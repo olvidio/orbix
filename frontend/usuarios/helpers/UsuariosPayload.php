@@ -49,7 +49,7 @@ public static function signListaValores(array $valores): array
             if (!is_array($spec)) {
                 continue;
             }
-            $path = PayloadCoercion::string($spec['path'] ?? '');
+            $path = \frontend\shared\helpers\PayloadCoercion::string($spec['path'] ?? '');
             $queryRaw = $spec['query'] ?? null;
             $query = is_array($queryRaw) ? $queryRaw : [];
             if ($path === '') {
@@ -99,16 +99,16 @@ public static function dataDesplFromPayload(array $raw): array
         }
         $opcionSelOut = $selList;
     } else {
-        $opcionSelOut = PayloadCoercion::string($opcionSel);
+        $opcionSelOut = \frontend\shared\helpers\PayloadCoercion::string($opcionSel);
     }
 
     return [
-        'tipo' => PayloadCoercion::string($raw['tipo'] ?? ''),
-        'nom' => PayloadCoercion::string($raw['nom'] ?? ''),
+        'tipo' => \frontend\shared\helpers\PayloadCoercion::string($raw['tipo'] ?? ''),
+        'nom' => \frontend\shared\helpers\PayloadCoercion::string($raw['nom'] ?? ''),
         'aOpciones' => NotasFormSupport::desplegableOpciones($raw['aOpciones'] ?? []),
         'opcion_sel' => $opcionSelOut,
         'blanco' => self::desplegableBlanco($raw['blanco'] ?? ''),
-        'accionConjunto' => PayloadCoercion::string($raw['accionConjunto'] ?? ''),
+        'accionConjunto' => \frontend\shared\helpers\PayloadCoercion::string($raw['accionConjunto'] ?? ''),
     ];
 }
 
@@ -121,7 +121,7 @@ public static function desplegableBlanco(mixed $value): bool|string
         return $value === 1 ? '1' : '';
     }
 
-    return PayloadCoercion::string($value);
+    return \frontend\shared\helpers\PayloadCoercion::string($value);
 }
 
 public static function formCamposFromPayload(array $payload): array
@@ -140,18 +140,18 @@ public static function formCamposFromPayload(array $payload): array
 
     return [
         'aOpcionesRoles' => NotasFormSupport::desplegableOpciones($payload['aOpcionesRoles'] ?? []),
-        'id_role' => PayloadCoercion::string($payload['id_role'] ?? ''),
-        'camposMas' => PayloadCoercion::string($payload['camposMas'] ?? ''),
-        'ctx_guardar' => PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
+        'id_role' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_role'] ?? ''),
+        'camposMas' => \frontend\shared\helpers\PayloadCoercion::string($payload['camposMas'] ?? ''),
+        'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
         'id_usuario' => NotasFormSupport::formScalar($payload['id_usuario'] ?? 0),
-        'usuario' => PayloadCoercion::string($payload['usuario'] ?? ''),
-        'quien' => PayloadCoercion::string($payload['quien'] ?? ''),
-        'pau' => PayloadCoercion::string($payload['pau'] ?? ''),
-        'nom_usuario' => PayloadCoercion::string($payload['nom_usuario'] ?? ''),
-        'email' => PayloadCoercion::string($payload['email'] ?? ''),
-        'chk_cambio_password' => PayloadCoercion::string($payload['chk_cambio_password'] ?? ''),
-        'chk_has_2fa' => PayloadCoercion::string($payload['chk_has_2fa'] ?? ''),
-        'obj' => PayloadCoercion::string($payload['obj'] ?? ''),
+        'usuario' => \frontend\shared\helpers\PayloadCoercion::string($payload['usuario'] ?? ''),
+        'quien' => \frontend\shared\helpers\PayloadCoercion::string($payload['quien'] ?? ''),
+        'pau' => \frontend\shared\helpers\PayloadCoercion::string($payload['pau'] ?? ''),
+        'nom_usuario' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom_usuario'] ?? ''),
+        'email' => \frontend\shared\helpers\PayloadCoercion::string($payload['email'] ?? ''),
+        'chk_cambio_password' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_cambio_password'] ?? ''),
+        'chk_has_2fa' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_has_2fa'] ?? ''),
+        'obj' => \frontend\shared\helpers\PayloadCoercion::string($payload['obj'] ?? ''),
         'aDataDespl' => $aDataDespl,
     ];
 }
@@ -213,16 +213,16 @@ public static function roleFormFromPayload(array $payload): array
     $lista = self::listaFromPayload($payload);
 
     return [
-        'role' => PayloadCoercion::string($payload['role'] ?? ''),
-        'sf' => PayloadCoercion::string($payload['sf'] ?? ''),
-        'chk_sf' => PayloadCoercion::string($payload['chk_sf'] ?? ''),
-        'sv' => PayloadCoercion::string($payload['sv'] ?? ''),
-        'chk_sv' => PayloadCoercion::string($payload['chk_sv'] ?? ''),
-        'pau' => PayloadCoercion::string($payload['pau'] ?? ''),
-        'dmz' => PayloadCoercion::string($payload['dmz'] ?? ''),
-        'chk_dmz' => PayloadCoercion::string($payload['chk_dmz'] ?? ''),
-        'permiso' => PayloadCoercion::string($payload['permiso'] ?? ''),
-        'txt_sfsv' => PayloadCoercion::string($payload['txt_sfsv'] ?? ''),
+        'role' => \frontend\shared\helpers\PayloadCoercion::string($payload['role'] ?? ''),
+        'sf' => \frontend\shared\helpers\PayloadCoercion::string($payload['sf'] ?? ''),
+        'chk_sf' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_sf'] ?? ''),
+        'sv' => \frontend\shared\helpers\PayloadCoercion::string($payload['sv'] ?? ''),
+        'chk_sv' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_sv'] ?? ''),
+        'pau' => \frontend\shared\helpers\PayloadCoercion::string($payload['pau'] ?? ''),
+        'dmz' => \frontend\shared\helpers\PayloadCoercion::string($payload['dmz'] ?? ''),
+        'chk_dmz' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_dmz'] ?? ''),
+        'permiso' => \frontend\shared\helpers\PayloadCoercion::string($payload['permiso'] ?? ''),
+        'txt_sfsv' => \frontend\shared\helpers\PayloadCoercion::string($payload['txt_sfsv'] ?? ''),
         'aOpcionesPau' => NotasFormSupport::desplegableOpciones($payload['aOpcionesPau'] ?? []),
         'cabeceras' => $lista['cabeceras'],
         'botones' => $lista['botones'],
@@ -235,21 +235,21 @@ public static function preferenciasFromPayload(array $payload): array
     $zona = $payload['zona_horaria'] ?? null;
 
     return [
-        'layout' => PayloadCoercion::string($payload['layout'] ?? ''),
-        'inicio' => PayloadCoercion::string($payload['inicio'] ?? ''),
-        'oficina' => PayloadCoercion::string($payload['oficina'] ?? ''),
+        'layout' => \frontend\shared\helpers\PayloadCoercion::string($payload['layout'] ?? ''),
+        'inicio' => \frontend\shared\helpers\PayloadCoercion::string($payload['inicio'] ?? ''),
+        'oficina' => \frontend\shared\helpers\PayloadCoercion::string($payload['oficina'] ?? ''),
         'oficinas_posibles' => NotasFormSupport::desplegableOpciones($payload['oficinas_posibles'] ?? []),
-        'estilo_azul_selected' => PayloadCoercion::string($payload['estilo_azul_selected'] ?? ''),
-        'estilo_naranja_selected' => PayloadCoercion::string($payload['estilo_naranja_selected'] ?? ''),
-        'estilo_verde_selected' => PayloadCoercion::string($payload['estilo_verde_selected'] ?? ''),
-        'tipo_menu_h' => PayloadCoercion::string($payload['tipo_menu_h'] ?? ''),
-        'tipo_menu_v' => PayloadCoercion::string($payload['tipo_menu_v'] ?? ''),
-        'tipo_tabla_s' => PayloadCoercion::string($payload['tipo_tabla_s'] ?? ''),
-        'tipo_tabla_h' => PayloadCoercion::string($payload['tipo_tabla_h'] ?? ''),
-        'tipo_apellidos_ap_nom' => PayloadCoercion::string($payload['tipo_apellidos_ap_nom'] ?? ''),
-        'tipo_apellidos_nom_ap' => PayloadCoercion::string($payload['tipo_apellidos_nom_ap'] ?? ''),
-        'idioma' => PayloadCoercion::string($payload['idioma'] ?? ''),
-        'zona_horaria' => PayloadCoercion::string(empty($zona) ? 'UTC' : $zona),
+        'estilo_azul_selected' => \frontend\shared\helpers\PayloadCoercion::string($payload['estilo_azul_selected'] ?? ''),
+        'estilo_naranja_selected' => \frontend\shared\helpers\PayloadCoercion::string($payload['estilo_naranja_selected'] ?? ''),
+        'estilo_verde_selected' => \frontend\shared\helpers\PayloadCoercion::string($payload['estilo_verde_selected'] ?? ''),
+        'tipo_menu_h' => \frontend\shared\helpers\PayloadCoercion::string($payload['tipo_menu_h'] ?? ''),
+        'tipo_menu_v' => \frontend\shared\helpers\PayloadCoercion::string($payload['tipo_menu_v'] ?? ''),
+        'tipo_tabla_s' => \frontend\shared\helpers\PayloadCoercion::string($payload['tipo_tabla_s'] ?? ''),
+        'tipo_tabla_h' => \frontend\shared\helpers\PayloadCoercion::string($payload['tipo_tabla_h'] ?? ''),
+        'tipo_apellidos_ap_nom' => \frontend\shared\helpers\PayloadCoercion::string($payload['tipo_apellidos_ap_nom'] ?? ''),
+        'tipo_apellidos_nom_ap' => \frontend\shared\helpers\PayloadCoercion::string($payload['tipo_apellidos_nom_ap'] ?? ''),
+        'idioma' => \frontend\shared\helpers\PayloadCoercion::string($payload['idioma'] ?? ''),
+        'zona_horaria' => \frontend\shared\helpers\PayloadCoercion::string(empty($zona) ? 'UTC' : $zona),
     ];
 }
 
@@ -266,7 +266,7 @@ public static function zonaHorariaOpcionSel(string $zona_horaria): string
         return '';
     }
 
-    return PayloadCoercion::string($id);
+    return \frontend\shared\helpers\PayloadCoercion::string($id);
 }
 
 public static function permMenuDlMapFromPayload(mixed $raw): array
@@ -276,7 +276,7 @@ public static function permMenuDlMapFromPayload(mixed $raw): array
     }
     $out = [];
     foreach ($raw as $key => $value) {
-        $out[$key] = PayloadCoercion::int($value);
+        $out[$key] = \frontend\shared\helpers\PayloadCoercion::int($value);
     }
 
     return $out;
@@ -297,8 +297,8 @@ public static function contactosFromPayload(mixed $raw): array
         }
         $key = $nombre;
         $out[$key] = [
-            'cargo' => PayloadCoercion::string($info['cargo'] ?? ''),
-            'email' => PayloadCoercion::string($info['email'] ?? ''),
+            'cargo' => \frontend\shared\helpers\PayloadCoercion::string($info['cargo'] ?? ''),
+            'email' => \frontend\shared\helpers\PayloadCoercion::string($info['email'] ?? ''),
         ];
     }
 
@@ -309,7 +309,7 @@ public static function twoFaInfoFromPayload(array $payload): array
 {
     return [
         'has_2fa' => !empty($payload['has_2fa']),
-        'secret_2fa' => PayloadCoercion::string($payload['secret_2fa'] ?? ''),
+        'secret_2fa' => \frontend\shared\helpers\PayloadCoercion::string($payload['secret_2fa'] ?? ''),
     ];
 }
 
@@ -327,8 +327,8 @@ public static function loginOkSessionFromResult(array $result): ?array
     return [
         'session_auth' => $sessionAuth,
         'session_config' => $sessionConfig,
-        'esquema' => PayloadCoercion::string($result['esquema'] ?? ''),
-        'idioma' => PayloadCoercion::string($result['idioma'] ?? ''),
+        'esquema' => \frontend\shared\helpers\PayloadCoercion::string($result['esquema'] ?? ''),
+        'idioma' => \frontend\shared\helpers\PayloadCoercion::string($result['idioma'] ?? ''),
     ];
 }
 
@@ -337,7 +337,7 @@ public static function cambiarIdioma(string $idioma = ''): void
     if ($idioma === '') {
         $sessionAuth = $_SESSION['session_auth'] ?? null;
         if (is_array($sessionAuth) && !empty($sessionAuth['idioma'])) {
-            $idioma = PayloadCoercion::string($sessionAuth['idioma']);
+            $idioma = \frontend\shared\helpers\PayloadCoercion::string($sessionAuth['idioma']);
         } elseif (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) && is_string($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             $a_idiomas = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
             foreach ($a_idiomas as $a_idioma) {
@@ -358,7 +358,7 @@ public static function cambiarIdioma(string $idioma = ''): void
         if ($idioma === '') {
             $oConfig = $_SESSION['oConfig'] ?? null;
             if ($oConfig instanceof ConfigSnapshot) {
-                $idioma = PayloadCoercion::string($oConfig->getIdioma_default());
+                $idioma = \frontend\shared\helpers\PayloadCoercion::string($oConfig->getIdioma_default());
             } else {
                 $idioma = 'es_ES.UTF-8';
             }

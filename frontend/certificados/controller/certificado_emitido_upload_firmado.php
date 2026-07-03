@@ -11,13 +11,13 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
 }
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 $form = CertificadosPayload::uploadFirmadoFromPayload(CertificadosPayload::postData(
     PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_upload_firmado_data', $_POST)

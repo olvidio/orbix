@@ -22,8 +22,8 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
@@ -46,4 +46,4 @@ $data = PostRequest::getDataFromUrl('/src/actividades/calendario_listas_datos', 
     'id_cdc' => $Qaid_cdc,
 ]);
 
-echo PayloadCoercion::string($data['html'] ?? '');
+echo \frontend\shared\helpers\PayloadCoercion::string($data['html'] ?? '');

@@ -4,16 +4,15 @@ use src\menus\application\MenuGuardar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
-use src\shared\domain\helpers\FuncTablasSupport;
 
-$Qid_grupmenu = FuncTablasSupport::inputInt($_POST, 'filtro_grupo');
-$Qid_menu = FuncTablasSupport::inputInt($_POST, 'id_menu');
-$Qok = FuncTablasSupport::inputString($_POST, 'ok');
-$Qorden = FuncTablasSupport::inputString($_POST, 'orden');
-$Qtxt_menu = FuncTablasSupport::inputString($_POST, 'txt_menu');
-$Qparametros = FuncTablasSupport::inputString($_POST, 'parametros');
-$Qid_metamenu = FuncTablasSupport::inputInt($_POST, 'id_metamenu');
-$rawPermMenu = FilterPostGet::post('perm_menu', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_grupmenu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'filtro_grupo');
+$Qid_menu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_menu');
+$Qok = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ok');
+$Qorden = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'orden');
+$Qtxt_menu = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'txt_menu');
+$Qparametros = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'parametros');
+$Qid_metamenu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_metamenu');
+$rawPermMenu = \src\shared\domain\helpers\FilterPostGet::post('perm_menu', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qperm_menu = [];
 if (is_array($rawPermMenu)) {
     foreach ($rawPermMenu as $perm) {

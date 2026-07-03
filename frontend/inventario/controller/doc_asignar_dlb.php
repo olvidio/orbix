@@ -17,8 +17,8 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 
 $str_selected_id = rawurlencode((string)json_encode($a_sel));
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $url_backend = '/src/inventario/lista_docs_asignar_dlb';

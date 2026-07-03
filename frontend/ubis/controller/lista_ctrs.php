@@ -22,7 +22,7 @@ $oTabla->setId_tabla('lista_ctrs');
 $oTabla->setCabeceras($lista['cabeceras']);
 $oTabla->setDatos($lista['valores']);
 
-$num_total_s = PayloadCoercion::int($data['num_total_s'] ?? 0);
+$num_total_s = \frontend\shared\helpers\PayloadCoercion::int($data['num_total_s'] ?? 0);
 
 echo "<h3>" . ucfirst(sprintf(_("número total de s: %s"), $num_total_s)) . "</h3>";
 echo $oTabla->mostrar_tabla();

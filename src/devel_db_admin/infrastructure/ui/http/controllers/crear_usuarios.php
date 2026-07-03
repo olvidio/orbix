@@ -13,8 +13,8 @@ use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\CrearUsuarios;
 
 
-$Qregion = (string) FilterPostGet::post('region');
-$Qdl = (string) FilterPostGet::post('dl');
+$Qregion = (string) \src\shared\domain\helpers\FilterPostGet::post('region');
+$Qdl = (string) \src\shared\domain\helpers\FilterPostGet::post('dl');
 
 $sessionEsSf = isset($_SESSION['sfsv']) && $_SESSION['sfsv'] === 'sf';
 

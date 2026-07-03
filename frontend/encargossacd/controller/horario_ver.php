@@ -20,8 +20,8 @@ $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qrefresh = EncargossacdPostInput::postInt('refresh');
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qmod = EncargossacdPostInput::postString('mod');

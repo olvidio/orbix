@@ -26,9 +26,9 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistActaImprimirParentReturnToPosicion($oPosicion, 1);
-ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistActaImprimirParentReturnToPosicion($oPosicion, 1);
+\frontend\shared\helpers\ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 
 $acta = ActaImprimirPostInput::actaFromPost();
 $cara = ActaImprimirPostInput::caraFromPost();

@@ -26,7 +26,7 @@ $data = CambiosPayload::postData(PostRequest::getDataFromUrl('/src/cambios/cambi
     'id_tipo_activ' => $Qid_tipo_activ,
     'dl_propia' => $Qdl_propia,
 ]));
-$error = PayloadCoercion::string($data['error'] ?? '');
+$error = \frontend\shared\helpers\PayloadCoercion::string($data['error'] ?? '');
 $aFases = NotasFormSupport::desplegableOpciones($data['aFases'] ?? []);
 
 if ($Qobjeto === '') {

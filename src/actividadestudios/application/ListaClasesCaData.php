@@ -10,7 +10,6 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterfac
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * @return array{
@@ -43,7 +42,7 @@ final class ListaClasesCaData
      */
     public function execute(array $input): array
     {
-        $idActiv = FuncTablasSupport::inputInt($input, 'id_activ');
+        $idActiv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         $msgErr = '';
 
         $oActividad = $this->actividadAllRepository->findById($idActiv);
@@ -124,7 +123,7 @@ final class ListaClasesCaData
                 $ctr = $oPersona->getCentro_o_dl();
                 $aMatriculados[$nomPersona] = $ctr;
             }
-            uksort($aMatriculados, 'src\shared\domain\helpers\strsinacentocmp');
+            uksort($aMatriculados, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
 
             $datosAsignatura[$a] = [
                 'nom_profesor' => $nomProfesor,

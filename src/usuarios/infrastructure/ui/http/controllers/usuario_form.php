@@ -1,7 +1,6 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\shared\config\ConfigGlobal;
 use Illuminate\Http\JsonResponse;
@@ -17,8 +16,8 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use src\shared\security\HashB;
-$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
-$Qquien = (string)FilterPostGet::post('quien');
+$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+$Qquien = (string)\src\shared\domain\helpers\FilterPostGet::post('quien');
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
@@ -86,9 +85,9 @@ if ($miRole < 4) { // es administrador
         $usuario = $oUsuario->getUsuarioAsString();
         $nom_usuario = $oUsuario->getNomUsuarioAsString();
         $cambio_password = $oUsuario->isCambio_password();
-        $chk_cambio_password = FuncTablasSupport::isTrue($cambio_password) ? 'checked' : '';
+        $chk_cambio_password = \src\shared\domain\helpers\FuncTablasSupport::isTrue($cambio_password) ? 'checked' : '';
         $has_2fa = $oUsuario->isHas_2fa();
-        $chk_has_2fa = FuncTablasSupport::isTrue($has_2fa) ? 'checked' : '';
+        $chk_has_2fa = \src\shared\domain\helpers\FuncTablasSupport::isTrue($has_2fa) ? 'checked' : '';
         $email = $oUsuario->getEmailAsString();
         $id_role = $oUsuario->getId_role();
         $oRole = $RoleRepository->findById($id_role ?? 0);

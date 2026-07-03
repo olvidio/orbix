@@ -145,7 +145,7 @@ class Select_notas_de_una_persona
             'obj_pau' => $this->obj_pau,
             'id_dossier' => $this->id_dossier,
         ];
-        array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
+        array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
         $this->link_insert_spec = [
             'path' => 'frontend/notas/controller/form_notas_de_una_persona.php',
             'query' => $aQuery,

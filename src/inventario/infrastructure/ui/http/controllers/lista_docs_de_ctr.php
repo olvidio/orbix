@@ -1,7 +1,6 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
@@ -10,8 +9,8 @@ use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_ubi = FuncTablasSupport::inputInt($_POST, 'id_ubi');
-$Qid_lugar = FuncTablasSupport::inputInt($_POST, 'id_lugar');
+$Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi');
+$Qid_lugar = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_lugar');
 $error_txt = '';
 
 $colTipoDoc = [];

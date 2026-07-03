@@ -4,7 +4,6 @@ namespace src\asistentes\application;
 
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Formulario de elección de centro / periodo (`que_ctr_lista.php`).
@@ -24,15 +23,15 @@ final class QueCtrListaData
      */
     public function build(array $input): array
     {
-        $tipo = FuncTablasSupport::inputString($input, 'tipo');
-        $ssfsv = FuncTablasSupport::inputString($input, 'ssfsv');
-        $Qlista = FuncTablasSupport::inputString($input, 'lista');
-        $Qsasistentes = FuncTablasSupport::inputString($input, 'sasistentes');
-        $Qsactividad = FuncTablasSupport::inputString($input, 'sactividad');
-        $Qn_agd = FuncTablasSupport::inputString($input, 'n_agd');
-        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi', 0);
-        $Qyear = FuncTablasSupport::inputInt($input, 'year', 0);
-        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+        $tipo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo');
+        $ssfsv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'ssfsv');
+        $Qlista = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'lista');
+        $Qsasistentes = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sasistentes');
+        $Qsactividad = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad');
+        $Qn_agd = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'n_agd');
+        $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi', 0);
+        $Qyear = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'year', 0);
+        $Qperiodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
 
         $tituloGros = '';
         $titulo = '';
@@ -140,7 +139,7 @@ final class QueCtrListaData
 
             $periodo_form = [
                 'opciones_periodos' => $aOpcionesP,
-                'titulo' => FuncTablasSupport::strtoupperDlb(_("periodo de inicio o finalización de las actividades")),
+                'titulo' => \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de inicio o finalización de las actividades")),
                 'form_name' => 'modifica',
                 'periodo_sel' => $periodo_sel,
                 'year_sel' => $year_sel,

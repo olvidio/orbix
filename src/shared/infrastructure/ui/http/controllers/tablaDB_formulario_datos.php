@@ -5,10 +5,10 @@ use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
-$Qclase_info_encoded = FilterPostGet::post('clase_info');
-$a_pkey = FilterPostGet::post('a_pkey');
-$Qobj_pau = FilterPostGet::post('obj_pau');
-$Qmod = FilterPostGet::post('mod');
+$Qclase_info_encoded = \src\shared\domain\helpers\FilterPostGet::post('clase_info');
+$a_pkey = \src\shared\domain\helpers\FilterPostGet::post('a_pkey');
+$Qobj_pau = \src\shared\domain\helpers\FilterPostGet::post('obj_pau');
+$Qmod = \src\shared\domain\helpers\FilterPostGet::post('mod');
 $mod = is_string($Qmod) ? $Qmod : '';
 
 // Tiene que ser en dos pasos.

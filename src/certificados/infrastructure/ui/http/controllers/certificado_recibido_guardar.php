@@ -8,29 +8,28 @@ use src\shared\config\ServerConf;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /** @var CertificadoRecibidoRepositoryInterface $certificadoRecibidoRepository */
 $certificadoRecibidoRepository = DependencyResolver::get(CertificadoRecibidoRepositoryInterface::class);
 
-$Qnuevo = FuncTablasSupport::inputInt($_POST, 'nuevo');
-$Qid_item = FuncTablasSupport::inputInt($_POST, 'id_item');
-$Qid_nom = FuncTablasSupport::inputInt($_POST, 'id_nom');
-$Qnom = FuncTablasSupport::inputString($_POST, 'nom');
-$Qidioma = FuncTablasSupport::inputString($_POST, 'idioma');
-$Qdestino = FuncTablasSupport::inputString($_POST, 'destino');
-$Qcertificado = FuncTablasSupport::inputString($_POST, 'certificado');
-$Qfirmado = FuncTablasSupport::inputString($_POST, 'firmado');
-$Qf_certificado = FuncTablasSupport::inputString($_POST, 'f_certificado');
-$Qf_recibido = FuncTablasSupport::inputString($_POST, 'f_recibido');
-$Qcertificado_old = FuncTablasSupport::inputString($_POST, 'certificado_old');
+$Qnuevo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'nuevo');
+$Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item');
+$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom');
+$Qnom = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nom');
+$Qidioma = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'idioma');
+$Qdestino = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'destino');
+$Qcertificado = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'certificado');
+$Qfirmado = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'firmado');
+$Qf_certificado = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_certificado');
+$Qf_recibido = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_recibido');
+$Qcertificado_old = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'certificado_old');
 
 $oF_certificado = DateTimeLocal::createFromLocal($Qf_certificado);
 $oF_recibido = DateTimeLocal::createFromLocal($Qf_recibido);
 
 $error_txt = '';
 
-if (FuncTablasSupport::isTrue($Qnuevo)) {
+if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qnuevo)) {
     $Qid_item = (int) $certificadoRecibidoRepository->getNewId_item();
     $oCertificadoRecibido = new CertificadoRecibido();
     $oCertificadoRecibido->setId_item($Qid_item);
@@ -57,7 +56,7 @@ $oCertificadoRecibido->setNom($Qnom);
 $oCertificadoRecibido->setIdiomaVo($Qidioma);
 $oCertificadoRecibido->setDestino($Qdestino);
 $oCertificadoRecibido->setCertificado($Qcertificado);
-$oCertificadoRecibido->setFirmado(FuncTablasSupport::isTrue($Qfirmado));
+$oCertificadoRecibido->setFirmado(\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qfirmado));
 $oCertificadoRecibido->setEsquema_emisor(ConfigGlobal::mi_region_dl());
 $oCertificadoRecibido->setF_certificado($oF_certificado instanceof DateTimeLocal ? $oF_certificado : null);
 if ($oF_recibido instanceof DateTimeLocal) {

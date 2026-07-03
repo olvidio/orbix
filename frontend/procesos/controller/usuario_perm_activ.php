@@ -15,15 +15,15 @@ use frontend\shared\helpers\FuncTablasSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 
 $sel = ProcesosPostInput::selTokensFromPost();
 $Qid_usuario = $sel['id_usuario'];
-$Qid_item = PayloadCoercion::string($sel['id_item']);
+$Qid_item = \frontend\shared\helpers\PayloadCoercion::string($sel['id_item']);
 $Qid_tipo_activ_txt = $sel['id_tipo_activ_txt'];
 $Qdl_propia = $sel['dl_propia'];
 
@@ -36,9 +36,9 @@ $data = PostRequest::getDataFromUrl($apiBase . '/src/procesos/usuario_perm_activ
     'dl_propia' => $Qdl_propia,
 ]);
 
-$nombre = PayloadCoercion::string($data['nombre'] ?? '');
-$Qdl_propia = PayloadCoercion::string($data['dl_propia'] ?? 't');
-$tipo_actividad_html = PayloadCoercion::string($data['tipo_actividad_html'] ?? '');
+$nombre = \frontend\shared\helpers\PayloadCoercion::string($data['nombre'] ?? '');
+$Qdl_propia = \frontend\shared\helpers\PayloadCoercion::string($data['dl_propia'] ?? 't');
+$tipo_actividad_html = \frontend\shared\helpers\PayloadCoercion::string($data['tipo_actividad_html'] ?? '');
 $a_fases = NotasFormSupport::desplegableOpciones($data['a_fases'] ?? []);
 $a_acciones = NotasFormSupport::desplegableOpciones($data['a_acciones'] ?? []);
 $aPermData = ProcesosPayload::usuarioPermRows($data['aPerm'] ?? null);
@@ -81,7 +81,7 @@ $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('dl_propia!id_tipo_activ');
 $h_actualizar = $oHash1->linkSinValParams();
 
-if (FuncTablasSupport::isTrue($Qdl_propia)) {
+if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qdl_propia)) {
     $chk_propia = 'checked';
     $chk_otra = '';
 } else {

@@ -12,7 +12,6 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
 use src\actividades\domain\entity\TiposActividades;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Widget del dossier `1301` (codigo `actividades_de_una_persona`):
@@ -80,8 +79,8 @@ class Select_actividades_de_una_persona
         $oConfig = $_SESSION['oConfig'];
         $fin_m = $oConfig->getMesFinStgr();
         $any = ($mes > $fin_m) ? (int) date('Y') + 1 : date('Y');
-        $inicurs_ca = FuncTablasSupport::cursoEst("inicio", $any)->format('Y-m-d');
-        $fincurs_ca = FuncTablasSupport::cursoEst("fin", $any)->format('Y-m-d');
+        $inicurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst("inicio", $any)->format('Y-m-d');
+        $fincurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst("fin", $any)->format('Y-m-d');
 
         /** @var array<string, mixed> $aWhere */
         $aWhere = ['_ordre' => 'f_ini'];
@@ -204,9 +203,9 @@ class Select_actividades_de_una_persona
             $act = $this->ref_perm[$id_tipo] ?? [];
             $permiso = !empty($act['perm']) ? 3 : 1;
 
-            FuncTablasSupport::isTrue($propio) ? $chk_propio = "si" : $chk_propio = "no";
-            FuncTablasSupport::isTrue($falta) ? $chk_falta = "si" : $chk_falta = "no";
-            FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = "si" : $chk_est_ok = "no";
+            \src\shared\domain\helpers\FuncTablasSupport::isTrue($propio) ? $chk_propio = "si" : $chk_propio = "no";
+            \src\shared\domain\helpers\FuncTablasSupport::isTrue($falta) ? $chk_falta = "si" : $chk_falta = "no";
+            \src\shared\domain\helpers\FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = "si" : $chk_est_ok = "no";
 
             $a_valores[$i]['sel'] = $permiso == 3 ? "$id_activ" : "";
             $a_valores[$i][1] = "$f_ini-$f_fin";

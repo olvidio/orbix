@@ -11,35 +11,34 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$restored = ListNavSupport::restoreSelectionFromStackPost();
+$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
+$Qid_sel = !\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : \frontend\shared\helpers\ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 
-$Qna = PayloadCoercion::string(filter_input(INPUT_POST, 'na'));
-$Qid_ctr_n = PayloadCoercion::string(filter_input(INPUT_POST, 'id_ctr_n'));
-$Qid_ctr_agd = PayloadCoercion::string(filter_input(INPUT_POST, 'id_ctr_agd'));
-$Qiasistentes_val = PayloadCoercion::string(filter_input(INPUT_POST, 'iasistentes_val'));
-$Qiactividad_val = PayloadCoercion::string(filter_input(INPUT_POST, 'actividad_val'));
-$Qperiodo = PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
-$Qyear = PayloadCoercion::string(filter_input(INPUT_POST, 'year'));
-$Qempiezamax = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));
-$Qempiezamin = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
-$Qref = PayloadCoercion::string(filter_input(INPUT_POST, 'ref'));
-$Qgrupo_estudios = PayloadCoercion::string(filter_input(INPUT_POST, 'grupo_estudios'));
-$Qca_estudios = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_estudios'));
-$Qca_repaso = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_repaso'));
-$Qca_todos = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_todos'));
+$Qna = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'na'));
+$Qid_ctr_n = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'id_ctr_n'));
+$Qid_ctr_agd = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'id_ctr_agd'));
+$Qiasistentes_val = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'iasistentes_val'));
+$Qiactividad_val = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'actividad_val'));
+$Qperiodo = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
+$Qyear = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'year'));
+$Qempiezamax = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));
+$Qempiezamin = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
+$Qref = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ref'));
+$Qgrupo_estudios = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'grupo_estudios'));
+$Qca_estudios = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ca_estudios'));
+$Qca_repaso = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ca_repaso'));
+$Qca_todos = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ca_todos'));
 
 $dq = CaPosiblesQuePayload::fromPayload(
     ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/ca_posibles_que_data', []))
@@ -106,9 +105,9 @@ if (empty($stack) && empty($Qca_todos)) {
     $Qca_todos = TRUE;
 }
 
-$chk_estudios = FuncTablasSupport::isTrue($Qca_estudios) ? 'checked' : '';
-$chk_repaso = FuncTablasSupport::isTrue($Qca_repaso) ? 'checked' : '';
-$chk_ca_todos = FuncTablasSupport::isTrue($Qca_todos) ? 'checked' : '';
+$chk_estudios = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qca_estudios) ? 'checked' : '';
+$chk_repaso = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qca_repaso) ? 'checked' : '';
+$chk_ca_todos = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qca_todos) ? 'checked' : '';
 
 $a_campos = [
     'oPosicion' => $oPosicion,

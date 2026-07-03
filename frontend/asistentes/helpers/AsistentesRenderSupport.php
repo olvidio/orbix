@@ -49,11 +49,11 @@ final class AsistentesRenderSupport
         }
 
         return [
-            'form_name' => PayloadCoercion::string($raw['form_name'] ?? 'modifica'),
-            'titulo' => PayloadCoercion::string($raw['titulo'] ?? ''),
+            'form_name' => \frontend\shared\helpers\PayloadCoercion::string($raw['form_name'] ?? 'modifica'),
+            'titulo' => \frontend\shared\helpers\PayloadCoercion::string($raw['titulo'] ?? ''),
             'opciones_periodos' => NotasFormSupport::desplegableOpciones($raw['opciones_periodos'] ?? []),
-            'periodo_sel' => PayloadCoercion::string($raw['periodo_sel'] ?? 'tot_any'),
-            'year_sel' => PayloadCoercion::string($raw['year_sel'] ?? (string) date('Y')),
+            'periodo_sel' => \frontend\shared\helpers\PayloadCoercion::string($raw['periodo_sel'] ?? 'tot_any'),
+            'year_sel' => \frontend\shared\helpers\PayloadCoercion::string($raw['year_sel'] ?? (string) date('Y')),
         ];
     }
 

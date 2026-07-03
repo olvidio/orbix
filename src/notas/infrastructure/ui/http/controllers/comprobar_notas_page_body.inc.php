@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 
 use frontend\shared\config\AppUrlConfig;
@@ -41,8 +40,8 @@ $nota_situ_numerica = NotaSituacion::NUMERICA;
 $nota_situ_cursada = NotaSituacion::CURSADA;
 
 $requestInput = $_POST !== [] ? $_POST : $_GET;
-$Qactualizar = FuncTablasSupport::inputString($requestInput, 'actualizar');
-$Qid_tabla = FuncTablasSupport::inputString($requestInput, 'id_tabla');
+$Qactualizar = \src\shared\domain\helpers\FuncTablasSupport::inputString($requestInput, 'actualizar');
+$Qid_tabla = \src\shared\domain\helpers\FuncTablasSupport::inputString($requestInput, 'id_tabla');
 
 [$tabla, $tabla_txt] = match ($Qid_tabla) {
     'n' => ['p_numerarios', 'Numerarios'],
@@ -117,8 +116,8 @@ if ($Qactualizar === 'r') {
 }
 if ($Qactualizar === 'borrar_cursada') {
 
-    $Qid_nom = (string)FuncTablasSupport::inputInt($requestInput, 'id_nom');
-    $Qid_asignatura = FuncTablasSupport::inputString($requestInput, 'id_asignatura');
+    $Qid_nom = (string)\src\shared\domain\helpers\FuncTablasSupport::inputInt($requestInput, 'id_nom');
+    $Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputString($requestInput, 'id_asignatura');
 
     $ssql = "DELETE FROM e_notas_dl n 
 		WHERE n.id_situacion = " . $nota_situ_cursada . "

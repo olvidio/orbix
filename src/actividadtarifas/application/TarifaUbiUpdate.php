@@ -4,7 +4,6 @@ namespace src\actividadtarifas\application;
 
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\ubis\domain\entity\TarifaUbi;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion: crea o actualiza una `TarifaUbi`.
@@ -21,13 +20,13 @@ final class TarifaUbiUpdate
      */
     public function execute(array $input): string
     {
-        $id_item = FuncTablasSupport::inputInt($input, 'id_item');
-        $id_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
-        $year = FuncTablasSupport::inputInt($input, 'year');
-        $id_tarifa = FuncTablasSupport::inputInt($input, 'id_tarifa');
-        $id_serie = FuncTablasSupport::inputInt($input, 'id_serie');
-        $cantidad = FuncTablasSupport::inputString($input, 'cantidad');
-        $observ = FuncTablasSupport::inputString($input, 'observ');
+        $id_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_item');
+        $id_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
+        $year = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'year');
+        $id_tarifa = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tarifa');
+        $id_serie = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_serie');
+        $cantidad = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'cantidad');
+        $observ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ');
 
         if ($id_item !== 0) {
             $oTarifaUbi = $this->tarifaUbiRepository->findById($id_item);

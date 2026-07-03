@@ -15,7 +15,6 @@ use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\actividades\domain\entity\TiposActividades;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Incorpora la primera peticion de plaza de cada numerario/agregado
@@ -45,8 +44,8 @@ final class PeticionesIncorporar
      */
     public function execute(array $input): array
     {
-        $sactividad = FuncTablasSupport::inputString($input, 'sactividad');
-        $sasistentes = FuncTablasSupport::inputString($input, 'sasistentes');
+        $sactividad = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad');
+        $sasistentes = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sasistentes');
 
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $ssfsv = $mi_sfsv === 2 ? 'sf' : 'sv';
@@ -70,13 +69,13 @@ final class PeticionesIncorporar
             case 'ca':
             case 'cv':
                 $any = $oConfig->any_final_curs('est');
-                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'est')->format('Y-m-d');
-                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'est')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'est')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'est')->format('Y-m-d');
                 break;
             case 'crt':
                 $any = $oConfig->any_final_curs('crt');
-                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'crt')->format('Y-m-d');
-                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d');
                 break;
         }
 

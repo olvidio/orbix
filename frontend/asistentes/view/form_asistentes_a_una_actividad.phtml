@@ -47,7 +47,7 @@
                         $('propietario').val(0);
                         $('#actualizar').val(1);
                     } else {
-                                                <?= list_nav_js_atras_to_dossiers_parent($oPosicion); ?>
+                                                <?= \frontend\shared\helpers\ListNavSupport::jsAtrasToDossiersParent($oPosicion); ?>
                     }
                 } else {
                     var msg = (rta && rta.mensaje) ? rta.mensaje : <?= json_encode(_("error desconocido")) ?>;
@@ -67,7 +67,7 @@
         fnjs_enviar_formulario(formulario, '#ficha3101');
     }
 </script>
-<?= list_nav_mostrar_left_slide_to_dossiers_parent($oPosicion); ?>
+<?= \frontend\shared\helpers\ListNavSupport::mostrarLeftSlideToDossiersParent($oPosicion); ?>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
     <?= $hash_campos_html ?? '' ?>
     <table>

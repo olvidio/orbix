@@ -26,8 +26,8 @@ $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_com_ctr_data', ['
 $a_campos = [
     'oPosicion' => $oPosicion,
     'array_atn_sacd' => is_array($datos['array_atn_sacd'] ?? null) ? $datos['array_atn_sacd'] : [],
-    'origen_txt' => PayloadCoercion::string($datos['origen_txt'] ?? ''),
-    'lugar_fecha' => PayloadCoercion::string($datos['lugar_fecha'] ?? ''),
+    'origen_txt' => \frontend\shared\helpers\PayloadCoercion::string($datos['origen_txt'] ?? ''),
+    'lugar_fecha' => \frontend\shared\helpers\PayloadCoercion::string($datos['lugar_fecha'] ?? ''),
 ];
 
 $oView = new ViewNewPhtml('frontend\\encargossacd\\controller');

@@ -7,8 +7,8 @@ use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_usuario = (int)FilterPostGet::post('id_usuario');
-$Qid_item = (int)FilterPostGet::post('id_item');
+$Qid_usuario = (int)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+$Qid_item = (int)\src\shared\domain\helpers\FilterPostGet::post('id_item');
 
 $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada

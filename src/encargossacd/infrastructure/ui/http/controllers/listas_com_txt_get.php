@@ -9,7 +9,7 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(ListasComTxtGet::class);
 
 
-$clave = (string)(FilterPostGet::post('clave') ?? FilterPostGet::get('clave') ?? '');
-$idioma = (string)(FilterPostGet::post('idioma') ?? FilterPostGet::get('idioma') ?? '');
+$clave = (string)(\src\shared\domain\helpers\FilterPostGet::post('clave') ?? \src\shared\domain\helpers\FilterPostGet::get('clave') ?? '');
+$idioma = (string)(\src\shared\domain\helpers\FilterPostGet::post('idioma') ?? \src\shared\domain\helpers\FilterPostGet::get('idioma') ?? '');
 
 ContestarJson::enviar('', $useCase->execute($clave, $idioma));

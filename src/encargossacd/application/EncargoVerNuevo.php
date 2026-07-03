@@ -6,7 +6,6 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\entity\Encargo;
 use src\encargossacd\domain\value_objects\EncargoGrupo;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Alta de encargo desde el formulario de `encargo_ver` (antes `encargo_ajax.php` que=nuevo).
@@ -26,19 +25,19 @@ final class EncargoVerNuevo
      */
     public function execute(array $input): array
     {
-        $Qfiltro_ctr = FuncTablasSupport::inputInt($input, 'filtro_ctr');
+        $Qfiltro_ctr = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'filtro_ctr');
         $Qsf_sv = empty($Qfiltro_ctr) ? EncargoGrupo::CENTRO_SV : $Qfiltro_ctr;
 
-        $Qid_ubi = FuncTablasSupport::inputInt($input, 'lst_ctrs');
-        $Qid_zona = FuncTablasSupport::inputInt($input, 'id_zona');
-        $Qdesc_enc = FuncTablasSupport::inputString($input, 'desc_enc');
-        $Qidioma_enc = FuncTablasSupport::inputString($input, 'idioma_enc');
-        $Qdesc_lugar = FuncTablasSupport::inputString($input, 'desc_lugar');
-        $Qobserv = FuncTablasSupport::inputString($input, 'observ');
+        $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'lst_ctrs');
+        $Qid_zona = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_zona');
+        $Qdesc_enc = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'desc_enc');
+        $Qidioma_enc = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'idioma_enc');
+        $Qdesc_lugar = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'desc_lugar');
+        $Qobserv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ');
 
-        $Qid_tipo_enc = FuncTablasSupport::inputString($input, 'id_tipo_enc');
-        $Qgrupo = FuncTablasSupport::inputString($input, 'grupo');
-        $Qnom_tipo = FuncTablasSupport::inputString($input, 'nom_tipo');
+        $Qid_tipo_enc = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_enc');
+        $Qgrupo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'grupo');
+        $Qnom_tipo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nom_tipo');
 
         if (!empty($Qid_tipo_enc) && !str_contains($Qid_tipo_enc, '.')) {
             $id_tipo_enc = $Qid_tipo_enc;

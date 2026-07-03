@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: datos del formulario de modificacion de una
@@ -12,8 +11,8 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'id_ubi' => FuncTablasSupport::inputInt($_POST, 'id_ubi'),
-    'id_direccion' => FuncTablasSupport::inputInt($_POST, 'id_direccion'),
+    'id_ubi' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi'),
+    'id_direccion' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_direccion'),
 ];
 
 /** @var CartaPresentacionFormData $useCase */

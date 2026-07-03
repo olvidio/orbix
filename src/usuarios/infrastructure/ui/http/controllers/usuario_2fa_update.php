@@ -9,10 +9,10 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
-$Qsecret_2fa = (string)FilterPostGet::post('secret_2fa');
-$Qenable_2fa = (bool)FilterPostGet::post('enable_2fa');
-$Qverification_code = (string)FilterPostGet::post('verification_code');
+$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+$Qsecret_2fa = (string)\src\shared\domain\helpers\FilterPostGet::post('secret_2fa');
+$Qenable_2fa = (bool)\src\shared\domain\helpers\FilterPostGet::post('enable_2fa');
+$Qverification_code = (string)\src\shared\domain\helpers\FilterPostGet::post('verification_code');
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);

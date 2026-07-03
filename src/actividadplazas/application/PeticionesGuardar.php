@@ -4,7 +4,6 @@ namespace src\actividadplazas\application;
 
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\entity\PlazaPeticion;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Guarda las peticiones de una persona+tipo. Borra todas las
@@ -25,8 +24,8 @@ final class PeticionesGuardar
      */
     public function execute(array $input): string
     {
-        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
-        $sactividad = FuncTablasSupport::inputString($input, 'sactividad');
+        $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
+        $sactividad = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad');
         if ($id_nom <= 0 || $sactividad === '') {
             return (string)_("faltan parametros id_nom / sactividad");
         }
@@ -39,7 +38,7 @@ final class PeticionesGuardar
             $this->plazaPeticionRepository->Eliminar($oPlazaPeticion);
         }
 
-        $a_actividades = FuncTablasSupport::inputStringList($input, 'actividades');
+        $a_actividades = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($input, 'actividades');
         $i = 0;
         foreach ($a_actividades as $id_activ_raw) {
             $id_activ = (int)$id_activ_raw;

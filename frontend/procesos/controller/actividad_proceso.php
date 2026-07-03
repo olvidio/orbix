@@ -14,18 +14,18 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootActividadSelectChildRecordar($oPosicion);
+    \frontend\shared\helpers\ListNavSupport::bootActividadSelectChildRecordar($oPosicion);
 }
 $sel = ProcesosPostInput::selTokensFromPost();
-ListNavSupport::persistActividadSelectChildEntry(
+\frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry(
     $oPosicion,
     $sel['id'] > 0 ? ['id_activ' => $sel['id']] : [],
 );
@@ -34,14 +34,14 @@ $Qid_activ = $sel['id'];
 $data = PostRequest::getDataFromUrl('/src/procesos/actividad_proceso_data', [
     'id_activ' => $Qid_activ,
 ]);
-$nom_activ = PayloadCoercion::string($data['nom_activ'] ?? '');
+$nom_activ = \frontend\shared\helpers\PayloadCoercion::string($data['nom_activ'] ?? '');
 
 $aQuery = [
     'pau' => 'a',
     'id_pau' => $Qid_activ,
     'obj_pau' => 'Actividad',
 ];
-array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
+array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
 $alt = _("ver dossiers");

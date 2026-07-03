@@ -5,7 +5,6 @@ namespace src\actividades\application;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use frontend\shared\web\Periodo;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Lista centros encargados de actividades en un periodo dado y, para cada
@@ -31,12 +30,12 @@ final class ListaCentrosActivDatos
      */
     public function ejecutar(array $input): array
     {
-        $Qid_ctr_num = FuncTablasSupport::inputInt($input, 'id_ctr_num');
+        $Qid_ctr_num = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ctr_num');
         $Qa_id_ctr = is_array($input['id_ctr'] ?? null) ? $input['id_ctr'] : [];
-        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
-        $Qyear = FuncTablasSupport::inputString($input, 'year');
-        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
-        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
+        $Qperiodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'year');
+        $Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
 
         if (empty($Qperiodo)) {
             $Qperiodo = 'actual';

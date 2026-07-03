@@ -24,13 +24,13 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
-$restored = ListNavSupport::restoreSelectionFromStackPost();
+$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
+$Qid_sel = !\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : \frontend\shared\helpers\ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 
@@ -54,7 +54,7 @@ $dataTipoHtml = PostRequest::getDataFromUrl('/src/pasarela/exportar_que_activida
     'sactividad' => $Qsactividad,
     'snom_tipo' => $Qsnom_tipo,
 ]);
-$html_actividad_tipo = PayloadCoercion::string($dataTipoHtml['html'] ?? '');
+$html_actividad_tipo = \frontend\shared\helpers\PayloadCoercion::string($dataTipoHtml['html'] ?? '');
 
 $aOpciones = [
     'tot_any' => _('todo el año'),

@@ -3,7 +3,6 @@
 namespace src\notas\application;
 
 use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Autocomplete de examinadores: delega al repositorio que ya devuelve
@@ -22,7 +21,7 @@ final class ExaminadoresSearchData
      */
     public function execute(array $input): string
     {
-        $search = FuncTablasSupport::inputString($input, 'search');
+        $search = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'search');
         $repo = $this->actaTribunalDlRepository;
         return (string)$repo->getJsonExaminadores($search);
     }

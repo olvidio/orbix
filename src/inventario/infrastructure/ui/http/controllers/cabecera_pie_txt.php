@@ -1,7 +1,6 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ConfigMagik;
@@ -10,7 +9,7 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qid_equipaje = FuncTablasSupport::inputInt($_POST, 'id_equipaje');
+$Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_equipaje');
 
 $cabecera = null;
 $cabeceraB = null;

@@ -45,7 +45,7 @@ final class PeriodoPlanningHelper
         string $titulo = ''
     ): PeriodoQue {
         if ($titulo === '') {
-            $titulo = FuncTablasSupport::strtoupperDlb(_("periodo del planning actividades"));
+            $titulo = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo del planning actividades"));
         }
 
         $oForm = new PeriodoQue();
@@ -53,7 +53,7 @@ final class PeriodoPlanningHelper
         $oForm->setTitulo($titulo);
         $oForm->setPosiblesPeriodos(self::opcionesTrimestrales());
         $oForm->setDesplPeriodosOpcion_sel($periodo);
-        $yearSel = empty($year) ? (string)date('Y') : PayloadCoercion::string($year);
+        $yearSel = empty($year) ? (string)date('Y') : \frontend\shared\helpers\PayloadCoercion::string($year);
         $oForm->setDesplAnysOpcion_sel($yearSel);
         $oForm->setEmpiezaMin($empiezaMin);
         $oForm->setEmpiezaMax($empiezaMax);

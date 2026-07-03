@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: guarda las peticiones de una persona+tipo
@@ -11,9 +10,9 @@ use src\actividadplazas\application\PeticionesGuardar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $input = [
-    'id_nom' => FuncTablasSupport::inputInt($_POST, 'id_nom'),
-    'sactividad' => FuncTablasSupport::inputString($_POST, 'sactividad'),
-    'actividades' => FuncTablasSupport::inputStringList($_POST, 'actividades'),
+    'id_nom' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom'),
+    'sactividad' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'sactividad'),
+    'actividades' => \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'actividades'),
 ];
 
 /** @var PeticionesGuardar $useCase */

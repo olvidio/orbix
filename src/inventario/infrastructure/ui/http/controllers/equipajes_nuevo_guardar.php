@@ -1,31 +1,30 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\entity\Equipaje;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\web\ContestarJson;
 
-$Qid_ubi_activ = FuncTablasSupport::inputInt($_POST, 'id_ubi_activ');
-$Qnom_equipaje = FuncTablasSupport::inputString($_POST, 'nom_equipaje');
-$Qids_activ = FuncTablasSupport::inputString($_POST, 'ids_activ');
-$Qf_ini = FuncTablasSupport::inputString($_POST, 'f_ini');
+$Qid_ubi_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi_activ');
+$Qnom_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nom_equipaje');
+$Qids_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ids_activ');
+$Qf_ini = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_ini');
 if (empty($Qf_ini)) {
     $oF_ini = null;
 } else {
     $rawF_ini = DateTimeLocal::createFromLocal($Qf_ini);
     $oF_ini = $rawF_ini instanceof DateTimeLocal ? $rawF_ini : null;
 }
-$Qf_fin = FuncTablasSupport::inputString($_POST, 'f_fin');
+$Qf_fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_fin');
 if (empty($Qf_fin)) {
     $oF_fin = null;
 } else {
     $rawF_fin = DateTimeLocal::createFromLocal($Qf_fin);
     $oF_fin = $rawF_fin instanceof DateTimeLocal ? $rawF_fin : null;
 }
-$Qlugar = FuncTablasSupport::inputString($_POST, 'lugar');
+$Qlugar = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'lugar');
 
 $error_txt = '';
 

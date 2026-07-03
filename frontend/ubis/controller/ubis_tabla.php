@@ -26,16 +26,16 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 $params = UbisPayload::postData($_POST);
 if ($Qid_sel !== null && $Qid_sel !== '') {
-    $params['id_sel'] = PayloadCoercion::string($Qid_sel);
+    $params['id_sel'] = \frontend\shared\helpers\PayloadCoercion::string($Qid_sel);
 }
 if ($Qscroll_id !== null && $Qscroll_id !== '') {
-    $params['scroll_id'] = PayloadCoercion::string($Qscroll_id);
+    $params['scroll_id'] = \frontend\shared\helpers\PayloadCoercion::string($Qscroll_id);
 }
 
 $tabla = UbisPayload::tablaFromPayload(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/ubis_tabla_data', $params)));

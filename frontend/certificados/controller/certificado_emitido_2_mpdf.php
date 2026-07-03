@@ -9,7 +9,7 @@ use frontend\shared\security\HashFront;
 use frontend\certificados\helpers\CertificadosPayload;
 
 
-$Qguardar = PayloadCoercion::string($_GET['guardar'] ?? '');
+$Qguardar = \frontend\shared\helpers\PayloadCoercion::string($_GET['guardar'] ?? '');
 
 $footer = '';
 $certificado = '';
@@ -74,7 +74,7 @@ if ($Qguardar !== '') {
     ], false));
     if (!empty($data['error'])) {
         certificado_emitido_echo_aviso_y_salir(
-            PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error']))
+            PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($data['error']))
         );
     }
 }

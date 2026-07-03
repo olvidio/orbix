@@ -28,16 +28,16 @@ final class ActaNotasPayload
     public static function fromPayload(array $payload): array
     {
         return [
-            'permiso' => PayloadCoercion::int($payload['permiso'] ?? 1),
-            'nom_activ' => PayloadCoercion::string($payload['nom_activ'] ?? ''),
-            'matriculados' => PayloadCoercion::int($payload['matriculados'] ?? 0),
+            'permiso' => \frontend\shared\helpers\PayloadCoercion::int($payload['permiso'] ?? 1),
+            'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom_activ'] ?? ''),
+            'matriculados' => \frontend\shared\helpers\PayloadCoercion::int($payload['matriculados'] ?? 0),
             'matriculas_rows' => ActividadesListaSupport::datos($payload['matriculas_rows'] ?? []),
-            'notas' => PayloadCoercion::string($payload['notas'] ?? 'nuevo'),
-            'acta_principal' => PayloadCoercion::string($payload['acta_principal'] ?? ''),
+            'notas' => \frontend\shared\helpers\PayloadCoercion::string($payload['notas'] ?? 'nuevo'),
+            'acta_principal' => \frontend\shared\helpers\PayloadCoercion::string($payload['acta_principal'] ?? ''),
             'acta_notas_a_actas' => ActividadesListaSupport::datos($payload['acta_notas_a_actas'] ?? []),
-            'acta_txt_cursada' => PayloadCoercion::string($payload['acta_txt_cursada'] ?? ''),
+            'acta_txt_cursada' => \frontend\shared\helpers\PayloadCoercion::string($payload['acta_txt_cursada'] ?? ''),
             'despl_actas_opciones' => NotasFormSupport::desplegableOpciones($payload['despl_actas_opciones'] ?? []),
-            'msg_err' => PayloadCoercion::string($payload['msg_err'] ?? ''),
+            'msg_err' => \frontend\shared\helpers\PayloadCoercion::string($payload['msg_err'] ?? ''),
         ];
     }
 }

@@ -41,16 +41,16 @@ final class CuadriculaZonaHtmlTable
             }
             $html .= '<tr>';
             $html .= self::td(
-                PayloadCoercion::string($row['encargo'] ?? ''),
+                \frontend\shared\helpers\PayloadCoercion::string($row['encargo'] ?? ''),
                 self::encargoCellClass($row),
                 ''
             );
             foreach ($dayFields as $field) {
                 $meta = is_array($row['meta'] ?? null) ? $row['meta'][$field] ?? null : null;
                 $html .= self::td(
-                    PayloadCoercion::string($row[$field] ?? ''),
-                    is_array($meta) ? PayloadCoercion::string($meta['color'] ?? '') : '',
-                    is_array($meta) ? PayloadCoercion::string($meta['texto'] ?? '') : ''
+                    \frontend\shared\helpers\PayloadCoercion::string($row[$field] ?? ''),
+                    is_array($meta) ? \frontend\shared\helpers\PayloadCoercion::string($meta['color'] ?? '') : '',
+                    is_array($meta) ? \frontend\shared\helpers\PayloadCoercion::string($meta['texto'] ?? '') : ''
                 );
             }
             $html .= '</tr>';
@@ -86,7 +86,7 @@ final class CuadriculaZonaHtmlTable
             usort($dayFields, 'strcmp');
             $sortedHeaders = [_('Encargo')];
             foreach ($dayFields as $field) {
-                $sortedHeaders[] = PayloadCoercion::string($row[$field] ?? $field);
+                $sortedHeaders[] = \frontend\shared\helpers\PayloadCoercion::string($row[$field] ?? $field);
             }
 
             return [$sortedHeaders, $dayFields];
@@ -133,8 +133,8 @@ final class CuadriculaZonaHtmlTable
             if (!is_array($col)) {
                 continue;
             }
-            $field = PayloadCoercion::string($col['field'] ?? $col['id'] ?? '');
-            $name = PayloadCoercion::string($col['name'] ?? $field);
+            $field = \frontend\shared\helpers\PayloadCoercion::string($col['field'] ?? $col['id'] ?? '');
+            $name = \frontend\shared\helpers\PayloadCoercion::string($col['name'] ?? $field);
             if ($field === 'encargo') {
                 $headers[] = $name;
                 continue;
@@ -185,7 +185,7 @@ final class CuadriculaZonaHtmlTable
      */
     private static function encargoCellClass(array $row): string
     {
-        $color = PayloadCoercion::string($row['color_encargo'] ?? '');
+        $color = \frontend\shared\helpers\PayloadCoercion::string($row['color_encargo'] ?? '');
         if ($color !== '' && $color !== 'titulo') {
             return $color;
         }

@@ -32,7 +32,7 @@ final class ProfesoresPayload
     public static function listaTablaFromPayload(array $data): array
     {
         return [
-            'id_tabla' => PayloadCoercion::string($data['id_tabla'] ?? ''),
+            'id_tabla' => \frontend\shared\helpers\PayloadCoercion::string($data['id_tabla'] ?? ''),
             'a_cabeceras' => ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []),
             'a_botones' => ActividadesListaSupport::botones($data['a_botones'] ?? []),
             'a_valores' => ActividadesListaSupport::datos($data['a_valores'] ?? []),

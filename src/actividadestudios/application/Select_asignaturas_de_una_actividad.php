@@ -217,7 +217,7 @@ class Select_asignaturas_de_una_actividad
                 'pau' => $this->pau,
                 'id_pau' => $this->id_pau,
             ];
-            array_walk($a_dataUrl, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
+            array_walk($a_dataUrl, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
             $this->linkInsertSpec = DossierTipoPublicUrls::formControllerLinkSpec($this->id_dossier, $a_dataUrl);
         }
     }

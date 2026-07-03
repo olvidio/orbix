@@ -9,8 +9,8 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
-$Qpassword = (string)FilterPostGet::post('password');
+$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+$Qpassword = (string)\src\shared\domain\helpers\FilterPostGet::post('password');
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);

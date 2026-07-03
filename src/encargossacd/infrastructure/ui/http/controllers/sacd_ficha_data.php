@@ -9,6 +9,6 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(SacdFichaData::class);
 
 
-$id_nom = (int)(FilterPostGet::post('id_nom') ?? FilterPostGet::get('id_nom') ?? 0);
+$id_nom = (int)(\src\shared\domain\helpers\FilterPostGet::post('id_nom') ?? \src\shared\domain\helpers\FilterPostGet::get('id_nom') ?? 0);
 
 ContestarJson::enviar('', $useCase->execute($id_nom));

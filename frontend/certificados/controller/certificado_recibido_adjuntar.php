@@ -15,8 +15,8 @@ use frontend\shared\helpers\FuncTablasSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $id_nom = CertificadosPostInput::idNomFromSelPost();
@@ -25,7 +25,7 @@ $formData = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/cert
     'id_nom' => $id_nom,
 ], false));
 if (!empty($formData['error'])) {
-    echo PostRequest::stripInternalCallProvenance(PayloadCoercion::string($formData['error']));
+    echo PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($formData['error']));
     return;
 }
 $form = CertificadosPayload::adjuntarFormFromPayload($formData);
@@ -37,7 +37,7 @@ $certificado = '';
 $f_certificado = '';
 $f_recibido = $form['f_enviado'];
 $firmado = '';
-$chk_firmado = FuncTablasSupport::isTrue($firmado) ? 'checked' : '';
+$chk_firmado = \src\shared\domain\helpers\FuncTablasSupport::isTrue($firmado) ? 'checked' : '';
 
 $oHashCertificadoPdf = new HashFront();
 $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!f_certificado!idioma!f_recibido');

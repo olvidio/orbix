@@ -9,7 +9,7 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(SacdSelectData::class);
 
 
-$filtro_sacd = (string)(FilterPostGet::post('filtro_sacd') ?? FilterPostGet::get('filtro_sacd') ?? '');
-$id_nom = (int)(FilterPostGet::post('id_nom') ?? FilterPostGet::get('id_nom') ?? 0);
+$filtro_sacd = (string)(\src\shared\domain\helpers\FilterPostGet::post('filtro_sacd') ?? \src\shared\domain\helpers\FilterPostGet::get('filtro_sacd') ?? '');
+$id_nom = (int)(\src\shared\domain\helpers\FilterPostGet::post('id_nom') ?? \src\shared\domain\helpers\FilterPostGet::get('id_nom') ?? 0);
 
 ContestarJson::enviar('', $useCase->execute($filtro_sacd, $id_nom));

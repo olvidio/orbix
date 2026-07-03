@@ -26,7 +26,7 @@ final class SelectMatriculasDeUnaPersonaRender
     {
         $wrapper = isset($seg['wrapper']) && is_array($seg['wrapper']) ? $seg['wrapper'] : [];
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $relForm = PayloadCoercion::string($wrapper['url_form_relative'] ?? '');
+        $relForm = \frontend\shared\helpers\PayloadCoercion::string($wrapper['url_form_relative'] ?? '');
         $urlForm = $relForm !== '' ? $base . '/' . ltrim($relForm, '/') : '';
 
         $abs = static function (string $path) use ($base): string {
@@ -37,12 +37,12 @@ final class SelectMatriculasDeUnaPersonaRender
 
         $todosForm = $seg['aviso_todos_form'] ?? null;
         if (is_array($todosForm)) {
-            $msg = PayloadCoercion::string($todosForm['mensaje'] ?? '');
-            $action = PayloadCoercion::string($todosForm['dossiers_form_action'] ?? 'frontend/dossiers/controller/dossiers_ver.php');
+            $msg = \frontend\shared\helpers\PayloadCoercion::string($todosForm['mensaje'] ?? '');
+            $action = \frontend\shared\helpers\PayloadCoercion::string($todosForm['dossiers_form_action'] ?? 'frontend/dossiers/controller/dossiers_ver.php');
             $hash = isset($todosForm['hash']) && is_array($todosForm['hash']) ? $todosForm['hash'] : [];
             $oHashA = new HashFront();
-            $oHashA->setCamposForm(PayloadCoercion::string($hash['campos_form'] ?? ''));
-            $oHashA->setCamposNo(PayloadCoercion::string($hash['campos_no'] ?? ''));
+            $oHashA->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_form'] ?? ''));
+            $oHashA->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_no'] ?? ''));
             $hiddenA = $hash['campos_hidden'] ?? [];
             $oHashA->setArrayCamposHidden(is_array($hiddenA) ? $hiddenA : []);
             $avisoHtml .= $msg;
@@ -55,13 +55,13 @@ final class SelectMatriculasDeUnaPersonaRender
         $oViewWrap = new ViewNewPhtml('frontend\actividadestudios\view');
         $script = $oViewWrap->renderizar('select_matriculas_de_una_persona.phtml', [
             'aviso' => $avisoHtml,
-            'txt_eliminar' => PayloadCoercion::string($wrapper['txt_eliminar'] ?? ''),
-            'bloque' => PayloadCoercion::string($wrapper['bloque'] ?? ''),
+            'txt_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($wrapper['txt_eliminar'] ?? ''),
+            'bloque' => \frontend\shared\helpers\PayloadCoercion::string($wrapper['bloque'] ?? ''),
             'url_form' => $urlForm,
-            'url_matricular' => $abs(PayloadCoercion::string($wrapper['url_matricular_path'] ?? '')),
-            'url_matricula_eliminar' => $abs(PayloadCoercion::string($wrapper['url_matricula_eliminar_path'] ?? '')),
-            'url_asistente_observ_est' => $abs(PayloadCoercion::string($wrapper['url_asistente_observ_est_path'] ?? '')),
-            'url_asistente_plan_est_ok' => $abs(PayloadCoercion::string($wrapper['url_asistente_plan_est_ok_path'] ?? '')),
+            'url_matricular' => $abs(\frontend\shared\helpers\PayloadCoercion::string($wrapper['url_matricular_path'] ?? '')),
+            'url_matricula_eliminar' => $abs(\frontend\shared\helpers\PayloadCoercion::string($wrapper['url_matricula_eliminar_path'] ?? '')),
+            'url_asistente_observ_est' => $abs(\frontend\shared\helpers\PayloadCoercion::string($wrapper['url_asistente_observ_est_path'] ?? '')),
+            'url_asistente_plan_est_ok' => $abs(\frontend\shared\helpers\PayloadCoercion::string($wrapper['url_asistente_plan_est_ok_path'] ?? '')),
         ], false);
 
         $html = $script;
@@ -74,7 +74,7 @@ final class SelectMatriculasDeUnaPersonaRender
                 }
             }
         }
-        $emptyMessage = PayloadCoercion::string($seg['empty_cas_message'] ?? '');
+        $emptyMessage = \frontend\shared\helpers\PayloadCoercion::string($seg['empty_cas_message'] ?? '');
         if ($emptyMessage !== '') {
             $html .= $emptyMessage;
         }
@@ -90,14 +90,14 @@ final class SelectMatriculasDeUnaPersonaRender
     {
         $hash = isset($ca['hash']) && is_array($ca['hash']) ? $ca['hash'] : [];
         $oHashCa = new HashFront();
-        $oHashCa->setCamposForm(PayloadCoercion::string($hash['campos_form'] ?? ''));
-        $oHashCa->setCamposNo(PayloadCoercion::string($hash['campos_no'] ?? ''));
+        $oHashCa->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_form'] ?? ''));
+        $oHashCa->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_no'] ?? ''));
         $hidden = $hash['campos_hidden'] ?? [];
         $oHashCa->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
 
         $tabla = isset($ca['tabla']) && is_array($ca['tabla']) ? $ca['tabla'] : [];
         $oTabla = new Lista();
-        $oTabla->setId_tabla(PayloadCoercion::string($tabla['id_tabla'] ?? 'sql_1303'));
+        $oTabla->setId_tabla(\frontend\shared\helpers\PayloadCoercion::string($tabla['id_tabla'] ?? 'sql_1303'));
         $oTabla->setCabeceras(ActividadesListaSupport::cabeceras($tabla['cabeceras'] ?? []));
         $oTabla->setBotones(ActividadesListaSupport::botones($tabla['botones'] ?? []));
         $oTabla->setDatos(ActividadesListaSupport::datos($tabla['valores'] ?? []));
@@ -110,16 +110,16 @@ final class SelectMatriculasDeUnaPersonaRender
             'oHashCa' => $oHashCa,
             'oTabla' => $oTabla,
             'link_add' => $linkAdd,
-            'nom_activ' => PayloadCoercion::string($ca['nom_activ'] ?? ''),
-            'form' => PayloadCoercion::string($ca['form'] ?? ''),
-            'ca_num' => PayloadCoercion::int($ca['ca_num'] ?? 0),
-            'chk_1' => PayloadCoercion::string($ca['chk_1'] ?? ''),
-            'chk_2' => PayloadCoercion::string($ca['chk_2'] ?? ''),
-            'bloque' => PayloadCoercion::string($wrapper['bloque'] ?? ''),
-            'observ_est' => PayloadCoercion::string($ca['observ_est'] ?? ''),
-            'permiso' => PayloadCoercion::int($ca['permiso'] ?? 0),
+            'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($ca['nom_activ'] ?? ''),
+            'form' => \frontend\shared\helpers\PayloadCoercion::string($ca['form'] ?? ''),
+            'ca_num' => \frontend\shared\helpers\PayloadCoercion::int($ca['ca_num'] ?? 0),
+            'chk_1' => \frontend\shared\helpers\PayloadCoercion::string($ca['chk_1'] ?? ''),
+            'chk_2' => \frontend\shared\helpers\PayloadCoercion::string($ca['chk_2'] ?? ''),
+            'bloque' => \frontend\shared\helpers\PayloadCoercion::string($wrapper['bloque'] ?? ''),
+            'observ_est' => \frontend\shared\helpers\PayloadCoercion::string($ca['observ_est'] ?? ''),
+            'permiso' => \frontend\shared\helpers\PayloadCoercion::int($ca['permiso'] ?? 0),
         ], false);
 
-        return PayloadCoercion::string($ca['html_prefix'] ?? '') . $inner;
+        return \frontend\shared\helpers\PayloadCoercion::string($ca['html_prefix'] ?? '') . $inner;
     }
 }

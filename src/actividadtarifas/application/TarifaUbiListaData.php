@@ -10,7 +10,6 @@ use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder: listado de `TarifaUbi` por `id_ubi` + `year`.
@@ -39,8 +38,8 @@ final class TarifaUbiListaData
      */
     public function execute(array $input): array
     {
-        $id_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
-        $year = FuncTablasSupport::inputInt($input, 'year');
+        $id_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
+        $year = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'year');
 
         $miSfsv = ConfigGlobal::mi_sfsv();
         $a_seccion = [1 => _("sv"), 2 => _("sf")];

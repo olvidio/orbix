@@ -127,7 +127,7 @@ if (!isset($_SESSION['session_auth'])) {
             if (orbix_es_peticion_api_src()) {
                 orbix_responder_login_api_sin_sesion();
             }
-            $error = PayloadCoercion::int($result['error'] ?? 1);
+            $error = \frontend\shared\helpers\PayloadCoercion::int($result['error'] ?? 1);
             $esquema_form = $loginInput['esquema'] !== '' ? $loginInput['esquema'] : $esquema_web_str;
             render_login_form($loginInput['username'], $ubicacion, $idioma, $esquema_form, $error, $esquema_web_str);
             die();
@@ -162,8 +162,8 @@ if (!isset($_SESSION['session_auth'])) {
         if (orbix_es_peticion_api_src()) {
             orbix_responder_login_api_sin_sesion();
         }
-        $esquema = PayloadCoercion::string($_COOKIE['esquema'] ?? '');
-        $idioma = PayloadCoercion::string($_COOKIE['idioma'] ?? '');
+        $esquema = \frontend\shared\helpers\PayloadCoercion::string($_COOKIE['esquema'] ?? '');
+        $idioma = \frontend\shared\helpers\PayloadCoercion::string($_COOKIE['idioma'] ?? '');
         UsuariosPayload::cambiarIdioma($idioma);
         render_login_form('', $ubicacion, $idioma, $esquema, 0, $esquema_web_str);
         die();

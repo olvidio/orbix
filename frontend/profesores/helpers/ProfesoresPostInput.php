@@ -33,7 +33,7 @@ final class ProfesoresPostInput
 
         return [
             'id_nom' => $idNom !== 0 ? $idNom : $idPau,
-            'id_tabla' => PayloadCoercion::string(filter_input(INPUT_POST, 'id_tabla')),
+            'id_tabla' => \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'id_tabla')),
         ];
     }
 }

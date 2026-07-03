@@ -20,8 +20,8 @@ final class ModulosSelectRender
     {
         $hm = isset($payload['hash_lista']) && is_array($payload['hash_lista']) ? $payload['hash_lista'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm(PayloadCoercion::string($hm['campos_form'] ?? ''));
-        $cn = PayloadCoercion::string($hm['campos_no'] ?? '');
+        $oHash->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hm['campos_form'] ?? ''));
+        $cn = \frontend\shared\helpers\PayloadCoercion::string($hm['campos_no'] ?? '');
         if ($cn !== '') {
             $oHash->setCamposNo($cn);
         }

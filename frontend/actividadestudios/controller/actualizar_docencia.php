@@ -25,10 +25,10 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$Qyear = PayloadCoercion::string(filter_input(INPUT_POST, 'year'));
-$Qperiodo = PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
-$Qempiezamin = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
-$Qempiezamax = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));
+$Qyear = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'year'));
+$Qperiodo = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
+$Qempiezamin = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
+$Qempiezamax = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));
 $continuar = (int) filter_input(INPUT_POST, 'continuar');
 
 if (empty($continuar)) {
@@ -46,7 +46,7 @@ if (empty($continuar)) {
     ];
     $oFormP = new PeriodoQue();
     $oFormP->setFormName('que');
-    $oFormP->setTitulo(FuncTablasSupport::strtoupperDlb(_('periodo de selección de actividades')));
+    $oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_('periodo de selección de actividades')));
     $oFormP->setPosiblesPeriodos($aOpciones);
     $oFormP->setDesplAnysOpcion_sel($Qyear);
     $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
@@ -73,7 +73,7 @@ if (empty($continuar)) {
     ]));
     $a_campos = [
         'mod' => 'fin',
-        'txt_rta' => PayloadCoercion::string($data['txt_rta'] ?? ''),
+        'txt_rta' => \frontend\shared\helpers\PayloadCoercion::string($data['txt_rta'] ?? ''),
     ];
 }
 

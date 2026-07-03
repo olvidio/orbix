@@ -10,9 +10,9 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$modo = PayloadCoercion::string($_POST['modo'] ?? 'seleccion');
+$modo = \frontend\shared\helpers\PayloadCoercion::string($_POST['modo'] ?? 'seleccion');
 $seleccionados = DevelDbAdminPayload::migracionesSel($_POST['sel'] ?? []);
-$prefijoHasta = PayloadCoercion::string($_POST['prefijo_hasta'] ?? '');
+$prefijoHasta = \frontend\shared\helpers\PayloadCoercion::string($_POST['prefijo_hasta'] ?? '');
 
 $data = PostRequest::getDataFromUrl('/src/devel_db_admin/migraciones_ejecutar', [
     'modo' => $modo,
@@ -21,7 +21,7 @@ $data = PostRequest::getDataFromUrl('/src/devel_db_admin/migraciones_ejecutar', 
 ]);
 
 echo '<h1>' . _("resultado migraciones") . '</h1>';
-$error = PayloadCoercion::string($data['error'] ?? '');
+$error = \frontend\shared\helpers\PayloadCoercion::string($data['error'] ?? '');
 if ($error !== '') {
     echo '<p><strong>' . _("error") . ':</strong> '
         . htmlspecialchars($error, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')

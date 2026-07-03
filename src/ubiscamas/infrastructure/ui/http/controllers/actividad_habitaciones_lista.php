@@ -5,8 +5,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 use src\ubiscamas\application\HabitacionesCamaLista;
-use src\shared\domain\helpers\FuncTablasSupport;
-$Qid_activ = FuncTablasSupport::inputInt($_POST, 'id_activ');
+$Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_activ');
 
 /** @var HabitacionesCamaLista $habitacionCamaLista */
 $habitacionCamaLista = DependencyResolver::get(HabitacionesCamaLista::class);

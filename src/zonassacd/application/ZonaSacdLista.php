@@ -8,7 +8,6 @@ use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 final class ZonaSacdLista
 {
     public function __construct(
@@ -70,13 +69,13 @@ final class ZonaSacdLista
                 $a_valores[$i][1] = $ap_nom;
                 $a_valores[$i][2] = $nombre_zona;
                 $a_valores[$i][3] = $oZonaSacd->isPropia();
-                $a_valores[$i][4] = FuncTablasSupport::isTrue($oZonaSacd->isDw1()) ? 'x' : '-';
-                $a_valores[$i][5] = FuncTablasSupport::isTrue($oZonaSacd->isDw2()) ? 'x' : '-';
-                $a_valores[$i][6] = FuncTablasSupport::isTrue($oZonaSacd->isDw3()) ? 'x' : '-';
-                $a_valores[$i][7] = FuncTablasSupport::isTrue($oZonaSacd->isDw4()) ? 'x' : '-';
-                $a_valores[$i][8] = FuncTablasSupport::isTrue($oZonaSacd->isDw5()) ? 'x' : '-';
-                $a_valores[$i][9] = FuncTablasSupport::isTrue($oZonaSacd->isDw6()) ? 'x' : '-';
-                $a_valores[$i][10] = FuncTablasSupport::isTrue($oZonaSacd->isDw7()) ? 'x' : '-';
+                $a_valores[$i][4] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oZonaSacd->isDw1()) ? 'x' : '-';
+                $a_valores[$i][5] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oZonaSacd->isDw2()) ? 'x' : '-';
+                $a_valores[$i][6] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oZonaSacd->isDw3()) ? 'x' : '-';
+                $a_valores[$i][7] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oZonaSacd->isDw4()) ? 'x' : '-';
+                $a_valores[$i][8] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oZonaSacd->isDw5()) ? 'x' : '-';
+                $a_valores[$i][9] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oZonaSacd->isDw6()) ? 'x' : '-';
+                $a_valores[$i][10] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oZonaSacd->isDw7()) ? 'x' : '-';
                 $i++;
             }
             if ($a_valores !== []) {

@@ -6,7 +6,6 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion de celda de la tabla editable de `gestion_plazas` (y
@@ -41,8 +40,8 @@ final class GestionPlazasUpdate
      */
     public function execute(array $input): string
     {
-        $dataRaw = FuncTablasSupport::inputString($input, 'data');
-        $colNameRaw = FuncTablasSupport::inputString($input, 'colName');
+        $dataRaw = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'data');
+        $colNameRaw = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'colName');
         if ($dataRaw === '' || $colNameRaw === '') {
             return '';
         }

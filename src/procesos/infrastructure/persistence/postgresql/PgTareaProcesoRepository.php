@@ -412,7 +412,7 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
         $aDatos['id_of_responsable'] = $TareaProceso->getId_of_responsable();
         // para los json
         $aDatos['json_fases_previas'] = (new ConverterJson($TareaProceso->getJson_fases_previas(),false))->toPg(false);
-        array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
+        array_walk($aDatos, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerNull']);
         */
 
         if ($bInsert === false) {

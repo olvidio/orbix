@@ -107,7 +107,7 @@ final class ActaImprimirPresentacionData
             $nota = $oPersonaNota->getNota_txt();
             $aPersonasNotas[$nom] = $nota;
         }
-        uksort($aPersonasNotas, 'src\\shared\\domain\\helpers\\strsinacentocmp');
+        uksort($aPersonasNotas, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
         $num_alumnos = count($aPersonasNotas);
 
         $ambito = ConfigGlobal::mi_ambito();

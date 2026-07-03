@@ -3,7 +3,6 @@
 namespace src\procesos\application;
 
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: guarda el estado (completado/observaciones) de una tarea del proceso.
@@ -21,15 +20,15 @@ class ActividadProcesoUpdate
      */
     public function execute(array $input): string
     {
-        $Qid_item = FuncTablasSupport::inputInt($input, 'id_item');
-        $Qcompletado = FuncTablasSupport::inputString($input, 'completado');
-        $Qobserv = FuncTablasSupport::inputString($input, 'observ');
+        $Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_item');
+        $Qcompletado = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'completado');
+        $Qobserv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ');
 
         $oFicha = $this->actividadProcesoTareaRepository->findById($Qid_item);
         if ($oFicha === null) {
             return _('no se encuentra la tarea del proceso');
         }
-        $oFicha->setCompletado(FuncTablasSupport::isTrue($Qcompletado));
+        $oFicha->setCompletado(\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qcompletado));
         $oFicha->setObserv($Qobserv);
         if ($this->procesoActividadService->guardar($oFicha) === false) {
             $err = $this->procesoActividadService->getErrorTxt();

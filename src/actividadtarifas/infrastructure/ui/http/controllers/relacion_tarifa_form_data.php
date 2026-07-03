@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: datos del form modificar/nuevo
@@ -11,7 +10,7 @@ use src\actividadtarifas\application\RelacionTarifaFormData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $input = [
-    'id_item' => FuncTablasSupport::inputString($_POST, 'id_item'),
+    'id_item' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_item'),
 ];
 
 /** @var RelacionTarifaFormData $useCase */

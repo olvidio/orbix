@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: elimina `CambioUsuario` por la clave compuesta
@@ -12,7 +11,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'sel' => FuncTablasSupport::inputStringList($_POST, 'sel'),
+    'sel' => \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'sel'),
 ];
 
 /** @var CambioUsuarioEliminar $useCase */

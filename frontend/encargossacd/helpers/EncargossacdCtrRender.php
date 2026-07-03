@@ -37,8 +37,8 @@ public static function construirOtrosSacd(
 
     $html = '';
     foreach ($colaboradores as $colab) {
-        $s = PayloadCoercion::int($colab['s'] ?? 0);
-        $id_nom = PayloadCoercion::int($colab['id_nom'] ?? 0);
+        $s = \frontend\shared\helpers\PayloadCoercion::int($colab['s'] ?? 0);
+        $id_nom = \frontend\shared\helpers\PayloadCoercion::int($colab['id_nom'] ?? 0);
         $necesitaSssc = !empty($colab['necesita_sssc']);
 
         $opciones = $necesitaSssc && $opcionesConSssc !== null ? $opcionesConSssc : $opcionesBase;
@@ -52,12 +52,12 @@ public static function construirOtrosSacd(
         $html .= '</td></tr><tr><td class=etiqueta >' . ucfirst(_('dedicación')) . '</td>';
 
         if ($mod_horario_e === 3) {
-            $txtHorario = PayloadCoercion::string($dedicSacd[$s] ?? '');
+            $txtHorario = \frontend\shared\helpers\PayloadCoercion::string($dedicSacd[$s] ?? '');
             $html .= '<td>' . $txtHorario . '</td></tr><tr>';
         } else {
-            $m = PayloadCoercion::string($dedicM[$s] ?? '');
-            $t = PayloadCoercion::string($dedicT[$s] ?? '');
-            $v = PayloadCoercion::string($dedicV[$s] ?? '');
+            $m = \frontend\shared\helpers\PayloadCoercion::string($dedicM[$s] ?? '');
+            $t = \frontend\shared\helpers\PayloadCoercion::string($dedicT[$s] ?? '');
+            $v = \frontend\shared\helpers\PayloadCoercion::string($dedicV[$s] ?? '');
             $html .= "<td><input type=text size=1 name=dedic_m[$s] value=$m>" . _('mañanas');
             $html .= "</td><td><input type=text size=1 name=dedic_t[$s] value=$t>" . _('tarde 1ª hora');
             $html .= "</td><td><input type=text size=1 name=dedic_v[$s] value=$v>" . _('tarde 2ª hora');

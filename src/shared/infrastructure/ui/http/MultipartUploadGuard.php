@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace src\shared\infrastructure\ui\http;
 
-use src\shared\domain\helpers\FuncTablasSupport;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -153,8 +152,8 @@ final class MultipartUploadGuard
             $fileFields[(string) $key] = $value;
         }
 
-        $fileName = FuncTablasSupport::inputString($fileFields, 'name');
-        $uploadError = FuncTablasSupport::inputInt($fileFields, 'error', UPLOAD_ERR_NO_FILE);
+        $fileName = \src\shared\domain\helpers\FuncTablasSupport::inputString($fileFields, 'name');
+        $uploadError = \src\shared\domain\helpers\FuncTablasSupport::inputInt($fileFields, 'error', UPLOAD_ERR_NO_FILE);
 
         if ($uploadError !== UPLOAD_ERR_OK) {
             if ($uploadError === UPLOAD_ERR_INI_SIZE || $uploadError === UPLOAD_ERR_FORM_SIZE) {
@@ -170,7 +169,7 @@ final class MultipartUploadGuard
 
         return [
             'name' => $fileName,
-            'tmp_name' => FuncTablasSupport::inputString($fileFields, 'tmp_name'),
+            'tmp_name' => \src\shared\domain\helpers\FuncTablasSupport::inputString($fileFields, 'tmp_name'),
         ];
     }
 

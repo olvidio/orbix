@@ -53,7 +53,7 @@ if (!empty($resp['success']) && $resp['success'] === true) {
     }
     echo '</div>';
 } else {
-    $msg = PayloadCoercion::string($resp['mensaje'] ?? 'Error al obtener los mails');
+    $msg = \frontend\shared\helpers\PayloadCoercion::string($resp['mensaje'] ?? 'Error al obtener los mails');
     echo '<div class="mails-region-error">' . htmlspecialchars($msg) . '</div>';
 }
 AjaxJsonSupport::html((string) ob_get_clean());

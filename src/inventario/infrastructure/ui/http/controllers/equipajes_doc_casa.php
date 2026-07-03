@@ -1,7 +1,6 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
@@ -11,7 +10,7 @@ use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_equipaje = FuncTablasSupport::inputInt($_POST, 'id_equipaje');
+$Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_equipaje');
 $error_txt = '';
 
 /** @var EquipajeRepositoryInterface $EquipajeRepository */

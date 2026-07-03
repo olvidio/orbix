@@ -9,8 +9,8 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(EncargoHorarioVerData::class);
 
 
-$mod = (string)(FilterPostGet::post('mod') ?? FilterPostGet::get('mod') ?? '');
-$id_enc = (int)(FilterPostGet::post('id_enc') ?? FilterPostGet::get('id_enc') ?? 0);
-$id_item_h = (int)(FilterPostGet::post('id_item_h') ?? FilterPostGet::get('id_item_h') ?? 0);
+$mod = (string)(\src\shared\domain\helpers\FilterPostGet::post('mod') ?? \src\shared\domain\helpers\FilterPostGet::get('mod') ?? '');
+$id_enc = (int)(\src\shared\domain\helpers\FilterPostGet::post('id_enc') ?? \src\shared\domain\helpers\FilterPostGet::get('id_enc') ?? 0);
+$id_item_h = (int)(\src\shared\domain\helpers\FilterPostGet::post('id_item_h') ?? \src\shared\domain\helpers\FilterPostGet::get('id_item_h') ?? 0);
 
 ContestarJson::enviar('', $useCase->cargar($mod, $id_enc, $id_item_h));

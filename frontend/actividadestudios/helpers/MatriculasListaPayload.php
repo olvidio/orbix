@@ -16,8 +16,8 @@ final class MatriculasListaPayload
     public static function fromPayload(array $payload): array
     {
         return [
-            'titulo' => PayloadCoercion::string($payload['titulo'] ?? ''),
-            'msg_err' => PayloadCoercion::string($payload['msg_err'] ?? ''),
+            'titulo' => \frontend\shared\helpers\PayloadCoercion::string($payload['titulo'] ?? ''),
+            'msg_err' => \frontend\shared\helpers\PayloadCoercion::string($payload['msg_err'] ?? ''),
             'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
         ];
     }
@@ -29,9 +29,9 @@ final class MatriculasListaPayload
     public static function fromPayloadOtrasR(array $payload): array
     {
         return [
-            'titulo' => PayloadCoercion::string($payload['titulo'] ?? ''),
-            'msg_err' => PayloadCoercion::string($payload['msg_err'] ?? ''),
-            'aviso' => PayloadCoercion::string($payload['aviso'] ?? ''),
+            'titulo' => \frontend\shared\helpers\PayloadCoercion::string($payload['titulo'] ?? ''),
+            'msg_err' => \frontend\shared\helpers\PayloadCoercion::string($payload['msg_err'] ?? ''),
+            'aviso' => \frontend\shared\helpers\PayloadCoercion::string($payload['aviso'] ?? ''),
             'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
         ];
     }
@@ -43,8 +43,8 @@ final class MatriculasListaPayload
     public static function fromPayloadPendientes(array $payload): array
     {
         return [
-            'msg_err' => PayloadCoercion::string($payload['msg_err'] ?? ''),
-            'aviso' => PayloadCoercion::string($payload['aviso'] ?? ''),
+            'msg_err' => \frontend\shared\helpers\PayloadCoercion::string($payload['msg_err'] ?? ''),
+            'aviso' => \frontend\shared\helpers\PayloadCoercion::string($payload['aviso'] ?? ''),
             'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
         ];
     }

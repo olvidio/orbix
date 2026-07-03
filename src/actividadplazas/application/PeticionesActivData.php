@@ -10,7 +10,6 @@ use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder de la pantalla `peticiones_activ`: lista de actividades
@@ -45,15 +44,15 @@ final class PeticionesActivData
      */
     public function execute(array $input): array
     {
-        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
-        $na = FuncTablasSupport::inputString($input, 'na');
-        $sactividad = FuncTablasSupport::inputString($input, 'sactividad');
+        $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
+        $na = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'na');
+        $sactividad = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad');
         if ($sactividad === '') {
-            $sactividad = FuncTablasSupport::inputString($input, 'que');
+            $sactividad = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'que');
         }
-        $todos = FuncTablasSupport::inputInt($input, 'todos');
-        $id_ctr_agd = FuncTablasSupport::inputInt($input, 'id_ctr_agd');
-        $id_ctr_n = FuncTablasSupport::inputInt($input, 'id_ctr_n');
+        $todos = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'todos');
+        $id_ctr_agd = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ctr_agd');
+        $id_ctr_n = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ctr_n');
 
         if (($na === 'a' || $na === 'agd') && $sactividad === 'ca') {
             $sactividad = 'cv';
@@ -90,13 +89,13 @@ final class PeticionesActivData
             case 'ca':
             case 'cv':
                 $any = $oConfig->any_final_curs('est');
-                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'est')->format('Y-m-d');
-                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'est')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'est')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'est')->format('Y-m-d');
                 break;
             case 'crt':
                 $any = $oConfig->any_final_curs('crt');
-                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'crt')->format('Y-m-d');
-                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d');
                 break;
         }
         $aWhere['f_ini'] = "'$inicurs','$fincurs'";

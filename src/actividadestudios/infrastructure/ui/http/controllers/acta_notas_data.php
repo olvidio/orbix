@@ -3,12 +3,11 @@
 use src\actividadestudios\application\ActaNotasData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 $error = '';
 $data = [];
 try {
-    $idActiv = FuncTablasSupport::inputInt($_POST, 'id_activ');
-    $idAsignatura = FuncTablasSupport::inputInt($_POST, 'id_asignatura');
+    $idActiv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_activ');
+    $idAsignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_asignatura');
     /** @var ActaNotasData $useCase */
     $useCase = DependencyResolver::get(ActaNotasData::class);
     $data = $useCase->execute(['id_activ' => $idActiv, 'id_asignatura' => $idAsignatura]);

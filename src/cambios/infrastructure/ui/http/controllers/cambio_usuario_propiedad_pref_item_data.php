@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint JSON: devuelve los datos de una condicion por `id_item`
@@ -12,9 +11,9 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'id_item' => FuncTablasSupport::inputInt($_POST, 'id_item'),
-    'objeto' => FuncTablasSupport::inputString($_POST, 'objeto'),
-    'propiedad' => FuncTablasSupport::inputString($_POST, 'propiedad'),
+    'id_item' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item'),
+    'objeto' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'objeto'),
+    'propiedad' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'propiedad'),
 ];
 
 /** @var CambioUsuarioPropiedadPrefItemData $useCase */

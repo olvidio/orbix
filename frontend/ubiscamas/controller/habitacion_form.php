@@ -16,14 +16,14 @@ $campos = array_merge($_GET, $_POST);
 
 // Resolver estado de navegación aquí (frontend): recortar hacia delante desde $stack.
 // Sólo tiene sentido si no se está creando una habitación nueva.
-$Qnuevo = PayloadCoercion::string($campos['nuevo'] ?? '');
+$Qnuevo = \frontend\shared\helpers\PayloadCoercion::string($campos['nuevo'] ?? '');
 $stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
 if ($Qnuevo === '' && $stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
 
 $data = UbiscamasPayload::postData(PostRequest::getDataFromUrl('/src/ubiscamas/habitacion_form_data', $campos));

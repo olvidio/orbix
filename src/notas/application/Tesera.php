@@ -2,7 +2,6 @@
 
 namespace src\notas\application;
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
@@ -318,7 +317,7 @@ final class Tesera
                 $i++;
                 $tabla[$i] = $this->filaAprobada($oAsig, $row);
 
-                if (FuncTablasSupport::isTrue($row['bAprobada'])) {
+                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($row['bAprobada'])) {
                     $numasig++;
                     $numcred += (float)$oAsig->getCreditos();
                     $oFActa = $row['fecha'];

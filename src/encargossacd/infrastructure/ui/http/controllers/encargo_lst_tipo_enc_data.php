@@ -9,10 +9,10 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(EncargoLstTipoEncData::class);
 
 
-$grupo = (string)(FilterPostGet::post('grupo') ?? FilterPostGet::get('grupo') ?? '');
-$id_tipo_enc = FilterPostGet::post('id_tipo_enc');
+$grupo = (string)(\src\shared\domain\helpers\FilterPostGet::post('grupo') ?? \src\shared\domain\helpers\FilterPostGet::get('grupo') ?? '');
+$id_tipo_enc = \src\shared\domain\helpers\FilterPostGet::post('id_tipo_enc');
 if ($id_tipo_enc === null) {
-    $id_tipo_enc = FilterPostGet::get('id_tipo_enc');
+    $id_tipo_enc = \src\shared\domain\helpers\FilterPostGet::get('id_tipo_enc');
 }
 
 ContestarJson::enviar('', $useCase->execute($grupo, $id_tipo_enc !== null && $id_tipo_enc !== false ? (string)$id_tipo_enc : null));

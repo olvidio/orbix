@@ -40,8 +40,8 @@ if (empty($Qque_lista)) {
     $Qque_lista = 'ctr_n';
 }
 
-$id_sel = isset($Qid_sel) ? PayloadCoercion::string($Qid_sel) : '';
-$scroll_id = isset($Qscroll_id) ? PayloadCoercion::string($Qscroll_id) : '';
+$id_sel = isset($Qid_sel) ? \frontend\shared\helpers\PayloadCoercion::string($Qid_sel) : '';
+$scroll_id = isset($Qscroll_id) ? \frontend\shared\helpers\PayloadCoercion::string($Qscroll_id) : '';
 
 $data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/list_ctr_data', [
     'que_lista' => $Qque_lista,
@@ -61,8 +61,8 @@ $aGoBack = [
     'que_lista' => $Qque_lista,
 ];
 $oPosicion->setParametros($aGoBack);
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar($aGoBack, $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar($aGoBack, $Qid_sel, $Qscroll_id));
 
 
 $oTabla = new Lista();

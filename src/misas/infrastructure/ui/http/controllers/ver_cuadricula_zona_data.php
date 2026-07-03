@@ -7,15 +7,15 @@ use src\misas\application\support\MisasBuildInput;
 use src\shared\web\ContestarJson;
 
 $in = [
-    'id_zona' => FilterPostGet::post('id_zona'),
-    'tipo_plantilla' => FilterPostGet::post('tipo_plantilla'),
-    'periodo' => FilterPostGet::post('periodo'),
-    'orden' => FilterPostGet::post('orden'),
-    'empiezamin' => FilterPostGet::post('empiezamin'),
-    'empiezamax' => FilterPostGet::post('empiezamax'),
-    'fila' => FilterPostGet::post('fila'),
-    'columna' => FilterPostGet::post('columna'),
-    'seleccion' => FilterPostGet::post('seleccion'),
+    'id_zona' => \src\shared\domain\helpers\FilterPostGet::post('id_zona'),
+    'tipo_plantilla' => \src\shared\domain\helpers\FilterPostGet::post('tipo_plantilla'),
+    'periodo' => \src\shared\domain\helpers\FilterPostGet::post('periodo'),
+    'orden' => \src\shared\domain\helpers\FilterPostGet::post('orden'),
+    'empiezamin' => \src\shared\domain\helpers\FilterPostGet::post('empiezamin'),
+    'empiezamax' => \src\shared\domain\helpers\FilterPostGet::post('empiezamax'),
+    'fila' => \src\shared\domain\helpers\FilterPostGet::post('fila'),
+    'columna' => \src\shared\domain\helpers\FilterPostGet::post('columna'),
+    'seleccion' => \src\shared\domain\helpers\FilterPostGet::post('seleccion'),
 ];
 
 /** @var CuadriculaZonaGridData $useCase */

@@ -18,12 +18,12 @@ use src\shared\infrastructure\DependencyResolver;
 /** @var CrearEsquema $useCase */
 $useCase = DependencyResolver::get(CrearEsquema::class);
 
-$QEsquemaRef = (string) FilterPostGet::post('esquema');
-$Qregion = (string) FilterPostGet::post('region');
-$Qdl = (string) FilterPostGet::post('dl');
-$Qcomun = (int) FilterPostGet::post('comun');
-$Qsv = (int) FilterPostGet::post('sv');
-$Qsf = (int) FilterPostGet::post('sf');
+$QEsquemaRef = (string) \src\shared\domain\helpers\FilterPostGet::post('esquema');
+$Qregion = (string) \src\shared\domain\helpers\FilterPostGet::post('region');
+$Qdl = (string) \src\shared\domain\helpers\FilterPostGet::post('dl');
+$Qcomun = (int) \src\shared\domain\helpers\FilterPostGet::post('comun');
+$Qsv = (int) \src\shared\domain\helpers\FilterPostGet::post('sv');
+$Qsf = (int) \src\shared\domain\helpers\FilterPostGet::post('sf');
 
 try {
     $avisos = $useCase->ejecutar(

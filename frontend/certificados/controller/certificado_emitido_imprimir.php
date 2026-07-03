@@ -16,10 +16,10 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-ListNavSupport::restoreSelectionFromStackPost();
+\frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistCertificadoImprimirParentReturnToPosicion($oPosicion, 1);
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistCertificadoImprimirParentReturnToPosicion($oPosicion, 1);
 
 $id_nom = CertificadosPostInput::idNomFromSelPost();
 
@@ -29,7 +29,7 @@ $datosPersona = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/
 if (!empty($datosPersona['error'])) {
     $a_campos = [
         'oPosicion' => $oPosicion,
-        'aviso' => PostRequest::stripInternalCallProvenance(PayloadCoercion::string($datosPersona['error'])),
+        'aviso' => PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($datosPersona['error'])),
     ];
     $oView = new ViewNewTwig('frontend/certificados/controller');
     $oView->renderizar('certificado_emitido_imprimir.html.twig', $a_campos);

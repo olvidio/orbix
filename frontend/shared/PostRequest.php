@@ -203,7 +203,7 @@ class PostRequest
         InProcessSrcDispatch::begin();
         // Se reescriben $_POST y $_GET (no `filter_input`, que lee la copia
         // inmutable del SAPI del request exterior). Los controladores /src deben
-        // leer la entrada con FilterPostGet::post()/FilterPostGet::get() para verlos in-process.
+        // leer la entrada con \src\shared\domain\helpers\FilterPostGet::post()/\src\shared\domain\helpers\FilterPostGet::get() para verlos in-process.
         $previousPost = $_POST;
         $previousGet = $_GET;
         $_POST = $postParams;

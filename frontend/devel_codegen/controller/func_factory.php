@@ -38,7 +38,7 @@ function primaryKey(\PDO $oDB, string $tabla): array
     if (!is_array($row) || !isset($row['attname'])) {
         exit('Quizà falta definir la clave primaria');
     }
-    $campo[] = PayloadCoercion::string($row['attname']);
+    $campo[] = \frontend\shared\helpers\PayloadCoercion::string($row['attname']);
 
     return $campo;
 

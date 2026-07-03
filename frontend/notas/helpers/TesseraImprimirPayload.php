@@ -37,9 +37,9 @@ final class TesseraImprimirPayload
         }
 
         return [
-            'id_nivel' => PayloadCoercion::int($raw['id_nivel'] ?? 0),
-            'id_asignatura' => PayloadCoercion::int($raw['id_asignatura'] ?? 0),
-            'nombre_asignatura' => PayloadCoercion::string($raw['nombre_asignatura'] ?? ''),
+            'id_nivel' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_nivel'] ?? 0),
+            'id_asignatura' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_asignatura'] ?? 0),
+            'nombre_asignatura' => \frontend\shared\helpers\PayloadCoercion::string($raw['nombre_asignatura'] ?? ''),
         ];
     }
 
@@ -53,13 +53,13 @@ final class TesseraImprimirPayload
         }
 
         return [
-            'id_nivel_asig' => PayloadCoercion::int($raw['id_nivel_asig'] ?? 0),
-            'id_nivel' => PayloadCoercion::int($raw['id_nivel'] ?? 0),
-            'id_asignatura' => PayloadCoercion::int($raw['id_asignatura'] ?? 0),
-            'nombre_asignatura' => PayloadCoercion::string($raw['nombre_asignatura'] ?? ''),
-            'acta' => PayloadCoercion::string($raw['acta'] ?? ''),
-            'fecha_local' => PayloadCoercion::string($raw['fecha_local'] ?? ''),
-            'nota' => PayloadCoercion::string($raw['nota'] ?? ''),
+            'id_nivel_asig' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_nivel_asig'] ?? 0),
+            'id_nivel' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_nivel'] ?? 0),
+            'id_asignatura' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_asignatura'] ?? 0),
+            'nombre_asignatura' => \frontend\shared\helpers\PayloadCoercion::string($raw['nombre_asignatura'] ?? ''),
+            'acta' => \frontend\shared\helpers\PayloadCoercion::string($raw['acta'] ?? ''),
+            'fecha_local' => \frontend\shared\helpers\PayloadCoercion::string($raw['fecha_local'] ?? ''),
+            'nota' => \frontend\shared\helpers\PayloadCoercion::string($raw['nota'] ?? ''),
         ];
     }
 

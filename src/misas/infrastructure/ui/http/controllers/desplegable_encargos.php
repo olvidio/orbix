@@ -5,8 +5,8 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\misas\application\DesplegableEncargosData;
 use src\shared\web\ContestarJson;
 
-$Qid_zona = (int)FilterPostGet::post('id_zona');
-$id_enc_raw = FilterPostGet::post('id_enc');
+$Qid_zona = (int)\src\shared\domain\helpers\FilterPostGet::post('id_zona');
+$id_enc_raw = \src\shared\domain\helpers\FilterPostGet::post('id_enc');
 $Qid_enc = ($id_enc_raw === null || $id_enc_raw === '') ? null : (int)$id_enc_raw;
 
 /** @var DesplegableEncargosData $useCase */

@@ -21,13 +21,13 @@ final class ListaUltimQueCtrRender
     {
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $formRel = FuncTablasSupport::payloadString($paths, 'form_action');
+        $formRel = \frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'form_action');
         $payload['form_action'] = $formRel !== '' ? $base . '/' . ltrim($formRel, '/') : '';
 
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm(FuncTablasSupport::payloadString($hashMain, 'campos_form', 'id_ubi'));
-        $cn = FuncTablasSupport::payloadString($hashMain, 'campos_no');
+        $oHash->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_form', 'id_ubi'));
+        $cn = \frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_no');
         if ($cn !== '') {
             $oHash->setCamposNo($cn);
         }

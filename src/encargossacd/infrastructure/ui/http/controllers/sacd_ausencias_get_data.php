@@ -9,7 +9,7 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(SacdAusenciasGetData::class);
 
 
-$id_nom = (int)(FilterPostGet::post('id_nom') ?? FilterPostGet::get('id_nom') ?? 0);
-$historial = (int)(FilterPostGet::post('historial') ?? FilterPostGet::get('historial') ?? 0);
+$id_nom = (int)(\src\shared\domain\helpers\FilterPostGet::post('id_nom') ?? \src\shared\domain\helpers\FilterPostGet::get('id_nom') ?? 0);
+$historial = (int)(\src\shared\domain\helpers\FilterPostGet::post('historial') ?? \src\shared\domain\helpers\FilterPostGet::get('historial') ?? 0);
 
 ContestarJson::enviar('', $useCase->execute($id_nom, $historial));

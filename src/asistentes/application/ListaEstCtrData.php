@@ -13,7 +13,6 @@ use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Listado estudios por centro (`lista_est_ctr.php`).
@@ -39,12 +38,12 @@ final class ListaEstCtrData
     {
         $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
 
-        $Qn_agd = FuncTablasSupport::inputString($input, 'n_agd');
-        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi', 0);
-        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
-        $Qyear = FuncTablasSupport::inputString($input, 'year');
-        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
-        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qn_agd = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'n_agd');
+        $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi', 0);
+        $Qperiodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'year');
+        $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
+        $Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
 
         $oPeriodo = Periodo::conCalendarioDesdeBackend();
         $oPeriodo->setDefaultAny('next');
@@ -166,7 +165,7 @@ final class ListaEstCtrData
                                     }
                                     $nombre_corto = $oAsignatura->getNombre_corto();
                                     $creditos = $oAsignatura->getCreditos();
-                                    if (FuncTablasSupport::isTrue($preceptor)) {
+                                    if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($preceptor)) {
                                         if (!empty($id_preceptor)) {
                                             $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
                                             if ($oPersona === null) {

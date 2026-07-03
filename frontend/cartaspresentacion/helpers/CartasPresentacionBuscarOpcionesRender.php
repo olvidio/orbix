@@ -21,7 +21,7 @@ final class CartasPresentacionBuscarOpcionesRender
     {
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $url_lista = $base . '/' . ltrim(PayloadCoercion::string($paths['lista'] ?? ''), '/');
+        $url_lista = $base . '/' . ltrim(\frontend\shared\helpers\PayloadCoercion::string($paths['lista'] ?? ''), '/');
 
         $hl = isset($payload['hash_lista']) && is_array($payload['hash_lista']) ? $payload['hash_lista'] : [];
         $oHash = new HashFront();
@@ -30,8 +30,8 @@ final class CartasPresentacionBuscarOpcionesRender
         if ($hidden !== []) {
             $oHash->setArrayCamposHidden($hidden);
         }
-        $oHash->setCamposForm(PayloadCoercion::string($hl['campos_form'] ?? ''));
-        $oHash->setCamposNo(PayloadCoercion::string($hl['campos_no'] ?? ''));
+        $oHash->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hl['campos_form'] ?? ''));
+        $oHash->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hl['campos_no'] ?? ''));
 
         $payload['url_lista'] = $url_lista;
         $payload['hash_lista_html'] = $oHash->getCamposHtml();

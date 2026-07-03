@@ -7,7 +7,6 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\permisos\domain\XPermisos;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: aplica setCompletado a la fase nueva para actividades seleccionadas.
@@ -27,9 +26,9 @@ class FasesActivCambioUpdate
      */
     public function execute(array $input): string
     {
-        $Qid_fase_nueva = FuncTablasSupport::inputString($input, 'id_fase_nueva');
-        $a_sel = FuncTablasSupport::inputStringList($input, 'sel');
-        $Qaccion = FuncTablasSupport::inputString($input, 'accion');
+        $Qid_fase_nueva = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_fase_nueva');
+        $a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($input, 'sel');
+        $Qaccion = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'accion');
 
         $txtOut = '';
 

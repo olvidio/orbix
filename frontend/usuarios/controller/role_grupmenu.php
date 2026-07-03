@@ -13,8 +13,8 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qid_role = (string)filter_input(INPUT_POST, 'id_role');
@@ -26,7 +26,7 @@ if (!empty($a_sel)) {
 
 $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/role_grupmenu_info', ['id_role' => $Qid_role]));
 $lista = UsuariosPayload::listaFromPayload($data);
-$role = PayloadCoercion::string($data['role'] ?? '');
+$role = \frontend\shared\helpers\PayloadCoercion::string($data['role'] ?? '');
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('grupmenu');

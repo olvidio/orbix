@@ -4,7 +4,6 @@ namespace src\actividadestudios\application;
 
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Edita una `ActividadAsignatura` existente.
@@ -23,13 +22,13 @@ final class ActividadAsignaturaEditar
      */
     public function execute(array $input): string
     {
-        $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
-        $Qid_asignatura = FuncTablasSupport::inputInt($input, 'id_asignatura');
-        $Qid_profesor = FuncTablasSupport::inputInt($input, 'id_profesor');
-        $Qavis_profesor = FuncTablasSupport::inputString($input, 'avis_profesor');
-        $Qtipo = FuncTablasSupport::inputString($input, 'tipo');
-        $Qf_ini = FuncTablasSupport::inputString($input, 'f_ini');
-        $Qf_fin = FuncTablasSupport::inputString($input, 'f_fin');
+        $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
+        $Qid_profesor = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_profesor');
+        $Qavis_profesor = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'avis_profesor');
+        $Qtipo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo');
+        $Qf_ini = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_ini');
+        $Qf_fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_fin');
 
         if ($Qid_activ <= 0 || $Qid_asignatura <= 0) {
             return _("faltan claves de la asignatura de actividad");

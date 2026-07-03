@@ -7,9 +7,9 @@ use src\misas\application\support\MisasBuildInput;
 use src\shared\web\ContestarJson;
 
 $in = [
-    'id_zona' => FilterPostGet::post('id_zona'),
-    'tipo_plantilla_origen' => FilterPostGet::post('tipo_plantilla_origen'),
-    'tipo_plantilla_destino' => FilterPostGet::post('tipo_plantilla_destino'),
+    'id_zona' => \src\shared\domain\helpers\FilterPostGet::post('id_zona'),
+    'tipo_plantilla_origen' => \src\shared\domain\helpers\FilterPostGet::post('tipo_plantilla_origen'),
+    'tipo_plantilla_destino' => \src\shared\domain\helpers\FilterPostGet::post('tipo_plantilla_destino'),
 ];
 
 /** @var ImportarPlantillaData $useCase */

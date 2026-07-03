@@ -29,7 +29,7 @@ $oDesplZonas->setAction('fnjs_ver_cuadricula_zona()');
 $oDesplTipoPlantilla = new Desplegable();
 $oDesplTipoPlantilla->setOpciones(MisasDesplegableSupport::opciones($data['tipos_plantilla'] ?? []));
 $oDesplTipoPlantilla->setNombre('tipoplantilla');
-$oDesplTipoPlantilla->setOpcion_sel(PayloadCoercion::string($data['plantilla_selected'] ?? ''));
+$oDesplTipoPlantilla->setOpcion_sel(\frontend\shared\helpers\PayloadCoercion::string($data['plantilla_selected'] ?? ''));
 $oDesplTipoPlantilla->setAction('fnjs_ver_cuadricula_zona()');
 
 $oDesplOrden = new Desplegable();

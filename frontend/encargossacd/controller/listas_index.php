@@ -16,7 +16,7 @@ $oPosicion = FrontBootstrap::boot();
  * @param array<string, int|string|null> $params
  */
 $lnk = static function (string $script, array $params = []): string {
-    array_walk($params, 'src\shared\domain\helpers\poner_empty_on_null');
+    array_walk($params, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
     $url = 'frontend/encargossacd/controller/' . $script;
     if ($params !== []) {
         $url .= '?' . http_build_query($params);

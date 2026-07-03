@@ -17,8 +17,8 @@ $email = UsuariosPostInput::sessionAuthString('mail');
 
 if ($usuario === '' && $id_usuario > 0) {
     $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_info', ['id_usuario' => $id_usuario]));
-    $usuario = PayloadCoercion::string($data['usuario'] ?? '');
-    $email = PayloadCoercion::string($data['email'] ?? '');
+    $usuario = \frontend\shared\helpers\PayloadCoercion::string($data['usuario'] ?? '');
+    $email = \frontend\shared\helpers\PayloadCoercion::string($data['email'] ?? '');
 }
 
 $oHash = new HashFront();

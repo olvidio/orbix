@@ -12,7 +12,6 @@ use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use frontend\shared\web\Periodo;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Actualiza el dossier `d_docencia_stgr` con la informacion docente derivada
@@ -38,10 +37,10 @@ final class DocenciaActualizar
      */
     public function execute(array $input): string
     {
-        $Qyear = FuncTablasSupport::inputString($input, 'year');
-        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
-        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
-        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
+        $Qyear = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'year');
+        $Qperiodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
+        $Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
 
         if (empty($Qperiodo)) {
             $Qperiodo = 'curso_ca';

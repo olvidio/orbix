@@ -9,7 +9,6 @@ use src\actividadestudios\domain\entity\Matricula;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Crea una matricula (asignatura de una persona en una actividad) y
@@ -33,16 +32,16 @@ final class MatriculaNueva
      */
     public function execute(array $input): string
     {
-        $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
-        $Qid_nom = FuncTablasSupport::inputInt($input, 'id_pau');
+        $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
         if ($Qid_nom <= 0) {
-            $Qid_nom = FuncTablasSupport::inputInt($input, 'id_nom');
+            $Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
         }
-        $Qid_asignatura = FuncTablasSupport::inputInt($input, 'id_asignatura');
-        $Qid_nivel = FuncTablasSupport::inputInt($input, 'id_nivel');
-        $Qid_situacion = FuncTablasSupport::inputInt($input, 'id_situacion');
-        $Qpreceptor = FuncTablasSupport::inputString($input, 'preceptor');
-        $Qid_preceptor = FuncTablasSupport::inputInt($input, 'id_preceptor');
+        $Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
+        $Qid_nivel = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nivel');
+        $Qid_situacion = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_situacion');
+        $Qpreceptor = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'preceptor');
+        $Qid_preceptor = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_preceptor');
 
         if ($Qid_activ <= 0 || $Qid_nom <= 0) {
             return _("falta id_activ o id_nom");
@@ -97,7 +96,7 @@ final class MatriculaNueva
             $oActividadAsignatura = new ActividadAsignatura();
             $oActividadAsignatura->setId_activ($Qid_activ);
             $oActividadAsignatura->setId_asignatura($Qid_asignatura);
-            if (FuncTablasSupport::isTrue($Qpreceptor)) {
+            if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpreceptor)) {
                 $oActividadAsignatura->setId_profesor($Qid_preceptor);
                 $tipo = 'p';
             } else {

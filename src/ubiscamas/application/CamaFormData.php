@@ -5,7 +5,6 @@ namespace src\ubiscamas\application;
 use Ramsey\Uuid\Uuid;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\CamaId;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Datos para `frontend/ubiscamas/controller/cama_form.php`.
@@ -24,10 +23,10 @@ final class CamaFormData
      */
     public function execute(array $input): array
     {
-        $Qmod = FuncTablasSupport::inputString($input, 'mod');
-        $Qid_cama = FuncTablasSupport::inputString($input, 'id_cama');
-        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
-        $Qid_habitacion = FuncTablasSupport::inputString($input, 'id_habitacion');
+        $Qmod = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'mod');
+        $Qid_cama = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_cama');
+        $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
+        $Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_habitacion');
 
         $uuid_cama = CamaId::fromNullableString($Qid_cama);
         $descripcion = '';

@@ -10,7 +10,7 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-ListNavSupport::bootDossierChildRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::bootDossierChildRecordar($oPosicion);
 
 
 $raw = PostRequest::getDataFromUrl('/src/actividadcargos/form_cargos_personas_en_actividad_data', PostRequest::requestPayloadForHash());

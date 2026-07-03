@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -37,18 +36,18 @@ final class ActaVerFormData
      */
     public function execute(array $in): array
     {
-        $notas = FuncTablasSupport::inputString($in, 'scope_notas');
-        $permiso = FuncTablasSupport::inputInt($in, 'scope_permiso', 3);
+        $notas = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'scope_notas');
+        $permiso = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'scope_permiso', 3);
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
             $permiso = 0;
         }
 
         $a_sel = isset($in['sel']) && is_array($in['sel']) ? $in['sel'] : [];
-        $Qmod = FuncTablasSupport::inputString($in, 'mod');
-        $Qsa_actas = FuncTablasSupport::inputString($in, 'sa_actas');
-        $Qa_actas = $Qsa_actas !== '' ? json_decode(FuncTablasSupport::urlsafeB64decode($Qsa_actas)) : null;
-        $Qacta = FuncTablasSupport::inputString($in, 'acta');
-        $Qnotas = FuncTablasSupport::inputString($in, 'notas');
+        $Qmod = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'mod');
+        $Qsa_actas = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'sa_actas');
+        $Qa_actas = $Qsa_actas !== '' ? json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($Qsa_actas)) : null;
+        $Qacta = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'acta');
+        $Qnotas = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'notas');
 
         $any = date('y');
         $mi_dele = ConfigGlobal::mi_delef();
@@ -74,7 +73,7 @@ final class ActaVerFormData
             }
             $a_actas = [$acta_actual];
         } else {
-            $actasJson = FuncTablasSupport::inputString($in, 'acta_notas_a_actas_json');
+            $actasJson = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'acta_notas_a_actas_json');
             if ($actasJson !== '') {
                 $decoded = json_decode($actasJson, true);
                 $a_actas = is_array($decoded) ? array_values(array_filter($decoded, 'is_string')) : [];
@@ -101,16 +100,16 @@ final class ActaVerFormData
 
         if ($notas !== 'nuevo' && $Qmod !== 'nueva' && $acta_actual !== '') {
             if ($Qacta !== '' && $notas !== '') {
-                $idAsig = FuncTablasSupport::inputInt($in, 'id_asignatura_actual', FuncTablasSupport::inputInt($in, 'id_asignatura'));
+                $idAsig = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_asignatura_actual', \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_asignatura'));
                 $id_asignatura_actual = $idAsig !== 0 ? $idAsig : null;
-                $id_activ = FuncTablasSupport::inputInt($in, 'id_activ');
-                $f_acta = FuncTablasSupport::inputString($in, 'f_acta');
-                $libro = FuncTablasSupport::inputString($in, 'libro');
-                $pagina = (string) FuncTablasSupport::inputInt($in, 'pagina');
-                $linea = (string) FuncTablasSupport::inputInt($in, 'linea');
-                $lugar = FuncTablasSupport::inputString($in, 'lugar');
-                $observ = FuncTablasSupport::inputString($in, 'observ');
-                $permiso = FuncTablasSupport::inputInt($in, 'permiso', $permiso);
+                $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_activ');
+                $f_acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'f_acta');
+                $libro = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'libro');
+                $pagina = (string) \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'pagina');
+                $linea = (string) \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'linea');
+                $lugar = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'lugar');
+                $observ = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'observ');
+                $permiso = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'permiso', $permiso);
             } else {
                 $oActa = $ActaRepository->findById($acta_actual);
                 if ($oActa instanceof Acta) {
@@ -132,11 +131,11 @@ final class ActaVerFormData
             $acta_new = "$dl {$num_acta}/{$any}";
 
             if ($notas === 'nuevo') {
-                $Qid_activ = FuncTablasSupport::inputInt($in, 'id_activ');
-                $id_scope = FuncTablasSupport::inputInt($in, 'id_activ_scope');
+                $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_activ');
+                $id_scope = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_activ_scope');
                 $id_activ = $id_scope !== 0 ? $id_scope : $Qid_activ;
-                $Qid_asignatura = FuncTablasSupport::inputInt($in, 'id_asignatura');
-                $id_asig_scope = FuncTablasSupport::inputInt($in, 'id_asignatura_scope');
+                $Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_asignatura');
+                $id_asig_scope = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_asignatura_scope');
                 $id_asignatura_actual = $id_asig_scope !== 0 ? $id_asig_scope : ($Qid_asignatura !== 0 ? $Qid_asignatura : null);
 
                 if ($id_activ > 0 && $id_asignatura_actual !== null) {

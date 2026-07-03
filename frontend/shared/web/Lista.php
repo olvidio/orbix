@@ -540,7 +540,7 @@ class Lista
             $width = self::slickgridDimension($aColsWidth['sel'] ?? null, '30') ?? '30';
             $selCol = '{id: "sel", name: "sel", field: "sel", width:' . $width . ', sortable: false, formatter: checkboxSelectionFormatter}';
             $sColumns .= $selCol;
-            if ($aColsVisible === null || !array_key_exists('sel', $aColsVisible) || FuncTablasSupport::isTrue($aColsVisible['sel'])) {
+            if ($aColsVisible === null || !array_key_exists('sel', $aColsVisible) || \src\shared\domain\helpers\FuncTablasSupport::isTrue($aColsVisible['sel'])) {
                 $sColumnsVisible .= $selCol;
                 $cv = 1;
             }

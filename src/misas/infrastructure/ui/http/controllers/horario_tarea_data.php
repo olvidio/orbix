@@ -8,7 +8,7 @@ use src\shared\web\ContestarJson;
 /** @var HorarioTareaData $useCase */
 $useCase = DependencyResolver::get(HorarioTareaData::class);
 $result = $useCase->getData([
-    'id_item_h' => FilterPostGet::post('id_item_h'),
+    'id_item_h' => \src\shared\domain\helpers\FilterPostGet::post('id_item_h'),
 ]);
 
 ContestarJson::enviar('', $result);

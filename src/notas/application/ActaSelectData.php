@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
-use src\shared\domain\helpers\FuncTablasSupport;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaExRepositoryInterface;
@@ -33,9 +32,9 @@ final class ActaSelectData
 
     public function execute(array $in): array
     {
-        $Qtitulo = FuncTablasSupport::inputString($in, 'titulo');
-        $Qacta = FuncTablasSupport::inputString($in, 'acta');
-        $mes_fin_stgr = FuncTablasSupport::inputInt($in, 'mes_fin_stgr', 6);
+        $Qtitulo = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'titulo');
+        $Qacta = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'acta');
+        $mes_fin_stgr = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'mes_fin_stgr', 6);
 
         $mi_dele = ConfigGlobal::mi_delef();
         $ambito = ConfigGlobal::mi_ambito();
@@ -90,8 +89,8 @@ final class ActaSelectData
             } else {
                 $any = (int)date('Y');
             }
-            $inicurs_ca = FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
-            $fincurs_ca = FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
+            $inicurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
+            $fincurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
             $txt_curso = "$inicurs_ca - $fincurs_ca";
 
             $aWhere['f_acta'] = "'$inicurs_ca','$fincurs_ca'";

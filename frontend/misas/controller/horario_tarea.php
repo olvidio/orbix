@@ -16,8 +16,8 @@ $data = PostRequest::getDataFromUrl('/src/misas/horario_tarea_data', [
     'id_item_h' => $Qid_item_h,
 ]);
 
-$t_start = PayloadCoercion::string($data['t_start'] ?? '');
-$t_end = PayloadCoercion::string($data['t_end'] ?? '');
+$t_start = \frontend\shared\helpers\PayloadCoercion::string($data['t_start'] ?? '');
+$t_end = \frontend\shared\helpers\PayloadCoercion::string($data['t_end'] ?? '');
 
 $url_guardar = AppUrlConfig::getApiBaseUrl() . '/src/misas/guardar_horario';
 $oHash = new HashFront();

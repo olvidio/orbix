@@ -24,8 +24,8 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $oForm = new CasasQue();
@@ -51,7 +51,7 @@ $oForm->setAction('');
 $oSelects = $oForm->getSelects();
 $oSelects->setAction('');
 
-$oForm->setTitulo(FuncTablasSupport::strtoupperDlb((string)_("resumen económico")));
+$oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("resumen económico")));
 $oForm->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "' onclick='fnjs_ver();'>");
 
 $web = AppUrlConfig::getPublicAppBaseUrl();

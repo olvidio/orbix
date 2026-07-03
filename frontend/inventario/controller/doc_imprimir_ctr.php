@@ -10,8 +10,8 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $dl = (bool)filter_input(INPUT_POST, 'dl');
@@ -38,7 +38,7 @@ $a_botones = [['txt' => _('seleccionar'), 'click' => 'fnjs_ver_equipaje()']];
 
 $data_css = PostRequest::getDataFromUrl('/src/inventario/inventario_css_inline_data', []);
 $cssPayload = InventarioPayload::postPayload($data_css);
-$css = PayloadCoercion::string($cssPayload['css'] ?? '');
+$css = \frontend\shared\helpers\PayloadCoercion::string($cssPayload['css'] ?? '');
 $html_total = $css;
 foreach ($a_ubi_valores as $nombre_ubi => $a_valores) {
     $html = '';

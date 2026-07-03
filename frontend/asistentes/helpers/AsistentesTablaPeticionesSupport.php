@@ -21,7 +21,7 @@ final class AsistentesTablaPeticionesSupport
     public static function fromPayload(array $payload): array
     {
         $paths = is_array($payload['paths'] ?? null) ? $payload['paths'] : [];
-        $apiPath = PayloadCoercion::string($paths['asistente_guardar'] ?? '');
+        $apiPath = \frontend\shared\helpers\PayloadCoercion::string($paths['asistente_guardar'] ?? '');
         $apiSaveUrl = $apiPath !== ''
             ? rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/' . ltrim($apiPath, '/')
             : '';
@@ -89,8 +89,8 @@ final class AsistentesTablaPeticionesSupport
         }
 
         return [
-            't' => PayloadCoercion::string($raw['t'] ?? ''),
-            's' => PayloadCoercion::string($raw['s'] ?? ''),
+            't' => \frontend\shared\helpers\PayloadCoercion::string($raw['t'] ?? ''),
+            's' => \frontend\shared\helpers\PayloadCoercion::string($raw['s'] ?? ''),
             'h' => AsistentesRenderSupport::hashCamposHidden($raw['h'] ?? []),
         ];
     }

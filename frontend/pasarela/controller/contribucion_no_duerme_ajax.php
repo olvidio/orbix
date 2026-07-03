@@ -55,7 +55,7 @@ switch ($Qque) {
         break;
     case 'form_default':
         $data = PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_default_data');
-        $default = PayloadCoercion::string($data['default'] ?? '');
+        $default = \frontend\shared\helpers\PayloadCoercion::string($data['default'] ?? '');
         $txt = _('Valor por defecto en %');
 
         $oHash = new HashFront();

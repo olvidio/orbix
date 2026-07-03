@@ -25,8 +25,8 @@ $aGoBack = [
     'id_tipo_doc' => $Qid_tipo_doc,
 ];
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar($aGoBack, ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar($aGoBack, \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
 $oPosicion->setParametros($aGoBack, 1);
 
@@ -37,7 +37,7 @@ $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $payload = InventarioPayload::postPayload($data);
 
 $a_valores = ActividadesListaSupport::datos($payload['a_valores'] ?? []);
-$nombreDoc = PayloadCoercion::string($payload['nombreDoc'] ?? '');
+$nombreDoc = \frontend\shared\helpers\PayloadCoercion::string($payload['nombreDoc'] ?? '');
 
 //3
 $url_doc_mod = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_asignar_ctr.php?';

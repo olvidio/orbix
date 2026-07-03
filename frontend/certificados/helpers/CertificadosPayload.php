@@ -93,7 +93,7 @@ final class CertificadosPayload
         $out = [];
         foreach ($raw as $k => $v) {
             if (is_string($k)) {
-                $out[$k] = PayloadCoercion::string($v);
+                $out[$k] = \frontend\shared\helpers\PayloadCoercion::string($v);
             }
         }
 
@@ -110,9 +110,9 @@ final class CertificadosPayload
         }
 
         return [
-            'id_asignatura' => PayloadCoercion::int($raw['id_asignatura'] ?? 0),
-            'id_nivel' => PayloadCoercion::int($raw['id_nivel'] ?? 0),
-            'nombre_asignatura' => PayloadCoercion::string($raw['nombre_asignatura'] ?? ''),
+            'id_asignatura' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_asignatura'] ?? 0),
+            'id_nivel' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_nivel'] ?? 0),
+            'nombre_asignatura' => \frontend\shared\helpers\PayloadCoercion::string($raw['nombre_asignatura'] ?? ''),
             'creditos' => self::creditosFloat($raw['creditos'] ?? 0),
         ];
     }
@@ -162,12 +162,12 @@ final class CertificadosPayload
         }
 
         return [
-            'id_nivel_asig' => PayloadCoercion::int($raw['id_nivel_asig'] ?? 0),
-            'id_nivel' => PayloadCoercion::int($raw['id_nivel'] ?? 0),
-            'id_asignatura' => PayloadCoercion::int($raw['id_asignatura'] ?? 0),
-            'nombre_asignatura' => PayloadCoercion::string($raw['nombre_asignatura'] ?? ''),
-            'creditos' => PayloadCoercion::string($raw['creditos'] ?? ''),
-            'nota_txt' => PayloadCoercion::string($raw['nota_txt'] ?? ''),
+            'id_nivel_asig' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_nivel_asig'] ?? 0),
+            'id_nivel' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_nivel'] ?? 0),
+            'id_asignatura' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_asignatura'] ?? 0),
+            'nombre_asignatura' => \frontend\shared\helpers\PayloadCoercion::string($raw['nombre_asignatura'] ?? ''),
+            'creditos' => \frontend\shared\helpers\PayloadCoercion::string($raw['creditos'] ?? ''),
+            'nota_txt' => \frontend\shared\helpers\PayloadCoercion::string($raw['nota_txt'] ?? ''),
         ];
     }
 
@@ -229,16 +229,16 @@ final class CertificadosPayload
         $content = is_string($contentRaw) ? $contentRaw : '';
 
         return [
-            'id_nom' => PayloadCoercion::int($payload['id_nom'] ?? 0),
-            'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
-            'idioma' => PayloadCoercion::string($payload['idioma'] ?? ''),
-            'destino' => PayloadCoercion::string($payload['destino'] ?? ''),
-            'certificado' => PayloadCoercion::string($payload['certificado'] ?? ''),
-            'f_certificado' => PayloadCoercion::string($payload['f_certificado'] ?? ''),
-            'f_enviado' => PayloadCoercion::string($payload['f_enviado'] ?? ''),
+            'id_nom' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_nom'] ?? 0),
+            'nom' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? ''),
+            'idioma' => \frontend\shared\helpers\PayloadCoercion::string($payload['idioma'] ?? ''),
+            'destino' => \frontend\shared\helpers\PayloadCoercion::string($payload['destino'] ?? ''),
+            'certificado' => \frontend\shared\helpers\PayloadCoercion::string($payload['certificado'] ?? ''),
+            'f_certificado' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_certificado'] ?? ''),
+            'f_enviado' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_enviado'] ?? ''),
             'firmado' => $payload['firmado'] ?? false,
             'content' => $content,
-            'apellidos_nombre' => PayloadCoercion::string($payload['apellidos_nombre'] ?? ''),
+            'apellidos_nombre' => \frontend\shared\helpers\PayloadCoercion::string($payload['apellidos_nombre'] ?? ''),
         ];
     }
 
@@ -249,9 +249,9 @@ final class CertificadosPayload
     public static function adjuntarFormFromPayload(array $payload): array
     {
         return [
-            'aviso' => PayloadCoercion::string($payload['aviso'] ?? ''),
-            'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
-            'f_enviado' => PayloadCoercion::string($payload['f_enviado'] ?? ''),
+            'aviso' => \frontend\shared\helpers\PayloadCoercion::string($payload['aviso'] ?? ''),
+            'nom' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? ''),
+            'f_enviado' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_enviado'] ?? ''),
         ];
     }
 
@@ -273,15 +273,15 @@ final class CertificadosPayload
     public static function recibidoFormFromPayload(array $payload): array
     {
         return [
-            'id_nom' => PayloadCoercion::int($payload['id_nom'] ?? 0),
-            'id_item' => PayloadCoercion::int($payload['id_item'] ?? 0),
-            'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
-            'idioma' => PayloadCoercion::string($payload['idioma'] ?? ''),
-            'destino' => PayloadCoercion::string($payload['destino'] ?? ''),
-            'certificado' => PayloadCoercion::string($payload['certificado'] ?? ''),
-            'f_certificado' => PayloadCoercion::string($payload['f_certificado'] ?? ''),
-            'f_recibido' => PayloadCoercion::string($payload['f_recibido'] ?? ''),
-            'chk_firmado' => PayloadCoercion::string($payload['chk_firmado'] ?? ''),
+            'id_nom' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_nom'] ?? 0),
+            'id_item' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_item'] ?? 0),
+            'nom' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? ''),
+            'idioma' => \frontend\shared\helpers\PayloadCoercion::string($payload['idioma'] ?? ''),
+            'destino' => \frontend\shared\helpers\PayloadCoercion::string($payload['destino'] ?? ''),
+            'certificado' => \frontend\shared\helpers\PayloadCoercion::string($payload['certificado'] ?? ''),
+            'f_certificado' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_certificado'] ?? ''),
+            'f_recibido' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_recibido'] ?? ''),
+            'chk_firmado' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_firmado'] ?? ''),
             'a_locales' => NotasFormSupport::desplegableOpciones($payload['a_locales'] ?? []),
         ];
     }
@@ -298,10 +298,10 @@ final class CertificadosPayload
     public static function uploadFirmadoFromPayload(array $payload): array
     {
         return [
-            'id_item' => PayloadCoercion::int($payload['id_item'] ?? 0),
-            'id_nom' => PayloadCoercion::int($payload['id_nom'] ?? 0),
-            'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
-            'apellidos_nombre' => PayloadCoercion::string($payload['apellidos_nombre'] ?? ''),
+            'id_item' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_item'] ?? 0),
+            'id_nom' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_nom'] ?? 0),
+            'nom' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? ''),
+            'apellidos_nombre' => \frontend\shared\helpers\PayloadCoercion::string($payload['apellidos_nombre'] ?? ''),
         ];
     }
 
@@ -324,17 +324,17 @@ final class CertificadosPayload
     public static function imprimirPersonaFromPayload(array $payload): array
     {
         return [
-            'nombreApellidos' => PayloadCoercion::string($payload['nombreApellidos'] ?? ''),
-            'lugar_nacimiento' => PayloadCoercion::string($payload['lugar_nacimiento'] ?? ''),
-            'f_nacimiento' => PayloadCoercion::string($payload['f_nacimiento'] ?? ''),
+            'nombreApellidos' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombreApellidos'] ?? ''),
+            'lugar_nacimiento' => \frontend\shared\helpers\PayloadCoercion::string($payload['lugar_nacimiento'] ?? ''),
+            'f_nacimiento' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_nacimiento'] ?? ''),
             'nivel_stgr' => $payload['nivel_stgr'] ?? null,
-            'region_latin' => PayloadCoercion::string($payload['region_latin'] ?? ''),
-            'vstgr' => PayloadCoercion::string($payload['vstgr'] ?? ''),
-            'dir_stgr' => PayloadCoercion::string($payload['dir_stgr'] ?? ''),
-            'lugar_firma' => PayloadCoercion::string($payload['lugar_firma'] ?? ''),
-            'contador' => PayloadCoercion::string($payload['contador'] ?? ''),
-            'f_certificado' => PayloadCoercion::string($payload['f_certificado'] ?? ''),
-            'any' => PayloadCoercion::string($payload['any_2digit'] ?? ''),
+            'region_latin' => \frontend\shared\helpers\PayloadCoercion::string($payload['region_latin'] ?? ''),
+            'vstgr' => \frontend\shared\helpers\PayloadCoercion::string($payload['vstgr'] ?? ''),
+            'dir_stgr' => \frontend\shared\helpers\PayloadCoercion::string($payload['dir_stgr'] ?? ''),
+            'lugar_firma' => \frontend\shared\helpers\PayloadCoercion::string($payload['lugar_firma'] ?? ''),
+            'contador' => \frontend\shared\helpers\PayloadCoercion::string($payload['contador'] ?? ''),
+            'f_certificado' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_certificado'] ?? ''),
+            'any' => \frontend\shared\helpers\PayloadCoercion::string($payload['any_2digit'] ?? ''),
         ];
     }
 

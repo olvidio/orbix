@@ -66,7 +66,7 @@ $txt_ok = _("se ha actualizado la configuraci?n de 2FA");
 $msg_2fa = '';
 $go_to = 'atras';
 if (isset($_SESSION['msg_2fa'])) {
-    $msg_2fa = PayloadCoercion::string($_SESSION['msg_2fa']);
+    $msg_2fa = \frontend\shared\helpers\PayloadCoercion::string($_SESSION['msg_2fa']);
     unset($_SESSION['msg_2fa']);
     $go_to = "fnjs_logout();";
 }

@@ -9,9 +9,9 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(EncargoZonasSelectData::class);
 
 
-$id_zona = FilterPostGet::post('id_zona');
+$id_zona = \src\shared\domain\helpers\FilterPostGet::post('id_zona');
 if ($id_zona === null) {
-    $id_zona = FilterPostGet::get('id_zona');
+    $id_zona = \src\shared\domain\helpers\FilterPostGet::get('id_zona');
 }
 
 ContestarJson::enviar('', $useCase->execute(

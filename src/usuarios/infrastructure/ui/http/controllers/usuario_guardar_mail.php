@@ -8,8 +8,8 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
-$Qemail = (string)FilterPostGet::post('email', FILTER_VALIDATE_EMAIL);
+$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+$Qemail = (string)\src\shared\domain\helpers\FilterPostGet::post('email', FILTER_VALIDATE_EMAIL);
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);

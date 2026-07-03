@@ -31,7 +31,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
-$Qid_ubi = PayloadCoercion::int(filter_input(INPUT_POST, 'id_ubi'));
+$Qid_ubi = \frontend\shared\helpers\PayloadCoercion::int(filter_input(INPUT_POST, 'id_ubi'));
 
 $permiso_des = ActividadesPermSupport::permDes();
 
@@ -109,7 +109,7 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'snom_tipo' => $snom_tipo,
     'extendida' => '',
 ]);
-$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
+$actividad_tipo_html = \frontend\shared\helpers\PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 

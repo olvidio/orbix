@@ -28,11 +28,11 @@ public static function idActivFromPost(): int
 
 public static function posicionString(mixed $value, string $default = ''): string
 {
-    return is_string($value) || is_int($value) || is_float($value) ? PayloadCoercion::string($value) : $default;
+    return is_string($value) || is_int($value) || is_float($value) ? \frontend\shared\helpers\PayloadCoercion::string($value) : $default;
 }
 
 public static function posicionInt(mixed $value, int $default = 0): int
 {
-    return is_int($value) || is_string($value) ? PayloadCoercion::int($value, $default) : $default;
+    return is_int($value) || is_string($value) ? \frontend\shared\helpers\PayloadCoercion::int($value, $default) : $default;
 }
 }

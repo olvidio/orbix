@@ -16,7 +16,7 @@ use src\actividades\application\ActividadPublicar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 /** @var ActividadPublicar $useCase */
 $useCase = DependencyResolver::get(ActividadPublicar::class);

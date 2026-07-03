@@ -10,7 +10,6 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder de la pantalla principal `gestion_plazas`.
@@ -47,11 +46,11 @@ final class GestionPlazasData
      */
     public function execute(array $input): array
     {
-        $Qid_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
-        $Qyear = FuncTablasSupport::inputString($input, 'year');
-        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
-        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
-        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
+        $Qid_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $Qyear = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'year');
+        $Qperiodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
+        $Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
         $Qsactividad = '';
         $extendida = false;
 
@@ -60,9 +59,9 @@ final class GestionPlazasData
             if (ConfigGlobal::mi_sfsv() === 2) {
                 $Qssfsv = 'sf';
             }
-            $Qsasistentes = FuncTablasSupport::inputString($input, 'sasistentes');
-            $Qsactividad = FuncTablasSupport::inputString($input, 'sactividad');
-            $Qsactividad2 = FuncTablasSupport::inputString($input, 'sactividad2');
+            $Qsasistentes = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sasistentes');
+            $Qsactividad = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad');
+            $Qsactividad2 = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad2');
             if ($Qsactividad2 !== '') {
                 $extendida = true;
             }

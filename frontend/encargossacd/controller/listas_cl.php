@@ -19,4 +19,4 @@ FrontBootstrap::boot();
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_cl_data', []);
 
-echo PayloadCoercion::string($datos['Html'] ?? '');
+echo \frontend\shared\helpers\PayloadCoercion::string($datos['Html'] ?? '');

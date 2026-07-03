@@ -11,7 +11,6 @@ use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\PermAccionBits;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: datos para la pantalla usuario_perm_activ.
@@ -32,9 +31,9 @@ class UsuarioPermActivData
      */
     public function execute(array $input): array
     {
-        $Qid_usuario = FuncTablasSupport::inputInt($input, 'id_usuario');
-        $Qid_tipo_activ_txt = FuncTablasSupport::inputString($input, 'id_tipo_activ_txt');
-        $Qdl_propia = FuncTablasSupport::isTrue($input['dl_propia'] ?? '') ? 't' : 'f';
+        $Qid_usuario = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_usuario');
+        $Qid_tipo_activ_txt = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ_txt');
+        $Qdl_propia = \src\shared\domain\helpers\FuncTablasSupport::isTrue($input['dl_propia'] ?? '') ? 't' : 'f';
         if ($Qid_tipo_activ_txt === '') {
             $Qdl_propia = 't';
         }
@@ -66,7 +65,7 @@ class UsuarioPermActivData
             $perm_jefe = true;
         }
 
-        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, FuncTablasSupport::isTrue($Qdl_propia) ?? false);
+        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qdl_propia) ?? false);
         $a_fases = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
 
         $aPerm = [];

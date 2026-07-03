@@ -286,8 +286,8 @@ class Periodo
                 $fin_m = $this->mesFinCrt();
                 $any2 = ($mes > $fin_m) ? $any + 1 : $any;
                 $c = $this->calendarioParaCursoEst();
-                $oInicio = FuncTablasSupport::cursoEst('inicio', $any2, 'crt', $c);
-                $oFin = FuncTablasSupport::cursoEst('fin', $any2, 'crt', $c);
+                $oInicio = \frontend\shared\helpers\FuncTablasSupport::cursoEst('inicio', $any2, 'crt', $c);
+                $oFin = \frontend\shared\helpers\FuncTablasSupport::cursoEst('fin', $any2, 'crt', $c);
                 $inicio = $oInicio->getIso();
                 $fin = $oFin->getIso();
                 break;
@@ -295,8 +295,8 @@ class Periodo
                 $fin_m = $this->mesFinStgr();
                 $any2 = ($mes > $fin_m) ? $any + 1 : $any;
                 $c = $this->calendarioParaCursoEst();
-                $oInicio = FuncTablasSupport::cursoEst('inicio', $any2, 'est', $c);
-                $oFin = FuncTablasSupport::cursoEst('fin', $any2, 'est', $c);
+                $oInicio = \frontend\shared\helpers\FuncTablasSupport::cursoEst('inicio', $any2, 'est', $c);
+                $oFin = \frontend\shared\helpers\FuncTablasSupport::cursoEst('fin', $any2, 'est', $c);
                 $inicio = $oInicio->getIso();
                 $fin = $oFin->getIso();
                 break;

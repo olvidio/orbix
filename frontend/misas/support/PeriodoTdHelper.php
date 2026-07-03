@@ -26,7 +26,7 @@ class PeriodoTdHelper
     {
         $oFormP = new PeriodoQue();
         $oFormP->setFormName('frm_nuevo_periodo');
-        $oFormP->setTitulo(FuncTablasSupport::strtoupperDlb(_('seleccionar un periodo')));
+        $oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_('seleccionar un periodo')));
         $oFormP->setPosiblesPeriodos($opciones);
         $oFormP->setDesplPeriodosOpcion_sel($selected);
         $oFormP->setisDesplAnysVisible(false);

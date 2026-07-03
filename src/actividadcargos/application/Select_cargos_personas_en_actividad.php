@@ -219,7 +219,7 @@ class Select_cargos_personas_en_actividad
                 'id_dossier' => $this->id_dossier,
                 'id_pau' => $this->id_pau,
             ];
-            array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
+            array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
             $nomTxt = $val['nom'] ?? '';
             $this->aLinks_dl[is_scalar($nomTxt) ? (string) $nomTxt : ''] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);
         }
@@ -235,7 +235,7 @@ class Select_cargos_personas_en_actividad
                 'id_dossier' => $this->id_dossier,
                 'id_pau' => $this->id_pau,
             ];
-            array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
+            array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
             $nomTxt = $val['nom'] ?? '';
             $this->aLinks_otros[is_scalar($nomTxt) ? (string) $nomTxt : ''] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);
         }

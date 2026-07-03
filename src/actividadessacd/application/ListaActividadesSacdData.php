@@ -17,7 +17,6 @@ use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\PermAccion;
 use src\procesos\domain\value_objects\FaseId;
 use frontend\shared\web\Periodo;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: construye la tabla principal de la pantalla activ_sacd.
@@ -40,11 +39,11 @@ final class ListaActividadesSacdData
      */
     public function execute(array $input): array
     {
-        $tipo = FuncTablasSupport::inputString($input, 'tipo');
-        $year = FuncTablasSupport::inputString($input, 'year');
-        $periodo = FuncTablasSupport::inputString($input, 'periodo');
-        $empiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
-        $empiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
+        $tipo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo');
+        $year = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'year');
+        $periodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
+        $empiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
+        $empiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
 
         $oPeriodo = new Periodo();
         $oPeriodo->setDefaultAny('next');
@@ -109,7 +108,7 @@ final class ListaActividadesSacdData
             $sacd_aprobado = $tieneProcesos
                 ? $this->actividadProcesoTareaRepository->getSacdAprobado($id_activ)
                 : true;
-            $clase = FuncTablasSupport::isTrue($sacd_aprobado) ? 'plaza4' : '';
+            $clase = \src\shared\domain\helpers\FuncTablasSupport::isTrue($sacd_aprobado) ? 'plaza4' : '';
             if ($status === StatusId::PROYECTO) {
                 $clase = 'wrong-soft';
             }
@@ -150,7 +149,7 @@ final class ListaActividadesSacdData
                 }
             }
 
-            if ($tipo === 'falta_sacd' && (FuncTablasSupport::isTrue($sacd_aprobado) || count($sacds) === 0)) {
+            if ($tipo === 'falta_sacd' && (\src\shared\domain\helpers\FuncTablasSupport::isTrue($sacd_aprobado) || count($sacds) === 0)) {
                 continue;
             }
 

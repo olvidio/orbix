@@ -27,7 +27,7 @@ final class DevelDbAdminPayload
         }
         $out = [];
         foreach ($raw as $item) {
-            $out[] = PayloadCoercion::string($item);
+            $out[] = \frontend\shared\helpers\PayloadCoercion::string($item);
         }
 
         return $out;
@@ -47,7 +47,7 @@ final class DevelDbAdminPayload
         }
         $out = [];
         foreach ($raw as $value) {
-            $s = PayloadCoercion::string($value);
+            $s = \frontend\shared\helpers\PayloadCoercion::string($value);
             if ($s !== '') {
                 $out[] = $s;
             }
@@ -58,6 +58,6 @@ final class DevelDbAdminPayload
 
     public static function lineString(mixed $line): string
     {
-        return PayloadCoercion::string($line);
+        return \frontend\shared\helpers\PayloadCoercion::string($line);
     }
 }

@@ -5,7 +5,7 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\misas\application\EliminarEncargoCentro;
 use src\shared\web\ContestarJson;
 
-$Qid_item = (string)FilterPostGet::post('id_item');
+$Qid_item = (string)\src\shared\domain\helpers\FilterPostGet::post('id_item');
 
 /** @var EliminarEncargoCentro $useCase */
 $useCase = DependencyResolver::get(EliminarEncargoCentro::class);

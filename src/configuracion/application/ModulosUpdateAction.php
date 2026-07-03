@@ -9,7 +9,6 @@ use src\configuracion\domain\value_objects\ModsReq;
 use src\configuracion\domain\value_objects\ModuloDescription;
 use src\configuracion\domain\value_objects\ModuloId;
 use src\configuracion\domain\value_objects\ModuloName;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Alta / baja / modificación de módulos (respuesta texto plano para AJAX legacy).
@@ -28,8 +27,8 @@ final class ModulosUpdateAction
     {
         $a_sel = isset($post['sel']) && is_array($post['sel']) ? $post['sel'] : [];
 
-        $Qmod = FuncTablasSupport::inputString($post, 'mod');
-        $Qid_mod = FuncTablasSupport::inputInt($post, 'id_mod');
+        $Qmod = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'mod');
+        $Qid_mod = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_mod');
 
         if ($a_sel !== []) {
             $firstSel = $a_sel[0] ?? '';
@@ -38,8 +37,8 @@ final class ModulosUpdateAction
             $Qid_mod = (int)$decoded;
         }
 
-        $Qnom = FuncTablasSupport::inputString($post, 'nom');
-        $Qdescripcion = FuncTablasSupport::inputString($post, 'descripcion');
+        $Qnom = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'nom');
+        $Qdescripcion = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'descripcion');
         $Qsel_mods = $this->parseIntList($post, 'sel_mods');
         $Qsel_apps = $this->parseIntList($post, 'sel_apps');
 

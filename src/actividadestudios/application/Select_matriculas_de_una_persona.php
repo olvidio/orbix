@@ -17,7 +17,6 @@ use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaN;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Widget del dossier `1303` (codigo `matriculas_de_una_persona`):
@@ -107,7 +106,7 @@ class Select_matriculas_de_una_persona
         $htmlPrefix = '';
         $this->id_activ = $oAsistente->getId_activ();
         $propio = $oAsistente->isPropio();
-        if (!FuncTablasSupport::isTrue($propio)) {
+        if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($propio)) {
             $htmlPrefix .= _("no está como propio, no debería tener plan de estudios");
         }
 
@@ -139,7 +138,7 @@ class Select_matriculas_de_una_persona
         ]);
 
         $form = "seleccionados" . $ca_num;
-        if (FuncTablasSupport::isTrue($est_ok)) {
+        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($est_ok)) {
             $chk_1 = "checked";
             $chk_2 = "";
         } else {
@@ -155,7 +154,7 @@ class Select_matriculas_de_una_persona
             $id_asignatura = $oMatricula->getId_asignatura();
             $preceptor = $oMatricula->isPreceptor();
             $id_preceptor = $oMatricula->getId_preceptor();
-            if (FuncTablasSupport::isTrue($preceptor)) {
+            if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($preceptor)) {
                 if (!empty($id_preceptor)) {
                     $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
                     if (!is_object($oPersona)) {
@@ -177,7 +176,7 @@ class Select_matriculas_de_una_persona
             }
             $nombre_corto = $oAsignatura->getNombre_corto();
 
-            $a_valores[$i]['sel'] = "$this->id_activ#$id_asignatura";
+            $a_valores[$i]['sel'] = "$this->id_activ#$id_asignatura#$this->id_pau";
             $a_valores[$i][1] = $preceptor;
             $a_valores[$i][2] = $nombre_corto;
         }
@@ -236,7 +235,7 @@ class Select_matriculas_de_una_persona
             'id_pau' => $this->id_pau,
             'id_activ' => $this->id_activ,
         ];
-        array_walk($a_dataUrl, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
+        array_walk($a_dataUrl, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
         $this->linkAddSpec = DossierTipoPublicUrls::formControllerLinkSpec($this->id_dossier, $a_dataUrl);
     }
 
@@ -257,8 +256,8 @@ class Select_matriculas_de_una_persona
         } else {
             $any = date('Y');
         }
-        $inicurs_ca = FuncTablasSupport::cursoEst("inicio", $any)->format('Y-m-d');
-        $fincurs_ca = FuncTablasSupport::cursoEst("fin", $any)->format('Y-m-d');
+        $inicurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst("inicio", $any)->format('Y-m-d');
+        $fincurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst("fin", $any)->format('Y-m-d');
 
         if ($this->id_pau < 0) {
             $oPersona = $this->personaExRepository->findById($this->id_pau);

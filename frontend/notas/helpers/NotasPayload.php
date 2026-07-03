@@ -26,18 +26,18 @@ public static function asigFaltanRow(mixed $raw): array
     if (is_int($asigTxt)) {
         $asigTxtStr = (string) $asigTxt;
     } else {
-        $asigTxtStr = PayloadCoercion::string($asigTxt);
+        $asigTxtStr = \frontend\shared\helpers\PayloadCoercion::string($asigTxt);
     }
 
     return [
-        'id_nom' => PayloadCoercion::int($raw['id_nom'] ?? 0),
-        'id_tabla' => PayloadCoercion::string($raw['id_tabla'] ?? ''),
-        'nom' => PayloadCoercion::string($raw['nom'] ?? ''),
-        'nombre_ubi' => PayloadCoercion::string($raw['nombre_ubi'] ?? ''),
-        'stgr' => PayloadCoercion::string($raw['stgr'] ?? ''),
+        'id_nom' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_nom'] ?? 0),
+        'id_tabla' => \frontend\shared\helpers\PayloadCoercion::string($raw['id_tabla'] ?? ''),
+        'nom' => \frontend\shared\helpers\PayloadCoercion::string($raw['nom'] ?? ''),
+        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($raw['nombre_ubi'] ?? ''),
+        'stgr' => \frontend\shared\helpers\PayloadCoercion::string($raw['stgr'] ?? ''),
         'asig_txt' => $asigTxtStr,
-        'telfs' => PayloadCoercion::string($raw['telfs'] ?? ''),
-        'mails' => PayloadCoercion::string($raw['mails'] ?? ''),
+        'telfs' => \frontend\shared\helpers\PayloadCoercion::string($raw['telfs'] ?? ''),
+        'mails' => \frontend\shared\helpers\PayloadCoercion::string($raw['mails'] ?? ''),
     ];
 }
 
@@ -52,8 +52,8 @@ public static function asigFaltanTablaFromPayload(array $payload): array
     }
 
     return [
-        'titulo' => PayloadCoercion::string($payload['titulo'] ?? ''),
-        'obj_pau' => PayloadCoercion::string($payload['obj_pau'] ?? ''),
+        'titulo' => \frontend\shared\helpers\PayloadCoercion::string($payload['titulo'] ?? ''),
+        'obj_pau' => \frontend\shared\helpers\PayloadCoercion::string($payload['obj_pau'] ?? ''),
         'rows' => $rows,
     ];
 }
@@ -72,36 +72,36 @@ public static function actaVerFormFromPayload(array $payload): array
     $examinadores = [];
     if (is_array($examinadoresRaw)) {
         foreach ($examinadoresRaw as $item) {
-            $examinadores[] = PayloadCoercion::string($item);
+            $examinadores[] = \frontend\shared\helpers\PayloadCoercion::string($item);
         }
     }
     $aActasRaw = $payload['a_actas'] ?? [];
     $aActas = [];
     if (is_array($aActasRaw)) {
         foreach ($aActasRaw as $item) {
-            $aActas[] = PayloadCoercion::string($item);
+            $aActas[] = \frontend\shared\helpers\PayloadCoercion::string($item);
         }
     }
 
     return [
-        'notas' => PayloadCoercion::string($payload['notas'] ?? ''),
-        'permiso' => PayloadCoercion::int($payload['permiso'] ?? 0),
-        'mod' => PayloadCoercion::string($payload['mod'] ?? ''),
-        'acta_actual' => PayloadCoercion::string($payload['acta_actual'] ?? ''),
-        'acta_new' => PayloadCoercion::string($payload['acta_new'] ?? ''),
-        'ult_acta' => PayloadCoercion::string($payload['ult_acta'] ?? ''),
-        'f_acta' => PayloadCoercion::string($payload['f_acta'] ?? ''),
-        'libro' => PayloadCoercion::string($payload['libro'] ?? ''),
-        'ult_lib' => PayloadCoercion::string($payload['ult_lib'] ?? ''),
-        'pagina' => PayloadCoercion::string($payload['pagina'] ?? ''),
-        'ult_pag' => PayloadCoercion::string($payload['ult_pag'] ?? ''),
-        'linea' => PayloadCoercion::string($payload['linea'] ?? ''),
-        'ult_lin' => PayloadCoercion::string($payload['ult_lin'] ?? ''),
-        'lugar' => PayloadCoercion::string($payload['lugar'] ?? ''),
-        'observ' => PayloadCoercion::string($payload['observ'] ?? ''),
-        'id_activ' => PayloadCoercion::int($payload['id_activ'] ?? 0),
-        'id_asignatura_actual' => PayloadCoercion::string($payload['id_asignatura_actual'] ?? ''),
-        'nombre_asignatura' => PayloadCoercion::string($payload['nombre_asignatura'] ?? ''),
+        'notas' => \frontend\shared\helpers\PayloadCoercion::string($payload['notas'] ?? ''),
+        'permiso' => \frontend\shared\helpers\PayloadCoercion::int($payload['permiso'] ?? 0),
+        'mod' => \frontend\shared\helpers\PayloadCoercion::string($payload['mod'] ?? ''),
+        'acta_actual' => \frontend\shared\helpers\PayloadCoercion::string($payload['acta_actual'] ?? ''),
+        'acta_new' => \frontend\shared\helpers\PayloadCoercion::string($payload['acta_new'] ?? ''),
+        'ult_acta' => \frontend\shared\helpers\PayloadCoercion::string($payload['ult_acta'] ?? ''),
+        'f_acta' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_acta'] ?? ''),
+        'libro' => \frontend\shared\helpers\PayloadCoercion::string($payload['libro'] ?? ''),
+        'ult_lib' => \frontend\shared\helpers\PayloadCoercion::string($payload['ult_lib'] ?? ''),
+        'pagina' => \frontend\shared\helpers\PayloadCoercion::string($payload['pagina'] ?? ''),
+        'ult_pag' => \frontend\shared\helpers\PayloadCoercion::string($payload['ult_pag'] ?? ''),
+        'linea' => \frontend\shared\helpers\PayloadCoercion::string($payload['linea'] ?? ''),
+        'ult_lin' => \frontend\shared\helpers\PayloadCoercion::string($payload['ult_lin'] ?? ''),
+        'lugar' => \frontend\shared\helpers\PayloadCoercion::string($payload['lugar'] ?? ''),
+        'observ' => \frontend\shared\helpers\PayloadCoercion::string($payload['observ'] ?? ''),
+        'id_activ' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_activ'] ?? 0),
+        'id_asignatura_actual' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_asignatura_actual'] ?? ''),
+        'nombre_asignatura' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_asignatura'] ?? ''),
         'examinadores' => $examinadores,
         'a_actas' => $aActas,
         'has_pdf' => !empty($payload['has_pdf']),
@@ -116,9 +116,9 @@ public static function actaSelectFromPayload(array $payload): array
     if (is_array($aAsigRaw)) {
         foreach ($aAsigRaw as $key => $value) {
             if (is_int($key)) {
-                $aAsignaturas[$key] = PayloadCoercion::string($value);
+                $aAsignaturas[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
             } elseif (is_numeric($key)) {
-                $aAsignaturas[(int) $key] = PayloadCoercion::string($value);
+                $aAsignaturas[(int) $key] = \frontend\shared\helpers\PayloadCoercion::string($value);
             }
         }
     }
@@ -130,16 +130,16 @@ public static function actaSelectFromPayload(array $payload): array
                 continue;
             }
             $actas[] = [
-                'acta' => PayloadCoercion::string($row['acta'] ?? ''),
-                'f_acta' => PayloadCoercion::string($row['f_acta'] ?? ''),
-                'id_asignatura' => PayloadCoercion::int($row['id_asignatura'] ?? 0),
+                'acta' => \frontend\shared\helpers\PayloadCoercion::string($row['acta'] ?? ''),
+                'f_acta' => \frontend\shared\helpers\PayloadCoercion::string($row['f_acta'] ?? ''),
+                'id_asignatura' => \frontend\shared\helpers\PayloadCoercion::int($row['id_asignatura'] ?? 0),
                 'has_pdf' => !empty($row['has_pdf']),
             ];
         }
     }
 
     return [
-        'titulo' => PayloadCoercion::string($payload['titulo'] ?? ''),
+        'titulo' => \frontend\shared\helpers\PayloadCoercion::string($payload['titulo'] ?? ''),
         'a_asignaturas' => $aAsignaturas,
         'actas' => $actas,
     ];
@@ -159,44 +159,44 @@ public static function personaFormFromPayload(array $payload): array
     $helpers = is_array($helpersRaw) ? $helpersRaw : [];
 
     return [
-        'mod' => PayloadCoercion::string($payload['mod'] ?? ''),
-        'id_asignatura_real' => PayloadCoercion::string($payload['id_asignatura_real'] ?? ''),
+        'mod' => \frontend\shared\helpers\PayloadCoercion::string($payload['mod'] ?? ''),
+        'id_asignatura_real' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_asignatura_real'] ?? ''),
         'id_nivel' => NotasFormSupport::formScalar($payload['id_nivel'] ?? ''),
-        'nombre_corto' => PayloadCoercion::string($payload['nombre_corto'] ?? ''),
+        'nombre_corto' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_corto'] ?? ''),
         'id_situacion' => NotasFormSupport::formScalar($payload['id_situacion'] ?? ''),
-        'nota_num' => PayloadCoercion::string($payload['nota_num'] ?? ''),
+        'nota_num' => \frontend\shared\helpers\PayloadCoercion::string($payload['nota_num'] ?? ''),
         'nota_max' => NotasFormSupport::formScalar($payload['nota_max'] ?? ''),
-        'acta' => PayloadCoercion::string($payload['acta'] ?? ''),
+        'acta' => \frontend\shared\helpers\PayloadCoercion::string($payload['acta'] ?? ''),
         'tipo_acta' => NotasFormSupport::formScalar($payload['tipo_acta'] ?? ''),
-        'f_acta' => PayloadCoercion::string($payload['f_acta'] ?? ''),
-        'f_acta_iso' => PayloadCoercion::string($payload['f_acta_iso'] ?? ''),
+        'f_acta' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_acta'] ?? ''),
+        'f_acta_iso' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_acta_iso'] ?? ''),
         'preceptor' => NotasFormSupport::formBoolOrString($payload['preceptor'] ?? ''),
         'id_preceptor' => NotasFormSupport::formScalar($payload['id_preceptor'] ?? ''),
-        'detalle' => PayloadCoercion::string($payload['detalle'] ?? ''),
+        'detalle' => \frontend\shared\helpers\PayloadCoercion::string($payload['detalle'] ?? ''),
         'epoca' => NotasFormSupport::formScalar($payload['epoca'] ?? ''),
         'id_activ' => NotasFormSupport::formScalar($payload['id_activ'] ?? ''),
-        'nom_activ' => PayloadCoercion::string($payload['nom_activ'] ?? ''),
+        'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom_activ'] ?? ''),
         'profesores' => NotasFormSupport::desplegableOpciones($payload['profesores'] ?? []),
         'asignaturas_faltan' => NotasFormSupport::desplegableOpciones($payload['asignaturas_faltan'] ?? []),
-        'lista_situacion_no_acta' => PayloadCoercion::string($payload['lista_situacion_no_acta'] ?? '"11"'),
+        'lista_situacion_no_acta' => \frontend\shared\helpers\PayloadCoercion::string($payload['lista_situacion_no_acta'] ?? '"11"'),
         'aOpcionesSituacion' => NotasFormSupport::desplegableOpciones($payload['aOpcionesSituacion'] ?? []),
         'vo' => [
             'NotaSituacion' => array_map(
-                static fn (mixed $v): int => PayloadCoercion::int($v),
+                static fn (mixed $v): int => \frontend\shared\helpers\PayloadCoercion::int($v),
                 $notaSituacion
             ),
             'TipoActa' => array_map(
-                static fn (mixed $v): int => PayloadCoercion::int($v),
+                static fn (mixed $v): int => \frontend\shared\helpers\PayloadCoercion::int($v),
                 $tipoActa
             ),
             'NotaEpoca' => array_map(
-                static fn (mixed $v): int => PayloadCoercion::int($v),
+                static fn (mixed $v): int => \frontend\shared\helpers\PayloadCoercion::int($v),
                 $notaEpoca
             ),
         ],
         'helpers' => [
-            'condicion_js' => PayloadCoercion::string($helpers['condicion_js'] ?? ''),
-            'op_genericas_json' => PayloadCoercion::string($helpers['op_genericas_json'] ?? ''),
+            'condicion_js' => \frontend\shared\helpers\PayloadCoercion::string($helpers['condicion_js'] ?? ''),
+            'op_genericas_json' => \frontend\shared\helpers\PayloadCoercion::string($helpers['op_genericas_json'] ?? ''),
         ],
     ];
 }
@@ -206,8 +206,8 @@ public static function actividadesBuscarFromPayload(array $payload): array
     return [
         'delegaciones' => NotasFormSupport::desplegableOpciones($payload['delegaciones'] ?? []),
         'actividades' => NotasFormSupport::desplegableOpciones($payload['actividades'] ?? []),
-        'dl_org_sel' => PayloadCoercion::string($payload['dl_org_sel'] ?? ''),
-        'id_activ_sel' => PayloadCoercion::string($payload['id_activ_sel'] ?? ''),
+        'dl_org_sel' => \frontend\shared\helpers\PayloadCoercion::string($payload['dl_org_sel'] ?? ''),
+        'id_activ_sel' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_activ_sel'] ?? ''),
     ];
 }
 
@@ -217,7 +217,7 @@ public static function asignaturasPendientesFromPayload(array $payload): array
     $cabeceras = [];
     if (is_array($cabecerasRaw)) {
         foreach ($cabecerasRaw as $item) {
-            $cabeceras[] = PayloadCoercion::string($item);
+            $cabeceras[] = \frontend\shared\helpers\PayloadCoercion::string($item);
         }
     }
     $filasRaw = $payload['filas'] ?? [];

@@ -10,7 +10,7 @@ $error = '';
 $data = [];
 
 try {
-    $Qlista = (string)FilterPostGet::post('lista');
+    $Qlista = (string)\src\shared\domain\helpers\FilterPostGet::post('lista');
     $lista = !empty($Qlista);
 
     /** @var InformeStgrProfesores $informe */

@@ -74,7 +74,7 @@ class CopiarBDU
             if (!is_array($aDatos)) {
                 continue;
             }
-            array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
+            array_walk($aDatos, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerNull']);
             $oDblSt->execute($aDatos);
         }
 

@@ -4,7 +4,6 @@ namespace src\asistentes\application;
 
 use src\asistentes\application\services\AsistenteApplicationService;
 use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Cambia la plaza asignada de un lote de asistentes (columna `plaza`).
@@ -25,12 +24,12 @@ final class AsistentePlazaAsignar
      */
     public function execute(array $input): string
     {
-        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         if ($id_activ === 0) {
             return _("falta id_activ");
         }
         $plaza = $input['plaza'] ?? null;
-        $lista_json = FuncTablasSupport::inputString($input, 'lista_json');
+        $lista_json = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'lista_json');
         $arr = json_decode($lista_json);
         if (!is_array($arr) || empty($arr)) {
             return _("falta lista de seleccion");

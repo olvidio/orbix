@@ -19,7 +19,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $post = (array)$_POST;
 $data = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/matricula_automatica', $post));
-$msg = PayloadCoercion::string($data['msg'] ?? '');
+$msg = \frontend\shared\helpers\PayloadCoercion::string($data['msg'] ?? '');
 
 (new ViewNewPhtml('frontend\\actividadestudios\\controller'))
     ->renderizar('matricular.phtml', [

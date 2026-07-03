@@ -1,12 +1,11 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_ubi = FuncTablasSupport::inputInt($_POST, 'id_ubi');
+$Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi');
 $error_txt = '';
 
 /** @var LugarRepositoryInterface $LugarRepository */

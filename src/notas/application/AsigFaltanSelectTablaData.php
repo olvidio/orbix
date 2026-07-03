@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -41,13 +40,13 @@ final class AsigFaltanSelectTablaData
      */
     public function execute(array $in): array
     {
-        $Qnumero = FuncTablasSupport::inputInt($in, 'numero');
-        $Qb_c = FuncTablasSupport::inputString($in, 'b_c');
-        $Qc1 = FuncTablasSupport::inputString($in, 'c1');
-        $Qc2 = FuncTablasSupport::inputString($in, 'c2');
-        $Qpersonas_n = FuncTablasSupport::inputString($in, 'personas_n');
-        $Qpersonas_agd = FuncTablasSupport::inputString($in, 'personas_agd');
-        $Qlista = FuncTablasSupport::inputString($in, 'lista');
+        $Qnumero = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'numero');
+        $Qb_c = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'b_c');
+        $Qc1 = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'c1');
+        $Qc2 = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'c2');
+        $Qpersonas_n = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'personas_n');
+        $Qpersonas_agd = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'personas_agd');
+        $Qlista = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'lista');
 
         $isTrue = static function (string $v): bool {
             return $v === '1' || $v === 'true' || $v === 'on' || $v === 't';

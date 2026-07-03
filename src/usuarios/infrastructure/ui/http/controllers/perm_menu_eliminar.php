@@ -8,7 +8,7 @@ use src\shared\web\ContestarJson;
 $error_txt = '';
 $Qid_item = 0;
 
-$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel) && is_string($a_sel[0])) { //vengo de un checkbox
     strtok($a_sel[0], "#");
     $tok = strtok("#");

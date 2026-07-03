@@ -5,7 +5,7 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\misas\application\BuscarPlanCtrData;
 use src\shared\web\ContestarJson;
 
-$Qid_zona = (int)FilterPostGet::post('id_zona', FILTER_VALIDATE_INT);
+$Qid_zona = (int)\src\shared\domain\helpers\FilterPostGet::post('id_zona', FILTER_VALIDATE_INT);
 
 /** @var BuscarPlanCtrData $useCase */
 $useCase = DependencyResolver::get(BuscarPlanCtrData::class);

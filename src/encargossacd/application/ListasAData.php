@@ -3,7 +3,6 @@
 namespace src\encargossacd\application;
 
 use src\configuracion\domain\value_objects\ConfigSnapshot;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
@@ -48,8 +47,8 @@ final class ListasAData
         $oConfig = $_SESSION['oConfig'];
 
         $any = $oConfig->any_final_curs('crt');
-        $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'crt')->getFromLocal();
-        $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'crt')->getFromLocal();
+        $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt')->getFromLocal();
+        $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->getFromLocal();
 
         $cabecera_left = sprintf(_('Curso:  %s - %s'), $inicurs, $fincurs);
         $cabecera_right = ConfigGlobal::mi_delef();

@@ -159,12 +159,12 @@ require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 $idNomRaw = filter_input(INPUT_GET, 'id_nom', FILTER_VALIDATE_INT);
 $id_nom = is_int($idNomRaw) ? $idNomRaw : 0;
-$id_tabla = PayloadCoercion::string(filter_input(INPUT_GET, 'id_tabla'));
+$id_tabla = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_GET, 'id_tabla'));
 
 $payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
     'id_nom' => $id_nom,
 ]);
-$nom = PayloadCoercion::string($payload['nom'] ?? '');
+$nom = \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? '');
 $cAsignaturas = TesseraImprimirPayload::asignaturasFromPayload($payload);
 $aAprobadas = TesseraImprimirPayload::aprobadasFromPayload($payload);
 /* Ahora no hace falta que sea en latín

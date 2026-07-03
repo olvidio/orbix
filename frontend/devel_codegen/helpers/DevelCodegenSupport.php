@@ -24,9 +24,9 @@ final class DevelCodegenSupport
                 continue;
             }
             $out[] = [
-                'attnum' => PayloadCoercion::int($row['attnum'] ?? 0),
-                'field' => PayloadCoercion::string($row['field'] ?? ''),
-                'type' => PayloadCoercion::string($row['type'] ?? ''),
+                'attnum' => \frontend\shared\helpers\PayloadCoercion::int($row['attnum'] ?? 0),
+                'field' => \frontend\shared\helpers\PayloadCoercion::string($row['field'] ?? ''),
+                'type' => \frontend\shared\helpers\PayloadCoercion::string($row['type'] ?? ''),
                 'length' => $row['length'] ?? null,
                 'lengthvar' => $row['lengthvar'] ?? null,
                 'notnull' => $row['notnull'] ?? null,
@@ -44,7 +44,7 @@ final class DevelCodegenSupport
         }
         $value = $stmt->fetchColumn();
 
-        return PayloadCoercion::string($value);
+        return \frontend\shared\helpers\PayloadCoercion::string($value);
     }
 
     public static function fileContents(string $path): string

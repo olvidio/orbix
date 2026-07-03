@@ -20,6 +20,6 @@ final class ActividadestudiosConfig
     {
         $oConfig = self::oConfig();
 
-        return $oConfig !== null ? PayloadCoercion::int($oConfig->getNotaMax()) : 0;
+        return $oConfig !== null ? \frontend\shared\helpers\PayloadCoercion::int($oConfig->getNotaMax()) : 0;
     }
 }

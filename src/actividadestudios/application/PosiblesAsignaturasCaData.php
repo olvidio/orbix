@@ -9,7 +9,6 @@ use src\notas\application\AsignaturasPendientes;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\CursoStgr;
 use src\personas\domain\entity\Persona;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * @return array{
@@ -37,8 +36,8 @@ final class PosiblesAsignaturasCaData
      */
     public function execute(array $input): array
     {
-        $idActiv = FuncTablasSupport::inputInt($input, 'id_activ');
-        $nomActivFromSel = FuncTablasSupport::inputString($input, 'nom_activ');
+        $idActiv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $nomActivFromSel = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nom_activ');
 
         $aTiposStgr = NivelStgrId::getArrayNivelStgrOn();
         $aAlumnosFinC = [];

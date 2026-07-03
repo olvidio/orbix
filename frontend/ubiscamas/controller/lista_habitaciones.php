@@ -12,26 +12,26 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
 }
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 if ($a_sel !== []) {
-    $first = PayloadCoercion::string($a_sel[0]);
+    $first = \frontend\shared\helpers\PayloadCoercion::string($a_sel[0]);
     $parts = explode('#', $first, 2);
-    $Qid_activ = PayloadCoercion::int($parts[0]);
+    $Qid_activ = \frontend\shared\helpers\PayloadCoercion::int($parts[0]);
 } else {
     $Qid_activ = (int)filter_input(INPUT_POST, 'id_activ');
 }
-ListNavSupport::persistActividadSelectChildEntry(
+\frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry(
     $oPosicion,
     $Qid_activ > 0 ? ['id_activ' => $Qid_activ] : [],
 );
@@ -40,7 +40,7 @@ $data = UbiscamasPayload::postData(PostRequest::getDataFromUrl('/src/ubiscamas/a
 $view = UbiscamasPayload::habitacionesListaFromPayload($data);
 
 if (isset($data['error'])) {
-    exit(PayloadCoercion::string($data['error']));
+    exit(\frontend\shared\helpers\PayloadCoercion::string($data['error']));
 }
 
 $oTabla = new Lista();

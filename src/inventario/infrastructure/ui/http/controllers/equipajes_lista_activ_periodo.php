@@ -1,7 +1,6 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -9,13 +8,13 @@ use src\ubis\domain\entity\Ubi;
 use src\shared\web\ContestarJson;
 use frontend\shared\web\Periodo;
 
-$Qid_cdc = FuncTablasSupport::inputInt($_POST, 'id_cdc');
-$Qperiodo = FuncTablasSupport::inputString($_POST, 'periodo');
-$Qyear = FuncTablasSupport::inputInt($_POST, 'year');
-$Qempiezamin = FuncTablasSupport::inputString($_POST, 'empiezamin');
-$Qempiezamax = FuncTablasSupport::inputString($_POST, 'empiezamax');
-$Qinicio = FuncTablasSupport::inputString($_POST, 'inicio');
-$Qfin = FuncTablasSupport::inputString($_POST, 'fin');
+$Qid_cdc = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_cdc');
+$Qperiodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'periodo');
+$Qyear = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'year');
+$Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'empiezamin');
+$Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'empiezamax');
+$Qinicio = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'inicio');
+$Qfin = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'fin');
 
 $error_txt = '';
 $a_valores = [];

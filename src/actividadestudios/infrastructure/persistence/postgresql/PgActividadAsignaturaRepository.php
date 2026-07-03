@@ -187,7 +187,7 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
         // para las fechas
         $aDatos['f_ini'] = (new ConverterDate('date', $ActividadAsignatura->getF_ini()))->toPg();
         $aDatos['f_fin'] = (new ConverterDate('date', $ActividadAsignatura->getF_fin()))->toPg();
-        array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
+        array_walk($aDatos, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerNull']);
         */
 
         if ($bInsert === false) {

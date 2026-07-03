@@ -9,7 +9,7 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(EncargoSelectData::class);
 
 
-$desc_enc = (string)(FilterPostGet::post('desc_enc') ?? FilterPostGet::get('desc_enc') ?? '');
-$id_tipo_enc = (int)(FilterPostGet::post('id_tipo_enc') ?? FilterPostGet::get('id_tipo_enc') ?? 0);
+$desc_enc = (string)(\src\shared\domain\helpers\FilterPostGet::post('desc_enc') ?? \src\shared\domain\helpers\FilterPostGet::get('desc_enc') ?? '');
+$id_tipo_enc = (int)(\src\shared\domain\helpers\FilterPostGet::post('id_tipo_enc') ?? \src\shared\domain\helpers\FilterPostGet::get('id_tipo_enc') ?? 0);
 
 ContestarJson::enviar('', $useCase->execute($desc_enc, $id_tipo_enc));

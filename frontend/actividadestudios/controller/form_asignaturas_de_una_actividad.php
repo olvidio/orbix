@@ -26,9 +26,9 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $obj = 'ActividadAsignatura';
 
-ListNavSupport::bootDossierChildRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::bootDossierChildRecordar($oPosicion);
 
-$Qpau = PayloadCoercion::string(filter_input(INPUT_POST, 'pau'));
+$Qpau = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'pau'));
 
 $a_sel = (array) filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $camposAsig = [
@@ -43,7 +43,7 @@ if (!empty($a_sel)) {
 
 $raw = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/form_asignaturas_de_una_actividad_data', $camposAsig));
 if (!empty($raw['error'])) {
-    exit(PayloadCoercion::string($raw['error']));
+    exit(\frontend\shared\helpers\PayloadCoercion::string($raw['error']));
 }
 $d = FormAsignaturasPayload::fromPayload($raw);
 

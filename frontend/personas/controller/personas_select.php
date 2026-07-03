@@ -28,8 +28,8 @@ $tipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qes_sacd = (int)filter_input(INPUT_POST, 'es_sacd');
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = ListNavSupport::idSelFromPost();
-$Qscroll_id = ListNavSupport::scrollIdFromPost();
+$Qid_sel = \frontend\shared\helpers\ListNavSupport::idSelFromPost();
+$Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qexacto = (string)filter_input(INPUT_POST, 'exacto');
 $Qcmb = (string)filter_input(INPUT_POST, 'cmb');
@@ -42,30 +42,30 @@ $stack = PersonasPostInput::stackFromPost();
 if ($stack !== null && $stack !== 0) {
     $oPosicion2 = new Posicion();
     if ($oPosicion2->goStack($stack)) {
-        $restoredSel = ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
-        if (!ListNavSupport::idSelIsEmpty($restoredSel)) {
+        $restoredSel = \frontend\shared\helpers\ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
+        if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restoredSel)) {
             $Qid_sel = $restoredSel;
         }
         $restoredScroll = $oPosicion2->getParametro('scroll_id');
         if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
             $Qscroll_id = (string) $restoredScroll;
         }
-        $Qque = PayloadCoercion::string($oPosicion2->getParametro('que') ?? $Qque);
-        $Qexacto = PayloadCoercion::string($oPosicion2->getParametro('exacto') ?? $Qexacto);
-        $Qcmb = PayloadCoercion::string($oPosicion2->getParametro('cmb') ?? $Qcmb);
-        $Qnombre = PayloadCoercion::string($oPosicion2->getParametro('nombre') ?? $Qnombre);
-        $Qapellido1 = PayloadCoercion::string($oPosicion2->getParametro('apellido1') ?? $Qapellido1);
-        $Qapellido2 = PayloadCoercion::string($oPosicion2->getParametro('apellido2') ?? $Qapellido2);
-        $Qcentro = PayloadCoercion::string($oPosicion2->getParametro('centro') ?? $Qcentro);
-        $tabla = PayloadCoercion::string($oPosicion2->getParametro('tabla') ?? $tabla);
-        $Qna = PayloadCoercion::string($oPosicion2->getParametro('na') ?? $Qna);
-        $tipo = PayloadCoercion::string($oPosicion2->getParametro('tipo') ?? $tipo);
+        $Qque = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('que') ?? $Qque);
+        $Qexacto = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('exacto') ?? $Qexacto);
+        $Qcmb = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('cmb') ?? $Qcmb);
+        $Qnombre = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('nombre') ?? $Qnombre);
+        $Qapellido1 = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('apellido1') ?? $Qapellido1);
+        $Qapellido2 = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('apellido2') ?? $Qapellido2);
+        $Qcentro = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('centro') ?? $Qcentro);
+        $tabla = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('tabla') ?? $tabla);
+        $Qna = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('na') ?? $Qna);
+        $tipo = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('tipo') ?? $tipo);
         $Qes_sacd = PersonasPostInput::posicionIntParam($oPosicion2->getParametro('es_sacd'), $Qes_sacd);
         $oPosicion2->olvidar($stack);
     }
 }
 
-ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
 $personasReturn = [
     'que' => $Qque,
     'exacto' => $Qexacto,
@@ -79,13 +79,13 @@ $personasReturn = [
     'tipo' => $tipo,
     'es_sacd' => $Qes_sacd,
 ];
-if (!ListNavSupport::idSelIsEmpty($Qid_sel)) {
+if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($Qid_sel)) {
     $personasReturn['id_sel'] = $Qid_sel;
 }
 if ($Qscroll_id !== '' && $Qscroll_id !== '0') {
     $personasReturn['scroll_id'] = $Qscroll_id;
 }
-ListNavSupport::persistCleanReturnToPosicion($oPosicion, $personasReturn, 0);
+\frontend\shared\helpers\ListNavSupport::persistCleanReturnToPosicion($oPosicion, $personasReturn, 0);
 
 $oPosicion->setParametros([
     'que' => $Qque,
@@ -101,7 +101,7 @@ $oPosicion->setParametros([
     'es_sacd' => $Qes_sacd,
 ], 1);
 
-ListNavSupport::persistSelectionOnListPage(
+\frontend\shared\helpers\ListNavSupport::persistSelectionOnListPage(
     $oPosicion,
     $Qid_sel,
     $Qscroll_id,
@@ -124,7 +124,7 @@ $campos = [
 $data = PostRequest::getDataFromUrl('/src/personas/personas_select_data', $campos, false);
 $aviso = '';
 if (!empty($data['error'])) {
-    $errorHtml = PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error']));
+    $errorHtml = PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($data['error']));
     if (
         str_contains($errorHtml, _('persona no válida'))
         || str_contains($errorHtml, 'persona no válida')
@@ -288,7 +288,7 @@ foreach ($a_filas as $fila) {
     }
     $a_valores[$c] = $a_val;
 }
-if (!ListNavSupport::idSelIsEmpty($Qid_sel)) {
+if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
 if ($Qscroll_id !== '') {

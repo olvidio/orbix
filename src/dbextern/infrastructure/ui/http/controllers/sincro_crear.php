@@ -3,13 +3,12 @@
 use src\dbextern\application\CrearPersonaDesdeListasUseCase;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
-$id_nom_listas = FuncTablasSupport::inputInt($_POST, 'id_nom_listas');
-$tipo_persona = FuncTablasSupport::inputString($_POST, 'tipo_persona');
+$id_nom_listas = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom_listas');
+$tipo_persona = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'tipo_persona');
 
 $error_txt = DependencyResolver::get(CrearPersonaDesdeListasUseCase::class)($id_nom_listas, $tipo_persona);
 
-$id = FuncTablasSupport::inputInt($_POST, 'id');
+$id = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id');
 $dbListas = $_SESSION['DBListas'] ?? null;
 if ($id > 0 && is_array($dbListas) && isset($dbListas[$id])) {
     session_start();

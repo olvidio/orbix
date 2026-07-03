@@ -3,7 +3,6 @@
 namespace src\actividadescentro\application;
 
 use src\shared\config\ConfigGlobal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Tipo resuelto y especificaciones de URL para la shell de `activ_ctr` (sin `HashFront` en `src/`).
@@ -26,7 +25,7 @@ final class ActivCtrShellData
      */
     public function build(array $in): array
     {
-        $Qtipo = FuncTablasSupport::inputString($in, 'tipo');
+        $Qtipo = \src\shared\domain\helpers\FuncTablasSupport::inputString($in, 'tipo');
         if (ConfigGlobal::mi_sfsv() === 2) {
             switch ($Qtipo) {
                 case 'sg':

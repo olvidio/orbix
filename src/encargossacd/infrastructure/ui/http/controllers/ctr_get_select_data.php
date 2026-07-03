@@ -9,24 +9,24 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(EncargoCtrSelectData::class);
 
 
-$id_ubi = FilterPostGet::post('id_ubi');
+$id_ubi = \src\shared\domain\helpers\FilterPostGet::post('id_ubi');
 if ($id_ubi === null) {
-    $id_ubi = FilterPostGet::get('id_ubi');
+    $id_ubi = \src\shared\domain\helpers\FilterPostGet::get('id_ubi');
 }
-$filtro_ctr = FilterPostGet::post('filtro_ctr');
+$filtro_ctr = \src\shared\domain\helpers\FilterPostGet::post('filtro_ctr');
 if ($filtro_ctr === null) {
-    $filtro_ctr = FilterPostGet::get('filtro_ctr');
+    $filtro_ctr = \src\shared\domain\helpers\FilterPostGet::get('filtro_ctr');
 }
-$id_zona = FilterPostGet::post('id_zona');
+$id_zona = \src\shared\domain\helpers\FilterPostGet::post('id_zona');
 if ($id_zona === null) {
-    $id_zona = FilterPostGet::get('id_zona');
+    $id_zona = \src\shared\domain\helpers\FilterPostGet::get('id_zona');
 }
 // `action` opcional: el handler onchange del <select>. Ausente => default
 // `fnjs_ver_ficha()` (ctr_ficha). Una vista sin ficha (encargo_ver) lo envía
 // vacío para que el select no tenga onchange.
-$action = FilterPostGet::post('action');
+$action = \src\shared\domain\helpers\FilterPostGet::post('action');
 if ($action === null) {
-    $action = FilterPostGet::get('action');
+    $action = \src\shared\domain\helpers\FilterPostGet::get('action');
 }
 
 ContestarJson::enviar('', $useCase->execute(

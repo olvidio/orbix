@@ -18,7 +18,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/procesos/actividad_proceso_get', PostRequest::requestPayloadForHash());
 
-$error = PayloadCoercion::string($data['error'] ?? '');
+$error = \frontend\shared\helpers\PayloadCoercion::string($data['error'] ?? '');
 if ($error !== '') {
     AjaxJsonSupport::html($error, $error);
 }

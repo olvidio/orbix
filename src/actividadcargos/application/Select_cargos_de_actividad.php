@@ -218,7 +218,7 @@ class Select_cargos_de_actividad
                 'id_dossier' => $this->id_dossier,
                 'id_pau' => $this->id_pau,
             ];
-            array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
+            array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
             $nomTxt = $val['nom'] ?? '';
             $nom = sprintf(_("añadir %s"), is_scalar($nomTxt) ? (string) $nomTxt : '');
             $this->aLinks_dl[$nom] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);

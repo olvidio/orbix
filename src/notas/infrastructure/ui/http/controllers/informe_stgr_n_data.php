@@ -10,7 +10,7 @@ $error = '';
 $data = [];
 
 try {
-    $QdlRaw = FilterPostGet::post('dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $QdlRaw = \src\shared\domain\helpers\FilterPostGet::post('dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     /** @var array<int, int|string> $Qdl */
     $Qdl = [];
     if (is_array($QdlRaw)) {
@@ -20,7 +20,7 @@ try {
             }
         }
     }
-    $Qlista = (string)FilterPostGet::post('lista');
+    $Qlista = (string)\src\shared\domain\helpers\FilterPostGet::post('lista');
     $lista = !empty($Qlista);
 
     /** @var InformeStgrNumerarios $informe */

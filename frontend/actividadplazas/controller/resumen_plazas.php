@@ -28,26 +28,26 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
 }
 
 $selParts = ActividadplazasPostInput::selHashParts();
 if ($selParts !== null) {
-    ListNavSupport::persistActividadSelectChildEntry($oPosicion, ['id_activ' => PayloadCoercion::int($selParts['first'])]);
+    \frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry($oPosicion, ['id_activ' => \frontend\shared\helpers\PayloadCoercion::int($selParts['first'])]);
 } else {
-    ListNavSupport::persistActividadSelectChildEntry($oPosicion);
+    \frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry($oPosicion);
 }
 
 if ($selParts !== null) {
-    $id_activ = PayloadCoercion::int($selParts['first']);
+    $id_activ = \frontend\shared\helpers\PayloadCoercion::int($selParts['first']);
     $nom_activ = $selParts['second'];
 } else {
     $id_activ = (int)filter_input(INPUT_POST, 'id_activ');

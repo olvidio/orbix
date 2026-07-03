@@ -7,13 +7,13 @@ use src\usuarios\domain\entity\Grupo;
 use src\usuarios\domain\value_objects\Username;
 use src\shared\web\ContestarJson;
 
-$Qusuario = (string)FilterPostGet::post('usuario');
+$Qusuario = (string)\src\shared\domain\helpers\FilterPostGet::post('usuario');
 
 $error_txt = '';
 if (empty($Qusuario)) {
     $error_txt .= _("debe poner un nombre");
 }
-$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
+$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
 
 $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 if (empty($Qid_usuario)) {

@@ -9,7 +9,6 @@ use src\actividadcargos\domain\entity\ActividadCargo;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Asigna un sacd nuevo a una actividad.
@@ -39,8 +38,8 @@ final class SacdAsignar
      */
     public function execute(array $input): string
     {
-        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
-        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
+        $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
         if ($id_activ <= 0 || $id_nom <= 0) {
             return _("faltan parametros id_activ / id_nom");
         }

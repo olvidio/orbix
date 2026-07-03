@@ -10,7 +10,6 @@ use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/home_persona_data`.
@@ -45,7 +44,7 @@ final class HomePersonaData
             $id_tabla = $seleccion['id_tabla'];
         }
 
-        $Qobj_pau = FuncTablasSupport::inputString($input, 'obj_pau');
+        $Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'obj_pau');
 
         $problemasRegionStgr = [];
         try {

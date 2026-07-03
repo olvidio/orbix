@@ -34,7 +34,7 @@
             data: $f.serialize()
         }).done(function (rta) {
             if (rta && rta.success) {
-                <?= list_nav_js_atras_to_dossiers_parent($oPosicion); ?>
+                <?= \frontend\shared\helpers\ListNavSupport::jsAtrasToDossiersParent($oPosicion); ?>
             } else {
                 var msg = (rta && rta.mensaje) ? rta.mensaje : <?= json_encode(_("error desconocido")) ?>;
                 alert(<?= json_encode(_("respuesta") . ": ") ?> + msg);
@@ -44,7 +44,7 @@
         });
     };
 </script>
-<?= list_nav_mostrar_left_slide_to_dossiers_parent($oPosicion); ?>
+<?= \frontend\shared\helpers\ListNavSupport::mostrarLeftSlideToDossiersParent($oPosicion); ?>
 <form id="frm_cargos_personas_en_actividad" name="frm_cargos_personas_en_actividad" action="" method="POST">
     <?= $hash_campos_html ?>
     <table>

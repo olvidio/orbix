@@ -5,8 +5,8 @@ use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
 // Obtener los parámetros
-$verification_code = FilterPostGet::post('verification_code');
-$secret_2fa = FilterPostGet::post('secret_2fa');
+$verification_code = \src\shared\domain\helpers\FilterPostGet::post('verification_code');
+$secret_2fa = \src\shared\domain\helpers\FilterPostGet::post('secret_2fa');
 
 $error_txt = '';
 $data = [];

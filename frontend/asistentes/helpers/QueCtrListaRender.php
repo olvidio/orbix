@@ -22,8 +22,8 @@ final class QueCtrListaRender
     {
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm(FuncTablasSupport::payloadString($hashMain, 'campos_form'));
-        $cn = FuncTablasSupport::payloadString($hashMain, 'campos_no');
+        $oHash->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_form'));
+        $cn = \frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_no');
         if ($cn !== '') {
             $oHash->setCamposNo($cn);
         }
@@ -46,7 +46,7 @@ final class QueCtrListaRender
         }
         unset($payload['periodo_form']);
 
-        $action = FuncTablasSupport::payloadString($payload, 'action');
+        $action = \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'action');
         if ($action !== '' && !str_starts_with($action, 'http://') && !str_starts_with($action, 'https://')) {
             $payload['action'] = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/' . ltrim($action, '/');
         }

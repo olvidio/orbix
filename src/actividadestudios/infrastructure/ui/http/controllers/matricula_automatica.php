@@ -6,5 +6,9 @@ use src\shared\web\ContestarJson;
 
 /** @var MatriculaAutomatica $useCase */
 $useCase = DependencyResolver::get(MatriculaAutomatica::class);
-$msg = $useCase->execute($_POST);
-ContestarJson::enviar($msg, 'ok');
+$result = $useCase->execute($_POST);
+if ($result['success']) {
+    ContestarJson::enviar('', ['msg' => $result['msg']]);
+} else {
+    ContestarJson::enviar($result['msg'], 'ok');
+}

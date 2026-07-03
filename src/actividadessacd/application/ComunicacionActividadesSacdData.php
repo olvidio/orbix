@@ -12,7 +12,6 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use frontend\shared\web\Periodo;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder para la pantalla "comunicacion de actividades a los sacd".
@@ -106,14 +105,14 @@ final class ComunicacionActividadesSacdData
      */
     public function resolverContexto(array $input): array
     {
-        $que = FuncTablasSupport::inputString($input, 'que');
-        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
-        $propuesta = FuncTablasSupport::inputString($input, 'propuesta');
+        $que = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'que');
+        $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
+        $propuesta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'propuesta');
 
-        $periodo = FuncTablasSupport::inputString($input, 'periodo');
-        $year = FuncTablasSupport::inputString($input, 'year');
-        $empiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
-        $empiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
+        $periodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
+        $year = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'year');
+        $empiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
+        $empiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
 
         $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         if ($oMiUsuario !== null) {

@@ -66,18 +66,18 @@ final class CartaspresentacionPayload
     public static function shellViewFromPayload(array $payload): array
     {
         return [
-            'mi_dele' => PayloadCoercion::string($payload['mi_dele'] ?? ''),
-            'url_ctr' => PayloadCoercion::string($payload['url_ctr'] ?? ''),
-            'h_ctr' => PayloadCoercion::string($payload['h_ctr'] ?? ''),
-            'url_lista' => PayloadCoercion::string($payload['url_lista'] ?? ''),
-            'hash_lista_html' => PayloadCoercion::string($payload['hash_lista_html'] ?? ''),
-            'url_form' => PayloadCoercion::string($payload['url_form'] ?? ''),
-            'h_form' => PayloadCoercion::string($payload['h_form'] ?? ''),
-            'url_poblaciones' => PayloadCoercion::string($payload['url_poblaciones'] ?? ''),
-            'h_poblaciones' => PayloadCoercion::string($payload['h_poblaciones'] ?? ''),
-            'url_update' => PayloadCoercion::string($payload['url_update'] ?? ''),
-            'url_eliminar' => PayloadCoercion::string($payload['url_eliminar'] ?? ''),
-            'h_eliminar' => PayloadCoercion::string($payload['h_eliminar'] ?? ''),
+            'mi_dele' => \frontend\shared\helpers\PayloadCoercion::string($payload['mi_dele'] ?? ''),
+            'url_ctr' => \frontend\shared\helpers\PayloadCoercion::string($payload['url_ctr'] ?? ''),
+            'h_ctr' => \frontend\shared\helpers\PayloadCoercion::string($payload['h_ctr'] ?? ''),
+            'url_lista' => \frontend\shared\helpers\PayloadCoercion::string($payload['url_lista'] ?? ''),
+            'hash_lista_html' => \frontend\shared\helpers\PayloadCoercion::string($payload['hash_lista_html'] ?? ''),
+            'url_form' => \frontend\shared\helpers\PayloadCoercion::string($payload['url_form'] ?? ''),
+            'h_form' => \frontend\shared\helpers\PayloadCoercion::string($payload['h_form'] ?? ''),
+            'url_poblaciones' => \frontend\shared\helpers\PayloadCoercion::string($payload['url_poblaciones'] ?? ''),
+            'h_poblaciones' => \frontend\shared\helpers\PayloadCoercion::string($payload['h_poblaciones'] ?? ''),
+            'url_update' => \frontend\shared\helpers\PayloadCoercion::string($payload['url_update'] ?? ''),
+            'url_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($payload['url_eliminar'] ?? ''),
+            'h_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($payload['h_eliminar'] ?? ''),
         ];
     }
 
@@ -94,8 +94,8 @@ final class CartaspresentacionPayload
     public static function buscarViewFromPayload(array $payload): array
     {
         return [
-            'url_lista' => PayloadCoercion::string($payload['url_lista'] ?? ''),
-            'hash_lista_html' => PayloadCoercion::string($payload['hash_lista_html'] ?? ''),
+            'url_lista' => \frontend\shared\helpers\PayloadCoercion::string($payload['url_lista'] ?? ''),
+            'hash_lista_html' => \frontend\shared\helpers\PayloadCoercion::string($payload['hash_lista_html'] ?? ''),
             'opciones_region' => NotasFormSupport::desplegableOpciones($payload['opciones_region'] ?? []),
             'opciones_pais' => NotasFormSupport::desplegableOpciones($payload['opciones_pais'] ?? []),
             'opciones_delegacion' => NotasFormSupport::desplegableOpciones($payload['opciones_delegacion'] ?? []),
@@ -120,14 +120,14 @@ final class CartaspresentacionPayload
     {
         return [
             'ok' => !empty($payload['ok']),
-            'mensaje' => PayloadCoercion::string($payload['mensaje'] ?? ''),
-            'nombre_ubi' => PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
-            'pres_nom' => PayloadCoercion::string($payload['pres_nom'] ?? ''),
-            'pres_telf' => PayloadCoercion::string($payload['pres_telf'] ?? ''),
-            'pres_mail' => PayloadCoercion::string($payload['pres_mail'] ?? ''),
-            'zona' => PayloadCoercion::string($payload['zona'] ?? ''),
-            'observ' => PayloadCoercion::string($payload['observ'] ?? ''),
-            'hash_update_html' => PayloadCoercion::string($payload['hash_update_html'] ?? ''),
+            'mensaje' => \frontend\shared\helpers\PayloadCoercion::string($payload['mensaje'] ?? ''),
+            'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
+            'pres_nom' => \frontend\shared\helpers\PayloadCoercion::string($payload['pres_nom'] ?? ''),
+            'pres_telf' => \frontend\shared\helpers\PayloadCoercion::string($payload['pres_telf'] ?? ''),
+            'pres_mail' => \frontend\shared\helpers\PayloadCoercion::string($payload['pres_mail'] ?? ''),
+            'zona' => \frontend\shared\helpers\PayloadCoercion::string($payload['zona'] ?? ''),
+            'observ' => \frontend\shared\helpers\PayloadCoercion::string($payload['observ'] ?? ''),
+            'hash_update_html' => \frontend\shared\helpers\PayloadCoercion::string($payload['hash_update_html'] ?? ''),
         ];
     }
 
@@ -138,8 +138,8 @@ final class CartaspresentacionPayload
     public static function listaHtmlFromPayload(array $payload): array
     {
         return [
-            'html_lista' => PayloadCoercion::string($payload['html_lista'] ?? ''),
-            'html_errores' => PayloadCoercion::string($payload['html_errores'] ?? ''),
+            'html_lista' => \frontend\shared\helpers\PayloadCoercion::string($payload['html_lista'] ?? ''),
+            'html_errores' => \frontend\shared\helpers\PayloadCoercion::string($payload['html_errores'] ?? ''),
         ];
     }
 
@@ -152,7 +152,7 @@ final class CartaspresentacionPayload
         return [
             'cabeceras' => ActividadesListaSupport::cabeceras($payload['a_cabeceras'] ?? []),
             'valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
-            'explicacion' => PayloadCoercion::string($payload['explicacion'] ?? ''),
+            'explicacion' => \frontend\shared\helpers\PayloadCoercion::string($payload['explicacion'] ?? ''),
         ];
     }
 }

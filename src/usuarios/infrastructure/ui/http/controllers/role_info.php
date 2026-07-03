@@ -11,7 +11,7 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use src\shared\web\ContestarJson;
 
-$Qid_role = (int)FilterPostGet::post('id_role');
+$Qid_role = (int)\src\shared\domain\helpers\FilterPostGet::post('id_role');
 
 $error_txt = '';
 

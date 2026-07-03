@@ -29,8 +29,8 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 if (!(OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r')) {
@@ -38,8 +38,8 @@ if (!(OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r'))
 }
 
 $aviso = '';
-$Qmod = PayloadCoercion::string(filter_input(INPUT_POST, 'mod'));
-$Qapellido1 = PayloadCoercion::string(filter_input(INPUT_POST, 'apellido1'));
+$Qmod = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'mod'));
+$Qapellido1 = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'apellido1'));
 
 $a_botones = array(
     array('txt' => _("imprimir certificado"), 'click' => "fnjs_imp_certificado(this.form)"),
@@ -60,7 +60,7 @@ $raw = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl(
     'apellido1' => $Qapellido1,
 ], false));
 if (!empty($raw['error'])) {
-    $errorHtml = PostRequest::stripInternalCallProvenance(PayloadCoercion::string($raw['error']));
+    $errorHtml = PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($raw['error']));
     if (str_contains($errorHtml, _('Delegaciones no dadas de alta'))
         || str_contains($errorHtml, 'Delegaciones no dadas de alta')
         || str_contains($errorHtml, _('Delegaciones sin región del stgr'))
@@ -93,7 +93,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 if ($msg_err !== '') {
-    echo PayloadCoercion::string($msg_err);
+    echo \frontend\shared\helpers\PayloadCoercion::string($msg_err);
 }
 
 $oTabla = new Lista();

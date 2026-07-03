@@ -6,41 +6,6 @@ namespace frontend\actividadessacd\helpers;
 
 use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\helpers\PayloadCoercion;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
-
-final class ActividadessacdSession
-{
-    public static function oConfig(): ?ConfigSnapshot
-    {
-        $oConfig = $_SESSION['oConfig'] ?? null;
-
-        return $oConfig instanceof ConfigSnapshot ? $oConfig : null;
-    }
-
-    public static function anyFinalCurs(): int
-    {
-        $oConfig = self::oConfig();
-        if ($oConfig === null) {
-            return (int) date('Y');
-        }
-
-        return $oConfig->any_final_curs();
-    }
-
-    public static function sessionIdioma(): string
-    {
-        $auth = $_SESSION['session_auth'] ?? null;
-        if (is_array($auth) && isset($auth['idioma']) && is_string($auth['idioma'])) {
-            return $auth['idioma'];
-        }
-        $oConfig = self::oConfig();
-        if ($oConfig === null) {
-            return '';
-        }
-
-        return PayloadCoercion::string($oConfig->getIdioma_default());
-    }
-}
 
 final class ActividadessacdPayload
 {
@@ -58,6 +23,6 @@ final class ActividadessacdPayload
      */
     public static function textoFromPayload(array $payload): string
     {
-        return PayloadCoercion::string($payload['texto'] ?? '');
+        return \frontend\shared\helpers\PayloadCoercion::string($payload['texto'] ?? '');
     }
 }

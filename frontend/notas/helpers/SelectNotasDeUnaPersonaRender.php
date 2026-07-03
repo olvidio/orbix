@@ -24,12 +24,12 @@ final class SelectNotasDeUnaPersonaRender
     {
         $paths = isset($seg['paths']) && is_array($seg['paths']) ? $seg['paths'] : [];
         $publicBase = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $elimRel = PayloadCoercion::string($paths['persona_nota_eliminar'] ?? '');
+        $elimRel = \frontend\shared\helpers\PayloadCoercion::string($paths['persona_nota_eliminar'] ?? '');
         $urlPersonaNotaEliminar = $elimRel !== '' ? $publicBase . '/' . ltrim($elimRel, '/') : '';
 
         $hashMain = isset($seg['hash_main']) && is_array($seg['hash_main']) ? $seg['hash_main'] : [];
         $oHashSelect = new HashFront();
-        $oHashSelect->setCamposNo(PayloadCoercion::string($hashMain['campos_no'] ?? ''));
+        $oHashSelect->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hashMain['campos_no'] ?? ''));
         $hidden = $hashMain['campos_hidden'] ?? [];
         $oHashSelect->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
 
@@ -59,7 +59,7 @@ final class SelectNotasDeUnaPersonaRender
         $valoresRaw = $tabla['valores'] ?? [];
 
         $oTabla = new Lista();
-        $oTabla->setId_tabla(PayloadCoercion::string($tabla['id_tabla'] ?? 'select_notas_de_una_persona'));
+        $oTabla->setId_tabla(\frontend\shared\helpers\PayloadCoercion::string($tabla['id_tabla'] ?? 'select_notas_de_una_persona'));
         $oTabla->setCabeceras($cabeceras);
         $oTabla->setBotones($botones);
         $oTabla->setDatos(is_array($valoresRaw) ? $valoresRaw : []);
@@ -67,7 +67,7 @@ final class SelectNotasDeUnaPersonaRender
         $spec = $seg['link_insert_spec'] ?? null;
         $linkInsertSpec = null;
         if (is_array($spec)) {
-            $path = PayloadCoercion::string($spec['path'] ?? '');
+            $path = \frontend\shared\helpers\PayloadCoercion::string($spec['path'] ?? '');
             $queryRaw = $spec['query'] ?? [];
             $query = [];
             if (is_array($queryRaw)) {
@@ -83,7 +83,7 @@ final class SelectNotasDeUnaPersonaRender
             'link_insert_spec' => $linkInsertSpec,
         ]);
 
-        $aviso = PayloadCoercion::string($seg['aviso'] ?? '');
+        $aviso = \frontend\shared\helpers\PayloadCoercion::string($seg['aviso'] ?? '');
 
         $oView = new ViewNewPhtml('frontend\\notas\\view');
 
@@ -91,12 +91,12 @@ final class SelectNotasDeUnaPersonaRender
             'oTabla' => $oTabla,
             'oHashSelect' => $oHashSelect,
             'link_insert' => $signed['link_insert'],
-            'txt_eliminar' => PayloadCoercion::string($seg['txt_eliminar'] ?? ''),
-            'bloque' => PayloadCoercion::string($seg['bloque'] ?? ''),
+            'txt_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($seg['txt_eliminar'] ?? ''),
+            'bloque' => \frontend\shared\helpers\PayloadCoercion::string($seg['bloque'] ?? ''),
             'aviso' => $aviso,
             'msg' => $aviso,
             'url_persona_nota_eliminar' => $urlPersonaNotaEliminar,
-            'id_sel_value' => PayloadCoercion::string($seg['id_sel_value'] ?? ''),
+            'id_sel_value' => \frontend\shared\helpers\PayloadCoercion::string($seg['id_sel_value'] ?? ''),
         ], false);
     }
 }

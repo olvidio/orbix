@@ -30,8 +30,8 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qtodos = (int)filter_input(INPUT_POST, 'todos');
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 $stack2 = ActividadplazasPostInput::stackFromPost();
 if ($stack2 !== null) {
@@ -43,7 +43,7 @@ if ($stack2 !== null) {
 
 $selParts = ActividadplazasPostInput::selHashParts();
 if ($selParts !== null) {
-    $Qid_nom = PayloadCoercion::int($selParts['first']);
+    $Qid_nom = \frontend\shared\helpers\PayloadCoercion::int($selParts['first']);
     $Qna = $selParts['second'];
     $Qsactividad = (string)(filter_input(INPUT_POST, 'sactividad') ?: filter_input(INPUT_POST, 'que'));
     $Qtodos = empty($Qtodos) ? 1 : $Qtodos;

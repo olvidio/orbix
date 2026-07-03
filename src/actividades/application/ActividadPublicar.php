@@ -3,7 +3,6 @@
 namespace src\actividades\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Marca como publicadas las actividades seleccionadas.
@@ -22,7 +21,7 @@ final class ActividadPublicar
     public function execute(array $input): string
     {
         $error_txt = '';
-        $a_sel = FuncTablasSupport::inputStringList($input, 'sel');
+        $a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($input, 'sel');
 
         if ($a_sel === []) {
             return $error_txt;

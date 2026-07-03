@@ -7,13 +7,13 @@ use src\misas\application\support\MisasBuildInput;
 use src\shared\web\ContestarJson;
 
 $in = [
-    'id_zona' => FilterPostGet::post('id_zona'),
-    'tipo_plantilla' => FilterPostGet::post('tipo_plantilla'),
-    'seleccion' => FilterPostGet::post('seleccion'),
-    'periodo' => FilterPostGet::post('periodo'),
-    'empiezamin' => FilterPostGet::post('empiezamin'),
-    'empiezamax' => FilterPostGet::post('empiezamax'),
-    'orden' => FilterPostGet::post('orden'),
+    'id_zona' => \src\shared\domain\helpers\FilterPostGet::post('id_zona'),
+    'tipo_plantilla' => \src\shared\domain\helpers\FilterPostGet::post('tipo_plantilla'),
+    'seleccion' => \src\shared\domain\helpers\FilterPostGet::post('seleccion'),
+    'periodo' => \src\shared\domain\helpers\FilterPostGet::post('periodo'),
+    'empiezamin' => \src\shared\domain\helpers\FilterPostGet::post('empiezamin'),
+    'empiezamax' => \src\shared\domain\helpers\FilterPostGet::post('empiezamax'),
+    'orden' => \src\shared\domain\helpers\FilterPostGet::post('orden'),
 ];
 
 /** @var CrearNuevoPeriodoData $useCase */

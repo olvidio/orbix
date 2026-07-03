@@ -30,18 +30,18 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 
-$restored = ListNavSupport::restoreSelectionFromStackPost();
+$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
 $Qid_sel = $restored['id_sel'];
 $Qscroll_id = $restored['scroll_id'];
 
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
-ListNavSupport::bootDossierChildRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::bootDossierChildRecordar($oPosicion, $Qrefresh);
 
 $ids = ActividadestudiosPostInput::idActivAsignatura();
 $id_activ = $ids['id_activ'];
 $id_asignatura = $ids['id_asignatura'];
 
-ListNavSupport::persistActaNotasReturnToPosicion($oPosicion, 0);
+\frontend\shared\helpers\ListNavSupport::persistActaNotasReturnToPosicion($oPosicion, 0);
 
 $d = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/acta_notas_data', [
     'id_activ' => $id_activ,
@@ -71,15 +71,15 @@ $oHashNotas->setCamposNo('que');
 $oHashNotas->setArraycamposHidden([
     'id_pau' => (int)filter_input(INPUT_POST, 'id_pau'),
     'id_activ' => $id_activ,
-    'opcional' => PayloadCoercion::string(filter_input(INPUT_POST, 'opcional')),
-    'primary_key_s' => PayloadCoercion::string(filter_input(INPUT_POST, 'primary_key_s')),
+    'opcional' => \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'opcional')),
+    'primary_key_s' => \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'primary_key_s')),
     'id_asignatura' => $id_asignatura,
     'id_nivel' => (int)filter_input(INPUT_POST, 'id_nivel'),
     'matriculados' => $matriculados,
 ]);
 
 if ($msg_err !== '') {
-    echo PayloadCoercion::string($msg_err);
+    echo \frontend\shared\helpers\PayloadCoercion::string($msg_err);
 }
 
 if ($matriculados === 0) {
@@ -99,7 +99,7 @@ $a_campos = [
     'oPosicion' => $oPosicion,
     'oHashNotas' => $oHashNotas,
     'permiso' => $permiso,
-    'Qque' => PayloadCoercion::string(filter_input(INPUT_POST, 'que')),
+    'Qque' => \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'que')),
     'matriculas_rows' => $matriculas_rows,
     'oDesplActas' => $oDesplActas,
     'acta_principal' => $acta_principal,

@@ -79,8 +79,8 @@ class CuadriculaZonaRenderer
             $value = $data[$key] ?? $defaultFromPost;
 
             return match ($type) {
-                'int' => PayloadCoercion::int($value),
-                'string' => PayloadCoercion::string($value),
+                'int' => \frontend\shared\helpers\PayloadCoercion::int($value),
+                'string' => \frontend\shared\helpers\PayloadCoercion::string($value),
                 default => $value,
             };
         };
@@ -96,8 +96,8 @@ class CuadriculaZonaRenderer
             'orden' => $pick('orden', $post['orden'] ?? '', 'string'),
             'seleccion' => $pick('seleccion', $post['seleccion'] ?? 0, 'int'),
             'periodo' => $pick('periodo', $post['periodo'] ?? '', 'string'),
-            'empieza_min' => PayloadCoercion::string($data['empieza_min'] ?? $post['empiezamin'] ?? ''),
-            'empieza_max' => PayloadCoercion::string($data['empieza_max'] ?? $post['empiezamax'] ?? ''),
+            'empieza_min' => \frontend\shared\helpers\PayloadCoercion::string($data['empieza_min'] ?? $post['empiezamin'] ?? ''),
+            'empieza_max' => \frontend\shared\helpers\PayloadCoercion::string($data['empieza_max'] ?? $post['empiezamax'] ?? ''),
             'fila' => $pick('fila', $post['fila'] ?? 0, 'int'),
             'columna' => $pick('columna', $post['columna'] ?? 0, 'int'),
             'h_cuadricula_update' => '',

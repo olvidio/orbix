@@ -21,8 +21,8 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qtipo_ctr = (string)filter_input(INPUT_POST, 'tipo_ctr');
@@ -41,7 +41,7 @@ if ($miRolePau === 'ctr') { // PauType::PAU_CTR
     $sessionAuth = $_SESSION['session_auth'] ?? null;
     $oMiUsuario = is_array($sessionAuth) ? ($sessionAuth['MiUsuario'] ?? null) : null;
     $id_pau = is_object($oMiUsuario) && method_exists($oMiUsuario, 'getCsv_id_pau')
-        ? PayloadCoercion::string($oMiUsuario->getCsv_id_pau())
+        ? \frontend\shared\helpers\PayloadCoercion::string($oMiUsuario->getCsv_id_pau())
         : '';
     $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
     $oForm->setCentros('centro');
@@ -107,7 +107,7 @@ $oSelects->setAccionConjunto('fnjs_mas_centros(event)');
 
 $oFormP = null;
 if ($Qperiodo === 'no') {
-    if ($Qtipo_lista === 'datosEc') $oForm->setTitulo(FuncTablasSupport::strtoupperDlb(_("resumen económico")));
+    if ($Qtipo_lista === 'datosEc') $oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("resumen económico")));
     $oForm->setBoton("<input type=button name=\"buscar\" value=\"" . _('buscar') . "\" onclick=\"fnjs_ver();\">");
 } else {
     $aOpciones = array(
@@ -130,7 +130,7 @@ if ($Qperiodo === 'no') {
     $oFormP->setEmpiezaMin($Qempiezamin);
     $oFormP->setEmpiezaMax($Qempiezamax);
 
-    $oFormP->setTitulo(FuncTablasSupport::strtoupperDlb(_("seleccionar un centro y un período")));
+    $oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("seleccionar un centro y un período")));
     $oFormP->setAntes($oSelects->ListaSelects());
     $oFormP->setBoton("<input type=button name=\"buscar\" value=\"" . _('buscar') . "\" onclick=\"fnjs_ver();\">");
 }

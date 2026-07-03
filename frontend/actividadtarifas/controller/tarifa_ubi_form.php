@@ -37,7 +37,7 @@ $fields = ActividadtarifasPayload::fields(
 $oDesplSeries = new Desplegable();
 $oDesplSeries->setNombre('id_serie');
 $oDesplSeries->setOpciones($fields['opciones_serie']);
-$oDesplSeries->setOpcion_sel(PayloadCoercion::string($fields['id_serie_sel']));
+$oDesplSeries->setOpcion_sel(\frontend\shared\helpers\PayloadCoercion::string($fields['id_serie_sel']));
 
 $oDesplTarifas = null;
 if ($fields['es_nuevo']) {

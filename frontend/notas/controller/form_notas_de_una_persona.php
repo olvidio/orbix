@@ -34,7 +34,7 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootDossierChildRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::bootDossierChildRecordar($oPosicion);
 
 $obj = 'notas\\model\\entity\\PersonaNotaDB';
 
@@ -90,7 +90,7 @@ $chk_preceptor = !empty($datos['preceptor']) ? 'checked' : '';
 $tipo_acta = $datos['tipo_acta'];
 $ta = $datos['vo']['TipoActa'];
 if ($tipo_acta !== '' && $tipo_acta !== 0) {
-    $tipoActaInt = PayloadCoercion::int($tipo_acta);
+    $tipoActaInt = \frontend\shared\helpers\PayloadCoercion::int($tipo_acta);
     $chk_acta = $tipoActaInt === ($ta['FORMATO_ACTA'] ?? 0) ? 'checked' : '';
     $chk_certificado = $tipoActaInt === ($ta['FORMATO_CERTIFICADO'] ?? 0) ? 'checked' : '';
 } else {
@@ -101,7 +101,7 @@ if ($tipo_acta !== '' && $tipo_acta !== 0) {
 $epoca = $datos['epoca'];
 $ne = $datos['vo']['NotaEpoca'];
 if ($epoca !== '' && $epoca !== 0) {
-    $epocaInt = PayloadCoercion::int($epoca);
+    $epocaInt = \frontend\shared\helpers\PayloadCoercion::int($epoca);
     $chk_epoca_ca = $epocaInt === ($ne['EPOCA_CA'] ?? 0) ? 'checked' : '';
     $chk_epoca_inv = $epocaInt === ($ne['EPOCA_INVIERNO'] ?? 0) ? 'checked' : '';
     $chk_epoca_otro = $epocaInt === ($ne['EPOCA_OTRO'] ?? 0) ? 'checked' : '';
@@ -167,10 +167,10 @@ $url_persona_nota_nueva = $web . '/src/notas/persona_nota_nueva';
 $url_persona_nota_editar = $web . '/src/notas/persona_nota_editar';
 
 $oConfig = $_SESSION['oConfig'] ?? null;
-$nota_max_default = $oConfig instanceof ConfigSnapshot ? PayloadCoercion::int($oConfig->getNotaMax()) : 0;
+$nota_max_default = $oConfig instanceof ConfigSnapshot ? \frontend\shared\helpers\PayloadCoercion::int($oConfig->getNotaMax()) : 0;
 $nota_max = $datos['nota_max'] === '' || $datos['nota_max'] === 0
     ? $nota_max_default
-    : PayloadCoercion::int($datos['nota_max'], $nota_max_default);
+    : \frontend\shared\helpers\PayloadCoercion::int($datos['nota_max'], $nota_max_default);
 
 $a_campos = [
     'obj' => $obj,

@@ -7,7 +7,6 @@ use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
 use src\menus\domain\PermisoMenuBits;
 use src\usuarios\domain\entity\Role;
-use src\shared\domain\helpers\FuncTablasSupport;
 class MenuGuardar
 {
     public function __construct(
@@ -47,7 +46,7 @@ class MenuGuardar
         $oRole->setId_role($oMiUsuario?->getId_role() ?? 0);
 
         //if ($oRole->isRole('SuperAdmin')) {
-            $ok = FuncTablasSupport::isTrue($ok);
+            $ok = \src\shared\domain\helpers\FuncTablasSupport::isTrue($ok);
             $oMenuDb->setOk($ok);
         //}
         $oMenuDb->setId_grupmenu($id_grupmenu);

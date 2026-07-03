@@ -11,14 +11,14 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\permisos\domain\PermisosActividades;
 use src\shared\web\ContestarJson;
 
-$Qid_tipo_activ = (string)FilterPostGet::post('id_tipo_activ');
+$Qid_tipo_activ = (string)\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ');
 if ($Qid_tipo_activ === '') {
-    $Qid_tipo_activ = (string)FilterPostGet::get('id_tipo_activ');
+    $Qid_tipo_activ = (string)\src\shared\domain\helpers\FilterPostGet::get('id_tipo_activ');
 }
 
-$Qdl = (string)FilterPostGet::post('dl_propia');
+$Qdl = (string)\src\shared\domain\helpers\FilterPostGet::post('dl_propia');
 if ($Qdl === '') {
-    $Qdl = (string)FilterPostGet::get('dl_propia');
+    $Qdl = (string)\src\shared\domain\helpers\FilterPostGet::get('dl_propia');
 }
 $dl_propia = !($Qdl === 'f' || $Qdl === '0' || strcasecmp($Qdl, 'false') === 0);
 

@@ -10,7 +10,7 @@ use src\shared\security\HashB;
 
 $sfsv = ConfigGlobal::mi_sfsv();
 
-$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
+$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
 // listado de grupos posibles
 $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 $cGrupos = $GrupoRepository->getGrupos();

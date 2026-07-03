@@ -32,13 +32,13 @@ $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
 $oDesplZonas->setOpciones(MisasDesplegableSupport::opciones($data['zonas_opciones'] ?? []));
-$oDesplZonas->setOpcion_sel(PayloadCoercion::string($data['zonas_selected'] ?? 0));
+$oDesplZonas->setOpcion_sel(\frontend\shared\helpers\PayloadCoercion::string($data['zonas_selected'] ?? 0));
 
 $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setOpciones(MisasDesplegableSupport::opciones($data['centros_opciones'] ?? []));
 $oDesplCentros->setAction('fnjs_ver_plan_ctr()');
-$cs = PayloadCoercion::string($data['centros_selected'] ?? '');
+$cs = \frontend\shared\helpers\PayloadCoercion::string($data['centros_selected'] ?? '');
 if ($cs !== '') {
     $oDesplCentros->setOpcion_sel($cs);
 }
@@ -63,7 +63,7 @@ $a_campos = [
     'url_ver_plan_ctr' => $url_ver_plan_ctr,
     'h_buscar_plan_ctr' => $h_buscar_plan_ctr,
     'h_plan_ctr' => $h_plan_ctr,
-    'id_ubi_centro' => PayloadCoercion::string($data['id_ubi_centro'] ?? ''),
+    'id_ubi_centro' => \frontend\shared\helpers\PayloadCoercion::string($data['id_ubi_centro'] ?? ''),
 ];
 
 $template = $view === 'centro' ? 'buscar_plan_un_ctr.phtml' : 'buscar_plan_ctr.phtml';

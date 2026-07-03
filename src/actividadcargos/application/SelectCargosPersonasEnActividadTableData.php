@@ -5,7 +5,6 @@ namespace src\actividadcargos\application;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\ActividadCargo;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Filas de la tabla del dossier 1302 ({@see Select_cargos_personas_en_actividad}).
@@ -49,7 +48,7 @@ final class SelectCargosPersonasEnActividadTableData
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
 
-            $chk_puede_agd = FuncTablasSupport::isTrue($oActividadCargo->isPuede_agd()) ? 'si' : 'no';
+            $chk_puede_agd = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oActividadCargo->isPuede_agd()) ? 'si' : 'no';
             $observ = (string) ($oActividadCargo->getObserv() ?? '');
 
             $id_tipo = substr((string) $id_tipo_activ, 0, 3);

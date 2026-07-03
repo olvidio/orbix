@@ -24,13 +24,13 @@ final class E43Payload
     public static function fromPayload(array $payload): array
     {
         return [
-            'msg_err' => PayloadCoercion::string($payload['msg_err'] ?? ''),
-            'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
-            'txt_nacimiento' => PayloadCoercion::string($payload['txt_nacimiento'] ?? ''),
-            'dl_origen' => PayloadCoercion::string($payload['dl_origen'] ?? ''),
-            'dl_destino' => PayloadCoercion::string($payload['dl_destino'] ?? ''),
-            'txt_actividad' => PayloadCoercion::string($payload['txt_actividad'] ?? ''),
-            'matriculas' => PayloadCoercion::int($payload['matriculas'] ?? 0),
+            'msg_err' => \frontend\shared\helpers\PayloadCoercion::string($payload['msg_err'] ?? ''),
+            'nom' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? ''),
+            'txt_nacimiento' => \frontend\shared\helpers\PayloadCoercion::string($payload['txt_nacimiento'] ?? ''),
+            'dl_origen' => \frontend\shared\helpers\PayloadCoercion::string($payload['dl_origen'] ?? ''),
+            'dl_destino' => \frontend\shared\helpers\PayloadCoercion::string($payload['dl_destino'] ?? ''),
+            'txt_actividad' => \frontend\shared\helpers\PayloadCoercion::string($payload['txt_actividad'] ?? ''),
+            'matriculas' => \frontend\shared\helpers\PayloadCoercion::int($payload['matriculas'] ?? 0),
             'aAsignaturasMatriculadas' => self::notasRows($payload['aAsignaturasMatriculadas'] ?? []),
         ];
     }
@@ -61,10 +61,10 @@ final class E43Payload
     private static function notaRow(array $row): array
     {
         return [
-            'nom_asignatura' => PayloadCoercion::string($row['nom_asignatura'] ?? ''),
-            'nota' => PayloadCoercion::string($row['nota'] ?? ''),
-            'f_acta' => PayloadCoercion::string($row['f_acta'] ?? ''),
-            'acta' => PayloadCoercion::string($row['acta'] ?? ''),
+            'nom_asignatura' => \frontend\shared\helpers\PayloadCoercion::string($row['nom_asignatura'] ?? ''),
+            'nota' => \frontend\shared\helpers\PayloadCoercion::string($row['nota'] ?? ''),
+            'f_acta' => \frontend\shared\helpers\PayloadCoercion::string($row['f_acta'] ?? ''),
+            'acta' => \frontend\shared\helpers\PayloadCoercion::string($row['acta'] ?? ''),
         ];
     }
 }

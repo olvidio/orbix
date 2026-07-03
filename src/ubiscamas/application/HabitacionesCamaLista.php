@@ -7,7 +7,6 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
-use src\shared\domain\helpers\FuncTablasSupport;
 class HabitacionesCamaLista
 {
     public function __construct(
@@ -122,7 +121,7 @@ class HabitacionesCamaLista
                 $aRow[6] = $oHabitacion->isDespacho() ? 'X' : '';
                 $aRow[7] = $oCama->getDescripcion();
                 $aRow[8] = $oCama->isLarga() ? 'X' : '';
-                $aRow[9] = FuncTablasSupport::isTrue($oCama->isVip()) ? 'X' : '';
+                $aRow[9] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oCama->isVip()) ? 'X' : '';
 
                 $ocupada_por = '';
                 $id_nom = '';

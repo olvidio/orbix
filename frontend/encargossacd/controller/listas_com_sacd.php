@@ -27,7 +27,7 @@ $a_campos = [
     'oPosicion' => $oPosicion,
     'array_modo' => is_array($datos['array_modo'] ?? null) ? $datos['array_modo'] : [],
     'Qsel' => $Qsel,
-    'lugar_fecha' => PayloadCoercion::string($datos['lugar_fecha'] ?? ''),
+    'lugar_fecha' => \frontend\shared\helpers\PayloadCoercion::string($datos['lugar_fecha'] ?? ''),
 ];
 
 $oView = new ViewNewPhtml('frontend\\encargossacd\\controller');

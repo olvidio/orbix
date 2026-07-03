@@ -1,7 +1,6 @@
 <?php
 
 use frontend\shared\helpers\ListNavSupport;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Pantalla unificada para la comunicacion de actividades a los sacd.
@@ -57,8 +56,8 @@ if ($Qque === 'un_sacd') {
     }
 }
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $aOpciones = [

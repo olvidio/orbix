@@ -10,7 +10,7 @@ final class PlanningPostInput
 {
 public static function postString(string $name, string $default = ''): string
 {
-    return PayloadCoercion::string(filter_input(INPUT_POST, $name), $default);
+    return \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, $name), $default);
 }
 
 public static function postInt(string $name, int $default = 0): int

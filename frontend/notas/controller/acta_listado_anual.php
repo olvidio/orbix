@@ -37,8 +37,8 @@ $data = PostRequest::getDataFromUrl('/src/notas/acta_listado_anual_data', [
 ]);
 
 $aActas = is_array($data['aActas'] ?? null) ? $data['aActas'] : [];
-$QinicioLocal = PayloadCoercion::string($data['inicio_local'] ?? '');
-$QfinLocal = PayloadCoercion::string($data['fin_local'] ?? '');
+$QinicioLocal = \frontend\shared\helpers\PayloadCoercion::string($data['inicio_local'] ?? '');
+$QfinLocal = \frontend\shared\helpers\PayloadCoercion::string($data['fin_local'] ?? '');
 
 $aOpciones = [
     'tot_any' => _("todo el año"),
@@ -54,7 +54,7 @@ $aOpciones = [
 $boton = "<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >";
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(FuncTablasSupport::strtoupperDlb(_("periodo de selección")));
+$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de selección")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);

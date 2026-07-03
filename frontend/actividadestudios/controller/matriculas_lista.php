@@ -35,16 +35,16 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 $aviso = '';
-$Qmod = PayloadCoercion::string(filter_input(INPUT_POST, 'mod'));
-$Qyear = PayloadCoercion::string(filter_input(INPUT_POST, 'year'));
-$Qperiodo = PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
-$Qempiezamin = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
-$Qempiezamax = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));
+$Qmod = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'mod'));
+$Qyear = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'year'));
+$Qperiodo = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
+$Qempiezamin = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
+$Qempiezamax = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));
 
 if ($Qperiodo === '') {
     $Qperiodo = 'curso_ca';
@@ -94,7 +94,7 @@ $a_camposHidden = [
 $oHash->setArraycamposHidden($a_camposHidden);
 
 if ($msg_err !== '') {
-    echo PayloadCoercion::string($msg_err);
+    echo \frontend\shared\helpers\PayloadCoercion::string($msg_err);
 }
 
 $oTabla = new Lista();
@@ -119,7 +119,7 @@ $aOpciones = [
 ];
 $oFormP = new frontend\shared\web\PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(FuncTablasSupport::strtoupperDlb(_('periodo de selección de actividades')));
+$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_('periodo de selección de actividades')));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setEmpiezaMax($Qempiezamax);

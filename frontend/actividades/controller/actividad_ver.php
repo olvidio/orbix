@@ -45,14 +45,14 @@ $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $gstackFromPost = filter_input(INPUT_POST, 'Gstack', FILTER_VALIDATE_INT);
 if (is_int($gstackFromPost) && $gstackFromPost > 0) {
-    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
-    ListNavSupport::persistActividadSelectChildEntry($oPosicion);
+    \frontend\shared\helpers\ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry($oPosicion);
 } else {
-    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-    ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 }
 
-ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
+\frontend\shared\helpers\ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 
 $Qid_activ = ActividadesPostInput::idActivFromPost();
 
@@ -66,7 +66,7 @@ $aQuery = array(
     'id_pau' => $Qid_activ,
     'obj_pau' => $Qobj_pau,
 );
-array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
 $permiso_des = ActividadesPermSupport::permDes();
@@ -180,7 +180,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         $isfsv = (integer)substr($id_tipo_activ, 0, 1);
         $calc_tarifa_inicial = true;
     }
-    if (FuncTablasSupport::isTrue($permiso_des)) {
+    if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($permiso_des)) {
         if (empty($id_tipo_activ)) {
             // valor por defecto. Si esta vacio dira que no tiene permiso.
             $id_tipo_activ = '1';
@@ -219,7 +219,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         ]);
         $crearPropia = ActividadesPayload::permisoCrearFromRow($rowPropia);
         if (!empty($rowPropia['aviso'])) {
-            echo '<br>' . PayloadCoercion::string($rowPropia['aviso']);
+            echo '<br>' . \frontend\shared\helpers\PayloadCoercion::string($rowPropia['aviso']);
         }
         if ($crearPropia === null) {
             echo '<br>';
@@ -243,7 +243,7 @@ if (!empty($Qid_activ)) { // caso de modificar
                 ]);
                 $crearEx = ActividadesPayload::permisoCrearFromRow($rowEx);
                 if (!empty($rowEx['aviso'])) {
-                    echo '<br>' . PayloadCoercion::string($rowEx['aviso']);
+                    echo '<br>' . \frontend\shared\helpers\PayloadCoercion::string($rowEx['aviso']);
                 }
                 if ($crearEx === null) {
                     die (_("No tiene permiso para crear una actividad de este tipo"));
@@ -265,7 +265,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         $dataNivelDef = PostRequest::getDataFromUrl('/src/actividades/actividad_nivel_stgr_default_datos', [
             'id_tipo_activ' => $id_tipo_activ,
         ]);
-        $nivel_stgr = PayloadCoercion::int($dataNivelDef['nivel_stgr_default'] ?? 9);
+        $nivel_stgr = \frontend\shared\helpers\PayloadCoercion::int($dataNivelDef['nivel_stgr_default'] ?? 9);
     }
 
     // Pedir desplegables + tarifa inicial para el caso 'nuevo'.
@@ -352,7 +352,7 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'snom_tipo' => $snom_tipo,
     'extendida' => $extendida ? 't' : '',
 ]);
-$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
+$actividad_tipo_html = \frontend\shared\helpers\PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 

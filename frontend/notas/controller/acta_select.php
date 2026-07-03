@@ -32,20 +32,20 @@ $mi_dele = OrbixRuntime::miDelef();
 $mi_region = OrbixRuntime::miRegion();
 
 $stackFromPost = isset($_POST['stack']) ? (int) filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
-$restored = ListNavSupport::restoreSelectionFromStackPost();
+$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
+$Qid_sel = !\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : \frontend\shared\helpers\ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistActaSelectReturnToPosicion($oPosicion, 0);
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistActaSelectReturnToPosicion($oPosicion, 0);
 
 $Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
 $Qacta = (string)filter_input(INPUT_POST, 'acta');
 
-ListNavSupport::persistSelectionOnListPage(
+\frontend\shared\helpers\ListNavSupport::persistSelectionOnListPage(
     $oPosicion,
     $Qid_sel,
     $Qscroll_id,
@@ -122,7 +122,7 @@ foreach ($cActasData as $oActa) {
     $a_valores[$i][3] = $nombre_corto;
     $a_valores[$i][4] = $hasPdf;
 }
-if (!ListNavSupport::idSelIsEmpty($Qid_sel)) {
+if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
 if ($Qscroll_id !== '') {

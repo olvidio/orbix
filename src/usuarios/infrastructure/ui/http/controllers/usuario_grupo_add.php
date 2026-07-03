@@ -1,7 +1,6 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\shared\config\ConfigGlobal;
 use src\shared\security\HashB;
@@ -12,15 +11,15 @@ use src\shared\web\ContestarJson;
 $sfsv = ConfigGlobal::mi_sfsv();
 $error_txt = '';
 
-$ctxRaw = (string)FilterPostGet::post('ctx');
+$ctxRaw = (string)\src\shared\domain\helpers\FilterPostGet::post('ctx');
 try {
     $opened = HashB::open($ctxRaw, 'usuario_grupo_add');
 } catch (HashBInvalidException $e) {
     ContestarJson::enviar(_("Operación no autorizada"), 'none');
     return;
 }
-$Qid_usuario = FuncTablasSupport::inputInt($opened, 'id_usuario');
-$Qid_grupo = FuncTablasSupport::inputInt($opened, 'id_grupo');
+$Qid_usuario = \src\shared\domain\helpers\FuncTablasSupport::inputInt($opened, 'id_usuario');
+$Qid_grupo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($opened, 'id_grupo');
 // añado el grupo de permisos al usuario.
 $UsuarioGrupoRepository = DependencyResolver::get(UsuarioGrupoRepositoryInterface::class);
 $oUsuarioGrupo = new UsuarioGrupo();

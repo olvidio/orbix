@@ -3,7 +3,6 @@
 namespace src\dossiers\application;
 
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Elimina un `TipoDossier`.
@@ -23,7 +22,7 @@ final class TipoDossierEliminar
      */
     public function execute(array $input): string
     {
-        $Qid_tipo_dossier = FuncTablasSupport::inputInt($input, 'id_tipo_dossier');
+        $Qid_tipo_dossier = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tipo_dossier');
         if ($Qid_tipo_dossier <= 0) {
             return _('falta id_tipo_dossier');
         }

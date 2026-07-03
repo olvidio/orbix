@@ -33,15 +33,15 @@ $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
 $Qactividad = (string)filter_input(INPUT_POST, 'actividad');
 $Qpropuesta = (bool)filter_input(INPUT_POST, 'propuesta');
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros([
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros([
     'modelo' => $Qmodelo,
     'year' => $Qyear,
     'trimestre' => $Qtrimestre,
     'id_zona' => $Qid_zona,
     'actividad' => $Qactividad,
     'propuesta' => $Qpropuesta,
-], ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
+], \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
 
 $oPosicion->setParametros([
@@ -74,7 +74,7 @@ $oPlanning->setInicio($oIniPlanning);
 $oPlanning->setFin($oFinPlanning);
 
 $msg_txt = '';
-if (FuncTablasSupport::isTrue($Qpropuesta)) {
+if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpropuesta)) {
     $msg_txt = _("Propuesta de calendario: actividades en cualquier estado (menos borrable)");
 }
 $a_campos = [

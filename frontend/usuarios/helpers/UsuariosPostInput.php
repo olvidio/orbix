@@ -51,7 +51,7 @@ public static function sessionAuthInt(string $key): int
         return 0;
     }
 
-    return PayloadCoercion::int($sessionAuth[$key] ?? 0);
+    return \frontend\shared\helpers\PayloadCoercion::int($sessionAuth[$key] ?? 0);
 }
 
 public static function sessionAuthString(string $key, string $default = ''): string
@@ -61,14 +61,14 @@ public static function sessionAuthString(string $key, string $default = ''): str
         return $default;
     }
 
-    return PayloadCoercion::string($sessionAuth[$key] ?? $default);
+    return \frontend\shared\helpers\PayloadCoercion::string($sessionAuth[$key] ?? $default);
 }
 
 public static function requestString(string $key): string
 {
     $merged = array_merge(UsuariosPayload::postData($_GET), UsuariosPayload::postData($_POST));
 
-    return PayloadCoercion::string($merged[$key] ?? '');
+    return \frontend\shared\helpers\PayloadCoercion::string($merged[$key] ?? '');
 }
 
 public static function loginInputFromPost(): array
@@ -76,10 +76,10 @@ public static function loginInputFromPost(): array
     $post = UsuariosPayload::postData($_POST);
 
     return [
-        'username' => PayloadCoercion::string($post['username'] ?? ''),
-        'password' => PayloadCoercion::string($post['password'] ?? ''),
-        'esquema' => PayloadCoercion::string($post['esquema'] ?? ''),
-        'verification_code' => PayloadCoercion::string($post['verification_code'] ?? ''),
+        'username' => \frontend\shared\helpers\PayloadCoercion::string($post['username'] ?? ''),
+        'password' => \frontend\shared\helpers\PayloadCoercion::string($post['password'] ?? ''),
+        'esquema' => \frontend\shared\helpers\PayloadCoercion::string($post['esquema'] ?? ''),
+        'verification_code' => \frontend\shared\helpers\PayloadCoercion::string($post['verification_code'] ?? ''),
     ];
 }
 

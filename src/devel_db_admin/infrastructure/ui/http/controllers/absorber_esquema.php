@@ -17,8 +17,8 @@ use src\shared\infrastructure\DependencyResolver;
 /** @var AbsorberEsquema $useCase */
 $useCase = DependencyResolver::get(AbsorberEsquema::class);
 
-$esquemaMatriz = (string) FilterPostGet::post('esquema_matriz');
-$esquemaDel = (string) FilterPostGet::post('esquema_del');
+$esquemaMatriz = (string) \src\shared\domain\helpers\FilterPostGet::post('esquema_matriz');
+$esquemaDel = (string) \src\shared\domain\helpers\FilterPostGet::post('esquema_del');
 
 $result = $useCase->execute($esquemaMatriz, $esquemaDel);
 

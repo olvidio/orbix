@@ -11,7 +11,6 @@ use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion de la ficha de atencion sacerdotal de un centro.
@@ -41,24 +40,24 @@ final class CtrFichaUpdate
      */
     public function execute(array $post): array
     {
-        $e = FuncTablasSupport::inputInt($post, 'e');
-        $mod = FuncTablasSupport::inputString($post, 'mod_' . $e);
-        $id_enc = FuncTablasSupport::inputInt($post, 'id_enc_' . $e);
-        $sacd_num = FuncTablasSupport::inputInt($post, 'sacd_num');
-        $id_ubi = FuncTablasSupport::inputInt($post, 'id_ubi_' . $e);
-        $tipo_centro = FuncTablasSupport::inputString($post, 'tipo_centro_' . $e);
+        $e = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'e');
+        $mod = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'mod_' . $e);
+        $id_enc = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_enc_' . $e);
+        $sacd_num = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'sacd_num');
+        $id_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_ubi_' . $e);
+        $tipo_centro = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'tipo_centro_' . $e);
 
-        $n_sacd = FuncTablasSupport::inputInt($post, 'n_sacd');
+        $n_sacd = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'n_sacd');
         $n_sacd = $n_sacd === 0 ? 1 : $n_sacd;
 
-        $id_sacd_titular = FuncTablasSupport::inputInt($post, 'id_sacd_titular');
-        $id_sacd_suplente = FuncTablasSupport::inputInt($post, 'id_sacd_suplente');
-        $observ = FuncTablasSupport::inputString($post, 'observ');
+        $id_sacd_titular = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_sacd_titular');
+        $id_sacd_suplente = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_sacd_suplente');
+        $observ = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'observ');
         $cl = !empty($post['cl']);
-        $num_alum = FuncTablasSupport::inputInt($post, 'num_alum');
-        $dedic_ctr_m = FuncTablasSupport::inputString($post, 'dedic_ctr_m');
-        $dedic_ctr_t = FuncTablasSupport::inputString($post, 'dedic_ctr_t');
-        $dedic_ctr_v = FuncTablasSupport::inputString($post, 'dedic_ctr_v');
+        $num_alum = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'num_alum');
+        $dedic_ctr_m = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'dedic_ctr_m');
+        $dedic_ctr_t = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'dedic_ctr_t');
+        $dedic_ctr_v = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'dedic_ctr_v');
 
         $Aid_sacd = is_array($post['id_sacd'] ?? null) ? $post['id_sacd'] : [];
         $Adedic_m = is_array($post['dedic_m'] ?? null) ? $post['dedic_m'] : [];

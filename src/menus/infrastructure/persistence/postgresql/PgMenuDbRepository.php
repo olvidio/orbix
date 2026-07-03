@@ -10,7 +10,6 @@ use PDO;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
 use src\shared\traits\HandlesPdoErrors;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Clase que adapta la tabla aux_menus a la interfaz del repositorio
@@ -107,7 +106,7 @@ class PgMenuDbRepository extends ClaseRepository implements MenuDbRepositoryInte
             }
             // para los array del postgres
             if (isset($aDatos['orden']) && is_string($aDatos['orden'])) {
-                $aDatos['orden'] = FuncTablasSupport::arrayPgInteger2php($aDatos['orden']);
+                $aDatos['orden'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPgInteger2php($aDatos['orden']);
             }
             $normalized = [];
             foreach ($aDatos as $key => $value) {
@@ -207,7 +206,7 @@ class PgMenuDbRepository extends ClaseRepository implements MenuDbRepositoryInte
             $result[(string) $key] = $value;
         }
         if (isset($result['orden']) && is_string($result['orden'])) {
-            $result['orden'] = FuncTablasSupport::arrayPgInteger2php($result['orden']);
+            $result['orden'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPgInteger2php($result['orden']);
         }
         return $result;
     }

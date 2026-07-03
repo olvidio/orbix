@@ -17,7 +17,7 @@ $a_campos_backend = ['id_activ' => $Qid_activ];
 $data = UbiscamasPayload::postData(PostRequest::getDataFromUrl($url_backend, $a_campos_backend));
 
 if (isset($data['error'])) {
-    exit(PayloadCoercion::string($data['error']));
+    exit(\frontend\shared\helpers\PayloadCoercion::string($data['error']));
 }
 
 $a_campos = [

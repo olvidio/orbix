@@ -7,10 +7,10 @@ use src\misas\application\support\MisasBuildInput;
 use src\shared\web\ContestarJson;
 
 $in = [
-    'id_zona' => FilterPostGet::post('id_zona'),
-    'empiezamin' => FilterPostGet::post('empiezamin'),
-    'empiezamax' => FilterPostGet::post('empiezamax'),
-    'seleccion' => FilterPostGet::post('seleccion'),
+    'id_zona' => \src\shared\domain\helpers\FilterPostGet::post('id_zona'),
+    'empiezamin' => \src\shared\domain\helpers\FilterPostGet::post('empiezamin'),
+    'empiezamax' => \src\shared\domain\helpers\FilterPostGet::post('empiezamax'),
+    'seleccion' => \src\shared\domain\helpers\FilterPostGet::post('seleccion'),
 ];
 
 /** @var VerMisasZonaData $useCase */

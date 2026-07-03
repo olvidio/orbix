@@ -3,11 +3,10 @@
 use src\actividadescentro\application\ActivCtrShellData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 $input = [
-    'tipo' => FuncTablasSupport::inputString($_POST, 'tipo'),
-    'year' => FuncTablasSupport::inputString($_POST, 'year'),
-    'periodo' => FuncTablasSupport::inputString($_POST, 'periodo'),
+    'tipo' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'tipo'),
+    'year' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'year'),
+    'periodo' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'periodo'),
 ];
 
 /** @var ActivCtrShellData $useCase */

@@ -23,15 +23,15 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qsfsv = (string)filter_input(INPUT_POST, 'sfsv');
 
 $oForm = new CasasQue();
-$oForm->setTitulo(FuncTablasSupport::strtoupperDlb((string)_('búsqueda de casas cuyo resumen económico interesa')));
+$oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_('búsqueda de casas cuyo resumen económico interesa')));
 $filtro = ['active' => true];
 $miSfsv = OrbixRuntime::miSfsv();
 $miRolePau = OrbixRuntime::miRolePau();
@@ -66,7 +66,7 @@ $aOpciones = [
 ];
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('seleccion');
-$oFormP->setTitulo(FuncTablasSupport::strtoupperDlb((string)_('periodo para el resumen económico')));
+$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_('periodo para el resumen económico')));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel(CasasPayload::periodoYearSel((int)date('Y')));
 $oFormP->setAntes($oSelects->ListaSelects());

@@ -5,7 +5,7 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\misas\application\PlanDeMisasPantallaData;
 use src\shared\web\ContestarJson;
 
-$pantalla = (string)FilterPostGet::post('pantalla');
+$pantalla = (string)\src\shared\domain\helpers\FilterPostGet::post('pantalla');
 if ($pantalla === '') {
     $pantalla = 'preparar';
 }

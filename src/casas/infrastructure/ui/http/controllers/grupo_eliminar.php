@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: elimina un `GrupoCasa`.
@@ -11,7 +10,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'id_item' => FuncTablasSupport::inputInt($_POST, 'id_item'),
+    'id_item' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item'),
 ];
 
 /** @var GrupoCasaEliminar $useCase */

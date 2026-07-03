@@ -4,7 +4,6 @@ namespace src\actividades\application;
 
 use frontend\shared\helpers\TipoActivGestionFormHashCompose;
 use src\actividades\domain\entity\TiposActividades;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve el HTML del formulario para modificar/eliminar un tipo de actividad
@@ -17,7 +16,7 @@ class TipoActivFormModificar
      */
     public function execute(array $input = []): string
     {
-        $Qid_tipo_activ = FuncTablasSupport::inputInt($input, 'id_tipo_activ');
+        $Qid_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tipo_activ');
         $oTiposActividades = new TiposActividades($Qid_tipo_activ);
 
         $nom_actividad = $oTiposActividades->getSfsvText();

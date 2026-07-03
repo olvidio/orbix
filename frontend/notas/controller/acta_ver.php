@@ -58,14 +58,14 @@ $requestPayload = PostRequest::requestPayloadForHash();
 $a_sel = isset($requestPayload['sel']) && is_array($requestPayload['sel'])
     ? $requestPayload['sel']
     : [];
-$Qmod = PayloadCoercion::string($requestPayload['mod'] ?? '');
-$Qsa_actas = PayloadCoercion::string($requestPayload['sa_actas'] ?? '');
-$Qacta = PayloadCoercion::string($requestPayload['acta'] ?? '');
-$Qnotas = PayloadCoercion::string($requestPayload['notas'] ?? '');
+$Qmod = \frontend\shared\helpers\PayloadCoercion::string($requestPayload['mod'] ?? '');
+$Qsa_actas = \frontend\shared\helpers\PayloadCoercion::string($requestPayload['sa_actas'] ?? '');
+$Qacta = \frontend\shared\helpers\PayloadCoercion::string($requestPayload['acta'] ?? '');
+$Qnotas = \frontend\shared\helpers\PayloadCoercion::string($requestPayload['notas'] ?? '');
 
 if (!$isIncluded && $notas === '' && $Qnotas === '') {
     $oPosicion->recordar();
-    ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
+    \frontend\shared\helpers\ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 }
 
 $payload = $requestPayload;
@@ -78,7 +78,7 @@ if (isset($id_activ)) {
     $payload['id_activ_scope'] = $id_activ;
 }
 if (isset($id_asignatura)) {
-    $payload['id_asignatura_scope'] = PayloadCoercion::string($id_asignatura);
+    $payload['id_asignatura_scope'] = \frontend\shared\helpers\PayloadCoercion::string($id_asignatura);
 }
 
 $d = PostRequest::getDataFromUrl('/src/notas/acta_ver_form_data', $payload);
@@ -131,7 +131,7 @@ if ($Qmod === 'nueva' || $notas === 'nuevo') {
 } else {
     $a_camposHidden['mod'] = '';
     $a_camposHidden['id_activ'] = $id_activ;
-    $a_camposHidden['sa_actas'] = FuncTablasSupport::urlsafeB64encode(json_encode($a_actas, JSON_THROW_ON_ERROR));
+    $a_camposHidden['sa_actas'] = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($a_actas, JSON_THROW_ON_ERROR));
     $a_camposHidden['notas'] = $notas;
 }
 $oHashActa->setArrayCamposHidden($a_camposHidden);

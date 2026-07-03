@@ -9,7 +9,6 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\profesores\domain\services\ProfesorStgrService;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * @return array{
@@ -56,12 +55,12 @@ final class FormMatriculasDeUnaPersonaData
      */
     public function execute(array $input): array
     {
-        $idNom = FuncTablasSupport::inputInt($input, 'id_nom');
+        $idNom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
         if ($idNom <= 0) {
-            $idNom = FuncTablasSupport::inputInt($input, 'id_pau');
+            $idNom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
         }
-        $idActiv = FuncTablasSupport::inputInt($input, 'id_activ');
-        $idAsignaturaPost = FuncTablasSupport::inputInt($input, 'id_asignatura');
+        $idActiv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $idAsignaturaPost = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
         $sel = isset($input['sel']) && is_array($input['sel']) ? $input['sel'] : null;
 
         $idAsignaturaReal = 0;

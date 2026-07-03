@@ -13,7 +13,7 @@ FrontBootstrap::boot();
 $Qid_ubi = (int)(filter_input(INPUT_POST, 'id_ubi') ?? filter_input(INPUT_GET, 'id_ubi'));
 $form = UbisPayload::centroPlazasFormFromPayload(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/centros_form_plazas', ['id_ubi' => $Qid_ubi])));
 
-$chk_sede = FuncTablasSupport::isTrue($form['sede']) ? 'checked' : '';
+$chk_sede = \src\shared\domain\helpers\FuncTablasSupport::isTrue($form['sede']) ? 'checked' : '';
 
 $url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 

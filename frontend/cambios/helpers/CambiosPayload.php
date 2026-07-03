@@ -63,15 +63,15 @@ final class CambiosPayload
     public static function avisosGenerarFromPayload(array $payload): array
     {
         return [
-            'effective_id_usuario' => PayloadCoercion::int($payload['effective_id_usuario'] ?? 0),
-            'effective_aviso_tipo' => PayloadCoercion::int($payload['effective_aviso_tipo'] ?? 0),
+            'effective_id_usuario' => \frontend\shared\helpers\PayloadCoercion::int($payload['effective_id_usuario'] ?? 0),
+            'effective_aviso_tipo' => \frontend\shared\helpers\PayloadCoercion::int($payload['effective_aviso_tipo'] ?? 0),
             'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
             'aOpcionesUsuarios' => NotasFormSupport::desplegableOpciones($payload['aOpcionesUsuarios'] ?? []),
             'aOpcionesAvisoTipo' => NotasFormSupport::desplegableOpciones($payload['aOpcionesAvisoTipo'] ?? []),
-            'url_eliminar' => PayloadCoercion::string($payload['url_eliminar'] ?? ''),
-            'url_eliminar_fecha' => PayloadCoercion::string($payload['url_eliminar_fecha'] ?? ''),
-            'h_eliminar' => PayloadCoercion::string($payload['h_eliminar'] ?? ''),
-            'h_eliminar_fecha' => PayloadCoercion::string($payload['h_eliminar_fecha'] ?? ''),
+            'url_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($payload['url_eliminar'] ?? ''),
+            'url_eliminar_fecha' => \frontend\shared\helpers\PayloadCoercion::string($payload['url_eliminar_fecha'] ?? ''),
+            'h_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($payload['h_eliminar'] ?? ''),
+            'h_eliminar_fecha' => \frontend\shared\helpers\PayloadCoercion::string($payload['h_eliminar_fecha'] ?? ''),
         ];
     }
 
@@ -100,15 +100,15 @@ final class CambiosPayload
             'aObjetos' => NotasFormSupport::desplegableOpciones($payload['aObjetos'] ?? []),
             'aFases' => NotasFormSupport::desplegableOpciones($payload['aFases'] ?? []),
             'aOpcionesCasas' => NotasFormSupport::desplegableOpciones($payload['aOpcionesCasas'] ?? []),
-            'id_pau' => PayloadCoercion::string($payload['id_pau'] ?? ''),
-            'aviso_tipo' => PayloadCoercion::string($payload['aviso_tipo'] ?? ''),
-            'objeto' => PayloadCoercion::string($payload['objeto'] ?? ''),
-            'id_fase_ref' => PayloadCoercion::string($payload['id_fase_ref'] ?? ''),
+            'id_pau' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_pau'] ?? ''),
+            'aviso_tipo' => \frontend\shared\helpers\PayloadCoercion::string($payload['aviso_tipo'] ?? ''),
+            'objeto' => \frontend\shared\helpers\PayloadCoercion::string($payload['objeto'] ?? ''),
+            'id_fase_ref' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_fase_ref'] ?? ''),
             'dl_propia' => !array_key_exists('dl_propia', $payload) || !empty($payload['dl_propia']),
             'aviso_off' => !empty($payload['aviso_off']),
             'aviso_on' => !array_key_exists('aviso_on', $payload) || !empty($payload['aviso_on']),
             'aviso_outdate' => !empty($payload['aviso_outdate']),
-            'id_tipo_activ' => PayloadCoercion::string($payload['id_tipo_activ'] ?? ''),
+            'id_tipo_activ' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_tipo_activ'] ?? ''),
         ];
     }
 
@@ -125,10 +125,10 @@ final class CambiosPayload
     public static function usuarioAvisosPrefCondicionFromPayload(array $payload): array
     {
         return [
-            'valor' => PayloadCoercion::string($payload['valor'] ?? ''),
-            'operador' => PayloadCoercion::string($payload['operador'] ?? ''),
-            'chk_old' => PayloadCoercion::string($payload['chk_old'] ?? 'checked'),
-            'chk_new' => PayloadCoercion::string($payload['chk_new'] ?? 'checked'),
+            'valor' => \frontend\shared\helpers\PayloadCoercion::string($payload['valor'] ?? ''),
+            'operador' => \frontend\shared\helpers\PayloadCoercion::string($payload['operador'] ?? ''),
+            'chk_old' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_old'] ?? 'checked'),
+            'chk_new' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_new'] ?? 'checked'),
             'aOpcionesCasas' => NotasFormSupport::desplegableOpciones($payload['aOpcionesCasas'] ?? []),
         ];
     }
@@ -156,7 +156,7 @@ final class CambiosPayload
      */
     public static function propiedadNomProp(array $row): string
     {
-        return PayloadCoercion::string($row['nom_prop'] ?? '');
+        return \frontend\shared\helpers\PayloadCoercion::string($row['nom_prop'] ?? '');
     }
 
     /**
@@ -167,7 +167,7 @@ final class CambiosPayload
     {
         return [
             'a_valores' => ActividadesListaSupport::datos($data['a_valores'] ?? []),
-            'nombre_usuario' => PayloadCoercion::string($data['nombre_usuario'] ?? ''),
+            'nombre_usuario' => \frontend\shared\helpers\PayloadCoercion::string($data['nombre_usuario'] ?? ''),
         ];
     }
 }

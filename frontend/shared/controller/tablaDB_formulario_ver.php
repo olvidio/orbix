@@ -6,15 +6,14 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');

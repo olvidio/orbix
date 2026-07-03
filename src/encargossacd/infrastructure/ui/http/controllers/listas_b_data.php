@@ -9,6 +9,6 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(ListasBData::class);
 
 
-$sf = (int)(FilterPostGet::post('sf') ?? FilterPostGet::get('sf') ?? 0);
+$sf = (int)(\src\shared\domain\helpers\FilterPostGet::post('sf') ?? \src\shared\domain\helpers\FilterPostGet::get('sf') ?? 0);
 
 ContestarJson::enviar('', $useCase->execute($sf));

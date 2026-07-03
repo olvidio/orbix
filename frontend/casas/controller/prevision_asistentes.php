@@ -28,8 +28,8 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qmi_of = (string)filter_input(INPUT_POST, 'mi_of');
@@ -72,7 +72,7 @@ $aOpciones = [
 ];
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(FuncTablasSupport::strtoupperDlb(_("período del listado del año próximo")));
+$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("período del listado del año próximo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel(CasasPayload::periodoYearSel($Qyear));

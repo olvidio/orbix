@@ -18,9 +18,9 @@ public static function statusLabelsFromPayload(array $labelsRow): array
     $out = [];
     foreach ($raw as $key => $value) {
         if (is_int($key)) {
-            $out[$key] = PayloadCoercion::string($value);
+            $out[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
         } elseif (is_string($key)) {
-            $out[$key] = PayloadCoercion::string($value);
+            $out[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
         }
     }
 
@@ -35,24 +35,24 @@ public static function entidadFromVerDatos(array $dataEntidad): array
     }
 
     return [
-        'id_tipo_activ' => PayloadCoercion::string($entidadRaw['id_tipo_activ'] ?? ''),
-        'dl_org' => PayloadCoercion::string($entidadRaw['dl_org'] ?? ''),
-        'nom_activ' => PayloadCoercion::string($entidadRaw['nom_activ'] ?? ''),
-        'id_ubi' => PayloadCoercion::int($entidadRaw['id_ubi'] ?? 0),
-        'f_ini' => PayloadCoercion::string($entidadRaw['f_ini'] ?? ''),
-        'h_ini' => PayloadCoercion::string($entidadRaw['h_ini'] ?? ''),
-        'f_fin' => PayloadCoercion::string($entidadRaw['f_fin'] ?? ''),
-        'h_fin' => PayloadCoercion::string($entidadRaw['h_fin'] ?? ''),
+        'id_tipo_activ' => \frontend\shared\helpers\PayloadCoercion::string($entidadRaw['id_tipo_activ'] ?? ''),
+        'dl_org' => \frontend\shared\helpers\PayloadCoercion::string($entidadRaw['dl_org'] ?? ''),
+        'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($entidadRaw['nom_activ'] ?? ''),
+        'id_ubi' => \frontend\shared\helpers\PayloadCoercion::int($entidadRaw['id_ubi'] ?? 0),
+        'f_ini' => \frontend\shared\helpers\PayloadCoercion::string($entidadRaw['f_ini'] ?? ''),
+        'h_ini' => \frontend\shared\helpers\PayloadCoercion::string($entidadRaw['h_ini'] ?? ''),
+        'f_fin' => \frontend\shared\helpers\PayloadCoercion::string($entidadRaw['f_fin'] ?? ''),
+        'h_fin' => \frontend\shared\helpers\PayloadCoercion::string($entidadRaw['h_fin'] ?? ''),
         'precio' => NotasFormSupport::formScalar($entidadRaw['precio'] ?? ''),
-        'status' => PayloadCoercion::int($entidadRaw['status'] ?? 0),
-        'observ' => PayloadCoercion::string($entidadRaw['observ'] ?? ''),
+        'status' => \frontend\shared\helpers\PayloadCoercion::int($entidadRaw['status'] ?? 0),
+        'observ' => \frontend\shared\helpers\PayloadCoercion::string($entidadRaw['observ'] ?? ''),
         'nivel_stgr' => NotasFormSupport::formScalar($entidadRaw['nivel_stgr'] ?? ''),
-        'lugar_esp' => PayloadCoercion::string($entidadRaw['lugar_esp'] ?? ''),
+        'lugar_esp' => \frontend\shared\helpers\PayloadCoercion::string($entidadRaw['lugar_esp'] ?? ''),
         'tarifa' => NotasFormSupport::formScalar($entidadRaw['tarifa'] ?? ''),
-        'id_repeticion' => PayloadCoercion::int($entidadRaw['id_repeticion'] ?? 0),
+        'id_repeticion' => \frontend\shared\helpers\PayloadCoercion::int($entidadRaw['id_repeticion'] ?? 0),
         'publicado' => NotasFormSupport::formBoolOrString($entidadRaw['publicado'] ?? ''),
         'plazas' => NotasFormSupport::formScalar($entidadRaw['plazas'] ?? ''),
-        'idioma' => PayloadCoercion::string($entidadRaw['idioma'] ?? ''),
+        'idioma' => \frontend\shared\helpers\PayloadCoercion::string($entidadRaw['idioma'] ?? ''),
     ];
 }
 
@@ -64,12 +64,12 @@ public static function verRenderFromPayload(array $data): array
         'html_despl_nivel_stgr' => ActividadesRenderSupport::desplegableHtml(is_array($data['select_nivel_stgr'] ?? null) ? $data['select_nivel_stgr'] : null),
         'html_despl_idioma' => ActividadesRenderSupport::desplegableHtml(is_array($data['select_idioma'] ?? null) ? $data['select_idioma'] : null),
         'html_despl_repeticion' => ActividadesRenderSupport::desplegableHtml(is_array($data['select_repeticion'] ?? null) ? $data['select_repeticion'] : null),
-        'nombre_ubi' => PayloadCoercion::string($data['nombre_ubi'] ?? ''),
-        'ssfsv' => PayloadCoercion::string($data['ssfsv'] ?? ''),
-        'sasistentes' => PayloadCoercion::string($data['sasistentes'] ?? ''),
-        'sactividad' => PayloadCoercion::string($data['sactividad'] ?? ''),
-        'snom_tipo' => PayloadCoercion::string($data['snom_tipo'] ?? ''),
-        'isfsv' => PayloadCoercion::int($data['isfsv'] ?? 0),
+        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($data['nombre_ubi'] ?? ''),
+        'ssfsv' => \frontend\shared\helpers\PayloadCoercion::string($data['ssfsv'] ?? ''),
+        'sasistentes' => \frontend\shared\helpers\PayloadCoercion::string($data['sasistentes'] ?? ''),
+        'sactividad' => \frontend\shared\helpers\PayloadCoercion::string($data['sactividad'] ?? ''),
+        'snom_tipo' => \frontend\shared\helpers\PayloadCoercion::string($data['snom_tipo'] ?? ''),
+        'isfsv' => \frontend\shared\helpers\PayloadCoercion::int($data['isfsv'] ?? 0),
         'tarifa_inicial' => $data['tarifa_inicial'] ?? null,
     ];
 }
@@ -82,8 +82,8 @@ public static function permisoCrearFromRow(array $row): ?array
     }
 
     return [
-        'of_responsable_txt' => PayloadCoercion::string($crear['of_responsable_txt'] ?? ''),
-        'status' => PayloadCoercion::int($crear['status'] ?? 0),
+        'of_responsable_txt' => \frontend\shared\helpers\PayloadCoercion::string($crear['of_responsable_txt'] ?? ''),
+        'status' => \frontend\shared\helpers\PayloadCoercion::int($crear['status'] ?? 0),
     ];
 }
 
@@ -100,7 +100,7 @@ public static function fasesCompletadasFromPayload(mixed $raw): array
     $out = [];
     foreach ($raw as $id) {
         if (is_int($id) || is_string($id)) {
-            $out[] = PayloadCoercion::int($id);
+            $out[] = \frontend\shared\helpers\PayloadCoercion::int($id);
         }
     }
 

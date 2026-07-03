@@ -13,14 +13,14 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'periodo' => (string)FilterPostGet::post('periodo'),
-    'year' => (string)FilterPostGet::post('year'),
-    'dl_org' => (string)FilterPostGet::post('dl_org'),
-    'empiezamin' => (string)FilterPostGet::post('empiezamin'),
-    'empiezamax' => (string)FilterPostGet::post('empiezamax'),
-    'c_activ' => (array)FilterPostGet::post('c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'status' => (array)FilterPostGet::post('status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'id_cdc' => (array)FilterPostGet::post('id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'periodo' => (string)\src\shared\domain\helpers\FilterPostGet::post('periodo'),
+    'year' => (string)\src\shared\domain\helpers\FilterPostGet::post('year'),
+    'dl_org' => (string)\src\shared\domain\helpers\FilterPostGet::post('dl_org'),
+    'empiezamin' => (string)\src\shared\domain\helpers\FilterPostGet::post('empiezamin'),
+    'empiezamax' => (string)\src\shared\domain\helpers\FilterPostGet::post('empiezamax'),
+    'c_activ' => (array)\src\shared\domain\helpers\FilterPostGet::post('c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'status' => (array)\src\shared\domain\helpers\FilterPostGet::post('status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'id_cdc' => (array)\src\shared\domain\helpers\FilterPostGet::post('id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
 ];
 
 /** @var ListaSrCsvListado $useCase */

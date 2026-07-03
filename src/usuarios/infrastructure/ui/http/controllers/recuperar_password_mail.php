@@ -18,11 +18,11 @@ use src\shared\domain\value_objects\Uuid;
 use src\usuarios\domain\PasswordHasher;
 use src\shared\web\ContestarJson;
 
-$Qusername = (string)FilterPostGet::post('username');
-$Qubicacion = (string)FilterPostGet::post('ubicacion');
-$Qesquema = (string)FilterPostGet::post('esquema');
-$Qesquema_web = (string)FilterPostGet::post('esquema_web');
-$Qurl_index = (string)FilterPostGet::post('url_index');
+$Qusername = (string)\src\shared\domain\helpers\FilterPostGet::post('username');
+$Qubicacion = (string)\src\shared\domain\helpers\FilterPostGet::post('ubicacion');
+$Qesquema = (string)\src\shared\domain\helpers\FilterPostGet::post('esquema');
+$Qesquema_web = (string)\src\shared\domain\helpers\FilterPostGet::post('esquema_web');
+$Qurl_index = (string)\src\shared\domain\helpers\FilterPostGet::post('url_index');
 
 $error_txt = '';
 $aWhere = array('usuario' => $Qusername);

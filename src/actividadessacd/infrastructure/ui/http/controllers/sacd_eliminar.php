@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: elimina el sacd ({id_activ, id_cargo}) de una
@@ -12,9 +11,9 @@ use src\actividadessacd\application\SacdEliminar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $input = [
-    'id_activ' => FuncTablasSupport::inputInt($_POST, 'id_activ'),
-    'id_cargo' => FuncTablasSupport::inputInt($_POST, 'id_cargo'),
-    'id_nom' => FuncTablasSupport::inputInt($_POST, 'id_nom'),
+    'id_activ' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_activ'),
+    'id_cargo' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_cargo'),
+    'id_nom' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom'),
 ];
 
 /** @var SacdEliminar $useCase */

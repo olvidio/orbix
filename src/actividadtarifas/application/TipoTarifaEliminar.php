@@ -3,7 +3,6 @@
 namespace src\actividadtarifas\application;
 
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion: elimina un `TipoTarifa`.
@@ -20,7 +19,7 @@ final class TipoTarifaEliminar
      */
     public function execute(array $input): string
     {
-        $id_tarifa = FuncTablasSupport::inputInt($input, 'id_tarifa');
+        $id_tarifa = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tarifa');
         if ($id_tarifa === 0) {
             return (string) _("no sé cuál he de borrar");
         }

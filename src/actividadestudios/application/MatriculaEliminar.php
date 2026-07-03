@@ -18,9 +18,10 @@ final class MatriculaEliminar
 {
     public function __construct(
         private ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
-        private MatriculaDlRepositoryInterface $matriculaDlRepository,
-        private DossierRepositoryInterface $dossierRepository,
-    ) {
+        private MatriculaDlRepositoryInterface           $matriculaDlRepository,
+        private DossierRepositoryInterface               $dossierRepository,
+    )
+    {
     }
 
     /**
@@ -29,7 +30,7 @@ final class MatriculaEliminar
     public function execute(array $input): string
     {
         $pau = FuncTablasSupport::inputString($input, 'pau');
-        $a_sel = (array) ($input['sel'] ?? []);
+        $a_sel = (array)($input['sel'] ?? []);
         $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
         $Qid_nom = FuncTablasSupport::inputInt($input, 'id_nom');
         if ($Qid_nom <= 0) {
@@ -43,7 +44,7 @@ final class MatriculaEliminar
             foreach ($a_sel as $sel) {
                 $parts = explode('#', self::selAsString($sel));
                 if (count($parts) === 2) {
-                    $id_nom = (int) $parts[1];
+                    $id_nom = (int)$parts[1];
                     if ($id_nom <= 0 && $Qid_nom > 0) {
                         $id_nom = $Qid_nom;
                     }
@@ -57,9 +58,9 @@ final class MatriculaEliminar
                     continue;
                 }
 
-                $id_activ = (int) $parts[0];
-                $id_asignatura = (int) $parts[1];
-                $id_nom = (int) $parts[2];
+                $id_activ = (int)$parts[0];
+                $id_asignatura = (int)$parts[1];
+                $id_nom = (int)$parts[2];
                 if ($Qid_activ > 0) {
                     $id_activ = $Qid_activ;
                 }
@@ -75,9 +76,9 @@ final class MatriculaEliminar
 
         if ($pau === 'a') {
             if (!empty($a_sel)) {
-                $id_nom = (int) strtok(self::selAsString($a_sel[0]), '#');
-                $id_asignatura = (int) strtok('#');
-                $id_activ = (int) strtok('#');
+                $id_nom = (int)strtok(self::selAsString($a_sel[0]), '#');
+                $id_asignatura = (int)strtok('#');
+                $id_activ = (int)strtok('#');
                 if ($id_activ <= 0 && $Qid_activ > 0) {
                     $id_activ = $Qid_activ;
                 }
@@ -179,6 +180,6 @@ final class MatriculaEliminar
 
     private static function selAsString(mixed $sel): string
     {
-        return is_scalar($sel) ? (string) $sel : '';
+        return is_scalar($sel) ? (string)$sel : '';
     }
 }

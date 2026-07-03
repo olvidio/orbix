@@ -1,7 +1,6 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
@@ -10,7 +9,7 @@ use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$sel = FuncTablasSupport::inputString($_POST, 'sel');
+$sel = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'sel');
 
 $a_sel = json_decode($sel, true);
 if (!is_array($a_sel)) {

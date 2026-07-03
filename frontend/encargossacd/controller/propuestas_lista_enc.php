@@ -14,8 +14,8 @@ $data = PostRequest::getDataFromUrl('/src/encargossacd/propuestas_lista_enc_data
 ]);
 
 if (($data['error'] ?? '') !== '') {
-    echo PayloadCoercion::string($data['error']);
+    echo \frontend\shared\helpers\PayloadCoercion::string($data['error']);
     return;
 }
 
-echo PayloadCoercion::string($data['html'] ?? '');
+echo \frontend\shared\helpers\PayloadCoercion::string($data['html'] ?? '');

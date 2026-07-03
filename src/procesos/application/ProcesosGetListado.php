@@ -10,7 +10,6 @@ use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: listado estructurado de fases/tareas del proceso.
@@ -32,7 +31,7 @@ class ProcesosGetListado
      */
     public function execute(array $input): array
     {
-        $Qid_tipo_proceso = FuncTablasSupport::inputInt($input, 'id_tipo_proceso');
+        $Qid_tipo_proceso = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tipo_proceso');
         $a_status = StatusId::getArrayStatus();
 
         $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());

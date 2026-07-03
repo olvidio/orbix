@@ -4,7 +4,6 @@ namespace src\actividadtarifas\application;
 
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\actividadtarifas\domain\value_objects\TarifaModoId;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder para el formulario modificar/nuevo de `TipoTarifa`.
@@ -29,7 +28,7 @@ final class TipoTarifaFormData
      */
     public function execute(array $input): array
     {
-        $id_tarifa = FuncTablasSupport::inputString($input, 'id_tarifa');
+        $id_tarifa = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tarifa');
         $es_nuevo = $id_tarifa === '' || $id_tarifa === 'nuevo';
 
         $letra = '';

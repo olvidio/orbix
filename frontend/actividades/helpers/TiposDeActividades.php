@@ -316,7 +316,7 @@ class TiposDeActividades
 
     public function setSfsvId(mixed $isfsv): void
     {
-        $this->ssfsv = PayloadCoercion::string($isfsv);
+        $this->ssfsv = \frontend\shared\helpers\PayloadCoercion::string($isfsv);
     }
 
     public function getSfsvRegexp(): string
@@ -371,7 +371,7 @@ class TiposDeActividades
 
     public function setAsistentesId(mixed $id): void
     {
-        $this->sasistentes = PayloadCoercion::string($id);
+        $this->sasistentes = \frontend\shared\helpers\PayloadCoercion::string($id);
     }
 
     public function getAsistentesRegexp(): string
@@ -449,7 +449,7 @@ class TiposDeActividades
 
     public function setActividadId(mixed $id): void
     {
-        $this->sactividad = PayloadCoercion::string($id);
+        $this->sactividad = \frontend\shared\helpers\PayloadCoercion::string($id);
     }
 
     public function getActividadRegexp(): string

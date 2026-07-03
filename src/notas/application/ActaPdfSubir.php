@@ -2,7 +2,6 @@
 
 namespace src\notas\application;
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\shared\infrastructure\ui\http\MultipartUploadGuard;
@@ -25,7 +24,7 @@ final class ActaPdfSubir
      */
     public function execute(array $input, array $files): array
     {
-        $acta = FuncTablasSupport::inputString($input, 'acta_num');
+        $acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta_num');
         if ($acta === '') {
             return ['error' => _('No se encuentra el acta'), 'http_status' => 200];
         }

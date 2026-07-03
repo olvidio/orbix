@@ -4,7 +4,6 @@ namespace src\certificados\domain;
 
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Listado de certificados recibidos de una persona (dossier 1010 / código certificados_de_una_persona).
@@ -106,7 +105,7 @@ class Select_certificados_de_una_persona
             $a_valores[$i]['sel'] = $id_item;
             $a_valores[$i][1] = $certificado;
             $a_valores[$i][2] = $f_certificado;
-            $a_valores[$i][3] = FuncTablasSupport::isTrue($firmado) ? _("Sí") : _("No");
+            $a_valores[$i][3] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($firmado) ? _("Sí") : _("No");
             $a_valores[$i][4] = empty($pdf) ? '' : _("Sí");
             $a_valores[$i][5] = $f_recibido;
 

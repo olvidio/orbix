@@ -7,7 +7,7 @@ use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
+$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
 
 $error_txt = '';
 $data = [];

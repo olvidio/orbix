@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: devuelve los centros disponibles (candidatos) para
@@ -12,11 +11,11 @@ use src\actividadescentro\application\CentrosDisponiblesData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $input = [
-    'tipo' => FuncTablasSupport::inputString($_POST, 'tipo'),
-    'id_activ' => FuncTablasSupport::inputInt($_POST, 'id_activ'),
-    'inicio' => FuncTablasSupport::inputString($_POST, 'inicio'),
-    'fin' => FuncTablasSupport::inputString($_POST, 'fin'),
-    'f_ini_act' => FuncTablasSupport::inputString($_POST, 'f_ini_act'),
+    'tipo' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'tipo'),
+    'id_activ' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_activ'),
+    'inicio' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'inicio'),
+    'fin' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'fin'),
+    'f_ini_act' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_ini_act'),
 ];
 
 /** @var CentrosDisponiblesData $useCase */

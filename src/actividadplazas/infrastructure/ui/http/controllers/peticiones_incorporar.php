@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: incorpora las primeras peticiones de plaza de
@@ -12,8 +11,8 @@ use src\actividadplazas\application\PeticionesIncorporar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $input = [
-    'sactividad' => FuncTablasSupport::inputString($_POST, 'sactividad'),
-    'sasistentes' => FuncTablasSupport::inputString($_POST, 'sasistentes'),
+    'sactividad' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'sactividad'),
+    'sasistentes' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'sasistentes'),
 ];
 
 /** @var PeticionesIncorporar $useCase */

@@ -36,8 +36,8 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 if (!empty($a_sel)) {
@@ -61,7 +61,7 @@ $dos = _("dossiers");
 $txt = ucfirst(_("formato texto"));
 $titulo = $home['nombre_ubi'];
 
-$lista_dossiers_html = DossiersListaRender::render($home['pau'], $home['id_pau'], $home['obj_pau']);
+$lista_dossiers_html = \frontend\dossiers\helpers\DossiersListaRender::render($home['pau'], $home['id_pau'], $home['obj_pau']);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'godossiers' => $godossiers,

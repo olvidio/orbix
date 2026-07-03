@@ -27,7 +27,7 @@ public static function posicionString(mixed $value, string $default = ''): strin
 
 public static function desplegableOpcionSel(int|string $value): string
 {
-    return PayloadCoercion::string($value);
+    return \frontend\shared\helpers\PayloadCoercion::string($value);
 }
 
 public static function isJefeCalendario(): bool
@@ -62,10 +62,10 @@ public static function calendarioEstilos(bool $appendCalendarioCss = true): arra
     }
 
     return [
-        'colorColumnaUno' => PayloadCoercion::string($colorColumnaUno),
-        'colorColumnaDos' => PayloadCoercion::string($colorColumnaDos),
-        'colorColumnaDomingo' => PayloadCoercion::string($colorColumnaDomingo),
-        'table_border' => PayloadCoercion::string($table_border),
+        'colorColumnaUno' => \frontend\shared\helpers\PayloadCoercion::string($colorColumnaUno),
+        'colorColumnaDos' => \frontend\shared\helpers\PayloadCoercion::string($colorColumnaDos),
+        'colorColumnaDomingo' => \frontend\shared\helpers\PayloadCoercion::string($colorColumnaDomingo),
+        'table_border' => \frontend\shared\helpers\PayloadCoercion::string($table_border),
         'css' => $css,
     ];
 }
@@ -103,10 +103,10 @@ public static function personaRow(mixed $raw): array
     }
 
     return [
-        'id_nom' => PayloadCoercion::int($raw['id_nom'] ?? 0),
-        'id_tabla' => PayloadCoercion::string($raw['id_tabla'] ?? ''),
-        'pref_apellidos_nombre' => PayloadCoercion::string($raw['pref_apellidos_nombre'] ?? ''),
-        'centro_o_dl' => PayloadCoercion::string($raw['centro_o_dl'] ?? ''),
+        'id_nom' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_nom'] ?? 0),
+        'id_tabla' => \frontend\shared\helpers\PayloadCoercion::string($raw['id_tabla'] ?? ''),
+        'pref_apellidos_nombre' => \frontend\shared\helpers\PayloadCoercion::string($raw['pref_apellidos_nombre'] ?? ''),
+        'centro_o_dl' => \frontend\shared\helpers\PayloadCoercion::string($raw['centro_o_dl'] ?? ''),
     ];
 }
 
@@ -136,7 +136,7 @@ public static function casaPeriodosPorUbi(mixed $raw): array
     }
     $out = [];
     foreach ($raw as $idUbi => $periodos) {
-        $idUbiInt = PayloadCoercion::int($idUbi);
+        $idUbiInt = \frontend\shared\helpers\PayloadCoercion::int($idUbi);
         if (!is_array($periodos)) {
             continue;
         }
@@ -146,9 +146,9 @@ public static function casaPeriodosPorUbi(mixed $raw): array
                 continue;
             }
             $parsed[] = [
-                'iso_ini' => PayloadCoercion::string($per['iso_ini'] ?? ''),
-                'iso_fin' => PayloadCoercion::string($per['iso_fin'] ?? ''),
-                'sfsv' => PayloadCoercion::int($per['sfsv'] ?? 0),
+                'iso_ini' => \frontend\shared\helpers\PayloadCoercion::string($per['iso_ini'] ?? ''),
+                'iso_fin' => \frontend\shared\helpers\PayloadCoercion::string($per['iso_fin'] ?? ''),
+                'sfsv' => \frontend\shared\helpers\PayloadCoercion::int($per['sfsv'] ?? 0),
             ];
         }
         $out[$idUbiInt] = $parsed;
@@ -277,7 +277,7 @@ public static function periodoAnysOpciones(): array
     $any = (int) date('Y');
     $out = [];
     for ($y = $any - 4; $y <= $any + 1; $y++) {
-        $out[$y] = PayloadCoercion::string($y);
+        $out[$y] = \frontend\shared\helpers\PayloadCoercion::string($y);
     }
 
     return $out;
@@ -289,7 +289,7 @@ public static function periodoAnysOpciones(): array
  */
 public static function casaQueFromPayload(array $payload): array
 {
-    $modo = PayloadCoercion::string($payload['modo_casas'] ?? 'all', 'all');
+    $modo = \frontend\shared\helpers\PayloadCoercion::string($payload['modo_casas'] ?? 'all', 'all');
 
     return [
         'filtro' => self::filtroCasas($payload['filtro'] ?? null),
@@ -304,8 +304,8 @@ public static function casaQueFromPayload(array $payload): array
 public static function ctrSelectFromPayload(array $payload): array
 {
     return [
-        'msg_txt' => PayloadCoercion::string($payload['msg_txt'] ?? ''),
-        'cabecera_title' => PayloadCoercion::string($payload['cabecera_title'] ?? ''),
+        'msg_txt' => \frontend\shared\helpers\PayloadCoercion::string($payload['msg_txt'] ?? ''),
+        'cabecera_title' => \frontend\shared\helpers\PayloadCoercion::string($payload['cabecera_title'] ?? ''),
         'a_actividades2' => self::actividadesMap($payload['a_actividades2'] ?? null),
     ];
 }
@@ -324,10 +324,10 @@ public static function ctrSelectFromPayload(array $payload): array
 public static function zonesSelectFromPayload(array $payload): array
 {
     return [
-        'planning_ini_iso' => PayloadCoercion::string($payload['planning_ini_iso'] ?? ''),
-        'planning_fin_iso' => PayloadCoercion::string($payload['planning_fin_iso'] ?? ''),
-        'titulo' => PayloadCoercion::string($payload['titulo'] ?? ''),
-        'zonas' => PayloadCoercion::int($payload['zonas'] ?? 0),
+        'planning_ini_iso' => \frontend\shared\helpers\PayloadCoercion::string($payload['planning_ini_iso'] ?? ''),
+        'planning_fin_iso' => \frontend\shared\helpers\PayloadCoercion::string($payload['planning_fin_iso'] ?? ''),
+        'titulo' => \frontend\shared\helpers\PayloadCoercion::string($payload['titulo'] ?? ''),
+        'zonas' => \frontend\shared\helpers\PayloadCoercion::int($payload['zonas'] ?? 0),
         'actividades_por_zona' => is_array($payload['actividades_por_zona'] ?? null) ? $payload['actividades_por_zona'] : [],
         'cabeceras_por_zona' => is_array($payload['cabeceras_por_zona'] ?? null) ? $payload['cabeceras_por_zona'] : [],
     ];
@@ -338,7 +338,7 @@ public static function zonesSelectFromPayload(array $payload): array
  */
 public static function whereString(array $decoded, string $key, string $default = ''): string
 {
-    return PayloadCoercion::string($decoded[$key] ?? $default);
+    return \frontend\shared\helpers\PayloadCoercion::string($decoded[$key] ?? $default);
 }
 
 /**
@@ -359,9 +359,9 @@ public static function filtrosPersonaDesdeSaWhereEncoded(
         return compact('nombre', 'apellido1', 'apellido2', 'centro', 'na');
     }
 
-    $aWhereDecoded = json_decode(FuncTablasSupport::urlsafeB64decode($saWhere), true);
+    $aWhereDecoded = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($saWhere), true);
     $aWhere = is_array($aWhereDecoded) ? $aWhereDecoded : [];
-    $aWhereCtrDecoded = json_decode(FuncTablasSupport::urlsafeB64decode($saWhereCtr), true);
+    $aWhereCtrDecoded = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($saWhereCtr), true);
     $aWhereCtr = is_array($aWhereCtrDecoded) ? $aWhereCtrDecoded : [];
 
     $apellido1 = self::whereString($aWhere, 'apellido1', $apellido1);

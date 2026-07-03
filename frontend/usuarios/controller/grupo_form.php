@@ -44,14 +44,14 @@ if (isset($_POST['stack'])) {
         $Qid_usuario = UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
     }
 }
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), $Qscroll_id));
 
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 if (!empty($Qid_usuario)) {
     $infoData = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/grupo_info', ['id_usuario' => $Qid_usuario]));
-    $usuario = PayloadCoercion::string($infoData['nombre'] ?? '');
+    $usuario = \frontend\shared\helpers\PayloadCoercion::string($infoData['nombre'] ?? '');
 
     $oHashG = new HashFront();
     $oHashG->setCamposForm('que!usuario');

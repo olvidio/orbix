@@ -22,8 +22,8 @@ use src\actividades\application\ActividadEliminar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_activ = (integer)FilterPostGet::post('id_activ');
-$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_activ = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_activ');
+$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 /** @var ActividadEliminar $useCase */
 $useCase = DependencyResolver::get(ActividadEliminar::class);

@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: devuelve el listado de actividades del tipo + periodo
@@ -12,11 +11,11 @@ use src\actividadescentro\application\ListaActividadesCtrData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $input = [
-    'tipo' => FuncTablasSupport::inputString($_POST, 'tipo'),
-    'year' => FuncTablasSupport::inputString($_POST, 'year'),
-    'periodo' => FuncTablasSupport::inputString($_POST, 'periodo'),
-    'empiezamin' => FuncTablasSupport::inputString($_POST, 'empiezamin'),
-    'empiezamax' => FuncTablasSupport::inputString($_POST, 'empiezamax'),
+    'tipo' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'tipo'),
+    'year' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'year'),
+    'periodo' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'periodo'),
+    'empiezamin' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'empiezamin'),
+    'empiezamax' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'empiezamax'),
 ];
 
 /** @var ListaActividadesCtrData $useCase */

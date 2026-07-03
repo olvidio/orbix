@@ -3,7 +3,6 @@ namespace frontend\shared\security;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
-use frontend\shared\helpers\FuncTablasSupport;
 
 class HashFront
 {
@@ -301,7 +300,7 @@ class HashFront
 
                 $sUrl = $this->realFullUrl();
                 if ($aPOST !== []) {
-                    array_walk($aPOST, [FuncTablasSupport::class, 'ponerEmptyOnNull']);
+                    array_walk($aPOST, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
                     $sUrl .= '?' . http_build_query($aPOST);
                 }
 
@@ -467,7 +466,7 @@ class HashFront
         if (OrbixRuntime::isDebug()) {
             $aParam['horig'] = $horig;
         }
-        array_walk($aParam, [FuncTablasSupport::class, 'ponerEmptyOnNull']);
+        array_walk($aParam, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
         if (strpos($sUrl_full, '?') === false) {
             $sUrl_full .= '?' . http_build_query($aParam);
         } else {
@@ -677,7 +676,7 @@ class HashFront
         $aParamSorted = self::ordenarArrayParam($prepared);
         $sUrl = self::FullPath($scriptPath);
         if ($aParamSorted !== []) {
-            array_walk($aParamSorted, [FuncTablasSupport::class, 'ponerEmptyOnNull']);
+            array_walk($aParamSorted, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
             $sUrl .= '?' . http_build_query($aParamSorted);
         }
 
@@ -719,7 +718,7 @@ class HashFront
         //$query .= '&horig='.$horig;
         $prepared['horig'] = $horig;
     }
-    array_walk($prepared, [FuncTablasSupport::class, 'ponerEmptyOnNull']);
+    array_walk($prepared, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
     $query = http_build_query($prepared);
     return $query;
 }
@@ -975,7 +974,7 @@ class HashFront
         $aCampos[$campo] = '';
     }
 
-    array_walk($aCampos, [FuncTablasSupport::class, 'ponerEmptyOnNull']);
+    array_walk($aCampos, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
     $sQuery = http_build_query($aCampos);
 
     return $sQuery;
@@ -1217,7 +1216,7 @@ class HashFront
         // puede fallar → 302 a index.php.
         $aPOST = self::collapseIndexedPostKeysToCanonical($aPOST, ['id_cdc']);
         ksort($aPOST);
-        array_walk($aPOST, [FuncTablasSupport::class, 'ponerEmptyOnNull']);
+        array_walk($aPOST, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
         return $aPOST;
     }
 
@@ -1284,14 +1283,6 @@ class HashFront
     public function setPrefix(string $prefix): void
 {
     $this->prefix = $prefix;
-}
-
-
-    public static function poner_empty_on_null(mixed &$valor): void
-{
-    if ($valor === null) {
-        $valor = '';
-    }
 }
 
 }

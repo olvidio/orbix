@@ -16,9 +16,9 @@ final class ListaClasesCaPayload
     public static function fromPayload(array $payload): array
     {
         return [
-            'msg_err' => PayloadCoercion::string($payload['msg_err'] ?? ''),
-            'nom_activ' => PayloadCoercion::string($payload['nom_activ'] ?? ''),
-            'nom_director_est' => PayloadCoercion::string($payload['nom_director_est'] ?? ''),
+            'msg_err' => \frontend\shared\helpers\PayloadCoercion::string($payload['msg_err'] ?? ''),
+            'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom_activ'] ?? ''),
+            'nom_director_est' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom_director_est'] ?? ''),
             'datos_asignatura' => ActividadesListaSupport::datos($payload['datos_asignatura'] ?? []),
         ];
     }

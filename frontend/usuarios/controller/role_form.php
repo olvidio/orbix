@@ -40,8 +40,8 @@ if (isset($_POST['stack'])) {
         $Qid_role = (string)UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
     }
 }
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 $oPosicion->setParametros(array('id_role' => $Qid_role), 1);
 

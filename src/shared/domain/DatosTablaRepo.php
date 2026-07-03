@@ -5,7 +5,6 @@ namespace src\shared\domain;
 use src\shared\domain\contracts\DatosFichaInterface;
 use src\shared\domain\contracts\DatosLookupRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_dossiers_abiertos
@@ -173,7 +172,7 @@ class DatosTablaRepo
                 $val_pks = $oFila->$pks1();
             }
             $val_pks = $this->normalizePkeyForEncode($val_pks);
-            $pks = FuncTablasSupport::urlsafeB64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
+            $pks = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
             /** @var array<string, mixed> $filaValores */
             $filaValores = ['sel' => $pks];
             foreach ($oFila->getDatosCampos() as $oDatosCampo) {
@@ -226,7 +225,7 @@ class DatosTablaRepo
                         $filaValores[(string) $v] = $var;
                         break;
                     case "check":
-                        if (FuncTablasSupport::isTrue($valor_camp)) {
+                        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($valor_camp)) {
                             $filaValores[(string) $v] = _("sí");
                         } else {
                             $filaValores[(string) $v] = _("no");

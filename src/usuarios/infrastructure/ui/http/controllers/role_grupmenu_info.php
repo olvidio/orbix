@@ -8,7 +8,7 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_role = (int)FilterPostGet::post('id_role');
+$Qid_role = (int)\src\shared\domain\helpers\FilterPostGet::post('id_role');
 
 $error_txt = '';
 

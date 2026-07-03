@@ -3,7 +3,6 @@
 namespace src\actividades\application;
 
 use src\shared\domain\helpers\OpcionesDesplegable;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve el payload (id, opciones, selected, blanco) del desplegable de
@@ -22,10 +21,10 @@ class ActividadTipoGetLugar
      */
     public function execute(array $input = []): array
     {
-        $Qentrada = FuncTablasSupport::inputString($input, 'entrada');
-        $Qisfsv = FuncTablasSupport::inputInt($input, 'isfsv');
-        $Qssfsv = FuncTablasSupport::inputString($input, 'ssfsv');
-        $Qopcion_sel = FuncTablasSupport::inputString($input, 'opcion_sel');
+        $Qentrada = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'entrada');
+        $Qisfsv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'isfsv');
+        $Qssfsv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'ssfsv');
+        $Qopcion_sel = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'opcion_sel');
 
         $oActividadLugar = $this->actividadLugar;
         $oActividadLugar->setIsfsv($Qisfsv);

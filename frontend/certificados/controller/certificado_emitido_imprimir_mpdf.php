@@ -23,7 +23,7 @@ $payload = CertificadosPayload::postData(PostRequest::getDataFromUrl(
 ));
 if (!empty($payload['error'])) {
     certificado_emitido_echo_aviso_y_salir(
-        PostRequest::stripInternalCallProvenance(PayloadCoercion::string($payload['error']))
+        PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($payload['error']))
     );
 }
 

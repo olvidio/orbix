@@ -9,7 +9,7 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\shared\web\ContestarJson;
 use src\actividades\application\ActividadVerDatos;
 
-$idTipo = (string)FilterPostGet::post('id_tipo_activ');
+$idTipo = (string)\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ');
 
 $nivel = ActividadVerDatos::nivelStgrPorDefectoParaIdTipoActividad($idTipo);
 

@@ -29,7 +29,7 @@ $payload = PostRequest::getDataFromUrl('/src/notas/informe_stgr_n_data', [
     'lista' => $Qlista,
 ]);
 
-$ce_lugar = PayloadCoercion::string($payload['ce_lugar'] ?? '');
+$ce_lugar = \frontend\shared\helpers\PayloadCoercion::string($payload['ce_lugar'] ?? '');
 unset($payload['ce_lugar']);
 
 if ($ce_lugar === '') {
@@ -42,7 +42,7 @@ if ($ce_lugar === '') {
 $datos = $payload;
 
 $a_campos = [
-    'titulo' => FuncTablasSupport::strtoupperDlb(_("alumnos numerarios")),
+    'titulo' => \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("alumnos numerarios")),
     'curso_txt' => $datos['curso_txt'],
     'res' => $datos['res'],
     'textos' => $datos['textos'],

@@ -2,7 +2,6 @@
 
 namespace src\actividadtarifas\application;
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Accion: copiar las tarifas de una casa del año anterior al año actual.
@@ -17,8 +16,8 @@ final class TarifaUbiCopiar
      */
     public function execute(array $input): string
     {
-        $id_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
-        $year = FuncTablasSupport::inputInt($input, 'year');
+        $id_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
+        $year = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'year');
         if ($id_ubi === 0 || $year === 0) {
             return (string) _("no sé qué casa/año tengo que copiar");
         }

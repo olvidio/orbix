@@ -15,11 +15,11 @@ final class ActividadestudiosListaSupport
     public static function valores(mixed $raw, mixed $select = null, mixed $scrollId = null): array
     {
         $valores = ActividadesListaSupport::datos($raw);
-        $selectStr = PayloadCoercion::string($select);
+        $selectStr = \frontend\shared\helpers\PayloadCoercion::string($select);
         if ($selectStr !== '') {
             $valores['select'] = $selectStr;
         }
-        $scrollStr = PayloadCoercion::string($scrollId);
+        $scrollStr = \frontend\shared\helpers\PayloadCoercion::string($scrollId);
         if ($scrollStr !== '') {
             $valores['scroll_id'] = $scrollStr;
         }

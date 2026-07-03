@@ -13,7 +13,7 @@ $oPosicion = FrontBootstrap::boot();
 /** @var \frontend\shared\web\Posicion $oPosicion */
 $Qactualizar = (int)filter_input(INPUT_POST, 'actualizar');
 if (empty($Qactualizar)) {
-    ListNavSupport::bootDossierChildRecordar($oPosicion);
+    \frontend\shared\helpers\ListNavSupport::bootDossierChildRecordar($oPosicion);
 }
 
 $campos = array_merge($_GET, $_POST);

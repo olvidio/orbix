@@ -7,7 +7,6 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\profesores\domain\ProfesorActividad;
 use src\profesores\domain\services\ProfesorAsignaturaService;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * @return array{
@@ -61,10 +60,10 @@ final class FormAsignaturasDeUnaActividadData
      */
     public function execute(array $input): array
     {
-        $pau = FuncTablasSupport::inputString($input, 'pau');
-        $idPau = FuncTablasSupport::inputInt($input, 'id_pau');
-        $idActivPost = FuncTablasSupport::inputInt($input, 'id_activ');
-        $idAsignaturaPost = FuncTablasSupport::inputInt($input, 'id_asignatura');
+        $pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'pau');
+        $idPau = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
+        $idActivPost = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $idAsignaturaPost = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
         $sel = isset($input['sel']) && is_array($input['sel']) ? $input['sel'] : null;
 
         if (!empty($sel)) {

@@ -32,19 +32,19 @@ if (isset($_POST['stack'])) {
     if ($stack !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
-            $Qid_sel = PayloadCoercion::string($oPosicion2->getParametro('id_sel'));
-            $Qscroll_id = PayloadCoercion::string($oPosicion2->getParametro('scroll_id'));
+            $Qid_sel = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('id_sel'));
+            $Qscroll_id = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('scroll_id'));
             $oPosicion2->olvidar($stack);
         }
     }
 }
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
 }
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
 
 
 $Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
@@ -59,8 +59,8 @@ if ($mes > $fin_m) {
 } else {
     $any = (int)date('Y');
 }
-$oInicurs_ca = FuncTablasSupport::cursoEst('inicio', $any);
-$oFincurs_ca = FuncTablasSupport::cursoEst('fin', $any);
+$oInicurs_ca = \frontend\shared\helpers\FuncTablasSupport::cursoEst('inicio', $any);
+$oFincurs_ca = \frontend\shared\helpers\FuncTablasSupport::cursoEst('fin', $any);
 $inicurs_ca_iso = $oInicurs_ca->getIso();
 $fincurs_ca_iso = $oFincurs_ca->getIso();
 $inicurs_ca_local = $oInicurs_ca->getFromLocal();
@@ -110,7 +110,7 @@ foreach ($a_valores as $idx => $row) {
     if (!is_int($idx) || !is_array($row) || !isset($row['sel'])) {
         continue;
     }
-    $id = PayloadCoercion::int($row['sel']);
+    $id = \frontend\shared\helpers\PayloadCoercion::int($row['sel']);
     if ($id <= 0) {
         continue;
     }

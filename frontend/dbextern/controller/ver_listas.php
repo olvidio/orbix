@@ -30,7 +30,7 @@ if ($first_load) {
         'first_load' => '1',
     ]);
     $a_lista = DbexternPayload::listaFromBackend($data['lista'] ?? []);
-    $cont_sync = PayloadCoercion::int($data['cont_sync'] ?? 0);
+    $cont_sync = \frontend\shared\helpers\PayloadCoercion::int($data['cont_sync'] ?? 0);
 
     session_start();
     $_SESSION['DBListas'] = $a_lista;

@@ -8,7 +8,6 @@ use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 class ProfesorAsignaturaService
 {
@@ -94,7 +93,7 @@ class ProfesorAsignaturaService
                 'nom' => $oPersonaDl->getNomVo()?->value() ?? '',
             ];
         }
-        FuncTablasSupport::usortProfesoresPorApellidos($aProfesores);
+        \src\shared\domain\helpers\FuncTablasSupport::usortProfesoresPorApellidos($aProfesores);
 
         $aOpciones = [];
         foreach ($aProfesores as $aClave) {

@@ -66,9 +66,6 @@ RefreshCrStgrMaterializedViews::emitUserAvisoIfHtmlRequest();
 
 (new HydrateSessionConfig())->execute();
 
-// func_tablas. Es necesaria para permisos\PermisosActividades->carregar()...
-include_once(__DIR__ . '/../../src/shared/domain/helpers/func_tablas.php');
-
 // Permisos en sesión: carga completa solo la primera vez tras login; luego caché.
 (new HydratePermisosActividades())->execute();
 

@@ -13,18 +13,18 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
 }
 $id_activ = ActividadestudiosPostInput::idFromSel();
-ListNavSupport::persistActividadSelectChildEntry(
+\frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry(
     $oPosicion,
     $id_activ > 0 ? ['id_activ' => $id_activ] : [],
 );
@@ -37,7 +37,7 @@ $nom_director_est = $d['nom_director_est'];
 $datos_asignatura = $d['datos_asignatura'];
 
 if ($msg_err !== '') {
-    echo PayloadCoercion::string($msg_err);
+    echo \frontend\shared\helpers\PayloadCoercion::string($msg_err);
 }
 
 $a_campos = ['oPosicion' => $oPosicion,

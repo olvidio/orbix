@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint JSON: construye el texto de preview de la condicion y el array
@@ -12,14 +11,14 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'id_item' => FuncTablasSupport::inputInt($_POST, 'id_item'),
-    'objeto' => FuncTablasSupport::inputString($_POST, 'objeto'),
-    'propiedad' => FuncTablasSupport::inputString($_POST, 'propiedad'),
-    'operador' => FuncTablasSupport::inputString($_POST, 'operador'),
-    'valor' => FuncTablasSupport::inputString($_POST, 'valor'),
-    'valor_old' => FuncTablasSupport::inputString($_POST, 'valor_old'),
-    'valor_new' => FuncTablasSupport::inputString($_POST, 'valor_new'),
-    'id_ubi' => FuncTablasSupport::inputStringList($_POST, 'id_ubi'),
+    'id_item' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item'),
+    'objeto' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'objeto'),
+    'propiedad' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'propiedad'),
+    'operador' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'operador'),
+    'valor' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'valor'),
+    'valor_old' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'valor_old'),
+    'valor_new' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'valor_new'),
+    'id_ubi' => \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'id_ubi'),
 ];
 
 /** @var CambioUsuarioPropiedadPrefPreview $useCase */

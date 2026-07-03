@@ -23,17 +23,17 @@ final class AsistenteMoverRender
     {
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $guardarRel = FuncTablasSupport::payloadString($paths, 'guardar');
+        $guardarRel = \frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'guardar');
         $payload['url_guardar'] = $guardarRel !== '' ? $base . '/' . ltrim($guardarRel, '/') : '';
 
         $hm = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         if ($hm !== []) {
             $oHash = new HashFront();
-            $cn = FuncTablasSupport::payloadString($hm, 'campos_no');
+            $cn = \frontend\shared\helpers\FuncTablasSupport::payloadString($hm, 'campos_no');
             if ($cn !== '') {
                 $oHash->setCamposNo($cn);
             }
-            $oHash->setCamposForm(FuncTablasSupport::payloadString($hm, 'campos_form'));
+            $oHash->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($hm, 'campos_form'));
             $hidden = AsistentesRenderSupport::hashCamposHidden($hm['campos_hidden'] ?? []);
             $oHash->setArrayCamposHidden($hidden);
             $payload['hash_campos_html'] = $oHash->getCamposHtml();

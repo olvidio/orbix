@@ -11,7 +11,6 @@ use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve los datos que el formulario "ver/editar actividad" necesita para
@@ -76,16 +75,16 @@ final class ActividadVerDatos
      */
     public function ejecutar(array $input): array
     {
-        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
-        $isfsv = FuncTablasSupport::inputInt($input, 'isfsv');
-        $dl_org = FuncTablasSupport::inputString($input, 'dl_org');
-        $Bdl = FuncTablasSupport::inputString($input, 'Bdl', 't');
+        $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $isfsv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'isfsv');
+        $dl_org = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_org');
+        $Bdl = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'Bdl', 't');
         $tarifa = is_scalar($input['tarifa'] ?? '') ? (string) ($input['tarifa'] ?? '') : '';
-        $idioma = FuncTablasSupport::inputString($input, 'idioma');
-        $id_repeticion = FuncTablasSupport::inputInt($input, 'id_repeticion');
-        $id_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
-        $lugar_esp = FuncTablasSupport::inputString($input, 'lugar_esp');
-        $id_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $idioma = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'idioma');
+        $id_repeticion = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_repeticion');
+        $id_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
+        $lugar_esp = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'lugar_esp');
+        $id_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ');
         $nivel_stgr_raw = $input['nivel_stgr'] ?? self::nivelStgrPorDefectoParaIdTipoActividad($id_tipo_activ);
         $nivel_stgr = is_scalar($nivel_stgr_raw) ? (string) $nivel_stgr_raw : '';
         $calcTarifaInicial = !empty($input['calc_tarifa_inicial']);

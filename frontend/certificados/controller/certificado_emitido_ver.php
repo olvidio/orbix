@@ -18,13 +18,13 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
 }
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 $Qid_item = CertificadosPostInput::idItemFromSelPost();
 
@@ -34,7 +34,7 @@ $data = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/certific
 if (!empty($data['error'])) {
     $a_campos = [
         'oPosicion' => $oPosicion,
-        'aviso' => PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error'])),
+        'aviso' => PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($data['error'])),
     ];
     $oView = new ViewNewTwig('frontend/certificados/controller');
     $oView->renderizar('certificado_emitido_ver.html.twig', $a_campos);
@@ -49,7 +49,7 @@ $destino = $ver['destino'];
 $certificado = $ver['certificado'];
 $f_certificado = $ver['f_certificado'];
 $f_enviado = $ver['f_enviado'];
-$chk_firmado = FuncTablasSupport::isTrue($ver['firmado']) ? 'checked' : '';
+$chk_firmado = \src\shared\domain\helpers\FuncTablasSupport::isTrue($ver['firmado']) ? 'checked' : '';
 $content_pdf = base64_decode($ver['content'], true);
 if ($content_pdf === false) {
     $content_pdf = '';

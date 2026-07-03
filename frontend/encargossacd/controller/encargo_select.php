@@ -25,18 +25,18 @@ $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$restored = ListNavSupport::restoreSelectionFromStackPost();
+$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
-$stackFromPost = ListNavSupport::stackFromPost();
+$Qid_sel = !\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : \frontend\shared\helpers\ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
 }
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 
@@ -82,7 +82,7 @@ foreach ($filas as $fila) {
     $desc_enc = $row['desc_enc'];
 
     $aQuery = ['que' => 'editar', 'id_enc' => $id_enc];
-    array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+    array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
     $pagina = HashFront::link('frontend/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
 
     $a_valores[$i] = [];
@@ -98,7 +98,7 @@ foreach ($filas as $fila) {
 }
 
 $aQuery = ['que' => 'nuevo', 'id_tipo_enc' => $Qid_tipo_enc];
-array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $pagina_nuevo = HashFront::link('frontend/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
 
 $txt_eliminar = _("¿Esta Seguro que desea borrar este encargo?");

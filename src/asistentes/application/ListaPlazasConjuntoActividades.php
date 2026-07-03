@@ -17,7 +17,6 @@ use src\ubis\domain\entity\Ubi;
 use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
 use function DI\get;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Lista los asistentes de una relación de actividades seleccionada
@@ -128,12 +127,12 @@ class ListaPlazasConjuntoActividades
         }
 
         if (($sasistentes === "s") and ($sactividad === "cv")) {
-            $titulo = FuncTablasSupport::strtoupperDlb(_("relación de cargos en las cv de s"));
+            $titulo = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("relación de cargos en las cv de s"));
         } else {
             if (($sasistentes === "sss+") and ($sactividad === "cv")) {
                 $titulo = strtoupper(_("propuesta de cl en cv de sss+"));
             } else {
-                $titulo = FuncTablasSupport::strtoupperDlb(_("relación de asistentes a las actividades seleccionadas"));
+                $titulo = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("relación de asistentes a las actividades seleccionadas"));
             }
         }
 
@@ -222,7 +221,7 @@ class ListaPlazasConjuntoActividades
                             continue;
                         }
                         $sacd = $oPersona->isSacd();
-                        if ($this->bsacd && !FuncTablasSupport::isTrue($sacd)) { continue; }
+                        if ($this->bsacd && !\src\shared\domain\helpers\FuncTablasSupport::isTrue($sacd)) { continue; }
 
                         $cl++;
                         $num++;
@@ -256,7 +255,7 @@ class ListaPlazasConjuntoActividades
                         continue;
                     }
                     $sacd = $oPersona->isSacd();
-                    if ($this->bsacd && !FuncTablasSupport::isTrue($sacd)) continue;
+                    if ($this->bsacd && !\src\shared\domain\helpers\FuncTablasSupport::isTrue($sacd)) continue;
 
                     $id_tabla = $oPersona->getId_tabla();
                     $ap_nom = $oPersona->getPrefApellidosNombre();

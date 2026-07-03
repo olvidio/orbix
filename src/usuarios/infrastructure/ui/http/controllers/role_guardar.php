@@ -8,12 +8,12 @@ use src\usuarios\domain\value_objects\PauType;
 use src\usuarios\domain\value_objects\RoleName;
 use src\shared\web\ContestarJson;
 
-$Qrole = (string)FilterPostGet::post('role');
-$Qid_role = (integer)FilterPostGet::post('id_role');
-$Qsf = (integer)FilterPostGet::post('sf');
-$Qsv = (integer)FilterPostGet::post('sv');
-$Qpau = (string)FilterPostGet::post('pau');
-$Qdmz = (integer)FilterPostGet::post('dmz');
+$Qrole = (string)\src\shared\domain\helpers\FilterPostGet::post('role');
+$Qid_role = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_role');
+$Qsf = (integer)\src\shared\domain\helpers\FilterPostGet::post('sf');
+$Qsv = (integer)\src\shared\domain\helpers\FilterPostGet::post('sv');
+$Qpau = (string)\src\shared\domain\helpers\FilterPostGet::post('pau');
+$Qdmz = (integer)\src\shared\domain\helpers\FilterPostGet::post('dmz');
 
 $error_txt = '';
 

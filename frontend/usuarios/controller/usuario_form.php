@@ -46,13 +46,13 @@ if (isset($_POST['stack'])) {
         $Qid_usuario = UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
     }
 }
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
 }
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), $Qscroll_id));
 
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
@@ -128,7 +128,7 @@ $oView->renderizar('usuario_form.phtml', $a_campos);
 
 if (!empty($Qid_usuario)) {
     $infoData = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_info', ['id_usuario' => $Qid_usuario]));
-    $a_campos['grupos_txt'] = PayloadCoercion::string($infoData['grupos_txt'] ?? '');
+    $a_campos['grupos_txt'] = \frontend\shared\helpers\PayloadCoercion::string($infoData['grupos_txt'] ?? '');
 
     $a_campos['procesos_installed'] = AppInstalled::is('procesos');
     $oView = new ViewNewPhtml('frontend\usuarios\controller');

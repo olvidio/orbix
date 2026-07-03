@@ -23,8 +23,8 @@ final class ActaImprimirPayload
             if (!is_array($row)) {
                 continue;
             }
-            $nom = PayloadCoercion::string($row['nom'] ?? '');
-            $nota = PayloadCoercion::string($row['nota'] ?? '');
+            $nom = \frontend\shared\helpers\PayloadCoercion::string($row['nom'] ?? '');
+            $nota = \frontend\shared\helpers\PayloadCoercion::string($row['nota'] ?? '');
             $out[$nom] = $nota;
         }
 
@@ -43,7 +43,7 @@ final class ActaImprimirPayload
         }
         $out = [];
         foreach ($raw as $item) {
-            $out[] = PayloadCoercion::string($item);
+            $out[] = \frontend\shared\helpers\PayloadCoercion::string($item);
         }
 
         return $out;
@@ -75,22 +75,22 @@ final class ActaImprimirPayload
     public static function presentacionFromPayload(array $payload): array
     {
         return [
-            'acta' => PayloadCoercion::string($payload['acta'] ?? ''),
-            'errores' => PayloadCoercion::string($payload['errores'] ?? ''),
-            'num_alumnos' => PayloadCoercion::int($payload['num_alumnos'] ?? 0),
-            'lin_tribunal' => PayloadCoercion::int($payload['lin_tribunal'] ?? 0),
-            'lin_max_cara_A' => PayloadCoercion::int($payload['lin_max_cara_A'] ?? 0),
-            'alum_cara_A' => PayloadCoercion::int($payload['alum_cara_A'] ?? 0),
-            'alum_cara_B' => PayloadCoercion::int($payload['alum_cara_B'] ?? 0),
-            'curso' => PayloadCoercion::string($payload['curso'] ?? ''),
-            'any' => PayloadCoercion::string($payload['any'] ?? ''),
-            'nombre_asignatura' => PayloadCoercion::string($payload['nombre_asignatura'] ?? ''),
-            'libro' => PayloadCoercion::string($payload['libro'] ?? ''),
-            'pagina' => PayloadCoercion::string($payload['pagina'] ?? ''),
-            'linea' => PayloadCoercion::string($payload['linea'] ?? ''),
-            'lugar' => PayloadCoercion::string($payload['lugar'] ?? ''),
-            'lugar_fecha' => PayloadCoercion::string($payload['lugar_fecha'] ?? ''),
-            'tribunal_html' => PayloadCoercion::string($payload['tribunal_html'] ?? ''),
+            'acta' => \frontend\shared\helpers\PayloadCoercion::string($payload['acta'] ?? ''),
+            'errores' => \frontend\shared\helpers\PayloadCoercion::string($payload['errores'] ?? ''),
+            'num_alumnos' => \frontend\shared\helpers\PayloadCoercion::int($payload['num_alumnos'] ?? 0),
+            'lin_tribunal' => \frontend\shared\helpers\PayloadCoercion::int($payload['lin_tribunal'] ?? 0),
+            'lin_max_cara_A' => \frontend\shared\helpers\PayloadCoercion::int($payload['lin_max_cara_A'] ?? 0),
+            'alum_cara_A' => \frontend\shared\helpers\PayloadCoercion::int($payload['alum_cara_A'] ?? 0),
+            'alum_cara_B' => \frontend\shared\helpers\PayloadCoercion::int($payload['alum_cara_B'] ?? 0),
+            'curso' => \frontend\shared\helpers\PayloadCoercion::string($payload['curso'] ?? ''),
+            'any' => \frontend\shared\helpers\PayloadCoercion::string($payload['any'] ?? ''),
+            'nombre_asignatura' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_asignatura'] ?? ''),
+            'libro' => \frontend\shared\helpers\PayloadCoercion::string($payload['libro'] ?? ''),
+            'pagina' => \frontend\shared\helpers\PayloadCoercion::string($payload['pagina'] ?? ''),
+            'linea' => \frontend\shared\helpers\PayloadCoercion::string($payload['linea'] ?? ''),
+            'lugar' => \frontend\shared\helpers\PayloadCoercion::string($payload['lugar'] ?? ''),
+            'lugar_fecha' => \frontend\shared\helpers\PayloadCoercion::string($payload['lugar_fecha'] ?? ''),
+            'tribunal_html' => \frontend\shared\helpers\PayloadCoercion::string($payload['tribunal_html'] ?? ''),
             'examinadores' => self::examinadoresFromPayload($payload),
             'aPersonasNotas' => self::personasNotasFromPayload($payload),
         ];

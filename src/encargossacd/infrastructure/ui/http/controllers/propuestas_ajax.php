@@ -5,7 +5,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
-$que = (string) (FilterPostGet::post('que') ?? FilterPostGet::get('que') ?? '');
+$que = (string) (\src\shared\domain\helpers\FilterPostGet::post('que') ?? \src\shared\domain\helpers\FilterPostGet::get('que') ?? '');
 
 /** @var PropuestasAjaxDispatch $useCase */
 $useCase = DependencyResolver::get(PropuestasAjaxDispatch::class);

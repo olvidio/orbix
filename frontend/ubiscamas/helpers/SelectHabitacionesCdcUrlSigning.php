@@ -29,7 +29,7 @@ final class SelectHabitacionesCdcUrlSigning
         $urlNuevo = '';
         $spec = $in['url_nuevo_spec'] ?? null;
         if ($spec !== null) {
-            $path = PayloadCoercion::string($spec['path'] ?? '');
+            $path = \frontend\shared\helpers\PayloadCoercion::string($spec['path'] ?? '');
             $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
             if ($path !== '') {
                 $url = $base . '/' . ltrim($path, '/') . '?' . http_build_query($query);
@@ -38,12 +38,12 @@ final class SelectHabitacionesCdcUrlSigning
         }
         $aLinksDl = [];
         foreach ($in['a_links_dl_specs'] ?? [] as $item) {
-            $label = PayloadCoercion::string($item['label'] ?? '');
+            $label = \frontend\shared\helpers\PayloadCoercion::string($item['label'] ?? '');
             $itemSpec = $item['spec'] ?? null;
             if ($label === '' || !is_array($itemSpec)) {
                 continue;
             }
-            $path = PayloadCoercion::string($itemSpec['path'] ?? '');
+            $path = \frontend\shared\helpers\PayloadCoercion::string($itemSpec['path'] ?? '');
             $query = is_array($itemSpec['query'] ?? null) ? $itemSpec['query'] : [];
             if ($path === '') {
                 continue;

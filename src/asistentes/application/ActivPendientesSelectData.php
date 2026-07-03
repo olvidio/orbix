@@ -10,7 +10,6 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Actividades pendientes por curso (`activ_pendientes_select.php`).
@@ -34,9 +33,9 @@ final class ActivPendientesSelectData
      */
     public function build(array $input): array
     {
-        $Qany = FuncTablasSupport::inputInt($input, 'any', 0);
-        $Qtipo_personas = FuncTablasSupport::inputString($input, 'tipo_personas');
-        $Qsactividad = FuncTablasSupport::inputString($input, 'sactividad');
+        $Qany = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'any', 0);
+        $Qtipo_personas = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo_personas');
+        $Qsactividad = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad');
 
         if (empty($Qany)) {
             $any = (int)date('Y');
@@ -95,8 +94,8 @@ final class ActivPendientesSelectData
                     $id_tipo_activ = '(112...)|(133...)';
                 }
                 $chk_ca = 'selected';
-                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'est')->format('Y-m-d');
-                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'est')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'est')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'est')->format('Y-m-d');
                 break;
             case 'crt':
                 if ($Qtipo_personas === 'n') {
@@ -109,8 +108,8 @@ final class ActivPendientesSelectData
                     $id_tipo_activ = '1[136]1...';
                 }
                 $chk_crt = 'selected';
-                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'crt')->format('Y-m-d');
-                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d');
                 break;
         }
 
@@ -165,7 +164,7 @@ final class ActivPendientesSelectData
                 $aFaltan[$ap_nom] = ['id_nom' => $id_nomP, 'id_ubi' => $id_ubi, 'nivel_stgr' => $nivel_stgr];
             }
         }
-        uksort($aFaltan, 'src\shared\domain\helpers\strsinacentocmp');
+        uksort($aFaltan, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
 
         $titulo = ucfirst(sprintf(_('lista de %s sin %s en el curso %s'), $Qtipo_personas, $Qsactividad, $txt_curso));
 
@@ -236,7 +235,7 @@ final class ActivPendientesSelectData
             $nivel_stgr = $oPersona->getNivel_stgr();
             $aFaltanOtras[$ap_nom] = ['id_nom' => $id_nomP, 'id_ubi' => $id_ubi, 'nivel_stgr' => $nivel_stgr];
         }
-        uksort($aFaltanOtras, 'src\shared\domain\helpers\strsinacentocmp');
+        uksort($aFaltanOtras, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
 
         $a_valores_2 = [];
         foreach ($aFaltanOtras as $ap_nom => $aDatos) {

@@ -37,7 +37,7 @@ switch ($Qloc) {
         ];
         $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
         $payload = InventarioPayload::postPayload($data);
-        $texto = PayloadCoercion::string($payload['texto'] ?? '');
+        $texto = \frontend\shared\helpers\PayloadCoercion::string($payload['texto'] ?? '');
         break;
 }
 

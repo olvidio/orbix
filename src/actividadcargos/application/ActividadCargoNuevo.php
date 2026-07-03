@@ -14,7 +14,6 @@ use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Alta de un `ActividadCargo`. Si llega `asis=true` ademas da de alta
@@ -42,12 +41,12 @@ final class ActividadCargoNuevo
      */
     public function execute(array $input): string
     {
-        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
-        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
-        $id_cargo = FuncTablasSupport::inputInt($input, 'id_cargo');
-        $observ = FuncTablasSupport::inputString($input, 'observ');
-        $puede_agd = FuncTablasSupport::inputString($input, 'puede_agd');
-        $asis = FuncTablasSupport::inputString($input, 'asis');
+        $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
+        $id_cargo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_cargo');
+        $observ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ');
+        $puede_agd = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'puede_agd');
+        $asis = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'asis');
 
         if ($id_activ <= 0 || $id_nom <= 0 || $id_cargo <= 0) {
             return _("faltan parametros id_activ / id_nom / id_cargo");
@@ -59,7 +58,7 @@ final class ActividadCargoNuevo
         $oActividadCargo->setId_cargo($id_cargo);
         $oActividadCargo->setId_nom($id_nom);
         $oActividadCargo->setObserv($observ !== '' ? $observ : null);
-        $oActividadCargo->setPuede_agd(FuncTablasSupport::isTrue($puede_agd) ?? false);
+        $oActividadCargo->setPuede_agd(\src\shared\domain\helpers\FuncTablasSupport::isTrue($puede_agd) ?? false);
 
         if ($this->actividadCargoRepository->Guardar($oActividadCargo) === false) {
             $error = $this->lastSessionError();

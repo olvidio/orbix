@@ -13,12 +13,12 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'id_ctr_num' => (int)FilterPostGet::post('id_ctr_num'),
-    'id_ctr' => (array)FilterPostGet::post('id_ctr', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'periodo' => (string)FilterPostGet::post('periodo'),
-    'year' => (string)FilterPostGet::post('year'),
-    'empiezamin' => (string)FilterPostGet::post('empiezamin'),
-    'empiezamax' => (string)FilterPostGet::post('empiezamax'),
+    'id_ctr_num' => (int)\src\shared\domain\helpers\FilterPostGet::post('id_ctr_num'),
+    'id_ctr' => (array)\src\shared\domain\helpers\FilterPostGet::post('id_ctr', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'periodo' => (string)\src\shared\domain\helpers\FilterPostGet::post('periodo'),
+    'year' => (string)\src\shared\domain\helpers\FilterPostGet::post('year'),
+    'empiezamin' => (string)\src\shared\domain\helpers\FilterPostGet::post('empiezamin'),
+    'empiezamax' => (string)\src\shared\domain\helpers\FilterPostGet::post('empiezamax'),
 ];
 
 /** @var ListaCentrosActivDatos $useCase */

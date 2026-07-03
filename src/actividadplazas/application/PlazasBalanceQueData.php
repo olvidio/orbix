@@ -5,7 +5,6 @@ namespace src\actividadplazas\application;
 use src\actividades\domain\entity\TiposActividades;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Opciones del desplegable de delegaciones + `id_tipo_activ` resuelto para
@@ -24,7 +23,7 @@ final class PlazasBalanceQueData
      */
     public function execute(array $input): array
     {
-        $idTipo = FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $idTipo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ');
         if ($idTipo === '') {
             $ssfsv = '';
             $mi = (int)ConfigGlobal::mi_sfsv();
@@ -34,8 +33,8 @@ final class PlazasBalanceQueData
             if ($mi === 2) {
                 $ssfsv = 'sf';
             }
-            $sa = FuncTablasSupport::inputString($input, 'sasistentes');
-            $sact = FuncTablasSupport::inputString($input, 'sactividad');
+            $sa = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sasistentes');
+            $sact = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad');
             $oTipoActiv = new TiposActividades();
             $oTipoActiv->setSfsvText($ssfsv);
             $oTipoActiv->setAsistentesText($sa);

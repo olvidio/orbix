@@ -3,7 +3,6 @@
 namespace src\planning\application;
 
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Actividades por persona (vista plana) para `planning_persona_ver`.
@@ -23,7 +22,7 @@ final class PlanningPersonaVerData
      */
     public function execute(array $input, array $aid_nom, DateTimeLocal $oIniPlanning, string $inicio_local, string $fin_iso, string $inicio_iso): array
     {
-        $Qobj_pau = FuncTablasSupport::inputString($input, 'obj_pau');
+        $Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'obj_pau');
         $aWhere = [
             'id_nom' => implode(',', $aid_nom),
         ];

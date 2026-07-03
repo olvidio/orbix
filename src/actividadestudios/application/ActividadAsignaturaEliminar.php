@@ -3,7 +3,6 @@
 namespace src\actividadestudios\application;
 
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Elimina una `ActividadAsignatura` (asignatura impartida en un ca).
@@ -22,10 +21,10 @@ final class ActividadAsignaturaEliminar
      */
     public function execute(array $input): string
     {
-        $Qpau = FuncTablasSupport::inputString($input, 'pau');
+        $Qpau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'pau');
         $a_sel = (array) ($input['sel'] ?? []);
-        $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
-        $Qid_asignatura = FuncTablasSupport::inputInt($input, 'id_asignatura');
+        $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
 
         if (!empty($a_sel) && $Qpau === 'a') {
             $sel = $a_sel[0];

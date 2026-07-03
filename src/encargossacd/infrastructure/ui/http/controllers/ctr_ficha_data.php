@@ -9,7 +9,7 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(CtrFichaData::class);
 
 
-$id_ubi = (int)(FilterPostGet::post('id_ubi') ?? FilterPostGet::get('id_ubi') ?? 0);
-$filtro_ctr = (int)(FilterPostGet::post('filtro_ctr') ?? FilterPostGet::get('filtro_ctr') ?? 0);
+$id_ubi = (int)(\src\shared\domain\helpers\FilterPostGet::post('id_ubi') ?? \src\shared\domain\helpers\FilterPostGet::get('id_ubi') ?? 0);
+$filtro_ctr = (int)(\src\shared\domain\helpers\FilterPostGet::post('filtro_ctr') ?? \src\shared\domain\helpers\FilterPostGet::get('filtro_ctr') ?? 0);
 
 ContestarJson::enviar('', $useCase->execute($id_ubi, $filtro_ctr));

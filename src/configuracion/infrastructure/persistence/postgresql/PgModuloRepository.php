@@ -167,7 +167,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         // para los array
         $aDatos['mods_req'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPhp2pg($Modulo->getModsReqVo()?->toArray());
         $aDatos['apps_req'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPhp2pg($Modulo->getAppsReqVo()?->toArray());
-        array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
+        array_walk($aDatos, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerNull']);
         */
 
         if ($bInsert === false) {

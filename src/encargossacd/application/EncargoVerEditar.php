@@ -3,7 +3,6 @@
 namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Actualización de encargo desde `encargo_ver` (antes `encargo_ajax.php` que=editar).
@@ -22,17 +21,17 @@ final class EncargoVerEditar
      */
     public function execute(array $input): array
     {
-        $Qfiltro_ctr = FuncTablasSupport::inputInt($input, 'filtro_ctr');
+        $Qfiltro_ctr = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'filtro_ctr');
         $Qsf_sv = empty($Qfiltro_ctr) ? 1 : $Qfiltro_ctr;
-        $Qid_enc = FuncTablasSupport::inputInt($input, 'id_enc');
+        $Qid_enc = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_enc');
 
-        $Qid_ubi = FuncTablasSupport::inputInt($input, 'lst_ctrs');
-        $Qid_zona = FuncTablasSupport::inputInt($input, 'id_zona');
-        $Qdesc_enc = FuncTablasSupport::inputString($input, 'desc_enc');
-        $Qidioma_enc = FuncTablasSupport::inputString($input, 'idioma_enc');
-        $Qdesc_lugar = FuncTablasSupport::inputString($input, 'desc_lugar');
-        $Qobserv = FuncTablasSupport::inputString($input, 'observ');
-        $Qid_tipo_enc = FuncTablasSupport::inputString($input, 'id_tipo_enc');
+        $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'lst_ctrs');
+        $Qid_zona = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_zona');
+        $Qdesc_enc = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'desc_enc');
+        $Qidioma_enc = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'idioma_enc');
+        $Qdesc_lugar = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'desc_lugar');
+        $Qobserv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ');
+        $Qid_tipo_enc = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_enc');
 
         if ($Qdesc_enc === '') {
             return ['error' => _('Debe llenar el campo descripción')];

@@ -25,7 +25,6 @@ use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\PermisosActividades;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Servicio que construye la estructura de comunicacion de actividades a
@@ -149,7 +148,7 @@ final class ComunicarActividadesSacdService
             $ord_activ = [];
             foreach ($cAsistentes as $aAsistente) {
                 $id_activ = $this->mixedToInt($aAsistente['id_activ'] ?? 0);
-                $propio = FuncTablasSupport::isTrue($aAsistente['propio'] ?? false) ?? false;
+                $propio = \src\shared\domain\helpers\FuncTablasSupport::isTrue($aAsistente['propio'] ?? false) ?? false;
                 $id_cargo = isset($aAsistente['id_cargo']) && $aAsistente['id_cargo'] !== ''
                     ? $this->mixedToInt($aAsistente['id_cargo'])
                     : null;
@@ -157,7 +156,7 @@ final class ComunicarActividadesSacdService
                 $oPermSesion = $_SESSION['oPermActividades'] ?? null;
                 if ($oPermSesion instanceof PermisosActividades) {
                     $oPermSesion->setId_activ($id_activ);
-                    if (!FuncTablasSupport::isTrue($this->propuesta) && ConfigGlobal::is_app_installed('procesos')) {
+                    if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($this->propuesta) && ConfigGlobal::is_app_installed('procesos')) {
                         $permiso_ver = $oPermSesion->havePermisoSacd($id_cargo, $propio);
                     } else {
                         $permiso_ver = true;
@@ -165,7 +164,7 @@ final class ComunicarActividadesSacdService
                 } else {
                     $permiso_ver = true;
                 }
-                if (!FuncTablasSupport::isTrue($permiso_ver)) {
+                if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($permiso_ver)) {
                     continue;
                 }
 
@@ -361,7 +360,7 @@ final class ComunicarActividadesSacdService
                 if (!is_array($act)) {
                     continue;
                 }
-                $actPropio = FuncTablasSupport::isTrue($act['propio'] ?? false);
+                $actPropio = \src\shared\domain\helpers\FuncTablasSupport::isTrue($act['propio'] ?? false);
                 $actFIni = $this->mixedToString($act['f_ini'] ?? '');
                 $actFFin = $this->mixedToString($act['f_fin'] ?? '');
                 $actNombreUbi = $this->mixedToString($act['nombre_ubi'] ?? '');

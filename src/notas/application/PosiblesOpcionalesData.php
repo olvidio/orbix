@@ -5,7 +5,6 @@ namespace src\notas\application;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Calcula las asignaturas opcionales (3000-5000) que todavia puede
@@ -28,7 +27,7 @@ final class PosiblesOpcionalesData
      */
     public function execute(array $input): array
     {
-        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
+        $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
 
         $AsignaturaRepository = $this->asignaturaRepository;
         $cOpcionales = $AsignaturaRepository->getAsignaturas(

@@ -3,7 +3,6 @@
 namespace src\planning\application;
 
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Listado de personas para `planning_persona_select`.
@@ -22,12 +21,12 @@ final class PlanningPersonaSelectData
      */
     public function execute(array $input): array
     {
-        $Qobj_pau = FuncTablasSupport::inputString($input, 'obj_pau');
-        $Qapellido1 = FuncTablasSupport::inputString($input, 'apellido1');
-        $Qapellido2 = FuncTablasSupport::inputString($input, 'apellido2');
-        $Qnombre = FuncTablasSupport::inputString($input, 'nombre');
-        $Qcentro = FuncTablasSupport::inputString($input, 'centro');
-        $Qna = FuncTablasSupport::inputString($input, 'na');
+        $Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'obj_pau');
+        $Qapellido1 = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apellido1');
+        $Qapellido2 = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apellido2');
+        $Qnombre = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nombre');
+        $Qcentro = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'centro');
+        $Qna = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'na');
 
         $aWhere = [
             'situacion' => 'A',

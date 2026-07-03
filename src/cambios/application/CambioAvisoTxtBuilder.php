@@ -14,7 +14,6 @@ use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\entity\Ubi;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Construye el texto legible de un aviso a partir de un `Cambio`.
@@ -215,7 +214,7 @@ final class CambioAvisoTxtBuilder
                         $cFases = $this->actividadFaseRepository->getActividadFases(['id_fase' => $id_fase]);
                         $sFase = $cFases[0]->getDesc_fase();
 
-                        if (FuncTablasSupport::isTrue($sValor_new)) {
+                        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($sValor_new)) {
                             $sformat = _("Fase \"%2\$s\" marcada en la actividad \"%1\$s\"");
                         } else {
                             $sformat = _("Fase \"%2\$s\" desmarcada en la actividad \"%1\$s\"");

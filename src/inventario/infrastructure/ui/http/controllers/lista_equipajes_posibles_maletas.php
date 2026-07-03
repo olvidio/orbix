@@ -1,14 +1,13 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_equipaje = FuncTablasSupport::inputInt($_POST, 'id_equipaje');
+$Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_equipaje');
 
 $error_txt = '';
 

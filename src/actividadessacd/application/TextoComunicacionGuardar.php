@@ -4,7 +4,6 @@ namespace src\actividadessacd\application;
 
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
 use src\actividadessacd\domain\entity\ActividadSacdTexto;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Guarda/actualiza/elimina el texto de comunicacion de `{clave, idioma}`.
@@ -21,9 +20,9 @@ final class TextoComunicacionGuardar
      */
     public function execute(array $input): string
     {
-        $clave = FuncTablasSupport::inputString($input, 'clave');
-        $idioma = FuncTablasSupport::inputString($input, 'idioma');
-        $texto = FuncTablasSupport::inputString($input, 'texto');
+        $clave = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'clave');
+        $idioma = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'idioma');
+        $texto = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'texto');
 
         if ($clave === '' || $idioma === '') {
             return _("faltan parametros clave / idioma");

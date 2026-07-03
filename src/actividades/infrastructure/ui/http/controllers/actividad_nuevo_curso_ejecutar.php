@@ -13,9 +13,9 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'year_ref' => (int)FilterPostGet::post('year_ref'),
-    'year' => (int)FilterPostGet::post('year'),
-    'ver_lista' => (string)FilterPostGet::post('ver_lista'),
+    'year_ref' => (int)\src\shared\domain\helpers\FilterPostGet::post('year_ref'),
+    'year' => (int)\src\shared\domain\helpers\FilterPostGet::post('year'),
+    'ver_lista' => (string)\src\shared\domain\helpers\FilterPostGet::post('ver_lista'),
 ];
 
 /** @var ActividadNuevoCursoEjecutar $useCase */

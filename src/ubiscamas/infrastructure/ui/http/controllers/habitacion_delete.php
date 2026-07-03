@@ -3,10 +3,9 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
-$a_sel = FuncTablasSupport::inputStringList($_POST, 'sel');
+$a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'sel');
 
-$Qid_habitacion = FuncTablasSupport::inputString($_POST, 'id_habitacion');
+$Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_habitacion');
 
 if ($a_sel !== []) {
     $Qid_habitacion = urldecode(strtok($a_sel[0], '#') ?: '');

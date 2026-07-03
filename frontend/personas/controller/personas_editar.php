@@ -25,8 +25,8 @@ $Qnuevo = (int)filter_input(INPUT_POST, 'nuevo');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $obj = 'src\\personas\\domain\\entity\\' . $Qobj_pau;
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qid_nom = 0;

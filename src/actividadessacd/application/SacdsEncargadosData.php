@@ -9,7 +9,6 @@ use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\procesos\domain\PermAccion;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve los sacd encargados actuales de una actividad.
@@ -28,7 +27,7 @@ final class SacdsEncargadosData
      */
     public function execute(array $input): array
     {
-        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         if ($id_activ <= 0) {
             return [
                 'id_activ' => 0,
@@ -37,8 +36,8 @@ final class SacdsEncargadosData
                 'sacds' => [],
             ];
         }
-        $id_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
-        $dl_org = FuncTablasSupport::inputString($input, 'dl_org');
+        $id_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $dl_org = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_org');
 
         $oPermSacd = $this->resolverPermisoSacd($id_activ, $id_tipo_activ, $dl_org);
         $permite_ver = $oPermSacd->have_perm_activ('ver') === true;

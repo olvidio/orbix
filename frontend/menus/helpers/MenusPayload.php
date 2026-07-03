@@ -6,32 +6,6 @@ namespace frontend\menus\helpers;
 
 use frontend\shared\helpers\PayloadCoercion;
 
-final class MenusPostInput
-{
-    public static function selFirstItem(mixed $aSel): mixed
-    {
-        if (!is_array($aSel)) {
-            return null;
-        }
-        foreach ($aSel as $item) {
-            return $item;
-        }
-
-        return null;
-    }
-
-    public static function idFromSelItem(mixed $sel0): int
-    {
-        if (!is_string($sel0) || $sel0 === '') {
-            return 0;
-        }
-        $parts = explode('#', $sel0, 2);
-        $idRaw = $parts[0];
-
-        return is_numeric($idRaw) ? (int) $idRaw : 0;
-    }
-}
-
 final class MenusPayload
 {
     /**
@@ -75,19 +49,19 @@ final class MenusPayload
         $idMetamenuRaw = $pageData['id_metamenu'] ?? null;
         $idMetamenu = '';
         if (is_int($idMetamenuRaw) || is_string($idMetamenuRaw)) {
-            $idMetamenu = PayloadCoercion::string($idMetamenuRaw);
+            $idMetamenu = \frontend\shared\helpers\PayloadCoercion::string($idMetamenuRaw);
         }
 
         return [
-            'mode' => PayloadCoercion::string($pageData['mode'] ?? ''),
-            'id_menu' => PayloadCoercion::string($pageData['id_menu'] ?? ''),
-            'orden_txt' => PayloadCoercion::string($pageData['orden_txt'] ?? ''),
-            'menu' => PayloadCoercion::string($pageData['menu'] ?? ''),
-            'parametros' => PayloadCoercion::string($pageData['parametros'] ?? ''),
+            'mode' => \frontend\shared\helpers\PayloadCoercion::string($pageData['mode'] ?? ''),
+            'id_menu' => \frontend\shared\helpers\PayloadCoercion::string($pageData['id_menu'] ?? ''),
+            'orden_txt' => \frontend\shared\helpers\PayloadCoercion::string($pageData['orden_txt'] ?? ''),
+            'menu' => \frontend\shared\helpers\PayloadCoercion::string($pageData['menu'] ?? ''),
+            'parametros' => \frontend\shared\helpers\PayloadCoercion::string($pageData['parametros'] ?? ''),
             'id_metamenu' => $idMetamenu,
-            'menu_perm' => PayloadCoercion::int($pageData['menu_perm'] ?? 0),
-            'txt_ok' => PayloadCoercion::string($pageData['txt_ok'] ?? ''),
-            'campos_chk' => PayloadCoercion::string($pageData['campos_chk'] ?? 'ok'),
+            'menu_perm' => \frontend\shared\helpers\PayloadCoercion::int($pageData['menu_perm'] ?? 0),
+            'txt_ok' => \frontend\shared\helpers\PayloadCoercion::string($pageData['txt_ok'] ?? ''),
+            'campos_chk' => \frontend\shared\helpers\PayloadCoercion::string($pageData['campos_chk'] ?? 'ok'),
             'menu_rows' => $menuRows,
         ];
     }
@@ -102,7 +76,7 @@ final class MenusPayload
         }
         $out = [];
         foreach ($raw as $key => $value) {
-            $out[$key] = PayloadCoercion::int($value);
+            $out[$key] = \frontend\shared\helpers\PayloadCoercion::int($value);
         }
 
         return $out;

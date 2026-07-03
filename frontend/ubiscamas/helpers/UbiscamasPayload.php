@@ -42,8 +42,8 @@ public static function asistentesSinCamaList(mixed $raw): array
         if (!is_array($item)) {
             continue;
         }
-        $idNom = PayloadCoercion::int($item['id_nom'] ?? 0);
-        $apellidos = PayloadCoercion::string($item['apellidos'] ?? '');
+        $idNom = \frontend\shared\helpers\PayloadCoercion::int($item['id_nom'] ?? 0);
+        $apellidos = \frontend\shared\helpers\PayloadCoercion::string($item['apellidos'] ?? '');
         if ($idNom <= 0 && $apellidos === '') {
             continue;
         }
@@ -140,10 +140,10 @@ public static function habitacionesListaFromPayload(array $data): array
         'camas_con_asistentes' => ActividadesListaSupport::datos($data['camas_con_asistentes'] ?? []),
         'asistentes_sin_cama' => self::asistentesSinCamaList($data['asistentes_sin_cama'] ?? []),
         'solo_vip' => NotasFormSupport::formBoolOrString($data['solo_vip'] ?? ''),
-        'url_update_cama_full' => PayloadCoercion::string($data['url_update_cama_full'] ?? ''),
-        'ctx_update_cama' => PayloadCoercion::string($data['ctx_update_cama'] ?? ''),
-        'update_solo_vip_full_url' => PayloadCoercion::string($data['update_solo_vip_full_url'] ?? ''),
-        'ctx_update_solo_vip' => PayloadCoercion::string($data['ctx_update_solo_vip'] ?? ''),
+        'url_update_cama_full' => \frontend\shared\helpers\PayloadCoercion::string($data['url_update_cama_full'] ?? ''),
+        'ctx_update_cama' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_update_cama'] ?? ''),
+        'update_solo_vip_full_url' => \frontend\shared\helpers\PayloadCoercion::string($data['update_solo_vip_full_url'] ?? ''),
+        'ctx_update_solo_vip' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_update_solo_vip'] ?? ''),
         'reload_main_url' => $signed['reload_main_url'],
         'distribucion_open_url' => $signed['distribucion_open_url'],
         'nombres_open_url' => $signed['nombres_open_url'],
@@ -179,19 +179,19 @@ public static function nombresListaFromPayload(array $data): array
             if (!is_array($aCama)) {
                 continue;
             }
-            $idCama = PayloadCoercion::int($aCama['id_cama'] ?? 0);
+            $idCama = \frontend\shared\helpers\PayloadCoercion::int($aCama['id_cama'] ?? 0);
             $nombrePersona = '';
             $asistenteRaw = $camasAsistentes[$idCama] ?? null;
             if (is_array($asistenteRaw)) {
-                $nombrePersona = PayloadCoercion::string($asistenteRaw['apellidos'] ?? '');
+                $nombrePersona = \frontend\shared\helpers\PayloadCoercion::string($asistenteRaw['apellidos'] ?? '');
             }
             if ($nombrePersona === '') {
                 continue;
             }
             $aLista[] = [
                 'nombre' => $nombrePersona,
-                'planta' => PayloadCoercion::string($aHabitacionRaw['planta'] ?? ''),
-                'habitacion' => PayloadCoercion::string($aHabitacionRaw['nombre'] ?? ''),
+                'planta' => \frontend\shared\helpers\PayloadCoercion::string($aHabitacionRaw['planta'] ?? ''),
+                'habitacion' => \frontend\shared\helpers\PayloadCoercion::string($aHabitacionRaw['nombre'] ?? ''),
             ];
         }
     }
@@ -221,12 +221,12 @@ public static function nombresListaFromPayload(array $data): array
 public static function camaFormViewFromPayload(array $payload, array $hashBlock): array
 {
     return [
-        'hash_form_html' => PayloadCoercion::string($hashBlock['hash_form_html'] ?? ''),
-        'cama_update_url' => PayloadCoercion::string($hashBlock['cama_update_url'] ?? ''),
-        'id_cama' => PayloadCoercion::string($payload['id_cama'] ?? ''),
-        'id_habitacion' => PayloadCoercion::string($payload['id_habitacion'] ?? ''),
-        'id_ubi' => PayloadCoercion::int($payload['id_ubi'] ?? 0),
-        'descripcion' => PayloadCoercion::string($payload['descripcion'] ?? ''),
+        'hash_form_html' => \frontend\shared\helpers\PayloadCoercion::string($hashBlock['hash_form_html'] ?? ''),
+        'cama_update_url' => \frontend\shared\helpers\PayloadCoercion::string($hashBlock['cama_update_url'] ?? ''),
+        'id_cama' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_cama'] ?? ''),
+        'id_habitacion' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_habitacion'] ?? ''),
+        'id_ubi' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_ubi'] ?? 0),
+        'descripcion' => \frontend\shared\helpers\PayloadCoercion::string($payload['descripcion'] ?? ''),
         'larga' => !empty($payload['larga']),
         'vip' => !empty($payload['vip']),
     ];
@@ -240,26 +240,26 @@ public static function camaFormViewFromPayload(array $payload, array $hashBlock)
 public static function habitacionFormViewFromPayload(array $payload, array $hashBlock): array
 {
     return [
-        'hash_form_html' => PayloadCoercion::string($hashBlock['hash_form_html'] ?? ''),
-        'hash_actualizar_html' => PayloadCoercion::string($hashBlock['hash_actualizar_html'] ?? ''),
-        'id_habitacion' => PayloadCoercion::string($payload['id_habitacion'] ?? ''),
-        'id_ubi' => PayloadCoercion::int($payload['id_ubi'] ?? 0),
+        'hash_form_html' => \frontend\shared\helpers\PayloadCoercion::string($hashBlock['hash_form_html'] ?? ''),
+        'hash_actualizar_html' => \frontend\shared\helpers\PayloadCoercion::string($hashBlock['hash_actualizar_html'] ?? ''),
+        'id_habitacion' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_habitacion'] ?? ''),
+        'id_ubi' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_ubi'] ?? 0),
         'orden' => NotasFormSupport::formScalar($payload['orden'] ?? ''),
-        'nombre' => PayloadCoercion::string($payload['nombre'] ?? ''),
+        'nombre' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre'] ?? ''),
         'numero_camas' => NotasFormSupport::formScalar($payload['numero_camas'] ?? ''),
         'numero_camas_vip' => NotasFormSupport::formScalar($payload['numero_camas_vip'] ?? ''),
-        'planta' => PayloadCoercion::string($payload['planta'] ?? ''),
+        'planta' => \frontend\shared\helpers\PayloadCoercion::string($payload['planta'] ?? ''),
         'sillon' => !empty($payload['sillon']),
         'adaptada' => !empty($payload['adaptada']),
-        'observaciones' => PayloadCoercion::string($payload['observaciones'] ?? ''),
+        'observaciones' => \frontend\shared\helpers\PayloadCoercion::string($payload['observaciones'] ?? ''),
         'despacho' => !empty($payload['despacho']),
         'tipoLavabo' => $payload['tipoLavabo'] ?? null,
         'a_tipos_tipoLavabo' => NotasFormSupport::desplegableOpciones($payload['a_tipos_tipoLavabo'] ?? []),
         'a_camas' => is_array($payload['a_camas'] ?? null) ? $payload['a_camas'] : [],
-        'url_cama_form' => PayloadCoercion::string($hashBlock['url_cama_form'] ?? ''),
-        'h_cama_form_params' => PayloadCoercion::string($hashBlock['h_cama_form_params'] ?? ''),
-        'url_cama_delete' => PayloadCoercion::string($hashBlock['url_cama_delete'] ?? ''),
-        'h_cama_delete_params' => PayloadCoercion::string($hashBlock['h_cama_delete_params'] ?? ''),
+        'url_cama_form' => \frontend\shared\helpers\PayloadCoercion::string($hashBlock['url_cama_form'] ?? ''),
+        'h_cama_form_params' => \frontend\shared\helpers\PayloadCoercion::string($hashBlock['h_cama_form_params'] ?? ''),
+        'url_cama_delete' => \frontend\shared\helpers\PayloadCoercion::string($hashBlock['url_cama_delete'] ?? ''),
+        'h_cama_delete_params' => \frontend\shared\helpers\PayloadCoercion::string($hashBlock['h_cama_delete_params'] ?? ''),
     ];
 }
 

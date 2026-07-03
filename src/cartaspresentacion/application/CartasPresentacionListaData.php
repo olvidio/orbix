@@ -12,7 +12,6 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
 use src\ubis\domain\entity\Centro;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder: agrupa las cartas de presentacion por tipo de labor,
@@ -462,7 +461,7 @@ final class CartasPresentacionListaData
                 if (!is_array($a_dl_pob_edad)) {
                     continue;
                 }
-                uksort($a_dl_pob_edad, 'src\shared\domain\helpers\strsinacentocmp');
+                uksort($a_dl_pob_edad, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
                 $html .= '<h3>';
                 $html .= sprintf(_("Cartas de presentación de %s"), (string)$tipo);
                 $html .= '</h3>';
@@ -471,7 +470,7 @@ final class CartasPresentacionListaData
                     if (!is_array($a_pob_edad)) {
                         continue;
                     }
-                    uksort($a_pob_edad, 'src\shared\domain\helpers\strsinacentocmp');
+                    uksort($a_pob_edad, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
                     if ($dl !== $dl_anterior) {
                         $html .= '<h3>' . (string)$dl . ' - ' . (string)$tipo . '</h3>';
                     }
@@ -486,7 +485,7 @@ final class CartasPresentacionListaData
                 if (!is_array($a_pob_edad)) {
                     continue;
                 }
-                uksort($a_pob_edad, 'src\shared\domain\helpers\strsinacentocmp');
+                uksort($a_pob_edad, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
                 $html .= '<h3>';
                 $html .= sprintf(_("Cartas de presentación de %s"), (string)$tipo);
                 $html .= '</h3>';
@@ -512,7 +511,7 @@ final class CartasPresentacionListaData
             }
             krsort($a_edad); // primero m, despues j
             if ($poblacion !== $poblacion_anterior || $poblacion === '') {
-                $html .= '<tr><td ' . $class . '>' . FuncTablasSupport::strtoupperDlb((string)$poblacion) . '</td>';
+                $html .= '<tr><td ' . $class . '>' . \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)$poblacion) . '</td>';
             }
             $f = 0;
             foreach ($a_edad as $edad => $texto) {

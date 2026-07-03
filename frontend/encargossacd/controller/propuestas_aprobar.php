@@ -9,4 +9,4 @@ require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 
 $data = PostRequest::getDataFromUrl('/src/encargossacd/propuestas_aprobar');
-echo PayloadCoercion::string($data['text'] ?? _('Hecho!'));
+echo \frontend\shared\helpers\PayloadCoercion::string($data['text'] ?? _('Hecho!'));

@@ -2,7 +2,6 @@
 
 namespace src\notas\application;
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
@@ -116,9 +115,9 @@ final class NotasDeUnaPersonaData
                 $nom_activ = $oActividad?->getNom_activ() ?? '';
             }
 
-            $preceptorText = FuncTablasSupport::isTrue($oPersonaNota->isPreceptor()) ? _("sí") : _("no");
+            $preceptorText = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oPersonaNota->isPreceptor()) ? _("sí") : _("no");
             $id_preceptor = $oPersonaNota->getId_preceptor();
-            if ($id_preceptor && FuncTablasSupport::isTrue($oPersonaNota->isPreceptor())) {
+            if ($id_preceptor && \src\shared\domain\helpers\FuncTablasSupport::isTrue($oPersonaNota->isPreceptor())) {
                 $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
                 $nom = $oPersona?->getPrefApellidosNombre() ?? _("no lo encuentro");
                 $preceptorText .= ' (' . $nom . ')';

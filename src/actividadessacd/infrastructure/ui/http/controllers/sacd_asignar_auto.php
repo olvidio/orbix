@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: auto-asignacion masiva del sacd titular del centro
@@ -12,7 +11,7 @@ use src\shared\domain\helpers\FuncTablasSupport;
 use src\actividadessacd\application\SacdAsignarAuto;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-$input = ['f_ini_iso' => FuncTablasSupport::inputString($_POST, 'f_ini_iso')];
+$input = ['f_ini_iso' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_ini_iso')];
 
 /** @var SacdAsignarAuto $useCase */
 $useCase = DependencyResolver::get(SacdAsignarAuto::class);

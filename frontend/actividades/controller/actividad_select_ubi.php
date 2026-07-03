@@ -22,10 +22,10 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $isfsv = isset($_REQUEST['isfsv']) && $_REQUEST['isfsv'] !== ''
-    ? PayloadCoercion::string($_REQUEST['isfsv'])
+    ? \frontend\shared\helpers\PayloadCoercion::string($_REQUEST['isfsv'])
     : '';
 $ssfsv = isset($_REQUEST['ssfsv']) && $_REQUEST['ssfsv'] !== ''
-    ? PayloadCoercion::string($_REQUEST['ssfsv'])
+    ? \frontend\shared\helpers\PayloadCoercion::string($_REQUEST['ssfsv'])
     : '';
 
 if (empty($isfsv)) {
@@ -36,9 +36,9 @@ if (empty($isfsv)) {
         $isfsv = 2;
     }
 }
-$isfsv = PayloadCoercion::int($isfsv);
+$isfsv = \frontend\shared\helpers\PayloadCoercion::int($isfsv);
 
-$dl_org = PayloadCoercion::string($_REQUEST['dl_org'] ?? '');
+$dl_org = \frontend\shared\helpers\PayloadCoercion::string($_REQUEST['dl_org'] ?? '');
 
 // URL + hash para cargar desplegables (freq/region) via AJAX.
 $url_desplegable = AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_select_ubi_desplegable';

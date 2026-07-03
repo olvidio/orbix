@@ -8,7 +8,6 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\value_objects\StatusId;
 use src\shared\config\ConfigGlobal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Datos para `form_cargos_personas_en_actividad` (vista por persona).
@@ -47,21 +46,21 @@ final class FormCargosPersonasEnActividadData
         $Qid_item = '';
         $id_cargo = '';
 
-        $Qpermiso = FuncTablasSupport::inputInt($post, 'permiso');
+        $Qpermiso = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'permiso');
 
-        $a_sel = FuncTablasSupport::inputStringList($post, 'sel');
+        $a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($post, 'sel');
         $Qque_dl = '';
         $Qid_tipo = 0;
         if ($a_sel !== []) {
             $Qid_item = (int) strtok($a_sel[0], '#');
         } else {
-            $Qque_dl = FuncTablasSupport::inputString($post, 'que_dl');
-            $Qid_tipo = FuncTablasSupport::inputInt($post, 'id_tipo');
+            $Qque_dl = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'que_dl');
+            $Qid_tipo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_tipo');
         }
 
-        $Qmod = FuncTablasSupport::inputString($post, 'mod');
-        $Qid_pau = FuncTablasSupport::inputInt($post, 'id_pau');
-        $Qid_dossier = FuncTablasSupport::inputInt($post, 'id_dossier');
+        $Qmod = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'mod');
+        $Qid_pau = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_pau');
+        $Qid_dossier = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_dossier');
         if ($Qid_dossier <= 0) {
             $Qid_dossier = 1302;
         }
@@ -115,7 +114,7 @@ final class FormCargosPersonasEnActividadData
             );
         }
 
-        $chk = (!empty($puede_agd) && FuncTablasSupport::isTrue($puede_agd)) ? 'checked' : '';
+        $chk = (!empty($puede_agd) && \src\shared\domain\helpers\FuncTablasSupport::isTrue($puede_agd)) ? 'checked' : '';
 
         $camposForm = 'id_cargo!observ';
         $camposNo = 'puede_agd';

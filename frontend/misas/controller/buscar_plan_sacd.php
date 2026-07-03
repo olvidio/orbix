@@ -15,7 +15,7 @@ FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/misas/buscar_plan_sacd_data');
 
 $a_sacd = $data['sacd_opciones'] ?? [];
-$sacd_selected = PayloadCoercion::string($data['sacd_selected'] ?? '');
+$sacd_selected = \frontend\shared\helpers\PayloadCoercion::string($data['sacd_selected'] ?? '');
 
 $periodo_td_html = PeriodoTdHelper::build([
     'esta_semana' => _('esta semana'),

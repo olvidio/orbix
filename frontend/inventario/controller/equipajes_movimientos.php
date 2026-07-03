@@ -29,12 +29,12 @@ foreach ($aCambios as $id_equipaje => $aGrupos) {
         $html_out = '';
         if ($aINOUT['in'] !== []) {
             foreach ($aINOUT['in'] as $id_doc) {
-                $html_in .= '<tr><td></td><td></td><td></td><td>' . PayloadCoercion::string($id_doc) . '</td></tr>';
+                $html_in .= '<tr><td></td><td></td><td></td><td>' . \frontend\shared\helpers\PayloadCoercion::string($id_doc) . '</td></tr>';
             }
         }
         if ($aINOUT['out'] !== []) {
             foreach ($aINOUT['out'] as $id_doc) {
-                $html_out .= '<tr><td></td><td></td><td></td><td>' . PayloadCoercion::string($id_doc) . '</td></tr>';
+                $html_out .= '<tr><td></td><td></td><td></td><td>' . \frontend\shared\helpers\PayloadCoercion::string($id_doc) . '</td></tr>';
             }
         }
         $html_g = '';

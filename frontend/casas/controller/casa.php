@@ -29,8 +29,8 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qtipo_lista = (string)filter_input(INPUT_POST, 'tipo_lista');
@@ -67,7 +67,7 @@ $oSelects = $oForm->getSelects();
 $oFormP = null;
 if ($Qperiodo === 'no') {
     if ($Qtipo_lista === 'datosEc') {
-        $oForm->setTitulo(FuncTablasSupport::strtoupperDlb((string)_("resumen económico")));
+        $oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("resumen económico")));
     }
     $oForm->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "' onclick='fnjs_ver();'>");
 } else {
@@ -86,7 +86,7 @@ if ($Qperiodo === 'no') {
     }
     $oFormP = new PeriodoQue();
     $oFormP->setFormName('seleccion');
-    $oFormP->setTitulo(FuncTablasSupport::strtoupperDlb((string)_("seleccionar una casa y un período")));
+    $oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("seleccionar una casa y un período")));
     $oFormP->setPosiblesPeriodos($aOpciones);
     if ($Qyear !== 0) {
         $oFormP->setDesplAnysOpcion_sel(CasasPayload::periodoYearSel($Qyear));

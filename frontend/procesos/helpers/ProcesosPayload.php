@@ -79,10 +79,10 @@ public static function verFromPayload(array $payload): array
         'a_fases' => NotasFormSupport::desplegableOpciones($payload['a_fases'] ?? []),
         'a_tareas' => NotasFormSupport::desplegableOpciones($payload['a_tareas'] ?? []),
         'a_fases_previas' => $fasesPrevias,
-        'status' => PayloadCoercion::string($payload['status'] ?? ''),
-        'id_of_responsable' => PayloadCoercion::string($payload['id_of_responsable'] ?? ''),
-        'id_fase' => PayloadCoercion::string($payload['id_fase'] ?? ''),
-        'id_tarea' => PayloadCoercion::string($payload['id_tarea'] ?? ''),
+        'status' => \frontend\shared\helpers\PayloadCoercion::string($payload['status'] ?? ''),
+        'id_of_responsable' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_of_responsable'] ?? ''),
+        'id_fase' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_fase'] ?? ''),
+        'id_tarea' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_tarea'] ?? ''),
     ];
 }
 
@@ -106,9 +106,9 @@ public static function fasePreviaRow(mixed $raw): array
     }
 
     return [
-        'id_fase_previa' => PayloadCoercion::string($raw['id_fase_previa'] ?? ''),
-        'id_tarea_previa' => PayloadCoercion::string($raw['id_tarea_previa'] ?? ''),
-        'mensaje_requisito' => PayloadCoercion::string($raw['mensaje_requisito'] ?? ''),
+        'id_fase_previa' => \frontend\shared\helpers\PayloadCoercion::string($raw['id_fase_previa'] ?? ''),
+        'id_tarea_previa' => \frontend\shared\helpers\PayloadCoercion::string($raw['id_tarea_previa'] ?? ''),
+        'mensaje_requisito' => \frontend\shared\helpers\PayloadCoercion::string($raw['mensaje_requisito'] ?? ''),
         'a_tareas_previa' => NotasFormSupport::desplegableOpciones($raw['a_tareas_previa'] ?? []),
     ];
 }
@@ -139,12 +139,12 @@ public static function actividadProcesoRow(mixed $raw): array
     }
 
     return [
-        'id_item' => PayloadCoercion::int($raw['id_item'] ?? 0),
-        'fase' => PayloadCoercion::string($raw['fase'] ?? ''),
-        'tarea' => PayloadCoercion::string($raw['tarea'] ?? ''),
-        'of_responsable_txt' => PayloadCoercion::string($raw['of_responsable_txt'] ?? ''),
+        'id_item' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_item'] ?? 0),
+        'fase' => \frontend\shared\helpers\PayloadCoercion::string($raw['fase'] ?? ''),
+        'tarea' => \frontend\shared\helpers\PayloadCoercion::string($raw['tarea'] ?? ''),
+        'of_responsable_txt' => \frontend\shared\helpers\PayloadCoercion::string($raw['of_responsable_txt'] ?? ''),
         'completado' => !empty($raw['completado']),
-        'observ' => PayloadCoercion::string($raw['observ'] ?? ''),
+        'observ' => \frontend\shared\helpers\PayloadCoercion::string($raw['observ'] ?? ''),
         'puede_editar' => !empty($raw['puede_editar']),
     ];
 }
@@ -189,12 +189,12 @@ public static function listadoRow(mixed $raw): array
     }
 
     return [
-        'id_item' => PayloadCoercion::int($raw['id_item'] ?? 0),
-        'status_txt' => PayloadCoercion::string($raw['status_txt'] ?? ''),
-        'responsable' => PayloadCoercion::string($raw['responsable'] ?? ''),
-        'fase' => PayloadCoercion::string($raw['fase'] ?? ''),
-        'tarea' => PayloadCoercion::string($raw['tarea'] ?? ''),
-        'fase_previa' => PayloadCoercion::string($raw['fase_previa'] ?? ''),
+        'id_item' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_item'] ?? 0),
+        'status_txt' => \frontend\shared\helpers\PayloadCoercion::string($raw['status_txt'] ?? ''),
+        'responsable' => \frontend\shared\helpers\PayloadCoercion::string($raw['responsable'] ?? ''),
+        'fase' => \frontend\shared\helpers\PayloadCoercion::string($raw['fase'] ?? ''),
+        'tarea' => \frontend\shared\helpers\PayloadCoercion::string($raw['tarea'] ?? ''),
+        'fase_previa' => \frontend\shared\helpers\PayloadCoercion::string($raw['fase_previa'] ?? ''),
     ];
 }
 
@@ -229,10 +229,10 @@ public static function tipoActivRow(mixed $raw): array
     }
 
     return [
-        'id_tipo_activ' => PayloadCoercion::string($raw['id_tipo_activ'] ?? ''),
-        'nom' => PayloadCoercion::string($raw['nom'] ?? ''),
-        'nom_proceso_propio' => PayloadCoercion::string($raw['nom_proceso_propio'] ?? ''),
-        'nom_proceso_no_propio' => PayloadCoercion::string($raw['nom_proceso_no_propio'] ?? ''),
+        'id_tipo_activ' => \frontend\shared\helpers\PayloadCoercion::string($raw['id_tipo_activ'] ?? ''),
+        'nom' => \frontend\shared\helpers\PayloadCoercion::string($raw['nom'] ?? ''),
+        'nom_proceso_propio' => \frontend\shared\helpers\PayloadCoercion::string($raw['nom_proceso_propio'] ?? ''),
+        'nom_proceso_no_propio' => \frontend\shared\helpers\PayloadCoercion::string($raw['nom_proceso_no_propio'] ?? ''),
     ];
 }
 
@@ -246,8 +246,8 @@ public static function tipoProcesoPosibleRow(mixed $raw): array
     }
 
     return [
-        'id_tipo_proceso' => PayloadCoercion::int($raw['id_tipo_proceso'] ?? 0),
-        'nom_proceso' => PayloadCoercion::string($raw['nom_proceso'] ?? ''),
+        'id_tipo_proceso' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_tipo_proceso'] ?? 0),
+        'nom_proceso' => \frontend\shared\helpers\PayloadCoercion::string($raw['nom_proceso'] ?? ''),
     ];
 }
 
@@ -260,14 +260,14 @@ public static function fasesActivCambioGoback(array $requestPayload): array
     return [
         'refresh' => '1',
         'hnov' => '0',
-        'dl_propia' => PayloadCoercion::string($requestPayload['dl_propia'] ?? ''),
-        'id_fase_nueva' => PayloadCoercion::string($requestPayload['id_fase_nueva'] ?? ''),
-        'id_tipo_activ' => PayloadCoercion::string($requestPayload['id_tipo_activ'] ?? ''),
-        'periodo' => PayloadCoercion::string($requestPayload['periodo'] ?? ''),
-        'year' => PayloadCoercion::string($requestPayload['year'] ?? ''),
-        'empiezamin' => PayloadCoercion::string($requestPayload['empiezamin'] ?? ''),
-        'empiezamax' => PayloadCoercion::string($requestPayload['empiezamax'] ?? ''),
-        'accion' => PayloadCoercion::string($requestPayload['accion'] ?? ''),
+        'dl_propia' => \frontend\shared\helpers\PayloadCoercion::string($requestPayload['dl_propia'] ?? ''),
+        'id_fase_nueva' => \frontend\shared\helpers\PayloadCoercion::string($requestPayload['id_fase_nueva'] ?? ''),
+        'id_tipo_activ' => \frontend\shared\helpers\PayloadCoercion::string($requestPayload['id_tipo_activ'] ?? ''),
+        'periodo' => \frontend\shared\helpers\PayloadCoercion::string($requestPayload['periodo'] ?? ''),
+        'year' => \frontend\shared\helpers\PayloadCoercion::string($requestPayload['year'] ?? ''),
+        'empiezamin' => \frontend\shared\helpers\PayloadCoercion::string($requestPayload['empiezamin'] ?? ''),
+        'empiezamax' => \frontend\shared\helpers\PayloadCoercion::string($requestPayload['empiezamax'] ?? ''),
+        'accion' => \frontend\shared\helpers\PayloadCoercion::string($requestPayload['accion'] ?? ''),
     ];
 }
 
@@ -295,9 +295,9 @@ public static function usuarioPermRow(mixed $raw): array
     }
 
     return [
-        'fase_ref' => PayloadCoercion::string($raw['fase_ref'] ?? ''),
-        'perm_on' => PayloadCoercion::string($raw['perm_on'] ?? ''),
-        'perm_off' => PayloadCoercion::string($raw['perm_off'] ?? ''),
+        'fase_ref' => \frontend\shared\helpers\PayloadCoercion::string($raw['fase_ref'] ?? ''),
+        'perm_on' => \frontend\shared\helpers\PayloadCoercion::string($raw['perm_on'] ?? ''),
+        'perm_off' => \frontend\shared\helpers\PayloadCoercion::string($raw['perm_off'] ?? ''),
         'afecta_a' => $raw['afecta_a'] ?? '',
         'num' => $raw['num'] ?? '',
         'marcado' => !empty($raw['marcado']),
@@ -330,7 +330,7 @@ public static function treePadres(mixed $raw): array
     }
     $out = [];
     foreach ($raw as $key => $items) {
-        $keyInt = PayloadCoercion::int($key);
+        $keyInt = \frontend\shared\helpers\PayloadCoercion::int($key);
         if (!is_array($items)) {
             continue;
         }

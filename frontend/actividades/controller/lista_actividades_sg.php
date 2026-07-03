@@ -62,7 +62,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qscroll_id = '';
 } else {
     $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qscroll_id = ListNavSupport::scrollIdFromPost();
+    $Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
     if ($stack !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
@@ -109,8 +109,8 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $oPosicion->setParametros($aGoBack, 1);
 }
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
 
 
 if (!empty($Qid_sel) || $Qscroll_id !== '') {
@@ -140,7 +140,7 @@ if (!empty($data['advertencia_demasiadas']) && is_array($data['advertencia_demas
     $ad = $data['advertencia_demasiadas'];
     $go_avant = HashFrontSignedLink::tryFromSpec($ad['continuar_link_spec'] ?? null);
     $go_atras = HashFrontSignedLink::tryFromSpec($ad['volver_link_spec'] ?? null);
-    $numActiv = PayloadCoercion::int($ad['num_actividades'] ?? 0);
+    $numActiv = \frontend\shared\helpers\PayloadCoercion::int($ad['num_actividades'] ?? 0);
     $html_advertencia = '<h2>' . sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."), $numActiv) . '</h2>';
     $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_avant . "') value=" . _("continuar") . ">";
     $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_atras . "') value=" . _("volver") . ">";
@@ -157,8 +157,8 @@ $oTabla->setBotones(ActividadesListaSupport::botones($data['a_botones'] ?? []));
 $oTabla->setDatos($a_valores);
 $html_tabla = $oTabla->mostrar_tabla();
 unset($data['a_cabeceras'], $data['a_botones'], $data['a_valores']);
-$result_busqueda = PayloadCoercion::string($data['result_busqueda'] ?? '');
-$Qid_tipo_activ = PayloadCoercion::string($data['id_tipo_activ'] ?? '');
+$result_busqueda = \frontend\shared\helpers\PayloadCoercion::string($data['result_busqueda'] ?? '');
+$Qid_tipo_activ = \frontend\shared\helpers\PayloadCoercion::string($data['id_tipo_activ'] ?? '');
 
 $aOpciones = [
     'tot_any' => _('todo el año'),
@@ -175,7 +175,7 @@ $aOpciones = [
 
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('modifica');
-$oFormP->setAntes(FuncTablasSupport::strtoupperDlb(_("periodo")));
+$oFormP->setAntes(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel(ActividadesPostInput::posicionString($Qperiodo));
 $oFormP->setDesplAnysOpcion_sel(ActividadesPostInput::posicionString($Qyear));

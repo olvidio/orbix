@@ -6,7 +6,7 @@ use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\entity\GrupMenuRole;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $error_txt = '';
 

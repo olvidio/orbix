@@ -4,7 +4,6 @@ namespace src\configuracion\application;
 
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\ModulosConfig;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Formulario de módulo (`frontend/configuracion/controller/modulos_form.php`).
@@ -25,7 +24,7 @@ final class ModulosFormData
      */
     public function execute(array $input): array
     {
-        $Qmod = FuncTablasSupport::inputString($input, 'mod');
+        $Qmod = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'mod');
 
         $Qid_mod = 0;
         $nom = '';
@@ -40,7 +39,7 @@ final class ModulosFormData
                 $selString = is_scalar($first) ? (string)$first : '';
                 $Qid_mod = (int)strtok($selString, '#');
             } else {
-                $Qid_mod = FuncTablasSupport::inputInt($input, 'id_mod');
+                $Qid_mod = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_mod');
             }
 
             $oModulo = $this->moduloRepository->findById($Qid_mod);

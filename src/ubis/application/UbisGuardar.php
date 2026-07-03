@@ -14,7 +14,6 @@ use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\Centro;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEx;
-use src\shared\domain\helpers\FuncTablasSupport;
 final class UbisGuardar
 {
     public function __construct(
@@ -27,7 +26,7 @@ final class UbisGuardar
      */
     public function execute(array $input): string
     {
-        $objPau = FuncTablasSupport::inputString($input, 'obj_pau');
+        $objPau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'obj_pau');
 
         return match ($objPau) {
             'CasaDl' => $this->guardarCasaDl($input),
@@ -76,7 +75,7 @@ final class UbisGuardar
             return _('No existe la clase del ubi');
         }
 
-        $oUbi = $repo->findById(FuncTablasSupport::inputInt($input, 'id_ubi'));
+        $oUbi = $repo->findById(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi'));
         if ($oUbi === null) {
             return _('no se encuentra el ubi');
         }
@@ -95,7 +94,7 @@ final class UbisGuardar
      */
     private function guardarCasaConRepo(CasaDlRepositoryInterface|CasaExRepositoryInterface $repo, array $input): string
     {
-        $idUbi = FuncTablasSupport::inputInt($input, 'id_ubi');
+        $idUbi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
         $oUbi = $repo->findById($idUbi);
         if ($oUbi === null) {
             $oUbi = new Casa();
@@ -104,10 +103,10 @@ final class UbisGuardar
             $oUbi->setId_ubi($repo->getNewIdUbi($id));
         }
 
-        $oUbi->setTipo_casa(FuncTablasSupport::inputString($input, 'tipo_casa'));
-        $oUbi->setPlazas(FuncTablasSupport::inputInt($input, 'plazas'));
-        $oUbi->setPlazas_min(FuncTablasSupport::inputInt($input, 'plazas_min'));
-        $oUbi->setNum_sacd(FuncTablasSupport::inputInt($input, 'num_sacd'));
+        $oUbi->setTipo_casa(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo_casa'));
+        $oUbi->setPlazas(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'plazas'));
+        $oUbi->setPlazas_min(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'plazas_min'));
+        $oUbi->setNum_sacd(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'num_sacd'));
         $this->aplicarCamposComunes($oUbi, $input);
 
         if ($repo->Guardar($oUbi) === false) {
@@ -127,11 +126,11 @@ final class UbisGuardar
             return _('No existe la clase del ubi');
         }
 
-        $idUbi = FuncTablasSupport::inputInt($input, 'id_ubi');
+        $idUbi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
         $oUbi = $repo->findById($idUbi);
-        $active = FuncTablasSupport::inputString($input, 'active');
-        $sv = FuncTablasSupport::inputString($input, 'sv');
-        $sf = FuncTablasSupport::inputString($input, 'sf');
+        $active = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'active');
+        $sv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sv');
+        $sf = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sf');
         if ($oUbi === null) {
             $oUbi = new CentroDl();
             $id = $repo->getNewId();
@@ -143,12 +142,12 @@ final class UbisGuardar
         }
 
         $this->aplicarCamposCentro($oUbi, $input);
-        $oUbi->setN_buzon(FuncTablasSupport::inputInt($input, 'n_buzon'));
-        $oUbi->setNum_pi(FuncTablasSupport::inputInt($input, 'num_pi'));
-        $oUbi->setNum_cartas(FuncTablasSupport::inputInt($input, 'num_cartas'));
-        $oUbi->setObserv(FuncTablasSupport::inputString($input, 'observ'));
-        $oUbi->setNum_habit_indiv(FuncTablasSupport::inputInt($input, 'num_habit_indiv'));
-        $oUbi->setPlazas(FuncTablasSupport::inputInt($input, 'plazas'));
+        $oUbi->setN_buzon(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'n_buzon'));
+        $oUbi->setNum_pi(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'num_pi'));
+        $oUbi->setNum_cartas(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'num_cartas'));
+        $oUbi->setObserv(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ'));
+        $oUbi->setNum_habit_indiv(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'num_habit_indiv'));
+        $oUbi->setPlazas(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'plazas'));
         $this->aplicarCamposComunes($oUbi, $input, $active, $sv, $sf);
 
         if ($repo->Guardar($oUbi) === false) {
@@ -168,11 +167,11 @@ final class UbisGuardar
             return _('No existe la clase del ubi');
         }
 
-        $idUbi = FuncTablasSupport::inputInt($input, 'id_ubi');
+        $idUbi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
         $oUbi = $repo->findById($idUbi);
-        $active = FuncTablasSupport::inputString($input, 'active');
-        $sv = FuncTablasSupport::inputString($input, 'sv');
-        $sf = FuncTablasSupport::inputString($input, 'sf');
+        $active = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'active');
+        $sv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sv');
+        $sf = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sf');
         if ($oUbi === null) {
             $oUbi = new CentroEx();
             $id = $repo->getNewId();
@@ -203,7 +202,7 @@ final class UbisGuardar
             return _('No existe la clase del ubi');
         }
 
-        $oUbi = $repo->findById(FuncTablasSupport::inputInt($input, 'id_ubi'));
+        $oUbi = $repo->findById(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi'));
         if ($oUbi === null) {
             return _('no se encuentra el ubi');
         }
@@ -222,11 +221,11 @@ final class UbisGuardar
      */
     private function aplicarCamposCentro(CentroDl|CentroEx $oUbi, array $input): void
     {
-        $oUbi->setTipo_ctr(FuncTablasSupport::inputString($input, 'tipo_ctr'));
-        $oUbi->setCdc(FuncTablasSupport::isTrue(FuncTablasSupport::inputString($input, 'cdc')));
-        $oUbi->setId_ctr_padre(FuncTablasSupport::inputInt($input, 'id_ctr_padre'));
+        $oUbi->setTipo_ctr(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo_ctr'));
+        $oUbi->setCdc(\src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'cdc')));
+        $oUbi->setId_ctr_padre(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ctr_padre'));
         if ($oUbi instanceof CentroDl) {
-            $oUbi->setNum_cartas_mensuales(FuncTablasSupport::inputInt($input, 'num_cartas_mensuales'));
+            $oUbi->setNum_cartas_mensuales(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'num_cartas_mensuales'));
         }
 
         $aTipoLabor = $input['tipo_labor'] ?? [];
@@ -252,17 +251,17 @@ final class UbisGuardar
         ?string $sv = null,
         ?string $sf = null,
     ): void {
-        $oUbi->setTipo_ubi(FuncTablasSupport::inputString($input, 'tipo_ubi'));
-        $oUbi->setNombre_ubi(FuncTablasSupport::inputString($input, 'nombre_ubi'));
-        $oUbi->setDl(FuncTablasSupport::inputString($input, 'dl'));
-        $oUbi->setRegion(FuncTablasSupport::inputString($input, 'region'));
-        $oUbi->setActive(FuncTablasSupport::isTrue($active ?? FuncTablasSupport::inputString($input, 'active')) ?? false);
+        $oUbi->setTipo_ubi(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo_ubi'));
+        $oUbi->setNombre_ubi(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nombre_ubi'));
+        $oUbi->setDl(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl'));
+        $oUbi->setRegion(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'region'));
+        $oUbi->setActive(\src\shared\domain\helpers\FuncTablasSupport::isTrue($active ?? \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'active')) ?? false);
 
-        $svVal = $sv ?? FuncTablasSupport::inputString($input, 'sv');
-        $sfVal = $sf ?? FuncTablasSupport::inputString($input, 'sf');
+        $svVal = $sv ?? \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sv');
+        $sfVal = $sf ?? \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sf');
         if ($oUbi instanceof Casa || $oUbi instanceof CentroDl || $oUbi instanceof CentroEx) {
-            $oUbi->setSv(FuncTablasSupport::isTrue($svVal));
-            $oUbi->setSf(FuncTablasSupport::isTrue($sfVal));
+            $oUbi->setSv(\src\shared\domain\helpers\FuncTablasSupport::isTrue($svVal));
+            $oUbi->setSf(\src\shared\domain\helpers\FuncTablasSupport::isTrue($sfVal));
         }
     }
 }

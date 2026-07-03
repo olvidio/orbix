@@ -17,15 +17,15 @@ $Qyear = (string)filter_input(INPUT_POST, 'year');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros([
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros([
     'n_agd' => $Qn_agd,
     'id_ubi' => $Qid_ubi,
     'periodo' => $Qperiodo,
     'year' => $Qyear,
     'empiezamax' => $Qempiezamax,
     'empiezamin' => $Qempiezamin,
-], ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
+], \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
 
 $oPosicion->setParametros([
@@ -41,4 +41,4 @@ $campos = array_merge($_GET, $_POST);
 $payload = AsistentesPayload::postData(PostRequest::getDataFromUrl('/src/asistentes/lista_est_ctr_data', $campos));
 
 echo $oPosicion->mostrar_left_slide(1);
-echo FuncTablasSupport::payloadString($payload, 'lista_html');
+echo \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'lista_html');

@@ -1,7 +1,6 @@
 <?php
 
 use src\shared\domain\helpers\FilterPostGet;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * JSON del listado `lista_activ`: filtros POST → {@see ListaActivTabla}.
@@ -15,24 +14,24 @@ use src\permisos\domain\XPermisos;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\config\ConfigGlobal;
 $input = [
-    'que' => (string)FilterPostGet::post('que'),
-    'status' => FilterPostGet::post('status'),
-    'id_tipo_activ' => (string)FilterPostGet::post('id_tipo_activ'),
-    'filtro_lugar' => (string)FilterPostGet::post('filtro_lugar'),
-    'id_ubi' => (int)FilterPostGet::post('id_ubi'),
-    'periodo' => (string)FilterPostGet::post('periodo'),
-    'year' => (string)FilterPostGet::post('year'),
-    'dl_org' => (string)FilterPostGet::post('dl_org'),
-    'empiezamin' => (string)FilterPostGet::post('empiezamin'),
-    'empiezamax' => (string)FilterPostGet::post('empiezamax'),
-    'c_activ' => FuncTablasSupport::inputStringList(['c_activ' => FilterPostGet::post('c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: []], 'c_activ'),
-    'asist' => FuncTablasSupport::inputStringList(['asist' => FilterPostGet::post('asist', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: []], 'asist'),
-    'seccion' => FuncTablasSupport::inputStringList(['seccion' => FilterPostGet::post('seccion', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: []], 'seccion'),
-    'ssfsv' => (string)FilterPostGet::post('ssfsv'),
-    'sasistentes' => (string)FilterPostGet::post('sasistentes'),
-    'sactividad' => (string)FilterPostGet::post('sactividad'),
-    'snom_tipo' => (string)FilterPostGet::post('snom_tipo'),
-    'titulo' => (string)FilterPostGet::post('titulo'),
+    'que' => (string)\src\shared\domain\helpers\FilterPostGet::post('que'),
+    'status' => \src\shared\domain\helpers\FilterPostGet::post('status'),
+    'id_tipo_activ' => (string)\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ'),
+    'filtro_lugar' => (string)\src\shared\domain\helpers\FilterPostGet::post('filtro_lugar'),
+    'id_ubi' => (int)\src\shared\domain\helpers\FilterPostGet::post('id_ubi'),
+    'periodo' => (string)\src\shared\domain\helpers\FilterPostGet::post('periodo'),
+    'year' => (string)\src\shared\domain\helpers\FilterPostGet::post('year'),
+    'dl_org' => (string)\src\shared\domain\helpers\FilterPostGet::post('dl_org'),
+    'empiezamin' => (string)\src\shared\domain\helpers\FilterPostGet::post('empiezamin'),
+    'empiezamax' => (string)\src\shared\domain\helpers\FilterPostGet::post('empiezamax'),
+    'c_activ' => \src\shared\domain\helpers\FuncTablasSupport::inputStringList(['c_activ' => \src\shared\domain\helpers\FilterPostGet::post('c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: []], 'c_activ'),
+    'asist' => \src\shared\domain\helpers\FuncTablasSupport::inputStringList(['asist' => \src\shared\domain\helpers\FilterPostGet::post('asist', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: []], 'asist'),
+    'seccion' => \src\shared\domain\helpers\FuncTablasSupport::inputStringList(['seccion' => \src\shared\domain\helpers\FilterPostGet::post('seccion', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: []], 'seccion'),
+    'ssfsv' => (string)\src\shared\domain\helpers\FilterPostGet::post('ssfsv'),
+    'sasistentes' => (string)\src\shared\domain\helpers\FilterPostGet::post('sasistentes'),
+    'sactividad' => (string)\src\shared\domain\helpers\FilterPostGet::post('sactividad'),
+    'snom_tipo' => (string)\src\shared\domain\helpers\FilterPostGet::post('snom_tipo'),
+    'titulo' => (string)\src\shared\domain\helpers\FilterPostGet::post('titulo'),
 ];
 
 $oPerm = $_SESSION['oPerm'] ?? null;

@@ -22,4 +22,4 @@ $Qsf = EncargossacdPostInput::postInt('sf');
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_d_data', ['sf' => $Qsf]);
 
-echo PayloadCoercion::string($datos['Html'] ?? '');
+echo \frontend\shared\helpers\PayloadCoercion::string($datos['Html'] ?? '');

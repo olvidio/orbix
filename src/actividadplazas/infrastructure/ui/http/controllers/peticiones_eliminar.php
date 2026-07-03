@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: elimina todas las peticiones de una
@@ -11,8 +10,8 @@ use src\actividadplazas\application\PeticionesEliminar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $input = [
-    'id_nom' => FuncTablasSupport::inputInt($_POST, 'id_nom'),
-    'sactividad' => FuncTablasSupport::inputString($_POST, 'sactividad'),
+    'id_nom' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom'),
+    'sactividad' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'sactividad'),
 ];
 
 /** @var PeticionesEliminar $useCase */

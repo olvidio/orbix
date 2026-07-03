@@ -17,7 +17,7 @@ final class ActividadestudiosDesplegableSupport
             return $value === 1 ? '1' : '';
         }
 
-        return PayloadCoercion::string($value);
+        return \frontend\shared\helpers\PayloadCoercion::string($value);
     }
 
     public static function opcionSel(mixed $value): string
@@ -26,6 +26,6 @@ final class ActividadestudiosDesplegableSupport
             return (string) $value;
         }
 
-        return PayloadCoercion::string($value);
+        return \frontend\shared\helpers\PayloadCoercion::string($value);
     }
 }

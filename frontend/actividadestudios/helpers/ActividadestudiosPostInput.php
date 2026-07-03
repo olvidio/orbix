@@ -79,7 +79,7 @@ final class ActividadestudiosPostInput
         if ($parts !== null) {
             return [
                 'id_activ' => self::intFromNumericString($parts[0]),
-                'nom_activ' => PayloadCoercion::string($parts[1]),
+                'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($parts[1]),
             ];
         }
 
@@ -87,7 +87,7 @@ final class ActividadestudiosPostInput
 
         return [
             'id_activ' => is_int($idActivRaw) ? $idActivRaw : 0,
-            'nom_activ' => PayloadCoercion::string(filter_input(INPUT_POST, 'nom_activ')),
+            'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'nom_activ')),
         ];
     }
 

@@ -16,7 +16,6 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Matriz de permisos por tipo de actividad + contexto de la actividad actual en sesión.
@@ -283,7 +282,7 @@ class PermisosActividades
             $perm_on = self::dbRowInt($row['perm_on'] ?? 0);
             $perm_off = self::dbRowInt($row['perm_off'] ?? 0);
 
-            if (FuncTablasSupport::isTrue($dl_propia)) {
+            if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)) {
                 if (array_key_exists($id_tipo_activ_txt, $this->aPermDl)) {
                     // machaco los valores existentes. Si he ordenado por id usuario (DESC), el último és el más importante.
                 } else { //nuevo
@@ -296,7 +295,7 @@ class PermisosActividades
                     $this->aPermOtras[$id_tipo_activ_txt] = new XResto($id_tipo_activ_txt);
                 }
             }
-            if (FuncTablasSupport::isTrue($dl_propia)) {
+            if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)) {
                 $this->aPermDl[$id_tipo_activ_txt]->setOmplir($iAfecta, $fase_ref, $perm_on, $perm_off);
             } else {
                 $this->aPermOtras[$id_tipo_activ_txt]->setOmplir($iAfecta, $fase_ref, $perm_on, $perm_off);
@@ -513,7 +512,7 @@ class PermisosActividades
             return new PermAccion(0);
         }
         $completada = $this->isCompletada($id_fase_ref);
-        $on_off = FuncTablasSupport::isTrue($completada) ? 'on' : 'off';
+        $on_off = \src\shared\domain\helpers\FuncTablasSupport::isTrue($completada) ? 'on' : 'off';
 
         $oPerm = $this->resolveXRestoForTipoActividad();
         if ($oPerm === null) {
@@ -550,7 +549,7 @@ class PermisosActividades
             return new PermAccion(0);
         }
         $completada = $this->isCompletada($id_fase_ref);
-        if (!FuncTablasSupport::isTrue($completada)) {
+        if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($completada)) {
             return new PermAccion(0);
         }
 
@@ -649,7 +648,7 @@ class PermisosActividades
                 $permiso_ver = TRUE;
             }
             //si también asiste. tiene propio = 't'
-            if (FuncTablasSupport::isTrue($propio) && $oPermAsisSacd->have_perm_activ('ver') === TRUE) {
+            if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($propio) && $oPermAsisSacd->have_perm_activ('ver') === TRUE) {
                 $permiso_ver = TRUE;
             }
         } else {
@@ -732,7 +731,7 @@ class PermisosActividades
     public function setPropia(bool|string $bpropia): void
     {
         // actualitza el bpropia
-        if (FuncTablasSupport::isTrue($bpropia)) {
+        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($bpropia)) {
             $this->bpropia = true;
         } else {
             $this->bpropia = false;

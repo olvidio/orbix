@@ -5,7 +5,7 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ContribucionReservaDefaultGuardar;
 
-$default = (string)FilterPostGet::post('default');
+$default = (string)\src\shared\domain\helpers\FilterPostGet::post('default');
 
 /** @var ContribucionReservaDefaultGuardar $useCase */
 $useCase = DependencyResolver::get(ContribucionReservaDefaultGuardar::class);

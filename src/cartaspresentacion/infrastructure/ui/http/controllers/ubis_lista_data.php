@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: listado de centros con el estado de su carta de
@@ -13,8 +12,8 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'tipo_lista' => FuncTablasSupport::inputString($_POST, 'tipo_lista'),
-    'poblacion_sel' => FuncTablasSupport::inputString($_POST, 'poblacion_sel'),
+    'tipo_lista' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'tipo_lista'),
+    'poblacion_sel' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'poblacion_sel'),
 ];
 
 /** @var CartasPresentacionUbisListaData $useCase */

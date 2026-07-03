@@ -14,18 +14,18 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 
-$restored = ListNavSupport::restoreSelectionFromStackPost();
+$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
+$Qid_sel = !\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : \frontend\shared\helpers\ListNavSupport::idSelFromPost();
 
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
 }
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(
-    ListNavSupport::buildReturnParametrosFromPost(),
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(
+    \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(),
     $Qid_sel,
     $restored['scroll_id'],
 ));
@@ -37,7 +37,7 @@ $data = PostRequest::getDataFromUrl('/src/notas/tessera_copiar_select_data', [
     'id_nom' => $id_nom,
 ]);
 
-$nom = PayloadCoercion::string($data['nom'] ?? '');
+$nom = \frontend\shared\helpers\PayloadCoercion::string($data['nom'] ?? '');
 $aPosibles = NotasFormSupport::desplegableOpciones($data['posibles_personas'] ?? []);
 
 $oDesplPersonas = new Desplegable();

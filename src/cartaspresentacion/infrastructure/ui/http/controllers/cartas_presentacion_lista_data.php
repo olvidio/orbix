@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: listado agrupado de cartas de presentacion (modo
@@ -16,11 +15,11 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'que' => FuncTablasSupport::inputString($_POST, 'que'),
-    'poblacion' => FuncTablasSupport::inputString($_POST, 'poblacion'),
-    'pais' => FuncTablasSupport::inputString($_POST, 'pais'),
-    'region' => FuncTablasSupport::inputString($_POST, 'region'),
-    'dl' => FuncTablasSupport::inputString($_POST, 'dl'),
+    'que' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'que'),
+    'poblacion' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'poblacion'),
+    'pais' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'pais'),
+    'region' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'region'),
+    'dl' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'dl'),
 ];
 
 /** @var CartasPresentacionListaData $useCase */

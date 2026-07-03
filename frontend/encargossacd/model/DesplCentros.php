@@ -38,16 +38,16 @@ final class DesplCentros
         $data = PostRequest::getDataFromUrl('/src/encargossacd/ctr_get_select_data', $campos);
 
         $oDesplCtr = new Desplegable();
-        $oDesplCtr->setNombre(PayloadCoercion::string($data['id'] ?? 'lst_ctrs'));
+        $oDesplCtr->setNombre(\frontend\shared\helpers\PayloadCoercion::string($data['id'] ?? 'lst_ctrs'));
         $oDesplCtr->setOpciones(\EncargossacdPayload::desplegableOpciones($data['opciones'] ?? []));
         if (!empty($data['blanco'])) {
             $oDesplCtr->setBlanco(true);
         }
         if (array_key_exists('val_blanco', $data)) {
-            $oDesplCtr->setValBlanco(PayloadCoercion::string($data['val_blanco']));
+            $oDesplCtr->setValBlanco(\frontend\shared\helpers\PayloadCoercion::string($data['val_blanco']));
         }
-        $oDesplCtr->setOpcion_sel(PayloadCoercion::string($data['selected'] ?? ''));
-        $oDesplCtr->setAction(PayloadCoercion::string($data['action'] ?? ''));
+        $oDesplCtr->setOpcion_sel(\frontend\shared\helpers\PayloadCoercion::string($data['selected'] ?? ''));
+        $oDesplCtr->setAction(\frontend\shared\helpers\PayloadCoercion::string($data['action'] ?? ''));
 
         return $oDesplCtr;
     }

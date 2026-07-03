@@ -3,15 +3,14 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\UbisListaData;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 
-$Qnombre_ubi = FuncTablasSupport::inputString($_POST, 'nombre_ubi');
+$Qnombre_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nombre_ubi');
 
 /** @var UbisListaData $useCase */
 $useCase = DependencyResolver::get(UbisListaData::class);
 $data = $useCase->execute($Qnombre_ubi);
 if (array_key_exists('error', $data)) {
-    ContestarJson::enviar(FuncTablasSupport::inputString($data, 'error'), []);
+    ContestarJson::enviar(\src\shared\domain\helpers\FuncTablasSupport::inputString($data, 'error'), []);
     return;
 }
 ContestarJson::enviar('', [

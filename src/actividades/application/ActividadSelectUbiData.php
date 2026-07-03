@@ -4,7 +4,6 @@ namespace src\actividades\application;
 
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\helpers\OpcionesDesplegable;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Recolecta las opciones de desplegables usadas en la pantalla "seleccionar
@@ -27,8 +26,8 @@ class ActividadSelectUbiData
      */
     public function execute(array $input = []): array
     {
-        $dl_org = FuncTablasSupport::inputString($input, 'dl_org');
-        $isfsv = FuncTablasSupport::inputInt($input, 'isfsv');
+        $dl_org = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_org');
+        $isfsv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'isfsv');
 
         switch ($isfsv) {
             case 1:

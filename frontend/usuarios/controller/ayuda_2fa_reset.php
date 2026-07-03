@@ -27,9 +27,9 @@ $data = UsuariosPayload::postData(PostRequest::getDataFromUrl($Qurl_base . 'src/
 ]));
 
 $a_campos = [
-    'error_txt' => PayloadCoercion::string($data['errores'] ?? ''),
+    'error_txt' => \frontend\shared\helpers\PayloadCoercion::string($data['errores'] ?? ''),
     'linkEnviarMail2fa' => $linkEnviarMail2fa,
-    'emailOfuscado' => PayloadCoercion::string($data['emailOfuscado'] ?? ''),
+    'emailOfuscado' => \frontend\shared\helpers\PayloadCoercion::string($data['emailOfuscado'] ?? ''),
     'url_base' => $Qurl_base,
 ];
 

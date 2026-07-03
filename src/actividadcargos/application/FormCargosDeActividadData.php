@@ -12,7 +12,6 @@ use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Datos para `form_cargos_de_actividad`. Los desplegables se construyen en el front
@@ -41,13 +40,13 @@ final class FormCargosDeActividadData
         $Qid_item = '';
         $Qid_cargo = '';
 
-        $Qpermiso = FuncTablasSupport::inputString($post, 'permiso');
-        $Qid_dossier = FuncTablasSupport::inputInt($post, 'id_dossier');
+        $Qpermiso = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'permiso');
+        $Qid_dossier = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_dossier');
         if ($Qid_dossier <= 0) {
             $Qid_dossier = 3102;
         }
 
-        $a_sel = FuncTablasSupport::inputStringList($post, 'sel');
+        $a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($post, 'sel');
         $Qid_schema = '';
         if ($a_sel !== []) {
             $Qid_nom = (int) strtok($a_sel[0], '#');
@@ -60,12 +59,12 @@ final class FormCargosDeActividadData
             $parsedSchema = strtok('#');
             $Qid_schema = $parsedSchema !== false ? (int) $parsedSchema : 0;
         } else {
-            $Qid_nom = FuncTablasSupport::inputInt($post, 'id_nom');
+            $Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_nom');
         }
 
-        $Qmod = FuncTablasSupport::inputString($post, 'mod');
-        $Qid_pau = FuncTablasSupport::inputInt($post, 'id_pau');
-        $Qobj_pau = FuncTablasSupport::inputString($post, 'obj_pau');
+        $Qmod = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'mod');
+        $Qid_pau = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_pau');
+        $Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'obj_pau');
 
         $obj = 'ActividadCargo';
 
@@ -123,7 +122,7 @@ final class FormCargosDeActividadData
             'opcion_sel' => (string) $Qid_cargo,
         ];
 
-        $chk = (!empty($puede_agd) && FuncTablasSupport::isTrue($puede_agd)) ? 'checked' : '';
+        $chk = (!empty($puede_agd) && \src\shared\domain\helpers\FuncTablasSupport::isTrue($puede_agd)) ? 'checked' : '';
 
         $camposForm = 'id_cargo!observ';
         $camposNo = 'puede_agd';

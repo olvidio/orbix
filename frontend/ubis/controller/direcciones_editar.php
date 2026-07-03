@@ -13,8 +13,8 @@ use frontend\shared\helpers\FuncTablasSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
@@ -34,7 +34,7 @@ $data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/direcciones
 ]));
 
 if (!empty($data['sin_direccion'])) {
-    echo '<table><tr><td>' . PayloadCoercion::string($data['msg_sin_direccion'] ?? '') . '</td></tr></table><br>';
+    echo '<table><tr><td>' . \frontend\shared\helpers\PayloadCoercion::string($data['msg_sin_direccion'] ?? '') . '</td></tr></table><br>';
     $golistadir = HashFront::link('frontend/ubis/controller/direcciones_que.php?' . http_build_query(['id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir]));
     echo "<span class='link' onclick=\"fnjs_update_div('#ficha','$golistadir');\">" . mb_strtoupper(_("asignar una dirección")) . "</span>";
     return;
@@ -86,9 +86,9 @@ $a_campos = UbisPayload::viewVars($data, [
     'oHash' => $oHash,
     'id_ubi' => $Qid_ubi,
     'obj_dir' => $Qobj_dir,
-    'chk_propietario' => FuncTablasSupport::isTrue($data['propietario']) ? 'checked' : '',
-    'chk_principal' => FuncTablasSupport::isTrue($data['principal']) ? 'checked' : '',
-    'chk_dcha' => FuncTablasSupport::isTrue($data['cp_dcha']) ? 'checked' : '',
+    'chk_propietario' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($data['propietario']) ? 'checked' : '',
+    'chk_principal' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($data['principal']) ? 'checked' : '',
+    'chk_dcha' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($data['cp_dcha']) ? 'checked' : '',
     'golistadir' => $golistadir,
     'go_dir' => $go_dir,
     'h' => $h,

@@ -72,7 +72,7 @@ public static function permBitMap(mixed $raw): array
     $out = [];
     foreach ($raw as $key => $value) {
         if (is_string($key)) {
-            $out[$key] = PayloadCoercion::int($value);
+            $out[$key] = \frontend\shared\helpers\PayloadCoercion::int($value);
         }
     }
 
@@ -106,7 +106,7 @@ public static function listaCabeceraStrings(mixed $raw): array
     }
     $out = [];
     foreach ($raw as $item) {
-        $out[] = PayloadCoercion::string($item);
+        $out[] = \frontend\shared\helpers\PayloadCoercion::string($item);
     }
 
     return $out;
@@ -196,7 +196,7 @@ public static function tablaFromPayload(array $payload): array
         'cabeceras' => ActividadesListaSupport::cabeceras($payload['a_cabeceras'] ?? []),
         'botones' => ActividadesListaSupport::botones($payload['a_botones'] ?? []),
         'valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
-        'titulo' => PayloadCoercion::string($payload['titulo'] ?? ''),
+        'titulo' => \frontend\shared\helpers\PayloadCoercion::string($payload['titulo'] ?? ''),
         'nueva_ficha' => NotasFormSupport::formBoolOrString($payload['nueva_ficha'] ?? ''),
         'hash_hidden' => self::hashCamposHidden($payload['hash_hidden'] ?? []),
         'pagina_link_spec' => $paginaLinkSpec,
@@ -227,21 +227,21 @@ public static function tablaFromPayload(array $payload): array
 public static function homeFromPayload(array $payload): array
 {
     return [
-        'nombre_ubi' => PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
-        'dl' => PayloadCoercion::string($payload['dl'] ?? ''),
-        'region' => PayloadCoercion::string($payload['region'] ?? ''),
-        'direccion' => PayloadCoercion::string($payload['direccion'] ?? ''),
-        'poblacion' => PayloadCoercion::string($payload['poblacion'] ?? ''),
-        'c_p' => PayloadCoercion::string($payload['c_p'] ?? ''),
-        'id_direccion' => PayloadCoercion::string($payload['id_direccion'] ?? ''),
-        'id_pau' => PayloadCoercion::int($payload['id_pau'] ?? 0),
-        'pau' => PayloadCoercion::string($payload['pau'] ?? ''),
-        'obj_pau' => PayloadCoercion::string($payload['obj_pau'] ?? ''),
-        'obj_dir' => PayloadCoercion::string($payload['obj_dir'] ?? ''),
-        'ubi' => PayloadCoercion::string($payload['ubi'] ?? ''),
-        'telfs' => PayloadCoercion::string($payload['telfs'] ?? ''),
-        'fax' => PayloadCoercion::string($payload['fax'] ?? ''),
-        'mails' => PayloadCoercion::string($payload['mails'] ?? ''),
+        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
+        'dl' => \frontend\shared\helpers\PayloadCoercion::string($payload['dl'] ?? ''),
+        'region' => \frontend\shared\helpers\PayloadCoercion::string($payload['region'] ?? ''),
+        'direccion' => \frontend\shared\helpers\PayloadCoercion::string($payload['direccion'] ?? ''),
+        'poblacion' => \frontend\shared\helpers\PayloadCoercion::string($payload['poblacion'] ?? ''),
+        'c_p' => \frontend\shared\helpers\PayloadCoercion::string($payload['c_p'] ?? ''),
+        'id_direccion' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_direccion'] ?? ''),
+        'id_pau' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_pau'] ?? 0),
+        'pau' => \frontend\shared\helpers\PayloadCoercion::string($payload['pau'] ?? ''),
+        'obj_pau' => \frontend\shared\helpers\PayloadCoercion::string($payload['obj_pau'] ?? ''),
+        'obj_dir' => \frontend\shared\helpers\PayloadCoercion::string($payload['obj_dir'] ?? ''),
+        'ubi' => \frontend\shared\helpers\PayloadCoercion::string($payload['ubi'] ?? ''),
+        'telfs' => \frontend\shared\helpers\PayloadCoercion::string($payload['telfs'] ?? ''),
+        'fax' => \frontend\shared\helpers\PayloadCoercion::string($payload['fax'] ?? ''),
+        'mails' => \frontend\shared\helpers\PayloadCoercion::string($payload['mails'] ?? ''),
     ];
 }
 
@@ -280,18 +280,18 @@ public static function homeFromPayload(array $payload): array
 public static function editarLoadFromPayload(array $load): array
 {
     return [
-        'tipo_ubi' => PayloadCoercion::string($load['tipo_ubi'] ?? ''),
-        'obj_pau' => PayloadCoercion::string($load['obj_pau'] ?? ''),
-        'id_ubi' => PayloadCoercion::int($load['id_ubi'] ?? 0),
-        'id_direccion' => PayloadCoercion::string($load['id_direccion'] ?? ''),
-        'dl' => PayloadCoercion::string($load['dl'] ?? ''),
+        'tipo_ubi' => \frontend\shared\helpers\PayloadCoercion::string($load['tipo_ubi'] ?? ''),
+        'obj_pau' => \frontend\shared\helpers\PayloadCoercion::string($load['obj_pau'] ?? ''),
+        'id_ubi' => \frontend\shared\helpers\PayloadCoercion::int($load['id_ubi'] ?? 0),
+        'id_direccion' => \frontend\shared\helpers\PayloadCoercion::string($load['id_direccion'] ?? ''),
+        'dl' => \frontend\shared\helpers\PayloadCoercion::string($load['dl'] ?? ''),
         'botones' => NotasFormSupport::formScalar($load['botones'] ?? 0),
-        'region' => PayloadCoercion::string($load['region'] ?? ''),
-        'nombre_ubi' => PayloadCoercion::string($load['nombre_ubi'] ?? ''),
+        'region' => \frontend\shared\helpers\PayloadCoercion::string($load['region'] ?? ''),
+        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($load['nombre_ubi'] ?? ''),
         'tipo_labor_bit_map' => self::permBitMap($load['tipo_labor_bit_map'] ?? []),
-        'tipo_labor' => PayloadCoercion::int($load['tipo_labor'] ?? 0),
-        'chk' => PayloadCoercion::string($load['chk'] ?? ''),
-        'chk_cdc' => PayloadCoercion::string($load['chk_cdc'] ?? ''),
+        'tipo_labor' => \frontend\shared\helpers\PayloadCoercion::int($load['tipo_labor'] ?? 0),
+        'chk' => \frontend\shared\helpers\PayloadCoercion::string($load['chk'] ?? ''),
+        'chk_cdc' => \frontend\shared\helpers\PayloadCoercion::string($load['chk_cdc'] ?? ''),
         'tipo_labor_val' => NotasFormSupport::formScalar($load['tipo_labor'] ?? ''),
         'id_ctr_padre' => NotasFormSupport::formScalar($load['id_ctr_padre'] ?? ''),
         'tipo_ctr' => NotasFormSupport::formScalar($load['tipo_ctr'] ?? ''),
@@ -301,12 +301,12 @@ public static function editarLoadFromPayload(array $load): array
         'num_habit_indiv' => NotasFormSupport::formScalar($load['num_habit_indiv'] ?? ''),
         'plazas' => NotasFormSupport::formScalar($load['plazas'] ?? ''),
         'n_buzon' => NotasFormSupport::formScalar($load['n_buzon'] ?? ''),
-        'observ' => PayloadCoercion::string($load['observ'] ?? ''),
+        'observ' => \frontend\shared\helpers\PayloadCoercion::string($load['observ'] ?? ''),
         'tipo_casa' => NotasFormSupport::formScalar($load['tipo_casa'] ?? ''),
         'plazas_min' => NotasFormSupport::formScalar($load['plazas_min'] ?? ''),
         'num_sacd' => NotasFormSupport::formScalar($load['num_sacd'] ?? ''),
-        'sv_chk' => PayloadCoercion::string($load['sv_chk'] ?? ''),
-        'sf_chk' => PayloadCoercion::string($load['sf_chk'] ?? ''),
+        'sv_chk' => \frontend\shared\helpers\PayloadCoercion::string($load['sv_chk'] ?? ''),
+        'sf_chk' => \frontend\shared\helpers\PayloadCoercion::string($load['sf_chk'] ?? ''),
     ];
 }
 
@@ -353,12 +353,12 @@ public static function calendarioPeriodoRows(mixed $rows): array
         if (!is_array($row)) {
             continue;
         }
-        $sfsv = PayloadCoercion::int($row['sfsv'] ?? 0);
+        $sfsv = \frontend\shared\helpers\PayloadCoercion::int($row['sfsv'] ?? 0);
         $out[] = [
-            'id_item' => PayloadCoercion::int($row['id_item'] ?? 0),
-            'id_ubi' => PayloadCoercion::int($row['id_ubi'] ?? 0),
-            'f_ini' => PayloadCoercion::string($row['f_ini'] ?? ''),
-            'f_fin' => PayloadCoercion::string($row['f_fin'] ?? ''),
+            'id_item' => \frontend\shared\helpers\PayloadCoercion::int($row['id_item'] ?? 0),
+            'id_ubi' => \frontend\shared\helpers\PayloadCoercion::int($row['id_ubi'] ?? 0),
+            'f_ini' => \frontend\shared\helpers\PayloadCoercion::string($row['f_ini'] ?? ''),
+            'f_fin' => \frontend\shared\helpers\PayloadCoercion::string($row['f_fin'] ?? ''),
             'sfsv' => $sfsv,
             'sel_sv' => $sfsv === 1 ? 'selected' : '',
             'sel_sf' => $sfsv === 2 ? 'selected' : '',
@@ -381,10 +381,10 @@ public static function calendarioPeriodoRows(mixed $rows): array
 public static function centroLaborRow(array $payload): array
 {
     return [
-        'id_ubi' => PayloadCoercion::int($payload['id_ubi'] ?? 0),
-        'nombre_ubi' => PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
-        'tipo_ctr' => PayloadCoercion::string($payload['tipo_ctr'] ?? ''),
-        'tipo_labor' => PayloadCoercion::int($payload['tipo_labor'] ?? 0),
+        'id_ubi' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_ubi'] ?? 0),
+        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
+        'tipo_ctr' => \frontend\shared\helpers\PayloadCoercion::string($payload['tipo_ctr'] ?? ''),
+        'tipo_labor' => \frontend\shared\helpers\PayloadCoercion::int($payload['tipo_labor'] ?? 0),
     ];
 }
 
@@ -425,8 +425,8 @@ public static function planoDownload(string $obj_dir, int $id_direccion): array
     };
 
     return [
-        'plano_nom' => PayloadCoercion::string($raw['plano_nom'] ?? ''),
-        'plano_extension' => PayloadCoercion::string($raw['plano_extension'] ?? ''),
+        'plano_nom' => \frontend\shared\helpers\PayloadCoercion::string($raw['plano_nom'] ?? ''),
+        'plano_extension' => \frontend\shared\helpers\PayloadCoercion::string($raw['plano_extension'] ?? ''),
         'plano_doc' => $raw['plano_doc'] ?? null,
     ];
 }
@@ -466,17 +466,17 @@ public static function uploadFileFromPost(mixed $files): array
     if (!is_array($files)) {
         return ['error' => UPLOAD_ERR_NO_FILE, 'name' => '', 'tmp_name' => '', 'filename' => '', 'extension' => ''];
     }
-    $error = PayloadCoercion::int($files['error'] ?? UPLOAD_ERR_NO_FILE);
-    $name = PayloadCoercion::string($files['name'] ?? '');
-    $tmpName = PayloadCoercion::string($files['tmp_name'] ?? '');
+    $error = \frontend\shared\helpers\PayloadCoercion::int($files['error'] ?? UPLOAD_ERR_NO_FILE);
+    $name = \frontend\shared\helpers\PayloadCoercion::string($files['name'] ?? '');
+    $tmpName = \frontend\shared\helpers\PayloadCoercion::string($files['tmp_name'] ?? '');
     $pathParts = pathinfo($name);
 
     return [
         'error' => $error,
         'name' => $name,
         'tmp_name' => $tmpName,
-        'filename' => PayloadCoercion::string($pathParts['filename']),
-        'extension' => PayloadCoercion::string($pathParts['extension'] ?? ''),
+        'filename' => \frontend\shared\helpers\PayloadCoercion::string($pathParts['filename']),
+        'extension' => \frontend\shared\helpers\PayloadCoercion::string($pathParts['extension'] ?? ''),
     ];
 }
 
@@ -487,15 +487,15 @@ public static function uploadFileFromPost(mixed $files): array
 public static function calendarioPeriodoFields(array $payload): array
 {
     return [
-        'f_ini' => PayloadCoercion::string($payload['f_ini'] ?? ''),
-        'f_fin' => PayloadCoercion::string($payload['f_fin'] ?? ''),
-        'sel_sv' => PayloadCoercion::string($payload['sel_sv'] ?? ''),
-        'sel_sf' => PayloadCoercion::string($payload['sel_sf'] ?? ''),
-        'sel_res' => PayloadCoercion::string($payload['sel_res'] ?? ''),
-        'f_next' => PayloadCoercion::string($payload['f_next'] ?? ''),
-        'sv_chk' => PayloadCoercion::string($payload['sv_chk'] ?? ''),
-        'sf_chk' => PayloadCoercion::string($payload['sf_chk'] ?? ''),
-        'overlap_error' => PayloadCoercion::string($payload['overlap_error'] ?? ''),
+        'f_ini' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_ini'] ?? ''),
+        'f_fin' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_fin'] ?? ''),
+        'sel_sv' => \frontend\shared\helpers\PayloadCoercion::string($payload['sel_sv'] ?? ''),
+        'sel_sf' => \frontend\shared\helpers\PayloadCoercion::string($payload['sel_sf'] ?? ''),
+        'sel_res' => \frontend\shared\helpers\PayloadCoercion::string($payload['sel_res'] ?? ''),
+        'f_next' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_next'] ?? ''),
+        'sv_chk' => \frontend\shared\helpers\PayloadCoercion::string($payload['sv_chk'] ?? ''),
+        'sf_chk' => \frontend\shared\helpers\PayloadCoercion::string($payload['sf_chk'] ?? ''),
+        'overlap_error' => \frontend\shared\helpers\PayloadCoercion::string($payload['overlap_error'] ?? ''),
         'show_nuevo' => !empty($payload['show_nuevo']),
     ];
 }
@@ -507,9 +507,9 @@ public static function calendarioPeriodoFields(array $payload): array
 public static function centroLaborFormFromPayload(array $payload): array
 {
     return [
-        'nombre_ubi' => PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
-        'tipo_ctr' => PayloadCoercion::string($payload['tipo_ctr'] ?? ''),
-        'tipo_labor' => PayloadCoercion::int($payload['tipo_labor'] ?? 0),
+        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
+        'tipo_ctr' => \frontend\shared\helpers\PayloadCoercion::string($payload['tipo_ctr'] ?? ''),
+        'tipo_labor' => \frontend\shared\helpers\PayloadCoercion::int($payload['tipo_labor'] ?? 0),
         'tipo_labor_bit_map' => self::permBitMap($payload['tipo_labor_bit_map'] ?? []),
     ];
 }
@@ -526,7 +526,7 @@ public static function apiError(mixed $data): string
         return '';
     }
 
-    return PayloadCoercion::string($data['error'] ?? '');
+    return \frontend\shared\helpers\PayloadCoercion::string($data['error'] ?? '');
 }
 
 /**
@@ -546,7 +546,7 @@ public static function viewVars(array $base, array $extra): array
 public static function centroNumFormFromPayload(array $payload): array
 {
     return [
-        'nombre_ubi' => PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
+        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
         'n_buzon' => NotasFormSupport::formScalar($payload['n_buzon'] ?? ''),
         'num_pi' => NotasFormSupport::formScalar($payload['num_pi'] ?? ''),
         'num_cartas' => NotasFormSupport::formScalar($payload['num_cartas'] ?? ''),
@@ -560,7 +560,7 @@ public static function centroNumFormFromPayload(array $payload): array
 public static function centroPlazasFormFromPayload(array $payload): array
 {
     return [
-        'nombre_ubi' => PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
+        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
         'num_habit_indiv' => NotasFormSupport::formScalar($payload['num_habit_indiv'] ?? ''),
         'plazas' => NotasFormSupport::formScalar($payload['plazas'] ?? ''),
         'sede' => NotasFormSupport::formBoolOrString($payload['sede'] ?? false),
@@ -599,7 +599,7 @@ public static function paginaLinkFromTabla(array $tabla): string
     if (!is_array($spec)) {
         return '';
     }
-    $path = PayloadCoercion::string($spec['path'] ?? '');
+    $path = \frontend\shared\helpers\PayloadCoercion::string($spec['path'] ?? '');
     if ($path === '') {
         return '';
     }
@@ -629,16 +629,16 @@ public static function paginaLinkFromTabla(array $tabla): string
 public static function telecoFromPayload(array $payload): array
 {
     return [
-        'obj' => PayloadCoercion::string($payload['obj'] ?? ''),
+        'obj' => \frontend\shared\helpers\PayloadCoercion::string($payload['obj'] ?? ''),
         'a_tipos' => NotasFormSupport::desplegableOpciones($payload['a_tipos'] ?? []),
         'a_desc' => NotasFormSupport::desplegableOpciones($payload['a_desc'] ?? []),
-        'id_tipo_teleco' => PayloadCoercion::string($payload['id_tipo_teleco'] ?? ''),
-        'id_desc_teleco' => PayloadCoercion::string($payload['id_desc_teleco'] ?? ''),
-        'num_teleco' => PayloadCoercion::string($payload['num_teleco'] ?? ''),
-        'observ' => PayloadCoercion::string($payload['observ'] ?? ''),
+        'id_tipo_teleco' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_tipo_teleco'] ?? ''),
+        'id_desc_teleco' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_desc_teleco'] ?? ''),
+        'num_teleco' => \frontend\shared\helpers\PayloadCoercion::string($payload['num_teleco'] ?? ''),
+        'observ' => \frontend\shared\helpers\PayloadCoercion::string($payload['observ'] ?? ''),
         'botones' => NotasFormSupport::formScalar($payload['botones'] ?? 0),
-        'ficha' => PayloadCoercion::string($payload['ficha'] ?? ''),
-        'tit_txt' => PayloadCoercion::string($payload['tit_txt'] ?? ''),
+        'ficha' => \frontend\shared\helpers\PayloadCoercion::string($payload['ficha'] ?? ''),
+        'tit_txt' => \frontend\shared\helpers\PayloadCoercion::string($payload['tit_txt'] ?? ''),
     ];
 }
 

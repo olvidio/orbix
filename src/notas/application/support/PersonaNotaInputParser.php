@@ -8,7 +8,6 @@ use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\TipoActa;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Convierte un array de entrada (`$_POST`) en un objeto `PersonaNota`
@@ -32,7 +31,7 @@ final class PersonaNotaInputParser
      */
     public function parse(array $input, bool $eliminar = false): PersonaNota
     {
-        $id_pau = FuncTablasSupport::inputInt($input, 'id_pau');
+        $id_pau = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
 
         $a_sel = (array)($input['sel'] ?? []);
         if (!empty($a_sel)) {
@@ -44,9 +43,9 @@ final class PersonaNotaInputParser
             $id_asignatura = (int)strtok('#');
             $tipo_acta = (int)strtok('#');
         } else {
-            $id_asignatura = FuncTablasSupport::inputInt($input, 'id_asignatura');
-            $id_nivel = FuncTablasSupport::inputInt($input, 'id_nivel');
-            $tipo_acta = FuncTablasSupport::inputInt($input, 'tipo_acta');
+            $id_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
+            $id_nivel = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nivel');
+            $tipo_acta = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'tipo_acta');
         }
 
         if ($id_asignatura === 1) {
@@ -72,17 +71,17 @@ final class PersonaNotaInputParser
             return $oPersonaNota;
         }
 
-        $id_situacion = FuncTablasSupport::inputInt($input, 'id_situacion');
-        $acta = FuncTablasSupport::inputString($input, 'acta');
-        $f_acta = FuncTablasSupport::inputString($input, 'f_acta');
-        $preceptor = FuncTablasSupport::inputString($input, 'preceptor');
-        $id_preceptor = FuncTablasSupport::inputInt($input, 'id_preceptor');
-        $detalle = FuncTablasSupport::inputString($input, 'detalle');
-        $epoca = FuncTablasSupport::inputInt($input, 'epoca');
-        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $id_situacion = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_situacion');
+        $acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta');
+        $f_acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_acta');
+        $preceptor = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'preceptor');
+        $id_preceptor = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_preceptor');
+        $detalle = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'detalle');
+        $epoca = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'epoca');
+        $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         $nota_num_raw = $input['nota_num'] ?? null;
         $nota_num = is_numeric($nota_num_raw) ? (float) $nota_num_raw : 0.0;
-        $nota_max = FuncTablasSupport::inputInt($input, 'nota_max');
+        $nota_max = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'nota_max');
 
         if ($epoca === 0) {
             $epoca = NotaEpoca::EPOCA_OTRO;
@@ -95,7 +94,7 @@ final class PersonaNotaInputParser
         $oPersonaNota->setActaVo($acta);
         $oPersonaNota->setDetalleVo($detalle);
         $oPersonaNota->setF_acta($oF_acta);
-        $oPersonaNota->setPreceptor(FuncTablasSupport::isTrue($preceptor) ?? false);
+        $oPersonaNota->setPreceptor(\src\shared\domain\helpers\FuncTablasSupport::isTrue($preceptor) ?? false);
         $oPersonaNota->setId_preceptor($id_preceptor);
         $oPersonaNota->setEpocaVo($epoca);
         $oPersonaNota->setIdActivVo($id_activ);

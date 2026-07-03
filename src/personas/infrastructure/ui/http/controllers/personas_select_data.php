@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint JSON: datos crudos para la tabla `personas_select`.
@@ -22,7 +21,7 @@ try {
         $problemas = [];
         RegionStgrAviso::registrar($problemas, $e);
         $result = [
-            'tabla' => FuncTablasSupport::inputString($_POST, 'tabla'),
+            'tabla' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'tabla'),
             'obj_pau' => '',
             'id_tabla' => '',
             'permiso' => 1,

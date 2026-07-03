@@ -8,19 +8,18 @@ use src\ubiscamas\domain\entity\Cama;
 use src\ubiscamas\domain\value_objects\CamaDescripcion;
 use src\ubiscamas\domain\value_objects\CamaId;
 use src\ubiscamas\domain\value_objects\HabitacionId;
-use src\shared\domain\helpers\FuncTablasSupport;
-$a_sel = FuncTablasSupport::inputStringList($_POST, 'sel');
+$a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'sel');
 
-$Qid_cama = FuncTablasSupport::inputString($_POST, 'id_cama');
-$Qid_habitacion = FuncTablasSupport::inputString($_POST, 'id_habitacion');
+$Qid_cama = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_cama');
+$Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_habitacion');
 
 if ($a_sel !== []) {
     $Qid_cama = urldecode(strtok($a_sel[0], '#') ?: '');
 }
 
-$Qdescripcion = FuncTablasSupport::inputString($_POST, 'descripcion');
-$Qlarga = FuncTablasSupport::isTrue(FuncTablasSupport::inputString($_POST, 'larga'));
-$Qvip = FuncTablasSupport::isTrue(FuncTablasSupport::inputString($_POST, 'vip'));
+$Qdescripcion = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'descripcion');
+$Qlarga = \src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'larga'));
+$Qvip = \src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'vip'));
 
 /** @var CamaDlRepositoryInterface $camaRepository */
 $camaRepository = DependencyResolver::get(CamaDlRepositoryInterface::class);

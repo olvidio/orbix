@@ -22,7 +22,7 @@ final class DossiersListaRender
             'obj_pau' => $objPau,
         ], false);
 
-        $error = PayloadCoercion::string($data['error'] ?? '');
+        $error = \frontend\shared\helpers\PayloadCoercion::string($data['error'] ?? '');
         if ($error !== '') {
             return '<div class="certificado-aviso-config" role="alert" style="max-width: 42rem; padding: 1rem 1.25rem; margin: 1rem 0; border: 1px solid #c9a227; background: #fffbea; color: #3d3500;">'
                 . PostRequest::stripInternalCallProvenance($error)
@@ -31,7 +31,7 @@ final class DossiersListaRender
 
         $viewData = DossiersPayload::viewVariables($data);
         $viewData['a_filas'] = DossiersListaSupport::signFilas($data['a_filas'] ?? [], ['href_ver', 'href_abrir']);
-        $viewData['web_icons'] = PayloadCoercion::string($data['web_icons'] ?? OrbixRuntime::getWebIcons());
+        $viewData['web_icons'] = \frontend\shared\helpers\PayloadCoercion::string($data['web_icons'] ?? OrbixRuntime::getWebIcons());
 
         $oView = new ViewNewPhtml('frontend\\dossiers\\controller');
 

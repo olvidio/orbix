@@ -29,14 +29,14 @@ final class FormAsistentesAUnaActividadRender
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
 
-        $url_guardar = $base . '/' . ltrim(FuncTablasSupport::payloadString($paths, 'asistente_guardar'), '/');
-        $url_self = $base . '/' . ltrim(FuncTablasSupport::payloadString($paths, 'form_self'), '/');
+        $url_guardar = $base . '/' . ltrim(\frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'asistente_guardar'), '/');
+        $url_self = $base . '/' . ltrim(\frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'form_self'), '/');
 
         $plazas_installed = !empty($payload['plazas_installed']);
         $url_ajax = '';
         $h1 = '';
         if ($plazas_installed) {
-            $ajaxPath = FuncTablasSupport::payloadString($paths, 'posibles_propietarios_data');
+            $ajaxPath = \frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'posibles_propietarios_data');
             if ($ajaxPath !== '') {
                 $url_ajax = $base . '/' . ltrim($ajaxPath, '/');
                 $ajaxMeta = isset($payload['ajax_propietarios']) && is_array($payload['ajax_propietarios'])
@@ -44,15 +44,15 @@ final class FormAsistentesAUnaActividadRender
                     : [];
                 $oHash1 = new HashFront();
                 $oHash1->setUrl($url_ajax);
-                $oHash1->setCamposForm(FuncTablasSupport::payloadString($ajaxMeta, 'campos_form', 'id_activ!id_nom'));
+                $oHash1->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($ajaxMeta, 'campos_form', 'id_activ!id_nom'));
                 $h1 = $oHash1->linkSinValParams();
             }
         }
 
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm(FuncTablasSupport::payloadString($hashMain, 'campos_form'));
-        $oHash->setCamposNo(FuncTablasSupport::payloadString($hashMain, 'campos_no'));
+        $oHash->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_form'));
+        $oHash->setCamposNo(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_no'));
         $hidden = AsistentesRenderSupport::hashCamposHidden($hashMain['campos_hidden'] ?? []);
         $oHash->setArrayCamposHidden($hidden);
 
@@ -76,14 +76,14 @@ final class FormAsistentesAUnaActividadRender
             $oPlaza = new Desplegable();
             $oPlaza->setNombre('plaza');
             $oPlaza->setOpciones($plazaOpciones);
-            $oPlaza->setOpcion_sel(FuncTablasSupport::payloadString($payload, 'plaza_selected'));
+            $oPlaza->setOpcion_sel(\frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'plaza_selected'));
             $desplegable_plaza_html = $oPlaza->desplegable();
 
             $propOpciones = NotasFormSupport::desplegableOpciones($payload['propietario_opciones'] ?? []);
             $oProp = new Desplegable();
             $oProp->setNombre('propietario');
             $oProp->setOpciones($propOpciones);
-            $oProp->setOpcion_sel(FuncTablasSupport::payloadString($payload, 'propietario_selected'));
+            $oProp->setOpcion_sel(\frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'propietario_selected'));
             if (!empty($payload['propietario_select_blanco'])) {
                 $oProp->setBlanco(true);
             }

@@ -17,7 +17,6 @@ use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Matricula automaticamente a una o varias personas en las asignaturas
@@ -50,9 +49,11 @@ final class MatriculaAutomatica
 
     /**
      * @param array<string, mixed> $input
+     * @return array{success: bool, msg: string}
      */
-    public function execute(array $input): string
+    public function execute(array $input): array
     {
+        $success = false;
         $msg = '';
 
         $a_sel = (array) ($input['sel'] ?? []);
@@ -61,8 +62,8 @@ final class MatriculaAutomatica
             $sel = $a_sel[0];
             $Qid_nom = (int) strtok(is_scalar($sel) ? (string) $sel : '', '#');
         } else {
-            $Qid_nom = FuncTablasSupport::inputInt($input, 'id_pau');
-            $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+            $Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
+            $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         }
 
         $mes = (int) date('m');
@@ -70,8 +71,8 @@ final class MatriculaAutomatica
         $oConfig = $_SESSION['oConfig'];
         $fin_m = $oConfig->getMesFinStgr();
         $any = ($mes > $fin_m) ? (int) date('Y') + 1 : (int) date('Y');
-        $inicurs_ca = FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
-        $fincurs_ca = FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
+        $inicurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
+        $fincurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
 
         $aWhere = [];
         $aOperador = [];
@@ -82,7 +83,10 @@ final class MatriculaAutomatica
 
             $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
             if ($oPersona === null) {
-                return sprintf(_('No se ha encontrado a la persona con id: %s'), $Qid_nom);
+                return [
+                    'success' => false,
+                    'msg' => sprintf(_('No se ha encontrado a la persona con id: %s'), $Qid_nom),
+                ];
             }
             $classname = PersonaRepositoryResolver::objPauFromInstance($oPersona);
 
@@ -190,6 +194,7 @@ final class MatriculaAutomatica
                         }
                     }
                     $msg .= sprintf(_('%s se ha matriculado de %s asignaturas'), $oPersonaDl->getPrefApellidosNombre(), $m) . "\n";
+                    $success = true;
                     break;
                 default:
                     $msg .= sprintf(_('no se ha hecho nada con %s, tiene asignado más de un ca'), $oPersonaDl->getPrefApellidosNombre()) . "\n";
@@ -199,7 +204,8 @@ final class MatriculaAutomatica
         if (empty($msg)) {
             $msg = _('no se ha hecho nada');
         }
-        return $msg;
+
+        return ['success' => $success, 'msg' => $msg];
     }
 
     private function matricularOpcionalSiCabe(

@@ -300,7 +300,7 @@ foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
     }
     $NomCamp = ucwords($nomcamp);
     $tipo = $row['type'];
-    $null = (FuncTablasSupport::isTrue($row['notnull'])) ? 'null' : '';
+    $null = (\src\shared\domain\helpers\FuncTablasSupport::isTrue($row['notnull'])) ? 'null' : '';
     $tip = 's';
     $tipo_db = 'string';
     $tip_val = '';
@@ -349,7 +349,7 @@ foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
             $tip = 'a_';
             $tip_val = '';
             $array_dades .= "\n\t\t\t";
-            $array_dades .= '$aDatos[\'' . $nomcamp . '\'] = FuncTablasSupport::arrayPgInteger2php($aDatos[\'' . $nomcamp . '\']);';
+            $array_dades .= '$aDatos[\'' . $nomcamp . '\'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPgInteger2php($aDatos[\'' . $nomcamp . '\']);';
             break;
         case 'int8':
         case 'int4':
@@ -630,7 +630,7 @@ foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
         case 'bool':
             $exists .= "\n\t\t" . 'if (array_key_exists(\'' . $nomcamp . '\',$aDatos))';
             $exists .= "\n\t\t{";
-            $exists .= "\n\t\t\t" . '$this->set' . $NomCamp . '(FuncTablasSupport::isTrue($aDatos[\'' . $nomcamp . '\']));';
+            $exists .= "\n\t\t\t" . '$this->set' . $NomCamp . '(\src\shared\domain\helpers\FuncTablasSupport::isTrue($aDatos[\'' . $nomcamp . '\']));';
             $exists .= "\n\t\t}";
             $ToEmpty .= "\n\t\t" . '$this->set' . $NomCamp . '(\'\');';
             break;
@@ -666,10 +666,10 @@ foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
     if (!in_array($nomcamp, $aClaus)) {
         if ($auto != 1) { // si tiene secuencia no pongo el campo en el update.
             if ($tip === 'b') {
-                $err_bool .= "\n\t\t" . 'if ( FuncTablasSupport::isTrue($aDatos[\'' . $nomcamp . '\']) ) { $aDatos[\'' . $nomcamp . '\']=\'true\'; } else { $aDatos[\'' . $nomcamp . '\']=\'false\'; }';
+                $err_bool .= "\n\t\t" . 'if ( \src\shared\domain\helpers\FuncTablasSupport::isTrue($aDatos[\'' . $nomcamp . '\']) ) { $aDatos[\'' . $nomcamp . '\']=\'true\'; } else { $aDatos[\'' . $nomcamp . '\']=\'false\'; }';
             }
             if ($tipo_db === 'array') {
-                $guardar_array .= "\n\t\t" . '$aDatos[\'' . $nomcamp . '\'] = FuncTablasSupport::arrayPhp2pg($' . $Q_clase . '->' . $metodo_get . ');';
+                $guardar_array .= "\n\t\t" . '$aDatos[\'' . $nomcamp . '\'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPhp2pg($' . $Q_clase . '->' . $metodo_get . ');';
             }
             if ($tipo === 'bytea') {
                 $guardar_bytea .= "\n\t\t" . '$aDatos[\'' . $nomcamp . '\'] = bin2hex($' . $Q_clase . '->' . $metodo_get . ');';
@@ -1177,7 +1177,7 @@ if ($guardar_json) {
     $txt_pgRepositorio .= $guardar_json;
 }
 $txt_pgRepositorio .= '
-		array_walk($aDatos, \'src\\shared\\domain\\helpers\\poner_null\');';
+		array_walk($aDatos, [\\src\\shared\\domain\\helpers\\FuncTablasSupport::class, \'ponerNull\']);';
 if ($err_bool) {
     $txt_pgRepositorio .= "\n\t\t//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:";
     $txt_pgRepositorio .= $err_bool;

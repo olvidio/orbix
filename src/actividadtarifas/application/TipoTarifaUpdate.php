@@ -5,7 +5,6 @@ namespace src\actividadtarifas\application;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\actividadtarifas\domain\entity\TipoTarifa;
 use src\shared\config\ConfigGlobal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion: crea o actualiza un `TipoTarifa`.
@@ -22,10 +21,10 @@ final class TipoTarifaUpdate
      */
     public function execute(array $input): string
     {
-        $id_tarifa = FuncTablasSupport::inputString($input, 'id_tarifa');
-        $letra = FuncTablasSupport::inputString($input, 'letra');
-        $modo = FuncTablasSupport::inputString($input, 'modo');
-        $observ = FuncTablasSupport::inputString($input, 'observ');
+        $id_tarifa = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tarifa');
+        $letra = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'letra');
+        $modo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'modo');
+        $observ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ');
 
         if ($id_tarifa === 'nuevo' || $id_tarifa === '') {
             $newId = $this->tipoTarifaRepository->getNewId();

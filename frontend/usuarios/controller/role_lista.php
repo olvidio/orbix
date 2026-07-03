@@ -29,14 +29,14 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/role_lista'));
 $lista = UsuariosPayload::listaFromPayload($data);
 $a_valores = UsuariosPayload::listaApplyNav($lista['valores'], $Qid_sel, $Qscroll_id);
-$permiso = PayloadCoercion::string($data['permiso'] ?? '');
+$permiso = \frontend\shared\helpers\PayloadCoercion::string($data['permiso'] ?? '');
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('roles_lista');

@@ -8,7 +8,6 @@ use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\Dinero;
 use src\shared\domain\value_objects\TimeLocal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Cambia el tipo de una actividad existente y regenera el proceso asociado.
@@ -28,30 +27,30 @@ final class ActividadCambiarTipo
      */
     public function execute(array $input): array
     {
-        $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
-        $Qid_tipo_activ = FuncTablasSupport::inputInt($input, 'id_tipo_activ');
-        $Qisfsv_val = FuncTablasSupport::inputInt($input, 'isfsv_val');
-        $Qiasistentes_val = FuncTablasSupport::inputInt($input, 'iasistentes_val');
-        $Qiactividad_val = FuncTablasSupport::inputInt($input, 'iactividad_val');
-        $Qinom_tipo_val = FuncTablasSupport::inputString($input, 'inom_tipo_val');
+        $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $Qid_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tipo_activ');
+        $Qisfsv_val = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'isfsv_val');
+        $Qiasistentes_val = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'iasistentes_val');
+        $Qiactividad_val = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'iactividad_val');
+        $Qinom_tipo_val = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'inom_tipo_val');
 
-        $Qdl_org = FuncTablasSupport::inputString($input, 'dl_org');
-        $Qnum_asistentes = FuncTablasSupport::inputInt($input, 'num_asistentes');
-        $Qstatus = FuncTablasSupport::inputInt($input, 'status');
-        $Qid_repeticion = FuncTablasSupport::inputInt($input, 'id_repeticion');
-        $Qplazas = FuncTablasSupport::inputInt($input, 'plazas');
-        $Qtarifa = FuncTablasSupport::inputInt($input, 'id_tarifa');
-        $Qnom_activ = FuncTablasSupport::inputString($input, 'nom_activ');
-        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
-        $Qlugar_esp = FuncTablasSupport::inputString($input, 'lugar_esp');
-        $Qdesc_activ = FuncTablasSupport::inputString($input, 'desc_activ');
-        $Qf_ini = FuncTablasSupport::inputString($input, 'f_ini');
-        $Qf_fin = FuncTablasSupport::inputString($input, 'f_fin');
-        $Qobserv = FuncTablasSupport::inputString($input, 'observ');
-        $Qnivel_stgr = FuncTablasSupport::inputInt($input, 'nivel_stgr');
-        $Qobserv_material = FuncTablasSupport::inputString($input, 'observ_material');
-        $Qh_ini = FuncTablasSupport::inputString($input, 'h_ini');
-        $Qh_fin = FuncTablasSupport::inputString($input, 'h_fin');
+        $Qdl_org = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_org');
+        $Qnum_asistentes = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'num_asistentes');
+        $Qstatus = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'status');
+        $Qid_repeticion = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_repeticion');
+        $Qplazas = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'plazas');
+        $Qtarifa = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tarifa');
+        $Qnom_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nom_activ');
+        $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
+        $Qlugar_esp = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'lugar_esp');
+        $Qdesc_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'desc_activ');
+        $Qf_ini = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_ini');
+        $Qf_fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_fin');
+        $Qobserv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ');
+        $Qnivel_stgr = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'nivel_stgr');
+        $Qobserv_material = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ_material');
+        $Qh_ini = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'h_ini');
+        $Qh_fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'h_fin');
 
         if ($Qid_tipo_activ !== 0 && strpos((string) $Qid_tipo_activ, '.') === false) {
             $valor_id_tipo_activ = $Qid_tipo_activ;

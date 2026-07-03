@@ -3,14 +3,13 @@
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ConfigMagik;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 $error_txt = '';
 
-$Qcabecera = FuncTablasSupport::inputString($_POST, 'cabecera');
-$QcabeceraB = FuncTablasSupport::inputString($_POST, 'cabeceraB');
-$Qfirma = FuncTablasSupport::inputString($_POST, 'firma');
-$Qpie = FuncTablasSupport::inputString($_POST, 'pie');
+$Qcabecera = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'cabecera');
+$QcabeceraB = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'cabeceraB');
+$Qfirma = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'firma');
+$Qpie = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'pie');
 
 $file = ConfigGlobal::$dir_web ."/data/inventario/cabecera_pie_textos.ini";
 $Config = new ConfigMagik($file, true, true);

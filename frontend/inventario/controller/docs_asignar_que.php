@@ -15,8 +15,8 @@ $oPosicion = FrontBootstrap::boot();
 $Qinventario = (int)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $url_backend = '/src/inventario/lista_tipo_doc';

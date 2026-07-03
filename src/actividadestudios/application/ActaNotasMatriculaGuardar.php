@@ -5,7 +5,6 @@ namespace src\actividadestudios\application;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\notas\domain\value_objects\NotaSituacion;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Guarda las notas de cada matricula (borrador del acta de notas). Se invoca
@@ -26,8 +25,8 @@ final class ActaNotasMatriculaGuardar
      */
     public function execute(array $input): string
     {
-        $Qid_asignatura = FuncTablasSupport::inputInt($input, 'id_asignatura');
-        $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
+        $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         /** @var ConfigSnapshot $oConfig */
         $oConfig = $_SESSION['oConfig'];
         $nota_corte = $oConfig->getNotaCorte();

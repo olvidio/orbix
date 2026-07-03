@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint JSON: listado de propiedades configurables del objeto indicado,
@@ -12,8 +11,8 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'objeto' => FuncTablasSupport::inputString($_POST, 'objeto'),
-    'id_item_usuario_objeto' => FuncTablasSupport::inputInt($_POST, 'id_item_usuario_objeto'),
+    'objeto' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'objeto'),
+    'id_item_usuario_objeto' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item_usuario_objeto'),
 ];
 
 /** @var CambioUsuarioObjetoPrefPropiedadesData $useCase */

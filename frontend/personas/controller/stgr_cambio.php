@@ -17,10 +17,10 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
-ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
+\frontend\shared\helpers\ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 
 $ids = PersonasPostInput::idFromSelPost();
 $id_nom = $ids['id_nom'];

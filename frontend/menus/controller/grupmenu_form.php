@@ -42,8 +42,8 @@ if (isset($_POST['stack'])) {
         $Qid_grupmenu = MenusPostInput::idFromSelItem(MenusPostInput::selFirstItem($a_sel));
     }
 }
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), $Qscroll_id));
 
 $oPosicion->setParametros(array('id_grupmenu' => $Qid_grupmenu), 1);
 

@@ -19,14 +19,14 @@ $oPosicion->setParametros(ProcesosPayload::fasesActivCambioGoback($requestPayloa
 
 $data = PostRequest::getDataFromUrl('/src/procesos/fases_activ_cambio_lista', $requestPayload);
 
-$error = PayloadCoercion::string($data['error'] ?? '');
+$error = \frontend\shared\helpers\PayloadCoercion::string($data['error'] ?? '');
 if ($error !== '') {
     AjaxJsonSupport::html('<h2>' . $error . '</h2>', $error);
 }
 
-$msg = PayloadCoercion::string($data['msg'] ?? '');
-$accion = PayloadCoercion::string($data['accion'] ?? '');
-$id_fase_nueva = PayloadCoercion::string($data['id_fase_nueva'] ?? '');
+$msg = \frontend\shared\helpers\PayloadCoercion::string($data['msg'] ?? '');
+$accion = \frontend\shared\helpers\PayloadCoercion::string($data['accion'] ?? '');
+$id_fase_nueva = \frontend\shared\helpers\PayloadCoercion::string($data['id_fase_nueva'] ?? '');
 $a_cabeceras = ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? null);
 $a_valores = ActividadesListaSupport::datos($data['a_valores'] ?? null);
 

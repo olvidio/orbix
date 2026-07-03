@@ -2,15 +2,14 @@
 
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\entity\Ubi;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qid_cdc = FuncTablasSupport::inputInt($_POST, 'id_cdc');
+$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_cdc = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_cdc');
 
 $error_txt = '';
 

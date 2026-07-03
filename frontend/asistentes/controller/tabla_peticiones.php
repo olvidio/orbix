@@ -18,7 +18,7 @@ $id_activ_old = AsistentesPostInput::idFromSelPost('id_activ_old');
 $campos = array_merge($_GET, $_POST);
 
 // Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $campos['restored_id_sel']    = $oPosicion->getParametro('id_sel');
     $campos['restored_scroll_id'] = $oPosicion->getParametro('scroll_id');
@@ -27,11 +27,11 @@ if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
 
 // Tras guardar por AJAX, js_atras(0) recarga con `stack` en POST: no volver a recordar() (duplicaría la pila).
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
 }
-ListNavSupport::persistActividadSelectChildEntry($oPosicion, [
+\frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry($oPosicion, [
     'id_activ_old' => $id_activ_old,
 ]);
 

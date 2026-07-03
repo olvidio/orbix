@@ -31,11 +31,11 @@ $data = UsuariosPayload::postData(PostRequest::getDataFromUrl($url_backend, [
 ]));
 
 $a_campos = [
-    'error_txt' => PayloadCoercion::string($data['errores'] ?? ''),
+    'error_txt' => \frontend\shared\helpers\PayloadCoercion::string($data['errores'] ?? ''),
     'linkEnviarMailPasswd' => $linkEnviarMailPasswd,
-    'emailOfuscado' => PayloadCoercion::string($data['emailOfuscado'] ?? ''),
+    'emailOfuscado' => \frontend\shared\helpers\PayloadCoercion::string($data['emailOfuscado'] ?? ''),
     'linkAyuda2FA' => $linkAyuda2FA,
-    'mail_admin' => PayloadCoercion::string($data['mail_admin'] ?? ''),
+    'mail_admin' => \frontend\shared\helpers\PayloadCoercion::string($data['mail_admin'] ?? ''),
     'url_base' => $url_base,
 ];
 

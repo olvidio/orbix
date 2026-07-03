@@ -3,11 +3,10 @@
 use src\actividadestudios\application\ListaClasesCaData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 $error = '';
 $data = [];
 try {
-    $idActiv = FuncTablasSupport::inputInt($_POST, 'id_activ');
+    $idActiv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_activ');
     /** @var ListaClasesCaData $useCase */
     $useCase = DependencyResolver::get(ListaClasesCaData::class);
     $data = $useCase->execute(['id_activ' => $idActiv]);

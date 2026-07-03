@@ -6,7 +6,6 @@ use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\HabitacionId;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Datos para `frontend/ubiscamas/controller/habitacion_form.php`.
@@ -26,8 +25,8 @@ final class HabitacionFormData
      */
     public function execute(array $input): array
     {
-        $Qnuevo = FuncTablasSupport::inputString($input, 'nuevo');
-        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
+        $Qnuevo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nuevo');
+        $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
         $orden = '';
         $nombre = '';
         $numero_camas = '';
@@ -47,7 +46,7 @@ final class HabitacionFormData
                 $firstSel = $a_sel[0];
                 $Qid_habitacion = strtok(is_scalar($firstSel) ? (string) $firstSel : '', '#') ?: '';
             } else {
-                $Qid_habitacion = FuncTablasSupport::inputString($input, 'id_habitacion');
+                $Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_habitacion');
             }
 
             $uuid_habitacion = HabitacionId::fromNullableString($Qid_habitacion);

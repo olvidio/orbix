@@ -3,7 +3,6 @@
 use src\certificados\application\CertificadoEmitidoUploadFirmadoFormData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /** @var CertificadoEmitidoUploadFirmadoFormData $useCase */
 $useCase = DependencyResolver::get(CertificadoEmitidoUploadFirmadoFormData::class);
@@ -11,7 +10,7 @@ $useCase = DependencyResolver::get(CertificadoEmitidoUploadFirmadoFormData::clas
 $error = '';
 $data = [];
 try {
-    $data = $useCase->execute(FuncTablasSupport::inputInt($_POST, 'id_item'));
+    $data = $useCase->execute(\src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item'));
 } catch (\Throwable $e) {
     $error = $e->getMessage();
 }

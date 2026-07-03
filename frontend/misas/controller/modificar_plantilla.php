@@ -22,7 +22,7 @@ $oDesplZonas->setAction('fnjs_ver_plantilla_zona()');
 $oDesplTipoPlantilla = new Desplegable();
 $oDesplTipoPlantilla->setOpciones(MisasDesplegableSupport::opciones($data['tipos_plantilla'] ?? []));
 $oDesplTipoPlantilla->setNombre('tipo_plantilla');
-$oDesplTipoPlantilla->setOpcion_sel(PayloadCoercion::string($data['plantilla_selected'] ?? ''));
+$oDesplTipoPlantilla->setOpcion_sel(\frontend\shared\helpers\PayloadCoercion::string($data['plantilla_selected'] ?? ''));
 $oDesplTipoPlantilla->setAction('fnjs_ver_plantilla_zona()');
 
 $a_TiposPlantilla2 = array_merge(

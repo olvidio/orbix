@@ -5,7 +5,6 @@ namespace src\procesos\application;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\shared\domain\helpers\OpcionesDesplegable;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: fases posibles para id_tipo_activ y dl_propia (desplegable JSON).
@@ -24,11 +23,11 @@ class FasesActivCambioGet
      */
     public function execute(array $input): array
     {
-        $Qid_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
-        $Qdl_propia = FuncTablasSupport::inputString($input, 'dl_propia');
-        $Qid_fase_sel = FuncTablasSupport::inputString($input, 'id_fase_sel');
+        $Qid_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $Qdl_propia = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_propia');
+        $Qid_fase_sel = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_fase_sel');
 
-        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, FuncTablasSupport::isTrue($Qdl_propia) ?? false);
+        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qdl_propia) ?? false);
         $aOpciones = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos, true);
 
         return [

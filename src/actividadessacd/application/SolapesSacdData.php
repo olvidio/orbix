@@ -13,7 +13,6 @@ use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\value_objects\FaseId;
 use frontend\shared\web\Periodo;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: construye el listado de sacd con actividades incompatibles (solapes).
@@ -36,10 +35,10 @@ final class SolapesSacdData
      */
     public function execute(array $input): array
     {
-        $year = FuncTablasSupport::inputString($input, 'year');
-        $periodo = FuncTablasSupport::inputString($input, 'periodo');
-        $empiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
-        $empiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
+        $year = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'year');
+        $periodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
+        $empiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
+        $empiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
 
         $oActividadFase = $this->actividadFaseRepository->findById(FaseId::FASE_OK_SACD);
         $txt_fase_ok_sacd = $oActividadFase !== null
@@ -99,7 +98,7 @@ final class SolapesSacdData
                 $id_ubi = (string)$oActividad->getId_ubi();
                 $status = (int)$oActividad->getStatus();
                 $sacd_aprobado = $this->actividadProcesoTareaRepository->getSacdAprobado((int)$id_activ);
-                $clase = FuncTablasSupport::isTrue($sacd_aprobado) ? 'plaza4' : '';
+                $clase = \src\shared\domain\helpers\FuncTablasSupport::isTrue($sacd_aprobado) ? 'plaza4' : '';
                 if ($status === StatusId::PROYECTO) {
                     $clase = 'wrong-soft';
                 }

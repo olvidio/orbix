@@ -38,7 +38,7 @@ $data = PostRequest::getDataFromUrl('/src/encargossacd/ctr_ficha_data', [
     'filtro_ctr' => $Qfiltro_ctr,
 ]);
 
-$Qfiltro_ctr = PayloadCoercion::int($data['filtro_ctr'] ?? $Qfiltro_ctr);
+$Qfiltro_ctr = \frontend\shared\helpers\PayloadCoercion::int($data['filtro_ctr'] ?? $Qfiltro_ctr);
 $opciones_seccion = EncargossacdPayload::desplegableOpciones($data['opciones_seccion'] ?? []);
 
 $oDesplGrupoCtrs = new Desplegable();

@@ -4,12 +4,11 @@ use src\dbextern\application\VerListasData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
-use src\shared\domain\helpers\FuncTablasSupport;
-$region = FuncTablasSupport::inputString($_POST, 'region');
-$dl = FuncTablasSupport::inputString($_POST, 'dl');
-$tipo_persona = FuncTablasSupport::inputString($_POST, 'tipo_persona');
-$first_load = (bool)FilterPostGet::post('first_load');
-$id_nom_bdu = FuncTablasSupport::inputInt($_POST, 'id_nom_bdu');
+$region = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'region');
+$dl = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'dl');
+$tipo_persona = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'tipo_persona');
+$first_load = (bool)\src\shared\domain\helpers\FilterPostGet::post('first_load');
+$id_nom_bdu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom_bdu');
 
 $useCase = DependencyResolver::get(VerListasData::class);
 

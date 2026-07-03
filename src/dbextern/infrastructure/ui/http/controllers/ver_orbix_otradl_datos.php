@@ -3,9 +3,8 @@
 use src\dbextern\application\VerOrbixOtraDlData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
-$tipo_persona = FuncTablasSupport::inputString($_POST, 'tipo_persona');
-$ids_traslados_A = FuncTablasSupport::inputString($_POST, 'ids_traslados_A');
+$tipo_persona = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'tipo_persona');
+$ids_traslados_A = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ids_traslados_A');
 
 $decoded = json_decode(urldecode($ids_traslados_A), true);
 /** @var list<int> $a_ids */

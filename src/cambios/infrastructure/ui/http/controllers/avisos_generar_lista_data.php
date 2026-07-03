@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: listado de avisos `CambioUsuario` (con `avisado=false`)
@@ -14,9 +13,9 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'id_usuario' => FuncTablasSupport::inputInt($_POST, 'id_usuario'),
-    'aviso_tipo' => FuncTablasSupport::inputInt($_POST, 'aviso_tipo'),
-    'is_admin' => FuncTablasSupport::inputInt($_POST, 'is_admin') === 1,
+    'id_usuario' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_usuario'),
+    'aviso_tipo' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'aviso_tipo'),
+    'is_admin' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'is_admin') === 1,
 ];
 
 /** @var AvisosGenerarListaData $useCase */

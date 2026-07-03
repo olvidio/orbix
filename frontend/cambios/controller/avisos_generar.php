@@ -28,8 +28,8 @@ $is_admin = CambiosPermSupport::isAdmin();
 if ($is_admin) {
     if (!empty($Qrefresh) && !empty($QGstack)) {
         $oPosicion->goStack($QGstack);
-        $Qid_usuario = PayloadCoercion::int($oPosicion->getParametro('id_usuario'));
-        $Qaviso_tipo = PayloadCoercion::int($oPosicion->getParametro('aviso_tipo'));
+        $Qid_usuario = \frontend\shared\helpers\PayloadCoercion::int($oPosicion->getParametro('id_usuario'));
+        $Qaviso_tipo = \frontend\shared\helpers\PayloadCoercion::int($oPosicion->getParametro('aviso_tipo'));
     } else {
         $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
         $Qaviso_tipo = (int)filter_input(INPUT_POST, 'aviso_tipo');
@@ -39,11 +39,11 @@ if ($is_admin) {
     $Qaviso_tipo = 0;
 }
 
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros([
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros([
     'id_usuario' => $Qid_usuario,
     'aviso_tipo' => $Qaviso_tipo,
-], ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
+], \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
 $data = AvisosGenerarListaRender::enrich(CambiosPayload::postData(PostRequest::getDataFromUrl('/src/cambios/avisos_generar_lista_data', [
     'id_usuario' => $Qid_usuario,
@@ -63,7 +63,7 @@ $oDesplUsuarios->setNombre('id_usuario');
 $oDesplUsuarios->setBlanco('false');
 $oDesplUsuarios->setOpciones($view['aOpcionesUsuarios']);
 if ($Qid_usuario !== 0) {
-    $oDesplUsuarios->setOpcion_sel(PayloadCoercion::string($Qid_usuario));
+    $oDesplUsuarios->setOpcion_sel(\frontend\shared\helpers\PayloadCoercion::string($Qid_usuario));
 }
 
 $oDesplTiposAviso = new Desplegable();
@@ -71,7 +71,7 @@ $oDesplTiposAviso->setNombre('aviso_tipo');
 $oDesplTiposAviso->setBlanco('false');
 $oDesplTiposAviso->setOpciones($view['aOpcionesAvisoTipo']);
 if ($Qaviso_tipo !== 0) {
-    $oDesplTiposAviso->setOpcion_sel(PayloadCoercion::string($Qaviso_tipo));
+    $oDesplTiposAviso->setOpcion_sel(\frontend\shared\helpers\PayloadCoercion::string($Qaviso_tipo));
 }
 
 $stack = $oPosicion->getStack();

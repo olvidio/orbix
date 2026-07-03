@@ -20,14 +20,14 @@ use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootDossierChildRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::bootDossierChildRecordar($oPosicion);
 
 $raw = PostRequest::getDataFromUrl('/src/actividadcargos/form_cargos_de_actividad_data', PostRequest::requestPayloadForHash());
 if (!empty($raw['error'])) {
     exit($raw['error']);
 }
 if (($raw['redir'] ?? '') === 'go_atras') {
-    echo ListNavSupport::goAtrasToDossiersParent($oPosicion);
+    echo \frontend\shared\helpers\ListNavSupport::goAtrasToDossiersParent($oPosicion);
     return;
 }
 unset($raw['redir'], $raw['error']);

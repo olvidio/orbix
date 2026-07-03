@@ -18,14 +18,14 @@ $oPosicion = FrontBootstrap::boot();
 $stack = isset($_POST['stack']) ? (int) filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
 $returningViaStack = $stack !== 0;
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = ListNavSupport::idSelFromPost();
-$Qscroll_id = ListNavSupport::scrollIdFromPost();
+$Qid_sel = \frontend\shared\helpers\ListNavSupport::idSelFromPost();
+$Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
 
 if ($returningViaStack) {
     $oPosicion2 = new Posicion();
     if ($oPosicion2->goStack($stack)) {
-        $restoredSel = ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
-        if (!ListNavSupport::idSelIsEmpty($restoredSel)) {
+        $restoredSel = \frontend\shared\helpers\ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
+        if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restoredSel)) {
             $Qid_sel = $restoredSel;
         }
         $restoredScroll = $oPosicion2->getParametro('scroll_id');
@@ -36,11 +36,11 @@ if ($returningViaStack) {
     }
 }
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
-ListNavSupport::persistSelectionOnListPage(
+\frontend\shared\helpers\ListNavSupport::persistSelectionOnListPage(
     $oPosicion,
     $Qid_sel,
     $Qscroll_id,
@@ -74,7 +74,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 if ($msg_err !== '') {
-    echo PayloadCoercion::string($msg_err);
+    echo \frontend\shared\helpers\PayloadCoercion::string($msg_err);
 }
 echo $oPosicion->mostrar_left_slide(1);
 

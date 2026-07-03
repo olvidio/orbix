@@ -7,12 +7,12 @@ use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
-$Qclase_info_encoded = (string)FilterPostGet::post('clase_info');
-$Qk_buscar = (string)FilterPostGet::post('k_buscar');
-$QaSerieBuscar = (string)FilterPostGet::post('aSerieBuscar');
-$Qpau = (string)FilterPostGet::post('pau');
-$Qid_pau = (integer)FilterPostGet::post('id_pau');
-$Qobj_pau = (string)FilterPostGet::post('obj_pau');
+$Qclase_info_encoded = (string)\src\shared\domain\helpers\FilterPostGet::post('clase_info');
+$Qk_buscar = (string)\src\shared\domain\helpers\FilterPostGet::post('k_buscar');
+$QaSerieBuscar = (string)\src\shared\domain\helpers\FilterPostGet::post('aSerieBuscar');
+$Qpau = (string)\src\shared\domain\helpers\FilterPostGet::post('pau');
+$Qid_pau = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_pau');
+$Qobj_pau = (string)\src\shared\domain\helpers\FilterPostGet::post('obj_pau');
 
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info_encoded);

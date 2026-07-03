@@ -26,7 +26,7 @@ public static function miUsuarioCsvIdPau(): string
         return '';
     }
 
-    return PayloadCoercion::string($oMiUsuario->getCsv_id_pau());
+    return \frontend\shared\helpers\PayloadCoercion::string($oMiUsuario->getCsv_id_pau());
 }
 
 /**
@@ -49,12 +49,12 @@ public static function postData(mixed $data): array
 
 public static function periodoYearSel(int|string $year): string
 {
-    return PayloadCoercion::string($year);
+    return \frontend\shared\helpers\PayloadCoercion::string($year);
 }
 
 public static function desplegableOpcionSel(int|string $value): string
 {
-    return PayloadCoercion::string($value);
+    return \frontend\shared\helpers\PayloadCoercion::string($value);
 }
 
 /**
@@ -81,9 +81,9 @@ public static function calendarioBodyErrorFromPayload(array $payload): array
 {
     return [
         'ok' => !empty($payload['ok']),
-        'error' => PayloadCoercion::string($payload['error'] ?? ''),
-        'any_anterior' => PayloadCoercion::int($payload['any_anterior'] ?? 0),
-        'id_ubi' => PayloadCoercion::int($payload['id_ubi'] ?? 0),
+        'error' => \frontend\shared\helpers\PayloadCoercion::string($payload['error'] ?? ''),
+        'any_anterior' => \frontend\shared\helpers\PayloadCoercion::int($payload['any_anterior'] ?? 0),
+        'id_ubi' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_ubi'] ?? 0),
     ];
 }
 
@@ -107,15 +107,15 @@ public static function ingresoFormFromPayload(array $payload): array
 {
     return [
         'ok' => !empty($payload['ok']),
-        'error' => PayloadCoercion::string($payload['error'] ?? ''),
-        'nom_activ' => PayloadCoercion::string($payload['nom_activ'] ?? ''),
-        'id_tarifa' => PayloadCoercion::string($payload['id_tarifa'] ?? ''),
+        'error' => \frontend\shared\helpers\PayloadCoercion::string($payload['error'] ?? ''),
+        'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom_activ'] ?? ''),
+        'id_tarifa' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_tarifa'] ?? ''),
         'puede_modificar_tarifa' => !empty($payload['puede_modificar_tarifa']),
-        'precio' => PayloadCoercion::string($payload['precio'] ?? ''),
-        'ingresos' => PayloadCoercion::string($payload['ingresos'] ?? ''),
-        'num_asistentes' => PayloadCoercion::string($payload['num_asistentes'] ?? ''),
-        'observ' => PayloadCoercion::string($payload['observ'] ?? ''),
-        'letra_tarifa' => PayloadCoercion::string($payload['letra_tarifa'] ?? ''),
+        'precio' => \frontend\shared\helpers\PayloadCoercion::string($payload['precio'] ?? ''),
+        'ingresos' => \frontend\shared\helpers\PayloadCoercion::string($payload['ingresos'] ?? ''),
+        'num_asistentes' => \frontend\shared\helpers\PayloadCoercion::string($payload['num_asistentes'] ?? ''),
+        'observ' => \frontend\shared\helpers\PayloadCoercion::string($payload['observ'] ?? ''),
+        'letra_tarifa' => \frontend\shared\helpers\PayloadCoercion::string($payload['letra_tarifa'] ?? ''),
         'a_opciones_tarifa' => NotasFormSupport::desplegableOpciones($payload['a_opciones_tarifa'] ?? []),
     ];
 }
@@ -136,9 +136,9 @@ public static function ingresosListaFromPayload(array $payload): array
 {
     return [
         'ok' => !empty($payload['ok']),
-        'error' => PayloadCoercion::string($payload['error'] ?? ''),
-        'nota' => PayloadCoercion::string($payload['nota'] ?? ''),
-        'errores' => PayloadCoercion::string($payload['errores'] ?? ''),
+        'error' => \frontend\shared\helpers\PayloadCoercion::string($payload['error'] ?? ''),
+        'nota' => \frontend\shared\helpers\PayloadCoercion::string($payload['nota'] ?? ''),
+        'errores' => \frontend\shared\helpers\PayloadCoercion::string($payload['errores'] ?? ''),
         'grupos' => NotasFormSupport::desplegableOpciones($payload['a_grupos'] ?? []),
         'cabeceras' => ActividadesListaSupport::cabeceras($payload['a_cabeceras'] ?? []),
         'valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
@@ -160,9 +160,9 @@ public static function ecGastosFromPayload(array $payload): array
 
     return [
         'ok' => !empty($payload['ok']),
-        'error' => PayloadCoercion::string($payload['error'] ?? ''),
+        'error' => \frontend\shared\helpers\PayloadCoercion::string($payload['error'] ?? ''),
         'casas' => is_array($casasRaw) ? $casasRaw : [],
-        'year' => PayloadCoercion::int($payload['year'] ?? 0),
+        'year' => \frontend\shared\helpers\PayloadCoercion::int($payload['year'] ?? 0),
     ];
 }
 
@@ -214,9 +214,9 @@ public static function grupoFormFromPayload(array $payload): array
 {
     return [
         'es_nuevo' => !array_key_exists('es_nuevo', $payload) || !empty($payload['es_nuevo']),
-        'id_item' => PayloadCoercion::string($payload['id_item'] ?? 'nuevo'),
-        'id_ubi_padre' => PayloadCoercion::int($payload['id_ubi_padre'] ?? 0),
-        'id_ubi_hijo' => PayloadCoercion::int($payload['id_ubi_hijo'] ?? 0),
+        'id_item' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_item'] ?? 'nuevo'),
+        'id_ubi_padre' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_ubi_padre'] ?? 0),
+        'id_ubi_hijo' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_ubi_hijo'] ?? 0),
         'opciones_casas' => NotasFormSupport::desplegableOpciones($payload['opciones_casas'] ?? []),
     ];
 }
@@ -238,9 +238,9 @@ public static function previsionFromPayload(array $payload): array
         'permitido' => !array_key_exists('permitido', $payload) || !empty($payload['permitido']),
         'cabeceras' => ActividadesListaSupport::cabeceras($payload['a_cabeceras'] ?? []),
         'valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
-        'mi_of' => PayloadCoercion::string($payload['mi_of'] ?? ''),
-        'inicio_local' => PayloadCoercion::string($payload['inicio_local'] ?? ''),
-        'fin_local' => PayloadCoercion::string($payload['fin_local'] ?? ''),
+        'mi_of' => \frontend\shared\helpers\PayloadCoercion::string($payload['mi_of'] ?? ''),
+        'inicio_local' => \frontend\shared\helpers\PayloadCoercion::string($payload['inicio_local'] ?? ''),
+        'fin_local' => \frontend\shared\helpers\PayloadCoercion::string($payload['fin_local'] ?? ''),
     ];
 }
 
@@ -257,7 +257,7 @@ public static function previsionFromPayload(array $payload): array
 public static function resumenListaFromPayload(array $payload): array
 {
     return [
-        'modo' => PayloadCoercion::string($payload['modo'] ?? 'periodo'),
+        'modo' => \frontend\shared\helpers\PayloadCoercion::string($payload['modo'] ?? 'periodo'),
         'a_resumen' => is_array($payload['a_resumen'] ?? null) ? $payload['a_resumen'] : [],
         'tot' => is_array($payload['tot'] ?? null) ? $payload['tot'] : [],
         'avisos' => is_array($payload['avisos'] ?? null) ? $payload['avisos'] : [],

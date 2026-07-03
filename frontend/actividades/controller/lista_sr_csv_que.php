@@ -2,7 +2,6 @@
 
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\helpers\ListNavSupport;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Pantalla del formulario para listados particulares de SR.
@@ -27,8 +26,8 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
@@ -51,13 +50,13 @@ $aOpciones = [
 
 $data = PostRequest::getDataFromUrl('/src/actividades/lista_sr_csv_que_datos', []);
 if (empty($Qperiodo)) {
-    $Qperiodo = PayloadCoercion::string($data['periodo'] ?? 'curso_ca');
+    $Qperiodo = \frontend\shared\helpers\PayloadCoercion::string($data['periodo'] ?? 'curso_ca');
 }
-$sel_ubis = PayloadCoercion::string($data['sel_ubis'] ?? '');
-$chk_status_1 = PayloadCoercion::string($data['chk_status_1'] ?? '');
-$chk_status_2 = PayloadCoercion::string($data['chk_status_2'] ?? '');
-$chk_activ_crt = PayloadCoercion::string($data['chk_activ_crt'] ?? '');
-$chk_activ_cv = PayloadCoercion::string($data['chk_activ_cv'] ?? '');
+$sel_ubis = \frontend\shared\helpers\PayloadCoercion::string($data['sel_ubis'] ?? '');
+$chk_status_1 = \frontend\shared\helpers\PayloadCoercion::string($data['chk_status_1'] ?? '');
+$chk_status_2 = \frontend\shared\helpers\PayloadCoercion::string($data['chk_status_2'] ?? '');
+$chk_activ_crt = \frontend\shared\helpers\PayloadCoercion::string($data['chk_activ_crt'] ?? '');
+$chk_activ_cv = \frontend\shared\helpers\PayloadCoercion::string($data['chk_activ_cv'] ?? '');
 
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('modifica');
@@ -69,7 +68,7 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oForm = new CasasQue();
-$oForm->setTitulo(FuncTablasSupport::strtoupperDlb(_("ocupación de casas compartidas")));
+$oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("ocupación de casas compartidas")));
 $oForm->setCasas('casa');
 $oForm->setFiltroCasas(['active' => true]);
 $oForm->setSeleccionados($sel_ubis);

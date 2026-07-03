@@ -52,8 +52,8 @@ class BotonesCurso
             $finM = $oConfig->getMesFinStgr();
         }
         $any = ($mes > $finM) ? (int) date('Y') + 1 : (int) date('Y');
-        $inicurs_ca = FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
-        $fincurs_ca = FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
+        $inicurs_ca = \frontend\shared\helpers\FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
+        $fincurs_ca = \frontend\shared\helpers\FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
 
         $this->aWhere = [];
         $this->aOperator = [];

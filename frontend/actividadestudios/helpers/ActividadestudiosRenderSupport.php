@@ -37,7 +37,7 @@ final class ActividadestudiosRenderSupport
         if (!is_array($spec)) {
             return null;
         }
-        $path = PayloadCoercion::string($spec['path'] ?? '');
+        $path = \frontend\shared\helpers\PayloadCoercion::string($spec['path'] ?? '');
         if ($path === '') {
             return null;
         }
@@ -68,7 +68,7 @@ final class ActividadestudiosRenderSupport
         }
         $out = [];
         foreach ($raw as $line) {
-            $out[] = PayloadCoercion::string($line);
+            $out[] = \frontend\shared\helpers\PayloadCoercion::string($line);
         }
 
         return $out;
@@ -85,9 +85,9 @@ final class ActividadestudiosRenderSupport
         $out = [];
         foreach ($raw as $key => $value) {
             if (is_int($key)) {
-                $out[$key] = PayloadCoercion::string($value);
+                $out[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
             } elseif (is_string($key)) {
-                $out[$key] = PayloadCoercion::string($value);
+                $out[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
             }
         }
 

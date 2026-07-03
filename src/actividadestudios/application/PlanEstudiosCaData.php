@@ -10,7 +10,6 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\entity\Persona;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * @return array{
@@ -48,7 +47,7 @@ final class PlanEstudiosCaData
      */
     public function execute(array $input): array
     {
-        $idActiv = FuncTablasSupport::inputInt($input, 'id_activ');
+        $idActiv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         $msgErr = '';
 
         $oActividad = $this->actividadAllRepository->findById($idActiv);
@@ -178,7 +177,7 @@ final class PlanEstudiosCaData
                     }
                     $nombreCorto = $oAsignatura->getNombre_corto();
                     $creditos = $oAsignatura->getCreditos();
-                    $preceptorTxt = FuncTablasSupport::isTrue($preceptor) ? '(' . _('preceptor') . ')' : '';
+                    $preceptorTxt = \src\shared\domain\helpers\FuncTablasSupport::isTrue($preceptor) ? '(' . _('preceptor') . ')' : '';
 
                     $aAsignaturas[$i] = [
                         'nombre_corto' => $nombreCorto,

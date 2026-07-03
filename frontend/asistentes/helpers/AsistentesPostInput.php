@@ -38,7 +38,7 @@ final class AsistentesPostInput
 
         return [
             'id_nom' => is_int($idNomRaw) ? $idNomRaw : 0,
-            'id_tabla' => PayloadCoercion::string(filter_input(INPUT_POST, 'id_tabla')),
+            'id_tabla' => \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'id_tabla')),
         ];
     }
 

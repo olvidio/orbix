@@ -18,18 +18,18 @@ use src\shared\web\ContestarJson;
 // no generen una segunda llamada HTTP anidada a /src/actividades/tipo_activ_metadata.
 TipoActivMetadataLoader::preload(DependencyResolver::get(TipoActivMetadata::class)->execute());
 
-$perm_jefe = FilterPostGet::post('perm_jefe') === 't';
-$id_tipo_activ = FilterPostGet::post('id_tipo_activ');
+$perm_jefe = \src\shared\domain\helpers\FilterPostGet::post('perm_jefe') === 't';
+$id_tipo_activ = \src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ');
 $id_tipo_activ = ($id_tipo_activ === false || $id_tipo_activ === null) ? '' : $id_tipo_activ;
-$que = (string)FilterPostGet::post('que');
-$sfsv = (string)FilterPostGet::post('sfsv');
-$sasistentes = (string)FilterPostGet::post('sasistentes');
-$sactividad = (string)FilterPostGet::post('sactividad');
-$sactividad2 = (string)FilterPostGet::post('sactividad2');
-$snom_tipo = (string)FilterPostGet::post('snom_tipo');
-$extendida = FilterPostGet::post('extendida') === 't';
-$para = (string)FilterPostGet::post('para');
-$sfsv_all_raw = FilterPostGet::post('sfsv_all');
+$que = (string)\src\shared\domain\helpers\FilterPostGet::post('que');
+$sfsv = (string)\src\shared\domain\helpers\FilterPostGet::post('sfsv');
+$sasistentes = (string)\src\shared\domain\helpers\FilterPostGet::post('sasistentes');
+$sactividad = (string)\src\shared\domain\helpers\FilterPostGet::post('sactividad');
+$sactividad2 = (string)\src\shared\domain\helpers\FilterPostGet::post('sactividad2');
+$snom_tipo = (string)\src\shared\domain\helpers\FilterPostGet::post('snom_tipo');
+$extendida = \src\shared\domain\helpers\FilterPostGet::post('extendida') === 't';
+$para = (string)\src\shared\domain\helpers\FilterPostGet::post('para');
+$sfsv_all_raw = \src\shared\domain\helpers\FilterPostGet::post('sfsv_all');
 $sfsv_all = ($sfsv_all_raw === null || $sfsv_all_raw === false || $sfsv_all_raw === '')
     ? null
     : ($sfsv_all_raw === 't');

@@ -16,7 +16,6 @@ use src\ubis\domain\entity\Centro;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEx;
 use src\ubis\domain\CuadrosLaborBits;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Carga ficha ubis (centro/casa) para `frontend/ubis/controller/ubis_editar.php`
@@ -38,10 +37,10 @@ final class UbisEditarLoadData
      */
     public function execute(array $post): array
     {
-        $Qid_ubi = FuncTablasSupport::inputInt($post, 'id_ubi');
-        $Qobj_pau = FuncTablasSupport::inputString($post, 'obj_pau');
-        $Qnuevo = FuncTablasSupport::inputString($post, 'nuevo');
-        $tipo_ubi_in = FuncTablasSupport::inputString($post, 'tipo_ubi');
+        $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_ubi');
+        $Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'obj_pau');
+        $Qnuevo = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'nuevo');
+        $tipo_ubi_in = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'tipo_ubi');
 
         if (!empty($Qnuevo)) {
             return self::buildNuevo($post, $Qobj_pau, $tipo_ubi_in);
@@ -128,9 +127,9 @@ final class UbisEditarLoadData
             throw new \RuntimeException(_('falta definir obj_pau'));
         }
 
-        $dl = FuncTablasSupport::inputString($post, 'dl');
-        $region = FuncTablasSupport::inputString($post, 'region');
-        $nombre_ubi = FuncTablasSupport::inputString($post, 'nombre_ubi');
+        $dl = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'dl');
+        $region = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'region');
+        $nombre_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'nombre_ubi');
         $nombre_ubi = urldecode($nombre_ubi);
 
         if ($dl === '' && str_contains($Qobj_pau, 'Dl')) {
@@ -145,7 +144,7 @@ final class UbisEditarLoadData
             $region = ConfigGlobal::mi_region();
         }
 
-        $botones = self::computeBotones($Qobj_pau, FuncTablasSupport::inputString($post, 'nuevo'), null, $dl);
+        $botones = self::computeBotones($Qobj_pau, \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'nuevo'), null, $dl);
 
         $base = [
             'tipo_ubi' => $tipo_ubi_in,
@@ -206,8 +205,8 @@ final class UbisEditarLoadData
                 'plazas' => null,
                 'plazas_min' => null,
                 'num_sacd' => null,
-                'sv_chk' => FuncTablasSupport::isTrue($sv) ? 'checked' : '',
-                'sf_chk' => FuncTablasSupport::isTrue($sf) ? 'checked' : '',
+                'sv_chk' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($sv) ? 'checked' : '',
+                'sf_chk' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($sf) ? 'checked' : '',
             ]),
             default => throw new \RuntimeException('tipo_ubi no soportado: ' . $tipo_ubi_in),
         };
@@ -245,7 +244,7 @@ final class UbisEditarLoadData
             'dl' => $o->getDl(),
             'region' => $o->getRegion(),
             'nombre_ubi' => $o->getNombre_ubi(),
-            'chk_cdc' => FuncTablasSupport::isTrue($o->isCdc()) ? 'checked' : '',
+            'chk_cdc' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($o->isCdc()) ? 'checked' : '',
             'tipo_labor' => $o->getTipo_labor(),
             'id_ctr_padre' => $o->getId_ctr_padre(),
             'tipo_ctr' => $o->getTipo_ctr(),
@@ -271,7 +270,7 @@ final class UbisEditarLoadData
             'dl' => $o->getDl(),
             'region' => $o->getRegion(),
             'nombre_ubi' => $o->getNombre_ubi(),
-            'chk_cdc' => FuncTablasSupport::isTrue($o->isCdc()) ? 'checked' : '',
+            'chk_cdc' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($o->isCdc()) ? 'checked' : '',
             'tipo_labor' => $o->getTipo_labor(),
             'id_ctr_padre' => $o->getId_ctr_padre(),
             'tipo_ctr' => $o->getTipo_ctr(),
@@ -288,7 +287,7 @@ final class UbisEditarLoadData
             'dl' => $o->getDl(),
             'region' => $o->getRegion(),
             'nombre_ubi' => $o->getNombre_ubi(),
-            'chk_cdc' => FuncTablasSupport::isTrue($o->isCdc()) ? 'checked' : '',
+            'chk_cdc' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($o->isCdc()) ? 'checked' : '',
             'tipo_labor' => $o->getTipo_labor(),
             'id_ctr_padre' => $o->getId_ctr_padre(),
             'tipo_ctr' => $o->getTipo_ctr(),
@@ -312,8 +311,8 @@ final class UbisEditarLoadData
             'plazas' => $o->getPlazas(),
             'plazas_min' => $o->getPlazas_min(),
             'num_sacd' => $o->getNum_sacd(),
-            'sv_chk' => FuncTablasSupport::isTrue($sv) ? 'checked' : '',
-            'sf_chk' => FuncTablasSupport::isTrue($sf) ? 'checked' : '',
+            'sv_chk' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($sv) ? 'checked' : '',
+            'sf_chk' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($sf) ? 'checked' : '',
         ];
     }
 }

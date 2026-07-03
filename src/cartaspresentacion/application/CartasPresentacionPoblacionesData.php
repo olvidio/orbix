@@ -106,7 +106,7 @@ final class CartasPresentacionPoblacionesData
                 }
             }
         }
-        uksort($poblaciones, 'src\shared\domain\helpers\strsinacentocmp');
+        uksort($poblaciones, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
         return $poblaciones;
     }
 

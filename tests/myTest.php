@@ -265,10 +265,6 @@ class myTest extends TestCase
         // Datos de configuración propios de cada dl.
         $_SESSION['oConfig'] = $GLOBALS['container']->get(ObtenerConfigSnapshot::class)->execute();
 
-        // func_tablas. Es necesaria para permisos\PermisosActividades->carregar()...
-        // Usamos una ruta absoluta para asegurar que se encuentre el archivo sin importar desde dónde se ejecute el test
-        include_once(__DIR__ . '/../src/shared/domain/helpers/func_tablas.php');
-
         // para mantener los permisos por actividades en una variable
         if (empty($_SESSION['oPermActividades'])) {
             if (ConfigGlobal::is_app_installed('procesos')) {

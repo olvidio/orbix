@@ -25,7 +25,7 @@ final class CartaPresentacionFormRender
 
         if ($ok && $hu !== []) {
             $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-            $rel = PayloadCoercion::string($paths['update'] ?? '');
+            $rel = \frontend\shared\helpers\PayloadCoercion::string($paths['update'] ?? '');
             $url = $rel !== '' ? $base . '/' . ltrim($rel, '/') : '';
             $oHash = new HashFront();
             $oHash->setUrl($url);
@@ -33,10 +33,10 @@ final class CartaPresentacionFormRender
             if ($hidden !== []) {
                 $oHash->setArrayCamposHidden($hidden);
             }
-            $oHash->setCamposForm(PayloadCoercion::string($hu['campos_form'] ?? ''));
+            $oHash->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hu['campos_form'] ?? ''));
             $payload['hash_update_html'] = $oHash->getCamposHtml();
         } else {
-            $payload['hash_update_html'] = PayloadCoercion::string($payload['hash_update_html'] ?? '');
+            $payload['hash_update_html'] = \frontend\shared\helpers\PayloadCoercion::string($payload['hash_update_html'] ?? '');
         }
 
         unset($payload['paths'], $payload['hash_update']);

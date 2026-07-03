@@ -7,10 +7,10 @@ use frontend\shared\OfuscarEmail;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
-$Qusername = (string)FilterPostGet::post('username');
-$Qubicacion = (string)FilterPostGet::post('ubicacion');
-$Qesquema = (string)FilterPostGet::post('esquema');
-$Qesquema_web = (string)FilterPostGet::post('esquema_web');
+$Qusername = (string)\src\shared\domain\helpers\FilterPostGet::post('username');
+$Qubicacion = (string)\src\shared\domain\helpers\FilterPostGet::post('ubicacion');
+$Qesquema = (string)\src\shared\domain\helpers\FilterPostGet::post('esquema');
+$Qesquema_web = (string)\src\shared\domain\helpers\FilterPostGet::post('esquema_web');
 
 $error_txt = '';
 $data = [];

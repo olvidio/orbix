@@ -4,7 +4,6 @@ namespace src\actividadessacd\application;
 
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Elimina un sacd ({id_activ, id_cargo}) de una actividad, incluyendo
@@ -23,9 +22,9 @@ final class SacdEliminar
      */
     public function execute(array $input): string
     {
-        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
-        $id_cargo = FuncTablasSupport::inputInt($input, 'id_cargo');
-        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
+        $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $id_cargo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_cargo');
+        $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
 
         if ($id_activ <= 0 || $id_cargo <= 0) {
             return _("no se sabe cual borrar");

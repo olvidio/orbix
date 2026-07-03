@@ -3,7 +3,6 @@
 namespace src\encargossacd\application;
 
 use src\configuracion\domain\value_objects\ConfigSnapshot;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
@@ -54,8 +53,8 @@ final class ListasCData
 
 
         $any = $oConfig->any_final_curs('crt');
-        $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'crt')->getFromLocal();
-        $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'crt')->getFromLocal();
+        $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt')->getFromLocal();
+        $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->getFromLocal();
 
         $cabecera_left = sprintf(_('Curso:  %s - %s'), $inicurs, $fincurs);
         $cabecera_right = ConfigGlobal::mi_delef();
@@ -221,10 +220,10 @@ final class ListasCData
                     }
                 }
             }
-            uksort($a_sacd, 'src\shared\domain\helpers\strsinacentocmp');
+            uksort($a_sacd, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
 
             $poblacion = !empty($id_grupo) ? ($array_grupos[$id_grupo] ?? _('otros')) : _('otros');
-            $titulo_2 = FuncTablasSupport::strtoupperDlb($poblacion);
+            $titulo_2 = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb($poblacion);
             if ($titulo_2 !== '') {
                 $Html_all .= "<tr><td class=poblacion colspan=2>$titulo_2</td></tr>";
             }

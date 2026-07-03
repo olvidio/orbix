@@ -204,7 +204,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         // para las fechas
         $aDatos['f_ini'] = (new ConverterDate('date', $Equipaje->getF_ini()))->toPg();
         $aDatos['f_fin'] = (new ConverterDate('date', $Equipaje->getF_fin()))->toPg();
-        array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
+        array_walk($aDatos, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerNull']);
         */
 
         if ($bInsert === false) {

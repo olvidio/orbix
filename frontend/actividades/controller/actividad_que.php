@@ -29,15 +29,15 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = ListNavSupport::idSelFromPost();
-$Qscroll_id = ListNavSupport::scrollIdFromPost();
+$Qid_sel = \frontend\shared\helpers\ListNavSupport::idSelFromPost();
+$Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
 
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
     $oPosicion2 = new Posicion();
     if ($oPosicion2->goStack($stackFromPost)) {
-        $restoredSel = ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
-        if (!ListNavSupport::idSelIsEmpty($restoredSel)) {
+        $restoredSel = \frontend\shared\helpers\ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
+        if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restoredSel)) {
             $Qid_sel = $restoredSel;
         }
         $restoredScroll = $oPosicion2->getParametro('scroll_id');
@@ -52,7 +52,7 @@ $Qmodo = (string)filter_input(INPUT_POST, 'modo');
 $Qmodo = empty($Qmodo) ? 'buscar' : $Qmodo;
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qstatus = (integer)filter_input(INPUT_POST, 'status');
-$Qid_tipo_activ = PayloadCoercion::string(filter_input(INPUT_POST, 'id_tipo_activ'));
+$Qid_tipo_activ = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'id_tipo_activ'));
 $Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
@@ -67,11 +67,11 @@ $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
 $Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
 
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootRecordar($oPosicion);
+    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
 }
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildActividadQueReturnParametros([
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildActividadQueReturnParametros([
     'modo' => $Qmodo,
     'que' => $Qque,
     'status' => $Qstatus,
@@ -114,7 +114,7 @@ $Qsactividad2 = (string)filter_input(INPUT_POST, 'sactividad2');
 if (!empty($Qsactividad2)) {
     $Qextendida = TRUE;
 }
-$extendida = FuncTablasSupport::isTrue($Qextendida) ? TRUE : FALSE;
+$extendida = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qextendida) ? TRUE : FALSE;
 
 
 if (empty($Qstatus)) {
@@ -179,7 +179,7 @@ $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
 $h = $oHash1->linkSinValParams();
 
 $aQuery = array('que' => $Qque, 'sactividad' => $Qsactividad, 'sasistentes' => $Qsasistentes);
-array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $Link_borrar = HashFront::link('frontend/actividades/controller/actividad_que.php?' . http_build_query($aQuery));
 
 switch ($Qmodo) {
@@ -223,7 +223,7 @@ $data_que = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', 
     'extendida' => $extendida ? 't' : '',
 ]);
 
-$actividad_tipo_html = PayloadCoercion::string($data_que['actividad_tipo_html'] ?? '');
+$actividad_tipo_html = \frontend\shared\helpers\PayloadCoercion::string($data_que['actividad_tipo_html'] ?? '');
 
 $chk_status_1 = ($Qstatus === ActividadStatusId::PROYECTO) ? "checked='true'" : '';
 $chk_status_2 = ($Qstatus === ActividadStatusId::ACTUAL) ? "checked='true'" : '';

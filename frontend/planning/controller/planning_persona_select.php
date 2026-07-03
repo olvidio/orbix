@@ -59,13 +59,13 @@ if (isset($_POST['stack'])) {
             $QsaOperadorCtr = PlanningPayload::posicionString($oPosicion2->getParametro('saOperadorCtr'));
             $oPosicion2->olvidar($stack);
 
-            $aWhereDecoded = json_decode(FuncTablasSupport::urlsafeB64decode($QsaWhere), true);
+            $aWhereDecoded = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($QsaWhere), true);
             $aWhere = is_array($aWhereDecoded) ? $aWhereDecoded : [];
-            $aOperadorDecoded = json_decode(FuncTablasSupport::urlsafeB64decode($QsaOperador), true);
+            $aOperadorDecoded = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($QsaOperador), true);
             $aOperador = is_array($aOperadorDecoded) ? $aOperadorDecoded : [];
-            $aWhereCtrDecoded = json_decode(FuncTablasSupport::urlsafeB64decode($QsaWhereCtr), true);
+            $aWhereCtrDecoded = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($QsaWhereCtr), true);
             $aWhereCtr = is_array($aWhereCtrDecoded) ? $aWhereCtrDecoded : [];
-            $aOperadorCtrDecoded = json_decode(FuncTablasSupport::urlsafeB64decode($QsaOperadorCtr), true);
+            $aOperadorCtrDecoded = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($QsaOperadorCtr), true);
             $aOperadorCtr = is_array($aOperadorCtrDecoded) ? $aOperadorCtrDecoded : [];
             $Qapellido1 = PlanningPayload::whereString($aWhere, 'apellido1', $Qapellido1);
             if (str_starts_with($Qapellido1, '^')) {
@@ -87,8 +87,8 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
 
 
 $aWhere = [
@@ -118,10 +118,10 @@ if ($Qcentro !== '') {
 if ($Qna !== '') {
     $aWhere['id_tabla'] = 'p' . $Qna;
 }
-$QsaWhere = FuncTablasSupport::urlsafeB64encode(json_encode($aWhere, JSON_THROW_ON_ERROR));
-$QsaOperador = FuncTablasSupport::urlsafeB64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
-$QsaWhereCtr = FuncTablasSupport::urlsafeB64encode(json_encode($aWhereCtr, JSON_THROW_ON_ERROR));
-$QsaOperadorCtr = FuncTablasSupport::urlsafeB64encode(json_encode($aOperadorCtr, JSON_THROW_ON_ERROR));
+$QsaWhere = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aWhere, JSON_THROW_ON_ERROR));
+$QsaOperador = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
+$QsaWhereCtr = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aWhereCtr, JSON_THROW_ON_ERROR));
+$QsaOperadorCtr = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aOperadorCtr, JSON_THROW_ON_ERROR));
 
 $postPayload = [
     'obj_pau' => $Qobj_pau,
@@ -189,7 +189,7 @@ foreach ($cPersonas as $row) {
         'obj_pau' => $Qobj_pau,
         'id_tabla' => $id_tabla,
     ];
-    array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
+    array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
     $pagina = HashFront::link('frontend/personas/controller/home_persona.php?' . http_build_query($aQuery));
 
     $a_valores[$i] = [

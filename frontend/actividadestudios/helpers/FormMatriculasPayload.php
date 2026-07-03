@@ -28,16 +28,16 @@ final class FormMatriculasPayload
     public static function fromPayload(array $payload): array
     {
         return [
-            'nom_activ' => PayloadCoercion::string($payload['nom_activ'] ?? ''),
-            'mod' => PayloadCoercion::string($payload['mod'] ?? 'nuevo'),
+            'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom_activ'] ?? ''),
+            'mod' => \frontend\shared\helpers\PayloadCoercion::string($payload['mod'] ?? 'nuevo'),
             'id_asignatura_real' => NotasFormSupport::formScalar($payload['id_asignatura_real'] ?? 0),
-            'nombre_corto' => PayloadCoercion::string($payload['nombre_corto'] ?? ''),
-            'chk_preceptor' => PayloadCoercion::string($payload['chk_preceptor'] ?? ''),
+            'nombre_corto' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_corto'] ?? ''),
+            'chk_preceptor' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_preceptor'] ?? ''),
             'id_preceptor' => NotasFormSupport::formScalar($payload['id_preceptor'] ?? ''),
-            'condicion_js' => PayloadCoercion::string($payload['condicion_js'] ?? ''),
+            'condicion_js' => \frontend\shared\helpers\PayloadCoercion::string($payload['condicion_js'] ?? ''),
             'oDesplNiveles_opciones' => NotasFormSupport::desplegableOpciones($payload['oDesplNiveles_opciones'] ?? []),
             'oDesplProfesores_opciones' => NotasFormSupport::desplegableOpciones($payload['oDesplProfesores_opciones'] ?? []),
-            'camposForm' => PayloadCoercion::string($payload['camposForm'] ?? ''),
+            'camposForm' => \frontend\shared\helpers\PayloadCoercion::string($payload['camposForm'] ?? ''),
             'a_camposHidden' => ActividadestudiosRenderSupport::stringKeyRow($payload['a_camposHidden'] ?? []),
         ];
     }

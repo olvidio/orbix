@@ -6,7 +6,6 @@ use src\shared\config\ConfigGlobal;
 use src\dossiers\application\PermisoDossier;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
@@ -60,13 +59,13 @@ final class CalendarioListasDatos
      */
     public function ejecutar(array $input): array
     {
-        $Qque = FuncTablasSupport::inputString($input, 'que');
-        $Qver_ctr = FuncTablasSupport::inputString($input, 'ver_ctr');
-        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
-        $Qyear = FuncTablasSupport::inputString($input, 'year');
-        $Qyeardefault = FuncTablasSupport::inputString($input, 'yeardefault');
-        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
-        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
+        $Qque = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'que');
+        $Qver_ctr = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'ver_ctr');
+        $Qperiodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'year');
+        $Qyeardefault = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'yeardefault');
+        $Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
         $Qaid_cdc = is_array($input['id_cdc'] ?? null) ? $input['id_cdc'] : [];
 
         $miSfsv = ConfigGlobal::mi_sfsv();

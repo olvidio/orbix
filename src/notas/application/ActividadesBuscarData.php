@@ -6,7 +6,6 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\application\services\DelegacionDropdown;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Datos necesarios para pintar el dialogo "buscar actividad" que se
@@ -34,9 +33,9 @@ final class ActividadesBuscarData
      */
     public function execute(array $input): array
     {
-        $dl_org = FuncTablasSupport::inputString($input, 'dl_org');
-        $f_acta_iso = FuncTablasSupport::inputString($input, 'f_acta_iso');
-        $id_activ_sel = FuncTablasSupport::inputInt($input, 'id_activ');
+        $dl_org = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_org');
+        $f_acta_iso = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_acta_iso');
+        $id_activ_sel = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
 
         if (empty($dl_org)) {
             $dl_org = ConfigGlobal::mi_delef();

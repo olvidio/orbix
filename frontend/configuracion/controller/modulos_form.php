@@ -16,14 +16,14 @@ $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 
 $campos = array_merge($_GET, $_POST);
 
-$Qmod = PayloadCoercion::string($campos['mod'] ?? '');
+$Qmod = \frontend\shared\helpers\PayloadCoercion::string($campos['mod'] ?? '');
 $stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
 if ($Qmod !== 'nuevo' && $stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
 
 $data = PostRequest::getDataFromUrl('/src/configuracion/modulos_form_data', $campos);

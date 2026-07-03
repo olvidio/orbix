@@ -25,18 +25,18 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 
-$stackFromPost = ListNavSupport::stackFromPost();
+$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
+    \frontend\shared\helpers\ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
 }
 $sel = ActividadestudiosPostInput::idActivNom();
-ListNavSupport::persistActividadSelectChildEntry(
+\frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry(
     $oPosicion,
     $sel['id_activ'] > 0 ? ['id_activ' => $sel['id_activ']] : [],
 );
@@ -49,7 +49,7 @@ $d = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/
 ]));
 
 $a_campos = ['oPosicion' => $oPosicion,
-    'nom_activ' => PayloadCoercion::string($d['nom_activ'] ?? $nom_activ),
+    'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($d['nom_activ'] ?? $nom_activ),
     'aAsignaturas_alumnos' => ActividadesListaSupport::datos($d['aAsignaturas_alumnos'] ?? []),
     'a_alumnos_fin_c' => ActividadesListaSupport::datos($d['a_alumnos_fin_c'] ?? []),
 ];

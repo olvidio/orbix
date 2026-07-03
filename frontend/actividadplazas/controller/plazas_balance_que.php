@@ -32,7 +32,7 @@ $post = [
 ];
 $dataShell = PostRequest::getDataFromUrl('/src/actividadplazas/plazas_balance_que_data', $post);
 $delegacionesOpc = NotasFormSupport::desplegableOpciones($dataShell['delegaciones_opciones'] ?? []);
-$Qid_tipo_activ = PayloadCoercion::string($dataShell['id_tipo_activ'] ?? '');
+$Qid_tipo_activ = \frontend\shared\helpers\PayloadCoercion::string($dataShell['id_tipo_activ'] ?? '');
 
 $desplDelegaciones = Desplegable::desdeOpciones($delegacionesOpc, 'dl');
 $desplDelegaciones->setAction('fnjs_comparativa()');

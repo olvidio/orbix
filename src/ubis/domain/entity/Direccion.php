@@ -18,7 +18,6 @@ use src\ubis\domain\value_objects\{APText,
     PoblacionText,
     ProvinciaText,
     SedeNameText};
-use src\shared\domain\helpers\FuncTablasSupport;
 
 class Direccion
 {
@@ -534,7 +533,7 @@ class Direccion
         $rtn = $salto_linea;
         $spc = $espacio;
         if (isset($this->direccion)) $txt .= $this->direccion . $rtn;
-        if (FuncTablasSupport::isTrue($this->cp_dcha)) {
+        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($this->cp_dcha)) {
             if (!empty($this->poblacion)) $txt .= $this->poblacion . $spc;
             if (!empty($this->c_p)) $txt .= $this->c_p;
         } else {

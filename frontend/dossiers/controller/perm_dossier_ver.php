@@ -34,8 +34,8 @@ $hashConfig = is_array($hashConfigRaw) ? $hashConfigRaw : [];
 unset($data['hash_config']);
 
 $oHash = new HashFront();
-$oHash->setCamposForm(PayloadCoercion::string($hashConfig['campos_form'] ?? ''));
-$oHash->setCamposNo(PayloadCoercion::string($hashConfig['campos_no'] ?? ''));
+$oHash->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hashConfig['campos_form'] ?? ''));
+$oHash->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hashConfig['campos_no'] ?? ''));
 $camposHidden = [];
 $hiddenRaw = $hashConfig['campos_hidden'] ?? null;
 if (is_array($hiddenRaw)) {
@@ -55,12 +55,12 @@ $viewData['go_to'] = $goTo;
 $viewData['hash_campos_html'] = $oHash->getCamposHtml();
 $viewData['permiso_lectura_html'] = MenuPermisoMenuHtml::cuadrosCheck(
     'permiso_lectura',
-    PayloadCoercion::int($data['permiso_lectura'] ?? 0),
+    \frontend\shared\helpers\PayloadCoercion::int($data['permiso_lectura'] ?? 0),
     $dossierMap
 );
 $viewData['permiso_escritura_html'] = MenuPermisoMenuHtml::cuadrosCheck(
     'permiso_escritura',
-    PayloadCoercion::int($data['permiso_escritura'] ?? 0),
+    \frontend\shared\helpers\PayloadCoercion::int($data['permiso_escritura'] ?? 0),
     $dossierMap
 );
 unset($viewData['permiso_dossier_bit_map']);

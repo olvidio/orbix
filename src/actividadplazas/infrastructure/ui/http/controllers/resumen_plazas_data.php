@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: datos del resumen de plazas por actividad
@@ -12,8 +11,8 @@ use src\actividadplazas\application\ResumenPlazasData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $input = [
-    'id_activ' => FuncTablasSupport::inputInt($_POST, 'id_activ'),
-    'nom_activ' => FuncTablasSupport::inputString($_POST, 'nom_activ'),
+    'id_activ' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_activ'),
+    'nom_activ' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nom_activ'),
 ];
 
 /** @var ResumenPlazasData $useCase */

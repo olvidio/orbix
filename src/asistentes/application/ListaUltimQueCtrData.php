@@ -4,7 +4,6 @@ namespace src\asistentes\application;
 
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Selector de centro para actividades pendientes (`lista_ultim_que_ctr.php`).
@@ -24,8 +23,8 @@ final class ListaUltimQueCtrData
      */
     public function build(array $input): array
     {
-        $Qque = FuncTablasSupport::inputString($input, 'que');
-        $Qcurso = FuncTablasSupport::inputString($input, 'curso');
+        $Qque = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'que');
+        $Qcurso = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'curso');
 
         $PersonaSRepository = $this->personaSRepository;
         $aIdCentros = $PersonaSRepository->getArrayIdCentros();

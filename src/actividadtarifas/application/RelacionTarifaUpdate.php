@@ -5,7 +5,6 @@ namespace src\actividadtarifas\application;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\entity\RelacionTarifaTipoActividad;
 use src\actividadtarifas\domain\value_objects\SerieId;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion: crea o actualiza una `RelacionTarifaTipoActividad`.
@@ -22,9 +21,9 @@ final class RelacionTarifaUpdate
      */
     public function execute(array $input): string
     {
-        $id_item = FuncTablasSupport::inputString($input, 'id_item');
-        $id_tarifa = FuncTablasSupport::inputInt($input, 'id_tarifa');
-        $id_tipo_activ = FuncTablasSupport::inputInt($input, 'id_tipo_activ');
+        $id_item = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_item');
+        $id_tarifa = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tarifa');
+        $id_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tipo_activ');
 
         if ($id_tarifa === 0) {
             return (string) _("debe indicar la tarifa");

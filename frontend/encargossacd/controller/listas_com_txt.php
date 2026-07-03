@@ -46,7 +46,7 @@ $a_Claves = [
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_com_txt_data', []);
 $a_locales = EncargossacdPayload::desplegableOpciones($datos['a_locales'] ?? []);
-$comunicacion = PayloadCoercion::string($datos['texto_inicial'] ?? '');
+$comunicacion = \frontend\shared\helpers\PayloadCoercion::string($datos['texto_inicial'] ?? '');
 
 $oDesplClaves = new Desplegable();
 $oDesplClaves->setNombre('clave');

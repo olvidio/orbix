@@ -11,7 +11,6 @@ use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaPub;
 use src\shared\config\ConfigGlobal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Listado de asistentes a una actividad (`lista_asistentes.php`).
@@ -41,12 +40,12 @@ final readonly class ListaAsistentesData
             $nomPart = strtok('#');
             $nom_activ = is_string($nomPart) ? $nomPart : '';
         } else {
-            $id_pau = FuncTablasSupport::inputInt($input, 'id_pau', 0);
+            $id_pau = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau', 0);
             $oActividad = $this->actividadAllRepository->findById($id_pau);
             $nom_activ = $oActividad !== null ? $oActividad->getNom_activ() : '';
         }
 
-        $queSel = FuncTablasSupport::inputString($input, 'queSel');
+        $queSel = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'queSel');
 
         $c = 0;
         $num = 0;
@@ -103,13 +102,13 @@ final readonly class ListaAsistentesData
                     $est_ok = $cAsistente[0]->isEst_ok();
                     $observ = $cAsistente[0]->getObserv();
 
-                    if (FuncTablasSupport::isTrue($propio)) {
+                    if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($propio)) {
                         $chk_propio = _('sí');
                     } else {
                         $chk_propio = _('no');
                     }
-                    FuncTablasSupport::isTrue($falta) ? $chk_falta = _('sí') : $chk_falta = _('no');
-                    FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = _('sí') : $chk_est_ok = _('no');
+                    \src\shared\domain\helpers\FuncTablasSupport::isTrue($falta) ? $chk_falta = _('sí') : $chk_falta = _('no');
+                    \src\shared\domain\helpers\FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = _('sí') : $chk_est_ok = _('no');
                     $asis = 't';
                     $a_valores[$c][3] = $chk_propio;
                     $a_valores[$c][4] = $chk_est_ok;
@@ -158,13 +157,13 @@ final readonly class ListaAsistentesData
                     continue;
                 }
             }
-            if (FuncTablasSupport::isTrue($propio)) {
+            if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($propio)) {
                 $chk_propio = _('sí');
             } else {
                 $chk_propio = _('no');
             }
-            FuncTablasSupport::isTrue($falta) ? $chk_falta = _('sí') : $chk_falta = _('no');
-            FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = _('sí') : $chk_est_ok = _('no');
+            \src\shared\domain\helpers\FuncTablasSupport::isTrue($falta) ? $chk_falta = _('sí') : $chk_falta = _('no');
+            \src\shared\domain\helpers\FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = _('sí') : $chk_est_ok = _('no');
 
             $a_val[2] = "$nom  ($ctr_dl)";
             $a_val[3] = $chk_propio;
@@ -174,7 +173,7 @@ final readonly class ListaAsistentesData
             $a_val[7] = $oPersona;
             $asistentes[$nom] = $a_val;
         }
-        uksort($asistentes, 'src\shared\domain\helpers\strsinacentocmp');
+        uksort($asistentes, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
 
         $c = 0;
         if (ConfigGlobal::is_app_installed('actividadcargos')) {

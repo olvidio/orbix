@@ -6,15 +6,14 @@ use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /** @var CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository */
 $certificadoEmitidoRepository = DependencyResolver::get(CertificadoEmitidoRepositoryInterface::class);
 
-$Qid_item = FuncTablasSupport::inputInt($_POST, 'id_item');
-$Qid_nom = FuncTablasSupport::inputInt($_POST, 'id_nom');
-$Qcertificado = FuncTablasSupport::inputString($_POST, 'certificado');
-$Qpdf = FuncTablasSupport::inputString($_POST, 'pdf');
+$Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item');
+$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom');
+$Qcertificado = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'certificado');
+$Qpdf = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'pdf');
 
 $pdf_content = base64_decode($Qpdf, true);
 $certificado = base64_decode($Qcertificado, true);

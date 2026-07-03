@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: copiar tarifas del año anterior.
@@ -13,7 +12,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
-$ctxRaw = FuncTablasSupport::inputString($_POST, 'ctx_copiar');
+$ctxRaw = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_copiar');
 try {
     $ctx = HashB::open($ctxRaw, 'tarifa_ubi_copiar');
 } catch (HashBInvalidException $e) {
@@ -22,8 +21,8 @@ try {
 }
 
 $input = [
-    'id_ubi' => FuncTablasSupport::inputInt($ctx, 'id_ubi'),
-    'year' => FuncTablasSupport::inputInt($ctx, 'year'),
+    'id_ubi' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_ubi'),
+    'year' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'year'),
 ];
 
 /** @var TarifaUbiCopiar $useCase */

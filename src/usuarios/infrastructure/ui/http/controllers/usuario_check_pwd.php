@@ -7,9 +7,9 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Username;
 
-$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
-$Qusuario = (string)FilterPostGet::post('usuario');
-$Qpassword = (string)FilterPostGet::post('password');
+$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+$Qusuario = (string)\src\shared\domain\helpers\FilterPostGet::post('usuario');
+$Qpassword = (string)\src\shared\domain\helpers\FilterPostGet::post('password');
 
 $usuario = null;
 if (!empty($Qusuario)) { // si es nuevo no tiene id

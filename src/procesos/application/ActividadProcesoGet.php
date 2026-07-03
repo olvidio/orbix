@@ -8,7 +8,6 @@ use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
 use src\permisos\domain\XPermisos;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: tareas del proceso para un id_activ (estructura + permiso edición).
@@ -29,7 +28,7 @@ class ActividadProcesoGet
      */
     public function execute(array $input): array
     {
-        $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
 
         $aWhere = [
             'id_activ' => $Qid_activ,
@@ -46,7 +45,7 @@ class ActividadProcesoGet
             if ($id_fase === null || $id_tarea === null) {
                 continue;
             }
-            $completado = FuncTablasSupport::isTrue($oActividadProcesoTarea->isCompletado());
+            $completado = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oActividadProcesoTarea->isCompletado());
             $observ = (string)$oActividadProcesoTarea->getObserv();
 
             $oFase = $this->actividadFaseRepository->findById($id_fase);

@@ -36,7 +36,7 @@ switch ($Qque) {
             'filtro_sacd' => $Qfiltro_sacd,
             'id_nom' => $Qid_nom,
         ]);
-        $prefix = PayloadCoercion::string($data['label_prefix'] ?? '');
+        $prefix = \frontend\shared\helpers\PayloadCoercion::string($data['label_prefix'] ?? '');
 
         $oDespl = new Desplegable();
         $oDespl->setBlanco(true);
@@ -52,15 +52,15 @@ switch ($Qque) {
             'id_nom' => $Qid_nom,
         ]);
 
-        $permiso = PayloadCoercion::int($data['permiso'] ?? 0);
-        $observ_sacd = PayloadCoercion::string($data['observ_sacd'] ?? '');
+        $permiso = \frontend\shared\helpers\PayloadCoercion::int($data['permiso'] ?? 0);
+        $observ_sacd = \frontend\shared\helpers\PayloadCoercion::string($data['observ_sacd'] ?? '');
         $encargos = EncargossacdPayload::sacdFichaEncargosFromPayload($data['encargos'] ?? null);
         $opciones_mas = EncargossacdPayload::desplegableOpciones($data['opciones_mas'] ?? []);
         $avisos = is_array($data['avisos'] ?? null) ? $data['avisos'] : [];
 
         foreach ($encargos as $idx => $e) {
             $aQuery = ['id_ubi' => EncargossacdPayload::sacdFichaEncargoIdUbi($e)];
-            array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+            array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
             $encargos[$idx]['pagina_ctr'] = HashFront::link(
                 'frontend/encargossacd/controller/ctr_ficha.php?' . http_build_query($aQuery),
             );

@@ -5,7 +5,7 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ContribucionNoDuermeDefaultGuardar;
 
-$default = (string)FilterPostGet::post('default');
+$default = (string)\src\shared\domain\helpers\FilterPostGet::post('default');
 
 /** @var ContribucionNoDuermeDefaultGuardar $useCase */
 $useCase = DependencyResolver::get(ContribucionNoDuermeDefaultGuardar::class);

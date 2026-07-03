@@ -4,7 +4,6 @@ namespace src\actividades\application;
 
 use src\actividades\domain\entity\TiposActividades;
 use src\shared\domain\helpers\OpcionesDesplegable;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve el payload (id, opciones, selected, blanco, val_blanco, action) del
@@ -18,9 +17,9 @@ class ActividadTipoGetActividad
      */
     public function execute(array $input = []): array
     {
-        $Qentrada = FuncTablasSupport::inputString($input, 'entrada');
-        $Qextendida = FuncTablasSupport::inputString($input, 'extendida');
-        $extendida = FuncTablasSupport::isTrue($Qextendida) === true;
+        $Qentrada = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'entrada');
+        $Qextendida = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'extendida');
+        $extendida = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qextendida) === true;
 
         $aux = $Qentrada . '....';
         $oTipoActiv = new TiposActividades($aux);

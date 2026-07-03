@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: devuelve el payload JSON estandar de desplegable
@@ -16,8 +15,8 @@ use src\actividadplazas\application\PosiblesPropietariosData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $input = [
-    'id_nom' => FuncTablasSupport::inputInt($_POST, 'id_nom'),
-    'id_activ' => FuncTablasSupport::inputInt($_POST, 'id_activ'),
+    'id_nom' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom'),
+    'id_activ' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_activ'),
 ];
 
 /** @var PosiblesPropietariosData $useCase */

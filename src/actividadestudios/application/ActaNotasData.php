@@ -12,7 +12,6 @@ use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * @return array{
@@ -56,8 +55,8 @@ final class ActaNotasData
      */
     public function execute(array $input): array
     {
-        $idActiv = FuncTablasSupport::inputInt($input, 'id_activ');
-        $idAsignatura = FuncTablasSupport::inputInt($input, 'id_asignatura');
+        $idActiv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $idAsignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
 
         $msgErr = '';
         $miDele = OrbixRuntime::miDelef();
@@ -107,7 +106,7 @@ final class ActaNotasData
                 $nom = $oPersona->getPrefApellidosNombre();
                 $aPersonasMatriculadas[$nom] = $oMatricula;
             }
-            uksort($aPersonasMatriculadas, 'src\shared\domain\helpers\strsinacentocmp');
+            uksort($aPersonasMatriculadas, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
         }
 
         $cActas = $this->actaRepository->getActas([
@@ -142,7 +141,7 @@ final class ActaNotasData
                 'id_nom' => $oMatricula->getId_nom(),
                 'nota_num' => $oMatricula->getNota_num(),
                 'nota_max' => $oMatricula->getNota_max(),
-                'preceptor' => (bool) FuncTablasSupport::isTrue($oMatricula->isPreceptor()),
+                'preceptor' => (bool) \src\shared\domain\helpers\FuncTablasSupport::isTrue($oMatricula->isPreceptor()),
                 'acta' => $oMatricula->getActa(),
             ];
         }

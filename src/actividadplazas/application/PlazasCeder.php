@@ -6,7 +6,6 @@ use src\shared\config\ConfigGlobal;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Actualiza el array `cedidas` de `ActividadPlazasDl` para ceder
@@ -30,9 +29,9 @@ final class PlazasCeder
      */
     public function execute(array $input): string
     {
-        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
-        $num_plazas = FuncTablasSupport::inputInt($input, 'num_plazas');
-        $reg_dl = FuncTablasSupport::inputString($input, 'region_dl');
+        $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $num_plazas = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'num_plazas');
+        $reg_dl = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'region_dl');
 
         if ($id_activ <= 0 || $reg_dl === '') {
             return (string)_("faltan parametros id_activ / region_dl");

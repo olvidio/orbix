@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: datos para el formulario de ingreso de una
@@ -12,7 +11,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'id_activ' => FuncTablasSupport::inputInt($_POST, 'id_activ'),
+    'id_activ' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_activ'),
 ];
 
 /** @var CasaIngresoFormData $useCase */

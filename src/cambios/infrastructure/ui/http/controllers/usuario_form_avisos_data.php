@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: datos para el listado de avisos de un usuario.
@@ -12,8 +11,8 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'id_usuario' => FuncTablasSupport::inputInt($_POST, 'id_usuario'),
-    'quien' => FuncTablasSupport::inputString($_POST, 'quien'),
+    'id_usuario' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_usuario'),
+    'quien' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'quien'),
 ];
 
 /** @var UsuarioFormAvisosData $useCase */

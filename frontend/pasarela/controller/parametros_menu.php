@@ -12,22 +12,22 @@ $web = AppUrlConfig::getPublicAppBaseUrl();
 
 $url = $web . '/frontend/pasarela/controller/activacion_lista.php';
 $aQuery = ['que' => 'fecha_activacion'];
-array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $url_activacion = HashFront::link($url . '?' . http_build_query($aQuery));
 
 $url = $web . '/frontend/pasarela/controller/nombre_lista.php';
 $aQuery = ['que' => 'nombre'];
-array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $url_nombre = HashFront::link($url . '?' . http_build_query($aQuery));
 
 $url = $web . '/frontend/pasarela/controller/contribucion_no_duerme_lista.php';
 $aQuery = ['que' => 'contribucion_no_duerme'];
-array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $url_contribucion_no_duerme = HashFront::link($url . '?' . http_build_query($aQuery));
 
 $url = $web . '/frontend/pasarela/controller/contribucion_reserva_lista.php';
 $aQuery = ['que' => 'contribucion_reserva'];
-array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $url_contribucion_reserva = HashFront::link($url . '?' . http_build_query($aQuery));
 
 $a_campos = [

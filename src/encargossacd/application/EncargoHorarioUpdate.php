@@ -6,7 +6,6 @@ use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoHorario;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Alta/edición/baja de horario de encargo (tabla encargo_horario).
@@ -25,7 +24,7 @@ final class EncargoHorarioUpdate
      */
     public function ejecutar(array $post): array
     {
-        $mod = FuncTablasSupport::inputString($post, 'mod');
+        $mod = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'mod');
         if ($mod === 'eliminar') {
             $selNom = $post['sel_nom'];
             if (!is_array($selNom) || !array_key_exists(0, $selNom)) {
@@ -43,19 +42,19 @@ final class EncargoHorarioUpdate
             return ['ok' => true];
         }
 
-        $Qdia = FuncTablasSupport::inputString($post, 'dia');
-        $Qid_item_h = FuncTablasSupport::inputInt($post, 'id_item_h');
-        $Qid_enc = FuncTablasSupport::inputInt($post, 'id_enc');
-        $Qf_ini = FuncTablasSupport::inputString($post, 'f_ini');
-        $Qf_fin = FuncTablasSupport::inputString($post, 'f_fin');
-        $Qdia_ref = FuncTablasSupport::inputString($post, 'dia_ref');
-        $Qdia_num = FuncTablasSupport::inputInt($post, 'dia_num');
-        $Qmas_menos = FuncTablasSupport::inputString($post, 'mas_menos');
-        $Qdia_inc = FuncTablasSupport::inputInt($post, 'dia_inc');
-        $Qh_ini = FuncTablasSupport::inputString($post, 'h_ini');
-        $Qh_fin = FuncTablasSupport::inputString($post, 'h_fin');
-        $Qn_sacd = FuncTablasSupport::inputInt($post, 'n_sacd');
-        $Qmes = FuncTablasSupport::inputInt($post, 'mes');
+        $Qdia = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'dia');
+        $Qid_item_h = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_item_h');
+        $Qid_enc = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_enc');
+        $Qf_ini = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'f_ini');
+        $Qf_fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'f_fin');
+        $Qdia_ref = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'dia_ref');
+        $Qdia_num = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'dia_num');
+        $Qmas_menos = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'mas_menos');
+        $Qdia_inc = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'dia_inc');
+        $Qh_ini = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'h_ini');
+        $Qh_fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'h_fin');
+        $Qn_sacd = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'n_sacd');
+        $Qmes = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'mes');
 
         $oF_ini = $Qf_ini === '' ? null : new DateTimeLocal($Qf_ini);
         $oF_fin = $Qf_fin === '' ? null : new DateTimeLocal($Qf_fin);

@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Login JSON para app móvil (Camino B). Establece sesión PHP y cookies como login web.
@@ -31,10 +30,10 @@ $merged = array_merge($_POST, $json);
 
 /** @var array{username?: string, password?: string, esquema?: string, verification_code?: string} $input */
 $input = [
-    'username' => FuncTablasSupport::inputString($merged, 'username'),
-    'password' => FuncTablasSupport::inputString($merged, 'password'),
-    'esquema' => FuncTablasSupport::inputString($merged, 'esquema'),
-    'verification_code' => FuncTablasSupport::inputString($merged, 'verification_code'),
+    'username' => \src\shared\domain\helpers\FuncTablasSupport::inputString($merged, 'username'),
+    'password' => \src\shared\domain\helpers\FuncTablasSupport::inputString($merged, 'password'),
+    'esquema' => \src\shared\domain\helpers\FuncTablasSupport::inputString($merged, 'esquema'),
+    'verification_code' => \src\shared\domain\helpers\FuncTablasSupport::inputString($merged, 'verification_code'),
 ];
 
 /** @var AppMobileLogin $useCase */

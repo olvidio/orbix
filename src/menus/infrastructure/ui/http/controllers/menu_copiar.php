@@ -3,10 +3,9 @@
 use src\menus\application\MenuCopiar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 
-$Qid_menu = FuncTablasSupport::inputInt($_POST, 'id_menu');
-$Qgm_new = FuncTablasSupport::inputString($_POST, 'gm_new');
+$Qid_menu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_menu');
+$Qgm_new = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'gm_new');
 
 $error_txt = '';
 

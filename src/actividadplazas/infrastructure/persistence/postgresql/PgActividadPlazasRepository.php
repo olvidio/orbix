@@ -158,7 +158,7 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         $aDatos['dl_tabla'] = $ActividadPlazas->getDlTablaVo()->value();
         // para los json
         $aDatos['cedidas'] = (new ConverterJson($ActividadPlazas->getArrayCedidas(), false))->toPg(false);
-        array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
+        array_walk($aDatos, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerNull']);
         */
 
         if ($bInsert === false) {

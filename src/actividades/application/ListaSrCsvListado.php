@@ -14,7 +14,6 @@ use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\XPermisos;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso que prepara la lista de actividades de San Rafael.
@@ -48,14 +47,14 @@ final class ListaSrCsvListado
             return $oPerm instanceof XPermisos && $oPerm->have_perm_oficina($perm);
         };
 
-        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
-        $Qyear = FuncTablasSupport::inputString($input, 'year');
-        $Qdl_org = FuncTablasSupport::inputString($input, 'dl_org');
-        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
-        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
-        $Qa_activ = FuncTablasSupport::inputStringList($input, 'c_activ');
-        $Qa_status = FuncTablasSupport::inputStringList($input, 'status');
-        $Qa_id_cdc = FuncTablasSupport::inputStringList($input, 'id_cdc');
+        $Qperiodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'year');
+        $Qdl_org = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_org');
+        $Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
+        $Qa_activ = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($input, 'c_activ');
+        $Qa_status = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($input, 'status');
+        $Qa_id_cdc = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($input, 'id_cdc');
 
         if (empty($Qperiodo)) {
             $Qperiodo = 'curso_ca';

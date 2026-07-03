@@ -27,8 +27,8 @@ $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qrefresh = EncargossacdPostInput::postInt('refresh');
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -58,16 +58,16 @@ $data = PostRequest::getDataFromUrl('/src/encargossacd/encargo_ver_data', [
     'id_zona' => $Qid_zona,
 ]);
 
-$Qque = PayloadCoercion::string($data['que'] ?? $Qque);
-$Qid_enc = PayloadCoercion::int($data['id_enc'] ?? $Qid_enc);
-$Qid_tipo_enc = PayloadCoercion::int($data['id_tipo_enc'] ?? $Qid_tipo_enc);
-$Qgrupo = PayloadCoercion::string($data['grupo'] ?? $Qgrupo);
-$Qfiltro_ctr = PayloadCoercion::string($data['filtro_ctr'] ?? $Qfiltro_ctr);
-$Qdesc_enc = PayloadCoercion::string($data['desc_enc'] ?? $Qdesc_enc);
-$Qdesc_lugar = PayloadCoercion::string($data['desc_lugar'] ?? $Qdesc_lugar);
-$idioma_enc = PayloadCoercion::string($data['idioma_enc'] ?? '');
-$Qid_ubi = PayloadCoercion::int($data['id_ubi'] ?? 0);
-$Qid_zona = PayloadCoercion::int($data['id_zona'] ?? $Qid_zona);
+$Qque = \frontend\shared\helpers\PayloadCoercion::string($data['que'] ?? $Qque);
+$Qid_enc = \frontend\shared\helpers\PayloadCoercion::int($data['id_enc'] ?? $Qid_enc);
+$Qid_tipo_enc = \frontend\shared\helpers\PayloadCoercion::int($data['id_tipo_enc'] ?? $Qid_tipo_enc);
+$Qgrupo = \frontend\shared\helpers\PayloadCoercion::string($data['grupo'] ?? $Qgrupo);
+$Qfiltro_ctr = \frontend\shared\helpers\PayloadCoercion::string($data['filtro_ctr'] ?? $Qfiltro_ctr);
+$Qdesc_enc = \frontend\shared\helpers\PayloadCoercion::string($data['desc_enc'] ?? $Qdesc_enc);
+$Qdesc_lugar = \frontend\shared\helpers\PayloadCoercion::string($data['desc_lugar'] ?? $Qdesc_lugar);
+$idioma_enc = \frontend\shared\helpers\PayloadCoercion::string($data['idioma_enc'] ?? '');
+$Qid_ubi = \frontend\shared\helpers\PayloadCoercion::int($data['id_ubi'] ?? 0);
+$Qid_zona = \frontend\shared\helpers\PayloadCoercion::int($data['id_zona'] ?? $Qid_zona);
 $grupo_posibles = EncargossacdPayload::desplegableOpciones($data['grupo_posibles'] ?? []);
 $posibles_encargo_tipo = EncargossacdPayload::desplegableOpciones($data['posibles_encargo_tipo'] ?? []);
 $opciones_seccion = EncargossacdPayload::desplegableOpciones($data['opciones_seccion'] ?? []);

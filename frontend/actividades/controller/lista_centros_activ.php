@@ -24,8 +24,8 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qid_ctr_num = (integer)filter_input(INPUT_POST, 'id_ctr_num');
@@ -44,4 +44,4 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_centros_activ_datos'
     'empiezamax' => $Qempiezamax,
 ]);
 
-AjaxJsonSupport::html(PayloadCoercion::string($data['html'] ?? ''));
+AjaxJsonSupport::html(\frontend\shared\helpers\PayloadCoercion::string($data['html'] ?? ''));

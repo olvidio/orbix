@@ -25,15 +25,15 @@ final class SelectMatriculasDeUnaActividadRender
     {
         $wrapper = isset($seg['wrapper']) && is_array($seg['wrapper']) ? $seg['wrapper'] : [];
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $relForm = PayloadCoercion::string($wrapper['url_form_relative'] ?? '');
+        $relForm = \frontend\shared\helpers\PayloadCoercion::string($wrapper['url_form_relative'] ?? '');
         $urlForm = $relForm !== '' ? $base . '/' . ltrim($relForm, '/') : '';
-        $elimPath = PayloadCoercion::string($wrapper['url_matricula_eliminar_path'] ?? '');
+        $elimPath = \frontend\shared\helpers\PayloadCoercion::string($wrapper['url_matricula_eliminar_path'] ?? '');
         $urlEliminar = $elimPath !== '' ? $base . '/' . ltrim($elimPath, '/') : '';
 
         $hash = isset($seg['hash']) && is_array($seg['hash']) ? $seg['hash'] : [];
         $oHashSelect = new HashFront();
-        $oHashSelect->setCamposForm(PayloadCoercion::string($hash['campos_form'] ?? ''));
-        $oHashSelect->setCamposNo(PayloadCoercion::string($hash['campos_no'] ?? ''));
+        $oHashSelect->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_form'] ?? ''));
+        $oHashSelect->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_no'] ?? ''));
         $hidden = $hash['campos_hidden'] ?? [];
         $oHashSelect->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
 
@@ -44,8 +44,8 @@ final class SelectMatriculasDeUnaActividadRender
         $oTabla->setBotones(ActividadesListaSupport::botones($tabla['botones'] ?? []));
         $oTabla->setDatos(ActividadesListaSupport::datos($tabla['valores'] ?? []));
 
-        $sinMsg = PayloadCoercion::string($seg['sin_asignaturas_mensaje'] ?? '');
-        $err = PayloadCoercion::string($seg['msg_err'] ?? '');
+        $sinMsg = \frontend\shared\helpers\PayloadCoercion::string($seg['sin_asignaturas_mensaje'] ?? '');
+        $err = \frontend\shared\helpers\PayloadCoercion::string($seg['msg_err'] ?? '');
 
         $html = '';
         if ($sinMsg !== '') {
@@ -57,8 +57,8 @@ final class SelectMatriculasDeUnaActividadRender
         $html .= $oView->renderizar('select_matriculas_de_una_actividad.phtml', [
             'oHashSelect' => $oHashSelect,
             'oTabla' => $oTabla,
-            'txt_eliminar' => PayloadCoercion::string($wrapper['txt_eliminar'] ?? ''),
-            'nom_activ' => PayloadCoercion::string($wrapper['nom_activ'] ?? ''),
+            'txt_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($wrapper['txt_eliminar'] ?? ''),
+            'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($wrapper['nom_activ'] ?? ''),
             'url_form' => $urlForm,
             'url_matricula_eliminar' => $urlEliminar,
         ], false);

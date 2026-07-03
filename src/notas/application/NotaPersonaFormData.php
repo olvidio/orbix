@@ -11,7 +11,6 @@ use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Prepara los datos que necesita `form_notas_de_una_persona.phtml` para pintar el form
@@ -40,7 +39,7 @@ final class NotaPersonaFormData
      */
     public function execute(array $input): array
     {
-        $id_pau = FuncTablasSupport::inputInt($input, 'id_pau');
+        $id_pau = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
         $id_asignatura_real = $this->resolveAsignaturaReal($input);
 
         if ($id_asignatura_real !== '') {
@@ -56,7 +55,7 @@ final class NotaPersonaFormData
     private function resolveAsignaturaReal(array $input): string
     {
         $sel = (array)($input['sel'] ?? []);
-        $pau = FuncTablasSupport::inputString($input, 'pau');
+        $pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'pau');
         if ($sel !== [] && $pau === 'p') {
             $sel0 = $sel[0];
             if (is_string($sel0)) {
@@ -65,9 +64,9 @@ final class NotaPersonaFormData
                 return is_string($part) ? $part : '';
             }
         }
-        $mod = FuncTablasSupport::inputString($input, 'mod');
+        $mod = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'mod');
         if ($mod !== '' && $mod !== 'nuevo') {
-            return FuncTablasSupport::inputString($input, 'id_asignatura_real');
+            return \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_asignatura_real');
         }
         return '';
     }
@@ -212,7 +211,7 @@ final class NotaPersonaFormData
             }
             $aProfesores[$oProfesor->getId_nom()] = $oPersona->getPrefApellidosNombre();
         }
-        uasort($aProfesores, 'src\shared\domain\helpers\strsinacentocmp');
+        uasort($aProfesores, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
         return $aProfesores;
     }
 

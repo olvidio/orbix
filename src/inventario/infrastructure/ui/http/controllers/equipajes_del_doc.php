@@ -2,14 +2,13 @@
 
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use src\inventario\domain\entity\Whereis;
 use src\shared\web\ContestarJson;
 
-$Qid_item_egm = FuncTablasSupport::inputInt($_POST, 'id_item_egm');
-$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_item_egm = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item_egm');
+$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $error_txt = '';
 

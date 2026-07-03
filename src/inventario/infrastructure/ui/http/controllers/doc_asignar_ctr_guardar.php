@@ -1,18 +1,17 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\entity\Documento;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\web\ContestarJson;
 
-$Qid_tipo_doc = FuncTablasSupport::inputString($_POST, 'id_tipo_doc');
-$Qnumerado = FuncTablasSupport::inputString($_POST, 'numerado');
-$Qstr_selected_id = FuncTablasSupport::inputString($_POST, 'str_selected_id');
-$Qf_recibido = FuncTablasSupport::inputString($_POST, 'f_recibido');
-$Qf_asignado = FuncTablasSupport::inputString($_POST, 'f_asignado');
+$Qid_tipo_doc = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_tipo_doc');
+$Qnumerado = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'numerado');
+$Qstr_selected_id = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'str_selected_id');
+$Qf_recibido = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_recibido');
+$Qf_asignado = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_asignado');
 
 $selected_id = json_decode(rawurldecode($Qstr_selected_id), true);
 if (!is_array($selected_id)) {

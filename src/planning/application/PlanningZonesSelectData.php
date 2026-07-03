@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace src\planning\application;
 
-use src\shared\domain\helpers\FuncTablasSupport;
 /**
  * Datos para `planning_zones_select` serializados a JSON.
  */
@@ -29,11 +28,11 @@ final class PlanningZonesSelectData
     public function execute(array $input): array
     {
         $data = $this->actividadesPorZonasService->execute(
-            FuncTablasSupport::inputString($input, 'id_zona'),
-            FuncTablasSupport::inputInt($input, 'trimestre'),
-            FuncTablasSupport::inputInt($input, 'year'),
-            FuncTablasSupport::inputString($input, 'actividad'),
-            FuncTablasSupport::inputString($input, 'propuesta'),
+            \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_zona'),
+            \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'trimestre'),
+            \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'year'),
+            \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'actividad'),
+            \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'propuesta'),
             null
         );
 

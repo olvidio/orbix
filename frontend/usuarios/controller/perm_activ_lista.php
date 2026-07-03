@@ -16,8 +16,8 @@ $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $Qolvidar = (string)filter_input(INPUT_POST, 'olvidar');
 
 if (empty($Qolvidar)) {
-    ListNavSupport::bootRecordar($oPosicion);
-    ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+    \frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 }
 

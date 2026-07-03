@@ -3,10 +3,9 @@
 use src\dbextern\application\TrasladarPersonaUseCase;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
-$dl = FuncTablasSupport::inputString($_POST, 'dl');
-$tipo_persona = FuncTablasSupport::inputString($_POST, 'tipo_persona');
-$id_nom_orbix = FuncTablasSupport::inputInt($_POST, 'id_nom_orbix');
+$dl = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'dl');
+$tipo_persona = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'tipo_persona');
+$id_nom_orbix = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom_orbix');
 
 $jsondata = DependencyResolver::get(TrasladarPersonaUseCase::class)->trasladarA($id_nom_orbix, $tipo_persona, $dl);
 

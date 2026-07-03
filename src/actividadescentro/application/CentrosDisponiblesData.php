@@ -6,7 +6,6 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve la lista de centros disponibles (candidatos) para asignar como
@@ -40,8 +39,8 @@ final class CentrosDisponiblesData
      */
     public function execute(array $input): array
     {
-        $tipo = FuncTablasSupport::inputString($input, 'tipo');
-        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $tipo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo');
+        $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         if (!in_array($tipo, self::TIPOS_VALIDOS, true)) {
             return [
                 'tipo' => $tipo,
@@ -57,9 +56,9 @@ final class CentrosDisponiblesData
 
         $centros = [];
         if ($tipo === 'sg') {
-            $inicio = FuncTablasSupport::inputString($input, 'inicio');
-            $fin = FuncTablasSupport::inputString($input, 'fin');
-            $f_ini_act = FuncTablasSupport::inputString($input, 'f_ini_act');
+            $inicio = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'inicio');
+            $fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'fin');
+            $f_ini_act = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_ini_act');
             $f_ini_act_iso = '';
             if ($f_ini_act !== '') {
                 $oDate = DateTimeLocal::createFromLocal($f_ini_act);

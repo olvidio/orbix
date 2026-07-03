@@ -16,8 +16,8 @@ $oPosicion = FrontBootstrap::boot();
 $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
 $aGoBack = [
     'inventario' => $Qinventario,
@@ -36,7 +36,7 @@ $view = InventarioPayload::docDeDlbFromPayload($payload);
 
 $a_valores = $view['a_valores'];
 $a_grupos = $view['a_grupos'];
-$nombreDoc = PayloadCoercion::string($payload['nombreDoc'] ?? '');
+$nombreDoc = \frontend\shared\helpers\PayloadCoercion::string($payload['nombreDoc'] ?? '');
 
 $url_doc_mod = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_asignar_dlb.php?';
 $url_imprimir = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_imprimir_dlb.php?';

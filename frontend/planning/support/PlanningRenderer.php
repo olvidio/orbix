@@ -178,14 +178,14 @@ class PlanningRenderer
                 $css = [];
                 for ($a = 0; $a < $num_a; $a++) {
                     $activi = $actividad[$a];
-                    $nom_curt[$a] = PayloadCoercion::string($activi['nom_curt'] ?? '');
-                    $nom[$a] = PayloadCoercion::string($activi['nom_llarg'] ?? '');
-                    $ini = PayloadCoercion::string($activi['f_ini'] ?? '');
-                    $hini = PayloadCoercion::string($activi['h_ini'] ?? '');
-                    $fi = PayloadCoercion::string($activi['f_fi'] ?? '');
-                    $hfi = PayloadCoercion::string($activi['h_fi'] ?? '');
-                    $id_activ[$a] = PayloadCoercion::int($activi['id_activ'] ?? 0);
-                    $css[$a] = PayloadCoercion::string($activi['css'] ?? '');
+                    $nom_curt[$a] = \frontend\shared\helpers\PayloadCoercion::string($activi['nom_curt'] ?? '');
+                    $nom[$a] = \frontend\shared\helpers\PayloadCoercion::string($activi['nom_llarg'] ?? '');
+                    $ini = \frontend\shared\helpers\PayloadCoercion::string($activi['f_ini'] ?? '');
+                    $hini = \frontend\shared\helpers\PayloadCoercion::string($activi['h_ini'] ?? '');
+                    $fi = \frontend\shared\helpers\PayloadCoercion::string($activi['f_fi'] ?? '');
+                    $hfi = \frontend\shared\helpers\PayloadCoercion::string($activi['h_fi'] ?? '');
+                    $id_activ[$a] = \frontend\shared\helpers\PayloadCoercion::int($activi['id_activ'] ?? 0);
+                    $css[$a] = \frontend\shared\helpers\PayloadCoercion::string($activi['css'] ?? '');
 
                     if (empty($ini)) {
                         $html .= _("PREMIO: Ha conseguido crear una actividad sin fecha de inicio.") . '<br>';
@@ -199,10 +199,10 @@ class PlanningRenderer
                         unset($actividad[$a]);
                         continue;
                     }
-                    $id_tipo_activ[$a] = PayloadCoercion::string($activi['id_tipo_activ'] ?? '');
-                    $lnk[$a] = PayloadCoercion::string($activi['pagina'] ?? '');
-                    $propio[$a] = PayloadCoercion::string($activi['propio'] ?? '');
-                    $plaza[$a] = PayloadCoercion::string($activi['plaza'] ?? '');
+                    $id_tipo_activ[$a] = \frontend\shared\helpers\PayloadCoercion::string($activi['id_tipo_activ'] ?? '');
+                    $lnk[$a] = \frontend\shared\helpers\PayloadCoercion::string($activi['pagina'] ?? '');
+                    $propio[$a] = \frontend\shared\helpers\PayloadCoercion::string($activi['propio'] ?? '');
+                    $plaza[$a] = \frontend\shared\helpers\PayloadCoercion::string($activi['plaza'] ?? '');
 
                     $hora_ini[$a] = 0;
                     $m_ini[$a] = 0;

@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: estudio económico de una casa (`calendario_ubi_resumen_data`).
@@ -11,10 +10,10 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'id_ubi' => FuncTablasSupport::inputInt($_POST, 'id_ubi'),
-    'seccion' => FuncTablasSupport::inputString($_POST, 'seccion'),
-    'G' => FuncTablasSupport::inputInt($_POST, 'G'),
-    'inc_t' => FuncTablasSupport::inputInt($_POST, 'inc_t'),
+    'id_ubi' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi'),
+    'seccion' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'seccion'),
+    'G' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'G'),
+    'inc_t' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'inc_t'),
 ];
 
 /** @var CalendarioUbiResumenData $useCase */

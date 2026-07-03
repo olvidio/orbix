@@ -2,14 +2,13 @@
 
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qid_ubi_new = FuncTablasSupport::inputInt($_POST, 'id_ubi_new');
-$Qid_lugar_new = FuncTablasSupport::inputInt($_POST, 'id_lugar_new');
+$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_ubi_new = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi_new');
+$Qid_lugar_new = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_lugar_new');
 
 $error_txt = '';
 

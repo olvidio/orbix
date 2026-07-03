@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: crea o actualiza una `TarifaUbi`.
@@ -13,7 +12,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
-$ctxRaw = FuncTablasSupport::inputString($_POST, 'ctx_update');
+$ctxRaw = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_update');
 try {
     $ctx = HashB::open($ctxRaw, 'tarifa_ubi_update');
 } catch (HashBInvalidException $e) {
@@ -22,13 +21,13 @@ try {
 }
 
 $input = [
-    'id_item' => FuncTablasSupport::inputInt($ctx, 'id_item'),
-    'id_ubi' => FuncTablasSupport::inputInt($ctx, 'id_ubi'),
-    'year' => FuncTablasSupport::inputInt($ctx, 'year'),
-    'id_tarifa' => FuncTablasSupport::inputInt($_POST, 'id_tarifa'),
-    'id_serie' => FuncTablasSupport::inputInt($_POST, 'id_serie'),
-    'cantidad' => FuncTablasSupport::inputString($_POST, 'cantidad'),
-    'observ' => FuncTablasSupport::inputString($_POST, 'observ'),
+    'id_item' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_item'),
+    'id_ubi' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_ubi'),
+    'year' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'year'),
+    'id_tarifa' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_tarifa'),
+    'id_serie' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_serie'),
+    'cantidad' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'cantidad'),
+    'observ' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'observ'),
 ];
 
 /** @var TarifaUbiUpdate $useCase */

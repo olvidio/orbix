@@ -6,7 +6,6 @@ use frontend\actividades\helpers\TipoActivMetadataLoader;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\entity\TipoDeActividad;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Crea un nuevo tipo de actividad. Portado del case `nuevo` del dispatcher
@@ -24,11 +23,11 @@ class TipoActivNuevo
      */
     public function execute(array $input = []): string
     {
-        $Qsfsv = FuncTablasSupport::inputString($input, 'isfsv_val');
-        $Qasistentes = FuncTablasSupport::inputString($input, 'iasistentes_val');
-        $Qactividad = FuncTablasSupport::inputString($input, 'iactividad_val');
-        $Qid_nom_tipo_activ = FuncTablasSupport::inputString($input, 'id_nom_tipo_activ');
-        $Qnom_tipo_activ = FuncTablasSupport::inputString($input, 'nom_tipo_activ');
+        $Qsfsv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'isfsv_val');
+        $Qasistentes = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'iasistentes_val');
+        $Qactividad = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'iactividad_val');
+        $Qid_nom_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_nom_tipo_activ');
+        $Qnom_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nom_tipo_activ');
 
         $id_tipo_activ = "$Qsfsv$Qasistentes$Qactividad$Qid_nom_tipo_activ";
 

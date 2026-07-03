@@ -11,7 +11,6 @@ use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: construye los datos (cabeceras + filas) de la pantalla
@@ -52,24 +51,24 @@ class ListaActivTabla
      */
     public function execute(array $input, array $opts): array
     {
-        $Qque = FuncTablasSupport::inputString($input, 'que');
+        $Qque = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'que');
         $Qstatus = $input['status'] ?? 0;
-        $Qid_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
-        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
-        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
-        $Qyear = FuncTablasSupport::inputString($input, 'year');
-        $Qdl_org = FuncTablasSupport::inputString($input, 'dl_org');
-        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
-        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
+        $Qid_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
+        $Qperiodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'year');
+        $Qdl_org = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_org');
+        $Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
         $Qc_activ = is_array($input['c_activ'] ?? null) ? $input['c_activ'] : [];
         $Qasist = is_array($input['asist'] ?? null) ? $input['asist'] : [];
         $Qseccion = is_array($input['seccion'] ?? null) ? $input['seccion'] : [];
-        $Qssfsv = FuncTablasSupport::inputString($input, 'ssfsv');
-        $Qsasistentes = FuncTablasSupport::inputString($input, 'sasistentes');
-        $Qsactividad = FuncTablasSupport::inputString($input, 'sactividad');
-        $Qsnom_tipo = FuncTablasSupport::inputString($input, 'snom_tipo');
+        $Qssfsv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'ssfsv');
+        $Qsasistentes = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sasistentes');
+        $Qsactividad = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad');
+        $Qsnom_tipo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'snom_tipo');
 
-        $mi_sfsv = FuncTablasSupport::inputInt($opts, 'mi_sfsv');
+        $mi_sfsv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($opts, 'mi_sfsv');
         $perm_vcsd = (bool)($opts['perm_vcsd'] ?? false);
         $perm_des = (bool)($opts['perm_des'] ?? false);
         $perm_sg = (bool)($opts['perm_sg'] ?? false);
@@ -167,7 +166,7 @@ class ListaActivTabla
 
         if ($Qque === 'list_active_inv_sg' || $Qque === 'list_activ_sr') {
             // El titulo lo suele enviar el formulario que_lista_activ_sg / que_lista_activ_sr.
-            $titulo = ucfirst(FuncTablasSupport::inputString($input, 'titulo'));
+            $titulo = ucfirst(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'titulo'));
         } else {
             $titulo = ucfirst(_("listado de actividades"));
         }
@@ -245,13 +244,13 @@ class ListaActivTabla
             $comun = '';
             if ($oCasa !== null) {
                 $nombre_ubi = $oCasa->getNombre_ubi();
-                if (FuncTablasSupport::isTrue($oCasa->isSv())) {
+                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($oCasa->isSv())) {
                     $comun = 'sv';
                 }
-                if (FuncTablasSupport::isTrue($oCasa->isSf())) {
+                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($oCasa->isSf())) {
                     $comun = 'sf';
                 }
-                if (FuncTablasSupport::isTrue($oCasa->isSv()) && FuncTablasSupport::isTrue($oCasa->isSf())) {
+                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($oCasa->isSv()) && \src\shared\domain\helpers\FuncTablasSupport::isTrue($oCasa->isSf())) {
                     $comun = 'comun';
                 }
             }

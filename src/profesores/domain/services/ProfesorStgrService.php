@@ -5,7 +5,6 @@ namespace src\profesores\domain\services;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 class ProfesorStgrService
 {
@@ -38,7 +37,7 @@ class ProfesorStgrService
                 'nom' => $oPersona->getNomVo()?->value() ?? '',
             ];
         }
-        FuncTablasSupport::usortProfesoresPorApellidos($aProfesores);
+        \src\shared\domain\helpers\FuncTablasSupport::usortProfesoresPorApellidos($aProfesores);
 
         $aOpciones = [];
         foreach ($aProfesores as $aClave) {
@@ -121,7 +120,7 @@ class ProfesorStgrService
                 'nom' => $oPersonaDl->getNomVo()?->value() ?? '',
             ];
         }
-        FuncTablasSupport::usortProfesoresPorApellidos($aFilas);
+        \src\shared\domain\helpers\FuncTablasSupport::usortProfesoresPorApellidos($aFilas);
 
         $aProfesores = [];
         foreach ($aFilas as $fila) {

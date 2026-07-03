@@ -3,12 +3,11 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\zonassacd\application\ZonaSacdUpdate;
-use src\shared\domain\helpers\FuncTablasSupport;
 $input = [
-    'id_zona' => FuncTablasSupport::inputString($_POST, 'id_zona'),
-    'id_zona_new' => FuncTablasSupport::inputString($_POST, 'id_zona_new'),
-    'acumular' => FuncTablasSupport::inputInt($_POST, 'acumular'),
-    'sel' => FuncTablasSupport::inputStringList($_POST, 'sel'),
+    'id_zona' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_zona'),
+    'id_zona_new' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_zona_new'),
+    'acumular' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'acumular'),
+    'sel' => \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'sel'),
 ];
 
 /** @var ZonaSacdUpdate $useCase */

@@ -14,18 +14,18 @@ use src\actividades\application\ActividadVerDatos;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_activ = (int)FilterPostGet::post('id_activ');
-$Qisfsv = (int)FilterPostGet::post('isfsv');
-$Qdl_org = (string)FilterPostGet::post('dl_org');
-$QBdl = (string)FilterPostGet::post('Bdl');
-$Qtarifa = FilterPostGet::post('tarifa');
-$Qnivel_stgr = FilterPostGet::post('nivel_stgr');
-$Qidioma = (string)FilterPostGet::post('idioma');
-$Qid_repeticion = (int)FilterPostGet::post('id_repeticion');
-$Qid_ubi = (int)FilterPostGet::post('id_ubi');
-$Qlugar_esp = (string)FilterPostGet::post('lugar_esp');
-$Qid_tipo_activ = (string)FilterPostGet::post('id_tipo_activ');
-$QcalcTarifa = (int)FilterPostGet::post('calc_tarifa_inicial');
+$Qid_activ = (int)\src\shared\domain\helpers\FilterPostGet::post('id_activ');
+$Qisfsv = (int)\src\shared\domain\helpers\FilterPostGet::post('isfsv');
+$Qdl_org = (string)\src\shared\domain\helpers\FilterPostGet::post('dl_org');
+$QBdl = (string)\src\shared\domain\helpers\FilterPostGet::post('Bdl');
+$Qtarifa = \src\shared\domain\helpers\FilterPostGet::post('tarifa');
+$Qnivel_stgr = \src\shared\domain\helpers\FilterPostGet::post('nivel_stgr');
+$Qidioma = (string)\src\shared\domain\helpers\FilterPostGet::post('idioma');
+$Qid_repeticion = (int)\src\shared\domain\helpers\FilterPostGet::post('id_repeticion');
+$Qid_ubi = (int)\src\shared\domain\helpers\FilterPostGet::post('id_ubi');
+$Qlugar_esp = (string)\src\shared\domain\helpers\FilterPostGet::post('lugar_esp');
+$Qid_tipo_activ = (string)\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ');
+$QcalcTarifa = (int)\src\shared\domain\helpers\FilterPostGet::post('calc_tarifa_inicial');
 
 /** @var ActividadVerDatos $useCase */
 $useCase = DependencyResolver::get(ActividadVerDatos::class);

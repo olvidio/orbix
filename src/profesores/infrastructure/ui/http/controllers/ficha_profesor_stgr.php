@@ -4,17 +4,16 @@ use src\profesores\application\FichaProfesorStgr;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /** @var FichaProfesorStgr $useCase */
 $useCase = DependencyResolver::get(FichaProfesorStgr::class);
 
-$id_nom = FuncTablasSupport::inputInt($_POST, 'id_nom');
-$id_tabla = FuncTablasSupport::inputString($_POST, 'id_tabla');
-$print = FuncTablasSupport::inputInt($_POST, 'print');
-$obj_pau = FuncTablasSupport::inputString($_POST, 'obj_pau');
-$permiso = FuncTablasSupport::inputString($_POST, 'permiso');
-$depende = FuncTablasSupport::inputString($_POST, 'depende');
+$id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom');
+$id_tabla = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_tabla');
+$print = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'print');
+$obj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'obj_pau');
+$permiso = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'permiso');
+$depende = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'depende');
 if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $print = 1;
 }

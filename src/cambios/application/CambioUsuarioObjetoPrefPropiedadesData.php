@@ -7,7 +7,6 @@ use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder: listado de campos configurables del objeto seleccionado,
@@ -99,7 +98,7 @@ final class CambioUsuarioObjetoPrefPropiedadesData
                 continue;
             }
             $condicion_aviso = $oDatosCampo->getAviso();
-            if (!FuncTablasSupport::isTrue($condicion_aviso)) {
+            if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($condicion_aviso)) {
                 continue;
             }
 

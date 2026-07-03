@@ -78,10 +78,10 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qfases_on = $oPosicion->getParametro('fases_on');
     $Qfases_off = $oPosicion->getParametro('fases_off');
     $Qpublicado = $oPosicion->getParametro('publicado');
-    $Qque = PayloadCoercion::string($oPosicion->getParametro('que') ?? $Qque);
-    $Qlistar_asistentes = PayloadCoercion::string($oPosicion->getParametro('listar_asistentes') ?? $Qlistar_asistentes);
-    $restoredSel = ListNavSupport::idSelForLista($oPosicion->getParametro('id_sel'));
-    if (!ListNavSupport::idSelIsEmpty($restoredSel)) {
+    $Qque = \frontend\shared\helpers\PayloadCoercion::string($oPosicion->getParametro('que') ?? $Qque);
+    $Qlistar_asistentes = \frontend\shared\helpers\PayloadCoercion::string($oPosicion->getParametro('listar_asistentes') ?? $Qlistar_asistentes);
+    $restoredSel = \frontend\shared\helpers\ListNavSupport::idSelForLista($oPosicion->getParametro('id_sel'));
+    if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restoredSel)) {
         $Qid_sel = $restoredSel;
     }
     $restoredScroll = $oPosicion->getParametro('scroll_id');
@@ -98,8 +98,8 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qsactividad = '';
     $Qsactividad2 = '';
 } else {
-    $Qid_sel = ListNavSupport::idSelFromPost();
-    $Qscroll_id = ListNavSupport::scrollIdFromPost();
+    $Qid_sel = \frontend\shared\helpers\ListNavSupport::idSelFromPost();
+    $Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
 
     $Qque = (string)filter_input(INPUT_POST, 'que');
     $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
@@ -123,28 +123,28 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     if ($stackFromPost !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stackFromPost)) {
-            $restoredSel = ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
-            if (!ListNavSupport::idSelIsEmpty($restoredSel)) {
+            $restoredSel = \frontend\shared\helpers\ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
+            if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restoredSel)) {
                 $Qid_sel = $restoredSel;
             }
             $restoredScroll = $oPosicion2->getParametro('scroll_id');
             if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
                 $Qscroll_id = (string) $restoredScroll;
             }
-            $Qmodo = PayloadCoercion::string($oPosicion2->getParametro('modo') ?? $Qmodo);
-            $Qstatus = PayloadCoercion::int($oPosicion2->getParametro('status'), $Qstatus);
-            $Qid_tipo_activ = PayloadCoercion::string($oPosicion2->getParametro('id_tipo_activ') ?? $Qid_tipo_activ);
-            $Qfiltro_lugar = PayloadCoercion::string($oPosicion2->getParametro('filtro_lugar') ?? $Qfiltro_lugar);
-            $Qid_ubi = PayloadCoercion::int($oPosicion2->getParametro('id_ubi'), $Qid_ubi);
-            $Qnom_activ = PayloadCoercion::string($oPosicion2->getParametro('nom_activ') ?? $Qnom_activ);
-            $Qperiodo = PayloadCoercion::string($oPosicion2->getParametro('periodo') ?? $Qperiodo);
-            $Qyear = PayloadCoercion::string($oPosicion2->getParametro('year') ?? $Qyear);
-            $Qdl_org = PayloadCoercion::string($oPosicion2->getParametro('dl_org') ?? $Qdl_org);
-            $Qempiezamin = PayloadCoercion::string($oPosicion2->getParametro('empiezamin') ?? $Qempiezamin);
-            $Qempiezamax = PayloadCoercion::string($oPosicion2->getParametro('empiezamax') ?? $Qempiezamax);
+            $Qmodo = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('modo') ?? $Qmodo);
+            $Qstatus = \frontend\shared\helpers\PayloadCoercion::int($oPosicion2->getParametro('status'), $Qstatus);
+            $Qid_tipo_activ = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('id_tipo_activ') ?? $Qid_tipo_activ);
+            $Qfiltro_lugar = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('filtro_lugar') ?? $Qfiltro_lugar);
+            $Qid_ubi = \frontend\shared\helpers\PayloadCoercion::int($oPosicion2->getParametro('id_ubi'), $Qid_ubi);
+            $Qnom_activ = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('nom_activ') ?? $Qnom_activ);
+            $Qperiodo = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('periodo') ?? $Qperiodo);
+            $Qyear = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('year') ?? $Qyear);
+            $Qdl_org = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('dl_org') ?? $Qdl_org);
+            $Qempiezamin = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('empiezamin') ?? $Qempiezamin);
+            $Qempiezamax = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('empiezamax') ?? $Qempiezamax);
             $Qfases_on = is_array($oPosicion2->getParametro('fases_on')) ? $oPosicion2->getParametro('fases_on') : $Qfases_on;
             $Qfases_off = is_array($oPosicion2->getParametro('fases_off')) ? $oPosicion2->getParametro('fases_off') : $Qfases_off;
-            $Qpublicado = PayloadCoercion::int($oPosicion2->getParametro('publicado'), $Qpublicado);
+            $Qpublicado = \frontend\shared\helpers\PayloadCoercion::int($oPosicion2->getParametro('publicado'), $Qpublicado);
             $oPosicion2->olvidar($stackFromPost);
         }
     }
@@ -181,7 +181,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     ];
 }
 
-$actividadSelectReturn = ListNavSupport::buildActividadSelectReturnParametros([
+$actividadSelectReturn = \frontend\shared\helpers\ListNavSupport::buildActividadSelectReturnParametros([
     'modo' => $Qmodo,
     'que' => $Qque,
     'listar_asistentes' => $Qlistar_asistentes,
@@ -208,29 +208,29 @@ $actividadSelectReturn = ListNavSupport::buildActividadSelectReturnParametros([
 ]);
 
 if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
+    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    ListNavSupport::bootRecordar($oPosicion);
+    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
 }
-ListNavSupport::persistRecordarEntry($oPosicion, $actividadSelectReturn);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, $actividadSelectReturn);
 
-ListNavSupport::persistSelectionOnListPage(
+\frontend\shared\helpers\ListNavSupport::persistSelectionOnListPage(
     $oPosicion,
     $Qid_sel,
     $Qscroll_id,
     $stackFromPost !== 0,
 );
 if ($aGoBack !== []) {
-    ListNavSupport::persistActividadQueParent($oPosicion, $aGoBack);
+    \frontend\shared\helpers\ListNavSupport::persistActividadQueParent($oPosicion, $aGoBack);
 }
 
 if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
-    ListNavSupport::persistSelectionOnListPage($oPosicion, $Qid_sel, $Qscroll_id, false);
+    \frontend\shared\helpers\ListNavSupport::persistSelectionOnListPage($oPosicion, $Qid_sel, $Qscroll_id, false);
 }
 
-$selForApi = ListNavSupport::idSelIsEmpty($Qid_sel)
+$selForApi = \frontend\shared\helpers\ListNavSupport::idSelIsEmpty($Qid_sel)
     ? []
-    : (is_array($Qid_sel) ? $Qid_sel : [PayloadCoercion::string($Qid_sel)]);
+    : (is_array($Qid_sel) ? $Qid_sel : [\frontend\shared\helpers\PayloadCoercion::string($Qid_sel)]);
 
 // Delegamos TODA la generacion del listado al caso de uso backend.
 $data = PostRequest::getDataFromUrl('/src/actividades/actividad_select_datos', [
@@ -263,7 +263,7 @@ if (!empty($data['advertencia_demasiadas']) && is_array($data['advertencia_demas
     $ad = $data['advertencia_demasiadas'];
     $go_avant = HashFrontSignedLink::tryFromSpec($ad['continuar_link_spec'] ?? null);
     $go_atras = HashFrontSignedLink::tryFromSpec($ad['volver_link_spec'] ?? null);
-    $numActiv = PayloadCoercion::int($ad['num_actividades'] ?? 0);
+    $numActiv = \frontend\shared\helpers\PayloadCoercion::int($ad['num_actividades'] ?? 0);
     $html_advertencia = '<h2>' . sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."), $numActiv) . '</h2>';
     $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_avant . "') value=" . _("continuar") . ">";
     $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_atras . "') value=" . _("volver") . ">";
@@ -280,13 +280,13 @@ $oTabla->setBotones(ActividadesListaSupport::botones($data['a_botones'] ?? []));
 $oTabla->setDatos($a_valores);
 $html_tabla = $oTabla->mostrar_tabla();
 unset($data['a_cabeceras'], $data['a_botones'], $data['a_valores']);
-$resultado = PayloadCoercion::string($data['resultado'] ?? '');
+$resultado = \frontend\shared\helpers\PayloadCoercion::string($data['resultado'] ?? '');
 $perm_nueva = (bool) ($data['perm_nueva'] ?? false);
-$mod = PayloadCoercion::string($data['mod'] ?? '');
-$obj_pau = PayloadCoercion::string($data['obj_pau'] ?? 'Actividad');
+$mod = \frontend\shared\helpers\PayloadCoercion::string($data['mod'] ?? '');
+$obj_pau = \frontend\shared\helpers\PayloadCoercion::string($data['obj_pau'] ?? 'Actividad');
 $aTiposActiv = ActividadesListaSupport::datos($data['aTiposActiv'] ?? []);
 $extendida = (bool) ($data['extendida'] ?? false);
-$id_tipo_activ_efectivo = PayloadCoercion::string($data['id_tipo_activ_efectivo'] ?? $Qid_tipo_activ);
+$id_tipo_activ_efectivo = \frontend\shared\helpers\PayloadCoercion::string($data['id_tipo_activ_efectivo'] ?? $Qid_tipo_activ);
 
 $oHash = new HashFront();
 $oHash->setUrl('frontend/actividades/controller/actividad_que.php');
@@ -321,8 +321,8 @@ $a_camposHiddenSel = [
 $oHashSel->setArraycamposHidden($a_camposHiddenSel);
 
 $id_sel_value = is_array($Qid_sel)
-    ? PayloadCoercion::string($Qid_sel[0] ?? '')
-    : PayloadCoercion::string($Qid_sel);
+    ? \frontend\shared\helpers\PayloadCoercion::string($Qid_sel[0] ?? '')
+    : \frontend\shared\helpers\PayloadCoercion::string($Qid_sel);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

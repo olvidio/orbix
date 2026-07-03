@@ -5,7 +5,6 @@ namespace src\cambios\application;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioObjetoPref;
 use src\shared\config\ConfigGlobal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion: crea o actualiza un `CambioUsuarioObjetoPref` (la parte de la
@@ -37,7 +36,7 @@ final class CambioUsuarioObjetoPrefGuardar
         $id_tipo_activ = isset($input['id_tipo_activ']) && is_string($input['id_tipo_activ'])
             ? $input['id_tipo_activ']
             : '';
-        $dl_propia = FuncTablasSupport::isTrue($input['dl_propia'] ?? '');
+        $dl_propia = \src\shared\domain\helpers\FuncTablasSupport::isTrue($input['dl_propia'] ?? '');
         $objeto = isset($input['objeto']) && is_string($input['objeto']) ? $input['objeto'] : '';
         $aviso_tipo = isset($input['aviso_tipo']) && is_numeric($input['aviso_tipo'])
             ? (int) $input['aviso_tipo']
@@ -45,9 +44,9 @@ final class CambioUsuarioObjetoPrefGuardar
         $id_fase_ref = isset($input['id_fase_ref']) && is_numeric($input['id_fase_ref'])
             ? (int) $input['id_fase_ref']
             : 0;
-        $aviso_off = FuncTablasSupport::isTrue($input['aviso_off'] ?? '') ?? false;
-        $aviso_on = FuncTablasSupport::isTrue($input['aviso_on'] ?? '') ?? false;
-        $aviso_outdate = FuncTablasSupport::isTrue($input['aviso_outdate'] ?? '') ?? false;
+        $aviso_off = \src\shared\domain\helpers\FuncTablasSupport::isTrue($input['aviso_off'] ?? '') ?? false;
+        $aviso_on = \src\shared\domain\helpers\FuncTablasSupport::isTrue($input['aviso_on'] ?? '') ?? false;
+        $aviso_outdate = \src\shared\domain\helpers\FuncTablasSupport::isTrue($input['aviso_outdate'] ?? '') ?? false;
         $a_casas = isset($input['casas']) && is_array($input['casas']) ? $input['casas'] : [];
 
         if ($id_usuario <= 0) {

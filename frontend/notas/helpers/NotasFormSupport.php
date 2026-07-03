@@ -32,7 +32,7 @@ public static function formBoolOrString(mixed $value): bool|string
         return $value;
     }
 
-    return PayloadCoercion::string($value);
+    return \frontend\shared\helpers\PayloadCoercion::string($value);
 }
 
 public static function desplegableOpciones(mixed $raw): array
@@ -46,8 +46,8 @@ public static function desplegableOpciones(mixed $raw): array
             if (!is_array($pair) || count($pair) < 2) {
                 continue;
             }
-            $key = is_int($pair[0]) ? $pair[0] : PayloadCoercion::string($pair[0]);
-            $out[$key] = PayloadCoercion::string($pair[1]);
+            $key = is_int($pair[0]) ? $pair[0] : \frontend\shared\helpers\PayloadCoercion::string($pair[0]);
+            $out[$key] = \frontend\shared\helpers\PayloadCoercion::string($pair[1]);
         }
 
         return $out;
@@ -55,9 +55,9 @@ public static function desplegableOpciones(mixed $raw): array
     $out = [];
     foreach ($raw as $key => $value) {
         if (is_int($key)) {
-            $out[$key] = PayloadCoercion::string($value);
+            $out[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
         } elseif (is_string($key)) {
-            $out[$key] = PayloadCoercion::string($value);
+            $out[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
         }
     }
 

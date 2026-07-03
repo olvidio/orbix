@@ -26,8 +26,8 @@ $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/per
     'id_item' => $Qid_item,
 ]));
 
-$nombre = PayloadCoercion::string($data['nombre'] ?? '');
-$menu_perm = PayloadCoercion::int($data['menu_perm'] ?? 0);
+$nombre = \frontend\shared\helpers\PayloadCoercion::string($data['nombre'] ?? '');
+$menu_perm = \frontend\shared\helpers\PayloadCoercion::int($data['menu_perm'] ?? 0);
 $menu_perm_dl_map = UsuariosPayload::permMenuDlMapFromPayload($data['menu_perm_dl_map'] ?? null);
 
 $oHash = new HashFront();

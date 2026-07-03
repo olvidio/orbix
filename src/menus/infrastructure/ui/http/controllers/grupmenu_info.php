@@ -1,12 +1,11 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_grupmenu = FuncTablasSupport::inputInt($_POST, 'id_grupmenu');
+$Qid_grupmenu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_grupmenu');
 
 /** @var GrupMenuRepositoryInterface $GrupMenuRepository */
 $GrupMenuRepository = DependencyResolver::get(GrupMenuRepositoryInterface::class);

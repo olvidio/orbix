@@ -14,7 +14,7 @@ use PHPStan\Type\Type;
 use src\shared\domain\helpers\FilterPostGet;
 
 /**
- * Da a {@see FilterPostGet::post()} / {@see FilterPostGet::get()}
+ * Da a {@see \src\shared\domain\helpers\FilterPostGet::post()} / {@see \src\shared\domain\helpers\FilterPostGet::get()}
  * la misma inferencia de tipo de retorno que
  * `filter_input(INPUT_POST, ...)` / `filter_input(INPUT_GET, ...)`.
  */
@@ -26,7 +26,7 @@ final class FilterPostGetReturnTypeExtension implements DynamicStaticMethodRetur
 
     public function getClass(): string
     {
-        return FilterPostGet::class;
+        return \src\shared\domain\helpers\FilterPostGet::class;
     }
 
     public function isStaticMethodSupported(MethodReflection $methodReflection): bool

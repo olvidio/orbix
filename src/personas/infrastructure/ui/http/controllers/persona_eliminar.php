@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint JSON: elimina una persona.
@@ -10,8 +9,8 @@ use src\personas\application\PersonaEliminar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_nom = FuncTablasSupport::inputInt($_POST, 'id_nom');
-$Qobj_pau = FuncTablasSupport::inputString($_POST, 'obj_pau');
+$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom');
+$Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'obj_pau');
 
 /** @var PersonaEliminar $useCase */
 $useCase = DependencyResolver::get(PersonaEliminar::class);

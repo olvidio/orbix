@@ -4,7 +4,6 @@ namespace src\shared\config;
 
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\usuarios\domain\entity\Usuario;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 class ConfigGlobal extends ServerConf
 {
@@ -205,7 +204,7 @@ class ConfigGlobal extends ServerConf
 
     public static function mi_id_usuario(): int
     {
-        return FuncTablasSupport::inputInt(self::sessionAuth(), 'id_usuario');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputInt(self::sessionAuth(), 'id_usuario');
     }
 
     /**
@@ -213,32 +212,32 @@ class ConfigGlobal extends ServerConf
      */
     public static function mi_sfsv(): int
     {
-        return FuncTablasSupport::inputInt(self::sessionAuth(), 'sfsv');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputInt(self::sessionAuth(), 'sfsv');
     }
 
     public static function mi_id_role(): int
     {
-        return FuncTablasSupport::inputInt(self::sessionAuth(), 'id_role');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputInt(self::sessionAuth(), 'id_role');
     }
 
     public static function mi_role_pau(): string
     {
-        return FuncTablasSupport::inputString(self::sessionAuth(), 'role_pau');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'role_pau');
     }
 
     public static function mi_usuario(): string
     {
-        return FuncTablasSupport::inputString(self::sessionAuth(), 'username');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'username');
     }
 
     public static function mi_pass(): string
     {
-        return FuncTablasSupport::inputString(self::sessionAuth(), 'password');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'password');
     }
 
     public static function mi_id_schema(): int
     {
-        return FuncTablasSupport::inputInt(self::sessionAuth(), 'mi_id_schema');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputInt(self::sessionAuth(), 'mi_id_schema');
     }
 
     public static function mi_region_dl(): string
@@ -251,12 +250,12 @@ class ConfigGlobal extends ServerConf
             return is_string($envEsquema) ? $envEsquema : '';
         }
 
-        return FuncTablasSupport::inputString($auth, 'esquema');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputString($auth, 'esquema');
     }
 
     public static function mi_region(): string
     {
-        $esq = FuncTablasSupport::inputString(self::sessionAuth(), 'esquema');
+        $esq = \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'esquema');
         if ($esq === '') {
             return '';
         }
@@ -270,7 +269,7 @@ class ConfigGlobal extends ServerConf
 
     public static function mi_dele(): string
     {
-        $esq = FuncTablasSupport::inputString(self::sessionAuth(), 'esquema');
+        $esq = \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'esquema');
         if ($esq === '') {
             return '';
         }
@@ -332,29 +331,29 @@ class ConfigGlobal extends ServerConf
 
     public static function mi_oficina_menu(): string
     {
-        return FuncTablasSupport::inputString(self::sessionAuth(), 'mi_oficina_menu');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'mi_oficina_menu');
     }
 
     public static function mi_oficina(): string
     {
-        return FuncTablasSupport::inputString(self::sessionAuth(), 'mi_oficina');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'mi_oficina');
     }
 
     public static function mi_mail(): string
     {
-        return FuncTablasSupport::inputString(self::sessionAuth(), 'mail');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'mail');
     }
     // ----------- Idioma -------------------
     //es_ES.UTF-8
     public static function mi_Idioma(): string
     {
-        return FuncTablasSupport::inputString(self::sessionAuth(), 'idioma');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'idioma');
     }
 
     //es
     public static function mi_Idioma_short(): string
     {
-        return substr(FuncTablasSupport::inputString(self::sessionAuth(), 'idioma'), 0, 2);
+        return substr(\src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'idioma'), 0, 2);
     }
 
     public static function is_locale_us(): bool
@@ -374,6 +373,6 @@ class ConfigGlobal extends ServerConf
     // ----------- ordenApellidos -------------------
     public static function mi_ordenApellidos(): string
     {
-        return FuncTablasSupport::inputString(self::sessionAuth(), 'ordenApellidos');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'ordenApellidos');
     }
 }

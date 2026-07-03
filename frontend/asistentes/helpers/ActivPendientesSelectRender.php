@@ -27,13 +27,13 @@ final class ActivPendientesSelectRender
 
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $formRel = FuncTablasSupport::payloadString($paths, 'form_action');
+        $formRel = \frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'form_action');
         $payload['form_action'] = $formRel !== '' ? $base . '/' . ltrim($formRel, '/') : '';
 
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         $oHashForm = new HashFront();
-        $oHashForm->setCamposForm(FuncTablasSupport::payloadString($hashMain, 'campos_form', 'tipo_personas!sactividad!any'));
-        $cn = FuncTablasSupport::payloadString($hashMain, 'campos_no');
+        $oHashForm->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_form', 'tipo_personas!sactividad!any'));
+        $cn = \frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_no');
         if ($cn !== '') {
             $oHashForm->setCamposNo($cn);
         }

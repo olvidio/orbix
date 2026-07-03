@@ -9,6 +9,6 @@ use src\shared\domain\helpers\FilterPostGet;
 $useCase = DependencyResolver::get(ListasComCtrData::class);
 
 
-$sfsv = (string)(FilterPostGet::post('sfsv') ?? FilterPostGet::get('sfsv') ?? '');
+$sfsv = (string)(\src\shared\domain\helpers\FilterPostGet::post('sfsv') ?? \src\shared\domain\helpers\FilterPostGet::get('sfsv') ?? '');
 
 ContestarJson::enviar('', $useCase->execute($sfsv));

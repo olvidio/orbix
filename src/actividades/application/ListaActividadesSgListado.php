@@ -6,7 +6,6 @@ use src\shared\config\ConfigGlobal;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 use src\permisos\domain\XPermisos;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -49,17 +48,17 @@ final class ListaActividadesSgListado
         $num_max_actividades = 200;
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-        $Qcontinuar = FuncTablasSupport::inputString($input, 'continuar');
-        $Qstatus = FuncTablasSupport::inputInt($input, 'status');
-        $Qtipo_activ_sg = FuncTablasSupport::inputString($input, 'tipo_activ_sg');
-        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
-        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
-        $Qyear = FuncTablasSupport::inputString($input, 'year');
-        $Qdl_org = FuncTablasSupport::inputString($input, 'dl_org');
-        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
-        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
+        $Qcontinuar = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'continuar');
+        $Qstatus = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'status');
+        $Qtipo_activ_sg = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo_activ_sg');
+        $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
+        $Qperiodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'year');
+        $Qdl_org = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_org');
+        $Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
         $Qid_sel = is_array($input['sel'] ?? null) ? $input['sel'] : [];
-        $Qscroll_id = FuncTablasSupport::inputString($input, 'scroll_id');
+        $Qscroll_id = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'scroll_id');
 
         $Qstatus = empty($Qstatus) ? StatusId::ACTUAL : $Qstatus;
 

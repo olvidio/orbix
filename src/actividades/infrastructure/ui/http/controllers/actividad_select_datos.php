@@ -13,29 +13,29 @@ use src\shared\infrastructure\DependencyResolver;
 use src\actividades\application\ActividadSelectListado;
 
 $input = [
-    'continuar' => (string)FilterPostGet::post('continuar'),
-    'modo' => (string)FilterPostGet::post('modo'),
-    'status' => (int)FilterPostGet::post('status'),
-    'id_tipo_activ' => (string)FilterPostGet::post('id_tipo_activ'),
-    'filtro_lugar' => (string)FilterPostGet::post('filtro_lugar'),
-    'id_ubi' => (int)FilterPostGet::post('id_ubi'),
-    'nom_activ' => (string)FilterPostGet::post('nom_activ'),
-    'periodo' => (string)FilterPostGet::post('periodo'),
-    'year' => (string)FilterPostGet::post('year'),
-    'dl_org' => (string)FilterPostGet::post('dl_org'),
-    'empiezamin' => (string)FilterPostGet::post('empiezamin'),
-    'empiezamax' => (string)FilterPostGet::post('empiezamax'),
-    'fases_on' => (array)FilterPostGet::post('fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'fases_off' => (array)FilterPostGet::post('fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'publicado' => (int)FilterPostGet::post('publicado'),
-    'ssfsv' => (string)FilterPostGet::post('ssfsv'),
-    'sasistentes' => (string)FilterPostGet::post('sasistentes'),
-    'sactividad' => (string)FilterPostGet::post('sactividad'),
-    'sactividad2' => (string)FilterPostGet::post('sactividad2'),
-    'sel' => (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'scroll_id' => (string)FilterPostGet::post('scroll_id'),
+    'continuar' => (string)\src\shared\domain\helpers\FilterPostGet::post('continuar'),
+    'modo' => (string)\src\shared\domain\helpers\FilterPostGet::post('modo'),
+    'status' => (int)\src\shared\domain\helpers\FilterPostGet::post('status'),
+    'id_tipo_activ' => (string)\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ'),
+    'filtro_lugar' => (string)\src\shared\domain\helpers\FilterPostGet::post('filtro_lugar'),
+    'id_ubi' => (int)\src\shared\domain\helpers\FilterPostGet::post('id_ubi'),
+    'nom_activ' => (string)\src\shared\domain\helpers\FilterPostGet::post('nom_activ'),
+    'periodo' => (string)\src\shared\domain\helpers\FilterPostGet::post('periodo'),
+    'year' => (string)\src\shared\domain\helpers\FilterPostGet::post('year'),
+    'dl_org' => (string)\src\shared\domain\helpers\FilterPostGet::post('dl_org'),
+    'empiezamin' => (string)\src\shared\domain\helpers\FilterPostGet::post('empiezamin'),
+    'empiezamax' => (string)\src\shared\domain\helpers\FilterPostGet::post('empiezamax'),
+    'fases_on' => (array)\src\shared\domain\helpers\FilterPostGet::post('fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'fases_off' => (array)\src\shared\domain\helpers\FilterPostGet::post('fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'publicado' => (int)\src\shared\domain\helpers\FilterPostGet::post('publicado'),
+    'ssfsv' => (string)\src\shared\domain\helpers\FilterPostGet::post('ssfsv'),
+    'sasistentes' => (string)\src\shared\domain\helpers\FilterPostGet::post('sasistentes'),
+    'sactividad' => (string)\src\shared\domain\helpers\FilterPostGet::post('sactividad'),
+    'sactividad2' => (string)\src\shared\domain\helpers\FilterPostGet::post('sactividad2'),
+    'sel' => (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'scroll_id' => (string)\src\shared\domain\helpers\FilterPostGet::post('scroll_id'),
 ];
-$stackGo = (int)FilterPostGet::post('stack_go');
+$stackGo = (int)\src\shared\domain\helpers\FilterPostGet::post('stack_go');
 
 /** @var ActividadSelectListado $useCase */
 $useCase = DependencyResolver::get(ActividadSelectListado::class);

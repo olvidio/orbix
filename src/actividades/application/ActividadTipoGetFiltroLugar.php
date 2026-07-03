@@ -4,7 +4,6 @@ namespace src\actividades\application;
 
 use src\shared\domain\helpers\OpcionesDesplegable;
 use src\ubis\application\services\DelegacionDropdown;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve el payload (id, opciones, blanco, action) del desplegable de
@@ -24,7 +23,7 @@ class ActividadTipoGetFiltroLugar
      */
     public function execute(array $input = []): array
     {
-        $sfsv = FuncTablasSupport::inputString($input, 'entrada');
+        $sfsv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'entrada');
         $sfsvInt = is_numeric($sfsv) ? (int) $sfsv : 0;
 
         return [

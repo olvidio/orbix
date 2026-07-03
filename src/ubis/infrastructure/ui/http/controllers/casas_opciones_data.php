@@ -3,18 +3,17 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\CasasOpcionesData;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 $filtro = [];
 
 if (array_key_exists('active', $_POST)) {
-    $filtro['active'] = FuncTablasSupport::isTrue($_POST['active']);
+    $filtro['active'] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($_POST['active']);
 }
 if (array_key_exists('sv', $_POST)) {
-    $filtro['sv'] = FuncTablasSupport::isTrue($_POST['sv']);
+    $filtro['sv'] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($_POST['sv']);
 }
 if (array_key_exists('sf', $_POST)) {
-    $filtro['sf'] = FuncTablasSupport::isTrue($_POST['sf']);
+    $filtro['sf'] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($_POST['sf']);
 }
 if (!empty($_POST['id_ubi_in'])) {
     $raw = $_POST['id_ubi_in'];

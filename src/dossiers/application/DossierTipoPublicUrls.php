@@ -53,7 +53,7 @@ final class DossierTipoPublicUrls
     public function formControllerLinkSpecInstance(int $idTipoDossier, array $aQuery): array
     {
         $path = $this->relativeFormControllerInstance($idTipoDossier);
-        array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+        array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 
         return [
             'path' => $path,

@@ -17,6 +17,6 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 /** @var DelegacionRepositoryInterface $repoDl */
 $repoDl = DependencyResolver::get(DelegacionRepositoryInterface::class);
 
-$region = (string) FilterPostGet::post('region');
+$region = (string) \src\shared\domain\helpers\FilterPostGet::post('region');
 
 ContestarJson::enviar('', DbLugarDropdown::getData($region, $repoDl));

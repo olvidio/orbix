@@ -17,8 +17,8 @@ require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/procesos/tipo_activ_proceso_lst_posibles', PostRequest::requestPayloadForHash());
 $aProcesos = is_array($data['a_procesos'] ?? null) ? $data['a_procesos'] : [];
-$id_tipo_activ = PayloadCoercion::int($data['id_tipo_activ'] ?? 0);
-$propio = PayloadCoercion::string($data['propio'] ?? '');
+$id_tipo_activ = \frontend\shared\helpers\PayloadCoercion::int($data['id_tipo_activ'] ?? 0);
+$propio = \frontend\shared\helpers\PayloadCoercion::string($data['propio'] ?? '');
 
 echo '<table>';
 echo '<tr><td class=cabecera>' . _("procesos") . '</td></tr>';

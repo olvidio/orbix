@@ -200,8 +200,8 @@ final class TipoActivMetadataLoader
                 continue;
             }
             $filas[] = [
-                'id_tipo_activ' => PayloadCoercion::int($row['id_tipo_activ'] ?? 0),
-                'nombre' => PayloadCoercion::string($row['nombre'] ?? ''),
+                'id_tipo_activ' => \frontend\shared\helpers\PayloadCoercion::int($row['id_tipo_activ'] ?? 0),
+                'nombre' => \frontend\shared\helpers\PayloadCoercion::string($row['nombre'] ?? ''),
             ];
         }
 
@@ -224,7 +224,7 @@ final class TipoActivMetadataLoader
             if (is_int($value) || is_string($value)) {
                 $out[$key] = $value;
             } else {
-                $out[$key] = PayloadCoercion::string($value);
+                $out[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
             }
         }
 

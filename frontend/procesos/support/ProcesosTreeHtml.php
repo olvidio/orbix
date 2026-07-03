@@ -22,8 +22,8 @@ final class ProcesosTreeHtml
         $html = '<div id="tree">';
         if (!empty($aPadres[0])) {
             foreach ($aPadres[0] as $padre) {
-                $id_fase_i = PayloadCoercion::int($padre['id'] ?? 0);
-                $nom = PayloadCoercion::string($padre['nom'] ?? '');
+                $id_fase_i = \frontend\shared\helpers\PayloadCoercion::int($padre['id'] ?? 0);
+                $nom = \frontend\shared\helpers\PayloadCoercion::string($padre['nom'] ?? '');
                 if (array_key_exists($id_fase_i, $aPadres)) {
                     $html .= '<div class="branch">';
                     $html .= '<div class="entry"><span>' . $nom . '</span>';
@@ -51,8 +51,8 @@ final class ProcesosTreeHtml
         }
         $html = '';
         foreach ($aPadres[$id_fase] as $padre) {
-            $id_fase_i = PayloadCoercion::int($padre['id'] ?? 0);
-            $nom = PayloadCoercion::string($padre['nom'] ?? '');
+            $id_fase_i = \frontend\shared\helpers\PayloadCoercion::int($padre['id'] ?? 0);
+            $nom = \frontend\shared\helpers\PayloadCoercion::string($padre['nom'] ?? '');
             if (array_key_exists($id_fase_i, $aPadres)) {
                 $html .= '<div class="branch">';
                 $html .= '<div class="entry"><span>' . $nom . '</span>';

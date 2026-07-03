@@ -4,7 +4,6 @@ namespace src\actividades\application;
 
 use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve la tabla HTML de nombres de tipo de actividad (id, nombre). Portado
@@ -17,7 +16,7 @@ class ActividadTipoGetNomTipoTabla
      */
     public function execute(array $input = []): string
     {
-        $Qentrada = FuncTablasSupport::inputString($input, 'entrada');
+        $Qentrada = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'entrada');
 
         $aux = $Qentrada . '..';
         $oTipoActiv = new TiposActividades($aux, true);

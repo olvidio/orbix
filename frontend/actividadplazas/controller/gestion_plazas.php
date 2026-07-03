@@ -31,12 +31,12 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $stackFromPost = ActividadplazasPostInput::stackFromPost() ?? 0;
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $campos = ActividadplazasPostInput::gestionPlazasRequestCampos($oPosicion, $stackFromPost);
-$Qscroll_id = ListNavSupport::scrollIdFromPost();
+$Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
 
 $payload = ActividadplazasPayload::gestionPlazasFromPayload(
     PostRequest::getDataFromUrl('/src/actividadplazas/gestion_plazas_data', $campos)
@@ -93,7 +93,7 @@ $aOpciones = [
     'separador1' => '---------',
     'otro' => _("otro"),
 ];
-$titulo = FuncTablasSupport::strtoupperDlb(_("periodo de selección de actividades"));
+$titulo = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de selección de actividades"));
 $titulo .= " (" . _("en estado actual") . ")";
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('que');

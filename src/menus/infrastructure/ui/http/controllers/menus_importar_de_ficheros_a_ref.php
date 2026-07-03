@@ -13,13 +13,13 @@ use src\shared\domain\helpers\FilterPostGet;
 $oDBPC = GlobalPdo::get('oDBPC');
 $gestorErrores = $_SESSION['oGestorErrores'] ?? null;
 
-$Qseguro = FilterPostGet::post('seguro', FILTER_VALIDATE_INT);
+$Qseguro = \src\shared\domain\helpers\FilterPostGet::post('seguro', FILTER_VALIDATE_INT);
 if ($Qseguro === false || $Qseguro === null) {
-    $Qseguro = FilterPostGet::get('seguro', FILTER_VALIDATE_INT);
+    $Qseguro = \src\shared\domain\helpers\FilterPostGet::get('seguro', FILTER_VALIDATE_INT);
 }
-$Qtodos = FilterPostGet::post('todos', FILTER_VALIDATE_INT);
+$Qtodos = \src\shared\domain\helpers\FilterPostGet::post('todos', FILTER_VALIDATE_INT);
 if ($Qtodos === false || $Qtodos === null) {
-    $Qtodos = FilterPostGet::get('todos', FILTER_VALIDATE_INT);
+    $Qtodos = \src\shared\domain\helpers\FilterPostGet::get('todos', FILTER_VALIDATE_INT);
 }
 
 $Qseguro = ($Qseguro === false || $Qseguro === null || $Qseguro === 0) ? 2 : $Qseguro;

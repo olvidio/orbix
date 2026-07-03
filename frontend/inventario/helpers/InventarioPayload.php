@@ -20,12 +20,12 @@ public static function postPayload(mixed $data): array
 
 public static function periodoSelString(int|string $value): string
 {
-    return PayloadCoercion::string($value);
+    return \frontend\shared\helpers\PayloadCoercion::string($value);
 }
 
 public static function desplegableOpcionSel(int|string $value): string
 {
-    return PayloadCoercion::string($value);
+    return \frontend\shared\helpers\PayloadCoercion::string($value);
 }
 
 /**
@@ -51,7 +51,7 @@ public static function listaDocsFromPayload(array $payload): array
         'a_cabeceras' => ActividadesListaSupport::cabeceras($payload['a_cabeceras'] ?? []),
         'a_botones' => ActividadesListaSupport::botones($payload['a_botones'] ?? []),
         'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
-        'nombreDoc' => PayloadCoercion::string($payload['nombreDoc'] ?? ''),
+        'nombreDoc' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombreDoc'] ?? ''),
     ];
 }
 
@@ -68,9 +68,9 @@ public static function docAsignarFromPayload(array $payload): array
 {
     return [
         'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
-        'nombreDoc' => PayloadCoercion::string($payload['nombreDoc'] ?? ''),
+        'nombreDoc' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombreDoc'] ?? ''),
         'isNumerado' => !empty($payload['isNumerado']),
-        'sCamposForm' => PayloadCoercion::string($payload['sCamposForm'] ?? ''),
+        'sCamposForm' => \frontend\shared\helpers\PayloadCoercion::string($payload['sCamposForm'] ?? ''),
     ];
 }
 
@@ -84,7 +84,7 @@ public static function docDeDlbFromPayload(array $payload): array
     $grupos = [];
     if (is_array($gruposRaw)) {
         foreach ($gruposRaw as $key => $value) {
-            $grupos[$key] = PayloadCoercion::string($value);
+            $grupos[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
         }
     }
 
@@ -105,7 +105,7 @@ public static function listaDocsGrupoFromPayload(array $payload): array
 {
     return [
         'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
-        'nombre_valija' => PayloadCoercion::string($payload['nombre_valija'] ?? ''),
+        'nombre_valija' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_valija'] ?? ''),
     ];
 }
 
@@ -121,10 +121,10 @@ public static function listaDocsGrupoFromPayload(array $payload): array
 public static function cabeceraPieFromPayload(array $payload): array
 {
     return [
-        'cabecera' => PayloadCoercion::string($payload['cabecera'] ?? ''),
-        'cabeceraB' => PayloadCoercion::string($payload['cabeceraB'] ?? ''),
-        'firma' => PayloadCoercion::string($payload['firma'] ?? ''),
-        'pie' => PayloadCoercion::string($payload['pie'] ?? ''),
+        'cabecera' => \frontend\shared\helpers\PayloadCoercion::string($payload['cabecera'] ?? ''),
+        'cabeceraB' => \frontend\shared\helpers\PayloadCoercion::string($payload['cabeceraB'] ?? ''),
+        'firma' => \frontend\shared\helpers\PayloadCoercion::string($payload['firma'] ?? ''),
+        'pie' => \frontend\shared\helpers\PayloadCoercion::string($payload['pie'] ?? ''),
     ];
 }
 
@@ -138,7 +138,7 @@ public static function actividadesNombres(mixed $raw): array
     }
     $out = [];
     foreach ($raw as $item) {
-        $out[] = PayloadCoercion::string($item);
+        $out[] = \frontend\shared\helpers\PayloadCoercion::string($item);
     }
 
     return $out;
@@ -152,8 +152,8 @@ public static function equipajesDocCasaFromPayload(array $payload): array
 {
     return [
         'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
-        'nombre_ubi' => PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
-        'id_ubi' => PayloadCoercion::int($payload['id_ubi'] ?? 0),
+        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
+        'id_ubi' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_ubi'] ?? 0),
     ];
 }
 
@@ -181,11 +181,11 @@ public static function egmRow(mixed $raw): array
     }
 
     return [
-        'id_grupo' => PayloadCoercion::int($raw['id_grupo'] ?? 0),
-        'id_lugar' => PayloadCoercion::int($raw['id_lugar'] ?? 0),
-        'nom_lugar' => PayloadCoercion::string($raw['nom_lugar'] ?? ''),
-        'id_item_egm' => PayloadCoercion::int($raw['id_item_egm'] ?? 0),
-        'texto' => PayloadCoercion::string($raw['texto'] ?? ''),
+        'id_grupo' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_grupo'] ?? 0),
+        'id_lugar' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_lugar'] ?? 0),
+        'nom_lugar' => \frontend\shared\helpers\PayloadCoercion::string($raw['nom_lugar'] ?? ''),
+        'id_item_egm' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_item_egm'] ?? 0),
+        'texto' => \frontend\shared\helpers\PayloadCoercion::string($raw['texto'] ?? ''),
         'a_valores' => ActividadesListaSupport::datos($raw['a_valores'] ?? []),
     ];
 }
@@ -223,9 +223,9 @@ public static function docLibreRow(mixed $raw): array
     }
 
     return [
-        'sigla' => PayloadCoercion::string($raw[0] ?? ''),
-        'identificador' => PayloadCoercion::string($raw[1] ?? ''),
-        'etiqueta' => PayloadCoercion::string($raw[2] ?? ''),
+        'sigla' => \frontend\shared\helpers\PayloadCoercion::string($raw[0] ?? ''),
+        'identificador' => \frontend\shared\helpers\PayloadCoercion::string($raw[1] ?? ''),
+        'etiqueta' => \frontend\shared\helpers\PayloadCoercion::string($raw[2] ?? ''),
     ];
 }
 
@@ -253,7 +253,7 @@ public static function posiblesMaletasFromPayload(array $payload): array
 {
     return [
         'a_opciones' => self::desplegableOpciones($payload['a_opciones'] ?? []),
-        'new_id_grupo' => PayloadCoercion::int($payload['new_id_grupo'] ?? 0),
+        'new_id_grupo' => \frontend\shared\helpers\PayloadCoercion::int($payload['new_id_grupo'] ?? 0),
     ];
 }
 
@@ -264,10 +264,10 @@ public static function posiblesMaletasFromPayload(array $payload): array
 public static function equipajesFormNuevoFromPayload(array $payload): array
 {
     return [
-        'nombre_ubi' => PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
-        'ini' => PayloadCoercion::string($payload['ini'] ?? ''),
-        'fin' => PayloadCoercion::string($payload['fin'] ?? ''),
-        'ids_activ' => PayloadCoercion::string($payload['ids_activ'] ?? ''),
+        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
+        'ini' => \frontend\shared\helpers\PayloadCoercion::string($payload['ini'] ?? ''),
+        'fin' => \frontend\shared\helpers\PayloadCoercion::string($payload['fin'] ?? ''),
+        'ids_activ' => \frontend\shared\helpers\PayloadCoercion::string($payload['ids_activ'] ?? ''),
     ];
 }
 
@@ -337,7 +337,7 @@ public static function movimientosFromPayload(array $payload): array
     $lugares = [];
     if (is_array($lugaresRaw)) {
         foreach ($lugaresRaw as $key => $value) {
-            $lugares[$key] = PayloadCoercion::string($value);
+            $lugares[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
         }
     }
 
@@ -345,7 +345,7 @@ public static function movimientosFromPayload(array $payload): array
     $nombres = [];
     if (is_array($nombresRaw)) {
         foreach ($nombresRaw as $key => $value) {
-            $nombres[$key] = PayloadCoercion::string($value);
+            $nombres[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
         }
     }
 
@@ -371,7 +371,7 @@ public static function movimientosQueRows(mixed $raw): array
         }
         $parsed = [];
         foreach ($row as $key => $value) {
-            $parsed[$key] = PayloadCoercion::string($value);
+            $parsed[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
         }
         $out[] = $parsed;
     }
@@ -412,12 +412,12 @@ public static function valorAgruparRow(mixed $raw): array
     }
 
     return [
-        'nombre' => PayloadCoercion::string($raw['nombre'] ?? ''),
-        'identificador' => PayloadCoercion::string($raw['identificador'] ?? ''),
-        'carta' => PayloadCoercion::string($raw['carta'] ?? ''),
-        'coleccion' => PayloadCoercion::string($raw['coleccion'] ?? ''),
-        'ejemplares' => PayloadCoercion::string($raw['ejemplares'] ?? ''),
-        'lugar' => PayloadCoercion::string($raw['lugar'] ?? ''),
+        'nombre' => \frontend\shared\helpers\PayloadCoercion::string($raw['nombre'] ?? ''),
+        'identificador' => \frontend\shared\helpers\PayloadCoercion::string($raw['identificador'] ?? ''),
+        'carta' => \frontend\shared\helpers\PayloadCoercion::string($raw['carta'] ?? ''),
+        'coleccion' => \frontend\shared\helpers\PayloadCoercion::string($raw['coleccion'] ?? ''),
+        'ejemplares' => \frontend\shared\helpers\PayloadCoercion::string($raw['ejemplares'] ?? ''),
+        'lugar' => \frontend\shared\helpers\PayloadCoercion::string($raw['lugar'] ?? ''),
     ];
 }
 

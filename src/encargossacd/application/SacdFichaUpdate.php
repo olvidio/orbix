@@ -7,7 +7,6 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoSacdObserv;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion de la ficha de encargos de un SACD
@@ -33,9 +32,9 @@ final class SacdFichaUpdate
      */
     public function execute(array $post): array
     {
-        $id_nom = FuncTablasSupport::inputInt($post, 'id_nom');
-        $enc_num = FuncTablasSupport::inputInt($post, 'enc_num');
-        $observ = FuncTablasSupport::inputString($post, 'observ');
+        $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_nom');
+        $enc_num = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'enc_num');
+        $observ = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'observ');
 
         $aId_tipo_enc = is_array($post['id_tipo_enc'] ?? null) ? $post['id_tipo_enc'] : [];
         $aId_enc = is_array($post['id_enc'] ?? null) ? $post['id_enc'] : [];

@@ -6,7 +6,6 @@ use src\cambios\domain\value_objects\OperadorPref;
 use src\cambios\domain\value_objects\PropiedadNombre;
 use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\entity\Ubi;
-use src\shared\domain\helpers\FuncTablasSupport;
 class CambioUsuarioPropiedadPref
 {
     use Hydratable;
@@ -18,14 +17,14 @@ class CambioUsuarioPropiedadPref
      */
     public function getTextCambio(): string|false
     {
-        if (!FuncTablasSupport::isTrue($this->isValor_new()) && !FuncTablasSupport::isTrue($this->isValor_old())) {
+        if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($this->isValor_new()) && !\src\shared\domain\helpers\FuncTablasSupport::isTrue($this->isValor_old())) {
             return false;
         }
         $sText = _("si el");
         $sText .= ' ';
-        if (FuncTablasSupport::isTrue($this->isValor_new())) $sText .= _("nuevo valor");
-        if (FuncTablasSupport::isTrue($this->isValor_new()) && FuncTablasSupport::isTrue($this->isValor_old())) $sText .= ' ' . _("o el") . ' ';
-        if (FuncTablasSupport::isTrue($this->isValor_old())) $sText .= _("valor actual");
+        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($this->isValor_new())) $sText .= _("nuevo valor");
+        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($this->isValor_new()) && \src\shared\domain\helpers\FuncTablasSupport::isTrue($this->isValor_old())) $sText .= ' ' . _("o el") . ' ';
+        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($this->isValor_old())) $sText .= _("valor actual");
         $sText .= ' ';
         $sText .= _("es");
         if ($this->getOperador() === '=') $sText .= ' = ' . _("a");

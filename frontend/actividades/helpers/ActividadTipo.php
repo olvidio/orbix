@@ -273,37 +273,37 @@ class ActividadTipo
 
     public function setSfsv(mixed $ssfsv): void
     {
-        $this->ssfsv = $ssfsv === null ? null : PayloadCoercion::string($ssfsv);
+        $this->ssfsv = $ssfsv === null ? null : \frontend\shared\helpers\PayloadCoercion::string($ssfsv);
     }
 
     public function setAsistentes(mixed $sasistentes): void
     {
-        $this->sasistentes = $sasistentes === null ? null : PayloadCoercion::string($sasistentes);
+        $this->sasistentes = $sasistentes === null ? null : \frontend\shared\helpers\PayloadCoercion::string($sasistentes);
     }
 
     public function setActividad(mixed $sactividad): void
     {
-        $this->sactividad = $sactividad === null ? null : PayloadCoercion::string($sactividad);
+        $this->sactividad = $sactividad === null ? null : \frontend\shared\helpers\PayloadCoercion::string($sactividad);
     }
 
     public function setActividad2Digitos(mixed $sactividad): void
     {
-        $this->sactividad = $sactividad === null ? null : PayloadCoercion::string($sactividad);
+        $this->sactividad = $sactividad === null ? null : \frontend\shared\helpers\PayloadCoercion::string($sactividad);
     }
 
     public function setNom_tipo(mixed $snom_tipo): void
     {
-        $this->snom_tipo = $snom_tipo === null ? null : PayloadCoercion::string($snom_tipo);
+        $this->snom_tipo = $snom_tipo === null ? null : \frontend\shared\helpers\PayloadCoercion::string($snom_tipo);
     }
 
     public function setStatus(mixed $status): void
     {
-        $this->status = $status === null ? null : PayloadCoercion::int($status);
+        $this->status = $status === null ? null : \frontend\shared\helpers\PayloadCoercion::int($status);
     }
 
     public function setQue(mixed $que): void
     {
-        $this->que = $que === null ? null : PayloadCoercion::string($que);
+        $this->que = $que === null ? null : \frontend\shared\helpers\PayloadCoercion::string($que);
     }
 
     public function setId_tipo_activ(mixed $id_tipo_activ): void
@@ -313,13 +313,13 @@ class ActividadTipo
         } elseif (is_int($id_tipo_activ) || is_string($id_tipo_activ)) {
             $this->id_tipo_activ = $id_tipo_activ;
         } else {
-            $this->id_tipo_activ = PayloadCoercion::string($id_tipo_activ);
+            $this->id_tipo_activ = \frontend\shared\helpers\PayloadCoercion::string($id_tipo_activ);
         }
     }
 
     public function setPara(mixed $para = 'actividades'): void
     {
-        $this->para = $para === null ? null : PayloadCoercion::string($para);
+        $this->para = $para === null ? null : \frontend\shared\helpers\PayloadCoercion::string($para);
     }
 
     public function getEvitarProcesos(): ?bool

@@ -16,7 +16,6 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use frontend\shared\web\Periodo;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Misma lógica que `frontend/.../ca_posibles.php`; respuesta serializable.
@@ -48,14 +47,14 @@ final class CaPosiblesData
     public function execute(array $post): array
     {
 
-        $objPau = FuncTablasSupport::inputString($post, 'obj_pau');
-        $QgrupoEstudios = FuncTablasSupport::inputString($post, 'grupo_estudios');
-        $Qtexto = FuncTablasSupport::inputString($post, 'texto');
-        $Qref = FuncTablasSupport::inputString($post, 'ref');
-        $Qidca = FuncTablasSupport::inputString($post, 'idca');
-        $QcaEstudios = FuncTablasSupport::inputString($post, 'ca_estudios');
-        $QcaRepaso = FuncTablasSupport::inputString($post, 'ca_repaso');
-        $QcaTodos = FuncTablasSupport::inputString($post, 'ca_todos');
+        $objPau = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'obj_pau');
+        $QgrupoEstudios = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'grupo_estudios');
+        $Qtexto = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'texto');
+        $Qref = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'ref');
+        $Qidca = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'idca');
+        $QcaEstudios = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'ca_estudios');
+        $QcaRepaso = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'ca_repaso');
+        $QcaTodos = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'ca_todos');
 
         $aSel = isset($post['sel']) && is_array($post['sel']) ? $post['sel'] : [];
 
@@ -87,9 +86,9 @@ final class CaPosiblesData
             $QidCtrAgd = 0;
             $QidCtrN = 0;
         } else {
-            $QidCtrAgd = FuncTablasSupport::inputInt($post, 'id_ctr_agd');
-            $QidCtrN = FuncTablasSupport::inputInt($post, 'id_ctr_n');
-            $Qna = FuncTablasSupport::inputString($post, 'na');
+            $QidCtrAgd = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_ctr_agd');
+            $QidCtrN = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_ctr_n');
+            $Qna = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'na');
             if ($Qna === '') {
                 if ($QidCtrN > 0) {
                     $Qna = 'n';
@@ -97,10 +96,10 @@ final class CaPosiblesData
                     $Qna = 'a';
                 }
             }
-            $Qyear = FuncTablasSupport::inputInt($post, 'year');
-            $Qperiodo = FuncTablasSupport::inputString($post, 'periodo');
-            $Qempiezamin = FuncTablasSupport::inputString($post, 'empiezamin');
-            $Qempiezamax = FuncTablasSupport::inputString($post, 'empiezamax');
+            $Qyear = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'year');
+            $Qperiodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'periodo');
+            $Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'empiezamin');
+            $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'empiezamax');
 
             if (empty($QidCtrAgd) && empty($QidCtrN)) {
                 throw new \InvalidArgumentException(_('debe seleccionar un centro o grupo de centros'));
@@ -129,14 +128,14 @@ final class CaPosiblesData
             case 'a':
                 $idCtr = ($QidCtrAgd === 1) ? '' : (string)$QidCtrAgd;
                 $idTablaPersona = 'a';
-                if (FuncTablasSupport::isTrue($QcaTodos)) {
+                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($QcaTodos)) {
                     $idTipoActiv = '^' . $miSfsv . '33';
                 } else {
                     $idTipoActiv = '^' . $miSfsv . '33';
-                    if (FuncTablasSupport::isTrue($QcaEstudios)) {
+                    if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($QcaEstudios)) {
                         $idTipoActiv = '^' . $miSfsv . '332';
                     }
-                    if (FuncTablasSupport::isTrue($QcaRepaso)) {
+                    if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($QcaRepaso)) {
                         $idTipoActiv = '^1' . $miSfsv . '334';
                     }
                 }
@@ -146,14 +145,14 @@ final class CaPosiblesData
             case 'n':
                 $idCtr = ($QidCtrN === 1) ? '' : (string)$QidCtrN;
                 $idTablaPersona = 'n';
-                if (FuncTablasSupport::isTrue($QcaTodos)) {
+                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($QcaTodos)) {
                     $idTipoActiv = '^' . $miSfsv . '12';
                 } else {
                     $idTipoActiv = '^' . $miSfsv . '12';
-                    if (FuncTablasSupport::isTrue($QcaEstudios)) {
+                    if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($QcaEstudios)) {
                         $idTipoActiv = '^' . $miSfsv . '122';
                     }
-                    if (FuncTablasSupport::isTrue($QcaRepaso)) {
+                    if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($QcaRepaso)) {
                         $idTipoActiv = '^' . $miSfsv . '124';
                     }
                 }

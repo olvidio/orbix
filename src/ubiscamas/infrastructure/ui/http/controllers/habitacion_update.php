@@ -15,26 +15,25 @@ use src\ubiscamas\domain\value_objects\HabitacionOrden;
 use src\ubiscamas\domain\value_objects\NumeroCamas;
 use src\ubiscamas\domain\value_objects\PlantaText;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
-use src\shared\domain\helpers\FuncTablasSupport;
-$a_sel = FuncTablasSupport::inputStringList($_POST, 'sel');
+$a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'sel');
 
-$Qid_habitacion = FuncTablasSupport::inputString($_POST, 'id_habitacion');
-$Qid_ubi = FuncTablasSupport::inputInt($_POST, 'id_ubi');
+$Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_habitacion');
+$Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi');
 
 if ($a_sel !== []) {
     $Qid_habitacion = urldecode(strtok($a_sel[0], '#') ?: '');
 }
 
-$Qorden = FuncTablasSupport::inputInt($_POST, 'orden');
-$Qnombre = FuncTablasSupport::inputString($_POST, 'nombre');
-$Qnumero_camas = FuncTablasSupport::inputInt($_POST, 'numero_camas');
-$Qnumero_camas_vip = FuncTablasSupport::inputInt($_POST, 'numero_camas_vip');
-$Qplanta = FuncTablasSupport::inputString($_POST, 'planta');
-$QtipoLavabo = FuncTablasSupport::inputInt($_POST, 'tipoLavabo');
-$Qsillon = FuncTablasSupport::isTrue(FuncTablasSupport::inputString($_POST, 'sillon'));
-$Qadaptada = FuncTablasSupport::isTrue(FuncTablasSupport::inputString($_POST, 'adaptada'));
-$Qobservaciones = FuncTablasSupport::inputString($_POST, 'observaciones');
-$Qdespacho = FuncTablasSupport::isTrue(FuncTablasSupport::inputString($_POST, 'despacho'));
+$Qorden = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'orden');
+$Qnombre = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nombre');
+$Qnumero_camas = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'numero_camas');
+$Qnumero_camas_vip = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'numero_camas_vip');
+$Qplanta = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'planta');
+$QtipoLavabo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'tipoLavabo');
+$Qsillon = \src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'sillon'));
+$Qadaptada = \src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'adaptada'));
+$Qobservaciones = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'observaciones');
+$Qdespacho = \src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'despacho'));
 
 /** @var HabitacionDlRepositoryInterface $habitacionRepository */
 $habitacionRepository = DependencyResolver::get(HabitacionDlRepositoryInterface::class);
@@ -77,9 +76,9 @@ try {
     $a_camas_actuales = $camaRepository->getCamasByHabitacion($uuid_habitacion);
     $num_camas_actuales = count($a_camas_actuales);
 
-    $new_camas_desc = FuncTablasSupport::inputStringList($_POST, 'new_camas_desc');
-    $new_camas_larga = FuncTablasSupport::inputStringList($_POST, 'new_camas_larga');
-    $new_camas_vip = FuncTablasSupport::inputStringList($_POST, 'new_camas_vip');
+    $new_camas_desc = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'new_camas_desc');
+    $new_camas_larga = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'new_camas_larga');
+    $new_camas_vip = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'new_camas_vip');
 
     foreach ($new_camas_desc as $index => $descripcion) {
         if ($descripcion !== '') {

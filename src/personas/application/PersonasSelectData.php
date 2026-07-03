@@ -17,7 +17,6 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/personas_select_data`.
@@ -52,16 +51,16 @@ final class PersonasSelectData
      */
     public function execute(array $input): array
     {
-        $tabla = FuncTablasSupport::inputString($input, 'tabla');
-        $Qna = FuncTablasSupport::inputString($input, 'na');
-        $tipo = FuncTablasSupport::inputString($input, 'tipo');
-        $Qes_sacd = FuncTablasSupport::inputInt($input, 'es_sacd');
-        $Qexacto = FuncTablasSupport::inputString($input, 'exacto');
-        $Qcmb = FuncTablasSupport::inputString($input, 'cmb');
-        $Qnombre = FuncTablasSupport::inputString($input, 'nombre');
-        $Qapellido1 = FuncTablasSupport::inputString($input, 'apellido1');
-        $Qapellido2 = FuncTablasSupport::inputString($input, 'apellido2');
-        $Qcentro = FuncTablasSupport::inputString($input, 'centro');
+        $tabla = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tabla');
+        $Qna = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'na');
+        $tipo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo');
+        $Qes_sacd = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'es_sacd');
+        $Qexacto = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'exacto');
+        $Qcmb = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'cmb');
+        $Qnombre = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nombre');
+        $Qapellido1 = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apellido1');
+        $Qapellido2 = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apellido2');
+        $Qcentro = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'centro');
 
         $aWhere = [];
         $aOperador = [];
@@ -219,7 +218,7 @@ final class PersonasSelectData
         $sessionAuth = $_SESSION['session_auth'] ?? null;
         /** @var array<string, mixed>|null $sessionAuthTyped */
         $sessionAuthTyped = is_array($sessionAuth) ? $sessionAuth : null;
-        $idUsuario = $sessionAuthTyped !== null ? FuncTablasSupport::inputInt($sessionAuthTyped, 'id_usuario') : 0;
+        $idUsuario = $sessionAuthTyped !== null ? \src\shared\domain\helpers\FuncTablasSupport::inputInt($sessionAuthTyped, 'id_usuario') : 0;
         $oPreferencia = $PreferenciaRepository->findById($idUsuario, 'tabla_presentacion');
         if ($oPreferencia !== null) {
             $sPrefs = (string)$oPreferencia->getPreferencia();
@@ -274,7 +273,7 @@ final class PersonasSelectData
                 }
                 $a_personas[$nom . '_' . $id_nom] = $fila;
         }
-        uksort($a_personas, 'src\shared\domain\helpers\strsinacentocmp');
+        uksort($a_personas, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
 
         $personas = array_values($a_personas);
 

@@ -70,7 +70,7 @@ final class CaPosiblesQueData
             $nombreUbi = $oCentroDl->getNombre_ubi();
             $aCentrosOrden[$nombreUbi] = [$idUbi => $nombreUbi];
         }
-        uksort($aCentrosOrden, 'src\shared\domain\helpers\strsinacentocmp');
+        uksort($aCentrosOrden, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
         $aCentrosNExt = [];
         $aCentrosNExt[1] = _('todos los ctr');
         $aCentrosNExt[2] = '----------';
@@ -94,7 +94,7 @@ final class CaPosiblesQueData
             $nombreUbi = $oCentroDl->getNombre_ubi();
             $aCentrosOrden[$nombreUbi] = [$idUbi => $nombreUbi];
         }
-        uksort($aCentrosOrden, 'src\shared\domain\helpers\strsinacentocmp');
+        uksort($aCentrosOrden, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
         $aCentrosAgdExt = [];
         $aCentrosAgdExt[1] = _('todos los ctr');
         $aCentrosAgdExt[2] = '----------';

@@ -2,7 +2,6 @@
 
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /*
  * Para que no de errror al ejecutar psql. usuario root no coincide con dani
@@ -22,7 +21,7 @@ $config = $oConfigDB->getEsquema('public'); //de la database comun
 $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
-$Qaccion = FuncTablasSupport::inputString($_POST, 'accion');
+$Qaccion = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'accion');
 
 //$dir_base = "/var/www/orbix";
 $dir_base = ServerConf::DIR;

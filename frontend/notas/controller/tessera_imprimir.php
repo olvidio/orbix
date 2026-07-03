@@ -127,8 +127,8 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-ListNavSupport::persistTesseraImprimirParentReturnToPosicion($oPosicion, 1);
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+\frontend\shared\helpers\ListNavSupport::persistTesseraImprimirParentReturnToPosicion($oPosicion, 1);
 
 echo "<script>fnjs_left_side_hide()</script>";
 include_once(OrbixRuntime::dirEstilos() . '/tessera.css.php');
@@ -153,7 +153,7 @@ $Qcara = empty($Qcara) ? "A" : $Qcara;
 $payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
     'id_nom' => $id_nom,
 ]);
-$nom = PayloadCoercion::string($payload['nom'] ?? '');
+$nom = \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? '');
 $cAsignaturas = TesseraImprimirPayload::asignaturasFromPayload($payload);
 $aAprobadas = TesseraImprimirPayload::aprobadasFromPayload($payload);
 $oConfig = $_SESSION['oConfig'] ?? null;

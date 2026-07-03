@@ -3,8 +3,7 @@
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
-$Qid_template_menu = FuncTablasSupport::inputInt($_POST, 'id_template_menu');
+$Qid_template_menu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_template_menu');
 
 $oDB = GlobalPdo::get('oDBE');
 $oDBPC = GlobalPdo::get('oDBPC');

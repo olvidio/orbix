@@ -20,9 +20,9 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistTesseraReturnToPosicion($oPosicion, 0);
-ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistTesseraReturnToPosicion($oPosicion, 0);
+\frontend\shared\helpers\ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 
 $a_sel_raw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $a_sel = is_array($a_sel_raw) ? $a_sel_raw : [];
@@ -41,7 +41,7 @@ foreach ($a_sel as $PersonaSel) {
     $payload = PostRequest::getDataFromUrl('/src/notas/tessera_ver_data', [
         'id_nom' => $id_nom,
     ], false);
-    $error = PayloadCoercion::string($payload['error'] ?? '');
+    $error = \frontend\shared\helpers\PayloadCoercion::string($payload['error'] ?? '');
     if ($error !== '') {
         echo PostRequest::stripInternalCallProvenance($error);
         return;

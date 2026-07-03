@@ -1,7 +1,6 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 // grabar la cabecera, pie o texto en las maletas.
 use src\inventario\domain\contracts\EgmRepositoryInterface;
@@ -10,9 +9,9 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qtexto = FuncTablasSupport::inputString($_POST, 'texto');
-$Qloc = FuncTablasSupport::inputString($_POST, 'loc');
-$Qid_equipaje = FuncTablasSupport::inputInt($_POST, 'id_equipaje');
+$Qtexto = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'texto');
+$Qloc = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'loc');
+$Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_equipaje');
 
 /** @var EquipajeRepositoryInterface $EquipajeRepository */
 $EquipajeRepository = DependencyResolver::get(EquipajeRepositoryInterface::class);

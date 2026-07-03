@@ -22,8 +22,8 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -40,7 +40,7 @@ $Qorigen = EncargossacdPostInput::postString('origen');
 $data = PostRequest::getDataFromUrl('/src/encargossacd/encargo_horario_select_data', [
     'id_enc' => $Qid_enc,
 ]);
-$desc_enc = PayloadCoercion::string($data['desc_enc'] ?? '');
+$desc_enc = \frontend\shared\helpers\PayloadCoercion::string($data['desc_enc'] ?? '');
 $filasRaw = $data['filas'] ?? [];
 $filas = is_array($filasRaw) ? $filasRaw : [];
 
@@ -84,7 +84,7 @@ foreach ($filas as $fila) {
         'id_item_h' => $id_item_h,
         'desc_enc' => $desc_enc,
     ];
-    array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+    array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
     $pagina = HashFront::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
     $a_valores[$i] = [
@@ -111,7 +111,7 @@ $aQuery = [
     'desc_enc' => $desc_enc,
     'origen' => $Qorigen,
 ];
-array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $pagina_nuevo = HashFront::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
 $oTabla = new Lista();

@@ -26,8 +26,8 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 $ids = PersonasPostInput::idFromSelPost();
@@ -49,7 +49,7 @@ $campos = [
 $data = PostRequest::getDataFromUrl('/src/personas/home_persona_data', $campos, false);
 $aviso = '';
 if (!empty($data['error'])) {
-    $errorHtml = PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error']));
+    $errorHtml = PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($data['error']));
     if (
         str_contains($errorHtml, _('persona no válida'))
         || str_contains($errorHtml, 'persona no válida')
@@ -86,7 +86,7 @@ $go_ficha = HashFront::link($base . '/frontend/personas/controller/personas_edit
 $a_parametros_dossier = ['pau' => $pau, 'id_pau' => $id_nom, 'obj_pau' => $Qobj_pau];
 $godossiers = HashFront::link($base . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 
-$lista_dossiers_html = DossiersListaRender::render($pau, $id_nom, $Qobj_pau);
+$lista_dossiers_html = \frontend\dossiers\helpers\DossiersListaRender::render($pau, $id_nom, $Qobj_pau);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

@@ -9,7 +9,6 @@ use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Crea, edita o mueve un `Asistente`.
@@ -38,29 +37,29 @@ final class AsistenteGuardar
      */
     public function execute(array $input): string
     {
-        $mod = FuncTablasSupport::inputString($input, 'mod');
+        $mod = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'mod');
         if (!in_array($mod, ['nuevo', 'editar', 'mover'], true)) {
             return sprintf(_("mod no soportado: %s"), $mod);
         }
 
-        $Qpau = FuncTablasSupport::inputString($input, 'pau');
-        $a_sel = FuncTablasSupport::inputStringList($input, 'sel');
+        $Qpau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'pau');
+        $a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($input, 'sel');
         $id_activ = 0;
         $id_nom = 0;
         if ($a_sel !== []) {
             $selKey = $a_sel[0];
             if ($Qpau === 'p') {
                 $id_activ = (int) strtok($selKey, '#');
-                $id_nom = FuncTablasSupport::inputInt($input, 'id_pau');
+                $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
             } elseif ($Qpau === 'a') {
                 $id_nom = (int) strtok($selKey, '#');
-                $id_activ = FuncTablasSupport::inputInt($input, 'id_pau');
+                $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
             }
         } else {
-            $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
-            $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
+            $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+            $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
         }
-        $id_activ_old = FuncTablasSupport::inputInt($input, 'id_activ_old');
+        $id_activ_old = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ_old');
 
         if ($id_activ === 0 || $id_nom === 0) {
             return _("faltan parametros id_activ / id_nom");
@@ -107,21 +106,21 @@ final class AsistenteGuardar
             return _("los datos de asistencia los modifica la dl del asistente");
         }
 
-        $oAsistente->setEncargo(FuncTablasSupport::inputString($input, 'encargo'));
-        $oAsistente->setObserv(FuncTablasSupport::inputString($input, 'observ'));
-        $oAsistente->setObservEstVo(FuncTablasSupport::inputString($input, 'observ_est'));
-        $oAsistente->setPropio(FuncTablasSupport::isTrue(FuncTablasSupport::inputString($input, 'propio')) ?? false);
-        $oAsistente->setEst_ok(FuncTablasSupport::isTrue(FuncTablasSupport::inputString($input, 'est_ok')) ?? false);
-        $oAsistente->setCfi(FuncTablasSupport::isTrue(FuncTablasSupport::inputString($input, 'cfi')) ?? false);
-        $oAsistente->setFalta(FuncTablasSupport::isTrue(FuncTablasSupport::inputString($input, 'falta')) ?? false);
-        $oAsistente->setCfi_con(FuncTablasSupport::inputInt($input, 'cfi_con'));
+        $oAsistente->setEncargo(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'encargo'));
+        $oAsistente->setObserv(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ'));
+        $oAsistente->setObservEstVo(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ_est'));
+        $oAsistente->setPropio(\src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'propio')) ?? false);
+        $oAsistente->setEst_ok(\src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'est_ok')) ?? false);
+        $oAsistente->setCfi(\src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'cfi')) ?? false);
+        $oAsistente->setFalta(\src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'falta')) ?? false);
+        $oAsistente->setCfi_con(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'cfi_con'));
 
         if ($mod === 'mover') {
             $oAsistente->setPropio(true);
         }
         $oAsistente->setDlResponsableVo(ConfigGlobal::mi_delef());
 
-        $Qpropietario = FuncTablasSupport::inputString($input, 'propietario');
+        $Qpropietario = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'propietario');
         if ($Qpropietario === 'xxx') {
             $Qpropietario = '';
         }
@@ -130,7 +129,7 @@ final class AsistenteGuardar
         }
         $oAsistente->setPropietarioVo($Qpropietario);
         $err_plaza = $oAsistente->setPlazaVoComprobando(
-            FuncTablasSupport::inputInt($input, 'plaza'),
+            \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'plaza'),
             $this->plazaPropietarioAsignacion,
         );
         if ($err_plaza !== '') {

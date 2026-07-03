@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: formulario anual de gastos/aportaciones (`casa_ec_gastos_form`).
@@ -11,8 +10,8 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'year' => FuncTablasSupport::inputInt($_POST, 'year'),
-    'id_cdc' => FuncTablasSupport::inputStringList($_POST, 'id_cdc'),
+    'year' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'year'),
+    'id_cdc' => \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'id_cdc'),
 ];
 
 /** @var CasaEcGastosFormData $useCase */

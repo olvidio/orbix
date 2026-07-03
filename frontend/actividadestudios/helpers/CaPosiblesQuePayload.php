@@ -21,7 +21,7 @@ final class CaPosiblesQuePayload
     public static function fromPayload(array $payload): array
     {
         return [
-            'grupo_estudios' => PayloadCoercion::string($payload['grupo_estudios'] ?? ''),
+            'grupo_estudios' => \frontend\shared\helpers\PayloadCoercion::string($payload['grupo_estudios'] ?? ''),
             'mi_grupo' => $payload['mi_grupo'] ?? '',
             'aCentrosNExt' => NotasFormSupport::desplegableOpciones($payload['aCentrosNExt'] ?? []),
             'aCentrosAgdExt' => NotasFormSupport::desplegableOpciones($payload['aCentrosAgdExt'] ?? []),

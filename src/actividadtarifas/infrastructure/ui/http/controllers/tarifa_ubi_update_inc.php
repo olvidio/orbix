@@ -11,7 +11,7 @@ use src\actividadtarifas\application\TarifaUbiUpdateInc;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$inc_cantidad = FilterPostGet::post('inc_cantidad', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$inc_cantidad = \src\shared\domain\helpers\FilterPostGet::post('inc_cantidad', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $input = [
     'inc_cantidad' => is_array($inc_cantidad) ? $inc_cantidad : [],

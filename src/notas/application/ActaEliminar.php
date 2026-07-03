@@ -6,7 +6,6 @@ use src\shared\config\ConfigGlobal;
 use src\notas\application\support\ActaDlGuard;
 use src\notas\application\support\ActaTribunalSync;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 final class ActaEliminar
 {
@@ -22,7 +21,7 @@ final class ActaEliminar
      */
     public function execute(array $input): string
     {
-        $acta = FuncTablasSupport::inputString($input, 'acta');
+        $acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta');
         $aSel = (array)($input['sel'] ?? []);
         if ($aSel !== []) {
             $sel0 = $aSel[0];

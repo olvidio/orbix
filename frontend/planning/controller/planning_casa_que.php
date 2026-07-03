@@ -35,8 +35,8 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
 
 
@@ -57,7 +57,7 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $QsSeleccionados = (string)filter_input(INPUT_POST, 'sSeleccionados');
 
-if ($Qyear === 0 && FuncTablasSupport::isTrue($Qpropuesta_calendario)) {
+if ($Qyear === 0 && \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpropuesta_calendario)) {
     $Qyear = (int) date('Y') + 1;
 }
 
@@ -71,7 +71,7 @@ $oHash->setArraycamposHidden([
 $oFormP = PeriodoPlanningHelper::formPeriodo($Qperiodo, $Qyear, $Qempiezamin, $Qempiezamax);
 
 $oForm = new CasasQue();
-$oForm->setTitulo(FuncTablasSupport::strtoupperDlb(_("búsqueda de casas cuyo planning interesa")));
+$oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("búsqueda de casas cuyo planning interesa")));
 
 $oForm->setFiltroCasas($filtroCasasQue);
 $oForm->setCasas($modoCasasQue);

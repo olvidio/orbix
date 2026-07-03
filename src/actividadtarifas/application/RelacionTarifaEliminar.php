@@ -3,7 +3,6 @@
 namespace src\actividadtarifas\application;
 
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion: elimina una `RelacionTarifaTipoActividad`.
@@ -20,7 +19,7 @@ final class RelacionTarifaEliminar
      */
     public function execute(array $input): string
     {
-        $id_item = FuncTablasSupport::inputInt($input, 'id_item');
+        $id_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_item');
         if ($id_item === 0) {
             return (string) _("no sé cuál he de borrar");
         }

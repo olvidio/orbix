@@ -3,7 +3,6 @@
 namespace src\procesos\application;
 
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: elimina una tarea_proceso por su id_item.
@@ -20,7 +19,7 @@ class ProcesosEliminar
      */
     public function execute(array $input): string
     {
-        $Qid_item = FuncTablasSupport::inputInt($input, 'id_item');
+        $Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_item');
         if ($Qid_item <= 0) {
             return _("no sé cuál he de borar");
         }

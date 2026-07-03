@@ -3,12 +3,11 @@
 use src\notas\application\ActaImprimirPresentacionData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 $error = '';
 $data = [];
 try {
-    $acta = FuncTablasSupport::inputString($_POST, 'acta');
-    $mode = FuncTablasSupport::inputString($_POST, 'mode', 'imprimir');
+    $acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'acta');
+    $mode = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'mode', 'imprimir');
     if ($mode !== 'mpdf') {
         $mode = 'imprimir';
     }

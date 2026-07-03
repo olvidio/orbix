@@ -27,7 +27,7 @@ use src\actividades\application\ActividadTipoGetNivelStgrDefecto;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qsalida = (string)FilterPostGet::post('salida');
+$Qsalida = (string)\src\shared\domain\helpers\FilterPostGet::post('salida');
 
 // Salidas que devuelven el payload estructurado de un desplegable
 // (id, opciones, selected, blanco, val_blanco, action). El frontend construye

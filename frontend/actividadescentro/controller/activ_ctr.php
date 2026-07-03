@@ -34,7 +34,7 @@ $shell = PostRequest::getDataFromUrl('/src/actividadescentro/activ_ctr_shell_dat
     'year' => $Qyear,
     'periodo' => $Qperiodo,
 ]);
-$Qtipo = PayloadCoercion::string($shell['tipo'] ?? $Qtipo);
+$Qtipo = \frontend\shared\helpers\PayloadCoercion::string($shell['tipo'] ?? $Qtipo);
 
 $signShellEndpoint = static function (array $spec): string {
     $path = (string)($spec['path'] ?? '');
@@ -50,7 +50,7 @@ $signShellEndpoint = static function (array $spec): string {
     return $url . $oHashEndpoint->linkSinVal();
 };
 
-$titulo = FuncTablasSupport::strtoupperDlb(_("periodo del listado del año próximo"));
+$titulo = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo del listado del año próximo"));
 $aOpciones = [
     'tot_any' => _("todo el año"),
     'trimestre_1' => _("primer trimestre"),

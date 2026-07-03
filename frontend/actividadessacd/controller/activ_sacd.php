@@ -33,7 +33,7 @@ $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qyear = (string)filter_input(INPUT_POST, 'year');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 
-$titulo = FuncTablasSupport::strtoupperDlb(_("periodo del listado del año próximo"));
+$titulo = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo del listado del año próximo"));
 $titulo .= '. ';
 $titulo .= '(' . sprintf(_("actividades de %s"), $Qtipo) . ')';
 

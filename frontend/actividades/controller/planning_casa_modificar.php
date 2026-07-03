@@ -36,7 +36,7 @@ $oPosicion = FrontBootstrap::boot();
 $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
 $Qid_activ = ActividadesPostInput::idActivFromPost();
 if ($Qid_activ === 0) {
-    $Qid_activ = PayloadCoercion::int(filter_input(INPUT_POST, 'id_activ'));
+    $Qid_activ = \frontend\shared\helpers\PayloadCoercion::int(filter_input(INPUT_POST, 'id_activ'));
 }
 
 $permiso_des = ActividadesPermSupport::permDes();
@@ -111,7 +111,7 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'snom_tipo' => $snom_tipo,
     'extendida' => '',
 ]);
-$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
+$actividad_tipo_html = \frontend\shared\helpers\PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $urlMutacionAjax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_mutacion_ajax.php';
 

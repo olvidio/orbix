@@ -51,11 +51,11 @@ final class ConfiguracionPayload
     public static function modulosFormViewFromPayload(array $payload): array
     {
         return [
-            'hash_form_html' => PayloadCoercion::string($payload['hash_form_html'] ?? ''),
-            'hash_actualizar_html' => PayloadCoercion::string($payload['hash_actualizar_html'] ?? ''),
-            'id_mod' => PayloadCoercion::int($payload['id_mod'] ?? 0),
-            'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
-            'descripcion' => PayloadCoercion::string($payload['descripcion'] ?? ''),
+            'hash_form_html' => \frontend\shared\helpers\PayloadCoercion::string($payload['hash_form_html'] ?? ''),
+            'hash_actualizar_html' => \frontend\shared\helpers\PayloadCoercion::string($payload['hash_actualizar_html'] ?? ''),
+            'id_mod' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_mod'] ?? 0),
+            'nom' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? ''),
+            'descripcion' => \frontend\shared\helpers\PayloadCoercion::string($payload['descripcion'] ?? ''),
             'a_mods_todos' => is_array($payload['a_mods_todos'] ?? null) ? $payload['a_mods_todos'] : [],
             'a_apps_todas' => is_array($payload['a_apps_todas'] ?? null) ? $payload['a_apps_todas'] : [],
             'a_mods_req' => is_array($payload['a_mods_req'] ?? null) ? $payload['a_mods_req'] : [],
@@ -78,12 +78,12 @@ final class ConfiguracionPayload
     public static function modulosSelectViewFromPayload(array $payload): array
     {
         return [
-            'hash_lista_html' => PayloadCoercion::string($payload['hash_lista_html'] ?? ''),
+            'hash_lista_html' => \frontend\shared\helpers\PayloadCoercion::string($payload['hash_lista_html'] ?? ''),
             'a_cabeceras' => ActividadesListaSupport::cabeceras($payload['a_cabeceras'] ?? []),
             'a_botones' => ActividadesListaSupport::botones($payload['a_botones'] ?? []),
             'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
-            'txt_eliminar' => PayloadCoercion::string($payload['txt_eliminar'] ?? ''),
-            'txt_anadir_modulo' => PayloadCoercion::string($payload['txt_anadir_modulo'] ?? ''),
+            'txt_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($payload['txt_eliminar'] ?? ''),
+            'txt_anadir_modulo' => \frontend\shared\helpers\PayloadCoercion::string($payload['txt_anadir_modulo'] ?? ''),
         ];
     }
 
@@ -95,7 +95,7 @@ final class ConfiguracionPayload
     {
         return [
             'a_locales' => NotasFormSupport::desplegableOpciones($data['a_locales'] ?? []),
-            'idioma_select' => PayloadCoercion::string($data['idioma_select'] ?? ''),
+            'idioma_select' => \frontend\shared\helpers\PayloadCoercion::string($data['idioma_select'] ?? ''),
         ];
     }
 

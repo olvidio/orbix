@@ -3,9 +3,8 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\usuarios\application\usuarioEliminar;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 
-$a_sel = FuncTablasSupport::inputStringList($_POST, 'sel');
+$a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'sel');
 
 /** @var usuarioEliminar $useCase */
 $useCase = DependencyResolver::get(usuarioEliminar::class);

@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: opciones del desplegable de poblaciones segun el
@@ -15,7 +14,7 @@ use src\cartaspresentacion\application\CartasPresentacionPoblacionesData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$input = ['filtro' => FuncTablasSupport::inputString($_POST, 'filtro')];
+$input = ['filtro' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'filtro')];
 
 /** @var CartasPresentacionPoblacionesData $useCase */
 $useCase = DependencyResolver::get(CartasPresentacionPoblacionesData::class);

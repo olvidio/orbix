@@ -11,7 +11,7 @@ final class EncargossacdPayload
 {
 public static function desplegableOpcionSel(int|string $value): string
 {
-    return PayloadCoercion::string($value);
+    return \frontend\shared\helpers\PayloadCoercion::string($value);
 }
 
 public static function desplegableBlanco(int|string|bool $value): bool|string
@@ -23,7 +23,7 @@ public static function desplegableBlanco(int|string|bool $value): bool|string
         return $value !== 0 ? '1' : false;
     }
 
-    return PayloadCoercion::string($value);
+    return \frontend\shared\helpers\PayloadCoercion::string($value);
 }
 
 /**
@@ -45,7 +45,7 @@ public static function stringList(mixed $raw): array
     $out = [];
     foreach ($raw as $key => $value) {
         if (is_int($key)) {
-            $out[$key] = PayloadCoercion::string($value);
+            $out[$key] = \frontend\shared\helpers\PayloadCoercion::string($value);
         }
     }
 
@@ -77,10 +77,10 @@ public static function colaboradores(mixed $raw): array
 public static function listasCamposFromPayload(array $payload): array
 {
     return [
-        'cabecera_left' => PayloadCoercion::string($payload['cabecera_left'] ?? ''),
-        'cabecera_right' => PayloadCoercion::string($payload['cabecera_right'] ?? ''),
-        'cabecera_right_2' => PayloadCoercion::string($payload['cabecera_right_2'] ?? ''),
-        'Html' => PayloadCoercion::string($payload['Html'] ?? ''),
+        'cabecera_left' => \frontend\shared\helpers\PayloadCoercion::string($payload['cabecera_left'] ?? ''),
+        'cabecera_right' => \frontend\shared\helpers\PayloadCoercion::string($payload['cabecera_right'] ?? ''),
+        'cabecera_right_2' => \frontend\shared\helpers\PayloadCoercion::string($payload['cabecera_right_2'] ?? ''),
+        'Html' => \frontend\shared\helpers\PayloadCoercion::string($payload['Html'] ?? ''),
     ];
 }
 
@@ -139,12 +139,12 @@ public static function ctrGetFichaFromPayload(array $payload): array
     $opcionesSssc = $payload['opciones_sacd_sssc'] ?? null;
 
     return [
-        'mod' => PayloadCoercion::string($payload['mod'] ?? 'nuevo'),
-        'tipo_centro' => PayloadCoercion::string($payload['tipo_centro'] ?? ''),
-        'num_enc' => PayloadCoercion::int($payload['num_enc'] ?? 0),
-        'chk_prelatura' => PayloadCoercion::string($payload['chk_prelatura'] ?? ''),
-        'chk_de_paso' => PayloadCoercion::string($payload['chk_de_paso'] ?? ''),
-        'chk_sssc' => PayloadCoercion::string($payload['chk_sssc'] ?? ''),
+        'mod' => \frontend\shared\helpers\PayloadCoercion::string($payload['mod'] ?? 'nuevo'),
+        'tipo_centro' => \frontend\shared\helpers\PayloadCoercion::string($payload['tipo_centro'] ?? ''),
+        'num_enc' => \frontend\shared\helpers\PayloadCoercion::int($payload['num_enc'] ?? 0),
+        'chk_prelatura' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_prelatura'] ?? ''),
+        'chk_de_paso' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_de_paso'] ?? ''),
+        'chk_sssc' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_sssc'] ?? ''),
         'opciones_sacd' => self::desplegableOpciones($payload['opciones_sacd'] ?? []),
         'opciones_sacd_sssc' => is_array($opcionesSssc) ? self::desplegableOpciones($opcionesSssc) : null,
         'encargos' => self::encargosFromPayload($payload['encargos'] ?? null),
@@ -183,21 +183,21 @@ public static function encargosFromPayload(mixed $raw): array
             continue;
         }
         $out[] = [
-            'id_enc' => PayloadCoercion::int($enc['id_enc'] ?? 0),
-            'mod_horario' => PayloadCoercion::int($enc['mod_horario'] ?? 0),
-            'sacd_num' => PayloadCoercion::int($enc['sacd_num'] ?? 1),
-            'cl_checked' => PayloadCoercion::string($enc['cl_checked'] ?? ''),
-            'observ' => PayloadCoercion::string($enc['observ'] ?? ''),
-            'desc_enc' => PayloadCoercion::string($enc['desc_enc'] ?? ''),
+            'id_enc' => \frontend\shared\helpers\PayloadCoercion::int($enc['id_enc'] ?? 0),
+            'mod_horario' => \frontend\shared\helpers\PayloadCoercion::int($enc['mod_horario'] ?? 0),
+            'sacd_num' => \frontend\shared\helpers\PayloadCoercion::int($enc['sacd_num'] ?? 1),
+            'cl_checked' => \frontend\shared\helpers\PayloadCoercion::string($enc['cl_checked'] ?? ''),
+            'observ' => \frontend\shared\helpers\PayloadCoercion::string($enc['observ'] ?? ''),
+            'desc_enc' => \frontend\shared\helpers\PayloadCoercion::string($enc['desc_enc'] ?? ''),
             'dedic_m' => self::stringList($enc['dedic_m'] ?? []),
             'dedic_t' => self::stringList($enc['dedic_t'] ?? []),
             'dedic_v' => self::stringList($enc['dedic_v'] ?? []),
             'dedic_sacd' => self::stringList($enc['dedic_sacd'] ?? []),
-            'dedic_ctr_m' => PayloadCoercion::string($enc['dedic_ctr_m'] ?? ''),
-            'dedic_ctr_t' => PayloadCoercion::string($enc['dedic_ctr_t'] ?? ''),
-            'dedic_ctr_v' => PayloadCoercion::string($enc['dedic_ctr_v'] ?? ''),
-            'actual_id_sacd_titular' => PayloadCoercion::int($enc['actual_id_sacd_titular'] ?? 0),
-            'actual_id_sacd_suplente' => PayloadCoercion::int($enc['actual_id_sacd_suplente'] ?? 0),
+            'dedic_ctr_m' => \frontend\shared\helpers\PayloadCoercion::string($enc['dedic_ctr_m'] ?? ''),
+            'dedic_ctr_t' => \frontend\shared\helpers\PayloadCoercion::string($enc['dedic_ctr_t'] ?? ''),
+            'dedic_ctr_v' => \frontend\shared\helpers\PayloadCoercion::string($enc['dedic_ctr_v'] ?? ''),
+            'actual_id_sacd_titular' => \frontend\shared\helpers\PayloadCoercion::int($enc['actual_id_sacd_titular'] ?? 0),
+            'actual_id_sacd_suplente' => \frontend\shared\helpers\PayloadCoercion::int($enc['actual_id_sacd_suplente'] ?? 0),
             'colaboradores' => self::colaboradores($enc['colaboradores'] ?? null),
         ];
     }
@@ -245,20 +245,20 @@ public static function horarioRow(mixed $raw): array
     }
 
     return [
-        'id_enc' => PayloadCoercion::int($raw['id_enc'] ?? 0),
-        'id_item_h' => PayloadCoercion::int($raw['id_item_h'] ?? 0),
-        'dia_num' => PayloadCoercion::string($raw['dia_num'] ?? ''),
-        'dia_ref' => PayloadCoercion::string($raw['dia_ref'] ?? ''),
-        'mas_menos' => PayloadCoercion::string($raw['mas_menos'] ?? ''),
-        'dia_inc' => PayloadCoercion::string($raw['dia_inc'] ?? ''),
-        'h_ini' => PayloadCoercion::string($raw['h_ini'] ?? ''),
-        'h_fin' => PayloadCoercion::string($raw['h_fin'] ?? ''),
-        'n_sacd' => PayloadCoercion::string($raw['n_sacd'] ?? ''),
-        'mes' => PayloadCoercion::string($raw['mes'] ?? ''),
-        'f_ini' => PayloadCoercion::string($raw['f_ini'] ?? ''),
-        'f_fin' => PayloadCoercion::string($raw['f_fin'] ?? ''),
-        'excep' => PayloadCoercion::string($raw['excep'] ?? ''),
-        'texto_horario' => PayloadCoercion::string($raw['texto_horario'] ?? ''),
+        'id_enc' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_enc'] ?? 0),
+        'id_item_h' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_item_h'] ?? 0),
+        'dia_num' => \frontend\shared\helpers\PayloadCoercion::string($raw['dia_num'] ?? ''),
+        'dia_ref' => \frontend\shared\helpers\PayloadCoercion::string($raw['dia_ref'] ?? ''),
+        'mas_menos' => \frontend\shared\helpers\PayloadCoercion::string($raw['mas_menos'] ?? ''),
+        'dia_inc' => \frontend\shared\helpers\PayloadCoercion::string($raw['dia_inc'] ?? ''),
+        'h_ini' => \frontend\shared\helpers\PayloadCoercion::string($raw['h_ini'] ?? ''),
+        'h_fin' => \frontend\shared\helpers\PayloadCoercion::string($raw['h_fin'] ?? ''),
+        'n_sacd' => \frontend\shared\helpers\PayloadCoercion::string($raw['n_sacd'] ?? ''),
+        'mes' => \frontend\shared\helpers\PayloadCoercion::string($raw['mes'] ?? ''),
+        'f_ini' => \frontend\shared\helpers\PayloadCoercion::string($raw['f_ini'] ?? ''),
+        'f_fin' => \frontend\shared\helpers\PayloadCoercion::string($raw['f_fin'] ?? ''),
+        'excep' => \frontend\shared\helpers\PayloadCoercion::string($raw['excep'] ?? ''),
+        'texto_horario' => \frontend\shared\helpers\PayloadCoercion::string($raw['texto_horario'] ?? ''),
     ];
 }
 
@@ -288,13 +288,13 @@ public static function encargoSelectRow(mixed $raw): array
     }
 
     return [
-        'id_enc' => PayloadCoercion::int($raw['id_enc'] ?? 0),
-        'sf_sv' => PayloadCoercion::int($raw['sf_sv'] ?? 0),
-        'desc_enc' => PayloadCoercion::string($raw['desc_enc'] ?? ''),
-        'seccion' => PayloadCoercion::string($raw['seccion'] ?? ''),
-        'nombre_ubi' => PayloadCoercion::string($raw['nombre_ubi'] ?? ''),
-        'desc_lugar' => PayloadCoercion::string($raw['desc_lugar'] ?? ''),
-        'idioma' => PayloadCoercion::string($raw['idioma'] ?? ''),
+        'id_enc' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_enc'] ?? 0),
+        'sf_sv' => \frontend\shared\helpers\PayloadCoercion::int($raw['sf_sv'] ?? 0),
+        'desc_enc' => \frontend\shared\helpers\PayloadCoercion::string($raw['desc_enc'] ?? ''),
+        'seccion' => \frontend\shared\helpers\PayloadCoercion::string($raw['seccion'] ?? ''),
+        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($raw['nombre_ubi'] ?? ''),
+        'desc_lugar' => \frontend\shared\helpers\PayloadCoercion::string($raw['desc_lugar'] ?? ''),
+        'idioma' => \frontend\shared\helpers\PayloadCoercion::string($raw['idioma'] ?? ''),
     ];
 }
 
@@ -322,12 +322,12 @@ public static function ausenciaRow(mixed $raw): array
     }
 
     return [
-        'id_enc' => PayloadCoercion::int($raw['id_enc'] ?? 0),
-        'id_tipo_enc' => PayloadCoercion::int($raw['id_tipo_enc'] ?? 0),
-        'desc_enc' => PayloadCoercion::string($raw['desc_enc'] ?? ''),
-        'id_item' => PayloadCoercion::int($raw['id_item'] ?? 0),
-        'inicio' => PayloadCoercion::string($raw['inicio'] ?? ''),
-        'fin' => PayloadCoercion::string($raw['fin'] ?? ''),
+        'id_enc' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_enc'] ?? 0),
+        'id_tipo_enc' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_tipo_enc'] ?? 0),
+        'desc_enc' => \frontend\shared\helpers\PayloadCoercion::string($raw['desc_enc'] ?? ''),
+        'id_item' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_item'] ?? 0),
+        'inicio' => \frontend\shared\helpers\PayloadCoercion::string($raw['inicio'] ?? ''),
+        'fin' => \frontend\shared\helpers\PayloadCoercion::string($raw['fin'] ?? ''),
     ];
 }
 
@@ -354,18 +354,18 @@ public static function ausenciaRow(mixed $raw): array
 public static function horarioVerFromPayload(array $payload): array
 {
     return [
-        'f_ini' => PayloadCoercion::string($payload['f_ini'] ?? ''),
-        'f_fin' => PayloadCoercion::string($payload['f_fin'] ?? ''),
-        'dia_ref' => PayloadCoercion::string($payload['dia_ref'] ?? ''),
-        'dia_num' => PayloadCoercion::string($payload['dia_num'] ?? ''),
-        'mas_menos' => PayloadCoercion::string($payload['mas_menos'] ?? ''),
-        'dia_inc' => PayloadCoercion::string($payload['dia_inc'] ?? ''),
-        'h_ini' => PayloadCoercion::string($payload['h_ini'] ?? ''),
-        'h_fin' => PayloadCoercion::string($payload['h_fin'] ?? ''),
-        'n_sacd' => PayloadCoercion::string($payload['n_sacd'] ?? ''),
-        'mes' => PayloadCoercion::string($payload['mes'] ?? ''),
-        'id_item_h' => PayloadCoercion::string($payload['id_item_h'] ?? ''),
-        'dia' => PayloadCoercion::string($payload['dia'] ?? ''),
+        'f_ini' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_ini'] ?? ''),
+        'f_fin' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_fin'] ?? ''),
+        'dia_ref' => \frontend\shared\helpers\PayloadCoercion::string($payload['dia_ref'] ?? ''),
+        'dia_num' => \frontend\shared\helpers\PayloadCoercion::string($payload['dia_num'] ?? ''),
+        'mas_menos' => \frontend\shared\helpers\PayloadCoercion::string($payload['mas_menos'] ?? ''),
+        'dia_inc' => \frontend\shared\helpers\PayloadCoercion::string($payload['dia_inc'] ?? ''),
+        'h_ini' => \frontend\shared\helpers\PayloadCoercion::string($payload['h_ini'] ?? ''),
+        'h_fin' => \frontend\shared\helpers\PayloadCoercion::string($payload['h_fin'] ?? ''),
+        'n_sacd' => \frontend\shared\helpers\PayloadCoercion::string($payload['n_sacd'] ?? ''),
+        'mes' => \frontend\shared\helpers\PayloadCoercion::string($payload['mes'] ?? ''),
+        'id_item_h' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_item_h'] ?? ''),
+        'dia' => \frontend\shared\helpers\PayloadCoercion::string($payload['dia'] ?? ''),
         'opciones_dia_semana' => self::desplegableOpciones($payload['opciones_dia_semana'] ?? []),
         'opciones_dia_ref' => self::desplegableOpciones($payload['opciones_dia_ref'] ?? []),
         'opciones_ordinales' => self::desplegableOpciones($payload['opciones_ordinales'] ?? []),
@@ -375,7 +375,7 @@ public static function horarioVerFromPayload(array $payload): array
 public static function listasComTxtResponse(mixed $data): string
 {
     if (is_array($data) && array_key_exists('texto', $data)) {
-        return PayloadCoercion::string($data['texto']);
+        return \frontend\shared\helpers\PayloadCoercion::string($data['texto']);
     }
 
     return is_string($data) ? $data : '';
@@ -384,7 +384,7 @@ public static function listasComTxtResponse(mixed $data): string
 public static function comprobacionesTexto(mixed $data): string
 {
     if (is_array($data) && isset($data['texto'])) {
-        return PayloadCoercion::string($data['texto']);
+        return \frontend\shared\helpers\PayloadCoercion::string($data['texto']);
     }
 
     return is_string($data) ? $data : '';
@@ -395,7 +395,7 @@ public static function sacdFichaEncargoIdUbi(mixed $raw): int
         return 0;
     }
 
-    return PayloadCoercion::int($raw['id_ubi'] ?? 0);
+    return \frontend\shared\helpers\PayloadCoercion::int($raw['id_ubi'] ?? 0);
 }
 
 /**
@@ -411,7 +411,7 @@ public static function sacdFichaEncargosFromPayload(mixed $raw): array
         if (!is_array($enc)) {
             continue;
         }
-        $enc['id_ubi'] = PayloadCoercion::int($enc['id_ubi'] ?? 0);
+        $enc['id_ubi'] = \frontend\shared\helpers\PayloadCoercion::int($enc['id_ubi'] ?? 0);
         $out[] = $enc;
     }
 

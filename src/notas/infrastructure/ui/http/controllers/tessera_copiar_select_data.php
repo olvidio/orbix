@@ -3,11 +3,10 @@
 use src\notas\application\TesseraCopiarSelectData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 $error = '';
 $data = [];
 try {
-    $id_nom = FuncTablasSupport::inputInt($_POST, 'id_nom');
+    $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom');
     if ($id_nom === 0) {
         throw new \RuntimeException(_("Se requiere id_nom"));
     }

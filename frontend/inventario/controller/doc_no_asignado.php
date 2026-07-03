@@ -18,8 +18,8 @@ $oPosicion = FrontBootstrap::boot();
 $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
 // muestra los ctr que NO tienen el documento.
@@ -31,7 +31,7 @@ $payload = InventarioPayload::postPayload($data);
 $a_cabeceras = ActividadesListaSupport::cabeceras($payload['a_cabeceras'] ?? []);
 $a_botones = ActividadesListaSupport::botones($payload['a_botones'] ?? []);
 $a_valores = ActividadesListaSupport::datos($payload['a_valores'] ?? []);
-$nombreDoc = PayloadCoercion::string($payload['nombreDoc'] ?? '');
+$nombreDoc = \frontend\shared\helpers\PayloadCoercion::string($payload['nombreDoc'] ?? '');
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('doc_ctr_tabla2');

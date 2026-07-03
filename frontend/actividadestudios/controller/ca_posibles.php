@@ -23,34 +23,34 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$restored = ListNavSupport::restoreSelectionFromStackPost();
+$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
+$Qid_sel = !\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : \frontend\shared\helpers\ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
 
 
-$obj_pau = PayloadCoercion::string(filter_input(INPUT_POST, 'obj_pau'));
-$Qgrupo_estudios = PayloadCoercion::string(filter_input(INPUT_POST, 'grupo_estudios'));
-$Qtexto = PayloadCoercion::string(filter_input(INPUT_POST, 'texto'));
-$Qref = PayloadCoercion::string(filter_input(INPUT_POST, 'ref'));
-$Qidca = PayloadCoercion::string(filter_input(INPUT_POST, 'idca'));
-$Qca_estudios = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_estudios'));
-$Qca_repaso = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_repaso'));
-$Qca_todos = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_todos'));
+$obj_pau = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'obj_pau'));
+$Qgrupo_estudios = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'grupo_estudios'));
+$Qtexto = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'texto'));
+$Qref = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ref'));
+$Qidca = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'idca'));
+$Qca_estudios = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ca_estudios'));
+$Qca_repaso = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ca_repaso'));
+$Qca_todos = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ca_todos'));
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 if (empty($a_sel)) {
     $Qid_ctr_agd = (integer)filter_input(INPUT_POST, 'id_ctr_agd');
     $Qid_ctr_n = (integer)filter_input(INPUT_POST, 'id_ctr_n');
-    $Qna = PayloadCoercion::string(filter_input(INPUT_POST, 'na'));
+    $Qna = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'na'));
     $Qyear = (integer)filter_input(INPUT_POST, 'year');
-    $Qperiodo = PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
-    $Qempiezamin = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
-    $Qempiezamax = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));
+    $Qperiodo = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
+    $Qempiezamin = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
+    $Qempiezamax = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));
 
     if (empty($Qid_ctr_agd) && empty($Qid_ctr_n)) {
         $msg_txt = _("debe seleccionar un centro o grupo de centros");
@@ -91,7 +91,7 @@ $data = PostRequest::getDataFromUrl(
     false,
 );
 if (!empty($data['error'])) {
-    echo PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error']));
+    echo PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($data['error']));
     return;
 }
 $caPosibles = CaPosiblesPayload::fromPayload(ActividadestudiosRenderSupport::stringKeyRow($data));

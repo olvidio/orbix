@@ -14,8 +14,8 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistE43ParentReturnToPosicion($oPosicion, 1);
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistE43ParentReturnToPosicion($oPosicion, 1);
 
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
 $Qid_nom = ActividadestudiosPostInput::idNom()['id_nom'];
@@ -39,7 +39,7 @@ $oHash->setCamposForm('id_nom!id_activ');
 $h = $oHash->linkSinVal();
 
 if ($msg_err !== '') {
-    echo PayloadCoercion::string($msg_err . '<br><br>');
+    echo \frontend\shared\helpers\PayloadCoercion::string($msg_err . '<br><br>');
 }
 
 $a_campos = ['oPosicion' => $oPosicion,

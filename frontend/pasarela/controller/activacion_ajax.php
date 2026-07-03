@@ -59,7 +59,7 @@ switch ($Qque) {
         AjaxJsonSupport::html(PasarelaExcepcionRender::listaConDefaultHtml($lista, 'fnjs_modificar_activacion_default()', 'fnjs_modificar_activacion'));
     case 'form_default':
         $data = PostRequest::getDataFromUrl('/src/pasarela/activacion_default_data');
-        $default = PayloadCoercion::string($data['default'] ?? '');
+        $default = \frontend\shared\helpers\PayloadCoercion::string($data['default'] ?? '');
 
         $oHash = new HashFront();
         $oHash->setUrl($url_ajax);

@@ -50,7 +50,7 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_sr_csv_datos', [
 ]);
 
 if (!empty($data['pref_error'])) {
-    echo PayloadCoercion::string($data['pref_error']);
+    echo \frontend\shared\helpers\PayloadCoercion::string($data['pref_error']);
 }
 
 if ($Qque === 'file') {
@@ -65,14 +65,14 @@ if ($Qque === 'file') {
 }
 
 if ($Qque === 'lista') {
-    ListNavSupport::bootRecordar($oPosicion);
-    ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
+    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+    \frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 
     $a_campos = [
         'oPosicion' => $oPosicion,
-        'titulo' => PayloadCoercion::string($data['titulo'] ?? ''),
-        'html_tabla' => PayloadCoercion::string($data['html_tabla'] ?? ''),
+        'titulo' => \frontend\shared\helpers\PayloadCoercion::string($data['titulo'] ?? ''),
+        'html_tabla' => \frontend\shared\helpers\PayloadCoercion::string($data['html_tabla'] ?? ''),
     ];
 
     $oView = new ViewNewPhtml('frontend\actividades\controller');

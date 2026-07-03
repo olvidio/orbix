@@ -23,10 +23,10 @@ final class CaPosiblesPayload
     public static function fromPayload(array $payload): array
     {
         return [
-            'modo' => PayloadCoercion::string($payload['modo'] ?? ''),
-            'msg_txt' => PayloadCoercion::string($payload['msg_txt'] ?? ''),
-            'titulo' => PayloadCoercion::string($payload['titulo'] ?? ''),
-            'stgr' => PayloadCoercion::string($payload['stgr'] ?? ''),
+            'modo' => \frontend\shared\helpers\PayloadCoercion::string($payload['modo'] ?? ''),
+            'msg_txt' => \frontend\shared\helpers\PayloadCoercion::string($payload['msg_txt'] ?? ''),
+            'titulo' => \frontend\shared\helpers\PayloadCoercion::string($payload['titulo'] ?? ''),
+            'stgr' => \frontend\shared\helpers\PayloadCoercion::string($payload['stgr'] ?? ''),
             'aActividades' => self::actividades($payload['aActividades'] ?? null),
             'pagina' => ActividadestudiosUrlSigning::signedLink($payload['pagina_link_spec'] ?? null),
             'filas' => self::rows($payload['tabla_filas'] ?? []),
@@ -47,8 +47,8 @@ final class CaPosiblesPayload
                 continue;
             }
             $out[] = [
-                'nom_activ' => PayloadCoercion::string($item['nom_activ'] ?? ''),
-                'creditos' => PayloadCoercion::string($item['creditos'] ?? ''),
+                'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($item['nom_activ'] ?? ''),
+                'creditos' => \frontend\shared\helpers\PayloadCoercion::string($item['creditos'] ?? ''),
                 'aLista' => is_array($item['aLista'] ?? null) ? $item['aLista'] : [],
             ];
         }
@@ -69,12 +69,12 @@ final class CaPosiblesPayload
             if (!is_array($datos)) {
                 continue;
             }
-            $nom = PayloadCoercion::string($nomPersona);
+            $nom = \frontend\shared\helpers\PayloadCoercion::string($nomPersona);
             if ($nom === '') {
                 continue;
             }
             $out[$nom] = [
-                'stgr' => PayloadCoercion::string($datos['stgr'] ?? ''),
+                'stgr' => \frontend\shared\helpers\PayloadCoercion::string($datos['stgr'] ?? ''),
                 'aActividades' => self::actividades($datos['aActividades'] ?? null),
             ];
         }
@@ -89,19 +89,19 @@ final class CaPosiblesPayload
     private static function row(array $row): array
     {
         return [
-            'msg_txt' => PayloadCoercion::string($row['msg_txt'] ?? ''),
-            'texto' => PayloadCoercion::string($row['texto'] ?? ''),
-            'nc_bienio' => PayloadCoercion::string($row['nc_bienio'] ?? ''),
-            'nc_cuadrienio1' => PayloadCoercion::string($row['nc_cuadrienio1'] ?? ''),
-            'nc_cuadrienio2' => PayloadCoercion::string($row['nc_cuadrienio2'] ?? ''),
-            'nc_cuadrienio' => PayloadCoercion::string($row['nc_cuadrienio'] ?? ''),
-            'nc_repaso' => PayloadCoercion::string($row['nc_repaso'] ?? ''),
-            'nc_ce' => PayloadCoercion::string($row['nc_ce'] ?? ''),
-            'nc_otros' => PayloadCoercion::string($row['nc_otros'] ?? ''),
-            'stgr' => PayloadCoercion::string($row['stgr'] ?? ''),
-            'ctr' => PayloadCoercion::string($row['ctr'] ?? ''),
-            'ref' => PayloadCoercion::string($row['ref'] ?? ''),
-            'height' => PayloadCoercion::string($row['height'] ?? ''),
+            'msg_txt' => \frontend\shared\helpers\PayloadCoercion::string($row['msg_txt'] ?? ''),
+            'texto' => \frontend\shared\helpers\PayloadCoercion::string($row['texto'] ?? ''),
+            'nc_bienio' => \frontend\shared\helpers\PayloadCoercion::string($row['nc_bienio'] ?? ''),
+            'nc_cuadrienio1' => \frontend\shared\helpers\PayloadCoercion::string($row['nc_cuadrienio1'] ?? ''),
+            'nc_cuadrienio2' => \frontend\shared\helpers\PayloadCoercion::string($row['nc_cuadrienio2'] ?? ''),
+            'nc_cuadrienio' => \frontend\shared\helpers\PayloadCoercion::string($row['nc_cuadrienio'] ?? ''),
+            'nc_repaso' => \frontend\shared\helpers\PayloadCoercion::string($row['nc_repaso'] ?? ''),
+            'nc_ce' => \frontend\shared\helpers\PayloadCoercion::string($row['nc_ce'] ?? ''),
+            'nc_otros' => \frontend\shared\helpers\PayloadCoercion::string($row['nc_otros'] ?? ''),
+            'stgr' => \frontend\shared\helpers\PayloadCoercion::string($row['stgr'] ?? ''),
+            'ctr' => \frontend\shared\helpers\PayloadCoercion::string($row['ctr'] ?? ''),
+            'ref' => \frontend\shared\helpers\PayloadCoercion::string($row['ref'] ?? ''),
+            'height' => \frontend\shared\helpers\PayloadCoercion::string($row['height'] ?? ''),
             'cPersonas' => self::cPersonas($row['cPersonas'] ?? null),
             'aActividades' => self::actividades($row['aActividades'] ?? null),
         ];

@@ -5,8 +5,8 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ContribucionNoDuermeExcepcionGuardar;
 
-$id_tipo_activ = (string)FilterPostGet::post('id_tipo_activ');
-$valor = (string)FilterPostGet::post('valor');
+$id_tipo_activ = (string)\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ');
+$valor = (string)\src\shared\domain\helpers\FilterPostGet::post('valor');
 
 /** @var ContribucionNoDuermeExcepcionGuardar $useCase */
 $useCase = DependencyResolver::get(ContribucionNoDuermeExcepcionGuardar::class);

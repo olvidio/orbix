@@ -35,7 +35,7 @@ $fields = ActividadtarifasPayload::fields(
 $oDesplModo = new Desplegable();
 $oDesplModo->setNombre('modo');
 $oDesplModo->setOpciones($fields['opciones_modo']);
-$oDesplModo->setOpcion_sel(PayloadCoercion::string($fields['modo']));
+$oDesplModo->setOpcion_sel(\frontend\shared\helpers\PayloadCoercion::string($fields['modo']));
 
 $a_campos = [
     'id_tarifa' => $fields['id_tarifa'],

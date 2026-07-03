@@ -310,7 +310,7 @@ class AsistenteActividadService
             $cAsistentesOk[$apellidos] = $oAsistente;
         }
 
-        uksort($cAsistentesOk, "src\shared\domain\helpers\strsinacentocmp");
+        uksort($cAsistentesOk, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
 
         if (!empty($msg_err)) {
             error_log($msg_err);

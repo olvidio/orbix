@@ -13,7 +13,6 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/personas_editar_data`.
@@ -49,8 +48,8 @@ final class PersonasEditarData
      */
     public function execute(array $input): array
     {
-        $Qnuevo = FuncTablasSupport::inputInt($input, 'nuevo');
-        $Qobj_pau = FuncTablasSupport::inputString($input, 'obj_pau');
+        $Qnuevo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'nuevo');
+        $Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'obj_pau');
 
         try {
             $repoPersona = $this->personaRepositoryResolver->repositorio($Qobj_pau);
@@ -83,7 +82,7 @@ final class PersonasEditarData
             'titulo' => '',
             'nom_ctr' => '',
             'id_ctr' => '',
-            'id_tabla' => FuncTablasSupport::inputString($input, 'tabla'),
+            'id_tabla' => \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tabla'),
             'dl' => '',
             'idioma_preferido' => '',
             'situacion' => '',
@@ -92,7 +91,7 @@ final class PersonasEditarData
         ];
 
         if (!empty($Qnuevo)) {
-            $Qapellido1 = FuncTablasSupport::inputString($input, 'apellido1');
+            $Qapellido1 = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apellido1');
             $out['apellido1'] = urldecode($Qapellido1);
             $out['f_situacion'] = (new DateTimeLocal())->getFromLocal();
             $out['situacion'] = 'A';
@@ -232,7 +231,7 @@ final class PersonasEditarData
         if (!empty($a_sel)) {
             return (int)strtok((string)$a_sel[0], '#');
         }
-        return FuncTablasSupport::inputInt($input, 'id_nom');
+        return \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
     }
 
     /**

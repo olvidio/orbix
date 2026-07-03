@@ -31,8 +31,8 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-ListNavSupport::bootRecordar($oPosicion);
-ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
+\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
+\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
 
 $Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
@@ -166,7 +166,7 @@ $oTabla->setBotones([]);
 $oTabla->setDatos($a_valores);
 $html_tabla = $oTabla->mostrar_tabla();
 
-$titulo = PayloadCoercion::string($data['titulo'] ?? '');
+$titulo = \frontend\shared\helpers\PayloadCoercion::string($data['titulo'] ?? '');
 
 $a_campos = [
     'oPosicion' => $oPosicion,

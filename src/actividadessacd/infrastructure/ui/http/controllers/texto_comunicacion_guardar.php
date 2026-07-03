@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: guarda/elimina texto de comunicacion sacd.
@@ -10,9 +9,9 @@ use src\actividadessacd\application\TextoComunicacionGuardar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $input = [
-    'clave' => FuncTablasSupport::inputString($_POST, 'clave'),
-    'idioma' => FuncTablasSupport::inputString($_POST, 'idioma'),
-    'texto' => FuncTablasSupport::inputString($_POST, 'texto'),
+    'clave' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'clave'),
+    'idioma' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'idioma'),
+    'texto' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'texto'),
 ];
 
 /** @var TextoComunicacionGuardar $useCase */

@@ -52,7 +52,7 @@ switch ($Qque) {
         AjaxJsonSupport::html(PasarelaExcepcionRender::listaConDefaultHtml($lista, 'fnjs_modificar_default()', 'fnjs_modificar'));
     case 'form_default':
         $data = PostRequest::getDataFromUrl('/src/pasarela/contribucion_reserva_default_data');
-        $default = PayloadCoercion::string($data['default'] ?? '');
+        $default = \frontend\shared\helpers\PayloadCoercion::string($data['default'] ?? '');
         $txt = _('Valor por defecto en €');
 
         $oHash = new HashFront();

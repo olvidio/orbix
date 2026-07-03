@@ -4,7 +4,6 @@ namespace src\procesos\application;
 
 use src\shared\config\ConfigGlobal;
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: procesos posibles asignables a un id_tipo_activ.
@@ -22,8 +21,8 @@ class TipoActivProcesoLstPosibles
      */
     public function execute(array $input): array
     {
-        $Qid_tipo_activ = FuncTablasSupport::inputInt($input, 'id_tipo_activ');
-        $Qpropio = FuncTablasSupport::inputString($input, 'propio');
+        $Qid_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tipo_activ');
+        $Qpropio = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'propio');
 
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $aWhere = ['sfsv' => $mi_sfsv, '_ordre' => 'nom_proceso'];

@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Endpoint backend: actualiza las plazas (totales, concedidas o
@@ -13,8 +12,8 @@ use src\actividadplazas\application\GestionPlazasUpdate;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $input = [
-    'data' => FuncTablasSupport::inputString($_POST, 'data'),
-    'colName' => FuncTablasSupport::inputString($_POST, 'colName'),
+    'data' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'data'),
+    'colName' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'colName'),
 ];
 
 /** @var GestionPlazasUpdate $useCase */

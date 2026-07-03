@@ -6,7 +6,6 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\shared\config\ConfigGlobal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder: lista de fases posibles para un `id_tipo_activ` (usado al
@@ -36,7 +35,7 @@ final class CambioUsuarioObjetoPrefFasesData
     {
         $objeto = (string)($input['objeto'] ?? '');
         $id_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
-        $dl_propia = FuncTablasSupport::isTrue($input['dl_propia'] ?? true) ?? true;
+        $dl_propia = \src\shared\domain\helpers\FuncTablasSupport::isTrue($input['dl_propia'] ?? true) ?? true;
 
         $result = [
             'error' => '',

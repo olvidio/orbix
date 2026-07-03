@@ -29,15 +29,15 @@ foreach ($cabeceras as $cabecera) {
 </tr>
 <?php
 foreach ($valores as $fila) {
-    $sel = PayloadCoercion::string($fila['sel'] ?? '');
+    $sel = \frontend\shared\helpers\PayloadCoercion::string($fila['sel'] ?? '');
     ?>
-    <tr><td class=link id='<?= $sel ?>' onclick="fnjs_buscar('#frm_buscar_3','<?= $sel ?>');" ><?= PayloadCoercion::string($fila[1] ?? '') ?></td>
-    <td><?= PayloadCoercion::string($fila[2] ?? '') ?></td>
-    <td><?= PayloadCoercion::string($fila[3] ?? '') ?></td>
-    <td><?= PayloadCoercion::string($fila[4] ?? '') ?></td>
-    <td><?= PayloadCoercion::string($fila[5] ?? '') ?></td>
-    <td><?= PayloadCoercion::string($fila[6] ?? '') ?></td>
-    <td><?= PayloadCoercion::string($fila[7] ?? '') ?></td></tr>
+    <tr><td class=link id='<?= $sel ?>' onclick="fnjs_buscar('#frm_buscar_3','<?= $sel ?>');" ><?= \frontend\shared\helpers\PayloadCoercion::string($fila[1] ?? '') ?></td>
+    <td><?= \frontend\shared\helpers\PayloadCoercion::string($fila[2] ?? '') ?></td>
+    <td><?= \frontend\shared\helpers\PayloadCoercion::string($fila[3] ?? '') ?></td>
+    <td><?= \frontend\shared\helpers\PayloadCoercion::string($fila[4] ?? '') ?></td>
+    <td><?= \frontend\shared\helpers\PayloadCoercion::string($fila[5] ?? '') ?></td>
+    <td><?= \frontend\shared\helpers\PayloadCoercion::string($fila[6] ?? '') ?></td>
+    <td><?= \frontend\shared\helpers\PayloadCoercion::string($fila[7] ?? '') ?></td></tr>
     <?php
 }
 ?>

@@ -168,7 +168,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         $aDatos['f_ult_comprobacion'] = (new ConverterDate('date', $Documento->getF_ult_comprobacion()))->toPg();
         $aDatos['f_perdido'] = (new ConverterDate('date', $Documento->getF_perdido()))->toPg();
         $aDatos['f_eliminado'] = (new ConverterDate('date', $Documento->getF_eliminado()))->toPg();
-        array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
+        array_walk($aDatos, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerNull']);
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aDatos['en_busqueda'])) {
             $aDatos['en_busqueda'] = 'true';

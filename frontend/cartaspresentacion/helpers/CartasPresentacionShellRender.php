@@ -25,40 +25,40 @@ final class CartasPresentacionShellRender
             return $rel !== '' ? $base . '/' . ltrim($rel, '/') : '';
         };
 
-        $url_ctr = $abs(PayloadCoercion::string($paths['ctr'] ?? ''));
+        $url_ctr = $abs(\frontend\shared\helpers\PayloadCoercion::string($paths['ctr'] ?? ''));
         $hc = isset($payload['hash_ctr']) && is_array($payload['hash_ctr']) ? $payload['hash_ctr'] : [];
         $oHashCtr = new HashFront();
         $oHashCtr->setUrl($url_ctr);
-        $oHashCtr->setCamposForm(PayloadCoercion::string($hc['campos_form'] ?? ''));
+        $oHashCtr->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hc['campos_form'] ?? ''));
         $h_ctr = $oHashCtr->linkSinValParams();
 
-        $url_lista = $abs(PayloadCoercion::string($paths['lista'] ?? ''));
+        $url_lista = $abs(\frontend\shared\helpers\PayloadCoercion::string($paths['lista'] ?? ''));
         $hl = isset($payload['hash_lista']) && is_array($payload['hash_lista']) ? $payload['hash_lista'] : [];
         $oHashLista = new HashFront();
         $oHashLista->setUrl($url_lista);
-        $oHashLista->setCamposForm(PayloadCoercion::string($hl['campos_form'] ?? ''));
-        $oHashLista->setCamposNo(PayloadCoercion::string($hl['campos_no'] ?? ''));
+        $oHashLista->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hl['campos_form'] ?? ''));
+        $oHashLista->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hl['campos_no'] ?? ''));
         $hash_lista_html = $oHashLista->getCamposHtml();
 
-        $url_form = $abs(PayloadCoercion::string($paths['form'] ?? ''));
+        $url_form = $abs(\frontend\shared\helpers\PayloadCoercion::string($paths['form'] ?? ''));
         $hf = isset($payload['hash_form']) && is_array($payload['hash_form']) ? $payload['hash_form'] : [];
         $oHashForm = new HashFront();
         $oHashForm->setUrl($url_form);
-        $oHashForm->setCamposForm(PayloadCoercion::string($hf['campos_form'] ?? ''));
+        $oHashForm->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hf['campos_form'] ?? ''));
         $h_form = $oHashForm->linkSinVal();
 
-        $url_poblaciones = $abs(PayloadCoercion::string($paths['poblaciones'] ?? ''));
+        $url_poblaciones = $abs(\frontend\shared\helpers\PayloadCoercion::string($paths['poblaciones'] ?? ''));
         $hp = isset($payload['hash_poblaciones']) && is_array($payload['hash_poblaciones']) ? $payload['hash_poblaciones'] : [];
         $oHashPob = new HashFront();
         $oHashPob->setUrl($url_poblaciones);
-        $oHashPob->setCamposForm(PayloadCoercion::string($hp['campos_form'] ?? ''));
+        $oHashPob->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hp['campos_form'] ?? ''));
         $h_poblaciones = $oHashPob->linkSinValParams();
 
-        $url_eliminar = $abs(PayloadCoercion::string($paths['eliminar'] ?? ''));
+        $url_eliminar = $abs(\frontend\shared\helpers\PayloadCoercion::string($paths['eliminar'] ?? ''));
         $he = isset($payload['hash_eliminar']) && is_array($payload['hash_eliminar']) ? $payload['hash_eliminar'] : [];
         $oHashEliminar = new HashFront();
         $oHashEliminar->setUrl($url_eliminar);
-        $oHashEliminar->setCamposForm(PayloadCoercion::string($he['campos_form'] ?? ''));
+        $oHashEliminar->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($he['campos_form'] ?? ''));
         $h_eliminar = $oHashEliminar->linkSinValParams();
 
         $payload['url_ctr'] = $url_ctr;
@@ -69,7 +69,7 @@ final class CartasPresentacionShellRender
         $payload['h_form'] = $h_form;
         $payload['url_poblaciones'] = $url_poblaciones;
         $payload['h_poblaciones'] = $h_poblaciones;
-        $payload['url_update'] = $abs(PayloadCoercion::string($paths['update'] ?? ''));
+        $payload['url_update'] = $abs(\frontend\shared\helpers\PayloadCoercion::string($paths['update'] ?? ''));
         $payload['url_eliminar'] = $url_eliminar;
         $payload['h_eliminar'] = $h_eliminar;
 

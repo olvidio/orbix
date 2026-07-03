@@ -4,12 +4,11 @@ use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /** @var CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository */
 $certificadoEmitidoRepository = DependencyResolver::get(CertificadoEmitidoRepositoryInterface::class);
 
-$Qid_item = FuncTablasSupport::inputInt($_POST, 'id_item');
+$Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item');
 $error_txt = '';
 $data = [];
 

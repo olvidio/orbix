@@ -10,7 +10,7 @@ $error = '';
 $data = [];
 
 try {
-    $id_nom = (int)FilterPostGet::post('id_nom');
+    $id_nom = (int)\src\shared\domain\helpers\FilterPostGet::post('id_nom');
     $data = (DependencyResolver::get(TesseraImprimirData::class))->execute($id_nom);
 } catch (\Throwable $e) {
     $error = $e->getMessage();

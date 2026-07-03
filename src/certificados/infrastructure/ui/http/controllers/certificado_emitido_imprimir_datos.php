@@ -6,7 +6,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
-$id_nom = (int)FilterPostGet::post('id_nom', FILTER_VALIDATE_INT);
+$id_nom = (int)\src\shared\domain\helpers\FilterPostGet::post('id_nom', FILTER_VALIDATE_INT);
 
 $error_txt = '';
 $data = [];

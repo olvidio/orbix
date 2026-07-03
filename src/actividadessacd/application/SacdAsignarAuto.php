@@ -10,7 +10,6 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Auto-asigna el sacd titular del centro encargado a actividades sr/sg sin sacd.
@@ -42,7 +41,7 @@ final class SacdAsignarAuto
      */
     public function execute(array $input): array
     {
-        $f_ini_iso = FuncTablasSupport::inputString($input, 'f_ini_iso');
+        $f_ini_iso = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_ini_iso');
         if ($f_ini_iso === '') {
             return ['asignadas' => 0, 'sin_asignar' => 0];
         }

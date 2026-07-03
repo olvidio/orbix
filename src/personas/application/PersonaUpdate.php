@@ -18,7 +18,6 @@ use src\personas\domain\entity\PersonaNax;
 use src\personas\domain\entity\PersonaS;
 use src\personas\domain\entity\PersonaSSSC;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Guarda los datos de una persona (crear o actualizar).
@@ -36,8 +35,8 @@ final class PersonaUpdate
      */
     public function execute(array $input): string
     {
-        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
-        $obj_pau = FuncTablasSupport::inputString($input, 'obj_pau');
+        $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
+        $obj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'obj_pau');
 
         if ($id_nom === 0) {
             return _("No se ha pasado el id_nom");
@@ -138,9 +137,9 @@ final class PersonaUpdate
         }
 
         $this->applyCommonFields($oPersona, $input);
-        $edadRaw = FuncTablasSupport::inputString($input, 'edad');
+        $edadRaw = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'edad');
         $oPersona->setEdad($edadRaw === '' ? null : (int) $edadRaw);
-        $oPersona->setProfesor_stgr(FuncTablasSupport::isTrue(FuncTablasSupport::inputString($input, 'profesor_stgr')));
+        $oPersona->setProfesor_stgr(\src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'profesor_stgr')));
 
         if ($repo->Guardar($oPersona) === false) {
             $err = _("hay un error, no se ha guardado");
@@ -157,36 +156,36 @@ final class PersonaUpdate
      */
     private function applyCommonFields(PersonaGlobal|PersonaEx $oPersona, array $input): void
     {
-        $oPersona->setDl(FuncTablasSupport::inputString($input, 'dl'));
-        $oPersona->setSituacion(FuncTablasSupport::inputString($input, 'situacion'));
-        $oPersona->setIdioma_preferido(FuncTablasSupport::inputString($input, 'idioma_preferido'));
-        $oPersona->setNivel_stgr(FuncTablasSupport::inputInt($input, 'nivel_stgr'));
-        $oPersona->setTrato(FuncTablasSupport::inputString($input, 'trato'));
-        $oPersona->setNom(FuncTablasSupport::inputString($input, 'nom'));
-        $oPersona->setApel_fam(FuncTablasSupport::inputString($input, 'apel_fam'));
-        $oPersona->setNx1(FuncTablasSupport::inputString($input, 'nx1'));
-        $oPersona->setApellido1(FuncTablasSupport::inputString($input, 'apellido1'));
-        $oPersona->setNx2(FuncTablasSupport::inputString($input, 'nx2'));
-        $oPersona->setApellido2(FuncTablasSupport::inputString($input, 'apellido2'));
-        $oPersona->setLugar_nacimiento(FuncTablasSupport::inputString($input, 'lugar_nacimiento'));
+        $oPersona->setDl(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl'));
+        $oPersona->setSituacion(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'situacion'));
+        $oPersona->setIdioma_preferido(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'idioma_preferido'));
+        $oPersona->setNivel_stgr(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'nivel_stgr'));
+        $oPersona->setTrato(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'trato'));
+        $oPersona->setNom(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nom'));
+        $oPersona->setApel_fam(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apel_fam'));
+        $oPersona->setNx1(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nx1'));
+        $oPersona->setApellido1(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apellido1'));
+        $oPersona->setNx2(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nx2'));
+        $oPersona->setApellido2(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apellido2'));
+        $oPersona->setLugar_nacimiento(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'lugar_nacimiento'));
 
-        $f_nacimiento = FuncTablasSupport::inputString($input, 'f_nacimiento');
+        $f_nacimiento = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_nacimiento');
         $rawF_nacimiento = $f_nacimiento === '' ? null : DateTimeLocal::createFromLocal($f_nacimiento);
         $oPersona->setF_nacimiento($rawF_nacimiento instanceof DateTimeLocal ? $rawF_nacimiento : null);
 
-        $f_situacion = FuncTablasSupport::inputString($input, 'f_situacion');
+        $f_situacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_situacion');
         $rawF_situacion = $f_situacion === '' ? null : DateTimeLocal::createFromLocal($f_situacion);
         $oPersona->setF_situacion($rawF_situacion instanceof DateTimeLocal ? $rawF_situacion : null);
 
-        $oPersona->setProfesion(FuncTablasSupport::inputString($input, 'profesion'));
-        $oPersona->setSacd(FuncTablasSupport::isTrue(FuncTablasSupport::inputString($input, 'sacd')));
-        $oPersona->setEap(FuncTablasSupport::inputString($input, 'eap'));
-        $oPersona->setInc(FuncTablasSupport::inputString($input, 'inc'));
+        $oPersona->setProfesion(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'profesion'));
+        $oPersona->setSacd(\src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sacd')));
+        $oPersona->setEap(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'eap'));
+        $oPersona->setInc(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'inc'));
 
-        $f_inc = FuncTablasSupport::inputString($input, 'f_inc');
+        $f_inc = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_inc');
         $rawF_inc = $f_inc === '' ? null : DateTimeLocal::createFromLocal($f_inc);
         $oPersona->setF_inc($rawF_inc instanceof DateTimeLocal ? $rawF_inc : null);
-        $oPersona->setObserv(FuncTablasSupport::inputString($input, 'observ'));
+        $oPersona->setObserv(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ'));
     }
 
     /**
@@ -194,18 +193,18 @@ final class PersonaUpdate
      */
     private function applyDlFields(PersonaDl $oPersona, array $input): void
     {
-        $oPersona->setId_ctr(FuncTablasSupport::inputInt($input, 'id_ctr') ?: null);
+        $oPersona->setId_ctr(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ctr') ?: null);
         if (method_exists($oPersona, 'setCe')) {
-            $oPersona->setCe(FuncTablasSupport::inputInt($input, 'ce') ?: null);
+            $oPersona->setCe(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'ce') ?: null);
         }
         if (method_exists($oPersona, 'setCe_lugar')) {
-            $oPersona->setCe_lugar(FuncTablasSupport::inputString($input, 'ce_lugar') ?: null);
+            $oPersona->setCe_lugar(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'ce_lugar') ?: null);
         }
         if (method_exists($oPersona, 'setCe_ini')) {
-            $oPersona->setCe_ini(FuncTablasSupport::inputInt($input, 'ce_ini') ?: null);
+            $oPersona->setCe_ini(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'ce_ini') ?: null);
         }
         if (method_exists($oPersona, 'setCe_fin')) {
-            $oPersona->setCe_fin(FuncTablasSupport::inputInt($input, 'ce_fin') ?: null);
+            $oPersona->setCe_fin(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'ce_fin') ?: null);
         }
     }
 

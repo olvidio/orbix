@@ -46,7 +46,7 @@ $oDesplPosiblesTipoTarifas = new Desplegable();
 $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
 $oDesplPosiblesTipoTarifas->setOpciones($fields['opciones_tarifa']);
 if (!$es_nuevo) {
-    $oDesplPosiblesTipoTarifas->setOpcion_sel(PayloadCoercion::string($id_tarifa_sel));
+    $oDesplPosiblesTipoTarifas->setOpcion_sel(\frontend\shared\helpers\PayloadCoercion::string($id_tarifa_sel));
 }
 
 $api = AppUrlConfig::getApiBaseUrl();
@@ -104,7 +104,7 @@ if (!$es_nuevo) {
         'extendida' => '',
         'sfsv_all' => 'f',
     ]);
-    $actividad_tipo_html = PayloadCoercion::string($dataTipo['actividad_tipo_html'] ?? '');
+    $actividad_tipo_html = \frontend\shared\helpers\PayloadCoercion::string($dataTipo['actividad_tipo_html'] ?? '');
 
     $a_campos = [
         'oPosicion' => $oPosicion,

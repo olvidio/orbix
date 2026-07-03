@@ -35,7 +35,7 @@ final class ZonassacdPayload
     public static function listaFromPayload(array $payload): array
     {
         return [
-            'id_tabla' => PayloadCoercion::string($payload['id_tabla'] ?? ''),
+            'id_tabla' => \frontend\shared\helpers\PayloadCoercion::string($payload['id_tabla'] ?? ''),
             'a_cabeceras' => ActividadesListaSupport::cabeceras($payload['a_cabeceras'] ?? null),
             'a_botones' => ActividadesListaSupport::botones($payload['a_botones'] ?? null),
             'con_sel' => !empty($payload['con_sel']),

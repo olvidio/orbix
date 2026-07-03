@@ -74,6 +74,7 @@
                 if (data && data.msg && data.msg.trim() !== '') {
                     alert(<?= json_encode(_("respuesta") . ": ") ?> + data.msg);
                 }
+                $(mod).val("sel_es_asistente");
                 fnjs_actualizar(formulario);
             }
         });

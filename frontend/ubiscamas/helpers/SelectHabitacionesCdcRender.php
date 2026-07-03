@@ -25,13 +25,13 @@ final class SelectHabitacionesCdcRender
     {
         $hash = isset($seg['hash']) && is_array($seg['hash']) ? $seg['hash'] : [];
         $oHashSelect = new HashFront();
-        $oHashSelect->setCamposForm(PayloadCoercion::string($hash['campos_form'] ?? ''));
-        $oHashSelect->setCamposNo(PayloadCoercion::string($hash['campos_no'] ?? ''));
+        $oHashSelect->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_form'] ?? ''));
+        $oHashSelect->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_no'] ?? ''));
         $oHashSelect->setArrayCamposHidden(UbiscamasPayload::hashCamposHidden($hash['campos_hidden'] ?? []));
 
         $tabla = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
         $oTabla = new Lista();
-        $oTabla->setId_tabla(PayloadCoercion::string($tabla['id_tabla'] ?? 'select2006'));
+        $oTabla->setId_tabla(\frontend\shared\helpers\PayloadCoercion::string($tabla['id_tabla'] ?? 'select2006'));
         $oTabla->setCabeceras(ActividadesListaSupport::cabeceras($tabla['cabeceras'] ?? []));
         $oTabla->setBotones(ActividadesListaSupport::botones($tabla['botones'] ?? []));
         $oTabla->setDatos(ActividadesListaSupport::datos($tabla['valores'] ?? []));

@@ -26,7 +26,7 @@ final class SelectCertificadosDeUnaPersonaRender
     {
         $paths = isset($seg['paths']) && is_array($seg['paths']) ? $seg['paths'] : [];
         $publicBase = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $delRel = PayloadCoercion::string($paths['certificado_recibido_delete'] ?? '');
+        $delRel = \frontend\shared\helpers\PayloadCoercion::string($paths['certificado_recibido_delete'] ?? '');
         $urlCertificadoRecibidoDelete = $delRel !== '' ? $publicBase . '/' . ltrim($delRel, '/') : '';
 
         $tablaSeg = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
@@ -37,7 +37,7 @@ final class SelectCertificadosDeUnaPersonaRender
             if (!is_int($idx) || !is_array($row) || !isset($row['sel'])) {
                 continue;
             }
-            $idItem = PayloadCoercion::int($row['sel']);
+            $idItem = \frontend\shared\helpers\PayloadCoercion::int($row['sel']);
             if ($idItem <= 0) {
                 continue;
             }
@@ -50,16 +50,16 @@ final class SelectCertificadosDeUnaPersonaRender
 
         $hashMain = isset($seg['hash_main']) && is_array($seg['hash_main']) ? $seg['hash_main'] : [];
         $oHashSelect = new HashFront();
-        $cf = PayloadCoercion::string($hashMain['campos_form'] ?? '');
+        $cf = \frontend\shared\helpers\PayloadCoercion::string($hashMain['campos_form'] ?? '');
         if ($cf !== '') {
             $oHashSelect->setCamposForm($cf);
         }
-        $oHashSelect->setCamposNo(PayloadCoercion::string($hashMain['campos_no'] ?? ''));
+        $oHashSelect->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hashMain['campos_no'] ?? ''));
         $oHashSelect->setArrayCamposHidden(CertificadosPayload::hashCamposHidden($hashMain['campos_hidden'] ?? []));
 
         $tabla = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
         $oTabla = new Lista();
-        $oTabla->setId_tabla(PayloadCoercion::string($tabla['id_tabla'] ?? 'select_certificados_de_una_persona'));
+        $oTabla->setId_tabla(\frontend\shared\helpers\PayloadCoercion::string($tabla['id_tabla'] ?? 'select_certificados_de_una_persona'));
         $oTabla->setCabeceras(ActividadesListaSupport::cabeceras($tabla['cabeceras'] ?? []));
         $oTabla->setBotones(ActividadesListaSupport::botones($tabla['botones'] ?? []));
         $oTabla->setDatos(ActividadesListaSupport::datos($tabla['valores'] ?? []));

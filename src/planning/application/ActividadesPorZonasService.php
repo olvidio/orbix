@@ -17,7 +17,6 @@ use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve las actividades agrupadas por zona sacd en un periodo dado.
@@ -235,7 +234,7 @@ class ActividadesPorZonasService
             'f_ini' => '<=',
             'f_fin' => '>=',
         ];
-        if (!FuncTablasSupport::isTrue($Qpropuesta)) {
+        if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpropuesta)) {
             $aWhereAct['status'] = StatusId::ACTUAL;
         } else {
             $aWhereAct['status'] = StatusId::BORRABLE;
@@ -254,7 +253,7 @@ class ActividadesPorZonasService
             $id_activ = is_numeric($id_activRaw) ? (int)$id_activRaw : 0;
             $propio = is_bool($aAsistente['propio'])
                 ? $aAsistente['propio']
-                : (FuncTablasSupport::isTrue($aAsistente['propio']) ?? false);
+                : (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aAsistente['propio']) ?? false);
             $plazaRaw = $aAsistente['plaza'] ?? null;
             $plaza = is_int($plazaRaw) || is_string($plazaRaw) ? $plazaRaw : null;
             $idCargoRaw = $aAsistente['id_cargo'] ?? null;
@@ -288,7 +287,7 @@ class ActividadesPorZonasService
             $fi = (string)($oF_fin?->getFromLocal() ?? '');
             $hfi = (string)$h_fin;
 
-            if (FuncTablasSupport::isTrue($Qpropuesta)) {
+            if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpropuesta)) {
                 $nom_curt = $oTipoActividad->getAsistentesText() . " " . $oTipoActividad->getActividadText();
                 $nom_llarg = $nom_activ;
             } else {

@@ -16,18 +16,18 @@ use src\shared\infrastructure\DependencyResolver;
 use src\actividades\application\ActividadQueFiltrosBloque;
 use src\shared\web\ContestarJson;
 
-$sfsv = (int)FilterPostGet::post('sfsv');
+$sfsv = (int)\src\shared\domain\helpers\FilterPostGet::post('sfsv');
 if ($sfsv === 0) {
     $sfsv = (int)ConfigGlobal::mi_sfsv();
 }
-$modo = (string)FilterPostGet::post('modo');
+$modo = (string)\src\shared\domain\helpers\FilterPostGet::post('modo');
 if ($modo === '') {
     $modo = 'buscar';
 }
-$dl_org = (string)FilterPostGet::post('dl_org');
-$filtro_lugar = (string)FilterPostGet::post('filtro_lugar');
-$id_ubi = (int)FilterPostGet::post('id_ubi');
-$publicado = (int)FilterPostGet::post('publicado');
+$dl_org = (string)\src\shared\domain\helpers\FilterPostGet::post('dl_org');
+$filtro_lugar = (string)\src\shared\domain\helpers\FilterPostGet::post('filtro_lugar');
+$id_ubi = (int)\src\shared\domain\helpers\FilterPostGet::post('id_ubi');
+$publicado = (int)\src\shared\domain\helpers\FilterPostGet::post('publicado');
 
 $proceso_installed = ConfigGlobal::is_app_installed('procesos');
 

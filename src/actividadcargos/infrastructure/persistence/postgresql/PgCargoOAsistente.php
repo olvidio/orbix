@@ -12,7 +12,6 @@ use src\personas\domain\entity\PersonaGlobal;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\StoresPdoErrorTxt;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * GestorCargoOAsistente — lista de objetos CargoOAsistente.
@@ -67,7 +66,7 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
             $oCargoOAsistente = new CargoOAsistente($id_activ);
             $oCargoOAsistente->setId_nom($iid_nom);
             if (isset($aDades['propio'])) {
-                $oCargoOAsistente->setPropio(FuncTablasSupport::isTrue($aDades['propio']) ?? false);
+                $oCargoOAsistente->setPropio(\src\shared\domain\helpers\FuncTablasSupport::isTrue($aDades['propio']) ?? false);
             }
             $oCargoOAsistenteSet->add($oCargoOAsistente);
             $aRepe[] = $id_activ;

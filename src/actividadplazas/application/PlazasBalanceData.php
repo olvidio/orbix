@@ -10,7 +10,6 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder del grid comparativo A vs B de plazas concedidas y
@@ -43,8 +42,8 @@ final class PlazasBalanceData
      */
     public function execute(array $input): array
     {
-        $Qdl = FuncTablasSupport::inputString($input, 'dl');
-        $Qid_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $Qdl = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl');
+        $Qid_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ');
 
         $dlA = ConfigGlobal::mi_delef();
         if ($Qdl === '') {
@@ -66,13 +65,13 @@ final class PlazasBalanceData
             case 'ca':
             case 'cv':
                 $any = $oConfig->any_final_curs('est');
-                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'est')->format('Y-m-d');
-                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'est')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'est')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'est')->format('Y-m-d');
                 break;
             case 'crt':
                 $any = $oConfig->any_final_curs('crt');
-                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'crt')->format('Y-m-d');
-                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d');
                 break;
         }
 

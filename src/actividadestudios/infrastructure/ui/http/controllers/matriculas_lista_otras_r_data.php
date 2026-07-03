@@ -4,12 +4,11 @@ use src\actividadestudios\application\MatriculasListaOtrasRData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\ubis\domain\RegionStgrAviso;
-use src\shared\domain\helpers\FuncTablasSupport;
 $error = '';
 $data = [];
 try {
-    $apellido1 = FuncTablasSupport::inputString($_POST, 'apellido1');
-    $esquema = FuncTablasSupport::inputString($_POST, 'esquema');
+    $apellido1 = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'apellido1');
+    $esquema = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'esquema');
     /** @var MatriculasListaOtrasRData $useCase */
     $useCase = DependencyResolver::get(MatriculasListaOtrasRData::class);
     $data = $useCase->execute([

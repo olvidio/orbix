@@ -7,7 +7,6 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\value_objects\NotaEpoca;
-use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Busca un acta por su numero abreviado (tal como lo teclea el usuario)
@@ -34,7 +33,7 @@ final class BuscarActaData
      */
     public function execute(array $input): array
     {
-        $acta = FuncTablasSupport::inputString($input, 'acta');
+        $acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta');
 
         $matches = [];
         preg_match("/^(\d*)(\/)?(\d*)/", $acta, $matches);

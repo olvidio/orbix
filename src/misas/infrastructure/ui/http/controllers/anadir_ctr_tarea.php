@@ -8,10 +8,10 @@ use src\shared\web\ContestarJson;
 /** @var AnadirCtrTarea $useCase */
 $useCase = DependencyResolver::get(AnadirCtrTarea::class);
 $result = $useCase->execute([
-    'que' => FilterPostGet::post('que'),
-    'id_ubi' => FilterPostGet::post('id_ubi'),
-    'id_tarea' => FilterPostGet::post('id_tarea'),
-    'id_item' => FilterPostGet::post('id_item'),
+    'que' => \src\shared\domain\helpers\FilterPostGet::post('que'),
+    'id_ubi' => \src\shared\domain\helpers\FilterPostGet::post('id_ubi'),
+    'id_tarea' => \src\shared\domain\helpers\FilterPostGet::post('id_tarea'),
+    'id_item' => \src\shared\domain\helpers\FilterPostGet::post('id_item'),
 ]);
 
 ContestarJson::enviar($result['error']);

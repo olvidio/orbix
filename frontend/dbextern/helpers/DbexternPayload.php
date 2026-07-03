@@ -134,7 +134,7 @@ final class DbexternPayload
         }
 
         return [
-            'id_nom_listas' => PayloadCoercion::string($raw['id_nom_listas'] ?? ''),
+            'id_nom_listas' => \frontend\shared\helpers\PayloadCoercion::string($raw['id_nom_listas'] ?? ''),
         ];
     }
 
@@ -148,7 +148,7 @@ final class DbexternPayload
         }
 
         return [
-            'id_nom_orbix' => PayloadCoercion::string($raw['id_nom_orbix'] ?? ''),
+            'id_nom_orbix' => \frontend\shared\helpers\PayloadCoercion::string($raw['id_nom_orbix'] ?? ''),
         ];
     }
 
