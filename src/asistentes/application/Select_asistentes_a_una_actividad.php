@@ -14,6 +14,11 @@ use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
+use src\personas\application\services\PersonaListadoLookup;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaEx;
+use src\personas\domain\entity\PersonaPub;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroDl;
@@ -41,6 +46,7 @@ class Select_asistentes_a_una_actividad
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
         private CargoRepositoryInterface $cargoRepository,
         private PersonaFinderService $personaFinderService,
+        private PersonaExRepositoryInterface $personaExRepository,
         private TelecoPersonaService $telecoPersonaService,
     ) {
     }
@@ -158,6 +164,34 @@ class Select_asistentes_a_una_actividad
         $padreEntry['ocupadas'] = $ocupadas;
         $entry[$padreKey] = $padreEntry;
         $this->a_plazas_conseguidas[$childKey] = $entry;
+    }
+
+    /**
+     * @return PersonaDl|PersonaPub|PersonaEx|null
+     */
+    private function buscarPersona(int $idNom): PersonaDl|PersonaPub|PersonaEx|null
+    {
+        if ($this->dl_org !== $this->mi_dele) {
+            return $this->personaFinderService->findPersonaEnDl($idNom);
+        }
+
+        $problemasRegionStgr = [];
+        $marcaRegionStgr = false;
+        $persona = $this->personaFinderService->findPersonaParaListado(
+            $idNom,
+            $problemasRegionStgr,
+            $marcaRegionStgr,
+        );
+        if ($persona !== null) {
+            return $persona;
+        }
+
+        return $this->personaExRepository->findById($idNom);
+    }
+
+    private function reportarPersonaNoEncontrada(int $idNom): void
+    {
+        $this->msg_err .= '<br>' . PersonaListadoLookup::mensajeNoEncontrada($idNom);
     }
 
     /** @return array<int, array{txt: string, click: string}> */
@@ -304,18 +338,11 @@ class Select_asistentes_a_una_actividad
                 continue;
             }
 
-            if ($this->dl_org !== $this->mi_dele) {
-                $oPersona = $this->personaFinderService->findPersonaEnDl($id_nom_int);
-                if ($oPersona === null) {
-                    continue;
-                }
-            } else {
-                $oPersona = $this->personaFinderService->findPersonaEnGlobal($id_nom_int);
-            }
-
+            $oPersona = $this->buscarPersona($id_nom_int);
             if ($oPersona === null) {
-                $this->msg_err .= "<br>";
-                $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona, __FILE__, __LINE__);
+                if ($this->dl_org === $this->mi_dele) {
+                    $this->reportarPersonaNoEncontrada($id_nom_int);
+                }
                 continue;
             }
 
@@ -451,18 +478,11 @@ class Select_asistentes_a_una_actividad
                 continue;
             }
 
-            if ($this->dl_org !== $this->mi_dele) {
-                $oPersona = $this->personaFinderService->findPersonaEnDl($id_nom);
-                if ($oPersona === null) {
-                    continue;
-                }
-            } else {
-                $oPersona = $this->personaFinderService->findPersonaEnGlobal($id_nom);
-            }
-
+            $oPersona = $this->buscarPersona($id_nom);
             if ($oPersona === null) {
-                $this->msg_err .= "<br>";
-                $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona, __FILE__, __LINE__);
+                if ($this->dl_org === $this->mi_dele) {
+                    $this->reportarPersonaNoEncontrada($id_nom);
+                }
                 continue;
             }
             $obj_pau = $oPersona->getClassName();

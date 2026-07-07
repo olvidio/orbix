@@ -1,0 +1,28 @@
+<?php if ($oTabla !== null && $oHash !== null): ?>
+<script>
+    window.fnjs_avisos_generar_cfg = <?= json_encode([
+        'url_eliminar' => $url_eliminar ?? '',
+        'h_eliminar' => $h_eliminar ?? '',
+        'url_eliminar_fecha' => $url_eliminar_fecha ?? '',
+        'h_eliminar_fecha' => $h_eliminar_fecha ?? '',
+    ], JSON_UNESCAPED_UNICODE) ?>;
+    $(function () {
+        $("#f_fin").datepicker({
+            numberOfMonths: 1,
+            showButtonPanel: true
+        });
+    });
+</script>
+    <span class="comentario"><?= _("Sólo se seleccionan las filas que se ven") ?></span>
+    <br>
+    <br>
+    <form id="seleccionados" name="seleccionados" action='' method='post'>
+        <?= $oHash->getCamposHtml() ?>
+        <?= $oTabla->mostrar_tabla() ?>
+        <br>
+        <?= _("borrar avisos anteriores a") ?>:
+        <input class="fecha" size="11" id="f_fin" name="f_fin">
+        <input type="button" value="<?= ucfirst(_("eliminar")) ?>"
+               onclick="javascript:fnjs_borrar_hasta_fecha(this.form);">
+    </form>
+<?php endif; ?>

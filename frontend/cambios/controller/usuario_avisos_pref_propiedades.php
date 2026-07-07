@@ -8,21 +8,31 @@ use frontend\shared\helpers\AjaxJsonSupport;
  */
 
 use frontend\cambios\helpers\CambiosPayload;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use src\shared\domain\helpers\FilterPostGet;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
-$Qid_item_usuario_objeto = (int)filter_input(INPUT_POST, 'id_item_usuario_objeto');
+$Qobjeto = PayloadCoercion::string(FilterPostGet::post('objeto'));
+$Qid_item_usuario_objeto = PayloadCoercion::int(FilterPostGet::post('id_item_usuario_objeto'));
 
 $data = CambiosPayload::postData(PostRequest::getDataFromUrl('/src/cambios/cambio_usuario_objeto_pref_propiedades_data', [
     'objeto' => $Qobjeto,
     'id_item_usuario_objeto' => $Qid_item_usuario_objeto,
 ]));
+$error = PayloadCoercion::string($data['error'] ?? '');
 $propiedades = CambiosPayload::propiedadesRows($data['propiedades'] ?? []);
+
+if ($error !== '') {
+    AjaxJsonSupport::html(
+        '<span class="alert">' . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . '</span>',
+        $error,
+    );
+}
 
 $scamposForm = '';
 foreach ($propiedades as $p) {

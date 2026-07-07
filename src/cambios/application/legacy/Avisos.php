@@ -12,6 +12,7 @@ use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\entity\CambioAnotado;
 use src\cambios\domain\entity\CambioUsuario;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\TimeLocal;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
@@ -219,6 +220,9 @@ class Avisos
 
     public function comparar(mixed $valor_cmb, string $operador, mixed $valor): bool
     {
+        $valor_cmb = self::normalizeValorComparacion($valor_cmb);
+        $valor = self::normalizeValorComparacion($valor);
+
         switch ($operador) {
             case '=':
                 if (is_string($valor) && strpos($valor, ',') !== false) { // es una lista de valores
@@ -477,5 +481,42 @@ class Avisos
         }
 
         return $result;
+    }
+
+    private static function normalizeValorComparacion(mixed $valor): mixed
+    {
+        if ($valor === null || $valor === '') {
+            return $valor;
+        }
+        if (!is_string($valor)) {
+            return $valor;
+        }
+
+        if (preg_match('/^\d{4}-\d{2}-\d{2}/', $valor) === 1) {
+            try {
+                return (new DateTimeLocal(substr($valor, 0, 10)))->format('Y-m-d');
+            } catch (\Throwable) {
+                return $valor;
+            }
+        }
+
+        if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}/', $valor) === 1) {
+            $parsed = DateTimeLocal::createFromLocal($valor);
+            if ($parsed instanceof DateTimeLocal) {
+                return $parsed->format('Y-m-d');
+            }
+
+            return $valor;
+        }
+
+        if (preg_match('/^\d{1,2}:\d{2}/', $valor) === 1) {
+            try {
+                return TimeLocal::fromString($valor)->toDatabaseString();
+            } catch (\Throwable) {
+                return $valor;
+            }
+        }
+
+        return $valor;
     }
 }

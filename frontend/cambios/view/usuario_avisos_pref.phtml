@@ -1,7 +1,9 @@
 <script>
-fnjs_actualizar_propiedades = function (id_item_usuario_objeto) {
+fnjs_actualizar_propiedades = function (id_item_usuario_objeto, objeto) {
     if (isNaN(id_item_usuario_objeto)) id_item_usuario_objeto = 0;
-    var objeto = $('#objeto').val();
+    if (objeto === undefined || objeto === null || objeto === '') {
+        objeto = $('#objeto').val() || '';
+    }
     fnjs_ajax_json_html({
         url: '<?= $url_get_propiedades ?>',
         data: 'salida=propiedades&objeto=' + objeto + '&id_item_usuario_objeto=' + id_item_usuario_objeto + '<?= $h_propiedades ?>',
@@ -148,8 +150,6 @@ fnjs_guardar_cond = function (que) {
     });
 };
 
-fnjs_actualizar_propiedades(<?= (int)$id_item_usuario_objeto ?>);
-
 fnjs_mas_casas = function (e) {
     var code = (e.keyCode ? e.keyCode : e.which);
     var valor;
@@ -243,6 +243,9 @@ El permiso se comprueba cuando se genera el aviso.") ?>
             <tr id="tr_tabla"></tr>
         </table>
     </form>
+    <script>
+    fnjs_actualizar_propiedades(<?= (int)$id_item_usuario_objeto ?>, <?= json_encode($objeto ?? '', JSON_UNESCAPED_UNICODE) ?>);
+    </script>
 
     <br>
     <input type="button" onclick="fnjs_grabar_todo();" value="<?= _("guardar") ?>">

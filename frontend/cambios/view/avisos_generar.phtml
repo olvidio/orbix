@@ -1,4 +1,14 @@
 <script>
+    window.fnjs_avisos_generar_cfg = Object.assign(
+        window.fnjs_avisos_generar_cfg || {},
+        <?= json_encode([
+            'url_eliminar' => $url_eliminar ?? '',
+            'h_eliminar' => $h_eliminar ?? '',
+            'url_eliminar_fecha' => $url_eliminar_fecha ?? '',
+            'h_eliminar_fecha' => $h_eliminar_fecha ?? '',
+        ], JSON_UNESCAPED_UNICODE) ?>
+    );
+
     $(function () {
         $("#f_fin").datepicker({
             numberOfMonths: 1,
@@ -6,17 +16,26 @@
         });
     });
 
+    fnjs_avisos_eliminar_serialize = function (formulario) {
+        var parts = [];
+        $(formulario).find('input.sel:checked').each(function () {
+            parts.push('sel[]=' + encodeURIComponent($(this).val() == null ? '' : String($(this).val())));
+        });
+        return parts.join('&');
+    };
+
     fnjs_borrar_hasta_fecha = function (formulario) {
+        var cfg = window.fnjs_avisos_generar_cfg || {};
         var f_fin = $('#f_fin').val();
         if (!f_fin) {
             alert(<?= json_encode(_("debe indicar la fecha")) ?>);
             return;
         }
         $.ajax({
-            url: '<?= $url_eliminar_fecha ?>',
+            url: cfg.url_eliminar_fecha || '',
             type: 'post',
             dataType: 'json',
-            data: 'f_fin=' + encodeURIComponent(f_fin) + '<?= $h_eliminar_fecha ?>'
+            data: 'f_fin=' + encodeURIComponent(f_fin) + (cfg.h_eliminar_fecha || '')
         }).done(function (rta) {
             if (!rta || rta.success !== true) {
                 alert(<?= json_encode(_("respuesta") . ": ") ?> + (rta && rta.mensaje ? rta.mensaje : ''));
@@ -27,19 +46,21 @@
     }
 
     fnjs_actualizar = function (formulario) {
-        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).find('input[name="refresh"], input[name="solo_lista"]').remove();
         $(formulario).attr('action', "frontend/cambios/controller/avisos_generar.php");
-        $(formulario).append(campo);
+        $(formulario).append('<input type="hidden" name="refresh" value="1">');
+        $(formulario).append('<input type="hidden" name="solo_lista" value="1">');
         fnjs_enviar_formulario(formulario, '#exportar');
     }
 
     fnjs_borrar = function (formulario) {
-        var data_sel = $(formulario).serialize();
+        var cfg = window.fnjs_avisos_generar_cfg || {};
+        var data_sel = fnjs_avisos_eliminar_serialize(formulario);
         $.ajax({
-            url: '<?= $url_eliminar ?>',
+            url: cfg.url_eliminar || '',
             type: 'post',
             dataType: 'json',
-            data: data_sel + '<?= $h_eliminar ?>'
+            data: data_sel + (cfg.h_eliminar || '')
         }).done(function (rta) {
             if (!rta || rta.success !== true) {
                 alert(rta && rta.mensaje ? rta.mensaje : '');
@@ -71,8 +92,11 @@
             <?= _("El sistema no es perfecto. Si hay dudas, hay que mirar la web para ver como está. Por ejemplo (para cambios en otras dl) puede ser que apunte cambios que se han hecho en una fase en la que no se debe avisar, y al hacer otro cambio en una fase que si debe avisar, puede anotar el cambio que se había reallizado con anterioridad...") ?>
         </li>
     </ul>
+<?php endif; ?>
+<?php if ($is_admin): ?>
     <div id="condiciones" class="no_print">
         <form name="frm_cond" id="frm_cond" action="frontend/cambios/controller/avisos_generar.php" method="post">
+            <input type="hidden" name="solo_lista" value="1">
             <?= $oHashCond->getCamposHtml() ?>
             <?= _("usuario") ?>:
             <?= $oDesplUsuarios->desplegable() ?>
@@ -84,19 +108,4 @@
     </div>
     <br><br>
 <?php endif; ?>
-<?php if (!empty($Qid_usuario) && $oTabla !== null): ?>
-    <div id="exportar">
-        <span class="comentario"><?= _("Sólo se seleccionan las filas que se ven") ?></span>
-        <br>
-        <br>
-        <form id="seleccionados" name="seleccionados" action='' method='post'>
-            <?= $oHash->getCamposHtml() ?>
-            <?= $oTabla->mostrar_tabla() ?>
-            <br>
-            <?= _("borrar avisos anteriores a") ?>:
-            <input class="fecha" size="11" id="f_fin" name="f_fin">
-            <input type="button" value="<?= ucfirst(_("eliminar")) ?>"
-                   onclick="javascript:fnjs_borrar_hasta_fecha(this.form);">
-        </form>
-    </div>
-<?php endif; ?>
+<div id="exportar"><?= $html_lista ?? '' ?></div>

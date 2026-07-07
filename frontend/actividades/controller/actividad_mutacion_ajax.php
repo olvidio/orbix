@@ -17,9 +17,11 @@ use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 
-ActividadesMutacionSupport::mutacionAjaxSanitizePost();
-
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/ActividadesMutacionSupport.php';
+
+// Filtrar $_POST antes de validar el hash en boot().
+ActividadesMutacionSupport::mutacionAjaxSanitizePost();
 
 FrontBootstrap::boot();
 

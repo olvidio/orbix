@@ -5,6 +5,7 @@ namespace src\cambios\application;
 use src\shared\config\ConfigGlobal;
 use src\cambios\application\legacy\Avisos;
 use src\permisos\domain\PermisosActividades;
+use src\procesos\domain\PermAccion;
 use src\shared\infrastructure\DependencyResolver;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ImportadaRepositoryInterface;
@@ -12,6 +13,7 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
+use src\cambios\domain\entity\Cambio;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use stdClass;
@@ -78,6 +80,8 @@ class AvisosGenerarTabla
         $num_cambios = count($cNuevosCambios);
         $err_fila = '';
         $bucle_infinito = false;
+        /** @var array<string, true> cambios omitidos (sin anotar) por actividad inexistente u otro error recuperable */
+        $cambiosOmitidos = [];
 
         $ActividadAllRepository = $this->actividadAllRepository;
         $ImportadaRepository = $this->importadaRepository;
@@ -104,6 +108,16 @@ class AvisosGenerarTabla
                 $valor_new_cmb = $oCambio->getValor_new();
                 $id_activ = $oCambio->getId_activ();
                 $oF_cmb = $oCambio->getTimestamp_cambio();
+
+                if ($id_activ > 0 && $ActividadAllRepository->findById($id_activ) === null) {
+                    $this->registrarCambioNoProcesado(
+                        $oCambio,
+                        sprintf('actividad %d no encontrada', $id_activ),
+                        $err_fila,
+                        $cambiosOmitidos,
+                    );
+                    continue;
+                }
 
                 // Para las actividades, en el cambio se anota: 'ActividadDl' 'ActividadEx'
                 // pero en las preferencias, solo 'Actividad'.
@@ -225,10 +239,20 @@ class AvisosGenerarTabla
                         // fase on
                         if (in_array($id_fase_ref, $aFases_cmb)) {
                             if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_on)) {
-                                $oPermActividades = $this->makePermisosActividades($id_usuario);
-                                $oPermActividades->setActividad($id_activ);
-                                $oPermActividades->setFasesCompletadas($aFases_cmb);
-                                $oPermActiv = $oPermActividades->getPermisoActual($afecta);
+                                $oPermActiv = $this->permisoActualActividad(
+                                    $id_usuario,
+                                    $id_activ,
+                                    (string) $id_tipo_activ,
+                                    (string) ($dl_org ?? ''),
+                                    $aFases_cmb,
+                                    $afecta,
+                                    $oCambio,
+                                    $err_fila,
+                                    $cambiosOmitidos,
+                                );
+                                if ($oPermActiv === null) {
+                                    continue 2;
+                                }
                                 if (!$oPermActiv->have_perm_activ('ocupado')) {
                                     continue;
                                 }
@@ -250,10 +274,20 @@ class AvisosGenerarTabla
                         } else {
                             // fase off
                             if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_off)) {
-                                $oPermActividades = $this->makePermisosActividades($id_usuario);
-                                $oPermActividades->setActividad($id_activ);
-                                $oPermActividades->setFasesCompletadas($aFases_cmb);
-                                $oPermActiv = $oPermActividades->getPermisoActual($afecta);
+                                $oPermActiv = $this->permisoActualActividad(
+                                    $id_usuario,
+                                    $id_activ,
+                                    (string) $id_tipo_activ,
+                                    (string) ($dl_org ?? ''),
+                                    $aFases_cmb,
+                                    $afecta,
+                                    $oCambio,
+                                    $err_fila,
+                                    $cambiosOmitidos,
+                                );
+                                if ($oPermActiv === null) {
+                                    continue 2;
+                                }
                                 if (!$oPermActiv->have_perm_activ('ocupado')) {
                                     continue;
                                 }
@@ -265,27 +299,33 @@ class AvisosGenerarTabla
 
                     if ($fase_correcta === 1) {
                         $cListaPropiedades = $CambiosUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadPrefs(['id_item_usuario_objeto' => $id_item_usuario_objeto]);
-                        foreach ($cListaPropiedades as $oCambioUsuarioPropiedadPref) {
-                            $propiedad = $oCambioUsuarioPropiedadPref->getPropiedad();
-                            $operador = $oCambioUsuarioPropiedadPref->getOperador();
-                            $valor = $oCambioUsuarioPropiedadPref->getValor();
-                            $valor_old = $oCambioUsuarioPropiedadPref->isValor_old();
-                            $valor_new = $oCambioUsuarioPropiedadPref->isValor_new();
+                        if ($cListaPropiedades === []) {
+                            if ($oAvisos->me_afecta($propiedad_cmb, $id_activ, $valor_old_cmb, $valor_new_cmb, $id_pau, (string) $sObjeto)) {
+                                $apuntar = true;
+                            }
+                        } else {
+                            foreach ($cListaPropiedades as $oCambioUsuarioPropiedadPref) {
+                                $propiedad = $oCambioUsuarioPropiedadPref->getPropiedad();
+                                $operador = $oCambioUsuarioPropiedadPref->getOperador();
+                                $valor = $oCambioUsuarioPropiedadPref->getValor();
+                                $valor_old = $oCambioUsuarioPropiedadPref->isValor_old();
+                                $valor_new = $oCambioUsuarioPropiedadPref->isValor_new();
 
-                            if ($propiedad_cmb === $propiedad) {
-                                if (!$oAvisos->me_afecta($propiedad, $id_activ, $valor_old_cmb, $valor_new_cmb, $id_pau, (string) $sObjeto)) {
-                                    $apuntar = false;
-                                    continue;
-                                } elseif (!empty($valor)) {
-                                    $operador = empty($operador) ? '=' : $operador;
-                                    if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($valor_old ?? false)) {
-                                        $apuntar = $oAvisos->comparar($valor_old_cmb, $operador, $valor);
+                                if ($propiedad_cmb === $propiedad) {
+                                    if (!$oAvisos->me_afecta($propiedad, $id_activ, $valor_old_cmb, $valor_new_cmb, $id_pau, (string) $sObjeto)) {
+                                        $apuntar = false;
+                                        continue;
+                                    } elseif (!empty($valor)) {
+                                        $operador = empty($operador) ? '=' : $operador;
+                                        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($valor_old ?? false)) {
+                                            $apuntar = $oAvisos->comparar($valor_old_cmb, $operador, $valor);
+                                        }
+                                        if ($apuntar === false && \src\shared\domain\helpers\FuncTablasSupport::isTrue($valor_new ?? false)) {
+                                            $apuntar = $oAvisos->comparar($valor_new_cmb, $operador, $valor);
+                                        }
+                                    } else {
+                                        $apuntar = true;
                                     }
-                                    if ($apuntar === false && \src\shared\domain\helpers\FuncTablasSupport::isTrue($valor_new ?? false)) {
-                                        $apuntar = $oAvisos->comparar($valor_new_cmb, $operador, $valor);
-                                    }
-                                } else {
-                                    $apuntar = true;
                                 }
                             }
                         }
@@ -303,8 +343,18 @@ class AvisosGenerarTabla
             $cNuevosCambios = $CambioRepository->getCambiosNuevos();
             $num_cambios = count($cNuevosCambios);
             if ($num_cambios === $num_cambios_inicial) {
+                if ($this->todosCambiosPendientesSonOmitidos($cNuevosCambios, $cambiosOmitidos, $ActividadAllRepository)) {
+                    $this->logAvisosGenerarTabla(sprintf(
+                        'finalizado: %d cambio(s) no procesado(s) (permanecen pendientes en cola)',
+                        count($cambiosOmitidos),
+                    ));
+                    break;
+                }
                 $oAvisos->borrar_pid($username, $esquema);
                 $bucle_infinito = true;
+                $this->logAvisosGenerarTabla(
+                    'bucle infinito: el numero de cambios pendientes no disminuye tras un ciclo completo',
+                );
                 break;
             }
         }
@@ -347,5 +397,124 @@ class AvisosGenerarTabla
         }
 
         return $resolved;
+    }
+
+    /**
+     * Evalúa permisos sobre la actividad del cambio usando tipo/dl del propio cambio
+     * (evita lookup en BD si la actividad ya no existe).
+     *
+     * @param list<int> $aFases_cmb
+     */
+    private function permisoActualActividad(
+        int $id_usuario,
+        int $id_activ,
+        string $id_tipo_activ,
+        string $dl_org,
+        array $aFases_cmb,
+        string $afecta,
+        Cambio $oCambio,
+        string &$err_fila,
+        array &$cambiosOmitidos,
+    ): ?PermAccion {
+        if ($id_activ > 0 && $this->actividadAllRepository->findById($id_activ) === null) {
+            $this->registrarCambioNoProcesado(
+                $oCambio,
+                sprintf('actividad %d no encontrada', $id_activ),
+                $err_fila,
+                $cambiosOmitidos,
+            );
+
+            return null;
+        }
+
+        $oPermActividades = $this->makePermisosActividades($id_usuario);
+        try {
+            if ($id_tipo_activ !== '' && $dl_org !== '') {
+                $oPermActividades->setActividad($id_activ, $id_tipo_activ, $dl_org);
+            } else {
+                $oPermActividades->setActividad($id_activ);
+            }
+            $oPermActividades->setFasesCompletadas($aFases_cmb);
+        } catch (\RuntimeException $e) {
+            $this->registrarCambioNoProcesado($oCambio, $e->getMessage(), $err_fila, $cambiosOmitidos);
+
+            return null;
+        }
+
+        return $oPermActividades->getPermisoActual($afecta);
+    }
+
+    /**
+     * @param list<Cambio> $cambios
+     * @param array<string, true> $cambiosOmitidos
+     */
+    private function todosCambiosPendientesSonOmitidos(
+        array $cambios,
+        array $cambiosOmitidos,
+        ActividadAllRepositoryInterface $actividadAllRepository,
+    ): bool {
+        if ($cambios === []) {
+            return false;
+        }
+        foreach ($cambios as $oCambio) {
+            if (isset($cambiosOmitidos[self::cambioKey($oCambio)])) {
+                continue;
+            }
+            $id_activ = $oCambio->getId_activ();
+            if ($id_activ > 0 && $actividadAllRepository->findById($id_activ) === null) {
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private static function cambioKey(Cambio $oCambio): string
+    {
+        return $oCambio->getId_schema() . '_' . $oCambio->getId_item_cambio();
+    }
+
+    /**
+     * @param array<string, true> $cambiosOmitidos
+     */
+    private function registrarCambioNoProcesado(
+        Cambio $oCambio,
+        string $motivo,
+        string &$err_fila,
+        array &$cambiosOmitidos,
+    ): void
+    {
+        $id_schema = $oCambio->getId_schema();
+        $id_item = $oCambio->getId_item_cambio();
+        $id_activ = $oCambio->getId_activ();
+        $objeto = (string) ($oCambio->getObjeto() ?? '');
+        $propiedad = (string) ($oCambio->getPropiedad() ?? '');
+
+        $cambiosOmitidos[self::cambioKey($oCambio)] = true;
+
+        $this->logAvisosGenerarTabla(sprintf(
+            'cambio NO procesado schema=%d item=%d id_activ=%d objeto=%s propiedad=%s motivo=%s',
+            $id_schema,
+            $id_item,
+            $id_activ,
+            $objeto,
+            $propiedad,
+            $motivo,
+        ));
+
+        $err_fila .= '<tr>';
+        $err_fila .= '<td>' . htmlspecialchars((string) $id_schema, ENT_QUOTES, 'UTF-8') . '</td>';
+        $err_fila .= '<td>' . htmlspecialchars((string) $id_item, ENT_QUOTES, 'UTF-8') . '</td>';
+        $err_fila .= '<td>' . htmlspecialchars((string) $id_activ, ENT_QUOTES, 'UTF-8') . '</td>';
+        $err_fila .= '<td>' . htmlspecialchars($motivo, ENT_QUOTES, 'UTF-8') . '</td>';
+        $err_fila .= '</tr>';
+    }
+
+    private function logAvisosGenerarTabla(string $mensaje): void
+    {
+        $line = sprintf("[%s] AvisosGenerarTabla: %s\n", date('c'), $mensaje);
+        error_log($line, 3, ConfigGlobal::$directorio . '/log/avisos.err');
     }
 }

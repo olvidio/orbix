@@ -132,4 +132,4 @@
     }
   });
 })();
-//# sourceMappingURL=slick.resizer.js.map
+//# sourceMappingURL=slick-grid-autosize.js.map

@@ -1,18 +1,18 @@
 <script>
     fnjs_mod_cambio = function (formulario) {
         rta = fnjs_solo_uno(formulario);
-        if (rta == 1) {
+        if (rta === 1) {
             $('#av_salida').val('modificar');
-            $(formulario).attr('action', 'apps/cambios/controller/usuario_avisos_pref.php');
+            $(formulario).attr('action', 'frontend/cambios/controller/usuario_avisos_pref.php');
             fnjs_enviar_formulario(formulario);
         }
     }
     fnjs_del_cambio = function (formulario, que_val) {
         rta = fnjs_solo_uno(formulario);
-        if (rta == 1) {
+        if (rta === 1) {
             if (confirm(<?= json_encode(_("¿Está seguro que desea borrar este aviso?")) ?>)) {
                 $('#av_salida').val('eliminar');
-                $(formulario).attr('action', 'apps/cambios/controller/usuario_avisos_pref_ajax.php');
+                $(formulario).attr('action', 'src/cambios/usuario_avisos_pref_eliminar.php');
                 $(formulario).one("submit", function () {
                     fnjs_ajax_json({
                         url: $(this).attr('action'),
@@ -30,7 +30,7 @@
     }
     fnjs_add_cambio = function () {
         $('#av_salida').val('nuevo');
-        $('#avisos').attr('action', "apps/cambios/controller/usuario_avisos_pref.php");
+        $('#avisos').attr('action', "frontend/cambios/controller/usuario_avisos_pref.php");
         fnjs_enviar_formulario('#avisos');
     }
 </script>

@@ -2,7 +2,7 @@
 
 namespace src\cambios\application;
 
-use src\asistentes\domain\entity\Asistente;
+use src\cambios\domain\AvisoObjetoCatalog;
 use src\shared\domain\DatosCampo;
 
 /**
@@ -15,11 +15,32 @@ final class CambioObjetoDatosCampos
      */
     public static function forObjeto(string $objeto): array
     {
-        $campos = match ($objeto) {
-            'Asistente' => (new Asistente())->getDatosCampos(),
-            default => [],
-        };
+        if ($objeto === '') {
+            return [];
+        }
 
-        return $campos;
+        $class = AvisoObjetoCatalog::getFullPathObj($objeto);
+        if ($class === '' || !class_exists($class)) {
+            return [];
+        }
+
+        $instance = new $class();
+        if (!method_exists($instance, 'getDatosCampos')) {
+            return [];
+        }
+
+        $raw = $instance->getDatosCampos();
+        if (!is_array($raw)) {
+            return [];
+        }
+
+        $out = [];
+        foreach ($raw as $item) {
+            if ($item instanceof DatosCampo) {
+                $out[] = $item;
+            }
+        }
+
+        return $out;
     }
 }

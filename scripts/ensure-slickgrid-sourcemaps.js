@@ -71,7 +71,17 @@ function ensureOrbixSlickAutosizePlugin() {
     copy = fs.statSync(src).mtimeMs > fs.statSync(dest).mtimeMs;
   }
   if (copy) {
-    fs.copyFileSync(src, dest);
+    const mapName = 'slick-grid-autosize.js.map';
+    let content = fs.readFileSync(src, 'utf8');
+    content = content.replace(
+      /\/\/# sourceMappingURL=[^\s\r\n]+\s*$/m,
+      `//# sourceMappingURL=${mapName}\n`,
+    );
+    fs.writeFileSync(dest, content, 'utf8');
+    const mapPath = path.join(destDir, mapName);
+    if (!fs.existsSync(mapPath)) {
+      fs.writeFileSync(mapPath, emptyMapBody, 'utf8');
+    }
     process.stdout.write(
       `ensure-slickgrid-sourcemaps: synced ${path.relative(process.cwd(), dest)}\n`,
     );

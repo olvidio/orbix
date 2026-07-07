@@ -13,6 +13,9 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\permisos\domain\PermisosActividades;
+use src\shared\domain\contracts\EventBusInterface;
+use src\shared\domain\events\EntidadModificada;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\actividades\domain\entity\TiposActividades;
@@ -472,10 +475,22 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     public function Eliminar(ActividadAll $ActividadAll, bool $registrarCambios = true): bool
     {
         $id_activ = $ActividadAll->getId_activ();
+        $datosActuales = [];
+        if ($registrarCambios) {
+            $raw = $this->datosById($id_activ);
+            $datosActuales = is_array($raw) ? $raw : [];
+        }
+
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_activ = $id_activ";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $success = $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+
+        if ($registrarCambios && $success && $datosActuales !== []) {
+            $this->dispatchCambioActividad('DELETE', $ActividadAll, [], $datosActuales);
+        }
+
+        return $success;
     }
 
 
@@ -488,6 +503,12 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_activ);
+
+        $datosActuales = [];
+        if ($registrarCambios && !$bInsert) {
+            $raw = $this->datosById($id_activ);
+            $datosActuales = is_array($raw) ? $raw : [];
+        }
 
         $aDatos = $ActividadAll->toArrayForDatabase([
             'h_ini' => fn($v) => (new ConverterDate('time', $v))->toPg(),
@@ -536,7 +557,50 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         if ($stmt === false) {
             return false;
         }
-        return $this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        $success = $this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+
+        if ($registrarCambios && $success) {
+            $datosNuevos = $this->datosById($id_activ);
+            if (is_array($datosNuevos)) {
+                if ($bInsert) {
+                    $this->dispatchCambioActividad('INSERT', $ActividadAll, $datosNuevos, []);
+                } else {
+                    $this->dispatchCambioActividad('UPDATE', $ActividadAll, $datosNuevos, $datosActuales);
+                }
+            }
+        }
+
+        return $success;
+    }
+
+    protected function getObjetoCambio(): string
+    {
+        return match ($this->getNomTabla()) {
+            'a_actividades_dl' => 'ActividadDl',
+            'a_actividades_ex' => 'ActividadEx',
+            default => 'Actividad',
+        };
+    }
+
+    /**
+     * @param array<string, mixed> $datosNuevos
+     * @param array<string, mixed> $datosActuales
+     */
+    private function dispatchCambioActividad(
+        string $tipoCambio,
+        ActividadAll $actividad,
+        array $datosNuevos,
+        array $datosActuales,
+    ): void {
+        /** @var EventBusInterface $eventBus */
+        $eventBus = DependencyResolver::get(EventBusInterface::class);
+        $eventBus->dispatch(new EntidadModificada(
+            objeto: $this->getObjetoCambio(),
+            tipoCambio: $tipoCambio,
+            idActiv: $actividad->getId_activ(),
+            datosNuevos: $datosNuevos,
+            datosActuales: $datosActuales,
+        ));
     }
 
     private function isNew(int $id_activ): bool

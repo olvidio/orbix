@@ -167,8 +167,8 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
 
         $oCambioSet = new Set();
         // Cambios Dl (av_cambios_dl)
-        $sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ, 
-                c.json_fases_sv, c.json_fases_sf, c.dl_org,
+        $sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ,
+                c.json_fases_sv, c.json_fases_sf, c.id_status, c.dl_org,
                 c.objeto, c.propiedad, c.valor_old, c.valor_new, c.quien_cambia, c.sfsv_quien_cambia, c.timestamp_cambio
                 FROM av_cambios_dl c LEFT JOIN $nom_tabla_anotados a
                 ON (c.id_schema = a.id_schema_cambio AND c.id_item_cambio=a.id_item_cambio)
@@ -181,15 +181,14 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
                 if (!is_array($aDatos)) {
                     continue;
                 }
-                $aDatos = $this->normalizeAssocRow($aDatos);
-                $oCambio = Cambio::fromArray($aDatos);
+                $oCambio = Cambio::fromArray($this->hydrateCambioRowFromPg($aDatos));
                 $oCambioSet->add($oCambio);
             }
         }
 
         // Cambios NO dl (sólo public.av_cambios)
-        $sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ, 
-                c.json_fases_sv, c.json_fases_sf, c.dl_org,
+        $sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ,
+                c.json_fases_sv, c.json_fases_sf, c.id_status, c.dl_org,
                 c.objeto, c.propiedad, c.valor_old, c.valor_new, c.quien_cambia, c.sfsv_quien_cambia, c.timestamp_cambio
                 FROM ONLY public.av_cambios c LEFT JOIN $nom_tabla_anotados a
                 ON (c.id_schema = a.id_schema_cambio AND c.id_item_cambio=a.id_item_cambio)
@@ -202,8 +201,7 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
                 if (!is_array($aDatos)) {
                     continue;
                 }
-                $aDatos = $this->normalizeAssocRow($aDatos);
-                $oCambio = Cambio::fromArray($aDatos);
+                $oCambio = Cambio::fromArray($this->hydrateCambioRowFromPg($aDatos));
                 $oCambioSet->add($oCambio);
             }
         }
@@ -284,12 +282,7 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
             if (!is_array($aDatos)) {
                 continue;
             }
-            $aDatos = $this->normalizeAssocRow($aDatos);
-            // para las fechas del postgres (texto iso)
-            $aDatos['timestamp_cambio'] = (new ConverterDate('timestamp', $aDatos['timestamp_cambio']))->fromPg();
-            // para los json
-            $aDatos['json_fases_sv'] = (new ConverterJson($this->jsonForConverter($aDatos['json_fases_sv']), true))->fromPg();
-            $aDatos['json_fases_sf'] = (new ConverterJson($this->jsonForConverter($aDatos['json_fases_sf']), true))->fromPg();
+            $aDatos = $this->hydrateCambioRowFromPg($aDatos);
             $CambioDl = Cambio::fromArray($aDatos);
             $CambioDlSet->add($CambioDl);
         }
@@ -420,16 +413,24 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         if (!is_array($aDatos)) {
             return false;
         }
-        $result = [];
-        foreach ($aDatos as $key => $value) {
-            $result[(string) $key] = $value;
-        }
-        // para las fechas del postgres (texto iso)
-        $result['timestamp_cambio'] = (new ConverterDate('timestamp', $result['timestamp_cambio']))->fromPg();
-        // para los json
-        $result['json_fases_sv'] = (new ConverterJson($this->jsonForConverter($result['json_fases_sv']), true))->fromPg();
-        $result['json_fases_sf'] = (new ConverterJson($this->jsonForConverter($result['json_fases_sf']), true))->fromPg();
-        return $result;
+
+        return $this->hydrateCambioRowFromPg($aDatos);
+    }
+
+    /**
+     * Normaliza una fila PostgreSQL de `av_cambios*` antes de {@see Cambio::fromArray()}.
+     *
+     * @param array<string, mixed> $aDatos
+     * @return array<string, mixed>
+     */
+    private function hydrateCambioRowFromPg(array $aDatos): array
+    {
+        $aDatos = $this->normalizeAssocRow($aDatos);
+        $aDatos['timestamp_cambio'] = (new ConverterDate('timestamp', $aDatos['timestamp_cambio']))->fromPg();
+        $aDatos['json_fases_sv'] = (new ConverterJson($this->jsonForConverter($aDatos['json_fases_sv']), true))->fromPg();
+        $aDatos['json_fases_sf'] = (new ConverterJson($this->jsonForConverter($aDatos['json_fases_sf']), true))->fromPg();
+
+        return $aDatos;
     }
 
     /**

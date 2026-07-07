@@ -23,6 +23,7 @@ use src\usuarios\domain\value_objects\IdLocale;
 
 class ActividadAll
 {
+    use ActividadAllDatosCampos;
     use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */

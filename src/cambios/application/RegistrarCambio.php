@@ -9,6 +9,7 @@ use src\cambios\domain\entity\Cambio;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\TimeLocal;
 
 /**
  * Caso de uso: registra un cambio en `av_cambios` / `av_cambios_dl`.
@@ -145,7 +146,7 @@ class RegistrarCambio
                         continue;
                     }
                     $oldValue = $aDadesActuals[$key];
-                    if ($value === $oldValue) {
+                    if (self::cambioValuesEqual($value, $oldValue)) {
                         continue;
                     }
                     if (!is_null(\src\shared\domain\helpers\FuncTablasSupport::isTrue($value))
@@ -340,10 +341,31 @@ class RegistrarCambio
         return 0;
     }
 
+    private static function cambioValuesEqual(mixed $a, mixed $b): bool
+    {
+        if ($a === $b) {
+            return true;
+        }
+
+        $sa = self::stringFromMixed($a);
+        $sb = self::stringFromMixed($b);
+
+        return $sa !== null && $sb !== null && $sa === $sb;
+    }
+
     private static function stringFromMixed(mixed $value): ?string
     {
         if ($value === null) {
             return null;
+        }
+        if ($value instanceof TimeLocal) {
+            return $value->toDatabaseString();
+        }
+        if ($value instanceof DateTimeLocal) {
+            return $value->format('Y-m-d');
+        }
+        if ($value instanceof \DateTimeInterface) {
+            return $value->format('Y-m-d');
         }
         if (is_string($value)) {
             return $value;

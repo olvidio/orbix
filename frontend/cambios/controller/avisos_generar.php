@@ -21,6 +21,7 @@ use frontend\shared\web\Lista;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
+$QsoloLista = (int)filter_input(INPUT_POST, 'solo_lista') === 1;
 
 $is_admin = CambiosPermSupport::isAdmin();
 $navPeek = $oPosicion->nav()->peek(0);
@@ -94,6 +95,7 @@ if ($Qaviso_tipo !== 0) {
 
 $oHashCond = new HashFront();
 $oHashCond->setCamposForm("id_usuario!aviso_tipo");
+$oHashCond->setCamposNo('solo_lista');
 
 $oTabla = null;
 $oHash = null;
@@ -119,16 +121,10 @@ if ($Qid_usuario !== 0) {
         'id_usuario' => $Qid_usuario,
         'aviso_tipo' => $Qaviso_tipo,
     ]);
-    $oHash->setCamposNo('f_fin!scroll_id!sel!refresh');
+    $oHash->setCamposNo('f_fin!scroll_id!sel!refresh!solo_lista');
 }
 
-$a_campos_view = [
-    'oPosicion' => $oPosicion,
-    'is_admin' => $is_admin,
-    'Qid_usuario' => $Qid_usuario,
-    'oDesplUsuarios' => $oDesplUsuarios,
-    'oDesplTiposAviso' => $oDesplTiposAviso,
-    'oHashCond' => $oHashCond,
+$a_campos_lista = [
     'oTabla' => $oTabla,
     'oHash' => $oHash,
     'url_eliminar' => $view['url_eliminar'],
@@ -138,4 +134,28 @@ $a_campos_view = [
 ];
 
 $oView = new ViewNewPhtml('frontend\\cambios\\view');
+ob_start();
+$oView->renderizar('avisos_generar_lista.phtml', $a_campos_lista);
+$html_lista = (string) ob_get_clean();
+
+if ($QsoloLista) {
+    echo $html_lista;
+
+    return;
+}
+
+$a_campos_view = [
+    'oPosicion' => $oPosicion,
+    'is_admin' => $is_admin,
+    'Qid_usuario' => $Qid_usuario,
+    'oDesplUsuarios' => $oDesplUsuarios,
+    'oDesplTiposAviso' => $oDesplTiposAviso,
+    'oHashCond' => $oHashCond,
+    'html_lista' => $html_lista,
+    'url_eliminar' => $view['url_eliminar'],
+    'url_eliminar_fecha' => $view['url_eliminar_fecha'],
+    'h_eliminar' => $view['h_eliminar'],
+    'h_eliminar_fecha' => $view['h_eliminar_fecha'],
+];
+
 $oView->renderizar('avisos_generar.phtml', $a_campos_view);

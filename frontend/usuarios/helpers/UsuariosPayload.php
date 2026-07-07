@@ -260,7 +260,7 @@ public static function localesFromPayload(array $payload): array
 
 public static function zonaHorariaOpcionSel(string $zona_horaria): string
 {
-    $opciones = DateTimeZone::listIdentifiers();
+    $opciones = \DateTimeZone::listIdentifiers();
     $id = array_search($zona_horaria, $opciones, true);
     if ($id === false) {
         return '';
