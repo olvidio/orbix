@@ -52,14 +52,14 @@
                     <?php if (!empty($notas) && $notas != 'nuevo') { ?>
                         alert(<?= json_encode(_("guardado")) ?>);
                     <?php } else { ?>
-                        <?= $oPosicion->js_atras(1); ?>
+                        <?= $oPosicion->jsNavAtras(1); ?>
                     <?php } ?>
                 }
             });
         }
     </script>
     <?php if ($notas === '') { ?>
-        <?= $oPosicion->mostrar_left_slide(1); ?>
+        <?= $oPosicion->mostrarNavAtras(1); ?>
     <?php } ?>
     <form id="frm_acta" name="frm_acta" action="" method="POST">
         <?= $oHashActa->getCamposHtml(); ?>
@@ -222,7 +222,7 @@
                 if (json.success != true) {
                     alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                 } else {
-                    <?= $oPosicion->js_atras(1); ?>
+                    <?= $oPosicion->jsNavAtras(1); ?>
                 }
             });
             request.fail(function (xhr) {
@@ -258,7 +258,7 @@
                     if (json.success != true) {
                         alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                     } else {
-                        <?= $oPosicion->js_atras(1); ?>
+                        <?= $oPosicion->jsNavAtras(1); ?>
                     }
                 });
             }

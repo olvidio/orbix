@@ -47,12 +47,12 @@
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= \frontend\shared\helpers\ListNavSupport::jsAtrasToDossiersParent($oPosicion); ?>
+                <?= $oPosicion->jsNavAtrasToDossiersParent(); ?>
             }
         });
     }
 </script>
-<?= \frontend\shared\helpers\ListNavSupport::mostrarLeftSlideToDossiersParent($oPosicion); ?>
+<?= $oPosicion->mostrarNavAtrasToDossiersParent(); ?>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
     <?= $oHash->getCamposHtml(); ?>
     <input type="Hidden" id="mod" name="mod" value="<?= $mod ?>">

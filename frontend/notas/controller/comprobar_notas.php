@@ -19,9 +19,6 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $requestPayload = PostRequest::requestPayloadForHash();
 $forward = [];
@@ -45,6 +42,13 @@ if (isset($requestPayload['dl']) && is_array($requestPayload['dl'])) {
     $forward['dl'] = $requestPayload['dl'];
 }
 
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildReturnParametrosFromPost($forward),
+);
+
 $payload = PostRequest::getDataFromUrl(
     '/src/notas/comprobar_notas_page_data',
     $forward
@@ -55,4 +59,4 @@ if (!isset($payload['html']) || !is_string($payload['html'])) {
 }
 
 echo $payload['html'];
-echo $oPosicion->mostrar_left_slide(1);
+echo $oPosicion->mostrarNavAtras(1);

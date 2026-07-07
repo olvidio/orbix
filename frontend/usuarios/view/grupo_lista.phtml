@@ -4,6 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 
 ?>
+<?= $oPosicion->mostrarNavAtras(1) ?>
 <script>
     fnjs_buscar = function () {
         var url = '<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/usuarios/controller/grupo_lista.php';

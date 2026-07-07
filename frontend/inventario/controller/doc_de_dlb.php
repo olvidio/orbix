@@ -16,14 +16,22 @@ $oPosicion = FrontBootstrap::boot();
 $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
-
 $aGoBack = [
     'inventario' => $Qinventario,
     'id_tipo_doc' => $Qid_tipo_doc,
 ];
-$oPosicion->setParametros($aGoBack, 1);
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    $aGoBack,
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $Qid_tipo_doc > 0 ? ['id_tipo_doc' => $Qid_tipo_doc] : [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, $navState);
 
 $url_backend = '/src/inventario/lista_docs_de_dlb';
 $a_campos_backend = [

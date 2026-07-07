@@ -20,19 +20,10 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack((int)$stack)) {
-            $oPosicion2->olvidar((int)$stack);
-        }
-    }
-}
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
-
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
 $periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto(PlanningPayload::mesFinStgr());
 
@@ -49,6 +40,25 @@ $Qctr = (string)filter_input(INPUT_POST, 'ctr');
 $Qtodos_n = (string)filter_input(INPUT_POST, 'todos_n');
 $Qtodos_agd = (string)filter_input(INPUT_POST, 'todos_agd');
 $Qtodos_s = (string)filter_input(INPUT_POST, 'todos_s');
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::mergeSelectionIntoReturnParametros([
+        'tipo' => $Qtipo,
+        'obj_pau' => $Qobj_pau,
+        'year' => $Qyear,
+        'periodo' => $Qperiodo,
+        'empiezamax' => $Qempiezamax,
+        'empiezamin' => $Qempiezamin,
+        'sacd' => $Qsacd,
+        'ctr' => $Qctr,
+        'todos_n' => $Qtodos_n,
+        'todos_agd' => $Qtodos_agd,
+        'todos_s' => $Qtodos_s,
+    ], $Qid_sel, $Qscroll_id),
+);
 
 $locale_us = OrbixRuntime::isLocaleUs();
 

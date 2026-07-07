@@ -47,7 +47,7 @@
                         $('propietario').val(0);
                         $('#actualizar').val(1);
                     } else {
-                                                <?= \frontend\shared\helpers\ListNavSupport::jsAtrasToDossiersParent($oPosicion); ?>
+                                                <?= $oPosicion->jsNavAtras(1); ?>
                     }
                 } else {
                     var msg = (rta && rta.mensaje) ? rta.mensaje : <?= json_encode(_("error desconocido")) ?>;
@@ -67,7 +67,7 @@
         fnjs_enviar_formulario(formulario, '#ficha3101');
     }
 </script>
-<?= \frontend\shared\helpers\ListNavSupport::mostrarLeftSlideToDossiersParent($oPosicion); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
     <?= $hash_campos_html ?? '' ?>
     <table>

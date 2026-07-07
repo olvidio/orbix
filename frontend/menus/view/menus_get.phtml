@@ -3,6 +3,7 @@
 use frontend\shared\permisos\MenuPermisoMenuHtml;
 
 ?>
+<?= $oPosicion->mostrarNavAtras(1) ?>
 <script>
     fnjs_guardar = function (formulario) {
         let url = $(formulario).attr('action');
@@ -17,7 +18,7 @@ use frontend\shared\permisos\MenuPermisoMenuHtml;
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= $oPosicion->jsNavAtras(1); ?>
                 fnjs_lista_menus();
             }
         });

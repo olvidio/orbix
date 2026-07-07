@@ -42,7 +42,7 @@ fnjs_guardar=function(formulario){
                     url: $(this).attr('action'),
                     data: $(this).serialize(),
                     onSuccess: function () {
-                        <?= $oPosicion->js_atras(1) ?>
+                        <?= $oPosicion->jsNavAtras(1) ?>
                     }
                 });
                 return false;
@@ -53,6 +53,7 @@ fnjs_guardar=function(formulario){
         return false;
     }
 </script>
+<?= $oPosicion->mostrarNavAtras(1) ?>
 <body>
 <form id="modifica" name="modifica" action="" method="post">
 <?= $oHash->getCamposHtml() ?>

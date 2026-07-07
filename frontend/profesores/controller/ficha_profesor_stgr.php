@@ -11,22 +11,22 @@ use frontend\shared\helpers\ListNavSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $sel = ProfesoresPostInput::idFromSelPost();
 $id_nom = $sel['id_nom'];
 $Qid_tabla = $sel['id_tabla'];
 
-$stackRaw = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-$stack = is_string($stackRaw) ? (int) $stackRaw : 0;
-if ($stack !== 0) {
-    $oPosicion2 = new frontend\shared\web\Posicion();
-    if ($oPosicion2->goStack((string) $stack)) {
-        $oPosicion2->olvidar((string) $stack);
-    }
-}
+ListNavSupport::restoreSelectionFromStackPost();
+
+$navIdentity = $id_nom > 0 ? ['id_nom' => $id_nom, 'id_tabla' => $Qid_tabla] : [];
+$navState = ListNavSupport::buildReturnParametrosFromPost();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildSelectionStatePatchFromPost());
 
 $Qpermiso = (string)filter_input(INPUT_POST, 'permiso');
 $Qdepende = (string)filter_input(INPUT_POST, 'depende');
@@ -59,7 +59,7 @@ $data['go_cosas'] = ProfesoresUrlSigning::goCosasFromSpecs($fichaSelfLinkSpec, $
 $Qprint = !empty($data['use_print_phtml']) ? 1 : 0;
 unset($data['use_print_phtml']);
 
-echo $oPosicion->mostrar_left_slide(1);
+echo $oPosicion->mostrarNavAtras(1);
 
 $viewVars = ProfesoresPayload::fichaViewVars($data);
 

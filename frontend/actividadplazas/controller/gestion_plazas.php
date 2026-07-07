@@ -30,12 +30,17 @@ use frontend\actividadplazas\helpers\ActividadplazasPayload;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
-$stackFromPost = ActividadplazasPostInput::stackFromPost() ?? 0;
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+ListNavSupport::restoreSelectionFromStackPost();
 
+$navState = ListNavSupport::buildReturnParametrosFromPost();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
 
-$campos = ActividadplazasPostInput::gestionPlazasRequestCampos($oPosicion, $stackFromPost);
+$campos = ActividadplazasPostInput::gestionPlazasRequestCampos($oPosicion);
 $Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
 
 $payload = ActividadplazasPayload::gestionPlazasFromPayload(
@@ -54,7 +59,7 @@ if ($Qscroll_id !== '') {
     $aValores['scroll_id'] = $Qscroll_id;
 }
 
-$oPosicion->setParametros([
+$oPosicion->nav()->updateStateAt(0, [
     'id_tipo_activ' => $Qid_tipo_activ,
     'year' => $Qyear,
     'periodo' => $Qperiodo,
@@ -65,7 +70,12 @@ $oPosicion->setParametros([
     'sactividad2' => $campos['sactividad2'],
     'extendida' => $extendida ? '1' : '',
     'scroll_id' => $Qscroll_id,
-], 0);
+]);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::buildSelectionStatePatchFromPost(),
+);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $oHashUpdate = new HashFront();

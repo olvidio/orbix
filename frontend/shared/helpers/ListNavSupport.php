@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\shared\helpers;
 
+use frontend\shared\web\NavStack;
 use frontend\shared\web\Posicion;
 
 /**
@@ -96,16 +97,18 @@ public static function idSelIsEmpty(string|array $sel): bool
 
 public static function sessionPosition(): ?array
 {
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+    $stack = self::navStackSessionEntries();
+    if ($stack === []) {
         return null;
     }
     /** @var array<int|string, array<string, mixed>> $position */
     $position = [];
-    foreach ($_SESSION['position'] as $key => $entry) {
-        if (!is_array($entry)) {
-            return null;
-        }
-        $position[$key] = $entry;
+    foreach ($stack as $idx => $entry) {
+        $position[$idx] = [
+            'url' => $entry['url'] ?? '',
+            'bloque' => $entry['bloque'] ?? '#main',
+            'parametros' => is_array($entry['state'] ?? null) ? $entry['state'] : [],
+        ];
     }
 
     return $position;
@@ -148,20 +151,39 @@ public static function idSelFromPost(): string|array
 
 public static function persistSelectionToPosicion(Posicion $oPosicion, int $n = 1): void
 {
-    $aSel = self::selFromPost();
-    $scrollId = self::scrollIdFromPost();
-    if ($aSel === [] && $scrollId === '') {
-        return;
-    }
+    self::syncNavStateAt($oPosicion, $n, self::buildSelectionStatePatchFromPost());
+}
 
+/**
+ * Parche id_sel / scroll_id desde POST (NavStack v2 updateStateAt).
+ *
+ * @return array<string, mixed>
+ */
+public static function buildSelectionStatePatchFromPost(): array
+{
     $persist = [];
+    $aSel = self::selFromPost();
     if ($aSel !== []) {
         $persist['id_sel'] = count($aSel) === 1 ? $aSel[0] : $aSel;
     }
-    if ($scrollId !== '') {
+    $scrollId = self::scrollIdFromPost();
+    if ($scrollId !== '' && $scrollId !== '0') {
         $persist['scroll_id'] = $scrollId;
     }
-    $oPosicion->setParametros($persist, $n);
+
+    return $persist;
+}
+
+/**
+ * Sincroniza el state de una entrada de la pila v2 (p. ej. padre al entrar en impresión).
+ *
+ * @param array<string, mixed> $state
+ */
+public static function syncNavStateAt(Posicion $oPosicion, int $n, array $state): void
+{
+    if ($state !== []) {
+        $oPosicion->nav()->updateStateAt($n, $state);
+    }
 }
 
 public static function persistSelectionOnListPage(Posicion $oPosicion, string|array $idSel, string $scrollId = '', bool $returningViaStack = false): void
@@ -178,8 +200,8 @@ public static function persistSelectionOnListPage(Posicion $oPosicion, string|ar
         $persist['scroll_id'] = $scrollId;
     }
 
-    // Tras recordar(): n=0 guarda en la entrada actual; al volver con stack, en la que restauramos.
-    $oPosicion->setParametros($persist, $returningViaStack ? 1 : 0);
+    // NavStack v2: actualizar state de la entrada n bajo la cima.
+    self::syncNavStateAt($oPosicion, $returningViaStack ? 1 : 0, $persist);
 }
 
 public static function buildDossierReturnParametros(): array
@@ -247,20 +269,16 @@ public static function stackTopParametros(): array
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
     }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position']) || $_SESSION['position'] === []) {
-        session_write_close();
-
-        return [];
-    }
-    $stack = $_SESSION['position'];
-    end($stack);
-    $raw = current($stack);
+    /** @var list<array<string, mixed>> $stack */
+    $stack = is_array($_SESSION['nav']['stack'] ?? null) ? $_SESSION['nav']['stack'] : [];
     session_write_close();
-    if (!is_array($raw) || !isset($raw['parametros']) || !is_array($raw['parametros'])) {
+    if ($stack === []) {
         return [];
     }
+    $top = $stack[count($stack) - 1];
+    $state = $top['state'] ?? [];
 
-    return $raw['parametros'];
+    return is_array($state) ? $state : [];
 }
 
 public static function dossiersSegmentKeyFromParametros(array $parametros): string
@@ -317,17 +335,7 @@ public static function dossiersCurrentIsAsistentesSegment(): bool
 
 public static function mostrarLeftSlideFromDossiers(Posicion $oPosicion): string
 {
-    // Desde la lista de asistentes el destino es siempre actividad_select (u otro listado
-    // externo), aunque en la pila quede matrículas / plan de estudios como padre inmediato.
-    if (self::dossiersCurrentIsAsistentesSegment()) {
-        return self::mostrarLeftSlideToListParentFromDossiers($oPosicion);
-    }
-
-    if (self::stackParentIsDossiersVer(1)) {
-        return $oPosicion->mostrar_left_slide(1);
-    }
-
-    return self::mostrarLeftSlideToListParentFromDossiers($oPosicion);
+    return $oPosicion->mostrarNavAtrasFromDossiers();
 }
 
 public static function persistAsistentesDossierSnapshot(Posicion $oPosicion): void
@@ -357,106 +365,36 @@ public static function stackHasAsistentesDossierForActiv(int $idActiv): bool
     if ($idActiv <= 0) {
         return false;
     }
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        session_write_close();
-
-        return false;
-    }
-    foreach ($_SESSION['position'] as $entry) {
-        if (!is_array($entry)) {
-            continue;
-        }
-        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
+    foreach (self::navStackSessionEntries() as $entry) {
+        $url = is_string($entry['url'] ?? null) ? $entry['url'] : '';
         if (!str_contains($url, 'dossiers_ver.php')) {
             continue;
         }
-        $parametros = isset($entry['parametros']) && is_array($entry['parametros']) ? $entry['parametros'] : [];
+        $parametros = is_array($entry['state'] ?? null) ? $entry['state'] : [];
         $queSel = isset($parametros['queSel']) && is_scalar($parametros['queSel']) ? (string) $parametros['queSel'] : '';
         $idDossier = isset($parametros['id_dossier']) ? (int) $parametros['id_dossier'] : 0;
         $idPau = isset($parametros['id_pau']) ? (int) $parametros['id_pau'] : 0;
         if (($queSel === 'asis' || $idDossier === 3101) && $idPau === $idActiv) {
-            session_write_close();
-
             return true;
         }
     }
-    session_write_close();
 
     return false;
 }
 
 public static function ensureAsistentesDossierBeforeActividadSelectChild(Posicion $oPosicion, int $idActiv): void
 {
-    unset($oPosicion);
-    if ($idActiv <= 0 || self::stackParentIsDossiersVer(1)) {
-        return;
-    }
-    if (self::stackHasAsistentesDossierForActiv($idActiv)) {
-        return;
-    }
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    $snapshot = $_SESSION['list_nav_asistentes_dossier_snapshot'] ?? null;
-    if (!is_array($snapshot)) {
-        session_write_close();
-
-        return;
-    }
-    $snapIdPau = isset($snapshot['id_pau']) ? (int) $snapshot['id_pau'] : 0;
-    if ($snapIdPau !== $idActiv) {
-        session_write_close();
-
-        return;
-    }
-    $parametros = $snapshot;
-    foreach (array_merge(self::metaHashPostKeys(), self::stackEphemeralPostKeys()) as $key) {
-        unset($parametros[$key]);
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        $_SESSION['position'] = [];
-    }
-    /** @var array<int|string, array<string, mixed>> $position */
-    $position = &$_SESSION['position'];
-    end($position);
-    $topKey = key($position);
-    $base = ($topKey === null || $topKey === '') ? 0 : (int) $topKey;
-    $newKey = $base + 1;
-    $parametros['stack'] = $newKey;
-    $position[$newKey] = [
-        'url' => self::dossiersVerDefaultUrl(),
-        'bloque' => '#main',
-        'parametros' => $parametros,
-        'stack' => $newKey,
-    ];
-    session_write_close();
+    unset($oPosicion, $idActiv);
 }
 
 public static function stackHasDossiersVer(): bool
 {
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        session_write_close();
-
-        return false;
-    }
-    foreach ($_SESSION['position'] as $entry) {
-        if (!is_array($entry)) {
-            continue;
-        }
-        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
+    foreach (self::navStackSessionEntries() as $entry) {
+        $url = is_string($entry['url'] ?? null) ? $entry['url'] : '';
         if (str_contains($url, 'dossiers_ver.php')) {
-            session_write_close();
-
             return true;
         }
     }
-    session_write_close();
 
     return false;
 }
@@ -468,62 +406,33 @@ public static function stackTopIsDossiersVer(): bool
 
 public static function findBestDossiersStackEntry(): ?array
 {
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        session_write_close();
-
-        return null;
-    }
     $best = null;
-    $bestKey = -1;
-    foreach ($_SESSION['position'] as $key => $entry) {
-        if (!is_array($entry)) {
-            continue;
-        }
-        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
+    foreach (self::navStackSessionEntries() as $entry) {
+        $url = is_string($entry['url'] ?? null) ? $entry['url'] : '';
         if (!str_contains($url, 'dossiers_ver.php')) {
             continue;
         }
-        $intKey = is_int($key) ? $key : (int) $key;
-        if ($intKey >= $bestKey) {
-            $bestKey = $intKey;
-            $best = $entry;
-        }
+        $best = [
+            'url' => $url,
+            'bloque' => $entry['bloque'] ?? '#main',
+            'parametros' => is_array($entry['state'] ?? null) ? $entry['state'] : [],
+        ];
     }
-    session_write_close();
 
     return $best;
 }
 
 public static function findBestDossiersStackKey(): int
 {
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
+    $stack = self::navStackSessionEntries();
+    for ($idx = count($stack) - 1; $idx >= 0; $idx--) {
+        $url = is_string($stack[$idx]['url'] ?? null) ? $stack[$idx]['url'] : '';
+        if (str_contains($url, 'dossiers_ver.php')) {
+            return $idx;
+        }
     }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        session_write_close();
 
-        return -1;
-    }
-    $bestKey = -1;
-    foreach ($_SESSION['position'] as $key => $entry) {
-        if (!is_array($entry)) {
-            continue;
-        }
-        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
-        if (!str_contains($url, 'dossiers_ver.php')) {
-            continue;
-        }
-        $intKey = is_int($key) ? $key : (int) $key;
-        if ($intKey >= $bestKey) {
-            $bestKey = $intKey;
-        }
-    }
-    session_write_close();
-
-    return $bestKey;
+    return -1;
 }
 
 public static function dossierChildFormUrlFragments(): array
@@ -591,69 +500,14 @@ public static function isSkippableBetweenActividadSelectAndChild(string $url): b
 
 public static function reindexPositionStack(): void
 {
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        return;
-    }
-    /** @var list<array<string, mixed>> $position */
-    $position = array_values($_SESSION['position']);
-    foreach ($position as $key => $values) {
-        $position[$key]['stack'] = $key;
-    }
-    $_SESSION['position'] = $position;
 }
 
 public static function purgeDossierChildFormsFromStack(): void
 {
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        session_write_close();
-
-        return;
-    }
-    /** @var list<array<string, mixed>> $kept */
-    $kept = [];
-    foreach ($_SESSION['position'] as $entry) {
-        if (!is_array($entry)) {
-            continue;
-        }
-        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
-        if ($url !== '' && self::isDossierChildFormUrl($url)) {
-            continue;
-        }
-        $kept[] = $entry;
-    }
-    $_SESSION['position'] = $kept;
-    self::reindexPositionStack();
-    session_write_close();
 }
 
 public static function purgeDossierNavigationFromStack(): void
 {
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        session_write_close();
-
-        return;
-    }
-    /** @var list<array<string, mixed>> $kept */
-    $kept = [];
-    foreach ($_SESSION['position'] as $entry) {
-        if (!is_array($entry)) {
-            continue;
-        }
-        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
-        if ($url !== '' && self::isDossierShellOrChildUrl($url)) {
-            continue;
-        }
-        $kept[] = $entry;
-    }
-    $_SESSION['position'] = $kept;
-    self::reindexPositionStack();
-    session_write_close();
 }
 
 public static function findStackKeyByUrlContains(string $needle): int
@@ -661,114 +515,30 @@ public static function findStackKeyByUrlContains(string $needle): int
     if ($needle === '') {
         return -1;
     }
-    $wasActive = session_status() === PHP_SESSION_ACTIVE;
-    if (!$wasActive) {
-        session_start();
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        if (!$wasActive) {
-            session_write_close();
-        }
-
-        return -1;
-    }
-    $bestKey = -1;
-    foreach ($_SESSION['position'] as $key => $entry) {
-        if (!is_array($entry)) {
-            continue;
-        }
-        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
+    $stack = self::navStackSessionEntries();
+    for ($idx = count($stack) - 1; $idx >= 0; $idx--) {
+        $url = is_string($stack[$idx]['url'] ?? null) ? $stack[$idx]['url'] : '';
         if ($url !== '' && str_contains($url, $needle)) {
-            $intKey = is_int($key) ? $key : (int) $key;
-            if ($intKey >= $bestKey) {
-                $bestKey = $intKey;
-            }
+            return $idx;
         }
     }
-    if (!$wasActive) {
-        session_write_close();
-    }
 
-    return $bestKey;
-}
-
-public static function stackFromPost(): int
-{
-    $raw = filter_input(INPUT_POST, 'stack', FILTER_VALIDATE_INT);
-
-    return is_int($raw) ? $raw : 0;
-}
-
-public static function isReturningViaStack(): bool
-{
-    return self::stackFromPost() > 0;
+    return -1;
 }
 
 public static function refreshStackEntryAtIndex(Posicion $oPosicion, int $stackIndex, string $bloque = '#main'): bool
 {
-    if ($stackIndex < 0) {
+    unset($bloque);
+    if ($stackIndex < 0 || $oPosicion->nav()->peek($stackIndex) === null) {
         return false;
     }
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        session_write_close();
-
-        return false;
-    }
-    /** @var list<array<string, mixed>> $position */
-    $position = array_values($_SESSION['position']);
-    if (!array_key_exists($stackIndex, $position)) {
-        session_write_close();
-
-        return false;
-    }
-    $position = array_slice($position, 0, $stackIndex + 1);
-
     $parametros = self::buildReturnParametrosFromPost();
-    $parametros['stack'] = $stackIndex;
-
-    $phpSelf = $_SERVER['PHP_SELF'] ?? '';
-    $urlFromPosition = $position[$stackIndex]['url'] ?? null;
-    $urlFallback = is_string($urlFromPosition) ? $urlFromPosition : '';
-    $url = is_string($phpSelf) && $phpSelf !== '' ? $phpSelf : $urlFallback;
-
-    $position[$stackIndex]['url'] = $url;
-    $position[$stackIndex]['bloque'] = $bloque;
-    $position[$stackIndex]['parametros'] = $parametros;
-    $position[$stackIndex]['stack'] = $stackIndex;
-    $_SESSION['position'] = $position;
-    self::reindexPositionStack();
-    session_write_close();
-
-    return $oPosicion->goStack($stackIndex);
-}
-
-public static function bootListPageAfterStackReturn(Posicion $oPosicion, int $stackFromPost): void
-{
-    self::purgeDossierNavigationFromStack();
-
-    $index = $stackFromPost;
-    $phpSelf = $_SERVER['PHP_SELF'] ?? '';
-    $needle = is_string($phpSelf) && $phpSelf !== '' ? basename($phpSelf) : '';
-
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
+    if ($parametros === []) {
+        return false;
     }
-    if (self::sessionStackEntry($index) === null) {
-        $found = $needle !== '' ? self::findStackKeyByUrlContains($needle) : -1;
-        if ($found >= 0) {
-            $index = $found;
-        }
-    }
-    session_write_close();
+    $oPosicion->nav()->updateStateAt($stackIndex, $parametros);
 
-    if ($index >= 0 && self::refreshStackEntryAtIndex($oPosicion, $index)) {
-        return;
-    }
-
-    self::bootRecordar($oPosicion);
+    return true;
 }
 
 public static function stackTopIsDossierChildForm(): bool
@@ -780,71 +550,29 @@ public static function stackTopIsDossierChildForm(): bool
 
 public static function olvidarForwardFromDossiersSlot(int $preferredIndex): void
 {
-    $index = $preferredIndex;
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    $entry = $index > 0 ? self::sessionStackEntry($index) : null;
-    if ($entry !== null) {
-        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
-        if (!str_contains($url, 'dossiers_ver.php')) {
-            $index = -1;
-        }
-    } else {
-        $index = -1;
-    }
-    if ($index < 0) {
-        $index = self::findBestDossiersStackKey();
-    }
-    session_write_close();
-    if ($index < 0) {
-        return;
-    }
-    $oPosicion = new Posicion();
-    if ($oPosicion->goStack($index)) {
-        $oPosicion->olvidar($index);
-    }
+    unset($preferredIndex);
 }
 
 public static function backStepsToListParentFromDossiers(int $max = 15): int
 {
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position']) || $_SESSION['position'] === []) {
-        session_write_close();
-
-        return 1;
-    }
-    /** @var array<int|string, array<string, mixed>> $position */
-    $position = $_SESSION['position'];
-    $stack = $position;
-    end($stack);
-    $steps = 0;
-    while ($steps < $max) {
-        if (prev($stack) === false) {
-            break;
-        }
-        $steps++;
-        $raw = current($stack);
-        if (!is_array($raw)) {
-            continue;
-        }
-        $url = isset($raw['url']) && is_string($raw['url']) ? $raw['url'] : '';
+    $stack = self::navStackSessionEntries();
+    $len = count($stack);
+    for ($steps = 1; $steps < $len && $steps <= $max; $steps++) {
+        $idx = $len - 1 - $steps;
+        $url = is_string($stack[$idx]['url'] ?? null) ? $stack[$idx]['url'] : '';
         if ($url !== '' && !self::isSkippableBetweenActividadSelectAndChild($url)) {
-            session_write_close();
-
             return max(1, $steps);
         }
     }
-    session_write_close();
 
     return 1;
 }
 
 public static function mostrarLeftSlideToListParentFromDossiers(Posicion $oPosicion): string
 {
-    return $oPosicion->mostrar_left_slide(self::backStepsToListParentFromDossiers());
+    $n = self::navBackStepsFromDossiersVer($oPosicion->nav());
+
+    return $oPosicion->mostrarNavAtras($n);
 }
 
 public static function dossiersVerDefaultUrl(): string
@@ -858,53 +586,32 @@ public static function dossiersVerDefaultUrl(): string
 
 public static function backStepsToDossiersParent(int $max = 10): int
 {
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position']) || $_SESSION['position'] === []) {
-        session_write_close();
-
-        return 1;
-    }
-    /** @var array<int|string, array<string, mixed>> $position */
-    $position = $_SESSION['position'];
-    $stack = $position;
-    end($stack);
-    $steps = 0;
-    while ($steps < $max) {
-        if (prev($stack) === false) {
-            break;
-        }
-        $steps++;
-        $raw = current($stack);
-        if (!is_array($raw)) {
-            continue;
-        }
-        $url = isset($raw['url']) && is_string($raw['url']) ? $raw['url'] : '';
+    $stack = self::navStackSessionEntries();
+    $len = count($stack);
+    for ($steps = 1; $steps < $len && $steps <= $max; $steps++) {
+        $idx = $len - 1 - $steps;
+        $url = is_string($stack[$idx]['url'] ?? null) ? $stack[$idx]['url'] : '';
         if (str_contains($url, 'dossiers_ver.php')) {
-            session_write_close();
-
             return $steps;
         }
     }
-    session_write_close();
 
     return 1;
 }
 
 public static function mostrarLeftSlideToDossiersParent(Posicion $oPosicion): string
 {
-    return $oPosicion->mostrar_left_slide(self::backStepsToDossiersParent());
+    return $oPosicion->mostrarNavAtrasToDossiersParent();
 }
 
 public static function jsAtrasToDossiersParent(Posicion $oPosicion): string
 {
-    return $oPosicion->js_atras(self::backStepsToDossiersParent());
+    return $oPosicion->jsNavAtrasToDossiersParent();
 }
 
 public static function goAtrasToDossiersParent(Posicion $oPosicion): string
 {
-    return $oPosicion->go_atras(self::backStepsToDossiersParent());
+    return $oPosicion->jsNavAtrasToDossiersParent();
 }
 
 public static function persistDossierParentSelectionIfDossier(Posicion $oPosicion): void
@@ -918,53 +625,6 @@ public static function persistDossierParentSelectionIfDossier(Posicion $oPosicio
 
 public static function ensureDossiersOnStackBeforeChild(): void
 {
-    if (self::stackTopIsDossiersVer()) {
-        return;
-    }
-    $existing = self::findBestDossiersStackEntry();
-    if ($existing !== null) {
-        $parametros = isset($existing['parametros']) && is_array($existing['parametros'])
-            ? $existing['parametros']
-            : [];
-        foreach (array_merge(self::metaHashPostKeys(), self::stackEphemeralPostKeys()) as $key) {
-            unset($parametros[$key]);
-        }
-        $bloque = '#main';
-        $dossiersUrl = isset($existing['url']) && is_string($existing['url'])
-            ? $existing['url']
-            : self::dossiersVerDefaultUrl();
-    } else {
-        $parametros = self::buildReturnParametrosFromPost();
-        $idDossierRaw = $parametros['id_dossier'] ?? null;
-        $idDossier = is_string($idDossierRaw)
-            ? trim($idDossierRaw)
-            : (is_scalar($idDossierRaw) ? trim((string) $idDossierRaw) : '');
-        if ($idDossier === '') {
-            return;
-        }
-        $bloque = '#main';
-        $dossiersUrl = self::dossiersVerDefaultUrl();
-    }
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        $_SESSION['position'] = [];
-    }
-    /** @var array<int|string, array<string, mixed>> $position */
-    $position = &$_SESSION['position'];
-    end($position);
-    $topKey = key($position);
-    $base = ($topKey === null || $topKey === '') ? 0 : (int) $topKey;
-    $newKey = $base + 1;
-    $parametros['stack'] = $newKey;
-    $position[$newKey] = [
-        'url' => $dossiersUrl,
-        'bloque' => $bloque,
-        'parametros' => $parametros,
-        'stack' => $newKey,
-    ];
-    session_write_close();
 }
 
 public static function pararRecordarForDossiersRefresh(int $Qrefresh): int
@@ -978,9 +638,7 @@ public static function pararRecordarForDossiersRefresh(int $Qrefresh): int
 
 public static function bootDossierChildRecordar(Posicion $oPosicion, int $parar = 0): void
 {
-    self::ensureDossiersOnStackBeforeChild();
-    self::bootRecordar($oPosicion, $parar);
-    self::persistDossierParentSelectionIfDossier($oPosicion);
+    unset($oPosicion, $parar);
 }
 
 public static function persistDossierReturnToPosicion(Posicion $oPosicion, int $n = 1): void
@@ -1050,13 +708,78 @@ public static function persistRecordarEntry(Posicion $oPosicion, array $parametr
 
 public static function clearInheritedStackForRecordar(Posicion $oPosicion): void
 {
-    $oPosicion->setParametro('stack', 0);
+    unset($oPosicion);
 }
 
 public static function bootRecordar(Posicion $oPosicion, int $parar = 0): void
 {
-    self::clearInheritedStackForRecordar($oPosicion);
-    $oPosicion->recordar($parar);
+    unset($oPosicion, $parar);
+}
+
+public static function bootListPageAfterStackReturn(Posicion $oPosicion, int $stackFromPost): void
+{
+    unset($oPosicion, $stackFromPost);
+}
+
+public static function bootActividadSelectChildRecordar(Posicion $oPosicion, int $parar = 0): void
+{
+    unset($oPosicion, $parar);
+}
+
+public static function persistActividadSelectChildEntry(Posicion $oPosicion, array $extra = []): void
+{
+    self::enterActividadSelectChildNav($oPosicion, '#main', $extra);
+}
+
+/**
+ * enter() NavStack v2 desde un hijo de actividad_select (lista_asistentes, resumen_plazas, …).
+ *
+ * @param array<string, mixed> $extra
+ */
+public static function enterActividadSelectChildNav(Posicion $oPosicion, string $bloque = '#main', array $extra = []): void
+{
+    $idActiv = 0;
+    if (isset($extra['id_activ']) && is_numeric($extra['id_activ'])) {
+        $idActiv = (int) $extra['id_activ'];
+    }
+    if ($idActiv <= 0) {
+        $idActivRaw = filter_input(INPUT_POST, 'id_activ', FILTER_VALIDATE_INT);
+        $idActiv = is_int($idActivRaw) ? $idActivRaw : 0;
+    }
+    if ($idActiv <= 0) {
+        $aSel = self::selFromPost();
+        if ($aSel !== []) {
+            $idActiv = (int) strtok((string) $aSel[0], '#');
+        }
+    }
+
+    $navState = $extra;
+    $aSel = self::selFromPost();
+    if ($aSel !== []) {
+        $navState['sel'] = $aSel;
+    }
+    foreach (['queSel', 'mod', 'obj_pau', 'pau', 'permiso'] as $key) {
+        $raw = filter_input(INPUT_POST, $key);
+        if (is_scalar($raw) && (string) $raw !== '') {
+            $navState[$key] = (string) $raw;
+        }
+    }
+    $navState = self::mergeSelectionIntoReturnParametros(
+        $navState,
+        self::idSelFromPost(),
+        self::scrollIdFromPost(),
+    );
+    if ($idActiv > 0) {
+        $navState['id_activ'] = $idActiv;
+    }
+
+    $oPosicion->nav()->enter(
+        (string) ($_SERVER['PHP_SELF'] ?? ''),
+        $bloque,
+        $idActiv > 0 ? ['id_activ' => $idActiv] : [],
+        $navState,
+    );
+    self::syncActividadSelectParentSelection($oPosicion);
 }
 
 public static function refreshStackEntryOnReturn(Posicion $oPosicion, int $stackIndex): void
@@ -1072,11 +795,7 @@ public static function refreshStackEntryOnReturn(Posicion $oPosicion, int $stack
 
 public static function bootChildFromListRecordar(Posicion $oPosicion, int $parar = 0): void
 {
-    $gstack = filter_input(INPUT_POST, 'Gstack', FILTER_VALIDATE_INT);
-    if (is_int($gstack) && $gstack > 0) {
-        self::repersistStackEntryFromGstack($gstack);
-    }
-    self::bootRecordar($oPosicion, $parar);
+    unset($oPosicion, $parar);
 }
 
 public static function persistParentIfUrl(Posicion $oPosicion, array $parametros, string $urlMustContain): void
@@ -1088,7 +807,7 @@ public static function persistParentIfUrl(Posicion $oPosicion, array $parametros
     if ($parentUrl === '' || !str_contains($parentUrl, $urlMustContain)) {
         return;
     }
-    $oPosicion->setParametros($parametros, 1);
+    self::syncNavStateAt($oPosicion, 1, $parametros);
 }
 
 public static function buildActividadQueReturnParametros(array $state): array
@@ -1134,75 +853,171 @@ public static function buildActividadSelectReturnParametros(array $state): array
     return $parametros;
 }
 
-public static function repersistStackEntryFromGstack(?int $gstackOverride = null, array $paramKeys = []): void
+public static function buildListaActivQueReturnParametros(array $state): array
 {
-    $gstack = $gstackOverride ?? filter_input(INPUT_POST, 'Gstack', FILTER_VALIDATE_INT);
-    if (!is_int($gstack) || $gstack === 0) {
-        return;
-    }
-
-    $oRestore = new Posicion();
-    if (!$oRestore->goStack($gstack)) {
-        return;
-    }
-
-    if ($paramKeys === []) {
-        $useActividadSelectReturn = true;
-        $paramKeys = [
-            'modo', 'que', 'status', 'id_tipo_activ', 'filtro_lugar', 'id_ubi', 'nom_activ',
-            'periodo', 'year', 'dl_org', 'empiezamin', 'empiezamax',
-            'fases_on', 'fases_off', 'publicado', 'listar_asistentes',
-            'ssfsv', 'sasistentes', 'sactividad', 'sactividad2', 'extendida',
-            'id_sel', 'scroll_id',
-        ];
-    } else {
-        $useActividadSelectReturn = false;
-    }
-
-    $state = [];
-    foreach ($paramKeys as $key) {
-        $val = $oRestore->getParametro($key);
+    $parametros = [];
+    foreach ([
+        'que', 'seccion', 'status', 'empiezamin', 'empiezamax', 'asist', 'c_activ', 'tit_list_grupo',
+    ] as $key) {
+        if (!array_key_exists($key, $state)) {
+            continue;
+        }
+        $val = $state[$key];
         if ($val === '' || $val === null || $val === []) {
             continue;
         }
-        $state[$key] = $val;
+        $parametros[$key] = $val;
     }
 
-    if ($state === []) {
+    return $parametros;
+}
+
+public static function buildListaActivReturnParametros(array $state): array
+{
+    $parametros = [];
+    foreach ([
+        'que', 'status', 'id_tipo_activ', 'filtro_lugar', 'id_ubi', 'periodo', 'year', 'dl_org',
+        'empiezamin', 'empiezamax', 'c_activ', 'asist', 'seccion', 'ssfsv', 'sasistentes',
+        'sactividad', 'snom_tipo', 'titulo', 'tit_list_grupo',
+    ] as $key) {
+        if (!array_key_exists($key, $state)) {
+            continue;
+        }
+        $val = $state[$key];
+        if ($val === '' || $val === null || $val === []) {
+            continue;
+        }
+        $parametros[$key] = $val;
+    }
+
+    $idSel = self::normalizeIdSel($state['id_sel'] ?? null);
+    $scrollIdRaw = $state['scroll_id'] ?? null;
+    $scrollId = is_scalar($scrollIdRaw) ? (string) $scrollIdRaw : '';
+
+    return self::mergeSelectionIntoReturnParametros($parametros, $idSel === '' ? null : $idSel, $scrollId);
+}
+
+public static function buildListaActividadesSgReturnParametros(array $state): array
+{
+    $parametros = [];
+    foreach ([
+        'que', 'tipo_activ_sg', 'id_ubi', 'periodo', 'year', 'dl_org', 'status',
+        'empiezamin', 'empiezamax', 'filtro_lugar',
+    ] as $key) {
+        if (!array_key_exists($key, $state)) {
+            continue;
+        }
+        $val = $state[$key];
+        if ($val === '' || $val === null || $val === []) {
+            continue;
+        }
+        $parametros[$key] = $val;
+    }
+
+    $idSel = self::normalizeIdSel($state['id_sel'] ?? null);
+    $scrollIdRaw = $state['scroll_id'] ?? null;
+    $scrollId = is_scalar($scrollIdRaw) ? (string) $scrollIdRaw : '';
+
+    return self::mergeSelectionIntoReturnParametros($parametros, $idSel === '' ? null : $idSel, $scrollId);
+}
+
+public static function buildListaSrCsvQueReturnParametros(array $state): array
+{
+    $parametros = [];
+    foreach ([
+        'periodo', 'year', 'empiezamin', 'empiezamax', 'c_activ', 'status', 'id_cdc',
+    ] as $key) {
+        if (!array_key_exists($key, $state)) {
+            continue;
+        }
+        $val = $state[$key];
+        if ($val === '' || $val === null || $val === []) {
+            continue;
+        }
+        $parametros[$key] = $val;
+    }
+
+    return $parametros;
+}
+
+public static function buildListaSrCsvReturnParametros(array $state): array
+{
+    $parametros = self::buildListaSrCsvQueReturnParametros($state);
+    if (!array_key_exists('que', $state)) {
+        return $parametros;
+    }
+    $que = $state['que'];
+    if ($que !== '' && $que !== null) {
+        $parametros['que'] = $que;
+    }
+
+    return $parametros;
+}
+
+public static function buildActividadesCentroQueReturnParametros(array $state): array
+{
+    $parametros = [];
+    foreach ([
+        'tipo_ctr', 'tipo_lista', 'ver_ctr', 'periodo', 'year', 'empiezamin', 'empiezamax',
+    ] as $key) {
+        if (!array_key_exists($key, $state)) {
+            continue;
+        }
+        $val = $state[$key];
+        if ($val === '' || $val === null || $val === []) {
+            continue;
+        }
+        $parametros[$key] = $val;
+    }
+
+    return $parametros;
+}
+
+public static function buildActividadVerReturnParametros(array $state): array
+{
+    $parametros = [];
+    foreach ([
+        'mod', 'obj_pau', 'id_activ', 'id_tipo_activ', 'ssfsv', 'sasistentes', 'sactividad', 'snom_tipo',
+    ] as $key) {
+        if (!array_key_exists($key, $state)) {
+            continue;
+        }
+        $val = $state[$key];
+        if ($val === '' || $val === null || $val === []) {
+            continue;
+        }
+        $parametros[$key] = $val;
+    }
+
+    return self::mergeSelectionIntoReturnParametros(
+        $parametros,
+        self::normalizeIdSel($state['id_sel'] ?? null) ?: null,
+        is_scalar($state['scroll_id'] ?? null) ? (string) ($state['scroll_id'] ?? '') : '',
+    );
+}
+
+/**
+ * Sincroniza el state del padre al entrar en lista_activ (NavStack v2).
+ *
+ * @param array<string, mixed> $state
+ */
+public static function syncListaActivParent(Posicion $oPosicion, array $state): void
+{
+    $parent = $oPosicion->nav()->peek(1);
+    if ($parent === null) {
         return;
     }
-
-    $parametros = $useActividadSelectReturn
-        ? self::buildActividadSelectReturnParametros($state)
-        : $state;
-
-    $parametros['stack'] = $gstack;
-
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
+    $parentUrl = is_string($parent['url'] ?? null) ? $parent['url'] : '';
+    if (str_contains($parentUrl, 'lista_activ_que.php')) {
+        self::syncNavStateAt($oPosicion, 1, self::buildListaActivQueReturnParametros($state));
+    } elseif (str_contains($parentUrl, 'actividad_que.php')) {
+        self::syncNavStateAt($oPosicion, 1, self::buildActividadQueReturnParametros($state));
     }
-    if (self::sessionStackEntry($gstack) === null) {
-        session_write_close();
+}
 
-        return;
-    }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        session_write_close();
-
-        return;
-    }
-    /** @var array<int|string, array<string, mixed>> $position */
-    $position = &$_SESSION['position'];
-    if (!array_key_exists($gstack, $position)) {
-        session_write_close();
-
-        return;
-    }
-    $position[$gstack]['parametros'] = $parametros;
-    if ($useActividadSelectReturn) {
-        self::rewriteStackEntryUrl($gstack, self::actividadSelectControllerSuffix());
-    }
-    session_write_close();
+public static function repersistStackEntryFromGstack(?int $gstackOverride = null, array $paramKeys = []): void
+{
+    unset($gstackOverride, $paramKeys);
 }
 
 public static function actividadSelectControllerSuffix(): string
@@ -1212,39 +1027,7 @@ public static function actividadSelectControllerSuffix(): string
 
 public static function rewriteStackEntryUrl(int $gstack, string $requiredSuffix): void
 {
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    $entry = self::sessionStackEntry($gstack);
-    if ($entry === null || !isset($entry['url']) || !is_string($entry['url'])) {
-        session_write_close();
-
-        return;
-    }
-    $current = $entry['url'];
-    if (str_contains($current, $requiredSuffix)) {
-        session_write_close();
-
-        return;
-    }
-    $pos = strpos($current, 'frontend/');
-    $newUrl = $pos !== false
-        ? substr($current, 0, $pos) . $requiredSuffix
-        : $requiredSuffix;
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
-        session_write_close();
-
-        return;
-    }
-    /** @var array<int|string, array<string, mixed>> $position */
-    $position = &$_SESSION['position'];
-    if (!array_key_exists($gstack, $position)) {
-        session_write_close();
-
-        return;
-    }
-    $position[$gstack]['url'] = $newUrl;
-    session_write_close();
+    unset($gstack, $requiredSuffix);
 }
 
 public static function persistActividadQueParent(Posicion $oPosicion, array $parametros): void
@@ -1257,49 +1040,16 @@ public static function stackEntryUrl(int $n = 0): string
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
     }
-    if (!isset($_SESSION['position']) || !is_array($_SESSION['position']) || $_SESSION['position'] === []) {
-        session_write_close();
-
-        return '';
-    }
-    $stack = $_SESSION['position'];
-    end($stack);
-    for ($i = 0; $i < $n; $i++) {
-        if (prev($stack) === false) {
-            reset($stack);
-            break;
-        }
-    }
-    $raw = current($stack);
+    /** @var list<array<string, mixed>> $stack */
+    $stack = is_array($_SESSION['nav']['stack'] ?? null) ? $_SESSION['nav']['stack'] : [];
     session_write_close();
-    if (!is_array($raw) || !isset($raw['url']) || !is_string($raw['url'])) {
+    $idx = count($stack) - 1 - $n;
+    if ($idx < 0 || !isset($stack[$idx])) {
         return '';
     }
+    $url = $stack[$idx]['url'] ?? '';
 
-    return $raw['url'];
-}
-
-public static function bootActividadSelectChildRecordar(Posicion $oPosicion, int $parar = 0): void
-{
-    self::bootChildFromListRecordar($oPosicion, $parar);
-}
-
-public static function persistActividadSelectChildEntry(Posicion $oPosicion, array $extra = []): void
-{
-    $parametros = $extra;
-    $aSel = self::selFromPost();
-    if ($aSel !== []) {
-        $parametros['sel'] = $aSel;
-    }
-    $parametros = self::mergeSelectionIntoReturnParametros(
-        $parametros,
-        self::idSelFromPost(),
-        self::scrollIdFromPost(),
-    );
-    foreach (['pau', 'obj_pau', 'queSel', 'id_dossier', 'permiso', 'Gstack', 'stack'] as $strip) {
-        unset($parametros[$strip]);
-    }
-    self::persistRecordarEntry($oPosicion, $parametros);
+    return is_string($url) ? $url : '';
 }
 
 public static function buildDossiersVerFromActividadSelectPost(): array
@@ -1336,43 +1086,51 @@ public static function buildDossiersVerFromActividadSelectPost(): array
 
 public static function bootDossiersFromActividadSelect(Posicion $oPosicion, int $parar = 0): void
 {
-    self::repersistStackEntryFromGstack();
-    self::bootRecordar($oPosicion, $parar);
-    // No reemplazar parametros: recordar() ya guardó el POST completo del formulario.
+    unset($oPosicion, $parar);
 }
 
 public static function persistCleanReturnToPosicion(Posicion $oPosicion, array $parametros, int $n = 0): void
 {
-    if ($parametros === []) {
-        return;
-    }
-    $oPosicion->replaceStackParametros($parametros, $n);
+    self::syncNavStateAt($oPosicion, $n, $parametros);
 }
 
 public static function restoreSelectionFromStackPost(): array
 {
-    $result = ['id_sel' => '', 'scroll_id' => ''];
-    $stackFromPost = isset($_POST['stack']) ? (int) filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
-    if ($stackFromPost === 0) {
-        return $result;
+    $idSel = self::idSelFromPost();
+
+    return [
+        'id_sel' => self::idSelIsEmpty($idSel) ? '' : $idSel,
+        'scroll_id' => self::scrollIdFromPost(),
+    ];
+}
+
+public static function buildPersonasQueReturnParametros(array $state): array
+{
+    $parametros = [];
+    foreach (['na', 'que', 'tipo', 'tabla', 'exacto', 'cmb', 'nombre', 'apellido1', 'apellido2', 'centro'] as $key) {
+        if (!array_key_exists($key, $state)) {
+            continue;
+        }
+        $val = $state[$key];
+        if ($val === '' || $val === null) {
+            continue;
+        }
+        $parametros[$key] = $val;
+    }
+    if (array_key_exists('es_sacd', $state)) {
+        $esSacd = $state['es_sacd'];
+        if (is_int($esSacd)) {
+            $parametros['es_sacd'] = $esSacd;
+        } elseif (is_string($esSacd) && is_numeric($esSacd)) {
+            $parametros['es_sacd'] = (int) $esSacd;
+        }
     }
 
-    $oPosicionRestore = new Posicion();
-    if (!$oPosicionRestore->goStack($stackFromPost)) {
-        return $result;
-    }
+    $idSel = self::normalizeIdSel($state['id_sel'] ?? null);
+    $scrollIdRaw = $state['scroll_id'] ?? null;
+    $scrollId = is_scalar($scrollIdRaw) ? (string) $scrollIdRaw : '';
 
-    $restoredSel = self::idSelForLista($oPosicionRestore->getParametro('id_sel'));
-    if (!self::idSelIsEmpty($restoredSel)) {
-        $result['id_sel'] = $restoredSel;
-    }
-    $restoredScroll = $oPosicionRestore->getParametro('scroll_id');
-    if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
-        $result['scroll_id'] = (string) $restoredScroll;
-    }
-    $oPosicionRestore->olvidar($stackFromPost);
-
-    return $result;
+    return self::mergeSelectionIntoReturnParametros($parametros, $idSel === '' ? null : $idSel, $scrollId);
 }
 
 public static function buildPersonasSelectReturnParametros(): array
@@ -1612,5 +1370,153 @@ public static function applyRestoredSelectionToApiPayload(
     if ($scroll !== '' && $scroll !== '0') {
         $apiPayload['restored_scroll_id'] = $scroll;
     }
+}
+
+/**
+ * Identity NavStack v2 para una entrada de dossiers_ver (segmento de dossier).
+ *
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
+public static function buildDossiersVerNavIdentity(array $state): array
+{
+    $identity = [];
+    foreach (['queSel', 'id_dossier', 'pau', 'obj_pau', 'id_pau', 'clase_info'] as $key) {
+        if (!array_key_exists($key, $state)) {
+            continue;
+        }
+        $val = $state[$key];
+        if (is_scalar($val) && (string) $val !== '') {
+            $identity[$key] = $val;
+        }
+    }
+    $mod = isset($state['mod']) && is_scalar($state['mod']) ? (string) $state['mod'] : '';
+    if ($mod !== '' && $mod !== 'refresh') {
+        $identity['mod'] = $mod;
+    }
+
+    return $identity;
+}
+
+/**
+ * Identity NavStack v2 para un formulario hijo de dossier (segmento #fichaNNNN).
+ *
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
+public static function buildDossierChildNavIdentity(array $state): array
+{
+    $identity = self::buildDossiersVerNavIdentity($state);
+    foreach (['id_activ', 'id_nom', 'id_asignatura', 'id_cargo'] as $key) {
+        if (!array_key_exists($key, $state)) {
+            continue;
+        }
+        $val = $state[$key];
+        if (!is_scalar($val)) {
+            continue;
+        }
+        $s = (string) $val;
+        if ($s === '' || $s === '0') {
+            continue;
+        }
+        $identity[$key] = $val;
+    }
+
+    return $identity;
+}
+
+/**
+ * enter() NavStack v2 desde un formulario hijo de dossier.
+ */
+public static function enterDossierChildNav(Posicion $oPosicion): void
+{
+    $state = self::buildDossierReturnParametros();
+    foreach (['mod', 'id_activ', 'depende', 'refresh', 'actualizar', 'id_nom', 'id_asignatura', 'id_cargo', 'id_nivel', 'opcional', 'primary_key_s'] as $key) {
+        $raw = filter_input(INPUT_POST, $key);
+        if (is_scalar($raw) && (string) $raw !== '') {
+            $state[$key] = $raw;
+        }
+    }
+
+    $bloqueRaw = filter_input(INPUT_POST, 'bloque');
+    $bloque = is_string($bloqueRaw) && $bloqueRaw !== '' ? $bloqueRaw : '#main';
+    $idDossierRaw = filter_input(INPUT_POST, 'id_dossier', FILTER_VALIDATE_INT);
+    if ((!is_string($bloqueRaw) || $bloqueRaw === '') && is_int($idDossierRaw) && $idDossierRaw > 0) {
+        $bloque = '#ficha' . $idDossierRaw;
+    }
+
+    $oPosicion->nav()->enter(
+        (string) ($_SERVER['PHP_SELF'] ?? ''),
+        $bloque,
+        self::buildDossierChildNavIdentity($state),
+        $state,
+    );
+}
+
+/**
+ * Pasos fnjs_nav_atras desde dossiers_ver (salta segmentos dossier intermedios si aplica).
+ */
+public static function navBackStepsFromDossiersVer(NavStack $nav): int
+{
+    if (self::dossiersCurrentIsAsistentesSegment()) {
+        return $nav->backStepsSkippingUrls(
+            static fn (string $url): bool => self::isSkippableBetweenActividadSelectAndChild($url),
+        );
+    }
+
+    $parent = $nav->peek(1);
+    if ($parent !== null) {
+        $parentUrl = is_string($parent['url'] ?? null) ? $parent['url'] : '';
+        if (str_contains($parentUrl, 'dossiers_ver.php')) {
+            return 1;
+        }
+    }
+
+    return $nav->backStepsSkippingUrls(
+        static fn (string $url): bool => self::isSkippableBetweenActividadSelectAndChild($url),
+    );
+}
+
+/**
+ * Sincroniza id_sel/scroll_id del POST en actividad_select padre (NavStack v2).
+ */
+public static function syncActividadSelectParentSelection(Posicion $oPosicion): void
+{
+    $parent = $oPosicion->nav()->peek(1);
+    if ($parent === null) {
+        return;
+    }
+    $parentUrl = is_string($parent['url'] ?? null) ? $parent['url'] : '';
+    if (!str_contains($parentUrl, 'actividad_select.php')) {
+        return;
+    }
+
+    $patch = [];
+    $idSel = self::idSelFromPost();
+    if (!self::idSelIsEmpty($idSel)) {
+        $patch['id_sel'] = $idSel;
+    }
+    $scrollId = self::scrollIdFromPost();
+    if ($scrollId !== '' && $scrollId !== '0') {
+        $patch['scroll_id'] = $scrollId;
+    }
+    if ($patch !== []) {
+        $oPosicion->nav()->updateStateAt(1, $patch);
+    }
+}
+
+/**
+ * @return list<array<string, mixed>>
+ */
+private static function navStackSessionEntries(): array
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    /** @var list<array<string, mixed>> $stack */
+    $stack = is_array($_SESSION['nav']['stack'] ?? null) ? $_SESSION['nav']['stack'] : [];
+    session_write_close();
+
+    return $stack;
 }
 }

@@ -15,8 +15,14 @@ use frontend\shared\helpers\FuncTablasSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+$navState = ListNavSupport::buildReturnParametrosFromPost();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, []);
 
 
 $apiBase = AppUrlConfig::getApiBaseUrl();

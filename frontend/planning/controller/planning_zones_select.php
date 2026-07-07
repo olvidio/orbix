@@ -4,7 +4,6 @@ namespace frontend\planning\controller;
 use frontend\planning\helpers\PlanningPayload;
 use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
@@ -33,25 +32,38 @@ $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
 $Qactividad = (string)filter_input(INPUT_POST, 'actividad');
 $Qpropuesta = (bool)filter_input(INPUT_POST, 'propuesta');
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros([
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
+
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros([
     'modelo' => $Qmodelo,
     'year' => $Qyear,
     'trimestre' => $Qtrimestre,
     'id_zona' => $Qid_zona,
     'actividad' => $Qactividad,
     'propuesta' => $Qpropuesta,
-], \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
+], $Qid_sel, $Qscroll_id);
 
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['id_zona' => $Qid_zona],
+    $navState,
+);
 
-$oPosicion->setParametros([
-    'modelo' => $Qmodelo,
-    'year' => $Qyear,
-    'trimestre' => $Qtrimestre,
-    'id_zona' => $Qid_zona,
-    'actividad' => $Qactividad,
-    'propuesta' => $Qpropuesta,
-], 1);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::mergeSelectionIntoReturnParametros([
+        'modelo' => $Qmodelo,
+        'year' => $Qyear,
+        'trimestre' => $Qtrimestre,
+        'id_zona' => (int) $Qid_zona,
+        'actividad' => $Qactividad,
+        'propuesta' => $Qpropuesta,
+    ], $Qid_sel, $Qscroll_id),
+);
 
 $data = PostRequest::getDataFromUrl('/src/planning/planning_zones_select_data', $_POST);
 $zonesSelect = PlanningPayload::zonesSelectFromPayload($data);

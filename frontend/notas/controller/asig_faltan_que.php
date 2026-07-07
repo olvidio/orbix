@@ -12,15 +12,9 @@ use frontend\shared\helpers\FuncTablasSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
-
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : \frontend\shared\helpers\ListNavSupport::idSelFromPost();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
-
-
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
 $Qnumero = (int)filter_input(INPUT_POST, 'numero');
 $Qb_c = (string)filter_input(INPUT_POST, 'b_c');
@@ -44,6 +38,17 @@ $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
 
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 $chk_lista = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qlista) ? 'checked' : '';
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::mergeSelectionIntoReturnParametros(
+        ListNavSupport::buildReturnParametrosFromPost(),
+        $Qid_sel,
+        $Qscroll_id,
+    ),
+);
 
 $dAsig = PostRequest::getDataFromUrl('/src/asignaturas/asignaturas_con_separador_data', []);
 $aOpciones = NotasFormSupport::desplegableOpciones($dAsig['a_opciones'] ?? []);

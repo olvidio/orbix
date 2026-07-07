@@ -4,7 +4,6 @@ namespace frontend\planning\controller;
 use frontend\planning\helpers\PlanningPayload;
 use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
@@ -23,16 +22,64 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
-
 
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qyear = (int)filter_input(INPUT_POST, 'year');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+
+$Qsacd = (string)filter_input(INPUT_POST, 'sacd');
+$Qctr = (string)filter_input(INPUT_POST, 'ctr');
+$Qtodos_n = (string)filter_input(INPUT_POST, 'todos_n');
+$Qtodos_agd = (string)filter_input(INPUT_POST, 'todos_agd');
+$Qtodos_s = (string)filter_input(INPUT_POST, 'todos_s');
+
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
+
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros([
+    'modelo' => $Qmodelo,
+    'tipo' => $Qtipo,
+    'obj_pau' => $Qobj_pau,
+    'year' => $Qyear,
+    'periodo' => $Qperiodo,
+    'empiezamin' => $Qempiezamin,
+    'empiezamax' => $Qempiezamax,
+    'sacd' => $Qsacd,
+    'ctr' => $Qctr,
+    'todos_n' => $Qtodos_n,
+    'todos_agd' => $Qtodos_agd,
+    'todos_s' => $Qtodos_s,
+], $Qid_sel, $Qscroll_id);
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['ctr' => $Qctr, 'tipo' => $Qtipo],
+    $navState,
+);
+
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::mergeSelectionIntoReturnParametros([
+        'tipo' => $Qtipo,
+        'obj_pau' => $Qobj_pau,
+        'year' => $Qyear,
+        'periodo' => $Qperiodo,
+        'empiezamax' => $Qempiezamax,
+        'empiezamin' => $Qempiezamin,
+        'sacd' => $Qsacd,
+        'ctr' => $Qctr,
+        'todos_n' => $Qtodos_n,
+        'todos_agd' => $Qtodos_agd,
+        'todos_s' => $Qtodos_s,
+    ], $Qid_sel, $Qscroll_id),
+);
 
 $oPeriodo = Periodo::conCalendarioDesdeBackend();
 $oPeriodo->setDefaultAny('next');
@@ -56,12 +103,6 @@ if ($interval < 2) {
     $doble = 0;
 }
 
-$Qsacd = (string)filter_input(INPUT_POST, 'sacd');
-$Qctr = (string)filter_input(INPUT_POST, 'ctr');
-$Qtodos_n = (string)filter_input(INPUT_POST, 'todos_n');
-$Qtodos_agd = (string)filter_input(INPUT_POST, 'todos_agd');
-$Qtodos_s = (string)filter_input(INPUT_POST, 'todos_s');
-
 $payload = [
     'modelo' => $Qmodelo,
     'tipo' => $Qtipo,
@@ -80,21 +121,6 @@ $ctrSelect = PlanningPayload::ctrSelectFromPayload($apiData);
 $msg_txt = $ctrSelect['msg_txt'];
 $cabecera_title = $ctrSelect['cabecera_title'];
 $a_actividades2 = $ctrSelect['a_actividades2'];
-
-$aGoBack = [
-    'modelo' => $Qmodelo,
-    'tipo' => $Qtipo,
-    'year' => $Qyear,
-    'periodo' => $Qperiodo,
-    'empiezamax' => $Qempiezamax,
-    'empiezamin' => $Qempiezamin,
-    'sacd' => $Qsacd,
-    'ctr' => $Qctr,
-    'todos_n' => $Qtodos_n,
-    'todos_agd' => $Qtodos_agd,
-    'todos_s' => $Qtodos_s,
-];
-$oPosicion->setParametros($aGoBack, 1);
 
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 

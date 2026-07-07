@@ -56,8 +56,15 @@ if ($Qque === 'un_sacd') {
     }
 }
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+$navIdentity = $Qid_nom > 0 ? ['id_nom' => $Qid_nom] : [];
+$navState = ListNavSupport::buildReturnParametrosFromPost();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, []);
 
 
 $aOpciones = [

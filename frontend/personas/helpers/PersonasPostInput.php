@@ -8,13 +8,6 @@ use frontend\shared\helpers\PayloadCoercion;
 
 final class PersonasPostInput
 {
-    public static function stackFromPost(): ?int
-    {
-        $stack = filter_input(INPUT_POST, 'stack', FILTER_VALIDATE_INT);
-
-        return is_int($stack) ? $stack : null;
-    }
-
     /**
      * @return array{id_nom: int, id_tabla: string}
      */

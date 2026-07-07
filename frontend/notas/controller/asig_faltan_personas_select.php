@@ -1,13 +1,11 @@
 <?php
 
 use frontend\notas\helpers\NotasPayload;
-use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
-use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
@@ -24,56 +22,36 @@ $Qc1 = (string)filter_input(INPUT_POST, 'c1');
 $Qc2 = (string)filter_input(INPUT_POST, 'c2');
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = \frontend\shared\helpers\ListNavSupport::idSelFromPost();
-$Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
-$stackFromPost = isset($_POST['stack']) ? (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
-if ($stackFromPost !== 0) {
-    $oPosicion2 = new Posicion();
-    if ($oPosicion2->goStack($stackFromPost)) {
-        $restoredSel = \frontend\shared\helpers\ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
-        if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restoredSel)) {
-            $Qid_sel = $restoredSel;
-        }
-        $restoredScroll = $oPosicion2->getParametro('scroll_id');
-        if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
-            $Qscroll_id = (string) $restoredScroll;
-        }
-        $Qid_asignatura = \frontend\shared\helpers\PayloadCoercion::int($oPosicion2->getParametro('id_asignatura'), $Qid_asignatura);
-        $Qpersonas_n = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('personas_n') ?? $Qpersonas_n);
-        $Qpersonas_agd = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('personas_agd') ?? $Qpersonas_agd);
-        $Qb_c = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('b_c') ?? $Qb_c);
-        $Qc1 = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('c1') ?? $Qc1);
-        $Qc2 = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('c2') ?? $Qc2);
-        $oPosicion2->olvidar($stackFromPost);
-    }
-}
-
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros([
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros([
     'id_asignatura' => $Qid_asignatura,
     'personas_n' => $Qpersonas_n,
     'personas_agd' => $Qpersonas_agd,
     'b_c' => $Qb_c,
     'c1' => $Qc1,
     'c2' => $Qc2,
-], $Qid_sel, $Qscroll_id));
+], $Qid_sel, $Qscroll_id);
 
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['id_asignatura' => $Qid_asignatura],
+    $navState,
+);
 
-$oPosicion->setParametros([
-    'id_asignatura' => $Qid_asignatura,
-    'personas_n' => $Qpersonas_n,
-    'personas_agd' => $Qpersonas_agd,
-    'b_c' => $Qb_c,
-    'c1' => $Qc1,
-    'c2' => $Qc2,
-], 1);
-
-\frontend\shared\helpers\ListNavSupport::persistSelectionOnListPage(
+ListNavSupport::syncNavStateAt(
     $oPosicion,
-    $Qid_sel,
-    $Qscroll_id,
-    $stackFromPost !== 0,
+    1,
+    ListNavSupport::mergeSelectionIntoReturnParametros([
+        'id_asignatura' => $Qid_asignatura,
+        'personas_n' => $Qpersonas_n,
+        'personas_agd' => $Qpersonas_agd,
+        'b_c' => $Qb_c,
+        'c1' => $Qc1,
+        'c2' => $Qc2,
+    ], $Qid_sel, $Qscroll_id),
 );
 
 if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpersonas_n) && !\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpersonas_agd)) {
@@ -108,7 +86,7 @@ $rows = $presentacion['rows'];
 
 $i = 0;
 $a_valores = [];
-if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($Qid_sel)) {
+if (!ListNavSupport::idSelIsEmpty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
 if ($Qscroll_id !== '') {

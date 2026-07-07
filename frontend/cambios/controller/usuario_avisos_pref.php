@@ -15,9 +15,6 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) {
@@ -27,6 +24,16 @@ if (!empty($a_sel)) {
     $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
     $Qid_item_usuario_objeto = (int)filter_input(INPUT_POST, 'id_item_usuario_objeto');
 }
+
+$navIdentity = $Qid_item_usuario_objeto > 0 ? ['id_item_usuario_objeto' => $Qid_item_usuario_objeto] : [];
+$navState = ListNavSupport::buildReturnParametrosFromPost();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildSelectionStatePatchFromPost());
 
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $Qsalida = (string)filter_input(INPUT_POST, 'salida');

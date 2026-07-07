@@ -18,8 +18,21 @@ $oPosicion = FrontBootstrap::boot();
 $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    array_filter([
+        'inventario' => $Qinventario,
+        'id_tipo_doc' => $Qid_tipo_doc,
+    ], static fn ($v) => $v !== '' && $v !== '0'),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $Qid_tipo_doc > 0 ? ['id_tipo_doc' => $Qid_tipo_doc] : [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, $navState);
 
 
 // muestra los ctr que NO tienen el documento.

@@ -14,13 +14,16 @@ $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 
-$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
-if ($stackFromPost !== 0) {
-    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
-} else {
-    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-}
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+ListNavSupport::restoreSelectionFromStackPost();
+
+$navState = ListNavSupport::buildReturnParametrosFromPost();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['id_usuario' => $Qid_usuario],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildSelectionStatePatchFromPost());
 
 
 $url_backend = '/src/cambios/usuario_form_avisos_data';

@@ -11,8 +11,12 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 
 
 // 12
@@ -24,6 +28,7 @@ $oHash = new HashFront();
 $oHash->setArrayCamposHidden(['inventario' => 1]);
 
 $a_campos = [
+    'oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'url_ctr' => $url_ctr,
     'url_dlb' => $url_dlb,

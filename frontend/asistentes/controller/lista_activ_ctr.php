@@ -8,10 +8,13 @@ use frontend\shared\helpers\ListNavSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-/** @var \frontend\shared\web\Posicion $oPosicion */
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 
 $campos = array_merge($_GET, $_POST);
 $payload = AsistentesPayload::postData(PostRequest::getDataFromUrl('/src/asistentes/lista_activ_ctr_data', $campos));

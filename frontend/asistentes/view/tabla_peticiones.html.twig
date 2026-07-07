@@ -1,5 +1,5 @@
 
-{{ oPosicion.mostrar_left_slide(1)|raw }}
+{{ oPosicion.mostrarNavAtras(1)|raw }}
 <h3> {{ nom_activ }}</h3>
 {{ tabla_html|raw }}
 <script>
@@ -15,7 +15,7 @@ fnjs_cambiar_actividad=function(param){
     });
     request.done( function (rta) {
         if (rta && rta.success) {
-            {{ oPosicion.js_atras()|raw }}
+            fnjs_update_div('#main', {{ reload_url_json|raw }});
         } else {
             var msg = (rta && rta.mensaje) ? rta.mensaje : 'error';
             alert(msg);

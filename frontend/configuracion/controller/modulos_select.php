@@ -15,18 +15,27 @@ $aGoBack = ['mod' => ''];
 
 $campos = array_merge($_GET, $_POST);
 
-$stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
-if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
-    $campos['restored_id_sel']    = $oPosicion->getParametro('id_sel');
-    $campos['restored_scroll_id'] = $oPosicion->getParametro('scroll_id');
-    $oPosicion->olvidar($stackFromPost);
+$restored = ListNavSupport::restoreSelectionFromStackPost();
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
+if (!ListNavSupport::idSelIsEmpty($restored['id_sel'])) {
+    $campos['restored_id_sel'] = $restored['id_sel'];
+    $campos['restored_scroll_id'] = $restored['scroll_id'];
 }
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar($aGoBack, \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
-
-
-$oPosicion->setParametros($aGoBack, 1);
+$navState = ListNavSupport::mergeSelectionForRecordar($aGoBack, $Qid_sel, $Qscroll_id);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    array_merge($aGoBack, ListNavSupport::buildSelectionStatePatchFromPost()),
+);
 
 $data = PostRequest::getDataFromUrl('/src/configuracion/modulos_select_data', $campos);
 $payload = ConfiguracionPayload::stringKeyPayload($data);

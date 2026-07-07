@@ -8,6 +8,7 @@ use frontend\shared\FrontBootstrap;
 use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\encargossacd\helpers\EncargossacdPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\web\Posicion;
 
 /**
  * Formulario horario de encargo. Datos: `/src/encargossacd/horario_ver_data`
@@ -17,12 +18,8 @@ use frontend\shared\helpers\ListNavSupport;
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
+/** @var Posicion $oPosicion */
 // FIN de  Cabecera global de URL de controlador ********************************
-
-$Qrefresh = EncargossacdPostInput::postInt('refresh');
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $Qmod = EncargossacdPostInput::postString('mod');
 $Qid_enc = EncargossacdPostInput::postInt('id_enc');
@@ -31,6 +28,31 @@ $Qdesc_enc = EncargossacdPostInput::postString('desc_enc');
 $Qdesc_enc = urldecode($Qdesc_enc);
 
 $id_item_h = EncargossacdPostInput::postSelIdItemH(EncargossacdPostInput::postInt('id_item_h'));
+
+$navIdentity = ['id_enc' => $Qid_enc];
+if ($Qmod !== 'nuevo' && $id_item_h > 0) {
+    $navIdentity['id_item_h'] = $id_item_h;
+}
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::mergeSelectionForRecordar(
+        ListNavSupport::buildReturnParametrosFromPost(),
+        ListNavSupport::idSelFromPost(),
+        ListNavSupport::scrollIdFromPost(),
+    ),
+);
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/horario_ver_data', [

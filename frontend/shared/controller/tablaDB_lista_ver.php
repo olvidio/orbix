@@ -114,20 +114,31 @@ if ($Qmod === 'eliminar') {
 }
 
 //Si vengo por medio de Posicion, borro la última
+$restored = ListNavSupport::restoreSelectionFromStackPost();
 $Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
 $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        // No me sirve el de global_object, sino el de la session
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-            $oPosicion2->olvidar($stack);
-        }
-    }
+if (!ListNavSupport::idSelIsEmpty($restored['id_sel'])) {
+    $Qid_sel = is_array($restored['id_sel']) ? (string)$restored['id_sel'][0] : (string)$restored['id_sel'];
 }
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
+if ($restored['scroll_id'] !== '') {
+    $Qscroll_id = (int)$restored['scroll_id'];
+}
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    $Qid_sel,
+    (string)$Qscroll_id,
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::buildSelectionStatePatchFromPost(),
+);
 
 
 // en los menus esta sin codificar, pero a partir de aquí si:

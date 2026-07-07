@@ -11,25 +11,37 @@ use frontend\shared\PostRequest;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-$Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
-
-$stackFromPost = ListNavSupport::stackFromPost();
-if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
-    $oPosicion->olvidar($stackFromPost);
-}
 
 $id_activ = ActividadestudiosPostInput::idFromSel();
 
-if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
-} else {
-    ListNavSupport::ensureAsistentesDossierBeforeActividadSelectChild($oPosicion, $id_activ);
-    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
+$navState = [];
+$aSel = ListNavSupport::selFromPost();
+if ($aSel !== []) {
+    $navState['sel'] = $aSel;
 }
-ListNavSupport::persistActividadSelectChildEntry(
-    $oPosicion,
-    $id_activ > 0 ? ['id_activ' => $id_activ] : [],
+foreach (['queSel', 'mod', 'obj_pau', 'pau', 'permiso'] as $key) {
+    $raw = filter_input(INPUT_POST, $key);
+    if (is_scalar($raw) && (string) $raw !== '') {
+        $navState[$key] = (string) $raw;
+    }
+}
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros(
+    $navState,
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
 );
+if ($id_activ > 0) {
+    $navState['id_activ'] = $id_activ;
+}
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $id_activ > 0 ? ['id_activ' => $id_activ] : [],
+    $navState,
+);
+
+ListNavSupport::syncActividadSelectParentSelection($oPosicion);
 
 $d = PlanEstudiosCaPayload::fromPayload(ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/plan_estudios_ca_data', ['id_activ' => $id_activ])));
 

@@ -23,23 +23,22 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\DesplegableArray;
 use frontend\shared\security\HashFront;
-use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qtodos = (int)filter_input(INPUT_POST, 'todos');
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+ListNavSupport::restoreSelectionFromStackPost();
 
-$stack2 = ActividadplazasPostInput::stackFromPost();
-if ($stack2 !== null) {
-    $oPosicion2 = new Posicion();
-    if ($oPosicion2->goStack($stack2)) {
-        $oPosicion2->olvidar($stack2);
-    }
-}
+$navState = ListNavSupport::buildReturnParametrosFromPost();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, []);
 
 $selParts = ActividadplazasPostInput::selHashParts();
 if ($selParts !== null) {
@@ -76,8 +75,6 @@ $oSelects = new DesplegableArray($sid_activ, $aOpciones, 'actividades');
 $oSelects->setBlanco('t');
 $oSelects->setAccionConjunto('fnjs_mas_actividades(event)');
 
-$stack = $oPosicion->getStack(0);
-
 $oHash = new HashFront();
 $oHash->setCamposForm('actividades!actividades_mas!actividades_num');
 $oHash->setcamposNo('que!actividades');
@@ -86,7 +83,6 @@ $oHash->setArraycamposHidden([
     'na' => $Qna,
     'sactividad' => $Qsactividad,
     'que' => '',
-    'stack' => $stack,
 ]);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();

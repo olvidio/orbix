@@ -75,7 +75,7 @@ final class ActividadesListaSupport
     }
 
     /**
-     * @return list<array<string, mixed>>
+     * @return array<int|string, mixed> filas firmadas + claves meta `select`/`scroll_id`
      */
     public static function signValoresFromPayload(mixed $raw): array
     {
@@ -83,13 +83,25 @@ final class ActividadesListaSupport
             return [];
         }
         $rows = [];
-        foreach ($raw as $item) {
+        $meta = [];
+        foreach ($raw as $key => $item) {
+            // Claves meta de Lista (selección/scroll a restaurar), no son filas:
+            // 'select' es un array y sin esto se colaría como fila fantasma al final.
+            if ($key === 'select' || $key === 'scroll_id') {
+                $meta[$key] = $item;
+                continue;
+            }
             if (is_array($item)) {
                 $rows[] = $item;
             }
         }
 
-        return self::signNestedLinkSpecs($rows);
+        $out = self::signNestedLinkSpecs($rows);
+        foreach ($meta as $key => $item) {
+            $out[$key] = $item;
+        }
+
+        return $out;
     }
 
     /**

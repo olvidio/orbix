@@ -16,9 +16,13 @@ $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $Qolvidar = (string)filter_input(INPUT_POST, 'olvidar');
 
 if (empty($Qolvidar)) {
-    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-    \frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
+    $navIdentity = $Qid_usuario > 0 ? ['id_usuario' => $Qid_usuario] : [];
+    $oPosicion->nav()->enter(
+        (string) ($_SERVER['PHP_SELF'] ?? ''),
+        '#main',
+        $navIdentity,
+        ListNavSupport::buildReturnParametrosFromPost(),
+    );
 }
 
 $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/perm_activ_lista', ['id_usuario' => $Qid_usuario]));

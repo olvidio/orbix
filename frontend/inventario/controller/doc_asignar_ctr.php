@@ -17,8 +17,18 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 
 $str_selected_id = rawurlencode((string)json_encode($a_sel));
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ['id_tipo_doc' => $Qid_tipo_doc],
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $Qid_tipo_doc > 0 ? ['id_tipo_doc' => $Qid_tipo_doc] : [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, $navState);
 
 
 $url_backend = '/src/inventario/lista_docs_asignar_ctr';

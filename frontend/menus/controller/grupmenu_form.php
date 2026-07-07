@@ -16,36 +16,36 @@ $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 
 $Qid_grupmenu = (integer)filter_input(INPUT_POST, 'id_grupmenu');
 
-$Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
+$restored = ListNavSupport::restoreSelectionFromStackPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-// Hay que usar isset y empty porque puede tener el valor =0.
-// Si vengo por medio de Posicion, borro la última
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        // No me sirve el de global_object, sino el de la session
-        $oPosicion2 = new \frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-            $a_sel = $oPosicion2->getParametro('id_sel');
-            if (!empty($a_sel)) {
-                $Qid_grupmenu = MenusPostInput::idFromSelItem(MenusPostInput::selFirstItem($a_sel));
-            } else {
-                $Qid_grupmenu = $oPosicion2->getParametro('id_grupmenu');
-            }
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack);
-        }
-    }
-} elseif (!empty($a_sel)) { //vengo de un checkbox
+if (!ListNavSupport::idSelIsEmpty($restored['id_sel'])) {
+    $a_sel = is_array($restored['id_sel']) ? $restored['id_sel'] : [$restored['id_sel']];
+}
+if (!empty($a_sel)) {
     $Qque = (string)filter_input(INPUT_POST, 'que');
-    if ($Qque !== 'del_grupmenu') { //En el caso de venir de borrar un grupmenu, no hago nada
+    if ($Qque !== 'del_grupmenu') {
         $Qid_grupmenu = MenusPostInput::idFromSelItem(MenusPostInput::selFirstItem($a_sel));
     }
 }
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), $Qscroll_id));
 
-$oPosicion->setParametros(array('id_grupmenu' => $Qid_grupmenu), 1);
+$navIdentity = $Qid_grupmenu > 0 ? ['id_grupmenu' => $Qid_grupmenu] : [];
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    ListNavSupport::idSelFromPost(),
+    $Qscroll_id,
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::buildSelectionStatePatchFromPost(),
+);
 
 if (!empty($Qid_grupmenu)) {
     //////////// Nombre de grupo ////////////////////////////////////////////////////////

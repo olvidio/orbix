@@ -14,19 +14,10 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
-if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
-    $oPosicion->olvidar($stackFromPost);
-}
-
-if ($stackFromPost !== 0) {
-    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
-} else {
-    \frontend\shared\helpers\ListNavSupport::bootActividadSelectChildRecordar($oPosicion);
-}
 $sel = ProcesosPostInput::selTokensFromPost();
-\frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry(
+ListNavSupport::enterActividadSelectChildNav(
     $oPosicion,
+    '#main',
     $sel['id'] > 0 ? ['id_activ' => $sel['id']] : [],
 );
 $Qid_activ = $sel['id'];
@@ -34,7 +25,7 @@ $Qid_activ = $sel['id'];
 $data = PostRequest::getDataFromUrl('/src/procesos/actividad_proceso_data', [
     'id_activ' => $Qid_activ,
 ]);
-$nom_activ = \frontend\shared\helpers\PayloadCoercion::string($data['nom_activ'] ?? '');
+$nom_activ = PayloadCoercion::string($data['nom_activ'] ?? '');
 
 $aQuery = [
     'pau' => 'a',

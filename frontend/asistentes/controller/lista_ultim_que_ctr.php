@@ -12,10 +12,13 @@ use frontend\shared\helpers\FuncTablasSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-/** @var \frontend\shared\web\Posicion $oPosicion */
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 
 $campos = array_merge($_GET, $_POST);
 /** @var array<string, mixed> $payload */
@@ -27,7 +30,7 @@ $oDeplCentros = new Desplegable('id_ubi', $opciones, '', true);
 
 $oView = new ViewNewPhtml('frontend\\asistentes\\view');
 $oView->renderizar('lista_ultim_que_ctr.phtml', [
-    'hash_form_html' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'hash_form_html'),
-    'form_action' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'form_action'),
+    'hash_form_html' => FuncTablasSupport::payloadString($payload, 'hash_form_html'),
+    'form_action' => FuncTablasSupport::payloadString($payload, 'form_action'),
     'oDeplCentros' => $oDeplCentros,
 ]);

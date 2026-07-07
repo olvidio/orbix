@@ -1,6 +1,6 @@
 <script>
     fnjs_cancelar=function(){
-        <?= $oPosicion->js_atras(1) ?>
+        <?= $oPosicion->jsNavAtras(1) ?>
     }
     fnjs_guardar = function (formulario) {
         let datos = $(formulario).serialize();
@@ -14,12 +14,12 @@
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= $oPosicion->jsNavAtras(1); ?>
             }
         });
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <h3><?= _("grupmenú") ?>: <?= $grupmenu ?></h3>
 <form id="frm_grupmenu" name="frm_grupmenu" action="" method="post">
     <?= $oHashG->getCamposHtml(); ?>

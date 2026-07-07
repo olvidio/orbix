@@ -14,11 +14,18 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
-
 $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::mergeSelectionIntoReturnParametros(
+        ['filtro_grupo' => $Qfiltro_grupo],
+        ListNavSupport::idSelFromPost(),
+        ListNavSupport::scrollIdFromPost(),
+    ),
+);
 
 
 $url_backend = '/src/menus/grupmenu_lista';
@@ -37,7 +44,8 @@ $oHash1->setUrl($url);
 $oHash1->setCamposForm('filtro_grupo');
 $h1 = $oHash1->linkSinValParams();
 
-$a_campos = ['url' => $url,
+$a_campos = ['oPosicion' => $oPosicion,
+    'url' => $url,
     'h1' => $h1,
     'oDesplGM' => $oDesplGM,
 ];

@@ -35,4 +35,6 @@ return array(
     '9b38cf48e83f5d8f60375221cd213eee' => $vendorDir . '/phpstan/phpstan/bootstrap.php',
     'ec07570ca5a812141189b1fa81503674' => $vendorDir . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
     'e39a8b23c42d4e1452234d762b03835a' => $vendorDir . '/ramsey/uuid/src/functions.php',
+    '48594f9102dc9d190e8e913bf69d6236' => $baseDir . '/src/shared/domain/helpers/is_true.php',
+    '02b1f47d70ea4d6edefd7b75e80d8987' => $baseDir . '/frontend/shared/helpers/is_true.php',
 );

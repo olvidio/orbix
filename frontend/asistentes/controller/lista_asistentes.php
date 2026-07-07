@@ -1,6 +1,7 @@
 <?php
 
 use frontend\asistentes\helpers\AsistentesPayload;
+use frontend\asistentes\helpers\AsistentesPostInput;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\model\ViewNewPhtml;
@@ -9,20 +10,35 @@ use frontend\shared\PostRequest;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-$Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 
-$stackFromPost = ListNavSupport::stackFromPost();
-if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
-    $oPosicion->olvidar($stackFromPost);
+$idActiv = AsistentesPostInput::idFromSelPost('id_pau');
+if ($idActiv === 0) {
+    $idActiv = AsistentesPostInput::idFromSelPost('id_activ');
 }
 
-if ($stackFromPost !== 0) {
-    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
-} else {
-    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
+$navState = [];
+$aSel = ListNavSupport::selFromPost();
+if ($aSel !== []) {
+    $navState['sel'] = $aSel;
 }
-ListNavSupport::persistActividadSelectChildEntry($oPosicion);
+foreach (['queSel', 'mod', 'obj_pau', 'pau', 'permiso', 'listar_asistentes'] as $key) {
+    $raw = filter_input(INPUT_POST, $key);
+    if (is_scalar($raw) && (string) $raw !== '') {
+        $navState[$key] = (string) $raw;
+    }
+}
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros(
+    $navState,
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
 
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $idActiv > 0 ? ['id_activ' => $idActiv] : [],
+    $navState,
+);
 
 $campos = array_merge($_GET, $_POST);
 $payload = AsistentesPayload::postData(PostRequest::getDataFromUrl('/src/asistentes/lista_asistentes_data', $campos));

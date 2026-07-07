@@ -18,12 +18,12 @@ use frontend\shared\permisos\MenuPermDlRadiosHtml;
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= $oPosicion->jsNavAtras(1); ?>
             }
         });
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <h1><?= sprintf(_("Añadir nuevo permiso a %s"), $nombre) ?></h1>
 <form id=pem_usuario name=perm_usuario action="" method="post">
     <?= $oHash->getCamposHtml(); ?>

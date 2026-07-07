@@ -21,9 +21,6 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
-
 
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
 $Qcdc_sel = (int)filter_input(INPUT_POST, 'cdc_sel');
@@ -37,7 +34,11 @@ $aIdCdc = (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUI
 $aIdCdc = array_filter($aIdCdc, static fn($v) => $v !== false && $v !== '');
 $sCdc = $Qcdc_sel === 9 ? implode(',', $aIdCdc) : '';
 
-$aGoBack = [
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
+
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros([
     'modelo' => $Qmodelo,
     'year' => $Qyear,
     'periodo' => $Qperiodo,
@@ -46,8 +47,30 @@ $aGoBack = [
     'cdc_sel' => $Qcdc_sel,
     'sin_activ' => $Qsin_activ,
     'sSeleccionados' => $sCdc,
-];
-$oPosicion->setParametros($aGoBack, 1);
+    'propuesta_calendario' => $Qpropuesta_calendario,
+], $Qid_sel, $Qscroll_id);
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['cdc_sel' => $Qcdc_sel],
+    $navState,
+);
+
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::mergeSelectionIntoReturnParametros([
+        'propuesta_calendario' => $Qpropuesta_calendario,
+        'cdc_sel' => $Qcdc_sel,
+        'year' => $Qyear,
+        'periodo' => $Qperiodo,
+        'empiezamax' => $Qempiezamax,
+        'empiezamin' => $Qempiezamin,
+        'sin_activ' => $Qsin_activ,
+        'sSeleccionados' => $sCdc,
+    ], $Qid_sel, $Qscroll_id),
+);
 
 $oHashMod = new HashFront();
 $oHashMod->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/planning_casa_modificar.php');

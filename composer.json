@@ -38,6 +38,8 @@
           "src\\": "src/"
         },
         "files": [
+          "src/shared/domain/helpers/is_true.php",
+          "frontend/shared/helpers/is_true.php"
         ]
    },
   "autoload-dev": {

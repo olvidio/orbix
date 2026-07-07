@@ -14,8 +14,12 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 
 
 $prefData = UsuariosPayload::preferenciasFromPayload(
@@ -73,6 +77,7 @@ $oHash = new HashFront();
 $oHash->setCamposForm('layout!inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou!zona_horaria_nou');
 
 $a_campos = [
+    'oPosicion' => $oPosicion,
     'cambios_installed' => $cambios_installed,
     'url_avisos' => $url_avisos,
     'url_avisos_lista' => $url_avisos_lista,

@@ -763,12 +763,6 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 		border: 0;
 	}
 
-    /*
-	div#ir_atras {
-		display: none;
-	}
-     */
-
     /* ===========================================
        MAIN
        =========================================== */

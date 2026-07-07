@@ -9,7 +9,7 @@
         })
         .done(function (respuesta) {
             if (respuesta.success) {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= $oPosicion->jsNavAtras(1); ?>
             } else {
                 alert(respuesta.mensaje || 'Error desconocido');
             }
@@ -20,10 +20,10 @@
     }
 
     fnjs_cancelar = function() {
-        <?= $oPosicion->js_atras(1) ?>
+        <?= $oPosicion->jsNavAtras(1) ?>
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <!-- ============================== Ficha ============================= -->
 <form id='frm2'>
     <?= $hash_form_html ?>

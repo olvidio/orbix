@@ -56,12 +56,12 @@
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= \frontend\shared\helpers\ListNavSupport::jsAtrasToDossiersParent($oPosicion); ?>
+                <?= $oPosicion->jsNavAtrasToDossiersParent(); ?>
             }
         });
     }
 </script>
-<?= \frontend\shared\helpers\ListNavSupport::mostrarLeftSlideToDossiersParent($oPosicion); ?>
+<?= $oPosicion->mostrarNavAtrasToDossiersParent(); ?>
 <form id="f_1303" name="f_1303" action="t" method="POST">
     <?= $oHash->getCamposHtml(); ?>
     <table>

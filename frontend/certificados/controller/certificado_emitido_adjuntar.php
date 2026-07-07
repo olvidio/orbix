@@ -14,11 +14,17 @@ use frontend\shared\helpers\FuncTablasSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $id_nom = CertificadosPostInput::idNomFromSelPost();
+$navState = ListNavSupport::buildCertificadoImprimirParentReturnParametros();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['id_nom' => $id_nom],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildCertificadoImprimirParentReturnParametros());
+
 $formData = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_adjuntar_data', [
     'id_nom' => $id_nom,
 ], false));

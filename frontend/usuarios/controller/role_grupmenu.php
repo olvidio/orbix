@@ -13,16 +13,28 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
-
 $Qid_role = (string)filter_input(INPUT_POST, 'id_role');
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) {
     $Qid_role = (string)UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
 }
+
+$navIdentity = $Qid_role !== '' && $Qid_role !== '0' ? ['id_role' => $Qid_role] : [];
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    array_merge(
+        $Qid_role !== '' && $Qid_role !== '0' ? ['id_role' => $Qid_role] : [],
+        ListNavSupport::buildSelectionStatePatchFromPost(),
+    ),
+);
 
 $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/role_grupmenu_info', ['id_role' => $Qid_role]));
 $lista = UsuariosPayload::listaFromPayload($data);

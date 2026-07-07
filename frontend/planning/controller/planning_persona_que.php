@@ -22,6 +22,10 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
+
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qna = (string)filter_input(INPUT_POST, 'na');
 $Qyear = (int)filter_input(INPUT_POST, 'year');
@@ -33,39 +37,7 @@ $Qapellido1 = PlanningPostInput::postString('apellido1');
 $Qapellido2 = PlanningPostInput::postString('apellido2');
 $Qcentro = PlanningPostInput::postString('centro');
 
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack((int)$stack)) {
-            $Qobj_pau = PlanningPayload::posicionString($oPosicion2->getParametro('obj_pau'), $Qobj_pau);
-            $Qna = PlanningPayload::posicionString($oPosicion2->getParametro('na'), $Qna);
-            $Qperiodo = PlanningPayload::posicionString($oPosicion2->getParametro('periodo'), $Qperiodo);
-            $Qyear = (int)PlanningPayload::posicionString($oPosicion2->getParametro('year'), (string)$Qyear);
-            $Qempiezamin = PlanningPayload::posicionString($oPosicion2->getParametro('empiezamin'), $Qempiezamin);
-            $Qempiezamax = PlanningPayload::posicionString($oPosicion2->getParametro('empiezamax'), $Qempiezamax);
-            $Qnombre = PlanningPayload::posicionString($oPosicion2->getParametro('nombre'), $Qnombre);
-            $Qapellido1 = PlanningPayload::posicionString($oPosicion2->getParametro('apellido1'), $Qapellido1);
-            $Qapellido2 = PlanningPayload::posicionString($oPosicion2->getParametro('apellido2'), $Qapellido2);
-            $Qcentro = PlanningPayload::posicionString($oPosicion2->getParametro('centro'), $Qcentro);
-            $filtros = PlanningPayload::filtrosPersonaDesdeSaWhereEncoded(
-                PlanningPayload::posicionString($oPosicion2->getParametro('saWhere')),
-                PlanningPayload::posicionString($oPosicion2->getParametro('saWhereCtr')),
-                $Qnombre,
-                $Qapellido1,
-                $Qapellido2,
-                $Qcentro,
-                $Qna,
-            );
-            $Qnombre = $filtros['nombre'];
-            $Qapellido1 = $filtros['apellido1'];
-            $Qapellido2 = $filtros['apellido2'];
-            $Qcentro = $filtros['centro'];
-            $Qna = $filtros['na'];
-            $oPosicion2->olvidar((int)$stack);
-        }
-    }
-} elseif (PlanningPostInput::postString('saWhere') !== '' || PlanningPostInput::postString('saWhereCtr') !== '') {
+if (PlanningPostInput::postString('saWhere') !== '' || PlanningPostInput::postString('saWhereCtr') !== '') {
     $filtros = PlanningPayload::filtrosPersonaDesdeSaWhereEncoded(
         PlanningPostInput::postString('saWhere'),
         PlanningPostInput::postString('saWhereCtr'),
@@ -81,9 +53,24 @@ if (isset($_POST['stack'])) {
     $Qcentro = $filtros['centro'];
     $Qna = $filtros['na'];
 }
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::mergeSelectionIntoReturnParametros([
+        'obj_pau' => $Qobj_pau,
+        'na' => $Qna,
+        'year' => $Qyear,
+        'periodo' => $Qperiodo,
+        'empiezamax' => $Qempiezamax,
+        'empiezamin' => $Qempiezamin,
+        'nombre' => $Qnombre,
+        'apellido1' => $Qapellido1,
+        'apellido2' => $Qapellido2,
+        'centro' => $Qcentro,
+    ], $Qid_sel, $Qscroll_id),
+);
 
 $periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto(PlanningPayload::mesFinStgr());
 $locale_us = OrbixRuntime::isLocaleUs();

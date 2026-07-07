@@ -11,7 +11,7 @@ use frontend\shared\config\AppUrlConfig;
             url: "<?= $url_direccion_update ?>",
             data: $(formulario).serialize(),
             onSuccess: function () {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= $oPosicion->jsNavAtras(1); ?>
             }
         });
     }
@@ -22,7 +22,7 @@ use frontend\shared\config\AppUrlConfig;
             url: "<?= $url_direcciones_quitar ?>",
             data: $(formulario).serialize(),
             onSuccess: function () {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= $oPosicion->jsNavAtras(1); ?>
             }
         });
     }
@@ -33,7 +33,7 @@ use frontend\shared\config\AppUrlConfig;
             url: '<?= $url_direcciones_asignar ?>',
             data: parametros,
             onSuccess: function () {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= $oPosicion->jsNavAtras(1); ?>
             }
         });
     }
@@ -66,7 +66,7 @@ use frontend\shared\config\AppUrlConfig;
     }
     fnjs_otro = function (n) { go_dir = '<?= $go_dir ?>'; if (n == 1) { go_dir += '&inc=menos'; } if (n == 2) { go_dir += '&inc=mas'; } fnjs_update_div('#ficha', go_dir); }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <?php if (!empty($menos) || !empty($mas)) { echo _("OJO Más de una dirección") . ':  '; } ?>
 <?php if (!empty($menos)) { ?><input type="button" onclick='fnjs_otro(1)' value="<< <?= _("anterior") ?>"><?php } ?>
 <?php if (!empty($mas)) { ?><input type="button" onclick='fnjs_otro(2)' value="<?= _("siguiente") ?> >>"><?php } ?>

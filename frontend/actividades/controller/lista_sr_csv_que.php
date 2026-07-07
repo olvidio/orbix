@@ -26,14 +26,29 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qyear = (string)filter_input(INPUT_POST, 'year');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qa_activ = (array)filter_input(INPUT_POST, 'c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_status = (array)filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_id_cdc = (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildListaSrCsvQueReturnParametros([
+        'periodo' => $Qperiodo,
+        'year' => $Qyear,
+        'empiezamin' => $Qempiezamin,
+        'empiezamax' => $Qempiezamax,
+        'c_activ' => $Qa_activ,
+        'status' => $Qa_status,
+        'id_cdc' => $Qa_id_cdc,
+    ]),
+);
 
 $aOpciones = [
     'tot_any' => _("todo el año"),
@@ -50,13 +65,13 @@ $aOpciones = [
 
 $data = PostRequest::getDataFromUrl('/src/actividades/lista_sr_csv_que_datos', []);
 if (empty($Qperiodo)) {
-    $Qperiodo = \frontend\shared\helpers\PayloadCoercion::string($data['periodo'] ?? 'curso_ca');
+    $Qperiodo = PayloadCoercion::string($data['periodo'] ?? 'curso_ca');
 }
-$sel_ubis = \frontend\shared\helpers\PayloadCoercion::string($data['sel_ubis'] ?? '');
-$chk_status_1 = \frontend\shared\helpers\PayloadCoercion::string($data['chk_status_1'] ?? '');
-$chk_status_2 = \frontend\shared\helpers\PayloadCoercion::string($data['chk_status_2'] ?? '');
-$chk_activ_crt = \frontend\shared\helpers\PayloadCoercion::string($data['chk_activ_crt'] ?? '');
-$chk_activ_cv = \frontend\shared\helpers\PayloadCoercion::string($data['chk_activ_cv'] ?? '');
+$sel_ubis = PayloadCoercion::string($data['sel_ubis'] ?? '');
+$chk_status_1 = PayloadCoercion::string($data['chk_status_1'] ?? '');
+$chk_status_2 = PayloadCoercion::string($data['chk_status_2'] ?? '');
+$chk_activ_crt = PayloadCoercion::string($data['chk_activ_crt'] ?? '');
+$chk_activ_cv = PayloadCoercion::string($data['chk_activ_cv'] ?? '');
 
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('modifica');

@@ -1,4 +1,4 @@
-<?= $oPosicion->mostrar_left_slide(1) ?>
+<?= $oPosicion->mostrarNavAtras(1) ?>
 <h3><?= $usuario ?></h3>
 <form id="frm_usuario" name="frm_usuario" action="" method="post">
     <?= $oHash->getCamposHtml() ?>
@@ -113,7 +113,7 @@
             if (json.success !== true) {
                 alert(<?= json_encode("respuesta: ") ?> + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(1) ?>
+                <?= $oPosicion->jsNavAtras(1) ?>
             }
         });
     }

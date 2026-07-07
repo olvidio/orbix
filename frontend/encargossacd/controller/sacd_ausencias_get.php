@@ -7,6 +7,7 @@ use frontend\shared\FrontBootstrap;
 use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\encargossacd\helpers\EncargossacdPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\web\Posicion;
 
 /**
  * Muestra las ausencias de un SACD.
@@ -20,16 +21,21 @@ use frontend\shared\helpers\ListNavSupport;
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
+/** @var Posicion $oPosicion */
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->setBloque('#ficha');
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $Qhistorial = EncargossacdPostInput::postInt('historial');
 $Qid_nom = EncargossacdPostInput::postInt('id_nom');
 $Qfiltro_sacd = EncargossacdPostInput::postInt('filtro_sacd');
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#ficha',
+    $Qid_nom > 0 ? ['id_nom' => $Qid_nom] : [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/sacd_ausencias_get_data', [
     'id_nom' => $Qid_nom,

@@ -64,8 +64,35 @@ $Qacta = \frontend\shared\helpers\PayloadCoercion::string($requestPayload['acta'
 $Qnotas = \frontend\shared\helpers\PayloadCoercion::string($requestPayload['notas'] ?? '');
 
 if (!$isIncluded && $notas === '' && $Qnotas === '') {
-    $oPosicion->recordar();
-    \frontend\shared\helpers\ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
+    $identity = [];
+    if ($Qacta !== '') {
+        $identity['acta'] = $Qacta;
+    } elseif ($Qmod === 'nueva') {
+        $identity['mod'] = 'nueva';
+    }
+    $navState = array_merge(
+        [
+            'mod' => $Qmod,
+            'sa_actas' => $Qsa_actas,
+            'notas' => $Qnotas,
+        ],
+        $a_sel !== [] ? ['sel' => $a_sel] : [],
+        ListNavSupport::buildSelectionStatePatchFromPost(),
+    );
+    $oPosicion->nav()->enter(
+        (string) ($_SERVER['PHP_SELF'] ?? ''),
+        '#main',
+        $identity,
+        $navState,
+    );
+    ListNavSupport::syncNavStateAt(
+        $oPosicion,
+        1,
+        array_merge(
+            ListNavSupport::buildActaSelectReturnParametros(),
+            ListNavSupport::buildSelectionStatePatchFromPost(),
+        ),
+    );
 }
 
 $payload = $requestPayload;

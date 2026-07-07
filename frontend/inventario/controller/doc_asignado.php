@@ -18,9 +18,14 @@ $oPosicion = FrontBootstrap::boot();
 $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
+$navState = ListNavSupport::buildReturnParametrosFromPost();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $Qid_tipo_doc > 0 ? ['id_tipo_doc' => $Qid_tipo_doc] : [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildReturnParametrosFromPost());
 
 // muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/lista_docs_asignados_por_tipo';

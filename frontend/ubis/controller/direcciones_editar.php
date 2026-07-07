@@ -6,16 +6,14 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
+use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-$Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
+/** @var Posicion $oPosicion */
 
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
@@ -23,6 +21,31 @@ $Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');
 $Qid_direccion = (string)filter_input(INPUT_POST, 'id_direccion');
 $Qidx = (int)filter_input(INPUT_POST, 'idx');
 $Qinc = (string)filter_input(INPUT_POST, 'inc');
+
+$navIdentity = ['id_ubi' => $Qid_ubi];
+if ($Qid_direccion !== '') {
+    $navIdentity['id_direccion'] = $Qid_direccion;
+}
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#ficha',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::mergeSelectionForRecordar(
+        ['id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir],
+        ListNavSupport::idSelFromPost(),
+        ListNavSupport::scrollIdFromPost(),
+    ),
+);
 
 $data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/direcciones_editar', [
     'id_ubi' => $Qid_ubi,

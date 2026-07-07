@@ -8,43 +8,30 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
-use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$stack = isset($_POST['stack']) ? (int) filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
-$returningViaStack = $stack !== 0;
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = \frontend\shared\helpers\ListNavSupport::idSelFromPost();
-$Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
-if ($returningViaStack) {
-    $oPosicion2 = new Posicion();
-    if ($oPosicion2->goStack($stack)) {
-        $restoredSel = \frontend\shared\helpers\ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
-        if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restoredSel)) {
-            $Qid_sel = $restoredSel;
-        }
-        $restoredScroll = $oPosicion2->getParametro('scroll_id');
-        if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
-            $Qscroll_id = (string) $restoredScroll;
-        }
-        $oPosicion2->olvidar($stack);
+$navState = [];
+foreach (['mod', 'id_dossier', 'permiso', 'obj_pau', 'queSel', 'pau'] as $key) {
+    $raw = filter_input(INPUT_POST, $key);
+    if (is_scalar($raw) && (string) $raw !== '') {
+        $navState[$key] = (string) $raw;
     }
 }
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros($navState, $Qid_sel, $Qscroll_id);
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
-
-
-\frontend\shared\helpers\ListNavSupport::persistSelectionOnListPage(
-    $oPosicion,
-    $Qid_sel,
-    $Qscroll_id,
-    $returningViaStack,
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
 );
 
 $aviso = '';
@@ -76,7 +63,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 if ($msg_err !== '') {
     echo \frontend\shared\helpers\PayloadCoercion::string($msg_err);
 }
-echo $oPosicion->mostrar_left_slide(1);
+echo $oPosicion->mostrarNavAtras(1);
 
 ?>
 <script>

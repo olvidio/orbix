@@ -15,12 +15,12 @@ use frontend\shared\config\AppUrlConfig;
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= $oPosicion->jsNavAtras(1); ?>
             }
         });
     }
     fnjs_cancelar = function () {
-        <?= $oPosicion->js_atras(1); ?>
+        <?= $oPosicion->jsNavAtras(1); ?>
     }
 
     fnjs_actualizar_depende = function (camp, accion) {
@@ -50,7 +50,7 @@ use frontend\shared\config\AppUrlConfig;
         });
     });
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <h1><?= _("Formulario de datos") ?></h1>
 <form id="datos_form" name="datos_form" action="" method="post">
     <?= $oHashSelect->getCamposHtml() ?>

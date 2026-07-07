@@ -26,7 +26,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $obj = 'ActividadAsignatura';
 
-\frontend\shared\helpers\ListNavSupport::bootDossierChildRecordar($oPosicion);
+ListNavSupport::enterDossierChildNav($oPosicion);
 
 $Qpau = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'pau'));
 

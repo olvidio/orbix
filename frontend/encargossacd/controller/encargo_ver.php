@@ -12,6 +12,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\web\Posicion;
 
 /**
  * Ficha de alta/edicion de un encargo. Los datos iniciales (resolucion del
@@ -24,12 +25,8 @@ use frontend\shared\FrontBootstrap;
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
+/** @var Posicion $oPosicion */
 // FIN de  Cabecera global de URL de controlador ********************************
-
-$Qrefresh = EncargossacdPostInput::postInt('refresh');
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) {
@@ -45,6 +42,28 @@ $Qfiltro_ctr = EncargossacdPostInput::postString('filtro_ctr');
 $Qdesc_enc = EncargossacdPostInput::postString('desc_enc');
 $Qdesc_lugar = EncargossacdPostInput::postString('desc_lugar');
 $Qid_zona = EncargossacdPostInput::postInt('id_zona');
+
+$navIdentity = $Qid_enc > 0 ? ['id_enc' => $Qid_enc] : [];
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::mergeSelectionForRecordar(
+        ListNavSupport::buildReturnParametrosFromPost(),
+        ListNavSupport::idSelFromPost(),
+        ListNavSupport::scrollIdFromPost(),
+    ),
+);
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/encargo_ver_data', [

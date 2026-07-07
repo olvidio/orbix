@@ -17,14 +17,31 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
-\frontend\shared\helpers\ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 
 $ids = PersonasPostInput::idFromSelPost();
 $id_nom = $ids['id_nom'];
 $id_tabla = $ids['id_tabla'];
+
+$navIdentity = $id_nom > 0 ? ['id_nom' => $id_nom] : [];
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    array_merge(
+        ListNavSupport::buildPersonasSelectReturnParametros(),
+        ListNavSupport::buildSelectionStatePatchFromPost(),
+    ),
+);
 
 $campos = [
     'id_nom' => $id_nom,

@@ -50,7 +50,7 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_sr_csv_datos', [
 ]);
 
 if (!empty($data['pref_error'])) {
-    echo \frontend\shared\helpers\PayloadCoercion::string($data['pref_error']);
+    echo PayloadCoercion::string($data['pref_error']);
 }
 
 if ($Qque === 'file') {
@@ -65,14 +65,42 @@ if ($Qque === 'file') {
 }
 
 if ($Qque === 'lista') {
-    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-    \frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+    $listaSrReturn = ListNavSupport::buildListaSrCsvReturnParametros([
+        'que' => 'lista',
+        'periodo' => $Qperiodo,
+        'year' => $Qyear,
+        'empiezamin' => $Qempiezamin,
+        'empiezamax' => $Qempiezamax,
+        'c_activ' => $Qa_activ,
+        'status' => $Qa_status,
+        'id_cdc' => $Qa_id_cdc,
+    ]);
 
+    $oPosicion->nav()->enter(
+        (string) ($_SERVER['PHP_SELF'] ?? ''),
+        '#main',
+        [],
+        $listaSrReturn,
+    );
+
+    ListNavSupport::syncNavStateAt(
+        $oPosicion,
+        1,
+        ListNavSupport::buildListaSrCsvQueReturnParametros([
+            'periodo' => $Qperiodo,
+            'year' => $Qyear,
+            'empiezamin' => $Qempiezamin,
+            'empiezamax' => $Qempiezamax,
+            'c_activ' => $Qa_activ,
+            'status' => $Qa_status,
+            'id_cdc' => $Qa_id_cdc,
+        ]),
+    );
 
     $a_campos = [
         'oPosicion' => $oPosicion,
-        'titulo' => \frontend\shared\helpers\PayloadCoercion::string($data['titulo'] ?? ''),
-        'html_tabla' => \frontend\shared\helpers\PayloadCoercion::string($data['html_tabla'] ?? ''),
+        'titulo' => PayloadCoercion::string($data['titulo'] ?? ''),
+        'html_tabla' => PayloadCoercion::string($data['html_tabla'] ?? ''),
     ];
 
     $oView = new ViewNewPhtml('frontend\actividades\controller');

@@ -15,7 +15,7 @@ $oPosicion = FrontBootstrap::boot();
 
 $requestPayload = PostRequest::requestPayloadForHash();
 
-$oPosicion->setParametros(ProcesosPayload::fasesActivCambioGoback($requestPayload), 0);
+$oPosicion->nav()->updateState(ProcesosPayload::fasesActivCambioGoback($requestPayload));
 
 $data = PostRequest::getDataFromUrl('/src/procesos/fases_activ_cambio_lista', $requestPayload);
 

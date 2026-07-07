@@ -10,6 +10,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\web\Posicion;
 
 /**
  * Listado de horarios de un encargo. Los datos vienen de
@@ -20,11 +21,8 @@ use frontend\shared\FrontBootstrap;
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
+/** @var Posicion $oPosicion */
 // FIN de  Cabecera global de URL de controlador ********************************
-
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($Qid_sel)) {
@@ -35,6 +33,27 @@ if (!empty($Qid_sel)) {
 
 $Qmod = EncargossacdPostInput::postString('mod');
 $Qorigen = EncargossacdPostInput::postString('origen');
+
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $Qid_enc > 0 ? ['id_enc' => $Qid_enc] : [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::mergeSelectionForRecordar(
+        ListNavSupport::buildReturnParametrosFromPost(),
+        ListNavSupport::idSelFromPost(),
+        ListNavSupport::scrollIdFromPost(),
+    ),
+);
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/encargo_horario_select_data', [

@@ -11,12 +11,12 @@
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= $oPosicion->jsNavAtras(1); ?>
             }
         });
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1) ?>
+<?= $oPosicion->mostrarNavAtras(1) ?>
 <h2><?= $nombreDoc ?></h2>
 <form id="seleccionados" name="seleccionados" action="" method="POST">
     <?= $oHash->getCamposHtml() ?>

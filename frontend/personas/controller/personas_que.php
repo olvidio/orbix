@@ -3,7 +3,6 @@ namespace frontend\personas\controller;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\web\Posicion;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -18,20 +17,10 @@ use frontend\shared\helpers\ListNavSupport;
  */
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-/** @var Posicion $oPosicion */
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $oPosicion2->olvidar($stack);
-        }
-    }
-}
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
-
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
 $Qna = (string)filter_input(INPUT_POST, 'na');
 $Qque = (string)filter_input(INPUT_POST, 'que');
@@ -44,6 +33,27 @@ $Qnombre = (string)filter_input(INPUT_POST, 'nombre');
 $Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
 $Qapellido2 = (string)filter_input(INPUT_POST, 'apellido2');
 $Qcentro = (string)filter_input(INPUT_POST, 'centro');
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildPersonasQueReturnParametros([
+        'na' => $Qna,
+        'que' => $Qque,
+        'tipo' => $Qtipo,
+        'tabla' => $Qtabla,
+        'es_sacd' => $Qes_sacd,
+        'exacto' => $Qexacto,
+        'cmb' => $Qcmb,
+        'nombre' => $Qnombre,
+        'apellido1' => $Qapellido1,
+        'apellido2' => $Qapellido2,
+        'centro' => $Qcentro,
+        'id_sel' => $Qid_sel,
+        'scroll_id' => $Qscroll_id,
+    ]),
+);
 
 if (!empty($Qtabla)) {
     $nom_tabla = substr($Qtabla, 2);

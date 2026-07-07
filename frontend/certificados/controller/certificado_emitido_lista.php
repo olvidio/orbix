@@ -23,34 +23,28 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
-$Qid_sel = '';
-$Qscroll_id = '';
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $Qid_sel = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('id_sel'));
-            $Qscroll_id = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('scroll_id'));
-            $oPosicion2->olvidar($stack);
-        }
-    }
-}
-$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
-if ($stackFromPost !== 0) {
-    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
-} else {
-    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-}
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
-
-
-$Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
 $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
 
-$titulo = $Qtitulo;
+$navState = [];
+foreach (['titulo', 'certificado'] as $key) {
+    $raw = filter_input(INPUT_POST, $key);
+    if (is_scalar($raw) && (string) $raw !== '') {
+        $navState[$key] = (string) $raw;
+    }
+}
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros($navState, $Qid_sel, $Qscroll_id);
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+
+
 $mes = date('m');
 $oConfig = CertificadosPayload::oConfig();
 $fin_m = $oConfig !== null ? $oConfig->getMesFinStgr() : 12;
@@ -67,12 +61,6 @@ $inicurs_ca_local = $oInicurs_ca->getFromLocal();
 $fincurs_ca_local = $oFincurs_ca->getFromLocal();
 $titulo = ucfirst(sprintf(_('lista de certificados emitidos entre %s y %s y no enviados'), $inicurs_ca_local, $fincurs_ca_local));
 
-$aGoBack = [
-    'titulo' => $Qtitulo,
-    'certificado' => $Qcertificado,
-];
-$oPosicion->setParametros($aGoBack, 1);
-
 if (!(OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r')) {
     exit(_('Solamente lo pueden ver las regiones del stgr'));
 }
@@ -85,7 +73,7 @@ $data = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/certific
 $tabla = CertificadosPayload::emitidoListaTablaFromPayload($data);
 $a_valores = $tabla['valores'];
 
-if ($Qid_sel !== '') {
+if (!ListNavSupport::idSelIsEmpty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
 if ($Qscroll_id !== '') {

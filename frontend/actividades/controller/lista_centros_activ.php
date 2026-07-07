@@ -2,7 +2,6 @@
 
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Fragmento HTML con la lista de centros y sus actividades en un periodo.
@@ -23,10 +22,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-$oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
+FrontBootstrap::boot();
 
 $Qid_ctr_num = (integer)filter_input(INPUT_POST, 'id_ctr_num');
 $Qa_id_ctr = (array)filter_input(INPUT_POST, 'id_ctr', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -44,4 +40,4 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_centros_activ_datos'
     'empiezamax' => $Qempiezamax,
 ]);
 
-AjaxJsonSupport::html(\frontend\shared\helpers\PayloadCoercion::string($data['html'] ?? ''));
+AjaxJsonSupport::html(PayloadCoercion::string($data['html'] ?? ''));

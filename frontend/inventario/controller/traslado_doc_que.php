@@ -12,8 +12,12 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 
 
 $url_backend = '/src/inventario/lista_de_ctr';
@@ -36,6 +40,7 @@ $oHashLugar->setCamposForm('id_ubi');
 $h_lugar = $oHashLugar->linkSinValParams();
 
 $a_campos = [
+    'oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'oDesplUbis' => $oDesplUbis,
     'oDesplUbisNew' => $oDesplUbisNew,

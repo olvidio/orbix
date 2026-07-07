@@ -1,6 +1,5 @@
 <?php
 
-use frontend\actividades\helpers\ActividadesPostInput;
 use frontend\usuarios\helpers\UsuariosPayload;
 use frontend\shared\AppInstalled;
 use frontend\shared\config\AppUrlConfig;
@@ -16,25 +15,25 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
 
-$Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
-$Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $Qid_sel = ActividadesPostInput::posicionString($oPosicion2->getParametro('id_sel'));
-            $Qscroll_id = ActividadesPostInput::posicionString($oPosicion2->getParametro('scroll_id'));
-            $oPosicion2->olvidar($stack);
-        }
-    }
-}
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
-
+$restored = ListNavSupport::restoreSelectionFromStackPost();
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
 
 $Qusername = (string)filter_input(INPUT_POST, 'username');
-$oPosicion->setParametros(array('username' => $Qusername), 1);
+
+$filterState = [
+    'username' => $Qusername,
+    'quien' => 'grupo',
+];
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros($filterState, $Qid_sel, $Qscroll_id);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, $filterState);
 
 $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/grupo_lista', ['username' => $Qusername]));
 $lista = UsuariosPayload::listaFromPayload($data);
@@ -62,6 +61,7 @@ $url_nuevo = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
     . http_build_query($aQuery));
 
 $a_campos = [
+    'oPosicion' => $oPosicion,
     'procesos_installed' => AppInstalled::is('procesos'),
     'txt_nuevo_grupo' => mb_strtoupper(_("nuevo grupo"), 'UTF-8'),
     'oHashBuscar' => $oHashBuscar,

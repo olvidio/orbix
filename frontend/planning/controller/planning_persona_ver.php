@@ -5,7 +5,6 @@ use frontend\planning\helpers\PlanningPostInput;
 use frontend\planning\helpers\PlanningPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\planning\support\PlanningRenderer;
-use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
@@ -24,9 +23,6 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
-
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qna = PlanningPostInput::postString('na');
@@ -35,6 +31,39 @@ $Qyear = (int)filter_input(INPUT_POST, 'year');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+
+$a_sel = PlanningPostInput::collectSelFromPost();
+$sSeleccionados = implode(',', $a_sel);
+
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
+
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros([
+    'obj_pau' => $Qobj_pau,
+    'na' => $Qna,
+    'modelo' => $Qmodelo,
+    'year' => $Qyear,
+    'periodo' => $Qperiodo,
+    'empiezamax' => $Qempiezamax,
+    'empiezamin' => $Qempiezamin,
+    'sSeleccionados' => $sSeleccionados,
+], $Qid_sel, $Qscroll_id);
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['sSeleccionados' => $sSeleccionados],
+    $navState,
+);
+
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::mergeSelectionForRecordar([
+        'sSeleccionados' => $sSeleccionados,
+    ], $Qid_sel, $Qscroll_id),
+);
 
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
@@ -64,31 +93,16 @@ if ((int)$interval < 2) {
 
 $cabecera_title = ucfirst(_("persona seleccionada"));
 
-$a_sel = PlanningPostInput::collectSelFromPost();
 $payload = [
     'obj_pau' => $Qobj_pau,
     'year' => $Qyear,
     'periodo' => $Qperiodo,
     'empiezamin' => $Qempiezamin,
     'empiezamax' => $Qempiezamax,
-    'sSeleccionados' => implode(',', $a_sel),
+    'sSeleccionados' => $sSeleccionados,
 ];
 $apiData = PostRequest::getDataFromUrl('/src/planning/planning_persona_ver_data', $payload);
 $a_actividades = PlanningPayload::actividadesMap($apiData['a_actividades'] ?? null);
-
-$aGoBack = [
-    'obj_pau' => $Qobj_pau,
-    'na' => $Qna,
-    'modelo' => $Qmodelo,
-    'year' => $Qyear,
-    'periodo' => $Qperiodo,
-    'empiezamax' => $Qempiezamax,
-    'empiezamin' => $Qempiezamin,
-    'id_sel' => PlanningPostInput::postString('id_sel'),
-    'scroll_id' => PlanningPostInput::postString('scroll_id'),
-    'sSeleccionados' => implode(',', $a_sel),
-];
-$oPosicion->setParametros($aGoBack, 1);
 
 $estilos = PlanningPayload::calendarioEstilos();
 

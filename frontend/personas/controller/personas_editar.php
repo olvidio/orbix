@@ -25,10 +25,6 @@ $Qnuevo = (int)filter_input(INPUT_POST, 'nuevo');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $obj = 'src\\personas\\domain\\entity\\' . $Qobj_pau;
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
-
 $Qid_nom = 0;
 $Qapellido1 = '';
 $id_tabla_post = '';
@@ -39,14 +35,39 @@ if (!empty($Qnuevo)) {
     $ids = PersonasPostInput::idFromSelPost();
     $Qid_nom = $ids['id_nom'];
     $id_tabla_post = $ids['id_tabla'];
-    $stack = PersonasPostInput::stackFromPost();
-    if ($stack !== null && $stack !== 0) {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $oPosicion2->olvidar($stack);
-        }
+}
+
+$navIdentity = [];
+if (!empty($Qnuevo)) {
+    if ($Qobj_pau !== '') {
+        $navIdentity['obj_pau'] = $Qobj_pau;
+    }
+} elseif ($Qid_nom > 0) {
+    $navIdentity['id_nom'] = $Qid_nom;
+    if ($Qobj_pau !== '') {
+        $navIdentity['obj_pau'] = $Qobj_pau;
     }
 }
+
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    array_merge(
+        ListNavSupport::buildPersonasSelectReturnParametros(),
+        ListNavSupport::buildSelectionStatePatchFromPost(),
+    ),
+);
 
 $campos = [
     'nuevo' => $Qnuevo,

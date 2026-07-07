@@ -41,7 +41,7 @@ use frontend\shared\security\HashFront;
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(1) ?>
+                <?= $oPosicion->jsNavAtras(1) ?>
             }
         });
     }
@@ -51,7 +51,7 @@ use frontend\shared\security\HashFront;
         fnjs_enviar_formulario(formulario, '#main');
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1) ?>
+<?= $oPosicion->mostrarNavAtras(1) ?>
 <h3><?= $role ?> <?= $txt_sfsv ?></h3>
 <form id="frm_role" name="frm_role" action="" method="post">
     <?= $oHash->getCamposHtml(); ?>

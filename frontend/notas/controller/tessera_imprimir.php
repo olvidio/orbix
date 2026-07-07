@@ -125,13 +125,6 @@ function data(string $fechaRaw): void
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-// En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-\frontend\shared\helpers\ListNavSupport::persistTesseraImprimirParentReturnToPosicion($oPosicion, 1);
-
-echo "<script>fnjs_left_side_hide()</script>";
-include_once(OrbixRuntime::dirEstilos() . '/tessera.css.php');
 
 $a_sel_raw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $a_sel = is_array($a_sel_raw) ? $a_sel_raw : [];
@@ -149,6 +142,21 @@ if ($a_sel !== []) { //vengo de un checkbox
 
 $Qcara = (string)filter_input(INPUT_POST, 'cara');
 $Qcara = empty($Qcara) ? "A" : $Qcara;
+
+$navState = array_merge(
+    ListNavSupport::buildTesseraReturnParametros(),
+    ['cara' => $Qcara],
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['id_nom' => $id_nom, 'id_tabla' => $id_tabla],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildTesseraReturnParametros());
+
+echo "<script>fnjs_left_side_hide()</script>";
+include_once(OrbixRuntime::dirEstilos() . '/tessera.css.php');
 
 $payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
     'id_nom' => $id_nom,
@@ -181,7 +189,7 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
 <table class="no_print">
     <tr>
         <td class="atras">
-            <?= $oPosicion->mostrar_back_arrow(1); ?>
+            <?= $oPosicion->mostrarNavAtras(1); ?>
         </td>
         <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')">
                 <?= _("Cara A (delante)"); ?>

@@ -17,8 +17,28 @@ $oPosicion = FrontBootstrap::boot();
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qid_lugar = (integer)filter_input(INPUT_POST, 'id_lugar');
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros(
+    array_filter([
+        'id_ubi' => $Qid_ubi,
+        'id_lugar' => $Qid_lugar,
+    ], static fn ($v) => $v !== 0),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    array_filter([
+        'id_ubi' => $Qid_ubi,
+        'id_lugar' => $Qid_lugar,
+    ], static fn ($v) => $v !== 0),
+);
 
 
 

@@ -8,7 +8,6 @@ use frontend\shared\helpers\FuncTablasSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-/** @var \frontend\shared\web\Posicion $oPosicion */
 
 $Qn_agd = (string)filter_input(INPUT_POST, 'n_agd');
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
@@ -17,28 +16,32 @@ $Qyear = (string)filter_input(INPUT_POST, 'year');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros([
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
+
+$filterState = [
     'n_agd' => $Qn_agd,
     'id_ubi' => $Qid_ubi,
     'periodo' => $Qperiodo,
     'year' => $Qyear,
     'empiezamax' => $Qempiezamax,
     'empiezamin' => $Qempiezamin,
-], \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
+];
 
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros($filterState, $Qid_sel, $Qscroll_id);
 
-$oPosicion->setParametros([
-    'n_agd' => $Qn_agd,
-    'id_ubi' => $Qid_ubi,
-    'periodo' => $Qperiodo,
-    'year' => $Qyear,
-    'empiezamax' => $Qempiezamax,
-    'empiezamin' => $Qempiezamin,
-], 1);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+
+ListNavSupport::syncNavStateAt($oPosicion, 1, $filterState);
 
 $campos = array_merge($_GET, $_POST);
 $payload = AsistentesPayload::postData(PostRequest::getDataFromUrl('/src/asistentes/lista_est_ctr_data', $campos));
 
-echo $oPosicion->mostrar_left_slide(1);
-echo \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'lista_html');
+echo $oPosicion->mostrarNavAtras(1);
+echo FuncTablasSupport::payloadString($payload, 'lista_html');

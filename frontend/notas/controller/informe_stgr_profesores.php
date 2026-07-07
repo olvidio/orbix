@@ -21,6 +21,13 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ['lista' => $Qlista],
+);
+
 $datos = PostRequest::getDataFromUrl('/src/notas/informe_stgr_profesores_data', [
     'lista' => $Qlista,
 ]);

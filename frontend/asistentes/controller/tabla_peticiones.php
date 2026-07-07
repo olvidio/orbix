@@ -7,42 +7,56 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\asistentes\helpers\TablaPeticionesRender;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\security\HashFrontSignedLink;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-$Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
-/** @var \frontend\shared\web\Posicion $oPosicion */
 
 $id_activ_old = AsistentesPostInput::idFromSelPost('id_activ_old');
 
+$navState = [];
+$aSel = ListNavSupport::selFromPost();
+if ($aSel !== []) {
+    $navState['sel'] = $aSel;
+}
+foreach (['queSel', 'mod', 'obj_pau', 'pau', 'permiso', 'listar_asistentes'] as $key) {
+    $raw = filter_input(INPUT_POST, $key);
+    if (is_scalar($raw) && (string) $raw !== '') {
+        $navState[$key] = (string) $raw;
+    }
+}
+if ($id_activ_old > 0) {
+    $navState['id_activ_old'] = $id_activ_old;
+}
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros(
+    $navState,
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $id_activ_old > 0 ? ['id_activ' => $id_activ_old] : [],
+    $navState,
+);
+
+ListNavSupport::syncActividadSelectParentSelection($oPosicion);
+
 $campos = array_merge($_GET, $_POST);
-
-// Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
-$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
-if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
-    $campos['restored_id_sel']    = $oPosicion->getParametro('id_sel');
-    $campos['restored_scroll_id'] = $oPosicion->getParametro('scroll_id');
-    $oPosicion->olvidar($stackFromPost);
-}
-
-// Tras guardar por AJAX, js_atras(0) recarga con `stack` en POST: no volver a recordar() (duplicaría la pila).
-if ($stackFromPost !== 0) {
-    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
-} else {
-    \frontend\shared\helpers\ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
-}
-\frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry($oPosicion, [
-    'id_activ_old' => $id_activ_old,
-]);
-
-
-$oPosicion->setParametros([
-    'id_activ_old' => $id_activ_old,
-], 1);
 
 /** @var array<string, mixed> $payload */
 $payload = AsistentesPayload::postData(PostRequest::getDataFromUrl('/src/asistentes/tabla_peticiones_data', $campos));
 $payload = TablaPeticionesRender::enrich($payload);
+
+$payload['reload_url'] = HashFrontSignedLink::fromSpec([
+    'path' => 'frontend/asistentes/controller/tabla_peticiones.php',
+    'query' => $navState,
+]);
+$payload['reload_url_json'] = json_encode(
+    $payload['reload_url'],
+    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT,
+);
 
 $a_campos = array_merge($payload, ['oPosicion' => $oPosicion]);
 

@@ -21,29 +21,46 @@ use frontend\shared\web\Lista;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
-$QGstack = (int)filter_input(INPUT_POST, 'Gstack');
 
 $is_admin = CambiosPermSupport::isAdmin();
+$navPeek = $oPosicion->nav()->peek(0);
+/** @var array<string, mixed> $prevState */
+$prevState = is_array($navPeek['state'] ?? null) ? $navPeek['state'] : [];
 
 if ($is_admin) {
-    if (!empty($Qrefresh) && !empty($QGstack)) {
-        $oPosicion->goStack($QGstack);
-        $Qid_usuario = \frontend\shared\helpers\PayloadCoercion::int($oPosicion->getParametro('id_usuario'));
-        $Qaviso_tipo = \frontend\shared\helpers\PayloadCoercion::int($oPosicion->getParametro('aviso_tipo'));
-    } else {
-        $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
-        $Qaviso_tipo = (int)filter_input(INPUT_POST, 'aviso_tipo');
+    $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
+    $Qaviso_tipo = (int)filter_input(INPUT_POST, 'aviso_tipo');
+    if ($Qrefresh && $Qid_usuario === 0 && isset($prevState['id_usuario'])) {
+        $Qid_usuario = (int)$prevState['id_usuario'];
+        $Qaviso_tipo = (int)($prevState['aviso_tipo'] ?? 0);
     }
 } else {
     $Qid_usuario = 0;
     $Qaviso_tipo = 0;
 }
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros([
+$restored = ListNavSupport::restoreSelectionFromStackPost();
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros([
     'id_usuario' => $Qid_usuario,
     'aviso_tipo' => $Qaviso_tipo,
-], \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
+], $Qid_sel, $Qscroll_id);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    array_merge(
+        ['id_usuario' => $Qid_usuario, 'aviso_tipo' => $Qaviso_tipo],
+        ListNavSupport::buildSelectionStatePatchFromPost(),
+    ),
+);
 
 $data = AvisosGenerarListaRender::enrich(CambiosPayload::postData(PostRequest::getDataFromUrl('/src/cambios/avisos_generar_lista_data', [
     'id_usuario' => $Qid_usuario,
@@ -53,10 +70,11 @@ $data = AvisosGenerarListaRender::enrich(CambiosPayload::postData(PostRequest::g
 $view = CambiosPayload::avisosGenerarFromPayload($data);
 $Qid_usuario = $view['effective_id_usuario'];
 $Qaviso_tipo = $view['effective_aviso_tipo'];
-$oPosicion->setParametros([
-    'id_usuario' => $Qid_usuario,
-    'aviso_tipo' => $Qaviso_tipo,
-], 1);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    0,
+    ['id_usuario' => $Qid_usuario, 'aviso_tipo' => $Qaviso_tipo],
+);
 
 $oDesplUsuarios = new Desplegable();
 $oDesplUsuarios->setNombre('id_usuario');
@@ -74,10 +92,7 @@ if ($Qaviso_tipo !== 0) {
     $oDesplTiposAviso->setOpcion_sel(\frontend\shared\helpers\PayloadCoercion::string($Qaviso_tipo));
 }
 
-$stack = $oPosicion->getStack();
-
 $oHashCond = new HashFront();
-$oHashCond->setArrayCamposHidden(['Gstack' => $stack]);
 $oHashCond->setCamposForm("id_usuario!aviso_tipo");
 
 $oTabla = null;
@@ -103,7 +118,6 @@ if ($Qid_usuario !== 0) {
     $oHash->setArrayCamposHidden([
         'id_usuario' => $Qid_usuario,
         'aviso_tipo' => $Qaviso_tipo,
-        'Gstack' => $stack,
     ]);
     $oHash->setCamposNo('f_fin!scroll_id!sel!refresh');
 }

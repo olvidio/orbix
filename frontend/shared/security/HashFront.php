@@ -11,7 +11,7 @@ class HashFront
      *
      * @var list<string>
      */
-    private const POST_CAMPOS_UI_DINAMICOS = ['id_sel'];
+    private const POST_CAMPOS_UI_DINAMICOS = ['id_sel', 'scroll_id', 'nav'];
 
     /**
      * Quita campos que el JS inyecta al enviar y no deben participar en el hash (ni al firmar ni al validar).
@@ -261,7 +261,7 @@ class HashFront
             }
         } else {
             if ($hpos == 1) {
-                // Atrás desde Posicion::mostrar_left_slide (add_hash sin meta-hash de formulario).
+                // Atrás desde Posicion::mostrarNavAtras (add_hash sin meta-hash de formulario).
                 $requestPath = parse_url($this->realFullUrl(), PHP_URL_PATH);
                 $requestPath = is_string($requestPath) ? $requestPath : '';
                 $rta = self::mdForPosicionBack($requestPath, $aPOST);

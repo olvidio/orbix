@@ -10,8 +10,7 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-/** @var \frontend\shared\web\Posicion $oPosicion */
-\frontend\shared\helpers\ListNavSupport::bootDossierChildRecordar($oPosicion);
+ListNavSupport::enterDossierChildNav($oPosicion);
 
 $campos = array_merge($_GET, $_POST);
 /** @var array<string, mixed> $payload */

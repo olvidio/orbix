@@ -13,10 +13,13 @@ use frontend\shared\helpers\FuncTablasSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-/** @var \frontend\shared\web\Posicion $oPosicion */
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 
 $campos = array_merge($_GET, $_POST);
 /** @var array<string, mixed> $payload */
@@ -27,25 +30,25 @@ $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setBlanco(true);
 $oDesplCentros->setOpciones(NotasFormSupport::desplegableOpciones($payload['opciones_centros'] ?? []));
-$oDesplCentros->setOpcion_sel(\frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'id_ubi_sel'));
+$oDesplCentros->setOpcion_sel(FuncTablasSupport::payloadString($payload, 'id_ubi_sel'));
 $oDesplCentros->setAction('fnjs_otro(1)');
 
 $a_campos = [
-    'tituloGros' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'tituloGros'),
-    'action' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'action'),
-    'hash_form_html' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'hash_form_html'),
-    'titulo' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'titulo'),
-    'n' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'n'),
-    'nj' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'nj'),
-    'nm' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'nm'),
-    'a' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'a'),
-    'sssc' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'sssc'),
-    'nax' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'nax'),
-    'c' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'c'),
+    'tituloGros' => FuncTablasSupport::payloadString($payload, 'tituloGros'),
+    'action' => FuncTablasSupport::payloadString($payload, 'action'),
+    'hash_form_html' => FuncTablasSupport::payloadString($payload, 'hash_form_html'),
+    'titulo' => FuncTablasSupport::payloadString($payload, 'titulo'),
+    'n' => FuncTablasSupport::payloadString($payload, 'n'),
+    'nj' => FuncTablasSupport::payloadString($payload, 'nj'),
+    'nm' => FuncTablasSupport::payloadString($payload, 'nm'),
+    'a' => FuncTablasSupport::payloadString($payload, 'a'),
+    'sssc' => FuncTablasSupport::payloadString($payload, 'sssc'),
+    'nax' => FuncTablasSupport::payloadString($payload, 'nax'),
+    'c' => FuncTablasSupport::payloadString($payload, 'c'),
     'oDesplCentros' => $oDesplCentros,
-    'periodo_form_html' => \frontend\shared\helpers\FuncTablasSupport::payloadString($payload, 'periodo_form_html'),
+    'periodo_form_html' => FuncTablasSupport::payloadString($payload, 'periodo_form_html'),
     'locale_us' => $payload['locale_us'] ?? false,
-    'mi_sfsv' => \frontend\shared\helpers\PayloadCoercion::int($payload['mi_sfsv'] ?? 0),
+    'mi_sfsv' => PayloadCoercion::int($payload['mi_sfsv'] ?? 0),
 ];
 
 $oView = new ViewNewPhtml('frontend\\asistentes\\view');

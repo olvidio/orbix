@@ -15,14 +15,31 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oPosicion->setBloque('#ficha'); // antes del recordar
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
-
 $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
 $Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
+
+$navIdentity = $Qid_menu !== '' && $Qid_menu !== '0' ? ['id_menu' => $Qid_menu] : [];
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros(
+    array_filter([
+        'filtro_grupo' => $Qfiltro_grupo,
+        'nuevo' => $Qnuevo,
+        'id_menu' => $Qid_menu,
+    ], static fn ($v) => $v !== '' && $v !== '0'),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#ficha',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    array_filter(['filtro_grupo' => $Qfiltro_grupo], static fn ($v) => $v !== ''),
+);
 
 $url_backend = '/src/menus/lista_meta_menus';
 $data = PostRequest::getDataFromUrl($url_backend);

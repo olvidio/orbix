@@ -10,12 +10,17 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
+$a_sel = ListNavSupport::selFromPost();
+$navState = ListNavSupport::buildReturnParametrosFromPost();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $a_sel !== [] ? ['sel' => $a_sel] : [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildReturnParametrosFromPost());
 
 $dl = (bool)filter_input(INPUT_POST, 'dl');
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $sel_json = json_encode($a_sel);
 
 $url_backend = '/src/inventario/inventario_ctr';
@@ -91,5 +96,5 @@ foreach ($a_ubi_valores as $nombre_ubi => $a_valores) {
     $html_total .= $html;
 }
 
-echo $oPosicion->mostrar_left_slide(1);
+echo $oPosicion->mostrarNavAtras(1);
 echo $html_total;

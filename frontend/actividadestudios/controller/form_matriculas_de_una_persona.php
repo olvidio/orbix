@@ -28,7 +28,7 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootDossierChildRecordar($oPosicion);
+ListNavSupport::enterDossierChildNav($oPosicion);
 
 $obj = 'actividadestudios\\model\\entity\\Matricula';
 

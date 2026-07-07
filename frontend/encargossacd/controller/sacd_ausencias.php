@@ -6,6 +6,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\web\Posicion;
 
 /**
  * Ficha de ausencias de un sacd.
@@ -19,13 +20,17 @@ use frontend\shared\helpers\ListNavSupport;
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
+/** @var Posicion $oPosicion */
 // FIN de  Cabecera global de URL de controlador ********************************
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
-
 $Qfiltro_sacd = EncargossacdPostInput::postString('filtro_sacd');
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 
 $hashes = SacdFichaAjaxHashes::hashesComunes();
 $oDesplFiltroSacd = SacdFichaAjaxHashes::desplegableFiltroSacd($Qfiltro_sacd);

@@ -11,13 +11,21 @@ use frontend\shared\helpers\ListNavSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $form = CertificadosPayload::recibidoFormFromPayload(CertificadosPayload::postData(
     PostRequest::getDataFromUrl('/src/certificados/certificado_recibido_modificar_data', $_POST)
 ));
+
+$idItem = (int) ($form['id_item'] ?? 0);
+$navState = ListNavSupport::buildCertificadoImprimirParentReturnParametros();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['id_item' => $idItem],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildCertificadoImprimirParentReturnParametros());
+
 
 $oDesplIdiomas = new Desplegable('idioma', $form['a_locales'], $form['idioma'], true);
 

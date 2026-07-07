@@ -23,7 +23,7 @@ use frontend\shared\web\Desplegable;
                     url: $(this).attr('action'),
                     data: $(this).serialize(),
                     onSuccess: function () {
-                        <?= $oPosicion->js_atras(1); ?>
+                        <?= $oPosicion->jsNavAtras(1); ?>
                     }
                 });
                 return false;
@@ -41,7 +41,7 @@ use frontend\shared\web\Desplegable;
                     url: $(this).attr('action'),
                     data: $(this).serialize(),
                     onSuccess: function () {
-                        <?= $oPosicion->js_atras(2); ?>
+                        <?= $oPosicion->jsNavAtras(2); ?>
                     }
                 });
                 return false;
@@ -51,7 +51,7 @@ use frontend\shared\web\Desplegable;
         }
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <form id='frm2'>
     <?= $oHash->getCamposHtml(); ?>
     <input type="Hidden" id="que" name="que" value="">

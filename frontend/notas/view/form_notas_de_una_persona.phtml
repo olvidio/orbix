@@ -234,7 +234,7 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
                         if (!json || json.success !== true) {
                             alert(<?= json_encode(_("respuesta") . ": ") ?> + ((json && json.mensaje) ? json.mensaje : ''));
                         } else {
-                            <?= \frontend\shared\helpers\ListNavSupport::jsAtrasToDossiersParent($oPosicion); ?>
+                            <?= $oPosicion->jsNavAtrasToDossiersParent(); ?>
                         }
                     });
                 return false;
@@ -250,7 +250,7 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
 <div id='overlay'></div>
 
 <div id='ficha'>
-    <?= \frontend\shared\helpers\ListNavSupport::mostrarLeftSlideToDossiersParent($oPosicion); ?>
+    <?= $oPosicion->mostrarNavAtrasToDossiersParent(); ?>
     <form id="form_notas_de_una_persona" name="form_notas_de_una_persona" action="" method="POST">
         <?= $oHash->getCamposHtml(); ?>
         <table>

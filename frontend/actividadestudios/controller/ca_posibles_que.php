@@ -15,16 +15,6 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
-
-/** @var string|list<string> $Qid_sel */
-$Qid_sel = !\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : \frontend\shared\helpers\ListNavSupport::idSelFromPost();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
-
-
-
 $Qna = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'na'));
 $Qid_ctr_n = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'id_ctr_n'));
 $Qid_ctr_agd = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'id_ctr_agd'));
@@ -39,6 +29,38 @@ $Qgrupo_estudios = \frontend\shared\helpers\PayloadCoercion::string(filter_input
 $Qca_estudios = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ca_estudios'));
 $Qca_repaso = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ca_repaso'));
 $Qca_todos = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ca_todos'));
+
+$hasFilterState = filter_input(INPUT_POST, 'id_ctr_n') !== null
+    || filter_input(INPUT_POST, 'id_ctr_agd') !== null
+    || filter_input(INPUT_POST, 'periodo') !== null
+    || filter_input(INPUT_POST, 'year') !== null;
+if (!$hasFilterState && $Qca_todos === '') {
+    $Qca_todos = '1';
+}
+
+$navState = [];
+foreach ([
+    'na', 'id_ctr_n', 'id_ctr_agd', 'periodo', 'year', 'empiezamin', 'empiezamax',
+    'ref', 'grupo_estudios', 'ca_estudios', 'ca_repaso', 'ca_todos',
+    'iasistentes_val', 'actividad_val',
+] as $key) {
+    $raw = filter_input(INPUT_POST, $key);
+    if (is_scalar($raw) && (string) $raw !== '') {
+        $navState[$key] = (string) $raw;
+    }
+}
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros(
+    $navState,
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
 
 $dq = CaPosiblesQuePayload::fromPayload(
     ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/ca_posibles_que_data', []))
@@ -99,10 +121,6 @@ if ($Qgrupo_estudios === 'todos') {
 } else {
     $chk_todos = '';
     $chk_grupo = 'checked';
-}
-
-if (empty($stack) && empty($Qca_todos)) {
-    $Qca_todos = TRUE;
 }
 
 $chk_estudios = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qca_estudios) ? 'checked' : '';

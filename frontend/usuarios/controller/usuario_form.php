@@ -1,6 +1,5 @@
 <?php
 
-use frontend\actividades\helpers\ActividadesPostInput;
 use frontend\usuarios\helpers\UsuariosPayload;
 use frontend\usuarios\helpers\UsuariosPostInput;
 use frontend\shared\helpers\PayloadCoercion;
@@ -22,39 +21,42 @@ $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 
-$Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
+$restored = ListNavSupport::restoreSelectionFromStackPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $a_sel = $oPosicion2->getParametro('id_sel');
-            if (!empty($a_sel)) {
-                $Qid_usuario = UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
-            } else {
-                $Qid_usuario = ActividadesPostInput::posicionInt($oPosicion2->getParametro('id_usuario'));
-                $Qquien = ActividadesPostInput::posicionString($oPosicion2->getParametro('quien'));
-            }
-            $Qscroll_id = ActividadesPostInput::posicionInt($oPosicion2->getParametro('scroll_id'));
-            $oPosicion2->olvidar($stack);
-        }
-    }
-} elseif (!empty($a_sel)) {
+if (!ListNavSupport::idSelIsEmpty($restored['id_sel'])) {
+    $a_sel = is_array($restored['id_sel']) ? $restored['id_sel'] : [$restored['id_sel']];
+}
+if (!empty($a_sel)) {
     $Qque = (string)filter_input(INPUT_POST, 'que');
     if ($Qque !== 'del_grupmenu') {
         $Qid_usuario = UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
     }
 }
-$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
-if ($stackFromPost !== 0) {
-    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
-} else {
-    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-}
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), $Qscroll_id));
 
-$oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
+$navIdentity = $Qid_usuario > 0 ? ['id_usuario' => $Qid_usuario] : [];
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    ListNavSupport::idSelFromPost(),
+    $Qscroll_id,
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    array_merge(
+        array_filter([
+            'username' => (string)filter_input(INPUT_POST, 'username'),
+            'quien' => $Qquien,
+        ], static fn ($v) => $v !== ''),
+        ListNavSupport::buildSelectionStatePatchFromPost(),
+    ),
+);
 
 $formData = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_form', [
     'id_usuario' => $Qid_usuario,

@@ -18,14 +18,32 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $Qcabecera = (string)filter_input(INPUT_POST, 'cabecera');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
 $id_pau = PersonasPostInput::idPauFromSelPost()['id_pau'];
+
+$navIdentity = $id_pau > 0 ? ['id_pau' => $id_pau] : [];
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    array_merge(
+        ListNavSupport::buildPersonasSelectReturnParametros(),
+        ListNavSupport::buildSelectionStatePatchFromPost(),
+    ),
+);
 
 $campos = [
     'id_pau' => $id_pau,

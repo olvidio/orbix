@@ -11,7 +11,6 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
-use frontend\shared\helpers\FuncTablasSupport;
 
 /**
  * Formulario de filtros para el planning por casas (se selecciona el
@@ -26,19 +25,10 @@ use frontend\shared\helpers\FuncTablasSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack((int)$stack)) {
-            $oPosicion2->olvidar((int)$stack);
-        }
-    }
-}
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
-
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
 $queCasasPayload = PostRequest::getDataFromUrl('/src/planning/planning_casa_que_data', []);
 $casaQue = PlanningPayload::casaQueFromPayload($queCasasPayload);
@@ -60,6 +50,22 @@ $QsSeleccionados = (string)filter_input(INPUT_POST, 'sSeleccionados');
 if ($Qyear === 0 && \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpropuesta_calendario)) {
     $Qyear = (int) date('Y') + 1;
 }
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::mergeSelectionIntoReturnParametros([
+        'propuesta_calendario' => $Qpropuesta_calendario,
+        'cdc_sel' => $Qcdc_sel,
+        'year' => $Qyear,
+        'periodo' => $Qperiodo,
+        'empiezamax' => $Qempiezamax,
+        'empiezamin' => $Qempiezamin,
+        'sin_activ' => $Qsin_activ,
+        'sSeleccionados' => $QsSeleccionados,
+    ], $Qid_sel, $Qscroll_id),
+);
 
 $oHash = new HashFront();
 $oHash->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!modelo!periodo!sin_activ!year');

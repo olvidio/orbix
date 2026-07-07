@@ -34,7 +34,7 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootDossierChildRecordar($oPosicion);
+ListNavSupport::enterDossierChildNav($oPosicion);
 
 $obj = 'notas\\model\\entity\\PersonaNotaDB';
 

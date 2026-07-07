@@ -28,7 +28,7 @@ use frontend\shared\config\AppUrlConfig;
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(0) ?>
+                <?= $oPosicion->jsNavAtras(0) ?>
             }
         });
     }
@@ -44,7 +44,7 @@ use frontend\shared\config\AppUrlConfig;
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(0) ?>
+                <?= $oPosicion->jsNavAtras(0) ?>
             }
         });
     }

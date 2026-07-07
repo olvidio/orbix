@@ -26,25 +26,13 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-$Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
-
-$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
-if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
-    $oPosicion->olvidar($stackFromPost);
-}
-
-if ($stackFromPost !== 0) {
-    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
-} else {
-    \frontend\shared\helpers\ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
-}
 
 $selParts = ActividadplazasPostInput::selHashParts();
+$extra = [];
 if ($selParts !== null) {
-    \frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry($oPosicion, ['id_activ' => \frontend\shared\helpers\PayloadCoercion::int($selParts['first'])]);
-} else {
-    \frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry($oPosicion);
+    $extra = ['id_activ' => PayloadCoercion::int($selParts['first'])];
 }
+ListNavSupport::enterActividadSelectChildNav($oPosicion, '#main', $extra);
 
 if ($selParts !== null) {
     $id_activ = \frontend\shared\helpers\PayloadCoercion::int($selParts['first']);
@@ -79,10 +67,6 @@ $hiddenActualizar = [
     'id_activ' => $id_activ,
     'nom_activ' => $nom_activ,
 ];
-$stackForRefresh = $oPosicion->getStack(0);
-if ($stackForRefresh > 0) {
-    $hiddenActualizar['stack'] = $stackForRefresh;
-}
 $oHashActualizar->setArraycamposHidden($hiddenActualizar);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();

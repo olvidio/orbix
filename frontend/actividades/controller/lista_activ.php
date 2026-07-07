@@ -31,98 +31,79 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
 
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
-$Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
-$QGstack = (integer)filter_input(INPUT_POST, 'Gstack');
-$stackRaw = filter_input(INPUT_POST, 'stack', FILTER_VALIDATE_INT);
-$stack = is_int($stackRaw) ? $stackRaw : 0;
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qstatus = (integer)filter_input(INPUT_POST, 'status');
+$Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+$Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-// Si vuelvo con el parametro 'continuar', los datos no estan en el POST sino
-// en `oPosicion`. Me paso la referencia del stack donde esta la informacion.
-if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
-    $oPosicion->goStack($QGstack);
-
-    $Qque = $oPosicion->getParametro('que');
-    $Qid_tipo_activ = $oPosicion->getParametro('id_tipo_activ');
-    $Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
-    $Qid_ubi = $oPosicion->getParametro('id_ubi');
-    $Qperiodo = $oPosicion->getParametro('periodo');
-    $Qyear = $oPosicion->getParametro('year');
-    $Qdl_org = $oPosicion->getParametro('dl_org');
-    $Qempiezamin = $oPosicion->getParametro('empiezamin');
-    $Qempiezamax = $oPosicion->getParametro('empiezamax');
-    $Qstatus = $oPosicion->getParametro('status');
-    $Qc_activ = $oPosicion->getParametro('c_activ');
-    $Qasist = $oPosicion->getParametro('asist');
-    $Qseccion = $oPosicion->getParametro('seccion');
-
-    $oPosicion->olvidar($QGstack);
-
-    $Qssfsv = '';
-    $Qsasistentes = '';
-    $Qsactividad = '';
-    $Qsnom_tipo = '';
-} else {
-    // Si vengo por medio de Posicion, borro la ultima.
-    if ($stack !== 0) {
-        $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $oPosicion2->olvidar($stack);
-        }
-    }
-    $Qque = (string)filter_input(INPUT_POST, 'que');
-    $Qstatus = (integer)filter_input(INPUT_POST, 'status');
-    $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-    $Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
-    $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
-    $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
-    $Qyear = (string)filter_input(INPUT_POST, 'year');
-    $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
-    $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
-    $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-
-    if (empty($Qperiodo)) {
-        $Qperiodo = 'actual';
-    }
-
-    $Qc_activ = (array)filter_input(INPUT_POST, 'c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qasist = (array)filter_input(INPUT_POST, 'asist', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qseccion = (array)filter_input(INPUT_POST, 'seccion', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    if (empty($Qstatus)) {
-        $Qa_status = (array)filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $Qstatus = empty($Qa_status) ? ActividadStatusId::ACTUAL : $Qa_status;
-    }
-
-    $Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
-    $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
-    $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
-    $Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
-
-    $aGoBack = [
-        'que' => $Qque,
-        'status' => $Qstatus,
-        'id_tipo_activ' => $Qid_tipo_activ,
-        'filtro_lugar' => $Qfiltro_lugar,
-        'id_ubi' => $Qid_ubi,
-        'periodo' => $Qperiodo,
-        'year' => $Qyear,
-        'dl_org' => $Qdl_org,
-        'empiezamin' => $Qempiezamin,
-        'empiezamax' => $Qempiezamax,
-        'c_activ' => $Qc_activ,
-        'asist' => $Qasist,
-        'seccion' => $Qseccion,
-    ];
-    $oPosicion->setParametros($aGoBack, 1);
+if (empty($Qperiodo)) {
+    $Qperiodo = 'actual';
 }
+
+$Qc_activ = (array)filter_input(INPUT_POST, 'c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qasist = (array)filter_input(INPUT_POST, 'asist', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qseccion = (array)filter_input(INPUT_POST, 'seccion', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (empty($Qstatus)) {
+    $Qa_status = (array)filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qstatus = empty($Qa_status) ? ActividadStatusId::ACTUAL : $Qa_status;
+}
+
+$Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
+$Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+$Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+$Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
+$Qtit_list_grupo = (string)filter_input(INPUT_POST, 'tit_list_grupo');
+
+$aGoBack = [
+    'que' => $Qque,
+    'status' => $Qstatus,
+    'id_tipo_activ' => $Qid_tipo_activ,
+    'filtro_lugar' => $Qfiltro_lugar,
+    'id_ubi' => $Qid_ubi,
+    'periodo' => $Qperiodo,
+    'year' => $Qyear,
+    'dl_org' => $Qdl_org,
+    'empiezamin' => $Qempiezamin,
+    'empiezamax' => $Qempiezamax,
+    'c_activ' => $Qc_activ,
+    'asist' => $Qasist,
+    'seccion' => $Qseccion,
+    'ssfsv' => $Qssfsv,
+    'sasistentes' => $Qsasistentes,
+    'sactividad' => $Qsactividad,
+    'snom_tipo' => $Qsnom_tipo,
+    'tit_list_grupo' => $Qtit_list_grupo,
+    'id_sel' => $Qid_sel,
+    'scroll_id' => $Qscroll_id,
+];
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildListaActivReturnParametros($aGoBack),
+);
+
+ListNavSupport::syncListaActivParent($oPosicion, $aGoBack);
 
 $tituloPrevio = '';
 if ($Qque === 'list_active_inv_sg' || $Qque === 'list_activ_sr') {
     // Viene del formulario que_lista_activ_sg.php / que_lista_activ_sr.
     $tituloPrevio = (string)filter_input(INPUT_POST, 'titulo');
+    if ($tituloPrevio === '') {
+        $tituloPrevio = $Qtit_list_grupo;
+    }
 }
 
 // periodo por defecto
@@ -166,7 +147,7 @@ $oTabla->setBotones([]);
 $oTabla->setDatos($a_valores);
 $html_tabla = $oTabla->mostrar_tabla();
 
-$titulo = \frontend\shared\helpers\PayloadCoercion::string($data['titulo'] ?? '');
+$titulo = PayloadCoercion::string($data['titulo'] ?? '');
 
 $a_campos = [
     'oPosicion' => $oPosicion,

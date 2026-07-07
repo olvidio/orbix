@@ -20,15 +20,35 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistTesseraReturnToPosicion($oPosicion, 0);
-\frontend\shared\helpers\ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 
 $a_sel_raw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $a_sel = is_array($a_sel_raw) ? $a_sel_raw : [];
 if ($a_sel === []) {
     exit('no sé de que va');
 }
+
+$firstSel = is_string($a_sel[0] ?? null) ? $a_sel[0] : '';
+$firstParts = explode('#', $firstSel, 2);
+$firstIdNom = is_numeric($firstParts[0] ?? '') ? (int) $firstParts[0] : 0;
+
+$navState = array_merge(
+    ListNavSupport::buildTesseraReturnParametros(),
+    ListNavSupport::buildSelectionStatePatchFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['id_nom' => $firstIdNom],
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    array_merge(
+        ListNavSupport::buildTesseraReturnParametros(),
+        ListNavSupport::buildSelectionStatePatchFromPost(),
+    ),
+);
 
 $oView = new ViewNewPhtml('frontend\\notas\\controller');
 foreach ($a_sel as $PersonaSel) {

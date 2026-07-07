@@ -32,22 +32,6 @@ $oPosicion = FrontBootstrap::boot();
 $Qid_sel = \frontend\shared\helpers\ListNavSupport::idSelFromPost();
 $Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
 
-$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
-if ($stackFromPost !== 0) {
-    $oPosicion2 = new Posicion();
-    if ($oPosicion2->goStack($stackFromPost)) {
-        $restoredSel = \frontend\shared\helpers\ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
-        if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restoredSel)) {
-            $Qid_sel = $restoredSel;
-        }
-        $restoredScroll = $oPosicion2->getParametro('scroll_id');
-        if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
-            $Qscroll_id = (string) $restoredScroll;
-        }
-        $oPosicion2->olvidar($stackFromPost);
-    }
-}
-
 $Qmodo = (string)filter_input(INPUT_POST, 'modo');
 $Qmodo = empty($Qmodo) ? 'buscar' : $Qmodo;
 $Qque = (string)filter_input(INPUT_POST, 'que');
@@ -66,31 +50,31 @@ $Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTE
 $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
 $Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
 
-if ($stackFromPost !== 0) {
-    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
-} else {
-    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-}
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildActividadQueReturnParametros([
-    'modo' => $Qmodo,
-    'que' => $Qque,
-    'status' => $Qstatus,
-    'id_tipo_activ' => $Qid_tipo_activ,
-    'filtro_lugar' => $Qfiltro_lugar,
-    'id_ubi' => $Qid_ubi,
-    'nom_activ' => $Qnom_activ,
-    'periodo' => $Qperiodo,
-    'year' => $Qyear,
-    'dl_org' => $Qdl_org,
-    'empiezamin' => $Qempiezamin,
-    'empiezamax' => $Qempiezamax,
-    'fases_on' => $Qfases_on,
-    'fases_off' => $Qfases_off,
-    'publicado' => $Qpublicado,
-    'listar_asistentes' => $Qlistar_asistentes,
-    'id_sel' => $Qid_sel,
-    'scroll_id' => $Qscroll_id,
-]));
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    \frontend\shared\helpers\ListNavSupport::buildActividadQueReturnParametros([
+        'modo' => $Qmodo,
+        'que' => $Qque,
+        'status' => $Qstatus,
+        'id_tipo_activ' => $Qid_tipo_activ,
+        'filtro_lugar' => $Qfiltro_lugar,
+        'id_ubi' => $Qid_ubi,
+        'nom_activ' => $Qnom_activ,
+        'periodo' => $Qperiodo,
+        'year' => $Qyear,
+        'dl_org' => $Qdl_org,
+        'empiezamin' => $Qempiezamin,
+        'empiezamax' => $Qempiezamax,
+        'fases_on' => $Qfases_on,
+        'fases_off' => $Qfases_off,
+        'publicado' => $Qpublicado,
+        'listar_asistentes' => $Qlistar_asistentes,
+        'id_sel' => $Qid_sel,
+        'scroll_id' => $Qscroll_id,
+    ]),
+);
 
 //Si vengo de vuelta y le paso la referencia del stack donde esta la informacion.
 

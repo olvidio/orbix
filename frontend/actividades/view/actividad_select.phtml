@@ -43,7 +43,7 @@ use frontend\shared\security\HashFront;
         fnjs_enviar_formulario('#modifica', '#main');
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <div id="condiciones" class="no_print">
     <form id="modifica" name="modifica" action="">
         <?= $oHash->getCamposHtml(); ?>
@@ -86,3 +86,8 @@ use frontend\shared\security\HashFront;
         ?>
     </div>
 </div>
+<script>
+    if (typeof fnjs_actividad_select_nav_state_hook === 'function') {
+        fnjs_actividad_select_nav_state_hook();
+    }
+</script>

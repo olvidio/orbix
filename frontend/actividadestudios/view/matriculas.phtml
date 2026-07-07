@@ -8,6 +8,7 @@ $jsUrlMatriculasListaRefresh = HashFront::link(
     AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/matriculas_lista.php',
 );
 ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <script>
     fnjs_buscar = function () {
         var campo = '<input type="hidden" name="refresh" value="1">';

@@ -8,6 +8,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use frontend\encargossacd\helpers\EncargossacdPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\web\Posicion;
 
 /**
  * Muestra la ficha de ausencias para un jefe de zona / oficial.
@@ -20,11 +21,15 @@ use frontend\shared\helpers\ListNavSupport;
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
+/** @var Posicion $oPosicion */
 // FIN de  Cabecera global de URL de controlador ********************************
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/sacd_ausencias_jefe_zona_data', []);
 $oDesplSacd = new Desplegable();

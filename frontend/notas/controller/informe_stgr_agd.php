@@ -23,6 +23,13 @@ $QdlRaw = filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qdl = is_array($QdlRaw) ? $QdlRaw : [];
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ['dl' => $Qdl, 'lista' => $Qlista],
+);
+
 $datos = PostRequest::getDataFromUrl('/src/notas/informe_stgr_agd_data', [
     'dl' => $Qdl,
     'lista' => $Qlista,

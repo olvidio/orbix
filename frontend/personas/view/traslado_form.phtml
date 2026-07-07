@@ -31,7 +31,7 @@ use frontend\shared\config\OrbixRuntime;
                     if (json.success !== true) {
                         alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje);
                     } else {
-                        <?= $oPosicion->js_atras(1); ?>
+                        <?= $oPosicion->jsNavAtras(1); ?>
                     }
                 });
                 return false;
@@ -46,7 +46,7 @@ use frontend\shared\config\OrbixRuntime;
     });
 </script>
 <?php if (empty($Qcabecera) || $Qcabecera !== "no") : ?>
-    <?= $oPosicion->mostrar_left_slide(1); ?>
+    <?= $oPosicion->mostrarNavAtras(1); ?>
     <table>
         <tr>
             <td class="esquerra" nowrap></td>

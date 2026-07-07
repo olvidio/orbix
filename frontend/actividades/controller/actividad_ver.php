@@ -40,24 +40,31 @@ use src\permisos\domain\PermisosActividades;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-// Necesario cuando tengo que buscar el desplegable dl_org segun permisos en procesos
-// (Como tambien afecta al status de la actividad, mejor rehacer toda la pagina).
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-$gstackFromPost = filter_input(INPUT_POST, 'Gstack', FILTER_VALIDATE_INT);
-if (is_int($gstackFromPost) && $gstackFromPost > 0) {
-    \frontend\shared\helpers\ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
-    \frontend\shared\helpers\ListNavSupport::persistActividadSelectChildEntry($oPosicion);
-} else {
-    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-    \frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-}
-
-\frontend\shared\helpers\ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
-
-$Qid_activ = ActividadesPostInput::idActivFromPost();
 
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+
+$Qid_activ = ActividadesPostInput::idActivFromPost();
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $Qid_activ > 0 ? ['id_activ' => $Qid_activ] : [],
+    ListNavSupport::buildActividadVerReturnParametros([
+        'mod' => $Qmod,
+        'obj_pau' => $Qobj_pau,
+        'id_activ' => $Qid_activ > 0 ? $Qid_activ : null,
+        'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),
+        'ssfsv' => (string)filter_input(INPUT_POST, 'ssfsv'),
+        'sasistentes' => (string)filter_input(INPUT_POST, 'sasistentes'),
+        'sactividad' => (string)filter_input(INPUT_POST, 'sactividad'),
+        'snom_tipo' => (string)filter_input(INPUT_POST, 'snom_tipo'),
+        'id_sel' => ListNavSupport::idSelFromPost(),
+        'scroll_id' => ListNavSupport::scrollIdFromPost(),
+    ]),
+);
+
+ListNavSupport::syncActividadSelectParentSelection($oPosicion);
 
 $obj = 'actividades\\model\\entity\\ActividadAll';
 

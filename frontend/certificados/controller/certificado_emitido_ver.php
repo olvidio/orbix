@@ -16,17 +16,17 @@ use frontend\shared\helpers\FuncTablasSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-$Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
-
-$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
-if ($stackFromPost !== 0) {
-    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
-} else {
-    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-}
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
 
 $Qid_item = CertificadosPostInput::idItemFromSelPost();
+$navState = ListNavSupport::buildSelectionStatePatchFromPost();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['id_item' => $Qid_item],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildSelectionStatePatchFromPost());
+
 
 $data = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_ver_datos', [
     'id_item' => $Qid_item,

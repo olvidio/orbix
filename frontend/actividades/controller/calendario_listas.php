@@ -1,7 +1,6 @@
 <?php
 
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Fragmento HTML con el calendario de actividades de casas / oficinas en un
@@ -21,10 +20,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-$oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
+FrontBootstrap::boot();
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qver_ctr = (string)filter_input(INPUT_POST, 'ver_ctr');
@@ -46,4 +42,4 @@ $data = PostRequest::getDataFromUrl('/src/actividades/calendario_listas_datos', 
     'id_cdc' => $Qaid_cdc,
 ]);
 
-echo \frontend\shared\helpers\PayloadCoercion::string($data['html'] ?? '');
+echo PayloadCoercion::string($data['html'] ?? '');

@@ -5,7 +5,6 @@ use frontend\actividades\helpers\ActividadesPayload;
 use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\helpers\ListNavSupport;
-use frontend\shared\helpers\FuncTablasSupport;
 
 /**
  * Pantalla que lista actividades sf/sg (crt, cv) con los filtros de
@@ -37,88 +36,59 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
 $Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
-$QGstack = (integer)filter_input(INPUT_POST, 'Gstack');
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-} else {
-    $stack = '';
-}
-if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
-    $oPosicion->goStack($QGstack);
-    $Qque = $oPosicion->getParametro('que');
-    $Qstatus = $oPosicion->getParametro('status');
-    $Qid_tipo_activ_pos = $oPosicion->getParametro('id_tipo_activ');
-    $Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
-    $Qid_ubi = $oPosicion->getParametro('id_ubi');
-    $Qperiodo = $oPosicion->getParametro('periodo');
-    $Qyear = $oPosicion->getParametro('year');
-    $Qdl_org = $oPosicion->getParametro('dl_org');
-    $Qempiezamin = $oPosicion->getParametro('empiezamin');
-    $Qempiezamax = $oPosicion->getParametro('empiezamax');
-    $Qtipo_activ_sg = $oPosicion->getParametro('tipo_activ_sg');
-    $oPosicion->olvidar($QGstack);
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
-    $Qid_sel = [];
-    $Qscroll_id = '';
-} else {
-    $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
-    if ($stack !== 0) {
-        $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack);
-        }
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qstatus = (integer)filter_input(INPUT_POST, 'status');
+$Qtipo_activ_sg = (string)filter_input(INPUT_POST, 'tipo_activ_sg');
+$Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+
+if (empty($Qperiodo)) {
+    switch ($Qtipo_activ_sg) {
+        case 'crt':
+            $Qperiodo = 'curso_crt';
+            break;
+        case 'cv':
+            $Qperiodo = 'curso_ca';
+            break;
     }
-    $Qque = (string)filter_input(INPUT_POST, 'que');
-    $Qstatus = (integer)filter_input(INPUT_POST, 'status');
-    $Qtipo_activ_sg = (string)filter_input(INPUT_POST, 'tipo_activ_sg');
-    $Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
-    $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
-    $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
-    $Qyear = (string)filter_input(INPUT_POST, 'year');
-    $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
-    $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
-    $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-
-    if (empty($Qperiodo)) {
-        switch ($Qtipo_activ_sg) {
-            case 'crt':
-                $Qperiodo = 'curso_crt';
-                break;
-            case 'cv':
-                $Qperiodo = 'curso_ca';
-                break;
-        }
-    }
-
-    $Qstatus = empty($Qstatus) ? ActividadStatusId::ACTUAL : $Qstatus;
-
-    $aGoBack = [
-        'que' => $Qque,
-        'tipo_activ_sg' => $Qtipo_activ_sg,
-        'id_ubi' => $Qid_ubi,
-        'periodo' => $Qperiodo,
-        'year' => $Qyear,
-        'dl_org' => $Qdl_org,
-        'status' => $Qstatus,
-        'empiezamin' => $Qempiezamin,
-        'empiezamax' => $Qempiezamax,
-    ];
-    $oPosicion->setParametros($aGoBack, 1);
 }
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
+$Qstatus = empty($Qstatus) ? ActividadStatusId::ACTUAL : $Qstatus;
 
+$listaSgReturn = ListNavSupport::buildListaActividadesSgReturnParametros([
+    'que' => $Qque,
+    'tipo_activ_sg' => $Qtipo_activ_sg,
+    'id_ubi' => $Qid_ubi,
+    'periodo' => $Qperiodo,
+    'year' => $Qyear,
+    'dl_org' => $Qdl_org,
+    'status' => $Qstatus,
+    'empiezamin' => $Qempiezamin,
+    'empiezamax' => $Qempiezamax,
+    'filtro_lugar' => $Qfiltro_lugar,
+    'id_sel' => $Qid_sel,
+    'scroll_id' => $Qscroll_id,
+]);
 
-if (!empty($Qid_sel) || $Qscroll_id !== '') {
-    $oPosicion->setParametros([
-        'id_sel' => $Qid_sel,
-        'scroll_id' => $Qscroll_id,
-    ], 0);
-}
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $listaSgReturn,
+);
+
+$selForApi = ListNavSupport::idSelIsEmpty($Qid_sel)
+    ? []
+    : (is_array($Qid_sel) ? $Qid_sel : [PayloadCoercion::string($Qid_sel)]);
 
 // Delegamos el calculo del listado al caso de uso backend.
 $data = PostRequest::getDataFromUrl('/src/actividades/lista_actividades_sg_datos', [
@@ -131,19 +101,22 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_actividades_sg_datos
     'dl_org' => $Qdl_org,
     'empiezamin' => $Qempiezamin,
     'empiezamax' => $Qempiezamax,
-    'sel' => $Qid_sel,
+    'sel' => $selForApi,
     'scroll_id' => $Qscroll_id,
-    'stack_go' => $oPosicion->getStack(),
+    'stack_go' => 0,
 ]);
 
 if (!empty($data['advertencia_demasiadas']) && is_array($data['advertencia_demasiadas'])) {
     $ad = $data['advertencia_demasiadas'];
-    $go_avant = HashFrontSignedLink::tryFromSpec($ad['continuar_link_spec'] ?? null);
-    $go_atras = HashFrontSignedLink::tryFromSpec($ad['volver_link_spec'] ?? null);
-    $numActiv = \frontend\shared\helpers\PayloadCoercion::int($ad['num_actividades'] ?? 0);
+    $continuarQuery = array_merge(['continuar' => 'si'], $listaSgReturn);
+    $go_avant = HashFrontSignedLink::fromSpec([
+        'path' => 'frontend/actividades/controller/lista_actividades_sg.php',
+        'query' => $continuarQuery,
+    ]);
+    $numActiv = PayloadCoercion::int($ad['num_actividades'] ?? 0);
     $html_advertencia = '<h2>' . sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."), $numActiv) . '</h2>';
     $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_avant . "') value=" . _("continuar") . ">";
-    $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_atras . "') value=" . _("volver") . ">";
+    $html_advertencia .= "<input type='button' onclick=\"fnjs_nav_atras(1);return false;\" value=" . _("volver") . ">";
     echo $html_advertencia;
     die();
 }
@@ -157,8 +130,8 @@ $oTabla->setBotones(ActividadesListaSupport::botones($data['a_botones'] ?? []));
 $oTabla->setDatos($a_valores);
 $html_tabla = $oTabla->mostrar_tabla();
 unset($data['a_cabeceras'], $data['a_botones'], $data['a_valores']);
-$result_busqueda = \frontend\shared\helpers\PayloadCoercion::string($data['result_busqueda'] ?? '');
-$Qid_tipo_activ = \frontend\shared\helpers\PayloadCoercion::string($data['id_tipo_activ'] ?? '');
+$result_busqueda = PayloadCoercion::string($data['result_busqueda'] ?? '');
+$Qid_tipo_activ = PayloadCoercion::string($data['id_tipo_activ'] ?? '');
 
 $aOpciones = [
     'tot_any' => _('todo el año'),
@@ -204,7 +177,6 @@ $a_camposHiddenSel = [
     'permiso' => '3',
     'tabla' => 'a_actividades',
     'tabla_pau' => 'a_actividades',
-    'Gstack' => $oPosicion->getStack(),
 ];
 $oHashSel->setArraycamposHidden($a_camposHiddenSel);
 

@@ -25,13 +25,28 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-\frontend\shared\helpers\ListNavSupport::persistActaImprimirParentReturnToPosicion($oPosicion, 1);
-\frontend\shared\helpers\ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 
 $acta = ActaImprimirPostInput::actaFromPost();
 $cara = ActaImprimirPostInput::caraFromPost();
+
+$navState = array_merge(
+    ['acta' => $acta, 'cara' => $cara],
+    ListNavSupport::buildSelectionStatePatchFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['acta' => $acta],
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    array_merge(
+        ListNavSupport::buildActaImprimirParentReturnParametros(),
+        ListNavSupport::buildSelectionStatePatchFromPost(),
+    ),
+);
 
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 $oConfig = $_SESSION['oConfig'] ?? null;

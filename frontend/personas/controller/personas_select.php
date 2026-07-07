@@ -2,7 +2,6 @@
 namespace frontend\personas\controller;
 
 use frontend\personas\helpers\PersonasPayload;
-use frontend\personas\helpers\PersonasPostInput;
 use frontend\shared\AppInstalled;
 use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
@@ -28,8 +27,8 @@ $tipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qes_sacd = (int)filter_input(INPUT_POST, 'es_sacd');
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = \frontend\shared\helpers\ListNavSupport::idSelFromPost();
-$Qscroll_id = \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qexacto = (string)filter_input(INPUT_POST, 'exacto');
 $Qcmb = (string)filter_input(INPUT_POST, 'cmb');
@@ -38,35 +37,7 @@ $Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
 $Qapellido2 = (string)filter_input(INPUT_POST, 'apellido2');
 $Qcentro = (string)filter_input(INPUT_POST, 'centro');
 
-$stack = PersonasPostInput::stackFromPost();
-if ($stack !== null && $stack !== 0) {
-    $oPosicion2 = new Posicion();
-    if ($oPosicion2->goStack($stack)) {
-        $restoredSel = \frontend\shared\helpers\ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
-        if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restoredSel)) {
-            $Qid_sel = $restoredSel;
-        }
-        $restoredScroll = $oPosicion2->getParametro('scroll_id');
-        if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
-            $Qscroll_id = (string) $restoredScroll;
-        }
-        $Qque = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('que') ?? $Qque);
-        $Qexacto = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('exacto') ?? $Qexacto);
-        $Qcmb = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('cmb') ?? $Qcmb);
-        $Qnombre = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('nombre') ?? $Qnombre);
-        $Qapellido1 = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('apellido1') ?? $Qapellido1);
-        $Qapellido2 = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('apellido2') ?? $Qapellido2);
-        $Qcentro = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('centro') ?? $Qcentro);
-        $tabla = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('tabla') ?? $tabla);
-        $Qna = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('na') ?? $Qna);
-        $tipo = \frontend\shared\helpers\PayloadCoercion::string($oPosicion2->getParametro('tipo') ?? $tipo);
-        $Qes_sacd = PersonasPostInput::posicionIntParam($oPosicion2->getParametro('es_sacd'), $Qes_sacd);
-        $oPosicion2->olvidar($stack);
-    }
-}
-
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-$personasReturn = [
+$aGoBack = [
     'que' => $Qque,
     'exacto' => $Qexacto,
     'cmb' => $Qcmb,
@@ -78,35 +49,20 @@ $personasReturn = [
     'na' => $Qna,
     'tipo' => $tipo,
     'es_sacd' => $Qes_sacd,
+    'id_sel' => $Qid_sel,
+    'scroll_id' => $Qscroll_id,
 ];
-if (!\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($Qid_sel)) {
-    $personasReturn['id_sel'] = $Qid_sel;
-}
-if ($Qscroll_id !== '' && $Qscroll_id !== '0') {
-    $personasReturn['scroll_id'] = $Qscroll_id;
-}
-\frontend\shared\helpers\ListNavSupport::persistCleanReturnToPosicion($oPosicion, $personasReturn, 0);
 
-$oPosicion->setParametros([
-    'que' => $Qque,
-    'exacto' => $Qexacto,
-    'cmb' => $Qcmb,
-    'nombre' => $Qnombre,
-    'apellido1' => $Qapellido1,
-    'apellido2' => $Qapellido2,
-    'centro' => $Qcentro,
-    'tabla' => $tabla,
-    'na' => $Qna,
-    'tipo' => $tipo,
-    'es_sacd' => $Qes_sacd,
-], 1);
+$personasSelectReturn = ListNavSupport::buildPersonasSelectReturnParametros();
 
-\frontend\shared\helpers\ListNavSupport::persistSelectionOnListPage(
-    $oPosicion,
-    $Qid_sel,
-    $Qscroll_id,
-    $stack !== null && $stack !== 0,
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $personasSelectReturn,
 );
+
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildPersonasQueReturnParametros($aGoBack));
 
 $campos = [
     'tabla' => $tabla,

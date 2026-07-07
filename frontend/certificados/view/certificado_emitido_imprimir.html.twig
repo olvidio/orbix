@@ -1,4 +1,4 @@
-{{ oPosicion.mostrar_left_slide(1)|raw }}
+{{ oPosicion.mostrarNavAtras(1)|raw }}
 
 {% if aviso|default('') %}
 <div class="certificado-aviso-config" role="alert" style="max-width: 42rem; padding: 1rem 1.25rem; margin: 1rem 0; border: 1px solid #c9a227; background: #fffbea; color: #3d3500; line-height: 1.5;">
@@ -128,16 +128,16 @@
         }
         if (isChromeAgent) {
             // ok
-            {{ oPosicion.js_atras(1)|raw }}
+            {{ oPosicion.jsNavAtras(1)|raw }}
         } else {
             if (confirm(msg)) {
                 // ok
-                {{ oPosicion.js_atras(1)|raw }}
+                {{ oPosicion.jsNavAtras(1)|raw }}
             } else {
                 // cancel
                 let url2 = "{{ pag_certificado_eliminar }}" + '?id_item=' + item + '{{ h_eliminar|raw }}';
                 fnjs_update_div('#main', url2);
-                {{ oPosicion.js_atras(1)|raw }}
+                {{ oPosicion.jsNavAtras(1)|raw }}
             }
         }
     }

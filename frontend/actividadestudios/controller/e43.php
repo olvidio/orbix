@@ -14,11 +14,17 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistE43ParentReturnToPosicion($oPosicion, 1);
-
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
 $Qid_nom = ActividadestudiosPostInput::idNom()['id_nom'];
+
+$navState = ListNavSupport::buildE43ParentReturnParametros();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['id_nom' => $Qid_nom, 'id_activ' => $Qid_activ],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildE43ParentReturnParametros());
 
 $d = E43Payload::fromPayload(ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/e43_data', [
     'id_nom' => $Qid_nom,

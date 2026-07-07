@@ -91,7 +91,7 @@ fnjs_grabar_todo = function () {
                 alert(rta2 && rta2.mensaje ? rta2.mensaje : '<?= _("Hay un error, no se ha guardado") ?>');
                 return;
             }
-            <?= $oPosicion->js_atras(1) ?>
+            <?= $oPosicion->jsNavAtras(1) ?>
         });
     });
 };
@@ -172,7 +172,7 @@ fnjs_mas_casas = function (e) {
 <?= $oDesplArrayCasas->ComprobarSelectJs() ?>
 </script>
 
-<?= $oPosicion->mostrar_left_slide(1) ?>
+<?= $oPosicion->mostrarNavAtras(1) ?>
 <div id='div_buscar'>
     <form id="usuario_pref" name="usuario_pref" action="" method="post">
         <?= $hash_form_html ?>

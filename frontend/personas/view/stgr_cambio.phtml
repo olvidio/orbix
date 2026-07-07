@@ -12,12 +12,12 @@ use frontend\shared\config\AppUrlConfig;
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= $oPosicion->jsNavAtras(1); ?>
             }
         });
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <h2 class="titulo"> <?= ucfirst(_("cambiar el stgr")) ?> </h2>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
     <?= $oHash->getCamposHtml(); ?>

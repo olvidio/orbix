@@ -30,18 +30,20 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 
-$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
-$Qid_sel = $restored['id_sel'];
-$Qscroll_id = $restored['scroll_id'];
-
-$Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
-\frontend\shared\helpers\ListNavSupport::bootDossierChildRecordar($oPosicion, $Qrefresh);
-
+$navState = ListNavSupport::buildActaNotasReturnParametros();
 $ids = ActividadestudiosPostInput::idActivAsignatura();
 $id_activ = $ids['id_activ'];
 $id_asignatura = $ids['id_asignatura'];
 
-\frontend\shared\helpers\ListNavSupport::persistActaNotasReturnToPosicion($oPosicion, 0);
+$bloqueRaw = filter_input(INPUT_POST, 'bloque');
+$bloque = is_string($bloqueRaw) && $bloqueRaw !== '' ? $bloqueRaw : '#main';
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    $bloque,
+    ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura],
+    $navState,
+);
 
 $d = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/acta_notas_data', [
     'id_activ' => $id_activ,

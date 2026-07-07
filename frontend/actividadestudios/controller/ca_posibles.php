@@ -23,14 +23,9 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
-
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : \frontend\shared\helpers\ListNavSupport::idSelFromPost();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
-
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
 $obj_pau = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'obj_pau'));
 $Qgrupo_estudios = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'grupo_estudios'));
@@ -42,6 +37,17 @@ $Qca_repaso = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPU
 $Qca_todos = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ca_todos'));
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+$navState = [];
+foreach ([
+    'obj_pau', 'grupo_estudios', 'texto', 'ref', 'idca', 'ca_estudios', 'ca_repaso', 'ca_todos',
+    'id_ctr_agd', 'id_ctr_n', 'na', 'periodo', 'year', 'empiezamin', 'empiezamax',
+] as $key) {
+    $raw = filter_input(INPUT_POST, $key);
+    if (is_scalar($raw) && (string) $raw !== '') {
+        $navState[$key] = (string) $raw;
+    }
+}
 
 if (empty($a_sel)) {
     $Qid_ctr_agd = (integer)filter_input(INPUT_POST, 'id_ctr_agd');
@@ -61,14 +67,7 @@ if (empty($a_sel)) {
         $Qperiodo = 'curso_ca';
     }
 
-    $oPeriodo = Periodo::conCalendarioDesdeBackend();
-    $oPeriodo->setDefaultAny('next');
-    $oPeriodo->setAny($Qyear);
-    $oPeriodo->setEmpiezaMin($Qempiezamin);
-    $oPeriodo->setEmpiezaMax($Qempiezamax);
-    $oPeriodo->setPeriodo($Qperiodo);
-
-    $aGoBack = array(
+    $navState = array_merge($navState, [
         'id_ctr_agd' => $Qid_ctr_agd,
         'id_ctr_n' => $Qid_ctr_n,
         'na' => $Qna,
@@ -81,8 +80,32 @@ if (empty($a_sel)) {
         'ca_estudios' => $Qca_estudios,
         'ca_repaso' => $Qca_repaso,
         'ca_todos' => $Qca_todos,
-    );
-    $oPosicion->setParametros($aGoBack, 1);
+    ]);
+}
+
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros($navState, $Qid_sel, $Qscroll_id);
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+
+$queState = [];
+foreach ([
+    'na', 'id_ctr_n', 'id_ctr_agd', 'periodo', 'year', 'empiezamin', 'empiezamax',
+    'ref', 'grupo_estudios', 'ca_estudios', 'ca_repaso', 'ca_todos',
+    'iasistentes_val', 'actividad_val',
+] as $key) {
+    if (!array_key_exists($key, $navState)) {
+        continue;
+    }
+    $queState[$key] = $navState[$key];
+}
+$parent = $oPosicion->nav()->peek(1);
+if ($queState !== [] && $parent !== null && str_contains((string) ($parent['url'] ?? ''), 'ca_posibles_que.php')) {
+    ListNavSupport::syncNavStateAt($oPosicion, 1, $queState);
 }
 
 $data = PostRequest::getDataFromUrl(

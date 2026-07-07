@@ -21,9 +21,6 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $Qtipo_ctr = (string)filter_input(INPUT_POST, 'tipo_ctr');
 $Qtipo_lista = (string)filter_input(INPUT_POST, 'tipo_lista');
@@ -34,6 +31,21 @@ $Qyear = (string)filter_input(INPUT_POST, 'year');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildActividadesCentroQueReturnParametros([
+        'tipo_ctr' => $Qtipo_ctr,
+        'tipo_lista' => $Qtipo_lista,
+        'ver_ctr' => $Qver_ctr,
+        'periodo' => $Qperiodo,
+        'year' => $Qyear,
+        'empiezamin' => $Qempiezamin,
+        'empiezamax' => $Qempiezamax,
+    ]),
+);
+
 $oForm = new CentrosQue();
 $miRolePau = OrbixRuntime::miRolePau();
 $filtro = ['active' => true];
@@ -41,7 +53,7 @@ if ($miRolePau === 'ctr') { // PauType::PAU_CTR
     $sessionAuth = $_SESSION['session_auth'] ?? null;
     $oMiUsuario = is_array($sessionAuth) ? ($sessionAuth['MiUsuario'] ?? null) : null;
     $id_pau = is_object($oMiUsuario) && method_exists($oMiUsuario, 'getCsv_id_pau')
-        ? \frontend\shared\helpers\PayloadCoercion::string($oMiUsuario->getCsv_id_pau())
+        ? PayloadCoercion::string($oMiUsuario->getCsv_id_pau())
         : '';
     $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
     $oForm->setCentros('centro');

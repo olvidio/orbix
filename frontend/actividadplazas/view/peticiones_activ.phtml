@@ -22,7 +22,7 @@
             dataType: 'json'
         }).done(function (json) {
             if (json && json.success === true) {
-                fnjs_left_slide_atras();
+                fnjs_nav_atras(1);
             } else {
                 alert(json && json.mensaje ? json.mensaje : '<?= _("error al guardar") ?>');
             }
@@ -49,7 +49,7 @@
     }
     <?= $oSelects->ComprobarSelectJs(); ?>
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <h3><?= $ap_nom ?></h3>
 <form id=frm_peticiones name=frm_peticiones action='' method="post">
     <?= $oHash->getCamposHtml(); ?>

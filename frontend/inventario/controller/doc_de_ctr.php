@@ -25,10 +25,18 @@ $aGoBack = [
     'id_tipo_doc' => $Qid_tipo_doc,
 ];
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar($aGoBack, \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
-
-$oPosicion->setParametros($aGoBack, 1);
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    $aGoBack,
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $Qid_tipo_doc > 0 ? ['id_tipo_doc' => $Qid_tipo_doc] : [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, $navState);
 
 // muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/lista_de_ctr_con_docs';

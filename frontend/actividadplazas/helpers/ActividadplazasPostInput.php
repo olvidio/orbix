@@ -30,13 +30,6 @@ final class ActividadplazasPostInput
         ];
     }
 
-    public static function stackFromPost(): ?int
-    {
-        $stack = filter_input(INPUT_POST, 'stack', FILTER_VALIDATE_INT);
-
-        return is_int($stack) ? $stack : null;
-    }
-
     /**
      * @return array{
      *     id_tipo_activ: string,
@@ -50,7 +43,7 @@ final class ActividadplazasPostInput
      *     extendida: string,
      * }
      */
-    public static function gestionPlazasRequestCampos(Posicion $oPosicion, int $stackFromPost): array
+    public static function gestionPlazasRequestCampos(Posicion $oPosicion): array
     {
         $read = static fn (string $key): string => PayloadCoercion::string(filter_input(INPUT_POST, $key) ?? '');
 
@@ -66,31 +59,27 @@ final class ActividadplazasPostInput
             'extendida' => $read('extendida'),
         ];
 
-        if ($stackFromPost !== 0) {
-            $oPosicion2 = new Posicion();
-            if ($oPosicion2->goStack($stackFromPost)) {
-                foreach (array_keys($campos) as $key) {
-                    $restored = $oPosicion2->getParametro($key);
-                    if (is_scalar($restored) && PayloadCoercion::string($restored) !== '') {
-                        $campos[$key] = PayloadCoercion::string($restored);
-                    }
-                }
-                $scrollRestored = $oPosicion2->getParametro('scroll_id');
-                if (is_scalar($scrollRestored) && PayloadCoercion::string($scrollRestored) !== '') {
-                    $_POST['scroll_id'] = PayloadCoercion::string($scrollRestored);
-                }
-                $oPosicion2->olvidar($stackFromPost);
+        $navPeek = $oPosicion->nav()->peek(0);
+        /** @var array<string, mixed> $navState */
+        $navState = is_array($navPeek['state'] ?? null) ? $navPeek['state'] : [];
+
+        foreach (array_keys($campos) as $key) {
+            if ($campos[$key] !== '') {
+                continue;
             }
-        } else {
-            foreach (array_keys($campos) as $key) {
-                if ($campos[$key] !== '') {
-                    continue;
-                }
-                $restored = $oPosicion->getParametro($key, 0);
-                if (is_scalar($restored) && PayloadCoercion::string($restored) !== '') {
-                    $campos[$key] = PayloadCoercion::string($restored);
-                }
+            $restored = $navState[$key] ?? null;
+            if (is_scalar($restored) && PayloadCoercion::string($restored) !== '') {
+                $campos[$key] = PayloadCoercion::string($restored);
             }
+        }
+
+        $scrollRestored = $navState['scroll_id'] ?? null;
+        if (
+            !isset($_POST['scroll_id'])
+            && is_scalar($scrollRestored)
+            && PayloadCoercion::string($scrollRestored) !== ''
+        ) {
+            $_POST['scroll_id'] = PayloadCoercion::string($scrollRestored);
         }
 
         return $campos;

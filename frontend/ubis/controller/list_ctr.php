@@ -14,21 +14,7 @@ use frontend\shared\helpers\ListNavSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-$Qid_sel = null;
-$Qscroll_id = null;
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $obj_pau = $oPosicion2->getParametro('obj_pau');
-            $id_ubi = $oPosicion2->getParametro('id_ubi');
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack);
-        }
-    }
-}
+/** @var Posicion $oPosicion */
 
 $Qque_lista = (string)filter_input(INPUT_POST, 'que_lista');
 $Qloc = (string)filter_input(INPUT_POST, 'loc');
@@ -40,8 +26,28 @@ if (empty($Qque_lista)) {
     $Qque_lista = 'ctr_n';
 }
 
-$id_sel = isset($Qid_sel) ? \frontend\shared\helpers\PayloadCoercion::string($Qid_sel) : '';
-$scroll_id = isset($Qscroll_id) ? \frontend\shared\helpers\PayloadCoercion::string($Qscroll_id) : '';
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
+
+$aGoBack = [
+    'loc' => $Qloc,
+    'que_lista' => $Qque_lista,
+];
+$navState = ListNavSupport::mergeSelectionForRecordar($aGoBack, $Qid_sel, $Qscroll_id);
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, $navState);
+
+$id_sel = ListNavSupport::idSelIsEmpty($Qid_sel)
+    ? ''
+    : PayloadCoercion::string(is_array($Qid_sel) ? implode(',', $Qid_sel) : $Qid_sel);
+$scroll_id = $Qscroll_id;
 
 $data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/list_ctr_data', [
     'que_lista' => $Qque_lista,
@@ -55,15 +61,6 @@ if ($error !== '') {
 }
 
 $lista = UbisPayload::listCtrFromPayload($data);
-
-$aGoBack = [
-    'loc' => $Qloc,
-    'que_lista' => $Qque_lista,
-];
-$oPosicion->setParametros($aGoBack);
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar($aGoBack, $Qid_sel, $Qscroll_id));
-
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('list_ctr');

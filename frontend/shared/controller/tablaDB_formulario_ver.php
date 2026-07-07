@@ -12,8 +12,14 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+$navState = ListNavSupport::buildReturnParametrosFromPost();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildSelectionStatePatchFromPost());
 
 
 $Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
@@ -45,9 +51,6 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
     $a_pkey = json_decode(src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($Qs_pkey));
     $aQuery['sel'] = $a_sel;
-    // add stack:
-    $stack = $oPosicion->getStack(1);
-    $aQuery['stack'] = $stack;
 } else { // si es nuevo
     $Qs_pkey = '';
     $a_pkey = '';

@@ -12,6 +12,8 @@ use frontend\shared\helpers\ListNavSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
+/** @var Posicion $oPosicion */
+
 $bloque = (string)filter_input(INPUT_POST, 'bloque');
 if (!empty($bloque)) {
     $oPosicion->setBloque("#$bloque");
@@ -21,30 +23,33 @@ $bloque = 'ficha';
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-$Qid_sel = null;
-$Qscroll_id = null;
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $obj_pau = $oPosicion2->getParametro('obj_pau');
-            $id_ubi = $oPosicion2->getParametro('id_ubi');
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack);
-        }
-    }
-}
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
-
-
 if (!empty($a_sel)) {
     $id_ubi = UbisPayload::idFromSelItem($a_sel[0] ?? '');
 } else {
     $id_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 }
+
+$navIdentity = $id_ubi > 0 ? ['id_ubi' => $id_ubi] : [];
+$navState = ListNavSupport::mergeSelectionForRecordar(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::mergeSelectionForRecordar(
+        ListNavSupport::buildReturnParametrosFromPost(),
+        ListNavSupport::idSelFromPost(),
+        ListNavSupport::scrollIdFromPost(),
+    ),
+);
 
 $home = UbisPayload::homeFromPayload(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/home_ubis_data', ['id_ubi' => $id_ubi])));
 

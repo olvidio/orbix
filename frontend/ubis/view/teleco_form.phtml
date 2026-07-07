@@ -4,7 +4,7 @@
             url: '<?= $url_guardar ?>',
             data: $(formulario).serialize(),
             onSuccess: function () {
-                <?= $oPosicion->js_atras(1) ?>
+                <?= $oPosicion->jsNavAtras(1) ?>
             }
         });
     }
@@ -14,7 +14,7 @@
         fnjs_ajax_json_html({ url: '<?= $url_actualizar ?>', data: parametros, target: '#span_descripcion' });
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <form id='frm2'>
     <?= $oHash->getCamposHtml(); ?>
     <input type="Hidden" id="mod" name="mod" value="">

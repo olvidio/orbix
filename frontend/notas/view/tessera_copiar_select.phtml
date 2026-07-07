@@ -20,7 +20,7 @@
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras() ?>
+                <?= $oPosicion->jsNavAtras(1) ?>
             }
         });
     }

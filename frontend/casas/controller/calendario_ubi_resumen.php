@@ -29,13 +29,17 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
-
 
 $QG = (int)filter_input(INPUT_POST, 'G');
 $Qinc_t = (int)filter_input(INPUT_POST, 'inc_t');
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $Qid_ubi > 0 ? ['id_ubi' => $Qid_ubi] : [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 
 $filtro = ['active' => '1'];
 if (!ActividadesPermSupport::havePermOficina('des') && !ActividadesPermSupport::havePermOficina('vcsd')) {

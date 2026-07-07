@@ -15,13 +15,18 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost());
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
-
-$Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
-$Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
-$Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros([], $Qid_sel, $Qscroll_id);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, []);
 
 $url_backend = '/src/menus/grupmenu_lista';
 $data = PostRequest::getDataFromUrl($url_backend);
@@ -60,6 +65,7 @@ $url_nuevo = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
     . http_build_query($aQuery));
 
 $a_campos = [
+    'oPosicion' => $oPosicion,
     'oHashSelect' => $oHashSelect,
     'oTabla' => $oTabla,
     'url_nuevo' => $url_nuevo,

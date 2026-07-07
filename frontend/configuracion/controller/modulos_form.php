@@ -17,13 +17,28 @@ $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $campos = array_merge($_GET, $_POST);
 
 $Qmod = \frontend\shared\helpers\PayloadCoercion::string($campos['mod'] ?? '');
-$stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
-if ($Qmod !== 'nuevo' && $stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
-    $oPosicion->olvidar($stackFromPost);
+$Qid_mod = \frontend\shared\helpers\PayloadCoercion::string($campos['id_mod'] ?? '');
+if ($Qmod !== 'nuevo') {
+    ListNavSupport::restoreSelectionFromStackPost();
 }
 
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionIntoReturnParametros(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), \frontend\shared\helpers\ListNavSupport::idSelFromPost(), \frontend\shared\helpers\ListNavSupport::scrollIdFromPost()));
+$navIdentity = $Qmod !== 'nuevo' && $Qid_mod !== '' ? ['id_mod' => $Qid_mod] : [];
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros(
+    ListNavSupport::buildReturnParametrosFromPost(),
+    ListNavSupport::idSelFromPost(),
+    ListNavSupport::scrollIdFromPost(),
+);
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    $navIdentity,
+    $navState,
+);
+ListNavSupport::syncNavStateAt(
+    $oPosicion,
+    1,
+    ListNavSupport::buildSelectionStatePatchFromPost(),
+);
 
 
 $data = PostRequest::getDataFromUrl('/src/configuracion/modulos_form_data', $campos);

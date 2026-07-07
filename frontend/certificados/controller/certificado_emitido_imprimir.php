@@ -16,12 +16,16 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-\frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
-
-\frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion);
-\frontend\shared\helpers\ListNavSupport::persistCertificadoImprimirParentReturnToPosicion($oPosicion, 1);
-
 $id_nom = CertificadosPostInput::idNomFromSelPost();
+
+$navState = ListNavSupport::buildCertificadoImprimirParentReturnParametros();
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    ['id_nom' => $id_nom],
+    $navState,
+);
+ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildCertificadoImprimirParentReturnParametros());
 
 $datosPersona = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_imprimir_datos', [
     'id_nom' => $id_nom,

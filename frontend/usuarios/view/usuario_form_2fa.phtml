@@ -105,7 +105,7 @@ $url_jquery = $url_jquery ?? (AppUrlConfig::getNodeModulesBaseUrl() . '/jquery/d
             } else {
                 alert(<?= json_encode((string)$txt_ok) ?>);
                 <?php if ($go_to === 'atras'): ?>
-                    <?= $oPosicion->js_atras(1) ?>
+                    <?= $oPosicion->jsNavAtras(1) ?>
                 <?php else: ?>
                     // Redirigir a la página de inicio
                     //window.location.href = '<?= $go_to ?>';

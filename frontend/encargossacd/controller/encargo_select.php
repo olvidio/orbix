@@ -9,6 +9,7 @@ use frontend\shared\FrontBootstrap;
 use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\encargossacd\helpers\EncargossacdPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\web\Posicion;
 
 /**
  * Listado de encargos. Los datos de cada fila vienen del backend
@@ -22,27 +23,29 @@ use frontend\shared\helpers\ListNavSupport;
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-$Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
+/** @var Posicion $oPosicion */
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$restored = \frontend\shared\helpers\ListNavSupport::restoreSelectionFromStackPost();
-
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !\frontend\shared\helpers\ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : \frontend\shared\helpers\ListNavSupport::idSelFromPost();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : \frontend\shared\helpers\ListNavSupport::scrollIdFromPost();
-$stackFromPost = \frontend\shared\helpers\ListNavSupport::stackFromPost();
-if ($stackFromPost !== 0) {
-    \frontend\shared\helpers\ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
-} else {
-    \frontend\shared\helpers\ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
-}
-\frontend\shared\helpers\ListNavSupport::persistRecordarEntry($oPosicion, \frontend\shared\helpers\ListNavSupport::mergeSelectionForRecordar(\frontend\shared\helpers\ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
-
-
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
 $Qtitulo = EncargossacdPostInput::postString('titulo');
 $Qid_tipo_enc = EncargossacdPostInput::postInt('id_tipo_enc');
 $Qdesc_enc = EncargossacdPostInput::postString('desc_enc');
+
+$navState = ListNavSupport::mergeSelectionIntoReturnParametros([
+    'titulo' => $Qtitulo,
+    'id_tipo_enc' => $Qid_tipo_enc,
+    'desc_enc' => $Qdesc_enc,
+], $Qid_sel, $Qscroll_id);
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    $navState,
+);
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/encargo_select_data', [
@@ -67,10 +70,10 @@ $a_cabeceras = [
 
 /** @var array<int|string, mixed> $a_valores */
 $a_valores = [];
-if (!empty($Qid_sel)) {
+if (!ListNavSupport::idSelIsEmpty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
-if (!empty($Qscroll_id)) {
+if ($Qscroll_id !== '') {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 $i = 0;

@@ -6,7 +6,7 @@
                 url: $(this).attr('action'),
                 data: $(this).serialize(),
                 onSuccess: function () {
-                    <?= $oPosicion->js_atras(1); ?>
+                    <?= $oPosicion->jsNavAtras(1); ?>
                 }
             });
             return false;
@@ -27,7 +27,7 @@
                     if (id_mod) {
                         fnjs_actualizar('#frm_actualizar');
                     } else {
-                        <?= $oPosicion->js_atras(1); ?>
+                        <?= $oPosicion->jsNavAtras(1); ?>
                     }
                 }
             });
@@ -43,7 +43,7 @@
         fnjs_enviar_formulario(formulario, '#main');
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrarNavAtras(1); ?>
 <form id='frm_actualizar'>
     <?= $hash_actualizar_html ?>
 </form>
