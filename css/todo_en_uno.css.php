@@ -763,6 +763,10 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 		border: 0;
 	}
 
+    .orbix-nav-atras {
+        display: none !important;
+    }
+
     /* ===========================================
        MAIN
        =========================================== */

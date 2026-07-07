@@ -4,10 +4,23 @@
 
 // This file requires the $h variable to be defined before inclusion
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\security\HashFront;
 use src\shared\config\ConfigGlobal;
 if (!isset($h)) {
     $h = '';
 }
+
+$navAtrasUrl = 'frontend/shared/controller/nav_atras.php';
+$oHashNavAtras = new HashFront();
+$oHashNavAtras->setUrl($navAtrasUrl);
+$oHashNavAtras->setCamposNo('n');
+$navAtrasSignedParams = $oHashNavAtras->linkSinValParams();
+
+$navStateUrl = 'frontend/shared/controller/nav_state.php';
+$oHashNavState = new HashFront();
+$oHashNavState->setUrl($navStateUrl);
+$oHashNavState->setCamposNo('nav_patch');
+$navStateSignedParams = $oHashNavState->linkSinValParams();
 ?>
 <?php // language=JavaScript ?>
 <script>
@@ -458,9 +471,9 @@ if (!isset($h)) {
 
     function fnjs_link_submenu(url, parametros) {
         if (parametros) {
-            parametros = parametros + '&PHPSESSID=<?= session_id() ?>';
+            parametros = parametros + '&nav=reset&PHPSESSID=<?= session_id() ?>';
         } else {
-            parametros = 'PHPSESSID=<?= session_id() ?>';
+            parametros = 'nav=reset&PHPSESSID=<?= session_id() ?>';
         }
         if (!url) return false;
         // para el caso de editar webs
@@ -500,9 +513,7 @@ if (!isset($h)) {
         $('#div_modificar').css({width: '0', height: '0'});
         $('#div_modificar').removeClass('ventana');
         fnjs_overlay_ocultar();
-        if ($('#main #ir_atras, #main #ir_atras2, #main #go_atras, #main #js_atras').length) {
-            fnjs_left_side_show();
-        }
+        fnjs_actualizar_left_slide_segun_nav('#main');
     }
 
     function fnjs_normalizar_bloque(bloque) {
@@ -516,151 +527,168 @@ if (!isset($h)) {
         return bloque === '' ? '#main' : '#' + bloque;
     }
 
-    function fnjs_mostrar_atras(id_div, htmlForm) {
-        fnjs_borrar_posibles_atras();
-        id_div = fnjs_normalizar_bloque(id_div);
-        var name_div = id_div.substring(1);
-
-        if ($(id_div).length) {
-            $(id_div).html(htmlForm);
-        } else {
-            var html = '<div id="' + name_div + '" style="display: none;">';
-            html += htmlForm;
-            html += '</div>';
-            $('#cargando').prepend(html);
-        }
-        fnjs_ir_a(id_div);
-    }
-
-    function fnjs_borrar_posibles_atras() {
-        // Evitar #ir_atras duplicado: fnjs_mostrar_atras puede dejar uno bajo #cargando (antes que #main en el DOM).
-        $('#cargando').children('#ir_atras, #ir_atras2, #go_atras, #js_atras').remove();
-        if ($('#ir_a').length) $('#ir_a').remove();
-        if ($('#ir_atras').length) $('#ir_atras').remove();
-        if ($('#ir_atras2').length) $('#ir_atras2').remove();
-        if ($('#js_atras').length) $('#js_atras').remove();
-        if ($('#go_atras').length) $('#go_atras').remove();
-    }
-
-    /**
-     * Recargas de #main o de un segmento hijo (#ficha3101, …) sustituyen el destino de la flecha lateral.
-     * Popups (#div_modificar) y bloques fuera de #main no deben borrar #ir_atras del shell.
-     */
-    function fnjs_bloque_afecta_navegacion_atras(bloque) {
-        if (!bloque) {
-            return false;
-        }
-        if (bloque === '#main' || bloque === '#body') {
-            return true;
-        }
+    function fnjs_nav_atras_markers_en(bloque) {
+        bloque = fnjs_normalizar_bloque(bloque);
         var $bloque = $(bloque);
-        return $bloque.length > 0 && $bloque.closest('#main').length > 0;
-    }
-
-    /** Quita solo el #ir_atras del shell de dossiers_ver (hijo directo de #main), no el de un sub-bloque. */
-    function fnjs_borrar_ir_atras_shell_main() {
-        $('#main').children('#ir_atras, #ir_atras2, #go_atras, #js_atras').remove();
-    }
-
-    /**
-     * Sub-bloque activo (#ficha3101, …): el #ir_atras del formulario hijo (más anidado).
-     * Sin sub-bloque: el del shell (hijo directo de #main), p. ej. dossiers → actividad_select.
-     */
-    function fnjs_ir_atras_activo_en_main(backId) {
-        var $shell = $('#main').children('#' + backId);
-        var $nested = $('#main [id="' + backId + '"]').not($shell);
-        if ($nested.length) {
-            return $nested.last();
+        if (!$bloque.length) {
+            return $();
         }
-        return $shell;
+        return $bloque.find('[data-nav-atras]').add($bloque.filter('[data-nav-atras]'));
     }
 
-    /**
-     * Flecha lateral: shell (#main > #ir_atras) salvo que haya un formulario hijo en un segmento (#ficha*).
-     */
+    function fnjs_nav_atras_steps_from_context(bloque) {
+        bloque = fnjs_normalizar_bloque(bloque || '#main');
+        var $markers = fnjs_nav_atras_markers_en(bloque);
+        if (!$markers.length && bloque === '#main') {
+            $markers = $('#main [data-nav-atras]');
+        }
+        if (!$markers.length) {
+            return 0;
+        }
+        var n = parseInt($markers.last().attr('data-nav-atras'), 10);
+        return (n >= 1) ? n : 1;
+    }
+
+    function fnjs_bloque_tiene_nav_atras(bloque) {
+        return fnjs_nav_atras_steps_from_context(bloque) > 0;
+    }
+
+    function fnjs_actualizar_left_slide_segun_nav(bloque) {
+        if (fnjs_bloque_tiene_nav_atras(bloque)) {
+            fnjs_left_side_show();
+        } else {
+            fnjs_left_side_hide();
+        }
+    }
+
+    /** @deprecated NavStack v2 — no-op; compatibilidad con vistas que aún lo invocan. */
+    function fnjs_borrar_posibles_atras() {
+    }
+
     function fnjs_left_slide_atras() {
         fnjs_cerrar_ventana_modal();
-        var backIds = ['ir_atras', 'ir_atras2', 'go_atras', 'js_atras'];
-        for (var i = 0; i < backIds.length; i++) {
-            var $back = fnjs_ir_atras_activo_en_main(backIds[i]);
-            if ($back.length) {
-                return fnjs_ir_a($back);
-            }
-        }
-        for (var j = 0; j < backIds.length; j++) {
-            var $fallback = $('[id="' + backIds[j] + '"]').last();
-            if ($fallback.length) {
-                return fnjs_ir_a($fallback);
-            }
-        }
-        return false;
-    }
-
-    function fnjs_ir_a(id_div) {
-        if (id_div && typeof id_div === 'string') {
-            id_div = fnjs_normalizar_bloque(id_div);
-        }
-        var $target = (id_div && id_div.jquery) ? id_div : $(id_div);
-        if (!$target.length) {
+        var n = fnjs_nav_atras_steps_from_context('#main');
+        if (n < 1) {
             return false;
         }
+        return fnjs_nav_atras(n);
+    }
+
+    function fnjs_nav_atras(n) {
+        n = (typeof n === 'number' && n >= 1) ? n : 1;
         fnjs_guardar_estado();
-
-        var is_back = false;
-        if (id_div && typeof id_div === 'string' && id_div.indexOf('atras') !== -1) {
-            is_back = true;
-        }
-        if ($target.find('#go_atras, #js_atras, #ir_atras').length > 0 || $target.is('#go_atras, #js_atras, #ir_atras')) {
-            is_back = true;
-        }
-        if (is_back) {
-            sessionStorage.setItem('is_back_navigation', 'true');
-            fnjs_cerrar_ventana_modal();
-        }
-
-        var url = $target.find("[name='url']").val();
-        var parametros = $target.find("[name='parametros']").val();
-        var bloque = $target.find("[name='id_div']").val();
-        bloque = fnjs_normalizar_bloque(bloque);
-
+        sessionStorage.setItem('is_back_navigation', 'true');
+        fnjs_cerrar_ventana_modal();
         fnjs_left_side_hide();
 
-        $(bloque).attr('refe', url);
-        fnjs_borrar_posibles_atras();
+        var parametros = '<?= $navAtrasSignedParams ?>&n=' + n + '&PHPSESSID=<?= session_id() ?>';
         $.ajax({
-            url: url,
+            url: '<?= $navAtrasUrl ?>',
             type: 'post',
             data: parametros,
-            complete: function (resposta) {
-                fnjs_mostra_resposta(resposta, bloque);
+            dataType: 'json',
+            complete: function (respuesta) {
+                var payload = respuesta.responseJSON;
+                if (!payload || payload.url === null || payload.url === '') {
+                    return false;
+                }
+                var bloque = fnjs_normalizar_bloque(payload.bloque || '#main');
+                $(bloque).attr('refe', payload.url);
+                $.ajax({
+                    url: payload.url,
+                    type: 'post',
+                    data: payload.parametros,
+                    complete: function (resposta) {
+                        fnjs_mostra_resposta(resposta, bloque);
+                    },
+                    error: fnjs_procesarError
+                });
             },
             error: fnjs_procesarError
         });
         return false;
     }
 
+    var fnjs_nav_state_timer = null;
+
+    function fnjs_nav_state_patch(patch) {
+        if (!patch || typeof patch !== 'object') {
+            return;
+        }
+        clearTimeout(fnjs_nav_state_timer);
+        fnjs_nav_state_timer = setTimeout(function () {
+            var parametros = '<?= $navStateSignedParams ?>&nav_patch='
+                + encodeURIComponent(JSON.stringify(patch))
+                + '&PHPSESSID=<?= session_id() ?>';
+            $.ajax({
+                url: '<?= $navStateUrl ?>',
+                type: 'post',
+                data: parametros,
+                dataType: 'json',
+                error: fnjs_procesarError
+            });
+        }, 500);
+    }
+
+    function fnjs_nav_state_patch_form_selection(formSelector, scrollInputSelector, gridGlobalName) {
+        if (typeof fnjs_nav_state_patch !== 'function') {
+            return;
+        }
+        var $form = $(formSelector);
+        if (!$form.length) {
+            return;
+        }
+        if (typeof fnjs_sync_grid_sel_checkboxes === 'function') {
+            fnjs_sync_grid_sel_checkboxes(formSelector);
+        }
+        var idSel = $form.find('input.sel:checked').first().val() || $form.find('input[name="id_sel"]').val() || '';
+        var scrollId = scrollInputSelector ? ($(scrollInputSelector).val() || '0') : '0';
+        if (!idSel && gridGlobalName) {
+            var grid = window[gridGlobalName];
+            var dataView = window['dataView_' + String(gridGlobalName).replace(/^grid_/, '')];
+            if (grid && dataView) {
+                var selected = grid.getSelectedRows();
+                if (selected && selected.length) {
+                    if (scrollInputSelector) {
+                        $(scrollInputSelector).val(selected[0]);
+                        scrollId = String(selected[0]);
+                    }
+                    var item = dataView.getItem(selected[0]);
+                    if (typeof fnjs_parse_slick_sel_value === 'function') {
+                        idSel = fnjs_parse_slick_sel_value(item ? item.sel : '');
+                    }
+                }
+            }
+        }
+        if (idSel !== '') {
+            $form.find('input[name="id_sel"]').val(idSel);
+        }
+        fnjs_nav_state_patch({ id_sel: idSel, scroll_id: scrollId });
+    }
+
+    function fnjs_actividad_select_nav_state_hook() {
+        if (typeof grid_actividad_select === 'undefined') {
+            setTimeout(fnjs_actividad_select_nav_state_hook, 100);
+            return;
+        }
+        var patch = function () {
+            fnjs_nav_state_patch_form_selection('#seleccionados', '#scroll_id_actividad_select', 'grid_actividad_select');
+        };
+        grid_actividad_select.onSelectedRowsChanged.subscribe(function () {
+            patch();
+        });
+        grid_actividad_select.onClick.subscribe(function () {
+            patch();
+        });
+        patch();
+    }
+
     function fnjs_cambiar_link(id_div) {
-        // busco si hay un id=ir_a que es para ir a otra página
-        if ($('#ir_a').length) {
-            fnjs_ir_a(id_div);
-            return false;
-        }
-        if ($('#go_atras').length) {
-            fnjs_ir_a(id_div);
-            return false;
-        }
-        if ($('#main #ir_atras').length || $('#main #ir_atras2').length) {
+        if (fnjs_bloque_tiene_nav_atras(id_div)) {
             fnjs_left_side_show();
             return true;
         }
-        if ($('#ir_atras').length) {
-            fnjs_left_side_show();
-            return true;
-        }
-        if ($('#js_atras').length) {
-            fnjs_ir_a(id_div);
-            return true;
-        }
+        fnjs_left_side_hide();
         var base = $(id_div).attr('refe');
         if (base) {
             var selector = id_div + " a[href]";
@@ -702,10 +730,6 @@ if (!isset($h)) {
         bloque = fnjs_normalizar_bloque(bloque);
         if (bloque === '#main') {
             fnjs_guardar_estado();
-        }
-        // Solo recargas de #main o segmentos hijos sustituyen la flecha lateral; popups no.
-        if (mantener_atras === 0 && fnjs_bloque_afecta_navegacion_atras(bloque)) {
-            fnjs_borrar_posibles_atras();
         }
         var path = ref.replace(/\?.*$/, '');
         var parametros = '';
@@ -792,11 +816,6 @@ if (!isset($h)) {
         }
         if (bloque === '#main') {
             fnjs_guardar_estado();
-        }
-        if (bloque === '#main' || bloque === '#body') {
-            fnjs_borrar_posibles_atras();
-        } else if (fnjs_bloque_afecta_navegacion_atras(bloque)) {
-            fnjs_borrar_ir_atras_shell_main();
         }
         $(id_form).one("submit", function () {
             var tgt_url = $(this).attr('action');
