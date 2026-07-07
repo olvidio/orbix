@@ -133,20 +133,13 @@ public static function normalizeIdSel(mixed $raw): string|array
 
 public static function idSelFromPost(): string|array
 {
-    $postIdSel = $_POST['id_sel'] ?? null;
-    if ($postIdSel !== null) {
-        $normalized = self::idSelForLista($postIdSel);
-        if (!self::idSelIsEmpty($normalized)) {
-            return $normalized;
-        }
-    }
-
+    // sel[] (checkbox/grid) manda sobre id_sel oculto, que puede quedar desactualizado tras cambiar fila.
     $aSel = self::selFromPost();
-    if ($aSel !== []) {
-        return self::idSelForLista($aSel);
+    if ($aSel === []) {
+        return '';
     }
 
-    return '';
+    return self::idSelForLista($aSel);
 }
 
 public static function persistSelectionToPosicion(Posicion $oPosicion, int $n = 1): void

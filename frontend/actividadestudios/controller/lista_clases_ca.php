@@ -40,6 +40,7 @@ $oPosicion->nav()->enter(
     $id_activ > 0 ? ['id_activ' => $id_activ] : [],
     $navState,
 );
+ListNavSupport::syncActividadSelectParentSelection($oPosicion);
 
 $d = ListaClasesCaPayload::fromPayload(ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/lista_clases_ca_data', ['id_activ' => $id_activ])));
 

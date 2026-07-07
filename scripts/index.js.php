@@ -680,7 +680,6 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         grid_actividad_select.onClick.subscribe(function () {
             patch();
         });
-        patch();
     }
 
     function fnjs_cambiar_link(id_div) {
