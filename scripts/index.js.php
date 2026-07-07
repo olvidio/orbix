@@ -844,6 +844,19 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         return url;
     }
 
+    function fnjs_dossiers_refresh(formulario, bloque) {
+        if (!bloque) {
+            bloque = '#main';
+        }
+        var $form = $(formulario);
+        $form.find('input[name="mod"]').val('');
+        $form.find('input[name="refresh"]').remove();
+        $form.append('<input type="hidden" name="refresh" value="1">');
+        $form.attr('action', 'frontend/dossiers/controller/dossiers_ver.php');
+        // Recarga in-place (refresh=1): el servidor no apunta en NavStack (legacy pararRecordar).
+        fnjs_enviar_formulario(formulario, bloque);
+    }
+
     function fnjs_enviar_formulario(id_form, bloque) {
         if (!bloque) {
             bloque = '#main';

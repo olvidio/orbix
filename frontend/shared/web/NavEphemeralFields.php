@@ -19,8 +19,8 @@ final class NavEphemeralFields
         'Gstack',
         'PHPSESSID',
         'nav',
-        'submit',
         'nav_patch',
+        'refresh',
     ];
 
     /**

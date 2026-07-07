@@ -74,16 +74,13 @@
                 if (data && data.msg && data.msg.trim() !== '') {
                     alert(<?= json_encode(_("respuesta") . ": ") ?> + data.msg);
                 }
-                $(mod).val("sel_es_asistente");
+                $(mod).val('');
                 fnjs_actualizar(formulario);
             }
         });
     }
     fnjs_actualizar = function (formulario) {
-        var campo = '<input type="hidden" name="refresh" value=1>';
-        $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
-        $(formulario).append(campo);
-        fnjs_enviar_formulario(formulario, '#main');
+        fnjs_dossiers_refresh(formulario, '#main');
     }
 </script>
 <?= $aviso ?? '' ?>

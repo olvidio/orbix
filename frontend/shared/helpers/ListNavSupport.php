@@ -235,8 +235,14 @@ public static function buildDossierReturnParametros(): array
         }
     }
 
-    $idPauRaw = filter_input(INPUT_POST, 'id_pau', FILTER_VALIDATE_INT);
-    $idPau = is_int($idPauRaw) ? $idPauRaw : 0;
+    $idPau = 0;
+    if (isset($_POST['id_pau']) && is_scalar($_POST['id_pau'])) {
+        $idPau = (int) $_POST['id_pau'];
+    }
+    if ($idPau <= 0) {
+        $idPauRaw = filter_input(INPUT_POST, 'id_pau', FILTER_VALIDATE_INT);
+        $idPau = is_int($idPauRaw) ? $idPauRaw : 0;
+    }
     if ($idPau <= 0) {
         $aSel = self::selFromPost();
         if ($aSel !== []) {
@@ -266,13 +272,156 @@ public static function buildDossiersVerStackParametros(): array
 {
     $parametros = self::buildDossierReturnParametros();
     foreach (['mod', 'id_activ', 'depende', 'refresh'] as $key) {
-        $raw = filter_input(INPUT_POST, $key);
-        if (is_scalar($raw) && (string) $raw !== '') {
-            $parametros[$key] = (string) $raw;
+        if (array_key_exists($key, $_POST) && is_scalar($_POST[$key]) && (string) $_POST[$key] !== '') {
+            $s = (string) $_POST[$key];
+        } else {
+            $raw = filter_input(INPUT_POST, $key);
+            if (!is_scalar($raw) || (string) $raw === '') {
+                continue;
+            }
+            $s = (string) $raw;
         }
+        if ($key === 'mod' && self::isDossiersEphemeralMod($s)) {
+            continue;
+        }
+        $parametros[$key] = $s;
     }
 
     return $parametros;
+}
+
+/**
+ * enter() o refresh in-place de dossiers_ver (no crece la pila en POST refresh=1).
+ *
+ * Equivalente v2 de {@see pararRecordarForDossiersRefresh()}: con refresh=1 solo se
+ * actualiza el state del tope dossiers; nunca se llama a enter().
+ */
+public static function enterOrRefreshDossiersVer(Posicion $oPosicion): void
+{
+    $navState = self::buildDossiersVerStackParametros();
+    $identity = self::buildDossiersVerNavIdentity($navState);
+
+    $isRefresh = isset($_POST['refresh']) && is_scalar($_POST['refresh']) && (int) $_POST['refresh'] > 0;
+    if (!$isRefresh) {
+        $refreshRaw = filter_input(INPUT_POST, 'refresh', FILTER_VALIDATE_INT);
+        $isRefresh = is_int($refreshRaw) && $refreshRaw > 0;
+    }
+
+    if ($isRefresh) {
+        if (self::tryRefreshDossiersVerAt($oPosicion, $identity, $navState, 0)
+            || self::tryRefreshDossiersVerBySegment($oPosicion, $navState, 0)
+            || self::tryRefreshDossiersVerOnTop($oPosicion, $navState)
+        ) {
+            self::pruneDuplicateDossiersVerSegments($oPosicion, $navState);
+        }
+
+        return;
+    }
+
+    $oPosicion->nav()->enter(
+        self::dossiersVerDefaultUrl(),
+        '#main',
+        $identity,
+        $navState,
+    );
+}
+
+/**
+ * @param array<string, mixed> $identity
+ * @param array<string, mixed> $navState
+ */
+private static function tryRefreshDossiersVerAt(
+    Posicion $oPosicion,
+    array $identity,
+    array $navState,
+    int $n,
+): bool {
+    $nav = $oPosicion->nav();
+    $entry = $nav->peek($n);
+    if ($entry === null) {
+        return false;
+    }
+    $entryUrl = is_string($entry['url'] ?? null) ? $entry['url'] : '';
+    if (!str_contains($entryUrl, 'dossiers_ver.php')) {
+        return false;
+    }
+    $entryIdentity = is_array($entry['identity'] ?? null) ? $entry['identity'] : [];
+    if (NavStack::pageKey($entryUrl, $entryIdentity) !== NavStack::pageKey($entryUrl, $identity)) {
+        return false;
+    }
+    $nav->updateStateAt($n, $navState);
+
+    return true;
+}
+
+/**
+ * @param array<string, mixed> $navState
+ */
+private static function tryRefreshDossiersVerBySegment(
+    Posicion $oPosicion,
+    array $navState,
+    int $n,
+): bool {
+    $nav = $oPosicion->nav();
+    $entry = $nav->peek($n);
+    if ($entry === null) {
+        return false;
+    }
+    $entryUrl = is_string($entry['url'] ?? null) ? $entry['url'] : '';
+    if (!str_contains($entryUrl, 'dossiers_ver.php')) {
+        return false;
+    }
+    $segmentKey = self::dossiersSegmentKeyFromParametros($navState);
+    if ($segmentKey === '' || self::dossiersSegmentKeyFromEntry($entry) !== $segmentKey) {
+        return false;
+    }
+    $nav->updateStateAt($n, $navState);
+
+    return true;
+}
+
+/**
+ * Último recurso en refresh: si el tope ya es dossiers_ver, actualizar sin enter().
+ *
+ * @param array<string, mixed> $navState
+ */
+private static function tryRefreshDossiersVerOnTop(Posicion $oPosicion, array $navState): bool
+{
+    if (!self::stackTopIsDossiersVer()) {
+        return false;
+    }
+    $oPosicion->nav()->updateStateAt(0, $navState);
+
+    return true;
+}
+
+/**
+ * @param array<string, mixed> $navState
+ */
+public static function pruneDuplicateDossiersVerSegments(Posicion $oPosicion, array $navState): void
+{
+    $segmentKey = self::dossiersSegmentKeyFromParametros($navState);
+    if ($segmentKey === '') {
+        return;
+    }
+
+    $oPosicion->nav()->collapseDuplicateDossiersSegments(
+        static fn (array $entry): string => self::dossiersSegmentKeyFromEntry($entry),
+        $segmentKey,
+    );
+}
+
+/**
+ * @param array<string, mixed> $entry
+ */
+public static function dossiersSegmentKeyFromEntry(array $entry): string
+{
+    /** @var array<string, mixed> $identity */
+    $identity = is_array($entry['identity'] ?? null) ? $entry['identity'] : [];
+    /** @var array<string, mixed> $state */
+    $state = is_array($entry['state'] ?? null) ? $entry['state'] : [];
+
+    return self::dossiersSegmentKeyFromParametros(array_merge($identity, $state));
 }
 
 public static function stackParentIsDossiersVer(int $n = 1): bool
@@ -312,7 +461,7 @@ public static function dossiersSegmentKeyFromParametros(array $parametros): stri
         }
     }
     $mod = isset($parametros['mod']) && is_scalar($parametros['mod']) ? (string) $parametros['mod'] : '';
-    if ($mod !== '' && $mod !== 'refresh') {
+    if ($mod !== '' && !self::isDossiersEphemeralMod($mod)) {
         $parts[] = 'mod=' . $mod;
     }
 
@@ -1409,11 +1558,19 @@ public static function buildDossiersVerNavIdentity(array $state): array
         }
     }
     $mod = isset($state['mod']) && is_scalar($state['mod']) ? (string) $state['mod'] : '';
-    if ($mod !== '' && $mod !== 'refresh') {
+    if ($mod !== '' && !self::isDossiersEphemeralMod($mod)) {
         $identity['mod'] = $mod;
     }
 
     return $identity;
+}
+
+/**
+ * mod transitorio de refresh/AJAX en dossiers: no forma parte de la identity NavStack.
+ */
+private static function isDossiersEphemeralMod(string $mod): bool
+{
+    return in_array($mod, ['refresh', 'matricular', 'sel_es_asistente'], true);
 }
 
 /**
@@ -1480,6 +1637,28 @@ public static function navBackStepsFromDossiersVer(NavStack $nav): int
         return $nav->backStepsSkippingUrls(
             static fn (string $url): bool => self::isSkippableBetweenActividadSelectAndChild($url),
         );
+    }
+
+    $currentSeg = self::dossiersSegmentKeyFromParametros(self::stackTopParametros());
+    if ($currentSeg !== '') {
+        $duplicateLayers = 0;
+        for ($n = 0; $n < 15; $n++) {
+            $entry = $nav->peek($n);
+            if ($entry === null) {
+                break;
+            }
+            $url = is_string($entry['url'] ?? null) ? $entry['url'] : '';
+            if (!str_contains($url, 'dossiers_ver.php')) {
+                break;
+            }
+            if (self::dossiersSegmentKeyFromEntry($entry) !== $currentSeg) {
+                break;
+            }
+            $duplicateLayers++;
+        }
+        if ($duplicateLayers > 1) {
+            return $duplicateLayers;
+        }
     }
 
     $parent = $nav->peek(1);

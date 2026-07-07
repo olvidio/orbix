@@ -110,6 +110,45 @@ final class NavStack
     }
 
     /**
+     * Elimina capas duplicadas consecutivas de dossiers_ver con el mismo segmento (p. ej. refresh tras matricular).
+     *
+     * @param callable(array<string, mixed>): string $segmentKeyFn
+     */
+    public function collapseDuplicateDossiersSegments(callable $segmentKeyFn, string $segmentKey): void
+    {
+        if ($segmentKey === '') {
+            return;
+        }
+
+        $this->mutateSession(function () use ($segmentKeyFn, $segmentKey): void {
+            $stack = $this->loadStack();
+            $len = count($stack);
+            if ($len < 2) {
+                return;
+            }
+
+            $run = 0;
+            for ($i = $len - 1; $i >= 0; $i--) {
+                $url = is_string($stack[$i]['url'] ?? null) ? $stack[$i]['url'] : '';
+                if (!str_contains($url, 'dossiers_ver.php')) {
+                    break;
+                }
+                if ($segmentKeyFn($stack[$i]) !== $segmentKey) {
+                    break;
+                }
+                $run++;
+            }
+
+            if ($run <= 1) {
+                return;
+            }
+
+            array_splice($stack, $len - $run, $run - 1);
+            $this->saveStack($stack);
+        });
+    }
+
+    /**
      * @return array<string, mixed>|null
      */
     public function peek(int $n = 0): ?array
@@ -152,6 +191,10 @@ final class NavStack
                 return null;
             }
             if (!is_string($bloque)) {
+                $bloque = '#main';
+            }
+            // dossiers_ver siempre recarga #main; entradas antiguas con #fichaNNNN rompen fnjs_nav_atras.
+            if (str_contains($url, 'dossiers_ver.php')) {
                 $bloque = '#main';
             }
             /** @var array<string, mixed> $params */

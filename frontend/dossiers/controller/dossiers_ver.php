@@ -29,12 +29,7 @@ $oPosicion = FrontBootstrap::boot();
 
 $navState = ListNavSupport::buildDossiersVerStackParametros();
 
-$oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
-    '#main',
-    ListNavSupport::buildDossiersVerNavIdentity($navState),
-    $navState,
-);
+ListNavSupport::enterOrRefreshDossiersVer($oPosicion);
 
 ListNavSupport::syncActividadSelectParentSelection($oPosicion);
 
