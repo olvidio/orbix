@@ -10,6 +10,14 @@ jsForm.enviar = function () {
         if (this.action) {
             $(this.form).attr('action', this.action);
         }
+        if (this.form === '#seleccionados' || this.form === 'seleccionados') {
+            if (typeof fnjs_nav_state_patch_form_selection === 'function') {
+                fnjs_nav_state_patch_form_selection('#seleccionados', '#scroll_id_actividad_select', 'grid_actividad_select');
+            }
+            if (typeof fnjs_nav_state_flush === 'function') {
+                fnjs_nav_state_flush();
+            }
+        }
         fnjs_enviar_formulario(this.form);
     }
 }

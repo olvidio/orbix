@@ -36,20 +36,18 @@ public static function scrollIdFromPost(): string
 
 public static function selFromPost(): array
 {
+    if (array_key_exists('sel', $_POST)) {
+        $fromPost = self::selArrayFromRaw($_POST['sel']);
+        if ($fromPost !== []) {
+            return $fromPost;
+        }
+    }
+
     $raw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     if (is_array($raw)) {
-        $out = [];
-        foreach ($raw as $item) {
-            if ($item === false) {
-                continue;
-            }
-            $s = (string) $item;
-            if ($s !== '') {
-                $out[] = $s;
-            }
-        }
-        if ($out !== []) {
-            return $out;
+        $fromFilter = self::selArrayFromRaw($raw);
+        if ($fromFilter !== []) {
+            return $fromFilter;
         }
     }
 
@@ -59,6 +57,33 @@ public static function selFromPost(): array
     }
 
     return is_array($fromIdSel) ? $fromIdSel : [$fromIdSel];
+}
+
+/**
+ * @return list<string>
+ */
+private static function selArrayFromRaw(mixed $raw): array
+{
+    if (!is_array($raw)) {
+        if (is_scalar($raw) && (string) $raw !== '') {
+            return [(string) $raw];
+        }
+
+        return [];
+    }
+
+    $out = [];
+    foreach ($raw as $item) {
+        if ($item === false) {
+            continue;
+        }
+        $s = (string) $item;
+        if ($s !== '') {
+            $out[] = $s;
+        }
+    }
+
+    return $out;
 }
 
 public static function idSelForLista(mixed $raw): string|array
@@ -1475,26 +1500,24 @@ public static function navBackStepsFromDossiersVer(NavStack $nav): int
  */
 public static function syncActividadSelectParentSelection(Posicion $oPosicion): void
 {
-    $parent = $oPosicion->nav()->peek(1);
-    if ($parent === null) {
-        return;
-    }
-    $parentUrl = is_string($parent['url'] ?? null) ? $parent['url'] : '';
-    if (!str_contains($parentUrl, 'actividad_select.php')) {
+    $patch = self::buildSelectionStatePatchFromPost();
+    if ($patch === []) {
         return;
     }
 
-    $patch = [];
-    $idSel = self::idSelFromPost();
-    if (!self::idSelIsEmpty($idSel)) {
-        $patch['id_sel'] = $idSel;
-    }
-    $scrollId = self::scrollIdFromPost();
-    if ($scrollId !== '' && $scrollId !== '0') {
-        $patch['scroll_id'] = $scrollId;
-    }
-    if ($patch !== []) {
-        $oPosicion->nav()->updateStateAt(1, $patch);
+    $nav = $oPosicion->nav();
+    for ($n = 1; $n < 20; $n++) {
+        $entry = $nav->peek($n);
+        if ($entry === null) {
+            break;
+        }
+        $parentUrl = is_string($entry['url'] ?? null) ? $entry['url'] : '';
+        if (!str_contains($parentUrl, 'actividad_select.php')) {
+            continue;
+        }
+        $nav->updateStateAt($n, $patch);
+
+        return;
     }
 }
 

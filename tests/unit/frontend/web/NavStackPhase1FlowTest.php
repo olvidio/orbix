@@ -135,4 +135,34 @@ class NavStackPhase1FlowTest extends TestCase
         $this->assertSame('/frontend/actividades/controller/actividad_select.php', $nav->backTarget(2)['url'] ?? null);
         $this->assertSame('/frontend/actividades/controller/actividad_que.php', $nav->backTarget(3)['url'] ?? null);
     }
+
+    public function testListaClUpdatesActividadSelectParentWhenSelDiffersFromStaleIdSel(): void
+    {
+        $_POST = [
+            'sel' => ['200#Act B'],
+            'id_sel' => '100#Act A',
+            'scroll_id_actividad_select' => '5',
+        ];
+
+        $nav = $this->nav($_POST);
+        $this->enterQue($nav, ['modo' => 'buscar']);
+        $this->enterSelect($nav, ['modo' => 'buscar', 'id_sel' => '100#Act A']);
+        $this->enterListaClasesCa($nav, 200, ['id_activ' => 200, 'id_sel' => '100#Act A']);
+
+        $oPosicion = new \frontend\shared\web\Posicion(
+            '/frontend/actividadestudios/controller/lista_clases_ca.php',
+            $_POST,
+        );
+        ListNavSupport::syncActividadSelectParentSelection($oPosicion);
+
+        $parent = $nav->peek(1);
+        $this->assertNotNull($parent);
+        $this->assertSame('200#Act B', $parent['state']['id_sel'] ?? null);
+
+        $back = $nav->backTarget(1);
+        $this->assertNotNull($back);
+        $this->assertStringContainsString('200', $back['parametros'] ?? '');
+
+        unset($_POST);
+    }
 }

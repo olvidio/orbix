@@ -133,6 +133,16 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
                 sel = fnjs_collect_sel_from_checked_inputs(tableEl);
             }
 
+            if (sel.length === 0) {
+                var $gridForm = $('#grid_' + tabla).closest('form');
+                if ($gridForm.length) {
+                    var hidSel = $gridForm.find('input[name="id_sel"]').val() || '';
+                    if (hidSel) {
+                        sel = [hidSel];
+                    }
+                }
+            }
+
             if (sel.length === 0 && existing && existing.sel && existing.sel.length > 0) {
                 sel = existing.sel;
             }
@@ -610,24 +620,46 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
     }
 
     var fnjs_nav_state_timer = null;
+    var fnjs_nav_state_pending = null;
+
+    function fnjs_nav_state_send(patch) {
+        if (!patch || typeof patch !== 'object') {
+            return;
+        }
+        var parametros = '<?= $navStateSignedParams ?>&nav_patch='
+            + encodeURIComponent(JSON.stringify(patch))
+            + '&PHPSESSID=<?= session_id() ?>';
+        $.ajax({
+            url: '<?= $navStateUrl ?>',
+            type: 'post',
+            data: parametros,
+            dataType: 'json',
+            async: false,
+            error: fnjs_procesarError
+        });
+    }
 
     function fnjs_nav_state_patch(patch) {
         if (!patch || typeof patch !== 'object') {
             return;
         }
+        fnjs_nav_state_pending = patch;
         clearTimeout(fnjs_nav_state_timer);
         fnjs_nav_state_timer = setTimeout(function () {
-            var parametros = '<?= $navStateSignedParams ?>&nav_patch='
-                + encodeURIComponent(JSON.stringify(patch))
-                + '&PHPSESSID=<?= session_id() ?>';
-            $.ajax({
-                url: '<?= $navStateUrl ?>',
-                type: 'post',
-                data: parametros,
-                dataType: 'json',
-                error: fnjs_procesarError
-            });
+            fnjs_nav_state_send(fnjs_nav_state_pending);
+            fnjs_nav_state_pending = null;
         }, 500);
+    }
+
+    function fnjs_nav_state_flush() {
+        clearTimeout(fnjs_nav_state_timer);
+        fnjs_nav_state_timer = null;
+        if (!fnjs_nav_state_pending) {
+            return;
+        }
+        var patch = fnjs_nav_state_pending;
+        fnjs_nav_state_pending = null;
+        fnjs_nav_state_send(patch);
     }
 
     function fnjs_nav_state_patch_form_selection(formSelector, scrollInputSelector, gridGlobalName) {
@@ -641,7 +673,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         if (typeof fnjs_sync_grid_sel_checkboxes === 'function') {
             fnjs_sync_grid_sel_checkboxes(formSelector);
         }
-        var idSel = $form.find('input.sel:checked').first().val() || $form.find('input[name="id_sel"]').val() || '';
+        var idSel = $form.find('input.sel:checked').first().val() || '';
         var scrollId = scrollInputSelector ? ($(scrollInputSelector).val() || '0') : '0';
         if (!idSel && gridGlobalName) {
             var grid = window[gridGlobalName];
@@ -659,6 +691,9 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
                     }
                 }
             }
+        }
+        if (!idSel) {
+            idSel = $form.find('input[name="id_sel"]').val() || '';
         }
         if (idSel !== '') {
             $form.find('input[name="id_sel"]').val(idSel);

@@ -93,6 +93,18 @@ final class ActividadestudiosPostInput
 
     private static function selToken(): ?string
     {
+        if (array_key_exists('sel', $_POST)) {
+            $raw = $_POST['sel'];
+            if (is_array($raw)) {
+                $sel0 = $raw[0] ?? null;
+                if (is_string($sel0) && $sel0 !== '') {
+                    return $sel0;
+                }
+            } elseif (is_scalar($raw) && (string) $raw !== '') {
+                return (string) $raw;
+            }
+        }
+
         $aSelRaw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!is_array($aSelRaw) || $aSelRaw === []) {
             return null;
