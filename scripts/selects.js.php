@@ -121,6 +121,10 @@ function fnjs_sync_grid_sel_checkboxes(formulario) {
 	});
 
 	var idList = Object.keys(idsToSync);
+
+	// Huérfanos de una sync anterior: si la celda del grid ya está renderizada, sobran y fnjs_solo_uno cuenta doble.
+	$form.find('input.sel[data-sync-orphan]').remove();
+
 	if (idList.length === 0) {
 		return;
 	}
@@ -137,8 +141,9 @@ function fnjs_sync_grid_sel_checkboxes(formulario) {
 				type: 'checkbox',
 				'class': 'sel',
 				name: 'sel[]',
-				value: id
-			}).prop('checked', true).appendTo($form);
+				value: id,
+				'data-sync-orphan': '1'
+			}).prop('checked', true).css('display', 'none').appendTo($form);
 		}
 	});
 }
