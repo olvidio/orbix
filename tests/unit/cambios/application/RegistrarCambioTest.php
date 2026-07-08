@@ -302,6 +302,52 @@ final class RegistrarCambioTest extends TestCase
         $this->assertSame('445566', $this->guardadosDl[0]->getValor_new());
     }
 
+    public function test_insert_actividad_cargo_sacd_registra_id_nom_en_repositorio_dl(): void
+    {
+        $useCase = $this->createUseCase(['cambiosInstalados' => true]);
+
+        $useCase->execute(
+            'ActividadCargoSacd',
+            'INSERT',
+            300123817,
+            [
+                'id_nom' => 778899,
+                'id_tipo_activ' => 112401,
+                'status' => 2,
+                'dl_org' => 'dlb',
+            ],
+            [],
+        );
+
+        $this->assertCount(1, $this->guardadosDl);
+        $this->assertSame('ActividadCargoSacd', $this->guardadosDl[0]->getObjeto());
+        $this->assertSame('id_nom', $this->guardadosDl[0]->getPropiedad());
+        $this->assertSame('778899', $this->guardadosDl[0]->getValor_new());
+    }
+
+    public function test_insert_actividad_cargo_no_sacd_registra_id_nom_en_repositorio_dl(): void
+    {
+        $useCase = $this->createUseCase(['cambiosInstalados' => true]);
+
+        $useCase->execute(
+            'ActividadCargoNoSacd',
+            'INSERT',
+            300123817,
+            [
+                'id_nom' => 889900,
+                'id_tipo_activ' => 112401,
+                'status' => 2,
+                'dl_org' => 'dlb',
+            ],
+            [],
+        );
+
+        $this->assertCount(1, $this->guardadosDl);
+        $this->assertSame('ActividadCargoNoSacd', $this->guardadosDl[0]->getObjeto());
+        $this->assertSame('id_nom', $this->guardadosDl[0]->getPropiedad());
+        $this->assertSame('889900', $this->guardadosDl[0]->getValor_new());
+    }
+
     public function test_insert_centro_encargado_registra_id_ubi_en_repositorio_public(): void
     {
         $useCase = $this->createUseCase(['cambiosInstalados' => false]);
