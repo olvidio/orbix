@@ -245,6 +245,24 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                     if (key($aAprobadas) === null) { // ha llegado al final
                                         $row = $rowEmpty;
                                     }
+                                    // Cara B: descartar notas de la cara A una sola vez, por id_nivel_asig
+                                    // (el slot del plan), no por id_nivel de la fila en e_notas.
+                                    if ($Qcara === 'B') {
+                                        while (key($aAprobadas) !== null) {
+                                            $rowCurrent = current($aAprobadas);
+                                            $rowCheck = is_array($rowCurrent)
+                                                ? TesseraImprimirPayload::aprobadaRow($rowCurrent)
+                                                : $rowEmpty;
+                                            if ($rowCheck['id_nivel_asig'] >= 2108) {
+                                                $row = $rowCheck;
+                                                break;
+                                            }
+                                            if (next($aAprobadas) === false) {
+                                                $row = $rowEmpty;
+                                                break;
+                                            }
+                                        }
+                                    }
 
                                     while ($a < count($cAsignaturas)) {
                                     $oAsignatura = $cAsignaturas[$a++];
@@ -259,24 +277,6 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                         continue;
                                     }
                                     if ($Qcara === "B" && $oAsignatura['id_nivel'] < 2108) {
-                                        if (key($aAprobadas) === null) { // ha llegado al final
-                                            $row = $rowEmpty;
-                                        }
-                                        while (($row["id_nivel"] < 2107) && ($j < $num_asig)) {
-                                            if (key($aAprobadas) === null) { // ha llegado al final
-                                                $row = $rowEmpty;
-                                            } else {
-                                                $rowCurrent = current($aAprobadas);
-                                                $row = is_array($rowCurrent)
-                                                    ? TesseraImprimirPayload::aprobadaRow($rowCurrent)
-                                                    : $rowEmpty;
-                                            }
-                                            if (next($aAprobadas) === FALSE) {
-                                                $row = $rowEmpty;
-                                                break;
-                                            }
-                                            $j++;
-                                        }
                                         continue;
                                     }
                                     while (($row['id_nivel_asig'] < $oAsignatura['id_nivel']) && ($j < $num_asig)) {
