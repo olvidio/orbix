@@ -264,4 +264,31 @@ class NavStackTest extends TestCase
         $this->assertSame('#main', NavStack::normalizeBloque('main'));
         $this->assertSame('#ficha3101', NavStack::normalizeBloque('#ficha3101'));
     }
+
+    public function testBackTargetReadsSessionWithoutRestartAfterWriteClose(): void
+    {
+        session_start();
+        $_SESSION = [];
+
+        $nav = $this->nav();
+        $nav->enter('/frontend/actividadestudios/controller/dossiers_ver.php', '#main', ['id' => 1], []);
+        $nav->enter('/frontend/actividadestudios/controller/acta_notas.php', '#main', [
+            'id_activ' => 42,
+            'id_asignatura' => 1101,
+        ], ['id_activ' => 42, 'id_asignatura' => 1101]);
+
+        session_write_close();
+
+        ob_start();
+        echo 'partial output';
+
+        try {
+            $target = $nav->backTarget(1);
+            $this->assertNotNull($target);
+            $this->assertSame('/frontend/actividadestudios/controller/dossiers_ver.php', $target['url'] ?? null);
+            $this->assertSame(PHP_SESSION_NONE, session_status());
+        } finally {
+            ob_end_clean();
+        }
+    }
 }

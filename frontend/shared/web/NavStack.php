@@ -398,14 +398,21 @@ final class NavStack
     private function readSession(callable $callback): mixed
     {
         $wasActive = session_status() === PHP_SESSION_ACTIVE;
+        $openedHere = false;
         if (!$wasActive) {
-            session_start();
+            // Tras session_write_close() en el mismo request (FrontBootstrap), $_SESSION
+            // sigue en memoria: no hace falta session_start() para lecturas (p. ej. nav
+            // atrás en una vista ya renderizada parcialmente).
+            if (session_id() === '') {
+                session_start();
+                $openedHere = true;
+            }
         }
 
         try {
             return $callback();
         } finally {
-            if (!$wasActive) {
+            if ($openedHere) {
                 session_write_close();
             }
         }
