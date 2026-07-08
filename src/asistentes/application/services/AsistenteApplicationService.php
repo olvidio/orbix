@@ -3,12 +3,15 @@
 namespace src\asistentes\application\services;
 
 use Psr\Container\ContainerInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
+use src\personas\application\services\PersonaFinderService;
+use src\personas\domain\contracts\PersonaAllRepositoryInterface;
 use src\shared\domain\contracts\UnitOfWorkInterface;
 
 /**
@@ -26,6 +29,9 @@ class AsistenteApplicationService
         private AsistenteRepositoryInterface $repository,
         private UnitOfWorkInterface $unitOfWork,
         private ContainerInterface $container,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private PersonaAllRepositoryInterface $personaAllRepository,
+        private PersonaFinderService $personaFinderService,
     ) {
     }
 
@@ -75,10 +81,50 @@ class AsistenteApplicationService
 
             if ($success) {
                 $uow->registerEntity($asistente);
+                $this->marcarEsPublicoSiAsistenciaCrossDl($asistente);
             }
 
             return $success;
         });
+    }
+
+    /**
+     * Cuando un numerario asiste a una actividad de otra dl, hay que marcarlo en
+     * `global.personas` para que aparezca en `v_personas_pub`.
+     */
+    private function marcarEsPublicoSiAsistenciaCrossDl(Asistente $asistente): void
+    {
+        $idNom = $asistente->getId_nom();
+        if ($idNom <= 0) {
+            return;
+        }
+
+        $oActividad = $this->actividadAllRepository->findById($asistente->getId_activ());
+        if ($oActividad === null) {
+            return;
+        }
+
+        $dlOrg = preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');
+        if ($dlOrg === '') {
+            return;
+        }
+
+        $oPersona = $this->personaFinderService->findPersonaEnGlobal($idNom);
+        if ($oPersona === null) {
+            return;
+        }
+
+        $dlPersona = preg_replace('/f$/', '', $oPersona->getDl() ?? '');
+        if ($dlPersona === '' || $dlPersona === $dlOrg) {
+            return;
+        }
+
+        $idSchema = $oPersona->getId_schema();
+        if ($idSchema < 1) {
+            return;
+        }
+
+        $this->personaAllRepository->marcarEsPublico($idNom, $idSchema);
     }
 
     /**

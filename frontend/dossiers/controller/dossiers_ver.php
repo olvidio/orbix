@@ -54,6 +54,7 @@ ListNavSupport::applyRestoredSelectionToApiPayload($apiPayload, null, null);
 $data = PostRequest::getDataFromUrl('/src/dossiers/dossiers_ver_pantalla_data', $apiPayload, false);
 $errorMsg = PayloadCoercion::string($data['error'] ?? '');
 if ($errorMsg !== '') {
+    echo $oPosicion->mostrarNavAtrasFromDossiers();
     echo PostRequest::stripInternalCallProvenance($errorMsg);
     return;
 }

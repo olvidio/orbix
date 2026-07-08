@@ -17,6 +17,7 @@ use src\personas\domain\InfoTraslado;
 use src\personas\domain\InfoUltimaAsistencia;
 use src\personas\domain\services\TelecoPersonaService;
 use src\personas\domain\Trasladar;
+use src\personas\domain\contracts\PersonaAllRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
@@ -33,6 +34,7 @@ use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaRepositoryInterface;
 use src\personas\domain\contracts\TrasladoRepositoryInterface;
 use src\personas\domain\contracts\UltimaAsistenciaRepositoryInterface;
+use src\personas\infrastructure\persistence\postgresql\PgPersonaAllRepository;
 use src\personas\infrastructure\persistence\postgresql\PgPersonaExRepository;
 use src\personas\infrastructure\persistence\postgresql\PersonaDlRepositoryFactory;
 use src\personas\infrastructure\persistence\postgresql\PgPersonaNaxRepository;
@@ -55,6 +57,7 @@ use function DI\get;
 return [
     // Mapeo simple: Interfaz => Clase
     SituacionRepositoryInterface::class => autowire(PgSituacionRepository::class),
+    PersonaAllRepositoryInterface::class => autowire(PgPersonaAllRepository::class),
     PersonaDlRepositoryInterface::class => autowire(PgPersonaDlRepository::class),
     PersonaDlRepositoryFactoryInterface::class => autowire(PersonaDlRepositoryFactory::class),
     PersonaAgdRepositoryInterface::class => autowire(PgPersonaAgdRepository::class),

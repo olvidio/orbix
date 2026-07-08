@@ -15,7 +15,9 @@ use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use src\personas\domain\entity\PersonaN;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaEx;
+use src\personas\domain\entity\PersonaPub;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 
 /**
@@ -63,6 +65,8 @@ class Select_matriculas_de_una_persona
 
     /** @var list<Asistente> */
     private array $cAsistencias = [];
+
+    private bool $planBloqueadoOtraDl = false;
 
     /** @var mixed */
     private $status;
@@ -259,12 +263,13 @@ class Select_matriculas_de_una_persona
         $inicurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst("inicio", $any)->format('Y-m-d');
         $fincurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst("fin", $any)->format('Y-m-d');
 
-        if ($this->id_pau < 0) {
-            $oPersona = $this->personaExRepository->findById($this->id_pau);
-        } else {
-            $oPersona = $this->personaDlRepository->findById($this->id_pau);
-        }
+        $oPersona = $this->resolvePersonaParaPlan();
         if ($oPersona === null) {
+            if ($this->planBloqueadoOtraDl) {
+                $this->cAsistencias = [];
+
+                return [];
+            }
             throw new \Exception(sprintf(_("No se ha encontrado alumno con id_nom: %s"), $this->id_pau));
         }
         $stgr = $oPersona->getNivel_stgr();
@@ -363,10 +368,40 @@ class Select_matriculas_de_una_persona
             'aviso_lines' => $this->avisoLines,
             'aviso_todos_form' => $this->avisoTodosForm,
             'cas' => $cas,
-            'empty_cas_message' => $this->cAsistencias === []
+            'empty_cas_message' => $this->cAsistencias === [] && !$this->planBloqueadoOtraDl
                 ? _("no tiene ninguna actividad asignada. O no es de mi dl")
                 : '',
         ];
+    }
+
+    /**
+     * Persona de mi dl/ex, o null si no existe o el plan no puede gestionarse aquí (otra dl).
+     */
+    private function resolvePersonaParaPlan(): PersonaDl|PersonaEx|PersonaPub|null
+    {
+        if ($this->id_pau < 0) {
+            return $this->personaExRepository->findById($this->id_pau);
+        }
+
+        $oPersona = $this->personaDlRepository->findById($this->id_pau);
+        if ($oPersona !== null) {
+            return $oPersona;
+        }
+
+        $oPersonaGlobal = Persona::findPersonaEnGlobal($this->id_pau);
+        if ($oPersonaGlobal === null) {
+            return null;
+        }
+
+        $dlAlumno = $oPersonaGlobal->getDl();
+        if ($dlAlumno !== null && $dlAlumno !== ConfigGlobal::mi_delef()) {
+            $this->planBloqueadoOtraDl = true;
+            $this->avisoLines[] = _("No puede modificar el plan de estudios de un alumno de otra dl") . "<br>";
+
+            return null;
+        }
+
+        return $oPersonaGlobal;
     }
 
     public function setTodos(mixed $todos): void

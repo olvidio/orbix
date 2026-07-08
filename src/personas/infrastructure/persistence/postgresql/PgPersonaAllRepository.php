@@ -50,8 +50,7 @@ class PgPersonaAllRepository extends ClaseRepository implements PersonaAllReposi
             // Si hay más de uno, me quedo con el que tiene la fecha de cambio situación más reciente.
             // Lo marco como publicado
             if ($id_schema_persona !== null) {
-                $sql = "UPDATE $nom_tabla SET es_publico = 't' WHERE id_nom=$id_nom AND situacion = 'A' AND id_schema = $id_schema_persona";
-                $this->ejecutar($sql);
+                $this->marcarEsPublico($id_nom, $id_schema_persona);
             }
         }
 
@@ -62,6 +61,25 @@ class PgPersonaAllRepository extends ClaseRepository implements PersonaAllReposi
             return $this->personaDlRepository->findById($id_nom);
         }
         return null;
+    }
+
+    public function marcarEsPublico(int $id_nom, int $id_schema): bool
+    {
+        if ($id_nom <= 0 || $id_schema < 1) {
+            return false;
+        }
+
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "UPDATE $nom_tabla SET es_publico = TRUE
+                WHERE id_nom = :id_nom AND situacion = 'A' AND id_schema = :id_schema
+                AND es_publico IS DISTINCT FROM TRUE";
+        $stmt = $oDbl->prepare($sql);
+        if ($stmt === false) {
+            return false;
+        }
+
+        return $stmt->execute(['id_nom' => $id_nom, 'id_schema' => $id_schema]);
     }
 
     /** @return \PDOStatement|false */

@@ -15,4 +15,9 @@ namespace src\personas\domain\contracts;
 interface PersonaAllRepositoryInterface
 {
     public function getPersonaByIdNom(int $id_nom): ?\src\personas\domain\entity\PersonaDl;
+
+    /**
+     * Marca la fila activa de `global.personas` como visible en otras dl (`v_personas_pub`).
+     */
+    public function marcarEsPublico(int $id_nom, int $id_schema): bool;
 }
