@@ -42,15 +42,6 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ActaTribunalDl
-     *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<\src\notas\domain\entity\PersonaNota|\src\notas\domain\entity\PersonaNotaOtraRegionStgr> Una colección de objetos PersonaNota
-     */
-    /** @param array<string, mixed> $aWhere */
-
-    /**
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<\src\notas\domain\entity\PersonaNota|\src\notas\domain\entity\PersonaNotaOtraRegionStgr>
@@ -88,6 +79,7 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
         if ($sCondicion !== '') {
             $sCondicion = " WHERE " . $sCondicion;
         }
+        $sCondicion = $this->anexarFiltroExcluirOtraRegionStgr($nom_tabla, $sCondicion);
         $sOrdre = '';
         $sLimit = '';
         $ordreVal = $aWhere['_ordre'] ?? null;
@@ -144,6 +136,43 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
             $oPersonaNota = new PersonaNota($a_pkey);
         }
         return $oPersonaNota;
+    }
+
+    /**
+     * En la tabla padre `e_notas`, PostgreSQL devuelve por herencia también
+     * `e_notas_otra_region_stgr`. Esas filas se consultan con su repositorio
+     * dedicado; aquí solo interesan las hijas `e_notas_dl`.
+     */
+    protected function filtroExcluirOtraRegionStgr(string $nomTabla): string
+    {
+        if ($nomTabla !== 'e_notas') {
+            return '';
+        }
+
+        return "(tableoid::regclass::text NOT LIKE '%e_notas_otra_region_stgr')";
+    }
+
+    /**
+     * @param string $whereClause vacío o ` WHERE ...`
+     */
+    protected function anexarFiltroExcluirOtraRegionStgr(string $nomTabla, string $whereClause): string
+    {
+        $filtro = $this->filtroExcluirOtraRegionStgr($nomTabla);
+        if ($filtro === '') {
+            return $whereClause;
+        }
+        if ($whereClause !== '') {
+            return $whereClause . ' AND ' . $filtro;
+        }
+
+        return ' WHERE ' . $filtro;
+    }
+
+    protected function sufijoAndExcluirOtraRegionStgr(string $nomTabla): string
+    {
+        $filtro = $this->filtroExcluirOtraRegionStgr($nomTabla);
+
+        return $filtro === '' ? '' : ' AND ' . $filtro;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -212,7 +241,8 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta";
+        $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta"
+            . $this->sufijoAndExcluirOtraRegionStgr($nom_tabla);
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
@@ -233,7 +263,8 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE  id_nom = $id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta";
+        $sql = "SELECT * FROM $nom_tabla WHERE  id_nom = $id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta"
+            . $this->sufijoAndExcluirOtraRegionStgr($nom_tabla);
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
