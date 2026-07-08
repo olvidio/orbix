@@ -22,7 +22,7 @@ use src\ubis\domain\entity\Ubi;
 final class CambioAvisoTxtBuilder
 {
     public function __construct(
-        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ActividadParaAvisoLookup $actividadParaAvisoLookup,
         private CambioRepositoryInterface $cambioRepository,
         private PersonaSacdRepositoryInterface $personaSacdRepository,
         private TipoTarifaRepositoryInterface $tipoTarifaRepository,
@@ -41,7 +41,7 @@ final class CambioAvisoTxtBuilder
         $sValor_old = (string) ($cambio->getValor_old() ?? '');
         $sValor_new = (string) ($cambio->getValor_new() ?? '');
 
-        $oActividad = $this->actividadAllRepository->findById($iId);
+        $oActividad = $this->actividadParaAvisoLookup->find($iId);
         if ($oActividad === null) {
             return false;
         }

@@ -30,11 +30,12 @@ $url_backend = '/src/cambios/usuario_form_avisos_data';
 $a_campos_backend = ['id_usuario' => $Qid_usuario, 'quien' => $Qquien];
 $view = CambiosPayload::usuarioFormAvisosFromPayload(CambiosPayload::postData(PostRequest::getDataFromUrl($url_backend, $a_campos_backend)));
 
+$label_fase_ref = $view['fases_usa_procesos'] ? _("fase ref.") : _("estado ref.");
 $a_cabeceras_avisos = [
     _("objeto"),
     _("dl propia"),
     _("tipo de actividad"),
-    _("fase ref."),
+    $label_fase_ref,
     _("off"),
     _("on"),
     _("outdate"),

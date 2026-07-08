@@ -7,7 +7,6 @@ use src\cambios\application\legacy\Avisos;
 use src\permisos\domain\PermisosActividades;
 use src\procesos\domain\PermAccion;
 use src\shared\infrastructure\DependencyResolver;
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ImportadaRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
@@ -40,7 +39,7 @@ class AvisosGenerarTabla
     public function __construct(
         private Avisos $avisos,
         private CambioRepositoryInterface $cambioRepository,
-        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ActividadParaAvisoLookup $actividadParaAvisoLookup,
         private ImportadaRepositoryInterface $importadaRepository,
         private TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
         private PersonaSacdRepositoryInterface $personaSacdRepository,
@@ -83,7 +82,7 @@ class AvisosGenerarTabla
         /** @var array<string, true> cambios omitidos (sin anotar) por actividad inexistente u otro error recuperable */
         $cambiosOmitidos = [];
 
-        $ActividadAllRepository = $this->actividadAllRepository;
+        $ActividadParaAvisoLookup = $this->actividadParaAvisoLookup;
         $ImportadaRepository = $this->importadaRepository;
         $TipoDeActividadRepository = $this->tipoDeActividadRepository;
         $PersonaSacdRepository = $this->personaSacdRepository;
@@ -109,7 +108,7 @@ class AvisosGenerarTabla
                 $id_activ = $oCambio->getId_activ();
                 $oF_cmb = $oCambio->getTimestamp_cambio();
 
-                if ($id_activ > 0 && $ActividadAllRepository->findById($id_activ) === null) {
+                if ($id_activ > 0 && $ActividadParaAvisoLookup->find($id_activ) === null) {
                     $this->registrarCambioNoProcesado(
                         $oCambio,
                         sprintf('actividad %d no encontrada', $id_activ),
@@ -159,8 +158,7 @@ class AvisosGenerarTabla
                 $dl_propia = (ConfigGlobal::mi_dele() === $dl_org_no_f);
                 // Si es de otra dl, compruebo que sea una actividad importada, sino no tiene sentido avisar.
                 if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)) {
-                    $cImportadas = $ImportadaRepository->findById($id_activ);
-                    if (empty($cImportadas)) {
+                    if ($ImportadaRepository->findById($id_activ) === null) {
                         $oAvisos->anotado();
                         continue;
                     }
@@ -201,7 +199,7 @@ class AvisosGenerarTabla
                     $fase_correcta = 0;
                     /////////////////// COMPARAR DATE //////////////////////////////////////////
                     if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_outdate)) {
-                        $oActividad = $ActividadAllRepository->findById($id_activ);
+                        $oActividad = $ActividadParaAvisoLookup->find($id_activ);
                         if ($oActividad === null || $oF_cmb === null) {
                             continue;
                         }
@@ -211,85 +209,114 @@ class AvisosGenerarTabla
                         }
                     }
 
-                    /////////////////// COMPARAR STATUS //////////////////////////////////////////
-                    // Si el id_fase es NULL, hay que mirar el id_status
-                    // Si el id_status es 1,2,3 corresponde al status de la actividad,
-                    //   porque no tiene instalado el módulo de procesos.
-                    if (empty($aFases_cmb)) {
-                        if (ConfigGlobal::is_app_installed('procesos')) {
-                            $status_de_fase = 0;
-                            $cTiposActividad = $TipoDeActividadRepository->getTiposDeActividades(['id_tipo_activ' => $id_tipo_activ]);
-                            if (!empty($cTiposActividad)) {
-                                $id_tipo_proceso = $cTiposActividad[0]->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
-                                $cTareasProceso = $TareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase_ref]);
-                                if (!empty($cTareasProceso)) {
-                                    $status_de_fase = $cTareasProceso[0]->getStatus();
-                                }
+                    /////////////////// COMPARAR STATUS / FASES //////////////////////////////////////////
+                    // Otra dl: matching por estado (id_fase_ref → status si hay procesos), sin permiso ocupado.
+                    if (!ConfigGlobal::is_app_installed('procesos')
+                        || !\src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)
+                    ) {
+                        $statusActual = $this->statusActividadParaMatching(
+                            $id_activ,
+                            $id_status_cmb,
+                        );
+                        if ($statusActual === null) {
+                            continue;
+                        }
+                        if ($aFases_cmb !== [] && \src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)) {
+                            $oPermActiv = $this->permisoActualActividad(
+                                $id_usuario,
+                                $id_activ,
+                                (string) $id_tipo_activ,
+                                (string) ($dl_org ?? ''),
+                                $aFases_cmb,
+                                $afecta,
+                                $oCambio,
+                                $err_fila,
+                                $cambiosOmitidos,
+                            );
+                            if ($oPermActiv === null) {
+                                continue 2;
                             }
-                            if ($id_status_cmb === $status_de_fase && \src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_on)) {
-                                $fase_correcta = 1;
-                            }
-                        } else {
-                            if ($id_status_cmb === $id_fase_ref && \src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_on)) {
-                                $fase_correcta = 1;
+                            if (!$oPermActiv->have_perm_activ('ocupado')) {
+                                continue;
                             }
                         }
+                        $statusReferencia = $id_fase_ref;
+                        if (ConfigGlobal::is_app_installed('procesos')) {
+                            $statusReferencia = $this->statusDeFaseReferencia(
+                                $id_fase_ref,
+                                $id_tipo_activ,
+                                $TipoDeActividadRepository,
+                                $TareaProcesoRepository,
+                            );
+                        }
+                        $fase_correcta = self::evaluarFaseCorrectaSinProcesos(
+                            $statusActual,
+                            $statusReferencia,
+                            $aviso_on,
+                            $aviso_off,
+                        );
+                    } elseif (empty($aFases_cmb)) {
+                        // Si el id_fase es NULL, hay que mirar el id_status (solo con procesos).
+                        $status_de_fase = 0;
+                        $cTiposActividad = $TipoDeActividadRepository->getTiposDeActividades(['id_tipo_activ' => $id_tipo_activ]);
+                        if (!empty($cTiposActividad)) {
+                            $id_tipo_proceso = $cTiposActividad[0]->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
+                            $cTareasProceso = $TareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase_ref]);
+                            if (!empty($cTareasProceso)) {
+                                $status_de_fase = $cTareasProceso[0]->getStatus();
+                            }
+                        }
+                        if ($id_status_cmb === $status_de_fase && \src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_on)) {
+                            $fase_correcta = 1;
+                        }
                     } else {
-                        /////////////////// COMPARAR FASES //////////////////////////////////////////
+                        /////////////////// COMPARAR FASES (con procesos) //////////////////////////////////////////
                         // fase on
                         if (in_array($id_fase_ref, $aFases_cmb)) {
                             if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_on)) {
-                                $oPermActiv = $this->permisoActualActividad(
-                                    $id_usuario,
-                                    $id_activ,
-                                    (string) $id_tipo_activ,
-                                    (string) ($dl_org ?? ''),
-                                    $aFases_cmb,
-                                    $afecta,
-                                    $oCambio,
-                                    $err_fila,
-                                    $cambiosOmitidos,
-                                );
-                                if ($oPermActiv === null) {
-                                    continue 2;
-                                }
-                                if (!$oPermActiv->have_perm_activ('ocupado')) {
-                                    continue;
-                                }
-
-                                if (ConfigGlobal::is_app_installed('procesos')) {
-                                    $fase_correcta = 1;
-                                } else {
-                                    $oActividad = $ActividadAllRepository->findById($id_activ);
-                                    if ($oActividad !== null) {
-                                        $status = $oActividad->getStatus();
-                                        foreach ($aFases_cmb as $id_fase) {
-                                            if ($status === $id_fase) {
-                                                $fase_correcta = 1;
-                                            }
-                                        }
+                                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)) {
+                                    $oPermActiv = $this->permisoActualActividad(
+                                        $id_usuario,
+                                        $id_activ,
+                                        (string) $id_tipo_activ,
+                                        (string) ($dl_org ?? ''),
+                                        $aFases_cmb,
+                                        $afecta,
+                                        $oCambio,
+                                        $err_fila,
+                                        $cambiosOmitidos,
+                                    );
+                                    if ($oPermActiv === null) {
+                                        continue 2;
+                                    }
+                                    if (!$oPermActiv->have_perm_activ('ocupado')) {
+                                        continue;
                                     }
                                 }
+
+                                $fase_correcta = 1;
                             }
                         } else {
                             // fase off
                             if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_off)) {
-                                $oPermActiv = $this->permisoActualActividad(
-                                    $id_usuario,
-                                    $id_activ,
-                                    (string) $id_tipo_activ,
-                                    (string) ($dl_org ?? ''),
-                                    $aFases_cmb,
-                                    $afecta,
-                                    $oCambio,
-                                    $err_fila,
-                                    $cambiosOmitidos,
-                                );
-                                if ($oPermActiv === null) {
-                                    continue 2;
-                                }
-                                if (!$oPermActiv->have_perm_activ('ocupado')) {
-                                    continue;
+                                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)) {
+                                    $oPermActiv = $this->permisoActualActividad(
+                                        $id_usuario,
+                                        $id_activ,
+                                        (string) $id_tipo_activ,
+                                        (string) ($dl_org ?? ''),
+                                        $aFases_cmb,
+                                        $afecta,
+                                        $oCambio,
+                                        $err_fila,
+                                        $cambiosOmitidos,
+                                    );
+                                    if ($oPermActiv === null) {
+                                        continue 2;
+                                    }
+                                    if (!$oPermActiv->have_perm_activ('ocupado')) {
+                                        continue;
+                                    }
                                 }
 
                                 $fase_correcta = 1;
@@ -343,7 +370,7 @@ class AvisosGenerarTabla
             $cNuevosCambios = $CambioRepository->getCambiosNuevos();
             $num_cambios = count($cNuevosCambios);
             if ($num_cambios === $num_cambios_inicial) {
-                if ($this->todosCambiosPendientesSonOmitidos($cNuevosCambios, $cambiosOmitidos, $ActividadAllRepository)) {
+                if ($this->todosCambiosPendientesSonOmitidos($cNuevosCambios, $cambiosOmitidos)) {
                     $this->logAvisosGenerarTabla(sprintf(
                         'finalizado: %d cambio(s) no procesado(s) (permanecen pendientes en cola)',
                         count($cambiosOmitidos),
@@ -365,6 +392,77 @@ class AvisosGenerarTabla
             'err_fila' => $err_fila,
             'bucle_infinito' => $bucle_infinito,
         ];
+    }
+
+    /**
+     * Con procesos instalados, id_fase_ref de la preferencia es id_fase del tipo de proceso;
+     * para comparar con el status de la actividad hay que traducirlo.
+     */
+    private function statusDeFaseReferencia(
+        int $id_fase_ref,
+        int $id_tipo_activ,
+        TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        TareaProcesoRepositoryInterface $tareaProcesoRepository,
+    ): int {
+        if ($id_fase_ref <= 0) {
+            return 0;
+        }
+
+        $cTiposActividad = $tipoDeActividadRepository->getTiposDeActividades(['id_tipo_activ' => $id_tipo_activ]);
+        if ($cTiposActividad === []) {
+            return $id_fase_ref;
+        }
+
+        $id_tipo_proceso = $cTiposActividad[0]->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
+        $cTareasProceso = $tareaProcesoRepository->getTareasProceso([
+            'id_tipo_proceso' => $id_tipo_proceso,
+            'id_fase' => $id_fase_ref,
+        ]);
+        if ($cTareasProceso === []) {
+            return $id_fase_ref;
+        }
+
+        return $cTareasProceso[0]->getStatus();
+    }
+
+    /**
+     * Estado de la actividad para matching sin procesos: actual en BD o anotado en el cambio.
+     */
+    private function statusActividadParaMatching(
+        int $id_activ,
+        int $id_status_cmb,
+    ): ?int {
+        if ($id_activ > 0) {
+            $oActividad = $this->actividadParaAvisoLookup->find($id_activ);
+            if ($oActividad !== null) {
+                return $oActividad->getStatus();
+            }
+        }
+
+        if ($id_status_cmb > 0) {
+            return $id_status_cmb;
+        }
+
+        return null;
+    }
+
+    /**
+     * aviso_on: actividad en el estado id_fase_ref; aviso_off: actividad fuera de ese estado.
+     */
+    private static function evaluarFaseCorrectaSinProcesos(
+        int $statusActual,
+        int $id_fase_ref,
+        bool $aviso_on,
+        bool $aviso_off,
+    ): int {
+        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_on) && $statusActual === $id_fase_ref) {
+            return 1;
+        }
+        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_off) && $statusActual !== $id_fase_ref) {
+            return 1;
+        }
+
+        return 0;
     }
 
     /**
@@ -416,7 +514,7 @@ class AvisosGenerarTabla
         string &$err_fila,
         array &$cambiosOmitidos,
     ): ?PermAccion {
-        if ($id_activ > 0 && $this->actividadAllRepository->findById($id_activ) === null) {
+        if ($id_activ > 0 && $this->actividadParaAvisoLookup->find($id_activ) === null) {
             $this->registrarCambioNoProcesado(
                 $oCambio,
                 sprintf('actividad %d no encontrada', $id_activ),
@@ -451,7 +549,6 @@ class AvisosGenerarTabla
     private function todosCambiosPendientesSonOmitidos(
         array $cambios,
         array $cambiosOmitidos,
-        ActividadAllRepositoryInterface $actividadAllRepository,
     ): bool {
         if ($cambios === []) {
             return false;
@@ -461,7 +558,7 @@ class AvisosGenerarTabla
                 continue;
             }
             $id_activ = $oCambio->getId_activ();
-            if ($id_activ > 0 && $actividadAllRepository->findById($id_activ) === null) {
+            if ($id_activ > 0 && $this->actividadParaAvisoLookup->find($id_activ) === null) {
                 continue;
             }
 
@@ -508,7 +605,7 @@ class AvisosGenerarTabla
         $err_fila .= '<td>' . htmlspecialchars((string) $id_schema, ENT_QUOTES, 'UTF-8') . '</td>';
         $err_fila .= '<td>' . htmlspecialchars((string) $id_item, ENT_QUOTES, 'UTF-8') . '</td>';
         $err_fila .= '<td>' . htmlspecialchars((string) $id_activ, ENT_QUOTES, 'UTF-8') . '</td>';
-        $err_fila .= '<td>' . htmlspecialchars($motivo, ENT_QUOTES, 'UTF-8') . '</td>';
+        $err_fila .= '<td colspan="1">' . htmlspecialchars($motivo, ENT_QUOTES, 'UTF-8') . '</td>';
         $err_fila .= '</tr>';
     }
 

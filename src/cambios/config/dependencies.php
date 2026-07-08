@@ -13,6 +13,8 @@ use src\cambios\application\CambioUsuarioObjetoPrefPropiedadesData;
 use src\cambios\application\CambioUsuarioPropiedadPrefGuardarTodas;
 use src\cambios\application\CambioUsuarioPropiedadPrefItemData;
 use src\cambios\application\CambioUsuarioPropiedadPrefPreview;
+use src\cambios\application\ActividadParaAvisoLookup;
+use src\cambios\application\CambioParaAvisoLookup;
 use src\cambios\application\legacy\Avisos;
 use src\cambios\application\RegistrarCambio;
 use src\cambios\application\UsuarioAvisosPrefFormData;
@@ -46,6 +48,8 @@ return [
     AvisosGenerarListaData::class => autowire(AvisosGenerarListaData::class),
     AvisosGenerarTabla::class => autowire(AvisosGenerarTabla::class),
     CambioAvisoTxtBuilder::class => autowire(CambioAvisoTxtBuilder::class),
+    CambioParaAvisoLookup::class => autowire(CambioParaAvisoLookup::class),
+    ActividadParaAvisoLookup::class => autowire(ActividadParaAvisoLookup::class),
     CambioUsuarioEliminar::class => autowire(CambioUsuarioEliminar::class),
     CambioUsuarioEliminarHastaFecha::class => autowire(CambioUsuarioEliminarHastaFecha::class),
     CambioUsuarioObjetoPrefEliminar::class => autowire(CambioUsuarioObjetoPrefEliminar::class),

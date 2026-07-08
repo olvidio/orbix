@@ -55,7 +55,7 @@ final class CambioUsuarioObjetoPrefFasesData
         } else {
             $a_status = StatusId::getArrayStatus();
             unset($a_status[StatusId::ALL]);
-            $result['aFases'] = array_flip($a_status);
+            $result['aFases'] = $a_status;
         }
 
         return $result;

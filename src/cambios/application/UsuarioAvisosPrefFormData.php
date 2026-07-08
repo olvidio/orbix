@@ -61,6 +61,10 @@ final class UsuarioAvisosPrefFormData
             'aFases' => [],
             'aOpcionesCasas' => [],
             'fases_usa_procesos' => false,
+            'label_fase_ref' => '',
+            'mensaje_error_fase_ref' => '',
+            'texto_aviso_off' => '',
+            'texto_aviso_on' => '',
             'id_pau' => '',
             'dl_propia' => true,
             'dl_org' => '',
@@ -147,10 +151,18 @@ final class UsuarioAvisosPrefFormData
         $result['fases_usa_procesos'] = ConfigGlobal::is_app_installed('procesos');
         if ($result['fases_usa_procesos']) {
             $result['aFases'] = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
+            $result['label_fase_ref'] = (string)_("fase de referencia");
+            $result['mensaje_error_fase_ref'] = (string)_("debe indicar la fase de referencia");
+            $result['texto_aviso_off'] = (string)_("avisar antes de que esté marcada (off)");
+            $result['texto_aviso_on'] = (string)_("avisar si está marcada (on)");
         } else {
             $a_status = StatusId::getArrayStatus();
             unset($a_status[StatusId::ALL]);
-            $result['aFases'] = array_flip($a_status);
+            $result['aFases'] = $a_status;
+            $result['label_fase_ref'] = (string)_("estado de la actividad de referencia");
+            $result['mensaje_error_fase_ref'] = (string)_("debe indicar el estado de la actividad de referencia");
+            $result['texto_aviso_off'] = (string)_("avisar si la actividad NO está en este estado");
+            $result['texto_aviso_on'] = (string)_("avisar si la actividad está en este estado");
         }
 
         $oRole = new Role();

@@ -76,12 +76,15 @@ class ModulosConfig
     }
 
     /**
+     * Todos los módulos instalados en el esquema (activos e inactivos).
+     *
      * @return array<int, string>
      */
     public function getModsInstalados(): array
     {
         $this->cModsInstalados = $this->moduloInstaladoRepository->getModuloInstalados();
         $a_mods = $this->getModsAll();
+        $this->a_mods_installed = [];
         foreach ($this->cModsInstalados as $oMod) {
             $id_mod = $oMod->getId_mod();
             $nom_mod = $a_mods[$id_mod]['nom'] ?? (string)$id_mod;
@@ -91,17 +94,65 @@ class ModulosConfig
     }
 
     /**
+     * Solo módulos instalados marcados como activos.
+     *
+     * @return array<int, string>
+     */
+    public function getModsInstaladosActivos(): array
+    {
+        $a_mods = $this->getModsAll();
+        $activos = [];
+        foreach ($this->moduloInstaladoRepository->getModuloInstalados() as $oMod) {
+            if ($oMod->isActive() !== true) {
+                continue;
+            }
+            $id_mod = $oMod->getId_mod();
+            $activos[$id_mod] = $a_mods[$id_mod]['nom'] ?? (string)$id_mod;
+        }
+
+        return $activos;
+    }
+
+    /**
+     * Módulos activos que declaran al indicado como requisito obligatorio.
+     *
+     * @return array<int, string> id_mod => nombre
+     */
+    public function getModulosActivosQueRequieren(int $id_mod): array
+    {
+        $a_mods = $this->getModsAll();
+        $activos = $this->getModsInstaladosActivos();
+        $dependientes = [];
+        foreach ($activos as $id_activo => $nom) {
+            if ($id_activo === $id_mod) {
+                continue;
+            }
+            $mods_req = $a_mods[$id_activo]['mods_req'] ?? [];
+            if (in_array($id_mod, $mods_req, true)) {
+                $dependientes[$id_activo] = $nom;
+            }
+        }
+
+        return $dependientes;
+    }
+
+    /**
+     * @param array<int, string>|null $a_mods_activos
      * @return list<int>
      */
-    public function getAppsMods(int $id_mod): array
+    public function getAppsMods(int $id_mod, ?array $a_mods_activos = null): array
     {
         if ($id_mod === 0) {
             return [];
         }
         $a_mods = $this->getModsAll();
         $mods_req = $a_mods[$id_mod]['mods_req'] ?? [];
+        $a_mods_activos ??= $this->getModsInstaladosActivos();
         $all = [];
         foreach ($mods_req as $mod) {
+            if (!array_key_exists($mod, $a_mods_activos)) {
+                continue;
+            }
             $all[] = $this->getApps($mod);
         }
         if ($all === []) {
@@ -132,9 +183,9 @@ class ModulosConfig
     {
         $app_installed = [];
 
-        $a_mods_installed = $this->getModsInstalados();
-        foreach ($a_mods_installed as $id_mod => $nom_mod) {
-            $ap1 = $this->getAppsMods($id_mod);
+        $a_mods_activos = $this->getModsInstaladosActivos();
+        foreach ($a_mods_activos as $id_mod => $nom_mod) {
+            $ap1 = $this->getAppsMods($id_mod, $a_mods_activos);
             $ap2 = $this->getApps($id_mod);
             array_push($app_installed, ...$ap1, ...$ap2);
         }

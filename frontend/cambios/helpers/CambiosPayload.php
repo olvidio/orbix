@@ -161,13 +161,18 @@ final class CambiosPayload
 
     /**
      * @param array<string, mixed> $data
-     * @return array{a_valores: array<int|string, mixed>, nombre_usuario: string}
+     * @return array{
+     *     a_valores: array<int|string, mixed>,
+     *     nombre_usuario: string,
+     *     fases_usa_procesos: bool,
+     * }
      */
     public static function usuarioFormAvisosFromPayload(array $data): array
     {
         return [
             'a_valores' => ActividadesListaSupport::datos($data['a_valores'] ?? []),
             'nombre_usuario' => \frontend\shared\helpers\PayloadCoercion::string($data['nombre_usuario'] ?? ''),
+            'fases_usa_procesos' => !empty($data['fases_usa_procesos']),
         ];
     }
 }

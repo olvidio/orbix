@@ -3,8 +3,6 @@
 namespace src\cambios\application;
 
 use DateTimeZone;
-use src\cambios\domain\contracts\CambioDlRepositoryInterface;
-use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\shared\config\ConfigGlobal;
@@ -26,8 +24,7 @@ final class AvisosGenerarListaData
         private UsuarioRepositoryInterface $usuarioRepository,
         private PreferenciaRepositoryInterface $preferenciaRepository,
         private CambioUsuarioRepositoryInterface $cambioUsuarioRepository,
-        private CambioRepositoryInterface $cambioRepository,
-        private CambioDlRepositoryInterface $cambioDlRepository,
+        private CambioParaAvisoLookup $cambioParaAvisoLookup,
         private CambioAvisoTxtBuilder $cambioAvisoTxtBuilder,
     ) {
     }
@@ -116,9 +113,7 @@ final class AvisosGenerarListaData
         foreach ($cCambiosUsuario as $oCambioUsuario) {
             $id_item_cmb = $oCambioUsuario->getId_item_cambio();
             $id_schema_cmb = $oCambioUsuario->getId_schema_cambio();
-            $oCambio = $id_schema_cmb === 3000
-                ? $this->cambioRepository->findById($id_item_cmb)
-                : $this->cambioDlRepository->findById($id_item_cmb);
+            $oCambio = $this->cambioParaAvisoLookup->find($id_schema_cmb, $id_item_cmb);
             if ($oCambio === null) {
                 continue;
             }

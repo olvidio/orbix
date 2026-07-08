@@ -48,42 +48,6 @@
         }
     }
 
-
-    fnjs_asistentes = function () {
-        var url = '{{ url }}';
-        var extendida = $('#extendida').val();
-        var isfsv = $('#isfsv_val').val();
-
-        if (isfsv == 3) {
-            $('#iasistentes_val').hide();
-            $('#iactividad_val').hide();
-            fnjs_nom_tipo();
-        } else {
-            var parametros = 'extendida=' + extendida + '&modo=buscar&salida=asistentes&entrada=' + isfsv + '{{ h|raw }}';
-
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: parametros,
-                dataType: 'json'
-            })
-                .done(function (json) {
-                    $('#lst_asistentes').html(fnjs_construir_desplegable(json));
-                });
-            // borrar el resto.
-            $('#iasistentes_val').val(".");
-            // borrar el resto.
-            if (extendida === "1") {
-                $('#iactividad_val').val("..");
-                $('#inom_tipo_val').val("..");
-            } else {
-                $('#iactividad_val').val(".");
-                $('#inom_tipo_val').val("...");
-            }
-            fnjs_actualizar_fases();
-        }
-    }
-
     fnjs_actividad = function () {
         var url = '{{ url }}';
         var extendida = $('#extendida').val();
@@ -105,10 +69,13 @@
         } else {
             $('#inom_tipo_val').val("...");
         }
+        {% if procesos_installed %}
         fnjs_actualizar_fases();
+        {% endif %}
     }
     fnjs_nom_tipo = function () {
         var url = '{{ url }}';
+        var extendida = $('#extendida').val();
         var isfsv = $('#isfsv_val').val();
         var iasistentes = $('#iasistentes_val').val();
         var iactividad = $('#iactividad_val').val();
@@ -122,7 +89,9 @@
             .done(function (json) {
                 $('#lst_nom_tipo').html(fnjs_construir_desplegable(json));
             });
+        {% if procesos_installed %}
         fnjs_actualizar_fases();
+        {% endif %}
     }
 
     fnjs_act_id_activ = function () {
@@ -134,7 +103,9 @@
         var id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
 
         $('#id_tipo_activ').val(id_tipo_activ);
+        {% if procesos_installed %}
         fnjs_actualizar_fases();
+        {% endif %}
     }
 
 </script>

@@ -4,8 +4,6 @@ namespace src\cambios\application;
 
 use DateInvalidTimeZoneException;
 use DateTimeZone;
-use src\cambios\domain\contracts\CambioDlRepositoryInterface;
-use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
 use src\cambios\domain\value_objects\AvisoTipoId;
@@ -42,8 +40,7 @@ class AvisosEnviarMails
         private CambioUsuarioRepositoryInterface $cambioUsuarioRepository,
         private UsuarioRepositoryInterface $usuarioRepository,
         private PreferenciaRepositoryInterface $preferenciaRepository,
-        private CambioRepositoryInterface $cambioRepository,
-        private CambioDlRepositoryInterface $cambioDlRepository,
+        private CambioParaAvisoLookup $cambioParaAvisoLookup,
         private CambioAvisoTxtBuilder $cambioAvisoTxtBuilder,
     ) {
     }
@@ -122,10 +119,7 @@ class AvisosEnviarMails
 
             $id_item_cmb = $oCambioUsuario->getId_item_cambio();
             $id_schema_cmb = $oCambioUsuario->getId_schema_cambio();
-            $repoCambio = $id_schema_cmb === 3000
-                ? $this->cambioRepository
-                : $this->cambioDlRepository;
-            $oCambioRow = $repoCambio->findById($id_item_cmb);
+            $oCambioRow = $this->cambioParaAvisoLookup->find($id_schema_cmb, $id_item_cmb);
             if ($oCambioRow === null) {
                 continue;
             }

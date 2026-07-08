@@ -8,9 +8,20 @@
 */
 
 // Formato de fecha:
-$idioma = $_SESSION['session_auth']['idioma'];
+$idioma = '';
+$sessionAuth = $_SESSION['session_auth'] ?? null;
+if (is_array($sessionAuth) && isset($sessionAuth['idioma']) && is_string($sessionAuth['idioma'])) {
+    $idioma = $sessionAuth['idioma'];
+}
 // Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
-if (!isset($idioma)){ $idioma = $_SESSION['oConfig']->getIdioma_default(); }
+if ($idioma === '') {
+    $oConfig = $_SESSION['oConfig'] ?? null;
+    if (is_object($oConfig) && method_exists($oConfig, 'getIdioma_default')) {
+        $idioma = (string) $oConfig->getIdioma_default();
+    } else {
+        $idioma = 'es_ES.UTF-8';
+    }
+}
 $a_idioma = explode('.',$idioma);
 $code_lng = $a_idioma[0];
 //$code_char = $a_idioma[1];

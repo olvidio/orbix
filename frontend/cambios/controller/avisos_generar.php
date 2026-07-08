@@ -17,9 +17,19 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
 use frontend\shared\web\Lista;
+use src\cambios\domain\value_objects\AvisoTipoId;
+use src\shared\config\ConfigGlobal;
 
-require_once 'frontend/shared/FrontBootstrap.php';
-$oPosicion = FrontBootstrap::boot();
+if (!defined('ORBIX_INDEX_EMBED')) {
+    require_once 'frontend/shared/FrontBootstrap.php';
+    $oPosicion = FrontBootstrap::boot();
+} else {
+    global $oPosicion;
+    if (!isset($oPosicion)) {
+        $phpSelf = isset($_SERVER['PHP_SELF']) && is_string($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '';
+        $oPosicion = new \frontend\shared\web\Posicion($phpSelf, $_POST);
+    }
+}
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $QsoloLista = (int)filter_input(INPUT_POST, 'solo_lista') === 1;
 
@@ -34,6 +44,14 @@ if ($is_admin) {
     if ($Qrefresh && $Qid_usuario === 0 && isset($prevState['id_usuario'])) {
         $Qid_usuario = (int)$prevState['id_usuario'];
         $Qaviso_tipo = (int)($prevState['aviso_tipo'] ?? 0);
+    } elseif (
+        defined('ORBIX_INDEX_EMBED')
+        && !$Qrefresh
+        && $Qid_usuario === 0
+        && $Qaviso_tipo === 0
+    ) {
+        $Qid_usuario = ConfigGlobal::mi_id_usuario();
+        $Qaviso_tipo = AvisoTipoId::TIPO_LISTA;
     }
 } else {
     $Qid_usuario = 0;

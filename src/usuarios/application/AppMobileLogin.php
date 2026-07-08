@@ -405,7 +405,7 @@ final class AppMobileLogin
     }
 
     /** @return list<string> */
-    private static function getAppsMods(int|string $id_mod): array
+    private static function getAppsMods(int|string $id_mod, array $a_mods_installed): array
     {
         $apps = [];
         $a_mods = self::getModsPosibles();
@@ -419,6 +419,10 @@ final class AppMobileLogin
                 $mod_in = str_getcsv($matches[1]);
                 foreach ($mod_in as $mod) {
                     if (!is_string($mod) || $mod === '') {
+                        continue;
+                    }
+                    $id_mod_req = (int) $mod;
+                    if ($id_mod_req === 0 || !array_key_exists($id_mod_req, $a_mods_installed)) {
                         continue;
                     }
                     foreach (self::getApps($mod) as $appName) {
@@ -462,7 +466,7 @@ final class AppMobileLogin
     {
         $app_installed = [];
         foreach ($a_mods_installed as $id_mod => $param) {
-            foreach (self::getAppsMods($id_mod) as $appRef) {
+            foreach (self::getAppsMods($id_mod, $a_mods_installed) as $appRef) {
                 $id = self::resolveInstalledAppId($a_apps, $appRef);
                 if ($id !== null) {
                     $app_installed[] = $id;

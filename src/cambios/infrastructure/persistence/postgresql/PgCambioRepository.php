@@ -89,11 +89,14 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         $this->setoDbl($oDbl);
         $this->setNomTabla('av_cambios');
 
-        $sQry = "DELETE FROM av_cambios_usuario USING av_cambios_usuario a
+        $sQry = "DELETE FROM av_cambios_usuario u USING av_cambios_usuario a
                 LEFT JOIN public.av_cambios c
                  ON (a.id_schema_cambio = c.id_schema AND a.id_item_cambio = c.id_item_cambio)
-                WHERE av_cambios_usuario.id_item = a.id_item
+                LEFT JOIN av_cambios_dl d
+                 ON (a.id_schema_cambio = d.id_schema AND a.id_item_cambio = d.id_item_cambio)
+                WHERE u.id_item = a.id_item
                 AND c.id_item_cambio IS NULL
+                AND d.id_item_cambio IS NULL
                 ";
 
         return $this->pdoExec($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
@@ -114,11 +117,14 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
             $nom_tabla_anotados = 'av_cambios_anotados_dl_sf';
         }
 
-        $sQry = "DELETE FROM $nom_tabla_anotados USING $nom_tabla_anotados a
+        $sQry = "DELETE FROM $nom_tabla_anotados a2 USING $nom_tabla_anotados a
                 LEFT JOIN public.av_cambios c
                  ON (a.id_schema_cambio = c.id_schema AND a.id_item_cambio = c.id_item_cambio)
-                WHERE $nom_tabla_anotados.id_item = a.id_item
+                LEFT JOIN av_cambios_dl d
+                 ON (a.id_schema_cambio = d.id_schema AND a.id_item_cambio = d.id_item_cambio)
+                WHERE a2.id_item = a.id_item
                 AND c.id_item_cambio IS NULL
+                AND d.id_item_cambio IS NULL
                 ";
 
         return $this->pdoExec($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
@@ -166,6 +172,8 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         // Vamos a hacer dos consultas separadas y unimos.
 
         $oCambioSet = new Set();
+        /** @var array<string, true> $cambiosVistos */
+        $cambiosVistos = [];
         // Cambios Dl (av_cambios_dl)
         $sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ,
                 c.json_fases_sv, c.json_fases_sf, c.id_status, c.dl_org,
@@ -182,17 +190,20 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
                     continue;
                 }
                 $oCambio = Cambio::fromArray($this->hydrateCambioRowFromPg($aDatos));
-                $oCambioSet->add($oCambio);
+                $this->addCambioNuevoAlSet($oCambio, $oCambioSet, $cambiosVistos);
             }
         }
 
-        // Cambios NO dl (sólo public.av_cambios)
+        // Cambios de otras dl visibles en public.av_cambios (herencia) pero aún no copiados en av_cambios_dl local.
         $sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ,
                 c.json_fases_sv, c.json_fases_sf, c.id_status, c.dl_org,
                 c.objeto, c.propiedad, c.valor_old, c.valor_new, c.quien_cambia, c.sfsv_quien_cambia, c.timestamp_cambio
-                FROM ONLY public.av_cambios c LEFT JOIN $nom_tabla_anotados a
+                FROM public.av_cambios c LEFT JOIN $nom_tabla_anotados a
                 ON (c.id_schema = a.id_schema_cambio AND c.id_item_cambio=a.id_item_cambio)
-                WHERE a.anotado IS NULL OR a.anotado = 'f'
+                LEFT JOIN av_cambios_dl local
+                ON (c.id_schema = local.id_schema AND c.id_item_cambio = local.id_item_cambio)
+                WHERE (a.anotado IS NULL OR a.anotado = 'f')
+                AND local.id_item_cambio IS NULL
                 ORDER BY dl_org,id_tipo_activ,timestamp_cambio
                 ";
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
@@ -202,7 +213,7 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
                     continue;
                 }
                 $oCambio = Cambio::fromArray($this->hydrateCambioRowFromPg($aDatos));
-                $oCambioSet->add($oCambio);
+                $this->addCambioNuevoAlSet($oCambio, $oCambioSet, $cambiosVistos);
             }
         }
 
@@ -211,6 +222,19 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         $result = array_values($oCambioSet->getTot());
 
         return $result;
+    }
+
+    /**
+     * @param array<string, true> $cambiosVistos
+     */
+    private function addCambioNuevoAlSet(Cambio $oCambio, Set $oCambioSet, array &$cambiosVistos): void
+    {
+        $key = $oCambio->getId_schema() . '_' . $oCambio->getId_item_cambio();
+        if (isset($cambiosVistos[$key])) {
+            return;
+        }
+        $cambiosVistos[$key] = true;
+        $oCambioSet->add($oCambio);
     }
 
 

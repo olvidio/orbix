@@ -88,6 +88,17 @@ final class FrontBootstrap
             return;
         }
 
+        // Tras session_write_close() en el mismo request (p. ej. global_object /
+        // after_global_object), session_id() sigue disponible: reabrir esa sesión
+        // en lugar de crear una vacía (falla en el primer login con página de inicio
+        // que llama a FrontBootstrap::boot(), p. ej. avisos de cambios).
+        $sidFromCurrentRequest = session_id();
+        if (is_string($sidFromCurrentRequest) && $sidFromCurrentRequest !== '') {
+            session_start();
+
+            return;
+        }
+
         $sessionName = session_name();
         if (!is_string($sessionName)) {
             $sessionName = 'PHPSESSID';

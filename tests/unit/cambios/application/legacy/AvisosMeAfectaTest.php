@@ -9,6 +9,8 @@ use DI\ContainerBuilder;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
+use src\actividades\domain\contracts\ActividadExRepositoryInterface;
+use src\cambios\application\ActividadParaAvisoLookup;
 use src\cambios\application\legacy\Avisos;
 use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
@@ -440,11 +442,15 @@ final class AvisosMeAfectaTest extends myTest
 
         $this->installContainer($rolesPau);
 
+        $exRepository = $this->createMock(ActividadExRepositoryInterface::class);
+        $exRepository->method('findById')->willReturn(null);
+
         return new Avisos(
             $this->createMock(CambioUsuarioRepositoryInterface::class),
             $this->createMock(CambioAnotadoRepositoryInterface::class),
             $usuarioRepo,
             $actividadRepo,
+            new ActividadParaAvisoLookup($actividadRepo, $exRepository),
             $zonaRepo,
             $zonaSacdRepo,
             $cargoRepo,

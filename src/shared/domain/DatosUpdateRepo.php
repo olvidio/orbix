@@ -4,6 +4,7 @@ namespace src\shared\domain;
 
 use src\configuracion\application\ModuloInstaladoTablesService;
 use src\configuracion\domain\entity\ModuloInstalado;
+use src\configuracion\domain\ModulosConfig;
 use src\profesores\domain\entity\ProfesorLatin;
 use src\shared\domain\contracts\DatosCrudRepositoryInterface;
 use src\shared\domain\contracts\DatosFichaInterface;
@@ -137,6 +138,20 @@ class DatosUpdateRepo
 
         $wasActive = $ficha instanceof ModuloInstalado ? $ficha->isActive() : null;
 
+        if ($ficha instanceof ModuloInstalado && $wasActive === true) {
+            $activeRaw = $aCampos['active'] ?? null;
+            $willBeActive = !empty($activeRaw) && \src\shared\domain\helpers\FuncTablasSupport::isTrue($activeRaw);
+            if (!$willBeActive) {
+                $dependientes = $this->modulosConfig()->getModulosActivosQueRequieren($ficha->getId_mod());
+                if ($dependientes !== []) {
+                    return sprintf(
+                        (string)_("No se puede desactivar el módulo: los módulos activos %s lo requieren obligatoriamente. Desactive primero esos módulos o resuelva la incompatibilidad."),
+                        implode(', ', $dependientes),
+                    );
+                }
+            }
+        }
+
         foreach ($ficha->getDatosCampos() as $oDatosCampo) {
             $nom_camp = $oDatosCampo->getNom_camp();
             if ($nom_camp === null) {
@@ -254,5 +269,13 @@ class DatosUpdateRepo
         $service = DependencyResolver::get(ModuloInstaladoTablesService::class);
 
         return $service;
+    }
+
+    private function modulosConfig(): ModulosConfig
+    {
+        /** @var ModulosConfig $config */
+        $config = DependencyResolver::get(ModulosConfig::class);
+
+        return $config;
     }
 }

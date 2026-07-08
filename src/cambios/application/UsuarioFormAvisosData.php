@@ -34,6 +34,7 @@ final class UsuarioFormAvisosData
      *   error: string,
      *   a_valores: array<int, array<int|string, mixed>>,
      *   nombre_usuario: string,
+     *   fases_usa_procesos: bool,
      * }
      */
     public function execute(array $input): array
@@ -49,6 +50,7 @@ final class UsuarioFormAvisosData
                 'error' => (string)_("No tiene permiso"),
                 'a_valores' => $a_valores,
                 'nombre_usuario' => $nombre_usuario,
+                'fases_usa_procesos' => ConfigGlobal::is_app_installed('procesos'),
             ];
         }
 
@@ -58,6 +60,7 @@ final class UsuarioFormAvisosData
                 'error' => (string)_("No tiene permiso"),
                 'a_valores' => $a_valores,
                 'nombre_usuario' => $nombre_usuario,
+                'fases_usa_procesos' => ConfigGlobal::is_app_installed('procesos'),
             ];
         }
         $nombre_usuario = $oUsuario->getUsuarioAsString();
@@ -136,6 +139,7 @@ final class UsuarioFormAvisosData
             'error' => '',
             'a_valores' => $a_valores,
             'nombre_usuario' => $nombre_usuario,
+            'fases_usa_procesos' => ConfigGlobal::is_app_installed('procesos'),
         ];
     }
 }

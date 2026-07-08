@@ -7,6 +7,7 @@ use src\permisos\domain\PermisosActividades;
 use src\shared\infrastructure\DependencyResolver;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\cambios\application\ActividadParaAvisoLookup;
 use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\entity\CambioAnotado;
@@ -52,6 +53,7 @@ class Avisos
         private CambioAnotadoRepositoryInterface $cambioAnotadoRepository,
         private UsuarioRepositoryInterface $usuarioRepository,
         private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ActividadParaAvisoLookup $actividadParaAvisoLookup,
         private ZonaRepositoryInterface $zonaRepository,
         private ZonaSacdRepositoryInterface $zonaSacdRepository,
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
@@ -77,7 +79,10 @@ class Avisos
                 $matches = [];
                 preg_match('@(\d+/\d+/\d+ \d+:\d+:\d+) -- .*@', $fileContent, $matches);
                 if (!isset($matches[1])) {
-                    exit;
+                    if (PHP_SAPI === 'cli') {
+                        exit;
+                    }
+                    throw new \RuntimeException(_('Ya hay un proceso de generación de avisos en marcha'));
                 }
                 $f_iso = $matches[1];
 
@@ -94,7 +99,10 @@ class Avisos
                     echo " ";
                     echo _("Posiblemente la anterior operación finalizó con error");
                 } else {
-                    exit;
+                    if (PHP_SAPI === 'cli') {
+                        exit;
+                    }
+                    throw new \RuntimeException(_('Ya hay un proceso de generación de avisos en marcha'));
                 }
             }
         }
@@ -272,7 +280,7 @@ class Avisos
             if ($mis_id_ubis !== '') {
                 $a_mis_id_ubis = explode(',', $mis_id_ubis);
 
-                $oActividad = $this->actividadAllRepository->findById($id_activ);
+                $oActividad = $this->actividadParaAvisoLookup->find($id_activ);
                 if ($oActividad === null) {
                     return false;
                 }
@@ -327,7 +335,7 @@ class Avisos
         if ($id_pau !== null && $id_pau !== '') { //casa o un listado de ubis en la preferencia del aviso.
             $a_id_pau = explode(',', $id_pau);
 
-            $oActividad = $this->actividadAllRepository->findById($id_activ);
+            $oActividad = $this->actividadParaAvisoLookup->find($id_activ);
             if ($oActividad === null) {
                 return false;
             }
