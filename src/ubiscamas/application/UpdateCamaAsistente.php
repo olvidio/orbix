@@ -11,8 +11,9 @@ final class UpdateCamaAsistente
 {
     public function __construct(
         private AsistenteActividadService $asistenteActividadService,
-        private ContainerInterface $container,
-    ) {
+        private ContainerInterface        $container,
+    )
+    {
     }
 
     /**
@@ -24,7 +25,7 @@ final class UpdateCamaAsistente
         if ($oAsistente === false) {
             return [
                 'success' => false,
-                'mensaje' => "Asistencia no encontrada para id_nom $id_nom e id_activ $id_activ.",
+                'mensaje' => sprintf(_("Asistencia no encontrada para id_nom %d e id_activ %d."), $id_nom, $id_activ),
             ];
         }
 
@@ -38,7 +39,7 @@ final class UpdateCamaAsistente
         if ($AsistenteRepository->Guardar($oAsistente) === false) {
             return [
                 'success' => false,
-                'mensaje' => 'Error al guardar la asignación de la cama.',
+                'mensaje' => _("Error al guardar la asignación de la cama") . '.',
             ];
         }
 

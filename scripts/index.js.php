@@ -1097,7 +1097,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
                     settings.onFail(xhr, status, error);
                     return;
                 }
-                alert('Error en la conexión con el servidor: ' + error);
+                alert("<?= _("Error en la conexión con el servidor") ?>".': ' + error);
             });
     }
 
@@ -1128,7 +1128,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
                 options.onFail(xhr, status, error);
                 return;
             }
-            alert('Error en la conexión con el servidor: ' + error);
+            alert("<?= _("Error en la conexión con el servidor") ?>".': ' + error);
         });
     }
 

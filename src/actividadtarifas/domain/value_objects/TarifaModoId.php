@@ -30,7 +30,7 @@ final class TarifaModoId
     private function validate(int $value): void
     {
         if (!array_key_exists($value, self::getArrayModo())) {
-            throw new \InvalidArgumentException(sprintf('El valor %s no es válido para TarifaModoId', $value));
+            throw new \InvalidArgumentException(sprintf(_("El valor %s no es válido para TarifaModoId"), $value));
         }
     }
 

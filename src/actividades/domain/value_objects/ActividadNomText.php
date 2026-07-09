@@ -23,7 +23,7 @@ final class ActividadNomText
         }
         if (!mb_check_encoding($value, 'UTF-8')) {
             throw new \InvalidArgumentException(
-                sprintf('ActividadNomText contiene encoding no válido (se esperaba UTF-8): %s', $value)
+                sprintf(_("ActividadNomText contiene encoding no válido (se esperaba UTF-8): %s"), $value)
             );
         }
         if (preg_match('/[\x00-\x1F\x7F]/', $value, $matches)) {
@@ -31,7 +31,7 @@ final class ActividadNomText
             // aceptar el tabulador
             if ($charCode !== 9) {
                 throw new \InvalidArgumentException(
-                    sprintf('ActividadNomText contiene un carácter de control no válido (código ASCII: %d)', $charCode)
+                    sprintf(_("ActividadNomText contiene un carácter de control no válido (código ASCII: %d)"), $charCode)
                 );
             }
         }

@@ -1,10 +1,10 @@
 <?php
 
+use frontend\shared\web\UrlBaseProject;
 use frontend\usuarios\helpers\UsuariosPayload;
 use frontend\usuarios\helpers\UsuariosPostInput;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
-use frontend\shared\web\UrlBaseProject;
 
 require __DIR__ . '/../../../libs/vendor/autoload.php';
 
@@ -17,8 +17,8 @@ $hash_recibido = hash('sha256', $Qtoken);
 $esquema = $Qesquema;
 $sfsv = 0;
 $oDB = null;
-$ubicacion = (string) getenv('UBICACION');
-$private = (string) getenv('PRIVATE');
+$ubicacion = (string)getenv('UBICACION');
+$private = (string)getenv('PRIVATE');
 $useSfDb = ($ubicacion === 'sf' || $private === 'sf');
 
 if (substr($esquema, -1) === 'v') {
@@ -76,8 +76,8 @@ if ($usuario_encontrado !== null) {
             $timeout = 1800;
             $maxlifetime = time() + $timeout;
 
-            ini_set("session.gc_maxlifetime", (string) $timeout);
-            ini_set("session.cookie_lifetime", (string) $timeout);
+            ini_set("session.gc_maxlifetime", (string)$timeout);
+            ini_set("session.cookie_lifetime", (string)$timeout);
 
             session_set_cookie_params([
                 'lifetime' => $maxlifetime,
@@ -101,10 +101,10 @@ if ($usuario_encontrado !== null) {
 
     $url_backend = UrlBaseProject::getUrlBase() . 'frontend/usuarios/controller/usuario_form_2fa.php';
 
-    echo "<h2>El doble factor ha sido desactivado con éxito.</h2>";
-    echo "<p>Por seguridad, debes configurar uno nuevo ahora mismo.</p>";
-    echo "<a href=\"$url_backend\" style=\"button\">Configurar nuevo 2FA</a>";
+    echo "<h2>" . _("El doble factor ha sido desactivado con éxito") . ".</h2>";
+    echo "<p>" . _("Por seguridad, debes configurar uno nuevo ahora mismo") . ".</p>";
+    echo "<a href=\"$url_backend\" style=\"button\">" . _("Configurar nuevo 2FA") . "</a>";
 
 } else {
-    echo "El enlace ha caducado o es inválido. Por favor, solicita uno nuevo.";
+    echo _("El enlace ha caducado o es inválido. Por favor, solicita uno nuevo") . ".";
 }

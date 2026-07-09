@@ -1,12 +1,11 @@
 <?php
 
-use frontend\shared\helpers\AjaxJsonSupport;
-use frontend\usuarios\helpers\UsuariosPayload;
-use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use frontend\shared\FrontBootstrap;
+use frontend\usuarios\helpers\UsuariosPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
@@ -33,7 +32,7 @@ if (!empty($resp['success']) && $resp['success'] === true) {
     $titulo = empty($Qregion) ? 'Contactos' : 'Contactos de ' . htmlspecialchars($Qregion);
     echo '<h3>' . $titulo . '</h3>';
     if ($aContactos === []) {
-        echo '<p>No hay datos de contactos para esta región.</p>';
+        echo '<p>' . _("No hay datos de contactos para esta región") . '.</p>';
     } else {
         echo '<ul>';
         foreach ($aContactos as $nombre => $info) {
@@ -56,4 +55,4 @@ if (!empty($resp['success']) && $resp['success'] === true) {
     $msg = \frontend\shared\helpers\PayloadCoercion::string($resp['mensaje'] ?? 'Error al obtener los mails');
     echo '<div class="mails-region-error">' . htmlspecialchars($msg) . '</div>';
 }
-AjaxJsonSupport::html((string) ob_get_clean());
+AjaxJsonSupport::html((string)ob_get_clean());

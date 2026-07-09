@@ -25,7 +25,7 @@ final class UbiGastoTipo
         ];
 
         if (!in_array($value, $allowedValues, true)) {
-            throw new \InvalidArgumentException(sprintf('"%s" no es un tipo de gasto válido', $value));
+            throw new \InvalidArgumentException(sprintf(_("\"%s\" no es un tipo de gasto válido"), $value));
         }
     }
 

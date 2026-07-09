@@ -149,7 +149,7 @@ if ($standalone) {
 </head>
 <body class="otro">
 <?php if ($pruebas === 1) { ?>
-    <p><strong>Entorno de pruebas</strong></p>
+    <p><strong><?= _("Entorno de pruebas") ?></strong></p>
 <?php } ?>
 <?php
 }

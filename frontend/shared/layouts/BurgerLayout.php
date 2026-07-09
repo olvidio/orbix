@@ -113,7 +113,7 @@ class BurgerLayout implements LayoutInterface
             <nav class="menu-utilidades-derecha">
                 <ul class="user-menu">
                     <li>
-                        <a href="#" class="user-menu">👤 Utilidades</a>
+                        <a href="#" class="user-menu">👤 <?= _("Utilidades") ?></a>
                         <div class="user-dropdown" id="navUser">
                             <ul>
                                 <?= $user_menus ?>

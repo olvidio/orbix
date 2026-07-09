@@ -242,7 +242,7 @@ if ($Qactualizar == "9998") {
     </head>
     <body topmargin="-0,5cm" background=/icons/fons.gif link=#0000ff vlink=#0000ff>
     <h2>
-        <center><font color=red>Comprobación del Fichero de Notas</font></center>
+        <center><font color=red><?= _("Comprobación del Fichero de Notas") ?></font></center>
     </h2>
     <hr size="2" aling="center">
     </bODY>
@@ -293,8 +293,8 @@ ORDER BY p.apellido1 ASC,p.apellido2 ";
 
 $oDBSt_bienio = $dbQuery($oDB, $sql);
 $nf = $oDBSt_bienio->rowCount();
-echo "<p>1. $tabla_txt con el bienio terminado y sin poner que lo ha terminado : $nf</p>";
-echo "<p>Es importante poner bien la fecha en que lo ha terminado</p>";
+echo "<p>". sprintf(_("1. %s con el bienio terminado y sin poner que lo ha terminado: %d"), $tabla_txt, $nf) . "</p>";
+echo "<p>"._("Es importante poner bien la fecha en que lo ha terminado")."</p>";
 if (!empty($nf)) {
     /* Para sacar una lista*/
     echo "<table>";

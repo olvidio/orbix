@@ -2,7 +2,6 @@
 
 namespace src\actividades\application;
 
-use src\shared\config\ConfigGlobal;
 use DateInterval;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
@@ -11,7 +10,7 @@ use src\actividades\domain\value_objects\IdTablaCode;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
-use src\actividadescentro\domain\entity\CentroEncargado;
+use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 
@@ -23,11 +22,12 @@ use src\shared\domain\value_objects\TimeLocal;
 class ActividadNuevoCurso
 {
     public function __construct(
-        private RepeticionRepositoryInterface $repeticionRepository,
-        private ActividadDlRepositoryInterface $actividadDlRepository,
-        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private RepeticionRepositoryInterface            $repeticionRepository,
+        private ActividadDlRepositoryInterface           $actividadDlRepository,
+        private CentroEncargadoRepositoryInterface       $centroEncargadoRepository,
         private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
-    ) {
+    )
+    {
     }
 
     /**
@@ -104,12 +104,12 @@ class ActividadNuevoCurso
             $oF_fin = clone $fFin;
             $h_fin = $this->horaComoTexto($cActividades[$i]->getH_fin(), '10:00:00');
             [$h, $m, $s] = array_pad(explode(':', $h_fin), 3, '0');
-            $oF_fin->setTime((int) $h, (int) $m, (int) $s);
+            $oF_fin->setTime((int)$h, (int)$m, (int)$s);
 
             $oF_ini = clone $fIniNext;
             $h_ini = $this->horaComoTexto($cActividades[$i + 1]->getH_ini(), '20:00:00');
             [$h, $m, $s] = array_pad(explode(':', $h_ini), 3, '0');
-            $oF_ini->setTime((int) $h, (int) $m, (int) $s);
+            $oF_ini->setTime((int)$h, (int)$m, (int)$s);
 
             $dif = $oF_fin->diff($oF_ini);
             //echo $dif->format('%R%a %H');
@@ -127,7 +127,7 @@ class ActividadNuevoCurso
 
     private function horaComoTexto(TimeLocal|null $hora, string $porDefecto): string
     {
-        if ($hora === null ) {
+        if ($hora === null) {
             return $porDefecto;
         }
         $txt = $hora->toDatabaseString();
@@ -165,7 +165,7 @@ class ActividadNuevoCurso
         $cActividades = $ActividadDlRepository->getArrayActividadesEnPeriodoNoEnProyecto($f_ini, $f_fin);
         $rta_txt = '';
         foreach ($cActividades as $nom_activ) {
-            $rta_txt .= (string) $nom_activ . '<br>';
+            $rta_txt .= (string)$nom_activ . '<br>';
         }
         if (!empty($rta_txt)) {
             $txt .= _("actividades no eliminadas, porque su estado no es proyecto") . ":<br>";
@@ -267,7 +267,7 @@ class ActividadNuevoCurso
         $oActividad->setH_ini($hIni instanceof TimeLocal ? $hIni : null);
         $oActividad->setH_fin($hFin instanceof TimeLocal ? $hFin : null);
         if ($ActividadDlRepository->Guardar($oActividad, $this->registrarCambios) === false) {
-            echo "ERROR: no se ha guardado la actividad<br>";
+            echo _("ERROR: no se ha guardado la actividad") . "<br>";
             exit;
         }
 
@@ -297,7 +297,7 @@ class ActividadNuevoCurso
     private function crear_fases(int $id_activ, ActividadAll $oActividad): void
     {
         $ActividadProcesoTareaRepository = $this->actividadProcesoTareaRepository;
-        $ActividadProcesoTareaRepository->generarProceso((string) $id_activ, null, false, $oActividad);
+        $ActividadProcesoTareaRepository->generarProceso((string)$id_activ, null, false, $oActividad);
         foreach ($ActividadProcesoTareaRepository->consumirAvisosGenerarProceso() as $aviso) {
             $this->avisosProceso[] = $aviso;
         }

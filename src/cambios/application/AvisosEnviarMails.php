@@ -4,6 +4,7 @@ namespace src\cambios\application;
 
 use DateInvalidTimeZoneException;
 use DateTimeZone;
+use frontend\shared\web\Lista;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
 use src\cambios\domain\value_objects\AvisoTipoId;
@@ -11,7 +12,6 @@ use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use frontend\shared\web\Lista;
 
 /**
  * Caso de uso para enviar por e-mail los avisos pendientes de cada usuario.
@@ -38,11 +38,12 @@ class AvisosEnviarMails
 {
     public function __construct(
         private CambioUsuarioRepositoryInterface $cambioUsuarioRepository,
-        private UsuarioRepositoryInterface $usuarioRepository,
-        private PreferenciaRepositoryInterface $preferenciaRepository,
-        private CambioParaAvisoLookup $cambioParaAvisoLookup,
-        private CambioAvisoTxtBuilder $cambioAvisoTxtBuilder,
-    ) {
+        private UsuarioRepositoryInterface       $usuarioRepository,
+        private PreferenciaRepositoryInterface   $preferenciaRepository,
+        private CambioParaAvisoLookup            $cambioParaAvisoLookup,
+        private CambioAvisoTxtBuilder            $cambioAvisoTxtBuilder,
+    )
+    {
     }
 
     /**
@@ -102,7 +103,7 @@ class AvisosEnviarMails
                 $id_usuario_anterior = $id_usuario;
 
                 $oPreferencia = $this->preferenciaRepository->findById($id_usuario, 'zona_horaria');
-                $zona_horaria = ($oPreferencia !== null) ? (string) $oPreferencia->getPreferencia() : '';
+                $zona_horaria = ($oPreferencia !== null) ? (string)$oPreferencia->getPreferencia() : '';
                 if ($zona_horaria !== '') {
                     try {
                         $DateTimeZone = new DateTimeZone($zona_horaria);
@@ -191,7 +192,7 @@ class AvisosEnviarMails
         $oTabla->setDatos($a_datos);
 
         $asunto = _("Avisos de cambios en actividades");
-        $cuerpo = '<html><head><title>Tabla de cambios en actividades</title></head><body>';
+        $cuerpo = '<html><head><title>' . _("Tabla de cambios en actividades") . '</title></head><body>';
         $cuerpo .= $oTabla->lista();
         $cuerpo .= '</body></html>';
 
@@ -220,10 +221,10 @@ class AvisosEnviarMails
                 continue;
             }
             $aWhere = [
-                'id_item_cambio' => (int) $ids[0],
-                'id_usuario' => (int) $ids[1],
-                'sfsv' => (int) $ids[2],
-                'aviso_tipo' => (int) $ids[3],
+                'id_item_cambio' => (int)$ids[0],
+                'id_usuario' => (int)$ids[1],
+                'sfsv' => (int)$ids[2],
+                'aviso_tipo' => (int)$ids[3],
             ];
 
             $cCambiosUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
