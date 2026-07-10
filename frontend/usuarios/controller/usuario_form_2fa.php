@@ -60,8 +60,8 @@ $oHashVerify->setUrl($url_2fa_verify);
 $oHashVerify->setCamposForm('secret_2fa!verification_code');
 $h_2fa_verify = $oHashVerify->linkSinValParams();
 
-$txt_guardar = _("guardar configuraci?n");
-$txt_ok = _("se ha actualizado la configuraci?n de 2FA");
+$txt_guardar = _("guardar configuración");
+$txt_ok = _("se ha actualizado la configuración de 2FA");
 
 $msg_2fa = '';
 $go_to = 'atras';

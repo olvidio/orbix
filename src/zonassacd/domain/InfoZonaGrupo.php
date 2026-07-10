@@ -14,7 +14,7 @@ class InfoZonaGrupo extends DatosInfoRepo
         private ZonaGrupoRepositoryInterface $zonaGrupoRepository,
     )
     {
-        $this->setTxtTitulo(_("grupo de sonas de misas"));
+        $this->setTxtTitulo(_("grupo de zonas de misas"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este grupo?"));
         $this->setTxtBuscar(_("grupo a buscar"));
         $this->setTxtExplicacion();
