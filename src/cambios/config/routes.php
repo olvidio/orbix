@@ -15,6 +15,11 @@ return static function ($r) {
         require $base . '/usuario_form_avisos_data.php';
     });
 
+    // generar tabla.
+    $r->addRoute(['GET', 'POST'], '/src/cambios/avisos_generar_tabla', static function () use ($base) {
+        require $base . '/avisos_generar_tabla.php';
+    });
+
     // Listado de avisos `CambioUsuario` (pantalla `avisos_generar`).
     $r->addRoute(['GET', 'POST'], '/src/cambios/avisos_generar_lista_data', static function () use ($base) {
         require $base . '/avisos_generar_lista_data.php';
