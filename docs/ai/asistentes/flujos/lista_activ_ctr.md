@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaActivCtr. Asistentes a actividades por centro (lista_activ_ctr.php).
+Ver actividades asistidas agrupadas por centro.
 
 ## Limites De La Respuesta
 

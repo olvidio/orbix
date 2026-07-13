@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.direccion_update"]
 acciones: ["crear_actualizar"]
 endpoints: ["/src/ubis/direccion_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Direccion
-
-Propuesta generada automaticamente desde la capacidad `ubis.direccion.gestionar` y sus pantallas relacionadas.
+# Flujo - Direccion
 
 ## Objetivo De Usuario
 
-Gestiona Direccion. Descripcion funcional pendiente de revisar.
+Crea o modifica una dirección y su relación con el ubi (principal, propietario).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -54,12 +52,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``no se encuentra el ubi``
-- ``no se encuentra la dirección``
+- `no se encuentra el ubi`
+- `operación no soportada para este tipo de dirección`
+- `no se encuentra la dirección`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

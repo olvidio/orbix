@@ -1,7 +1,7 @@
 ---
 id: "encargossacd.pantalla.sacd_ficha"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "pantalla_principal"
 modulo: "encargossacd"
 nombre: "Sacd Ficha"
 controller: "frontend/encargossacd/controller/sacd_ficha.php"
@@ -11,7 +11,7 @@ endpoints: []
 capacidades: []
 campos: ["post.filtro_sacd"]
 acciones: ["fnjs_guardar", "fnjs_lista_sacd", "fnjs_ver_ficha"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Sacd Ficha
@@ -20,7 +20,7 @@ Ficha de encargos de un sacd.
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/encargossacd/controller/sacd_ficha.php`
 
 ## Vistas Relacionadas
@@ -49,13 +49,19 @@ No se han detectado capacidades relacionadas.
 - `fnjs_lista_sacd`
 - `fnjs_ver_ficha`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** dre > Encargos > ficha sacd
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Encargos > ficha sacd
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
+
+
+## Ruta de menú
+
+- **Legacy:** dre > Encargos > ficha sacd
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
+

@@ -15,14 +15,20 @@ requiere_hashb: false
 frontend_referencias: ["frontend/casas/controller/grupo_lista.php"]
 casos_uso: ["src\\casas\\application\\GrupoCasaListaData"]
 tags: ["casas", "grupo", "lista", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Grupo Lista Data
 
-Endpoint backend: listado de `GrupoCasa` (relaciones padre ↔ hijo).
+Listado de relaciones `GrupoCasa` (casa padre ↔ casa hijo) para la tabla del flujo de grupos.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Sucesor de `apps/casas/controller/grupo_lista.php`. Carga todos los grupos, resuelve los nombres de
+casa padre/hijo y devuelve cabeceras + filas con botones `fnjs_modificar` / `fnjs_eliminar`. El flag
+`puede_anadir` indica si el usuario puede dar de alta nuevos grupos.
 
 ## Endpoint
 
@@ -33,20 +39,20 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Sin parámetros; el controller invoca el caso de uso sin `$input`.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Payload en `data` (schema `casas_GrupoCasaListaDataData`):
-  - `a_cabeceras` (`array`)
-  - `a_valores` (`array`)
-  - `puede_anadir` (`boolean`)
+- Helper: `ContestarJson::enviar` (doble `JSON.parse` en el front).
+- Forma: `standard_envelope_string_data`.
+- Payload en `data`:
+  - `a_cabeceras` (`array<int,string>`): `casa padre`, `casa hijo`, y dos columnas vacías (acciones).
+  - `a_valores` (`array`): filas indexadas; columnas 3–4 son celdas `{script, valor}` para editar/eliminar.
+  - `puede_anadir` (`boolean`): `true` si `$_SESSION['oPerm']->have_perm_oficina('adl')`.
 
 ## Permisos
 
-- Permiso oficina `adl`
+- `puede_anadir` depende de permiso oficina `adl` vía `XPermisos`. El listado en sí no filtra por permiso.
 
 ## Casos De Uso
 
@@ -54,10 +60,5 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/casas/controller/grupo_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/casas/controller/grupo_lista.php`: `fnjs_ver` carga la tabla; las acciones de fila llaman a
+  `grupo_form` / `grupo_update` / `grupo_eliminar`.

@@ -1,7 +1,7 @@
 ---
 id: "usuarios.pantalla.usuario_lista"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "usuarios"
 nombre: "Usuario Lista"
 controller: "frontend/usuarios/controller/usuario_lista.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/usuario_eliminar", "/src/usuarios/usuario_lista"]
 capacidades: ["usuarios.usuario.gestionar"]
 campos: ["form.sel", "form.username", "html.btn_ok", "post.id_sel", "post.scroll_id", "post.stack", "post.username"]
 acciones: ["fnjs_actualizar", "fnjs_buscar", "fnjs_eliminar", "fnjs_enviar", "fnjs_enviar_formulario", "fnjs_left_side_hide", "fnjs_solo_uno", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Usuario Lista
 
-Descripcion funcional pendiente de revisar.
+Listado principal de usuarios web con filtro por login, alta/edición y borrado.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/usuarios/controller/usuario_lista.php`
 
 ## Vistas Relacionadas
@@ -62,13 +64,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_solo_uno`
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > usuarios web > lista usuarios
+- **Pills2:** ADMIN LOCAL > usuarios web > lista usuarios

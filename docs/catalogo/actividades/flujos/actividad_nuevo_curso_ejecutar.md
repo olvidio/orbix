@@ -2,68 +2,43 @@
 id: "actividades.actividad_nuevo_curso_ejecutar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Actividad Nuevo Curso Ejecutar"
+nombre: "Flujo - Ejecutar generación nuevo curso"
 capacidad: "actividades.actividad_nuevo_curso_ejecutar.gestionar"
-pantallas_principales: []
-fragmentos: ["actividades.pantalla.actividad_nuevo_curso"]
+pantallas_principales: ["actividades.pantalla.actividad_nuevo_curso"]
+fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/actividades/actividad_nuevo_curso_ejecutar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad Nuevo Curso Ejecutar
+# Flujo - Ejecutar generación nuevo curso
 
-Propuesta generada automaticamente desde la capacidad `actividades.actividad_nuevo_curso_ejecutar.gestionar` y sus pantallas relacionadas.
+Proceso batch: borra actividades en proyecto del curso destino, copia desde año referencia,
+opcionalmente centros encargados y fases.
 
 ## Objetivo De Usuario
 
-Gestiona ActividadNuevoCursoEjecutar. Endpoint backend para actividad_nuevo_curso (ejecucion).
+Confirmar años en `actividad_nuevo_curso` y lanzar la generación (puede tardar varios minutos).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Formulario `actividad_nuevo_curso.phtml` → POST directo al endpoint (no pasa por controller
+frontend intermedio).
 
-## Fragmentos O Pantallas Auxiliares
-
-- `actividades.pantalla.actividad_nuevo_curso`
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.year`
-- `form.year_ref`
-- `html.ver_lista`
-- `html.year`
-- `html.year_ref`
-- `post.ok`
-- `post.ver_lista`
-- `post.year`
-- `post.year_ref`
-
-Acciones JavaScript:
-- `fnjs_enviar_formulario`
+1. Leer avisos de borrado/creación.
+2. Elegir `year` (destino) y `year_ref` (origen).
+3. Enviar formulario; esperar respuesta.
+4. Revisar resumen o listado si `ver_lista`.
 
 ## Endpoints Del Flujo
 
 - `/src/actividades/actividad_nuevo_curso_ejecutar`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Nuevo calendario > nuevo curso.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Generar nuevo curso.

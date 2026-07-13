@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Paso 1 del asistente: crea roles PostgreSQL y passwords en ficheros .inc.
 
 ## Uso En Ayuda
 

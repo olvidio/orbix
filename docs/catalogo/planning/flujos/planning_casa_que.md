@@ -2,72 +2,35 @@
 id: "planning.planning_casa_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Gestionar Planning Casa Que"
+nombre: "Flujo - Planning por casas (filtros)"
 capacidad: "planning.planning_casa_que.gestionar"
-pantallas_principales: []
-fragmentos: ["planning.pantalla.planning_casa_que"]
-acciones: ["obtener_datos"]
+pantallas_principales: ["planning.pantalla.planning_casa_que"]
+fragmentos: []
+acciones: ["filtrar_casas", "elegir_periodo", "ver_planning"]
 endpoints: ["/src/planning/planning_casa_que_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Planning Casa Que
+# Flujo - Planning por casas (filtros)
 
-Propuesta generada automaticamente desde la capacidad `planning.planning_casa_que.gestionar` y sus pantallas relacionadas.
+Entrada del planning por casas: elige grupo de casas y periodo, luego pasa a selección/calendario.
 
 ## Objetivo De Usuario
 
-Gestiona PlanningCasaQue. Dataset para montar CasasQue en {.
+Consultar el calendario de actividades por casas (actual o propuesta de calendario).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `planning_casa_que.php` (menú Herramientas de calendario / planning por casas).
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `planning.pantalla.planning_casa_que`
+### Preparar filtros
 
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.cdc_sel`
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.iactividad_val`
-- `form.iasistentes_val`
-- `form.id_cdc_mas`
-- `form.id_cdc_num`
-- `form.modelo`
-- `form.periodo`
-- `form.sin_activ`
-- `form.year`
-- `html.modelo`
-- `html.sin_activ`
-- `post.cdc_sel`
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.periodo`
-- `post.propuesta_calendario`
-- `post.sSeleccionados`
-- `post.sin_activ`
-- `post.stack`
-- `post.year`
-
-Acciones JavaScript:
-- `fnjs_comprobar_fecha`
-- `fnjs_enviar_formulario`
-- `fnjs_left_side_hide`
-- `fnjs_ver_planning`
+1. Abrir entrada de menú (`propuesta_calendario` opcional).
+2. El front llama a `planning_casa_que_data` para acotar `CasasQue` según rol/permiso.
+3. Elegir grupo de casas, periodo y si incluir casas sin actividad.
+4. Pulsar ver planning → `planning_casa_select.php`.
 
 ## Endpoints Del Flujo
 
@@ -75,11 +38,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No se encuentra el usuario`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** `dre > planning > por casas` (y variantes por oficina)
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning calendario actual`
+- Propuesta: `ACTIVIDADES > Herramientas de calendario > Planning calendario en estudio`

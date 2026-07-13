@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Guardar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el acta de notas, modificar nota, nota máxima, preceptor o desplegable de acta de un alumno.
+2. Al salir del campo nota (`fnjs_nota`) o al guardar explícitamente, se invoca `fnjs_guardar_nota`.
+3. El sistema serializa `#f_1303` y llama al endpoint.
+4. Si hay error de validación, se muestra alerta con el mensaje devuelto.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/acta_notas_matricula_guardar`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActaNotasMatricula. Guarda el borrador de notas sobre cada matricula (rama que=1 del legacy apps/actividadestudios/controller/acta_notas_update.php).
+El usuario edita notas, nota máxima, preceptor o situación de acta de los alumnos matriculados y guarda el borrador en las matrículas. Sustituye la rama `que=1` del legacy `apps/actividadestudios/controller/acta_notas_update.php`.
 
 ## Errores Documentados
 

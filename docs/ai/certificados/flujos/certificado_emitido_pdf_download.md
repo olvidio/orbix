@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoEmitidoPdfDownload. Descripcion funcional pendiente de revisar.
+Descargar PDF adjunto de certificado emitido.
 
 ## Limites De La Respuesta
 

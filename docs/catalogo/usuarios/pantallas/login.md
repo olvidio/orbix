@@ -1,7 +1,7 @@
 ---
 id: "usuarios.pantalla.login"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "pantalla_principal"
 modulo: "usuarios"
 nombre: "Login"
 controller: "frontend/usuarios/controller/login.php"
@@ -11,16 +11,18 @@ endpoints: []
 capacidades: []
 campos: ["html.esquema", "html.idioma", "html.password", "html.username", "html.verification_code"]
 acciones: ["fnjs_goHelp", "fnjs_goTop", "fnjs_hideErrors"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Login
 
-Guardia de sesion del sistema web.
+Pantalla login web (HTML, no JSON).
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/usuarios/controller/login.php`
 
 ## Vistas Relacionadas
@@ -54,13 +56,7 @@ No se han detectado capacidades relacionadas.
 - `fnjs_goTop`
 - `fnjs_hideErrors`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

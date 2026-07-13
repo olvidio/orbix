@@ -4,10 +4,10 @@ subtipo: "flujo"
 modulo: "cartaspresentacion"
 titulo: "Cartas Presentacion Buscar"
 flujo: "cartaspresentacion.cartas_presentacion_buscar.gestionar.flujo"
-preguntas: ["Como obtener datos en Cartas Presentacion Buscar?"]
-pantallas_principales: []
-fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion_buscar"]
-endpoints: ["/src/cartaspresentacion/cartas_presentacion_buscar_data"]
+preguntas: []
+pantallas_principales: ["cartaspresentacion.pantalla.cartas_presentacion_buscar"]
+fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion_lista"]
+endpoints: ["/src/cartaspresentacion/cartas_presentacion_buscar_data", "/src/cartaspresentacion/cartas_presentacion_lista_data"]
 source: "docs/catalogo/cartaspresentacion/flujos/cartas_presentacion_buscar.md"
 estado_revision: "generado"
 ---
@@ -19,30 +19,23 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Cartas Presentacion Buscar?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Cartas Presentacion Buscar (`cartaspresentacion.pantalla.cartas_presentacion_buscar`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `cartaspresentacion.pantalla.cartas_presentacion_buscar`
+- `cartaspresentacion.pantalla.cartas_presentacion_lista`
 
 ## Objetivo
 
-Gestiona CartasPresentacionBuscarOpciones. Opciones del formulario de busqueda de cartas de presentacion (region, pais, delegacion).
+Encontrar cartas de presentación que cumplan criterios geográficos o de delegación.
 
 ## Limites De La Respuesta
 

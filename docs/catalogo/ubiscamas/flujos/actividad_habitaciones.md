@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubiscamas.pantalla.lista_habitaciones", "ubiscamas.pantalla.lista_habitaciones_distribucion", "ubiscamas.pantalla.lista_habitaciones_nombres"]
 acciones: ["listar"]
 endpoints: ["/src/ubiscamas/actividad_habitaciones_lista"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad Habitaciones
-
-Propuesta generada automaticamente desde la capacidad `ubiscamas.actividad_habitaciones.gestionar` y sus pantallas relacionadas.
+# Flujo - Actividad Habitaciones
 
 ## Objetivo De Usuario
 
-Gestiona HabitacionesCamaLista. Descripcion funcional pendiente de revisar.
+Listar camas de la ubi de una actividad, asignar o reasignar asistentes (drag-and-drop), activar modo solo VIP y abrir vistas de distribución o nombres.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dossier de actividad, enlace `camas` (`frontend/actividades/view/actividades.js` → `lista_habitaciones.php`). Sin entrada de menú en el índice.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -62,11 +60,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Actividad not found`
+- `No Ubi assigned to activity`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

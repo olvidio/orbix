@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona VerInicialesZona. Descripcion funcional pendiente de revisar.
+Lista sacds de una zona con sus iniciales y color para edición inline en SlickGrid.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

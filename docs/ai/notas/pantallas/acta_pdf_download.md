@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Entrada legada; la descarga vive en `/src/notas/acta_pdf_download`.
+Proxy de descarga con token firmado.
 
 ## Uso En Ayuda
 

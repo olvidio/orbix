@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActivPendientesSelect. Actividades pendientes por curso (activ_pendientes_select.php). Datos y link_spec sin firmar; hash, firmas y tablas en {.
+Identificar personas sin ca/crt en el curso.
 
 ## Limites De La Respuesta
 

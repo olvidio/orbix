@@ -8,39 +8,44 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadestudios/asistente_observ"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Asistente Observ
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.asistente_observ.gestionar` y sus pantallas relacionadas.
+Guardado del campo `observ` de un asistente en una actividad de estudios.
 
 ## Objetivo De Usuario
 
-Gestiona AsistenteObserv. Guarda el texto observ de un Asistente. Sustituye al case observ de update_3103.php.
+El usuario guarda el texto de observaciones generales (`observ`) de un asistente en una
+actividad. Sustituye al case `observ` de `update_3103.php`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Endpoint de mutación invocado por AJAX desde el dossier de matrículas de una actividad
+(3103) en el sistema legacy. En el frontend actual **no hay referencia activa** a esta
+URL (solo existe el caso de uso y la ruta en `src/`).
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+No se han detectado fragmentos AJAX relacionados en `frontend/` actual.
 
 ## Escenarios Inferidos
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Desde el contexto de un asistente en una actividad, editar el campo `observ`.
+2. Enviar `id_activ`, `id_nom` (o `id_pau`) y `observ` al endpoint.
+3. El sistema localiza al asistente y persiste el texto.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/asistente_observ`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- Ninguno detectado.
+- Ninguno detectado en frontend actual.
 
 Acciones JavaScript:
 - Ninguna detectada.
@@ -55,9 +60,10 @@ Acciones JavaScript:
 - ``hay un error, no se ha guardado``
 - ``no encuentro al asistente``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice. Subflujo previsto desde dossier 3103 (matrículas de una
+actividad), accesible vía búsqueda de actividad CA.
+
+- **Legacy:** vsm > ca > buscar ca.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n.

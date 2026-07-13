@@ -1,7 +1,7 @@
 ---
 id: "usuarios.pantalla.recovery"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "pantalla_principal"
 modulo: "usuarios"
 nombre: "Recovery"
 controller: "frontend/usuarios/controller/recovery.php"
@@ -11,16 +11,18 @@ endpoints: []
 capacidades: []
 campos: ["get.esquema", "get.id_usuario", "get.token"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Recovery
 
-Descripcion funcional pendiente de revisar.
+Dispatcher recuperación acceso (password/2FA/ayuda).
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/usuarios/controller/recovery.php`
 
 ## Vistas Relacionadas
@@ -49,13 +51,7 @@ No se han detectado capacidades relacionadas.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

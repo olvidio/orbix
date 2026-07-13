@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el dossier de matrículas de una persona (1303), marcar o confirmar el plan de estudios.
+2. Pulsar la acción de confirmar plan (`fnjs_grabar_est`).
+3. El sistema actualiza el flag `est_ok` del asistente y refresca el fragmento.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/asistente_plan_est_ok`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AsistentePlanEstOk. Marca el flag est_ok (plan de estudios confirmado) de un Asistente. Sustituye al case plan de update_3103.php.
+El usuario marca el plan de estudios de un asistente como confirmado (`est_ok`). Sustituye al case `plan` de `update_3103.php`.
 
 ## Errores Documentados
 

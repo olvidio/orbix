@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Filtro para buscar alumnos con asignaturas pendientes (por número o por asignatura).
 
 ## Uso En Ayuda
 

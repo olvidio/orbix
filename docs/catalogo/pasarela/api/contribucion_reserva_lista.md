@@ -4,44 +4,52 @@ tipo: "endpoint"
 modulo: "pasarela"
 url: "/src/pasarela/contribucion_reserva_lista"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/pasarela/infrastructure/ui/http/controllers/contribucion_reserva_lista.php"
-entrada: []
+entrada:[]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "pasarela_ContribucionReservaListaData"
-respuesta_data: ["default:string, excepciones: list<array{id_tipo_activ: string, etiqueta: string, valor: string}>"]
 requiere_hashb: false
-frontend_referencias: ["frontend/pasarela/controller/contribucion_reserva_ajax.php"]
-casos_uso: ["src\\pasarela\\application\\ContribucionReservaLista"]
-tags: ["pasarela", "contribucion", "reserva", "lista"]
-estado_revision: "generado"
+errores:[]
+frontend_referencias:
+  - "frontend\/pasarela\/controller\/contribucion_reserva_ajax.php"
+casos_uso: ["src\pasarela\application\ContribucionReservaLista"]
+tags: ["pasarela"]
+estado_revision: "revisado"
 ---
 
 # Contribucion Reserva Lista
 
-Devuelve el listado del parámetro `contribucion_reserva` listo para serializar. Estructura: `{default, excepciones: [{id_tipo_activ, etiqueta, valor}]}`.
+Listado del parámetro `contribucion_reserva` (porcentaje reserva).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Payload `{default, excepciones}`.
 
 ## Endpoint
 
 - URL: `/src/pasarela/contribucion_reserva_lista`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/contribucion_reserva_lista.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Sin parámetros POST (listados sin filtros o lectura de configuración persistida).
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `pasarela_ContribucionReservaListaData`):
-  - `default` (`string, excepciones: list<array{id_tipo_activ: string, etiqueta: string, valor: string}>`)
+- `default` y `excepciones` con porcentajes.
+
+## Errores conocidos
+
+No devuelve errores `_()` propios (solo validación vacía en mutaciones).
+
+## Permisos
+
+Sin control en el caso de uso; autorización en frontend.
 
 ## Casos De Uso
 
@@ -50,9 +58,3 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 ## Frontend Relacionado
 
 - `frontend/pasarela/controller/contribucion_reserva_ajax.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

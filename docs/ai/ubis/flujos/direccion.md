@@ -45,11 +45,12 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Direccion. Descripcion funcional pendiente de revisar.
+Crea o modifica una dirección y su relación con el ubi (principal, propietario).
 
 ## Errores Documentados
 
 - `no se encuentra el ubi`
+- `operación no soportada para este tipo de dirección`
 - `no se encuentra la dirección`
 
 ## Limites De La Respuesta

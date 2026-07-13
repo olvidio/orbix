@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Documentos. Descripcion funcional pendiente de revisar.
+Asignación y consulta de documentos por tipo: selector `docs_asignar_que`, listados asignados/no asignados, formularios CTR/DLB.
 
 ## Limites De La Respuesta
 

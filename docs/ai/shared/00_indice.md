@@ -21,14 +21,14 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Locales Posibles -> `flujos/locales_posibles.md`
-- TablaDB -> `flujos/tablaDB.md`
-- TablaDB Buscar -> `flujos/tablaDB_buscar.md`
-- TablaDB Depende -> `flujos/tablaDB_depende.md`
-- TablaDB Formulario -> `flujos/tablaDB_formulario.md`
-- TablaDB Lista -> `flujos/tablaDB_lista.md`
+- Cargar locales/idiomas -> `flujos/locales_posibles.md`
+- Persistir registro tabla genérica -> `flujos/tablaDB.md`
+- Búsqueda previa al listado -> `flujos/tablaDB_buscar.md`
+- Desplegable dependiente -> `flujos/tablaDB_depende.md`
+- Formulario tabla genérica -> `flujos/tablaDB_formulario.md`
+- Listar y mantener tabla genérica -> `flujos/tablaDB_lista.md`
 
 ## Pantallas Disponibles
 
-- TablaDB Formulario Ver -> `pantallas/tablaDB_formulario_ver.md`
-- TablaDB Lista Ver -> `pantallas/tablaDB_lista_ver.md`
+- Mantenimiento genérico de tablas (formulario) -> `pantallas/tablaDB_formulario_ver.md`
+- Mantenimiento genérico de tablas (listado) -> `pantallas/tablaDB_lista_ver.md`

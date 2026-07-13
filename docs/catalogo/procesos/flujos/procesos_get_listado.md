@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.procesos_get_listado"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/procesos_get_listado"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Procesos Get Listado
-
-Propuesta generada automaticamente desde la capacidad `procesos.procesos_get_listado.gestionar` y sus pantallas relacionadas.
+# Flujo - Listado tabular de proceso
 
 ## Objetivo De Usuario
 
-Gestiona ProcesosGetListado. Caso de uso: devuelve el listado (estructurado) de fases/tareas del proceso filtrando por sfsv/role. El render HTML se hace en el frontend.
+Visualización en formato tabla de las fases/tareas de un tipo de proceso, con acciones de modificar y eliminar cada tarea.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada directa de menú; se abre desde la pantalla de administración de procesos (`procesos_select`) con el botón «ver listado».
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -52,11 +50,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

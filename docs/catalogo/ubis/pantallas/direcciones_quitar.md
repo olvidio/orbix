@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/direcciones_quitar"]
 capacidades: ["ubis.direcciones_quitar.gestionar"]
 campos: ["post.id_direccion", "post.id_ubi", "post.idx", "post.obj_dir"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Direcciones Quitar
 
-Descripcion funcional pendiente de revisar.
+Desvincula una dirección del ubi tras confirmación en la ficha de direcciones.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/ubis/controller/direcciones_quitar.php`
 
 ## Vistas Relacionadas
@@ -50,13 +52,7 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

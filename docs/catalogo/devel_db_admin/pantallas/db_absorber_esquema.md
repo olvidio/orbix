@@ -11,12 +11,12 @@ endpoints: ["/src/devel_db_admin/absorber_esquema"]
 capacidades: ["devel_db_admin.absorber_esquema.gestionar"]
 campos: ["post.esquema_del", "post.esquema_matriz"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Db Absorber Esquema
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX que ejecuta la absorción de esquema tras confirmar en `db_absorber_esquema_que`.
 
 ## Tipo
 
@@ -50,11 +50,11 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Acceder desde el menú de administración DB o configuración.
+2. Completar el formulario y ejecutar la acción.
+3. Revisar avisos/errores en el panel de respuesta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

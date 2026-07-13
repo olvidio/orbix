@@ -45,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Equipaje. Borrado de un equipaje (antes solo en equipajes_eliminar.php).
+Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (EGM/Whereis), impresión y eliminación.
 
 ## Errores Documentados
 

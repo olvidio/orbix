@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["devel_db_admin.pantalla.migraciones_lista"]
 acciones: ["listar"]
 endpoints: ["/src/devel_db_admin/migraciones_lista_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Migraciones
@@ -17,7 +17,8 @@ Propuesta generada automaticamente desde la capacidad `devel_db_admin.migracione
 
 ## Objetivo De Usuario
 
-Gestiona Migraciones. Descripcion funcional pendiente de revisar.
+Revisar y aplicar migraciones SQL del repositorio.
+
 
 ## Punto De Entrada
 
@@ -60,9 +61,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > DB > actualizar DB
+- **Pills2:** sistema > DB > actualizar DB

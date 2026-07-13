@@ -53,7 +53,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PersonaNota. Crea una PersonaNota. Elimina una PersonaNota.
+Alta de nota en dossier 1011 (`persona_nota_nueva`).
 
 ## Limites De La Respuesta
 

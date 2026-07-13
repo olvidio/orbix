@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Documentos Form"
+titulo: "Edición masiva documentos"
 pantalla: "inventario.pantalla.documentos_form"
-preguntas: ["Que se puede hacer en Documentos Form?", "Que campos tiene Documentos Form?", "Que acciones hay en Documentos Form?"]
+preguntas: ["Que se puede hacer en Edición masiva documentos?", "Que campos tiene Edición masiva documentos?", "Que acciones hay en Edición masiva documentos?"]
 capacidades: []
 endpoints: []
 source: "docs/catalogo/inventario/pantallas/documentos_form.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Documentos Form
+# Ayuda IA Pantalla - Edición masiva documentos
 
 ## Resumen
 
-Fragmento AJAX: formulario “modificar por bloques” de documentos (inventario).
+Form popup para fechas/estado de documentos seleccionados.
 
 ## Uso En Ayuda
 

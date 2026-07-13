@@ -31,10 +31,9 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Eliminar
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. En una actividad, pulsar un sacd ya asignado.
+2. Elegir **borrar** en el menú contextual.
+3. El sistema elimina cargo y asistencia (si aplica) y refresca la celda de sacd de la actividad.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadessacd/sacd_eliminar`
@@ -45,11 +44,13 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Sacd. Elimina el sacd ({id_activ, id_cargo}) de una actividad y la asistencia asociada.
+El usuario quita un sacd ya asignado a una actividad. El sistema elimina el cargo (`ActividadCargo`) y, si existe, la fila de asistencia asociada (`Asistencia`).
 
 ## Errores Documentados
 
 - `no se sabe cual borrar`
+- `hay un error, no se ha eliminado el cargo`
+- `hay un error, no se ha eliminado la asistencia`
 
 ## Limites De La Respuesta
 

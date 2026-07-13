@@ -6,23 +6,38 @@ url: "/src/actividades/actividad_nuevo_curso_ejecutar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividades/infrastructure/ui/http/controllers/actividad_nuevo_curso_ejecutar.php"
-entrada: ["post.ver_lista:string", "post.year:integer", "post.year_ref:integer"]
+entrada: ["post.year_ref:integer", "post.year:integer", "post.ver_lista:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividades_ActividadNuevoCursoEjecutarData"
-respuesta_data: ["html:string, copiadas: int"]
+respuesta_data: ["html:string", "copiadas:integer"]
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/actividades/controller/actividad_nuevo_curso.php"]
 casos_uso: ["src\\actividades\\application\\ActividadNuevoCursoEjecutar"]
 tags: ["actividades", "actividad", "nuevo", "curso", "ejecutar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Actividad Nuevo Curso Ejecutar
 
-Endpoint backend para `actividad_nuevo_curso` (ejecucion).
+Genera las actividades del nuevo curso copiándolas desde un curso de referencia, solo para la
+delegación actual. Es una operación con efectos (borra y crea actividades).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Para la delegación propia (`dl_org` = mi dele y `mi dele + 'f'`):
+
+1. Borra las actividades del año destino (`year`), acumulando incidencias.
+2. Copia las actividades de status 2 y 3 del año de referencia (`year_ref`) al nuevo curso mediante
+   `ActividadNuevoCurso::crear_actividad`, replicando repeticiones, centros encargados y fases.
+3. Comprueba solapes y recoge avisos del proceso.
+
+Devuelve un HTML con el resumen (copiadas, incidencias al borrar, errores al crear, solapes, avisos) y
+el número de actividades copiadas. Con `ver_lista` activado, antepone la lista detallada de las creadas.
+El registro de cambios queda deshabilitado (`setRegistrarCambios(false)`).
 
 ## Endpoint
 
@@ -35,17 +50,21 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `ver_lista` | `string` | controller | No | controller |
-| `year` | `integer` | controller | No | controller |
-| `year_ref` | `integer` | controller | No | controller |
+| `year_ref` | `integer` | controller | No | Año de referencia (origen de la copia) |
+| `year` | `integer` | controller | No | Año destino (se borra antes de copiar) |
+| `ver_lista` | `string` | controller | No | Si es "true"/no vacío, incluye la lista detallada |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `actividades_ActividadNuevoCursoEjecutarData`):
-  - `html` (`string, copiadas: int`)
+- Helper: `ContestarJson::enviar` (data serializada como string JSON; el front hace segundo `JSON.parse`).
+- Forma: `standard_envelope_string_data`.
+- `data`: `{ html: string, copiadas: integer }`. Las incidencias/errores no viajan como `success: false`,
+  sino integradas en `data.html`.
+
+## Permisos
+
+- Sin control de permisos propio en el caso de uso; opera siempre sobre la delegación actual. La
+  autorización se resuelve en el frontend (`actividad_nuevo_curso.php`) y en `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -54,9 +73,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Frontend Relacionado
 
 - `frontend/actividades/controller/actividad_nuevo_curso.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

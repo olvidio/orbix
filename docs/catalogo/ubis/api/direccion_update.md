@@ -6,22 +6,26 @@ url: "/src/ubis/direccion_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/direccion_update.php"
-entrada: ["post.a_p:string", "post.c_p:string", "post.cp_dcha:string", "post.direccion:string", "post.f_direccion:string", "post.id_direccion:string", "post.id_ubi:integer", "post.idx:string", "post.latitud:string", "post.longitud:string", "post.nom_sede:string", "post.obj_dir:string", "post.observ:string", "post.pais:string", "post.poblacion:string", "post.principal:string", "post.propietario:string", "post.provincia:string"]
-entrada_obligatoria: []
+entrada: ["post.obj_dir:string", "post.id_ubi:integer", "post.idx:string", "post.id_direccion:string", "post.nom_sede:string", "post.direccion:string", "post.a_p:string", "post.c_p:string", "post.poblacion:string", "post.provincia:string", "post.pais:string", "post.observ:string", "post.f_direccion:string", "post.latitud:string", "post.longitud:string", "post.cp_dcha:string", "post.propietario:string", "post.principal:string"]
+entrada_obligatoria: ["obj_dir", "id_ubi"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["no se encuentra el ubi", "no se encuentra la dirección"]
+errores: ["no se encuentra el ubi", "operación no soportada para este tipo de dirección", "no se encuentra la dirección"]
 frontend_referencias: ["frontend/ubis/controller/direccion_update.php"]
 casos_uso: ["src\\ubis\\application\\DireccionUpdate"]
 tags: ["ubis", "direccion", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Direccion Update
 
-Descripcion funcional pendiente de revisar.
+Crea o modifica una dirección y su relación con el ubi (principal, propietario).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Crea o modifica una dirección y su relación con el ubi (principal, propietario).
 
 ## Endpoint
 
@@ -34,37 +38,40 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `a_p` | `string` | application | No | application |
-| `c_p` | `string` | application | No | application |
-| `cp_dcha` | `string` | application | No | application |
-| `direccion` | `string` | application | No | application |
-| `f_direccion` | `string` | application | No | application |
-| `id_direccion` | `string` | application | No | application |
-| `id_ubi` | `integer` | application | No | application |
-| `idx` | `string` | application | No | application |
-| `latitud` | `string` | application | No | application |
-| `longitud` | `string` | application | No | application |
-| `nom_sede` | `string` | application | No | application |
-| `obj_dir` | `string` | application | No | application |
-| `observ` | `string` | application | No | application |
-| `pais` | `string` | application | No | application |
-| `poblacion` | `string` | application | No | application |
-| `principal` | `string` | application | No | application |
-| `propietario` | `string` | application | No | application |
-| `provincia` | `string` | application | No | application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `obj_dir` | `string` | application | Si | |
+| `id_ubi` | `integer` | application | Si | |
+| `idx` | `string` | application | No | |
+| `id_direccion` | `string` | application | No | |
+| `nom_sede` | `string` | application | No | |
+| `direccion` | `string` | application | No | |
+| `a_p` | `string` | application | No | |
+| `c_p` | `string` | application | No | |
+| `poblacion` | `string` | application | No | |
+| `provincia` | `string` | application | No | |
+| `pais` | `string` | application | No | |
+| `observ` | `string` | application | No | |
+| `f_direccion` | `string` | application | No | |
+| `latitud` | `string` | application | No | |
+| `longitud` | `string` | application | No | |
+| `cp_dcha` | `string` | application | No | |
+| `propietario` | `string` | application | No | |
+| `principal` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `ok`: 1
 
 ## Errores conocidos
-
 - `no se encuentra el ubi`
+- `operación no soportada para este tipo de dirección`
 - `no se encuentra la dirección`
+
+## Permisos
+
+UbiPermisos: frontend oculta botones si no puedeModificarPorObjeto.
 
 ## Casos De Uso
 
@@ -72,10 +79,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/ubis/controller/direccion_update.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/ubis/controller/direccion_update.php"]`).

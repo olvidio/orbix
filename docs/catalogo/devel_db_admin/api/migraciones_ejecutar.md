@@ -6,23 +6,29 @@ url: "/src/devel_db_admin/migraciones_ejecutar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_ejecutar.php"
-entrada: ["post.modo:mixed", "post.prefijo_hasta:mixed", "post.sel:mixed"]
+entrada: ["post.modo:string", "post.prefijo_hasta:string", "post.sel:array"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "devel_db_admin_MigracionesEjecutarData"
-respuesta_data: ["lines:list<string>, error: string|null"]
 requiere_hashb: false
-frontend_referencias: ["frontend/devel_db_admin/controller/migraciones_ejecutar.php", "frontend/devel_db_admin/controller/migraciones_lista.php"]
+errores: ["No hay migraciones para ejecutar.", "No se puede leer %s", "Database no soportada: %s", "No se han encontrado esquemas activos para %s", "Error ejecutando SQL de migracion (%s): %s", "La migracion no se aplico en ningun esquema: todos omitidos por esquema inexistente (catalogo PostgreSQL / SQLSTATE 3F000 / 42P01)."]
+frontend_referencias: ["frontend/devel_db_admin/controller/migraciones_ejecutar.php"]
 casos_uso: ["src\\devel_db_admin\\application\\MigracionesEjecutar"]
 tags: ["devel_db_admin", "migraciones", "ejecutar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Migraciones Ejecutar
 
-Descripcion funcional pendiente de revisar.
+Ejecuta migraciones SQL pendientes desde `db/migrations` y registra el resultado.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Modos: `seleccion` (ids en `sel[]`), `hasta` (`prefijo_hasta` inclusive). Por cada migración
+aplica archivos en comun/sv/sv-e (y réplicas), con soporte comodín por esquema, CSV puente,
+suspensión de suscripciones lógicas en migraciones de estructura, e idempotencia
+(`MIGRACION_YA_APLICADA`). Registra en `migracion_aplicada`.
 
 ## Endpoint
 
@@ -35,19 +41,22 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `modo` | `mixed` | controller | No | controller |
-| `prefijo_hasta` | `mixed` | controller | No | controller |
-| `sel` | `mixed` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `modo` | `string` | controller | No | Default `seleccion`; o `hasta` |
+| `sel` | `array` | controller | Condicional | Ids de migración (sin `#` inicial) |
+| `prefijo_hasta` | `string` | controller | Condicional | Modo `hasta` |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `devel_db_admin_MigracionesEjecutarData`):
-  - `lines` (`list<string>, error: string|null`)
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Payload: `{ "lines": list<string>, "error": string|null }`.
+
+## Errores conocidos
+
+- Ver front matter; muchos mensajes técnicos en inglés/castellano mezclados en `lines`/`error`
+
+## Permisos
+
+- Sin control propio; menú `sistema > DB > actualizar DB`.
 
 ## Casos De Uso
 
@@ -55,11 +64,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/devel_db_admin/controller/migraciones_ejecutar.php`
-- `frontend/devel_db_admin/controller/migraciones_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/devel_db_admin/controller/migraciones_ejecutar.php` (proxy desde lista)

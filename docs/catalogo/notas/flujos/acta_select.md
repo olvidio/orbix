@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.acta_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/acta_select_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Select
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_select.gestion
 
 ## Objetivo De Usuario
 
-Gestiona ActaSelect. Lista de actas y mapa de asignaturas para acta_select (frontend sin repositorios).
+Buscar y seleccionar actas del curso; navegar a ver, modificar, imprimir o descargar PDF.
 
 ## Punto De Entrada
 
@@ -72,9 +72,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > actas... > actas; stgr > actas > actas
+- **Pills2:** ESTUDIOS > Actas y certificados > Actas; vest > actas... > actas; stgr > actas > actas

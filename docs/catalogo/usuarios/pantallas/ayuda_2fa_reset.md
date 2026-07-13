@@ -11,16 +11,18 @@ endpoints: []
 capacidades: []
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Ayuda 2fa Reset
 
-Página de ayuda para restablecer la autenticación de dos factores (2FA).
+Ayuda reset 2FA embebida en formulario 2FA.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/ayuda_2fa_reset.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página está como include de acta_2_mpdf.php
+Generación PDF (mPDF) del acta.
 
 ## Uso En Ayuda
 

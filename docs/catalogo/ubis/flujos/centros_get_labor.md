@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.centros_get_labor"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/centros_get_labor"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Centros Get Labor
-
-Propuesta generada automaticamente desde la capacidad `ubis.centros_get_labor.gestionar` y sus pantallas relacionadas.
+# Flujo - Centros Get Labor
 
 ## Objetivo De Usuario
 
-Gestiona CentrosGetLabor. Descripcion funcional pendiente de revisar.
+Lista todos los centros DL activos con su tipo de centro y tipo de labor.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones > modificar centros.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros

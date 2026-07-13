@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Página de ayuda para restablecer la autenticación de dos factores (2FA).
+Ayuda reset 2FA embebida en formulario 2FA.
 
 ## Uso En Ayuda
 

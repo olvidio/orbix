@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En dossier 1303 o 3103, seleccionar una matrícula y pulsar **modificar**.
+2. Ajustar nivel, asignatura o preceptor en el formulario.
+3. Pulsar **guardar**; el sistema persiste los cambios en la matrícula.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/matricula_editar`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona MatriculaEditar. Edita una matricula.
+El usuario modifica nivel, asignatura, preceptor u otros datos de una matrícula ya creada y guarda los cambios. Sustituye el case `editar` de `update_3103.php`.
 
 ## Errores Documentados
 

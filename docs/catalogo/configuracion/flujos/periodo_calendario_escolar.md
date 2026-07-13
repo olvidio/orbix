@@ -2,60 +2,45 @@
 id: "configuracion.periodo_calendario_escolar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "configuracion"
-nombre: "Flujo - Gestionar Periodo Calendario Escolar"
+nombre: "Flujo - Periodo calendario escolar (interno)"
 capacidad: "configuracion.periodo_calendario_escolar.gestionar"
 pantallas_principales: []
 fragmentos: []
 acciones: ["obtener_datos"]
 endpoints: ["/src/configuracion/periodo_calendario_escolar_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Periodo Calendario Escolar
-
-Propuesta generada automaticamente desde la capacidad `configuracion.periodo_calendario_escolar.gestionar` y sus pantallas relacionadas.
+# Flujo - Periodo calendario escolar (interno)
 
 ## Objetivo De Usuario
 
-Gestiona PeriodoCalendarioEscolar. Fechas y metadatos del curso (STGR / CRT) que antes solo estaban en $_SESSION['oConfig'], para inyectar en Periodo del frontend.
+No hay pantalla de usuario: el frontend obtiene fechas de inicio/fin de curso STGR y CRT
+(caché en sesión o BD) para que `Periodo` calcule rangos de fechas en listados y filtros
+de calendario.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Consumo programático desde `frontend/shared/web/Periodo.php`:
+`Periodo::conCalendarioDesdeBackend()` → POST a `periodo_calendario_escolar_data`.
 
-## Fragmentos O Pantallas Auxiliares
+Los valores editables por el administrador están en la pantalla **config esquema**
+(`curso_stgr`, `curso_crt`); este endpoint solo los lee (vía `ConfigSnapshot` / sesión).
 
-No se han detectado fragmentos AJAX relacionados.
+## Escenarios
 
-## Escenarios Inferidos
+### Obtener calendario
 
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
-
-## Endpoints Del Flujo
-
-- `/src/configuracion/periodo_calendario_escolar_data`
+1. Si `$_SESSION['oConfig']` ya es `ConfigSnapshot`, no llama al backend.
+2. Si no, una petición POST devuelve `dia_ini_stgr`, `mes_ini_stgr`, `dia_fin_stgr`,
+   `mes_fin_stgr`, equivalentes CRT y `any_final_est` / `any_final_crt`.
+3. Resultado cacheado estáticamente en la petición PHP.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+Errores de `PostRequest` propagados como `RuntimeException` si `$throwOnError=true`; en modo
+legacy pueden provocar `exit` con mensaje de error.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (flujo técnico transversal; configuración en «config esquema»).

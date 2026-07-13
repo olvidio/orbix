@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.centros_form_num"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "modal"
 modulo: "ubis"
 nombre: "Centros Form Num"
 controller: "frontend/ubis/controller/centros_form_num.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/centros_form_num", "/src/ubis/centros_update"]
 capacidades: ["ubis.centros.gestionar", "ubis.centros_form_num.gestionar"]
 campos: ["form.n_buzon", "form.num_cartas", "form.num_pi", "get.id_ubi", "post.id_ubi"]
 acciones: ["fnjs_cerrar", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Centros Form Num
 
-Descripcion funcional pendiente de revisar.
+Formulario modal para editar buzón, pi y cartas de un centro DL.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `modal`
+
+
 - Controller: `frontend/ubis/controller/centros_form_num.php`
 
 ## Vistas Relacionadas
@@ -54,13 +56,7 @@ No se han detectado controladores frontend relacionados.
 - `fnjs_cerrar`
 - `fnjs_guardar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

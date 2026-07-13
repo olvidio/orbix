@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/grupo_info", "/src/usuarios/perm_menu_eliminar", "/sr
 capacidades: ["usuarios.grupo_info.gestionar", "usuarios.perm_menu.gestionar"]
 campos: ["form.que", "form.sel", "form.usuario", "html.que", "html.refresh", "post.id_usuario", "post.que", "post.refresh", "post.scroll_id", "post.sel", "post.stack"]
 acciones: ["fnjs_actualizar", "fnjs_add_perm_menu", "fnjs_del_perm_menu", "fnjs_enviar_formulario", "fnjs_guardar", "fnjs_solo_uno"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Grupo Form
 
-Descripcion funcional pendiente de revisar.
+Formulario alta/edición de grupo de permisos.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/grupo_form.php`
 
 ## Vistas Relacionadas
@@ -68,13 +70,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_guardar`
 - `fnjs_solo_uno`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

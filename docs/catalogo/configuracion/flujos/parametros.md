@@ -2,79 +2,46 @@
 id: "configuracion.parametros.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "configuracion"
-nombre: "Flujo - Gestionar Parametros"
+nombre: "Flujo - Configurar parámetros del esquema"
 capacidad: "configuracion.parametros.gestionar"
-pantallas_principales: []
-fragmentos: ["configuracion.pantalla.parametros"]
-acciones: ["crear_actualizar", "listar"]
+pantallas_principales: ["configuracion.pantalla.parametros"]
+fragmentos: []
+acciones: ["listar", "crear_actualizar"]
 endpoints: ["/src/configuracion/parametros_lista", "/src/configuracion/parametros_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Parametros
-
-Propuesta generada automaticamente desde la capacidad `configuracion.parametros.gestionar` y sus pantallas relacionadas.
+# Flujo - Configurar parámetros del esquema
 
 ## Objetivo De Usuario
 
-Gestiona Parametros. Descripcion funcional pendiente de revisar.
+Consultar y modificar los parámetros globales del esquema (curso escolar, certificados,
+idioma, ámbito territorial, gestión de calendario, etc.).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+`frontend/configuracion/controller/parametros.php`
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `configuracion.pantalla.parametros`
+### Cargar parámetros
 
-## Escenarios Inferidos
+1. Abrir menú config esquema / Esquema.
+2. `parametros_lista` devuelve valores actuales y catálogo de idiomas.
+3. Si hay error en la carga, la pantalla termina con el mensaje (`exit($data['error'])`).
 
-### Crear Actualizar
+### Guardar un parámetro
 
-Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/configuracion/parametros_update`
-
-### Listar
-
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Endpoints asociados:
-- `/src/configuracion/parametros_lista`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.fin_dia`
-- `form.fin_mes`
-- `form.ini_dia`
-- `form.ini_mes`
-- `form.valor`
-
-Acciones JavaScript:
-- Ninguna detectada.
-
-## Endpoints Del Flujo
-
-- `/src/configuracion/parametros_lista`
-- `/src/configuracion/parametros_update`
+1. Editar el bloque deseado (cada formulario lleva `parametro` oculto vía HashFront).
+2. Periodos STGR/CRT: campos `ini_dia`, `ini_mes`, `fin_dia`, `fin_mes` (no `valor`).
+3. Resto: campo `valor` (texto, radio o desplegable).
+4. «Guardar» → `parametros_update` → aviso «se ha guardado correctamente».
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+Sin mensajes `_()` documentados en el endpoint; fallos de carga inicial se muestran en pantalla.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > Configuración > config esquema
+- **Pills2:** ADMIN LOCAL > Esquema; sistema > Configuración > config esquema

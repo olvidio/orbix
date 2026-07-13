@@ -6,22 +6,32 @@ url: "/src/pasarela/contribucion_reserva_excepcion_guardar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/pasarela/infrastructure/ui/http/controllers/contribucion_reserva_excepcion_guardar.php"
-entrada: ["post.id_tipo_activ:string", "post.valor:string"]
+entrada:
+  - "post.id_tipo_activ:string"
+  - "post.valor:string"
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["Falta id_tipo_activ", "Falta valor de contribución", "Debe ser un numero entero del 1 al 100"]
-frontend_referencias: ["frontend/pasarela/controller/contribucion_reserva_ajax.php", "frontend/pasarela/controller/contribucion_reserva_lista.php"]
-casos_uso: ["src\\pasarela\\application\\ContribucionReservaExcepcionGuardar"]
-tags: ["pasarela", "contribucion", "reserva", "excepcion", "guardar"]
-estado_revision: "generado"
+errores:
+  - "Falta id_tipo_activ"
+  - "Falta valor de contribución"
+  - "Debe ser un numero entero del 1 al 100"
+frontend_referencias:
+  - "frontend\/pasarela\/controller\/contribucion_reserva_ajax.php"
+casos_uso: ["src\pasarela\application\ContribucionReservaExcepcionGuardar"]
+tags: ["pasarela"]
+estado_revision: "revisado"
 ---
 
 # Contribucion Reserva Excepcion Guardar
 
-Inserta o actualiza una excepción del parámetro `contribucion_reserva` para un `id_tipo_activ` concreto.
+Alta/edición de excepción de contribución reserva por tipo.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Campo POST `valor` = porcentaje.
 
 ## Endpoint
 
@@ -34,20 +44,23 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tipo_activ` | `string` | controller | No | controller |
-| `valor` | `string` | controller | No | controller |
+| `id_tipo_activ` | `string` | controller | No | |
+| `valor` | `string` | controller | No | |
+
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data: "ok"`.
 
 ## Errores conocidos
 
 - `Falta id_tipo_activ`
 - `Falta valor de contribución`
 - `Debe ser un numero entero del 1 al 100`
+
+## Permisos
+
+Sin control en el caso de uso; autorización en frontend.
 
 ## Casos De Uso
 
@@ -56,10 +69,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Frontend Relacionado
 
 - `frontend/pasarela/controller/contribucion_reserva_ajax.php`
-- `frontend/pasarela/controller/contribucion_reserva_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

@@ -8,20 +8,22 @@ pantallas_principales: []
 fragmentos: ["asistentes.pantalla.form_asistentes_a_una_actividad"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/form_asistentes_a_una_actividad_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Form Asistentes A Una Actividad
 
-Propuesta generada automaticamente desde la capacidad `asistentes.form_asistentes_a_una_actividad.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Gestiona FormAsistentesAUnaActividad. Dossier asistentes a una actividad (3101). Datos puros; la UI vive en {.
+Gestionar asistente en dossier 3101 (actividad).
+
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `form_asistentes_a_una_actividad` (`frontend/asistentes/controller/`).
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -64,9 +66,6 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

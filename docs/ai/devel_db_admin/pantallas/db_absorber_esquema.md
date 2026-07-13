@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX que ejecuta la absorción de esquema tras confirmar en `db_absorber_esquema_que`.
 
 ## Uso En Ayuda
 

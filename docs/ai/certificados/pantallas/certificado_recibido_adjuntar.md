@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario para registrar un certificado recibido (PDF) en la región STGR local.
 
 ## Uso En Ayuda
 

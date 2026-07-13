@@ -8,20 +8,23 @@ pantallas_principales: []
 fragmentos: ["actividadplazas.pantalla.peticiones_activ"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadplazas/peticiones_activ_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Peticiones Activ
 
-Propuesta generada automaticamente desde la capacidad `actividadplazas.peticiones_activ.gestionar` y sus pantallas relacionadas.
+Carga la pantalla de peticiones de plaza de una persona: actividades candidatas y peticiones actuales
+en orden de prioridad.
 
 ## Objetivo De Usuario
 
-Gestiona PeticionesActiv. Lista de actividades candidatas + peticiones actuales para una persona+tipo.
+Consultar y preparar la edición de las peticiones de plaza de una persona: ver su nombre, las
+actividades disponibles del tipo y las peticiones ya guardadas, listas para reordenar o ampliar.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `peticiones_activ`, abierta al seleccionar una persona desde los listados de colectivos
+(n / a / agd). No tiene entrada directa en el menú de plazas.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +34,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Desde un listado de personas (n / a / agd), abrir las peticiones de plaza de una persona.
+2. El sistema carga `peticiones_activ_data` con `id_nom` y `sactividad`.
+3. Devuelve las actividades candidatas y las peticiones actuales; limpia peticiones antiguas ya no
+   disponibles.
+4. Pinta los desplegables (`DesplegableArray`) precargados con el orden de prioridad; el usuario
+   puede guardar o borrar (flujo `peticiones`).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadplazas/peticiones_activ_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -69,9 +76,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- Sin entrada de menú en el índice: se abre desde la selección de una persona (colectivos n / a / agd),
+  no directamente desde un menú.

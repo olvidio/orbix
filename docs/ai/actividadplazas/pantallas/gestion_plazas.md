@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla principal del modulo `actividadplazas`.
+Pantalla principal del módulo `actividadplazas`: cuadro de distribución de plazas por delegación del grupo de estudios (totales, concedidas y pedidas) para un periodo y tipo de actividad, con edición inline por celda.
 
 ## Uso En Ayuda
 

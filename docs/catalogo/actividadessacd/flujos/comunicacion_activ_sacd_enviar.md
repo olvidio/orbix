@@ -8,20 +8,23 @@ pantallas_principales: []
 fragmentos: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadessacd/comunicacion_activ_sacd_enviar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Comunicacion Activ Sacd Enviar
 
-Propuesta generada automaticamente desde la capacidad `actividadessacd.comunicacion_activ_sacd_enviar.gestionar` y sus pantallas relacionadas.
+Envío de correos de comunicación de actividades a los sacd.
 
 ## Objetivo De Usuario
 
-Gestiona ComunicacionActividadesSacdEnviar. Encola los mails de comunicacion de actividades a los sacd y al ctr del sacd, con copia al jefe de calendario.
+El usuario pulsa **enviar mail**: el sistema encola los correos de comunicación (uno por sacd con
+copia al jefe de calendario, y otro para el ctr del sacd si tiene email). Requiere un periodo válido
+y el jefe de calendario configurado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `com_sacd_activ_periodo` (`frontend/actividadessacd/controller/com_sacd_activ_periodo.php`):
+la función `fnjs_enviar_mails` llama a este endpoint al pulsar **enviar mail**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,38 +34,21 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Tener un listado generado (flujo de búsqueda previo).
+2. Pulsar **enviar mail**.
+3. El sistema encola los correos y muestra el resultado.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadessacd/comunicacion_activ_sacd_enviar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.iactividad_val`
-- `form.iasistentes_val`
-- `form.periodo`
-- `form.year`
-- `post.id_nom`
-- `post.periodo`
-- `post.propuesta`
-- `post.que`
-- `post.sel`
-- `post.year`
+- Ninguno detectado.
 
 Acciones JavaScript:
-- `fnjs_cancelar`
-- `fnjs_construir_listado`
-- `fnjs_enviar_mails`
-- `fnjs_esc_html`
-- `fnjs_left_side_hide`
-- `fnjs_parse_rta_txt`
-- `fnjs_pintar_sacds`
-- `fnjs_update_div`
-- `fnjs_ver`
+- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -72,9 +58,11 @@ Acciones JavaScript:
 
 - ``falta determinar un periodo``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `com_sacd_activ_periodo`:
+
+- **Legacy:** dre > actividades > comunic. sacd · exterior > sacd > atención actividades
+- **Pills2:** ATENCIÓN SACD > Actividades > Comunicación a los sacd
+
+Con `propuesta=true`: dre > propuestas > lista activ. sacd.

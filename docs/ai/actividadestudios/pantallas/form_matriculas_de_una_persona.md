@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Form de alta / edicion de una `Matricula` desde los dossiers `matriculas_de_una_persona` (1303) y `matriculas_de_una_actividad` (3103).
+Formulario de alta o edición de una `Matricula` desde los dossiers `matriculas_de_una_persona` (1303) y `matriculas_de_una_actividad` (3103). Sucesor de `apps/actividadestudios/controller/form_1303.php`.
 
 ## Uso En Ayuda
 

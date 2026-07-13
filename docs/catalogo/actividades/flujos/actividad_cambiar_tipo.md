@@ -2,48 +2,35 @@
 id: "actividades.actividad_cambiar_tipo.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Actividad Cambiar Tipo"
+nombre: "Flujo - Cambiar tipo de actividad"
 capacidad: "actividades.actividad_cambiar_tipo.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividades.pantalla.actividad_ver"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/actividades/actividad_cambiar_tipo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad Cambiar Tipo
+# Flujo - Cambiar tipo de actividad
 
-Propuesta generada automaticamente desde la capacidad `actividades.actividad_cambiar_tipo.gestionar` y sus pantallas relacionadas.
+Cambio de tipo en ficha existente (`mod=cambiar_tipo`): regenera proceso y reinicia fases.
 
 ## Objetivo De Usuario
 
-Gestiona ActividadCambiarTipo. Endpoint backend AJAX: cambia el tipo de una actividad existente.
+Seleccionar un nuevo tipo en la cascada, confirmar aviso de vuelta a *proyecto* y guardar.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+`actividad_ver` con `mod=cambiar_tipo` (enlace desde ficha o procesos).
 
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+1. Activar modo cambiar tipo en la ficha.
+2. Elegir nuevo tipo completo en la cascada.
+3. Confirmar diálogo (`fnjs_guardar('cambiar_tipo')`).
+4. POST a `actividad_cambiar_tipo`; volver atrás si OK.
 
 ## Endpoints Del Flujo
 
@@ -51,11 +38,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `debe seleccionar un tipo de actividad`
+- `actividad no encontrada`
+- `hay un error, no se ha guardado` + detalle
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (acción desde ficha de actividad ya abierta).

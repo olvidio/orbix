@@ -17,9 +17,9 @@ paths:
       operationId: "post_casas_calendario_ubi_resumen_data"
       summary: "Calendario Ubi Resumen Data"
       description: |
-        Endpoint backend: estudio económico de una casa (`calendario_ubi_resumen_data`).
+        Estudio económico y de ocupación de una casa para previsión del calendario.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/casas/api/calendario_ubi_resumen_data.md`
       tags:
@@ -30,6 +30,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
               properties:
                 G:
                   type: "integer"
@@ -57,7 +59,7 @@ paths:
       operationId: "post_casas_casa_actividades_lista_data"
       summary: "Casa Actividades Lista Data"
       description: |
-        Endpoint backend: listado de actividades por casa (`casa_actividades_lista`).
+        Listado de actividades por casa y periodo (modo `tipo_lista=lista_activ`).
         
         Operacion: `lista_data`.
         
@@ -101,7 +103,7 @@ paths:
       operationId: "post_casas_casa_ec_gastos_form_data"
       summary: "Casa Ec Gastos Form Data"
       description: |
-        Endpoint backend: formulario anual de gastos/aportaciones (`casa_ec_gastos_form`).
+        Formulario anual de gastos y aportaciones (sv/sf) por mes de una o varias casas.
         
         Operacion: `form_data`.
         
@@ -114,6 +116,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_cdc"
               properties:
                 id_cdc:
                   type: "array"
@@ -139,7 +143,7 @@ paths:
       operationId: "post_casas_casa_ec_gastos_guardar"
       summary: "Casa Ec Gastos Guardar"
       description: |
-        Endpoint backend: guardar gastos/aportaciones mensuales (`casa_ec_gastos_guardar`).
+        Guarda gastos y aportaciones mensuales de una casa para un año completo.
         
         Operacion: `mutacion`.
         
@@ -152,36 +156,105 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
+                - "year"
               properties:
-                "ap_sf$m":
-                  type: "string"
-                "ap_sv$m":
-                  type: "string"
-                "g$m":
-                  type: "string"
                 id_ubi:
                   type: "integer"
                 year:
                   type: "integer"
+                g1:
+                  type: "string"
+                g2:
+                  type: "string"
+                g3:
+                  type: "string"
+                g4:
+                  type: "string"
+                g5:
+                  type: "string"
+                g6:
+                  type: "string"
+                g7:
+                  type: "string"
+                g8:
+                  type: "string"
+                g9:
+                  type: "string"
+                g10:
+                  type: "string"
+                g11:
+                  type: "string"
+                g12:
+                  type: "string"
+                ap_sv1:
+                  type: "string"
+                ap_sv2:
+                  type: "string"
+                ap_sv3:
+                  type: "string"
+                ap_sv4:
+                  type: "string"
+                ap_sv5:
+                  type: "string"
+                ap_sv6:
+                  type: "string"
+                ap_sv7:
+                  type: "string"
+                ap_sv8:
+                  type: "string"
+                ap_sv9:
+                  type: "string"
+                ap_sv10:
+                  type: "string"
+                ap_sv11:
+                  type: "string"
+                ap_sv12:
+                  type: "string"
+                ap_sf1:
+                  type: "string"
+                ap_sf2:
+                  type: "string"
+                ap_sf3:
+                  type: "string"
+                ap_sf4:
+                  type: "string"
+                ap_sf5:
+                  type: "string"
+                ap_sf6:
+                  type: "string"
+                ap_sf7:
+                  type: "string"
+                ap_sf8:
+                  type: "string"
+                ap_sf9:
+                  type: "string"
+                ap_sf10:
+                  type: "string"
+                ap_sf11:
+                  type: "string"
+                ap_sf12:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/casas_CasaEcGastosGuardarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/casas_CasaEcGastosGuardarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/casas/casa_ingreso_eliminar":
     post:
       operationId: "post_casas_casa_ingreso_eliminar"
       summary: "Casa Ingreso Eliminar"
       description: |
-        Endpoint backend: eliminar el Ingreso de una actividad.
+        Elimina el `Ingreso` asociado a una actividad.
         
         Operacion: `mutacion`.
         
@@ -194,6 +267,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -203,19 +278,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/casas_CasaIngresoEliminarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/casas_CasaIngresoEliminarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/casas/casa_ingreso_form_data":
     post:
       operationId: "post_casas_casa_ingreso_form_data"
       summary: "Casa Ingreso Form Data"
       description: |
-        Endpoint backend: datos para el formulario de ingreso de una actividad (`casa_ingreso_form`).
+        Datos del formulario modal de ingreso económico de una actividad.
         
         Operacion: `form_data`.
         
@@ -228,6 +303,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -249,7 +326,7 @@ paths:
       operationId: "post_casas_casa_ingreso_update"
       summary: "Casa Ingreso Update"
       description: |
-        Endpoint backend: crear/actualizar ingreso y tarifa de actividad.
+        Crea o actualiza el `Ingreso` de una actividad y, opcionalmente, su tarifa y precio.
         
         Operacion: `mutacion`.
         
@@ -262,6 +339,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -281,19 +360,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/casas_CasaIngresoUpdateDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/casas_CasaIngresoUpdateDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/casas/casa_ingresos_lista_data":
     post:
       operationId: "post_casas_casa_ingresos_lista_data"
       summary: "Casa Ingresos Lista Data"
       description: |
-        Endpoint backend: listado económico de actividades por casa (`casa_ingresos_lista`).
+        Listado económico de actividades por casa y periodo (gestión económica).
         
         Operacion: `lista_data`.
         
@@ -306,6 +385,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_cdc"
               properties:
                 empiezamax:
                   type: "string"
@@ -337,9 +418,9 @@ paths:
       operationId: "post_casas_casas_resumen_data"
       summary: "Casas Resumen Data"
       description: |
-        Endpoint backend: resumen económico de casas (`casas_resumen_data`).
+        Resumen económico agregado de casas (ocupación, asistentes, ingresos, gastos, superávit).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/casas/api/casas_resumen_data.md`
       tags:
@@ -373,19 +454,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/casas_CasasResumenDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/casas_CasasResumenDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/casas/grupo_eliminar":
     post:
       operationId: "post_casas_grupo_eliminar"
       summary: "Grupo Eliminar"
       description: |
-        Endpoint backend: elimina un `GrupoCasa`.
+        Elimina un `GrupoCasa` por `id_item`.
         
         Operacion: `mutacion`.
         
@@ -398,6 +479,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_item:
                   type: "integer"
@@ -419,7 +502,7 @@ paths:
       operationId: "post_casas_grupo_form_data"
       summary: "Grupo Form Data"
       description: |
-        Endpoint backend: datos del formulario `GrupoCasa`.
+        Datos del formulario de alta/edición de un `GrupoCasa`.
         
         Operacion: `form_data`.
         
@@ -453,7 +536,7 @@ paths:
       operationId: "post_casas_grupo_lista_data"
       summary: "Grupo Lista Data"
       description: |
-        Endpoint backend: listado de `GrupoCasa` (relaciones padre ↔ hijo).
+        Listado de relaciones `GrupoCasa` (casa padre ↔ casa hijo) para la tabla del flujo de grupos.
         
         Operacion: `lista_data`.
         
@@ -488,7 +571,7 @@ paths:
       operationId: "post_casas_grupo_update"
       summary: "Grupo Update"
       description: |
-        Endpoint backend: crea o actualiza un `GrupoCasa`.
+        Crea o actualiza un `GrupoCasa` (relación casa padre ↔ casa hijo).
         
         Operacion: `mutacion`.
         
@@ -501,6 +584,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi_padre"
+                - "id_ubi_hijo"
               properties:
                 id_item:
                   type: "string"
@@ -526,7 +612,7 @@ paths:
       operationId: "post_casas_ingreso_plazas_previstas_update"
       summary: "Ingreso Plazas Previstas Update"
       description: |
-        Endpoint backend: actualiza plazas previstas de un ingreso (TablaEditable).
+        Actualiza `num_asistentes_previstos` de un `Ingreso` desde `TablaEditable`.
         
         Operacion: `mutacion`.
         
@@ -539,6 +625,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "data"
+                - "colName"
               properties:
                 colName:
                   type: "string"
@@ -562,9 +651,9 @@ paths:
       operationId: "post_casas_prevision_asistentes_data"
       summary: "Prevision Asistentes Data"
       description: |
-        Endpoint backend: datos de la pantalla `prevision_asistentes`.
+        Datos de la tabla editable de plazas previstas por actividad.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/casas/api/prevision_asistentes_data.md`
       tags:
@@ -616,82 +705,6 @@ components:
           type: string
         data:
           description: "Ver schema concreto de cada operacion."
-    casas_CasaEcGastosGuardarData:
-      type: object
-      properties:
-        ok:
-          type: "string"
-    casas_CasaEcGastosGuardarDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/casas_CasaEcGastosGuardarData"
-    casas_CasaIngresoEliminarData:
-      type: object
-      properties:
-        ok:
-          type: "string"
-    casas_CasaIngresoEliminarDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/casas_CasaIngresoEliminarData"
-    casas_CasaIngresoUpdateData:
-      type: object
-      properties:
-        ok:
-          type: "string"
-    casas_CasaIngresoUpdateDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/casas_CasaIngresoUpdateData"
-    casas_CasasResumenDataData:
-      type: object
-      properties:
-        row:
-          type: array
-          items: {}
-        "0":
-          type: array
-          items: {}
-        "1":
-          type: array
-          items: {}
-        "2":
-          type: array
-          items: {}
-        _id_ubi_padre:
-          type: "integer"
-        _id_ubi_hijo:
-          type: "integer"
-        avisos:
-          type: "string"
-    casas_CasasResumenDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/casas_CasasResumenDataData"
     casas_GrupoCasaFormDataData:
       type: object
       properties:

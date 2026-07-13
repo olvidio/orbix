@@ -8,22 +8,20 @@ pantallas_principales: []
 fragmentos: ["actividadcargos.pantalla.form_cargos_personas_en_actividad"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadcargos/form_cargos_personas_en_actividad_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Form Cargos Personas En Actividad
 
-Propuesta generada automaticamente desde la capacidad `actividadcargos.form_cargos_personas_en_actividad.gestionar` y sus pantallas relacionadas.
+Bootstrap del formulario de cargo en la vista por persona (dossier 1302).
 
 ## Objetivo De Usuario
 
-Gestionar los cargos de una persona en distintas actividades (dossier 1302): consultar, añadir, modificar y quitar.
-
-Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Form Cargos Personas En Actividad).
+Gestionar los cargos de una persona en distintas actividades: el sistema carga el listado de actividades candidatas (en altas), valores del cargo en edición y URLs de mutación.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Controller `frontend/actividadcargos/controller/form_cargos_personas_en_actividad.php`, invocado desde el widget 1302 (enlaces **añadir cargo de la dl** / **añadir cargo de otra dl** o **modificar cargo**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,10 +32,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 ### Obtener Datos
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. El usuario abre el formulario desde el widget de relación de cargos de la persona.
+2. El controller POSTea a `form_cargos_personas_en_actividad_data` con `id_pau` (persona), `sel`, `mod`, `que_dl`, `id_tipo` según el enlace de alta.
+3. En modo `editar`, carga datos del `ActividadCargo` y fija actividad en solo lectura.
+4. En modo `nuevo`, filtra actividades por tipo y delegación (`que_dl` vacío = otras delegaciones).
+5. El front pinta desplegables y hash; el usuario completa y guarda vía `cargo_nuevo`/`cargo_editar`.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadcargos/form_cargos_personas_en_actividad_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -59,11 +61,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `no encuentro el cargo` (edición)
+- `actividad no encontrada`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (fragmento AJAX del dossier 1302; entrada habitual vía ficha de persona).

@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.acta_ver"]
 acciones: ["ejecutar"]
 endpoints: ["/src/notas/asignaturas_search"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Asignaturas Search
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.asignaturas_search.
 
 ## Objetivo De Usuario
 
-Gestiona AsignaturasSearch. Autocomplete jQuery-UI.
+Autocompletado de asignaturas en formulario de acta.
 
 ## Punto De Entrada
 
@@ -65,10 +65,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

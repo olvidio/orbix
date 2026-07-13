@@ -53,7 +53,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoEmitidoGuardarMessages. Descripcion funcional pendiente de revisar. Mensajes legibles al guardar un certificado emitido (errores de BD, etc.).
+Imprimir, guardar o eliminar un certificado emitido desde el formulario de impresión.
 
 ## Limites De La Respuesta
 

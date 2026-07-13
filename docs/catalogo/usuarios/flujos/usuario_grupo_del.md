@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["usuarios.pantalla.usuario_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_grupo_del"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Usuario Grupo Del
-
-Propuesta generada automaticamente desde la capacidad `usuarios.usuario_grupo_del.gestionar` y sus pantallas relacionadas.
+# Flujo - Usuario Grupo Del
 
 ## Objetivo De Usuario
 
-Gestiona UsuarioGrupoDel. Descripcion funcional pendiente de revisar.
+Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -70,11 +68,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Operación no autorizada`
+- `hay un error, no se ha eliminado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

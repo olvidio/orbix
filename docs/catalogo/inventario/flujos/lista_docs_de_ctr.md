@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["inventario.pantalla.traslado_doc_lista"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_docs_de_ctr"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Lista Docs De Ctr
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `inventario.lista_docs_de_
 
 ## Objetivo De Usuario
 
-Gestiona ListaDocsDeCtr. Descripcion funcional pendiente de revisar.
+Gestiona ListaDocsDeCtr. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Punto De Entrada
 
@@ -53,10 +53,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

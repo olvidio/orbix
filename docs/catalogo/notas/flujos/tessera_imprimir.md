@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.tessera_imprimir", "notas.pantalla.tessera_imprimir_mpdf"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/tessera_imprimir_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Tessera Imprimir
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.tessera_imprimir.ge
 
 ## Objetivo De Usuario
 
-Gestiona TesseraImprimir. Datos imprimibles de tessera ya serializados (sin objetos dominio → JSON estable).
+Imprimir tessera (HTML/PDF).
 
 ## Punto De Entrada
 
@@ -59,10 +59,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

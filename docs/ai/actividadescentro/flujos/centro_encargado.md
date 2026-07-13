@@ -6,7 +6,7 @@ titulo: "Centro Encargado"
 flujo: "actividadescentro.centro_encargado.gestionar.flujo"
 preguntas: ["Como eliminar en Centro Encargado?"]
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 endpoints: ["/src/actividadescentro/centro_encargado_eliminar"]
 source: "docs/catalogo/actividadescentro/flujos/centro_encargado.md"
 estado_revision: "generado"
@@ -31,21 +31,20 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Eliminar
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Pulsar un centro encargado ya asignado para abrir el popup de orden.
+2. Elegir **borrar**.
+3. El sistema lo elimina y refresca la celda de centros de la actividad.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadescentro/centro_encargado_eliminar`
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Objetivo
 
-Gestiona CentroEncargado. Elimina un CentroEncargado de una actividad.
+El usuario quita un centro de la lista de encargados de una actividad.
 
 ## Errores Documentados
 

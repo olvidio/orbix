@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["eliminar", "guardar"]
 endpoints: ["/src/ubis/teleco_eliminar", "/src/ubis/teleco_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Teleco
-
-Propuesta generada automaticamente desde la capacidad `ubis.teleco.gestionar` y sus pantallas relacionadas.
+# Flujo - Teleco
 
 ## Objetivo De Usuario
 
-Gestiona Teleco. Descripcion funcional pendiente de revisar.
+Elimina una o más telecomunicaciones del ubi por claves primarias codificadas.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -63,11 +61,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

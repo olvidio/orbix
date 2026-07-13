@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona FormAsistentesAUnaActividad. Dossier asistentes a una actividad (3101). Datos puros; la UI vive en {.
+Gestionar asistente en dossier 3101 (actividad).
 
 ## Limites De La Respuesta
 

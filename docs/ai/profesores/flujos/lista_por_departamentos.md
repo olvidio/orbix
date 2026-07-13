@@ -2,39 +2,41 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "profesores"
-titulo: "Lista Por Departamentos"
+titulo: "Consultar claustro"
 flujo: "profesores.lista_por_departamentos.gestionar.flujo"
-preguntas: ["Como ejecutar en Lista Por Departamentos?"]
-pantallas_principales: []
-fragmentos: ["profesores.pantalla.lista_por_departamentos"]
+preguntas: ["Como consultar en Consultar claustro?"]
+pantallas_principales: ["profesores.pantalla.lista_por_departamentos"]
+fragmentos: []
 endpoints: ["/src/profesores/lista_por_departamentos"]
 source: "docs/catalogo/profesores/flujos/lista_por_departamentos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Lista Por Departamentos
+# Ayuda IA - Consultar claustro
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Lista Por Departamentos`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar claustro`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Lista Por Departamentos?
+- Como consultar en Consultar claustro?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Claustro por departamentos (`profesores.pantalla.lista_por_departamentos`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Consultar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **claustro** desde el menú.
+2. En RSTGR sin filtro: marcar delegaciones y pulsar **Aplicar filtro** (`filtro=1`, `dl[]`).
+3. Revisar departamentos con subsecciones director y tipos de profesor.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/profesores/lista_por_departamentos`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaPorDepartamentos. Descripcion funcional pendiente de revisar.
+Ver quiénes integran el claustro vigente, opcionalmente filtrado por delegación en RSTGR.
 
 ## Limites De La Respuesta
 

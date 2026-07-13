@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Doc Imprimir Dlb"
+titulo: "Imprimir inventario DLB"
 pantalla: "inventario.pantalla.doc_imprimir_dlb"
-preguntas: ["Que se puede hacer en Doc Imprimir Dlb?", "Que campos tiene Doc Imprimir Dlb?", "Que acciones hay en Doc Imprimir Dlb?"]
+preguntas: ["Que se puede hacer en Imprimir inventario DLB?", "Que campos tiene Imprimir inventario DLB?", "Que acciones hay en Imprimir inventario DLB?"]
 capacidades: ["inventario.inventario_css_inline.gestionar", "inventario.inventario_dlb.gestionar"]
 endpoints: ["/src/inventario/inventario_css_inline_data", "/src/inventario/inventario_dlb"]
 source: "docs/catalogo/inventario/pantallas/doc_imprimir_dlb.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Doc Imprimir Dlb
+# Ayuda IA Pantalla - Imprimir inventario DLB
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Vista de impresión DLB vía `inventario_dlb`.
 
 ## Uso En Ayuda
 

@@ -7,21 +7,26 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/procesos_update.php"
 entrada: ["post.id_fase:integer", "post.id_fase_previa:array", "post.id_item:integer", "post.id_of_responsable:integer", "post.id_tarea:integer", "post.id_tarea_previa:array", "post.id_tipo_proceso:integer", "post.mensaje_requisito:array", "post.status:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_item"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["no se encuentra la tarea del proceso", "hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/procesos/controller/procesos_select.php", "frontend/procesos/controller/procesos_ver.php"]
 casos_uso: ["src\\procesos\\application\\ProcesosUpdate"]
 tags: ["procesos", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Procesos Update
 
-Caso de uso: guarda una tarea_proceso del proceso.
+Guarda una `tarea_proceso` del proceso tipo.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Actualiza status, oficina responsable, fase, tarea y el JSON de fases previas (arrays paralelos
+`id_fase_previa[]`, `id_tarea_previa[]`, `mensaje_requisito[]`) de una tarea de proceso existente.
 
 ## Endpoint
 
@@ -34,17 +39,17 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_fase` | `integer` | application | No | application |
-| `id_fase_previa` | `array` | application | No | application |
-| `id_item` | `integer` | application | No | application |
-| `id_of_responsable` | `integer` | application | No | application |
-| `id_tarea` | `integer` | application | No | application |
-| `id_tarea_previa` | `array` | application | No | application |
-| `id_tipo_proceso` | `integer` | application | No | application |
-| `mensaje_requisito` | `array` | application | No | application |
-| `status` | `integer` | application | No | application |
+| `id_item` | `integer` | application | Si | PK de `tareas_proceso` |
+| `id_tipo_proceso` | `integer` | application | No | Proceso tipo |
+| `status` | `integer` | application | No | Estado de la tarea |
+| `id_of_responsable` | `integer` | application | No | Oficina responsable (bits menú) |
+| `id_fase` | `integer` | application | No | Fase de la tarea |
+| `id_tarea` | `integer` | application | No | Tarea (0 permitido) |
+| `id_fase_previa` | `array` | application | No | Índices paralelos de requisitos |
+| `id_tarea_previa` | `array` | application | No | Tarea previa por requisito |
+| `mensaje_requisito` | `array` | application | No | Mensaje personalizado por requisito |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+El controller pasa `$_POST` completo al caso de uso.
 
 ## Salida
 
@@ -55,7 +60,11 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 ## Errores conocidos
 
 - `no se encuentra la tarea del proceso`
-- `hay un error, no se ha guardado`
+- `hay un error, no se ha guardado` (puede concatenar error de repositorio)
+
+## Permisos
+
+- Sin control de permisos propio; autorización en frontend y `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -63,11 +72,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/procesos/controller/procesos_select.php`
-- `frontend/procesos/controller/procesos_ver.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/procesos/controller/procesos_ver.php` (submit del formulario de edición)
+- `frontend/procesos/controller/procesos_select.php` (URL emitida como `url_update`)

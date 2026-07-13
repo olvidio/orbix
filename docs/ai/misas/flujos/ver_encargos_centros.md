@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona VerEncargosCentros. Devuelve los datos del SlickGrid de EncargoCtr (encargos visibles para cada centro de una zona) + los desplegables estaticos del modal de edicion (zonas posibles para filtrar encargos, centros de la zona). El desplegable dinamico de encargos (que cambia al seleccionar zona en el modal) no se incluye aqui: el frontend lo pide por separado a DesplegableEncargosData cuando el usuario lo necesita.
+Devuelve filas del grid EncargoCtr de una zona más desplegables estáticos del modal (zonas, centros).
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

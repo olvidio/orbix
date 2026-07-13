@@ -14,14 +14,21 @@ errores: ["faltan parametros id_activ / id_nom / id_cargo", "no encuentro el car
 frontend_referencias: []
 casos_uso: ["src\\actividadcargos\\application\\ActividadCargoEditar"]
 tags: ["actividadcargos", "cargo", "editar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Cargo Editar
 
-Edita un `ActividadCargo` existente.
+Edita un `ActividadCargo` existente (o lo crea si `id_item` viene vacío, preservando la semántica
+del legacy `update_3102` caso `editar`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Actualiza cargo, observaciones y `puede_agd` del vínculo. Además sincroniza la asistencia: si `asis`
+cambia respecto al estado actual del `Asistente` (controlado por `asis_presente`), lo crea o lo
+elimina y abre los dossiers `1301`/`3101`.
 
 ## Endpoint
 
@@ -64,16 +71,16 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - `hay un error, no se ha guardado el asistente`
 - `hay un error, no se ha eliminado el asistente`
 
+## Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
+  frontend y en `$_SESSION['oPerm']`.
+
 ## Casos De Uso
 
 - `src\actividadcargos\application\ActividadCargoEditar`
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Invocado desde el submit del form de cargos (URL emitida en su payload como `url_cargo_editar`).
+  No hay referencia literal a la URL en `frontend/`.

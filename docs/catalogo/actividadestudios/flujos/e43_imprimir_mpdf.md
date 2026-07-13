@@ -8,39 +8,46 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.e43_imprimir_mpdf"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/e43_imprimir_mpdf_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar E43 Imprimir Mpdf
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.e43_imprimir_mpdf.gestionar` y sus pantallas relacionadas.
+Generación del HTML/PDF imprimible del certificado E43.
 
 ## Objetivo De Usuario
 
-Gestiona E43Certificado. Datos certificado E43 (pantalla e imprimible).
+El usuario imprime el certificado E43 en formato PDF: el sistema obtiene los mismos datos
+que la pantalla E43 y los renderiza en la plantilla imprimible (`e43_imprimir_mpdf.php` /
+`e43_2_mpdf.php`).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `e43_imprimir_mpdf` (`frontend/actividadestudios/controller/e43_imprimir_mpdf.php`,
+incluida desde `e43_2_mpdf.php`): al abrir la ventana de impresión desde `e43.phtml`
+llama a `e43_imprimir_mpdf_data` con `id_nom` e `id_activ` por GET.
 
 ## Fragmentos O Pantallas Auxiliares
 
 - `actividadestudios.pantalla.e43_imprimir_mpdf`
+- `actividadestudios.pantalla.e43` (botón imprimir)
 
 ## Escenarios Inferidos
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En la pantalla E43, pulsar **imprimir** (abre ventana con `e43_2_mpdf.php`).
+2. El controlador consulta `e43_imprimir_mpdf_data`.
+3. Se renderiza el certificado con estilos `e43_mpdf.css` listo para imprimir/exportar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/e43_imprimir_mpdf_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- Ninguno detectado.
+- Ninguno detectado (parámetros GET `id_nom`, `id_activ`).
 
 Acciones JavaScript:
 - Ninguna detectada.
@@ -53,9 +60,9 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo desde pantalla `e43`).
+
+- **Legacy:** vsm > ca > buscar ca (misma cadena que E43).
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n.

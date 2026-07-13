@@ -7,21 +7,25 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividadtarifas/infrastructure/ui/http/controllers/relacion_tarifa_eliminar.php"
 entrada: ["post.id_item:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_item"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["no sé cuál he de borrar", "no se encuentra la relación", "hay un error, no se ha borrado"]
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa_tipo_actividad.php"]
 casos_uso: ["src\\actividadtarifas\\application\\RelacionTarifaEliminar"]
 tags: ["actividadtarifas", "relacion", "tarifa", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Relacion Tarifa Eliminar
 
-Endpoint backend: elimina una `RelacionTarifaTipoActividad`.
+Elimina una `RelacionTarifaTipoActividad`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Borra la relación tarifa–tipo de actividad indicada por `id_item`.
 
 ## Endpoint
 
@@ -34,9 +38,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `integer` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_item` | `integer` | application | Si | Debe ser `> 0` |
 
 ## Salida
 
@@ -46,13 +48,17 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Efectos colaterales
 
-- Mutacion: elimina una `RelacionTarifaTipoActividad`.
+- Elimina la `RelacionTarifaTipoActividad`.
 
 ## Errores conocidos
 
 - `no sé cuál he de borrar`
 - `no se encuentra la relación`
-- `hay un error, no se ha borrado`
+- `hay un error, no se ha borrado` (puede incluir detalle del repositorio)
+
+## Permisos
+
+- Sin control propio; acción desde formulario de edición con permiso `adl` en listado.
 
 ## Casos De Uso
 
@@ -60,10 +66,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/actividadtarifas/controller/tarifa_tipo_actividad.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/actividadtarifas/view/tarifa_tipo_actividad.phtml`: `fnjs_guardar(..., 'eliminar')`.

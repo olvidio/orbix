@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.ubis_buscar"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/ubis_buscar_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ubis Buscar
-
-Propuesta generada automaticamente desde la capacidad `ubis.ubis_buscar.gestionar` y sus pantallas relacionadas.
+# Flujo - Ubis Buscar
 
 ## Objetivo De Usuario
 
-Gestiona UbisBuscarOpciones. Opciones de formulario para frontend/ubis/controller/ubis_buscar.php.
+Devuelve opciones de desplegables para el formulario de búsqueda de ubis.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: scdl > direcciones > buscar. Pills2: scdl > direcciones > buscar.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -69,11 +67,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > direcciones > buscar
+- **Pills2:** scdl > direcciones > buscar

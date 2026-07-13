@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona UpdateIniciales. Inserta o actualiza la fila de iniciales/color para un sacerdote. Devuelve texto vacio si todo fue bien; en otro caso, el mensaje de error del repositorio. El controlador HTTP es quien serializa la respuesta con ContestarJson::enviar(...).
+Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
+
+## Errores Documentados
+
+- `<repositorio getErrorTxt()>`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

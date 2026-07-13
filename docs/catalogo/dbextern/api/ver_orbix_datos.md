@@ -4,47 +4,61 @@ tipo: "endpoint"
 modulo: "dbextern"
 url: "/src/dbextern/ver_orbix_datos"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/dbextern/infrastructure/ui/http/controllers/ver_orbix_datos.php"
 entrada: ["post.dl:string", "post.id_nom_orbix:integer", "post.region:string", "post.tipo_persona:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
+errores: ["No existe la clase de la persona"]
 frontend_referencias: ["frontend/dbextern/controller/ver_orbix.php"]
 casos_uso: ["src\\dbextern\\application\\VerOrbixData"]
 tags: ["dbextern", "ver", "orbix", "datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Ver Orbix Datos
 
-Descripcion funcional pendiente de revisar.
+Lista personas Aquinate activas sin correspondencia en BDU (punto 9) o busca candidatos BDU para unir.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Dos modos según `id_nom_orbix`:
+
+- **`id_nom_orbix` = 0**: personas Orbix situación `A` sin `id_match`; devuelve `lista`.
+- **`id_nom_orbix` > 0**: candidatos BDU (`posiblesBDU`) para unir con esa persona.
 
 ## Endpoint
 
 - URL: `/src/dbextern/ver_orbix_datos`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/dbextern/infrastructure/ui/http/controllers/ver_orbix_datos.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `dl` | `string` | controller | No | controller |
-| `id_nom_orbix` | `integer` | controller | No | controller |
-| `region` | `string` | controller | No | controller |
-| `tipo_persona` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `region` | `string` | controller | Sí | |
+| `dl` | `string` | controller | No | Usado en modo matches |
+| `tipo_persona` | `string` | controller | Sí | `n`/`a`/`s`/`sssc` |
+| `id_nom_orbix` | `integer` | controller | No | Si > 0, modo candidatos BDU |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (doble `JSON.parse` en front).
+- Modo lista: `lista` (filas con `id_nom_orbix`, `ape_nom`, nombre, apellidos, `f_nacimiento`).
+- Modo matches: array de candidatos BDU (el front usa `DbexternPayload::listaBduFromMatches`).
+- Error: `error` con mensaje si clase de persona inválida.
+
+## Errores conocidos
+
+- `No existe la clase de la persona`
+
+## Permisos
+
+- Sin control propio en el caso de uso.
 
 ## Casos De Uso
 
@@ -52,10 +66,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/dbextern/controller/ver_orbix.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/dbextern/controller/ver_orbix.php` (sesión `$_SESSION['DBOrbix']`)

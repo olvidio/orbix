@@ -11,17 +11,22 @@ entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["no se encuentra la tarifa", "hay un error, no se ha guardado"]
-frontend_referencias: ["frontend/actividadtarifas/controller/tarifa.php", "frontend/actividadtarifas/controller/tarifa_form.php", "frontend/actividadtarifas/view/tarifa_form.phtml"]
+frontend_referencias: ["frontend/actividadtarifas/controller/tarifa.php", "frontend/actividadtarifas/controller/tarifa_form.php"]
 casos_uso: ["src\\actividadtarifas\\application\\TipoTarifaUpdate"]
 tags: ["actividadtarifas", "tipo", "tarifa", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tipo Tarifa Update
 
-Endpoint backend: crea o actualiza un `TipoTarifa`.
+Crea o actualiza un `TipoTarifa` del catálogo maestro (letra, modo, observaciones).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Alta cuando `id_tarifa` es `nuevo` o vacío (asigna nuevo id y `sfsv = mi_sfsv`). Edición carga el
+registro por id numérico. Solo actualiza campos no vacíos (`letra`, `modo`, `observ`).
 
 ## Endpoint
 
@@ -34,12 +39,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tarifa` | `string` | controller+application | No | controller+application |
-| `letra` | `string` | controller+application | No | controller+application |
-| `modo` | `string` | controller+application | No | controller+application |
-| `observ` | `string` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_tarifa` | `string` | application | No | `nuevo`/vacío = alta; numérico = edición |
+| `letra` | `string` | application | No | Código de tarifa |
+| `modo` | `string` | application | No | Id de modo (`TarifaModoId`) |
+| `observ` | `string` | application | No | Observaciones |
 
 ## Salida
 
@@ -50,7 +53,12 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 ## Errores conocidos
 
 - `no se encuentra la tarifa`
-- `hay un error, no se ha guardado`
+- `hay un error, no se ha guardado` (puede incluir detalle del repositorio)
+
+## Permisos
+
+- Sin control propio; el listado muestra modificar solo con `have_perm_oficina('adl')` y sección
+  coincidente; alta si `adl`|`pr`|`calendario`.
 
 ## Casos De Uso
 
@@ -58,12 +66,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/actividadtarifas/controller/tarifa.php`
-- `frontend/actividadtarifas/controller/tarifa_form.php`
-- `frontend/actividadtarifas/view/tarifa_form.phtml`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/actividadtarifas/view/tarifa_form.phtml`: submit del form `#frm_tarifa` vía
+  `fnjs_guardar` en `tarifa.phtml`.

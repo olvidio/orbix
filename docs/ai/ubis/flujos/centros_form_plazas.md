@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Centros. Datos comunes para los formularios de centro dl (labor / num / plazas). Los tres formularios muestran sobre un mismo centro un subconjunto de campos distinto según el modo indicado.
+Carga datos del formulario modal de plazas y sede de un centro DL.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

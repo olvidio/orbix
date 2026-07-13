@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Para asegurar que inicia la sesion, y poder acceder a los permisos
+Listado de alumnos de otras regiones para certificados STGR: búsqueda por apellido, alertas de acta/región y emisión de certificado. Solo accesible en ámbito `rstgr` o `r`.
 
 ## Uso En Ayuda
 

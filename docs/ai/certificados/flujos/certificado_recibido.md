@@ -54,7 +54,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoRecibido. Descripcion funcional pendiente de revisar.
+Gestionar certificados recibidos de una persona (adjuntar, modificar, eliminar).
 
 ## Limites De La Respuesta
 

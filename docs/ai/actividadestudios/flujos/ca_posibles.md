@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. En `ca_posibles_que`, elegir centro N o AGD, periodo y opciones de filtro.
+2. Pulsar **buscar**; el formulario envía a `ca_posibles.php`.
+3. El controlador valida que haya centro seleccionado y consulta `ca_posibles_data`.
+4. Se muestra el listado o cuadro de posibles CA por alumno.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/ca_posibles_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CaPosibles. Misma lógica que frontend/.../ca_posibles.php; respuesta serializable. En modo lista, pagina_link_spec lo firma el front ({.
+Tras elegir centro, periodo y filtros en `ca_posibles_que`, el usuario obtiene el cuadro de posibles CA por alumno: créditos cursables, asignaturas pendientes y enlaces de detalle. Misma lógica que `frontend/actividadestudios/controller/ca_posibles.php`; en modo lista, `pagina_link_spec` lo firma el front.
 
 ## Limites De La Respuesta
 

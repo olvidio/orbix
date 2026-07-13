@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/form_actividades_de_una_persona_data"]
 capacidades: ["asistentes.form_actividades_de_una_persona.gestionar"]
 campos: ["html.est_ok", "html.falta", "html.guardar", "html.observ", "html.propio"]
 acciones: ["fnjs_cmb_propietario", "fnjs_construir_desplegable_propietario", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Form Actividades De Una Persona
 
-Descripcion funcional pendiente de revisar.
+Formulario dossier 1301: alta/edición de asistencia de una persona a actividades.
 
 ## Tipo
 
@@ -55,11 +55,7 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

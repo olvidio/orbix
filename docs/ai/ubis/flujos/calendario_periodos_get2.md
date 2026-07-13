@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CalendarioPeriodosGet2. Descripcion funcional pendiente de revisar.
+Lista los periodos de una casa en un año con detección de solapes.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "dbextern"
-titulo: "Ver Desaparecidos De Listas"
+titulo: "Aquinate con BDU desaparecida"
 pantalla: "dbextern.pantalla.ver_desaparecidos_de_listas"
-preguntas: ["Que se puede hacer en Ver Desaparecidos De Listas?", "Que campos tiene Ver Desaparecidos De Listas?", "Que acciones hay en Ver Desaparecidos De Listas?"]
+preguntas: ["Que se puede hacer en Aquinate con BDU desaparecida?", "Que campos tiene Aquinate con BDU desaparecida?", "Que acciones hay en Aquinate con BDU desaparecida?"]
 capacidades: ["dbextern.sincro_baja.gestionar", "dbextern.ver_desaparecidos_de_listas.gestionar"]
 endpoints: ["/src/dbextern/sincro_baja", "/src/dbextern/ver_desaparecidos_de_listas_datos"]
 source: "docs/catalogo/dbextern/pantallas/ver_desaparecidos_de_listas.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Ver Desaparecidos De Listas
+# Ayuda IA Pantalla - Aquinate con BDU desaparecida
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Subpantalla del punto 8: personas Aquinate con `id_match` pero ficha BDU vacía o inexistente.
 
 ## Uso En Ayuda
 
@@ -31,7 +31,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 ## Acciones Detectadas
 
 - `fnjs_baja`
-- `fnjs_traslado`
 
 ## Capacidades Relacionadas
 

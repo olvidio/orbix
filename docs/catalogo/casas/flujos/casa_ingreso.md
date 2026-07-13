@@ -8,7 +8,7 @@ pantallas_principales: ["casas.pantalla.casa"]
 fragmentos: ["casas.pantalla.casa_ingreso_form"]
 acciones: ["crear_actualizar", "eliminar", "ver_formulario"]
 endpoints: ["/src/casas/casa_ingreso_eliminar", "/src/casas/casa_ingreso_form_data", "/src/casas/casa_ingreso_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Casa Ingreso
@@ -100,11 +100,15 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Falta id_activ`
+- `Actividad no encontrada`
+- `Hay un error, no se ha guardado la actividad.`
+- `Hay un error, no se ha guardado.`
+- `no sé cuál he de borar`
+- `Ingreso no encontrado`
+- `Hay un error, no se ha eliminado`
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** exterior > casas > Gestión económica
+- **Pills2:** CASAS Y CTR > Gestión casas > Gestión económica
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

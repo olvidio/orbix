@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Docs Perdidos"
+titulo: "Documentos perdidos"
 pantalla: "inventario.pantalla.docs_perdidos"
-preguntas: ["Que se puede hacer en Docs Perdidos?", "Que campos tiene Docs Perdidos?", "Que acciones hay en Docs Perdidos?"]
+preguntas: ["Que se puede hacer en Documentos perdidos?", "Que campos tiene Documentos perdidos?", "Que acciones hay en Documentos perdidos?"]
 capacidades: ["inventario.lista_docs_perdidos.gestionar"]
 endpoints: ["/src/inventario/lista_docs_perdidos"]
 source: "docs/catalogo/inventario/pantallas/docs_perdidos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Docs Perdidos
+# Ayuda IA Pantalla - Documentos perdidos
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado docs perdidos.
 
 ## Uso En Ayuda
 

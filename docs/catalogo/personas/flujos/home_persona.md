@@ -2,51 +2,35 @@
 id: "personas.home_persona.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Gestionar Home Persona"
+nombre: "Flujo - Ver cabecera de persona"
 capacidad: "personas.home_persona.gestionar"
 pantallas_principales: []
 fragmentos: ["personas.pantalla.home_persona"]
-acciones: ["obtener_datos"]
+acciones: ["ver_resumen", "ir_ficha", "ir_dossiers"]
 endpoints: ["/src/personas/home_persona_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Home Persona
+# Flujo - Ver cabecera de persona
 
-Propuesta generada automaticamente desde la capacidad `personas.home_persona.gestionar` y sus pantallas relacionadas.
+Muestra el resumen de una persona y enlaces a ficha y dossiers.
 
 ## Objetivo De Usuario
 
-Gestiona HomePersona. Endpoint JSON: datos para la pantalla home_persona.phtml.
+Consultar datos básicos y acceder a la ficha completa o dossiers sin pasar por el listado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- Clic en nombre del listado (`fnjs_home` o enlace HTML según preferencia `tabla_presentacion`).
+- Navegación directa con `id_nom`, `id_tabla`, `obj_pau`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `personas.pantalla.home_persona`
+### Ver resumen
 
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.id_nom`
-- `post.id_tabla`
-- `post.obj_pau`
-- `post.sel`
-
-Acciones JavaScript:
-- `fnjs_update_div`
+1. Seleccionar persona en listado o abrir enlace.
+2. `home_persona` solicita `home_persona_data`.
+3. Revisar datos y lista de dossiers embebida.
 
 ## Endpoints Del Flujo
 
@@ -54,11 +38,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No se encuentra la persona`
+- Aviso: persona no válida
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice.

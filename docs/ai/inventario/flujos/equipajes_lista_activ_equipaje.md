@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona EquipajesListaActivEquipaje. Descripcion funcional pendiente de revisar.
+Gestiona EquipajesListaActivEquipaje. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Limites De La Respuesta
 

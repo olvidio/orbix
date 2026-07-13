@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. En `actividad_select`, seleccionar una actividad CA.
+2. Pulsar la acción **plan estudios**.
+3. El sistema consulta `plan_estudios_ca_data` y muestra el informe completo.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/plan_estudios_ca_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PlanEstudiosCa. Descripcion funcional pendiente de revisar.
+El usuario consulta el plan de estudios de una actividad CA: director de estudios, preceptores, profesores por asignatura y alumnos con sus asignaturas matriculadas y observaciones de plan (`observ_est`).
 
 ## Limites De La Respuesta
 

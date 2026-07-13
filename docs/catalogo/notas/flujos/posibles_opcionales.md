@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.form_notas_de_una_persona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/posibles_opcionales_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Posibles Opcionales
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.posibles_opcionales
 
 ## Objetivo De Usuario
 
-Gestiona PosiblesOpcionales. Devuelve las asignaturas opcionales que puede cursar la persona con el contrato estandar de desplegable (ver refactor.md §"Desplegables devueltos por endpoints AJAX: payload + constructor en frontend").
+Consultar opcionales disponibles al editar nota.
 
 ## Punto De Entrada
 
@@ -82,10 +82,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

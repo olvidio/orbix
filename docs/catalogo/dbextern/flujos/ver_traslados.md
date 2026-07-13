@@ -2,52 +2,33 @@
 id: "dbextern.ver_traslados.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Gestionar Ver Traslados"
+nombre: "Flujo - Revisar traslados punto 2"
 capacidad: "dbextern.ver_traslados.gestionar"
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_traslados"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/dbextern/ver_traslados_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ver Traslados
+# Flujo - Revisar traslados punto 2
 
-Propuesta generada automaticamente desde la capacidad `dbextern.ver_traslados.gestionar` y sus pantallas relacionadas.
+Listado de personas unidas a BDU pero en otra DL Orbix.
 
 ## Objetivo De Usuario
 
-Gestiona VerTraslados. Obtiene datos de personas a trasladar desde otras DL.
+Identificar quién debe trasladarse a esta DL desde otra delegación.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+**ver** del punto 2 en `sincro_index`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `dbextern.pantalla.ver_traslados`
+### Obtener datos
 
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.dl`
-- `form.id_nom_orbix`
-- `form.tipo_persona`
-- `post.ids_traslados`
-- `post.tipo_persona`
-
-Acciones JavaScript:
-- `fnjs_trasladar`
+1. Envía `ids_traslados` (JSON) y `tipo_persona`.
+2. Muestra tabla con nombre, DL actual y acción trasladar.
 
 ## Endpoints Del Flujo
 
@@ -55,11 +36,8 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No existe la clase de la persona`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

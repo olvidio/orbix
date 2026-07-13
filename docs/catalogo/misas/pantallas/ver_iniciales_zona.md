@@ -11,16 +11,18 @@ endpoints: ["/src/misas/update_iniciales", "/src/misas/ver_iniciales_zona_data"]
 capacidades: ["misas.update_iniciales.gestionar", "misas.ver_iniciales_zona.gestionar"]
 campos: ["form.color", "form.id_sacd", "form.iniciales", "post.id_zona"]
 acciones: ["fnjs_generarNomEnc"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Ver Iniciales Zona
+# Ver iniciales zona
 
-Descripcion funcional pendiente de revisar.
+Fragmento SlickGrid con sacds de la zona; edición inline que postea a `update_iniciales`.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/misas/controller/ver_iniciales_zona.php`
 
 ## Vistas Relacionadas
@@ -52,13 +54,7 @@ No se han detectado controladores frontend relacionados.
 
 - `fnjs_generarNomEnc`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

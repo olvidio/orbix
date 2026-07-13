@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.teleco_editar"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "modal"
 modulo: "ubis"
 nombre: "Teleco Editar"
 controller: "frontend/ubis/controller/teleco_editar.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/teleco_editar"]
 capacidades: ["ubis.teleco_editar.gestionar"]
 campos: ["form.id_desc_teleco", "form.id_tipo_teleco", "form.mod", "form.num_teleco", "form.observ", "html.mod", "html.num_teleco", "html.observ", "post.id_ubi", "post.mod", "post.obj_pau", "post.s_pkey", "post.sel"]
 acciones: ["fnjs_actualizar_descripcion", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Teleco Editar
 
-Descripcion funcional pendiente de revisar.
+Formulario modal de alta o edición de una telecomunicación del ubi.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `modal`
+
+
 - Controller: `frontend/ubis/controller/teleco_editar.php`
 
 ## Vistas Relacionadas
@@ -60,13 +62,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_actualizar_descripcion`
 - `fnjs_guardar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

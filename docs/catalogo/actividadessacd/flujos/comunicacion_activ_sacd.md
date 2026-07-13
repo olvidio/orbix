@@ -8,20 +8,24 @@ pantallas_principales: []
 fragmentos: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadessacd/comunicacion_activ_sacd_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Comunicacion Activ Sacd
 
-Propuesta generada automaticamente desde la capacidad `actividadessacd.comunicacion_activ_sacd.gestionar` y sus pantallas relacionadas.
+Construcción del listado de actividades a comunicar a los sacd.
 
 ## Objetivo De Usuario
 
-Gestiona ComunicacionActividadesSacd. Construye el listado de atencion de actividades a comunicar a los sacd (incluidas las de los "sacd de paso" cuando procede).
+El usuario selecciona un periodo y pulsa **buscar**: el sistema construye, por cada sacd, la lista
+de actividades a comunicar (incluidas las de los "sacd de paso" cuando procede) con los textos de la
+carta y las cabeceras de columnas.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `com_sacd_activ_periodo` (`frontend/actividadessacd/controller/com_sacd_activ_periodo.php`):
+la función `fnjs_ver` llama a este endpoint al pulsar **buscar** (o automáticamente al entrar con
+`que=un_sacd` + `sel[]` desde `personas_select`).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,38 +35,21 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Seleccionar periodo en la barra de filtros (o entrar con un sacd preseleccionado).
+2. Pulsar **buscar** (o auto-carga si `AUTO_CARGAR`).
+3. El sistema pinta el listado por sacd con actividades, textos y leyenda.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadessacd/comunicacion_activ_sacd_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.iactividad_val`
-- `form.iasistentes_val`
-- `form.periodo`
-- `form.year`
-- `post.id_nom`
-- `post.periodo`
-- `post.propuesta`
-- `post.que`
-- `post.sel`
-- `post.year`
+- Ninguno detectado.
 
 Acciones JavaScript:
-- `fnjs_cancelar`
-- `fnjs_construir_listado`
-- `fnjs_enviar_mails`
-- `fnjs_esc_html`
-- `fnjs_left_side_hide`
-- `fnjs_parse_rta_txt`
-- `fnjs_pintar_sacds`
-- `fnjs_update_div`
-- `fnjs_ver`
+- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -72,9 +59,11 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `com_sacd_activ_periodo`:
+
+- **Legacy:** dre > actividades > comunic. sacd · exterior > sacd > atención actividades
+- **Pills2:** ATENCIÓN SACD > Actividades > Comunicación a los sacd
+
+Con `propuesta=true`: dre > propuestas > lista activ. sacd.

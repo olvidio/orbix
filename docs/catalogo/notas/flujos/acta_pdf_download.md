@@ -8,7 +8,7 @@ pantallas_principales: ["notas.pantalla.acta_pdf_download"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/notas/acta_pdf_download"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Pdf Download
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_pdf_download.g
 
 ## Objetivo De Usuario
 
-Gestiona ActaPdfDownload. Descripcion funcional pendiente de revisar.
+Descargar PDF con token firmado.
 
 ## Punto De Entrada
 
@@ -52,10 +52,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

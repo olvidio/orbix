@@ -45,10 +45,21 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Cuadricula. Use case del endpoint cuadricula_update (migracion de apps/misas/controller/cuadricula_update.php al Slice 6a). Hace dos cosas en la misma transaccion logica: 1. Upsert / delete de un EncargoDia para un dia + encargo concretos, en funcion de key (si esta vacio, se borra; si trae id_nom, se guarda o actualiza). 2. Recalcula el bloque meta que la UI usa para pintar colores y textos (disponibilidad del sacd anterior y del nuevo, numero de misas del dia, conflictos con primera hora, etc.). El codigo es una traduccion casi literal del controlador original para minimizar riesgo de regresion: la logica de negocio en si no cambia en este slice; lo unico que cambia es donde vive.
+Asigna, actualiza o borra un EncargoDia en una celda de la cuadrícula y recalcula metadatos de color/texto para la fila SACD y la celda misa.
+
+## Errores Documentados
+
+- `Falta el id_item`
+- `Este día tiene más de dos Misas`
+- `Este día tiene dos Misas`
+- `Este día no tiene ninguna Misa`
+- `Tiene dos Misas a primera hora`
+- `No está en la zona y tiene Misa a primera hora`
+- `Está en `
+- `<repositorio getErrorTxt()>`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

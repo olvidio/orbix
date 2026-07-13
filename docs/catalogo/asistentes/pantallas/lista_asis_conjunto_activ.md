@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/lista_asis_conjunto_activ_data"]
 capacidades: ["asistentes.lista_asis_conjunto_activ.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Lista Asis Conjunto Activ
 
-Descripcion funcional pendiente de revisar.
+Listado conjunto de plazas por actividades (DL propia y otras), con filtros de periodo y tipo.
 
 ## Tipo
 
@@ -49,11 +49,7 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

@@ -11,12 +11,12 @@ endpoints: ["/src/certificados/certificado_recibido_guardar", "/src/certificados
 capacidades: ["certificados.certificado_recibido.gestionar", "certificados.certificado_recibido_modificar.gestionar", "certificados.certificado_recibido_pdf_upload.gestionar"]
 campos: ["form.certificado", "form.certificado_pdf", "form.f_certificado", "form.f_recibido", "form.firmado", "form.idioma"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Certificado Recibido Modificar
 
-Descripcion funcional pendiente de revisar.
+Edición de metadatos de un certificado recibido existente.
 
 ## Tipo
 
@@ -56,13 +56,6 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (desde listado dossier persona)

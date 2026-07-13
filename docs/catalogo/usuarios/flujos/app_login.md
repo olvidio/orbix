@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/app_login"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar App Login
-
-Propuesta generada automaticamente desde la capacidad `usuarios.app_login.gestionar` y sus pantallas relacionadas.
+# Flujo - App Login
 
 ## Objetivo De Usuario
 
-Gestiona AppMobileLogin. Login JSON para app móvil (Camino B).
+Autenticación app móvil con credenciales y 2FA opcional.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,12 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Usuario y contraseña obligatorios`
+- `Esquema no indicado`
+- `Esquema no válido`
+- `Error de autenticación`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

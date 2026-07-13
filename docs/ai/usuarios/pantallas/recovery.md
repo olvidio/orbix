@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Dispatcher recuperación acceso (password/2FA/ayuda).
 
 ## Uso En Ayuda
 

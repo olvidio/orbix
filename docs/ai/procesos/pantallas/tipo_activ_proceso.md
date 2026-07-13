@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Asignación de procesos a tipos de actividad: tabla con proceso propio (DL) y no propio; al pulsar un proceso se despliega la mini-tabla de procesos posibles para asignar.
 
 ## Uso En Ayuda
 

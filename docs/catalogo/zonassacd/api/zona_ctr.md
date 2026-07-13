@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "zonassacd"
 url: "/src/zonassacd/zona_ctr"
 metodos: ["GET", "POST"]
-operacion: "consulta"
+operacion: "form_data"
 controller: "src/zonassacd/infrastructure/ui/http/controllers/zona_ctr.php"
 entrada: []
 entrada_obligatoria: []
@@ -16,40 +16,49 @@ frontend_referencias: ["frontend/zonassacd/controller/zona_ctr.php", "frontend/z
 casos_uso: ["src\\zonassacd\\application\\ZonaCtrPage"]
 tags: ["zonassacd", "zona", "ctr"]
 estado_revision: "revisado"
+errores: []
 ---
 
 # Zona Ctr
 
-Datos iniciales de la pantalla **Zonas-ctr**: opciones del desplegable de zonas
-(`a_opciones`) y permiso de modificacion (`perm_des`, oficina `des` o `vcsd`).
-No muta nada.
+Datos iniciales de Zonas-ctr: desplegable de zonas y perm_des (activa opción no_sf, checkboxes y botón asignar).
+
+Linaje: Migrado desde apps/zonassacd/controller/zona_ctr.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Datos iniciales de Zonas-ctr: desplegable de zonas y perm_des (activa opción no_sf, checkboxes y botón asignar).
 
 ## Endpoint
 
 - URL: `/src/zonassacd/zona_ctr`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/zonassacd/infrastructure/ui/http/controllers/zona_ctr.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| _(ninguno)_ | | | | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `zonassacd_ZonaCtrPageData`):
-  - `a_opciones` (`array`) — zonas para el desplegable
-  - `perm_des` (`boolean`) — permiso oficina `des` o `vcsd`
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse` salvo vacío):
+  - `a_opciones`: map id_zona=>nombre
+  - `perm_des`: boolean permiso des/vcsd
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
 
 ## Permisos
 
-- Responde a cualquier usuario autenticado; `perm_des` informa a la UI de si debe
-  mostrar las acciones de modificacion y la opcion `sin asignar zona sf`.
+perm_des vía have_perm_oficina('des'|'vcsd').
 
 ## Casos De Uso
 
@@ -57,11 +66,4 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/zonassacd/controller/zona_ctr.php`
-- `frontend/zonassacd/controller/zona_ctr_lista_ajax.php`
-- `frontend/zonassacd/controller/zona_ctr_update_ajax.php`
-
-## Revision Manual
-
-- Revisado jun 2026 (lectura de `ZonaCtrPage::getData`).
-- Pendiente: ejemplos reales de request/response.
+- Ver `frontend_referencias` en front matter (`["frontend/zonassacd/controller/zona_ctr.php", "frontend/zonassacd/controller/zona_ctr_lista_ajax.php", "frontend/zonassacd/controller/zona_ctr_update_ajax.php"]`).

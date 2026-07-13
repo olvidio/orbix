@@ -15,9 +15,9 @@ paths:
   "/src/misas/anadir_ctr_tarea":
     post:
       operationId: "post_misas_anadir_ctr_tarea"
-      summary: "Anadir Ctr Tarea"
+      summary: "Anadir ctr tarea"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Añade o elimina una fila de plantilla (centro asociado a tarea) en el editor de plantillas. Rama que=anadir crea Plantilla con semana=-1; rama quitar elimina por id_item.
         
         Operacion: `mutacion`.
         
@@ -30,15 +30,17 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "que"
               properties:
-                id_item:
-                  type: "string"
-                id_tarea:
-                  type: "string"
-                id_ubi:
-                  type: "string"
                 que:
                   type: "string"
+                id_ubi:
+                  type: "integer"
+                id_tarea:
+                  type: "integer"
+                id_item:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -55,11 +57,11 @@ paths:
   "/src/misas/buscar_plan_ctr_data":
     post:
       operationId: "post_misas_buscar_plan_ctr_data"
-      summary: "Buscar Plan Ctr Data"
+      summary: "Buscar plan ctr Data"
       description: |
-        Formulario buscador del plan de misas por centro (zonas + centros + periodo).
+        Inicializa el formulario de búsqueda del plan CTR: zonas, centros disponibles y selección por defecto según rol del usuario.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/buscar_plan_ctr_data.md`
       tags:
@@ -89,11 +91,11 @@ paths:
   "/src/misas/buscar_plan_sacd_data":
     post:
       operationId: "post_misas_buscar_plan_sacd_data"
-      summary: "Buscar Plan Sacd Data"
+      summary: "Buscar plan sacd Data"
       description: |
-        Lista de sacerdotes disponibles en el buscador del plan SACD (según rol y zona).
+        Devuelve el desplegable de sacerdotes para el buscador del plan SACD, filtrado por rol y zona del usuario.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/buscar_plan_sacd_data.md`
       tags:
@@ -124,11 +126,11 @@ paths:
   "/src/misas/cambiar_status_data":
     post:
       operationId: "post_misas_cambiar_status_data"
-      summary: "Cambiar Status Data"
+      summary: "Cambiar status Data"
       description: |
-        Formulario "Cambiar estado del plan de misas" (zona, estado, orden).
+        Carga los desplegables de la pantalla cambiar estado del plan de misas: zonas permitidas, criterios de orden y estados posibles.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/cambiar_status_data.md`
       tags:
@@ -159,9 +161,9 @@ paths:
   "/src/misas/crear_nuevo_periodo_data":
     post:
       operationId: "post_misas_crear_nuevo_periodo_data"
-      summary: "Crear Nuevo Periodo Data"
+      summary: "Crear nuevo periodo Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Crea asignaciones EncargoDia para un nuevo periodo de plan de misas a partir de plantilla y devuelve el payload de cuadrícula para renderizar ver_cuadricula_zona.phtml.
         
         Operacion: `mutacion`.
         
@@ -174,20 +176,24 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
+                - "tipo_plantilla"
+                - "periodo"
               properties:
-                empiezamax:
+                id_zona:
+                  type: "integer"
+                tipo_plantilla:
+                  type: "string"
+                seleccion:
+                  type: "integer"
+                periodo:
                   type: "string"
                 empiezamin:
                   type: "string"
-                id_zona:
+                empiezamax:
                   type: "string"
                 orden:
-                  type: "string"
-                periodo:
-                  type: "string"
-                seleccion:
-                  type: "string"
-                tipo_plantilla:
                   type: "string"
       responses:
         "200":
@@ -205,9 +211,9 @@ paths:
   "/src/misas/cuadricula_update":
     post:
       operationId: "post_misas_cuadricula_update"
-      summary: "Cuadricula Update"
+      summary: "Cuadricula update"
       description: |
-        Use case del endpoint `cuadricula_update` (migracion de `apps/misas/controller/cuadricula_update.php` al Slice 6a). Hace dos cosas en la misma transaccion logica: 1. Upsert / delete de un `EncargoDia` para un dia + encargo concretos, en funcion de `key` (si esta vacio, se borra; si trae `id_nom`, se guarda o actualiza). 2. Recalcula el bloque `meta` que la UI usa para pintar colores y textos (disponibilidad del sacd anterior y del nuevo, numero de misas del dia, conflictos con primera hora, etc.). El codigo es una traduccion casi literal del controlador original para minimizar riesgo de regresion: la logica de negocio en si no cambia en este slice; lo unico que cambia es donde vive.
+        Asigna, actualiza o borra un EncargoDia en una celda de la cuadrícula y recalcula metadatos de color/texto para la fila SACD y la celda misa.
         
         Operacion: `mutacion`.
         
@@ -220,25 +226,27 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "uuid_item"
               properties:
-                dia:
+                uuid_item:
                   type: "string"
-                id_enc:
-                  type: "integer"
-                id_zona:
-                  type: "integer"
                 key:
-                  type: "string"
-                observ:
-                  type: "string"
-                tend:
-                  type: "string"
-                tipo_plantilla:
                   type: "string"
                 tstart:
                   type: "string"
-                uuid_item:
+                tend:
                   type: "string"
+                observ:
+                  type: "string"
+                id_enc:
+                  type: "integer"
+                dia:
+                  type: "string"
+                tipo_plantilla:
+                  type: "string"
+                id_zona:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -255,11 +263,11 @@ paths:
   "/src/misas/desplegable_centros_zona":
     post:
       operationId: "post_misas_desplegable_centros_zona"
-      summary: "Desplegable Centros Zona"
+      summary: "Desplegable centros zona"
       description: |
-        Payload JSON para el desplegable de centros activos de una zona. Orden: sf (alfabetico), linea separadora, sv (alfabetico).
+        Devuelve opciones del desplegable de centros activos (sf y sv) de una zona para el modal de encargos-centro.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/desplegable_centros_zona.md`
       tags:
@@ -270,10 +278,12 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
               properties:
-                id_ubi:
-                  type: "string"
                 id_zona:
+                  type: "integer"
+                id_ubi:
                   type: "integer"
       responses:
         "200":
@@ -291,11 +301,11 @@ paths:
   "/src/misas/desplegable_encargos":
     post:
       operationId: "post_misas_desplegable_encargos"
-      summary: "Desplegable Encargos"
+      summary: "Desplegable encargos"
       description: |
-        Payload JSON para el desplegable dinamico de encargos de una zona. Sigue el contrato de desplegables de `refactor.md`: - `id` : id del `<select>` que montara `fnjs_construir_desplegable`. - `opciones` : map id_enc => desc_enc de los encargos con `id_tipo_enc >= 8100` de la zona. - `selected` : id_enc preseleccionado (`''` si no aplica). - `blanco` : true si se quiere opcion en blanco. - `val_blanco`: valor de la opcion en blanco. - `action` : handler `onchange` opcional (vacio por defecto).
+        Devuelve opciones de encargos 8100+ de una zona para el desplegable dinámico del modal de encargos-centro.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/desplegable_encargos.md`
       tags:
@@ -306,10 +316,12 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
               properties:
-                id_enc:
-                  type: "string"
                 id_zona:
+                  type: "integer"
+                id_enc:
                   type: "integer"
       responses:
         "200":
@@ -327,11 +339,11 @@ paths:
   "/src/misas/desplegable_sacd":
     post:
       operationId: "post_misas_desplegable_sacd"
-      summary: "Desplegable Sacd"
+      summary: "Desplegable sacd"
       description: |
-        Opciones del desplegable dinámico de SACD en el modal de la cuadrícula de zona. El payload sigue el espíritu del contrato de `refactor.md` (id, selected, filas ordenadas). `rows` conserva el orden del HTML legacy: opción actual, opción en blanco si aplica, resto ordenado por clave.
+        Construye el desplegable dinámico de SACD en el modal de la cuadrícula, filtrando por disponibilidad según flags de selección y día.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/desplegable_sacd.md`
       tags:
@@ -342,15 +354,18 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
+                - "dia"
               properties:
-                dia:
-                  type: "string"
-                id_sacd:
-                  type: "integer"
                 id_zona:
+                  type: "integer"
+                id_sacd:
                   type: "integer"
                 seleccion:
                   type: "integer"
+                dia:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -367,9 +382,9 @@ paths:
   "/src/misas/eliminar_encargo_centro":
     post:
       operationId: "post_misas_eliminar_encargo_centro"
-      summary: "Eliminar Encargo Centro"
+      summary: "Eliminar encargo centro"
       description: |
-        Elimina un `EncargoCtr` por su uuid. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+        Elimina la relación EncargoCtr (encargo visible en un centro) por uuid.
         
         Operacion: `mutacion`.
         
@@ -382,6 +397,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_item:
                   type: "string"
@@ -401,9 +418,9 @@ paths:
   "/src/misas/eliminar_encargo_zona":
     post:
       operationId: "post_misas_eliminar_encargo_zona"
-      summary: "Eliminar Encargo Zona"
+      summary: "Eliminar encargo zona"
       description: |
-        Elimina un `Encargo` por id. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+        Elimina un Encargo de zona (grupo ZONAS_MISAS) por id_enc.
         
         Operacion: `mutacion`.
         
@@ -416,6 +433,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_enc"
               properties:
                 id_enc:
                   type: "integer"
@@ -435,9 +454,9 @@ paths:
   "/src/misas/guardar_encargo_centro":
     post:
       operationId: "post_misas_guardar_encargo_centro"
-      summary: "Guardar Encargo Centro"
+      summary: "Guardar encargo centro"
       description: |
-        Inserta o actualiza un `EncargoCtr` (relacion encargo ↔ centro). - Si `id_item` esta vacio se crea un nuevo `EncargoCtr` con uuid v4. - Si `id_item` es un uuid valido se carga el existente y se modifica. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+        Inserta o actualiza un EncargoCtr vinculando un encargo de zona con un centro.
         
         Operacion: `mutacion`.
         
@@ -450,13 +469,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_enc"
+                - "id_ctr"
               properties:
-                id_ctr:
-                  type: "integer"
-                id_enc:
-                  type: "integer"
                 id_item:
                   type: "string"
+                id_enc:
+                  type: "integer"
+                id_ctr:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -473,9 +495,9 @@ paths:
   "/src/misas/guardar_encargo_zona":
     post:
       operationId: "post_misas_guardar_encargo_zona"
-      summary: "Guardar Encargo Zona"
+      summary: "Guardar encargo zona"
       description: |
-        Inserta o actualiza un `Encargo` del grupo `ZONAS_MISAS`. - Si `id_enc` es 0 se crea uno nuevo con `getNewId()`. - Si hay valor, se carga el existente y se modifica. Devuelve un array con: - `error`: texto vacio si todo fue bien, mensaje del repositorio si no. - `data` : payload para el frontend con `id_enc`, `lugar` y el nombre del centro si se resolvio.
+        Crea o actualiza un Encargo del grupo ZONAS_MISAS (id_enc=0 → alta) y devuelve id y nombre del centro.
         
         Operacion: `mutacion`.
         
@@ -489,25 +511,25 @@ paths:
             schema:
               type: object
               properties:
+                id_enc:
+                  type: "integer"
+                id_tipo_enc:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                id_zona:
+                  type: "integer"
+                orden:
+                  type: "integer"
+                prioridad:
+                  type: "integer"
                 descripcion_lugar:
                   type: "string"
                 encargo:
                   type: "string"
-                id_enc:
-                  type: "string"
-                id_tipo_enc:
-                  type: "string"
-                id_ubi:
-                  type: "string"
-                id_zona:
-                  type: "string"
                 idioma_enc:
                   type: "string"
                 observ:
-                  type: "string"
-                orden:
-                  type: "string"
-                prioridad:
                   type: "string"
       responses:
         "200":
@@ -525,9 +547,9 @@ paths:
   "/src/misas/guardar_horario":
     post:
       operationId: "post_misas_guardar_horario"
-      summary: "Guardar Horario"
+      summary: "Guardar horario"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Guarda hora inicio/fin (t_start/t_end) de un EncargoHorario en el modal de horario de tarea.
         
         Operacion: `mutacion`.
         
@@ -540,12 +562,14 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item_h"
               properties:
                 id_item_h:
+                  type: "integer"
+                t_start:
                   type: "string"
                 t_end:
-                  type: "string"
-                t_start:
                   type: "string"
       responses:
         "200":
@@ -563,11 +587,11 @@ paths:
   "/src/misas/horario_tarea_data":
     post:
       operationId: "post_misas_horario_tarea_data"
-      summary: "Horario Tarea Data"
+      summary: "Horario tarea Data"
       description: |
-        Datos del horario de una tarea (modal `horario_tarea.phtml`). Simple lectura de `t_start`/`t_end` del `EncargoHorario` indicado por `id_item_h`. Se saca de la vista frontend para cumplir la regla de `refactor.md`: los controladores `frontend/` no pueden instanciar repositorios de `src\` ni resolver dependencias del contenedor.
+        Lee las horas actuales de un EncargoHorario para poblar el modal horario_tarea.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/horario_tarea_data.md`
       tags:
@@ -580,7 +604,7 @@ paths:
               type: object
               properties:
                 id_item_h:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -597,9 +621,9 @@ paths:
   "/src/misas/importar_plantilla_data":
     post:
       operationId: "post_misas_importar_plantilla_data"
-      summary: "Importar Plantilla Data"
+      summary: "Importar plantilla Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Copia asignaciones de plantilla origen a destino para una zona, creando/actualizando EncargoDia en el rango correspondiente.
         
         Operacion: `mutacion`.
         
@@ -612,12 +636,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
+                - "tipo_plantilla_origen"
+                - "tipo_plantilla_destino"
               properties:
                 id_zona:
+                  type: "integer"
+                tipo_plantilla_origen:
                   type: "string"
                 tipo_plantilla_destino:
-                  type: "string"
-                tipo_plantilla_origen:
                   type: "string"
       responses:
         "200":
@@ -635,11 +663,11 @@ paths:
   "/src/misas/modificar_encargos_centros_data":
     post:
       operationId: "post_misas_modificar_encargos_centros_data"
-      summary: "Modificar Encargos Centros Data"
+      summary: "Modificar encargos centros Data"
       description: |
-        Devuelve el desplegable de zonas que el usuario actual puede ver, para pintar la pantalla `modificar_encargos_centros`. Replica la logica de permisos de `apps/misas/controller/modificar_encargos_centros.php`: si el rol es `p-sacd` y NO es jefe de calendario, se limitan las zonas a las del `id_pau` del propio usuario. Devuelve: - `error` : texto vacio si todo ok, mensaje si falta permiso. - `a_opciones_zona`: array id_zona => nombre_zona.
+        Devuelve el desplegable de zonas permitidas para la pantalla modificar encargos de centros.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/modificar_encargos_centros_data.md`
       tags:
@@ -670,11 +698,11 @@ paths:
   "/src/misas/modificar_encargos_data":
     post:
       operationId: "post_misas_modificar_encargos_data"
-      summary: "Modificar Encargos Data"
+      summary: "Modificar encargos Data"
       description: |
-        Devuelve los datos para pintar la pantalla `modificar_encargos`: el desplegable de zonas (filtrado segun el rol del usuario) y la lista de criterios de orden aceptados por el grid. Replica la logica de `apps/misas/controller/modificar_encargos.php`: si el rol es `p-sacd` y NO es jefe de calendario, se limitan las zonas a las del `id_pau` del propio usuario. Devuelve: - `error` : texto vacio si todo ok, mensaje si el usuario no tiene permiso para ver la pantalla. - `a_opciones_zona`: array id_zona => nombre_zona. - `a_orden` : array criterio => label.
+        Devuelve zonas permitidas y criterios de orden para la pantalla modificar encargos de zona.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/modificar_encargos_data.md`
       tags:
@@ -705,11 +733,11 @@ paths:
   "/src/misas/modificar_iniciales_sacd_zona_data":
     post:
       operationId: "post_misas_modificar_iniciales_sacd_zona_data"
-      summary: "Modificar Iniciales Sacd Zona Data"
+      summary: "Modificar iniciales sacd zona Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve el desplegable de todas las zonas para la pantalla de edición de iniciales SACD.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/modificar_iniciales_sacd_zona_data.md`
       tags:
@@ -740,11 +768,11 @@ paths:
   "/src/misas/modificar_plantilla_data":
     post:
       operationId: "post_misas_modificar_plantilla_data"
-      summary: "Modificar Plantilla Data"
+      summary: "Modificar plantilla Data"
       description: |
-        Datos comunes para las pantallas preparar / modificar / ver plan de misas y para modificar plantilla (mismos desplegables de zona / tipo / orden).
+        Carga desplegables de zona, orden y tipos de plantilla (con preferencia ultima_plantilla) para modificar plantilla.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/modificar_plantilla_data.md`
       tags:
@@ -775,9 +803,9 @@ paths:
   "/src/misas/nuevo_status":
     post:
       operationId: "post_misas_nuevo_status"
-      summary: "Nuevo Status"
+      summary: "Nuevo status"
       description: |
-        Actualiza `status` de todos los `EncargoDia` de encargos 8100+ de la zona en el rango.
+        Actualiza masivamente el status de todos los EncargoDia de encargos 8100+ de una zona en el rango de fechas indicado.
         
         Operacion: `mutacion`.
         
@@ -790,17 +818,21 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
+                - "periodo"
+                - "estado"
               properties:
-                empiezamax:
-                  type: "string"
-                empiezamin:
-                  type: "string"
-                estado:
-                  type: "integer"
                 id_zona:
                   type: "integer"
                 periodo:
                   type: "string"
+                empiezamin:
+                  type: "string"
+                empiezamax:
+                  type: "string"
+                estado:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -817,11 +849,11 @@ paths:
   "/src/misas/plan_de_misas_pantalla_data":
     post:
       operationId: "post_misas_plan_de_misas_pantalla_data"
-      summary: "Plan De Misas Pantalla Data"
+      summary: "Plan de misas pantalla Data"
       description: |
-        Datos comunes para las pantallas preparar / modificar / ver plan de misas y para modificar plantilla (mismos desplegables de zona / tipo / orden).
+        Datos comunes para pantallas preparar/modificar/ver plan de misas: zonas, orden y tipos de plantilla en preparar.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/plan_de_misas_pantalla_data.md`
       tags:
@@ -851,9 +883,9 @@ paths:
   "/src/misas/quitar_horario":
     post:
       operationId: "post_misas_quitar_horario"
-      summary: "Quitar Horario"
+      summary: "Quitar horario"
       description: |
-        Anula `t_start` / `t_end` de una fila `misa_plantillas_dl` (`id_item`).
+        Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
         
         Operacion: `mutacion`.
         
@@ -866,9 +898,11 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_item:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -885,9 +919,9 @@ paths:
   "/src/misas/update_iniciales":
     post:
       operationId: "post_misas_update_iniciales"
-      summary: "Update Iniciales"
+      summary: "Update iniciales"
       description: |
-        Inserta o actualiza la fila de iniciales/color para un sacerdote. Devuelve texto vacio si todo fue bien; en otro caso, el mensaje de error del repositorio. El controlador HTTP es quien serializa la respuesta con `ContestarJson::enviar(...)`.
+        Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
         
         Operacion: `mutacion`.
         
@@ -900,12 +934,14 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_sacd"
               properties:
-                color:
-                  type: "string"
                 id_sacd:
                   type: "integer"
                 iniciales:
+                  type: "string"
+                color:
                   type: "string"
       responses:
         "200":
@@ -923,11 +959,11 @@ paths:
   "/src/misas/ver_cuadricula_zona_data":
     post:
       operationId: "post_misas_ver_cuadricula_zona_data"
-      summary: "Ver Cuadricula Zona Data"
+      summary: "Ver cuadricula zona Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Construye el SlickGrid de cuadrícula de zona (columnas, filas encargo/sacd, metadatos de celda) para ver/modificar plan, plantilla o cambiar estado.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_cuadricula_zona_data.md`
       tags:
@@ -938,25 +974,28 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
+                - "tipo_plantilla"
               properties:
-                columna:
-                  type: "string"
-                empiezamax:
-                  type: "string"
-                empiezamin:
-                  type: "string"
-                fila:
-                  type: "string"
                 id_zona:
-                  type: "string"
-                orden:
+                  type: "integer"
+                tipo_plantilla:
                   type: "string"
                 periodo:
                   type: "string"
+                orden:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                empiezamax:
+                  type: "string"
+                fila:
+                  type: "string"
+                columna:
+                  type: "string"
                 seleccion:
-                  type: "string"
-                tipo_plantilla:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -973,11 +1012,11 @@ paths:
   "/src/misas/ver_encargos_centros_data":
     post:
       operationId: "post_misas_ver_encargos_centros_data"
-      summary: "Ver Encargos Centros Data"
+      summary: "Ver encargos centros Data"
       description: |
-        Devuelve los datos del SlickGrid de `EncargoCtr` (encargos visibles para cada centro de una zona) + los desplegables estaticos del modal de edicion (zonas posibles para filtrar encargos, centros de la zona). El desplegable dinamico de encargos (que cambia al seleccionar zona en el modal) no se incluye aqui: el frontend lo pide por separado a `DesplegableEncargosData` cuando el usuario lo necesita.
+        Devuelve filas del grid EncargoCtr de una zona más desplegables estáticos del modal (zonas, centros).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_encargos_centros_data.md`
       tags:
@@ -1007,11 +1046,11 @@ paths:
   "/src/misas/ver_encargos_zona_data":
     post:
       operationId: "post_misas_ver_encargos_zona_data"
-      summary: "Ver Encargos Zona Data"
+      summary: "Ver encargos zona Data"
       description: |
-        Devuelve los datos necesarios para pintar el SlickGrid de encargos de una zona + los desplegables del modal de edicion. Replica la consulta de `apps/misas/controller/ver_encargos_zona.php`: encargos con `id_tipo_enc >= 8100` (grupo `8...`) de la zona indicada, ordenados por `$orden` (`orden`, `prioridad` o `desc_enc`).
+        Devuelve encargos 8100+ de una zona ordenados para SlickGrid y datos del modal de edición.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_encargos_zona_data.md`
       tags:
@@ -1043,11 +1082,11 @@ paths:
   "/src/misas/ver_iniciales_zona_data":
     post:
       operationId: "post_misas_ver_iniciales_zona_data"
-      summary: "Ver Iniciales Zona Data"
+      summary: "Ver iniciales zona Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista sacds de una zona con sus iniciales y color para edición inline en SlickGrid.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_iniciales_zona_data.md`
       tags:
@@ -1077,11 +1116,11 @@ paths:
   "/src/misas/ver_misas_zona_data":
     post:
       operationId: "post_misas_ver_misas_zona_data"
-      summary: "Ver Misas Zona Data"
+      summary: "Ver misas zona Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Construye la cuadrícula de consulta de misas por zona y rango de fechas (solo lectura, con metadatos dia/tipo en celdas).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_misas_zona_data.md`
       tags:
@@ -1092,15 +1131,19 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
+                - "empiezamin"
+                - "empiezamax"
               properties:
-                empiezamax:
-                  type: "string"
+                id_zona:
+                  type: "integer"
                 empiezamin:
                   type: "string"
-                id_zona:
+                empiezamax:
                   type: "string"
                 seleccion:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1117,11 +1160,11 @@ paths:
   "/src/misas/ver_plan_ctr_data":
     post:
       operationId: "post_misas_ver_plan_ctr_data"
-      summary: "Ver Plan Ctr Data"
+      summary: "Ver plan ctr Data"
       description: |
-        Datos para la vista `ver_plan_ctr.phtml`: cuadricula del plan de misas por centro (filas: encargos, columnas: días).
+        Genera la cuadrícula del plan de misas por centro: encargos en filas, días en columnas, con leyenda de sacds.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_plan_ctr_data.md`
       tags:
@@ -1132,14 +1175,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
               properties:
-                empiezamax:
-                  type: "string"
-                empiezamin:
-                  type: "string"
                 id_ubi:
                   type: "integer"
                 periodo:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                empiezamax:
                   type: "string"
       responses:
         "200":
@@ -1157,11 +1202,11 @@ paths:
   "/src/misas/ver_plan_sacd_data":
     post:
       operationId: "post_misas_ver_plan_sacd_data"
-      summary: "Ver Plan Sacd Data"
+      summary: "Ver plan sacd Data"
       description: |
-        Datos para la vista `ver_plan_sacd.phtml`: plan de misas de un sacerdote en un rango de fechas.
+        Lista cronológica de misas asignadas a un sacerdote en un rango de fechas.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_plan_sacd_data.md`
       tags:
@@ -1172,14 +1217,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_sacd"
               properties:
-                empiezamax:
-                  type: "string"
-                empiezamin:
-                  type: "string"
                 id_sacd:
                   type: "string"
                 periodo:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                empiezamax:
                   type: "string"
       responses:
         "200":
@@ -1197,11 +1244,11 @@ paths:
   "/src/misas/zona_sacd_datos_get":
     post:
       operationId: "post_misas_zona_sacd_datos_get"
-      summary: "Zona Sacd Datos Get"
+      summary: "Zona sacd datos get"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lee datos de disponibilidad semanal (propia, dw1-dw7) de un SACD en una zona para el modal zona_sacd.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/misas/api/zona_sacd_datos_get.md`
       tags:
@@ -1212,10 +1259,13 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
+                - "id_sacd"
               properties:
-                id_sacd:
-                  type: "integer"
                 id_zona:
+                  type: "integer"
+                id_sacd:
                   type: "integer"
       responses:
         "200":
@@ -1233,9 +1283,9 @@ paths:
   "/src/misas/zona_sacd_datos_put":
     post:
       operationId: "post_misas_zona_sacd_datos_put"
-      summary: "Zona Sacd Datos Put"
+      summary: "Zona sacd datos put"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Guarda flags de disponibilidad semanal de un SACD en una zona (ZonaSacd).
         
         Operacion: `mutacion`.
         
@@ -1248,7 +1298,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
+                - "id_sacd"
               properties:
+                id_zona:
+                  type: "integer"
+                id_sacd:
+                  type: "integer"
+                propia:
+                  type: "string"
                 dw1:
                   type: "string"
                 dw2:
@@ -1263,10 +1322,6 @@ paths:
                   type: "string"
                 dw7:
                   type: "string"
-                id_sacd:
-                  type: "integer"
-                id_zona:
-                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."

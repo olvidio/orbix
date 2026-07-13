@@ -11,12 +11,12 @@ endpoints: ["/src/certificados/certificado_emitido_ver_datos", "/src/shared/loca
 capacidades: ["certificados.certificado_emitido_ver.gestionar"]
 campos: ["form.certificado", "form.certificado_pdf", "form.destino", "form.f_certificado", "form.f_enviado", "form.firmado", "form.idioma", "form.nom", "post.sel"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Certificado Emitido Ver
 
-Descripcion funcional pendiente de revisar.
+Vista Twig de consulta/edición de un certificado emitido (metadatos y PDF embebido). Abierta desde el listado de emitidos.
 
 ## Tipo
 
@@ -56,13 +56,6 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (modal desde listado Certificados)

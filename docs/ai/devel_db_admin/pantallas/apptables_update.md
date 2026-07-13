@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Proxy JSON del submit de apptables hacia `/src/devel_db_admin/apptables_update` (no es pantalla de usuario).
 
 ## Uso En Ayuda
 

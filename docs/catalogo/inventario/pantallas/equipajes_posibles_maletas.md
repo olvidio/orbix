@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.equipajes_posibles_maletas"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "fragmento"
 modulo: "inventario"
-nombre: "Equipajes Posibles Maletas"
+nombre: "Elegir maleta/grupo"
 controller: "frontend/inventario/controller/equipajes_posibles_maletas.php"
 vistas: []
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_equipajes_posibles_maletas"]
 capacidades: ["inventario.lista_equipajes_posibles_maletas.gestionar"]
 campos: ["post.id_equipaje"]
 acciones: ["fnjs_ver_docs"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Posibles Maletas
+# Elegir maleta/grupo
 
-Descripcion funcional pendiente de revisar.
+Selector maleta; puede crear grupo vía `equipajes_update_grupo`.
+
 
 ## Tipo
 
@@ -49,11 +50,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Selector maleta; puede crear grupo vía `equipajes_update_grupo`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú
+- **Pills2:** —

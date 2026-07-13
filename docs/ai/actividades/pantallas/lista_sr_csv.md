@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "actividades"
-titulo: "Lista Sr Csv"
+titulo: "Listado SR (tabla/CSV)"
 pantalla: "actividades.pantalla.lista_sr_csv"
-preguntas: ["Que se puede hacer en Lista Sr Csv?", "Que campos tiene Lista Sr Csv?", "Que acciones hay en Lista Sr Csv?"]
+preguntas: ["Que se puede hacer en Listado SR (tabla/CSV)?", "Que campos tiene Listado SR (tabla/CSV)?", "Que acciones hay en Listado SR (tabla/CSV)?"]
 capacidades: ["actividades.lista_sr_csv.gestionar"]
 endpoints: ["/src/actividades/lista_sr_csv_datos"]
 source: "docs/catalogo/actividades/pantallas/lista_sr_csv.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Lista Sr Csv
+# Ayuda IA Pantalla - Listado SR (tabla/CSV)
 
 ## Resumen
 
-Listado de actividades de SR para exportar como CSV o mostrar en pantalla.
+Pantalla de **resultados** del listado CSV de San Rafael: recibe filtros de `lista_sr_csv_que` (periodo, casas `id_cdc`, tipos `c_activ`, estados) y llama a `lista_sr_csv_datos`. Según `que` muestra tabla HTML o fuerza descarga CSV.
 
 ## Uso En Ayuda
 

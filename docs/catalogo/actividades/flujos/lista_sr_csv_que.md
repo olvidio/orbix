@@ -2,71 +2,32 @@
 id: "actividades.lista_sr_csv_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Lista Sr Csv Que"
+nombre: "Flujo - Bootstrap listado CSV SR"
 capacidad: "actividades.lista_sr_csv_que.gestionar"
 pantallas_principales: []
 fragmentos: ["actividades.pantalla.lista_sr_csv_que"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividades/lista_sr_csv_que_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Lista Sr Csv Que
+# Flujo - Bootstrap listado CSV SR
 
-Propuesta generada automaticamente desde la capacidad `actividades.lista_sr_csv_que.gestionar` y sus pantallas relacionadas.
+Valores por defecto (periodo, casas, tipos, estados) al abrir el formulario CSV de SR.
 
 ## Objetivo De Usuario
 
-Gestiona ListaSrCsvQueDatos. Endpoint backend para lista_sr_csv_que.
+Ver el formulario pre-rellenado con la última preferencia guardada del usuario.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-- `actividades.pantalla.lista_sr_csv_que`
-
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.c_activ`
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.id_cdc_mas`
-- `form.id_cdc_num`
-- `form.periodo`
-- `form.status`
-- `form.year`
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.periodo`
-- `post.year`
-
-Acciones JavaScript:
-- Ninguna detectada.
+Carga de `lista_sr_csv_que.php` (PostRequest en servidor).
 
 ## Endpoints Del Flujo
 
 - `/src/actividades/lista_sr_csv_que_datos`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vsr > listas actividades > listado csv.
+- **Pills2:** sin entrada dedicada (vsr).

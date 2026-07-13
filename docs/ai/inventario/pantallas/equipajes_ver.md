@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Ver"
+titulo: "Gestionar equipajes"
 pantalla: "inventario.pantalla.equipajes_ver"
-preguntas: ["Que se puede hacer en Equipajes Ver?", "Que campos tiene Equipajes Ver?", "Que acciones hay en Equipajes Ver?"]
+preguntas: ["Que se puede hacer en Gestionar equipajes?", "Que campos tiene Gestionar equipajes?", "Que acciones hay en Gestionar equipajes?"]
 capacidades: ["inventario.lista_equipajes_desde_fecha.gestionar"]
 endpoints: ["/src/inventario/lista_equipajes_desde_fecha"]
 source: "docs/catalogo/inventario/pantallas/equipajes_ver.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Ver
+# Ayuda IA Pantalla - Gestionar equipajes
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Lista equipajes desde fecha; modificar, eliminar o imprimir según parámetro URL.
 
 ## Uso En Ayuda
 

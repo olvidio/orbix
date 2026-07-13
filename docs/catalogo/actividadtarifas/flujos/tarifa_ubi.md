@@ -8,12 +8,12 @@ pantallas_principales: ["actividadtarifas.pantalla.tarifa_ubi"]
 fragmentos: ["actividadtarifas.pantalla.tarifa_ubi_form", "actividadtarifas.pantalla.tarifa_ubi_lista"]
 acciones: ["actualizar_incremento", "copiar", "crear_actualizar", "eliminar", "listar", "ver_formulario"]
 endpoints: ["/src/actividadtarifas/tarifa_ubi_copiar", "/src/actividadtarifas/tarifa_ubi_eliminar", "/src/actividadtarifas/tarifa_ubi_form_data", "/src/actividadtarifas/tarifa_ubi_lista_data", "/src/actividadtarifas/tarifa_ubi_update", "/src/actividadtarifas/tarifa_ubi_update_inc"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Tarifa Ubi
 
-Propuesta generada automaticamente desde la capacidad `actividadtarifas.tarifa_ubi.gestionar` y sus pantallas relacionadas.
+Consultar y mantener tarifas económicas de una casa para un año.
 
 ## Objetivo De Usuario
 
@@ -46,10 +46,10 @@ Endpoints asociados:
 ### Copiar
 
 Pasos propuestos:
-1. Abrir el listado en el contexto origen/destino correspondiente.
-2. Pulsar la accion de copiar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que los datos copiados aparecen en el listado.
+1. Cargar listado de casa/año destino.
+2. Pulsar copiar tarifas del año anterior (solo si hay `token_copiar`).
+3. Confirmar; el cliente reenvía la cápsula `ctx_copiar` (HashB) sin inspeccionarla.
+4. **Nota:** la operación devuelve hoy «función pendiente de reimplementar».
 
 Endpoints asociados:
 - `/src/actividadtarifas/tarifa_ubi_copiar`
@@ -139,17 +139,20 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``Operación no autorizada``
-- ``función de copiar tarifas pendiente de reimplementar``
-- ``hay un error, no se ha borrado``
-- ``hay un error, no se ha guardado``
-- ``no se encuentra la tarifa``
-- ``no sé cuál he de borrar``
-- ``no sé qué casa/año tengo que copiar``
+- `Operación no autorizada` (cápsula HashB inválida en update/eliminar/copiar)
+- `función de copiar tarifas pendiente de reimplementar`
+- `hay un error, no se ha borrado`
+- `hay un error, no se ha guardado`
+- `no se encuentra la tarifa`
+- `no sé cuál he de borrar`
+- `no sé qué casa/año tengo que copiar`
 
-## Revision Manual
+## Permisos
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- Mutaciones `TarifaUbi` vía HashB (`ctx_update`, `ctx_eliminar`, `ctx_copiar`).
+- Visibilidad: `have_perm_oficina('adl')` para modificar; `adl`|`pr`|`calendario` para añadir/copiar.
+
+## Ruta de menú
+
+- **Legacy:** adl > Tarifas > tarifas por casa y año; Calendario/dre/exterior > Tarifas > tarifas por casa y año.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifas por casa y año.

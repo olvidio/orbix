@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.horario_tarea"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/guardar_horario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Guardar Horario
-
-Propuesta generada automaticamente desde la capacidad `misas.guardar_horario.gestionar` y sus pantallas relacionadas.
+# Flujo - Guardar horario
 
 ## Objetivo De Usuario
 
-Gestiona GuardarHorarioTarea. Descripcion funcional pendiente de revisar.
+Guarda hora inicio/fin (t_start/t_end) de un EncargoHorario en el modal de horario de tarea.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -55,11 +53,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Error: falta el id_item`
+- `No se encuentra el horario %d`
+- `<repositorio getErrorTxt()>`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

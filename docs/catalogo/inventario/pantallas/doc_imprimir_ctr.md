@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.doc_imprimir_ctr"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "fragmento"
 modulo: "inventario"
-nombre: "Doc Imprimir Ctr"
+nombre: "Imprimir inventario centros"
 controller: "frontend/inventario/controller/doc_imprimir_ctr.php"
 vistas: []
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/inventario_css_inline_data", "/src/inventario/inven
 capacidades: ["inventario.inventario_css_inline.gestionar", "inventario.inventario_ctr.gestionar"]
 campos: ["post.dl", "post.sel"]
 acciones: ["fnjs_ver_equipaje"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Doc Imprimir Ctr
+# Imprimir inventario centros
 
-Descripcion funcional pendiente de revisar.
+Vista de impresión: llama `inventario_ctr` + CSS inline.
+
 
 ## Tipo
 
@@ -52,11 +53,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Vista de impresión: llama `inventario_ctr` + CSS inline.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú (destino impresión)
+- **Pills2:** —

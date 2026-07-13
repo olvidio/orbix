@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CentrosGetLabor. Descripcion funcional pendiente de revisar.
+Lista todos los centros DL activos con su tipo de centro y tipo de labor.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

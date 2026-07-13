@@ -4,44 +4,39 @@ tipo: "endpoint"
 modulo: "menus"
 url: "/src/menus/lista_meta_menus"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/menus/infrastructure/ui/http/controllers/lista_meta_menus.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "menus_ListaMetaMenusData"
-respuesta_data: ["a_opciones:array"]
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/menus/controller/menus_get.php"]
 casos_uso: ["src\\menus\\application\\ListaMetaMenus"]
-tags: ["menus", "lista", "meta"]
-estado_revision: "generado"
+tags: ["menus", "lista", "meta", "menus"]
+estado_revision: "revisado"
 ---
 
-# Lista Meta Menus
+# Lista de metamenús
 
-Descripcion funcional pendiente de revisar.
+Opciones para el desplegable de destino (metamenu) al editar un ítem de menú.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Metamenús (`aux_metamenus`): URL + módulo destino, **iguales para todos los layouts**. Alimenta el desplegable
+`id_metamenu` en el formulario de menú.
 
 ## Endpoint
 
 - URL: `/src/menus/lista_meta_menus`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
-- Controller: `src/menus/infrastructure/ui/http/controllers/lista_meta_menus.php`
-
-## Entrada
-
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+- Operacion: `lista_data`
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `menus_ListaMetaMenusData`):
-  - `a_opciones` (`array`)
+- `data.a_opciones`: mapa `id_metamenu` → descripción (doble `JSON.parse`).
 
 ## Casos De Uso
 
@@ -50,9 +45,3 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 ## Frontend Relacionado
 
 - `frontend/menus/controller/menus_get.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

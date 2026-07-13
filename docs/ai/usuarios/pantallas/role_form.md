@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Alta/edición de rol (sf/sv/pau/dmz) y tabla grupmenus asignados.
 
 ## Uso En Ayuda
 

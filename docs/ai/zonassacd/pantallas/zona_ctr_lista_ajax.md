@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX: renderiza tabla de centros vía zona_ctr_lista (fnjs_busca_ctrs).
 
 ## Uso En Ayuda
 

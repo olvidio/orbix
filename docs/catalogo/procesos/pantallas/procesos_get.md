@@ -11,12 +11,12 @@ endpoints: ["/src/procesos/procesos_get"]
 capacidades: ["procesos.procesos.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Procesos Get
 
-Renderer frontend del arbol del proceso.
+Fragmento AJAX que renderiza el árbol jerárquico de fases del tipo de proceso seleccionado en `procesos_select`.
 
 ## Tipo
 
@@ -47,13 +47,7 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

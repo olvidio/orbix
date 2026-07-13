@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Resultado: alumnos a los que falta una asignatura concreta.
 
 ## Uso En Ayuda
 

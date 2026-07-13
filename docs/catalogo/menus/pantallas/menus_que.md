@@ -1,7 +1,7 @@
 ---
 id: "menus.pantalla.menus_que"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "menus"
 nombre: "Menus Que"
 controller: "frontend/menus/controller/menus_que.php"
@@ -11,50 +11,22 @@ endpoints: ["/src/menus/grupmenu_lista"]
 capacidades: ["menus.grupmenu.gestionar"]
 campos: ["form.filtro_grupo", "post.filtro_grupo"]
 acciones: ["fnjs_lista_menus"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Menus Que
+# Gestor de menús (seleccionar grupo)
 
-Descripcion funcional pendiente de revisar.
+Punto de entrada al gestor: desplegable de grupmenu y carga AJAX del listado/ficha en `#ficha`.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
-- Controller: `frontend/menus/controller/menus_que.php`
+- Subtipo: `pantalla_principal`
 
-## Vistas Relacionadas
+## Ruta de menú
 
-- `frontend/menus/view/menus_que.phtml`
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/menus/controller/menus_get.php`
-
-## Endpoints Usados
-
-- `/src/menus/grupmenu_lista`
-
-## Capacidades Relacionadas
-
-- `menus.grupmenu.gestionar`
-
-## Campos Detectados
-
-- `form.filtro_grupo`
-- `post.filtro_grupo`
-
-## Acciones Detectadas
-
-- `fnjs_lista_menus`
+- **Legacy:** sistema > menus > seleccionar
+- **Pills2:** ADMIN GLOBAL > menus > seleccionar
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+1. Abrir desde menú administración. 2. Elegir grupo de menú. 3. Gestionar ítems en el panel inferior.

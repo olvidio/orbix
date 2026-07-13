@@ -11,7 +11,7 @@ endpoints: ["/src/encargossacd/sacd_ficha_data", "/src/encargossacd/sacd_ficha_u
 capacidades: ["encargossacd.sacd_ficha.gestionar", "encargossacd.sacd_select.gestionar"]
 campos: ["form.dedic_m", "form.dedic_t", "form.dedic_v", "form.enc_num", "form.id_tipo_enc", "form.mas", "form.observ", "html.dedic_m[<?= $j ?>]", "html.dedic_t[<?= $j ?>]", "html.dedic_v[<?= $j ?>]", "html.enc_num", "html.ok", "post.filtro_sacd", "post.id_nom", "post.que"]
 acciones: ["fnjs_crear_horario", "fnjs_guardar", "fnjs_mas_enc", "fnjs_update_div", "fnjs_ver_ficha"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Sacd Ficha Ajax
@@ -70,13 +70,19 @@ AJAX de la ficha SACD.
 - `fnjs_update_div`
 - `fnjs_ver_ficha`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+

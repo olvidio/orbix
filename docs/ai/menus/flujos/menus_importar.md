@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "menus"
 titulo: "Menus Importar"
 flujo: "menus.menus_importar.gestionar.flujo"
-preguntas: ["Como ejecutar en Menus Importar?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["menus.pantalla.menus_importar_form"]
 endpoints: ["/src/menus/menus_importar"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Menus Importar?
 
 ## Donde Entrar
 
@@ -29,20 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `menus.pantalla.menus_importar_form`
 
 ## Objetivo
 
-Gestiona MenusImportar. Descripcion funcional pendiente de revisar.
+Sustituye menús locales por una plantilla seleccionada.
 
 ## Limites De La Respuesta
 

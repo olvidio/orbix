@@ -8,20 +8,22 @@ pantallas_principales: []
 fragmentos: ["asistentes.pantalla.form_actividades_de_una_persona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/form_actividades_de_una_persona_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Form Actividades De Una Persona
 
-Propuesta generada automaticamente desde la capacidad `asistentes.form_actividades_de_una_persona.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Gestiona FormActividadesDeUnaPersona. Dossier actividades de una persona (1301). Datos puros para el formulario; la UI (HashFront, Desplegable) se compone en frontend.
+Gestionar asistencias en dossier 1301 (persona).
+
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `form_actividades_de_una_persona` (`frontend/asistentes/controller/`).
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -59,9 +61,6 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

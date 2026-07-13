@@ -11,12 +11,12 @@ endpoints: ["/src/notas/informe_stgr_profesores_data"]
 capacidades: ["notas.informe_stgr_profesores.gestionar"]
 campos: ["post.lista"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Informe Stgr Profesores
 
-Informe anual STGR - Profesores (puntos 36..47).
+Informe anual del claustro/docencia.
 
 ## Tipo
 
@@ -47,13 +47,11 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** ESTUDIOS > Datos e informes > Informe anual profesores > Con números / Con listados
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

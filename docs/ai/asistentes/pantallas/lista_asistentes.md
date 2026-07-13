@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado de asistentes y cargos-asistentes de una actividad concreta.
 
 ## Uso En Ayuda
 

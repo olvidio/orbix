@@ -4,10 +4,10 @@ subtipo: "flujo"
 modulo: "cartaspresentacion"
 titulo: "Cartas Presentacion Shell"
 flujo: "cartaspresentacion.cartas_presentacion_shell.gestionar.flujo"
-preguntas: ["Como obtener datos en Cartas Presentacion Shell?"]
-pantallas_principales: []
-fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion"]
-endpoints: ["/src/cartaspresentacion/cartas_presentacion_shell_data"]
+preguntas: []
+pantallas_principales: ["cartaspresentacion.pantalla.cartas_presentacion"]
+fragmentos: []
+endpoints: ["/src/cartaspresentacion/cartas_presentacion_shell_data", "/src/cartaspresentacion/ubis_lista_data", "/src/cartaspresentacion/poblaciones_data", "/src/cartaspresentacion/carta_presentacion_form_data", "/src/cartaspresentacion/carta_presentacion_update", "/src/cartaspresentacion/carta_presentacion_eliminar"]
 source: "docs/catalogo/cartaspresentacion/flujos/cartas_presentacion_shell.md"
 estado_revision: "generado"
 ---
@@ -19,22 +19,14 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Cartas Presentacion Shell?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Cartas Presentacion (`cartaspresentacion.pantalla.cartas_presentacion`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
-
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,10 +34,16 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CartasPresentacionShell. Datos para la shell cartas_presentacion.php: delegación y paths relativos. URLs absolutas y fragment Hash: {.
+Mantener los datos de presentación (director, contacto, zona) de los centros de la delegación o de regiones extranjeras.
+
+## Errores Documentados
+
+- `Formulario: No puede modificar datos de otra dl, Centro no encontrado.`
+- `Update: Hay un error, no se ha guardado.`
+- `Eliminar: Carta de presentacion no encontrada, Hay un error, no se ha borrado.`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

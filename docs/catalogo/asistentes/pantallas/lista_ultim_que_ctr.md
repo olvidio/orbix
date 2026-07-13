@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/lista_ultim_que_ctr_data"]
 capacidades: ["asistentes.lista_ultim_que_ctr.gestionar"]
 campos: []
 acciones: ["fnjs_enviar_formulario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Lista Ultim Que Ctr
 
-Descripcion funcional pendiente de revisar.
+Selector de centro antes del informe de última asistencia (personas s sin crt/cv reciente).
 
 ## Tipo
 
@@ -49,11 +49,8 @@ No se han detectado campos de formulario.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** vsg > crt/cv > informes de seguimiento
+- **Pills2:** vsg > crt/cv > s que no han ido / corresponde ir

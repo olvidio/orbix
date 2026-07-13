@@ -11,7 +11,7 @@ endpoints: ["/src/encargossacd/horario_ver_data"]
 capacidades: ["encargossacd.horario_ver.gestionar"]
 campos: ["html.f_fin", "html.f_ini", "html.h_fin", "html.h_ini", "html.n_sacd", "post.desc_enc", "post.id_enc", "post.id_item_h", "post.mod", "post.origen", "post.refresh"]
 acciones: ["fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Horario Ver
@@ -58,13 +58,19 @@ Formulario horario de encargo.
 
 - `fnjs_guardar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+

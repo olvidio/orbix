@@ -2,61 +2,55 @@
 id: "profesores.profesor_asignatura_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Gestionar Profesor Asignatura Que"
+nombre: "Flujo - Buscar profesor para asignatura"
 capacidad: "profesores.profesor_asignatura_que.gestionar"
-pantallas_principales: []
-fragmentos: ["profesores.pantalla.profesor_asignatura_que"]
-acciones: ["ejecutar"]
-endpoints: ["/src/profesores/profesor_asignatura_que"]
-estado_revision: "generado"
+pantallas_principales: ["profesores.pantalla.profesor_asignatura_que"]
+fragmentos: ["profesores.pantalla.profesor_asignatura_ajax"]
+acciones: ["consultar"]
+endpoints: ["/src/profesores/profesor_asignatura_que", "/src/profesores/profesor_asignatura_ajax"]
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Profesor Asignatura Que
+# Flujo - Buscar profesor para asignatura
 
-Propuesta generada automaticamente desde la capacidad `profesores.profesor_asignatura_que.gestionar` y sus pantallas relacionadas.
+Consulta de profesores habilitados para impartir una asignatura concreta.
 
 ## Objetivo De Usuario
 
-Gestiona ProfesorAsignaturaQue. Descripcion funcional pendiente de revisar.
+Elegir asignatura y ver candidatos (departamento + ampliación) con datos de contacto y docencia
+previa, como apoyo antes de asignar en el curso académico.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `profesor_asignatura_que` (`frontend/profesores/controller/profesor_asignatura_que.php`).
 
 ## Fragmentos O Pantallas Auxiliares
 
-- `profesores.pantalla.profesor_asignatura_que`
+- `profesores.pantalla.profesor_asignatura_ajax`
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Abrir **profesor para asignatura** desde el menú.
+2. Elegir asignatura en el desplegable (`fnjs_profes`).
+3. Revisar la tabla AJAX con profesores, centro, docencia y contacto.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.id_asignatura`
-
-Acciones JavaScript:
-- `fnjs_left_side_hide`
-- `fnjs_profes`
+- `/src/profesores/profesor_asignatura_que` — carga inicial
+- `/src/profesores/profesor_asignatura_ajax` — tabla al cambiar asignatura
 
 ## Endpoints Del Flujo
 
 - `/src/profesores/profesor_asignatura_que`
+- `/src/profesores/profesor_asignatura_ajax`
 
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > buscar persona > profesor para asignatura; stgr > personas > profesor para asignatura
+- **Pills2:** ESTUDIOS > Preparación planes estudio > Profesor para asignatura

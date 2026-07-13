@@ -2,72 +2,57 @@
 id: "actividades.actividad.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Actividad"
+nombre: "Flujo - Crear y eliminar actividad"
 capacidad: "actividades.actividad.gestionar"
-pantallas_principales: []
-fragmentos: []
+pantallas_principales: ["actividades.pantalla.actividad_ver"]
+fragmentos: ["actividades.pantalla.actividad_select"]
 acciones: ["crear", "eliminar"]
 endpoints: ["/src/actividades/actividad_eliminar", "/src/actividades/actividad_nuevo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad
+# Flujo - Crear y eliminar actividad
 
-Propuesta generada automaticamente desde la capacidad `actividades.actividad.gestionar` y sus pantallas relacionadas.
+Alta y baja de fichas de actividad desde la UI (ficha nueva, listados, planning).
 
 ## Objetivo De Usuario
 
-Gestiona Actividad, BorrarActividad. Endpoint backend AJAX: crea una nueva actividad a partir de los datos del formulario. Endpoint backend AJAX: elimina las actividades indicadas.
+- **Crear:** rellenar la ficha en modo *nuevo* y guardar (`actividad_nuevo`).
+- **Eliminar:** seleccionar actividad(es) en un listado y confirmar borrado (`actividad_eliminar`).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- Crear: `actividad_ver` (`mod=nuevo`) o `planning_casa_nueva`.
+- Eliminar: acciones de listado en `actividad_select` / `lista_actividades_sg` (según permisos).
 
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Crear
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
+1. Abrir ficha nueva (menú *nueva activ* o planning).
+2. Completar tipo, fechas, lugar, organiza y demás campos obligatorios.
+3. Pulsar guardar (`fnjs_guardar('nuevo')` → `actividad_nuevo`).
+4. Comprobar mensaje de éxito; la ficha puede resetearse en la misma página.
 
 ### Eliminar
 
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-Endpoints asociados:
-- `/src/actividades/actividad_eliminar`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+1. En listado, marcar actividad(es) y elegir borrar.
+2. Confirmar diálogo.
+3. El backend elimina vía `actividad_eliminar`; refrescar listado.
 
 ## Endpoints Del Flujo
 
-- `/src/actividades/actividad_eliminar`
 - `/src/actividades/actividad_nuevo`
+- `/src/actividades/actividad_eliminar`
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+Crear: `debe seleccionar un tipo de actividad`, `No tiene permiso para crear…`,
+`hay un error, no se ha guardado`. Eliminar: `actividad no encontrada`,
+`No tiene permiso para borrar esta actividad`, `hay un error, no se ha eliminado`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre/Calendario > actividades > nueva activ (crear).
+- **Pills2:** ACTIVIDADES > Buscar actividad > Nueva actividad; ATENCIÓN SACD >
+  Actividades > Nueva actividad. Borrado desde listados de búsqueda (sin menú propio).

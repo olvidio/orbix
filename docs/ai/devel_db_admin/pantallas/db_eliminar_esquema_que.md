@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario para eliminar un esquema DL (trasladar a resto y borrar roles).
 
 ## Uso En Ayuda
 

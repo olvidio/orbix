@@ -9,19 +9,23 @@ controller: "src/dbextern/infrastructure/ui/http/controllers/sincro_unir.php"
 entrada: ["post.id:integer", "post.id_nom_listas:integer", "post.id_orbix:integer", "post.tipo_persona:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
 errores: ["hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/dbextern/controller/ver_listas.php", "frontend/dbextern/controller/ver_orbix.php"]
 casos_uso: ["src\\dbextern\\application\\UnirPersonaUseCase"]
 tags: ["dbextern", "sincro", "unir"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Sincro Unir
 
-Vincula una persona de BDU con una persona de Orbix.
+Crea el vínculo `id_match` entre una persona BDU (`id_nom_listas`) y una Orbix (`id_orbix`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Guarda `IdMatchPersona` con `id_tabla = tipo_persona`. Si llega `id` de sesión `DBListas`/`DBOrbix`,
+elimina esa fila de la sesión tras éxito.
 
 ## Endpoint
 
@@ -34,22 +38,24 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id` | `integer` | controller | No | controller |
-| `id_nom_listas` | `integer` | controller | No | controller |
-| `id_orbix` | `integer` | controller | No | controller |
-| `tipo_persona` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_nom_listas` | `integer` | controller | Sí | ID en BDU |
+| `id_orbix` | `integer` | controller | Sí | `id_nom` en Aquinate |
+| `tipo_persona` | `string` | controller | Sí | `n`/`a`/`s`/`sssc` |
+| `id` | `integer` | controller | No | Índice en `$_SESSION['DBListas']` o `DBOrbix` para avanzar lista |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Éxito: `success: true`, `data: "ok"`.
+- Error: `success: false`, mensaje del repositorio.
 
 ## Errores conocidos
 
-- `hay un error, no se ha guardado`
+- `hay un error, no se ha guardado` (+ texto de `getErrorTxt()`)
+
+## Permisos
+
+- HashFront en pantallas `ver_listas` / `ver_orbix`.
 
 ## Casos De Uso
 
@@ -57,11 +63,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/dbextern/controller/ver_listas.php`
-- `frontend/dbextern/controller/ver_orbix.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/dbextern/controller/ver_listas.php` → `fnjs_unir`
+- `frontend/dbextern/controller/ver_orbix.php` → `fnjs_unir_bdu`

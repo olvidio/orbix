@@ -6,7 +6,7 @@ url: "/src/ubis/ubis_lista_data"
 metodos: ["GET", "POST"]
 operacion: "lista_data"
 controller: "src/ubis/infrastructure/ui/http/controllers/ubis_lista_data.php"
-entrada: ["post.error:string", "post.nombre_ubi:string"]
+entrada: ["post.nombre_ubi:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "ubis_UbisListaDataData"
@@ -15,14 +15,19 @@ requiere_hashb: false
 frontend_referencias: ["frontend/ubis/controller/ubis_lista.php"]
 casos_uso: ["src\\ubis\\application\\UbisListaData"]
 tags: ["ubis", "lista", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["opción no definida en switch en %s, linea %s"]
 ---
 
 # Ubis Lista Data
 
-Descripcion funcional pendiente de revisar.
+Busca casas y centros activos por nombre para el autocompletado de lista.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Busca casas y centros activos por nombre para el autocompletado de lista.
 
 ## Endpoint
 
@@ -35,22 +40,22 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `error` | `string` | controller | No | controller |
-| `nombre_ubi` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `nombre_ubi` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Payload en `data` (schema `ubis_UbisListaDataData`):
-  - `a_cabeceras` (`list<string>, a_valores: list<array<string|int>>`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `a_cabeceras`: cabeceras tabla
+  - `a_valores`: filas casas y centros activos
+
+## Errores conocidos
+- `opción no definida en switch en %s, linea %s`
 
 ## Permisos
 
-- Permiso oficina `vcsd`
-- Permiso oficina `des`
+have_perm_oficina(vcsd|des): ver sf en sfsv=1 sin filtrar sv.
 
 ## Casos De Uso
 
@@ -58,10 +63,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/ubis/controller/ubis_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/ubis/controller/ubis_lista.php"]`).

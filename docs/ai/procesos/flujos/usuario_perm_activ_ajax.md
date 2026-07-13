@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona UsuarioPermActivFases. Caso de uso: devuelve las opciones disponibles para el desplegable fase_ref[] de la pantalla usuario_perm_activ, filtradas por el tipo de actividad y la delegacion.
+Actualizar dinámicamente las opciones del desplegable `fase_ref[]` al cambiar el tipo de actividad o la delegación en la pantalla de permisos de actividad de usuario.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

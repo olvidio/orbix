@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "actividades"
-titulo: "Calendario Listas"
+titulo: "Listados calendario (casas/oficinas)"
 pantalla: "actividades.pantalla.calendario_listas"
-preguntas: ["Que se puede hacer en Calendario Listas?", "Que campos tiene Calendario Listas?", "Que acciones hay en Calendario Listas?"]
+preguntas: ["Que se puede hacer en Listados calendario (casas/oficinas)?", "Que campos tiene Listados calendario (casas/oficinas)?", "Que acciones hay en Listados calendario (casas/oficinas)?"]
 capacidades: ["actividades.calendario_listas.gestionar"]
 endpoints: ["/src/actividades/calendario_listas_datos"]
 source: "docs/catalogo/actividades/pantallas/calendario_listas.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Calendario Listas
+# Ayuda IA Pantalla - Listados calendario (casas/oficinas)
 
 ## Resumen
 
-Fragmento HTML con el calendario de actividades de casas / oficinas en un periodo dado.
+Fragmento **HTML por AJAX** con listados del *nuevo calendario*: actividades por oficina, casas comunes, todas las casas, variantes SV/SF, lista de centros encargados (`que=lista_cdc`), etc. El parámetro `que` determina el informe; `ver_ctr=si` incluye columna de centros encargados cuando aplica.
 
 ## Uso En Ayuda
 

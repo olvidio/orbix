@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona EquipajesMovimientos. Descripcion funcional pendiente de revisar.
+Comparar movimientos de documentos entre equipajes seleccionados.
 
 ## Limites De La Respuesta
 

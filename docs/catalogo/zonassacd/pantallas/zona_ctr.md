@@ -16,13 +16,22 @@ estado_revision: "revisado"
 
 # Zona Ctr
 
-Pantalla **Zonas-ctr**: consultar que centros pertenecen a cada zona y, con permiso
-`des`/`vcsd`, reasignar los centros marcados a otra zona (o dejarlos sin zona).
+Pantalla Zonas-ctr: listar centros por zona y reasignarlos. Opción sin zona sf solo con perm_des.
 
 ## Tipo
 
-- Subtipo: `pantalla_principal` (se carga en `#main`; la tabla llega por AJAX)
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/zonassacd/controller/zona_ctr.php`
+
+## Acciones (revisadas)
+
+| Accion | Funcion JS | Llama a | Parametros |
+|--------|-----------|---------|------------|
+| Listar centros de una zona | `fnjs_busca_ctrs()` (onchange del desplegable) | `zona_ctr_lista_ajax.php` | `id_zona` (`int` / `'no'` / `'no_sf'`) |
+| Asignar centros a zona | `fnjs_guardar(form)` (boton asignar) | `zona_ctr_update_ajax.php` | `id_zona_new` (`int` / `'no'`), `sel[]` |
+
+La opcion `'no_sf'` del desplegable solo aparece con `perm_des`. Los centros sf
+se muestran con clase `tono2`.
 
 ## Vistas Relacionadas
 
@@ -54,20 +63,7 @@ Pantalla **Zonas-ctr**: consultar que centros pertenecen a cada zona y, con perm
 - `fnjs_guardar`
 - `fnjs_left_side_hide`
 
-## Acciones (revisadas)
+## Ruta de menú
 
-| Accion | Funcion JS | Llama a | Parametros |
-|--------|-----------|---------|------------|
-| Listar centros de una zona | `fnjs_busca_ctrs()` (onchange del desplegable) | `zona_ctr_lista_ajax.php` | `id_zona` (`int` / `'no'` / `'no_sf'`) |
-| Asignar centros a zona | `fnjs_guardar(form)` (boton asignar) | `zona_ctr_update_ajax.php` | `id_zona_new` (`int` / `'no'`), `sel[]` |
-
-La opcion `'no_sf'` del desplegable solo aparece con `perm_des`. Los centros sf
-se muestran con clase `tono2`.
-
-## Manual De Usuario
-
-Ver [`manual/zonassacd.md`](../../../manual/zonassacd.md), seccion *Zona Centros*.
-
-## Revision Manual
-
-- Revisado jun 2026: pantalla principal confirmada; acciones documentadas.
+- **Legacy:** dre > zonas > zonas-ctr
+- **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-ctr

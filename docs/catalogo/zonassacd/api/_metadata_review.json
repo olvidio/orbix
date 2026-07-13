@@ -1,0 +1,145 @@
+{
+    "zona_sacd": {
+        "operacion": "form_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {
+            "success_data": {
+                "a_opciones": "map id_zona=>nombre para desplegable",
+                "perm_des": "boolean permiso oficina des o vcsd"
+            }
+        },
+        "objetivo_funcional": "Datos iniciales de la pantalla Zonas-sacd: opciones del desplegable de zonas y flag perm_des que activa checkboxes, botones de asignación y modal de días.",
+        "permisos": ["perm_des vía have_perm_oficina('des'|'vcsd') en sesión; sin validación en caso de uso."],
+        "casos_uso": ["src\\zonassacd\\application\\ZonaSacdPage"],
+        "apps_lineage": "Migrado desde apps/zonassacd/controller/zona_sacd.php"
+    },
+    "zona_sacd_ajax": {
+        "operacion": "mutacion",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {},
+        "objetivo_funcional": "Ruta muerta: registrada en routes.php pero el controller no existe. Era dispatcher legacy (que=get_lista|update|get_lista_tot), sustituido por zona_sacd_lista, zona_sacd_update y zona_sacd_lista_tot.",
+        "permisos": [],
+        "casos_uso": []
+    },
+    "zona_sacd_lista": {
+        "operacion": "lista_data",
+        "entrada": {"id_zona": "string"},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {
+            "success_data": {
+                "tipo": "tabla",
+                "id_tabla": "zona_sacd_ajax",
+                "a_cabeceras": "sacd, zona, propia, L..D",
+                "a_botones": "modificar si perm_des",
+                "con_sel": "boolean",
+                "a_valores": "filas con sel=id_nom",
+                "error": "string vacío"
+            }
+        },
+        "objetivo_funcional": "Tabla de sacd de una zona (id_zona numérico), sacd sin zona (id_zona=no) o vacía si id_zona inválido. Columnas propia y días L–D como x/-.",
+        "permisos": ["con_sel y botón modificar solo con perm_des (des/vcsd)."],
+        "casos_uso": ["src\\zonassacd\\application\\ZonaSacdLista"],
+        "apps_lineage": "Case get_lista del legacy zona_sacd_ajax.php"
+    },
+    "zona_sacd_lista_tot": {
+        "operacion": "lista_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {
+            "success_data": {
+                "tipo": "lista",
+                "a_cabeceras": "sacd, zona, propia",
+                "a_valores": "una fila por asignación sacd-zona",
+                "error": "string vacío"
+            }
+        },
+        "objetivo_funcional": "Listado global de todos los sacd de la delegación con sus zonas (zona propia primero). Sacd sin zona aparece con zona vacía.",
+        "permisos": ["Sin control de permisos en caso de uso."],
+        "casos_uso": ["src\\zonassacd\\application\\ZonaSacdListaTot"],
+        "apps_lineage": "Case get_lista_tot del legacy zona_sacd_ajax.php"
+    },
+    "zona_sacd_update": {
+        "operacion": "mutacion",
+        "entrada": {
+            "acumular": "integer",
+            "id_zona": "string",
+            "id_zona_new": "string",
+            "sel": "array"
+        },
+        "entrada_obligatoria": [],
+        "errores": [
+            "hay un error, no se ha guardado",
+            "hay un error, no se ha eliminado"
+        ],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Mueve, crea o elimina asignaciones sacd↔zona para sel[]. acumular=1 cambia zona propia; acumular=2 añade/quita asignación iglesia/cgi no propia. id_zona_new=no elimina; vacío no hace nada.",
+        "permisos": ["Sin validación en caso de uso; UI restringe a perm_des."],
+        "casos_uso": ["src\\zonassacd\\application\\ZonaSacdUpdate"],
+        "apps_lineage": "Case update del legacy zona_sacd_ajax.php"
+    },
+    "zona_ctr": {
+        "operacion": "form_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {
+            "success_data": {
+                "a_opciones": "map id_zona=>nombre",
+                "perm_des": "boolean permiso des/vcsd"
+            }
+        },
+        "objetivo_funcional": "Datos iniciales de Zonas-ctr: desplegable de zonas y perm_des (activa opción no_sf, checkboxes y botón asignar).",
+        "permisos": ["perm_des vía have_perm_oficina('des'|'vcsd')."],
+        "casos_uso": ["src\\zonassacd\\application\\ZonaCtrPage"],
+        "apps_lineage": "Migrado desde apps/zonassacd/controller/zona_ctr.php"
+    },
+    "zona_ctr_ajax": {
+        "operacion": "mutacion",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {},
+        "objetivo_funcional": "Ruta muerta: registrada en routes.php pero sin controller. Sustituida por zona_ctr_lista y zona_ctr_update.",
+        "permisos": [],
+        "casos_uso": []
+    },
+    "zona_ctr_lista": {
+        "operacion": "lista_data",
+        "entrada": {"id_zona": "string"},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {
+            "success_data": {
+                "tipo": "tabla",
+                "id_tabla": "zona_ctr_ajax",
+                "a_cabeceras": "centro, zona",
+                "con_sel": "boolean",
+                "a_valores": "filas sel=id_ubi; clase tono2 en sf"
+            }
+        },
+        "objetivo_funcional": "Centros activos de una zona (id numérico), sin zona dl (no) o sin zona sf (no_sf). Centros sf solo visibles con perm_des.",
+        "permisos": ["con_sel y centros sf requieren perm_des."],
+        "casos_uso": ["src\\zonassacd\\application\\ZonaCtrLista"],
+        "apps_lineage": "Case get_lista del legacy zona_ctr_ajax.php"
+    },
+    "zona_ctr_update": {
+        "operacion": "mutacion",
+        "entrada": {
+            "id_zona_new": "string",
+            "sel": "array"
+        },
+        "entrada_obligatoria": [],
+        "errores": ["hay un error, no se ha guardado."],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Reasigna centros marcados (sel=id_ubi) a id_zona_new. Primer dígito del id_ubi elige repo dl (1) o sf. id_zona_new=no deja sin zona.",
+        "permisos": ["Sin validación en caso de uso; UI restringe a perm_des."],
+        "casos_uso": ["src\\zonassacd\\application\\ZonaCtrUpdate"],
+        "apps_lineage": "Case update del legacy zona_ctr_ajax.php"
+    }
+}

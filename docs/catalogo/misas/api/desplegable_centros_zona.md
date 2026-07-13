@@ -4,43 +4,65 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/desplegable_centros_zona"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/misas/infrastructure/ui/http/controllers/desplegable_centros_zona.php"
-entrada: ["post.id_ubi:mixed", "post.id_zona:integer"]
-entrada_obligatoria: []
+entrada: ["post.id_zona:integer", "post.id_ubi:integer"]
+entrada_obligatoria: ["id_zona"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/ver_encargos_centros.php"]
 casos_uso: ["src\\misas\\application\\DesplegableCentrosZonaData"]
 tags: ["misas", "desplegable", "centros", "zona"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
-# Desplegable Centros Zona
+# Desplegable centros zona
 
-Payload JSON para el desplegable de centros activos de una zona. Orden: sf (alfabetico), linea separadora, sv (alfabetico).
+Devuelve opciones del desplegable de centros activos (sf y sv) de una zona para el modal de encargos-centro.
+
+Linaje: Slice 5 — nuevo endpoint JSON; consumido por frontend/misas/controller/ver_encargos_centros.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve opciones del desplegable de centros activos (sf y sv) de una zona para el modal de encargos-centro.
 
 ## Endpoint
 
 - URL: `/src/misas/desplegable_centros_zona`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/desplegable_centros_zona.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_ubi` | `mixed` | controller | No | controller |
-| `id_zona` | `integer` | controller | No | controller |
+| `id_zona` | `integer` | application | Si | |
+| `id_ubi` | `integer|null` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `id`: id_ubi
+  - `opciones_sf`: array
+  - `opciones_sv`: array
+  - `selected`: string
+  - `blanco`: 1
+  - `val_blanco`: 
+  - `action`: 
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -48,10 +70,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/ver_encargos_centros.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/ver_encargos_centros.php"]`).

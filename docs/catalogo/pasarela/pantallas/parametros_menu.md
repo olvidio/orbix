@@ -3,20 +3,25 @@ id: "pasarela.pantalla.parametros_menu"
 tipo: "pantalla_frontend"
 subtipo: "pantalla"
 modulo: "pasarela"
-nombre: "Parametros Menu"
+nombre: "Parámetros pasarela"
 controller: "frontend/pasarela/controller/parametros_menu.php"
-vistas: []
-fragmentos_frontend: ["frontend/pasarela/controller/activacion_lista.php", "frontend/pasarela/controller/contribucion_no_duerme_lista.php", "frontend/pasarela/controller/contribucion_reserva_lista.php", "frontend/pasarela/controller/nombre_lista.php"]
-endpoints: []
-capacidades: []
+vistas:
+  - "frontend\/pasarela\/view\/parametros_menu.html.twig"
+fragmentos_frontend:
+  - "frontend\/pasarela\/controller\/activacion_lista.php"
+  - "frontend\/pasarela\/controller\/nombre_lista.php"
+  - "frontend\/pasarela\/controller\/contribucion_no_duerme_lista.php"
+  - "frontend\/pasarela\/controller\/contribucion_reserva_lista.php"
+endpoints:[]
+capacidades:[]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Parametros Menu
+# Parámetros pasarela
 
-Descripcion funcional pendiente de revisar.
+Menú de configuración de la pasarela de exterior: enlaces a fecha de activación, nombres particulares, contribución no duerme y contribución reserva.
 
 ## Tipo
 
@@ -25,38 +30,19 @@ Descripcion funcional pendiente de revisar.
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/pasarela/controller/activacion_lista.php`
-- `frontend/pasarela/controller/contribucion_no_duerme_lista.php`
-- `frontend/pasarela/controller/contribucion_reserva_lista.php`
-- `frontend/pasarela/controller/nombre_lista.php`
+- `frontend/pasarela/view/parametros_menu.html.twig`
 
 ## Endpoints Usados
 
-No se han detectado endpoints `/src/...`.
-
-## Capacidades Relacionadas
-
-No se han detectado capacidades relacionadas.
-
-## Campos Detectados
-
-No se han detectado campos de formulario.
-
-## Acciones Detectadas
-
-No se han detectado acciones.
+Ninguno directo (solo enlaces a subpantallas).
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Abrir desde el menú Pasarela > parámetros.
+2. Elegir el parámetro a configurar.
+3. En cada subpantalla gestionar valor por defecto y excepciones por tipo de actividad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Pasarela > parámetros
+- **Pills2:** dre > Pasarela > parámetros; ACTIVIDADES > Pasarela > parámetros

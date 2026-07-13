@@ -10,45 +10,33 @@ entrada: []
 entrada_obligatoria: []
 respuesta: "raw_response"
 requiere_hashb: false
+errores: []
 frontend_referencias: []
 casos_uso: []
-tags: ["menus", "generar", "txt"]
-estado_revision: "generado"
+tags: ["menus", "generar", "txt", "traducciones"]
+estado_revision: "revisado"
 ---
 
-# Menus Generar Txt
+# Generar fichero de textos para gettext
 
-Esta página genera un fichero con todos los textos de los menús que hay en la base de datos, para poder traducirlos por gettex
+Regenera `frontend/menus/view/traducir_menu.phtml` con llamadas `_()` por cada etiqueta de menú activo y
+tipos de repetición de actividades.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
-## Endpoint
+## Objetivo funcional
 
-- URL: `/src/menus/menus_generar_txt`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
-- Controller: `src/menus/infrastructure/ui/http/controllers/menus_generar_txt.php`
-
-## Entrada
-
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Escribe PHP con `_('texto')` para extracción gettext. **No usa `ContestarJson`**; imprime error si el fichero
+no es escribible.
 
 ## Salida
 
-- Helper: `echo`
-- Forma: `raw_response`
-- Exito: `success: true`, `data: "ok"`.
+- Fichero en disco; respuesta HTTP vacía o mensajes `print` de error.
 
-## Casos De Uso
+## Permisos
 
-No se han detectado imports de `src\...\application\...`.
+- Menú `sistema > traducciones > menus a texto` (`_referencia_menus.md`).
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Entrada vía menú traducciones (URL legacy `src/menus/menus_generar_txt`).

@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **Matr. Pendientes** / **Exam. pendientes de acta** desde el menú.
+2. El sistema carga automáticamente `matriculas_pendientes_data`.
+3. Se muestra la tabla con avisos de región STGR si aplica.
+4. Opcional: ver dossier CA de una fila o borrar matrículas.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/matriculas_pendientes_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona MatriculasPendientes. Filas para frontend/actividadestudios/controller/matriculas_pendientes.php.
+El usuario consulta las matrículas que aún no tienen nota definitiva en acta: una fila por matrícula con actividad, asignatura, alumno y permiso. Puede abrir el dossier de la actividad o borrar matrículas seleccionadas.
 
 ## Limites De La Respuesta
 

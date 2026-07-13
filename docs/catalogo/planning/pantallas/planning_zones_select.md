@@ -3,7 +3,7 @@ id: "planning.pantalla.planning_zones_select"
 tipo: "pantalla_frontend"
 subtipo: "fragmento_ajax"
 modulo: "planning"
-nombre: "Planning Zones Select"
+nombre: "Planning por zonas SACD (calendario)"
 controller: "frontend/planning/controller/planning_zones_select.php"
 vistas: ["frontend/planning/view/planning_zones_select.phtml"]
 fragmentos_frontend: ["frontend/planning/controller/leyenda.php"]
@@ -11,54 +11,27 @@ endpoints: ["/src/planning/planning_zones_select_data"]
 capacidades: ["planning.planning_zones_select.gestionar"]
 campos: ["post.actividad", "post.id_zona", "post.modelo", "post.propuesta", "post.trimestre", "post.year"]
 acciones: ["fnjs_exportar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Planning Zones Select
+# Planning por zonas SACD (calendario)
 
-Planning (calendario) por zonas sacd.
+Cuadrícula de actividades por zona SACD en el trimestre elegido. Fragmento AJAX desde `planning_zones_que`.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
 - Controller: `frontend/planning/controller/planning_zones_select.php`
 
-## Vistas Relacionadas
-
-- `frontend/planning/view/planning_zones_select.phtml`
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/planning/controller/leyenda.php`
-
 ## Endpoints Usados
 
 - `/src/planning/planning_zones_select_data`
 
-## Capacidades Relacionadas
+## Acciones
 
-- `planning.planning_zones_select.gestionar`
+- Exportar calendario
+- Leyenda (`leyenda.php`)
 
-## Campos Detectados
+## Ruta de menú
 
-- `post.actividad`
-- `post.id_zona`
-- `post.modelo`
-- `post.propuesta`
-- `post.trimestre`
-- `post.year`
-
-## Acciones Detectadas
-
-- `fnjs_exportar`
-
-## Manual De Usuario
-
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+sin entrada de menú en el índice (fragmento del flujo por zonas)

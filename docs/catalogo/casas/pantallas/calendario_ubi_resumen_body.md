@@ -11,7 +11,7 @@ endpoints: ["/src/casas/calendario_ubi_resumen_data"]
 capacidades: ["casas.calendario_ubi_resumen.gestionar"]
 campos: ["html.id_ubi", "html.year", "post.G", "post.id_ubi", "post.inc_t", "post.seccion"]
 acciones: ["button:grabar tarifas", "fnjs_guardar", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Calendario Ubi Resumen Body
@@ -57,10 +57,8 @@ Controlador AJAX HTML: cuerpo del informe `calendario_ubi_resumen`.
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** adl > Nuevo Calendario > Previsión económica
+- **Pills2:** ACTIVIDADES > Estadísticas económicas > Previsión económica
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

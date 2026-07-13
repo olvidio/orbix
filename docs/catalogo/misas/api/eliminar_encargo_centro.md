@@ -7,21 +7,27 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/eliminar_encargo_centro.php"
 entrada: ["post.id_item:string"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_item"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["Falta el identificador del encargo-centro a eliminar"]
+errores: ["Falta el identificador del encargo-centro a eliminar", "No se encuentra el encargo-centro %s", "<repositorio getErrorTxt()>"]
 frontend_referencias: ["frontend/misas/controller/ver_encargos_centros.php"]
 casos_uso: ["src\\misas\\application\\EliminarEncargoCentro"]
 tags: ["misas", "eliminar", "encargo", "centro"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Eliminar Encargo Centro
+# Eliminar encargo centro
 
-Elimina un `EncargoCtr` por su uuid. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+Elimina la relación EncargoCtr (encargo visible en un centro) por uuid.
+
+Linaje: Slice 5 — rama borrar de apps/misas/controller/update_encargos_centros.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Elimina la relación EncargoCtr (encargo visible en un centro) por uuid.
 
 ## Endpoint
 
@@ -34,21 +40,23 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `string` | controller | No | controller |
+| `id_item` | `string` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-
-## Efectos colaterales
-
-- Elimina un `EncargoCtr` por su uuid.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `id_item`: string
 
 ## Errores conocidos
-
 - `Falta el identificador del encargo-centro a eliminar`
+- `No se encuentra el encargo-centro %s`
+- `<repositorio getErrorTxt()>`
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -56,10 +64,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/ver_encargos_centros.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/ver_encargos_centros.php"]`).

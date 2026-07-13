@@ -2,65 +2,39 @@
 id: "planning.planning_zones_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Gestionar Planning Zones Select"
+nombre: "Flujo - Planning por zonas SACD (calendario)"
 capacidad: "planning.planning_zones_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["planning.pantalla.planning_zones_que"]
 fragmentos: ["planning.pantalla.planning_zones_select"]
-acciones: ["obtener_datos"]
+acciones: ["cargar_calendario", "exportar"]
 endpoints: ["/src/planning/planning_zones_select_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Planning Zones Select
+# Flujo - Planning por zonas SACD (calendario)
 
-Propuesta generada automaticamente desde la capacidad `planning.planning_zones_select.gestionar` y sus pantallas relacionadas.
+Cuadrícula de actividades por zona SACD tras enviar filtros en `planning_zones_que`.
 
 ## Objetivo De Usuario
 
-Gestiona PlanningZonesSelect. Dataset para {.
+Visualizar y exportar el planning por zonas en el trimestre elegido.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `planning_zones_que.php` → AJAX `planning_zones_select`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `planning.pantalla.planning_zones_select`
+### Ver calendario
 
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.actividad`
-- `post.id_zona`
-- `post.modelo`
-- `post.propuesta`
-- `post.trimestre`
-- `post.year`
-
-Acciones JavaScript:
-- `fnjs_exportar`
+1. Confirmar zona, trimestre, año y actividad.
+2. `planning_zones_select_data` devuelve `actividades_por_zona` y cabeceras.
+3. Exportar o consultar leyenda.
 
 ## Endpoints Del Flujo
 
 - `/src/planning/planning_zones_select_data`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (subflujo del planning por zonas)

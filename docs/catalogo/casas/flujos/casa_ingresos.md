@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["casas.pantalla.casa_ingresos_lista"]
 acciones: ["listar"]
 endpoints: ["/src/casas/casa_ingresos_lista_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Casa Ingresos
@@ -59,10 +59,8 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** exterior > casas > Gestión económica
+- **Pills2:** CASAS Y CTR > Gestión casas > Gestión económica
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

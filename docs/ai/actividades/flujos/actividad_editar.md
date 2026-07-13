@@ -2,50 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Actividad Editar"
+titulo: "Guardar edición de actividad"
 flujo: "actividades.actividad_editar.gestionar.flujo"
-preguntas: ["Como ejecutar en Actividad Editar?"]
-pantallas_principales: []
-fragmentos: []
+preguntas: []
+pantallas_principales: ["actividades.pantalla.actividad_ver"]
+fragmentos: ["actividades.pantalla.planning_casa_modificar"]
 endpoints: ["/src/actividades/actividad_editar"]
 source: "docs/catalogo/actividades/flujos/actividad_editar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Actividad Editar
+# Ayuda IA - Guardar edición de actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Actividad Editar`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar edición de actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Actividad Editar?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (`actividades.pantalla.actividad_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `actividades.pantalla.actividad_ver`
+- `actividades.pantalla.planning_casa_modificar`
 
 ## Objetivo
 
-Gestiona ActividadEditar. Endpoint backend AJAX: guarda la edicion de una actividad existente.
+Modificar campos de la actividad (fechas, lugar, plazas, observaciones, etc.) y guardar sin cambiar el tipo.
+
+## Errores Documentados
+
+- `sesión de permisos no disponible`
+- `debe seleccionar un tipo de actividad`
+- `actividad no encontrada`
+- `hay un error, no se ha guardado + detalle`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

@@ -11,12 +11,12 @@ endpoints: ["/src/actividadtarifas/tipo_tarifa_eliminar", "/src/actividadtarifas
 capacidades: ["actividadtarifas.tipo_tarifa.gestionar"]
 campos: ["form.id_tarifa", "form.letra", "form.modo", "form.observ"]
 acciones: ["fnjs_cerrar", "fnjs_guardar", "fnjs_modificar", "fnjs_update_div", "fnjs_ver"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tarifa
 
-Pantalla principal del modulo `actividadtarifas` - catalogo de `TipoTarifa`.
+Catálogo maestro de tipos de tarifa (`TipoTarifa`): listado AJAX, alta/edición/eliminación en popup.
 
 ## Tipo
 
@@ -59,11 +59,13 @@ Pantalla principal del modulo `actividadtarifas` - catalogo de `TipoTarifa`.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Al abrir la pantalla se carga el listado (`fnjs_ver` → `tipo_tarifa_lista_data`). Desde el listado
+se puede modificar una fila (`fnjs_modificar`) o crear una nueva; el formulario se inyecta en
+`#div_modificar`. Guardar/eliminar llaman a `tipo_tarifa_update` / `tipo_tarifa_eliminar` con JSON.
+El enlace modificar solo aparece con permiso oficina `adl` y sección coincidente.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** adl > Tarifas > definir tarifa; dre > Nuevo calendario > Tarifas > definir tarifa;
+  exterior > Tarifas > definir tarifa (también como activ -> tarifa en algunos menús).
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Definir tarifa.

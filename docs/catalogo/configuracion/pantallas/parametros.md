@@ -1,63 +1,62 @@
 ---
 id: "configuracion.pantalla.parametros"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "configuracion"
-nombre: "Parametros"
+nombre: "Configuración del esquema"
 controller: "frontend/configuracion/controller/parametros.php"
-vistas: []
+vistas: ["frontend/configuracion/view/parametros.html.twig"]
 fragmentos_frontend: []
-endpoints: ["/src/configuracion/parametros_lista"]
+endpoints: ["/src/configuracion/parametros_lista", "/src/configuracion/parametros_update"]
 capacidades: ["configuracion.parametros.gestionar"]
-campos: ["form.fin_dia", "form.fin_mes", "form.ini_dia", "form.ini_mes", "form.valor"]
-acciones: []
-estado_revision: "generado"
+campos: ["form.ini_dia", "form.ini_mes", "form.fin_dia", "form.fin_mes", "form.valor", "form.parametro"]
+acciones: ["fnjs_guardar"]
+estado_revision: "revisado"
 ---
 
-# Parametros
+# Configuración del esquema
 
-Descripcion funcional pendiente de revisar.
+Pantalla de parámetros globales del esquema Orbix: periodos de curso STGR/CRT, jefe de
+calendario, datos de estudios/certificados, notas, idioma, ámbito (dl/región/rstgr) y
+gestión de calendario. Cada bloque es un formulario independiente con HashFront.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/configuracion/controller/parametros.php`
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-No se han detectado controladores frontend relacionados.
+- `frontend/configuracion/view/parametros.html.twig`
 
 ## Endpoints Usados
 
-- `/src/configuracion/parametros_lista`
+- `/src/configuracion/parametros_lista` — carga valores actuales (builder `form_data`)
+- `/src/configuracion/parametros_update` — guarda un parámetro (`parametro` + `valor` o fechas)
 
-## Capacidades Relacionadas
+## Parámetros editables
 
-- `configuracion.parametros.gestionar`
-
-## Campos Detectados
-
-- `form.fin_dia`
-- `form.fin_mes`
-- `form.ini_dia`
-- `form.ini_mes`
-- `form.valor`
-
-## Acciones Detectadas
-
-No se han detectado acciones.
+| Código | Contenido |
+|--------|-----------|
+| `curso_stgr` / `curso_crt` | Periodo curso (día/mes inicio y fin) |
+| `jefe_calendario` | Logins del jefe de calendario (coma) |
+| `ce_lugar` | Nombre(s) centro de estudios |
+| `region_latin` | Nombre región en latín (HTML) |
+| `vstgr`, `lugar_firma`, `dir_stgr` | Datos certificados STGR |
+| `nota_corte`, `nota_max`, `caduca_cursada` | Notas y caducidad asignaturas |
+| `ini_contador_certificados` | Contador inicial certificados |
+| `idioma_default` | Desplegable de locales |
+| `ambito` | `dl` / `r` / `rstgr` |
+| `gesCalendario` | `central` / `oficinas` |
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Abrir desde menú Configuración > config esquema (o ADMIN LOCAL > Esquema en Pills2).
+2. Localizar el bloque del parámetro a cambiar.
+3. Editar y pulsar «Guardar» del formulario correspondiente (cada bloque guarda por separado).
+4. Confirmar el aviso «se ha guardado correctamente».
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > Configuración > config esquema
+- **Pills2:** ADMIN LOCAL > Esquema; sistema > Configuración > config esquema

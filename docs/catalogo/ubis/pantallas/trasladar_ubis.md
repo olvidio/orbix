@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/trasladar_ubis"]
 capacidades: ["ubis.trasladar_ubis.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Trasladar Ubis
 
-Descripcion funcional pendiente de revisar.
+Ejecuta el traslado de ubis seleccionados a la delegación destino indicada.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/ubis/controller/trasladar_ubis.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

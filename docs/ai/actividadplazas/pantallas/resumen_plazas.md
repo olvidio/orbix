@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla resumen de plazas por actividad.
+Pantalla resumen de plazas de una actividad: desglose por delegación (calendario, cedidas, conseguidas, disponibles, ocupadas y libres) con totales, y formulario para ceder plazas a otra dl.
 
 ## Uso En Ayuda
 

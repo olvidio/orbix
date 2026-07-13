@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona UbisTabla. Normaliza los parámetros de entrada del request.
+Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla navegable.
+
+## Errores Documentados
+
+- `debe poner algún criterio de búsqueda`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

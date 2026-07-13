@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado alfabético de asistentes con habitación y planta asignadas.
 
 ## Uso En Ayuda
 

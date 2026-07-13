@@ -43,10 +43,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CuadriculaZonaGrid. Descripcion funcional pendiente de revisar.
+Construye el SlickGrid de cuadrícula de zona (columnas, filas encargo/sacd, metadatos de celda) para ver/modificar plan, plantilla o cambiar estado.
+
+## Errores Documentados
+
+- `hay un error, no se ha guardado`
+- `sólo debería haber uno`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

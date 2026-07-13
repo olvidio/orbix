@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "zonassacd"
 titulo: "Zona Sacd Lista Tot"
 flujo: "zonassacd.zona_sacd_lista_tot.gestionar.flujo"
-preguntas: ["Como ejecutar en Zona Sacd Lista Tot?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/zonassacd/zona_sacd_lista_tot"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Zona Sacd Lista Tot?
 
 ## Donde Entrar
 
@@ -29,23 +28,20 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - Ninguna pantalla relacionada.
 
 ## Objetivo
 
-Gestiona ZonaSacdListaTot. Descripcion funcional pendiente de revisar.
+Ver el listado global sacd–zona de toda la delegación (una fila por asignación). Entrada de menú Lista sacd-zona.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

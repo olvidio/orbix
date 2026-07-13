@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "encargossacd"
 url: "/src/encargossacd/listas_com_txt_get"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/encargossacd/infrastructure/ui/http/controllers/listas_com_txt_get.php"
 entrada: ["post.clave:mixed", "post.idioma:mixed"]
 entrada_obligatoria: []
@@ -15,20 +15,23 @@ requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/listas_com_txt.php", "frontend/encargossacd/controller/listas_com_txt_get.php"]
 casos_uso: ["src\\encargossacd\\application\\ListasComTxtGet"]
 tags: ["encargossacd", "listas", "com", "txt", "get"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Listas Com Txt Get
 
 Lectura del texto de comunicacion para un par (clave, idioma). Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
+## Objetivo funcional
+
+Lee texto de comunicación por `clave` + `idioma`.
+
 ## Endpoint
 
 - URL: `/src/encargossacd/listas_com_txt_get`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/listas_com_txt_get.php`
 
 ## Entrada
@@ -40,15 +43,16 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_ListasComTxtGetData`):
-  - `texto` (`string`)
+- Claves: `texto` (doble `JSON.parse`).
+
 
 ## Efectos colaterales
 
 - Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
+
+## Permisos
+
+Sin control propio; menú listados.
 
 ## Casos De Uso
 
@@ -59,8 +63,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - `frontend/encargossacd/controller/listas_com_txt.php`
 - `frontend/encargossacd/controller/listas_com_txt_get.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

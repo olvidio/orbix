@@ -4,43 +4,64 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/desplegable_encargos"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/misas/infrastructure/ui/http/controllers/desplegable_encargos.php"
-entrada: ["post.id_enc:mixed", "post.id_zona:integer"]
-entrada_obligatoria: []
+entrada: ["post.id_zona:integer", "post.id_enc:integer"]
+entrada_obligatoria: ["id_zona"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/ver_encargos_centros.php"]
 casos_uso: ["src\\misas\\application\\DesplegableEncargosData"]
 tags: ["misas", "desplegable", "encargos"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
-# Desplegable Encargos
+# Desplegable encargos
 
-Payload JSON para el desplegable dinamico de encargos de una zona. Sigue el contrato de desplegables de `refactor.md`: - `id` : id del `<select>` que montara `fnjs_construir_desplegable`. - `opciones` : map id_enc => desc_enc de los encargos con `id_tipo_enc >= 8100` de la zona. - `selected` : id_enc preseleccionado (`''` si no aplica). - `blanco` : true si se quiere opcion en blanco. - `val_blanco`: valor de la opcion en blanco. - `action` : handler `onchange` opcional (vacio por defecto).
+Devuelve opciones de encargos 8100+ de una zona para el desplegable dinámico del modal de encargos-centro.
+
+Linaje: Slice 5 — migrado desde apps/misas/controller/desplegable_encargos.php (antes devolvía HTML <select>).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve opciones de encargos 8100+ de una zona para el desplegable dinámico del modal de encargos-centro.
 
 ## Endpoint
 
 - URL: `/src/misas/desplegable_encargos`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/desplegable_encargos.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_enc` | `mixed` | controller | No | controller |
-| `id_zona` | `integer` | controller | No | controller |
+| `id_zona` | `integer` | application | Si | |
+| `id_enc` | `integer|null` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `id`: id_enc
+  - `opciones`: array
+  - `selected`: string
+  - `blanco`: 1
+  - `val_blanco`: 
+  - `action`: fnjs_prepara_select_centro()
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -48,10 +69,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/ver_encargos_centros.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/ver_encargos_centros.php"]`).

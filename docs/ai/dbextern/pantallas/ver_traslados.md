@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "dbextern"
-titulo: "Ver Traslados"
+titulo: "Traslados desde otra DL"
 pantalla: "dbextern.pantalla.ver_traslados"
-preguntas: ["Que se puede hacer en Ver Traslados?", "Que campos tiene Ver Traslados?", "Que acciones hay en Ver Traslados?"]
+preguntas: ["Que se puede hacer en Traslados desde otra DL?", "Que campos tiene Traslados desde otra DL?", "Que acciones hay en Traslados desde otra DL?"]
 capacidades: ["dbextern.sincro_trasladar.gestionar", "dbextern.ver_traslados.gestionar"]
 endpoints: ["/src/dbextern/sincro_trasladar", "/src/dbextern/ver_traslados_datos"]
 source: "docs/catalogo/dbextern/pantallas/ver_traslados.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Ver Traslados
+# Ayuda IA Pantalla - Traslados desde otra DL
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Subpantalla del punto 2: personas unidas a BDU pero con ficha activa en otra DL Orbix.
 
 ## Uso En Ayuda
 

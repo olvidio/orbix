@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Desde un listado de personas (n / a / agd), abrir las peticiones de plaza de una persona.
+2. El sistema carga `peticiones_activ_data` con `id_nom` y `sactividad`.
+3. Devuelve las actividades candidatas y las peticiones actuales; limpia peticiones antiguas ya no
+4. Pinta los desplegables (`DesplegableArray`) precargados con el orden de prioridad; el usuario
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadplazas/peticiones_activ_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PeticionesActiv. Lista de actividades candidatas + peticiones actuales para una persona+tipo.
+Consultar y preparar la edición de las peticiones de plaza de una persona: ver su nombre, las actividades disponibles del tipo y las peticiones ya guardadas, listas para reordenar o ampliar.
 
 ## Limites De La Respuesta
 

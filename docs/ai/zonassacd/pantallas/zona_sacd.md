@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Pantalla Zonas-sacd: listar sacd por zona, reasignar zonas (propia/iglesia) y modal de días L–D (vía misas/zona_sacd_datos_*). Requiere perm_des para mutaciones.
 
 ## Uso En Ayuda
 

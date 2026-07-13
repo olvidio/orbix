@@ -45,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona QueCtr. JSON para {.
+Filtrar por centro y periodo antes de listados por centros.
 
 ## Limites De La Respuesta
 

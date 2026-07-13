@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Asigna una dirección existente al ubi desde la tabla de búsqueda.
 
 ## Uso En Ayuda
 

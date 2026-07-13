@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Ver Docs"
+titulo: "Ver docs de lugar"
 pantalla: "inventario.pantalla.equipajes_ver_docs"
-preguntas: ["Que se puede hacer en Equipajes Ver Docs?", "Que campos tiene Equipajes Ver Docs?", "Que acciones hay en Equipajes Ver Docs?"]
+preguntas: ["Que se puede hacer en Ver docs de lugar?", "Que campos tiene Ver docs de lugar?", "Que acciones hay en Ver docs de lugar?"]
 capacidades: ["inventario.lista_docs_de_lugar.gestionar"]
 endpoints: ["/src/inventario/lista_docs_de_lugar"]
 source: "docs/catalogo/inventario/pantallas/equipajes_ver_docs.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Ver Docs
+# Ayuda IA Pantalla - Ver docs de lugar
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Lista documentos de un lugar en equipaje.
 
 ## Uso En Ayuda
 

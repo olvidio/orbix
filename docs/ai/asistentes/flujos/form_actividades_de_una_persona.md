@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona FormActividadesDeUnaPersona. Dossier actividades de una persona (1301). Datos puros para el formulario; la UI (HashFront, Desplegable) se compone en frontend.
+Gestionar asistencias en dossier 1301 (persona).
 
 ## Limites De La Respuesta
 

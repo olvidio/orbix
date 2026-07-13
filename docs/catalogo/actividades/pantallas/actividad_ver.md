@@ -76,6 +76,16 @@ crear a `actividad_permiso_crear_datos`, el bloque de tipo a
 Ver [`manual/actividades.md`](../../../manual/actividades.md), seccion
 *Crear, Editar, Eliminar*.
 
+## Ruta de menú
+
+- **Legacy:** dre > actividades > nueva activ; Calendario > actividades > nueva activ.
+- **Pills2:** Calendario > actividades > nueva activ; dre > actividades > nueva activ;
+  ATENCIÓN SACD > Actividades > Nueva actividad; ACTIVIDADES > Buscar actividad >
+  Nueva actividad.
+
+También se abre al editar desde listados (`actividad_select`) o planning — sin
+entrada de menú propia en esos casos.
+
 ## Revision Manual
 
 - Revisado jun 2026 (lectura de controller + 5 plantillas + JS): subtipo corregido,

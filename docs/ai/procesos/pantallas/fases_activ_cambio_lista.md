@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX que renderiza la tabla de actividades candidatas al cambio de fase, con selección múltiple, acción de cambiar fase y enlace para ver el proceso de una actividad.
 
 ## Uso En Ayuda
 

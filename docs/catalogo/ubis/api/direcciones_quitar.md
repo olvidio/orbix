@@ -6,8 +6,8 @@ url: "/src/ubis/direcciones_quitar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/direcciones_quitar.php"
-entrada: ["post.id_direccion:string", "post.id_ubi:integer", "post.idx:integer", "post.obj_dir:string"]
-entrada_obligatoria: []
+entrada: ["post.id_ubi:integer", "post.idx:integer", "post.obj_dir:string", "post.id_direccion:string"]
+entrada_obligatoria: ["id_ubi", "obj_dir", "id_direccion"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "ubis_DireccionesQuitarData"
 respuesta_data: ["ok:boolean"]
@@ -15,14 +15,19 @@ requiere_hashb: false
 frontend_referencias: ["frontend/ubis/controller/direcciones_quitar.php"]
 casos_uso: ["src\\ubis\\application\\DireccionesQuitar"]
 tags: ["ubis", "direcciones", "quitar"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Direcciones Quitar
 
-Descripcion funcional pendiente de revisar.
+Desvincula una dirección del ubi según el índice en la lista CSV de ids.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Desvincula una dirección del ubi según el índice en la lista CSV de ids.
 
 ## Endpoint
 
@@ -35,20 +40,25 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_direccion` | `string` | controller | No | controller |
-| `id_ubi` | `integer` | controller | No | controller |
-| `idx` | `integer` | controller | No | controller |
-| `obj_dir` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_ubi` | `integer` | application | Si | |
+| `idx` | `integer` | application | No | |
+| `obj_dir` | `string` | application | Si | |
+| `id_direccion` | `string` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `ubis_DireccionesQuitarData`):
-  - `ok` (`boolean`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `ok`: boolean
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `UbiPermisos` (`puedeModificarPorObjeto`, `dlPerteneceAMiDelegacion`), `have_perm_oficina(scdl|scl|vcsd|des|admin_sv)` y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -56,10 +66,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/ubis/controller/direcciones_quitar.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/ubis/controller/direcciones_quitar.php"]`).

@@ -4,9 +4,9 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/horario_tarea_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/misas/infrastructure/ui/http/controllers/horario_tarea_data.php"
-entrada: ["post.id_item_h:mixed"]
+entrada: ["post.id_item_h:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_HorarioTareaDataData"
@@ -15,35 +15,50 @@ requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/horario_tarea.php"]
 casos_uso: ["src\\misas\\application\\HorarioTareaData"]
 tags: ["misas", "horario", "tarea", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
-# Horario Tarea Data
+# Horario tarea Data
 
-Datos del horario de una tarea (modal `horario_tarea.phtml`). Simple lectura de `t_start`/`t_end` del `EncargoHorario` indicado por `id_item_h`. Se saca de la vista frontend para cumplir la regla de `refactor.md`: los controladores `frontend/` no pueden instanciar repositorios de `src\` ni resolver dependencias del contenedor.
+Lee las horas actuales de un EncargoHorario para poblar el modal horario_tarea.
+
+Linaje: Slice 12 — nuevo endpoint; antes la lectura vivía en frontend/misas/controller/horario_tarea.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Lee las horas actuales de un EncargoHorario para poblar el modal horario_tarea.
 
 ## Endpoint
 
 - URL: `/src/misas/horario_tarea_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/horario_tarea_data.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item_h` | `mixed` | controller | No | controller |
+| `id_item_h` | `integer` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `misas_HorarioTareaDataData`):
-  - `t_start` (`string, t_end: string`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `t_start`: string (H:i)
+  - `t_end`: string (H:i)
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -51,10 +66,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/horario_tarea.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/horario_tarea.php"]`).

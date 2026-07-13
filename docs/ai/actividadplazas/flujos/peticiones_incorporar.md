@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **Incorporar peticiones de plazas** desde el menú (según tipo y colectivo).
+2. Leer el texto explicativo y pulsar **Continuar** (`fnjs_incorporar_peticiones`).
+3. El botón se deshabilita mientras se ejecuta; el sistema envía `sactividad` y `sasistentes` a
+4. Muestra en `#resultado` cuántas peticiones se incorporaron (`incorporadas`) y el aviso de que no
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadplazas/peticiones_incorporar`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,10 +45,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PeticionesIncorporar. Incorpora las primeras peticiones de plaza de cada persona como asistencia con plaza asignada/pedida (segun si la actividad es de midele o de otra dl).
+Ejecutar el proceso masivo que convierte las primeras peticiones de plaza (orden = 1) en asistencias propias con plaza, para un tipo y colectivo, sin incorporar personas que ya tienen actividad propia en el periodo.
+
+## Errores Documentados
+
+- `hay un error, no se ha guardado`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

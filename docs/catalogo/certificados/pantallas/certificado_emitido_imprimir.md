@@ -11,12 +11,12 @@ endpoints: ["/src/certificados/certificado_emitido_delete", "/src/certificados/c
 capacidades: ["certificados.certificado_emitido.gestionar", "certificados.certificado_emitido_imprimir.gestionar"]
 campos: ["form.certificado", "form.destino", "form.f_certificado", "form.firmado", "form.guardar", "form.id_item", "form.idioma", "post.id_nom", "post.id_tabla", "post.sel", "post.stack"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Certificado Emitido Imprimir
 
-Descripcion funcional pendiente de revisar.
+Formulario previo a generar un certificado nuevo: datos de persona, idioma y configuración STGR.
 
 ## Tipo
 
@@ -60,13 +60,6 @@ No se han detectado vistas PHTML relacionadas.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (desde dossier persona o matrículas)

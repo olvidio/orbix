@@ -11,12 +11,12 @@ endpoints: ["/src/notas/asignaturas_pendientes_data"]
 capacidades: ["notas.asignaturas_pendientes.gestionar"]
 campos: ["form.dl", "post.dl"]
 acciones: ["fnjs_left_side_hide"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Asignaturas Pendientes
 
-Cuadro "alumnos x asignaturas": genera una tabla con las asignaturas pendientes de todos los alumnos, filtrando por delegacion (`ambito = dl`) o por las delegaciones seleccionadas de la region stgr (`ambito = rstgr`).
+Matriz alumnos × asignaturas pendientes de superar.
 
 ## Tipo
 
@@ -48,13 +48,11 @@ No se han detectado vistas PHTML relacionadas.
 
 - `fnjs_left_side_hide`
 
+## Ruta de menú
+
+- **Legacy:** vest > actas... > tabla alumnos-asignaturas; stgr > actas > tabla alumnos-asignaturas
+- **Pills2:** ESTUDIOS > Preparación planes estudio > Tab. Alumn/asig.; vest > actas... > tabla alumnos-asignaturas; stgr > actas > tabla alumnos-asignaturas
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

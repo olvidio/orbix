@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla principal del modulo `actividadtarifas` - relacion `TipoTarifa` ↔ tipo de actividad (`RelacionTarifaTipoActividad`).
+Relación tarifa ↔ tipo de actividad (`RelacionTarifaTipoActividad`): listado, alta/edición en popup.
 
 ## Uso En Ayuda
 

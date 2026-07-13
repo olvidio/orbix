@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActividadQueFasesCuadro. Caso de uso: devuelve la lista de fases aplicables al tipo de actividad indicado (estructura pura) para construir los checkboxes de fases_on o fases_off del filtro de busqueda de actividades.
+Devolver las fases aplicables a un tipo de actividad para construir los checkboxes de filtro `fases_on` / `fases_off` en la búsqueda de actividades.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

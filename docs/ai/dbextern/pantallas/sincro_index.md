@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "dbextern"
-titulo: "Sincro Index"
+titulo: "Sincronizar con los datos de Listas"
 pantalla: "dbextern.pantalla.sincro_index"
-preguntas: ["Que se puede hacer en Sincro Index?", "Que campos tiene Sincro Index?", "Que acciones hay en Sincro Index?"]
+preguntas: ["Que se puede hacer en Sincronizar con los datos de Listas?", "Que campos tiene Sincronizar con los datos de Listas?", "Que acciones hay en Sincronizar con los datos de Listas?"]
 capacidades: ["dbextern.refrescar_bdu.gestionar", "dbextern.sincro_index.gestionar", "dbextern.sincro_syncro.gestionar"]
 endpoints: ["/src/dbextern/refrescar_bdu", "/src/dbextern/sincro_index_datos", "/src/dbextern/sincro_syncro"]
 source: "docs/catalogo/dbextern/pantallas/sincro_index.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Sincro Index
+# Ayuda IA Pantalla - Sincronizar con los datos de Listas
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Dashboard principal de sincronización BDU↔Aquinate: muestra fecha de actualización de `tmp_bdu`, contadores de las 9 situaciones y enlaces «ver» / «ejecutar» hacia subpantallas y mutaciones.
 
 ## Uso En Ayuda
 

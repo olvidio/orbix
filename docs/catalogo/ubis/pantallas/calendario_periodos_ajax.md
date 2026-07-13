@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.calendario_periodos_ajax"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "dispatcher"
 modulo: "ubis"
 nombre: "Calendario Periodos Ajax"
 controller: "frontend/ubis/controller/calendario_periodos_ajax.php"
@@ -11,16 +11,18 @@ endpoints: []
 capacidades: []
 campos: ["post.que"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Calendario Periodos Ajax
 
-Compatibilidad: despacha por `que` a los controladores finos (mismo patrón que ubis_lista.php).
+Dispatcher que enruta por parámetro que a los fragmentos de calendario de periodos.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `dispatcher`
+
+
 - Controller: `frontend/ubis/controller/calendario_periodos_ajax.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ No se han detectado capacidades relacionadas.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -13,14 +13,20 @@ requiere_hashb: false
 frontend_referencias: ["frontend/casas/controller/casa_actividades_lista.php"]
 casos_uso: ["src\\casas\\application\\CasaActividadesListaData"]
 tags: ["casas", "casa", "actividades", "lista", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Casa Actividades Lista Data
 
-Endpoint backend: listado de actividades por casa (`casa_actividades_lista`).
+Listado de actividades por casa y periodo (modo `tipo_lista=lista_activ`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Sucesor del listado de actividades de `apps/casas/controller/casa_que.php` con `que=lista_activ`.
+Devuelve cabeceras y filas agrupadas por casa con fechas, tipo, centros encargados, SACDs y tarifa.
+Oculta datos si el permiso `datos.ver` no lo permite (muestra «ocupado»).
 
 ## Endpoint
 
@@ -33,18 +39,20 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `empiezamax` | `string` | controller+application | No | controller+application |
-| `empiezamin` | `string` | controller+application | No | controller+application |
-| `id_cdc` | `array` | controller+application | No | controller+application |
-| `periodo` | `string` | controller+application | No | controller+application |
-| `year` | `string` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_cdc` | `array` | controller+application | No | IDs de casa |
+| `periodo` | `string` | controller+application | No | |
+| `year` | `string` | controller+application | No | |
+| `empiezamin` / `empiezamax` | `string` | controller+application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
+- Helper: `ContestarJson::enviar('', $payload)` (doble `JSON.parse`).
+- `ok: true`, `a_cabeceras`, `a_valores` (por `id_ubi`), `a_grupos` (títulos de casa).
+
+## Permisos
+
+- Por actividad: `PermisosActividades` facetas `datos` (`ocupado`/`ver`), `ctr` (`ver` centros),
+  `sacd` (`ver` + aprobación SACD si `procesos`+sf). Sin sesión de permisos usa `PermisosActividadesTrue`.
 
 ## Casos De Uso
 
@@ -52,10 +60,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/casas/controller/casa_actividades_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/casas/controller/casa_actividades_lista.php`: fragmento de `casa.php` con
+  `tipo_lista=lista_activ`.

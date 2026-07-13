@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.acta_ver"]
 acciones: ["ejecutar"]
 endpoints: ["/src/notas/examinadores_search"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Examinadores Search
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.examinadores_search
 
 ## Objetivo De Usuario
 
-Gestiona ExaminadoresSearch. Autocomplete jQuery-UI.
+Autocompletado de examinadores en formulario de acta.
 
 ## Punto De Entrada
 
@@ -65,10 +65,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

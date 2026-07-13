@@ -42,10 +42,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Usuario2faInfo. Descripcion funcional pendiente de revisar.
+Estado 2FA del usuario para formulario configuración.
+
+## Errores Documentados
+
+- `Id de usuario no válido`
+- `Usuario no encontrado`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

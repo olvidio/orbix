@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento que invoca la eliminación de un ubi y muestra error si falla.
 
 ## Uso En Ayuda
 

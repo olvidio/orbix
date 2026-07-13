@@ -31,10 +31,11 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el fragmento de edición de textos desde la pantalla de comunicación.
+2. El sistema rellena el desplegable de idiomas con `a_locales`.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadessacd/locales_desplegable_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona LocalesDesplegable. Descripcion funcional pendiente de revisar.
+Al abrir el fragmento de edición de textos, el sistema carga la lista de idiomas/locales disponibles para poblar el desplegable `idioma` del formulario de comunicación.
 
 ## Limites De La Respuesta
 

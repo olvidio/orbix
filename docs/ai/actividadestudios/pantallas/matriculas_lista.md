@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Listado de matrículas (dossier).
+Listado de matrículas realizadas en un periodo, con filtro de fechas y acciones sobre filas seleccionadas (ver asignaturas del CA, borrar matrícula).
 
 ## Uso En Ayuda
 

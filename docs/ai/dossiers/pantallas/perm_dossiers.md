@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Página de selección de los dossiers cuyos permisos deseo visualizar o modificar.
+Listado de tipos de dossier para administrar permisos de un ámbito (`tipo` = `p` personas, `u` ubis, `a` actividades). Cada fila enlaza a `perm_dossier_ver` para ver o modificar la definición del tipo.
 
 ## Uso En Ayuda
 

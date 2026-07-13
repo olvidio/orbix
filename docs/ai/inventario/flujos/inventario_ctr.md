@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona InventarioCtr. Descripcion funcional pendiente de revisar.
+Impresión inventario de centros: selección en `doc_de_ctr`, render en `doc_imprimir_ctr` vía `inventario_ctr`.
 
 ## Limites De La Respuesta
 

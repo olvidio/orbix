@@ -11,7 +11,7 @@ endpoints: ["/src/casas/grupo_eliminar", "/src/casas/grupo_update"]
 capacidades: ["casas.grupo.gestionar"]
 campos: ["form.id_item", "form.id_ubi_hijo", "form.id_ubi_padre"]
 acciones: ["fnjs_cerrar", "fnjs_eliminar", "fnjs_guardar", "fnjs_modificar", "fnjs_update_div", "fnjs_ver"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Grupo
@@ -59,10 +59,8 @@ Pantalla principal del módulo `casas` - grupos de casas (padre ↔ hijo).
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** adl > Gestión casas > grupos
+- **Pills2:** CASAS Y CTR > Gestión casas > grupos
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

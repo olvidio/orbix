@@ -2,85 +2,41 @@
 id: "personas.personas_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Gestionar Personas Select"
+nombre: "Flujo - Buscar y listar personas"
 capacidad: "personas.personas_select.gestionar"
-pantallas_principales: []
-fragmentos: ["personas.pantalla.personas_select"]
-acciones: ["obtener_datos"]
+pantallas_principales: ["personas.pantalla.personas_que", "personas.pantalla.personas_select"]
+fragmentos: []
+acciones: ["buscar", "seleccionar", "acciones_listado"]
 endpoints: ["/src/personas/personas_select_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Personas Select
+# Flujo - Buscar y listar personas
 
-Propuesta generada automaticamente desde la capacidad `personas.personas_select.gestionar` y sus pantallas relacionadas.
+Búsqueda por criterios y visualización del listado con acciones sobre la selección.
 
 ## Objetivo De Usuario
 
-Gestiona PersonasSelect. Endpoint JSON: datos crudos para la tabla personas_select.
+Encontrar personas del colectivo indicado por el menú, revisar resultados y lanzar acciones
+(ficha, dossiers, STGR, traslado, módulos satélite).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `personas_que.php` (criterios) → `personas_select.php` (tabla).
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `personas.pantalla.personas_select`
+### Buscar
 
-## Escenarios Inferidos
+1. Abrir entrada de menú (define `tabla`, `na`, `tipo`, `es_sacd`).
+2. Rellenar criterios opcionales en `personas_que`.
+3. Enviar → `personas_select` llama a `personas_select_data`.
+4. Revisar total y avisos de región STGR si aparecen.
 
-### Obtener Datos
+### Acciones sobre selección
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.id_dossier`
-- `form.que`
-- `form.sel`
-- `html.id_dossier`
-- `html.que`
-- `post.apellido1`
-- `post.apellido2`
-- `post.centro`
-- `post.cmb`
-- `post.es_sacd`
-- `post.exacto`
-- `post.id_sel`
-- `post.na`
-- `post.nombre`
-- `post.que`
-- `post.scroll_id`
-- `post.stack`
-- `post.tabla`
-- `post.tipo`
-
-Acciones JavaScript:
-- `fnjs_actividades`
-- `fnjs_copiar_tessera`
-- `fnjs_dossiers`
-- `fnjs_enviar_formulario`
-- `fnjs_ficha`
-- `fnjs_ficha_profe`
-- `fnjs_home`
-- `fnjs_imp_certificado`
-- `fnjs_imp_tessera`
-- `fnjs_lista_activ`
-- `fnjs_matriculas`
-- `fnjs_modificar`
-- `fnjs_modificar_ctr`
-- `fnjs_notas`
-- `fnjs_peticion_activ`
-- `fnjs_posibles_ca`
-- `fnjs_solo_uno`
-- `fnjs_tessera`
-- `fnjs_update_div`
-- `fnjs_upload_certificado`
+1. Marcar fila(s) en la tabla (`sel=id_nom#id_tabla`).
+2. Pulsar botón contextual (ficha, dossiers, modificar stgr, etc.).
 
 ## Endpoints Del Flujo
 
@@ -88,11 +44,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No se encuentra ningún centro con esta condición`
+- Avisos suaves región/persona no válida (listado vacío con mensaje)
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Herencia de `personas_que` — ver variantes vsm/PERSONAS en `_referencia_menus.md`
+(p. ej. `vsm > buscar n > n r/dl` / `PERSONAS > Numerarios > Buscar n de la r/dl`).

@@ -9,20 +9,23 @@ controller: "src/dbextern/infrastructure/ui/http/controllers/sincro_trasladar_a.
 entrada: ["post.dl:string", "post.id_nom_orbix:integer", "post.tipo_persona:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "dbextern_TrasladarPersonaUseCaseData"
-respuesta_data: ["success:bool, mensaje?: string"]
-requiere_hashb: false
+errores: ["No se encontró la delegación destino", "Este traslado debe hacerse desde el dossier de traslados", "Error al trasladar"]
 frontend_referencias: ["frontend/dbextern/controller/ver_orbix_otradl.php"]
 casos_uso: ["src\\dbextern\\application\\TrasladarPersonaUseCase"]
 tags: ["dbextern", "sincro", "trasladar", "a"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Sincro Trasladar A
 
-Descripcion funcional pendiente de revisar.
+Traslada una persona Aquinate activa hacia la DL donde está su correspondencia BDU (punto 7).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Invoca `TrasladarPersonaUseCase::trasladarA`: situación `L`, esquema destino = DL de la fila BDU.
+Si la región destino ≠ región actual, rechaza y pide usar el dossier de traslados.
 
 ## Endpoint
 
@@ -35,30 +38,31 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `dl` | `string` | controller | No | controller |
-| `id_nom_orbix` | `integer` | controller | No | controller |
-| `tipo_persona` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_nom_orbix` | `integer` | controller | Sí | |
+| `tipo_persona` | `string` | controller | Sí | |
+| `dl` | `string` | controller | Sí | DL destino (formato del listado: `dlNN` o prefijo sin `cr`) |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `dbextern_TrasladarPersonaUseCaseData`):
-  - `success` (`bool, mensaje?: string`)
+- Helper: `ContestarJson::enviar`.
+- Éxito: `success: true`, `data` con resultado de `Trasladar::trasladar()`.
+- Error: `success: false`, `mensaje`.
+
+## Errores conocidos
+
+- `No se encontró la delegación destino`
+- `Este traslado debe hacerse desde el dossier de traslados` (+ línea sobre campo situación)
+- `Error al trasladar` (fallback)
+- Otros mensajes del dominio `Trasladar`
+
+## Permisos
+
+- HashFront en `ver_orbix_otradl.phtml`.
 
 ## Casos De Uso
 
-- `src\dbextern\application\TrasladarPersonaUseCase`
+- `src\dbextern\application\TrasladarPersonaUseCase` (método `trasladarA`)
 
 ## Frontend Relacionado
 
 - `frontend/dbextern/controller/ver_orbix_otradl.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

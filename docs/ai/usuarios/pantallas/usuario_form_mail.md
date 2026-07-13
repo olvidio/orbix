@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Formulario para cambiar el mail por parte del usuario.
+Formulario cambio de email del usuario autenticado.
 
 ## Uso En Ayuda
 

@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.ver_encargos_zona"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/eliminar_encargo_zona"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Eliminar Encargo Zona
-
-Propuesta generada automaticamente desde la capacidad `misas.eliminar_encargo_zona.gestionar` y sus pantallas relacionadas.
+# Flujo - Eliminar encargo zona
 
 ## Objetivo De Usuario
 
-Gestiona EliminarEncargoZona. Elimina un Encargo por id. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+Elimina un Encargo de zona (grupo ZONAS_MISAS) por id_enc.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Modificar encargos. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar encargos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -65,11 +63,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No se encuentra el encargo %d`
+- `<repositorio getErrorTxt()>`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Modificar encargos
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos

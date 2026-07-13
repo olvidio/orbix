@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "personas"
-titulo: "Stgr"
+titulo: "Guardar nivel STGR"
 flujo: "personas.stgr.gestionar.flujo"
-preguntas: ["Como crear o modificar en Stgr?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["personas.pantalla.stgr_cambio"]
 endpoints: ["/src/personas/stgr_update"]
@@ -12,14 +12,13 @@ source: "docs/catalogo/personas/flujos/stgr.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Stgr
+# Ayuda IA - Guardar nivel STGR
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Stgr`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar nivel STGR`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Stgr?
 
 ## Donde Entrar
 
@@ -29,28 +28,19 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
-
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/personas/stgr_update`
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `personas.pantalla.stgr_cambio`
 
 ## Objetivo
 
-Gestiona Stgr. Endpoint JSON: actualiza el nivel_stgr de una persona.
+Actualizar el nivel STGR de una persona del listado.
 
 ## Errores Documentados
 
 - `No existe la clase de la persona`
 - `No se encuentra la persona`
+- `hay un error, no se ha guardado`
 
 ## Limites De La Respuesta
 

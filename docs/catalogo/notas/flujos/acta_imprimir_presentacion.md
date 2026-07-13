@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.acta_imprimir", "notas.pantalla.acta_imprimir_mpdf"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/acta_imprimir_presentacion_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Imprimir Presentacion
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_imprimir_prese
 
 ## Objetivo De Usuario
 
-Gestiona ActaImprimirPresentacion. Datos compartidos por acta_imprimir y el HTML de acta_imprimir_mpdf.
+Obtener datos de presentación e imprimir acta (HTML/PDF).
 
 ## Punto De Entrada
 
@@ -58,10 +58,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

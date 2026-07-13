@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.ubis_editar"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/ubis_editar_load_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ubis Editar Load
-
-Propuesta generada automaticamente desde la capacidad `ubis.ubis_editar_load.gestionar` y sus pantallas relacionadas.
+# Flujo - Ubis Editar Load
 
 ## Objetivo De Usuario
 
-Gestiona UbisEditarLoad. Carga ficha ubis (centro/casa) para frontend/ubis/controller/ubis_editar.php sin repositorios en el frontend.
+Carga la ficha completa de un ubi para edición o alta, normalizando obj_pau de delegación.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -75,11 +73,13 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `falta definir obj_pau`
+- `No se encuentra ubi id %s`
+- `tipo de entidad inesperado para centro dl`
+- `tipo de entidad inesperado para centro ex`
+- `tipo de entidad inesperado para casa`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

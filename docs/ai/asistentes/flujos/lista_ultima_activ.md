@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaUltimaActiv. Listado última actividad / seguimiento (lista_ultima_activ.php).
+Informe de personas s sin asistencia reciente.
 
 ## Limites De La Respuesta
 

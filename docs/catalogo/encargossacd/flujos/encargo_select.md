@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["encargossacd.pantalla.encargo_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/encargo_select_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Encargo Select
@@ -21,7 +21,8 @@ Gestiona EncargoSelect. Datos para la lista de encargos (encargo_select). El fro
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú: dre > Encargos > ver encargo.
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -71,9 +72,14 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Encargos > ver encargo
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
+
+
+## Ruta de menú
+
+- **Legacy:** dre > Encargos > ver encargo
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
+

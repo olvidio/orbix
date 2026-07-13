@@ -69,8 +69,18 @@ Referencias tecnicas para verificar la respuesta:
 
 Gestiona CasaIngreso. Crear/actualizar el Ingreso de una actividad. Datos para el formulario de ingreso de una actividad (casa_ingreso_form). Eliminar el Ingreso de una actividad.
 
+## Errores Documentados
+
+- `Falta id_activ`
+- `Actividad no encontrada`
+- `Hay un error, no se ha guardado la actividad.`
+- `Hay un error, no se ha guardado.`
+- `no sé cuál he de borar`
+- `Ingreso no encontrado`
+- `Hay un error, no se ha eliminado`
+
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. En `actividad_select`, seleccionar una actividad CA.
+2. Pulsar la acción **posibles asignaturas**.
+3. El sistema consulta `posibles_asignaturas_ca_data`.
+4. Se muestra el informe Twig con asignaturas y alumnos posibles.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/posibles_asignaturas_ca_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PosiblesAsignaturasCa. Descripcion funcional pendiente de revisar.
+El usuario consulta, para una actividad CA, qué asignaturas podrían matricular los alumnos según su historial de notas y pendientes, agrupado por asignatura y por alumno.
 
 ## Limites De La Respuesta
 

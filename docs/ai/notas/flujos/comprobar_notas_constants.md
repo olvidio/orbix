@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ComprobarNotasConstants. VO {.
+Cargar constantes VO antes de ejecutar comprobaciones.
 
 ## Limites De La Respuesta
 

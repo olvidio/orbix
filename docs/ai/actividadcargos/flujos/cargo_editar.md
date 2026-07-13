@@ -6,7 +6,7 @@ titulo: "Cargo Editar"
 flujo: "actividadcargos.cargo_editar.gestionar.flujo"
 preguntas: ["Como ejecutar en Cargo Editar?"]
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadcargos.pantalla.form_cargos_de_actividad", "actividadcargos.pantalla.form_cargos_personas_en_actividad"]
 endpoints: ["/src/actividadcargos/cargo_editar"]
 source: "docs/catalogo/actividadcargos/flujos/cargo_editar.md"
 estado_revision: "generado"
@@ -31,18 +31,23 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la relación de cargos, seleccionar una fila y pulsar **modificar cargo**.
+2. Ajustar **Cargo**, **¿Puede ser agd?** u **Observaciones** (persona y actividad suelen venir fijas).
+3. Si aparece **¿asiste?**, marcar o desmarcar según corresponda.
+4. Pulsar **Guardar datos del cargo**.
+5. En éxito, el panel se cierra y el listado refleja los cambios.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadcargos/cargo_editar`
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `actividadcargos.pantalla.form_cargos_de_actividad`
+- `actividadcargos.pantalla.form_cargos_personas_en_actividad`
 
 ## Objetivo
 
-Guardar cambios en un cargo existente (tipo, AGD, observaciones y sincronización de asistente). Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Cargo Editar).
+Guardar cambios en un cargo existente: tipo de cargo, flag AGD, observaciones y, cuando el formulario incluye **¿asiste?**, sincronizar el registro de asistente (alta/baja).
 
 ## Errores Documentados
 

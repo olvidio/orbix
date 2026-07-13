@@ -11,12 +11,15 @@ endpoints: ["/src/actividadessacd/locales_desplegable_data", "/src/actividadessa
 capacidades: ["actividadessacd.locales_desplegable.gestionar", "actividadessacd.texto_comunicacion.gestionar"]
 campos: ["html.comunicacion"]
 acciones: ["fnjs_cancelar", "fnjs_get_texto", "fnjs_guardar", "fnjs_parse_rta_txt"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Com Sacd Txt
 
-Pantalla de edicion de textos de comunicacion a los sacd.
+Fragmento de edición de los textos de comunicación a los sacd. Renderiza dos desplegables (`clave`,
+`idioma`) y un `<textarea>` precargado con `com_sacd/es`. Lee y guarda por AJAX contra
+`texto_comunicacion_data` y `texto_comunicacion_guardar`; el desplegable de idiomas se pobla desde
+`locales_desplegable_data`.
 
 ## Tipo
 
@@ -55,11 +58,12 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Elegir la **clave** (comunicación a los sacerdotes o cada título de columna) y el **idioma**: el
+   textarea se recarga con el texto guardado.
+2. Editar el texto y pulsar **guardar**. Guardar con el textarea vacío elimina el texto de ese
+   `{clave, idioma}`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- Sin entrada de menú en el índice: fragmento invocado desde la pantalla "Comunicación a los sacd"
+  (`com_sacd_activ_periodo`) cuando el usuario tiene permiso de edición (`perm_mod_txt`).

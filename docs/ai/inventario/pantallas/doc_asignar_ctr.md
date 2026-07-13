@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Doc Asignar Ctr"
+titulo: "Formulario asignar a centros"
 pantalla: "inventario.pantalla.doc_asignar_ctr"
-preguntas: ["Que se puede hacer en Doc Asignar Ctr?", "Que campos tiene Doc Asignar Ctr?", "Que acciones hay en Doc Asignar Ctr?"]
+preguntas: ["Que se puede hacer en Formulario asignar a centros?", "Que campos tiene Formulario asignar a centros?", "Que acciones hay en Formulario asignar a centros?"]
 capacidades: ["inventario.doc_asignar_ctr.gestionar", "inventario.lista_docs_asignar_ctr.gestionar"]
 endpoints: ["/src/inventario/doc_asignar_ctr_guardar", "/src/inventario/lista_docs_asignar_ctr"]
 source: "docs/catalogo/inventario/pantallas/doc_asignar_ctr.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Doc Asignar Ctr
+# Ayuda IA Pantalla - Formulario asignar a centros
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario numérico por centro; guarda con `doc_asignar_ctr_guardar`.
 
 ## Uso En Ayuda
 

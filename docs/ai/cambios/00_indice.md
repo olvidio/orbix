@@ -21,23 +21,23 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Avisos Generar -> `flujos/avisos_generar.md`
-- Cambio Usuario -> `flujos/cambio_usuario.md`
-- Cambio Usuario Eliminar Hasta Fecha -> `flujos/cambio_usuario_eliminar_hasta_fecha.md`
-- Cambio Usuario Objeto Pref -> `flujos/cambio_usuario_objeto_pref.md`
-- Cambio Usuario Objeto Pref Fases -> `flujos/cambio_usuario_objeto_pref_fases.md`
-- Cambio Usuario Objeto Pref Propiedades -> `flujos/cambio_usuario_objeto_pref_propiedades.md`
-- Cambio Usuario Propiedad Pref Guardar Todas -> `flujos/cambio_usuario_propiedad_pref_guardar_todas.md`
-- Cambio Usuario Propiedad Pref Item -> `flujos/cambio_usuario_propiedad_pref_item.md`
-- Cambio Usuario Propiedad Pref Preview -> `flujos/cambio_usuario_propiedad_pref_preview.md`
-- Usuario Avisos Pref -> `flujos/usuario_avisos_pref.md`
-- Usuario Form Avisos -> `flujos/usuario_form_avisos.md`
+- Consultar y purgar cambios -> `flujos/avisos_generar.md`
+- Eliminar cambio anotado -> `flujos/cambio_usuario.md`
+- Purgar cambios hasta fecha -> `flujos/cambio_usuario_eliminar_hasta_fecha.md`
+- Guardar objeto de aviso -> `flujos/cambio_usuario_objeto_pref.md`
+- Actualizar fases de referencia -> `flujos/cambio_usuario_objeto_pref_fases.md`
+- Cargar propiedades vigilables -> `flujos/cambio_usuario_objeto_pref_propiedades.md`
+- Sincronizar propiedades -> `flujos/cambio_usuario_propiedad_pref_guardar_todas.md`
+- Editar condición de propiedad -> `flujos/cambio_usuario_propiedad_pref_item.md`
+- Preview de condición -> `flujos/cambio_usuario_propiedad_pref_preview.md`
+- Configurar preferencia de aviso -> `flujos/usuario_avisos_pref.md`
+- avisos del usuario -> `flujos/usuario_form_avisos.md`
 
 ## Pantallas Disponibles
 
-- Avisos Generar -> `pantallas/avisos_generar.md`
-- Usuario Avisos Pref -> `pantallas/usuario_avisos_pref.md`
-- Usuario Avisos Pref Condicion -> `pantallas/usuario_avisos_pref_condicion.md`
-- Usuario Avisos Pref Fases -> `pantallas/usuario_avisos_pref_fases.md`
-- Usuario Avisos Pref Propiedades -> `pantallas/usuario_avisos_pref_propiedades.md`
-- Usuario Form Avisos -> `pantallas/usuario_form_avisos.md`
+- Lista de cambios -> `pantallas/avisos_generar.md`
+- Configurar aviso -> `pantallas/usuario_avisos_pref.md`
+- Modal de condición -> `pantallas/usuario_avisos_pref_condicion.md`
+- Desplegable de fases -> `pantallas/usuario_avisos_pref_fases.md`
+- Tabla de propiedades -> `pantallas/usuario_avisos_pref_propiedades.md`
+- Avisos del usuario -> `pantallas/usuario_form_avisos.md`

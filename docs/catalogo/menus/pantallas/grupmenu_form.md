@@ -11,58 +11,22 @@ endpoints: ["/src/menus/grupmenu_info"]
 capacidades: ["menus.grupmenu_info.gestionar"]
 campos: ["form.grupmenu", "form.orden", "form.que", "post.id_grupmenu", "post.que", "post.refresh", "post.scroll_id", "post.sel", "post.stack"]
 acciones: ["fnjs_cancelar", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Grupmenu Form
+# Formulario grupmenu
 
-Descripcion funcional pendiente de revisar.
+Alta/edición nombre y orden de un grupmenu.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
-- Controller: `frontend/menus/controller/grupmenu_form.php`
 
-## Vistas Relacionadas
+## Ruta de menú
 
-- `frontend/menus/view/grupmenu_form.phtml`
-
-## Fragmentos Frontend Relacionados
-
-No se han detectado controladores frontend relacionados.
-
-## Endpoints Usados
-
-- `/src/menus/grupmenu_info`
-
-## Capacidades Relacionadas
-
-- `menus.grupmenu_info.gestionar`
-
-## Campos Detectados
-
-- `form.grupmenu`
-- `form.orden`
-- `form.que`
-- `post.id_grupmenu`
-- `post.que`
-- `post.refresh`
-- `post.scroll_id`
-- `post.sel`
-- `post.stack`
-
-## Acciones Detectadas
-
-- `fnjs_cancelar`
-- `fnjs_guardar`
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Desde `grupmenu_lista` (nuevo o modificar).

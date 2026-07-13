@@ -4,44 +4,34 @@ tipo: "endpoint"
 modulo: "menus"
 url: "/src/menus/menus_legacy_layout_items_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/menus/infrastructure/ui/http/controllers/menus_legacy_layout_items_data.php"
 entrada: ["post.id_grupmenu:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/shared/layouts/LegacyLayout.php"]
 casos_uso: ["src\\menus\\application\\MenusLegacyLayoutItemsUseCase"]
-tags: ["menus", "legacy", "layout", "items", "data"]
-estado_revision: "generado"
+tags: ["menus", "legacy", "layout", "data"]
+estado_revision: "revisado"
 ---
 
-# Menus Legacy Layout Items Data
+# Ítems menú layout Legacy
 
-Entradas de menú para el layout legacy (grupos 1 y el seleccionado, mismo filtro que el antiguo {
+Entradas visibles para grupmenu 1 (Utilidades) + el grupmenu activo, con filtro de raíz jerárquica (`orden[0]`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
-## Endpoint
-
-- URL: `/src/menus/menus_legacy_layout_items_data`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
-- Controller: `src/menus/infrastructure/ui/http/controllers/menus_legacy_layout_items_data.php`
-
 ## Entrada
 
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `id_grupmenu` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| Campo | Default |
+|-------|---------|
+| `id_grupmenu` | `'1'` |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- `data.items`: lista `{indice, menu, url, full_url, parametros, menu_perm}` (doble `JSON.parse`).
 
 ## Casos De Uso
 
@@ -50,9 +40,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 ## Frontend Relacionado
 
 - `frontend/shared/layouts/LegacyLayout.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

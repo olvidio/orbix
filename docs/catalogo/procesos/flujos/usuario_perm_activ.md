@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.usuario_perm_activ"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/procesos/usuario_perm_activ_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Usuario Perm Activ
-
-Propuesta generada automaticamente desde la capacidad `procesos.usuario_perm_activ.gestionar` y sus pantallas relacionadas.
+# Flujo - Permisos de actividad de usuario
 
 ## Objetivo De Usuario
 
-Gestiona UsuarioPermActiv. Caso de uso: datos para la pantalla usuario_perm_activ (alta/edicion de permisos de actividad para un usuario). Agrupa la resolucion de repositorios para que el controlador frontend no acceda directamente al contenedor ni a use src\.... El frontend recibe arrays serializables y construye los frontend\shared\web\Desplegable.
+Carga de la pantalla de alta o edición de permisos de actividad para un usuario: tipo de actividad, filas de ámbitos afectados y desplegables de fase y permisos.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada directa de menú; se abre embebido desde la gestión de usuarios o permisos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -66,11 +64,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

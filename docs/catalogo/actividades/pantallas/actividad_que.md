@@ -81,6 +81,16 @@ importar / buscar actividades de mi dl para publicar.
 Ver [`manual/actividades.md`](../../../manual/actividades.md), secciones
 *Buscar Y Abrir Actividades* e *Importar/Publicar*.
 
+## Ruta de menú
+
+Múltiples entradas según parámetros (`que`, `modo`, colectivo). Ejemplos:
+
+- **Legacy:** dre/Calendario > actividades > buscar activ; importar activ; publicar
+  activ; entradas por colectivo (vsm, vsg, vsr, dagd, vest, dre > sssc…).
+- **Pills2:** ACTIVIDADES > Buscar actividad / Listado de actividades (crt, cv, ca…);
+  ATENCIÓN SACD > Actividades > publicar activ; ESTUDIOS > Semestres de invierno >
+  Buscar/Importar.
+
 ## Revision Manual
 
 - Revisado jun 2026 (lectura de controller + twig + `_actividad_tipo.js`):

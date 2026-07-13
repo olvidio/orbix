@@ -11,16 +11,18 @@ endpoints: ["/src/misas/desplegable_encargos", "/src/misas/eliminar_encargo_cent
 capacidades: ["misas.desplegable_encargos.gestionar", "misas.eliminar_encargo_centro.gestionar", "misas.guardar_encargo_centro.gestionar", "misas.ver_encargos_centros.gestionar"]
 campos: ["form.id_ctr", "form.id_enc", "form.id_item", "form.id_zona", "html.nuevo", "post.id_zona"]
 acciones: ["fnjs_construir_desplegable", "fnjs_nuevo", "fnjs_prepara_select_encargo", "fnjs_refresh_grid"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Ver Encargos Centros
+# Ver encargos centros
 
-Descripcion funcional pendiente de revisar.
+Fragmento SlickGrid EncargoCtr con modal y desplegables dinámicos (`desplegable_encargos`, `desplegable_centros_zona`).
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/misas/controller/ver_encargos_centros.php`
 
 ## Vistas Relacionadas
@@ -61,13 +63,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_prepara_select_encargo`
 - `fnjs_refresh_grid`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

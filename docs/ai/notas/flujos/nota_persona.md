@@ -44,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona NotaPersona. Endpoint backend que prepara los datos para form_notas_de_una_persona.phtml (alta/edicion de PersonaNota).
+Formulario completo de nota: carga (`nota_persona_form_data`) y mutaciones.
 
 ## Limites De La Respuesta
 

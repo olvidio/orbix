@@ -5,10 +5,10 @@ modulo: actividadcargos
 subtipo: widget_dossier
 id_tipo_dossier: 1302
 codigo_dossier: cargos_personas_en_actividad
-estado_revision: revisado
+estado_revision: "revisado"
 ---
 
-# Widget — Relacion de cargos (persona)
+# Widget — Relación de cargos (persona)
 
 ## Descripcion
 
@@ -21,14 +21,22 @@ Listado de actividades en las que una persona tiene cargo. Widget del dossier **
 ## Endpoints (AJAX)
 
 - `/src/actividadcargos/cargo_eliminar`
-- Formulario via dossier 1302 → `form_cargos_personas_en_actividad.php`
+- Formulario vía dossier 1302 → `form_cargos_personas_en_actividad.php`
 
 ## Acciones usuario
 
-- Filtro **actuales / curso / todos** (`BotonesCurso`)
-- **modificar cargo** / **quitar cargo**
-- Enlaces de alta por tipo de actividad (filas dl / otros)
+- Filtro **actuales / curso / todos** (`BotonesCurso`, campo `modo_curso`)
+- **modificar cargo** / **quitar cargo** (siempre visibles, también en ámbito `rstgr`)
+- Enlaces de alta por tipo de actividad: **añadir cargo de la dl** (`aLinks_dl`) y **añadir cargo de otra dl** (`aLinks_otros`)
+
+## Tabla
+
+Columnas: cargo, actividad, ¿Puede ser agd?, observaciones.
 
 ## Modulo relacionado
 
 - `dossiers`, `personas`, `actividades`
+
+## Ruta de menú
+
+- sin entrada de menú en el índice (widget embebido en dossier 1302 de la ficha de persona).

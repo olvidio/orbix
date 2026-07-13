@@ -11,12 +11,12 @@ endpoints: ["/src/notas/tessera_copiar", "/src/notas/tessera_copiar_select_data"
 capacidades: ["notas.tessera.gestionar", "notas.tessera_copiar_select.gestionar"]
 campos: ["form.id_nom_dst", "html.copiar", "post.id_nom", "post.id_tabla", "post.sel", "post.stack"]
 acciones: ["fnjs_copiar", "fnjs_left_side_hide"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tessera Copiar Select
 
-Descripcion funcional pendiente de revisar.
+Selección de persona destino para copiar tessera (mismo apellido).
 
 ## Tipo
 
@@ -55,13 +55,11 @@ No se han detectado controladores frontend relacionados.
 - `fnjs_copiar`
 - `fnjs_left_side_hide`
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

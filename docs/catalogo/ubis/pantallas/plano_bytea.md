@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.plano_bytea"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "descarga"
 modulo: "ubis"
 nombre: "Plano Bytea"
 controller: "frontend/ubis/controller/plano_bytea.php"
@@ -11,16 +11,18 @@ endpoints: []
 capacidades: []
 campos: ["form.act", "form.id_direccion", "form.obj_dir", "get.act", "get.id_direccion", "get.obj_dir", "html.name_file", "html.userfile", "post.act", "post.id_direccion", "post.obj_dir"]
 acciones: ["fnjs_buscar", "fnjs_introducir"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Plano Bytea
 
-Página que pregunta dónde está la foto, y la copia en la base de datos
+Sube, descarga o elimina el plano (bytea) asociado a una dirección.
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `descarga`
+
+
 - Controller: `frontend/ubis/controller/plano_bytea.php`
 
 ## Vistas Relacionadas
@@ -58,13 +60,7 @@ No se han detectado capacidades relacionadas.
 - `fnjs_buscar`
 - `fnjs_introducir`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

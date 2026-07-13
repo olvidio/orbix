@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la entrada de menú **posibles ca**.
+2. El sistema carga desplegables de centros N/AGD y texto de grupo vía `ca_posibles_que_data`.
+3. El usuario ajusta periodo, centro y flags; al buscar pasa al flujo `ca_posibles`.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/ca_posibles_que_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CaPosiblesQue. Desplegables y texto de grupo para ca_posibles_que.php.
+El usuario configura los filtros del informe de posibles CA: centro (N o AGD), periodo, grupo de estudios y opciones de inclusión (estudios, repaso, todos). Al cargar la pantalla obtiene los desplegables y textos iniciales.
 
 ## Limites De La Respuesta
 

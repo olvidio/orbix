@@ -7,19 +7,19 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/notas/infrastructure/ui/http/controllers/acta_eliminar.php"
 entrada: ["post.acta:string", "post.sel:array"]
-entrada_obligatoria: []
+entrada_obligatoria: ["acta"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["No se encuentra el acta"]
+errores: ["No se encuentra el acta", "hay un error, no se ha eliminado"]
 frontend_referencias: ["frontend/notas/controller/acta_select.php"]
 casos_uso: ["src\\notas\\application\\ActaEliminar"]
 tags: ["notas", "acta", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Acta Eliminar
 
-Descripcion funcional pendiente de revisar.
+Elimina un acta y su tribunal asociado.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -43,11 +43,20 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `success: true`, `data: "ok"`. Error en `mensaje`.
+
+## Objetivo funcional
+
+Borrado desde listado `acta_select` (`fnjs_eliminar`) o contextos que reutilicen el endpoint.
+
+## Permisos
+
+- `have_perm_oficina('est')` en `acta_select` (DL).
 
 ## Errores conocidos
 
 - `No se encuentra el acta`
+- `hay un error, no se ha eliminado`
 
 ## Casos De Uso
 
@@ -55,10 +64,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/acta_select.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/acta_select.php`.

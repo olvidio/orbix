@@ -17,7 +17,7 @@ paths:
       operationId: "post_notas_acta_eliminar"
       summary: "Acta Eliminar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina un acta y su tribunal asociado.
         
         Operacion: `mutacion`.
         
@@ -30,6 +30,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "acta"
               properties:
                 acta:
                   type: "string"
@@ -55,9 +57,9 @@ paths:
       operationId: "post_notas_acta_imprimir_presentacion_data"
       summary: "Acta Imprimir Presentacion Data"
       description: |
-        Datos compartidos por `acta_imprimir` y el HTML de `acta_imprimir_mpdf`.
+        Datos de presentación para imprimir un acta (HTML/mpdf).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/acta_imprimir_presentacion_data.md`
       tags:
@@ -68,6 +70,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "acta"
               properties:
                 acta:
                   type: "string"
@@ -91,9 +95,9 @@ paths:
       operationId: "post_notas_acta_listado_anual_data"
       summary: "Acta Listado Anual Data"
       description: |
-        Lista las actas en un rango de fechas (ISO) ordenadas por nivel y fecha. En ambito `rstgr` considera todas las delegaciones de la region de stgr; en los demas ambitos, solo la delegacion actual. Cada item es un array asociativo `{id_nivel, acta, f_acta, nombre_corto}`.
+        Lista actas en un rango de fechas para el listado anual.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/acta_listado_anual_data.md`
       tags:
@@ -104,6 +108,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "inicio"
+                - "fin"
               properties:
                 finIso:
                   type: "string"
@@ -127,7 +134,7 @@ paths:
       operationId: "post_notas_acta_modificar"
       summary: "Acta Modificar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Actualiza los datos de cabecera de un acta existente y su tribunal.
         
         Operacion: `mutacion`.
         
@@ -140,6 +147,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "acta"
               properties:
                 acta:
                   type: "string"
@@ -185,7 +194,7 @@ paths:
       operationId: "post_notas_acta_nueva"
       summary: "Acta Nueva"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Da de alta un acta con cabecera (asignatura, actividad, fechas, libro/página/línea, lugar, observaciones) y sincroniza el tribunal de examinadores.
         
         Operacion: `mutacion`.
         
@@ -198,6 +207,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "acta"
               properties:
                 acta:
                   type: "string"
@@ -243,9 +254,9 @@ paths:
       operationId: "get_notas_acta_pdf_download"
       summary: "Acta Pdf Download"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Descarga el PDF de un acta mediante token firmado.
         
-        Operacion: `mutacion`.
+        Operacion: `descarga`.
         
         Fuente catalogo: `docs/catalogo/notas/api/acta_pdf_download.md`
       tags:
@@ -253,7 +264,7 @@ paths:
       parameters:
         - name: "tk"
           in: query
-          required: false
+          required: true
           schema:
             type: "string"
       responses:
@@ -274,7 +285,7 @@ paths:
       operationId: "post_notas_acta_pdf_eliminar"
       summary: "Acta Pdf Eliminar"
       description: |
-        Elimina el PDF firmado asociado a un `Acta` (sin borrar el acta).
+        Elimina el PDF adjunto a un acta.
         
         Operacion: `mutacion`.
         
@@ -287,6 +298,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "acta_num"
               properties:
                 acta_num:
                   type: "string"
@@ -308,7 +321,7 @@ paths:
       operationId: "post_notas_acta_pdf_subir"
       summary: "Acta Pdf Subir"
       description: |
-        Sube (persiste) el contenido binario de un PDF firmado en el campo `pdf` del acta identificada por `acta_num`.
+        Sube un PDF y lo asocia al acta indicado.
         
         Operacion: `mutacion`.
         
@@ -321,6 +334,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "acta_num"
               properties:
                 acta_num:
                   type: "string"
@@ -344,7 +359,7 @@ paths:
       description: |
         Lista de actas y mapa de asignaturas para `acta_select` (frontend sin repositorios).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/acta_select_data.md`
       tags:
@@ -380,7 +395,7 @@ paths:
       operationId: "post_notas_acta_ver_form_data"
       summary: "Acta Ver Form Data"
       description: |
-        Estado del formulario `acta_ver` (sin HashFront ni vistas).
+        Estado del formulario de cabecera de acta (`acta_ver`).
         
         Operacion: `form_data`.
         
@@ -415,9 +430,9 @@ paths:
       operationId: "post_notas_actividades_buscar_data"
       summary: "Actividades Buscar Data"
       description: |
-        Datos (delegaciones + actividades) para el dialogo "buscar actividad" que abre `frontend/notas/controller/actividad_buscar_form.php` desde `form_notas_de_una_persona.phtml` al modificar una nota asociada a una actividad.
+        Busca actividades CA para vincular a un acta/nota.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/actividades_buscar_data.md`
       tags:
@@ -453,9 +468,9 @@ paths:
       operationId: "post_notas_asig_faltan_personas_select_data"
       summary: "Asig Faltan Personas Select Data"
       description: |
-        Tabla de `asig_faltan_personas_select`.
+        Lista personas a las que falta una asignatura concreta.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/asig_faltan_personas_select_data.md`
       tags:
@@ -466,6 +481,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_asignatura"
               properties:
                 b_c:
                   type: "string"
@@ -497,9 +514,9 @@ paths:
       operationId: "post_notas_asig_faltan_select_data"
       summary: "Asig Faltan Select Data"
       description: |
-        Tabla de `asig_faltan_select` (asignaturas pendientes por persona).
+        Tabla de personas con asignaturas pendientes (filtro por número máximo).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/asig_faltan_select_data.md`
       tags:
@@ -543,9 +560,9 @@ paths:
       operationId: "post_notas_asignaturas_pendientes_data"
       summary: "Asignaturas Pendientes Data"
       description: |
-        Datos para la pantalla `asignaturas_pendientes` (matriz alumnos × asignaturas). La UI (`Lista`, desplegable rstgr) se monta en el controlador frontend.
+        Matriz alumnos × asignaturas pendientes.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/asignaturas_pendientes_data.md`
       tags:
@@ -577,9 +594,9 @@ paths:
       operationId: "post_notas_asignaturas_pendientes_resumen_data"
       summary: "Asignaturas Pendientes Resumen Data"
       description: |
-        Resumen: número de alumnos con cada asignatura pendiente, desglosado por tramo (nb, nc1, nc2, n total, ab, ac1, ac2, a total). Sucesor de la lógica embebida en `frontend/notas/controller/asignaturas_pendientes_resumen.php`.
+        Resumen: número de alumnos por asignatura pendiente.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/asignaturas_pendientes_resumen_data.md`
       tags:
@@ -612,9 +629,9 @@ paths:
       operationId: "post_notas_asignaturas_search"
       summary: "Asignaturas Search"
       description: |
-        Autocomplete jQuery-UI.
+        Autocompletado de asignaturas en el formulario de acta.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/asignaturas_search.md`
       tags:
@@ -646,9 +663,9 @@ paths:
       operationId: "post_notas_buscar_acta"
       summary: "Buscar Acta"
       description: |
-        Busca un acta por su numero abreviado.
+        Resuelve datos de un acta por número (autocomplete/búsqueda).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/buscar_acta.md`
       tags:
@@ -659,6 +676,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "acta"
               properties:
                 acta:
                   type: "string"
@@ -680,9 +699,9 @@ paths:
       operationId: "post_notas_comprobar_notas_constants_data"
       summary: "Comprobar Notas Constants Data"
       description: |
-        VO {
+        Constantes VO para consultas SQL de comprobar notas.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/comprobar_notas_constants_data.md`
       tags:
@@ -715,9 +734,9 @@ paths:
       operationId: "post_notas_comprobar_notas_page_data"
       summary: "Comprobar Notas Page Data"
       description: |
-        HTML de {
+        Ejecuta comprobaciones SQL y devuelve HTML de resultados.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/comprobar_notas_page_data.md`
       tags:
@@ -750,9 +769,9 @@ paths:
       operationId: "post_notas_examinadores_search"
       summary: "Examinadores Search"
       description: |
-        Autocomplete jQuery-UI.
+        Autocompletado de examinadores para el formulario de acta.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/examinadores_search.md`
       tags:
@@ -784,9 +803,9 @@ paths:
       operationId: "post_notas_informe_stgr_agd_data"
       summary: "Informe Stgr Agd Data"
       description: |
-        Calcula el informe anual STGR de "agregados" (puntos 21..33 + `x`). Encapsula el uso de `src\notas\application\legacy\Resumen` (legacy) para que los controllers del frontend no importen la clase legacy directamente. Devuelve un array neutro `{res, textos, curso_txt}` listo para renderizado.
+        Informe anual STGR de agregados (métricas 1..18 + totales).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/informe_stgr_agd_data.md`
       tags:
@@ -822,9 +841,9 @@ paths:
       operationId: "post_notas_informe_stgr_n_data"
       summary: "Informe Stgr N Data"
       description: |
-        Calcula el informe anual STGR de "numerarios" (puntos 1..18 + `x`). Encapsula el uso de `src\notas\application\legacy\Resumen` (legacy) para que los controllers del frontend no importen la clase legacy directamente. Devuelve un array neutro `{res, textos, curso_txt}` listo para renderizado.
+        Informe anual STGR de numerarios.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/informe_stgr_n_data.md`
       tags:
@@ -860,9 +879,9 @@ paths:
       operationId: "post_notas_informe_stgr_profesores_data"
       summary: "Informe Stgr Profesores Data"
       description: |
-        Calcula el informe anual STGR de "profesores" (puntos 36..47). Encapsula el uso de `src\notas\application\legacy\Resumen` (legacy) para que los controllers del frontend no importen la clase legacy directamente. Devuelve un array neutro `{res, textos, curso_txt}` listo para renderizado. Tipos de profesor utilizados: 1 Ordinario 2 Extraordinario 3 Adjunto 4 Encargado 5 Ayudante 6 Asociado 0 (todos)
+        Informe anual del claustro/profesores.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/informe_stgr_profesores_data.md`
       tags:
@@ -894,7 +913,7 @@ paths:
       operationId: "post_notas_nota_persona_form_data"
       summary: "Nota Persona Form Data"
       description: |
-        Endpoint backend que prepara los datos para `form_notas_de_una_persona.phtml` (alta/edicion de `PersonaNota`).
+        Payload del formulario de alta/edición de nota de persona.
         
         Operacion: `form_data`.
         
@@ -907,6 +926,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_pau"
               properties:
                 id_asignatura_real:
                   type: "string"
@@ -938,7 +959,7 @@ paths:
       operationId: "post_notas_persona_nota_editar"
       summary: "Persona Nota Editar"
       description: |
-        Edita una `PersonaNota` existente.
+        Modifica una nota existente de persona.
         
         Operacion: `mutacion`.
         
@@ -951,6 +972,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_pau"
               properties:
                 id_asignatura_real:
                   type: "integer"
@@ -972,7 +995,7 @@ paths:
       operationId: "post_notas_persona_nota_eliminar"
       summary: "Persona Nota Eliminar"
       description: |
-        Elimina una `PersonaNota`.
+        Elimina la nota seleccionada (tabla padre `e_notas`).
         
         Operacion: `mutacion`.
         
@@ -985,6 +1008,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_pau"
+                - "sel"
               properties:
                 _sin_parametros_detectados:
                   type: string
@@ -1007,7 +1033,7 @@ paths:
       operationId: "post_notas_persona_nota_nueva"
       summary: "Persona Nota Nueva"
       description: |
-        Crea una `PersonaNota`.
+        Crea una nota de persona (asignatura/nivel/tipo acta) con replicación DL/certificado.
         
         Operacion: `mutacion`.
         
@@ -1020,6 +1046,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_pau"
               properties:
                 _sin_parametros_detectados:
                   type: string
@@ -1042,9 +1070,9 @@ paths:
       operationId: "post_notas_posibles_opcionales_data"
       summary: "Posibles Opcionales Data"
       description: |
-        Devuelve las asignaturas opcionales que puede cursar la persona con el contrato estandar de desplegable (ver `refactor.md` §"Desplegables devueltos por endpoints AJAX: payload + constructor en frontend").
+        Opcionales de sobra disponibles para una persona.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/posibles_opcionales_data.md`
       tags:
@@ -1055,6 +1083,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom"
               properties:
                 id_nom:
                   type: "integer"
@@ -1076,9 +1106,9 @@ paths:
       operationId: "post_notas_posibles_preceptores_data"
       summary: "Posibles Preceptores Data"
       description: |
-        Devuelve el desplegable de posibles preceptores (profesores STGR) con el contrato estandar de refactor.md.
+        Preceptores posibles para una nota.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/posibles_preceptores_data.md`
       tags:
@@ -1111,7 +1141,7 @@ paths:
       operationId: "post_notas_tessera_copiar"
       summary: "Tessera Copiar"
       description: |
-        Copia todas las `PersonaNota` de una persona origen hacia una persona destino. Utilizado por `personas_select.phtml` (pagina de traslado de tessera entre numerarios / supernumerarios). Devuelve una cadena con los errores (separados por `<br>`) o vacia si todo ha ido bien.
+        Copia las notas/tessera de una persona origen a otra destino (mismo apellido).
         
         Operacion: `mutacion`.
         
@@ -1124,6 +1154,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom_org"
+                - "id_nom_dst"
               properties:
                 id_nom_dst:
                   type: "integer"
@@ -1147,9 +1180,9 @@ paths:
       operationId: "post_notas_tessera_copiar_select_data"
       summary: "Tessera Copiar Select Data"
       description: |
-        Prepara los datos para elegir a que persona (con el mismo primer apellido) se copiara la tessera de otra persona. Devuelve `['nom' => string, 'posibles_personas' => [id_nom => nombre]]`. Lanza `RuntimeException` si no encuentra la persona origen ni como numerario ni como agregado.
+        Personas destino posibles para copiar tessera (mismo apellido).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/tessera_copiar_select_data.md`
       tags:
@@ -1160,6 +1193,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom"
               properties:
                 id_nom:
                   type: "integer"
@@ -1181,9 +1216,9 @@ paths:
       operationId: "post_notas_tessera_imprimir_data"
       summary: "Tessera Imprimir Data"
       description: |
-        Datos imprimibles de tessera ya serializados (sin objetos dominio → JSON estable).
+        Datos para imprimir la tessera de estudios de una persona.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/tessera_imprimir_data.md`
       tags:
@@ -1194,6 +1229,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom"
               properties:
                 id_nom:
                   type: "integer"
@@ -1215,9 +1252,9 @@ paths:
       operationId: "post_notas_tessera_ver_data"
       summary: "Tessera Ver Data"
       description: |
-        Dataset JSON para {
+        Datos de visualización de tessera.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/notas/api/tessera_ver_data.md`
       tags:
@@ -1228,6 +1265,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom"
               properties:
                 id_nom:
                   type: "integer"

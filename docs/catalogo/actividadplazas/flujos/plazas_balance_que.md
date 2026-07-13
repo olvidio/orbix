@@ -8,34 +8,41 @@ pantallas_principales: []
 fragmentos: ["actividadplazas.pantalla.plazas_balance_que"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadplazas/plazas_balance_que_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Plazas Balance Que
 
-Propuesta generada automaticamente desde la capacidad `actividadplazas.plazas_balance_que.gestionar` y sus pantallas relacionadas.
+Pantalla de filtro para el balance de plazas: carga las delegaciones comparables y el tipo de
+actividad, y dispara la comparativa al elegir una dl.
 
 ## Objetivo De Usuario
 
-Gestiona PlazasBalanceQue. Datos para la pantalla plazas_balance_que (opciones dl + id_tipo_activ).
+Acceder al balance de plazas entre delegaciones, elegir con qué dl comparar la propia, y ver el grid
+comparativo que se carga debajo.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú de plazas → **Balance de plazas** (ver "Ruta de menú"). Se abre
+`actividadplazas.pantalla.plazas_balance_que`.
 
 ## Fragmentos O Pantallas Auxiliares
 
 - `actividadplazas.pantalla.plazas_balance_que`
+- `actividadplazas.pantalla.plazas_balance_dl` (grid cargado por AJAX)
 
 ## Escenarios Inferidos
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **Balance de plazas** desde el menú (según tipo y colectivo).
+2. El sistema carga `plazas_balance_que_data`: opciones del desplegable de delegaciones e
+   `id_tipo_activ` del contexto (`sactividad`/`sasistentes`).
+3. Al elegir una delegación (`fnjs_comparativa`), solicita por AJAX `plazas_balance_dl` e inserta el
+   HTML en `#comparativa` (flujo `plazas_balance`).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadplazas/plazas_balance_que_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -57,9 +64,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vsm > ca > Balance de plazas (y variantes por perfil/tipo: dagd, vsg…)
+- **Pills2:** ACTIVIDADES > Gestión de plazas y peticiones > Balance plazas ca n entre r/dl (y variantes por tipo/colectivo)

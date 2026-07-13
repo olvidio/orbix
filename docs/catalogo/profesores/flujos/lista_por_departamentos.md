@@ -2,50 +2,38 @@
 id: "profesores.lista_por_departamentos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Gestionar Lista Por Departamentos"
+nombre: "Flujo - Consultar claustro"
 capacidad: "profesores.lista_por_departamentos.gestionar"
-pantallas_principales: []
-fragmentos: ["profesores.pantalla.lista_por_departamentos"]
-acciones: ["ejecutar"]
+pantallas_principales: ["profesores.pantalla.lista_por_departamentos"]
+fragmentos: []
+acciones: ["consultar"]
 endpoints: ["/src/profesores/lista_por_departamentos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Lista Por Departamentos
+# Flujo - Consultar claustro
 
-Propuesta generada automaticamente desde la capacidad `profesores.lista_por_departamentos.gestionar` y sus pantallas relacionadas.
+Consulta del claustro STGR agrupado por departamento y tipo de profesor.
 
 ## Objetivo De Usuario
 
-Gestiona ListaPorDepartamentos. Descripcion funcional pendiente de revisar.
+Ver quiénes integran el claustro vigente, opcionalmente filtrado por delegación en RSTGR.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-- `profesores.pantalla.lista_por_departamentos`
+Pantalla `lista_por_departamentos` (`frontend/profesores/controller/lista_por_departamentos.php`).
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Abrir **claustro** desde el menú.
+2. En RSTGR sin filtro: marcar delegaciones y pulsar **Aplicar filtro** (`filtro=1`, `dl[]`).
+3. Revisar departamentos con subsecciones director y tipos de profesor.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.dl`
-- `post.dl`
-- `post.filtro`
-
-Acciones JavaScript:
-- `fnjs_left_side_hide`
+- `/src/profesores/lista_por_departamentos`
 
 ## Endpoints Del Flujo
 
@@ -55,9 +43,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > buscar persona > claustro; stgr > personas > claustro
+- **Pills2:** ESTUDIOS > Datos e informes > Claustro

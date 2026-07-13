@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "pasarela"
-titulo: "Exportar Select"
+titulo: "Resultado exportación actividades"
 pantalla: "pasarela.pantalla.exportar_select"
-preguntas: ["Que se puede hacer en Exportar Select?", "Que campos tiene Exportar Select?", "Que acciones hay en Exportar Select?"]
-capacidades: ["pasarela.exportar_actividades.gestionar"]
-endpoints: ["/src/pasarela/exportar_actividades_data"]
+preguntas: ["Que se puede hacer en Resultado exportación actividades?", "Que campos tiene Resultado exportación actividades?", "Que acciones hay en Resultado exportación actividades?"]
+capacidades: [""]
+endpoints: [""]
 source: "docs/catalogo/pasarela/pantallas/exportar_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Exportar Select
+# Ayuda IA Pantalla - Resultado exportación actividades
 
 ## Resumen
 
-Resultado del filtro "exportar actividades": delega el armado del listado en `/src/pasarela/exportar_actividades_data` (caso de uso {@see \src\pasarela\application\ExportarActividadesData}) y solo se ocupa de renderizar la tabla con `frontend\shared\web\Lista`.
+Calcula periodo en frontend (`Periodo`) y muestra la tabla HTML devuelta por `exportar_actividades_data`.
 
 ## Uso En Ayuda
 
@@ -23,15 +23,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Campos Detectados
 
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.iactividad_val`
-- `post.iasistentes_val`
-- `post.id_cdc`
-- `post.id_tipo_activ`
-- `post.isfsv_val`
-- `post.periodo`
-- `post.year`
+- No hay campos detectados.
 
 ## Acciones Detectadas
 
@@ -39,11 +31,11 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Capacidades Relacionadas
 
-- `pasarela.exportar_actividades.gestionar`
+- ``
 
 ## Endpoints Relacionados
 
-- `/src/pasarela/exportar_actividades_data`
+- ``
 
 ## Precauciones
 

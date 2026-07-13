@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "planning"
-titulo: "Planning Casa Que"
+titulo: "Planning por casas (filtros)"
 pantalla: "planning.pantalla.planning_casa_que"
-preguntas: ["Que se puede hacer en Planning Casa Que?", "Que campos tiene Planning Casa Que?", "Que acciones hay en Planning Casa Que?"]
+preguntas: ["Que se puede hacer en Planning por casas (filtros)?", "Que campos tiene Planning por casas (filtros)?", "Que acciones hay en Planning por casas (filtros)?"]
 capacidades: ["planning.planning_casa_que.gestionar"]
 endpoints: ["/src/planning/planning_casa_que_data"]
 source: "docs/catalogo/planning/pantallas/planning_casa_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Planning Casa Que
+# Ayuda IA Pantalla - Planning por casas (filtros)
 
 ## Resumen
 
-Formulario de filtros para el planning por casas (se selecciona el grupo de casas y el periodo).
+Formulario de criterios: grupo de casas (`CasasQue`), periodo y opción de incluir casas sin actividad. Al enviar navega a `planning_casa_select.php`.
 
 ## Uso En Ayuda
 

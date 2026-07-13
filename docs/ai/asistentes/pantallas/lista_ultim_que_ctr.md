@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Selector de centro antes del informe de última asistencia (personas s sin crt/cv reciente).
 
 ## Uso En Ayuda
 

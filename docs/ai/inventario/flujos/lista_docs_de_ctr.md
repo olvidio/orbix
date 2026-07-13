@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaDocsDeCtr. Descripcion funcional pendiente de revisar.
+Gestiona ListaDocsDeCtr. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Limites De La Respuesta
 

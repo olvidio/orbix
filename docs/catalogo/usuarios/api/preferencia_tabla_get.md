@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "usuarios"
 url: "/src/usuarios/preferencia_tabla_get"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/usuarios/infrastructure/ui/http/controllers/preferencia_tabla_get.php"
 entrada: ["post.id_tabla:string"]
 entrada_obligatoria: []
@@ -15,37 +15,48 @@ requiere_hashb: false
 frontend_referencias: ["frontend/shared/web/Lista.php", "frontend/shared/web/TablaEditable.php"]
 casos_uso: ["src\\usuarios\\application\\PreferenciaTablaData"]
 tags: ["usuarios", "preferencia", "tabla", "get"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Preferencia Tabla Get
 
-Devuelve las preferencias de usuario necesarias para renderizar una tabla (HTML simple o SlickGrid) en el front.
+Devuelve preferencias de presentación de tablas (global y SlickGrid por id_tabla+idioma).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve preferencias de presentación de tablas (global y SlickGrid por id_tabla+idioma).
 
 ## Endpoint
 
 - URL: `/src/usuarios/preferencia_tabla_get`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/preferencia_tabla_get.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tabla` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_tabla` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `usuarios_PreferenciaTablaDataData`):
-  - `formato_tabla` (`string, slickgrid: array<string, mixed>|null`)
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse` salvo JsonResponse directo):
+  - `formato_tabla`: html|slickgrid
+  - `slickgrid`: prefs JSON o null
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Usuario autenticado (`ConfigGlobal::mi_id_usuario()`).
 
 ## Casos De Uso
 
@@ -53,11 +64,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/shared/web/Lista.php`
-- `frontend/shared/web/TablaEditable.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/shared/web/Lista.php", "frontend/shared/web/TablaEditable.php"]`).

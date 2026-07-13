@@ -4,48 +4,63 @@ tipo: "endpoint"
 modulo: "procesos"
 url: "/src/procesos/actividad_proceso_get"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/procesos/infrastructure/ui/http/controllers/actividad_proceso_get.php"
 entrada: ["post.id_activ:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_activ"]
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "procesos_ActividadProcesoGetData"
-respuesta_data: ["error:string, a_rows: list<array<string, mixed>>"]
 requiere_hashb: false
+errores: ["error: La fase del proceso tipo: %s, fase: %s, tarea: %s"]
 frontend_referencias: ["frontend/procesos/controller/actividad_proceso.php", "frontend/procesos/controller/actividad_proceso_get.php"]
 casos_uso: ["src\\procesos\\application\\ActividadProcesoGet"]
 tags: ["procesos", "actividad", "proceso", "get"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Actividad Proceso Get
 
-Caso de uso: tareas del proceso para un id_activ (estructura + permiso edición).
+Listado de tareas del proceso de una actividad con permiso de edición por fila.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Construye las filas de la tabla de fases/tareas del proceso para un `id_activ`. Cada fila incluye
+si el usuario puede editarla según la oficina responsable (`$_SESSION['oPerm']`). Si falta la
+definición de una tarea en `tareas_proceso`, devuelve `error` en el payload (no en el sobre).
 
 ## Endpoint
 
 - URL: `/src/procesos/actividad_proceso_get`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/procesos/infrastructure/ui/http/controllers/actividad_proceso_get.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `integer` | application | No | application |
+| `id_activ` | `integer` | application | Si | Actividad cuyo proceso se lista |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+El controller pasa `$_POST` completo al caso de uso.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `procesos_ActividadProcesoGetData`):
-  - `error` (`string, a_rows: list<array<string, mixed>>`)
+- Claves en `data` (doble `JSON.parse`):
+  - `error` (`string`; vacío si todo correcto)
+  - `a_rows` (`list`): cada fila con `id_item`, `fase`, `tarea`, `of_responsable_txt`,
+    `completado` (`bool`), `observ`, `puede_editar` (`bool`)
+
+## Errores conocidos
+
+- `error: La fase del proceso tipo: %s, fase: %s, tarea: %s` (en `data.error`, no en `mensaje`)
+
+## Permisos
+
+- No hay `perm_*` en el caso de uso; `puede_editar` por fila según oficina responsable y
+  `$_SESSION['oPerm']->have_perm_oficina()`.
 
 ## Casos De Uso
 
@@ -53,11 +68,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/procesos/controller/actividad_proceso.php`
-- `frontend/procesos/controller/actividad_proceso_get.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/procesos/controller/actividad_proceso_get.php` (renderer HTML de la tabla)
+- `frontend/procesos/controller/actividad_proceso.php` (URL en `url_get` / `param_actualizar`)

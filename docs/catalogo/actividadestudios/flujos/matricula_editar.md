@@ -8,20 +8,23 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.form_matriculas_de_una_persona"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadestudios/matricula_editar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Matricula Editar
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.matricula_editar.gestionar` y sus pantallas relacionadas.
+Edición de una matrícula existente.
 
 ## Objetivo De Usuario
 
-Gestiona MatriculaEditar. Edita una matricula.
+El usuario modifica nivel, asignatura, preceptor u otros datos de una matrícula ya creada
+y guarda los cambios. Sustituye el case `editar` de `update_3103.php`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `form_matriculas_de_una_persona`
+(`frontend/actividadestudios/controller/form_matriculas_de_una_persona.php`): en modo
+edición, `fnjs_guardar` envía el formulario a `matricula_editar`.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +34,13 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En dossier 1303 o 3103, seleccionar una matrícula y pulsar **modificar**.
+2. Ajustar nivel, asignatura o preceptor en el formulario.
+3. Pulsar **guardar**; el sistema persiste los cambios en la matrícula.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/matricula_editar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -65,9 +70,9 @@ Acciones JavaScript:
 - ``hay un error, no se ha guardado``
 - ``no encuentro la matricula``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo desde dossier 1303 o 3103).
+
+- **Legacy:** vest > buscar persona > n r/dl; vsm > ca > buscar ca.
+- **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl; ACTIVIDADES > Buscar actividad > ca n.

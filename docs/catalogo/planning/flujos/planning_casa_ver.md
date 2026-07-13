@@ -2,53 +2,35 @@
 id: "planning.planning_casa_ver.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Gestionar Planning Casa Ver"
+nombre: "Flujo - Planning por casas (calendario)"
 capacidad: "planning.planning_casa_ver.gestionar"
-pantallas_principales: []
+pantallas_principales: ["planning.pantalla.planning_casa_que", "planning.pantalla.planning_casa_select"]
 fragmentos: ["planning.pantalla.planning_casa_ver"]
-acciones: ["obtener_datos"]
+acciones: ["cargar_calendario", "exportar"]
 endpoints: ["/src/planning/planning_casa_ver_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Planning Casa Ver
+# Flujo - Planning por casas (calendario)
 
-Propuesta generada automaticamente desde la capacidad `planning.planning_casa_ver.gestionar` y sus pantallas relacionadas.
+Muestra la cuadrícula de actividades por casa tras confirmar la selección en `planning_casa_select`.
 
 ## Objetivo De Usuario
 
-Gestiona PlanningCasaVer. Dataset para {.
+Visualizar y exportar el planning de casas en el periodo elegido.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- Desde `planning_casa_select` → AJAX a `planning_casa_ver`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `planning.pantalla.planning_casa_ver`
+### Ver calendario
 
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.modelo`
-- `post.periodo`
-- `post.propuesta_calendario`
-- `post.year`
-
-Acciones JavaScript:
-- `fnjs_exportar`
+1. Confirmar casas y periodo en pasos anteriores.
+2. `planning_casa_ver` envía `cdc_sel`, fechas ISO, `sin_activ` y lista manual si aplica.
+3. Renderiza actividades y periodos de ocupación por ubi.
+4. Opcional: exportar o abrir leyenda.
 
 ## Endpoints Del Flujo
 
@@ -56,11 +38,8 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Faltan fechas de periodo (f_ini_iso / f_fin_iso).`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (subflujo del planning por casas)

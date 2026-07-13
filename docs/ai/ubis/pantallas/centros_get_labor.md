@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla AJAX de tipo de labor de todos los centros DL activos.
 
 ## Uso En Ayuda
 

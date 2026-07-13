@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "cambios"
-titulo: "Usuario Avisos Pref"
+titulo: "Configurar aviso"
 pantalla: "cambios.pantalla.usuario_avisos_pref"
-preguntas: ["Que se puede hacer en Usuario Avisos Pref?", "Que campos tiene Usuario Avisos Pref?", "Que acciones hay en Usuario Avisos Pref?"]
+preguntas: ["Que se puede hacer en Configurar aviso?", "Que campos tiene Configurar aviso?", "Que acciones hay en Configurar aviso?"]
 capacidades: ["cambios.usuario_avisos_pref.gestionar"]
-endpoints: ["/src/cambios/usuario_avisos_pref_form_data"]
+endpoints: ["/src/cambios/usuario_avisos_pref_form_data", "/src/cambios/cambio_usuario_objeto_pref_guardar", "/src/cambios/cambio_usuario_propiedad_pref_guardar_todas", "/src/cambios/cambio_usuario_propiedad_pref_preview"]
 source: "docs/catalogo/cambios/pantallas/usuario_avisos_pref.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Usuario Avisos Pref
+# Ayuda IA Pantalla - Configurar aviso
 
 ## Resumen
 
-Pantalla: configuracion de avisos por usuario/grupo.
+Formulario completo para definir una preferencia de aviso: objeto vigilado, tipo de actividad, fase de referencia, tipo de aviso, casas y propiedades con condiciones.
 
 ## Uso En Ayuda
 
@@ -50,6 +50,9 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 ## Endpoints Relacionados
 
 - `/src/cambios/usuario_avisos_pref_form_data`
+- `/src/cambios/cambio_usuario_objeto_pref_guardar`
+- `/src/cambios/cambio_usuario_propiedad_pref_guardar_todas`
+- `/src/cambios/cambio_usuario_propiedad_pref_preview`
 
 ## Precauciones
 

@@ -47,10 +47,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona HabitacionesCamaLista. Descripcion funcional pendiente de revisar.
+Listar camas de la ubi de una actividad, asignar o reasignar asistentes (drag-and-drop), activar modo solo VIP y abrir vistas de distribución o nombres.
+
+## Errores Documentados
+
+- `Actividad not found`
+- `No Ubi assigned to activity`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

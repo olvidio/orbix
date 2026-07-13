@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página sirve para la tessera de una persona.
+Impresión HTML de tessera.
 
 ## Uso En Ayuda
 

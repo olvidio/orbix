@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PosiblesOpcionales. Devuelve las asignaturas opcionales que puede cursar la persona con el contrato estandar de desplegable (ver refactor.md §"Desplegables devueltos por endpoints AJAX: payload + constructor en frontend").
+Consultar opcionales disponibles al editar nota.
 
 ## Limites De La Respuesta
 

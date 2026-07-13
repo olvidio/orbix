@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Buscador de plan por centro: zona y centro según rol (ctr/sacd/jefe).
 
 ## Uso En Ayuda
 

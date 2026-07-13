@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Delegación al controlador HTTP del módulo (multipart upload).
+Proxy frontend de subida PDF para certificados recibidos.
 
 ## Uso En Ayuda
 

@@ -11,12 +11,12 @@ endpoints: ["/src/procesos/actividad_proceso_get"]
 capacidades: ["procesos.actividad_proceso.gestionar"]
 campos: ["html.b_guardar", "html.completado", "html.observ"]
 acciones: ["fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Actividad Proceso Get
 
-Renderer frontend de la tabla de fases del proceso de una actividad.
+Fragmento AJAX que renderiza la tabla de tareas del proceso de una actividad (fase, tarea, responsable, completado, observaciones y botón guardar).
 
 ## Tipo
 
@@ -49,13 +49,7 @@ No se han detectado controladores frontend relacionados.
 
 - `fnjs_guardar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

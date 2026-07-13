@@ -15,11 +15,11 @@ paths:
   "/src/inventario/cabecera_pie_txt":
     post:
       operationId: "post_inventario_cabecera_pie_txt"
-      summary: "Cabecera Pie Txt"
+      summary: "Cabecera y pie de impresión de equipajes"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve los textos de cabecera (A/B), firma y pie para imprimir equipajes. Prioriza textos propios del equipaje (`id_equipaje`); si faltan, lee defaults de `data/inventario/cabecera_pie_textos.ini`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/cabecera_pie_txt.md`
       tags:
@@ -49,9 +49,9 @@ paths:
   "/src/inventario/cabecera_pie_txt_guardar":
     post:
       operationId: "post_inventario_cabecera_pie_txt_guardar"
-      summary: "Cabecera Pie Txt Guardar"
+      summary: "Guardar textos globales cabecera/pie"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Persiste en `cabecera_pie_textos.ini` los textos por defecto de cabecera, cabecera B, firma y pie para impresión de equipajes.
         
         Operacion: `mutacion`.
         
@@ -89,9 +89,9 @@ paths:
   "/src/inventario/doc_asignar_ctr_guardar":
     post:
       operationId: "post_inventario_doc_asignar_ctr_guardar"
-      summary: "Doc Asignar Ctr Guardar"
+      summary: "Asignar documento a centros"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Crea o actualiza documentos de un tipo en los centros seleccionados (`str_selected_id` JSON). Si el tipo es numerado guarda `num_reg`; si no, `num_ejemplares`. Opcionalmente fija fechas de recepción/asignación.
         
         Operacion: `mutacion`.
         
@@ -104,17 +104,21 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_doc"
               properties:
-                f_asignado:
-                  type: "string"
-                f_recibido:
-                  type: "string"
                 id_tipo_doc:
                   type: "string"
                 numerado:
                   type: "string"
                 str_selected_id:
                   type: "string"
+                f_recibido:
+                  type: "string"
+                f_asignado:
+                  type: "string"
+                "num_{id_ubi}":
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -131,9 +135,9 @@ paths:
   "/src/inventario/doc_asignar_dlb_guardar":
     post:
       operationId: "post_inventario_doc_asignar_dlb_guardar"
-      summary: "Doc Asignar Dlb Guardar"
+      summary: "Asignar documento a DLB/casa"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Actualiza documentos existentes por lugar (`str_selected_id` JSON de `id_lugar`). Campos dinámicos `num_{id_lugar}`. Requiere documento único por ubi+lugar+tipo.
         
         Operacion: `mutacion`.
         
@@ -146,17 +150,21 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_doc"
               properties:
-                f_asignado:
-                  type: "string"
-                f_recibido:
-                  type: "string"
                 id_tipo_doc:
                   type: "string"
                 numerado:
                   type: "string"
                 str_selected_id:
                   type: "string"
+                f_recibido:
+                  type: "string"
+                f_asignado:
+                  type: "string"
+                "num_{id_lugar}":
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -173,9 +181,9 @@ paths:
   "/src/inventario/documentos_guardar":
     post:
       operationId: "post_inventario_documentos_guardar"
-      summary: "Documentos Guardar"
+      summary: "Actualización masiva de documentos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Actualiza en lote documentos identificados en `documentos` (claves base64 con JSON `{id_doc}` separadas por `#`). Solo modifica campos cuyo checkbox `chk_*` viene activo: fechas recibido/asignado/eliminado, flag eliminado, rango num_ini/num_fin.
         
         Operacion: `mutacion`.
         
@@ -188,32 +196,34 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "documentos"
               properties:
-                chk_eliminado:
-                  type: "string"
-                chk_f_asignado:
-                  type: "string"
-                chk_f_eliminado:
+                documentos:
                   type: "string"
                 chk_f_recibido:
                   type: "string"
-                chk_num_fin:
+                f_recibido:
                   type: "string"
-                chk_num_ini:
+                chk_f_asignado:
                   type: "string"
-                documentos:
+                f_asignado:
+                  type: "string"
+                chk_eliminado:
                   type: "string"
                 eliminado:
                   type: "integer"
-                f_asignado:
+                chk_f_eliminado:
                   type: "string"
                 f_eliminado:
                   type: "string"
-                f_recibido:
-                  type: "string"
-                num_fin:
+                chk_num_ini:
                   type: "string"
                 num_ini:
+                  type: "string"
+                chk_num_fin:
+                  type: "string"
+                num_fin:
                   type: "string"
       responses:
         "200":
@@ -231,9 +241,9 @@ paths:
   "/src/inventario/equipajes_add_doc":
     post:
       operationId: "post_inventario_equipajes_add_doc"
-      summary: "Equipajes Add Doc"
+      summary: "Añadir documento a maleta (EGM)"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Asocia un documento libre a un item EGM (`id_item_egm`) creando registro Whereis.
         
         Operacion: `mutacion`.
         
@@ -246,6 +256,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item_egm"
               properties:
                 id_item_egm:
                   type: "integer"
@@ -269,9 +281,9 @@ paths:
   "/src/inventario/equipajes_del_doc":
     post:
       operationId: "post_inventario_equipajes_del_doc"
-      summary: "Equipajes Del Doc"
+      summary: "Quitar documento de maleta"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina la asociación Whereis entre documento(s) seleccionados y el item EGM.
         
         Operacion: `mutacion`.
         
@@ -284,6 +296,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item_egm"
               properties:
                 id_item_egm:
                   type: "integer"
@@ -307,11 +321,11 @@ paths:
   "/src/inventario/equipajes_doc_casa":
     post:
       operationId: "post_inventario_equipajes_doc_casa"
-      summary: "Equipajes Doc Casa"
+      summary: "Documentos por casa en equipaje"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista documentos agrupados por casa/centro para un equipaje (`id_equipaje`), usado en impresión.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/equipajes_doc_casa.md`
       tags:
@@ -322,6 +336,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_equipaje"
               properties:
                 id_equipaje:
                   type: "integer"
@@ -341,11 +357,11 @@ paths:
   "/src/inventario/equipajes_egm":
     post:
       operationId: "post_inventario_equipajes_egm"
-      summary: "Equipajes Egm"
+      summary: "Estructura EGM de un equipaje"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve grupos/maletas (EGM) del equipaje con sus documentos asociados para edición o impresión.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/equipajes_egm.md`
       tags:
@@ -356,6 +372,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_equipaje"
               properties:
                 id_equipaje:
                   type: "integer"
@@ -375,9 +393,9 @@ paths:
   "/src/inventario/equipajes_eliminar":
     post:
       operationId: "post_inventario_equipajes_eliminar"
-      summary: "Equipajes Eliminar"
+      summary: "Eliminar equipaje"
       description: |
-        Borrado de un equipaje (antes solo en `equipajes_eliminar.php`).
+        Borra un equipaje por `id_equipaje` vía caso de uso `EquipajeEliminar`.
         
         Operacion: `mutacion`.
         
@@ -411,9 +429,9 @@ paths:
   "/src/inventario/equipajes_eliminar_grupo":
     post:
       operationId: "post_inventario_equipajes_eliminar_grupo"
-      summary: "Equipajes Eliminar Grupo"
+      summary: "Eliminar grupo/maleta de equipaje"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina un grupo EGM (`id_grupo`) de un equipaje.
         
         Operacion: `mutacion`.
         
@@ -426,10 +444,13 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_grupo"
+                - "id_equipaje"
               properties:
-                id_equipaje:
-                  type: "integer"
                 id_grupo:
+                  type: "integer"
+                id_equipaje:
                   type: "integer"
       responses:
         "200":
@@ -447,11 +468,11 @@ paths:
   "/src/inventario/equipajes_lista_activ_equipaje":
     post:
       operationId: "post_inventario_equipajes_lista_activ_equipaje"
-      summary: "Equipajes Lista Activ Equipaje"
+      summary: "Actividades de un equipaje"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista actividades vinculadas al equipaje (`ids_activ` almacenados) para la cabecera de impresión.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/equipajes_lista_activ_equipaje.md`
       tags:
@@ -462,6 +483,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_equipaje"
               properties:
                 id_equipaje:
                   type: "integer"
@@ -481,11 +504,11 @@ paths:
   "/src/inventario/equipajes_lista_activ_periodo":
     post:
       operationId: "post_inventario_equipajes_lista_activ_periodo"
-      summary: "Equipajes Lista Activ Periodo"
+      summary: "Actividades por periodo y lugar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Filtra actividades de un CDC/lugar en un periodo para seleccionar al crear equipaje.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/equipajes_lista_activ_periodo.md`
       tags:
@@ -496,21 +519,23 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_cdc"
               properties:
-                empiezamax:
-                  type: "string"
-                empiezamin:
-                  type: "string"
-                fin:
-                  type: "string"
                 id_cdc:
                   type: "integer"
-                inicio:
-                  type: "string"
                 periodo:
                   type: "string"
                 year:
                   type: "integer"
+                empiezamin:
+                  type: "string"
+                empiezamax:
+                  type: "string"
+                inicio:
+                  type: "string"
+                fin:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -527,11 +552,11 @@ paths:
   "/src/inventario/equipajes_lista_activ_sel":
     post:
       operationId: "post_inventario_equipajes_lista_activ_sel"
-      summary: "Equipajes Lista Activ Sel"
+      summary: "Datos iniciales nuevo equipaje"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve contexto (nombre ubi, fechas, ids actividades) tras elegir actividades al crear equipaje.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/equipajes_lista_activ_sel.md`
       tags:
@@ -565,11 +590,11 @@ paths:
   "/src/inventario/equipajes_movimientos":
     post:
       operationId: "post_inventario_equipajes_movimientos"
-      summary: "Equipajes Movimientos"
+      summary: "Movimientos de documentos entre equipajes"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Compara documentos en maletas de equipajes seleccionados y devuelve entradas/salidas por tipo doc y lugar.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/equipajes_movimientos.md`
       tags:
@@ -580,6 +605,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
                 sel:
                   type: "array"
@@ -601,9 +628,9 @@ paths:
   "/src/inventario/equipajes_nuevo_guardar":
     post:
       operationId: "post_inventario_equipajes_nuevo_guardar"
-      summary: "Equipajes Nuevo Guardar"
+      summary: "Crear equipaje"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Alta de equipaje con nombre, fechas, lugar, ubi de actividades e ids de actividades seleccionadas.
         
         Operacion: `mutacion`.
         
@@ -616,18 +643,20 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "nom_equipaje"
               properties:
-                f_fin:
+                id_ubi_activ:
+                  type: "integer"
+                nom_equipaje:
+                  type: "string"
+                ids_activ:
                   type: "string"
                 f_ini:
                   type: "string"
-                id_ubi_activ:
-                  type: "integer"
-                ids_activ:
+                f_fin:
                   type: "string"
                 lugar:
-                  type: "string"
-                nom_equipaje:
                   type: "string"
       responses:
         "200":
@@ -645,9 +674,9 @@ paths:
   "/src/inventario/equipajes_texto_listado_guardar":
     post:
       operationId: "post_inventario_equipajes_texto_listado_guardar"
-      summary: "Equipajes Texto Listado Guardar"
+      summary: "Guardar textos de listado en equipaje"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Persiste textos editables (cabecera, pie, listado por grupo) según `loc` (`cabecera`, `pie`, `docs_grupo_{id}`…).
         
         Operacion: `mutacion`.
         
@@ -660,13 +689,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "loc"
+                - "id_equipaje"
               properties:
-                id_equipaje:
-                  type: "integer"
-                loc:
-                  type: "string"
                 texto:
                   type: "string"
+                loc:
+                  type: "string"
+                id_equipaje:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -683,9 +715,9 @@ paths:
   "/src/inventario/equipajes_update_grupo":
     post:
       operationId: "post_inventario_equipajes_update_grupo"
-      summary: "Equipajes Update Grupo"
+      summary: "Crear grupo y asignar documentos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Crea item EGM en grupo/lugar si no existe y asocia documentos (`sel`) vía Whereis. Devuelve `id_item_egm` creado.
         
         Operacion: `mutacion`.
         
@@ -698,10 +730,14 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_equipaje"
+                - "id_grupo"
+                - "id_lugar"
               properties:
-                id_equipaje:
-                  type: "integer"
                 id_grupo:
+                  type: "integer"
+                id_equipaje:
                   type: "integer"
                 id_lugar:
                   type: "integer"
@@ -725,11 +761,11 @@ paths:
   "/src/inventario/inventario_css_inline_data":
     post:
       operationId: "post_inventario_inventario_css_inline_data"
-      summary: "Inventario Css Inline Data"
+      summary: "CSS embebido para impresión"
       description: |
-        CSS embebido para impresión de inventario (`inventario.css.php` en disco).
+        Lee `inventario.css.php` del disco y devuelve el CSS inline para vistas de impresión de inventario.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/inventario_css_inline_data.md`
       tags:
@@ -750,21 +786,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inventario_InventarioCssInlineDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inventario_InventarioCssInlineDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/inventario/inventario_ctr":
     post:
       operationId: "post_inventario_inventario_ctr"
-      summary: "Inventario Ctr"
+      summary: "Inventario imprimible de centros"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Genera tablas de documentos por centro (`sel` JSON array de `id_ubi`) para impresión de inventario de centros.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/inventario_ctr.md`
       tags:
@@ -775,6 +811,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
                 sel:
                   type: "string"
@@ -794,11 +832,11 @@ paths:
   "/src/inventario/inventario_dlb":
     post:
       operationId: "post_inventario_inventario_dlb"
-      summary: "Inventario Dlb"
+      summary: "Inventario imprimible DLB/casa"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Igual que `inventario_ctr` pero para documentos DLB/casa (sin ubi de centro).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/inventario_dlb.md`
       tags:
@@ -809,6 +847,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
                 sel:
                   type: "string"
@@ -828,11 +868,11 @@ paths:
   "/src/inventario/lista_casas_posibles_periodo":
     post:
       operationId: "post_inventario_lista_casas_posibles_periodo"
-      summary: "Lista Casas Posibles Periodo"
+      summary: "Casas posibles en periodo"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Opciones de casas/centros con actividades en el periodo indicado (para equipajes).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_casas_posibles_periodo.md`
       tags:
@@ -844,18 +884,18 @@ paths:
             schema:
               type: object
               properties:
-                empiezamax:
-                  type: "string"
-                empiezamin:
-                  type: "string"
-                fin:
-                  type: "string"
-                inicio:
-                  type: "string"
                 periodo:
                   type: "string"
                 year:
                   type: "integer"
+                empiezamin:
+                  type: "string"
+                empiezamax:
+                  type: "string"
+                inicio:
+                  type: "string"
+                fin:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -872,11 +912,11 @@ paths:
   "/src/inventario/lista_colecciones":
     post:
       operationId: "post_inventario_lista_colecciones"
-      summary: "Lista Colecciones"
+      summary: "Opciones de colecciones"
       description: |
-        Opciones del desplegable de colecciones (`lista_colecciones.php`).
+        Desplegable de colecciones de documentos para filtros/agrupación en listados.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_colecciones.md`
       tags:
@@ -897,21 +937,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inventario_ColeccionesOpcionesDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inventario_ColeccionesOpcionesDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/inventario/lista_de_ctr":
     post:
       operationId: "post_inventario_lista_de_ctr"
-      summary: "Lista De Ctr"
+      summary: "Centros con inventario"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista centros (ubi inventario) para selección en traslado o consulta.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_de_ctr.md`
       tags:
@@ -942,11 +982,11 @@ paths:
   "/src/inventario/lista_de_ctr_con_docs":
     post:
       operationId: "post_inventario_lista_de_ctr_con_docs"
-      summary: "Lista De Ctr Con Docs"
+      summary: "Centros con documentos de un tipo"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista centros que tienen documentos del tipo (`id_tipo_doc`) para inventario o impresión CTR.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_de_ctr_con_docs.md`
       tags:
@@ -978,11 +1018,11 @@ paths:
   "/src/inventario/lista_docs_asignados_por_tipo":
     post:
       operationId: "post_inventario_lista_docs_asignados_por_tipo"
-      summary: "Lista Docs Asignados Por Tipo"
+      summary: "Documentos asignados por tipo"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Tabla de centros/lugares con documentos ya asignados de un tipo.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_asignados_por_tipo.md`
       tags:
@@ -993,6 +1033,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_doc"
               properties:
                 id_tipo_doc:
                   type: "integer"
@@ -1012,11 +1054,11 @@ paths:
   "/src/inventario/lista_docs_asignar_ctr":
     post:
       operationId: "post_inventario_lista_docs_asignar_ctr"
-      summary: "Lista Docs Asignar Ctr"
+      summary: "Formulario asignación a centros"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Genera filas con inputs `num_{id_ubi}` para asignar documento numerado o por ejemplares a centros en `sel`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_asignar_ctr.md`
       tags:
@@ -1027,6 +1069,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_doc"
               properties:
                 id_tipo_doc:
                   type: "integer"
@@ -1050,11 +1094,11 @@ paths:
   "/src/inventario/lista_docs_asignar_dlb":
     post:
       operationId: "post_inventario_lista_docs_asignar_dlb"
-      summary: "Lista Docs Asignar Dlb"
+      summary: "Formulario asignación DLB"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Igual que `lista_docs_asignar_ctr` para inventario DLB/casa.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_asignar_dlb.md`
       tags:
@@ -1065,6 +1109,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_doc"
               properties:
                 id_tipo_doc:
                   type: "integer"
@@ -1088,11 +1134,11 @@ paths:
   "/src/inventario/lista_docs_con_observaciones":
     post:
       operationId: "post_inventario_lista_docs_con_observaciones"
-      summary: "Lista Docs Con Observaciones"
+      summary: "Documentos con observaciones"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Listado de documentos que tienen texto en observaciones (centro o general).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_con_observaciones.md`
       tags:
@@ -1123,11 +1169,11 @@ paths:
   "/src/inventario/lista_docs_de_ctr":
     post:
       operationId: "post_inventario_lista_docs_de_ctr"
-      summary: "Lista Docs De Ctr"
+      summary: "Documentos de un centro/lugar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Documentos filtrados por `id_ubi` y/o `id_lugar` para traslado o consulta.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_de_ctr.md`
       tags:
@@ -1139,9 +1185,9 @@ paths:
             schema:
               type: object
               properties:
-                id_lugar:
-                  type: "integer"
                 id_ubi:
+                  type: "integer"
+                id_lugar:
                   type: "integer"
       responses:
         "200":
@@ -1159,11 +1205,11 @@ paths:
   "/src/inventario/lista_docs_de_dlb":
     post:
       operationId: "post_inventario_lista_docs_de_dlb"
-      summary: "Lista Docs De Dlb"
+      summary: "Documentos DLB de un tipo"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista documentos DLB/casa de un tipo para inventario o impresión.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_de_dlb.md`
       tags:
@@ -1195,11 +1241,11 @@ paths:
   "/src/inventario/lista_docs_de_egm":
     post:
       operationId: "post_inventario_lista_docs_de_egm"
-      summary: "Lista Docs De Egm"
+      summary: "Documentos de una maleta"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Documentos asociados a un item EGM (`id_item_egm`) dentro de un equipaje.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_de_egm.md`
       tags:
@@ -1210,6 +1256,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item_egm"
               properties:
                 id_item_egm:
                   type: "integer"
@@ -1229,11 +1277,11 @@ paths:
   "/src/inventario/lista_docs_de_lugar":
     post:
       operationId: "post_inventario_lista_docs_de_lugar"
-      summary: "Lista Docs De Lugar"
+      summary: "Documentos por lugar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Documentos en un lugar concreto (`id_lugar`) para equipajes.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_de_lugar.md`
       tags:
@@ -1244,6 +1292,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_lugar"
               properties:
                 id_lugar:
                   type: "integer"
@@ -1263,11 +1313,11 @@ paths:
   "/src/inventario/lista_docs_en_busqueda":
     post:
       operationId: "post_inventario_lista_docs_en_busqueda"
-      summary: "Lista Docs En Busqueda"
+      summary: "Documentos pendientes de búsqueda"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Listado de documentos marcados en estado de búsqueda/pendientes.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_en_busqueda.md`
       tags:
@@ -1298,11 +1348,11 @@ paths:
   "/src/inventario/lista_docs_libres":
     post:
       operationId: "post_inventario_lista_docs_libres"
-      summary: "Lista Docs Libres"
+      summary: "Documentos libres para equipaje"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Documentos no asignados a maletas, filtrables por equipaje y tipo doc.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_libres.md`
       tags:
@@ -1334,11 +1384,11 @@ paths:
   "/src/inventario/lista_docs_no_asignados_por_tipo":
     post:
       operationId: "post_inventario_lista_docs_no_asignados_por_tipo"
-      summary: "Lista Docs No Asignados Por Tipo"
+      summary: "Centros sin documento de un tipo"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Centros que aún no tienen asignado el tipo de documento indicado.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_no_asignados_por_tipo.md`
       tags:
@@ -1349,6 +1399,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_doc"
               properties:
                 id_tipo_doc:
                   type: "integer"
@@ -1368,11 +1420,11 @@ paths:
   "/src/inventario/lista_docs_perdidos":
     post:
       operationId: "post_inventario_lista_docs_perdidos"
-      summary: "Lista Docs Perdidos"
+      summary: "Documentos perdidos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Listado de documentos marcados como perdidos/eliminados.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_perdidos.md`
       tags:
@@ -1403,11 +1455,11 @@ paths:
   "/src/inventario/lista_equipajes_desde_fecha":
     post:
       operationId: "post_inventario_lista_equipajes_desde_fecha"
-      summary: "Lista Equipajes Desde Fecha"
+      summary: "Equipajes desde fecha"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Opciones de equipajes con fecha inicio >= `f_ini_iso` (desplegable/movimientos).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_equipajes_desde_fecha.md`
       tags:
@@ -1437,11 +1489,11 @@ paths:
   "/src/inventario/lista_equipajes_posibles_maletas":
     post:
       operationId: "post_inventario_lista_equipajes_posibles_maletas"
-      summary: "Lista Equipajes Posibles Maletas"
+      summary: "Maletas/grupos posibles"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Grupos EGM existentes y opción «nuevo» para añadir documentos a equipaje.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_equipajes_posibles_maletas.md`
       tags:
@@ -1452,6 +1504,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_equipaje"
               properties:
                 id_equipaje:
                   type: "integer"
@@ -1471,11 +1525,11 @@ paths:
   "/src/inventario/lista_lugares_de_ubi":
     post:
       operationId: "post_inventario_lista_lugares_de_ubi"
-      summary: "Lista Lugares De Ubi"
+      summary: "Lugares de un centro"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Desplegable AJAX de lugares (`id_lugar`, nombre) filtrados por `id_ubi`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_lugares_de_ubi.md`
       tags:
@@ -1486,6 +1540,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
               properties:
                 id_ubi:
                   type: "integer"
@@ -1505,11 +1561,11 @@ paths:
   "/src/inventario/lista_tipo_doc":
     post:
       operationId: "post_inventario_lista_tipo_doc"
-      summary: "Lista Tipo Doc"
+      summary: "Opciones tipos de documento"
       description: |
-        Opciones del desplegable de tipos de documento (`lista_tipo_doc.php`).
+        Desplegable de tipos de documento para asignación y filtros.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/lista_tipo_doc.md`
       tags:
@@ -1530,21 +1586,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inventario_TipoDocOpcionesDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inventario_TipoDocOpcionesDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/inventario/texto_de_egm":
     post:
       operationId: "post_inventario_texto_de_egm"
-      summary: "Texto De Egm"
+      summary: "Texto editable de grupo EGM"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve texto almacenado para cabecera/listado de un grupo o item EGM.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/inventario/api/texto_de_egm.md`
       tags:
@@ -1578,9 +1634,9 @@ paths:
   "/src/inventario/traslado_doc_guardar":
     post:
       operationId: "post_inventario_traslado_doc_guardar"
-      summary: "Traslado Doc Guardar"
+      summary: "Trasladar documentos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Mueve documentos seleccionados (`sel` array id_doc) a otro centro/lugar (`id_ubi_new`, `id_lugar_new`). Si `id_ubi_new` vacío, desasigna ubi.
         
         Operacion: `mutacion`.
         
@@ -1593,15 +1649,17 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
-                id_lugar_new:
-                  type: "integer"
-                id_ubi_new:
-                  type: "integer"
                 sel:
                   type: "array"
                   items:
                     type: string
+                id_ubi_new:
+                  type: "integer"
+                id_lugar_new:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1622,65 +1680,6 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
-    OrbixStandardResponseEnvelope:
-      type: object
-      required:
-        - success
-        - data
-      properties:
-        success:
-          type: boolean
-        mensaje:
-          type: string
-        data:
-          description: "Ver schema concreto de cada operacion."
-    inventario_InventarioCssInlineDataData:
-      type: object
-      properties:
-        css:
-          type: "string"
-    inventario_InventarioCssInlineDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/inventario_InventarioCssInlineDataData"
-    inventario_ColeccionesOpcionesDataData:
-      type: object
-      properties:
-        a_opciones:
-          type: array
-          items: {}
-    inventario_ColeccionesOpcionesDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/inventario_ColeccionesOpcionesDataData"
-    inventario_TipoDocOpcionesDataData:
-      type: object
-      properties:
-        a_opciones:
-          type: array
-          items: {}
-    inventario_TipoDocOpcionesDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/inventario_TipoDocOpcionesDataData"
     OrbixStandardResponseStringData:
       type: object
       required:

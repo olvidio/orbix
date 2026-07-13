@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActividadProcesoGenerar. Caso de uso: (re)genera las tareas del proceso asociado a un id_activ, conservando el estado actual segun el flag force=true.
+Regenerar las tareas del proceso asociado a una actividad, conservando o no el estado actual según el flag «forzar».
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

@@ -8,78 +8,29 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["copiar", "eliminar", "guardar"]
 endpoints: ["/src/menus/menu_copiar", "/src/menus/menu_eliminar", "/src/menus/menu_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Menu
-
-Propuesta generada automaticamente desde la capacidad `menus.menu.gestionar` y sus pantallas relacionadas.
+# Flujo - Gestionar ítem de menú
 
 ## Objetivo De Usuario
 
-Gestiona Menu. Descripcion funcional pendiente de revisar.
+Alta, edición, copia, movimiento y borrado de entradas del árbol (`aux_menus`) enlazadas a un metamenu.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
-
-### Copiar
-
-Pasos propuestos:
-1. Abrir el listado en el contexto origen/destino correspondiente.
-2. Pulsar la accion de copiar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que los datos copiados aparecen en el listado.
-
-Endpoints asociados:
-- `/src/menus/menu_copiar`
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-Endpoints asociados:
-- `/src/menus/menu_eliminar`
-
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+`menus_que` → elegir grupo → listado/ficha en `menus_get`.
 
 ## Endpoints Del Flujo
 
-- `/src/menus/menu_copiar`
-- `/src/menus/menu_eliminar`
 - `/src/menus/menu_guardar`
+- `/src/menus/menu_eliminar`
+- `/src/menus/menu_copiar`
+- `/src/menus/menu_mover`
+- `/src/menus/menus_get_page_data`
+- `/src/menus/lista_meta_menus`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > menus > seleccionar
+- **Pills2:** ADMIN GLOBAL > menus > seleccionar

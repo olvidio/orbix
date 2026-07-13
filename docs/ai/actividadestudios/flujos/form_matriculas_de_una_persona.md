@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el dossier de matrículas (1303 o 3103), pulsar **nuevo** o **modificar**.
+2. El sistema carga el formulario con `id_nom`, `id_activ`, `id_nivel`, `id_asignatura`.
+3. Se muestran desplegables de nivel y preceptor, con enlaces AJAX a opcionales/preceptores.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/form_matriculas_de_una_persona_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona FormMatriculasDeUnaPersona. Descripcion funcional pendiente de revisar.
+El usuario abre el formulario para matricular o editar la matrícula de una persona en una asignatura de una actividad: el sistema devuelve desplegables de nivel, asignatura, preceptor y datos de la actividad según el modo.
 
 ## Limites De La Respuesta
 

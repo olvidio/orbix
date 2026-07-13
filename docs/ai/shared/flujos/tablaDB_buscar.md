@@ -2,39 +2,31 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "shared"
-titulo: "TablaDB Buscar"
+titulo: "Búsqueda previa al listado"
 flujo: "shared.tablaDB_buscar.gestionar.flujo"
-preguntas: ["Como obtener datos en TablaDB Buscar?"]
-pantallas_principales: []
-fragmentos: ["shared.pantalla.tablaDB_lista_ver"]
+preguntas: []
+pantallas_principales: ["shared.pantalla.tablaDB_lista_ver"]
+fragmentos: []
 endpoints: ["/src/shared/tablaDB_buscar_datos"]
 source: "docs/catalogo/shared/flujos/tablaDB_buscar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - TablaDB Buscar
+# Ayuda IA - Búsqueda previa al listado
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `TablaDB Buscar`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Búsqueda previa al listado`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en TablaDB Buscar?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Mantenimiento genérico de tablas (listado) (`shared.pantalla.tablaDB_lista_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
-
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,10 +34,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TablaDBBuscar. Descripcion funcional pendiente de revisar.
+Filtrar registros antes de mostrar la tabla en mantenimientos que definen criterios de búsqueda.
+
+## Errores Documentados
+
+- `Ninguno documentado en el builder.`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

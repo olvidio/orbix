@@ -11,12 +11,12 @@ endpoints: ["/src/notas/acta_imprimir_presentacion_data"]
 capacidades: ["notas.acta_imprimir_presentacion.gestionar"]
 campos: ["form.acta", "post.acta", "post.cara", "post.refresh", "post.sel"]
 acciones: ["fnjs_left_side_hide", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Acta Imprimir
 
-Esta página sirve para las actas.
+Presentación HTML para impresión de acta seleccionada.
 
 ## Tipo
 
@@ -53,13 +53,11 @@ Esta página sirve para las actas.
 - `fnjs_left_side_hide`
 - `fnjs_update_div`
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

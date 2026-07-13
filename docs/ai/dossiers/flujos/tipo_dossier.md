@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "dossiers"
 titulo: "Tipo Dossier"
 flujo: "dossiers.tipo_dossier.gestionar.flujo"
-preguntas: ["Como eliminar en Tipo Dossier?", "Como guardar en Tipo Dossier?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/dossiers/tipo_dossier_eliminar", "/src/dossiers/tipo_dossier_guardar"]
@@ -19,8 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como eliminar en Tipo Dossier?
-- Como guardar en Tipo Dossier?
 
 ## Donde Entrar
 
@@ -30,36 +28,20 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/dossiers/tipo_dossier_eliminar`
-
-## Guardar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - Ninguna pantalla relacionada.
 
 ## Objetivo
 
-Gestiona TipoDossier. Elimina un TipoDossier. Guarda los cambios a un TipoDossier.
+Persistir cambios (`tipo_dossier_guardar`) o eliminar (`tipo_dossier_eliminar`) un tipo de dossier desde el formulario `perm_dossier_ver` (solo administradores `admin_sv`/`admin_sf`).
 
 ## Errores Documentados
 
-- `Hay un error, no se ha eliminado.`
-- `Hay un error, no se ha guardado.`
 - `falta id_tipo_dossier`
+- `No se encuentra el dossier: <id>`
+- `Hay un error, no se ha guardado.`
+- `Hay un error, no se ha eliminado.`
 
 ## Limites De La Respuesta
 

@@ -6,22 +6,26 @@ url: "/src/ubis/centros_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/centros_update.php"
-entrada: ["post.id_ubi:integer", "post.labor:string", "post.n_buzon:integer", "post.num_cartas:integer", "post.num_habit_indiv:integer", "post.num_pi:integer", "post.plazas:integer", "post.sede:string", "post.tipo_ctr:string", "post.tipo_labor:mixed"]
-entrada_obligatoria: []
+entrada: ["post.id_ubi:integer", "post.labor:string", "post.tipo_ctr:string", "post.tipo_labor:string", "post.n_buzon:integer", "post.num_pi:integer", "post.num_cartas:integer", "post.num_habit_indiv:integer", "post.plazas:integer", "post.sede:string"]
+entrada_obligatoria: ["id_ubi"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["Hay un error, no se ha guardado."]
 frontend_referencias: ["frontend/ubis/controller/centros_form_labor.php", "frontend/ubis/controller/centros_form_num.php", "frontend/ubis/controller/centros_form_plazas.php", "frontend/ubis/controller/centros_que.php"]
 casos_uso: ["src\\ubis\\application\\CentrosUpdate"]
 tags: ["ubis", "centros", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Centros Update
 
-Actualiza datos de centro DL según el formulario enviado (labor, num o plazas). Solo modifica el bloque de campos presente en el POST; el resto se conserva.
+Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plazas).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plazas).
 
 ## Endpoint
 
@@ -34,29 +38,29 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_ubi` | `integer` | application | No | application |
-| `labor` | `string` | application | No | application |
-| `n_buzon` | `integer` | application | No | application |
-| `num_cartas` | `integer` | application | No | application |
-| `num_habit_indiv` | `integer` | application | No | application |
-| `num_pi` | `integer` | application | No | application |
-| `plazas` | `integer` | application | No | application |
-| `sede` | `string` | application | No | application |
-| `tipo_ctr` | `string` | application | No | application |
-| `tipo_labor` | `mixed` | application | No | application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_ubi` | `integer` | application | Si | |
+| `labor` | `string` | application | No | |
+| `tipo_ctr` | `string` | application | No | |
+| `tipo_labor` | `mixed` | application | No | |
+| `n_buzon` | `integer` | application | No | |
+| `num_pi` | `integer` | application | No | |
+| `num_cartas` | `integer` | application | No | |
+| `num_habit_indiv` | `integer` | application | No | |
+| `plazas` | `integer` | application | No | |
+| `sede` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `{ "success": true, "data": "ok" }`.
-- Error: `{ "success": false, "mensaje": "<texto>", "data": "ok" }`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacío serializado).
 
 ## Errores conocidos
-
 - `Hay un error, no se ha guardado.`
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `UbiPermisos` (`puedeModificarPorObjeto`, `dlPerteneceAMiDelegacion`), `have_perm_oficina(scdl|scl|vcsd|des|admin_sv)` y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -64,13 +68,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/ubis/controller/centros_form_labor.php`
-- `frontend/ubis/controller/centros_form_num.php`
-- `frontend/ubis/controller/centros_form_plazas.php`
-- `frontend/ubis/controller/centros_que.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/ubis/controller/centros_form_labor.php", "frontend/ubis/controller/centros_form_num.php", "frontend/ubis/controller/centros_form_plazas.php", "frontend/ubis/controller/centros_que.php"]`).

@@ -2,54 +2,41 @@
 id: "personas.personas_editar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Gestionar Personas Editar"
+nombre: "Flujo - Abrir ficha de persona"
 capacidad: "personas.personas_editar.gestionar"
 pantallas_principales: []
 fragmentos: ["personas.pantalla.personas_editar"]
-acciones: ["obtener_datos"]
+acciones: ["obtener_datos", "alta"]
 endpoints: ["/src/personas/personas_editar_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Personas Editar
+# Flujo - Abrir ficha de persona
 
-Propuesta generada automaticamente desde la capacidad `personas.personas_editar.gestionar` y sus pantallas relacionadas.
+Carga del formulario de alta o edición según colectivo y permisos.
 
 ## Objetivo De Usuario
 
-Gestiona PersonasEditar. Endpoint JSON: datos para la ficha personas_editar.phtml.
+Crear una persona nueva o editar la ficha existente con los campos del colectivo correspondiente.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- Listado: botón «ficha» (edición) o enlace alta (`nuevo=1`, `apellido1` precargado).
+- Cabecera: enlace «ficha».
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `personas.pantalla.personas_editar`
+### Alta
 
-## Escenarios Inferidos
+1. Desde listado con permiso `3`, pulsar alta.
+2. `personas_editar_data` con `nuevo=1` asigna `id_nom` y defaults.
+3. Completar formulario y guardar (flujo `persona`).
 
-### Obtener Datos
+### Edición
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.apellido1`
-- `post.id_nom`
-- `post.nuevo`
-- `post.obj_pau`
-- `post.sel`
-- `post.stack`
-- `post.tabla`
-
-Acciones JavaScript:
-- `fnjs_act_ctr`
+1. Seleccionar persona y abrir ficha.
+2. Cargar datos vía `sel` o `id_nom`.
+3. Plantilla según `obj_pau` y permiso oficina.
 
 ## Endpoints Del Flujo
 
@@ -57,11 +44,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No se ha pasado el id_nom`
+- `No se encuentra la persona`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice.

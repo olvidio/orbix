@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.form_notas_de_una_persona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/posibles_preceptores_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Posibles Preceptores
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.posibles_preceptore
 
 ## Objetivo De Usuario
 
-Gestiona PosiblesPreceptores. Devuelve el desplegable de posibles preceptores (profesores STGR) con el contrato estandar de refactor.md.
+Elegir preceptor en formulario de nota.
 
 ## Punto De Entrada
 
@@ -82,10 +82,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

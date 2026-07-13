@@ -2,47 +2,39 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Tipo Activ Metadata"
+titulo: "Metadatos cascada tipo actividad"
 flujo: "actividades.tipo_activ_metadata.gestionar.flujo"
-preguntas: ["Como ejecutar en Tipo Activ Metadata?"]
-pantallas_principales: []
+preguntas: []
+pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
 endpoints: ["/src/actividades/tipo_activ_metadata"]
 source: "docs/catalogo/actividades/flujos/tipo_activ_metadata.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Tipo Activ Metadata
+# Ayuda IA - Metadatos cascada tipo actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Tipo Activ Metadata`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Metadatos cascada tipo actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Tipo Activ Metadata?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Gestión de tipos de actividad (`actividades.pantalla.tipo_activ`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `actividades.pantalla.tipo_activ`
 
 ## Objetivo
 
-Gestiona TipoActivMetadata. Endpoint backend que devuelve, en una sola respuesta JSON, los datos que necesita {.
+Al cambiar un nivel en el formulario de tipos, actualizar los siguientes desplegables.
 
 ## Limites De La Respuesta
 

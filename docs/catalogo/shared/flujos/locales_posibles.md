@@ -2,60 +2,42 @@
 id: "shared.locales_posibles.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "shared"
-nombre: "Flujo - Gestionar Locales Posibles"
+nombre: "Flujo - Cargar locales/idiomas"
 capacidad: "shared.locales_posibles.gestionar"
 pantallas_principales: []
 fragmentos: []
-acciones: ["ejecutar"]
+acciones: ["cargar_desplegable"]
 endpoints: ["/src/shared/locales_posibles"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Locales Posibles
-
-Propuesta generada automaticamente desde la capacidad `shared.locales_posibles.gestionar` y sus pantallas relacionadas.
+# Flujo - Cargar locales/idiomas
 
 ## Objetivo De Usuario
 
-Gestiona LocalesPosibles. Descripcion funcional pendiente de revisar.
+Obtener la lista de idiomas activos para un desplegable en pantallas que lo necesitan (certificados,
+preferencias de usuario).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Carga auxiliar al renderizar:
 
-## Fragmentos O Pantallas Auxiliares
+- `frontend/usuarios/controller/preferencias.php`
+- `frontend/certificados/controller/certificado_emitido_ver.php`
+- `frontend/certificados/controller/certificado_emitido_imprimir.php`
 
-No se han detectado fragmentos AJAX relacionados.
+## Escenarios
 
-## Escenarios Inferidos
+### Cargar desplegable
 
-### Ejecutar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
-
-## Endpoints Del Flujo
-
-- `/src/shared/locales_posibles`
+1. POST (vacío) a `/src/shared/locales_posibles`.
+2. Usar `a_locales` (`id_locale` → nombre idioma) en la vista.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- Ninguno documentado.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (endpoint embebido; las pantallas host sí tienen menú propio en
+usuarios/certificados).

@@ -8,54 +8,24 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/menus/menus_generar_txt"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Menus Generar Txt
-
-Propuesta generada automaticamente desde la capacidad `menus.menus_generar_txt.gestionar` y sus pantallas relacionadas.
+# Flujo - Menús a texto (gettext)
 
 ## Objetivo De Usuario
 
-Gestiona MenusGenerarTxt. Esta página genera un fichero con todos los textos de los menús que hay en la base de datos, para poder traducirlos por gettex.
+Regenera fichero de cadenas traducibles de etiquetas de menú.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
-
-### Ejecutar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+Menú traducciones.
 
 ## Endpoints Del Flujo
 
 - `/src/menus/menus_generar_txt`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > traducciones > menus a texto
+- **Pills2:** sistema > traducciones > menus a texto

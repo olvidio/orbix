@@ -42,11 +42,13 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona EliminarEncargoCentro. Elimina un EncargoCtr por su uuid. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+Elimina la relación EncargoCtr (encargo visible en un centro) por uuid.
 
 ## Errores Documentados
 
 - `Falta el identificador del encargo-centro a eliminar`
+- `No se encuentra el encargo-centro %s`
+- `<repositorio getErrorTxt()>`
 
 ## Limites De La Respuesta
 

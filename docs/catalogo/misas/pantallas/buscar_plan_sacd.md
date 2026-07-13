@@ -1,7 +1,7 @@
 ---
 id: "misas.pantalla.buscar_plan_sacd"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "misas"
 nombre: "Buscar Plan Sacd"
 controller: "frontend/misas/controller/buscar_plan_sacd.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/misas/buscar_plan_sacd_data"]
 capacidades: ["misas.buscar_plan_sacd.gestionar"]
 campos: ["form.empiezamax", "form.empiezamin", "form.id_sacd", "form.periodo"]
 acciones: ["fnjs_ver_plan_sacd"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Buscar Plan Sacd
+# Buscar plan sacd
 
-Descripcion funcional pendiente de revisar.
+Buscador de plan por sacerdote: desplegable sacd filtrado por rol y rango de fechas.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/misas/controller/buscar_plan_sacd.php`
 
 ## Vistas Relacionadas
@@ -50,13 +52,7 @@ Descripcion funcional pendiente de revisar.
 
 - `fnjs_ver_plan_sacd`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Misas > Plan sacerdote
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan sacerdote

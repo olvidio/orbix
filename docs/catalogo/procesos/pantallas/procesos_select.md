@@ -5,18 +5,18 @@ subtipo: "fragmento_ajax"
 modulo: "procesos"
 nombre: "Procesos Select"
 controller: "frontend/procesos/controller/procesos_select.php"
-vistas: []
+vistas: ["frontend/procesos/view/procesos_select.html.twig"]
 fragmentos_frontend: ["frontend/procesos/controller/procesos_get.php", "frontend/procesos/controller/procesos_get_listado.php", "frontend/procesos/controller/procesos_ver.php"]
 endpoints: ["/src/procesos/procesos_clonar", "/src/procesos/procesos_eliminar", "/src/procesos/procesos_get", "/src/procesos/procesos_regenerar", "/src/procesos/procesos_select_data", "/src/procesos/procesos_update"]
 capacidades: ["procesos.procesos.gestionar", "procesos.procesos_clonar.gestionar", "procesos.procesos_regenerar.gestionar", "procesos.procesos_select.gestionar"]
 campos: ["post.refresh", "post.stack"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Procesos Select
 
-Descripcion funcional pendiente de revisar.
+Administración de tipos de proceso: desplegable de proceso, visualización en árbol o listado tabular de fases/tareas, alta y edición en ventana modal, clonado desde otro proceso y regeneración masiva de procesos en actividades.
 
 ## Tipo
 
@@ -25,7 +25,7 @@ Descripcion funcional pendiente de revisar.
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
+- `frontend/procesos/view/procesos_select.html.twig`
 
 ## Fragmentos Frontend Relacionados
 
@@ -58,13 +58,7 @@ No se han detectado vistas PHTML relacionadas.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > procesos activ. > procesos
+- **Pills2:** ADMIN LOCAL > procesos activ. > procesos

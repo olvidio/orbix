@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Desvincula una dirección del ubi tras confirmación en la ficha de direcciones.
 
 ## Uso En Ayuda
 

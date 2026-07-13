@@ -8,20 +8,23 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.acta_notas"]
 acciones: ["guardar"]
 endpoints: ["/src/actividadestudios/acta_notas_matricula_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Notas Matricula
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.acta_notas_matricula.gestionar` y sus pantallas relacionadas.
+Guardado del borrador de notas sobre cada matrícula del acta.
 
 ## Objetivo De Usuario
 
-Gestiona ActaNotasMatricula. Guarda el borrador de notas sobre cada matricula (rama que=1 del legacy apps/actividadestudios/controller/acta_notas_update.php).
+El usuario edita notas, nota máxima, preceptor o situación de acta de los alumnos
+matriculados y guarda el borrador en las matrículas. Sustituye la rama `que=1` del legacy
+`apps/actividadestudios/controller/acta_notas_update.php`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `acta_notas` (`frontend/actividadestudios/controller/acta_notas.php`): `fnjs_guardar_nota`
+(disparada al cambiar una nota vía `fnjs_nota`) envía el formulario por AJAX con `que=1`.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +34,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Guardar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En el acta de notas, modificar nota, nota máxima, preceptor o desplegable de acta de un alumno.
+2. Al salir del campo nota (`fnjs_nota`) o al guardar explícitamente, se invoca `fnjs_guardar_nota`.
+3. El sistema serializa `#f_1303` y llama al endpoint.
+4. Si hay error de validación, se muestra alerta con el mensaje devuelto.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/acta_notas_matricula_guardar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -61,11 +67,7 @@ Campos:
 - `post.stack`
 
 Acciones JavaScript:
-- `fnjs_enviar_formulario`
 - `fnjs_guardar_nota`
-- `fnjs_guardar_tessera`
-- `fnjs_imprimir`
-- `fnjs_left_side_hide`
 - `fnjs_nota`
 
 ## Endpoints Del Flujo
@@ -78,9 +80,9 @@ Acciones JavaScript:
 - ``hay un error, no se ha guardado``
 - ``no se puede definir cursada con preceptor``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo desde pantalla `acta_notas`).
+
+- **Legacy:** vest > actas... > actas.
+- **Pills2:** ESTUDIOS > Actas y certificados > Actas.

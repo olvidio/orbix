@@ -11,12 +11,12 @@ endpoints: ["/src/notas/actividades_buscar_data"]
 capacidades: ["notas.actividades_buscar.gestionar"]
 campos: ["form.observ", "form.pres_mail", "form.pres_nom", "form.pres_telf", "form.zona", "post.dl_org", "post.f_acta_iso", "post.id_activ"]
 acciones: ["fnjs_buscar_ca", "fnjs_cerrar", "fnjs_update_activ"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Actividad Buscar Form
 
-Dialogo "buscar actividad" que abre `form_notas_de_una_persona.phtml` al pulsar "añadir ca".
+Búsqueda de actividad CA para vincular al acta (popup en `acta_ver`).
 
 ## Tipo
 
@@ -56,13 +56,11 @@ No se han detectado controladores frontend relacionados.
 - `fnjs_cerrar`
 - `fnjs_update_activ`
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

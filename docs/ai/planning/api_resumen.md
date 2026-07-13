@@ -42,7 +42,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `planning.planning_persona_ver_data`
 - Controller: `src/planning/infrastructure/ui/http/controllers/planning_persona_ver_data.php`
-- Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.obj_pau:string`, `post.periodo:string`, `post.sel:array`, `post.year:integer`
+- Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.obj_pau:string`, `post.periodo:string`, `post.sel:array`, `post.sSeleccionados:string`, `post.year:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/planning/planning_zones_que_data`

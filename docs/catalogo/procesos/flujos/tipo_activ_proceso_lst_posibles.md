@@ -8,20 +8,18 @@ pantallas_principales: ["procesos.pantalla.tipo_activ_proceso"]
 fragmentos: ["procesos.pantalla.tipo_activ_proceso_lst_posibles"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/tipo_activ_proceso_lst_posibles"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Tipo Activ Proceso Lst Posibles
-
-Propuesta generada automaticamente desde la capacidad `procesos.tipo_activ_proceso_lst_posibles.gestionar` y sus pantallas relacionadas.
+# Flujo - Procesos posibles para tipo de actividad
 
 ## Objetivo De Usuario
 
-Gestiona TipoActivProcesoLstPosibles. Caso de uso: devuelve la lista de procesos posibles que el usuario puede asignar a un id_tipo_activ concreto, como estructura. El frontend se encarga de la mini-tabla HTML clickable.
+Obtener y mostrar la mini-tabla de procesos que el usuario puede asignar a un tipo de actividad concreto (propio o no propio).
 
 ## Punto De Entrada
 
-- `procesos.pantalla.tipo_activ_proceso`
+Menú Legacy: sistema > procesos activ. > tipo activ - proceso. Pills2: ADMIN LOCAL > procesos activ. > tipo activ - proceso.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > procesos activ. > tipo activ - proceso
+- **Pills2:** ADMIN LOCAL > procesos activ. > tipo activ - proceso

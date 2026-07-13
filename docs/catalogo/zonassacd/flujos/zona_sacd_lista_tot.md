@@ -8,42 +8,27 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/zonassacd/zona_sacd_lista_tot"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Zona Sacd Lista Tot
-
-Propuesta generada automaticamente desde la capacidad `zonassacd.zona_sacd_lista_tot.gestionar` y sus pantallas relacionadas.
+# Flujo - Zona Sacd Lista Tot
 
 ## Objetivo De Usuario
 
-Gestiona ZonaSacdListaTot. Descripcion funcional pendiente de revisar.
+Ver el listado global sacd–zona de toda la delegación (una fila por asignación). Entrada de menú Lista sacd-zona.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > zonas > lista sacd-zona. Pills2: ATENCIÓN SACD > Gestión de zonas > Lista sacd-zona.
+
+## Escenarios
+
+1. Menú «Lista sacd-zona» carga `zona_sacd_lista_ajax.php?que=get_lista_tot`.
+2. Muestra listado HTML de todos los sacd con sus zonas (endpoint `zona_sacd_lista_tot`).
 
 ## Fragmentos O Pantallas Auxiliares
 
 No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
-
-### Ejecutar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -51,11 +36,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > zonas > lista sacd-zona
+- **Pills2:** ATENCIÓN SACD > Gestión de zonas > Lista sacd-zona

@@ -1,9 +1,9 @@
 ---
 id: "planning.pantalla.planning_ctr_que"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "pantalla_principal"
 modulo: "planning"
-nombre: "Planning Ctr Que"
+nombre: "Planning por centro (filtros)"
 controller: "frontend/planning/controller/planning_ctr_que.php"
 vistas: ["frontend/planning/view/planning_ctr_que.phtml"]
 fragmentos_frontend: ["frontend/planning/controller/planning_ctr_select.php"]
@@ -11,77 +11,34 @@ endpoints: []
 capacidades: []
 campos: ["form.ctr", "form.empiezamax", "form.empiezamin", "form.iactividad_val", "form.iasistentes_val", "form.periodo", "form.sacd", "form.year", "html.ctr", "html.modelo", "html.sacd", "html.todos_agd", "html.todos_n", "html.todos_s", "post.ctr", "post.empiezamax", "post.empiezamin", "post.obj_pau", "post.periodo", "post.sacd", "post.stack", "post.tipo", "post.todos_agd", "post.todos_n", "post.todos_s", "post.year"]
 acciones: ["fnjs_comprobar_fecha", "fnjs_enviar_formulario", "fnjs_left_side_hide", "fnjs_ver_planning"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Planning Ctr Que
+# Planning por centro (filtros)
 
-Formulario de filtros para el planning por centros (personas de un centro determinado).
+Formulario: centro concreto o todos (`todos_n`/`todos_agd`/`todos_s`), periodo y filtro sacd.
+Al enviar carga `planning_ctr_select` por AJAX.
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/planning/controller/planning_ctr_que.php`
 
-## Vistas Relacionadas
+## Campos
 
-- `frontend/planning/view/planning_ctr_que.phtml`
+- `ctr`: nombre de centro (vacío = todos con checkboxes de colectivo)
+- `sacd`, `todos_n`, `todos_agd`, `todos_s`
+- Periodo: `year`, `periodo`, `empiezamin`, `empiezamax`
 
-## Fragmentos Frontend Relacionados
+## Acciones
 
-- `frontend/planning/controller/planning_ctr_select.php`
-
-## Endpoints Usados
-
-No se han detectado endpoints `/src/...`.
-
-## Capacidades Relacionadas
-
-No se han detectado capacidades relacionadas.
-
-## Campos Detectados
-
-- `form.ctr`
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.iactividad_val`
-- `form.iasistentes_val`
-- `form.periodo`
-- `form.sacd`
-- `form.year`
-- `html.ctr`
-- `html.modelo`
-- `html.sacd`
-- `html.todos_agd`
-- `html.todos_n`
-- `html.todos_s`
-- `post.ctr`
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.obj_pau`
-- `post.periodo`
-- `post.sacd`
-- `post.stack`
-- `post.tipo`
-- `post.todos_agd`
-- `post.todos_n`
-- `post.todos_s`
-- `post.year`
-
-## Acciones Detectadas
-
-- `fnjs_comprobar_fecha`
-- `fnjs_enviar_formulario`
-- `fnjs_left_side_hide`
-- `fnjs_ver_planning`
+- Ver planning → `planning_ctr_select.php` (AJAX + `planning_ctr_select_data`)
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Revisado contra `frontend/planning/`. Linaje `apps/planning/controller/planning_ctr_que.php`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** `dre > planning > por centro` (y equivalentes: `Calendario`, `vest`, `vsm`, …)
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning por ctr`

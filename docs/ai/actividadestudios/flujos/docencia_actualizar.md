@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **actualizar docencia** desde el menú.
+2. Elegir año y periodo (o fechas personalizadas) y pulsar **buscar**.
+3. El sistema calcula la docencia de actividades terminadas en el rango y la persiste.
+4. Se muestra el mensaje de resultado en la misma pantalla.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/docencia_actualizar`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona DocenciaActualizar. Ejecuta {.
+El usuario elige un periodo de actividades terminadas y ejecuta la actualización: el sistema recorre las asignaturas con profesor asignado y graba/actualiza registros en `d_docencia_stgr` (`ProfesorDocenciaStgr`). Sustituye la rama «continuar» del legacy `apps/actividadestudios/controller/actualizar_docencia.php`.
 
 ## Limites De La Respuesta
 

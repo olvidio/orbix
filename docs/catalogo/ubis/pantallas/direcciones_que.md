@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/direcciones_que"]
 capacidades: ["ubis.direcciones_que.gestionar"]
 campos: ["form.c_p", "form.ciudad", "form.id_ubi", "form.obj_dir", "form.pais", "html.btn_ok", "post.id_ubi", "post.obj_dir"]
 acciones: ["fnjs_enviar", "fnjs_enviar_formulario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Direcciones Que
 
-Descripcion funcional pendiente de revisar.
+Formulario de criterios para buscar direcciones existentes a asignar a un ubi.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/ubis/controller/direcciones_que.php`
 
 ## Vistas Relacionadas
@@ -55,13 +57,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_enviar`
 - `fnjs_enviar_formulario`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -1,7 +1,7 @@
 ---
 id: "usuarios.pantalla.borrar_todos_pwd"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "fragmento_ajax"
 modulo: "usuarios"
 nombre: "Borrar Todos Pwd"
 controller: "frontend/usuarios/controller/borrar_todos_pwd.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/infrastructure/ui/http/controllers/borrar_pwd"]
 capacidades: []
 campos: []
 acciones: ["fnjs_borrar_todos_pwd", "fnjs_left_side_hide"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Borrar Todos Pwd
 
-Descripcion funcional pendiente de revisar.
+Herramienta pruebas: reset masivo contraseñas (solo entorno pruebas).
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/borrar_todos_pwd.php`
 
 ## Vistas Relacionadas
@@ -48,13 +50,7 @@ No se han detectado campos de formulario.
 - `fnjs_borrar_todos_pwd`
 - `fnjs_left_side_hide`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

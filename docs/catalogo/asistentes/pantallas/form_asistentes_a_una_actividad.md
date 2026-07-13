@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/form_asistentes_a_una_actividad_data"]
 capacidades: ["asistentes.form_asistentes_a_una_actividad.gestionar"]
 campos: ["html.est_ok", "html.falta", "html.guardar", "html.guardar2", "html.observ", "html.observ_est", "html.propio", "post.actualizar"]
 acciones: ["fnjs_cmb_propietario", "fnjs_construir_desplegable_propietario", "fnjs_enviar_formulario", "fnjs_guardar", "fnjs_nuevo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Form Asistentes A Una Actividad
 
-Descripcion funcional pendiente de revisar.
+Formulario dossier 3101: alta/edición de asistente en una actividad.
 
 ## Tipo
 
@@ -60,11 +60,7 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

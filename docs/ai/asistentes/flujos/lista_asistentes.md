@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaAsistentes. Listado de asistentes a una actividad (lista_asistentes.php).
+Consultar listado de asistentes de una actividad.
 
 ## Limites De La Respuesta
 

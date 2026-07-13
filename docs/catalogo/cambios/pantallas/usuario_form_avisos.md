@@ -3,20 +3,21 @@ id: "cambios.pantalla.usuario_form_avisos"
 tipo: "pantalla_frontend"
 subtipo: "fragmento_ajax"
 modulo: "cambios"
-nombre: "Usuario Form Avisos"
+nombre: "Avisos del usuario"
 controller: "frontend/cambios/controller/usuario_form_avisos.php"
 vistas: ["frontend/cambios/view/usuario_form_avisos.phtml"]
 fragmentos_frontend: ["frontend/cambios/controller/usuario_avisos_pref.php"]
-endpoints: ["/src/cambios/usuario_form_avisos_data"]
+endpoints: ["/src/cambios/usuario_form_avisos_data", "/src/cambios/cambio_usuario_objeto_pref_eliminar"]
 capacidades: ["cambios.usuario_form_avisos.gestionar"]
 campos: ["post.id_usuario", "post.quien"]
 acciones: ["fnjs_add_cambio", "fnjs_del_cambio", "fnjs_enviar_formulario", "fnjs_mod_cambio", "fnjs_solo_uno"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Usuario Form Avisos
+# Avisos del usuario
 
-Descripcion funcional pendiente de revisar.
+Fragmento embebido en la ficha de usuario: tabla de preferencias de aviso (`CambioUsuarioObjetoPref`)
+configuradas para ese usuario.
 
 ## Tipo
 
@@ -27,38 +28,22 @@ Descripcion funcional pendiente de revisar.
 
 - `frontend/cambios/view/usuario_form_avisos.phtml`
 
-## Fragmentos Frontend Relacionados
-
-- `frontend/cambios/controller/usuario_avisos_pref.php`
-
 ## Endpoints Usados
 
-- `/src/cambios/usuario_form_avisos_data`
-
-## Capacidades Relacionadas
-
-- `cambios.usuario_form_avisos.gestionar`
-
-## Campos Detectados
-
-- `post.id_usuario`
-- `post.quien`
+- `/src/cambios/usuario_form_avisos_data` (tabla inicial)
+- `/src/cambios/cambio_usuario_objeto_pref_eliminar` (`fnjs_del_cambio`)
 
 ## Acciones Detectadas
 
-- `fnjs_add_cambio`
-- `fnjs_del_cambio`
-- `fnjs_enviar_formulario`
-- `fnjs_mod_cambio`
-- `fnjs_solo_uno`
+- `fnjs_add_cambio` / `fnjs_mod_cambio` — abren `usuario_avisos_pref` (nuevo/modificar)
+- `fnjs_del_cambio` — elimina la preferencia seleccionada
+- `fnjs_solo_uno` — exige una fila seleccionada
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Desde la ficha de un usuario web, pestaña de avisos: ver las reglas configuradas, añadir una nueva,
+modificar o eliminar la seleccionada.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+sin entrada de menú en el índice (se abre embebido desde la ficha de usuario)

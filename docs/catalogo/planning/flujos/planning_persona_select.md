@@ -2,79 +2,45 @@
 id: "planning.planning_persona_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Gestionar Planning Persona Select"
+nombre: "Flujo - Planning por persona (listado)"
 capacidad: "planning.planning_persona_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["planning.pantalla.planning_persona_que"]
 fragmentos: ["planning.pantalla.planning_persona_select"]
-acciones: ["obtener_datos"]
+acciones: ["buscar", "seleccionar", "ver_planning"]
 endpoints: ["/src/planning/planning_persona_select_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Planning Persona Select
+# Flujo - Planning por persona (listado)
 
-Propuesta generada automaticamente desde la capacidad `planning.planning_persona_select.gestionar` y sus pantallas relacionadas.
+Búsqueda de personas y selección para ver su planning.
 
 ## Objetivo De Usuario
 
-Gestiona PlanningPersonaSelect. Listado de personas para planning_persona_select.
+Encontrar personas del colectivo del menú y abrir su calendario de actividades.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `planning_persona_que.php` → `planning_persona_select.php`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `planning.pantalla.planning_persona_select`
+### Buscar y listar
 
-## Escenarios Inferidos
+1. Abrir entrada de menú (define `obj_pau`, `na`).
+2. Rellenar criterios opcionales y periodo en `planning_persona_que`.
+3. `planning_persona_select_data` devuelve tabla de personas.
+4. Seleccionar fila(s) y pulsar ver planning → `planning_persona_ver`.
 
-### Obtener Datos
+### Acciones sobre fila
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `html.id_dossier`
-- `html.modelo`
-- `html.que`
-- `post.apellido1`
-- `post.apellido2`
-- `post.centro`
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.id_sel`
-- `post.na`
-- `post.nombre`
-- `post.obj_pau`
-- `post.periodo`
-- `post.scroll_id`
-- `post.stack`
-- `post.year`
-
-Acciones JavaScript:
-- `fnjs_actividades`
-- `fnjs_enviar_formulario`
-- `fnjs_planning_print`
-- `fnjs_solo_uno`
-- `fnjs_ver_planning`
+- Ficha persona, dossier, imprimir planning de una persona.
 
 ## Endpoints Del Flujo
 
 - `/src/planning/planning_persona_select_data`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Plannig por personas` (u otras variantes sacd/de paso)
+- **Legacy:** `dre > planning > persona r/dl` (según `obj_pau`/`na`)

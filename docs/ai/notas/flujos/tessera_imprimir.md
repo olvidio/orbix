@@ -43,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TesseraImprimir. Datos imprimibles de tessera ya serializados (sin objetos dominio → JSON estable).
+Imprimir tessera (HTML/PDF).
 
 ## Limites De La Respuesta
 

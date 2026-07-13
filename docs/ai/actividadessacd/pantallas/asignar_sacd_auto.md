@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla auxiliar "Auto asignar sacd a actividades".
+Pantalla auxiliar "Auto asignar sacd a actividades": muestra el criterio de asignación automática (sacd titular del centro encargado a actividades sr/sg actuales posteriores al inicio de curso des) y un botón **continuar** que dispara el endpoint `/src/actividadessacd/sacd_asignar_auto` y pinta el resultado (`asignadas`, `sin_asignar`) sin recargar.
 
 ## Uso En Ayuda
 

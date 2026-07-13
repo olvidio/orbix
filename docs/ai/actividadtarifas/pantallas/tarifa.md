@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla principal del modulo `actividadtarifas` - catalogo de `TipoTarifa`.
+Catálogo maestro de tipos de tarifa (`TipoTarifa`): listado AJAX, alta/edición/eliminación en popup.
 
 ## Uso En Ayuda
 

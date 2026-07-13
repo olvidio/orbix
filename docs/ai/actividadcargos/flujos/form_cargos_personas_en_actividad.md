@@ -31,10 +31,14 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. El usuario abre el formulario desde el widget de relación de cargos de la persona.
+2. El controller POSTea a `form_cargos_personas_en_actividad_data` con `id_pau` (persona), `sel`, `mod`, `que_dl`, `id_tipo` según el enlace de alta.
+3. En modo `editar`, carga datos del `ActividadCargo` y fija actividad en solo lectura.
+4. En modo `nuevo`, filtra actividades por tipo y delegación (`que_dl` vacío = otras delegaciones).
+5. El front pinta desplegables y hash; el usuario completa y guarda vía `cargo_nuevo`/`cargo_editar`.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadcargos/form_cargos_personas_en_actividad_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,10 +46,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestionar los cargos de una persona en distintas actividades (dossier 1302): consultar, añadir, modificar y quitar. Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Form Cargos Personas En Actividad).
+Gestionar los cargos de una persona en distintas actividades: el sistema carga el listado de actividades candidatas (en altas), valores del cargo en edición y URLs de mutación.
+
+## Errores Documentados
+
+- `no encuentro el cargo (edición)`
+- `actividad no encontrada`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

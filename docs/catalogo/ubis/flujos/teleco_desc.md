@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.teleco_desc_lista_ajax"]
 acciones: ["listar"]
 endpoints: ["/src/ubis/teleco_desc_lista"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Teleco Desc
-
-Propuesta generada automaticamente desde la capacidad `ubis.teleco_desc.gestionar` y sus pantallas relacionadas.
+# Flujo - Teleco Desc
 
 ## Objetivo De Usuario
 
-Gestiona TelecoDescLista. Descripcion funcional pendiente de revisar.
+Devuelve descripciones de telecomunicación dependientes del tipo seleccionado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -54,11 +52,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

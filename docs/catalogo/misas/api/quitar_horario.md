@@ -6,8 +6,8 @@ url: "/src/misas/quitar_horario"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/quitar_horario.php"
-entrada: ["post.id_item:mixed"]
-entrada_obligatoria: []
+entrada: ["post.id_item:integer"]
+entrada_obligatoria: ["id_item"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_QuitarHorarioPlantillaData"
 respuesta_data: ["error:string"]
@@ -15,14 +15,21 @@ requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/horario_tarea.php"]
 casos_uso: ["src\\misas\\application\\QuitarHorarioPlantilla"]
 tags: ["misas", "quitar", "horario"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Error: falta el id_item", "No se encuentra la plantilla %d", "<repositorio getErrorTxt()>"]
 ---
 
-# Quitar Horario
+# Quitar horario
 
-Anula `t_start` / `t_end` de una fila `misa_plantillas_dl` (`id_item`).
+Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
+
+Linaje: Slice 9 — migrado desde apps/misas/controller/quitar_horario.php (zquitar_horario es alias).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
 
 ## Endpoint
 
@@ -35,15 +42,22 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `mixed` | controller | No | controller |
+| `id_item` | `integer` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `misas_QuitarHorarioPlantillaData`):
-  - `error` (`string`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacio serializado).
+
+## Errores conocidos
+- `Error: falta el id_item`
+- `No se encuentra la plantilla %d`
+- `<repositorio getErrorTxt()>`
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -51,10 +65,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/horario_tarea.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/horario_tarea.php"]`).

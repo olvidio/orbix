@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/comprobar_notas_constants_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Comprobar Notas Constants
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.comprobar_notas_con
 
 ## Objetivo De Usuario
 
-Gestiona ComprobarNotasConstants. VO {.
+Cargar constantes VO antes de ejecutar comprobaciones.
 
 ## Punto De Entrada
 
@@ -53,9 +53,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice (variantes id_tabla)
+- **Pills2:** ESTUDIOS > Datos e informes > Comprobar datos n / Comprobar datos agd

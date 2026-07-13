@@ -2,25 +2,23 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "pasarela"
-titulo: "Activacion Default"
+titulo: "Editar activación por defecto"
 flujo: "pasarela.activacion_default.gestionar.flujo"
-preguntas: ["Como guardar en Activacion Default?", "Como obtener datos en Activacion Default?"]
+preguntas: []
 pantallas_principales: []
-fragmentos: ["pasarela.pantalla.activacion_ajax"]
-endpoints: ["/src/pasarela/activacion_default_data", "/src/pasarela/activacion_default_guardar"]
+fragmentos: [""]
+endpoints: [""]
 source: "docs/catalogo/pasarela/flujos/activacion_default.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Activacion Default
+# Ayuda IA - Editar activación por defecto
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Activacion Default`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Editar activación por defecto`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como guardar en Activacion Default?
-- Como obtener datos en Activacion Default?
 
 ## Donde Entrar
 
@@ -30,27 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Guardar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
-- `pasarela.pantalla.activacion_ajax`
+- ``
 
 ## Objetivo
 
-Gestiona ActivacionDefault. Actualiza el valor por defecto del parámetro fecha_activacion. Devuelve solo el valor por defecto del parámetro fecha_activacion, para alimentar el formulario form_default desde el frontend.
+Cambiar el valor global de días de activación (o `upload`).
 
 ## Errores Documentados
 

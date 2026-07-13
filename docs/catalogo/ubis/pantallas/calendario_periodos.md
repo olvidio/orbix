@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.calendario_periodos"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "pantalla_principal"
 modulo: "ubis"
 nombre: "Calendario Periodos"
 controller: "frontend/ubis/controller/calendario_periodos.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/calendario_periodos_eliminar", "/src/ubis/calendario_peri
 capacidades: ["ubis.calendario_periodos.gestionar"]
 campos: ["form.id_item", "form.id_ubi", "form.year", "html.buscar"]
 acciones: ["fnjs_cerrar", "fnjs_guardar", "fnjs_modificar", "fnjs_update_div", "fnjs_ver"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Calendario Periodos
 
-Esta página sirve para asignar una dirección a un determinado ubi.
+Pantalla principal de gestión de periodos de calendario de casas CDC por año.
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/ubis/controller/calendario_periodos.php`
 
 ## Vistas Relacionadas
@@ -57,13 +59,7 @@ Esta página sirve para asignar una dirección a un determinado ubi.
 - `fnjs_update_div`
 - `fnjs_ver`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos

@@ -7,16 +7,19 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/notas/infrastructure/ui/http/controllers/persona_nota_eliminar.php"
 entrada: []
-entrada_obligatoria: []
+entrada_obligatoria: ["id_pau", "sel"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["Selección de nota no válida.", "No se ha eliminado la Nota: %s"]
 frontend_referencias: []
 casos_uso: ["src\\notas\\application\\PersonaNotaEliminar"]
 tags: ["notas", "persona", "nota", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Persona Nota Eliminar
+
+Elimina la nota seleccionada (tabla padre `e_notas`).
 
 Elimina una `PersonaNota`.
 
@@ -39,11 +42,24 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `success: true`, `data: "ok"`. Error en `mensaje`.
 
 ## Efectos colaterales
 
 - Elimina una `PersonaNota` a traves de la tabla padre `e_notas`.
+
+## Objetivo funcional
+
+Borrado desde listado de notas de una persona (`fnjs_borrar`). Token `sel`: `id_nivel#id_asignatura#tipo_acta`.
+
+## Permisos
+
+- Frontend dossier 1011 + `$_SESSION['oPerm']`.
+
+## Errores conocidos
+
+- `Selección de nota no válida.`
+- `No se ha eliminado la Nota: %s`
 
 ## Casos De Uso
 
@@ -51,10 +67,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/form_notas_de_una_persona.php`.

@@ -2,24 +2,23 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "pasarela"
-titulo: "Tipo Activ Txt"
+titulo: "Texto descriptivo del tipo"
 flujo: "pasarela.tipo_activ_txt.gestionar.flujo"
-preguntas: ["Como obtener datos en Tipo Activ Txt?"]
+preguntas: []
 pantallas_principales: []
-fragmentos: ["pasarela.pantalla.activacion_ajax", "pasarela.pantalla.contribucion_no_duerme_ajax", "pasarela.pantalla.contribucion_reserva_ajax", "pasarela.pantalla.nombre_ajax"]
-endpoints: ["/src/pasarela/tipo_activ_txt_data"]
+fragmentos: [""]
+endpoints: [""]
 source: "docs/catalogo/pasarela/flujos/tipo_activ_txt.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Tipo Activ Txt
+# Ayuda IA - Texto descriptivo del tipo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Tipo Activ Txt`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Texto descriptivo del tipo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Tipo Activ Txt?
 
 ## Donde Entrar
 
@@ -29,23 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
-- `pasarela.pantalla.activacion_ajax`
-- `pasarela.pantalla.contribucion_no_duerme_ajax`
-- `pasarela.pantalla.contribucion_reserva_ajax`
-- `pasarela.pantalla.nombre_ajax`
+- ``
 
 ## Objetivo
 
-Gestiona TipoActivTxt. Devuelve el texto descriptivo (sfsv asistentes actividad) para un id_tipo_activ. Lo consumen los formularios form_modificar desde el frontend para mostrar a qué tipo de actividad corresponde la fila editada.
+Mostrar etiqueta legible del tipo al editar excepciones.
 
 ## Limites De La Respuesta
 

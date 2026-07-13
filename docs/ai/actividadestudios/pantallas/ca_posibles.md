@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página sirve para calcular los créditos cursables para cada alumno en cada ca.
+Resultado del informe «posibles CA»: calcula y muestra, para un centro y periodo, los créditos cursables de cada alumno por actividad (cuadro imprimible o listado resumido). Se invoca desde `ca_posibles_que.php` al pulsar **ver cuadro**.
 
 ## Uso En Ayuda
 

@@ -8,20 +8,18 @@ pantallas_principales: ["usuarios.pantalla.mails_contactos_region"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/mails_contactos_region"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Mails Contactos Region
-
-Propuesta generada automaticamente desde la capacidad `usuarios.mails_contactos_region.gestionar` y sus pantallas relacionadas.
+# Flujo - Mails Contactos Region
 
 ## Objetivo De Usuario
 
-Gestiona usuariosRegionContactos. Descripcion funcional pendiente de revisar.
+Devuelve contactos email de usuarios regionales con permisos de oficina relevantes (pantalla recuperación).
 
 ## Punto De Entrada
 
-- `usuarios.pantalla.mails_contactos_region`
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -52,11 +50,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

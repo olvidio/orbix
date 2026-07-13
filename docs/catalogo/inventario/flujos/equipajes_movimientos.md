@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["inventario.pantalla.equipajes_movimientos"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/equipajes_movimientos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Equipajes Movimientos
@@ -17,11 +17,13 @@ Propuesta generada automaticamente desde la capacidad `inventario.equipajes_movi
 
 ## Objetivo De Usuario
 
-Gestiona EquipajesMovimientos. Descripcion funcional pendiente de revisar.
+Comparar movimientos de documentos entre equipajes seleccionados.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `inventario.pantalla.equipajes_movimientos_que`
+
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -53,9 +55,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > Inventario > equipajes > movimientos maletas
+- **Pills2:** —

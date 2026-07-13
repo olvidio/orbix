@@ -7,7 +7,7 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/usuario_eliminar.php"
 entrada: ["post.sel:array"]
-entrada_obligatoria: []
+entrada_obligatoria: ["sel"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "usuarios_usuarioEliminarData"
 respuesta_data: ["error:string, data: string"]
@@ -15,14 +15,19 @@ requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/usuario_lista.php"]
 casos_uso: ["src\\usuarios\\application\\usuarioEliminar"]
 tags: ["usuarios", "usuario", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Usuario no encontrado", "hay un error, no se ha eliminado"]
 ---
 
 # Usuario Eliminar
 
-Descripcion funcional pendiente de revisar.
+Elimina usuario seleccionado (id en token sel).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Elimina usuario seleccionado (id en token sel).
 
 ## Endpoint
 
@@ -35,17 +40,21 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `sel` | `array` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `sel` | `array` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `usuarios_usuarioEliminarData`):
-  - `error` (`string, data: string`)
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacío serializado).
+
+## Errores conocidos
+- `Usuario no encontrado`
+- `hay un error, no se ha eliminado`
+
+## Permisos
+
+Admin id_role≤3 en `usuario_lista`.
 
 ## Casos De Uso
 
@@ -53,10 +62,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/usuarios/controller/usuario_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/usuarios/controller/usuario_lista.php"]`).

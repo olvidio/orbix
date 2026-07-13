@@ -2,79 +2,41 @@
 id: "shared.tablaDB_buscar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "shared"
-nombre: "Flujo - Gestionar TablaDB Buscar"
+nombre: "Flujo - Búsqueda previa al listado"
 capacidad: "shared.tablaDB_buscar.gestionar"
-pantallas_principales: []
-fragmentos: ["shared.pantalla.tablaDB_lista_ver"]
-acciones: ["obtener_datos"]
+pantallas_principales: ["shared.pantalla.tablaDB_lista_ver"]
+fragmentos: []
+acciones: ["mostrar_criterios", "buscar"]
 endpoints: ["/src/shared/tablaDB_buscar_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar TablaDB Buscar
-
-Propuesta generada automaticamente desde la capacidad `shared.tablaDB_buscar.gestionar` y sus pantallas relacionadas.
+# Flujo - Búsqueda previa al listado
 
 ## Objetivo De Usuario
 
-Gestiona TablaDBBuscar. Descripcion funcional pendiente de revisar.
+Filtrar registros antes de mostrar la tabla en mantenimientos que definen criterios de búsqueda.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Primera carga de `tablaDB_lista_ver.php` (sin `k_buscar` ni `aSerieBuscar`).
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `shared.pantalla.tablaDB_lista_ver`
+### Mostrar criterios
 
-## Escenarios Inferidos
+1. `tablaDB_buscar_datos` con `clase_info` y contexto padre.
+2. Vista `tablaDB_busqueda.phtml` o `buscar_view` custom del `Info*`.
 
-### Obtener Datos
+### Buscar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.sel`
-- `html.btn_new`
-- `html.btn_ok`
-- `html.k_buscar`
-- `html.mod`
-- `post.aSerieBuscar`
-- `post.clase_info`
-- `post.id_pau`
-- `post.id_sel`
-- `post.k_buscar`
-- `post.mod`
-- `post.obj_pau`
-- `post.pau`
-- `post.permiso`
-- `post.refresh`
-- `post.scroll_id`
-- `post.sel`
-- `post.stack`
-
-Acciones JavaScript:
-- `fnjs_enviar`
-- `fnjs_enviar_formulario`
-- `fnjs_nuevo`
-
-## Endpoints Del Flujo
-
-- `/src/shared/tablaDB_buscar_datos`
+1. Usuario rellena `k_buscar` (y campos extra del `Info*`).
+2. Submit → misma URL con criterios → fase listado (`tablaDB_lista_datos`).
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- Ninguno documentado en el builder.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Misma entrada que el listado destino (variante por `clase_info` en `_referencia_menus.md`).

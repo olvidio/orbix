@@ -4,57 +4,61 @@ tipo: "endpoint"
 modulo: "planning"
 url: "/src/planning/planning_zones_select_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/planning/infrastructure/ui/http/controllers/planning_zones_select_data.php"
 entrada: ["post.actividad:string", "post.id_zona:string", "post.propuesta:string", "post.trimestre:integer", "post.year:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "planning_PlanningZonesSelectDataData"
-respuesta_data: ["actividades_por_zona:array", "cabeceras_por_zona:array", "zonas:integer", "titulo:string", "planning_ini_iso:string", "planning_fin_iso:string"]
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/planning/controller/planning_zones_select.php"]
 casos_uso: ["src\\planning\\application\\PlanningZonesSelectData"]
 tags: ["planning", "zones", "select", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Planning Zones Select Data
 
-Dataset para {
+Actividades agrupadas por zona SACD para el calendario de `planning_zones_select`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Invoca `ActividadesPorZonasService` con zona, trimestre, año, filtro de actividad y flag
+`propuesta` (calendario en estudio). Serializa fechas del periodo como `planning_ini_iso` /
+`planning_fin_iso` y devuelve la cuadrícula por zonas.
 
 ## Endpoint
 
 - URL: `/src/planning/planning_zones_select_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/planning/infrastructure/ui/http/controllers/planning_zones_select_data.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `actividad` | `string` | application | No | application |
-| `id_zona` | `string` | application | No | application |
-| `propuesta` | `string` | application | No | application |
-| `trimestre` | `integer` | application | No | application |
-| `year` | `integer` | application | No | application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_zona` | `string` | application | No | Zona SACD; vacío puede significar todas según servicio |
+| `trimestre` | `integer` | application | No | Trimestre del periodo |
+| `year` | `integer` | application | No | Año |
+| `actividad` | `string` | application | No | Filtro por tipo/nombre de actividad |
+| `propuesta` | `string` | application | No | `true` → calendario propuesta (`propuesta_calendario`) |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `planning_PlanningZonesSelectDataData`):
-  - `actividades_por_zona` (`array`)
-  - `cabeceras_por_zona` (`array`)
-  - `zonas` (`integer`)
-  - `titulo` (`string`)
-  - `planning_ini_iso` (`string`)
-  - `planning_fin_iso` (`string`)
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- `data`:
+  - `actividades_por_zona` (`array`): slots por zona.
+  - `cabeceras_por_zona` (`array`): títulos de columna por zona.
+  - `zonas` (`integer`): número de zonas mostradas.
+  - `titulo` (`string`): título del planning.
+  - `planning_ini_iso` / `planning_fin_iso` (`string`): límites del periodo.
+
+## Permisos
+
+- Sin control propio en el caso de uso; alcance de zonas ya filtrado en `planning_zones_que`.
 
 ## Casos De Uso
 
@@ -63,9 +67,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 ## Frontend Relacionado
 
 - `frontend/planning/controller/planning_zones_select.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

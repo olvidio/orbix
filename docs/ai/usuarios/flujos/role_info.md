@@ -42,10 +42,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona RoleInfo. Descripcion funcional pendiente de revisar.
+Carga ficha rol: datos, permiso de edición y tabla grupmenus ya asignados.
+
+## Errores Documentados
+
+- `Usuario no encontrado`
+- `Rol no encontrado`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

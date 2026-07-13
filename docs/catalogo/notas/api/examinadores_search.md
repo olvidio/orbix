@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "notas"
 url: "/src/notas/examinadores_search"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/notas/infrastructure/ui/http/controllers/examinadores_search.php"
 entrada: ["post.search:string"]
 entrada_obligatoria: []
@@ -13,10 +13,12 @@ requiere_hashb: false
 frontend_referencias: ["frontend/notas/controller/acta_ver.php"]
 casos_uso: ["src\\notas\\application\\ExaminadoresSearchData"]
 tags: ["notas", "examinadores", "search"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Examinadores Search
+
+Autocompletado de examinadores para el formulario de acta.
 
 Autocomplete jQuery-UI.
 
@@ -26,7 +28,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - URL: `/src/notas/examinadores_search`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/examinadores_search.php`
 
 ## Entrada
@@ -41,7 +43,16 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - Helper: `echo`
 - Forma: `raw_response`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (doble `JSON.parse` salvo excepciones).
+- Payload en `data` (doble `JSON.parse`): lista de sugerencias `{label, value}` o equivalente del builder.
+
+## Objetivo funcional
+
+Búsqueda por texto (`search`) de personas examinadoras; devuelve opciones para jQuery UI autocomplete en `acta_ver`.
+
+## Permisos
+
+- Contexto `acta_ver`; sin permiso propio.
 
 ## Casos De Uso
 
@@ -49,10 +60,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/acta_ver.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/acta_ver.php` (`fnjs_autocomplete_exam`).

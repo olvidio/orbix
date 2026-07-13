@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/role_grupmenu_add", "/src/usuarios/role_grupmenu_info
 capacidades: ["usuarios.role_grupmenu_add.gestionar", "usuarios.role_grupmenu_info.gestionar"]
 campos: ["form.sel", "post.id_role", "post.sel"]
 acciones: ["fnjs_add_grupmenu"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Role Grupmenu
 
-Descripcion funcional pendiente de revisar.
+Pantalla asignación grupmenu↔rol (añadir desde candidatos).
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/role_grupmenu.php`
 
 ## Vistas Relacionadas
@@ -51,13 +53,7 @@ No se han detectado controladores frontend relacionados.
 
 - `fnjs_add_grupmenu`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

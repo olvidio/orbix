@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/activ_pendientes_select_data"]
 capacidades: ["asistentes.activ_pendientes_select.gestionar"]
 campos: ["html.any", "html.ok", "html.sactividad", "html.tipo_personas"]
 acciones: ["fnjs_enviar", "fnjs_enviar_formulario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Activ Pendientes Select
 
-Descripcion funcional pendiente de revisar.
+Listado de personas de la delegación (y otras DL) sin asistencia propia a ca o crt en el curso elegido.
 
 ## Tipo
 
@@ -53,11 +53,8 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** vsm/vest/dagd/dre > pendientes según `sactividad` y `tipo_personas`
+- **Pills2:** ACTIVIDADES > Listados > Listado de personas sin ca/crt

@@ -8,64 +8,48 @@ pantallas_principales: ["actividadessacd.pantalla.activ_sacd"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadessacd/sacd_reordenar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Sacd Reordenar
 
-Propuesta generada automaticamente desde la capacidad `actividadessacd.sacd_reordenar.gestionar` y sus pantallas relacionadas.
+Reordenación de la prioridad de un sacd dentro de una actividad.
 
 ## Objetivo De Usuario
 
-Gestiona SacdReordenar. Reordena un sacd dentro de una actividad (mas / menos prioridad).
+El usuario sube o baja la prioridad de un sacd ya asignado intercambiando su posición con el
+anterior o el siguiente en el listado de cargos `sacd` de la actividad.
 
 ## Punto De Entrada
 
-- `actividadessacd.pantalla.activ_sacd`
+Pantalla `activ_sacd` (`frontend/actividadessacd/controller/activ_sacd.php`): al pulsar un sacd
+asignado se abre el menú contextual; **más prioridad** / **menos prioridad** llaman a
+`fnjs_orden(..., 'mas'|'menos')`, que invoca este endpoint. El parámetro `num_orden` es la
+dirección (`mas` / `menos`), no un número ordinal.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadessacd.pantalla.activ_sacd`
 
 ## Escenarios Inferidos
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En una actividad, pulsar un sacd ya asignado.
+2. Elegir **más prioridad** o **menos prioridad**.
+3. El sistema intercambia el orden y refresca la celda de sacd de la actividad.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadessacd/sacd_reordenar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.periodo`
-- `form.tipo`
-- `form.year`
-- `post.periodo`
-- `post.tipo`
-- `post.year`
+- Ninguno detectado.
 
 Acciones JavaScript:
-- `fnjs_actualizar_activ`
-- `fnjs_asignar_sacd`
-- `fnjs_cambiar_sacd`
-- `fnjs_cerrar`
-- `fnjs_construir_celda_sacds`
-- `fnjs_construir_leyenda`
-- `fnjs_construir_tabla_disponibles`
-- `fnjs_construir_tabla_lista`
-- `fnjs_construir_tabla_solapes`
-- `fnjs_enviar`
-- `fnjs_esc`
-- `fnjs_left_side_hide`
-- `fnjs_nuevo_sacd`
-- `fnjs_orden`
-- `fnjs_parse_rta`
-- `fnjs_ver`
+- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -75,10 +59,11 @@ Acciones JavaScript:
 
 - ``direccion de orden incorrecta (mas / menos)``
 - ``faltan parametros id_activ / id_nom``
+- ``hay un error, no se ha guardado``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
+
+- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).

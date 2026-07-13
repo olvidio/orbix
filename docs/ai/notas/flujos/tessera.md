@@ -45,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Tessera. Copia todas las PersonaNota de una persona origen hacia una persona destino. Utilizado por personas_select.phtml (pagina de traslado de tessera entre numerarios / supernumerarios). Devuelve una cadena con los errores (separados por <br>) o vacia si todo ha ido bien.
+Flujo tessera: ver, imprimir y copiar entre personas.
 
 ## Errores Documentados
 

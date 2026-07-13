@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/usuario_info"]
 capacidades: ["usuarios.usuario_info.gestionar"]
 campos: ["form.email"]
 acciones: ["fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Usuario Form Mail
 
-Formulario para cambiar el mail por parte del usuario.
+Formulario cambio de email del usuario autenticado.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/usuario_form_mail.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ No se han detectado controladores frontend relacionados.
 
 - `fnjs_guardar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

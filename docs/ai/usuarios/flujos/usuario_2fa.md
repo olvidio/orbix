@@ -46,10 +46,17 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Usuario2fa. Descripcion funcional pendiente de revisar.
+Configuración autenticación dos factores del usuario.
+
+## Errores Documentados
+
+- `Usuario no encontrado`
+- `Se requiere un código de verificación para activar 2FA`
+- `Código de verificación inválido`
+- `Hay un error, no se ha guardado`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

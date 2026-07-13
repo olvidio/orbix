@@ -2,48 +2,35 @@
 id: "actividades.actividad_publicar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Actividad Publicar"
+nombre: "Flujo - Publicar actividades"
 capacidad: "actividades.actividad_publicar.gestionar"
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividades.pantalla.actividad_que", "actividades.pantalla.actividad_select"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividades/actividad_publicar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad Publicar
+# Flujo - Publicar actividades
 
-Propuesta generada automaticamente desde la capacidad `actividades.actividad_publicar.gestionar` y sus pantallas relacionadas.
+Marcar actividades de la dl propia como publicadas (visibles externamente según reglas).
 
 ## Objetivo De Usuario
 
-Gestiona ActividadPublicar. Endpoint backend AJAX: marca como publicadas las actividades seleccionadas.
+Buscar actividades en modo publicar, seleccionar y ejecutar publicación masiva.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+`actividad_que` (`modo=publicar`) → `actividad_select` → acción publicar.
 
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+1. Menú *publicar activ*.
+2. Filtrar actividades no publicadas de la dl.
+3. Seleccionar filas y publicar (`actividad_publicar`).
+4. Comprobar actualización en listado.
 
 ## Endpoints Del Flujo
 
@@ -51,11 +38,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `hay un error, no se ha guardado` + detalle (por id fallido)
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre/Calendario > actividades > publicar activ.
+- **Pills2:** dre/Calendario > actividades > publicar activ; ATENCIÓN SACD > Actividades >
+  publicar activ.

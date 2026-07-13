@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Paso 3 del asistente: copia datos desde esquema de referencia (importar).
 
 ## Uso En Ayuda
 

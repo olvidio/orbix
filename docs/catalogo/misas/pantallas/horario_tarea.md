@@ -1,7 +1,7 @@
 ---
 id: "misas.pantalla.horario_tarea"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "modal"
 modulo: "misas"
 nombre: "Horario Tarea"
 controller: "frontend/misas/controller/horario_tarea.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/misas/guardar_horario", "/src/misas/horario_tarea_data", "/src
 capacidades: ["misas.guardar_horario.gestionar", "misas.horario_tarea.gestionar", "misas.quitar_horario.gestionar"]
 campos: ["form.id_item", "form.t_end", "form.t_start", "post.id_item_h"]
 acciones: ["fnjs_guardar_horario", "fnjs_quitar_horario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Horario Tarea
+# Horario tarea
 
-Descripcion funcional pendiente de revisar.
+Modal para editar hora inicio/fin de una tarea en plantilla (`horario_tarea_data`, `guardar_horario`).
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `modal`
+
+
 - Controller: `frontend/misas/controller/horario_tarea.php`
 
 ## Vistas Relacionadas
@@ -55,13 +57,7 @@ No se han detectado controladores frontend relacionados.
 - `fnjs_guardar_horario`
 - `fnjs_quitar_horario`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -1,7 +1,7 @@
 ---
 id: "encargossacd.pantalla.encargo_select"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "encargossacd"
 nombre: "Encargo Select"
 controller: "frontend/encargossacd/controller/encargo_select.php"
@@ -11,16 +11,17 @@ endpoints: ["/src/encargossacd/encargo_select_data", "/src/encargossacd/encargo_
 capacidades: ["encargossacd.encargo_select.gestionar", "encargossacd.encargo_ver.gestionar"]
 campos: ["form.id_activ", "form.id_nom", "form.que", "form.scroll_id", "form.sel", "html.desc_enc", "html.ok", "html.que", "post.desc_enc", "post.id_tipo_enc", "post.stack", "post.titulo"]
 acciones: ["fnjs_borrar", "fnjs_enviar", "fnjs_enviar_formulario", "fnjs_horario", "fnjs_modificar", "fnjs_solo_uno", "fnjs_strip_hash_sel", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Encargo Select
 
-Listado de encargos.
+Listado/búsqueda de encargos con acciones ver, modificar, horario y borrar. Los datos vienen de
+`encargo_select_data`; el controller arma la `Lista` frontend.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/encargossacd/controller/encargo_select.php`
 
 ## Vistas Relacionadas
@@ -69,13 +70,19 @@ Listado de encargos.
 - `fnjs_strip_hash_sel`
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** dre > Encargos > ver encargo
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Encargos > ver encargo
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
+
+
+## Ruta de menú
+
+- **Legacy:** dre > Encargos > ver encargo
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
+

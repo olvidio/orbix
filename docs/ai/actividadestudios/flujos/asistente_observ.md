@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Desde el contexto de un asistente en una actividad, editar el campo `observ`.
+2. Enviar `id_activ`, `id_nom` (o `id_pau`) y `observ` al endpoint.
+3. El sistema localiza al asistente y persiste el texto.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/asistente_observ`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AsistenteObserv. Guarda el texto observ de un Asistente. Sustituye al case observ de update_3103.php.
+El usuario guarda el texto de observaciones generales (`observ`) de un asistente en una actividad. Sustituye al case `observ` de `update_3103.php`.
 
 ## Errores Documentados
 

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Doc Asignar Dlb"
+titulo: "Formulario asignar DLB"
 pantalla: "inventario.pantalla.doc_asignar_dlb"
-preguntas: ["Que se puede hacer en Doc Asignar Dlb?", "Que campos tiene Doc Asignar Dlb?", "Que acciones hay en Doc Asignar Dlb?"]
+preguntas: ["Que se puede hacer en Formulario asignar DLB?", "Que campos tiene Formulario asignar DLB?", "Que acciones hay en Formulario asignar DLB?"]
 capacidades: ["inventario.doc_asignar_dlb.gestionar", "inventario.lista_docs_asignar_dlb.gestionar"]
 endpoints: ["/src/inventario/doc_asignar_dlb_guardar", "/src/inventario/lista_docs_asignar_dlb"]
 source: "docs/catalogo/inventario/pantallas/doc_asignar_dlb.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Doc Asignar Dlb
+# Ayuda IA Pantalla - Formulario asignar DLB
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Asignación DLB; guarda con `doc_asignar_dlb_guardar`.
 
 ## Uso En Ayuda
 

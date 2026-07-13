@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "personas"
-titulo: "Personas Editar"
+titulo: "Ficha de persona"
 pantalla: "personas.pantalla.personas_editar"
-preguntas: ["Que se puede hacer en Personas Editar?", "Que campos tiene Personas Editar?", "Que acciones hay en Personas Editar?"]
-capacidades: ["personas.personas_editar.gestionar"]
-endpoints: ["/src/personas/personas_editar_data"]
+preguntas: ["Que se puede hacer en Ficha de persona?", "Que campos tiene Ficha de persona?", "Que acciones hay en Ficha de persona?"]
+capacidades: ["personas.personas_editar.gestionar", "personas.persona.gestionar"]
+endpoints: ["/src/personas/personas_editar_data", "/src/personas/persona_update", "/src/personas/persona_eliminar"]
 source: "docs/catalogo/personas/pantallas/personas_editar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Personas Editar
+# Ayuda IA Pantalla - Ficha de persona
 
 ## Resumen
 
-Ficha de una persona: edicion (o alta si `$Qnuevo === 1`).
+Alta (`nuevo=1`) o edición de persona. Plantilla según colectivo y permiso:
 
 ## Uso En Ayuda
 
@@ -23,25 +23,28 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Campos Detectados
 
-- `post.apellido1`
-- `post.id_nom`
 - `post.nuevo`
 - `post.obj_pau`
 - `post.sel`
-- `post.stack`
+- `post.apellido1`
 - `post.tabla`
 
 ## Acciones Detectadas
 
 - `fnjs_act_ctr`
+- `fnjs_guardar`
+- `fnjs_eliminar`
 
 ## Capacidades Relacionadas
 
 - `personas.personas_editar.gestionar`
+- `personas.persona.gestionar`
 
 ## Endpoints Relacionados
 
 - `/src/personas/personas_editar_data`
+- `/src/personas/persona_update`
+- `/src/personas/persona_eliminar`
 
 ## Precauciones
 

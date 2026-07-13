@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.trasladar_ubis"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/trasladar_ubis"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Trasladar Ubis
-
-Propuesta generada automaticamente desde la capacidad `ubis.trasladar_ubis.gestionar` y sus pantallas relacionadas.
+# Flujo - Trasladar Ubis
 
 ## Objetivo De Usuario
 
-Gestiona TrasladarUbis. Descripcion funcional pendiente de revisar.
+Traslada centros y casas seleccionados a otra delegación destino.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: scdl > direcciones > listados. Pills2: Calendario > centros y casas > listados.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``No se han seleccionado ubis.``
+- `No se han seleccionado ubis.`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > direcciones > listados
+- **Pills2:** Calendario > centros y casas > listados

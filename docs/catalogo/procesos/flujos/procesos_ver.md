@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.procesos_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/procesos/procesos_ver_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Procesos Ver
-
-Propuesta generada automaticamente desde la capacidad `procesos.procesos_ver.gestionar` y sus pantallas relacionadas.
+# Flujo - Editar tarea de proceso
 
 ## Objetivo De Usuario
 
-Gestiona ProcesosVer. Caso de uso: datos para la pantalla procesos_ver (formulario editar / nuevo de una fase dentro de un tipo de proceso). Devuelve todos los arrays necesarios para que el controlador frontend monte los frontend\shared\web\Desplegable (fases, tareas, status, oficinas responsables, fases previas y sus tareas) y el formulario de edicion.
+Carga del formulario modal de alta o edición de una tarea dentro de un tipo de proceso, con desplegables de fases, tareas, status, oficina y dependencias.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada directa de menú; se abre desde la pantalla de administración de procesos (`procesos_select`).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -63,11 +61,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

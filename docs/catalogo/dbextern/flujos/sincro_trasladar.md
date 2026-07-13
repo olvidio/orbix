@@ -2,52 +2,34 @@
 id: "dbextern.sincro_trasladar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Gestionar Sincro Trasladar"
+nombre: "Flujo - Trasladar a esta DL"
 capacidad: "dbextern.sincro_trasladar.gestionar"
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_traslados"]
-acciones: ["ejecutar"]
+acciones: ["trasladar"]
 endpoints: ["/src/dbextern/sincro_trasladar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Sincro Trasladar
+# Flujo - Trasladar a esta DL
 
-Propuesta generada automaticamente desde la capacidad `dbextern.sincro_trasladar.gestionar` y sus pantallas relacionadas.
+Traslado individual desde otra DL Orbix (punto 2).
 
 ## Objetivo De Usuario
 
-Gestiona TrasladarPersonaUseCase. Trasladar persona desde otra DL a la DL actual.
+Traer la ficha a la DL actual; la fecha de traslado queda en hoy (aviso en pantalla).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+**trasladar** en `ver_traslados` (`fnjs_trasladar`).
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `dbextern.pantalla.ver_traslados`
+### Trasladar
 
-## Escenarios Inferidos
-
-### Ejecutar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.dl`
-- `form.id_nom_orbix`
-- `form.tipo_persona`
-- `post.ids_traslados`
-- `post.tipo_persona`
-
-Acciones JavaScript:
-- `fnjs_trasladar`
+1. Alerta informativa sobre fecha.
+2. POST `id_nom_orbix`, `dl` origen, `tipo_persona`.
+3. Fila tachada si éxito.
 
 ## Endpoints Del Flujo
 
@@ -55,11 +37,8 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- Mensajes del dominio `Trasladar` / `Error al trasladar`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

@@ -8,20 +8,25 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.acta_notas"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadestudios/acta_notas_definitivas_grabar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Notas Definitivas Grabar
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.acta_notas_definitivas_grabar.gestionar` y sus pantallas relacionadas.
+Conversión del borrador del acta en notas definitivas (`PersonaNota` / tessera).
 
 ## Objetivo De Usuario
 
-Gestiona ActaNotasDefinitivasGrabar. Convierte las matriculas/notas borrador en PersonaNota definitivas (rama que=3 del legacy apps/actividadestudios/controller/acta_notas_update.php).
+El usuario confirma las notas del acta como definitivas: el sistema convierte las
+matrículas/notas borrador en registros `PersonaNota` definitivos, asignando época,
+nivel y acta correspondiente. Sustituye la rama `que=3` del legacy
+`apps/actividadestudios/controller/acta_notas_update.php`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `acta_notas` (`frontend/actividadestudios/controller/acta_notas.php`): la función
+`fnjs_guardar_tessera` envía el formulario por AJAX a este endpoint (solo si `mod` no es
+`nueva`).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +36,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En el acta de notas de una asignatura, revisar notas y situaciones de cada alumno.
+2. Pulsar la acción de grabar definitivas (`fnjs_guardar_tessera`).
+3. El sistema serializa `#f_1303` con `que=3` y llama al endpoint.
+4. Si la respuesta es correcta, las notas quedan grabadas en tessera; si no, se muestra alerta.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/acta_notas_definitivas_grabar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -61,12 +69,7 @@ Campos:
 - `post.stack`
 
 Acciones JavaScript:
-- `fnjs_enviar_formulario`
-- `fnjs_guardar_nota`
 - `fnjs_guardar_tessera`
-- `fnjs_imprimir`
-- `fnjs_left_side_hide`
-- `fnjs_nota`
 
 ## Endpoints Del Flujo
 
@@ -76,9 +79,10 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo desde pantalla `acta_notas`, accesible desde
+dossier 3005 o módulo de actas).
+
+- **Legacy:** vest > actas... > actas (pantalla padre habitual).
+- **Pills2:** ESTUDIOS > Actas y certificados > Actas.

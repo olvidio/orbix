@@ -2,39 +2,31 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Actividad Permiso Crear"
+titulo: "Permiso crear actividad"
 flujo: "actividades.actividad_permiso_crear.gestionar.flujo"
-preguntas: ["Como obtener datos en Actividad Permiso Crear?"]
-pantallas_principales: []
-fragmentos: ["actividades.pantalla.actividad_ver"]
+preguntas: []
+pantallas_principales: ["actividades.pantalla.actividad_ver"]
+fragmentos: []
 endpoints: ["/src/actividades/actividad_permiso_crear_datos"]
 source: "docs/catalogo/actividades/flujos/actividad_permiso_crear.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Actividad Permiso Crear
+# Ayuda IA - Permiso crear actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Actividad Permiso Crear`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Permiso crear actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Actividad Permiso Crear?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (`actividades.pantalla.actividad_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
-
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +34,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActividadPermisoCrear. JSON: resultado de {.
+Al crear ficha nueva, el sistema bloquea o permite el formulario según permisos de proceso.
 
 ## Limites De La Respuesta
 

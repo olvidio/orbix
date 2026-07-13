@@ -8,42 +8,30 @@ pantallas_principales: []
 fragmentos: ["dossiers.pantalla.perm_dossiers"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/dossiers/perm_dossiers_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Perm Dossiers
-
-Propuesta generada automaticamente desde la capacidad `dossiers.perm_dossiers.gestionar` y sus pantallas relacionadas.
+# Flujo - Perm Dossiers
 
 ## Objetivo De Usuario
 
-Gestiona PermDossiers. Listado de tipos de dossier para pantalla de permisos. pagina_link_spec se firma en perm_dossiers_data.php.
+Elegir el ámbito de tipos de dossier (personas/ubis/actividades) y abrir la edición de permisos de cada tipo desde el menú de administración.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: sistema > perm_dossiers > ubis · sistema > perm_dossiers > personas · sistema > perm_dossiers > actividades. Pills2: ADMIN LOCAL > perm_dossiers > ubis · ADMIN LOCAL > perm_dossiers > personas · ADMIN LOCAL > perm_dossiers > actividades.
+
+## Escenarios
+
+### Elegir ámbito y tipo de dossier
+
+1. Menú `perm_dossiers` con `tipo=p|u|a` (personas, ubis o actividades).
+2. `perm_dossiers_data` devuelve `a_filas` con `pagina_link_spec` hacia `perm_dossier_ver`.
+3. Pulsar «ver o modificar permisos» en una fila carga el formulario del tipo.
 
 ## Fragmentos O Pantallas Auxiliares
 
 - `dossiers.pantalla.perm_dossiers`
-
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.tipo`
-
-Acciones JavaScript:
-- `fnjs_update_div`
 
 ## Endpoints Del Flujo
 
@@ -51,11 +39,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > perm_dossiers > ubis · sistema > perm_dossiers > personas · sistema > perm_dossiers > actividades
+- **Pills2:** ADMIN LOCAL > perm_dossiers > ubis · ADMIN LOCAL > perm_dossiers > personas · ADMIN LOCAL > perm_dossiers > actividades

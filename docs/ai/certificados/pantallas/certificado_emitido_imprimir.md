@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario previo a generar un certificado nuevo: datos de persona, idioma y configuración STGR.
 
 ## Uso En Ayuda
 

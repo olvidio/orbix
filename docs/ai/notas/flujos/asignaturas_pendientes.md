@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AsignaturasPendientes. Datos para la pantalla asignaturas_pendientes (matriz alumnos × asignaturas). La UI (Lista, desplegable rstgr) se monta en el controlador frontend.
+Consultar matriz de asignaturas pendientes por alumno.
 
 ## Limites De La Respuesta
 

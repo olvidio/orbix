@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Actualiza el desplegable de descripciones al cambiar el tipo de telecomunicación.
 
 ## Uso En Ayuda
 

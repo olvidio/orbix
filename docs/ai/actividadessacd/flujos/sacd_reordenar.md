@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En una actividad, pulsar un sacd ya asignado.
+2. Elegir **más prioridad** o **menos prioridad**.
+3. El sistema intercambia el orden y refresca la celda de sacd de la actividad.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadessacd/sacd_reordenar`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,12 +44,13 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona SacdReordenar. Reordena un sacd dentro de una actividad (mas / menos prioridad).
+El usuario sube o baja la prioridad de un sacd ya asignado intercambiando su posición con el anterior o el siguiente en el listado de cargos `sacd` de la actividad.
 
 ## Errores Documentados
 
 - `direccion de orden incorrecta (mas / menos)`
 - `faltan parametros id_activ / id_nom`
+- `hay un error, no se ha guardado`
 
 ## Limites De La Respuesta
 

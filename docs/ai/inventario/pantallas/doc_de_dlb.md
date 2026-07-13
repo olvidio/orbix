@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Doc De Dlb"
+titulo: "Inventario DLB/casa"
 pantalla: "inventario.pantalla.doc_de_dlb"
-preguntas: ["Que se puede hacer en Doc De Dlb?", "Que campos tiene Doc De Dlb?", "Que acciones hay en Doc De Dlb?"]
+preguntas: ["Que se puede hacer en Inventario DLB/casa?", "Que campos tiene Inventario DLB/casa?", "Que acciones hay en Inventario DLB/casa?"]
 capacidades: ["inventario.lista_docs_de_dlb.gestionar"]
 endpoints: ["/src/inventario/lista_docs_de_dlb"]
 source: "docs/catalogo/inventario/pantallas/doc_de_dlb.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Doc De Dlb
+# Ayuda IA Pantalla - Inventario DLB/casa
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Consulta documentos DLB por tipo; asignar, modificar e imprimir.
 
 ## Uso En Ayuda
 

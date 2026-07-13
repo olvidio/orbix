@@ -11,17 +11,22 @@ entrada_obligatoria: ["id_activ", "id_ubi"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["no se sabe cual borrar", "el centro encargado ya no existe", "hay un error, no se ha eliminado el centro"]
-frontend_referencias: []
+frontend_referencias: ["frontend/actividadescentro/controller/activ_ctr.php"]
 casos_uso: ["src\\actividadescentro\\application\\CentroEncargadoEliminar"]
 tags: ["actividadescentro", "centro", "encargado", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Centro Encargado Eliminar
 
-Endpoint backend: elimina un CentroEncargado de una actividad.
+Elimina un `CentroEncargado` (`{id_activ, id_ubi}`) del listado de centros encargados de una actividad.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Sucesor de la rama `orden` con `num_orden = 'borrar'` del dispatcher legacy `activ_ctr_ajax.php`.
+Valida que `id_activ` e `id_ubi` sean `> 0`, busca el `CentroEncargado` con `findById` y lo elimina.
 
 ## Endpoint
 
@@ -34,20 +39,21 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `integer` | application | Si | application |
-| `id_ubi` | `integer` | application | Si | application |
+| `id_activ` | `integer` | application | Si | Debe ser `> 0` |
+| `id_ubi` | `integer` | application | Si | Centro a eliminar; debe ser `> 0` |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+El controller pasa `$_POST` completo al caso de uso, que lee `id_activ` / `id_ubi` con `inputInt`.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
+- Helper: `ContestarJson::enviar` (el controller pasa `'ok'` como data literal).
+- Forma: `standard_envelope_string_data`.
 - Exito: `success: true`, `data: "ok"`.
+- En error de negocio: `success: false`, `mensaje` con el texto devuelto por el caso de uso.
 
 ## Efectos colaterales
 
-- Elimina un `CentroEncargado` ({id_activ, id_ubi}) del listado de centros encargados de una actividad.
+- Elimina un `CentroEncargado` (`{id_activ, id_ubi}`) del listado de centros encargados de una actividad.
 
 ## Errores conocidos
 
@@ -55,16 +61,17 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - `el centro encargado ya no existe`
 - `hay un error, no se ha eliminado el centro`
 
+## Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización se resuelve en el frontend (la
+  acción solo se ofrece si `permite_modificar` / `perm_modificar_ctr`) y en `$_SESSION['oPerm']`.
+
 ## Casos De Uso
 
 - `src\actividadescentro\application\CentroEncargadoEliminar`
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/actividadescentro/controller/activ_ctr.php` (vista `activ_ctr.phtml`): la función
+  `fnjs_eliminar` invoca este endpoint (URL firmada `url_eliminar`) desde el popup `borrar` y refresca
+  la celda con `fnjs_actualizar_activ`.

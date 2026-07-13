@@ -11,12 +11,12 @@ endpoints: ["/src/zonassacd/zona_ctr_lista"]
 capacidades: ["zonassacd.zona_ctr.gestionar"]
 campos: ["post.id_zona"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Zona Ctr Lista Ajax
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX: renderiza tabla de centros vía zona_ctr_lista (fnjs_busca_ctrs).
 
 ## Tipo
 
@@ -47,13 +47,7 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

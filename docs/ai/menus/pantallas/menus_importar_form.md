@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Selecciona plantilla (`lista_templates`) e importa al esquema activo (destructivo).
 
 ## Uso En Ayuda
 

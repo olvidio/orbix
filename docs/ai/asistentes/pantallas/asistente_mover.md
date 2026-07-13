@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Modal para mover un asistente a otra actividad del mismo tipo en el curso.
 
 ## Uso En Ayuda
 

@@ -17,7 +17,7 @@ paths:
       operationId: "post_configuracion_modulos_form_data"
       summary: "Modulos Form Data"
       description: |
-        JSON para {
+        Construye los datos del formulario de alta/edición de un `Modulo` para la pantalla `modulos_form`.
         
         Operacion: `form_data`.
         
@@ -55,9 +55,9 @@ paths:
       operationId: "post_configuracion_modulos_select_data"
       summary: "Modulos Select Data"
       description: |
-        JSON para {
+        Construye los datos tabulares del listado de módulos (cabeceras, botones y filas) para la pantalla `modulos_select`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/configuracion/api/modulos_select_data.md`
       tags:
@@ -97,7 +97,7 @@ paths:
       operationId: "post_configuracion_modulos_update"
       summary: "Modulos Update"
       description: |
-        Alta / baja / modificación de módulos (respuesta texto plano para AJAX legacy).
+        Alta / baja / modificación de un `Modulo`. Responde texto plano para el AJAX legacy.
         
         Operacion: `mutacion`.
         
@@ -121,6 +121,14 @@ paths:
                   type: "string"
                 sel:
                   type: "string"
+                sel_apps:
+                  type: "array"
+                  items:
+                    type: string
+                sel_mods:
+                  type: "array"
+                  items:
+                    type: string
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -139,9 +147,9 @@ paths:
       operationId: "post_configuracion_parametros_lista"
       summary: "Parametros Lista"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve los valores actuales de todos los parámetros de configuración para pintar el formulario de parámetros.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/configuracion/api/parametros_lista.md`
       tags:
@@ -174,7 +182,7 @@ paths:
       operationId: "post_configuracion_parametros_update"
       summary: "Parametros Update"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Guarda un parámetro de configuración (`ConfigSchema`) desde la pantalla de parámetros.
         
         Operacion: `mutacion`.
         
@@ -187,6 +195,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "parametro"
               properties:
                 fin_dia:
                   type: "integer"
@@ -218,9 +228,9 @@ paths:
       operationId: "post_configuracion_periodo_calendario_escolar_data"
       summary: "Periodo Calendario Escolar Data"
       description: |
-        Fechas y metadatos del curso (STGR / CRT) que antes solo estaban en `$_SESSION['oConfig']`, para inyectar en `Periodo` del frontend.
+        Devuelve las fechas y metadatos del curso (STGR / CRT) que antes solo vivían en `$_SESSION['oConfig']`, para inyectarlos en el objeto `Periodo` del frontend.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/configuracion/api/periodo_calendario_escolar_data.md`
       tags:

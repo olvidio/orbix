@@ -49,5 +49,5 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `dossiers.tipo_dossier_guardar`
 - Controller: `src/dossiers/infrastructure/ui/http/controllers/tipo_dossier_guardar.php`
-- Entrada: `post.Permiso_escritura:mixed`, `post.Permiso_lectura:mixed`, `post.app:string`, `post.campo_to:string`, `post.class:string`, `post.codigo:string`, `post.depende_modificar:string`, `post.descripcion:string`, `post.id_tipo_dossier:integer`, `post.id_tipo_dossier_rel:integer`, `post.tabla_from:string`, `post.tabla_to:string`
+- Entrada: `post.Permiso_escritura:array`, `post.Permiso_lectura:array`, `post.app:string`, `post.campo_to:string`, `post.class:string`, `post.codigo:string`, `post.depende_modificar:string`, `post.descripcion:string`, `post.id_tipo_dossier:integer`, `post.id_tipo_dossier_rel:integer`, `post.tabla_from:string`, `post.tabla_to:string`
 - Respuesta: `standard_envelope_string_data`

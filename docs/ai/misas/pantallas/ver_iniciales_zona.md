@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento SlickGrid con sacds de la zona; edición inline que postea a `update_iniciales`.
 
 ## Uso En Ayuda
 

@@ -11,12 +11,12 @@ endpoints: []
 capacidades: []
 campos: ["get.acta"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Acta 2 Mpdf
 
-Descripcion funcional pendiente de revisar.
+Variante PDF del acta (segunda plantilla).
 
 ## Tipo
 
@@ -47,13 +47,11 @@ No se han detectado capacidades relacionadas.
 
 No se han detectado acciones.
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

@@ -5,18 +5,18 @@ subtipo: "fragmento_ajax"
 modulo: "procesos"
 nombre: "Usuario Perm Activ"
 controller: "frontend/procesos/controller/usuario_perm_activ.php"
-vistas: []
+vistas: ["frontend/procesos/view/usuario_perm_activ.html.twig"]
 fragmentos_frontend: []
 endpoints: ["/src/procesos/usuario_perm_activ_ajax", "/src/procesos/usuario_perm_activ_data", "/src/usuarios/perm_activ_guardar"]
 capacidades: ["procesos.usuario_perm_activ.gestionar", "procesos.usuario_perm_activ_ajax.gestionar"]
 campos: ["form.dl_propia", "form.extendida", "form.fase_ref", "form.iactividad_val", "form.iasistentes_val", "form.id_tipo_activ", "form.inom_tipo_val", "form.isfsv_val", "form.perm_off", "form.perm_on", "post.dl_propia", "post.id_tipo_activ_txt", "post.id_usuario", "post.que", "post.quien", "post.sel"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Usuario Perm Activ
 
-Descripcion funcional pendiente de revisar.
+Alta o edición de permisos de actividad para un usuario: selector de tipo de actividad (DL propia/otras), ámbitos afectados, fase de referencia y permisos on/off por fila.
 
 ## Tipo
 
@@ -25,7 +25,7 @@ Descripcion funcional pendiente de revisar.
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
+- `frontend/procesos/view/usuario_perm_activ.html.twig`
 
 ## Fragmentos Frontend Relacionados
 
@@ -65,13 +65,7 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

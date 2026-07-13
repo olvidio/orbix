@@ -42,10 +42,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona GuardarEncargoZona. Inserta o actualiza un Encargo del grupo ZONAS_MISAS. - Si id_enc es 0 se crea uno nuevo con getNewId(). - Si hay valor, se carga el existente y se modifica. Devuelve un array con: - error: texto vacio si todo fue bien, mensaje del repositorio si no. - data : payload para el frontend con id_enc, lugar y el nombre del centro si se resolvio.
+Crea o actualiza un Encargo del grupo ZONAS_MISAS (id_enc=0 → alta) y devuelve id y nombre del centro.
+
+## Errores Documentados
+
+- `No se encuentra el encargo %d`
+- `<repositorio getErrorTxt()>`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

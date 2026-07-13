@@ -2,25 +2,23 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "pasarela"
-titulo: "Contribucion No Duerme Excepcion"
+titulo: "Excepción contribución no duerme"
 flujo: "pasarela.contribucion_no_duerme_excepcion.gestionar.flujo"
-preguntas: ["Como eliminar en Contribucion No Duerme Excepcion?", "Como guardar en Contribucion No Duerme Excepcion?"]
+preguntas: []
 pantallas_principales: []
-fragmentos: ["pasarela.pantalla.contribucion_no_duerme_ajax", "pasarela.pantalla.contribucion_no_duerme_lista"]
-endpoints: ["/src/pasarela/contribucion_no_duerme_excepcion_eliminar", "/src/pasarela/contribucion_no_duerme_excepcion_guardar"]
+fragmentos: [""]
+endpoints: [""]
 source: "docs/catalogo/pasarela/flujos/contribucion_no_duerme_excepcion.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Contribucion No Duerme Excepcion
+# Ayuda IA - Excepción contribución no duerme
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Contribucion No Duerme Excepcion`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Excepción contribución no duerme`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como eliminar en Contribucion No Duerme Excepcion?
-- Como guardar en Contribucion No Duerme Excepcion?
 
 ## Donde Entrar
 
@@ -30,37 +28,19 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/pasarela/contribucion_no_duerme_excepcion_eliminar`
-
-## Guardar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
-- `pasarela.pantalla.contribucion_no_duerme_ajax`
-- `pasarela.pantalla.contribucion_no_duerme_lista`
+- ``
 
 ## Objetivo
 
-Gestiona ContribucionNoDuermeExcepcion. Elimina una excepción del parámetro contribucion_no_duerme para un id_tipo_activ concreto. Inserta o actualiza una excepción del parámetro contribucion_no_duerme para un id_tipo_activ concreto.
+Porcentaje distinto por tipo de actividad.
 
 ## Errores Documentados
 
-- `Debe ser un numero entero del 1 al 100`
 - `Falta id_tipo_activ`
 - `Falta valor de contribución`
+- `Debe ser un numero entero del 1 al 100`
 
 ## Limites De La Respuesta
 

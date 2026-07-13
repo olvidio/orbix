@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["eliminar"]
 endpoints: ["/src/notas/acta_pdf_eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Pdf
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_pdf.gestionar`
 
 ## Objetivo De Usuario
 
-Gestiona ActaPdf. Elimina el PDF firmado asociado a un Acta (sin borrar el acta).
+Gestión del PDF escaneado: subir, descargar y eliminar.
 
 ## Punto De Entrada
 
@@ -55,10 +55,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 - ``No se encuentra el acta``
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

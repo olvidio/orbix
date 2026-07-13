@@ -11,12 +11,12 @@ endpoints: ["/src/certificados/certificado_emitido_guardar_pdf"]
 capacidades: ["certificados.certificado_emitido_guardar_pdf.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Certificado Emitido 2 Mpdf
 
-Descripcion funcional pendiente de revisar.
+Variante de generación/guardado PDF del certificado emitido (segunda plantilla mPDF).
 
 ## Tipo
 
@@ -47,13 +47,6 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice

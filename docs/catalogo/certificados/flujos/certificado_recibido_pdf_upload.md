@@ -8,20 +8,20 @@ pantallas_principales: ["certificados.pantalla.certificado_recibido_pdf_upload"]
 fragmentos: ["certificados.pantalla.certificado_recibido_adjuntar", "certificados.pantalla.certificado_recibido_modificar"]
 acciones: ["ejecutar"]
 endpoints: ["/src/certificados/certificado_recibido_pdf_upload"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Certificado Recibido Pdf Upload
 
-Propuesta generada automaticamente desde la capacidad `certificados.certificado_recibido_pdf_upload.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Gestiona CertificadoRecibidoPdfUpload. Subida AJAX del PDF (certificado recibido, FormData multipart).
+Subir PDF de certificado recibido.
 
 ## Punto De Entrada
 
-- `certificados.pantalla.certificado_recibido_pdf_upload`
+Formulario adjuntar recibido.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -62,9 +62,6 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

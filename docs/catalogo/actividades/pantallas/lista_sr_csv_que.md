@@ -1,71 +1,41 @@
 ---
 id: "actividades.pantalla.lista_sr_csv_que"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "actividades"
-nombre: "Lista Sr Csv Que"
+nombre: "Filtros listado CSV San Rafael"
 controller: "frontend/actividades/controller/lista_sr_csv_que.php"
-vistas: []
-fragmentos_frontend: ["frontend/actividades/controller/lista_sr_csv.php", "frontend/actividades/controller/lista_sr_csv_que.php"]
+vistas: ["frontend/actividades/view/lista_sr_csv_que.html.twig"]
+fragmentos_frontend: ["frontend/actividades/controller/lista_sr_csv.php"]
 endpoints: ["/src/actividades/lista_sr_csv_que_datos"]
 capacidades: ["actividades.lista_sr_csv_que.gestionar"]
 campos: ["form.c_activ", "form.empiezamax", "form.empiezamin", "form.id_cdc_mas", "form.id_cdc_num", "form.periodo", "form.status", "form.year", "post.empiezamax", "post.empiezamin", "post.periodo", "post.year"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Lista Sr Csv Que
+# Filtros listado CSV San Rafael
 
-Pantalla del formulario para listados particulares de SR.
+Formulario para el **listado CSV de actividades SR**: periodo (`PeriodoQue`),
+selección múltiple de casas (`CasasQue`), tipos de actividad y estados. Al cargar
+consulta `lista_sr_csv_que_datos` para valores por defecto (preferencias del
+usuario). El action apunta a `lista_sr_csv.php`.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal` (`ViewNewTwig`)
 - Controller: `frontend/actividades/controller/lista_sr_csv_que.php`
-
-## Vistas Relacionadas
-
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/actividades/controller/lista_sr_csv.php`
-- `frontend/actividades/controller/lista_sr_csv_que.php`
 
 ## Endpoints Usados
 
-- `/src/actividades/lista_sr_csv_que_datos`
-
-## Capacidades Relacionadas
-
-- `actividades.lista_sr_csv_que.gestionar`
-
-## Campos Detectados
-
-- `form.c_activ`
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.id_cdc_mas`
-- `form.id_cdc_num`
-- `form.periodo`
-- `form.status`
-- `form.year`
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.periodo`
-- `post.year`
-
-## Acciones Detectadas
-
-No se han detectado acciones.
+- `/src/actividades/lista_sr_csv_que_datos` — bootstrap de defaults
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Elegir casas, periodo, tipos y estados; buscar o exportar CSV en la pantalla de
+resultados.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** vsr > listas actividades > listado csv.
+- **Pills2:** sin entrada dedicada en el índice (misma ruta vsr).

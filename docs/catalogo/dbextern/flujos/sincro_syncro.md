@@ -2,54 +2,34 @@
 id: "dbextern.sincro_syncro.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Gestionar Sincro Syncro"
+nombre: "Flujo - Sincronizar fichas unidas"
 capacidad: "dbextern.sincro_syncro.gestionar"
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.sincro_index"]
 acciones: ["ejecutar"]
 endpoints: ["/src/dbextern/sincro_syncro"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Sincro Syncro
+# Flujo - Sincronizar fichas unidas
 
-Propuesta generada automaticamente desde la capacidad `dbextern.sincro_syncro.gestionar` y sus pantallas relacionadas.
+Ejecuta la sincronización masiva del punto 1.
 
 ## Objetivo De Usuario
 
-Gestiona SincroPersonas. Sincroniza todas las personas unidas de una DL.
+Actualizar en Aquinate los datos de todas las personas ya vinculadas a la BDU en la DL actual.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Enlace **ejecutar** del punto 1 en `sincro_index` (`fnjs_sincronizar`).
 
-## Fragmentos O Pantallas Auxiliares
-
-- `dbextern.pantalla.sincro_index`
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.dl_listas`
-- `form.que`
-- `form.region`
-- `form.tipo_persona`
-- `post.tipo`
-
-Acciones JavaScript:
-- `fnjs_refrescar`
-- `fnjs_sincronizar`
-- `fnjs_update_div`
+1. Envía `region`, `dl_listas`, `tipo_persona` con HashFront.
+2. `SincroPersonas` sincroniza cada persona con `id_match`.
+3. Muestra `alert` con mensaje resumen o errores parciales.
 
 ## Endpoints Del Flujo
 
@@ -57,11 +37,8 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- Mensajes de syncro por persona (dentro de `mensaje`, no siempre `success: false`)
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (acción embebida en `sincro_index`)

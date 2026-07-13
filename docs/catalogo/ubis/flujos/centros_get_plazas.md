@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.centros_get_plazas"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/centros_get_plazas"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Centros Get Plazas
-
-Propuesta generada automaticamente desde la capacidad `ubis.centros_get_plazas.gestionar` y sus pantallas relacionadas.
+# Flujo - Centros Get Plazas
 
 ## Objetivo De Usuario
 
-Gestiona CentrosGetPlazas. Descripcion funcional pendiente de revisar.
+Lista centros DL activos con plazas, habitaciones individuales y flag sede.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones > modificar centros.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros

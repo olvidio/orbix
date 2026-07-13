@@ -2,47 +2,39 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Actividad Fases Completadas"
+titulo: "Prefill fases completadas"
 flujo: "actividades.actividad_fases_completadas.gestionar.flujo"
-preguntas: ["Como obtener datos en Actividad Fases Completadas?"]
-pantallas_principales: []
+preguntas: []
+pantallas_principales: ["actividades.pantalla.actividad_ver"]
 fragmentos: []
 endpoints: ["/src/actividades/actividad_fases_completadas_datos"]
 source: "docs/catalogo/actividades/flujos/actividad_fases_completadas.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Actividad Fases Completadas
+# Ayuda IA - Prefill fases completadas
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Actividad Fases Completadas`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Prefill fases completadas`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Actividad Fases Completadas?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (`actividades.pantalla.actividad_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `actividades.pantalla.actividad_ver`
 
 ## Objetivo
 
-Gestiona ActividadFasesCompletadasDatos. JSON: lista de fases completadas para id_activ (alimentar setFasesCompletadas en sesión).
+Ver checkboxes de fases coherentes con el estado real del proceso al editar/crear.
 
 ## Limites De La Respuesta
 

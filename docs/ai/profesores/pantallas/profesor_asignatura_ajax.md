@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "profesores"
-titulo: "Profesor Asignatura Ajax"
+titulo: "Tabla profesores por asignatura"
 pantalla: "profesores.pantalla.profesor_asignatura_ajax"
-preguntas: ["Que se puede hacer en Profesor Asignatura Ajax?", "Que campos tiene Profesor Asignatura Ajax?", "Que acciones hay en Profesor Asignatura Ajax?"]
+preguntas: ["Que se puede hacer en Tabla profesores por asignatura?", "Que campos tiene Tabla profesores por asignatura?", "Que acciones hay en Tabla profesores por asignatura?"]
 capacidades: ["profesores.profesor_asignatura_ajax.gestionar"]
 endpoints: ["/src/profesores/profesor_asignatura_ajax"]
 source: "docs/catalogo/profesores/pantallas/profesor_asignatura_ajax.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Profesor Asignatura Ajax
+# Ayuda IA Pantalla - Tabla profesores por asignatura
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX: devuelve HTML de tabla `Lista` con profesores del departamento y de ampliación para la asignatura indicada.
 
 ## Uso En Ayuda
 

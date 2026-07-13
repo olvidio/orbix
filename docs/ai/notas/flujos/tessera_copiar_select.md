@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TesseraCopiarSelect. Prepara los datos para elegir a que persona (con el mismo primer apellido) se copiara la tessera de otra persona. Devuelve ['nom' => string, 'posibles_personas' => [id_nom => nombre]]. Lanza RuntimeException si no encuentra la persona origen ni como numerario ni como agregado.
+Elegir destino y ejecutar copia de tessera.
 
 ## Limites De La Respuesta
 

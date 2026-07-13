@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Página para recuperar el QR para la app 2fa.
+Formulario solicitud recuperación código 2FA.
 
 ## Uso En Ayuda
 

@@ -2,48 +2,39 @@
 id: "profesores.docencia.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Gestionar Docencia"
+nombre: "Flujo - Ver docencia global"
 capacidad: "profesores.docencia.gestionar"
-pantallas_principales: []
-fragmentos: ["profesores.pantalla.docencia"]
-acciones: ["ejecutar"]
+pantallas_principales: ["profesores.pantalla.docencia"]
+fragmentos: []
+acciones: ["consultar"]
 endpoints: ["/src/profesores/docencia"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Docencia
+# Flujo - Ver docencia global
 
-Propuesta generada automaticamente desde la capacidad `profesores.docencia.gestionar` y sus pantallas relacionadas.
+Consulta del registro histórico de docencia STGR de todo el claustro.
 
 ## Objetivo De Usuario
 
-Gestiona DocenciaLista. Descripcion funcional pendiente de revisar.
+Revisar qué docencia consta registrada por profesor, curso, asignatura y acta.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-- `profesores.pantalla.docencia`
+Pantalla `docencia` (`frontend/profesores/controller/docencia.php`).
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Abrir **ver docencia** desde el menú `stgr2`.
+2. Revisar la tabla `tabla_docencia`.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/profesores/docencia`
 
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+Relacionado: alimentar datos con **actualizar docencia** (`actividadestudios`) al cerrar el CA.
 
 ## Endpoints Del Flujo
 
@@ -53,9 +44,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > actas... > ver docencia
+- **Pills2:** sin entrada en el índice

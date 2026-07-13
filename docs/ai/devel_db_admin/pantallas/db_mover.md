@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento que ejecuta el movimiento de tabla entre bases.
 
 ## Uso En Ayuda
 

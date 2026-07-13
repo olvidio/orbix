@@ -45,10 +45,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TipoActivProcesoLista. Caso de uso: devuelve el listado estructurado de tipos de actividad con el proceso propio / no-propio asignado. El frontend renderiza la tabla con frontend\shared\web\Lista.
+Listado de tipos de actividad con el proceso asignado (propio y no propio) para su gestión desde la pantalla de asignación.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

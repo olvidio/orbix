@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaUltimQueCtr. JSON para {.
+Elegir centro para informe de última asistencia.
 
 ## Limites De La Respuesta
 

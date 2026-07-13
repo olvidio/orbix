@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "pasarela"
-titulo: "Parametros Menu"
+titulo: "Parámetros pasarela"
 pantalla: "pasarela.pantalla.parametros_menu"
-preguntas: ["Que se puede hacer en Parametros Menu?", "Que campos tiene Parametros Menu?", "Que acciones hay en Parametros Menu?"]
+preguntas: ["Que se puede hacer en Parámetros pasarela?", "Que campos tiene Parámetros pasarela?", "Que acciones hay en Parámetros pasarela?"]
 capacidades: []
 endpoints: []
 source: "docs/catalogo/pasarela/pantallas/parametros_menu.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Parametros Menu
+# Ayuda IA Pantalla - Parámetros pasarela
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Menú de configuración de la pasarela de exterior: enlaces a fecha de activación, nombres particulares, contribución no duerme y contribución reserva.
 
 ## Uso En Ayuda
 

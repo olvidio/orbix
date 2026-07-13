@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario para crear un nuevo plan de misas: zona, orden, tipo plantilla y periodo. Redirige a `crear_nuevo_periodo`.
 
 ## Uso En Ayuda
 

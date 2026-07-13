@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActaPdfSubir. Sube (persiste) el contenido binario de un PDF firmado en el campo pdf del acta identificada por acta_num. El contenido se lee del array $files que tiene la misma forma que $_FILES (clave acta_pdf generada por bootstrap-fileinput en acta_ver.phtml).
+Adjuntar PDF a un acta.
 
 ## Limites De La Respuesta
 

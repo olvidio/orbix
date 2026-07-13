@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ProcesosDepende. Caso de uso: devuelve las opciones disponibles para el desplegable de tareas dependientes de la fase indicada (usado al cambiar de fase o fase_previa en el formulario procesos_ver). Respuesta JSON con opciones (value => label). El frontend inyecta los <option> en el <select> destino indicado por acc.
+Actualización dinámica del desplegable de tareas dependientes al cambiar la fase o fase previa en el formulario de edición de una tarea de proceso.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

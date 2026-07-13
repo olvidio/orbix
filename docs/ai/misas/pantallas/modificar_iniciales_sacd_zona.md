@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Entry point para editar iniciales y color de sacerdotes por zona. Selector de zona y carga AJAX de `ver_iniciales_zona`.
 
 ## Uso En Ayuda
 

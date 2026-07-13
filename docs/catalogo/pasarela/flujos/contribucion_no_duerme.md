@@ -2,77 +2,50 @@
 id: "pasarela.contribucion_no_duerme.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "pasarela"
-nombre: "Flujo - Gestionar Contribucion No Duerme"
+nombre: "Flujo - Gestionar contribución no duerme"
 capacidad: "pasarela.contribucion_no_duerme.gestionar"
 pantallas_principales: []
-fragmentos: ["pasarela.pantalla.contribucion_no_duerme_ajax"]
-acciones: ["listar"]
-endpoints: ["/src/pasarela/contribucion_no_duerme_lista"]
-estado_revision: "generado"
+fragmentos:
+  - "pasarela.pantalla.contribucion_no_duerme_ajax"
+acciones: ["listar", "guardar", "eliminar"]
+endpoints:
+  - "\/src\/pasarela\/contribucion_no_duerme_lista"
+  - "\/src\/pasarela\/contribucion_no_duerme_default_data"
+  - "\/src\/pasarela\/contribucion_no_duerme_default_guardar"
+  - "\/src\/pasarela\/contribucion_no_duerme_excepcion_guardar"
+  - "\/src\/pasarela\/contribucion_no_duerme_excepcion_eliminar"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Contribucion No Duerme
-
-Propuesta generada automaticamente desde la capacidad `pasarela.contribucion_no_duerme.gestionar` y sus pantallas relacionadas.
+# Flujo - Gestionar contribución no duerme
 
 ## Objetivo De Usuario
 
-Gestiona ContribucionNoDuermeLista. Devuelve el listado del parámetro contribucion_no_duerme listo para serializar. Estructura: {default, excepciones: [{id_tipo_activ, etiqueta, valor}]}.
+Porcentaje de contribución para quien no pernocta.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+`contribucion_no_duerme_lista.php` desde parámetros.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `pasarela.pantalla.contribucion_no_duerme_ajax`
-
-## Escenarios Inferidos
-
-### Listar
-
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Endpoints asociados:
-- `/src/pasarela/contribucion_no_duerme_lista`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.contribucion`
-- `form.default`
-- `form.iactividad_val`
-- `form.iasistentes_val`
-- `form.id_tipo_activ`
-- `form.inom_tipo_val`
-- `form.isfsv_val`
-- `post.contribucion`
-- `post.default`
-- `post.id_tipo_activ`
-- `post.que`
-- `post.sactividad`
-- `post.sasistentes`
-- `post.snom_tipo`
-
-Acciones JavaScript:
-- `fnjs_modificar`
-- `fnjs_modificar_default`
+Listar, editar default (0–100 %), alta/edición/eliminación de excepciones.
 
 ## Endpoints Del Flujo
 
 - `/src/pasarela/contribucion_no_duerme_lista`
+- `/src/pasarela/contribucion_no_duerme_default_data`
+- `/src/pasarela/contribucion_no_duerme_default_guardar`
+- `/src/pasarela/contribucion_no_duerme_excepcion_guardar`
+- `/src/pasarela/contribucion_no_duerme_excepcion_eliminar`
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Falta valor por defecto`
+- `Debe ser un numero entero del 1 al 100`
+- `Falta id_tipo_activ`
+- `Falta valor de contribución`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).

@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.asignaturas_pendientes_resumen"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/asignaturas_pendientes_resumen_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Asignaturas Pendientes Resumen
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.asignaturas_pendien
 
 ## Objetivo De Usuario
 
-Gestiona AsignaturasPendientesResumen. Resumen: número de alumnos con cada asignatura pendiente, desglosado por tramo (nb, nc1, nc2, n total, ab, ac1, ac2, a total). Sucesor de la lógica embebida en frontend/notas/controller/asignaturas_pendientes_resumen.php.
+Ver resumen de pendientes por asignatura.
 
 ## Punto De Entrada
 
@@ -53,9 +53,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > actas... > resumen pendientes
+- **Pills2:** ESTUDIOS > Preparación planes estudio > nº alum. por asignatura; vest > actas... > resumen pendientes

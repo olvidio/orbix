@@ -8,7 +8,7 @@ pantallas_principales: ["casas.pantalla.grupo"]
 fragmentos: ["casas.pantalla.grupo_form", "casas.pantalla.grupo_lista"]
 acciones: ["crear_actualizar", "eliminar", "listar", "ver_formulario"]
 endpoints: ["/src/casas/grupo_eliminar", "/src/casas/grupo_form_data", "/src/casas/grupo_lista_data", "/src/casas/grupo_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Grupo
@@ -101,16 +101,14 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``Hay un error, no se ha eliminado.``
-- ``Hay un error, no se ha guardado.``
-- ``No puede ser la misma casa``
-- ``debe indicar el grupo a eliminar``
-- ``debe indicar las dos casas``
-- ``no se encuentra el grupo``
+- `debe indicar las dos casas`
+- `No puede ser la misma casa`
+- `no se encuentra el grupo`
+- `debe indicar el grupo a eliminar`
+- `Hay un error, no se ha guardado.`
+- `Hay un error, no se ha eliminado.`
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** adl > Gestión casas > grupos
+- **Pills2:** CASAS Y CTR > Gestión casas > grupos
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

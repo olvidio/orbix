@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla AJAX de grupos disponibles para asignar al usuario.
 
 ## Uso En Ayuda
 

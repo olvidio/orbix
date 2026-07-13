@@ -11,12 +11,12 @@ endpoints: ["/src/devel_db_admin/db_lugar", "/src/devel_db_admin/db_propiedades_
 capacidades: ["devel_db_admin.db_lugar.gestionar", "devel_db_admin.db_propiedades.gestionar"]
 campos: ["form.comun", "form.dl", "form.esquema_origen", "form.region", "form.sf", "form.sv", "html.bcorregir", "html.bcrear", "html.bverif", "html.comun", "html.dl", "html.esquema_origen", "html.region", "html.sf", "html.sv"]
 acciones: ["fnjs_db_corregir_renombrar_esquema", "fnjs_db_renombrar_esquema", "fnjs_db_verificar_renombrar_esquema", "fnjs_dl", "fnjs_enviar_formulario", "fnjs_html_verificacion", "fnjs_sincronizar_frm_verif"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Db Cambiar Nombre Que
 
-Descripcion funcional pendiente de revisar.
+Asistente para renombrar un esquema DL: origen, región/dl destino y flags comun/sv/sf.
 
 ## Tipo
 
@@ -73,11 +73,11 @@ Descripcion funcional pendiente de revisar.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Acceder desde el menú de administración DB o configuración.
+2. Completar el formulario y ejecutar la acción.
+3. Revisar avisos/errores en el panel de respuesta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > DB > cambiar nombre esquema
+- **Pills2:** ADMIN GLOBAL > DB > mover y cambiar nombre dl / sistema > DB > cambiar nombre esquema

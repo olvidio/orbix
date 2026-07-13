@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona DesplegableSacd. Opciones del desplegable dinámico de SACD en el modal de la cuadrícula de zona. El payload sigue el espíritu del contrato de refactor.md (id, selected, filas ordenadas). rows conserva el orden del HTML legacy: opción actual, opción en blanco si aplica, resto ordenado por clave.
+Construye el desplegable dinámico de SACD en el modal de la cuadrícula, filtrando por disponibilidad según flags de selección y día.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

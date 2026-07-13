@@ -11,12 +11,12 @@ endpoints: ["/src/notas/informe_stgr_agd_data"]
 capacidades: ["notas.informe_stgr_agd.gestionar"]
 campos: ["post.dl", "post.lista"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Informe Stgr Agd
 
-Informe anual STGR - Agregados (puntos 21..33 + `x`).
+Informe anual de agregados: métricas de progreso en planes de estudio.
 
 ## Tipo
 
@@ -48,13 +48,11 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
+## Ruta de menú
+
+- **Legacy:** Calendario > Nuevo calendario > Previsión asistentes (sin lista); variantes lista en ESTUDIOS
+- **Pills2:** ACTIVIDADES > Estadísticas económicas > Previsión asistentes; ESTUDIOS > Datos e informes > Informe anual agd > Con números / Con listados
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

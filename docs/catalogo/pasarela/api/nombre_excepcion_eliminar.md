@@ -6,22 +6,29 @@ url: "/src/pasarela/nombre_excepcion_eliminar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/pasarela/infrastructure/ui/http/controllers/nombre_excepcion_eliminar.php"
-entrada: ["post.id_tipo_activ:string"]
+entrada:
+  - "post.id_tipo_activ:string"
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["Falta id_tipo_activ"]
-frontend_referencias: ["frontend/pasarela/controller/nombre_ajax.php"]
-casos_uso: ["src\\pasarela\\application\\NombreExcepcionEliminar"]
-tags: ["pasarela", "nombre", "excepcion", "eliminar"]
-estado_revision: "generado"
+errores:
+  - "Falta id_tipo_activ"
+frontend_referencias:
+  - "frontend\/pasarela\/controller\/nombre_ajax.php"
+casos_uso: ["src\pasarela\application\NombreExcepcionEliminar"]
+tags: ["pasarela"]
+estado_revision: "revisado"
 ---
 
 # Nombre Excepcion Eliminar
 
-Elimina una excepción del parámetro `nombre` para un `id_tipo_activ` concreto.
+Elimina el nombre particular de un tipo de actividad.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Borra la excepción en `pasarela_dl`.
 
 ## Endpoint
 
@@ -34,21 +41,20 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tipo_activ` | `string` | controller | No | controller |
+| `id_tipo_activ` | `string` | controller | No | |
+
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-
-## Efectos colaterales
-
-- Elimina una excepción del parámetro `nombre` para un `id_tipo_activ` concreto.
+- Éxito: `data: "ok"`.
 
 ## Errores conocidos
 
 - `Falta id_tipo_activ`
+
+## Permisos
+
+Sin control en el caso de uso; autorización en frontend.
 
 ## Casos De Uso
 
@@ -57,9 +63,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Frontend Relacionado
 
 - `frontend/pasarela/controller/nombre_ajax.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

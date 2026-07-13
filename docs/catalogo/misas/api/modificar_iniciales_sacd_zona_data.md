@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/modificar_iniciales_sacd_zona_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/misas/infrastructure/ui/http/controllers/modificar_iniciales_sacd_zona_data.php"
 entrada: []
 entrada_obligatoria: []
@@ -13,31 +13,49 @@ requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/modificar_iniciales_sacd_zona.php"]
 casos_uso: ["src\\misas\\application\\ModificarInicialesSacdZonaData"]
 tags: ["misas", "modificar", "iniciales", "sacd", "zona", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
-# Modificar Iniciales Sacd Zona Data
+# Modificar iniciales sacd zona Data
 
-Descripcion funcional pendiente de revisar.
+Devuelve el desplegable de todas las zonas para la pantalla de edición de iniciales SACD.
+
+Linaje: Slice 3 — migrado desde apps/misas/controller/modificar_iniciales_sacd_zona.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve el desplegable de todas las zonas para la pantalla de edición de iniciales SACD.
 
 ## Endpoint
 
 - URL: `/src/misas/modificar_iniciales_sacd_zona_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/modificar_iniciales_sacd_zona_data.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| _(ninguno)_ | | | | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `a_opciones`: array<int|string, string>
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -45,10 +63,4 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/modificar_iniciales_sacd_zona.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/modificar_iniciales_sacd_zona.php"]`).

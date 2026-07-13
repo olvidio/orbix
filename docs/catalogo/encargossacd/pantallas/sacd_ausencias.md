@@ -1,7 +1,7 @@
 ---
 id: "encargossacd.pantalla.sacd_ausencias"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "pantalla_principal"
 modulo: "encargossacd"
 nombre: "Sacd Ausencias"
 controller: "frontend/encargossacd/controller/sacd_ausencias.php"
@@ -11,7 +11,7 @@ endpoints: []
 capacidades: []
 campos: ["form.filtro_sacd", "form.historial", "form.id_nom", "post.filtro_sacd"]
 acciones: ["fnjs_horario", "fnjs_lista_sacd", "fnjs_ver_ficha"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Sacd Ausencias
@@ -20,7 +20,7 @@ Ficha de ausencias de un sacd.
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/encargossacd/controller/sacd_ausencias.php`
 
 ## Vistas Relacionadas
@@ -52,13 +52,19 @@ No se han detectado capacidades relacionadas.
 - `fnjs_lista_sacd`
 - `fnjs_ver_ficha`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** dre > ausencias > sacd
+- **Pills2:** sin entrada de menú en el índice
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > ausencias > sacd
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** dre > ausencias > sacd
+- **Pills2:** sin entrada de menú en el índice
+

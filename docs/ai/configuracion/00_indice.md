@@ -21,14 +21,14 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Modulos -> `flujos/modulos.md`
-- Modulos Select -> `flujos/modulos_select.md`
-- Parametros -> `flujos/parametros.md`
-- Periodo Calendario Escolar -> `flujos/periodo_calendario_escolar.md`
+- módulo (ficha) -> `flujos/modulos.md`
+- Definir módulos (listado) -> `flujos/modulos_select.md`
+- Configurar parámetros del esquema -> `flujos/parametros.md`
+- Periodo calendario escolar (interno) -> `flujos/periodo_calendario_escolar.md`
 
 ## Pantallas Disponibles
 
-- Modulos Form -> `pantallas/modulos_form.md`
-- Modulos Select -> `pantallas/modulos_select.md`
-- Modulos Update -> `pantallas/modulos_update.md`
-- Parametros -> `pantallas/parametros.md`
+- Ficha de módulo -> `pantallas/modulos_form.md`
+- Definir módulos -> `pantallas/modulos_select.md`
+- Proxy AJAX modulos_update -> `pantallas/modulos_update.md`
+- Configuración del esquema -> `pantallas/parametros.md`

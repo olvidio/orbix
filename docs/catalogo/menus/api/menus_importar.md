@@ -7,52 +7,33 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/menus/infrastructure/ui/http/controllers/menus_importar.php"
 entrada: ["post.id_template_menu:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_template_menu"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/menus/controller/menus_importar_form.php"]
 casos_uso: []
-tags: ["menus", "importar"]
-estado_revision: "generado"
+tags: ["menus", "importar", "template"]
+estado_revision: "revisado"
 ---
 
-# Menus Importar
+# Importar plantilla de menú al esquema activo
 
-Descripcion funcional pendiente de revisar.
+TRUNCATE + INSERT desde `ref_*` (BD pública) hacia `aux_grupmenu`, `aux_grupmenu_rol`, `aux_menus` del
+esquema de trabajo. **Destructivo**: borra menús locales antes de importar.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
-## Endpoint
-
-- URL: `/src/menus/menus_importar`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
-- Controller: `src/menus/infrastructure/ui/http/controllers/menus_importar.php`
-
 ## Entrada
 
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `id_template_menu` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| Campo | Tipo | Notas |
+|-------|------|-------|
+| `id_template_menu` | `integer` | Plantilla origen |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-
-## Casos De Uso
-
-No se han detectado imports de `src\...\application\...`.
+- `data: "ok"`; errores SQL en `mensaje` (`Importar.*`).
 
 ## Frontend Relacionado
 
 - `frontend/menus/controller/menus_importar_form.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

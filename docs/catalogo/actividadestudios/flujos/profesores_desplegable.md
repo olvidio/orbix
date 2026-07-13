@@ -8,20 +8,25 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/profesores_desplegable_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Profesores Desplegable
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.profesores_desplegable.gestionar` y sus pantallas relacionadas.
+Desplegable AJAX de profesores para asignatura de actividad.
 
 ## Objetivo De Usuario
 
-Gestiona ProfesoresDesplegable. Devuelve JSON con los datos para construir el desplegable de profesores.
+Al cambiar la asignatura o añadir un profesor en el formulario de asignatura impartida, el
+usuario obtiene la lista actualizada de profesores candidatos para esa asignatura en la
+actividad.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `form_asignaturas_de_una_actividad`
+(`frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php`): las
+funciones `fnjs_construir_desplegable` y `fnjs_mas_profes` llaman por AJAX a
+`profesores_desplegable_data` (URLs `h`, `h1`, `h2` del HashFront).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +36,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En el formulario de asignatura impartida, cambiar la asignatura del desplegable.
+2. Se dispara `fnjs_mas_profes('asignatura')` o reconstrucción del desplegable.
+3. El sistema consulta `profesores_desplegable_data` con `id_activ`, `id_asignatura` y `salida`.
+4. Se actualiza el desplegable de profesores en pantalla.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/profesores_desplegable_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -56,9 +64,7 @@ Campos:
 - `post.sel`
 
 Acciones JavaScript:
-- `fnjs_comprobar_fecha`
 - `fnjs_construir_desplegable`
-- `fnjs_guardar`
 - `fnjs_mas_profes`
 
 ## Endpoints Del Flujo
@@ -69,9 +75,9 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo AJAX desde formulario dossier 3005).
+
+- **Legacy:** vsm > ca > buscar ca.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n.

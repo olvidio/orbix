@@ -10,13 +10,13 @@ fragmentos_frontend: []
 endpoints: ["/src/cartaspresentacion/ubis_lista_data"]
 capacidades: ["cartaspresentacion.ubis.gestionar"]
 campos: ["post.poblacion_sel", "post.tipo_lista"]
-acciones: []
-estado_revision: "generado"
+acciones: ["fnjs_modificar", "fnjs_ver_ubi", "fnjs_eliminar_cp"]
+estado_revision: "revisado"
 ---
 
 # Cartas Presentacion Ubis Lista
 
-Controlador AJAX HTML: listado de centros con el estado de su carta de presentacion (modal de seleccion de la pantalla principal).
+Fragmento AJAX: tabla de centros con estado de carta de presentación (sí/no) y acciones por fila.
 
 ## Tipo
 
@@ -25,36 +25,28 @@ Controlador AJAX HTML: listado de centros con el estado de su carta de presentac
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-No se han detectado controladores frontend relacionados.
+No tiene vista PHTML; genera HTML con `frontend\shared\web\Lista`.
 
 ## Endpoints Usados
 
 - `/src/cartaspresentacion/ubis_lista_data`
 
-## Capacidades Relacionadas
-
-- `cartaspresentacion.ubis.gestionar`
-
 ## Campos Detectados
 
-- `post.poblacion_sel`
-- `post.tipo_lista`
+- `post.tipo_lista` — `get_dl` o `get_r`
+- `post.poblacion_sel` — filtro de población (modo `get_dl`)
 
 ## Acciones Detectadas
 
-No se han detectado acciones.
+- `fnjs_modificar` — enlace columna «director» (definido en shell padre)
+- `fnjs_ver_ubi` — enlace nombre del centro
+- `fnjs_eliminar_cp` — enlace «quitar» si la carta existe
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Se carga en `#ficha2` al pulsar **buscar** en la pantalla principal. Cada fila indica si el centro
+tiene carta y permite modificarla, ver la ficha del centro o quitar la carta existente.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+sin entrada de menú en el índice (fragmento de la pantalla `cartas_presentacion`).

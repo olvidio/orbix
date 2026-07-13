@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario de criterios para buscar direcciones existentes a asignar a un ubi.
 
 ## Uso En Ayuda
 

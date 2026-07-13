@@ -10,17 +10,23 @@ entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/devel_db_admin/controller/migraciones_lista.php"]
 casos_uso: ["src\\devel_db_admin\\application\\MigracionesListaData"]
 tags: ["devel_db_admin", "migraciones", "lista", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Migraciones Lista Data
 
-Descripcion funcional pendiente de revisar.
+Listado de migraciones SQL escaneadas con estado de aplicación.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Escanea `db/migrations`, cruza con `migracion_aplicada` y devuelve filas para SlickGrid con
+cabeceras traducidas. Cada fila incluye `sel` = id de migración (sin `#`; el grid lo añade).
 
 ## Endpoint
 
@@ -31,12 +37,19 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Sin parámetros.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Payload:
+  - `a_cabeceras` (`array`): columnas SlickGrid
+  - `a_valores` (`array`): filas (`sel`, `fichero`, `prefijo`, `descripcion`, `bds`, `tipo`, `estado`, `fecha`)
+  - `warnings` (`list<string>`): avisos del escaneo
+
+## Permisos
+
+- Sin control propio.
 
 ## Casos De Uso
 
@@ -45,9 +58,3 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 ## Frontend Relacionado
 
 - `frontend/devel_db_admin/controller/migraciones_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

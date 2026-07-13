@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["eliminar"]
 endpoints: ["/src/inventario/equipajes_eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Equipajes
@@ -17,11 +17,13 @@ Propuesta generada automaticamente desde la capacidad `inventario.equipajes.gest
 
 ## Objetivo De Usuario
 
-Gestiona Equipaje. Borrado de un equipaje (antes solo en equipajes_eliminar.php).
+Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (EGM/Whereis), impresión y eliminación.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `inventario.pantalla.equipajes_ver`
+
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -57,9 +59,7 @@ Acciones JavaScript:
 - ``falta id_equipaje``
 - ``hay un error, no se ha eliminado``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > Inventario > equipajes > hacer equipajes
+- **Pills2:** —

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Inventario Que"
+titulo: "Elegir inventario centros o DLB"
 pantalla: "inventario.pantalla.inventario_que"
-preguntas: ["Que se puede hacer en Inventario Que?", "Que campos tiene Inventario Que?", "Que acciones hay en Inventario Que?"]
+preguntas: ["Que se puede hacer en Elegir inventario centros o DLB?", "Que campos tiene Elegir inventario centros o DLB?", "Que acciones hay en Elegir inventario centros o DLB?"]
 capacidades: []
 endpoints: []
 source: "docs/catalogo/inventario/pantallas/inventario_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Inventario Que
+# Ayuda IA Pantalla - Elegir inventario centros o DLB
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Punto de entrada: el usuario elige inventario de centros o de DLB/casa; redirige a `doc_de_ctr` o `doc_de_dlb`.
 
 ## Uso En Ayuda
 

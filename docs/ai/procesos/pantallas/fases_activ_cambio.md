@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Página para cambiar la fase a un grupo de actividades.
+Cambio de fase masivo en actividades: selector de tipo de actividad, filtro DL propia/otras, periodo, fase destino y acción marcar/desmarcar; muestra listado de actividades candidatas y permite aplicar el cambio.
 
 ## Uso En Ayuda
 

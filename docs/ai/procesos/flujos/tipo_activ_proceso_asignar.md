@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TipoActivProcesoAsignar. Caso de uso: asigna un id_tipo_proceso al tipo de actividad indicado, distinguiendo entre proceso propio (dl) o no-propio segun propio.
+Asignar un tipo de proceso a un tipo de actividad, distinguiendo entre proceso propio (DL) o no propio.
 
 ## Errores Documentados
 

@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.form_notas_de_una_persona"]
 acciones: ["crear", "eliminar"]
 endpoints: ["/src/notas/persona_nota_eliminar", "/src/notas/persona_nota_nueva"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Persona Nota
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.persona_nota.gestio
 
 ## Objetivo De Usuario
 
-Gestiona PersonaNota. Crea una PersonaNota. Elimina una PersonaNota.
+Alta de nota en dossier 1011 (`persona_nota_nueva`).
 
 ## Punto De Entrada
 
@@ -95,9 +95,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/dossier)

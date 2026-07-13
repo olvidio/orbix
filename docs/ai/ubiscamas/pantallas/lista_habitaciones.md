@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Asignación visual de asistentes a camas de una actividad (dossier actividad, enlace `camas`).
 
 ## Uso En Ayuda
 

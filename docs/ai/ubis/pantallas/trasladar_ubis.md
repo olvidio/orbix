@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Ejecuta el traslado de ubis seleccionados a la delegación destino indicada.
 
 ## Uso En Ayuda
 

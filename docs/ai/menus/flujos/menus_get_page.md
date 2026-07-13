@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "menus"
 titulo: "Menus Get Page"
 flujo: "menus.menus_get_page.gestionar.flujo"
-preguntas: ["Como obtener datos en Menus Get Page?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["menus.pantalla.menus_get"]
 endpoints: ["/src/menus/menus_get_page_data"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Menus Get Page?
 
 ## Donde Entrar
 
@@ -29,20 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `menus.pantalla.menus_get`
 
 ## Objetivo
 
-Gestiona MenusGetPage. Datos para frontend/menus/controller/menus_get.php (formulario o listado).
+Builder AJAX lista vs edición en gestor de menús.
 
 ## Limites De La Respuesta
 

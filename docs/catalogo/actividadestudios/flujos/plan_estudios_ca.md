@@ -8,34 +8,41 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.plan_estudios_ca"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/plan_estudios_ca_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Plan Estudios Ca
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.plan_estudios_ca.gestionar` y sus pantallas relacionadas.
+Informe del plan de estudios de una actividad CA.
 
 ## Objetivo De Usuario
 
-Gestiona PlanEstudiosCa. Descripcion funcional pendiente de revisar.
+El usuario consulta el plan de estudios de una actividad CA: director de estudios,
+preceptores, profesores por asignatura y alumnos con sus asignaturas matriculadas y
+observaciones de plan (`observ_est`).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `plan_estudios_ca` (`frontend/actividadestudios/controller/plan_estudios_ca.php`):
+se abre desde `actividad_select` con acción `plan_estudios`; llama a
+`plan_estudios_ca_data` con `id_activ`.
 
 ## Fragmentos O Pantallas Auxiliares
 
 - `actividadestudios.pantalla.plan_estudios_ca`
+- `frontend/actividades/controller/actividad_select.php` (pantalla padre)
 
 ## Escenarios Inferidos
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En `actividad_select`, seleccionar una actividad CA.
+2. Pulsar la acción **plan estudios**.
+3. El sistema consulta `plan_estudios_ca_data` y muestra el informe completo.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/plan_estudios_ca_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -53,9 +60,10 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde `actividad_select`:
+
+- **Legacy:** vsm > ca > buscar ca; vest > sem inv. > buscar.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades;
+  ESTUDIOS > Semestres de invierno > Buscar.

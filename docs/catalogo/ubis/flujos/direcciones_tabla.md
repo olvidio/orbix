@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.direcciones_tabla"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/direcciones_tabla"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Direcciones Tabla
-
-Propuesta generada automaticamente desde la capacidad `ubis.direcciones_tabla.gestionar` y sus pantallas relacionadas.
+# Flujo - Direcciones Tabla
 
 ## Objetivo De Usuario
 
-Gestiona DireccionesTabla. Descripcion funcional pendiente de revisar.
+Busca direcciones por cp/ciudad/país y muestra tabla para asignar al ubi.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -55,11 +53,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

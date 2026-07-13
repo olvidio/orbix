@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.calendario_periodos_form_periodo"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/calendario_periodos_form_periodo_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Calendario Periodos Form Periodo
-
-Propuesta generada automaticamente desde la capacidad `ubis.calendario_periodos_form_periodo.gestionar` y sus pantallas relacionadas.
+# Flujo - Calendario Periodos Form Periodo
 
 ## Objetivo De Usuario
 
-Gestiona CalendarioPeriodosFormPeriodo. Descripcion funcional pendiente de revisar.
+Carga los campos del formulario de edición de un periodo de calendario existente.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: adl > Nuevo Calendario > Definir periodos. Pills2: ACTIVIDADES > Herramientas de calendario > Definir periodos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -55,11 +53,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos

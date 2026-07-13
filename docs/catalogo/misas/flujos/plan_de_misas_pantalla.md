@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.modificar_plan_de_misas", "misas.pantalla.preparar_plan_de_misas", "misas.pantalla.ver_plan_de_misas"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/plan_de_misas_pantalla_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Plan De Misas Pantalla
-
-Propuesta generada automaticamente desde la capacidad `misas.plan_de_misas_pantalla.gestionar` y sus pantallas relacionadas.
+# Flujo - Plan de misas pantalla
 
 ## Objetivo De Usuario
 
-Gestiona PlanDeMisasPantalla. Datos comunes para las pantallas preparar / modificar / ver plan de misas y para modificar plantilla (mismos desplegables de zona / tipo / orden).
+Datos comunes para pantallas preparar/modificar/ver plan de misas: zonas, orden y tipos de plantilla en preparar.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas >  Nuevo plan. Pills2: ATENCIÓN SACD > Gestión de misas > Nuevo plan.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -63,11 +61,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Usuario no encontrado`
+- `No tiene permiso para ver esta página`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas >  Nuevo plan
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Nuevo plan

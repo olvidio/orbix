@@ -2,48 +2,41 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Actividad Tipo"
+titulo: "Cascada tipo actividad (AJAX)"
 flujo: "actividades.actividad_tipo.gestionar.flujo"
-preguntas: ["Como obtener en Actividad Tipo?"]
+preguntas: []
 pantallas_principales: ["actividades.pantalla.actividad_select_ubi"]
-fragmentos: ["actividades.pantalla.actividad_que"]
+fragmentos: ["actividades.pantalla.actividad_que", "actividades.pantalla.actividad_ver"]
 endpoints: ["/src/actividades/actividad_tipo_get"]
 source: "docs/catalogo/actividades/flujos/actividad_tipo.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Actividad Tipo
+# Ayuda IA - Cascada tipo actividad (AJAX)
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Actividad Tipo`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Cascada tipo actividad (AJAX)`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener en Actividad Tipo?
 
 ## Donde Entrar
 
-- Actividad Select Ubi (`actividades.pantalla.actividad_select_ubi`)
+- Seleccionar lugar (popup) (`actividades.pantalla.actividad_select_ubi`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividades.pantalla.actividad_select_ubi`
 - `actividades.pantalla.actividad_que`
+- `actividades.pantalla.actividad_ver`
 
 ## Objetivo
 
-Gestiona ActividadTipoGetActividad, ActividadTipoGetAsistentes, ActividadTipoGetDlOrg, ActividadTipoGetFiltroLugar, ActividadTipoGetIdTarifa, ActividadTipoGetLugar, ActividadTipoGetNivelStgrDefecto, ActividadTipoGetNomTipo, ActividadTipoGetNomTipoTabla. Endpoint backend que devuelve el payload necesario (datos de desplegable, tabla HTML o valor escalar) segun el parametro POST salida.
+Al cambiar un nivel de la cascada, actualizar los desplegables dependientes sin recargar toda la página.
 
 ## Limites De La Respuesta
 

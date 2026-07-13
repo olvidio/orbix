@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/usuario_2fa_update"]
 capacidades: ["usuarios.usuario_2fa.gestionar"]
 campos: ["post.id_usuario"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Usuario Reset 2fa
 
-Controlador para restablecer la configuración de autenticación de dos factores (2FA).
+Fragmento admin para resetear 2FA de un usuario.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/usuario_reset_2fa.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ No se han detectado vistas PHTML relacionadas.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

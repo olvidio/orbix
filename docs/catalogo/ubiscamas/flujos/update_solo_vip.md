@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/ubiscamas/update_solo_vip"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Update Solo Vip
-
-Propuesta generada automaticamente desde la capacidad `ubiscamas.update_solo_vip.gestionar` y sus pantallas relacionadas.
+# Flujo - Update Solo Vip
 
 ## Objetivo De Usuario
 
-Gestiona UpdateSoloVip. Descripcion funcional pendiente de revisar.
+Alternar el filtro de solo camas VIP en la actividad (`desc_activ=camasVIP`).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Checkbox «solo VIP» en `lista_habitaciones.phtml`. Sin entrada de menú en el índice.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Operación no autorizada`
+- `Actividad no encontrada`
+- `Error al guardar el estado VIP de la actividad`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

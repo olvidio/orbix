@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona EquipajesDelDoc. Descripcion funcional pendiente de revisar.
+Gestiona EquipajesDelDoc. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Limites De La Respuesta
 

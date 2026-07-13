@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["usuarios.pantalla.usuario_form", "usuarios.pantalla.usuario_lista"]
 acciones: ["eliminar", "guardar", "listar", "ver_formulario"]
 endpoints: ["/src/usuarios/usuario_eliminar", "/src/usuarios/usuario_form", "/src/usuarios/usuario_guardar", "/src/usuarios/usuario_lista"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Usuario
-
-Propuesta generada automaticamente desde la capacidad `usuarios.usuario.gestionar` y sus pantallas relacionadas.
+# Flujo - Usuario
 
 ## Objetivo De Usuario
 
-Gestiona usuario, usuariosLista. Descripcion funcional pendiente de revisar.
+Administración de usuarios web: listar, alta/edición en ficha, borrado y asignación grupos/permisos.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: sistema > usuarios web > lista usuarios. Pills2: ADMIN LOCAL > usuarios web > lista usuarios.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -119,11 +117,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Usuario no encontrado`
+- `hay un error, no se ha eliminado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > usuarios web > lista usuarios
+- **Pills2:** ADMIN LOCAL > usuarios web > lista usuarios

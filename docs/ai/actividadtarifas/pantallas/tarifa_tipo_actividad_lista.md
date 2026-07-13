@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Controlador AJAX HTML: listado de relaciones `TipoTarifa` ↔ tipo de actividad.
+Fragmento AJAX: tabla de relaciones tarifa ↔ tipo de actividad.
 
 ## Uso En Ayuda
 

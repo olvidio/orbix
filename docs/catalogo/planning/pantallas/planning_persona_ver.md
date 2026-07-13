@@ -3,7 +3,7 @@ id: "planning.pantalla.planning_persona_ver"
 tipo: "pantalla_frontend"
 subtipo: "fragmento_ajax"
 modulo: "planning"
-nombre: "Planning Persona Ver"
+nombre: "Planning por persona (calendario)"
 controller: "frontend/planning/controller/planning_persona_ver.php"
 vistas: ["frontend/planning/view/planning_persona_ver.phtml"]
 fragmentos_frontend: ["frontend/planning/controller/leyenda.php"]
@@ -11,54 +11,27 @@ endpoints: ["/src/planning/planning_persona_ver_data"]
 capacidades: ["planning.planning_persona_ver.gestionar"]
 campos: ["post.empiezamax", "post.empiezamin", "post.modelo", "post.obj_pau", "post.periodo", "post.year"]
 acciones: ["fnjs_exportar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Planning Persona Ver
+# Planning por persona (calendario)
 
-Planning (calendario) de las actividades asignadas a un conjunto de personas seleccionadas en `planning_persona_select`.
+Calendario de actividades de las personas seleccionadas en `planning_persona_select`.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
 - Controller: `frontend/planning/controller/planning_persona_ver.php`
 
-## Vistas Relacionadas
-
-- `frontend/planning/view/planning_persona_ver.phtml`
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/planning/controller/leyenda.php`
-
 ## Endpoints Usados
 
 - `/src/planning/planning_persona_ver_data`
 
-## Capacidades Relacionadas
+## Acciones
 
-- `planning.planning_persona_ver.gestionar`
+- Exportar calendario
+- Leyenda (`leyenda.php`)
 
-## Campos Detectados
+## Ruta de menú
 
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.modelo`
-- `post.obj_pau`
-- `post.periodo`
-- `post.year`
-
-## Acciones Detectadas
-
-- `fnjs_exportar`
-
-## Manual De Usuario
-
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+sin entrada de menú en el índice (fragmento del flujo por persona)

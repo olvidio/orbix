@@ -11,16 +11,18 @@ endpoints: []
 capacidades: []
 campos: ["post.esquema", "post.esquema_web", "post.ubicacion", "post.username"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Ayuda Acceso
 
-Página de ayuda para restablecer la autenticación de dos factores (2FA).
+Ayuda acceso: muestra email ofuscado y contacto admin.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/ayuda_acceso.php`
 
 ## Vistas Relacionadas
@@ -51,13 +53,7 @@ No se han detectado capacidades relacionadas.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

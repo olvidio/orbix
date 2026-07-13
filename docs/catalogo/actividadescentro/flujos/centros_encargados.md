@@ -5,27 +5,30 @@ modulo: "actividadescentro"
 nombre: "Flujo - Gestionar Centros Encargados"
 capacidad: "actividadescentro.centros_encargados.gestionar"
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadescentro/centros_encargados_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Centros Encargados
 
-Propuesta generada automaticamente desde la capacidad `actividadescentro.centros_encargados.gestionar` y sus pantallas relacionadas.
+Recarga de la celda de centros encargados de una actividad tras una mutación.
 
 ## Objetivo De Usuario
 
-Gestiona CentrosEncargados. Devuelve los centros encargados actuales de una actividad en un array serializable, junto con los flags de permiso.
+Tras asignar, reordenar o eliminar un centro encargado, la celda de esa actividad se refresca con la
+lista actualizada de centros y el flag `permite_modificar` (que decide si cada centro se pinta como
+enlace o como texto plano). Es un paso automático, no una acción explícita del usuario.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): la función
+`fnjs_actualizar_activ` llama a este endpoint después de cada mutación.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Escenarios Inferidos
 
@@ -53,9 +56,11 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+  agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+  asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.

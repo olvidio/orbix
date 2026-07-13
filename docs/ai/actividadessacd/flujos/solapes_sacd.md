@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar desde el menú con tipo `solape`.
+2. Elegir periodo y pulsar **buscar**.
+3. El sistema construye la tabla de sacd con sus actividades incompatibles y la leyenda de colores.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadessacd/solapes_sacd_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona SolapesSacd. Devuelve el listado de sacd con actividades incompatibles (solapes) en el periodo.
+Con el tipo de menú `solape`, el usuario elige un periodo y pulsa **buscar**: el sistema muestra los sacd que tienen actividades incompatibles (solapes horarios) y, para cada uno, las actividades afectadas.
 
 ## Limites De La Respuesta
 

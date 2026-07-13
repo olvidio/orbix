@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "personas"
-titulo: "Personas Que"
+titulo: "Buscar personas"
 pantalla: "personas.pantalla.personas_que"
-preguntas: ["Que se puede hacer en Personas Que?", "Que campos tiene Personas Que?", "Que acciones hay en Personas Que?"]
+preguntas: ["Que se puede hacer en Buscar personas?", "Que campos tiene Buscar personas?", "Que acciones hay en Buscar personas?"]
 capacidades: []
 endpoints: []
 source: "docs/catalogo/personas/pantallas/personas_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Personas Que
+# Ayuda IA Pantalla - Buscar personas
 
 ## Resumen
 
-Formulario de busqueda de personas.
+Formulario de criterios de búsqueda. Al enviar, navega a `personas_select.php` con los filtros y parámetros de contexto (`tabla`, `na`, `tipo`, `es_sacd`) heredados del menú.
 
 ## Uso En Ayuda
 
@@ -29,31 +29,10 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `form.cmb`
 - `form.exacto`
 - `form.nombre`
-- `html.apellido1`
-- `html.apellido2`
-- `html.btn_ok`
-- `html.centro`
-- `html.cmb`
-- `html.exacto`
-- `html.nombre`
-- `post.apellido1`
-- `post.apellido2`
-- `post.centro`
-- `post.cmb`
-- `post.es_sacd`
-- `post.exacto`
-- `post.na`
-- `post.nombre`
-- `post.que`
-- `post.stack`
-- `post.tabla`
-- `post.tipo`
 
 ## Acciones Detectadas
 
-- `fnjs_enviar`
 - `fnjs_enviar_formulario`
-- `fnjs_update_div`
 
 ## Capacidades Relacionadas
 

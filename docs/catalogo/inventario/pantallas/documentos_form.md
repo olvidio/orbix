@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.documentos_form"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "fragmento"
 modulo: "inventario"
-nombre: "Documentos Form"
+nombre: "Edición masiva documentos"
 controller: "frontend/inventario/controller/documentos_form.php"
 vistas: []
 fragmentos_frontend: []
@@ -11,12 +11,12 @@ endpoints: []
 capacidades: []
 campos: ["html.chk_eliminado", "html.chk_f_asignado", "html.chk_f_eliminado", "html.chk_f_recibido", "html.chk_num_fin", "html.chk_num_ini", "html.eliminado", "html.f_asignado", "html.f_eliminado", "html.f_recibido", "html.num_fin", "html.num_ini", "post.documentos", "post.id_tipo_doc"]
 acciones: ["fnjs_cerrar", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Documentos Form
+# Edición masiva documentos
 
-Fragmento AJAX: formulario “modificar por bloques” de documentos (inventario).
+Form popup para fechas/estado de documentos seleccionados.
 
 ## Tipo
 
@@ -63,11 +63,9 @@ No se han detectado capacidades relacionadas.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Form popup para fechas/estado de documentos seleccionados.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú
+- **Pills2:** —

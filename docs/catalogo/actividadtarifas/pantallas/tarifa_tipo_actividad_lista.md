@@ -11,12 +11,12 @@ endpoints: ["/src/actividadtarifas/relacion_tarifa_lista_data"]
 capacidades: ["actividadtarifas.relacion_tarifa.gestionar"]
 campos: []
 acciones: ["fnjs_modificar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tarifa Tipo Actividad Lista
 
-Controlador AJAX HTML: listado de relaciones `TipoTarifa` ↔ tipo de actividad.
+Fragmento AJAX: tabla de relaciones tarifa ↔ tipo de actividad.
 
 ## Tipo
 
@@ -49,11 +49,8 @@ No se han detectado campos de formulario.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Cargado al abrir la pantalla principal. Enlace modificar por fila si permiso `adl` y sección coincide.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Sin entrada propia; fragmento de `tarifa_tipo_actividad.php`.

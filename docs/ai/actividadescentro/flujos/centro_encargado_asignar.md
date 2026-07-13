@@ -6,7 +6,7 @@ titulo: "Centro Encargado Asignar"
 flujo: "actividadescentro.centro_encargado_asignar.gestionar.flujo"
 preguntas: ["Como ejecutar en Centro Encargado Asignar?"]
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 endpoints: ["/src/actividadescentro/centro_encargado_asignar"]
 source: "docs/catalogo/actividadescentro/flujos/centro_encargado_asignar.md"
 estado_revision: "generado"
@@ -31,18 +31,20 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En una actividad, pulsar **nuevo** para ver los centros candidatos.
+2. Pulsar el centro deseado.
+3. El sistema lo guarda como encargado y refresca la celda de centros de la actividad.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadescentro/centro_encargado_asignar`
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Objetivo
 
-Gestiona CentroEncargadoAsignar. Asigna un CentroEncargado a una actividad.
+El usuario asigna un centro (elegido en el desplegable de candidatos) como encargado de una actividad. El centro queda al final del listado (`num_orden = max + 1`) con `encargo = 'organizador'`.
 
 ## Errores Documentados
 

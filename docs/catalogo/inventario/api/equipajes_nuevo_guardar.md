@@ -6,21 +6,26 @@ url: "/src/inventario/equipajes_nuevo_guardar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/inventario/infrastructure/ui/http/controllers/equipajes_nuevo_guardar.php"
-entrada: ["post.f_fin:string", "post.f_ini:string", "post.id_ubi_activ:integer", "post.ids_activ:string", "post.lugar:string", "post.nom_equipaje:string"]
-entrada_obligatoria: []
+entrada: ["post.id_ubi_activ:integer", "post.nom_equipaje:string", "post.ids_activ:string", "post.f_ini:string", "post.f_fin:string", "post.lugar:string"]
+entrada_obligatoria: ["nom_equipaje"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: []
+errores: ["hay un error, no se ha guardado"]
+frontend_referencias: ["frontend/inventario/controller/equipajes_nuevo.php"]
 casos_uso: []
 tags: ["inventario", "equipajes", "nuevo", "guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Nuevo Guardar
+# Crear equipaje
 
-Descripcion funcional pendiente de revisar.
+Alta de equipaje con nombre, fechas, lugar, ubi de actividades e ids de actividades seleccionadas.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Alta de equipaje con nombre, fechas, lugar, ubi de actividades e ids de actividades seleccionadas.
 
 ## Endpoint
 
@@ -33,31 +38,32 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `f_fin` | `string` | controller | No | controller |
-| `f_ini` | `string` | controller | No | controller |
-| `id_ubi_activ` | `integer` | controller | No | controller |
-| `ids_activ` | `string` | controller | No | controller |
-| `lugar` | `string` | controller | No | controller |
-| `nom_equipaje` | `string` | controller | No | controller |
+| `id_ubi_activ` | `integer` | POST | No | |
+| `nom_equipaje` | `string` | POST | Si | |
+| `ids_activ` | `string` | POST | No | |
+| `f_ini` | `string` | POST | No | |
+| `f_fin` | `string` | POST | No | |
+| `lugar` | `string` | POST | No | |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data: "ok"`.
+
+## Errores conocidos
+
+  - `hay un error, no se ha guardado`
+
+## Permisos
+
+- Sin control de permisos propio en el controller; autorización de oficina vía frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- Lógica inline en controller (sin `application/`).
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/inventario/controller/equipajes_nuevo.php`

@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.actividad_proceso"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/actividad_proceso_generar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad Proceso Generar
-
-Propuesta generada automaticamente desde la capacidad `procesos.actividad_proceso_generar.gestionar` y sus pantallas relacionadas.
+# Flujo - Regenerar proceso de actividad
 
 ## Objetivo De Usuario
 
-Gestiona ActividadProcesoGenerar. Caso de uso: (re)genera las tareas del proceso asociado a un id_activ, conservando el estado actual segun el flag force=true.
+Regenerar las tareas del proceso asociado a una actividad, conservando o no el estado actual según el flag «forzar».
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada directa de menú; se ejecuta desde la pantalla embebida de proceso de actividad.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -56,11 +54,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

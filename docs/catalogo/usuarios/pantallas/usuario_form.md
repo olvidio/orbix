@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/usuario_ajax", "/src/usuarios/usuario_check_pwd", "/s
 capacidades: ["usuarios.usuario.gestionar", "usuarios.usuario_check_pwd.gestionar", "usuarios.usuario_grupo_add.gestionar", "usuarios.usuario_grupo_del.gestionar", "usuarios.usuario_info.gestionar"]
 campos: ["form.id_usuario", "form.password", "form.usuario", "html.cambio_password", "html.has_2fa", "html.password", "post.id_usuario", "post.que", "post.quien", "post.refresh", "post.scroll_id", "post.sel", "post.stack"]
 acciones: ["fnjs_add_grup", "fnjs_chk_passwd", "fnjs_del_grup", "fnjs_guardar", "fnjs_guardar_datos", "fnjs_lst_add_grup", "fnjs_lst_del_grup", "fnjs_mas_casas"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Usuario Form
 
-Descripcion funcional pendiente de revisar.
+Ficha usuario: datos, rol, pau, permisos menú/actividad y grupos (admin id_role≤3).
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/usuario_form.php`
 
 ## Vistas Relacionadas
@@ -80,13 +82,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_lst_del_grup`
 - `fnjs_mas_casas`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

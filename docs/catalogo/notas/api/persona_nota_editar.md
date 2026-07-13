@@ -7,16 +7,19 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/notas/infrastructure/ui/http/controllers/persona_nota_editar.php"
 entrada: ["post.id_asignatura_real:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_pau"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["Selección de nota no válida.", "No se encuentra una asignatura para el nivel: %s", "No se ha guardado la nota"]
 frontend_referencias: ["frontend/notas/controller/form_notas_de_una_persona.php"]
 casos_uso: ["src\\notas\\application\\PersonaNotaEditar"]
 tags: ["notas", "persona", "nota", "editar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Persona Nota Editar
+
+Modifica una nota existente de persona.
 
 Edita una `PersonaNota` existente.
 
@@ -41,7 +44,21 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `success: true`, `data: "ok"`. Error en `mensaje`.
+
+## Objetivo funcional
+
+Edición desde formulario de notas; mismos campos que alta (`nota_num`, `nota_max`, `id_situacion`, `acta`, `f_acta`, preceptor, época, `id_activ`, `detalle`).
+
+## Permisos
+
+- Frontend dossier 1011 + `$_SESSION['oPerm']`.
+
+## Errores conocidos
+
+- `Selección de nota no válida.`
+- `No se encuentra una asignatura para el nivel: %s`
+- `No se ha guardado la nota`
 
 ## Casos De Uso
 
@@ -49,10 +66,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/form_notas_de_una_persona.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/form_notas_de_una_persona.php`.

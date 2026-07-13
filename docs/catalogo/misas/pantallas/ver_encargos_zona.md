@@ -11,16 +11,18 @@ endpoints: ["/src/misas/eliminar_encargo_zona", "/src/misas/guardar_encargo_zona
 capacidades: ["misas.eliminar_encargo_zona.gestionar", "misas.guardar_encargo_zona.gestionar", "misas.ver_encargos_zona.gestionar"]
 campos: ["form.descripcion_lugar", "form.encargo", "form.id_enc", "form.id_tipo_enc", "form.id_ubi", "form.id_zona", "form.idioma_enc", "form.observ", "form.orden", "form.prioridad", "html.nuevo", "post.id_zona", "post.orden"]
 acciones: ["fnjs_generarNomEnc", "fnjs_nuevo", "fnjs_refresh_grid"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Ver Encargos Zona
+# Ver encargos zona
 
-Descripcion funcional pendiente de revisar.
+Fragmento SlickGrid de encargos 8100+ con modal alta/edición/borrado (`guardar_encargo_zona`, `eliminar_encargo_zona`).
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/misas/controller/ver_encargos_zona.php`
 
 ## Vistas Relacionadas
@@ -65,13 +67,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_nuevo`
 - `fnjs_refresh_grid`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

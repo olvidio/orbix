@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "encargossacd"
 url: "/src/encargossacd/sacd_ficha_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/encargossacd/infrastructure/ui/http/controllers/sacd_ficha_data.php"
 entrada: ["post.id_nom:mixed"]
 entrada_obligatoria: []
@@ -13,20 +13,23 @@ requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/sacd_ficha_ajax.php"]
 casos_uso: ["src\\encargossacd\\application\\SacdFichaData"]
 tags: ["encargossacd", "sacd", "ficha", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Sacd Ficha Data
 
 Datos para la ficha de encargos de un SACD (`sacd_ficha_ajax?que=ficha`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
+## Objetivo funcional
+
+Ficha de encargos de un SACD: tareas, horarios, observaciones, avisos. Sucesor de `apps/encargossacd/controller/sacd_ficha_ajax.php?que=ficha`.
+
 ## Endpoint
 
 - URL: `/src/encargossacd/sacd_ficha_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/sacd_ficha_data.php`
 
 ## Entrada
@@ -37,9 +40,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Payload: `encargos[]`, `permiso`, `observ_sacd`, `avisos[]` (doble `JSON.parse`).
+
 
 ## Permisos
 
@@ -54,8 +56,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - `frontend/encargossacd/controller/sacd_ficha_ajax.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

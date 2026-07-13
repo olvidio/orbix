@@ -9,20 +9,23 @@ controller: "src/cambios/infrastructure/ui/http/controllers/cambio_usuario_elimi
 entrada: ["post.sel:array"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "cambios_CambioUsuarioEliminarData"
-respuesta_data: ["ok:bool, mensaje: string"]
 requiere_hashb: false
-frontend_referencias: []
+frontend_referencias: ["frontend/cambios/controller/avisos_generar.php"]
 casos_uso: ["src\\cambios\\application\\CambioUsuarioEliminar"]
 tags: ["cambios", "cambio", "usuario", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Cambio Usuario Eliminar
 
-Endpoint backend: elimina `CambioUsuario` por la clave compuesta `id_item_cambio#id_usuario#sfsv#aviso_tipo` recibida en `sel[]`.
+Elimina uno o varios `CambioUsuario` por la clave compuesta recibida en `sel[]`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Recorre cada token de `sel[]` con formato `id_item_cambio#id_usuario#sfsv#aviso_tipo`, localiza el
+registro y lo elimina. Con `sel` vacío devuelve éxito sin hacer nada.
 
 ## Endpoint
 
@@ -35,22 +38,21 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `sel` | `array` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `sel` | `array` | controller+application | No | Tokens `id_item_cambio#id_usuario#sfsv#aviso_tipo` |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `cambios_CambioUsuarioEliminarData`):
-  - `ok` (`bool, mensaje: string`)
+- Éxito: `success: true`, `data: "ok"` (string vacío serializado).
+- Error: mensaje en el envelope (`Hay un error, no se ha eliminado` + detalle repositorio).
 
-## Efectos colaterales
+## Errores conocidos
 
-- Caso de uso: elimina `CambioUsuario` por la clave compuesta seleccionada en el listado (`id_item_cambio#id_usuario#sfsv#aviso_tipo`).
-- Sucesor de la rama `que=eliminar` del dispatcher `apps/cambios/controller/avisos_generar_ajax.php`.
+- `Hay un error, no se ha eliminado` (concatenado con errores del repositorio)
+
+## Permisos
+
+- Sin control propio; la autorización se resuelve en frontend (`avisos_generar`) + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -58,10 +60,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/cambios/controller/avisos_generar.php`: `fnjs_borrar` envía `sel[]` firmado vía
+  `hash_eliminar` del payload de `avisos_generar_lista_data`.

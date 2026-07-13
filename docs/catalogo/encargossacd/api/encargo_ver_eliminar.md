@@ -14,15 +14,19 @@ respuesta_data: ["error:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/encargo_select.php"]
 casos_uso: ["src\\encargossacd\\application\\EncargoVerEliminar"]
+errores: ["No se encuentra el encargo %d", "hay un error, no se ha eliminado"]
 tags: ["encargossacd", "encargo", "ver", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Encargo Ver Eliminar
 
 Borrado desde lista `encargo_select` (antes `encargo_ajax.php` que=eliminar).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Elimina encargo(s) seleccionados desde `encargo_select`/`encargo_ver`. Token `sel` con `id_enc#...`.
 
 ## Endpoint
 
@@ -41,15 +45,23 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_EncargoVerEliminarData`):
-  - `error` (`string`)
+- Helper: `ContestarJson::enviar`.
+- Éxito: `data: ""`.
+- Error: mensaje en `data`.
+
 
 ## Efectos colaterales
 
 - Borrado desde lista `encargo_select` (antes `encargo_ajax.php` que=eliminar).
+
+## Errores conocidos
+
+- `No se encuentra el encargo %d`
+- `hay un error, no se ha eliminado`
+
+## Permisos
+
+Sin control propio; frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -59,8 +71,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - `frontend/encargossacd/controller/encargo_select.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

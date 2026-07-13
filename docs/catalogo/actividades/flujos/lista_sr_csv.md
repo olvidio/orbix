@@ -2,56 +2,26 @@
 id: "actividades.lista_sr_csv.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Lista Sr Csv"
+nombre: "Flujo - Resultado listado CSV SR"
 capacidad: "actividades.lista_sr_csv.gestionar"
 pantallas_principales: []
 fragmentos: ["actividades.pantalla.lista_sr_csv"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividades/lista_sr_csv_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Lista Sr Csv
+# Flujo - Resultado listado CSV SR
 
-Propuesta generada automaticamente desde la capacidad `actividades.lista_sr_csv.gestionar` y sus pantallas relacionadas.
+Tabla HTML o export CSV de actividades SR según filtros de `lista_sr_csv_que`.
 
 ## Objetivo De Usuario
 
-Gestiona ListaSrCsvListado. Endpoint backend para lista_sr_csv (listado SR + exportacion).
+Visualizar listado o descargar CSV para San Rafael.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-- `actividades.pantalla.lista_sr_csv`
-
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.c_activ`
-- `post.dl_org`
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.id_cdc`
-- `post.periodo`
-- `post.que`
-- `post.status`
-- `post.year`
-
-Acciones JavaScript:
-- Ninguna detectada.
+POST desde `lista_sr_csv_que` a `lista_sr_csv.php`.
 
 ## Endpoints Del Flujo
 
@@ -59,11 +29,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `hay un error, no se ha guardado la preferencia` (en `pref_error`, no bloquea listado)
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vsr > listas actividades > listado csv (resultado).
+- **Pills2:** sin entrada dedicada (vsr).

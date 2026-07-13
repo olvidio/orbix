@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AsignaturasSearch. Autocomplete jQuery-UI.
+Autocompletado de asignaturas en formulario de acta.
 
 ## Limites De La Respuesta
 

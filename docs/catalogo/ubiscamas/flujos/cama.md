@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubiscamas.pantalla.cama_form"]
 acciones: ["crear_actualizar", "eliminar", "ver_formulario"]
 endpoints: ["/src/ubiscamas/cama_delete", "/src/ubiscamas/cama_form_data", "/src/ubiscamas/cama_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Cama
-
-Propuesta generada automaticamente desde la capacidad `ubiscamas.cama.gestionar` y sus pantallas relacionadas.
+# Flujo - Cama
 
 ## Objetivo De Usuario
 
-Gestiona Cama. Datos para frontend/ubiscamas/controller/cama_form.php. La composición de HashFront ocurre en {. Descripcion funcional pendiente de revisar.
+Crear, editar o eliminar camas individuales asociadas a una habitación.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Modal invocado desde `habitacion_form` (editar/nueva cama). Sin entrada de menú en el índice.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -80,11 +78,15 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `ID de cama no proporcionado`
+- `No se encontró la cama a eliminar`
+- `hay un error, no se ha eliminado la cama`
+- `Error al eliminar la cama`
+- `Habitación no válida`
+- `Cama no válida`
+- `Error al guardar la cama`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

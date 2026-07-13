@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/notas/acta_pdf_subir"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Pdf Subir
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_pdf_subir.gest
 
 ## Objetivo De Usuario
 
-Gestiona ActaPdfSubir. Sube (persiste) el contenido binario de un PDF firmado en el campo pdf del acta identificada por acta_num. El contenido se lee del array $files que tiene la misma forma que $_FILES (clave acta_pdf generada por bootstrap-fileinput en acta_ver.phtml).
+Adjuntar PDF a un acta.
 
 ## Punto De Entrada
 
@@ -52,10 +52,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

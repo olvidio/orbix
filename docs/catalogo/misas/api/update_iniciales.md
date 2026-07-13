@@ -6,21 +6,28 @@ url: "/src/misas/update_iniciales"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/update_iniciales.php"
-entrada: ["post.color:string", "post.id_sacd:integer", "post.iniciales:string"]
-entrada_obligatoria: []
+entrada: ["post.id_sacd:integer", "post.iniciales:string", "post.color:string"]
+entrada_obligatoria: ["id_sacd"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/ver_iniciales_zona.php"]
 casos_uso: ["src\\misas\\application\\UpdateIniciales"]
 tags: ["misas", "update", "iniciales"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["<repositorio getErrorTxt()>"]
 ---
 
-# Update Iniciales
+# Update iniciales
 
-Inserta o actualiza la fila de iniciales/color para un sacerdote. Devuelve texto vacio si todo fue bien; en otro caso, el mensaje de error del repositorio. El controlador HTTP es quien serializa la respuesta con `ContestarJson::enviar(...)`.
+Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
+
+Linaje: Slice 3 — migrado desde apps/misas/controller/update_iniciales.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
 
 ## Endpoint
 
@@ -33,15 +40,23 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `color` | `string` | controller | No | controller |
-| `id_sacd` | `integer` | controller | No | controller |
-| `iniciales` | `string` | controller | No | controller |
+| `id_sacd` | `integer` | application | Si | |
+| `iniciales` | `string` | application | No | |
+| `color` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `id_sacd`: integer
+
+## Errores conocidos
+- `<repositorio getErrorTxt()>`
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -49,10 +64,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/ver_iniciales_zona.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/ver_iniciales_zona.php"]`).

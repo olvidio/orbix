@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.equipajes_form_nuevo"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "fragmento"
 modulo: "inventario"
-nombre: "Equipajes Form Nuevo"
+nombre: "Fragmento selección actividades"
 controller: "frontend/inventario/controller/equipajes_form_nuevo.php"
 vistas: ["frontend/inventario/view/equipajes_form_nuevo.phtml"]
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/equipajes_lista_activ_sel"]
 capacidades: ["inventario.equipajes_lista_activ_sel.gestionar"]
 campos: ["form.nom_equipaje", "html.nom_equipaje", "post.id_cdc", "post.nom_equip", "post.sel"]
 acciones: ["fnjs_cerrar", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Form Nuevo
+# Fragmento selección actividades
 
-Descripcion funcional pendiente de revisar.
+AJAX selección actividades al crear equipaje.
+
 
 ## Tipo
 
@@ -54,11 +55,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). AJAX selección actividades al crear equipaje.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú
+- **Pills2:** —

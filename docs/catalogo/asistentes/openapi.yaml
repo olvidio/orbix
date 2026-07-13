@@ -17,9 +17,9 @@ paths:
       operationId: "post_asistentes_activ_pendientes_select_data"
       summary: "Activ Pendientes Select Data"
       description: |
-        Actividades pendientes por curso (`activ_pendientes_select.php`). Datos y `link_spec` sin firmar; hash, firmas y tablas en {
+        Listado de personas sin asistencia propia a ca/crt en un curso.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/activ_pendientes_select_data.md`
       tags:
@@ -55,7 +55,7 @@ paths:
       operationId: "post_asistentes_asistente_eliminar"
       summary: "Asistente Eliminar"
       description: |
-        Elimina un `Asistente` y sus matriculas.
+        Elimina un `Asistente` y sus matrículas asociadas.
         
         Operacion: `mutacion`.
         
@@ -112,6 +112,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "mod"
               properties:
                 cfi:
                   type: "string"
@@ -167,9 +169,9 @@ paths:
       operationId: "post_asistentes_asistente_mover_data"
       summary: "Asistente Mover Data"
       description: |
-        JSON para {
+        Payload del modal para mover un asistente a otra actividad del mismo tipo.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/asistente_mover_data.md`
       tags:
@@ -209,7 +211,7 @@ paths:
       operationId: "post_asistentes_asistente_plaza_asignar"
       summary: "Asistente Plaza Asignar"
       description: |
-        Cambia la plaza de un lote de asistentes.
+        Asigna plaza común a un lote de asistentes seleccionados.
         
         Operacion: `mutacion`.
         
@@ -222,6 +224,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
+                - "lista_json"
               properties:
                 id_activ:
                   type: "integer"
@@ -247,9 +252,9 @@ paths:
       operationId: "post_asistentes_form_actividades_de_una_persona_data"
       summary: "Form Actividades De Una Persona Data"
       description: |
-        Dossier actividades de una persona (1301). Datos puros para el formulario; la UI (HashFront, Desplegable) se compone en frontend.
+        Dossier actividades de una persona (1301): datos del formulario alta/edición de asistencia.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/form_actividades_de_una_persona_data.md`
       tags:
@@ -291,9 +296,9 @@ paths:
       operationId: "post_asistentes_form_asistentes_a_una_actividad_data"
       summary: "Form Asistentes A Una Actividad Data"
       description: |
-        Dossier asistentes a una actividad (3101). Datos puros; la UI vive en {
+        Dossier asistentes a una actividad (3101): datos del formulario alta/edición.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/form_asistentes_a_una_actividad_data.md`
       tags:
@@ -337,9 +342,9 @@ paths:
       operationId: "post_asistentes_lista_activ_ctr_data"
       summary: "Lista Activ Ctr Data"
       description: |
-        Asistentes a actividades por centro (`lista_activ_ctr.php`).
+        Asistentes a actividades agrupados por centro.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/lista_activ_ctr_data.md`
       tags:
@@ -387,9 +392,9 @@ paths:
       operationId: "post_asistentes_lista_asis_conjunto_activ_data"
       summary: "Lista Asis Conjunto Activ Data"
       description: |
-        Listados conjuntos de plazas/actividades (`lista_asis_conjunto_activ.php`).
+        Listado conjunto de plazas/asistencias por actividades filtradas.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/lista_asis_conjunto_activ_data.md`
       tags:
@@ -437,21 +442,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/asistentes_ListaAsisConjuntoActivDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/asistentes_ListaAsisConjuntoActivDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/asistentes/lista_asistentes_data":
     post:
       operationId: "post_asistentes_lista_asistentes_data"
       summary: "Lista Asistentes Data"
       description: |
-        Listado de asistentes a una actividad (`lista_asistentes.php`).
+        Listado de asistentes (y cargos-asistentes) de una actividad.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/lista_asistentes_data.md`
       tags:
@@ -489,9 +494,9 @@ paths:
       operationId: "post_asistentes_lista_est_ctr_data"
       summary: "Lista Est Ctr Data"
       description: |
-        Listado estudios por centro (`lista_est_ctr.php`).
+        Estudios (asignaturas matriculadas) por centro y actividad ca/cv.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/lista_est_ctr_data.md`
       tags:
@@ -521,21 +526,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/asistentes_ListaEstCtrDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/asistentes_ListaEstCtrDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/asistentes/lista_ultim_que_ctr_data":
     post:
       operationId: "post_asistentes_lista_ultim_que_ctr_data"
       summary: "Lista Ultim Que Ctr Data"
       description: |
-        JSON para {
+        Selector de centro para informes de última asistencia.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/lista_ultim_que_ctr_data.md`
       tags:
@@ -557,21 +562,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/asistentes_ListaUltimQueCtrDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/asistentes_ListaUltimQueCtrDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/asistentes/lista_ultima_activ_data":
     post:
       operationId: "post_asistentes_lista_ultima_activ_data"
       summary: "Lista Ultima Activ Data"
       description: |
-        Listado última actividad / seguimiento (`lista_ultima_activ.php`).
+        Seguimiento de personas `s` sin asistencia reciente a crt/cv.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/lista_ultima_activ_data.md`
       tags:
@@ -582,6 +587,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "que"
               properties:
                 curso:
                   type: "string"
@@ -595,21 +602,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/asistentes_ListaUltimaActivDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/asistentes_ListaUltimaActivDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/asistentes/que_ctr_lista_data":
     post:
       operationId: "post_asistentes_que_ctr_lista_data"
       summary: "Que Ctr Lista Data"
       description: |
-        JSON para {
+        Formulario de filtro por centro/tipo persona/periodo antes del listado.
         
-        Operacion: `lista_data`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/que_ctr_lista_data.md`
       tags:
@@ -657,9 +664,9 @@ paths:
       operationId: "post_asistentes_tabla_peticiones_data"
       summary: "Tabla Peticiones Data"
       description: |
-        JSON para {
+        Tabla de peticiones de plaza por asistente de una actividad.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/asistentes/api/tabla_peticiones_data.md`
       tags:
@@ -731,26 +738,16 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/asistentes_ListaActivCtrDataData"
-    asistentes_ListaAsisConjuntoActivDataData:
-      type: object
-      properties:
-        content_html:
-          type: "string"
-    asistentes_ListaAsisConjuntoActivDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/asistentes_ListaAsisConjuntoActivDataData"
     asistentes_ListaAsistentesDataData:
       type: object
       properties:
         nom_activ:
           type: "string"
+        queSel:
+          type: "string"
+        aAsistentes:
+          type: array
+          items: {}
     asistentes_ListaAsistentesDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
@@ -761,52 +758,6 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/asistentes_ListaAsistentesDataData"
-    asistentes_ListaEstCtrDataData:
-      type: object
-      properties:
-        lista_html:
-          type: "string"
-    asistentes_ListaEstCtrDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/asistentes_ListaEstCtrDataData"
-    asistentes_ListaUltimQueCtrDataData:
-      type: object
-      properties:
-        opciones_centros:
-          type: array
-          items: {}
-    asistentes_ListaUltimQueCtrDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/asistentes_ListaUltimQueCtrDataData"
-    asistentes_ListaUltimaActivDataData:
-      type: object
-      properties:
-        alert_html:
-          type: "string"
-    asistentes_ListaUltimaActivDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/asistentes_ListaUltimaActivDataData"
     OrbixStandardResponseStringData:
       type: object
       required:

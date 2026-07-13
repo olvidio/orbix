@@ -11,12 +11,12 @@ endpoints: ["/src/notas/infrastructure/ui/http/controllers/acta_pdf_subir"]
 capacidades: []
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Acta Pdf Upload
 
-Subida AJAX del PDF firmado del acta (multipart / FormData).
+Subida de PDF escaneado al acta.
 
 ## Tipo
 
@@ -47,13 +47,11 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

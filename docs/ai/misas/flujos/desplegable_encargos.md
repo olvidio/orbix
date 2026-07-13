@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona DesplegableEncargos. Payload JSON para el desplegable dinamico de encargos de una zona. Sigue el contrato de desplegables de refactor.md: - id : id del <select> que montara fnjs_construir_desplegable. - opciones : map id_enc => desc_enc de los encargos con id_tipo_enc >= 8100 de la zona. - selected : id_enc preseleccionado ('' si no aplica). - blanco : true si se quiere opcion en blanco. - val_blanco: valor de la opcion en blanco. - action : handler onchange opcional (vacio por defecto).
+Devuelve opciones de encargos 8100+ de una zona para el desplegable dinámico del modal de encargos-centro.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

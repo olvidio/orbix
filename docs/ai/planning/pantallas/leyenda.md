@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "planning"
-titulo: "Leyenda"
+titulo: "Leyenda del planning"
 pantalla: "planning.pantalla.leyenda"
-preguntas: ["Que se puede hacer en Leyenda?", "Que campos tiene Leyenda?", "Que acciones hay en Leyenda?"]
+preguntas: ["Que se puede hacer en Leyenda del planning?", "Que campos tiene Leyenda del planning?", "Que acciones hay en Leyenda del planning?"]
 capacidades: []
 endpoints: []
 source: "docs/catalogo/planning/pantallas/leyenda.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Leyenda
+# Ayuda IA Pantalla - Leyenda del planning
 
 ## Resumen
 
-Popup estatico con la leyenda de colores/estilos del planning.
+Popup estático con la leyenda de colores y estilos del calendario de planning. Se abre desde las vistas `*_select` y `*_ver` del módulo.
 
 ## Uso En Ayuda
 

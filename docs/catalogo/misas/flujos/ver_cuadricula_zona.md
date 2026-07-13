@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.modificar_cuadricula_zona", "misas.pantalla.ver_cuadricula_zona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/ver_cuadricula_zona_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ver Cuadricula Zona
-
-Propuesta generada automaticamente desde la capacidad `misas.ver_cuadricula_zona.gestionar` y sus pantallas relacionadas.
+# Flujo - Ver cuadricula zona
 
 ## Objetivo De Usuario
 
-Gestiona CuadriculaZonaGrid. Descripcion funcional pendiente de revisar.
+Construye el SlickGrid de cuadrícula de zona (columnas, filas encargo/sacd, metadatos de celda) para ver/modificar plan, plantilla o cambiar estado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Modificar plan. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plan.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -61,11 +59,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `hay un error, no se ha guardado`
+- `sólo debería haber uno`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Modificar plan
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plan

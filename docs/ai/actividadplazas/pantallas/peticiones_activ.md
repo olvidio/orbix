@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla de peticiones de plaza de una persona (n / a / agd).
+Pantalla de peticiones de plaza de una persona (colectivos n / a / agd): permite ordenar las actividades solicitadas y guardarlas o borrarlas.
 
 ## Uso En Ayuda
 

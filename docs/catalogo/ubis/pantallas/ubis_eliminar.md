@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/ubis_eliminar"]
 capacidades: ["ubis.ubis.gestionar"]
 campos: ["post.id_ubi", "post.obj_pau"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Ubis Eliminar
 
-Descripcion funcional pendiente de revisar.
+Fragmento que invoca la eliminación de un ubi y muestra error si falla.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/ubis/controller/ubis_eliminar.php`
 
 ## Vistas Relacionadas
@@ -48,13 +50,7 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

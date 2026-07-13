@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "actividades"
-titulo: "Lista Activ"
+titulo: "Listado de actividades (tabla)"
 pantalla: "actividades.pantalla.lista_activ"
-preguntas: ["Que se puede hacer en Lista Activ?", "Que campos tiene Lista Activ?", "Que acciones hay en Lista Activ?"]
+preguntas: ["Que se puede hacer en Listado de actividades (tabla)?", "Que campos tiene Listado de actividades (tabla)?", "Que acciones hay en Listado de actividades (tabla)?"]
 capacidades: ["actividades.lista_activ.gestionar"]
 endpoints: ["/src/actividades/lista_activ_datos"]
 source: "docs/catalogo/actividades/pantallas/lista_activ.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Lista Activ
+# Ayuda IA Pantalla - Listado de actividades (tabla)
 
 ## Resumen
 
-Pantalla que muestra el listado de actividades filtradas.
+Pantalla de **resultados tabulares** de actividades. Recibe por POST los filtros de `actividad_que` (`que=list_activ` / `list_activ_compl`) o de `lista_activ_que` (listados SR/SG) y llama a `lista_activ_datos` para obtener cabeceras, filas y título; monta la tabla con `Lista` y la muestra con navegación atrás.
 
 ## Uso En Ayuda
 

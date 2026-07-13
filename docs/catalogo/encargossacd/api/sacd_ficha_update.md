@@ -14,15 +14,19 @@ respuesta_data: ["error:string, mensajes: string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/sacd_ficha_ajax.php"]
 casos_uso: ["src\\encargossacd\\application\\SacdFichaUpdate"]
+errores: ["id_nom no valido", "Error con las tareas", "hay un error, no se ha eliminado", "hay un error, no se ha guardado"]
 tags: ["encargossacd", "sacd", "ficha", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Sacd Ficha Update
 
 Mutacion de la ficha de encargos de un SACD (`sacd_ficha_ajax?que=update`). Porta la logica del antiguo controlador frontend, haciendo la misma actualizacion de dedicaciones por modulo y de observaciones.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Guarda observaciones y tareas/horarios de la ficha SACD. Sucesor de ramas update de `sacd_ficha_ajax.php`.
 
 ## Endpoint
 
@@ -48,11 +52,20 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_SacdFichaUpdateData`):
-  - `error` (`string, mensajes: string`)
+- Éxito: `error` vacío.
+- Error: `error` + `mensajes`.
+
+
+## Errores conocidos
+
+- `id_nom no valido`
+- `Error con las tareas`
+- `hay un error, no se ha eliminado`
+- `hay un error, no se ha guardado`
+
+## Permisos
+
+Edición condicionada por `permiso` del payload de ficha.
 
 ## Casos De Uso
 
@@ -62,8 +75,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - `frontend/encargossacd/controller/sacd_ficha_ajax.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

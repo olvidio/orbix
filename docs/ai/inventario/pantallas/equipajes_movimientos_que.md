@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Movimientos Que"
+titulo: "Movimientos maletas — filtro"
 pantalla: "inventario.pantalla.equipajes_movimientos_que"
-preguntas: ["Que se puede hacer en Equipajes Movimientos Que?", "Que campos tiene Equipajes Movimientos Que?", "Que acciones hay en Equipajes Movimientos Que?"]
+preguntas: ["Que se puede hacer en Movimientos maletas — filtro?", "Que campos tiene Movimientos maletas — filtro?", "Que acciones hay en Movimientos maletas — filtro?"]
 capacidades: ["inventario.lista_equipajes_desde_fecha.gestionar"]
 endpoints: ["/src/inventario/lista_equipajes_desde_fecha"]
 source: "docs/catalogo/inventario/pantallas/equipajes_movimientos_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Movimientos Que
+# Ayuda IA Pantalla - Movimientos maletas — filtro
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Elige fecha y equipajes para comparar movimientos.
 
 ## Uso En Ayuda
 

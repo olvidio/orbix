@@ -8,20 +8,25 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/form_asignaturas_de_una_actividad_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Form Asignaturas De Una Actividad
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.form_asignaturas_de_una_actividad.gestionar` y sus pantallas relacionadas.
+Carga del formulario de alta/edición de una asignatura impartida (dossier 3005).
 
 ## Objetivo De Usuario
 
-Gestiona FormAsignaturasDeUnaActividad. Descripcion funcional pendiente de revisar.
+El usuario abre el formulario para crear o editar una asignatura impartida en una actividad
+CA: el sistema devuelve desplegables de asignaturas y profesores, fechas, flags de aviso y
+permisos según el modo (nuevo/editar).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `form_asignaturas_de_una_actividad`
+(`frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php`): al abrirse
+desde el dossier 3005 llama a `form_asignaturas_de_una_actividad_data` con `id_activ`,
+`id_asignatura`, `pau` y opcionalmente `sel`. Sucesor de `apps/actividadestudios/controller/form_3005.php`.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +36,13 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En el dossier 3005, pulsar **nuevo** o **modificar** sobre una asignatura.
+2. El sistema carga el formulario consultando `form_asignaturas_de_una_actividad_data`.
+3. Se muestran desplegables, fechas y botón guardar con hash de seguridad.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/form_asignaturas_de_una_actividad_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -69,9 +76,9 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo desde dossier 3005).
+
+- **Legacy:** vsm > ca > buscar ca.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades.

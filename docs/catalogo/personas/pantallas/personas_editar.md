@@ -3,65 +3,43 @@ id: "personas.pantalla.personas_editar"
 tipo: "pantalla_frontend"
 subtipo: "fragmento_ajax"
 modulo: "personas"
-nombre: "Personas Editar"
+nombre: "Ficha de persona"
 controller: "frontend/personas/controller/personas_editar.php"
-vistas: []
-fragmentos_frontend: ["frontend/dossiers/controller/dossiers_ver.php", "frontend/personas/controller/home_persona.php", "frontend/personas/controller/traslado_form.php"]
-endpoints: ["/src/personas/personas_editar_data"]
-capacidades: ["personas.personas_editar.gestionar"]
-campos: ["post.apellido1", "post.id_nom", "post.nuevo", "post.obj_pau", "post.sel", "post.stack", "post.tabla"]
-acciones: ["fnjs_act_ctr"]
-estado_revision: "generado"
+vistas: ["frontend/personas/view/persona_form.phtml", "frontend/personas/view/persona_sss_form.phtml", "frontend/personas/view/persona_de_paso.phtml", "frontend/personas/view/p_public_personas.phtml"]
+fragmentos_frontend: ["frontend/personas/view/_persona_form_js.phtml", "frontend/personas/view/_persona_form_botones.phtml"]
+endpoints: ["/src/personas/personas_editar_data", "/src/personas/persona_update", "/src/personas/persona_eliminar"]
+capacidades: ["personas.personas_editar.gestionar", "personas.persona.gestionar"]
+campos: ["post.nuevo", "post.obj_pau", "post.sel", "post.apellido1", "post.tabla"]
+acciones: ["fnjs_act_ctr", "fnjs_guardar", "fnjs_eliminar"]
+estado_revision: "revisado"
 ---
 
-# Personas Editar
+# Ficha de persona
 
-Ficha de una persona: edicion (o alta si `$Qnuevo === 1`).
+Alta (`nuevo=1`) o edición de persona. Plantilla según colectivo y permiso:
+
+- `persona_form.phtml` — N, Agd, Nax, S (con permiso oficina o `dtor`)
+- `persona_sss_form.phtml` — SSSC (`des`/`vcsd`/`dtor`)
+- `persona_de_paso.phtml` — PersonaEx
+- `p_public_personas.phtml` — solo lectura pública
+
+Incluye enlace a traslado si no es alta.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
 - Controller: `frontend/personas/controller/personas_editar.php`
 
-## Vistas Relacionadas
-
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/dossiers/controller/dossiers_ver.php`
-- `frontend/personas/controller/home_persona.php`
-- `frontend/personas/controller/traslado_form.php`
-
 ## Endpoints Usados
 
-- `/src/personas/personas_editar_data`
-
-## Capacidades Relacionadas
-
-- `personas.personas_editar.gestionar`
-
-## Campos Detectados
-
-- `post.apellido1`
-- `post.id_nom`
-- `post.nuevo`
-- `post.obj_pau`
-- `post.sel`
-- `post.stack`
-- `post.tabla`
-
-## Acciones Detectadas
-
-- `fnjs_act_ctr`
+- `/src/personas/personas_editar_data` (carga)
+- `/src/personas/persona_update` (guardar)
+- `/src/personas/persona_eliminar` (eliminar)
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/personas/controller/personas_editar.php`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (desde listado «ficha»/«nuevo» o cabecera persona).

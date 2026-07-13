@@ -11,12 +11,12 @@ endpoints: ["/src/actividadtarifas/tarifa_ubi_form_data", "/src/actividadtarifas
 capacidades: ["actividadtarifas.tarifa_ubi.gestionar"]
 campos: ["html.cantidad", "html.ctx_eliminar", "html.ctx_update", "html.id_item", "html.id_ubi", "html.year", "post.id_item", "post.id_ubi", "post.letra", "post.year"]
 acciones: ["fnjs_cerrar", "fnjs_comprobar_dinero", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tarifa Ubi Form
 
-Controlador AJAX HTML: form modificar/nuevo de `TarifaUbi`.
+Fragmento AJAX: formulario popup de `TarifaUbi` con cápsulas HashB `ctx_update` / `ctx_eliminar`.
 
 ## Tipo
 
@@ -61,11 +61,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Alta: desplegables tarifa y serie + importe. Edición: solo importe (y eliminar). Los hidden `ctx_*`
+autorizan las mutaciones; los `id_ubi`/`year`/`id_item` del form son compatibilidad transitoria.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Sin entrada propia; popup de `tarifa_ubi.php`.

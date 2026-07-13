@@ -8,20 +8,22 @@ pantallas_principales: []
 fragmentos: ["asistentes.pantalla.tabla_peticiones"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/tabla_peticiones_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Tabla Peticiones
 
-Propuesta generada automaticamente desde la capacidad `asistentes.tabla_peticiones.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Gestiona TablaPeticiones. JSON para {.
+Ver peticiones de plaza y mover asistente a actividad preferida.
+
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `tabla_peticiones` (`frontend/asistentes/controller/`).
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -54,9 +56,6 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

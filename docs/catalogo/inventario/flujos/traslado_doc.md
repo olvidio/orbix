@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["guardar"]
 endpoints: ["/src/inventario/traslado_doc_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Traslado Doc
@@ -17,11 +17,13 @@ Propuesta generada automaticamente desde la capacidad `inventario.traslado_doc.g
 
 ## Objetivo De Usuario
 
-Gestiona TrasladoDoc. Descripcion funcional pendiente de revisar.
+Trasladar documentos entre centros/lugares: filtro en `traslado_doc_que`, selección en `traslado_doc_lista`, guardado en `traslado_doc_guardar`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `inventario.pantalla.traslado_doc_que`
+
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -53,9 +55,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > Inventario > inventarios > traslado de doc
+- **Pills2:** —

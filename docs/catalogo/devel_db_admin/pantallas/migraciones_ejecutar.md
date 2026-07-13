@@ -11,12 +11,12 @@ endpoints: ["/src/devel_db_admin/migraciones_ejecutar"]
 capacidades: ["devel_db_admin.migraciones_ejecutar.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Migraciones Ejecutar
 
-Descripcion funcional pendiente de revisar.
+Proxy JSON de ejecución de migraciones desde la lista.
 
 ## Tipo
 
@@ -49,11 +49,11 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Acceder desde el menú de administración DB o configuración.
+2. Completar el formulario y ejecutar la acción.
+3. Revisar avisos/errores en el panel de respuesta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

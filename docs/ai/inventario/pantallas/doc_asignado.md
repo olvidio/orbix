@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Doc Asignado"
+titulo: "Documentos ya asignados"
 pantalla: "inventario.pantalla.doc_asignado"
-preguntas: ["Que se puede hacer en Doc Asignado?", "Que campos tiene Doc Asignado?", "Que acciones hay en Doc Asignado?"]
+preguntas: ["Que se puede hacer en Documentos ya asignados?", "Que campos tiene Documentos ya asignados?", "Que acciones hay en Documentos ya asignados?"]
 capacidades: ["inventario.lista_docs_asignados_por_tipo.gestionar"]
 endpoints: ["/src/inventario/lista_docs_asignados_por_tipo"]
 source: "docs/catalogo/inventario/pantallas/doc_asignado.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Doc Asignado
+# Ayuda IA Pantalla - Documentos ya asignados
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Lista centros con el tipo doc asignado.
 
 ## Uso En Ayuda
 

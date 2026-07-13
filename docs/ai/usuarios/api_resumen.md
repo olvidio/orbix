@@ -14,7 +14,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.app_login`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/app_login.php`
-- Entrada: `post.esquema:string`, `post.password:string`, `post.username:string`, `post.verification_code:string`
+- Entrada: `post.username:string`, `post.password:string`, `post.esquema:string`, `post.verification_code:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/app_session`
@@ -49,7 +49,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.grupo_guardar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php`
-- Entrada: `post.id_usuario:integer`, `post.usuario:string`
+- Entrada: `post.usuario:string`, `post.id_usuario:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/grupo_info`
@@ -84,7 +84,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.perm_activ_guardar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php`
-- Entrada: `post.afecta_a:array`, `post.dl_propia:string`, `post.fase_ref:array`, `post.iactividad_val:string`, `post.iasistentes_val:string`, `post.id_item:integer`, `post.id_tipo_activ:integer`, `post.id_usuario:integer`, `post.inom_tipo_val:string`, `post.isfsv_val:string`, `post.perm_off:array`, `post.perm_on:array`
+- Entrada: `post.id_usuario:integer`, `post.id_tipo_activ:integer`, `post.id_item:integer`, `post.dl_propia:string`, `post.fase_ref:array`, `post.perm_on:array`, `post.perm_off:array`, `post.afecta_a:array`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/perm_activ_lista`
@@ -112,7 +112,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.perm_menu_info`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/perm_menu_info.php`
-- Entrada: `post.id_item:integer`, `post.id_usuario:integer`
+- Entrada: `post.id_usuario:integer`, `post.id_item:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/perm_menu_lista`
@@ -133,21 +133,21 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.preferencias_guardar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php`
-- Entrada: `post.estilo_color:string`, `post.idioma_nou:string`, `post.inicio:string`, `post.layout:string`, `post.oficina:string`, `post.ordenApellidos:string`, `post.que:string`, `post.sPrefs:string`, `post.tabla:string`, `post.tipo_menu:string`, `post.tipo_tabla:string`, `post.zona_horaria_nou:string`
+- Entrada: `post.que:string`, `post.tabla:string`, `post.sPrefs:string`, `post.layout:string`, `post.oficina:string`, `post.inicio:string`, `post.tipo_tabla:string`, `post.ordenApellidos:string`, `post.idioma_nou:string`, `post.zona_horaria_nou:string`, `post.estilo_color:string`, `post.tipo_menu:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/recuperar_2fa_mail`
 
 - Id: `usuarios.recuperar_2fa_mail`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php`
-- Entrada: `post.esquema:string`, `post.esquema_web:string`, `post.ubicacion:string`, `post.url_base:string`, `post.username:string`
+- Entrada: `post.username:string`, `post.ubicacion:string`, `post.esquema:string`, `post.esquema_web:string`, `post.url_base:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/recuperar_password_mail`
 
 - Id: `usuarios.recuperar_password_mail`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php`
-- Entrada: `post.esquema:string`, `post.esquema_web:string`, `post.ubicacion:string`, `post.url_index:string`, `post.username:string`
+- Entrada: `post.username:string`, `post.ubicacion:string`, `post.esquema:string`, `post.esquema_web:string`, `post.url_index:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/role_eliminar`
@@ -182,7 +182,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.role_guardar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/role_guardar.php`
-- Entrada: `post.dmz:integer`, `post.id_role:integer`, `post.pau:string`, `post.role:string`, `post.sf:integer`, `post.sv:integer`
+- Entrada: `post.role:string`, `post.id_role:integer`, `post.sf:integer`, `post.sv:integer`, `post.pau:string`, `post.dmz:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/role_info`
@@ -210,28 +210,28 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.usuario_2fa_update`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php`
-- Entrada: `post.enable_2fa:boolean`, `post.id_usuario:integer`, `post.secret_2fa:string`, `post.verification_code:string`
+- Entrada: `post.id_usuario:integer`, `post.secret_2fa:string`, `post.enable_2fa:boolean`, `post.verification_code:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_2fa_verify`
 
 - Id: `usuarios.usuario_2fa_verify`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_verify.php`
-- Entrada: `post.secret_2fa:mixed`, `post.verification_code:mixed`
+- Entrada: `post.verification_code:string`, `post.secret_2fa:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_ayuda_info`
 
 - Id: `usuarios.usuario_ayuda_info`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php`
-- Entrada: `post.esquema:string`, `post.esquema_web:string`, `post.ubicacion:string`, `post.username:string`
+- Entrada: `post.username:string`, `post.ubicacion:string`, `post.esquema:string`, `post.esquema_web:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_check_pwd`
 
 - Id: `usuarios.usuario_check_pwd`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_check_pwd.php`
-- Entrada: `post.id_usuario:integer`, `post.password:string`, `post.usuario:string`
+- Entrada: `post.id_usuario:integer`, `post.usuario:string`, `post.password:string`
 - Respuesta: `pendiente_revision`
 
 ## `/src/usuarios/usuario_eliminar`
@@ -252,14 +252,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.usuario_grupo_add`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php`
-- Entrada: `post.ctx:string`, `post.id_grupo:integer`, `post.id_usuario:integer`
+- Entrada: `post.ctx:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_grupo_del`
 
 - Id: `usuarios.usuario_grupo_del`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del.php`
-- Entrada: `post.ctx:string`, `post.id_grupo:integer`, `post.id_usuario:integer`
+- Entrada: `post.ctx:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_grupo_del_lst`
@@ -280,14 +280,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.usuario_guardar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php`
-- Entrada: `post.cambio_password:boolean`, `post.casas:array`, `post.ctx:string`, `post.email:string`, `post.has_2fa:boolean`, `post.id_ctr:integer`, `post.id_nom:integer`, `post.id_role:integer`, `post.id_usuario:integer`, `post.nom_usuario:string`, `post.pass:string`, `post.password:string`, `post.perm_activ:array`, `post.que_user:string`, `post.usuario:string`
+- Entrada: `post.ctx:string`, `post.usuario:string`, `post.id_role:integer`, `post.email:string`, `post.nom_usuario:string`, `post.password:string`, `post.id_nom:integer`, `post.id_ctr:integer`, `post.casas:array`, `post.cambio_password:boolean`, `post.has_2fa:boolean`, `post.perm_activ:array`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_guardar_mail`
 
 - Id: `usuarios.usuario_guardar_mail`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php`
-- Entrada: `post.email:string`, `post.id_usuario:integer`
+- Entrada: `post.id_usuario:integer`, `post.email:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_guardar_pwd`

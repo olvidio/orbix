@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["guardar"]
 endpoints: ["/src/usuarios/preferencias_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Preferencias
-
-Propuesta generada automaticamente desde la capacidad `usuarios.preferencias.gestionar` y sus pantallas relacionadas.
+# Flujo - Preferencias
 
 ## Objetivo De Usuario
 
-Gestiona Preferencias. Descripcion funcional pendiente de revisar.
+Ajuste preferencias personales: layout, inicio, idioma, tablas y estilo.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: menú usuario > preferencias. Pills2: menú usuario > preferencias.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `hay un error, no se ha guardado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** menú usuario > preferencias
+- **Pills2:** menú usuario > preferencias

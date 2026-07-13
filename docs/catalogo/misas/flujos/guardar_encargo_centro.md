@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.ver_encargos_centros"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/guardar_encargo_centro"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Guardar Encargo Centro
-
-Propuesta generada automaticamente desde la capacidad `misas.guardar_encargo_centro.gestionar` y sus pantallas relacionadas.
+# Flujo - Guardar encargo centro
 
 ## Objetivo De Usuario
 
-Gestiona GuardarEncargoCentro. Inserta o actualiza un EncargoCtr (relacion encargo ↔ centro). - Si id_item esta vacio se crea un nuevo EncargoCtr con uuid v4. - Si id_item es un uuid valido se carga el existente y se modifica. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+Inserta o actualiza un EncargoCtr vinculando un encargo de zona con un centro.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -59,11 +57,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No se encuentra el encargo-centro %s`
+- `<repositorio getErrorTxt()>`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Encargos centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr

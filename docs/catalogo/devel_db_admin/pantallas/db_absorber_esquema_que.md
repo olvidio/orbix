@@ -11,12 +11,12 @@ endpoints: ["/src/devel_db_admin/db_propiedades_data"]
 capacidades: ["devel_db_admin.db_propiedades.gestionar"]
 campos: ["form.esquema_del", "form.esquema_matriz", "html.bimportar"]
 acciones: ["fnjs_absorber_dl", "fnjs_enviar_formulario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Db Absorber Esquema Que
 
-Descripcion funcional pendiente de revisar.
+Formulario para unir (absorber) un esquema DL en otro esquema matriz.
 
 ## Tipo
 
@@ -52,11 +52,11 @@ Descripcion funcional pendiente de revisar.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Acceder desde el menú de administración DB o configuración.
+2. Completar el formulario y ejecutar la acción.
+3. Revisar avisos/errores en el panel de respuesta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sistema > DB > DB unir esquemas

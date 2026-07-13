@@ -1,7 +1,7 @@
 ---
 id: "encargossacd.pantalla.ctr_ficha"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "encargossacd"
 nombre: "Ctr Ficha"
 controller: "frontend/encargossacd/controller/ctr_ficha.php"
@@ -11,7 +11,7 @@ endpoints: ["/src/encargossacd/ctr_ficha_data", "/src/encargossacd/ctr_get_selec
 capacidades: ["encargossacd.ctr_ficha.gestionar", "encargossacd.ctr_get_select.gestionar"]
 campos: ["form.filtro_ctr", "form.id_ubi", "post.filtro_ctr", "post.id_ubi"]
 acciones: ["fnjs_construir_desplegable", "fnjs_guardar", "fnjs_lista_ctrs", "fnjs_ver_ficha"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Ctr Ficha
@@ -20,7 +20,7 @@ Ficha de atencion sacerdotal de un centro.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/encargossacd/controller/ctr_ficha.php`
 
 ## Vistas Relacionadas
@@ -56,13 +56,19 @@ Ficha de atencion sacerdotal de un centro.
 - `fnjs_lista_ctrs`
 - `fnjs_ver_ficha`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** dre > Encargos > ficha ctr
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Encargos > ficha ctr
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
+
+
+## Ruta de menú
+
+- **Legacy:** dre > Encargos > ficha ctr
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
+

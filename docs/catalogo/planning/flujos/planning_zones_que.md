@@ -2,61 +2,35 @@
 id: "planning.planning_zones_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Gestionar Planning Zones Que"
+nombre: "Flujo - Planning por zonas SACD (filtros)"
 capacidad: "planning.planning_zones_que.gestionar"
-pantallas_principales: []
-fragmentos: ["planning.pantalla.planning_zones_que"]
-acciones: ["obtener_datos"]
+pantallas_principales: ["planning.pantalla.planning_zones_que"]
+fragmentos: []
+acciones: ["cargar_zonas", "elegir_trimestre", "ver_planning"]
 endpoints: ["/src/planning/planning_zones_que_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Planning Zones Que
+# Flujo - Planning por zonas SACD (filtros)
 
-Propuesta generada automaticamente desde la capacidad `planning.planning_zones_que.gestionar` y sus pantallas relacionadas.
+Entrada del planning por zonas: carga zonas permitidas y elige trimestre/actividad.
 
 ## Objetivo De Usuario
 
-Gestiona PlanningZonesQue. Opciones de zona + comprobación de permiso para planning_zones_que.
+Consultar el calendario de actividades SACD agrupadas por zona.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `planning_zones_que.php` (menú por zonas o propuesta).
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `planning.pantalla.planning_zones_que`
+### Preparar filtros
 
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.actividad`
-- `form.id_zona`
-- `form.trimestre`
-- `form.year`
-- `html.actividad`
-- `html.id_zona`
-- `html.trimestre`
-- `post.actividad`
-- `post.id_zona`
-- `post.modo`
-- `post.stack`
-- `post.trimestre`
-- `post.year`
-
-Acciones JavaScript:
-- `fnjs_enviar_formulario`
-- `fnjs_ver_planning`
+1. Abrir entrada de menú (`propuesta` opcional).
+2. `planning_zones_que_data` devuelve `opciones_zonas` según rol (p-sacd acotado a jefe).
+3. Elegir zona, trimestre, año y filtro de actividad.
+4. Ver planning → `planning_zones_select`.
 
 ## Endpoints Del Flujo
 
@@ -64,11 +38,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No se encuentra el usuario`
+- `No tiene permiso para ver esta página`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** `dre > planning > por zonas`
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > por zonas`
+- Propuesta: `dre > propuestas > planing zonas`

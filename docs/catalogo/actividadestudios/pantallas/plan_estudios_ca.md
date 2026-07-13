@@ -11,12 +11,13 @@ endpoints: ["/src/actividadestudios/plan_estudios_ca_data"]
 capacidades: ["actividadestudios.plan_estudios_ca.gestionar"]
 campos: ["post.sel"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Plan Estudios Ca
 
-Descripcion funcional pendiente de revisar.
+Vista del plan de estudios de un curso anual (CA): profesores, preceptores y alumnos con las
+asignaturas matriculadas y créditos.
 
 ## Tipo
 
@@ -49,11 +50,17 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Se abre desde la selección de actividad en dossier (`sel` → `id_activ`). Consulta
+`plan_estudios_ca_data` y muestra:
 
-## Revision Manual
+- Nombre del CA y director de estudios.
+- Bloque de profesores (asignatura, créditos, nombre).
+- Bloque de preceptores (misma estructura).
+- Lista de alumnos con centro, observaciones de estudios si las hay, y asignaturas matriculadas
+  con créditos y preceptor.
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Pantalla de solo consulta/imprimible.
+
+## Ruta de menú
+
+sin entrada de menú en el índice (vista de dossier / selección de actividad)

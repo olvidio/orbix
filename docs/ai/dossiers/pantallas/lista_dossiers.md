@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Include desde 'home_persona.phtml' y 'home_ubis.phtml' (variables $pau, $id_pau, $Qobj_pau).
+Tabla parcial «relación de dossiers» (modo lista de `dossiers_ver`): icono y descripción por tipo; enlaces `href_ver` según permiso (`perm_a` 1 sin acceso, 2 lectura, 3 escritura). Renderizada desde `dossiers_ver.php`, no tiene controller propio.
 
 ## Uso En Ayuda
 

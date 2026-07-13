@@ -2,72 +2,41 @@
 id: "personas.traslado.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Gestionar Traslado"
+nombre: "Flujo - Trasladar persona"
 capacidad: "personas.traslado.gestionar"
 pantallas_principales: []
 fragmentos: ["personas.pantalla.traslado_form"]
-acciones: ["crear_actualizar", "ver_formulario"]
+acciones: ["ver_formulario", "crear_actualizar"]
 endpoints: ["/src/personas/traslado_form_data", "/src/personas/traslado_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Traslado
+# Flujo - Trasladar persona
 
-Propuesta generada automaticamente desde la capacidad `personas.traslado.gestionar` y sus pantallas relacionadas.
+Cambio de centro y/o delegación con registro en dossier de traslados.
 
 ## Objetivo De Usuario
 
-Gestiona Traslado. Endpoint JSON: aplica un traslado de centro y/o delegacion. Endpoint JSON: datos para el formulario traslado_form.phtml.
+Mover una persona a otro centro o delegación, documentando fechas y situación.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- Ficha edición: enlace traslado.
+- Listado: «cambio de ctr» (`sm`) — abre formulario de centro.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `personas.pantalla.traslado_form`
+### Ver formulario
 
-## Escenarios Inferidos
+1. Abrir traslado con persona seleccionada (`id_pau`, `obj_pau`).
+2. `traslado_form_data` precarga ctr/dl actuales y opciones.
+3. No disponible para personas de paso publicadas.
 
-### Crear Actualizar
+### Aplicar traslado
 
-Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/personas/traslado_update`
-
-### Ver Formulario
-
-Pasos propuestos:
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Endpoints asociados:
-- `/src/personas/traslado_form_data`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.f_ctr`
-- `form.f_dl`
-- `form.new_ctr`
-- `form.new_dl`
-- `form.situacion`
-- `html.f_ctr`
-- `html.f_dl`
-- `post.cabecera`
-- `post.id_pau`
-- `post.obj_pau`
-- `post.sel`
-
-Acciones JavaScript:
-- `fnjs_guardar`
-- `fnjs_update_div`
+1. Rellenar nuevo centro y/o nueva delegación con fechas.
+2. Si hay cambio de dl, elegir situación válida.
+3. Guardar → `traslado_update`; se abre dossier tipo 1004.
 
 ## Endpoints Del Flujo
 
@@ -76,13 +45,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``Faltan id_pau u obj_pau``
-- ``No existe la clase de la persona``
-- ``No se encuentra la persona``
+- `con las personas de paso no tiene sentido.`
+- `Falta una situación válida`
+- `Faltan id_pau u obj_pau`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice.

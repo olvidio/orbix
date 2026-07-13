@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla de personas s pendientes de asistir según el informe (`que`) y centro elegido.
 
 ## Uso En Ayuda
 

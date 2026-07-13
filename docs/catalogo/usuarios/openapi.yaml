@@ -17,7 +17,7 @@ paths:
       operationId: "post_usuarios_app_login"
       summary: "App Login"
       description: |
-        Login JSON para app móvil (Camino B).
+        Login JSON para app móvil: valida credenciales (y 2FA si aplica), establece sesión PHP y devuelve payload con códigos de estado.
         
         Operacion: `mutacion`.
         
@@ -30,12 +30,15 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "username"
+                - "password"
               properties:
-                esquema:
+                username:
                   type: "string"
                 password:
                   type: "string"
-                username:
+                esquema:
                   type: "string"
                 verification_code:
                   type: "string"
@@ -57,9 +60,9 @@ paths:
       operationId: "post_usuarios_app_session"
       summary: "App Session"
       description: |
-        Comprueba si hay sesión autenticada (útil al arrancar la app).
+        Comprueba si hay sesión autenticada al arrancar la app móvil (sin credenciales).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/app_session.md`
       tags:
@@ -92,7 +95,7 @@ paths:
       operationId: "post_usuarios_borrar_pwd"
       summary: "Borrar Pwd"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Herramienta de pruebas: resetea contraseñas al login en todos los esquemas (excepto superadmin id_role=1). Solo WEBDIR=pruebas o Docker.
         
         Operacion: `mutacion`.
         
@@ -127,7 +130,7 @@ paths:
       operationId: "post_usuarios_check_first_login_2fa"
       summary: "Check First Login 2fa"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Tras login web, redirige a configuración 2FA si el usuario no la tiene activada; si no, continúa al home.
         
         Operacion: `mutacion`.
         
@@ -162,7 +165,7 @@ paths:
       operationId: "post_usuarios_grupo_eliminar"
       summary: "Grupo Eliminar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina un grupo de permisos (`aux_grupos`) seleccionado en la lista.
         
         Operacion: `mutacion`.
         
@@ -175,6 +178,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
                 sel:
                   type: "array"
@@ -198,7 +203,7 @@ paths:
       operationId: "post_usuarios_grupo_guardar"
       summary: "Grupo Guardar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Crea o actualiza un grupo de permisos (nombre en campo `usuario`, id en `id_usuario`).
         
         Operacion: `mutacion`.
         
@@ -211,11 +216,13 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "usuario"
               properties:
-                id_usuario:
-                  type: "integer"
                 usuario:
                   type: "string"
+                id_usuario:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -234,9 +241,9 @@ paths:
       operationId: "post_usuarios_grupo_info"
       summary: "Grupo Info"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve el nombre de un grupo para el formulario de edición.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/grupo_info.md`
       tags:
@@ -247,6 +254,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
                 id_usuario:
                   type: "integer"
@@ -268,9 +277,9 @@ paths:
       operationId: "post_usuarios_grupo_lista"
       summary: "Grupo Lista"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista grupos de permisos (id_usuario ~ ^5) con filtro opcional por nombre.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/grupo_lista.md`
       tags:
@@ -302,9 +311,9 @@ paths:
       operationId: "post_usuarios_mails_contactos_region"
       summary: "Mails Contactos Region"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve contactos email de usuarios regionales con permisos de oficina relevantes (pantalla recuperación).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/mails_contactos_region.md`
       tags:
@@ -336,7 +345,7 @@ paths:
       operationId: "post_usuarios_perm_activ_eliminar"
       summary: "Perm Activ Eliminar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina un permiso de actividad-proceso del usuario (`id_item` en token sel).
         
         Operacion: `mutacion`.
         
@@ -349,6 +358,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
                 sel:
                   type: "array"
@@ -372,7 +383,7 @@ paths:
       operationId: "post_usuarios_perm_activ_guardar"
       summary: "Perm Activ Guardar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Crea/actualiza/elimina permisos de actividad por tipo, fase y bits on/off para cada `afecta_a`.
         
         Operacion: `mutacion`.
         
@@ -385,36 +396,30 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
-                afecta_a:
-                  type: "array"
-                  items:
-                    type: string
+                id_usuario:
+                  type: "integer"
+                id_tipo_activ:
+                  type: "integer"
+                id_item:
+                  type: "integer"
                 dl_propia:
                   type: "string"
                 fase_ref:
                   type: "array"
                   items:
                     type: string
-                iactividad_val:
-                  type: "string"
-                iasistentes_val:
-                  type: "string"
-                id_item:
-                  type: "integer"
-                id_tipo_activ:
-                  type: "integer"
-                id_usuario:
-                  type: "integer"
-                inom_tipo_val:
-                  type: "string"
-                isfsv_val:
-                  type: "string"
+                perm_on:
+                  type: "array"
+                  items:
+                    type: string
                 perm_off:
                   type: "array"
                   items:
                     type: string
-                perm_on:
+                afecta_a:
                   type: "array"
                   items:
                     type: string
@@ -436,9 +441,9 @@ paths:
       operationId: "post_usuarios_perm_activ_lista"
       summary: "Perm Activ Lista"
       description: |
-        Para la tabla slickGrid, el width debe ser en pixels No hay que poner unidades, pues da un error de javascript.
+        Tabla de permisos actividad-proceso del usuario con etiquetas de tipo, fase y bits.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/perm_activ_lista.md`
       tags:
@@ -449,6 +454,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
                 id_usuario:
                   type: "string"
@@ -470,7 +477,7 @@ paths:
       operationId: "post_usuarios_perm_menu_eliminar"
       summary: "Perm Menu Eliminar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina un permiso de menú DL del usuario/grupo.
         
         Operacion: `mutacion`.
         
@@ -483,6 +490,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
                 sel:
                   type: "array"
@@ -506,7 +515,7 @@ paths:
       operationId: "post_usuarios_perm_menu_guardar"
       summary: "Perm Menu Guardar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Alta/edición permiso menú: suma bits `menu_perm[]` en entero.
         
         Operacion: `mutacion`.
         
@@ -519,6 +528,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
                 id_item:
                   type: "integer"
@@ -546,9 +557,9 @@ paths:
       operationId: "post_usuarios_perm_menu_info"
       summary: "Perm Menu Info"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Carga formulario modal de permiso menú (nuevo o edición).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/perm_menu_info.md`
       tags:
@@ -559,10 +570,12 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
-                id_item:
-                  type: "integer"
                 id_usuario:
+                  type: "integer"
+                id_item:
                   type: "integer"
       responses:
         "200":
@@ -582,9 +595,9 @@ paths:
       operationId: "post_usuarios_perm_menu_lista"
       summary: "Perm Menu Lista"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista permisos de menú DL asignados al usuario.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/perm_menu_lista.md`
       tags:
@@ -595,6 +608,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
                 id_usuario:
                   type: "string"
@@ -616,9 +631,9 @@ paths:
       operationId: "post_usuarios_preferencia_tabla_get"
       summary: "Preferencia Tabla Get"
       description: |
-        Devuelve las preferencias de usuario necesarias para renderizar una tabla (HTML simple o SlickGrid) en el front.
+        Devuelve preferencias de presentación de tablas (global y SlickGrid por id_tabla+idioma).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/preferencia_tabla_get.md`
       tags:
@@ -650,7 +665,7 @@ paths:
       operationId: "post_usuarios_preferencias_guardar"
       summary: "Preferencias Guardar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Persiste preferencias personales: layout, inicio, slickGrid, tabla, idioma, zona horaria, estilo (según `que`).
         
         Operacion: `mutacion`.
         
@@ -664,29 +679,29 @@ paths:
             schema:
               type: object
               properties:
-                estilo_color:
+                que:
                   type: "string"
-                idioma_nou:
+                tabla:
                   type: "string"
-                inicio:
+                sPrefs:
                   type: "string"
                 layout:
                   type: "string"
                 oficina:
                   type: "string"
-                ordenApellidos:
-                  type: "string"
-                que:
-                  type: "string"
-                sPrefs:
-                  type: "string"
-                tabla:
-                  type: "string"
-                tipo_menu:
+                inicio:
                   type: "string"
                 tipo_tabla:
                   type: "string"
+                ordenApellidos:
+                  type: "string"
+                idioma_nou:
+                  type: "string"
                 zona_horaria_nou:
+                  type: "string"
+                estilo_color:
+                  type: "string"
+                tipo_menu:
                   type: "string"
       responses:
         "200":
@@ -706,7 +721,7 @@ paths:
       operationId: "post_usuarios_recuperar_2fa_mail"
       summary: "Recuperar 2fa Mail"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Recuperación 2FA: genera código/link y envía mail al usuario.
         
         Operacion: `mutacion`.
         
@@ -719,16 +734,18 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "username"
               properties:
+                username:
+                  type: "string"
+                ubicacion:
+                  type: "string"
                 esquema:
                   type: "string"
                 esquema_web:
                   type: "string"
-                ubicacion:
-                  type: "string"
                 url_base:
-                  type: "string"
-                username:
                   type: "string"
       responses:
         "200":
@@ -748,7 +765,7 @@ paths:
       operationId: "post_usuarios_recuperar_password_mail"
       summary: "Recuperar Password Mail"
       description: |
-        Página para recuperar la contraseña de un usuario.
+        Recuperación contraseña: genera pwd temporal, marca cambio obligatorio y envía mail.
         
         Operacion: `mutacion`.
         
@@ -761,16 +778,18 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "username"
               properties:
+                username:
+                  type: "string"
+                ubicacion:
+                  type: "string"
                 esquema:
                   type: "string"
                 esquema_web:
                   type: "string"
-                ubicacion:
-                  type: "string"
                 url_index:
-                  type: "string"
-                username:
                   type: "string"
       responses:
         "200":
@@ -790,7 +809,7 @@ paths:
       operationId: "post_usuarios_role_eliminar"
       summary: "Role Eliminar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina un rol (solo superadmin permiso=1).
         
         Operacion: `mutacion`.
         
@@ -803,6 +822,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
                 sel:
                   type: "array"
@@ -826,7 +847,7 @@ paths:
       operationId: "post_usuarios_role_grupmenu_add"
       summary: "Role Grupmenu Add"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Asocia grupmenu a rol (tokens sel `id_role#id_grupmenu`).
         
         Operacion: `mutacion`.
         
@@ -839,6 +860,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
                 sel:
                   type: "array"
@@ -862,7 +885,7 @@ paths:
       operationId: "post_usuarios_role_grupmenu_del"
       summary: "Role Grupmenu Del"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Quita asociación grupmenu↔rol por id_item.
         
         Operacion: `mutacion`.
         
@@ -875,6 +898,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
                 sel:
                   type: "array"
@@ -898,9 +923,9 @@ paths:
       operationId: "post_usuarios_role_grupmenu_info"
       summary: "Role Grupmenu Info"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista grupmenus disponibles para añadir a un rol.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/role_grupmenu_info.md`
       tags:
@@ -911,6 +936,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_role"
               properties:
                 id_role:
                   type: "integer"
@@ -932,7 +959,7 @@ paths:
       operationId: "post_usuarios_role_guardar"
       summary: "Role Guardar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Crea o actualiza rol con flags sf/sv, pau y dmz.
         
         Operacion: `mutacion`.
         
@@ -945,18 +972,20 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "role"
               properties:
-                dmz:
-                  type: "integer"
-                id_role:
-                  type: "integer"
-                pau:
-                  type: "string"
                 role:
                   type: "string"
+                id_role:
+                  type: "integer"
                 sf:
                   type: "integer"
                 sv:
+                  type: "integer"
+                pau:
+                  type: "string"
+                dmz:
                   type: "integer"
       responses:
         "200":
@@ -976,9 +1005,9 @@ paths:
       operationId: "post_usuarios_role_info"
       summary: "Role Info"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Carga ficha rol: datos, permiso de edición y tabla grupmenus ya asignados.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/role_info.md`
       tags:
@@ -1010,9 +1039,9 @@ paths:
       operationId: "post_usuarios_role_lista"
       summary: "Role Lista"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista roles con grupmenus concatenados y nivel permiso del operador.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/role_lista.md`
       tags:
@@ -1045,9 +1074,9 @@ paths:
       operationId: "post_usuarios_usuario_2fa_info"
       summary: "Usuario 2fa Info"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Estado 2FA del usuario para formulario configuración.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/usuario_2fa_info.md`
       tags:
@@ -1058,6 +1087,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
                 id_usuario:
                   type: "integer"
@@ -1079,7 +1110,7 @@ paths:
       operationId: "post_usuarios_usuario_2fa_update"
       summary: "Usuario 2fa Update"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Activa/desactiva 2FA verificando TOTP al activar.
         
         Operacion: `mutacion`.
         
@@ -1092,13 +1123,15 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
-                enable_2fa:
-                  type: "boolean"
                 id_usuario:
                   type: "integer"
                 secret_2fa:
                   type: "string"
+                enable_2fa:
+                  type: "boolean"
                 verification_code:
                   type: "string"
       responses:
@@ -1119,7 +1152,7 @@ paths:
       operationId: "post_usuarios_usuario_2fa_verify"
       summary: "Usuario 2fa Verify"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Valida código TOTP contra secret provisional (paso previo a activar 2FA).
         
         Operacion: `mutacion`.
         
@@ -1132,10 +1165,13 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "verification_code"
+                - "secret_2fa"
               properties:
-                secret_2fa:
-                  type: "string"
                 verification_code:
+                  type: "string"
+                secret_2fa:
                   type: "string"
       responses:
         "200":
@@ -1155,9 +1191,9 @@ paths:
       operationId: "post_usuarios_usuario_ayuda_info"
       summary: "Usuario Ayuda Info"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Ayuda acceso login: email ofuscado del usuario y contacto admin regional.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/usuario_ayuda_info.md`
       tags:
@@ -1168,14 +1204,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "username"
               properties:
-                esquema:
-                  type: "string"
-                esquema_web:
+                username:
                   type: "string"
                 ubicacion:
                   type: "string"
-                username:
+                esquema:
+                  type: "string"
+                esquema_web:
                   type: "string"
       responses:
         "200":
@@ -1195,9 +1233,9 @@ paths:
       operationId: "post_usuarios_usuario_check_pwd"
       summary: "Usuario Check Pwd"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Valida fortaleza de contraseña (JsonResponse directo, no envelope ContestarJson).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/usuario_check_pwd.md`
       tags:
@@ -1208,12 +1246,14 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "password"
               properties:
                 id_usuario:
                   type: "integer"
-                password:
-                  type: "string"
                 usuario:
+                  type: "string"
+                password:
                   type: "string"
       responses:
         "200":
@@ -1233,7 +1273,7 @@ paths:
       operationId: "post_usuarios_usuario_eliminar"
       summary: "Usuario Eliminar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina usuario seleccionado (id en token sel).
         
         Operacion: `mutacion`.
         
@@ -1246,6 +1286,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
                 sel:
                   type: "array"
@@ -1269,9 +1311,9 @@ paths:
       operationId: "post_usuarios_usuario_form"
       summary: "Usuario Form"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Builder formulario usuario: alta/edición con roles, pau, permisos menú/actividad y ctx firmado para guardar.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/usuario_form.md`
       tags:
@@ -1305,7 +1347,7 @@ paths:
       operationId: "post_usuarios_usuario_grupo_add"
       summary: "Usuario Grupo Add"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Asocia grupo permisos a usuario (ctx HashB `usuario_grupo_add`).
         
         Operacion: `mutacion`.
         
@@ -1318,13 +1360,11 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx"
               properties:
                 ctx:
                   type: "string"
-                id_grupo:
-                  type: "integer"
-                id_usuario:
-                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1343,7 +1383,7 @@ paths:
       operationId: "post_usuarios_usuario_grupo_del"
       summary: "Usuario Grupo Del"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).
         
         Operacion: `mutacion`.
         
@@ -1356,13 +1396,11 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx"
               properties:
                 ctx:
                   type: "string"
-                id_grupo:
-                  type: "integer"
-                id_usuario:
-                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1381,9 +1419,9 @@ paths:
       operationId: "post_usuarios_usuario_grupo_del_lst"
       summary: "Usuario Grupo Del Lst"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista grupos ya asignados al usuario con acción quitar.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/usuario_grupo_del_lst.md`
       tags:
@@ -1394,6 +1432,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
                 id_usuario:
                   type: "integer"
@@ -1415,9 +1455,9 @@ paths:
       operationId: "post_usuarios_usuario_grupo_lst"
       summary: "Usuario Grupo Lst"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista grupos disponibles para asignar al usuario (id ~ ^5, excluye ya asignados).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/usuario_grupo_lst.md`
       tags:
@@ -1428,6 +1468,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
                 id_usuario:
                   type: "integer"
@@ -1449,7 +1491,7 @@ paths:
       operationId: "post_usuarios_usuario_guardar"
       summary: "Usuario Guardar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Alta/edición usuario con rol, pau, casas/centro, flags pwd/2FA y permisos actividad embebidos.
         
         Operacion: `mutacion`.
         
@@ -1462,41 +1504,38 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx"
+                - "usuario"
               properties:
-                cambio_password:
-                  type: "boolean"
+                ctx:
+                  type: "string"
+                usuario:
+                  type: "string"
+                id_role:
+                  type: "integer"
+                email:
+                  type: "string"
+                nom_usuario:
+                  type: "string"
+                password:
+                  type: "string"
+                id_nom:
+                  type: "integer"
+                id_ctr:
+                  type: "integer"
                 casas:
                   type: "array"
                   items:
                     type: string
-                ctx:
-                  type: "string"
-                email:
-                  type: "string"
+                cambio_password:
+                  type: "boolean"
                 has_2fa:
                   type: "boolean"
-                id_ctr:
-                  type: "integer"
-                id_nom:
-                  type: "integer"
-                id_role:
-                  type: "integer"
-                id_usuario:
-                  type: "integer"
-                nom_usuario:
-                  type: "string"
-                pass:
-                  type: "string"
-                password:
-                  type: "string"
                 perm_activ:
                   type: "array"
                   items:
                     type: string
-                que_user:
-                  type: "string"
-                usuario:
-                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1515,7 +1554,7 @@ paths:
       operationId: "post_usuarios_usuario_guardar_mail"
       summary: "Usuario Guardar Mail"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Actualiza email del usuario (preferencias o admin).
         
         Operacion: `mutacion`.
         
@@ -1528,11 +1567,14 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
+                - "email"
               properties:
-                email:
-                  type: "string"
                 id_usuario:
                   type: "integer"
+                email:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1551,7 +1593,7 @@ paths:
       operationId: "post_usuarios_usuario_guardar_pwd"
       summary: "Usuario Guardar Pwd"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Cambia contraseña tras validar fortaleza; limpia flag cambio_password.
         
         Operacion: `mutacion`.
         
@@ -1564,6 +1606,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
+                - "password"
               properties:
                 id_usuario:
                   type: "integer"
@@ -1587,9 +1632,9 @@ paths:
       operationId: "post_usuarios_usuario_info"
       summary: "Usuario Info"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Resumen usuario para cabecera ficha (grupos, login, email).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/usuario_info.md`
       tags:
@@ -1600,6 +1645,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
                 id_usuario:
                   type: "integer"
@@ -1621,9 +1668,9 @@ paths:
       operationId: "post_usuarios_usuario_lista"
       summary: "Usuario Lista"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista usuarios web filtrable; oculta roles según sfsv y permiso id_role≤3.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/usuario_lista.md`
       tags:
@@ -1655,9 +1702,9 @@ paths:
       operationId: "post_usuarios_usuario_preferencias"
       summary: "Usuario Preferencias"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Builder pantalla preferencias: layout, inicio, oficina, estilo y opciones según rol/apps.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/usuario_preferencias.md`
       tags:

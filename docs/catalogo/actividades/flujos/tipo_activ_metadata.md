@@ -2,60 +2,33 @@
 id: "actividades.tipo_activ_metadata.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Tipo Activ Metadata"
+nombre: "Flujo - Metadatos cascada tipo actividad"
 capacidad: "actividades.tipo_activ_metadata.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/actividades/tipo_activ_metadata"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Tipo Activ Metadata
+# Flujo - Metadatos cascada tipo actividad
 
-Propuesta generada automaticamente desde la capacidad `actividades.tipo_activ_metadata.gestionar` y sus pantallas relacionadas.
+Opciones AJAX para los desplegables del formulario de alta/edición de tipos (sf/sv,
+asistentes, actividad, nombre).
 
 ## Objetivo De Usuario
 
-Gestiona TipoActivMetadata. Endpoint backend que devuelve, en una sola respuesta JSON, los datos que necesita {.
+Al cambiar un nivel en el formulario de tipos, actualizar los siguientes desplegables.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
-
-### Ejecutar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+JS en `tipo_activ.html.twig` al editar/crear tipos.
 
 ## Endpoints Del Flujo
 
 - `/src/actividades/tipo_activ_metadata`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > Configuración > gestión Tipos actividades.
+- **Pills2:** ADMIN LOCAL > Gestión tipos de actividad.

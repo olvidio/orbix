@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado imprimible de clases de un curso anual (CA): por cada asignatura muestra el profesor y la lista numerada de alumnos matriculados con su centro.
 
 ## Uso En Ayuda
 

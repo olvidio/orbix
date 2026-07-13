@@ -11,12 +11,12 @@ endpoints: ["/src/certificados/certificado_emitido_adjuntar_data", "/src/certifi
 capacidades: ["certificados.certificado_emitido_adjuntar.gestionar", "certificados.certificados_locales.gestionar"]
 campos: ["form.certificado", "form.certificado_pdf", "form.f_certificado", "form.f_enviado", "form.firmado", "form.idioma", "post.id_nom", "post.sel"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Certificado Emitido Adjuntar
 
-Descripcion funcional pendiente de revisar.
+Formulario para adjuntar un certificado emitido (PDF + metadatos) a una persona. Entrada desde dossier o flujo de persona.
 
 ## Tipo
 
@@ -56,13 +56,6 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (dossier persona / navegación embebida)

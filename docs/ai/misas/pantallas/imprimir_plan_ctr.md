@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Generación PDF/mpdf del plan CTR a partir de `ver_plan_ctr`. Sin menú directo.
 
 ## Uso En Ayuda
 

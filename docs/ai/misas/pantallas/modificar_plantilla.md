@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Editor de plantilla semanal (-1): centros/tareas/horarios por zona. Grid plantilla + `anadir_ctr_tarea`, `quitar_horario`, `importar_plantilla`.
 
 ## Uso En Ayuda
 

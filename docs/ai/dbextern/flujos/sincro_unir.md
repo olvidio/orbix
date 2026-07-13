@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "dbextern"
-titulo: "Sincro Unir"
+titulo: "Unir BDU con Aquinate"
 flujo: "dbextern.sincro_unir.gestionar.flujo"
-preguntas: ["Como ejecutar en Sincro Unir?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_listas", "dbextern.pantalla.ver_orbix"]
 endpoints: ["/src/dbextern/sincro_unir"]
@@ -12,14 +12,13 @@ source: "docs/catalogo/dbextern/flujos/sincro_unir.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Sincro Unir
+# Ayuda IA - Unir BDU con Aquinate
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Sincro Unir`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Unir BDU con Aquinate`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Sincro Unir?
 
 ## Donde Entrar
 
@@ -29,13 +28,6 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `dbextern.pantalla.ver_listas`
@@ -43,7 +35,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona UnirPersonaUseCase. Vincula una persona de BDU con una persona de Orbix.
+Confirmar la correspondencia cuando el sistema sugiere candidatos (puntos 4 y 9).
 
 ## Errores Documentados
 

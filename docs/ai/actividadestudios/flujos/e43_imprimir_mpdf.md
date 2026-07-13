@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la pantalla E43, pulsar **imprimir** (abre ventana con `e43_2_mpdf.php`).
+2. El controlador consulta `e43_imprimir_mpdf_data`.
+3. Se renderiza el certificado con estilos `e43_mpdf.css` listo para imprimir/exportar.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/e43_imprimir_mpdf_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona E43Certificado. Datos certificado E43 (pantalla e imprimible).
+El usuario imprime el certificado E43 en formato PDF: el sistema obtiene los mismos datos que la pantalla E43 y los renderiza en la plantilla imprimible (`e43_imprimir_mpdf.php` / `e43_2_mpdf.php`).
 
 ## Limites De La Respuesta
 

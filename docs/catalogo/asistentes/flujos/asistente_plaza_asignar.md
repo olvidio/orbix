@@ -8,20 +8,22 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/asistentes/asistente_plaza_asignar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Asistente Plaza Asignar
 
-Propuesta generada automaticamente desde la capacidad `asistentes.asistente_plaza_asignar.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Gestiona AsistentePlazaAsignar. Cambia la plaza de un lote de asistentes.
+Asignar plaza común a varios asistentes seleccionados.
+
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `lista_asistentes` (`frontend/asistentes/controller/`).
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -54,9 +56,6 @@ Acciones JavaScript:
 - ``falta id_activ``
 - ``falta lista de seleccion``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Vista del proceso de una actividad concreta: tabla de fases/tareas con completado y observaciones, opción forzar, regenerar proceso (con permiso calendario) y enlace al dossier de la actividad.
 
 ## Uso En Ayuda
 

@@ -2,53 +2,31 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "configuracion"
-titulo: "Parametros"
+titulo: "Configurar parámetros del esquema"
 flujo: "configuracion.parametros.gestionar.flujo"
-preguntas: ["Como crear o modificar en Parametros?", "Como consultar el listado en Parametros?"]
-pantallas_principales: []
-fragmentos: ["configuracion.pantalla.parametros"]
+preguntas: []
+pantallas_principales: ["configuracion.pantalla.parametros"]
+fragmentos: []
 endpoints: ["/src/configuracion/parametros_lista", "/src/configuracion/parametros_update"]
 source: "docs/catalogo/configuracion/flujos/parametros.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Parametros
+# Ayuda IA - Configurar parámetros del esquema
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Parametros`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Configurar parámetros del esquema`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Parametros?
-- Como consultar el listado en Parametros?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Configuración del esquema (`configuracion.pantalla.parametros`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
-
-## Crear o modificar
-
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/configuracion/parametros_update`
-
-## Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/configuracion/parametros_lista`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -56,7 +34,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Parametros. Descripcion funcional pendiente de revisar.
+Consultar y modificar los parámetros globales del esquema (curso escolar, certificados, idioma, ámbito territorial, gestión de calendario, etc.).
 
 ## Limites De La Respuesta
 

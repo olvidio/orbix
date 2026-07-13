@@ -2,74 +2,52 @@
 id: "cambios.avisos_generar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cambios"
-nombre: "Flujo - Gestionar Avisos Generar"
+nombre: "Flujo - Consultar y purgar cambios"
 capacidad: "cambios.avisos_generar.gestionar"
 pantallas_principales: []
 fragmentos: ["cambios.pantalla.avisos_generar"]
-acciones: ["listar"]
-endpoints: ["/src/cambios/avisos_generar_lista_data"]
-estado_revision: "generado"
+acciones: ["listar", "eliminar", "eliminar_hasta_fecha"]
+endpoints: ["/src/cambios/avisos_generar_lista_data", "/src/cambios/cambio_usuario_eliminar", "/src/cambios/cambio_usuario_eliminar_hasta_fecha"]
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Avisos Generar
-
-Propuesta generada automaticamente desde la capacidad `cambios.avisos_generar.gestionar` y sus pantallas relacionadas.
+# Flujo - Consultar y purgar cambios
 
 ## Objetivo De Usuario
 
-Gestiona AvisosGenerar. Listado de avisos CambioUsuario (con avisado=false) para el usuario/aviso_tipo dado + opciones de desplegables de la pantalla avisos_generar.
+Ver los cambios registrados pendientes de avisar y eliminar los que ya no interesan (por fila o por
+fecha límite).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+`frontend/cambios/controller/avisos_generar.php` (varias entradas de menú «ver lista cambios»).
 
-## Fragmentos O Pantallas Auxiliares
-
-- `cambios.pantalla.avisos_generar`
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Listar
 
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir la pantalla.
+2. Si es admin, elegir usuario y tipo de aviso.
+3. El sistema carga `avisos_generar_lista_data` y muestra la tabla.
 
-Endpoints asociados:
-- `/src/cambios/avisos_generar_lista_data`
+### Eliminar filas
 
-## Campos Y Acciones Detectadas En Pantalla
+1. Marcar filas en la tabla.
+2. Pulsar borrar → `cambio_usuario_eliminar` con `sel[]`.
 
-Campos:
-- `form.aviso_tipo`
-- `form.id_usuario`
-- `html.f_fin`
-- `html.refresh`
-- `post.Gstack`
-- `post.aviso_tipo`
-- `post.id_usuario`
-- `post.refresh`
+### Eliminar hasta fecha
 
-Acciones JavaScript:
-- `fnjs_actualizar`
-- `fnjs_borrar`
-- `fnjs_borrar_hasta_fecha`
-- `fnjs_enviar_formulario`
-- `fnjs_selectAll`
-
-## Endpoints Del Flujo
-
-- `/src/cambios/avisos_generar_lista_data`
+1. Indicar `f_fin`.
+2. Pulsar purga → `cambio_usuario_eliminar_hasta_fecha`.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `debe indicar la fecha`
+- `Hay un error, no se ha eliminado`
+- `Hay un error al eliminar los cambios hasta la fecha indicada`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** Calendario > actividades > ver lista cambios; sistema > usuarios web > ver lista cambios;
+  Utilidades > Utilidades > lista de cambios
+- **Pills2:** mismas rutas (+ ADMIN LOCAL en usuarios web)

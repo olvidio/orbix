@@ -11,12 +11,12 @@ endpoints: ["/src/devel_db_admin/db_propiedades_data"]
 capacidades: ["devel_db_admin.db_propiedades.gestionar"]
 campos: ["form.tabla", "html.bcrear"]
 acciones: ["fnjs_db_mover_tabla", "fnjs_enviar_formulario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Db Mover Que
 
-Para mover una tabla de la DB sv a sv-e que está en la dmz.
+Selección de tabla a mover de sv a sv-e por esquema.
 
 ## Tipo
 
@@ -51,11 +51,11 @@ Para mover una tabla de la DB sv a sv-e que está en la dmz.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Acceder desde el menú de administración DB o configuración.
+2. Completar el formulario y ejecutar la acción.
+3. Revisar avisos/errores en el panel de respuesta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > DB > mover tabla a otra DB
+- **Pills2:** sistema > DB > mover tabla a otra DB / ADMIN GLOBAL > DB > mover tabla a otra DB

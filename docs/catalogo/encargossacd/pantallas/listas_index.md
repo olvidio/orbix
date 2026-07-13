@@ -1,7 +1,7 @@
 ---
 id: "encargossacd.pantalla.listas_index"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "pantalla_principal"
 modulo: "encargossacd"
 nombre: "Listas Index"
 controller: "frontend/encargossacd/controller/listas_index.php"
@@ -11,7 +11,7 @@ endpoints: []
 capacidades: []
 campos: ["form.que"]
 acciones: ["fnjs_comprobaciones", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Listas Index
@@ -20,7 +20,7 @@ Construye la URL firmada a un controlador de `frontend/encargossacd/controller` 
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/encargossacd/controller/listas_index.php`
 
 ## Vistas Relacionadas
@@ -49,13 +49,19 @@ No se han detectado capacidades relacionadas.
 - `fnjs_comprobaciones`
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** dre > Encargos > listados
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Encargos > listados
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados
+
+
+## Ruta de menú
+
+- **Legacy:** dre > Encargos > listados
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados
+

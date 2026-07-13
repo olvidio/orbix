@@ -4,49 +4,66 @@ tipo: "endpoint"
 modulo: "ubis"
 url: "/src/ubis/direcciones_editar"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/ubis/infrastructure/ui/http/controllers/direcciones_editar.php"
-entrada: ["post.id_direccion:string", "post.id_ubi:integer", "post.idx:integer", "post.inc:string", "post.mod:string", "post.obj_dir:string"]
-entrada_obligatoria: []
+entrada: ["post.id_ubi:integer", "post.mod:string", "post.obj_dir:string", "post.id_direccion:string", "post.idx:integer", "post.inc:string"]
+entrada_obligatoria: ["id_ubi", "obj_dir"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/ubis/controller/direcciones_editar.php"]
 casos_uso: ["src\\ubis\\application\\DireccionesEditarData"]
 tags: ["ubis", "direcciones", "editar"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Direcciones Editar
 
-Descripcion funcional pendiente de revisar.
+Carga la ficha de edición de direcciones de un ubi, con navegación entre varias direcciones.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Carga la ficha de edición de direcciones de un ubi, con navegación entre varias direcciones.
 
 ## Endpoint
 
 - URL: `/src/ubis/direcciones_editar`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direcciones_editar.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_direccion` | `string` | controller | No | controller |
-| `id_ubi` | `integer` | controller | No | controller |
-| `idx` | `integer` | controller | No | controller |
-| `inc` | `string` | controller | No | controller |
-| `mod` | `string` | controller | No | controller |
-| `obj_dir` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_ubi` | `integer` | application | Si | |
+| `mod` | `string` | application | No | |
+| `obj_dir` | `string` | application | Si | |
+| `id_direccion` | `string` | application | No | |
+| `idx` | `integer` | application | No | |
+| `inc` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `dl`: delegación ubi
+  - `sin_direccion`: boolean
+  - `msg_sin_direccion`: aviso sin dirección
+  - `idx`: índice dirección actual
+  - `botones`: códigos botones según UbiPermisos
+  - `mas/menos`: navegación entre direcciones
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+UbiPermisos.puedeModificarPorObjeto: controla botones 1,4,5.
 
 ## Casos De Uso
 
@@ -54,10 +71,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/ubis/controller/direcciones_editar.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/ubis/controller/direcciones_editar.php"]`).

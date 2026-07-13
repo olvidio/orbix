@@ -4,19 +4,22 @@ tipo: "endpoint"
 modulo: "notas"
 url: "/src/notas/tessera_imprimir_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/notas/infrastructure/ui/http/controllers/tessera_imprimir_data.php"
 entrada: ["post.id_nom:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_nom"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["No se ha encontrado la asignatura con id: %s"]
 frontend_referencias: ["frontend/notas/controller/tessera_imprimir.php", "frontend/notas/controller/tessera_imprimir_mpdf.php"]
 casos_uso: ["src\\notas\\application\\TesseraImprimirData"]
 tags: ["notas", "tessera", "imprimir", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tessera Imprimir Data
+
+Datos para imprimir la tessera de estudios de una persona.
 
 Datos imprimibles de tessera ya serializados (sin objetos dominio → JSON estable).
 
@@ -26,7 +29,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - URL: `/src/notas/tessera_imprimir_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/tessera_imprimir_data.php`
 
 ## Entrada
@@ -39,7 +42,20 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (doble `JSON.parse` salvo excepciones).
+- Payload impresión en `data`.
+
+## Objetivo funcional
+
+Payload HTML/estructura para `tessera_imprimir` y variantes mpdf.
+
+## Permisos
+
+- Dossier tessera.
+
+## Errores conocidos
+
+- `No se ha encontrado la asignatura con id: %s`
 
 ## Casos De Uso
 
@@ -47,11 +63,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/tessera_imprimir.php`
-- `frontend/notas/controller/tessera_imprimir_mpdf.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/tessera_imprimir.php`.

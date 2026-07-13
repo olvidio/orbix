@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.procesos_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/procesos/procesos_select_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Procesos Select
-
-Propuesta generada automaticamente desde la capacidad `procesos.procesos_select.gestionar` y sus pantallas relacionadas.
+# Flujo - Procesos select
 
 ## Objetivo De Usuario
 
-Gestiona ProcesosSelect. Caso de uso: datos para la pantalla procesos_select. Devuelve las opciones del desplegable de tipo de proceso para que la vista frontend monte el frontend\shared\web\Desplegable y los web\Hash correspondientes.
+Carga inicial de la pantalla de administración de procesos: opciones del desplegable de tipo de proceso y hashes de navegación.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > procesos activ. > procesos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -52,11 +50,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > procesos activ. > procesos
+- **Pills2:** ADMIN LOCAL > procesos activ. > procesos

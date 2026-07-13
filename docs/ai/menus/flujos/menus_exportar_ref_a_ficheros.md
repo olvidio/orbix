@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "menus"
 titulo: "Menus Exportar Ref A Ficheros"
 flujo: "menus.menus_exportar_ref_a_ficheros.gestionar.flujo"
-preguntas: ["Como ejecutar en Menus Exportar Ref A Ficheros?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/menus/menus_exportar_ref_a_ficheros"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Menus Exportar Ref A Ficheros?
 
 ## Donde Entrar
 
@@ -29,20 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - Ninguna pantalla relacionada.
 
 ## Objetivo
 
-Gestiona MenusExportarRefAFicheros. Descripcion funcional pendiente de revisar.
+Genera scripts COPY en `log/menus/` (metamenús, ref, módulos).
 
 ## Limites De La Respuesta
 

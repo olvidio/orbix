@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ExaminadoresSearch. Autocomplete jQuery-UI.
+Autocompletado de examinadores en formulario de acta.
 
 ## Limites De La Respuesta
 

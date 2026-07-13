@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario de filtros para el informe de créditos cursables por alumno y CA. Al enviarlo abre `ca_posibles.php` con el cuadro o listado resultante.
 
 ## Uso En Ayuda
 

@@ -6,21 +6,26 @@ url: "/src/usuarios/recuperar_password_mail"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php"
-entrada: ["post.esquema:string", "post.esquema_web:string", "post.ubicacion:string", "post.url_index:string", "post.username:string"]
-entrada_obligatoria: []
+entrada: ["post.username:string", "post.ubicacion:string", "post.esquema:string", "post.esquema_web:string", "post.url_index:string"]
+entrada_obligatoria: ["username"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: []
 casos_uso: []
 tags: ["usuarios", "recuperar", "password", "mail"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Esquema no válido", "Error al preparar la consulta", "Error al ejecutar la consulta", "No hay email asociado a este usuario", "Error al enviar el correo electrónico", "Error al actualizar la contraseña", "No se encontró ningún usuario con ese nombre"]
 ---
 
 # Recuperar Password Mail
 
-Página para recuperar la contraseña de un usuario.
+Recuperación contraseña: genera pwd temporal, marca cambio obligatorio y envía mail.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Recuperación contraseña: genera pwd temporal, marca cambio obligatorio y envía mail.
 
 ## Endpoint
 
@@ -33,28 +38,37 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `esquema` | `string` | controller | No | controller |
-| `esquema_web` | `string` | controller | No | controller |
-| `ubicacion` | `string` | controller | No | controller |
-| `url_index` | `string` | controller | No | controller |
-| `username` | `string` | controller | No | controller |
+| `username` | `string` | application | Si | |
+| `ubicacion` | `string` | application | No | |
+| `esquema` | `string` | application | No | |
+| `esquema_web` | `string` | application | No | |
+| `url_index` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `success`: boolean
+  - `email`: string
+
+## Errores conocidos
+- `Esquema no válido`
+- `Error al preparar la consulta`
+- `Error al ejecutar la consulta`
+- `No hay email asociado a este usuario`
+- `Error al enviar el correo electrónico`
+- `Error al actualizar la contraseña`
+- `No se encontró ningún usuario con ese nombre`
+
+## Permisos
+
+Público (pantalla recuperar_password).
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`[]`).

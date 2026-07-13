@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Entry point para vincular encargos de zona con centros (EncargoCtr). Selector de zona y grid `ver_encargos_centros`.
 
 ## Uso En Ayuda
 

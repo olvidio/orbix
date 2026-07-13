@@ -11,12 +11,12 @@ endpoints: ["/src/notas/tessera_imprimir_data"]
 capacidades: ["notas.tessera_imprimir.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tessera Imprimir Mpdf
 
-Esta página sirve para la tessera de una persona.
+PDF de tessera vía mPDF.
 
 ## Tipo
 
@@ -47,13 +47,11 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

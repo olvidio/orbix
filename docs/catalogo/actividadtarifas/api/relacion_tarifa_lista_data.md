@@ -15,14 +15,20 @@ requiere_hashb: false
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php"]
 casos_uso: ["src\\actividadtarifas\\application\\RelacionTarifaListaData"]
 tags: ["actividadtarifas", "relacion", "tarifa", "lista", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Relacion Tarifa Lista Data
 
-Endpoint backend: listado de relaciones tarifa ↔ tipo actividad.
+Listado de relaciones `TipoTarifa` ↔ tipo de actividad.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve todas las relaciones ordenadas por id de tipo de actividad, con columnas nombre del tipo,
+tarifa (letra + modo) y enlace modificar si `mi_sfsv` coincide con la sección del tipo y permiso
+`adl`. `puede_anadir` para `adl`|`pr`|`calendario`.
 
 ## Endpoint
 
@@ -33,16 +39,17 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Sin parámetros POST.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Payload en `data` (schema `actividadtarifas_RelacionTarifaListaDataData`):
-  - `a_cabeceras` (`array`)
-  - `a_valores` (`array`)
-  - `puede_anadir` (`boolean`)
+- Helper: `ContestarJson::enviar` → doble `JSON.parse` en cliente.
+- Payload: `a_cabeceras` (tipo actividad, tarifa, acción), `a_valores`, `puede_anadir`.
+
+## Permisos
+
+- Enlace modificar: `mi_sfsv === isfsv` del tipo y `have_perm_oficina('adl')`.
+- `puede_anadir`: `have_perm_oficina('adl'|'pr'|'calendario')`.
 
 ## Casos De Uso
 
@@ -50,10 +57,4 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php`.

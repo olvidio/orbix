@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Cuadro "alumnos x asignaturas": genera una tabla con las asignaturas pendientes de todos los alumnos, filtrando por delegacion (`ambito = dl`) o por las delegaciones seleccionadas de la region stgr (`ambito = rstgr`).
+Matriz alumnos × asignaturas pendientes de superar.
 
 ## Uso En Ayuda
 

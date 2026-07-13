@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Traslado Doc Lista"
+titulo: "Traslado — lista y guardar"
 pantalla: "inventario.pantalla.traslado_doc_lista"
-preguntas: ["Que se puede hacer en Traslado Doc Lista?", "Que campos tiene Traslado Doc Lista?", "Que acciones hay en Traslado Doc Lista?"]
+preguntas: ["Que se puede hacer en Traslado — lista y guardar?", "Que campos tiene Traslado — lista y guardar?", "Que acciones hay en Traslado — lista y guardar?"]
 capacidades: ["inventario.lista_docs_de_ctr.gestionar"]
 endpoints: ["/src/inventario/lista_docs_de_ctr"]
 source: "docs/catalogo/inventario/pantallas/traslado_doc_lista.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Traslado Doc Lista
+# Ayuda IA Pantalla - Traslado — lista y guardar
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Lista docs del centro/lugar y ejecuta `traslado_doc_guardar`.
 
 ## Uso En Ayuda
 

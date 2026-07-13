@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.modificar_plantilla"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/modificar_plantilla_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Modificar Plantilla
-
-Propuesta generada automaticamente desde la capacidad `misas.modificar_plantilla.gestionar` y sus pantallas relacionadas.
+# Flujo - Modificar plantilla
 
 ## Objetivo De Usuario
 
-Gestiona PlanDeMisasPantalla. Datos comunes para las pantallas preparar / modificar / ver plan de misas y para modificar plantilla (mismos desplegables de zona / tipo / orden).
+Carga desplegables de zona, orden y tipos de plantilla (con preferencia ultima_plantilla) para modificar plantilla.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -59,11 +57,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Usuario no encontrado`
+- `No tiene permiso para ver esta página`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Modificar plantilla
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla

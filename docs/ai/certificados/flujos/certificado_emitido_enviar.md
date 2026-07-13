@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoEmitidoEnviar. Descripcion funcional pendiente de revisar.
+Enviar certificado emitido a la delegación destino del alumno (copia + anuncio).
 
 ## Limites De La Respuesta
 

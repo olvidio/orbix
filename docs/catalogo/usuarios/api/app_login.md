@@ -6,8 +6,8 @@ url: "/src/usuarios/app_login"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/app_login.php"
-entrada: ["post.esquema:string", "post.password:string", "post.username:string", "post.verification_code:string"]
-entrada_obligatoria: []
+entrada: ["post.username:string", "post.password:string", "post.esquema:string", "post.verification_code:string"]
+entrada_obligatoria: ["username", "password"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "usuarios_AppMobileLoginData"
 respuesta_data: ["ok:bool, code?: string, mensaje?: string, data?: array<string, mixed>"]
@@ -15,14 +15,19 @@ requiere_hashb: false
 frontend_referencias: []
 casos_uso: ["src\\usuarios\\application\\AppMobileLogin"]
 tags: ["usuarios", "app", "login"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Usuario y contraseña obligatorios", "Esquema no indicado", "Esquema no válido", "Error de autenticación"]
 ---
 
 # App Login
 
-Login JSON para app móvil (Camino B).
+Login JSON para app móvil: valida credenciales (y 2FA si aplica), establece sesión PHP y devuelve payload con códigos de estado.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Login JSON para app móvil: valida credenciales (y 2FA si aplica), establece sesión PHP y devuelve payload con códigos de estado.
 
 ## Endpoint
 
@@ -35,20 +40,28 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `esquema` | `string` | controller+application | No | controller+application |
-| `password` | `string` | controller+application | No | controller+application |
-| `username` | `string` | controller+application | No | controller+application |
-| `verification_code` | `string` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `username` | `string` | application | Si | |
+| `password` | `string` | application | Si | |
+| `esquema` | `string` | application | No | |
+| `verification_code` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `usuarios_AppMobileLoginData`):
-  - `ok` (`bool, code?: string, mensaje?: string, data?: array<string, mixed>`)
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `code`: código app (need_2fa, ok, …)
+  - `authenticated`: boolean tras éxito
+
+## Errores conocidos
+- `Usuario y contraseña obligatorios`
+- `Esquema no indicado`
+- `Esquema no válido`
+- `Error de autenticación`
+
+## Permisos
+
+Público (sin sesión previa).
 
 ## Casos De Uso
 
@@ -56,10 +69,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`[]`).

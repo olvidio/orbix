@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el dossier de matrículas de una persona (1303), editar el campo de observaciones de
+2. Pulsar grabar observaciones (`fnjs_grabar_observ`).
+3. El sistema envía el formulario serializado al endpoint y refresca el fragmento si tiene éxito.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/asistente_observ_est`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AsistenteObservEst. Guarda el texto observ_est de un Asistente (persona en una actividad de estudios). Sustituye al case observ_est de update_3103.php.
+El usuario guarda las observaciones de plan de estudios (`observ_est`) de un asistente en su actividad vigente. Sustituye al case `observ_est` de `update_3103.php`.
 
 ## Errores Documentados
 

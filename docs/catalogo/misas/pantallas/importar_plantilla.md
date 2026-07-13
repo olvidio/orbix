@@ -11,16 +11,18 @@ endpoints: ["/src/misas/importar_plantilla_data"]
 capacidades: ["misas.importar_plantilla.gestionar"]
 campos: ["post.id_zona", "post.tipo_plantilla_destino", "post.tipo_plantilla_origen"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Importar Plantilla
+# Importar plantilla
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX que copia asignaciones entre tipos de plantilla (`importar_plantilla_data`).
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/misas/controller/importar_plantilla.php`
 
 ## Vistas Relacionadas
@@ -49,13 +51,7 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

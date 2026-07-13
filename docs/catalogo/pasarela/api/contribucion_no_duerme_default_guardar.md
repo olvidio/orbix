@@ -6,22 +6,30 @@ url: "/src/pasarela/contribucion_no_duerme_default_guardar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/pasarela/infrastructure/ui/http/controllers/contribucion_no_duerme_default_guardar.php"
-entrada: ["post.default:string"]
+entrada:
+  - "post.default:string"
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["Falta valor por defecto", "Debe ser un numero entero del 1 al 100"]
-frontend_referencias: ["frontend/pasarela/controller/contribucion_no_duerme_ajax.php"]
-casos_uso: ["src\\pasarela\\application\\ContribucionNoDuermeDefaultGuardar"]
-tags: ["pasarela", "contribucion", "no", "duerme", "default", "guardar"]
-estado_revision: "generado"
+errores:
+  - "Falta valor por defecto"
+  - "Debe ser un numero entero del 1 al 100"
+frontend_referencias:
+  - "frontend\/pasarela\/controller\/contribucion_no_duerme_ajax.php"
+casos_uso: ["src\pasarela\application\ContribucionNoDuermeDefaultGuardar"]
+tags: ["pasarela"]
+estado_revision: "revisado"
 ---
 
 # Contribucion No Duerme Default Guardar
 
-Actualiza el valor por defecto del parámetro `contribucion_no_duerme`.
+Actualiza el porcentaje por defecto de contribución «no duerme».
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Valida entero 0–100 (mensaje habla de 1–100 pero acepta 0).
 
 ## Endpoint
 
@@ -34,18 +42,21 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `default` | `string` | controller | No | controller |
+| `default` | `string` | controller | No | |
+
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data: "ok"`.
 
 ## Errores conocidos
 
 - `Falta valor por defecto`
 - `Debe ser un numero entero del 1 al 100`
+
+## Permisos
+
+Sin control en el caso de uso; autorización en frontend.
 
 ## Casos De Uso
 
@@ -54,9 +65,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Frontend Relacionado
 
 - `frontend/pasarela/controller/contribucion_no_duerme_ajax.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Genera una clave secreta aleatoria para 2FA
+Configuración 2FA: activar/desactivar TOTP con verificación previa.
 
 ## Uso En Ayuda
 

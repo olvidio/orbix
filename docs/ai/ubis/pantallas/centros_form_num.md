@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario modal para editar buzón, pi y cartas de un centro DL.
 
 ## Uso En Ayuda
 

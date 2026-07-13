@@ -42,14 +42,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadtarifas.tarifa_ubi_copiar`
 - Controller: `src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_copiar.php`
-- Entrada: `post.ctx_copiar:string`, `post.id_ubi:integer`, `post.year:integer`
+- Entrada: `post.ctx_copiar:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadtarifas/tarifa_ubi_eliminar`
 
 - Id: `actividadtarifas.tarifa_ubi_eliminar`
 - Controller: `src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_eliminar.php`
-- Entrada: `post.ctx_eliminar:string`, `post.id_item:integer`
+- Entrada: `post.ctx_eliminar:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadtarifas/tarifa_ubi_form_data`
@@ -70,7 +70,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadtarifas.tarifa_ubi_update`
 - Controller: `src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_update.php`
-- Entrada: `post.cantidad:string`, `post.ctx_update:string`, `post.id_item:integer`, `post.id_serie:integer`, `post.id_tarifa:integer`, `post.id_ubi:integer`, `post.observ:string`, `post.year:integer`
+- Entrada: `post.cantidad:string`, `post.ctx_update:string`, `post.id_serie:integer`, `post.id_tarifa:integer`, `post.observ:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadtarifas/tarifa_ubi_update_inc`

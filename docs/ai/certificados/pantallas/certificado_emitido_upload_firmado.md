@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Subida del PDF firmado de un certificado emitido ya registrado. Desde el listado de emitidos.
 
 ## Uso En Ayuda
 

@@ -4,57 +4,64 @@ tipo: "endpoint"
 modulo: "procesos"
 url: "/src/procesos/fases_activ_cambio_tipo_html"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_tipo_html.php"
 entrada: ["post.id_tipo_activ:string", "post.sactividad:string", "post.sactividad2:string", "post.sasistentes:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "procesos_FasesActivCambioTipoActividadHtmlDataData"
-respuesta_data: ["tipo_actividad_html:string"]
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/procesos/controller/fases_activ_cambio.php"]
 casos_uso: ["src\\procesos\\application\\FasesActivCambioTipoActividadHtmlData"]
 tags: ["procesos", "fases", "activ", "cambio", "tipo", "html"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Fases Activ Cambio Tipo Html
 
-Payload para fases_activ_cambio: HTML del selector tipo actividad.
+Fragmento HTML del selector de tipo de actividad en `fases_activ_cambio`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Renderiza el widget de búsqueda de tipo de actividad (`ActividadTipo`) para la pantalla de cambio
+masivo de fases. El modo extendido se activa si `sactividad2` no viene vacío. El alcance de tipos
+visibles depende de permisos de oficina (`vcsd`, `des`, `calendario`) o del SFSV de sesión.
 
 ## Endpoint
 
 - URL: `/src/procesos/fases_activ_cambio_tipo_html`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_tipo_html.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tipo_activ` | `string` | application | No | application |
-| `sactividad` | `string` | application | No | application |
-| `sactividad2` | `string` | application | No | application |
-| `sasistentes` | `string` | application | No | application |
+| `id_tipo_activ` | `string` | application | No | Tipo preseleccionado |
+| `sasistentes` | `string` | application | No | Filtro asistentes del widget |
+| `sactividad` | `string` | application | No | Filtro actividad |
+| `sactividad2` | `string` | application | No | No vacío → modo extendido |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+El controller pasa `$_POST` completo al caso de uso.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `procesos_FasesActivCambioTipoActividadHtmlDataData`):
-  - `tipo_actividad_html` (`string`)
+- Claves en `data` (doble `JSON.parse`):
+  - `tipo_actividad_html` (`string`): HTML del selector
+
+## Errores conocidos
+
+- _(ninguno documentado en el caso de uso)_
 
 ## Permisos
 
-- Permiso oficina `vcsd`
-- Permiso oficina `des`
-- Permiso oficina `calendario`
+- No llama a `perm_*` explícito; restringe tipos visibles según oficinas `vcsd`/`des`/`calendario`
+  en `$_SESSION['oPerm']`, o limita a SV/SF de la sesión si no tiene esos permisos.
 
 ## Casos De Uso
 
@@ -62,10 +69,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/procesos/controller/fases_activ_cambio.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/procesos/controller/fases_activ_cambio.php` (carga inicial vía `PostRequest::getDataFromUrl`)

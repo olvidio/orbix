@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla AJAX de telecomunicaciones de un ubi con acciones modificar y eliminar.
 
 ## Uso En Ayuda
 

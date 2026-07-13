@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "usuarios"
 url: "/src/usuarios/mails_contactos_region"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/usuarios/infrastructure/ui/http/controllers/mails_contactos_region.php"
 entrada: ["post.region:string"]
 entrada_obligatoria: []
@@ -15,43 +15,48 @@ requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/mails_contactos_region.php"]
 casos_uso: ["src\\usuarios\\application\\usuariosRegionContactos"]
 tags: ["usuarios", "mails", "contactos", "region"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Mails Contactos Region
 
-Descripcion funcional pendiente de revisar.
+Devuelve contactos email de usuarios regionales con permisos de oficina relevantes (pantalla recuperación).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve contactos email de usuarios regionales con permisos de oficina relevantes (pantalla recuperación).
 
 ## Endpoint
 
 - URL: `/src/usuarios/mails_contactos_region`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/mails_contactos_region.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `region` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `region` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `usuarios_usuariosRegionContactosData`):
-  - `error` (`string, data: array<string, mixed>`)
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse` salvo JsonResponse directo):
+  - `success`: true
+  - `contactos`: mapa nom→{email,cargo} filtrado por perm oficina est/sm/agd
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
 
 ## Permisos
 
-- Permiso oficina `est`
-- Permiso oficina `sm`
-- Permiso oficina `agd`
+Público en flujo recovery; consulta esquema remoto por región.
 
 ## Casos De Uso
 
@@ -59,10 +64,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/usuarios/controller/mails_contactos_region.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/usuarios/controller/mails_contactos_region.php"]`).

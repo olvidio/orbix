@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página muestra un formulario para modificar los datos de un acta.
+Formulario de cabecera de acta (asignatura, actividad, fechas, libro, tribunal, PDF). Fragmento embebido desde `acta_select` o `actividadestudios/acta_notas`.
 
 ## Uso En Ayuda
 

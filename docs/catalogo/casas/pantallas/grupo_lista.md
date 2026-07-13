@@ -11,7 +11,7 @@ endpoints: ["/src/casas/grupo_lista_data"]
 capacidades: ["casas.grupo.gestionar"]
 campos: []
 acciones: ["fnjs_modificar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Grupo Lista
@@ -50,10 +50,8 @@ No se han detectado campos de formulario.
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** adl > Gestión casas > grupos
+- **Pills2:** CASAS Y CTR > Gestión casas > grupos
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

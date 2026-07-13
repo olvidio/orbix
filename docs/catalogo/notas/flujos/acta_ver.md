@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.acta_ver"]
 acciones: ["ver_formulario"]
 endpoints: ["/src/notas/acta_ver_form_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Ver
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_ver.gestionar`
 
 ## Objetivo De Usuario
 
-Gestiona ActaVer. Estado del formulario acta_ver (sin HashFront ni vistas).
+Ver y editar cabecera de acta, tribunal, PDF y vínculo a actividad CA.
 
 ## Punto De Entrada
 
@@ -68,9 +68,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/dossier)

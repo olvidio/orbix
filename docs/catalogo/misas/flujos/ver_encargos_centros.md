@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.ver_encargos_centros"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/ver_encargos_centros_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ver Encargos Centros
-
-Propuesta generada automaticamente desde la capacidad `misas.ver_encargos_centros.gestionar` y sus pantallas relacionadas.
+# Flujo - Ver encargos centros
 
 ## Objetivo De Usuario
 
-Gestiona VerEncargosCentros. Devuelve los datos del SlickGrid de EncargoCtr (encargos visibles para cada centro de una zona) + los desplegables estaticos del modal de edicion (zonas posibles para filtrar encargos, centros de la zona). El desplegable dinamico de encargos (que cambia al seleccionar zona en el modal) no se incluye aqui: el frontend lo pide por separado a DesplegableEncargosData cuando el usuario lo necesita.
+Devuelve filas del grid EncargoCtr de una zona más desplegables estáticos del modal (zonas, centros).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -59,11 +57,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Encargos centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr

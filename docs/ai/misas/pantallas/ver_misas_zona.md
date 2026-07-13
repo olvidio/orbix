@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Consulta de misas por zona y fechas (solo lectura). Sin entrada de menú en el índice; acceso vía enlaces internos.
 
 ## Uso En Ayuda
 

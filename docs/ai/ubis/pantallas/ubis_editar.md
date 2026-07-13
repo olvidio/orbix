@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Es el frame inferior.
+Formulario de edición o alta de ficha de centro o casa dentro de la ficha ubi.
 
 ## Uso En Ayuda
 

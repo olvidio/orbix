@@ -6,8 +6,8 @@ url: "/src/misas/guardar_horario"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/guardar_horario.php"
-entrada: ["post.id_item_h:mixed", "post.t_end:mixed", "post.t_start:mixed"]
-entrada_obligatoria: []
+entrada: ["post.id_item_h:integer", "post.t_start:string", "post.t_end:string"]
+entrada_obligatoria: ["id_item_h"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_GuardarHorarioTareaData"
 respuesta_data: ["error:string"]
@@ -15,14 +15,21 @@ requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/horario_tarea.php"]
 casos_uso: ["src\\misas\\application\\GuardarHorarioTarea"]
 tags: ["misas", "guardar", "horario"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Error: falta el id_item", "No se encuentra el horario %d", "<repositorio getErrorTxt()>"]
 ---
 
-# Guardar Horario
+# Guardar horario
 
-Descripcion funcional pendiente de revisar.
+Guarda hora inicio/fin (t_start/t_end) de un EncargoHorario en el modal de horario de tarea.
+
+Linaje: Slice 9 — migrado desde apps/misas/controller/guardar_horario.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Guarda hora inicio/fin (t_start/t_end) de un EncargoHorario en el modal de horario de tarea.
 
 ## Endpoint
 
@@ -35,17 +42,24 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item_h` | `mixed` | controller | No | controller |
-| `t_end` | `mixed` | controller | No | controller |
-| `t_start` | `mixed` | controller | No | controller |
+| `id_item_h` | `integer` | application | Si | |
+| `t_start` | `string` | application | No | |
+| `t_end` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `misas_GuardarHorarioTareaData`):
-  - `error` (`string`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacio serializado).
+
+## Errores conocidos
+- `Error: falta el id_item`
+- `No se encuentra el horario %d`
+- `<repositorio getErrorTxt()>`
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -53,10 +67,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/horario_tarea.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/horario_tarea.php"]`).

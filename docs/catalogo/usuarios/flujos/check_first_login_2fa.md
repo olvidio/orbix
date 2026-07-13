@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/check_first_login_2fa"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Check First Login 2fa
-
-Propuesta generada automaticamente desde la capacidad `usuarios.check_first_login_2fa.gestionar` y sus pantallas relacionadas.
+# Flujo - Check First Login 2fa
 
 ## Objetivo De Usuario
 
-Gestiona CheckFirstLogin2fa. Descripcion funcional pendiente de revisar.
+Tras login web, redirige a configuración 2FA si el usuario no la tiene activada; si no, continúa al home.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

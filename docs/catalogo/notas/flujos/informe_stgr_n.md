@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.informe_stgr_n"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/informe_stgr_n_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Informe Stgr N
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.informe_stgr_n.gest
 
 ## Objetivo De Usuario
 
-Gestiona InformeStgrNumerarios. Calcula el informe anual STGR de "numerarios" (puntos 1..18 + x). Encapsula el uso de src\notas\application\legacy\Resumen (legacy) para que los controllers del frontend no importen la clase legacy directamente. Devuelve un array neutro {res, textos, curso_txt} listo para renderizado.
+Generar informe anual de numerarios.
 
 ## Punto De Entrada
 
@@ -54,9 +54,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** ESTUDIOS > Datos e informes > Informe anual n > Con números / Con listados

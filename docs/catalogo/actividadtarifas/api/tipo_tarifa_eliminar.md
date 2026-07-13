@@ -7,21 +7,26 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_eliminar.php"
 entrada: ["post.id_tarifa:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_tarifa"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["no sé cuál he de borrar", "no se encuentra la tarifa", "hay un error, no se ha borrado"]
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa.php"]
 casos_uso: ["src\\actividadtarifas\\application\\TipoTarifaEliminar"]
 tags: ["actividadtarifas", "tipo", "tarifa", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tipo Tarifa Eliminar
 
-Endpoint backend: elimina un `TipoTarifa`.
+Elimina un `TipoTarifa` del catálogo.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Borra el tipo de tarifa indicado por `id_tarifa` (entero > 0). Solo disponible desde el formulario
+de edición.
 
 ## Endpoint
 
@@ -34,9 +39,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tarifa` | `integer` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_tarifa` | `integer` | application | Si | Debe ser `> 0` |
 
 ## Salida
 
@@ -46,7 +49,7 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Efectos colaterales
 
-- Mutacion: elimina un `TipoTarifa`.
+- Elimina el `TipoTarifa` y sus dependencias según reglas del repositorio.
 
 ## Errores conocidos
 
@@ -54,16 +57,14 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - `no se encuentra la tarifa`
 - `hay un error, no se ha borrado`
 
+## Permisos
+
+- Sin control propio; botón eliminar solo en formulario de edición con permiso `adl` en listado.
+
 ## Casos De Uso
 
 - `src\actividadtarifas\application\TipoTarifaEliminar`
 
 ## Frontend Relacionado
 
-- `frontend/actividadtarifas/controller/tarifa.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/actividadtarifas/view/tarifa_form.phtml`: `fnjs_guardar(..., 'eliminar')` en `tarifa.phtml`.

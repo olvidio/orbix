@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.list_ctr"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "ubis"
 nombre: "List Ctr"
 controller: "frontend/ubis/controller/list_ctr.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/list_ctr_data"]
 capacidades: ["ubis.list_ctr.gestionar"]
 campos: ["form.loc", "form.que_lista", "form.sel", "post.loc", "post.que_lista", "post.stack"]
 acciones: ["fnjs_actualizar", "fnjs_cerrar", "fnjs_enviar_formulario", "fnjs_left_side_hide", "fnjs_limpiar", "fnjs_modificar", "fnjs_solo_uno", "fnjs_trasladar", "fnjs_update_div", "fnjs_ver_dl"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # List Ctr
 
-Página para realizar algunos listados standard de ubis Llegamos desde menú: "centros y casas" y submenú "listados" Las funciones que podré hacer con los ubis son idénticas a las que realizamos en submenú "buscar" Se tiene en cuenta si es una vuelta de un go_to
+Pantalla principal de listado de centros y casas con filtros por delegación y tipo.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/ubis/controller/list_ctr.php`
 
 ## Vistas Relacionadas
@@ -64,13 +66,7 @@ Página para realizar algunos listados standard de ubis Llegamos desde menú: "c
 - `fnjs_update_div`
 - `fnjs_ver_dl`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** scdl > direcciones > listados
+- **Pills2:** Calendario > centros y casas > listados

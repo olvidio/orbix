@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["casas.pantalla.casa_ec_gastos_lista"]
 acciones: ["guardar", "ver_formulario"]
 endpoints: ["/src/casas/casa_ec_gastos_form_data", "/src/casas/casa_ec_gastos_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Casa Ec Gastos
@@ -68,10 +68,8 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** exterior > casas > gastos casa
+- **Pills2:** CASAS Y CTR > Gestión casas > gastos casas
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona InventarioDlb. Descripcion funcional pendiente de revisar.
+Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ## Limites De La Respuesta
 

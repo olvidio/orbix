@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TesseraVer. Dataset JSON para {.
+Visualizar tessera de estudios.
 
 ## Limites De La Respuesta
 

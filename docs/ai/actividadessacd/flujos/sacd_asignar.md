@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En una actividad con permiso, pulsar **nuevo** para ver los sacd candidatos.
+2. Pulsar el sacd deseado (titular del centro o global según checkboxes de selección).
+3. El sistema lo guarda como encargado y refresca la celda de sacd de la actividad.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadessacd/sacd_asignar`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona SacdAsignar. Asigna un sacd a una actividad (y, si es sv, tambien crea la asistencia).
+El usuario asigna un sacd candidato (elegido en el desplegable de disponibles) a una actividad. El sacd queda en el primer hueco libre de cargos tipo `sacd`. Si la actividad es de sv (`id_tipo_activ` empieza por `1`), se crea además la fila de asistencia.
 
 ## Errores Documentados
 

@@ -7,20 +7,27 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/devel_db_admin/infrastructure/ui/http/controllers/crear_usuarios.php"
 entrada: ["post.dl:string", "post.region:string"]
-entrada_obligatoria: []
+entrada_obligatoria: ["region", "dl"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/devel_db_admin/controller/db_crear_usuarios.php"]
 casos_uso: ["src\\devel_db_admin\\application\\CrearUsuarios"]
 tags: ["devel_db_admin", "crear", "usuarios"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Crear Usuarios
 
-Ejecuta {
+Crea roles PostgreSQL para un esquema `region-dl` y registra passwords en ficheros de importación.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Paso 1 del asistente «nuevo esquema». Genera passwords aleatorios y crea usuarios `region-dl`,
+`region-dlv` y `region-dlf` en comun, sv, sv-e y sf (sf-e según sesión `$_SESSION['sfsv']==='sf'`).
+Actualiza ficheros `.inc` de passwords vía `ConfigDB::addEsquemaEnFicheroPasswords`.
 
 ## Endpoint
 
@@ -33,14 +40,20 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `dl` | `string` | controller | No | controller |
-| `region` | `string` | controller | No | controller |
+| `region` | `string` | controller | Si | |
+| `dl` | `string` | controller | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Payload en `data`:
+  - `esquema`, `esquemaPwd` (comun)
+  - `esquemav`, `esquemavPwd` (sv / sv-e)
+  - `esquemaf`, `esquemafPwd` (sf)
+
+## Permisos
+
+- Sin control propio; menú DB desarrollo.
 
 ## Casos De Uso
 
@@ -49,9 +62,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Frontend Relacionado
 
 - `frontend/devel_db_admin/controller/db_crear_usuarios.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

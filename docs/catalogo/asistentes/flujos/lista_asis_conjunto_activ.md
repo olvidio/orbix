@@ -8,20 +8,22 @@ pantallas_principales: []
 fragmentos: ["asistentes.pantalla.lista_asis_conjunto_activ"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/lista_asis_conjunto_activ_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Lista Asis Conjunto Activ
 
-Propuesta generada automaticamente desde la capacidad `asistentes.lista_asis_conjunto_activ.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Gestiona ListaAsisConjuntoActiv. Listados conjuntos de plazas/actividades (lista_asis_conjunto_activ.php).
+Listado conjunto de plazas en varias actividades.
+
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `lista_asis_conjunto_activ` (`frontend/asistentes/controller/`).
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -53,9 +55,6 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

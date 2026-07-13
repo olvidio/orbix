@@ -4,46 +4,38 @@ tipo: "endpoint"
 modulo: "menus"
 url: "/src/menus/menus_get_page_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/menus/infrastructure/ui/http/controllers/menus_get_page_data.php"
-entrada: ["post.filtro_grupo:string", "post.id_menu:string", "post.nuevo:string"]
+entrada: ["post.filtro_grupo:string", "post.nuevo:string", "post.id_menu:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["No encuentro el menu"]
 frontend_referencias: ["frontend/menus/controller/menus_get.php"]
 casos_uso: ["src\\menus\\application\\MenusGetPageData"]
 tags: ["menus", "get", "page", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Menus Get Page Data
+# Datos página gestor de menú (lista o ficha)
 
-Datos para `frontend/menus/controller/menus_get.php` (formulario o listado).
+Builder para `menus_get.php`: modo listado de ítems del grupmenu seleccionado o modo edición/alta.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
-## Endpoint
+## Objetivo funcional
 
-- URL: `/src/menus/menus_get_page_data`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
-- Controller: `src/menus/infrastructure/ui/http/controllers/menus_get_page_data.php`
-
-## Entrada
-
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `filtro_grupo` | `string` | application | No | application |
-| `id_menu` | `string` | application | No | application |
-| `nuevo` | `string` | application | No | application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+- **`mode=list`**: `menu_rows` filtrados por `filtro_grupo` + metadatos (`aRoles`, `perm_menu_bit_map`, `usuario.i_perm_menus`).
+- **`mode=edit`**: campos del formulario (`orden_txt`, `txt_menu`, `id_metamenu`, `menu_perm`, checkbox ok…).
+- Alta: `nuevo` presente e `id_menu` vacío.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Doble `JSON.parse`. Claves según modo (ver `MenusGetPageData::execute`).
+
+## Errores conocidos
+
+- `No encuentro el menu` (`RuntimeException` en edición)
 
 ## Casos De Uso
 
@@ -52,9 +44,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 ## Frontend Relacionado
 
 - `frontend/menus/controller/menus_get.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

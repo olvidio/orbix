@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX: tabla de menús del grupo o formulario alta/edición (metamenu, orden, permisos Bit).
 
 ## Uso En Ayuda
 

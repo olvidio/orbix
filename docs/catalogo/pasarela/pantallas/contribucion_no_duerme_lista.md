@@ -1,63 +1,55 @@
 ---
 id: "pasarela.pantalla.contribucion_no_duerme_lista"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "pasarela"
-nombre: "Contribucion No Duerme Lista"
+nombre: "Contribución no duerme"
 controller: "frontend/pasarela/controller/contribucion_no_duerme_lista.php"
-vistas: []
-fragmentos_frontend: ["frontend/pasarela/controller/contribucion_no_duerme_ajax.php"]
-endpoints: ["/src/", "/src/pasarela/contribucion_no_duerme_excepcion_guardar"]
-capacidades: ["pasarela.contribucion_no_duerme_excepcion.gestionar"]
-campos: ["form.contribucion", "form.id_tipo_activ", "form.que", "form.valor"]
+vistas:
+  - "frontend\/pasarela\/view\/contribucion_no_duerme_lista.html.twig"
+fragmentos_frontend:
+  - "frontend\/pasarela\/controller\/contribucion_no_duerme_ajax.php"
+endpoints:
+  - "\/src\/pasarela\/contribucion_no_duerme_lista"
+  - "\/src\/pasarela\/contribucion_no_duerme_default_data"
+  - "\/src\/pasarela\/contribucion_no_duerme_default_guardar"
+  - "\/src\/pasarela\/contribucion_no_duerme_excepcion_guardar"
+  - "\/src\/pasarela\/contribucion_no_duerme_excepcion_eliminar"
+  - "\/src\/pasarela\/tipo_activ_txt_data"
+capacidades:
+  - "pasarela.contribucion_no_duerme.gestionar"
+campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Contribucion No Duerme Lista
+# Contribución no duerme
 
-Descripcion funcional pendiente de revisar.
+Porcentaje de contribución para asistentes que no pernoctan, por defecto y por tipo.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla`
 - Controller: `frontend/pasarela/controller/contribucion_no_duerme_lista.php`
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/pasarela/controller/contribucion_no_duerme_ajax.php`
+- `frontend/pasarela/view/contribucion_no_duerme_lista.html.twig`
 
 ## Endpoints Usados
 
-- `/src/`
+- `/src/pasarela/contribucion_no_duerme_lista`
+- `/src/pasarela/contribucion_no_duerme_default_data`
+- `/src/pasarela/contribucion_no_duerme_default_guardar`
 - `/src/pasarela/contribucion_no_duerme_excepcion_guardar`
-
-## Capacidades Relacionadas
-
-- `pasarela.contribucion_no_duerme_excepcion.gestionar`
-
-## Campos Detectados
-
-- `form.contribucion`
-- `form.id_tipo_activ`
-- `form.que`
-- `form.valor`
-
-## Acciones Detectadas
-
-No se han detectado acciones.
+- `/src/pasarela/contribucion_no_duerme_excepcion_eliminar`
+- `/src/pasarela/tipo_activ_txt_data`
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Desde parámetros pasarela.
+2. Configurar default (0–100 %) y excepciones.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).

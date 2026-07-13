@@ -14,7 +14,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.anadir_ctr_tarea`
 - Controller: `src/misas/infrastructure/ui/http/controllers/anadir_ctr_tarea.php`
-- Entrada: `post.id_item:mixed`, `post.id_tarea:mixed`, `post.id_ubi:mixed`, `post.que:mixed`
+- Entrada: `post.que:string`, `post.id_ubi:integer`, `post.id_tarea:integer`, `post.id_item:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/buscar_plan_ctr_data`
@@ -42,35 +42,35 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.crear_nuevo_periodo_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/crear_nuevo_periodo_data.php`
-- Entrada: `post.empiezamax:mixed`, `post.empiezamin:mixed`, `post.id_zona:mixed`, `post.orden:mixed`, `post.periodo:mixed`, `post.seleccion:mixed`, `post.tipo_plantilla:mixed`
+- Entrada: `post.id_zona:integer`, `post.tipo_plantilla:string`, `post.seleccion:integer`, `post.periodo:string`, `post.empiezamin:string`, `post.empiezamax:string`, `post.orden:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/cuadricula_update`
 
 - Id: `misas.cuadricula_update`
 - Controller: `src/misas/infrastructure/ui/http/controllers/cuadricula_update.php`
-- Entrada: `post.dia:string`, `post.id_enc:integer`, `post.id_zona:integer`, `post.key:string`, `post.observ:string`, `post.tend:string`, `post.tipo_plantilla:string`, `post.tstart:string`, `post.uuid_item:string`
+- Entrada: `post.uuid_item:string`, `post.key:string`, `post.tstart:string`, `post.tend:string`, `post.observ:string`, `post.id_enc:integer`, `post.dia:string`, `post.tipo_plantilla:string`, `post.id_zona:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/desplegable_centros_zona`
 
 - Id: `misas.desplegable_centros_zona`
 - Controller: `src/misas/infrastructure/ui/http/controllers/desplegable_centros_zona.php`
-- Entrada: `post.id_ubi:mixed`, `post.id_zona:integer`
+- Entrada: `post.id_zona:integer`, `post.id_ubi:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/desplegable_encargos`
 
 - Id: `misas.desplegable_encargos`
 - Controller: `src/misas/infrastructure/ui/http/controllers/desplegable_encargos.php`
-- Entrada: `post.id_enc:mixed`, `post.id_zona:integer`
+- Entrada: `post.id_zona:integer`, `post.id_enc:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/desplegable_sacd`
 
 - Id: `misas.desplegable_sacd`
 - Controller: `src/misas/infrastructure/ui/http/controllers/desplegable_sacd.php`
-- Entrada: `post.dia:string`, `post.id_sacd:integer`, `post.id_zona:integer`, `post.seleccion:integer`
+- Entrada: `post.id_zona:integer`, `post.id_sacd:integer`, `post.seleccion:integer`, `post.dia:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/eliminar_encargo_centro`
@@ -91,35 +91,35 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.guardar_encargo_centro`
 - Controller: `src/misas/infrastructure/ui/http/controllers/guardar_encargo_centro.php`
-- Entrada: `post.id_ctr:integer`, `post.id_enc:integer`, `post.id_item:string`
+- Entrada: `post.id_item:string`, `post.id_enc:integer`, `post.id_ctr:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/guardar_encargo_zona`
 
 - Id: `misas.guardar_encargo_zona`
 - Controller: `src/misas/infrastructure/ui/http/controllers/guardar_encargo_zona.php`
-- Entrada: `post.descripcion_lugar:mixed`, `post.encargo:mixed`, `post.id_enc:mixed`, `post.id_tipo_enc:mixed`, `post.id_ubi:mixed`, `post.id_zona:mixed`, `post.idioma_enc:mixed`, `post.observ:mixed`, `post.orden:mixed`, `post.prioridad:mixed`
+- Entrada: `post.id_enc:integer`, `post.id_tipo_enc:integer`, `post.id_ubi:integer`, `post.id_zona:integer`, `post.orden:integer`, `post.prioridad:integer`, `post.descripcion_lugar:string`, `post.encargo:string`, `post.idioma_enc:string`, `post.observ:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/guardar_horario`
 
 - Id: `misas.guardar_horario`
 - Controller: `src/misas/infrastructure/ui/http/controllers/guardar_horario.php`
-- Entrada: `post.id_item_h:mixed`, `post.t_end:mixed`, `post.t_start:mixed`
+- Entrada: `post.id_item_h:integer`, `post.t_start:string`, `post.t_end:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/horario_tarea_data`
 
 - Id: `misas.horario_tarea_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/horario_tarea_data.php`
-- Entrada: `post.id_item_h:mixed`
+- Entrada: `post.id_item_h:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/importar_plantilla_data`
 
 - Id: `misas.importar_plantilla_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/importar_plantilla_data.php`
-- Entrada: `post.id_zona:mixed`, `post.tipo_plantilla_destino:mixed`, `post.tipo_plantilla_origen:mixed`
+- Entrada: `post.id_zona:integer`, `post.tipo_plantilla_origen:string`, `post.tipo_plantilla_destino:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/modificar_encargos_centros_data`
@@ -154,7 +154,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.nuevo_status`
 - Controller: `src/misas/infrastructure/ui/http/controllers/nuevo_status.php`
-- Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.estado:integer`, `post.id_zona:integer`, `post.periodo:string`
+- Entrada: `post.id_zona:integer`, `post.periodo:string`, `post.empiezamin:string`, `post.empiezamax:string`, `post.estado:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/plan_de_misas_pantalla_data`
@@ -168,21 +168,21 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.quitar_horario`
 - Controller: `src/misas/infrastructure/ui/http/controllers/quitar_horario.php`
-- Entrada: `post.id_item:mixed`
+- Entrada: `post.id_item:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/update_iniciales`
 
 - Id: `misas.update_iniciales`
 - Controller: `src/misas/infrastructure/ui/http/controllers/update_iniciales.php`
-- Entrada: `post.color:string`, `post.id_sacd:integer`, `post.iniciales:string`
+- Entrada: `post.id_sacd:integer`, `post.iniciales:string`, `post.color:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/ver_cuadricula_zona_data`
 
 - Id: `misas.ver_cuadricula_zona_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_cuadricula_zona_data.php`
-- Entrada: `post.columna:mixed`, `post.empiezamax:mixed`, `post.empiezamin:mixed`, `post.fila:mixed`, `post.id_zona:mixed`, `post.orden:mixed`, `post.periodo:mixed`, `post.seleccion:mixed`, `post.tipo_plantilla:mixed`
+- Entrada: `post.id_zona:integer`, `post.tipo_plantilla:string`, `post.periodo:string`, `post.orden:string`, `post.empiezamin:string`, `post.empiezamax:string`, `post.fila:string`, `post.columna:string`, `post.seleccion:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/ver_encargos_centros_data`
@@ -210,33 +210,33 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.ver_misas_zona_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_misas_zona_data.php`
-- Entrada: `post.empiezamax:mixed`, `post.empiezamin:mixed`, `post.id_zona:mixed`, `post.seleccion:mixed`
+- Entrada: `post.id_zona:integer`, `post.empiezamin:string`, `post.empiezamax:string`, `post.seleccion:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/ver_plan_ctr_data`
 
 - Id: `misas.ver_plan_ctr_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_plan_ctr_data.php`
-- Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.id_ubi:integer`, `post.periodo:string`
+- Entrada: `post.id_ubi:integer`, `post.periodo:string`, `post.empiezamin:string`, `post.empiezamax:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/ver_plan_sacd_data`
 
 - Id: `misas.ver_plan_sacd_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_plan_sacd_data.php`
-- Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.id_sacd:string`, `post.periodo:string`
+- Entrada: `post.id_sacd:string`, `post.periodo:string`, `post.empiezamin:string`, `post.empiezamax:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/zona_sacd_datos_get`
 
 - Id: `misas.zona_sacd_datos_get`
 - Controller: `src/misas/infrastructure/ui/http/controllers/zona_sacd_datos_get.php`
-- Entrada: `post.id_sacd:integer`, `post.id_zona:integer`
+- Entrada: `post.id_zona:integer`, `post.id_sacd:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/zona_sacd_datos_put`
 
 - Id: `misas.zona_sacd_datos_put`
 - Controller: `src/misas/infrastructure/ui/http/controllers/zona_sacd_datos_put.php`
-- Entrada: `post.dw1:string`, `post.dw2:string`, `post.dw3:string`, `post.dw4:string`, `post.dw5:string`, `post.dw6:string`, `post.dw7:string`, `post.id_sacd:integer`, `post.id_zona:integer`
+- Entrada: `post.id_zona:integer`, `post.id_sacd:integer`, `post.propia:string`, `post.dw1:string`, `post.dw2:string`, `post.dw3:string`, `post.dw4:string`, `post.dw5:string`, `post.dw6:string`, `post.dw7:string`
 - Respuesta: `standard_envelope_string_data`

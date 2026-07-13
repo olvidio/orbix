@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "menus"
 titulo: "Menus Legacy Layout Items"
 flujo: "menus.menus_legacy_layout_items.gestionar.flujo"
-preguntas: ["Como obtener datos en Menus Legacy Layout Items?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/menus/menus_legacy_layout_items_data"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Menus Legacy Layout Items?
 
 ## Donde Entrar
 
@@ -29,20 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - Ninguna pantalla relacionada.
 
 ## Objetivo
 
-Gestiona MenusLegacyLayoutItemsUseCase. Entradas de menú para el layout legacy (grupos 1 y el seleccionado, mismo filtro que el antiguo {.
+Ítems visibles para barra lateral layout H-dlbv.
 
 ## Limites De La Respuesta
 

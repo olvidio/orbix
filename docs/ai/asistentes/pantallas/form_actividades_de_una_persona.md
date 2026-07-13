@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario dossier 1301: alta/edición de asistencia de una persona a actividades.
 
 ## Uso En Ayuda
 

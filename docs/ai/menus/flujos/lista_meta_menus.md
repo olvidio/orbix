@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "menus"
 titulo: "Lista Meta Menus"
 flujo: "menus.lista_meta_menus.gestionar.flujo"
-preguntas: ["Como ejecutar en Lista Meta Menus?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["menus.pantalla.menus_get"]
 endpoints: ["/src/menus/lista_meta_menus"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Lista Meta Menus?
 
 ## Donde Entrar
 
@@ -29,20 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `menus.pantalla.menus_get`
 
 ## Objetivo
 
-Gestiona ListaMetaMenus. Descripcion funcional pendiente de revisar.
+Opciones de destino URL/módulo al editar un ítem (metamenús globales).
 
 ## Limites De La Respuesta
 

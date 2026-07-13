@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "ubis"
 url: "/src/ubis/ubis_buscar_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/ubis/infrastructure/ui/http/controllers/ubis_buscar_data.php"
 entrada: []
 entrada_obligatoria: []
@@ -15,36 +15,50 @@ requiere_hashb: false
 frontend_referencias: ["frontend/ubis/controller/ubis_buscar.php"]
 casos_uso: ["src\\ubis\\application\\UbisBuscarOpcionesData"]
 tags: ["ubis", "buscar", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Ubis Buscar Data
 
-Opciones de formulario para frontend/ubis/controller/ubis_buscar.php
+Devuelve opciones de desplegables para el formulario de búsqueda de ubis.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve opciones de desplegables para el formulario de búsqueda de ubis.
 
 ## Endpoint
 
 - URL: `/src/ubis/ubis_buscar_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/ubis_buscar_data.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| _(ninguno)_ | | | | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `ubis_UbisBuscarOpcionesDataData`):
-  - `opciones_region` (`array`)
-  - `opciones_tipo_ctr` (`array`)
-  - `opciones_tipo_casa` (`array`)
-  - `opciones_pais` (`array`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `opciones_region`: regiones activas
+  - `opciones_tipo_ctr`: tipos centro
+  - `opciones_tipo_casa`: tipos casa
+  - `opciones_pais`: países
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `UbiPermisos` (`puedeModificarPorObjeto`, `dlPerteneceAMiDelegacion`), `have_perm_oficina(scdl|scl|vcsd|des|admin_sv)` y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -52,10 +66,4 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/ubis/controller/ubis_buscar.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/ubis/controller/ubis_buscar.php"]`).

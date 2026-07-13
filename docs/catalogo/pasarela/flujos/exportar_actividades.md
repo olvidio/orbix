@@ -2,56 +2,32 @@
 id: "pasarela.exportar_actividades.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "pasarela"
-nombre: "Flujo - Gestionar Exportar Actividades"
+nombre: "Flujo - Exportar actividades al exterior"
 capacidad: "pasarela.exportar_actividades.gestionar"
 pantallas_principales: []
-fragmentos: ["pasarela.pantalla.exportar_select"]
-acciones: ["obtener_datos"]
-endpoints: ["/src/pasarela/exportar_actividades_data"]
-estado_revision: "generado"
+fragmentos:
+  - "pasarela.pantalla.exportar_select"
+acciones: ["listar", "guardar", "eliminar"]
+endpoints:
+  - "\/src\/pasarela\/exportar_actividades_data"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Exportar Actividades
-
-Propuesta generada automaticamente desde la capacidad `pasarela.exportar_actividades.gestionar` y sus pantallas relacionadas.
+# Flujo - Exportar actividades al exterior
 
 ## Objetivo De Usuario
 
-Gestiona ExportarActividades. Caso de uso "exportar actividades": dado un filtro (tipo de actividad, periodo y casas), devuelve cabeceras + filas para el listado de exportación, mezclando datos de actividades con las conversiones de pasarela. Devuelve un array serializable por {.
+Generar listado tabular con datos de actividades filtradas para sistemas externos.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+`exportar_que.php` (menú Pasarela).
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `pasarela.pantalla.exportar_select`
-
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.iactividad_val`
-- `post.iasistentes_val`
-- `post.id_cdc`
-- `post.id_tipo_activ`
-- `post.isfsv_val`
-- `post.periodo`
-- `post.year`
-
-Acciones JavaScript:
-- Ninguna detectada.
+1. Elegir filtros y casas.
+2. Submit → `exportar_select` calcula periodo ISO.
+3. Muestra tabla; avisos en `errores` (tarifas/activación faltantes).
 
 ## Endpoints Del Flujo
 
@@ -59,11 +35,12 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Periodo no válido`
+- `valor no válido para la activación del tipo de actividad %s`
+- `No está definido el tipo tarifa...`
+- `No está definida la id_tarifa...`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Pasarela > exportar actividades
+- **Pills2:** dre > Pasarela > exportar actividades; ACTIVIDADES > Pasarela > exportar actividades

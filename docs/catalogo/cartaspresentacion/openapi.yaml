@@ -17,7 +17,7 @@ paths:
       operationId: "post_cartaspresentacion_carta_presentacion_eliminar"
       summary: "Carta Presentacion Eliminar"
       description: |
-        Endpoint backend: elimina una `CartaPresentacion`.
+        Elimina una `CartaPresentacion`.
         
         Operacion: `mutacion`.
         
@@ -30,6 +30,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
+                - "id_direccion"
               properties:
                 id_direccion:
                   type: "integer"
@@ -41,19 +44,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionEliminarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionEliminarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/cartaspresentacion/carta_presentacion_form_data":
     post:
       operationId: "post_cartaspresentacion_carta_presentacion_form_data"
       summary: "Carta Presentacion Form Data"
       description: |
-        Endpoint backend: datos del formulario de modificacion de una `CartaPresentacion` (valida permisos: solo dl propia o `cr`).
+        Datos del formulario modal de modificación de una `CartaPresentacion`.
         
         Operacion: `form_data`.
         
@@ -66,6 +69,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
+                - "id_direccion"
               properties:
                 id_direccion:
                   type: "integer"
@@ -89,7 +95,7 @@ paths:
       operationId: "post_cartaspresentacion_carta_presentacion_update"
       summary: "Carta Presentacion Update"
       description: |
-        Endpoint backend: crea / actualiza una `CartaPresentacion`.
+        Crea o actualiza una `CartaPresentacion`.
         
         Operacion: `mutacion`.
         
@@ -102,6 +108,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
+                - "id_direccion"
               properties:
                 id_direccion:
                   type: "integer"
@@ -123,21 +132,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionUpdateDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionUpdateDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/cartaspresentacion/cartas_presentacion_buscar_data":
     post:
       operationId: "post_cartaspresentacion_cartas_presentacion_buscar_data"
       summary: "Cartas Presentacion Buscar Data"
       description: |
-        Endpoint backend: opciones del formulario de busqueda de cartas de presentacion (region, pais, delegacion).
+        Opciones de los desplegables del formulario de búsqueda de cartas de presentación.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/cartaspresentacion/api/cartas_presentacion_buscar_data.md`
       tags:
@@ -170,7 +179,7 @@ paths:
       operationId: "post_cartaspresentacion_cartas_presentacion_lista_data"
       summary: "Cartas Presentacion Lista Data"
       description: |
-        Endpoint backend: listado agrupado de cartas de presentacion (modo `lista_dl`, `lista_todo` o `get` con filtros).
+        Listado agrupado de cartas de presentación en HTML ya formateado (tipo labor → delegación → población).
         
         Operacion: `lista_data`.
         
@@ -212,9 +221,9 @@ paths:
       operationId: "post_cartaspresentacion_cartas_presentacion_shell_data"
       summary: "Cartas Presentacion Shell Data"
       description: |
-        Datos para la shell `cartas_presentacion.php`: delegación y paths relativos. URLs absolutas y fragment Hash: {
+        Bootstrap de la pantalla principal `cartas_presentacion`: devuelve la delegación del usuario y las rutas relativas de los demás endpoints del módulo, junto con las especificaciones `hash_*` que el frontend firma con `HashFront`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/cartaspresentacion/api/cartas_presentacion_shell_data.md`
       tags:
@@ -235,21 +244,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionShellDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionShellDataDataResponse"
   "/src/cartaspresentacion/poblaciones_data":
     post:
       operationId: "post_cartaspresentacion_poblaciones_data"
       summary: "Poblaciones Data"
       description: |
-        Endpoint backend: opciones del desplegable de poblaciones segun el filtro elegido (`get_H`, `get_r`, `get_dl`).
+        Opciones del desplegable de poblaciones de la pantalla principal según el filtro elegido.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/cartaspresentacion/api/poblaciones_data.md`
       tags:
@@ -281,7 +290,7 @@ paths:
       operationId: "post_cartaspresentacion_ubis_lista_data"
       summary: "Ubis Lista Data"
       description: |
-        Endpoint backend: listado de centros con el estado de su carta de presentacion, en dos variantes (delegacion del usuario o centros extranjeros).
+        Listado de centros con el estado (sí/no) de su carta de presentación, para pintar con `Lista`.
         
         Operacion: `lista_data`.
         
@@ -331,21 +340,6 @@ components:
           type: string
         data:
           description: "Ver schema concreto de cada operacion."
-    cartaspresentacion_CartaPresentacionEliminarData:
-      type: object
-      properties:
-        ok:
-          type: "string"
-    cartaspresentacion_CartaPresentacionEliminarDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionEliminarData"
     cartaspresentacion_CartaPresentacionFormDataData:
       type: object
       properties:
@@ -369,6 +363,12 @@ components:
           type: "string"
         observ:
           type: "string"
+        paths:
+          type: array
+          items: {}
+        hash_update:
+          type: array
+          items: {}
     cartaspresentacion_CartaPresentacionFormDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
@@ -379,21 +379,6 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionFormDataData"
-    cartaspresentacion_CartaPresentacionUpdateData:
-      type: object
-      properties:
-        ok:
-          type: "string"
-    cartaspresentacion_CartaPresentacionUpdateDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionUpdateData"
     cartaspresentacion_CartasPresentacionBuscarOpcionesDataData:
       type: object
       properties:
@@ -427,6 +412,8 @@ components:
       properties:
         html_lista:
           type: "string"
+        html_errores:
+          type: "string"
     cartaspresentacion_CartasPresentacionListaDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
@@ -437,6 +424,39 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionListaDataData"
+    cartaspresentacion_CartasPresentacionShellDataData:
+      type: object
+      properties:
+        mi_dele:
+          type: "string"
+        paths:
+          type: array
+          items: {}
+        hash_ctr:
+          type: array
+          items: {}
+        hash_lista:
+          type: array
+          items: {}
+        hash_form:
+          type: array
+          items: {}
+        hash_poblaciones:
+          type: array
+          items: {}
+        hash_eliminar:
+          type: array
+          items: {}
+    cartaspresentacion_CartasPresentacionShellDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionShellDataData"
     cartaspresentacion_CartasPresentacionPoblacionesDataData:
       type: object
       properties:
@@ -452,6 +472,8 @@ components:
         val_blanco:
           type: "string"
         action:
+          type: "string"
+        clase:
           type: "string"
     cartaspresentacion_CartasPresentacionPoblacionesDataDataResponse:
       allOf:

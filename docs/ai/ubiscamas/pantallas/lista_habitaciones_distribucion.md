@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Vista tabular de distribución habitación/cama/asistente abierta desde lista_habitaciones.
 
 ## Uso En Ayuda
 

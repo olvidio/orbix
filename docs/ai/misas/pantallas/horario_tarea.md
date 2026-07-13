@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Modal para editar hora inicio/fin de una tarea en plantilla (`horario_tarea_data`, `guardar_horario`).
 
 ## Uso En Ayuda
 

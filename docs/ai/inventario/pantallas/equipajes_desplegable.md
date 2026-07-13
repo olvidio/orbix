@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Desplegable"
+titulo: "Desplegable equipajes"
 pantalla: "inventario.pantalla.equipajes_desplegable"
-preguntas: ["Que se puede hacer en Equipajes Desplegable?", "Que campos tiene Equipajes Desplegable?", "Que acciones hay en Equipajes Desplegable?"]
+preguntas: ["Que se puede hacer en Desplegable equipajes?", "Que campos tiene Desplegable equipajes?", "Que acciones hay en Desplegable equipajes?"]
 capacidades: ["inventario.lista_equipajes_desde_fecha.gestionar"]
 endpoints: ["/src/inventario/lista_equipajes_desde_fecha"]
 source: "docs/catalogo/inventario/pantallas/equipajes_desplegable.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Desplegable
+# Ayuda IA Pantalla - Desplegable equipajes
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Opciones equipajes desde fecha.
 
 ## Uso En Ayuda
 

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Modal de selección de delegación destino para trasladar ubis desde list_ctr.
 
 ## Uso En Ayuda
 

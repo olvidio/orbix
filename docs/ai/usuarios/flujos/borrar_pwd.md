@@ -42,10 +42,16 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona BorrarPwd. Descripcion funcional pendiente de revisar.
+Herramienta de pruebas: resetea contraseñas al login en todos los esquemas (excepto superadmin id_role=1). Solo WEBDIR=pruebas o Docker.
+
+## Errores Documentados
+
+- `No se pudieron obtener esquemas`
+- `Sólo se puede borrar en la base de datos de pruebas`
+- `hay un error, no se ha guardado`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

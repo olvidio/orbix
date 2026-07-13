@@ -8,54 +8,24 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/menus/menus_exportar_ref_a_ficheros"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Menus Exportar Ref A Ficheros
-
-Propuesta generada automaticamente desde la capacidad `menus.menus_exportar_ref_a_ficheros.gestionar` y sus pantallas relacionadas.
+# Flujo - Exportar ref a ficheros SQL
 
 ## Objetivo De Usuario
 
-Gestiona MenusExportarRefAFicheros. Descripcion funcional pendiente de revisar.
+Genera scripts COPY en `log/menus/` (metamenús, ref, módulos).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
-
-### Ejecutar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+Menú mantenimiento / operación servidor.
 
 ## Endpoints Del Flujo
 
 - `/src/menus/menus_exportar_ref_a_ficheros`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

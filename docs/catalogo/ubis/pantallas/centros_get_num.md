@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/centros_get_num"]
 capacidades: ["ubis.centros_get_num.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Centros Get Num
 
-Descripcion funcional pendiente de revisar.
+Tabla AJAX de datos numéricos (buzón, pi, cartas) de centros DL.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/ubis/controller/centros_get_num.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -15,14 +15,17 @@ requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/listas_com_txt.php", "frontend/encargossacd/controller/listas_com_txt_update.php"]
 casos_uso: ["src\\encargossacd\\application\\ListasComTxtUpdate"]
 tags: ["encargossacd", "listas", "com", "txt", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Listas Com Txt Update
 
 Mutacion del texto de comunicacion para un par (clave, idioma). Si el texto llega vacio, se elimina la fila. Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Guarda texto de comunicación (`clave`, `idioma`, `comunicacion`).
 
 ## Endpoint
 
@@ -41,16 +44,17 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_ListasComTxtUpdateData`):
-  - `ok` (`true`)
+- Éxito: `data: ""`, `{ok: true}`.
+
 
 ## Efectos colaterales
 
 - Si el texto llega vacio, se elimina la fila.
 - Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
+
+## Permisos
+
+Sin control propio; menú listados.
 
 ## Casos De Uso
 
@@ -61,8 +65,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - `frontend/encargossacd/controller/listas_com_txt.php`
 - `frontend/encargossacd/controller/listas_com_txt_update.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

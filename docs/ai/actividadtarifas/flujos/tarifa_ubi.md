@@ -46,10 +46,10 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Copiar
 
-1. Abrir el listado en el contexto origen/destino correspondiente.
-2. Pulsar la accion de copiar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que los datos copiados aparecen en el listado.
+1. Cargar listado de casa/año destino.
+2. Pulsar copiar tarifas del año anterior (solo si hay `token_copiar`).
+3. Confirmar; el cliente reenvía la cápsula `ctx_copiar` (HashB) sin inspeccionarla.
+4. **Nota:** la operación devuelve hoy «función pendiente de reimplementar».
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadtarifas/tarifa_ubi_copiar`
@@ -105,7 +105,7 @@ Consultar y mantener las tarifas económicas de una casa para un año: listado, 
 
 ## Errores Documentados
 
-- `Operación no autorizada`
+- `Operación no autorizada (cápsula HashB inválida en update/eliminar/copiar)`
 - `función de copiar tarifas pendiente de reimplementar`
 - `hay un error, no se ha borrado`
 - `hay un error, no se ha guardado`

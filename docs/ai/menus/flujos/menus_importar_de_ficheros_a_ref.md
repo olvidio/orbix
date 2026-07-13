@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "menus"
 titulo: "Menus Importar De Ficheros A Ref"
 flujo: "menus.menus_importar_de_ficheros_a_ref.gestionar.flujo"
-preguntas: ["Como ejecutar en Menus Importar De Ficheros A Ref?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/menus/menus_importar_de_ficheros_a_ref"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Menus Importar De Ficheros A Ref?
 
 ## Donde Entrar
 
@@ -29,20 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - Ninguna pantalla relacionada.
 
 ## Objetivo
 
-Gestiona MenusImportarDeFicherosARef. Descripcion funcional pendiente de revisar.
+Copia ref pública a aux de DL(s) con confirmación en dos pasos.
 
 ## Limites De La Respuesta
 

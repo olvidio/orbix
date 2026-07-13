@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Controlador para restablecer la configuración de autenticación de dos factores (2FA).
+Fragmento admin para resetear 2FA de un usuario.
 
 ## Uso En Ayuda
 

@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.list_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/list_ctr_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar List Ctr
-
-Propuesta generada automaticamente desde la capacidad `ubis.list_ctr.gestionar` y sus pantallas relacionadas.
+# Flujo - List Ctr
 
 ## Objetivo De Usuario
 
-Gestiona ListCtr. Descripcion funcional pendiente de revisar.
+Lista centros y casas filtrados por delegación/exterior y tipo, con teléfonos y enlaces a ficha.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: scdl > direcciones > listados. Pills2: Calendario > centros y casas > listados.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -65,11 +63,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > direcciones > listados
+- **Pills2:** Calendario > centros y casas > listados

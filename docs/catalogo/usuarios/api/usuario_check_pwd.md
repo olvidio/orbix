@@ -4,54 +4,64 @@ tipo: "endpoint"
 modulo: "usuarios"
 url: "/src/usuarios/usuario_check_pwd"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/usuarios/infrastructure/ui/http/controllers/usuario_check_pwd.php"
-entrada: ["post.id_usuario:integer", "post.password:string", "post.usuario:string"]
-entrada_obligatoria: []
+entrada: ["post.id_usuario:integer", "post.usuario:string", "post.password:string"]
+entrada_obligatoria: ["password"]
 respuesta: "pendiente_revision"
 requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/usuario_form.php", "frontend/usuarios/controller/usuario_form_pwd.php"]
 casos_uso: []
 tags: ["usuarios", "usuario", "check", "pwd"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Usuario Check Pwd
 
-Descripcion funcional pendiente de revisar.
+Valida fortaleza de contraseña (JsonResponse directo, no envelope ContestarJson).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Valida fortaleza de contraseña (JsonResponse directo, no envelope ContestarJson).
 
 ## Endpoint
 
 - URL: `/src/usuarios/usuario_check_pwd`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_check_pwd.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_usuario` | `integer` | controller | No | controller |
-| `password` | `string` | controller | No | controller |
-| `usuario` | `string` | controller | No | controller |
+| `id_usuario` | `integer` | application | No | |
+| `usuario` | `string` | application | No | |
+| `password` | `string` | application | Si | |
 
 ## Salida
 
-No se ha detectado salida estandar. Revisar manualmente.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse` salvo JsonResponse directo):
+  - `success`: boolean
+  - `mensaje`: validación PasswordHasher
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Formularios pwd usuario (nuevo/edición).
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-- `frontend/usuarios/controller/usuario_form.php`
-- `frontend/usuarios/controller/usuario_form_pwd.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/usuarios/controller/usuario_form.php", "frontend/usuarios/controller/usuario_form_pwd.php"]`).

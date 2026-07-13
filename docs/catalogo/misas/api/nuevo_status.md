@@ -6,8 +6,8 @@ url: "/src/misas/nuevo_status"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/nuevo_status.php"
-entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.estado:integer", "post.id_zona:integer", "post.periodo:string"]
-entrada_obligatoria: []
+entrada: ["post.id_zona:integer", "post.periodo:string", "post.empiezamin:string", "post.empiezamax:string", "post.estado:integer"]
+entrada_obligatoria: ["id_zona", "periodo", "estado"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_NuevoStatusPeriodoData"
 respuesta_data: ["error:string"]
@@ -15,14 +15,21 @@ requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/cambiar_status.php"]
 casos_uso: ["src\\misas\\application\\NuevoStatusPeriodo"]
 tags: ["misas", "nuevo", "status"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["<repositorio getErrorTxt() acumulado>"]
 ---
 
-# Nuevo Status
+# Nuevo status
 
-Actualiza `status` de todos los `EncargoDia` de encargos 8100+ de la zona en el rango.
+Actualiza masivamente el status de todos los EncargoDia de encargos 8100+ de una zona en el rango de fechas indicado.
+
+Linaje: Slice 10 — migrado desde apps/misas/controller/nuevo_status.php (antes respuesta HTML vacía).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Actualiza masivamente el status de todos los EncargoDia de encargos 8100+ de una zona en el rango de fechas indicado.
 
 ## Endpoint
 
@@ -35,19 +42,24 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `empiezamax` | `string` | controller | No | controller |
-| `empiezamin` | `string` | controller | No | controller |
-| `estado` | `integer` | controller | No | controller |
-| `id_zona` | `integer` | controller | No | controller |
-| `periodo` | `string` | controller | No | controller |
+| `id_zona` | `integer` | application | Si | |
+| `periodo` | `string` | application | Si | |
+| `empiezamin` | `string` | application | No | |
+| `empiezamax` | `string` | application | No | |
+| `estado` | `integer` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `misas_NuevoStatusPeriodoData`):
-  - `error` (`string`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "{}"`.
+
+## Errores conocidos
+- `<repositorio getErrorTxt() acumulado>`
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -55,10 +67,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/cambiar_status.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/cambiar_status.php"]`).

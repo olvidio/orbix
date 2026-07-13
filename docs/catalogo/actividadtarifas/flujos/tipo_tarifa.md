@@ -8,12 +8,12 @@ pantallas_principales: ["actividadtarifas.pantalla.tarifa"]
 fragmentos: ["actividadtarifas.pantalla.tarifa_form", "actividadtarifas.pantalla.tarifa_lista"]
 acciones: ["crear_actualizar", "eliminar", "listar", "ver_formulario"]
 endpoints: ["/src/actividadtarifas/tipo_tarifa_eliminar", "/src/actividadtarifas/tipo_tarifa_form_data", "/src/actividadtarifas/tipo_tarifa_lista_data", "/src/actividadtarifas/tipo_tarifa_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Tipo Tarifa
 
-Propuesta generada automaticamente desde la capacidad `actividadtarifas.tipo_tarifa.gestionar` y sus pantallas relacionadas.
+Mantener el catálogo maestro de tipos de tarifa (letra, modo, observaciones).
 
 ## Objetivo De Usuario
 
@@ -103,14 +103,17 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``hay un error, no se ha borrado``
-- ``hay un error, no se ha guardado``
-- ``no se encuentra la tarifa``
-- ``no sé cuál he de borrar``
+- `hay un error, no se ha borrado`
+- `hay un error, no se ha guardado`
+- `no se encuentra la tarifa`
+- `no sé cuál he de borrar`
 
-## Revision Manual
+## Permisos
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- Edición por fila: `have_perm_oficina('adl')` y sección coincidente.
+- Alta: `adl`, `pr` o `calendario`.
+
+## Ruta de menú
+
+- **Legacy:** adl > Tarifas > definir tarifa; dre/Calendario/exterior > Tarifas > definir tarifa.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Definir tarifa.

@@ -53,14 +53,13 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CalendarioPeriodo. Descripcion funcional pendiente de revisar.
+Elimina un periodo de calendario CDC identificado por id_item.
 
 ## Errores Documentados
 
-- `hay un error, no se ha eliminado`
-- `hay un error, no se ha guardado`
-- `no se encuentra el periodo a borrar`
 - `no sé cuál he de borar`
+- `no se encuentra el periodo a borrar`
+- `hay un error, no se ha eliminado`
 
 ## Limites De La Respuesta
 

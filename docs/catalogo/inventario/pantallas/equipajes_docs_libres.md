@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.equipajes_docs_libres"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "fragmento"
 modulo: "inventario"
-nombre: "Equipajes Docs Libres"
+nombre: "Docs libres"
 controller: "frontend/inventario/controller/equipajes_docs_libres.php"
 vistas: []
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_docs_libres"]
 capacidades: ["inventario.lista_docs_libres.gestionar"]
 campos: ["html.sel[]", "post.id_equipaje", "post.id_tipo_doc"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Docs Libres
+# Docs libres
 
-Descripcion funcional pendiente de revisar.
+Documentos disponibles para añadir a maleta.
+
 
 ## Tipo
 
@@ -51,11 +52,9 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Documentos disponibles para añadir a maleta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú
+- **Pills2:** —

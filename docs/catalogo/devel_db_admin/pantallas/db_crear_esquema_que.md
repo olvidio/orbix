@@ -11,12 +11,12 @@ endpoints: ["/src/devel_db_admin/db_lugar", "/src/devel_db_admin/db_propiedades_
 capacidades: ["devel_db_admin.db_lugar.gestionar", "devel_db_admin.db_propiedades.gestionar"]
 campos: ["form.comun", "form.dl", "form.esquema", "form.region", "form.sf", "form.sv", "html.bcrear", "html.bcrear_esquema", "html.bimportar", "html.comun", "html.sf", "html.sv"]
 acciones: ["fnjs_db_copiar", "fnjs_db_crear_esquemas", "fnjs_db_crear_usuarios", "fnjs_dl", "fnjs_enviar_formulario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Db Crear Esquema Que
 
-Descripcion funcional pendiente de revisar.
+Asistente «nuevo esquema»: referencia, región/dl destino, crear usuarios, estructura e importar datos.
 
 ## Tipo
 
@@ -68,11 +68,11 @@ Descripcion funcional pendiente de revisar.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Acceder desde el menú de administración DB o configuración.
+2. Completar el formulario y ejecutar la acción.
+3. Revisar avisos/errores en el panel de respuesta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > DB > nuevo esquema
+- **Pills2:** sistema > DB > nuevo esquema / ADMIN GLOBAL > DB > nuevo esquema

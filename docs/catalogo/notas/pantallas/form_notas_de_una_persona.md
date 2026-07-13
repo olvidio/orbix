@@ -11,12 +11,12 @@ endpoints: ["/src/notas/buscar_acta", "/src/notas/nota_persona_form_data", "/src
 capacidades: ["notas.buscar_acta.gestionar", "notas.nota_persona.gestionar", "notas.persona_nota.gestionar", "notas.persona_nota_editar.gestionar", "notas.posibles_opcionales.gestionar", "notas.posibles_preceptores.gestionar"]
 campos: ["form.acta", "form.dl_org", "form.f_acta_iso", "form.id_nom", "html.acta", "html.detalle", "html.epoca", "html.f_acta", "html.id_asignatura", "html.nota_max", "html.nota_num", "html.preceptor", "html.tipo_acta", "post.id_asignatura_real", "post.id_pau", "post.mod", "post.obj_pau", "post.pau", "post.permiso", "post.sel"]
 acciones: ["fnjs_buscar_acta", "fnjs_buscar_ca", "fnjs_cerrar", "fnjs_cmb_opcional", "fnjs_cmb_preceptor", "fnjs_comprobar_fecha", "fnjs_construir_desplegable", "fnjs_guardar", "fnjs_modificar", "fnjs_nota", "fnjs_update_activ", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Form Notas De Una Persona
 
-Form de alta / edicion de una `PersonaNota` de un dossier.
+Dossier 1011: listado y formulario de notas de una persona (alta/edición/borrado).
 
 ## Tipo
 
@@ -87,13 +87,11 @@ Form de alta / edicion de una `PersonaNota` de un dossier.
 - `fnjs_update_activ`
 - `fnjs_update_div`
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

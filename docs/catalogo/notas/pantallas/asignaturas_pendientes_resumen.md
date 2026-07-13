@@ -11,12 +11,12 @@ endpoints: ["/src/notas/asignaturas_pendientes_resumen_data"]
 capacidades: ["notas.asignaturas_pendientes_resumen.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Asignaturas Pendientes Resumen
 
-Esta página sirve para generar un cuadro con el numero de alumnos que tienen pendiente cada asignatura.
+Resumen agregado: cuántos alumnos deben cada asignatura.
 
 ## Tipo
 
@@ -47,13 +47,11 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
+## Ruta de menú
+
+- **Legacy:** vest > actas... > resumen pendientes
+- **Pills2:** ESTUDIOS > Preparación planes estudio > nº alum. por asignatura; vest > actas... > resumen pendientes
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

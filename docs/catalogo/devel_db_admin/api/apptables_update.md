@@ -6,23 +6,30 @@ url: "/src/devel_db_admin/apptables_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/devel_db_admin/infrastructure/ui/http/controllers/apptables_update.php"
-entrada: []
-entrada_obligatoria: []
+entrada: ["post.accion:string", "post.esquema:string", "post.id_app:integer"]
+entrada_obligatoria: ["id_app", "accion"]
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "devel_db_admin_ApptablesUpdateData"
-respuesta_data: ["ok:true, mensaje: string, bases: list<string>, replica: bool"]
-requiere_hashb: false
-frontend_referencias: ["frontend/devel_db_admin/controller/apptables_update.php"]
+requiere_hashb: true
+errores: ["No hay aplicaciones configuradas en la sesión.", "Aplicación no válida.", "Acción no indicada.", "Debe elegir un esquema.", "Acción no reconocida.", "La aplicación %s no define clases DB para esta operación."]
+frontend_referencias: ["frontend/devel_db_admin/controller/apptables.php", "frontend/devel_db_admin/controller/apptables_update.php"]
 casos_uso: ["src\\devel_db_admin\\application\\ApptablesUpdate"]
 tags: ["devel_db_admin", "apptables", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Apptables Update
 
-Ejecuta {
+Crea, elimina o rellena tablas globales o de esquema invocando las clases `DB`/`DBEsquema` del módulo
+de aplicación seleccionado.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Recibe `id_app`, `accion` y opcionalmente `esquema`. Resuelve el nombre de app desde
+`$_SESSION['config']['a_apps']` y delega en `{app}\db\DB` o `{app}\db\DBEsquema` (legacy o `src\`).
+Acciones: `crear_global`, `eliminar_global`, `crear_esquema`, `eliminar_esquema`, `llenar_esquema`.
+Tras `crear_global` ejecuta verificación adicional (`ApptablesVerificarGlobal`).
 
 ## Endpoint
 
@@ -33,21 +40,34 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_app` | `integer` | application | Si | Debe existir en sesión |
+| `accion` | `string` | application | Si | Ver acciones arriba |
+| `esquema` | `string` | application | Condicional | Obligatorio para acciones `*_esquema` |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `devel_db_admin_ApptablesUpdateData`):
-  - `ok` (`true, mensaje: string, bases: list<string>, replica: bool`)
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Payload en `data`:
+  - `ok` (`true`)
+  - `mensaje` (`string`): texto de éxito traducido
+  - `bases` (`list<string>`): BDs lógicas afectadas (`comun`, `sv`, `sv-e`, réplicas)
+  - `replica` (`bool`): si `ReplicaSelectPolicy::incluirSelect()`
+  - `verificado` (`array`): resultado de verificación global (solo `crear_global`)
 
-## Efectos colaterales
+## Errores conocidos
 
-- Crear / eliminar / llenar tablas de aplicación (herramienta apptables).
+- `No hay aplicaciones configuradas en la sesión.`
+- `Aplicación no válida.`
+- `Acción no indicada.`
+- `Debe elegir un esquema.`
+- `Acción no reconocida.`
+- `La aplicación %s no define clases DB para esta operación.`
+
+## Permisos
+
+- Sin control propio; `HashFront` en `apptables.php` firma el POST.
 
 ## Casos De Uso
 
@@ -55,10 +75,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/devel_db_admin/controller/apptables_update.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/devel_db_admin/controller/apptables.php` (formulario)
+- `frontend/devel_db_admin/controller/apptables_update.php` (proxy JSON con hash)

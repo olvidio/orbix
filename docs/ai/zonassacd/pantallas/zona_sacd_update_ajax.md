@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Proxy JSON POST a `/src/zonassacd/zona_sacd_update` desde fnjs_guardar en zona_sacd.
 
 ## Uso En Ayuda
 

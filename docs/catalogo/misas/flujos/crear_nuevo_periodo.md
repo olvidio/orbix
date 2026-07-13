@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.crear_nuevo_periodo"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/crear_nuevo_periodo_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Crear Nuevo Periodo
-
-Propuesta generada automaticamente desde la capacidad `misas.crear_nuevo_periodo.gestionar` y sus pantallas relacionadas.
+# Flujo - Crear nuevo periodo
 
 ## Objetivo De Usuario
 
-Gestiona CrearNuevoPeriodo. Descripcion funcional pendiente de revisar.
+Crea asignaciones EncargoDia para un nuevo periodo de plan de misas a partir de plantilla y devuelve el payload de cuadrícula para renderizar ver_cuadricula_zona.phtml.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas >  Nuevo plan. Pills2: ATENCIÓN SACD > Gestión de misas > Nuevo plan.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -57,11 +55,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `solo deberia haber uno`
+- `<repositorio getErrorTxt() acumulado en error_txt>`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas >  Nuevo plan
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Nuevo plan

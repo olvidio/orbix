@@ -1,9 +1,9 @@
 ---
 id: "profesores.pantalla.congresos"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "profesores"
-nombre: "Congresos"
+nombre: "Asistencia a congresos"
 controller: "frontend/profesores/controller/congresos.php"
 vistas: ["frontend/profesores/view/congresos.phtml"]
 fragmentos_frontend: []
@@ -11,49 +11,36 @@ endpoints: ["/src/profesores/congresos"]
 capacidades: ["profesores.congresos.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Congresos
+# Asistencia a congresos
 
-Descripcion funcional pendiente de revisar.
+Tabla global de congresos del claustro: delegación (RSTGR), profesor, tipo, lugar, fechas y
+organizador.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal` (menú `stgr2`)
 - Controller: `frontend/profesores/controller/congresos.php`
 
 ## Vistas Relacionadas
 
 - `frontend/profesores/view/congresos.phtml`
 
-## Fragmentos Frontend Relacionados
-
-No se han detectado controladores frontend relacionados.
-
 ## Endpoints Usados
 
 - `/src/profesores/congresos`
 
-## Capacidades Relacionadas
-
-- `profesores.congresos.gestionar`
-
-## Campos Detectados
-
-No se han detectado campos de formulario.
-
-## Acciones Detectadas
-
-No se han detectado acciones.
-
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Abrir **asistencia a congresos** desde el menú (ámbito `stgr2`; el índice conserva el typo
+   «asitencia»).
+2. Consultar la tabla de asistencias registradas.
 
-## Revision Manual
+Pantalla de solo consulta.
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+## Ruta de menú
+
+- **Legacy:** vest > actas... > asitencia a congresos
+- **Pills2:** sin entrada en el índice

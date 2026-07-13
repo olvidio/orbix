@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-La idea de esta página es poder crear y eliminar las tablas correspondientes a cada app.
+Gestión de tablas globales y por esquema de cada aplicación instalada (crear/eliminar/rellenar).
 
 ## Uso En Ayuda
 

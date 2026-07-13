@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/plan_de_misas_pantalla_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/misas/infrastructure/ui/http/controllers/plan_de_misas_pantalla_data.php"
 entrada: ["post.pantalla:string"]
 entrada_obligatoria: []
@@ -15,37 +15,53 @@ requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/modificar_plan_de_misas.php", "frontend/misas/controller/preparar_plan_de_misas.php", "frontend/misas/controller/ver_plan_de_misas.php"]
 casos_uso: ["src\\misas\\application\\PlanDeMisasPantallaData"]
 tags: ["misas", "plan", "de", "pantalla", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Usuario no encontrado", "No tiene permiso para ver esta página"]
 ---
 
-# Plan De Misas Pantalla Data
+# Plan de misas pantalla Data
 
-Datos comunes para las pantallas preparar / modificar / ver plan de misas y para modificar plantilla (mismos desplegables de zona / tipo / orden).
+Datos comunes para pantallas preparar/modificar/ver plan de misas: zonas, orden y tipos de plantilla en preparar.
+
+Linaje: Slice 8 — sustituye lógica de apps/misas/controller/preparar_plan_de_misas.php, modificar_plan_de_misas.php, ver_plan_de_misas.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Datos comunes para pantallas preparar/modificar/ver plan de misas: zonas, orden y tipos de plantilla en preparar.
 
 ## Endpoint
 
 - URL: `/src/misas/plan_de_misas_pantalla_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/plan_de_misas_pantalla_data.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `pantalla` | `string` | controller | No | controller |
+| `pantalla` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `misas_PlanDeMisasPantallaDataData`):
-  - `pantalla` (`string`)
-  - `zonas_opciones` (`array`)
-  - `orden_opciones` (`array`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `pantalla`: string
+  - `zonas_opciones`: array
+  - `orden_opciones`: array
+  - `tipos_plantilla`: array (solo preparar)
+  - `plantilla_selected`: string (solo preparar)
+
+## Errores conocidos
+- `Usuario no encontrado`
+- `No tiene permiso para ver esta página`
+
+## Permisos
+
+IdNomJefeResolver
 
 ## Casos De Uso
 
@@ -53,12 +69,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/modificar_plan_de_misas.php`
-- `frontend/misas/controller/preparar_plan_de_misas.php`
-- `frontend/misas/controller/ver_plan_de_misas.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/modificar_plan_de_misas.php", "frontend/misas/controller/preparar_plan_de_misas.php", "frontend/misas/controller/ver_plan_de_misas.php"]`).

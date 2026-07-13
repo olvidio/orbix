@@ -11,12 +11,12 @@ endpoints: ["/src/notas/asig_faltan_select_data"]
 capacidades: ["notas.asig_faltan_select.gestionar"]
 campos: ["form.sel", "post.b_c", "post.c1", "post.c2", "post.lista", "post.numero", "post.personas_agd", "post.personas_n", "post.stack"]
 acciones: ["fnjs_enviar_formulario", "fnjs_modificar", "fnjs_solo_uno", "fnjs_tesera"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Asig Faltan Select
 
-Descripcion funcional pendiente de revisar.
+Resultado: lista de alumnos con ≤ N asignaturas pendientes.
 
 ## Tipo
 
@@ -60,13 +60,11 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_solo_uno`
 - `fnjs_tesera`
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

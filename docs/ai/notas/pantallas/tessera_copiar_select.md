@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Selección de persona destino para copiar tessera (mismo apellido).
 
 ## Uso En Ayuda
 

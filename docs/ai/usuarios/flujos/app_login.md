@@ -42,10 +42,17 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AppMobileLogin. Login JSON para app móvil (Camino B).
+Autenticación app móvil con credenciales y 2FA opcional.
+
+## Errores Documentados
+
+- `Usuario y contraseña obligatorios`
+- `Esquema no indicado`
+- `Esquema no válido`
+- `Error de autenticación`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

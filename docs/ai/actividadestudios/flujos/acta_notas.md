@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el dossier de asignaturas de una actividad (3005), seleccionar una asignatura.
+2. Pulsar **actas** (`fnjs_actas`).
+3. El sistema carga `acta_notas` y consulta `acta_notas_data` con las claves de actividad
+4. Se muestra el acta con matriculados, desplegable de situaciones y permiso de edición.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/acta_notas_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActaNotas. Descripcion funcional pendiente de revisar.
+El usuario abre el acta de una asignatura impartida en una actividad: el sistema muestra el formulario del acta (cabecera vía `acta_ver`) y debajo la lista de matriculados con nota, nota máxima, preceptor y situación de acta, según permisos de la DL propietaria.
 
 ## Limites De La Respuesta
 

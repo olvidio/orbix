@@ -62,7 +62,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActividadProceso, ActividadProcesoGet. Caso de uso: datos para la pantalla actividad_proceso (vista de las fases del proceso de una actividad concreta). Caso de uso: devuelve las tareas del proceso para un id_activ como estructura (completado, fase, tarea, responsable, observ) + flag de permiso de edicion. El render HTML se hace en el frontend. Caso de uso: guarda el estado (completado/observaciones) de una tarea concreta (id_item) del proceso de una actividad.
+Consulta y edición del proceso de una actividad: ver tareas por fase, marcar completado, guardar observaciones y actualizar el estado de cada tarea.
 
 ## Errores Documentados
 

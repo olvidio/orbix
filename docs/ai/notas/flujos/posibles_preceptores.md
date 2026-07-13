@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PosiblesPreceptores. Devuelve el desplegable de posibles preceptores (profesores STGR) con el contrato estandar de refactor.md.
+Elegir preceptor en formulario de nota.
 
 ## Limites De La Respuesta
 

@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "encargossacd"
 url: "/src/encargossacd/zonas_get_select_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/encargossacd/infrastructure/ui/http/controllers/zonas_get_select_data.php"
 entrada: ["post.id_zona:mixed"]
 entrada_obligatoria: []
@@ -15,20 +15,23 @@ requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/encargo_ver.php"]
 casos_uso: ["src\\encargossacd\\application\\EncargoZonasSelectData"]
 tags: ["encargossacd", "zonas", "get", "select", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Zonas Get Select Data
 
 Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en `refactor.md`, sin instanciar `frontend\shared\web\Desplegable` (responsabilidad exclusiva del frontend).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
+## Objetivo funcional
+
+Opciones de zonas SACD para desplegables (`id_zona_selected`).
+
 ## Endpoint
 
 - URL: `/src/encargossacd/zonas_get_select_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/zonas_get_select_data.php`
 
 ## Entrada
@@ -39,11 +42,12 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_EncargoZonasSelectDataData`):
-  - `label_prefix` (`string, id: string, name: string, opciones: array<string, string>, selected: string, blanco: bool, val_blanco: string, action: string`)
+- Claves: `opciones`, `selected` (doble `JSON.parse`).
+
+
+## Permisos
+
+Sin control propio; frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -53,8 +57,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - `frontend/encargossacd/controller/encargo_ver.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

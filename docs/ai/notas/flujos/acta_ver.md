@@ -44,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActaVer. Estado del formulario acta_ver (sin HashFront ni vistas).
+Ver y editar cabecera de acta, tribunal, PDF y vínculo a actividad CA.
 
 ## Limites De La Respuesta
 

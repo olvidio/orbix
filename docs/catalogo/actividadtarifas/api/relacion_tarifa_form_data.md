@@ -15,14 +15,20 @@ requiere_hashb: false
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php"]
 casos_uso: ["src\\actividadtarifas\\application\\RelacionTarifaFormData"]
 tags: ["actividadtarifas", "relacion", "tarifa", "form", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Relacion Tarifa Form Data
 
-Endpoint backend: datos del form modificar/nuevo `RelacionTarifaTipoActividad`.
+Datos del formulario alta/edición de `RelacionTarifaTipoActividad`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Builder del popup tarifa↔tipo actividad. Alta: `id_item` vacío/`nuevo`, `isfsv = mi_sfsv`,
+opciones de tarifa filtradas por sección. Edición: carga tipo de actividad, nombre y tarifa
+seleccionada. En alta el selector de tipo de actividad viene de `actividad_que_datos` (otro módulo).
 
 ## Endpoint
 
@@ -35,22 +41,17 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `string` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_item` | `string` | application | No | Vacío/`nuevo` = alta |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Payload en `data` (schema `actividadtarifas_RelacionTarifaFormDataData`):
-  - `es_nuevo` (`boolean`)
-  - `id_item` (`string`)
-  - `id_tipo_activ` (`integer`)
-  - `nom_tipo_activ` (`string`)
-  - `isfsv` (`integer`)
-  - `id_tarifa_sel` (`integer`)
-  - `opciones_tarifa` (`array`)
+- Helper: `ContestarJson::enviar` → doble `JSON.parse` en cliente.
+- Payload: `es_nuevo`, `id_item`, `id_tipo_activ`, `nom_tipo_activ`, `isfsv`, `id_tarifa_sel`,
+  `opciones_tarifa`.
+
+## Permisos
+
+- Sin control propio; visibilidad según listado (`puede_anadir`, enlace modificar con `adl`).
 
 ## Casos De Uso
 
@@ -58,10 +59,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php`: en alta combina con
+  `/src/actividades/actividad_que_datos` (`para=tipoactiv-tarifas`).

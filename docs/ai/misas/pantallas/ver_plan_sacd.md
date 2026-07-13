@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Resultado: lista cronológica de misas del sacerdote (`ver_plan_sacd_data`).
 
 ## Uso En Ayuda
 

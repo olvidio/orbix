@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Eliminación AJAX del PDF firmado del acta.
+Eliminación del PDF del acta.
 
 ## Uso En Ayuda
 

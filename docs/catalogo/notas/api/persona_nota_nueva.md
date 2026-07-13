@@ -7,16 +7,19 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/notas/infrastructure/ui/http/controllers/persona_nota_nueva.php"
 entrada: []
-entrada_obligatoria: []
+entrada_obligatoria: ["id_pau"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["Selección de nota no válida.", "No se encuentra una asignatura para el nivel: %s", "No se ha guardado la nota"]
 frontend_referencias: ["frontend/notas/controller/form_notas_de_una_persona.php"]
 casos_uso: ["src\\notas\\application\\PersonaNotaNueva"]
 tags: ["notas", "persona", "nota", "nueva"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Persona Nota Nueva
+
+Crea una nota de persona (asignatura/nivel/tipo acta) con replicación DL/certificado.
 
 Crea una `PersonaNota`.
 
@@ -39,7 +42,21 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `success: true`, `data: "ok"`. Error en `mensaje`.
+
+## Objetivo funcional
+
+Alta de nota en dossier 1011 / `form_notas_de_una_persona`. Parsea `sel` como `id_nivel#id_asignatura#tipo_acta` o campos sueltos; delega en `EditarPersonaNota::nuevo()`.
+
+## Permisos
+
+- Frontend dossier 1011 + `$_SESSION['oPerm']`; sin `perm_*` en caso de uso.
+
+## Errores conocidos
+
+- `Selección de nota no válida.`
+- `No se encuentra una asignatura para el nivel: %s`
+- `No se ha guardado la nota`
 
 ## Casos De Uso
 
@@ -47,10 +64,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/form_notas_de_una_persona.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/form_notas_de_una_persona.php`.

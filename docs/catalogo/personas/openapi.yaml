@@ -17,9 +17,9 @@ paths:
       operationId: "post_personas_home_persona_data"
       summary: "Home Persona Data"
       description: |
-        Endpoint JSON: datos para la pantalla `home_persona.phtml`.
+        Construye el payload de la cabecera de persona (`home_persona.phtml`): datos básicos, telecos, centro, nivel STGR traducido y normalización de `Qobj_pau` cuando la entidad es `PersonaDl`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/personas/api/home_persona_data.md`
       tags:
@@ -31,6 +31,10 @@ paths:
             schema:
               type: object
               properties:
+                id_nom:
+                  type: "integer"
+                id_tabla:
+                  type: "string"
                 obj_pau:
                   type: "string"
                 sel:
@@ -53,7 +57,7 @@ paths:
       operationId: "post_personas_persona_eliminar"
       summary: "Persona Eliminar"
       description: |
-        Endpoint JSON: elimina una persona.
+        Elimina una persona del colectivo indicado, solo si pertenece a la delegación del usuario.
         
         Operacion: `mutacion`.
         
@@ -66,6 +70,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "post.id_nom"
+                - "post.obj_pau"
               properties:
                 id_nom:
                   type: "integer"
@@ -89,7 +96,7 @@ paths:
       operationId: "post_personas_persona_update"
       summary: "Persona Update"
       description: |
-        Endpoint JSON: guarda los datos de una persona.
+        Guarda (crea o actualiza) los datos de una persona según `obj_pau`.
         
         Operacion: `mutacion`.
         
@@ -102,6 +109,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "post.id_nom"
+                - "post.obj_pau"
               properties:
                 apel_fam:
                   type: "string"
@@ -179,9 +189,9 @@ paths:
       operationId: "post_personas_personas_editar_data"
       summary: "Personas Editar Data"
       description: |
-        Endpoint JSON: datos para la ficha `personas_editar.phtml`.
+        Prepara los datos del formulario de ficha de persona (alta o edición). El frontend elige la plantilla (`persona_form`, `persona_sss_form`, `persona_de_paso`, `p_public_personas`) según `obj_pau` y permisos de oficina.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/personas/api/personas_editar_data.md`
       tags:
@@ -223,9 +233,9 @@ paths:
       operationId: "post_personas_personas_select_data"
       summary: "Personas Select Data"
       description: |
-        Endpoint JSON: datos crudos para la tabla `personas_select`.
+        Devuelve los datos crudos para montar la tabla `personas_select` tras una búsqueda en `personas_que`. No genera HTML: el frontend instancia `web\Lista` con filas, botones y cabeceras según `tabla`, permisos y módulos instalados.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/personas/api/personas_select_data.md`
       tags:
@@ -275,9 +285,9 @@ paths:
       operationId: "post_personas_stgr_cambio_data"
       summary: "Stgr Cambio Data"
       description: |
-        Endpoint JSON: datos para el formulario `stgr_cambio.phtml`.
+        Datos para el formulario modal de cambio de nivel STGR (`stgr_cambio.phtml`).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/personas/api/stgr_cambio_data.md`
       tags:
@@ -313,7 +323,7 @@ paths:
       operationId: "post_personas_stgr_update"
       summary: "Stgr Update"
       description: |
-        Endpoint JSON: actualiza el `nivel_stgr` de una persona.
+        Actualiza el campo `nivel_stgr` de una persona.
         
         Operacion: `mutacion`.
         
@@ -326,6 +336,10 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "post.id_nom"
+                - "post.id_tabla"
+                - "post.nivel_stgr"
               properties:
                 id_nom:
                   type: "integer"
@@ -351,7 +365,7 @@ paths:
       operationId: "post_personas_traslado_form_data"
       summary: "Traslado Form Data"
       description: |
-        Endpoint JSON: datos para el formulario de traslado.
+        Datos iniciales del formulario de traslado de centro y/o delegación (`traslado_form.phtml`).
         
         Operacion: `form_data`.
         
@@ -387,7 +401,7 @@ paths:
       operationId: "post_personas_traslado_update"
       summary: "Traslado Update"
       description: |
-        Endpoint JSON: aplica traslado de centro/delegacion.
+        Aplica traslado de centro y/o delegación y abre el dossier de traslados (tipo 1004).
         
         Operacion: `mutacion`.
         
@@ -400,6 +414,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "post.id_pau"
+                - "post.obj_pau"
               properties:
                 ctr_o:
                   type: "string"

@@ -2,26 +2,28 @@
 id: "profesores.ficha_profesor_stgr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Gestionar Ficha Profesor Stgr"
+nombre: "Flujo - Ver ficha profesor STGR"
 capacidad: "profesores.ficha_profesor_stgr.gestionar"
 pantallas_principales: []
 fragmentos: ["profesores.pantalla.ficha_profesor_stgr"]
-acciones: ["ejecutar"]
+acciones: ["consultar", "imprimir", "modificar_bloque"]
 endpoints: ["/src/profesores/ficha_profesor_stgr"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ficha Profesor Stgr
+# Flujo - Ver ficha profesor STGR
 
-Propuesta generada automaticamente desde la capacidad `profesores.ficha_profesor_stgr.gestionar` y sus pantallas relacionadas.
+Dossier académico del profesor desde la búsqueda de personas.
 
 ## Objetivo De Usuario
 
-Gestiona FichaProfesorStgr. Descripcion funcional pendiente de revisar.
+Consultar (e imprimir o modificar con permiso) la ficha STGR de un profesor: nombramientos,
+curriculum, docencia, congresos, etc.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Botón **ficha profesor stgr** en `personas_select` (`fnjs_ficha_profe`), que abre
+`ficha_profesor_stgr.php` con `sel=id_nom#id_tabla`.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,41 +31,29 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Buscar persona y abrir **ficha profesor stgr**.
+2. Revisar bloques visibles según `aPerm`.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.depende`
-- `post.id_nom`
-- `post.id_pau`
-- `post.id_tabla`
-- `post.obj_pau`
-- `post.permiso`
-- `post.print`
-- `post.sel`
-- `post.stack`
-
-Acciones JavaScript:
-- `fnjs_update_div`
-
-## Endpoints Del Flujo
-
 - `/src/profesores/ficha_profesor_stgr`
+
+### Imprimir
+
+Pasos:
+1. Pulsar **[imprimir]** → recarga con `print=1` (forzado en RSTGR).
+
+### Modificar bloque
+
+Pasos:
+1. Con permiso de escritura, pulsar **[modificar]** en un bloque → `tablaDB_lista_ver`.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No encuentro a nadie con id_nom: %s`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (desde búsqueda de personas / `personas_select`)

@@ -4,67 +4,65 @@ tipo: "flujo_frontend"
 modulo: "cartaspresentacion"
 nombre: "Flujo - Gestionar Cartas Presentacion Shell"
 capacidad: "cartaspresentacion.cartas_presentacion_shell.gestionar"
-pantallas_principales: []
-fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion"]
-acciones: ["obtener_datos"]
-endpoints: ["/src/cartaspresentacion/cartas_presentacion_shell_data"]
-estado_revision: "generado"
+pantallas_principales: ["cartaspresentacion.pantalla.cartas_presentacion"]
+fragmentos: []
+acciones: ["obtener_datos", "buscar_centros", "modificar_carta", "eliminar_carta"]
+endpoints: ["/src/cartaspresentacion/cartas_presentacion_shell_data", "/src/cartaspresentacion/ubis_lista_data", "/src/cartaspresentacion/poblaciones_data", "/src/cartaspresentacion/carta_presentacion_form_data", "/src/cartaspresentacion/carta_presentacion_update", "/src/cartaspresentacion/carta_presentacion_eliminar"]
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Cartas Presentacion Shell
+# Flujo - Gestionar Cartas Presentacion (pantalla principal)
 
-Propuesta generada automaticamente desde la capacidad `cartaspresentacion.cartas_presentacion_shell.gestionar` y sus pantallas relacionadas.
+Gestión de cartas de presentación desde la pantalla **modificar**: buscar centros, crear/editar y
+eliminar cartas.
 
 ## Objetivo De Usuario
 
-Gestiona CartasPresentacionShell. Datos para la shell cartas_presentacion.php: delegación y paths relativos. URLs absolutas y fragment Hash: {.
+Mantener los datos de presentación (director, contacto, zona) de los centros de la delegación o de
+regiones extranjeras.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `cartas_presentacion` (`frontend/cartaspresentacion/controller/cartas_presentacion.php`):
+menú scdl > direcciones > cartas presentacion > modificar.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `cartaspresentacion.pantalla.cartas_presentacion`
+### Inicializar pantalla
 
-## Escenarios Inferidos
+1. Al cargar, el controller llama a `cartas_presentacion_shell_data` y firma las URLs AJAX.
+2. Se muestra el formulario de selección (dl/regiones + población).
 
-### Obtener Datos
+### Buscar centros
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir «según dl» y población (si aplica).
+2. Pulsar **buscar** → `ubis_lista_data` pinta la tabla en `#ficha2`.
 
-Endpoints asociados:
-- Ninguno inferido para esta accion.
+### Modificar carta
 
-## Campos Y Acciones Detectadas En Pantalla
+1. Pulsar **director** en una fila → modal con `carta_presentacion_form_data`.
+2. Rellenar campos y **guardar** → `carta_presentacion_update`; se refresca el listado.
 
-Campos:
-- `html.buscar`
+### Eliminar carta
 
-Acciones JavaScript:
-- `fnjs_cerrar`
-- `fnjs_construir_desplegable`
-- `fnjs_eliminar_cp`
-- `fnjs_guardar_cp`
-- `fnjs_left_side_hide`
-- `fnjs_modificar`
-- `fnjs_poblacion`
-- `fnjs_update_div`
-- `fnjs_ver`
-- `fnjs_ver_ubi`
+1. En filas con carta existente, pulsar **quitar** → confirmación → `carta_presentacion_eliminar`.
 
 ## Endpoints Del Flujo
 
 - `/src/cartaspresentacion/cartas_presentacion_shell_data`
+- `/src/cartaspresentacion/ubis_lista_data`
+- `/src/cartaspresentacion/poblaciones_data`
+- `/src/cartaspresentacion/carta_presentacion_form_data`
+- `/src/cartaspresentacion/carta_presentacion_update`
+- `/src/cartaspresentacion/carta_presentacion_eliminar`
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- Formulario: `No puede modificar datos de otra dl`, `Centro no encontrado`.
+- Update: `Hay un error, no se ha guardado.`
+- Eliminar: `Carta de presentacion no encontrada`, `Hay un error, no se ha borrado.`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > direcciones > cartas presentacion > modificar
+- **Pills2:** scdl > direcciones > cartas presentacion > modificar

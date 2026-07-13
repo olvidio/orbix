@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/actividad_que_fases_ajax"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad Que Fases Ajax
-
-Propuesta generada automaticamente desde la capacidad `procesos.actividad_que_fases_ajax.gestionar` y sus pantallas relacionadas.
+# Flujo - Fases en filtro de actividades
 
 ## Objetivo De Usuario
 
-Gestiona ActividadQueFasesCuadro. Caso de uso: devuelve la lista de fases aplicables al tipo de actividad indicado (estructura pura) para construir los checkboxes de fases_on o fases_off del filtro de busqueda de actividades.
+Devolver las fases aplicables a un tipo de actividad para construir los checkboxes de filtro `fases_on` / `fases_off` en la búsqueda de actividades.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada directa de menú; se invoca vía AJAX desde el filtro de búsqueda de actividades.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

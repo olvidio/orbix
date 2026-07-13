@@ -8,20 +8,22 @@ pantallas_principales: []
 fragmentos: ["actividadplazas.pantalla.resumen_plazas"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadplazas/plazas_ceder"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Plazas Ceder
 
-Propuesta generada automaticamente desde la capacidad `actividadplazas.plazas_ceder.gestionar` y sus pantallas relacionadas.
+Cede (o quita) plazas de mi delegación a otra delegación en una actividad concreta.
 
 ## Objetivo De Usuario
 
-Gestiona PlazasCeder. Actualiza el array cedidas de ActividadPlazasDl para ceder (o quitar) plazas de mi_dele a otra dl en una actividad.
+Desde el resumen de plazas de una actividad, indicar cuántas plazas ceder a otra delegación y
+confirmar el cambio.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Formulario **Ceder** al pie de la pantalla `resumen_plazas`, abierta desde el menú «Plazas» de una
+actividad concreta.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +33,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el resumen de plazas de la actividad.
+2. En el bloque **Ceder**, escribir el número de plazas y elegir la delegación destino.
+3. Pulsar **Guardar** (`fnjs_guardar`): envía `id_activ`, `num_plazas` y `region_dl` a
+   `plazas_ceder`.
+4. Si tiene éxito, la pantalla se recarga (`fnjs_actualizar`) mostrando el nuevo reparto.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadplazas/plazas_ceder`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -61,12 +66,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``faltan parametros id_activ / region_dl``
-- ``hay un error, no se ha guardado``
+- `faltan parametros id_activ / region_dl`
+- `hay un error, no se ha guardado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- Sin entrada de menú en el índice: se ejecuta desde el resumen de plazas de una actividad (menú
+  «Plazas» de la actividad), no directamente desde un menú.

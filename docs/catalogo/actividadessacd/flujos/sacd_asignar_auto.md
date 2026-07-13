@@ -8,34 +8,39 @@ pantallas_principales: ["actividadessacd.pantalla.asignar_sacd_auto"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadessacd/sacd_asignar_auto"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Sacd Asignar Auto
 
-Propuesta generada automaticamente desde la capacidad `actividadessacd.sacd_asignar_auto.gestionar` y sus pantallas relacionadas.
+Auto-asignación masiva del sacd titular del centro encargado.
 
 ## Objetivo De Usuario
 
-Gestiona SacdAsignarAuto. Auto-asignacion masiva del sacd titular del centro encargado a actividades sr/sg sin sacd.
+El usuario confirma la asignación automática: el sistema asigna el sacd titular del centro encargado
+a las actividades sr/sg actuales posteriores al inicio de curso des que aún no tienen sacd. Devuelve
+cuántas se han asignado y cuántas quedan sin asignar; las asignadas quedan con observaciones `auto`.
 
 ## Punto De Entrada
 
-- `actividadessacd.pantalla.asignar_sacd_auto`
+Pantalla `asignar_sacd_auto` (`frontend/actividadessacd/controller/asignar_sacd_auto.php`): la
+función `fnjs_asignar_sacd_auto` llama a este endpoint al pulsar **continuar**.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadessacd.pantalla.asignar_sacd_auto`
 
 ## Escenarios Inferidos
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Leer el texto que describe el criterio de asignación automática.
+2. Pulsar **continuar**.
+3. El sistema procesa y muestra el resultado (`asignadas`, `sin_asignar`) sin recargar la página.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadessacd/sacd_asignar_auto`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -43,8 +48,7 @@ Campos:
 - Ninguno detectado.
 
 Acciones JavaScript:
-- `fnjs_asignar_sacd_auto`
-- `fnjs_esc_asauto`
+- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -52,11 +56,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+No se han documentado errores en la capacidad (fallos de guardado se cuentan como `sin_asignar`).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- Sin entrada de menú en el índice: pantalla auxiliar invocada desde "Asignar sacd a actividades"
+  (`activ_sacd`).

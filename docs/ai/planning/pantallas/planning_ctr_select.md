@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "planning"
-titulo: "Planning Ctr Select"
+titulo: "Planning por centro (calendario)"
 pantalla: "planning.pantalla.planning_ctr_select"
-preguntas: ["Que se puede hacer en Planning Ctr Select?", "Que campos tiene Planning Ctr Select?", "Que acciones hay en Planning Ctr Select?"]
+preguntas: ["Que se puede hacer en Planning por centro (calendario)?", "Que campos tiene Planning por centro (calendario)?", "Que acciones hay en Planning por centro (calendario)?"]
 capacidades: ["planning.planning_ctr_select.gestionar"]
 endpoints: ["/src/planning/planning_ctr_select_data"]
 source: "docs/catalogo/planning/pantallas/planning_ctr_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Planning Ctr Select
+# Ayuda IA Pantalla - Planning por centro (calendario)
 
 ## Resumen
 
-Planning (calendario) de las personas de un centro (o grupo de centros), filtrado por periodo y tipo de persona (n, agd, s).
+Calendario de personas y actividades agrupadas por centro. Fragmento AJAX cargado desde `planning_ctr_que`.
 
 ## Uso En Ayuda
 

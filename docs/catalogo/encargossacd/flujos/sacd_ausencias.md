@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["encargossacd.pantalla.sacd_ausencias_update"]
 acciones: ["crear_actualizar"]
 endpoints: ["/src/encargossacd/sacd_ausencias_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Sacd Ausencias
@@ -21,7 +21,8 @@ Gestiona SacdAusencias. Guarda/modifica las ausencias de un SACD (frontend/encar
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú: dre > ausencias > sacd.
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -56,9 +57,14 @@ Acciones JavaScript:
 
 - ``no se ha encontrado el encargo del sacd``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > ausencias > sacd
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** dre > ausencias > sacd
+- **Pills2:** sin entrada de menú en el índice
+

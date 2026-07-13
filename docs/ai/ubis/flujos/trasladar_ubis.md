@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TrasladarUbis. Descripcion funcional pendiente de revisar.
+Traslada centros y casas seleccionados a otra delegación destino.
 
 ## Errores Documentados
 

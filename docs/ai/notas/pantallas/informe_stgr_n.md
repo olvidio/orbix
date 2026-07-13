@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Informe anual STGR - Numerarios (puntos 1..18 + `x`).
+Informe anual de numerarios.
 
 ## Uso En Ayuda
 

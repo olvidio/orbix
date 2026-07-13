@@ -17,7 +17,7 @@ paths:
       operationId: "post_actividadtarifas_relacion_tarifa_eliminar"
       summary: "Relacion Tarifa Eliminar"
       description: |
-        Endpoint backend: elimina una `RelacionTarifaTipoActividad`.
+        Elimina una `RelacionTarifaTipoActividad`.
         
         Operacion: `mutacion`.
         
@@ -30,6 +30,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_item:
                   type: "integer"
@@ -51,7 +53,7 @@ paths:
       operationId: "post_actividadtarifas_relacion_tarifa_form_data"
       summary: "Relacion Tarifa Form Data"
       description: |
-        Endpoint backend: datos del form modificar/nuevo `RelacionTarifaTipoActividad`.
+        Datos del formulario alta/edición de `RelacionTarifaTipoActividad`.
         
         Operacion: `form_data`.
         
@@ -85,7 +87,7 @@ paths:
       operationId: "post_actividadtarifas_relacion_tarifa_lista_data"
       summary: "Relacion Tarifa Lista Data"
       description: |
-        Endpoint backend: listado de relaciones tarifa ↔ tipo actividad.
+        Listado de relaciones `TipoTarifa` ↔ tipo de actividad.
         
         Operacion: `lista_data`.
         
@@ -120,7 +122,7 @@ paths:
       operationId: "post_actividadtarifas_relacion_tarifa_update"
       summary: "Relacion Tarifa Update"
       description: |
-        Endpoint backend: crea o actualiza una `RelacionTarifaTipoActividad`.
+        Crea o actualiza una `RelacionTarifaTipoActividad` (qué tarifa aplica a cada tipo de actividad).
         
         Operacion: `mutacion`.
         
@@ -133,6 +135,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tarifa"
+                - "id_tipo_activ"
               properties:
                 id_item:
                   type: "string"
@@ -158,7 +163,9 @@ paths:
       operationId: "post_actividadtarifas_tarifa_ubi_copiar"
       summary: "Tarifa Ubi Copiar"
       description: |
-        Endpoint backend: copiar tarifas del año anterior.
+        Copia las tarifas de una casa del año anterior al año actual (endpoint mantenido por paridad; lógica pendiente).
+        
+        Requiere cápsula HashB en `` (accion ``).
         
         Operacion: `mutacion`.
         
@@ -171,13 +178,11 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx_copiar"
               properties:
                 ctx_copiar:
                   type: "string"
-                id_ubi:
-                  type: "integer"
-                year:
-                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -196,7 +201,9 @@ paths:
       operationId: "post_actividadtarifas_tarifa_ubi_eliminar"
       summary: "Tarifa Ubi Eliminar"
       description: |
-        Endpoint backend: elimina una `TarifaUbi`.
+        Elimina una `TarifaUbi` de una casa y año.
+        
+        Requiere cápsula HashB en `` (accion ``).
         
         Operacion: `mutacion`.
         
@@ -209,11 +216,11 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx_eliminar"
               properties:
                 ctx_eliminar:
                   type: "string"
-                id_item:
-                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -232,7 +239,7 @@ paths:
       operationId: "post_actividadtarifas_tarifa_ubi_form_data"
       summary: "Tarifa Ubi Form Data"
       description: |
-        Endpoint backend: datos del form modificar/nuevo `TarifaUbi`.
+        Datos del formulario alta/edición de `TarifaUbi` y emisión de cápsulas `HashB`.
         
         Operacion: `form_data`.
         
@@ -272,7 +279,7 @@ paths:
       operationId: "post_actividadtarifas_tarifa_ubi_lista_data"
       summary: "Tarifa Ubi Lista Data"
       description: |
-        Endpoint backend: listado de `TarifaUbi` por `id_ubi` + `year`.
+        Listado de `TarifaUbi` filtrado por casa (`id_ubi`) y año (`year`).
         
         Operacion: `lista_data`.
         
@@ -308,7 +315,9 @@ paths:
       operationId: "post_actividadtarifas_tarifa_ubi_update"
       summary: "Tarifa Ubi Update"
       description: |
-        Endpoint backend: crea o actualiza una `TarifaUbi`.
+        Crea o actualiza una `TarifaUbi` (importe de una tarifa en una casa y año).
+        
+        Requiere cápsula HashB en `` (accion ``).
         
         Operacion: `mutacion`.
         
@@ -321,23 +330,19 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx_update"
               properties:
                 cantidad:
                   type: "string"
                 ctx_update:
                   type: "string"
-                id_item:
-                  type: "integer"
                 id_serie:
                   type: "integer"
                 id_tarifa:
                   type: "integer"
-                id_ubi:
-                  type: "integer"
                 observ:
                   type: "string"
-                year:
-                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -356,7 +361,7 @@ paths:
       operationId: "post_actividadtarifas_tarifa_ubi_update_inc"
       summary: "Tarifa Ubi Update Inc"
       description: |
-        Endpoint backend: actualiza en lote las cantidades de varias `TarifaUbi` desde el estudio economico de casa.
+        Actualiza en lote las cantidades de varias `TarifaUbi` desde el estudio económico de casa.
         
         Operacion: `mutacion`.
         
@@ -392,7 +397,7 @@ paths:
       operationId: "post_actividadtarifas_tipo_tarifa_eliminar"
       summary: "Tipo Tarifa Eliminar"
       description: |
-        Endpoint backend: elimina un `TipoTarifa`.
+        Elimina un `TipoTarifa` del catálogo.
         
         Operacion: `mutacion`.
         
@@ -405,6 +410,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tarifa"
               properties:
                 id_tarifa:
                   type: "integer"
@@ -426,7 +433,7 @@ paths:
       operationId: "post_actividadtarifas_tipo_tarifa_form_data"
       summary: "Tipo Tarifa Form Data"
       description: |
-        Endpoint backend: datos del form modificar/nuevo `TipoTarifa`.
+        Datos del formulario alta/edición de `TipoTarifa`.
         
         Operacion: `form_data`.
         
@@ -460,7 +467,7 @@ paths:
       operationId: "post_actividadtarifas_tipo_tarifa_lista_data"
       summary: "Tipo Tarifa Lista Data"
       description: |
-        Endpoint backend: listado del catalogo de tipos de tarifa.
+        Listado del catálogo maestro de `TipoTarifa`.
         
         Operacion: `lista_data`.
         
@@ -495,7 +502,7 @@ paths:
       operationId: "post_actividadtarifas_tipo_tarifa_update"
       summary: "Tipo Tarifa Update"
       description: |
-        Endpoint backend: crea o actualiza un `TipoTarifa`.
+        Crea o actualiza un `TipoTarifa` del catálogo maestro (letra, modo, observaciones).
         
         Operacion: `mutacion`.
         

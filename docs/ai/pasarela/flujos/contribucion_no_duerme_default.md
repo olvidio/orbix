@@ -2,25 +2,23 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "pasarela"
-titulo: "Contribucion No Duerme Default"
+titulo: "Default contribución no duerme"
 flujo: "pasarela.contribucion_no_duerme_default.gestionar.flujo"
-preguntas: ["Como guardar en Contribucion No Duerme Default?", "Como obtener datos en Contribucion No Duerme Default?"]
+preguntas: []
 pantallas_principales: []
-fragmentos: ["pasarela.pantalla.contribucion_no_duerme_ajax"]
-endpoints: ["/src/pasarela/contribucion_no_duerme_default_data", "/src/pasarela/contribucion_no_duerme_default_guardar"]
+fragmentos: [""]
+endpoints: [""]
 source: "docs/catalogo/pasarela/flujos/contribucion_no_duerme_default.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Contribucion No Duerme Default
+# Ayuda IA - Default contribución no duerme
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Contribucion No Duerme Default`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Default contribución no duerme`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como guardar en Contribucion No Duerme Default?
-- Como obtener datos en Contribucion No Duerme Default?
 
 ## Donde Entrar
 
@@ -30,32 +28,18 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Guardar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
-- `pasarela.pantalla.contribucion_no_duerme_ajax`
+- ``
 
 ## Objetivo
 
-Gestiona ContribucionNoDuermeDefault. Actualiza el valor por defecto del parámetro contribucion_no_duerme. Devuelve solo el valor por defecto del parámetro contribucion_no_duerme, para alimentar el formulario form_default desde el frontend.
+Cambiar el porcentaje global.
 
 ## Errores Documentados
 
-- `Debe ser un numero entero del 1 al 100`
 - `Falta valor por defecto`
+- `Debe ser un numero entero del 1 al 100`
 
 ## Limites De La Respuesta
 

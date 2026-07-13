@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado conjunto de plazas por actividades (DL propia y otras), con filtros de periodo y tipo.
 
 ## Uso En Ayuda
 

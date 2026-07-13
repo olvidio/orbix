@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.lista_ctrs"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/lista_ctrs_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Lista Ctrs
-
-Propuesta generada automaticamente desde la capacidad `ubis.lista_ctrs.gestionar` y sus pantallas relacionadas.
+# Flujo - Lista Ctrs
 
 ## Objetivo De Usuario
 
-Gestiona CentrosS. Listado de centros de tipo 's' (sacerdotes) con el número de personas s asignadas en cada uno, y el total global.
+Lista centros tipo s de la delegación con el número de sacerdotes asignados en cada uno.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: vsg > buscar > lista ctr i nº s. Pills2: vsg > buscar > lista ctr i nº s.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vsg > buscar > lista ctr i nº s
+- **Pills2:** vsg > buscar > lista ctr i nº s

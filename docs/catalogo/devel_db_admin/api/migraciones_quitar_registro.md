@@ -6,23 +6,27 @@ url: "/src/devel_db_admin/migraciones_quitar_registro"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_quitar_registro.php"
-entrada: ["post.sel:mixed"]
-entrada_obligatoria: []
+entrada: ["post.sel:array"]
+entrada_obligatoria: ["sel"]
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "devel_db_admin_MigracionesQuitarRegistroData"
-respuesta_data: ["lines:list<string>, error: string|null"]
 requiere_hashb: false
+errores: ["No hay migraciones seleccionadas.", "Ninguna migracion seleccionada tenia registro en migracion_aplicada.", "No se elimino ningun registro."]
 frontend_referencias: ["frontend/devel_db_admin/controller/migraciones_lista.php"]
 casos_uso: ["src\\devel_db_admin\\application\\MigracionesQuitarRegistro"]
 tags: ["devel_db_admin", "migraciones", "quitar", "registro"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Migraciones Quitar Registro
 
-Descripcion funcional pendiente de revisar.
+Elimina registros de `migracion_aplicada` para permitir re-ejecutar migraciones.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Recibe ids en `sel[]` (mismo formato que la lista). Por cada migración encontrada en disco, borra
+filas aplicadas en el repositorio. No ejecuta SQL; solo limpia el historial.
 
 ## Endpoint
 
@@ -35,17 +39,22 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `sel` | `mixed` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `sel` | `array` | controller | Si | Ids de migración |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `devel_db_admin_MigracionesQuitarRegistroData`):
-  - `lines` (`list<string>, error: string|null`)
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Payload: `{ "lines": list<string>, "error": string|null }`.
+
+## Errores conocidos
+
+- `No hay migraciones seleccionadas.`
+- `Ninguna migracion seleccionada tenia registro en migracion_aplicada.`
+- `No se elimino ningun registro.`
+
+## Permisos
+
+- Sin control propio; acción desde `migraciones_lista`.
 
 ## Casos De Uso
 
@@ -54,9 +63,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 ## Frontend Relacionado
 
 - `frontend/devel_db_admin/controller/migraciones_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

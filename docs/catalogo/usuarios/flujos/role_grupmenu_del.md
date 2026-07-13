@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["usuarios.pantalla.role_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/role_grupmenu_del"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Role Grupmenu Del
-
-Propuesta generada automaticamente desde la capacidad `usuarios.role_grupmenu_del.gestionar` y sus pantallas relacionadas.
+# Flujo - Role Grupmenu Del
 
 ## Objetivo De Usuario
 
-Gestiona RoleGrupmenuDel. Descripcion funcional pendiente de revisar.
+Quita asociación grupmenu↔rol por id_item.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -73,11 +71,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `no existe el registro`
+- `hay un error, no se ha eliminado`
+- `debe seleccionar uno`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["usuarios.pantalla.grupo_form", "usuarios.pantalla.perm_menu_form"]
 acciones: ["eliminar", "guardar", "listar"]
 endpoints: ["/src/usuarios/perm_menu_eliminar", "/src/usuarios/perm_menu_guardar", "/src/usuarios/perm_menu_lista"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Perm Menu
-
-Propuesta generada automaticamente desde la capacidad `usuarios.perm_menu.gestionar` y sus pantallas relacionadas.
+# Flujo - Perm Menu
 
 ## Objetivo De Usuario
 
-Gestiona PermMenu. Descripcion funcional pendiente de revisar.
+Gestión permisos menú DL de un usuario desde su ficha.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -94,11 +92,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `no existe el registro`
+- `hay un error, no se ha eliminado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

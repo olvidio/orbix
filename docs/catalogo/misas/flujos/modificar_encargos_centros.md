@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.modificar_encargos_centros"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/modificar_encargos_centros_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Modificar Encargos Centros
-
-Propuesta generada automaticamente desde la capacidad `misas.modificar_encargos_centros.gestionar` y sus pantallas relacionadas.
+# Flujo - Modificar encargos centros
 
 ## Objetivo De Usuario
 
-Gestiona ModificarEncargosCentros. Devuelve el desplegable de zonas que el usuario actual puede ver, para pintar la pantalla modificar_encargos_centros. Replica la logica de permisos de apps/misas/controller/modificar_encargos_centros.php: si el rol es p-sacd y NO es jefe de calendario, se limitan las zonas a las del id_pau del propio usuario. Devuelve: - error : texto vacio si todo ok, mensaje si falta permiso. - a_opciones_zona: array id_zona => nombre_zona.
+Devuelve el desplegable de zonas permitidas para la pantalla modificar encargos de centros.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Usuario no encontrado`
+- `No tiene permiso para ver esta página`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Encargos centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr

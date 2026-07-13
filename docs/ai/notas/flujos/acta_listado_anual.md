@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListadoAnualActas. Lista las actas en un rango de fechas (ISO) ordenadas por nivel y fecha. En ambito rstgr considera todas las delegaciones de la region de stgr; en los demas ambitos, solo la delegacion actual. Cada item es un array asociativo {id_nivel, acta, f_acta, nombre_corto}.
+Consultar actas por rango de fechas en vista anual.
 
 ## Limites De La Respuesta
 

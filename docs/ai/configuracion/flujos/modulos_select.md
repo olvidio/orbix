@@ -2,50 +2,48 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "configuracion"
-titulo: "Modulos Select"
+titulo: "Definir módulos (listado)"
 flujo: "configuracion.modulos_select.gestionar.flujo"
-preguntas: ["Como obtener datos en Modulos Select?"]
-pantallas_principales: []
-fragmentos: ["configuracion.pantalla.modulos_select"]
-endpoints: ["/src/configuracion/modulos_select_data"]
+preguntas: []
+pantallas_principales: ["configuracion.pantalla.modulos_select"]
+fragmentos: ["configuracion.pantalla.modulos_form", "configuracion.pantalla.modulos_update"]
+endpoints: ["/src/configuracion/modulos_select_data", "/src/configuracion/modulos_update"]
 source: "docs/catalogo/configuracion/flujos/modulos_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Modulos Select
+# Ayuda IA - Definir módulos (listado)
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Modulos Select`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Definir módulos (listado)`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Modulos Select?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Definir módulos (`configuracion.pantalla.modulos_select`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `configuracion.pantalla.modulos_select`
+- `configuracion.pantalla.modulos_form`
+- `configuracion.pantalla.modulos_update`
 
 ## Objetivo
 
-Gestiona ModulosSelect. JSON para {.
+Consultar los módulos definidos en el esquema y acceder a alta, edición o baja de cada uno.
+
+## Errores Documentados
+
+- `hay un error, no se ha eliminado (+ texto de getErrorTxt() del repositorio)`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

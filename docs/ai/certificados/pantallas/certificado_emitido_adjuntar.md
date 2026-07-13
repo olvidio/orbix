@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario para adjuntar un certificado emitido (PDF + metadatos) a una persona. Entrada desde dossier o flujo de persona.
 
 ## Uso En Ayuda
 

@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/ubis_lista_data"]
 capacidades: ["ubis.ubis.gestionar"]
 campos: ["post.nombre_ubi"]
 acciones: ["fnjs_buscar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Ubis Lista
 
-Esta página muestra una tabla con los ubis seleccionados.
+Fragmento HTML de resultados de autocompletado al buscar ubis por nombre.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/ubis/controller/ubis_lista.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ No se han detectado controladores frontend relacionados.
 
 - `fnjs_buscar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

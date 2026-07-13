@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/buscar_plan_sacd_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/misas/infrastructure/ui/http/controllers/buscar_plan_sacd_data.php"
 entrada: []
 entrada_obligatoria: []
@@ -15,33 +15,50 @@ requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/buscar_plan_sacd.php"]
 casos_uso: ["src\\misas\\application\\BuscarPlanSacdData"]
 tags: ["misas", "buscar", "plan", "sacd", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
-# Buscar Plan Sacd Data
+# Buscar plan sacd Data
 
-Lista de sacerdotes disponibles en el buscador del plan SACD (según rol y zona).
+Devuelve el desplegable de sacerdotes para el buscador del plan SACD, filtrado por rol y zona del usuario.
+
+Linaje: Slice 7 — migrado desde apps/misas/controller/buscar_plan_sacd.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve el desplegable de sacerdotes para el buscador del plan SACD, filtrado por rol y zona del usuario.
 
 ## Endpoint
 
 - URL: `/src/misas/buscar_plan_sacd_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/buscar_plan_sacd_data.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| _(ninguno)_ | | | | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `misas_BuscarPlanSacdDataData`):
-  - `sacd_opciones` (`array`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `sacd_opciones`: array<string, string>
+  - `sacd_selected`: string
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Jefe de zona: sacds de sus zonas p-sacd no jefe: solo su propio plan Oficial_dl o is_jefeCalendario(): todos los sacds activos
 
 ## Casos De Uso
 
@@ -49,10 +66,4 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/buscar_plan_sacd.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/buscar_plan_sacd.php"]`).

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Para asegurar que inicia la sesion, y poder acceder a los permisos
+Persiste creación o modificación de una dirección y su relación con el ubi.
 
 ## Uso En Ayuda
 

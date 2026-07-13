@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Informe anual STGR - Agregados (puntos 21..33 + `x`).
+Informe anual de agregados: métricas de progreso en planes de estudio.
 
 ## Uso En Ayuda
 

@@ -14,16 +14,18 @@ frontend_referencias: []
 casos_uso: []
 tags: ["zonassacd", "zona", "ctr", "ajax"]
 estado_revision: "revisado"
+errores: []
 ---
 
 # Zona Ctr Ajax
 
-**Ruta muerta** (confirmado jun 2026): `routes.php` registra la ruta pero el
-controller `src/zonassacd/infrastructure/ui/http/controllers/zona_ctr_ajax.php`
-**no existe**. Era el dispatcher legacy, sustituido por `zona_ctr_lista` y
-`zona_ctr_update`. Pendiente: eliminar la ruta de `src/zonassacd/config/routes.php`.
+Ruta muerta: registrada en routes.php pero sin controller. Sustituida por zona_ctr_lista y zona_ctr_update.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Ruta muerta: registrada en routes.php pero sin controller. Sustituida por zona_ctr_lista y zona_ctr_update.
 
 ## Endpoint
 
@@ -34,20 +36,28 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| _(ninguno)_ | | | | |
 
 ## Salida
 
-No se ha detectado salida estandar. Revisar manualmente.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Sin salida estándar (ruta muerta o pendiente).
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Sin control de permisos propio en el caso de uso; la autorización se resuelve en frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(ninguno — ruta muerta)_
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Revisado jun 2026: ruta sin controller; ver descripcion.
+- Ver `frontend_referencias` en front matter (`[]`).

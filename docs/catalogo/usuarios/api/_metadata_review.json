@@ -1,0 +1,442 @@
+{
+    "app_login": {
+        "operacion": "mutacion",
+        "entrada": {"username": "string", "password": "string", "esquema": "string", "verification_code": "string"},
+        "entrada_obligatoria": ["username", "password"],
+        "errores": ["Usuario y contraseña obligatorios", "Esquema no indicado", "Esquema no válido", "Error de autenticación"],
+        "salida": {"success_data": {"code": "código app (need_2fa, ok, …)", "authenticated": "boolean tras éxito"}},
+        "objetivo_funcional": "Login JSON para app móvil: valida credenciales (y 2FA si aplica), establece sesión PHP y devuelve payload con códigos de estado.",
+        "permisos": ["Público (sin sesión previa)."],
+        "casos_uso": ["AppMobileLogin"]
+    },
+    "app_session": {
+        "operacion": "form_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"authenticated": "boolean", "id_usuario": "int si autenticado", "username": "string", "esquema": "string"}},
+        "objetivo_funcional": "Comprueba si hay sesión autenticada al arrancar la app móvil (sin credenciales).",
+        "permisos": ["Lee `$_SESSION['session_auth']`; sin permisos de oficina."],
+        "casos_uso": []
+    },
+    "borrar_pwd": {
+        "operacion": "mutacion",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": ["No se pudieron obtener esquemas", "Sólo se puede borrar en la base de datos de pruebas", "hay un error, no se ha guardado"],
+        "salida": {"success_data": {"actualizados": "número de usuarios actualizados"}},
+        "objetivo_funcional": "Herramienta de pruebas: resetea contraseñas al login en todos los esquemas (excepto superadmin id_role=1). Solo WEBDIR=pruebas o Docker.",
+        "permisos": ["Restringido a entorno pruebas/Docker en controller."],
+        "casos_uso": []
+    },
+    "check_first_login_2fa": {
+        "operacion": "mutacion",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": "redirect"},
+        "objetivo_funcional": "Tras login web, redirige a configuración 2FA si el usuario no la tiene activada; si no, continúa al home.",
+        "permisos": ["Usuario autenticado (`ConfigGlobal::MiUsuario()`)."],
+        "casos_uso": []
+    },
+    "grupo_eliminar": {
+        "operacion": "mutacion",
+        "entrada": {"sel": "array"},
+        "entrada_obligatoria": ["sel"],
+        "errores": ["Grupo no encontrado", "hay un error, no se ha eliminado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Elimina un grupo de permisos (`aux_grupos`) seleccionado en la lista.",
+        "permisos": ["Admin id_role≤3 en frontend `grupo_lista`."],
+        "casos_uso": []
+    },
+    "grupo_guardar": {
+        "operacion": "mutacion",
+        "entrada": {"usuario": "string", "id_usuario": "integer"},
+        "entrada_obligatoria": ["usuario"],
+        "errores": ["debe poner un nombre", "Grupo no encontrado", "hay un error, no se ha guardado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Crea o actualiza un grupo de permisos (nombre en campo `usuario`, id en `id_usuario`).",
+        "permisos": ["Admin id_role≤3 en frontend `grupo_form`."],
+        "casos_uso": []
+    },
+    "grupo_info": {
+        "operacion": "form_data",
+        "entrada": {"id_usuario": "integer"},
+        "entrada_obligatoria": ["id_usuario"],
+        "errores": ["Grupo no encontrado"],
+        "salida": {"success_data": {"nombre": "nombre del grupo"}},
+        "objetivo_funcional": "Devuelve el nombre de un grupo para el formulario de edición.",
+        "permisos": ["Admin en frontend `grupo_form`."],
+        "casos_uso": []
+    },
+    "grupo_lista": {
+        "operacion": "lista_data",
+        "entrada": {"username": "string"},
+        "entrada_obligatoria": [],
+        "errores": ["Usuario no encontrado", "no tiene permisos para ver esto"],
+        "salida": {"success_data": {"a_cabeceras": "cabeceras tabla", "a_botones": "botones", "a_valores": "filas con sel id# y link editar"}},
+        "objetivo_funcional": "Lista grupos de permisos (id_usuario ~ ^5) con filtro opcional por nombre.",
+        "permisos": ["id_role≤3; si >3 devuelve error de permisos."],
+        "casos_uso": ["GruposLista"]
+    },
+    "mails_contactos_region": {
+        "operacion": "form_data",
+        "entrada": {"region": "string"},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"success": "true", "contactos": "mapa nom→{email,cargo} filtrado por perm oficina est/sm/agd"}},
+        "objetivo_funcional": "Devuelve contactos email de usuarios regionales con permisos de oficina relevantes (pantalla recuperación).",
+        "permisos": ["Público en flujo recovery; consulta esquema remoto por región."],
+        "casos_uso": ["usuariosRegionContactos"]
+    },
+    "perm_activ_eliminar": {
+        "operacion": "mutacion",
+        "entrada": {"sel": "array"},
+        "entrada_obligatoria": ["sel"],
+        "errores": ["no existe el registro", "hay un error, no se ha eliminado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Elimina un permiso de actividad-proceso del usuario (`id_item` en token sel).",
+        "permisos": ["Admin en ficha usuario (`perm_activ_lista`)."],
+        "casos_uso": []
+    },
+    "perm_activ_guardar": {
+        "operacion": "mutacion",
+        "entrada": {"id_usuario": "integer", "id_tipo_activ": "integer", "id_item": "integer", "dl_propia": "string", "fase_ref": "array", "perm_on": "array", "perm_off": "array", "afecta_a": "array"},
+        "entrada_obligatoria": ["id_usuario"],
+        "errores": ["hay un error, no se ha guardado", "hay un error."],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Crea/actualiza/elimina permisos de actividad por tipo, fase y bits on/off para cada `afecta_a`.",
+        "permisos": ["Admin en modal permisos actividad del usuario."],
+        "casos_uso": []
+    },
+    "perm_activ_lista": {
+        "operacion": "lista_data",
+        "entrada": {"id_usuario": "string"},
+        "entrada_obligatoria": ["id_usuario"],
+        "errores": [],
+        "salida": {"success_data": {"a_cabeceras": "columnas permiso", "a_botones": "modificar/eliminar", "a_valores": "filas con sel id_usuario#id_item"}},
+        "objetivo_funcional": "Tabla de permisos actividad-proceso del usuario con etiquetas de tipo, fase y bits.",
+        "permisos": ["Admin en pestaña permisos actividad de `usuario_form`."],
+        "casos_uso": []
+    },
+    "perm_menu_eliminar": {
+        "operacion": "mutacion",
+        "entrada": {"sel": "array"},
+        "entrada_obligatoria": ["sel"],
+        "errores": ["no existe el registro", "hay un error, no se ha eliminado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Elimina un permiso de menú DL del usuario/grupo.",
+        "permisos": ["Admin en ficha usuario."],
+        "casos_uso": []
+    },
+    "perm_menu_guardar": {
+        "operacion": "mutacion",
+        "entrada": {"id_item": "integer", "id_usuario": "integer", "menu_perm": "array"},
+        "entrada_obligatoria": ["id_usuario"],
+        "errores": ["Permiso de menú no encontrado", "hay un error, no se ha guardado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Alta/edición permiso menú: suma bits `menu_perm[]` en entero.",
+        "permisos": ["Admin en modal `perm_menu_form`."],
+        "casos_uso": []
+    },
+    "perm_menu_info": {
+        "operacion": "form_data",
+        "entrada": {"id_usuario": "integer", "id_item": "integer"},
+        "entrada_obligatoria": ["id_usuario"],
+        "errores": ["Grupo no encontrado"],
+        "salida": {"success_data": {"nombre": "nombre grupo/usuario", "menu_perm": "entero bits", "menu_perm_dl_map": "mapa bits etiquetados"}},
+        "objetivo_funcional": "Carga formulario modal de permiso menú (nuevo o edición).",
+        "permisos": ["Admin en `perm_menu_form`."],
+        "casos_uso": []
+    },
+    "perm_menu_lista": {
+        "operacion": "lista_data",
+        "entrada": {"id_usuario": "string"},
+        "entrada_obligatoria": ["id_usuario"],
+        "errores": [],
+        "salida": {"success_data": {"a_cabeceras": "oficina o grupo", "a_botones": "quitar", "a_valores": "filas sel id_usuario#id_item"}},
+        "objetivo_funcional": "Lista permisos de menú DL asignados al usuario.",
+        "permisos": ["Admin en ficha usuario."],
+        "casos_uso": []
+    },
+    "preferencia_tabla_get": {
+        "operacion": "form_data",
+        "entrada": {"id_tabla": "string"},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"formato_tabla": "html|slickgrid", "slickgrid": "prefs JSON o null"}},
+        "objetivo_funcional": "Devuelve preferencias de presentación de tablas (global y SlickGrid por id_tabla+idioma).",
+        "permisos": ["Usuario autenticado (`ConfigGlobal::mi_id_usuario()`)."],
+        "casos_uso": ["PreferenciaTablaData"]
+    },
+    "preferencias_guardar": {
+        "operacion": "mutacion",
+        "entrada": {"que": "string", "tabla": "string", "sPrefs": "string", "layout": "string", "oficina": "string", "inicio": "string", "tipo_tabla": "string", "ordenApellidos": "string", "idioma_nou": "string", "zona_horaria_nou": "string", "estilo_color": "string", "tipo_menu": "string"},
+        "entrada_obligatoria": [],
+        "errores": ["hay un error, no se ha guardado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Persiste preferencias personales: layout, inicio, slickGrid, tabla, idioma, zona horaria, estilo (según `que`).",
+        "permisos": ["Usuario autenticado; escribe en `web_preferencias` del usuario actual."],
+        "casos_uso": []
+    },
+    "recuperar_2fa_mail": {
+        "operacion": "mutacion",
+        "entrada": {"username": "string", "ubicacion": "string", "esquema": "string", "esquema_web": "string", "url_base": "string"},
+        "entrada_obligatoria": ["username"],
+        "errores": ["Esquema no válido", "No hay email asociado a este usuario", "Error al enviar el correo electrónico", "No se encontró ningún usuario con ese nombre"],
+        "salida": {"success_data": {"success": "boolean", "email": "email ofuscado o ????"}},
+        "objetivo_funcional": "Recuperación 2FA: genera código/link y envía mail al usuario.",
+        "permisos": ["Público (pantalla login/recuperar_2fa)."],
+        "casos_uso": []
+    },
+    "recuperar_password_mail": {
+        "operacion": "mutacion",
+        "entrada": {"username": "string", "ubicacion": "string", "esquema": "string", "esquema_web": "string", "url_index": "string"},
+        "entrada_obligatoria": ["username"],
+        "errores": ["Esquema no válido", "Error al preparar la consulta", "Error al ejecutar la consulta", "No hay email asociado a este usuario", "Error al enviar el correo electrónico", "Error al actualizar la contraseña", "No se encontró ningún usuario con ese nombre"],
+        "salida": {"success_data": {"success": "boolean", "email": "string"}},
+        "objetivo_funcional": "Recuperación contraseña: genera pwd temporal, marca cambio obligatorio y envía mail.",
+        "permisos": ["Público (pantalla recuperar_password)."],
+        "casos_uso": []
+    },
+    "role_eliminar": {
+        "operacion": "mutacion",
+        "entrada": {"sel": "array"},
+        "entrada_obligatoria": ["sel"],
+        "errores": ["no existe el registro", "hay un error, no se ha eliminado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Elimina un rol (solo superadmin permiso=1).",
+        "permisos": ["Superadmin id_role=1 en `rolesLista`."],
+        "casos_uso": []
+    },
+    "role_grupmenu_add": {
+        "operacion": "mutacion",
+        "entrada": {"sel": "array"},
+        "entrada_obligatoria": ["sel"],
+        "errores": ["hay un error, no se ha guardado", "debe seleccionar uno"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Asocia grupmenu a rol (tokens sel `id_role#id_grupmenu`).",
+        "permisos": ["Superadmin o admin (permiso 1/2) en `role_grupmenu`."],
+        "casos_uso": []
+    },
+    "role_grupmenu_del": {
+        "operacion": "mutacion",
+        "entrada": {"sel": "array"},
+        "entrada_obligatoria": ["sel"],
+        "errores": ["no existe el registro", "hay un error, no se ha eliminado", "debe seleccionar uno"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Quita asociación grupmenu↔rol por id_item.",
+        "permisos": ["Superadmin o admin en ficha rol."],
+        "casos_uso": []
+    },
+    "role_grupmenu_info": {
+        "operacion": "lista_data",
+        "entrada": {"id_role": "integer"},
+        "entrada_obligatoria": ["id_role"],
+        "errores": ["Rol no encontrado"],
+        "salida": {"success_data": {"a_cabeceras": "grupmenu", "a_botones": "añadir", "a_valores": "grupmenus no asignados", "role": "nombre rol"}},
+        "objetivo_funcional": "Lista grupmenus disponibles para añadir a un rol.",
+        "permisos": ["Admin en pantalla `role_grupmenu`."],
+        "casos_uso": []
+    },
+    "role_guardar": {
+        "operacion": "mutacion",
+        "entrada": {"role": "string", "id_role": "integer", "sf": "integer", "sv": "integer", "pau": "string", "dmz": "integer"},
+        "entrada_obligatoria": ["role"],
+        "errores": ["Rol no encontrado", "hay un error, no se ha guardado", "debe poner un nombre"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Crea o actualiza rol con flags sf/sv, pau y dmz.",
+        "permisos": ["Superadmin en `role_form`."],
+        "casos_uso": []
+    },
+    "role_info": {
+        "operacion": "form_data",
+        "entrada": {"id_role": "integer"},
+        "entrada_obligatoria": [],
+        "errores": ["Usuario no encontrado", "Rol no encontrado"],
+        "salida": {"success_data": {"role": "nombre", "chk_sf": "checked|''", "chk_sv": "checked|''", "pau": "string", "chk_dmz": "checked|''", "permiso": "0|1|2", "a_cabeceras": "tabla grupmenus asignados", "a_valores": "filas"}},
+        "objetivo_funcional": "Carga ficha rol: datos, permiso de edición y tabla grupmenus ya asignados.",
+        "permisos": ["permiso=1 superadmin (CRUD rol); permiso=2 admin (solo grupmenu)."],
+        "casos_uso": []
+    },
+    "role_lista": {
+        "operacion": "lista_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": ["Usuario no encontrado"],
+        "salida": {"success_data": {"a_cabeceras": "role,sf,sv,pau,dmz,grup menu", "a_botones": "modificar/borrar según permiso", "a_valores": "filas", "permiso": "0|1|2"}},
+        "objetivo_funcional": "Lista roles con grupmenus concatenados y nivel permiso del operador.",
+        "permisos": ["Superadmin permiso=1 (CRUD); admin permiso=2 (modificar grupmenu); resto lectura filtrada sfsv."],
+        "casos_uso": ["rolesLista"]
+    },
+    "usuario_2fa_info": {
+        "operacion": "form_data",
+        "entrada": {"id_usuario": "integer"},
+        "entrada_obligatoria": ["id_usuario"],
+        "errores": ["Id de usuario no válido", "Usuario no encontrado"],
+        "salida": {"success_data": {"has_2fa": "boolean", "secret_2fa": "string|null"}},
+        "objetivo_funcional": "Estado 2FA del usuario para formulario configuración.",
+        "permisos": ["Usuario propio o admin en `usuario_form_2fa`."],
+        "casos_uso": []
+    },
+    "usuario_2fa_update": {
+        "operacion": "mutacion",
+        "entrada": {"id_usuario": "integer", "secret_2fa": "string", "enable_2fa": "boolean", "verification_code": "string"},
+        "entrada_obligatoria": ["id_usuario"],
+        "errores": ["Usuario no encontrado", "Se requiere un código de verificación para activar 2FA", "Código de verificación inválido", "Hay un error, no se ha guardado"],
+        "salida": {"success_data": {"success": "true"}},
+        "objetivo_funcional": "Activa/desactiva 2FA verificando TOTP al activar.",
+        "permisos": ["Usuario autenticado en formulario 2FA."],
+        "casos_uso": []
+    },
+    "usuario_2fa_verify": {
+        "operacion": "mutacion",
+        "entrada": {"verification_code": "string", "secret_2fa": "string"},
+        "entrada_obligatoria": ["verification_code", "secret_2fa"],
+        "errores": ["Código de verificación o clave secreta no válidos", "Código de verificación inválido"],
+        "salida": {"success_data": {"valid": "boolean"}},
+        "objetivo_funcional": "Valida código TOTP contra secret provisional (paso previo a activar 2FA).",
+        "permisos": ["Usuario en wizard 2FA."],
+        "casos_uso": []
+    },
+    "usuario_ayuda_info": {
+        "operacion": "form_data",
+        "entrada": {"username": "string", "ubicacion": "string", "esquema": "string", "esquema_web": "string"},
+        "entrada_obligatoria": ["username"],
+        "errores": ["Esquema no válido", "Debe ingresar un nombre de usuario válido", "No hay email asociado a este usuario"],
+        "salida": {"success_data": {"emailOfuscado": "string", "mail_admin": "email admin circunscripción", "errores": "string"}},
+        "objetivo_funcional": "Ayuda acceso login: email ofuscado del usuario y contacto admin regional.",
+        "permisos": ["Público (pantalla ayuda_acceso)."],
+        "casos_uso": []
+    },
+    "usuario_check_pwd": {
+        "operacion": "form_data",
+        "entrada": {"id_usuario": "integer", "usuario": "string", "password": "string"},
+        "entrada_obligatoria": ["password"],
+        "errores": [],
+        "salida": {"success_data": {"success": "boolean", "mensaje": "validación PasswordHasher"}},
+        "objetivo_funcional": "Valida fortaleza de contraseña (JsonResponse directo, no envelope ContestarJson).",
+        "permisos": ["Formularios pwd usuario (nuevo/edición)."],
+        "casos_uso": []
+    },
+    "usuario_eliminar": {
+        "operacion": "mutacion",
+        "entrada": {"sel": "array"},
+        "entrada_obligatoria": ["sel"],
+        "errores": ["Usuario no encontrado", "hay un error, no se ha eliminado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Elimina usuario seleccionado (id en token sel).",
+        "permisos": ["Admin id_role≤3 en `usuario_lista`."],
+        "casos_uso": ["usuarioEliminar"]
+    },
+    "usuario_form": {
+        "operacion": "form_data",
+        "entrada": {"id_usuario": "integer", "quien": "string"},
+        "entrada_obligatoria": [],
+        "errores": ["Usuario no encontrado", "no tiene permisos para ver esto", "Rol no encontrado"],
+        "salida": {"success_data": {"a_campos": "JSON string con ctx_guardar HashB, roles, pau, permisos… (doble parse)"}},
+        "objetivo_funcional": "Builder formulario usuario: alta/edición con roles, pau, permisos menú/actividad y ctx firmado para guardar.",
+        "permisos": ["id_role<4 admin; resto solo avisos (error permisos)."],
+        "casos_uso": []
+    },
+    "usuario_grupo_add": {
+        "operacion": "mutacion",
+        "entrada": {"ctx": "string"},
+        "entrada_obligatoria": ["ctx"],
+        "errores": ["Operación no autorizada", "hay un error, no se ha guardado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Asocia grupo permisos a usuario (ctx HashB `usuario_grupo_add`).",
+        "permisos": ["Admin; ctx firmado con id_usuario+id_grupo."],
+        "casos_uso": []
+    },
+    "usuario_grupo_del": {
+        "operacion": "mutacion",
+        "entrada": {"ctx": "string"},
+        "entrada_obligatoria": ["ctx"],
+        "errores": ["Operación no autorizada", "hay un error, no se ha eliminado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).",
+        "permisos": ["Admin; ctx firmado."],
+        "casos_uso": []
+    },
+    "usuario_grupo_del_lst": {
+        "operacion": "lista_data",
+        "entrada": {"id_usuario": "integer"},
+        "entrada_obligatoria": ["id_usuario"],
+        "errores": [],
+        "salida": {"success_data": {"a_cabeceras": "grupos asignados", "a_valores": "acción quitar con ctx HashB"}},
+        "objetivo_funcional": "Lista grupos ya asignados al usuario con acción quitar.",
+        "permisos": ["Admin en ficha usuario."],
+        "casos_uso": []
+    },
+    "usuario_grupo_lst": {
+        "operacion": "lista_data",
+        "entrada": {"id_usuario": "integer"},
+        "entrada_obligatoria": ["id_usuario"],
+        "errores": ["Usuario no encontrado"],
+        "salida": {"success_data": {"a_cabeceras": "grupos candidatos", "a_valores": "acción añadir con ctx HashB"}},
+        "objetivo_funcional": "Lista grupos disponibles para asignar al usuario (id ~ ^5, excluye ya asignados).",
+        "permisos": ["Admin en ficha usuario."],
+        "casos_uso": []
+    },
+    "usuario_guardar": {
+        "operacion": "mutacion",
+        "entrada": {"ctx": "string", "usuario": "string", "id_role": "integer", "email": "string", "nom_usuario": "string", "password": "string", "id_nom": "integer", "id_ctr": "integer", "casas": "array", "cambio_password": "boolean", "has_2fa": "boolean", "perm_activ": "array"},
+        "entrada_obligatoria": ["ctx", "usuario"],
+        "errores": ["Operación no autorizada", "debe poner un nombre", "Usuario no encontrado", "hay un error, no se ha guardado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Alta/edición usuario con rol, pau, casas/centro, flags pwd/2FA y permisos actividad embebidos.",
+        "permisos": ["Admin; ctx HashB `usuario_guardar` coherente con que_user/id_usuario."],
+        "casos_uso": []
+    },
+    "usuario_guardar_mail": {
+        "operacion": "mutacion",
+        "entrada": {"id_usuario": "integer", "email": "string"},
+        "entrada_obligatoria": ["id_usuario", "email"],
+        "errores": ["Usuario no encontrado", "hay un error, no se ha guardado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Actualiza email del usuario (preferencias o admin).",
+        "permisos": ["Usuario propio o admin."],
+        "casos_uso": []
+    },
+    "usuario_guardar_pwd": {
+        "operacion": "mutacion",
+        "entrada": {"id_usuario": "integer", "password": "string"},
+        "entrada_obligatoria": ["id_usuario", "password"],
+        "errores": ["Usuario no encontrado", "hay un error, no se ha guardado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Cambia contraseña tras validar fortaleza; limpia flag cambio_password.",
+        "permisos": ["Usuario autenticado en `usuario_form_pwd`."],
+        "casos_uso": []
+    },
+    "usuario_info": {
+        "operacion": "form_data",
+        "entrada": {"id_usuario": "integer"},
+        "entrada_obligatoria": ["id_usuario"],
+        "errores": ["Id de usuario no válido", "Usuario no encontrado"],
+        "salida": {"success_data": {"grupos_txt": "lista grupos", "usuario": "login", "email": "string"}},
+        "objetivo_funcional": "Resumen usuario para cabecera ficha (grupos, login, email).",
+        "permisos": ["Admin en ficha usuario."],
+        "casos_uso": []
+    },
+    "usuario_lista": {
+        "operacion": "lista_data",
+        "entrada": {"username": "string"},
+        "entrada_obligatoria": [],
+        "errores": ["Usuario no encontrado", "no tiene permisos para ver esto"],
+        "salida": {"success_data": {"a_cabeceras": "usuario,nombre,role,email,accion", "a_botones": "borrar", "a_valores": "filas con sel id# y link editar"}},
+        "objetivo_funcional": "Lista usuarios web filtrable; oculta roles según sfsv y permiso id_role≤3.",
+        "permisos": ["id_role≤3; si >3 error permisos."],
+        "casos_uso": ["usuariosLista"]
+    },
+    "usuario_preferencias": {
+        "operacion": "form_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"layout": "legacy|pills", "inicio": "string", "oficina": "id_grupmenu", "oficinas_posibles": "map", "estilo_color": "string", "tipo_menu": "string", "aOpciones": "páginas inicio"}},
+        "objetivo_funcional": "Builder pantalla preferencias: layout, inicio, oficina, estilo y opciones según rol/apps.",
+        "permisos": ["Cualquier usuario autenticado."],
+        "casos_uso": []
+    }
+}

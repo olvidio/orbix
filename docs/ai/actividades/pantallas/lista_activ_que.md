@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "actividades"
-titulo: "Lista Activ Que"
+titulo: "Filtros listados SR/SG"
 pantalla: "actividades.pantalla.lista_activ_que"
-preguntas: ["Que se puede hacer en Lista Activ Que?", "Que campos tiene Lista Activ Que?", "Que acciones hay en Lista Activ Que?"]
+preguntas: ["Que se puede hacer en Filtros listados SR/SG?", "Que campos tiene Filtros listados SR/SG?", "Que acciones hay en Filtros listados SR/SG?"]
 capacidades: ["actividades.lista_activ.gestionar"]
 endpoints: ["/src/actividades/lista_activ_datos"]
 source: "docs/catalogo/actividades/pantallas/lista_activ_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Lista Activ Que
+# Ayuda IA Pantalla - Filtros listados SR/SG
 
 ## Resumen
 
-Pantalla de filtros para listados particulares de sr/sg.
+Formulario de **filtros para listados especiales** de SR/SG. Según `que`:
 
 ## Uso En Ayuda
 

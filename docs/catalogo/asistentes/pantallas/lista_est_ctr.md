@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/lista_est_ctr_data"]
 capacidades: ["asistentes.lista_est_ctr.gestionar"]
 campos: ["post.empiezamax", "post.empiezamin", "post.id_ubi", "post.n_agd", "post.periodo", "post.year"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Lista Est Ctr
 
-Descripcion funcional pendiente de revisar.
+Resultado del filtro `que_ctr_lista` (`lista=list_est`): estudios/asignaturas por centro.
 
 ## Tipo
 
@@ -54,11 +54,8 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** vest/dagd > estudios x ctr
+- **Pills2:** ACTIVIDADES > Listados > Mejores ca para n/agd

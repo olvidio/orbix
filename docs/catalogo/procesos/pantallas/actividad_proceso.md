@@ -5,18 +5,18 @@ subtipo: "fragmento_ajax"
 modulo: "procesos"
 nombre: "Actividad Proceso"
 controller: "frontend/procesos/controller/actividad_proceso.php"
-vistas: []
+vistas: ["frontend/procesos/view/actividad_proceso.html.twig"]
 fragmentos_frontend: ["frontend/dossiers/controller/dossiers_ver.php", "frontend/procesos/controller/actividad_proceso_get.php"]
 endpoints: ["/src/procesos/actividad_proceso_data", "/src/procesos/actividad_proceso_generar", "/src/procesos/actividad_proceso_get", "/src/procesos/actividad_proceso_update"]
 capacidades: ["procesos.actividad_proceso.gestionar", "procesos.actividad_proceso_generar.gestionar"]
 campos: ["form.completado", "form.force", "form.id_item", "form.observ", "post.id_activ", "post.sel"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Actividad Proceso
 
-Descripcion funcional pendiente de revisar.
+Vista del proceso de una actividad concreta: tabla de fases/tareas con completado y observaciones, opción forzar, regenerar proceso (con permiso calendario) y enlace al dossier de la actividad.
 
 ## Tipo
 
@@ -25,7 +25,7 @@ Descripcion funcional pendiente de revisar.
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
+- `frontend/procesos/view/actividad_proceso.html.twig`
 
 ## Fragmentos Frontend Relacionados
 
@@ -57,13 +57,7 @@ No se han detectado vistas PHTML relacionadas.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

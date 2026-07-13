@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Alta/edición nombre y orden de un grupmenu.
 
 ## Uso En Ayuda
 

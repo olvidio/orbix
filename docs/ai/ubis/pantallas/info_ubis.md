@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Pantalla informativa estática sobre el módulo de ubis (sin menú directo).
 
 ## Uso En Ayuda
 

@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona EquipajesNuevo. Descripcion funcional pendiente de revisar.
+Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuevo_guardar`.
 
 ## Limites De La Respuesta
 

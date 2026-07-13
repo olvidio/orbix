@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "configuracion"
-titulo: "Modulos Update"
+titulo: "Proxy AJAX modulos_update"
 pantalla: "configuracion.pantalla.modulos_update"
-preguntas: ["Que se puede hacer en Modulos Update?", "Que campos tiene Modulos Update?", "Que acciones hay en Modulos Update?"]
+preguntas: ["Que se puede hacer en Proxy AJAX modulos_update?", "Que campos tiene Proxy AJAX modulos_update?", "Que acciones hay en Proxy AJAX modulos_update?"]
 capacidades: ["configuracion.modulos.gestionar"]
 endpoints: ["/src/configuracion/modulos_update"]
 source: "docs/catalogo/configuracion/pantallas/modulos_update.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Modulos Update
+# Ayuda IA Pantalla - Proxy AJAX modulos_update
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Controlador frontend sin vista: reenvía el POST firmado (HashFront) a `/src/configuracion/modulos_update` y convierte la respuesta texto plano legacy en JSON para `fnjs_ajax_json`.
 
 ## Uso En Ayuda
 

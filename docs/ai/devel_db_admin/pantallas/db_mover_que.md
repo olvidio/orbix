@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Para mover una tabla de la DB sv a sv-e que está en la dmz.
+Selección de tabla a mover de sv a sv-e por esquema.
 
 ## Uso En Ayuda
 

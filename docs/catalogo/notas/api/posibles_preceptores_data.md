@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "notas"
 url: "/src/notas/posibles_preceptores_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/notas/infrastructure/ui/http/controllers/posibles_preceptores_data.php"
 entrada: []
 entrada_obligatoria: []
@@ -13,10 +13,12 @@ requiere_hashb: false
 frontend_referencias: ["frontend/actividadestudios/controller/form_matriculas_de_una_persona.php", "frontend/notas/controller/form_notas_de_una_persona.php"]
 casos_uso: ["src\\notas\\application\\PosiblesPreceptoresData"]
 tags: ["notas", "posibles", "preceptores", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Posibles Preceptores Data
+
+Preceptores posibles para una nota.
 
 Devuelve el desplegable de posibles preceptores (profesores STGR) con el contrato estandar de refactor.md.
 
@@ -26,7 +28,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - URL: `/src/notas/posibles_preceptores_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/posibles_preceptores_data.php`
 
 ## Entrada
@@ -37,7 +39,16 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (doble `JSON.parse` salvo excepciones).
+- Opciones en `data`.
+
+## Objetivo funcional
+
+Desplegable de preceptores según contexto de la nota.
+
+## Permisos
+
+- Formulario nota persona.
 
 ## Casos De Uso
 
@@ -45,11 +56,4 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/actividadestudios/controller/form_matriculas_de_una_persona.php`
-- `frontend/notas/controller/form_notas_de_una_persona.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `form_notas_de_una_persona`.

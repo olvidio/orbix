@@ -65,10 +65,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona FasesActivCambio, FasesActivCambioGet, FasesActivCambioLista. Caso de uso: aplica setCompletado(t|f) a la tarea de la fase nueva para cada id_activ seleccionado, respetando permisos de oficina del responsable. Caso de uso: devuelve las fases posibles para el id_tipo_activ y la dl_propia actual, incluyendo la opcion seleccionada por id_fase_sel. Respuesta conforme al contrato de refactor.md para desplegables (payload JSON con id, opciones, selected, blanco, action). El frontend construye el <select> con el helper JS estandar. Caso de uso: devuelve los datos estructurados para la tabla de actividades candidatas a cambiar de fase, segun filtros de tipo de actividad, dl_propia, periodo y accion (marcar/desmarcar). El frontend renderiza el formulario con frontend\shared\web\Lista + web\Hash.
+Cambio masivo de fase en actividades: filtrar por tipo, periodo y fase destino; listar candidatas; marcar o desmarcar la tarea de la fase nueva en las actividades seleccionadas.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

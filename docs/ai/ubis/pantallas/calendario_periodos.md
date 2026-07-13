@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página sirve para asignar una dirección a un determinado ubi.
+Pantalla principal de gestión de periodos de calendario de casas CDC por año.
 
 ## Uso En Ayuda
 

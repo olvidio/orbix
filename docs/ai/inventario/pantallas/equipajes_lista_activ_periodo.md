@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Lista Activ Periodo"
+titulo: "Actividades por periodo"
 pantalla: "inventario.pantalla.equipajes_lista_activ_periodo"
-preguntas: ["Que se puede hacer en Equipajes Lista Activ Periodo?", "Que campos tiene Equipajes Lista Activ Periodo?", "Que acciones hay en Equipajes Lista Activ Periodo?"]
+preguntas: ["Que se puede hacer en Actividades por periodo?", "Que campos tiene Actividades por periodo?", "Que acciones hay en Actividades por periodo?"]
 capacidades: ["inventario.equipajes_lista_activ_periodo.gestionar"]
 endpoints: ["/src/inventario/equipajes_lista_activ_periodo"]
 source: "docs/catalogo/inventario/pantallas/equipajes_lista_activ_periodo.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Lista Activ Periodo
+# Ayuda IA Pantalla - Actividades por periodo
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla actividades filtradas por CDC y periodo.
 
 ## Uso En Ayuda
 

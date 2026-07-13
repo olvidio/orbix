@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.importar_plantilla"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/importar_plantilla_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Importar Plantilla
-
-Propuesta generada automaticamente desde la capacidad `misas.importar_plantilla.gestionar` y sus pantallas relacionadas.
+# Flujo - Importar plantilla
 
 ## Objetivo De Usuario
 
-Gestiona ImportarPlantilla. Descripcion funcional pendiente de revisar.
+Copia asignaciones de plantilla origen a destino para una zona, creando/actualizando EncargoDia en el rango correspondiente.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -53,11 +51,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `solo deberia haber uno`
+- `<repositorio getErrorTxt() acumulado>`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Modificar plantilla
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla

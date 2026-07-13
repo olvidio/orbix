@@ -4,55 +4,61 @@ tipo: "endpoint"
 modulo: "inventario"
 url: "/src/inventario/lista_colecciones"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/inventario/infrastructure/ui/http/controllers/lista_colecciones.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "inventario_ColeccionesOpcionesDataData"
-respuesta_data: ["a_opciones:array"]
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/inventario/domain/ListaAgrupar.php"]
-casos_uso: ["src\\inventario\\application\\ColeccionesOpcionesData"]
+casos_uso: ["src\inventario\application\ColeccionesOpcionesData"]
 tags: ["inventario", "lista", "colecciones"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Lista Colecciones
+# Opciones de colecciones
 
-Opciones del desplegable de colecciones (`lista_colecciones.php`).
+Desplegable de colecciones de documentos para filtros/agrupación en listados.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Desplegable de colecciones de documentos para filtros/agrupación en listados.
 
 ## Endpoint
 
 - URL: `/src/inventario/lista_colecciones`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/lista_colecciones.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| *(ninguno)* | — | — | — | Sin parámetros en controller |
+
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `inventario_ColeccionesOpcionesDataData`):
-  - `a_opciones` (`array`)
+- Payload `{a_opciones}` (id → nombre).
+
+## Errores conocidos
+
+- Sin mensajes `_()` documentados en controller.
+
+## Permisos
+
+- Sin control de permisos propio en el controller; autorización de oficina vía frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
-- `src\inventario\application\ColeccionesOpcionesData`
+src\inventario\application\ColeccionesOpcionesData
 
 ## Frontend Relacionado
 
 - `frontend/inventario/domain/ListaAgrupar.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

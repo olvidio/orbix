@@ -2,63 +2,37 @@
 id: "cambios.cambio_usuario.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cambios"
-nombre: "Flujo - Gestionar Cambio Usuario"
+nombre: "Flujo - Eliminar cambio anotado"
 capacidad: "cambios.cambio_usuario.gestionar"
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["cambios.pantalla.avisos_generar"]
 acciones: ["eliminar"]
 endpoints: ["/src/cambios/cambio_usuario_eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Cambio Usuario
-
-Propuesta generada automaticamente desde la capacidad `cambios.cambio_usuario.gestionar` y sus pantallas relacionadas.
+# Flujo - Eliminar cambio anotado
 
 ## Objetivo De Usuario
 
-Gestiona CambioUsuario. Elimina CambioUsuario por la clave compuesta id_item_cambio#id_usuario#sfsv#aviso_tipo recibida en sel[].
+Quitar de la cola de avisos un `CambioUsuario` concreto seleccionado en la lista de cambios.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `avisos_generar` → acción `fnjs_borrar`.
 
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Eliminar
 
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-Endpoints asociados:
-- `/src/cambios/cambio_usuario_eliminar`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
-
-## Endpoints Del Flujo
-
-- `/src/cambios/cambio_usuario_eliminar`
+1. Seleccionar una o más filas (`sel[]` = `id_item_cambio#id_usuario#sfsv#aviso_tipo`).
+2. Confirmar borrado.
+3. El listado se refresca sin las filas eliminadas.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Hay un error, no se ha eliminado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+(vía pantalla lista de cambios — ver flujo `avisos_generar`)

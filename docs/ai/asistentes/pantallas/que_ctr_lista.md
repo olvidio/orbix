@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario intermedio: elige tipo de persona (n/agd/…), centro y periodo antes de abrir el listado por centros.
 
 ## Uso En Ayuda
 

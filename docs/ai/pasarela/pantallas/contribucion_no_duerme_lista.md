@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "pasarela"
-titulo: "Contribucion No Duerme Lista"
+titulo: "Contribución no duerme"
 pantalla: "pasarela.pantalla.contribucion_no_duerme_lista"
-preguntas: ["Que se puede hacer en Contribucion No Duerme Lista?", "Que campos tiene Contribucion No Duerme Lista?", "Que acciones hay en Contribucion No Duerme Lista?"]
-capacidades: ["pasarela.contribucion_no_duerme_excepcion.gestionar"]
-endpoints: ["/src/", "/src/pasarela/contribucion_no_duerme_excepcion_guardar"]
+preguntas: ["Que se puede hacer en Contribución no duerme?", "Que campos tiene Contribución no duerme?", "Que acciones hay en Contribución no duerme?"]
+capacidades: [""]
+endpoints: [""]
 source: "docs/catalogo/pasarela/pantallas/contribucion_no_duerme_lista.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Contribucion No Duerme Lista
+# Ayuda IA Pantalla - Contribución no duerme
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Porcentaje de contribución para asistentes que no pernoctan, por defecto y por tipo.
 
 ## Uso En Ayuda
 
@@ -23,10 +23,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Campos Detectados
 
-- `form.contribucion`
-- `form.id_tipo_activ`
-- `form.que`
-- `form.valor`
+- No hay campos detectados.
 
 ## Acciones Detectadas
 
@@ -34,12 +31,11 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Capacidades Relacionadas
 
-- `pasarela.contribucion_no_duerme_excepcion.gestionar`
+- ``
 
 ## Endpoints Relacionados
 
-- `/src/`
-- `/src/pasarela/contribucion_no_duerme_excepcion_guardar`
+- ``
 
 ## Precauciones
 

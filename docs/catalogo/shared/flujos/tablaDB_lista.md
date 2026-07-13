@@ -2,89 +2,50 @@
 id: "shared.tablaDB_lista.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "shared"
-nombre: "Flujo - Gestionar TablaDB Lista"
+nombre: "Flujo - Listar y mantener tabla genérica"
 capacidad: "shared.tablaDB_lista.gestionar"
-pantallas_principales: []
-fragmentos: ["shared.pantalla.tablaDB_formulario_ver", "shared.pantalla.tablaDB_lista_ver"]
-acciones: ["obtener_datos"]
-endpoints: ["/src/shared/tablaDB_lista_datos"]
-estado_revision: "generado"
+pantallas_principales: ["shared.pantalla.tablaDB_lista_ver"]
+fragmentos: ["shared.pantalla.tablaDB_formulario_ver"]
+acciones: ["buscar", "listar", "nuevo", "editar", "eliminar"]
+endpoints: ["/src/shared/tablaDB_buscar_datos", "/src/shared/tablaDB_lista_datos", "/src/shared/tablaDB_update"]
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar TablaDB Lista
-
-Propuesta generada automaticamente desde la capacidad `shared.tablaDB_lista.gestionar` y sus pantallas relacionadas.
+# Flujo - Listar y mantener tabla genérica
 
 ## Objetivo De Usuario
 
-Gestiona TablaDBLista. Descripcion funcional pendiente de revisar.
+Consultar y mantener registros de tablas de configuración enlazadas desde el menú (asignaturas,
+ubis, inventario, procesos, etc.) mediante el shell común `tablaDB`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+`frontend/shared/controller/tablaDB_lista_ver.php` con `clase_info` según la entrada de menú.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `shared.pantalla.tablaDB_formulario_ver`
-- `shared.pantalla.tablaDB_lista_ver`
+### Buscar y listar
 
-## Escenarios Inferidos
+1. Abrir desde menú (pasa `clase_info` y contexto `pau`/`id_pau` si aplica).
+2. Si el `Info*` define criterios, rellenar búsqueda → `tablaDB_buscar_datos`.
+3. Enviar → `tablaDB_lista_datos` y tabla con ordenación múltiple.
 
-### Obtener Datos
+### Alta / edición
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. «Nuevo» o seleccionar fila → `tablaDB_formulario_ver` (`mod=nuevo`/`editar`).
+2. Guardar → `tablaDB_update` → volver al listado.
 
-Endpoints asociados:
-- Ninguno inferido para esta accion.
+### Borrado
 
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.accion`
-- `form.clase_info`
-- `form.sel`
-- `form.valor_depende`
-- `html.<?= $nom_camp ?>`
-- `html.btn_new`
-- `html.btn_ok`
-- `html.k_buscar`
-- `html.mod`
-- `post.aSerieBuscar`
-- `post.clase_info`
-- `post.datos_buscar`
-- `post.id_pau`
-- `post.id_sel`
-- `post.k_buscar`
-- `post.mod`
-- `post.obj_pau`
-- `post.pau`
-- `post.permiso`
-- `post.refresh`
-- `post.scroll_id`
-- `post.sel`
-- `post.stack`
-
-Acciones JavaScript:
-- `fnjs_actualizar_depende`
-- `fnjs_cancelar`
-- `fnjs_comprobar_fecha`
-- `fnjs_enviar`
-- `fnjs_enviar_formulario`
-- `fnjs_grabar`
-- `fnjs_nuevo`
-
-## Endpoints Del Flujo
-
-- `/src/shared/tablaDB_lista_datos`
+1. Marcar fila(s) y eliminar (`mod=eliminar`, `sel[]` o `s_pkey`).
+2. `tablaDB_update` → refresco de listado.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- Errores de `tablaDB_update` (ver ficha API).
+- Sin errores propios en builders de lista.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Variante según `clase_info` — ver `docs/guias/_referencia_menus.md` (entradas `tablaDB_lista_ver.php`).
+Ejemplos: `global > estudios > asignaturas`, `sistema > menus > meta menus`, `dre > zonas > zonas`.

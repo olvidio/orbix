@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "pasarela"
-titulo: "Activacion Lista"
+titulo: "Fecha de activación"
 pantalla: "pasarela.pantalla.activacion_lista"
-preguntas: ["Que se puede hacer en Activacion Lista?", "Que campos tiene Activacion Lista?", "Que acciones hay en Activacion Lista?"]
-capacidades: ["pasarela.activacion_excepcion.gestionar"]
-endpoints: ["/src/", "/src/pasarela/activacion_excepcion_eliminar", "/src/pasarela/activacion_excepcion_guardar"]
+preguntas: ["Que se puede hacer en Fecha de activación?", "Que campos tiene Fecha de activación?", "Que acciones hay en Fecha de activación?"]
+capacidades: [""]
+endpoints: [""]
 source: "docs/catalogo/pasarela/pantallas/activacion_lista.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Activacion Lista
+# Ayuda IA Pantalla - Fecha de activación
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Gestiona cuándo se activa cada tipo de actividad en la pasarela (días antes del inicio o `upload`).
 
 ## Uso En Ayuda
 
@@ -23,10 +23,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Campos Detectados
 
-- `form.activacion`
-- `form.id_tipo_activ`
-- `form.que`
-- `form.valor`
+- No hay campos detectados.
 
 ## Acciones Detectadas
 
@@ -34,13 +31,11 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Capacidades Relacionadas
 
-- `pasarela.activacion_excepcion.gestionar`
+- ``
 
 ## Endpoints Relacionados
 
-- `/src/`
-- `/src/pasarela/activacion_excepcion_eliminar`
-- `/src/pasarela/activacion_excepcion_guardar`
+- ``
 
 ## Precauciones
 

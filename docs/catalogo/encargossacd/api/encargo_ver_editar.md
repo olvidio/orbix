@@ -14,15 +14,19 @@ respuesta_data: ["error:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/encargo_ver.php"]
 casos_uso: ["src\\encargossacd\\application\\EncargoVerEditar"]
+errores: ["Debe llenar el campo descripción", "No se encuentra el encargo %d", "hay un error, no se ha guardado"]
 tags: ["encargossacd", "encargo", "ver", "editar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Encargo Ver Editar
 
 Actualización de encargo desde `encargo_ver` (antes `encargo_ajax.php` que=editar).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Actualiza un encargo existente desde `encargo_ver`. Sucesor de `encargo_ajax.php` con `que=editar`.
 
 ## Endpoint
 
@@ -49,11 +53,20 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_EncargoVerEditarData`):
-  - `error` (`string`)
+- Helper: `ContestarJson::enviar`.
+- Éxito: `data: ""` (`error` vacío).
+- Error: mensaje en `data`.
+
+
+## Errores conocidos
+
+- `Debe llenar el campo descripción`
+- `No se encuentra el encargo %d`
+- `hay un error, no se ha guardado`
+
+## Permisos
+
+Sin control propio; frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -63,8 +76,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - `frontend/encargossacd/controller/encargo_ver.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

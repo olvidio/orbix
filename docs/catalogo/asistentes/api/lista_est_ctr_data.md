@@ -4,53 +4,59 @@ tipo: "endpoint"
 modulo: "asistentes"
 url: "/src/asistentes/lista_est_ctr_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/asistentes/infrastructure/ui/http/controllers/lista_est_ctr_data.php"
 entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.id_ubi:integer", "post.n_agd:string", "post.periodo:string", "post.year:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "asistentes_ListaEstCtrDataData"
 respuesta_data: ["lista_html:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/asistentes/controller/lista_est_ctr.php"]
 casos_uso: ["src\\asistentes\\application\\ListaEstCtrData"]
 tags: ["asistentes", "lista", "est", "ctr", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Lista Est Ctr Data
 
-Listado estudios por centro (`lista_est_ctr.php`).
+Estudios (asignaturas matriculadas) por centro y actividad ca/cv.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Para cada persona de cada centro, lista actividades ca/cv con asistencia propia en el periodo y
+desglosa asignaturas matriculadas (o «plan de formación»/«repaso» según nivel stgr). Actividades ya
+iniciadas muestran «ya lo ha hecho».
 
 ## Endpoint
 
 - URL: `/src/asistentes/lista_est_ctr_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/asistentes/infrastructure/ui/http/controllers/lista_est_ctr_data.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `empiezamax` | `string` | application | No | application |
-| `empiezamin` | `string` | application | No | application |
-| `id_ubi` | `integer` | application | No | application |
-| `n_agd` | `string` | application | No | application |
-| `periodo` | `string` | application | No | application |
-| `year` | `string` | application | No | application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `n_agd` | `string` | application | No | Tipo centro/persona (`n`, `a`, `nm`, `nj`, `sssc`, `c`) |
+| `id_ubi` | `integer` | application | No | Si `n_agd=c` |
+| `year`, `periodo`, `empiezamin`, `empiezamax` | string | application | No | Rango vía `Periodo` |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `asistentes_ListaEstCtrDataData`):
-  - `lista_html` (`string`)
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Payload en `data`:
+  - `lista_html` (`string`): tabla paginada generada por `Lista::listaPaginada()`
+
+## Errores conocidos
+
+- Excepción si asignatura no encontrada: `No se ha encontrado la asignatura con id: %s`
+
+## Permisos
+
+- Sin control propio; listado de menú: frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -58,10 +64,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/asistentes/controller/lista_est_ctr.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/asistentes/controller/lista_est_ctr.php`.

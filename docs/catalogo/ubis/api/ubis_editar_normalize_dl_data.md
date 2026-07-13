@@ -4,47 +4,59 @@ tipo: "endpoint"
 modulo: "ubis"
 url: "/src/ubis/ubis_editar_normalize_dl_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/ubis/infrastructure/ui/http/controllers/ubis_editar_normalize_dl_data.php"
-entrada: ["post.id_ubi:integer", "post.nombre_ubi:string", "post.obj_pau:string", "post.tipo_ubi:string"]
-entrada_obligatoria: []
+entrada: ["post.id_ubi:integer", "post.tipo_ubi:string", "post.nombre_ubi:string", "post.obj_pau:string"]
+entrada_obligatoria: ["id_ubi", "tipo_ubi", "obj_pau"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: []
 casos_uso: ["src\\ubis\\application\\UbisEditarNormalizeDlData"]
 tags: ["ubis", "editar", "normalize", "dl", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Ubis Editar Normalize Dl Data
 
-Ajusta `obj_pau` a CentroDl/CasaDl cuando la ficha es de la delegación actual.
+Ajusta obj_pau a CentroDl/CasaDl cuando la ficha pertenece a la delegación del usuario.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Ajusta obj_pau a CentroDl/CasaDl cuando la ficha pertenece a la delegación del usuario.
 
 ## Endpoint
 
 - URL: `/src/ubis/ubis_editar_normalize_dl_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/ubis_editar_normalize_dl_data.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_ubi` | `integer` | controller | No | controller |
-| `nombre_ubi` | `string` | controller | No | controller |
-| `obj_pau` | `string` | controller | No | controller |
-| `tipo_ubi` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_ubi` | `integer` | application | Si | |
+| `tipo_ubi` | `string` | application | Si | |
+| `nombre_ubi` | `string` | application | No | |
+| `obj_pau` | `string` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `obj_pau`: CentroDl o CasaDl si pertenece a delegación
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Llamado desde flujo ubis_editar en frontend.
 
 ## Casos De Uso
 
@@ -52,10 +64,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`[]`).

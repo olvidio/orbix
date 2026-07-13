@@ -5,37 +5,41 @@ modulo: "actividadescentro"
 nombre: "Flujo - Gestionar Centro Encargado Reordenar"
 capacidad: "actividadescentro.centro_encargado_reordenar.gestionar"
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadescentro/centro_encargado_reordenar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Centro Encargado Reordenar
 
-Propuesta generada automaticamente desde la capacidad `actividadescentro.centro_encargado_reordenar.gestionar` y sus pantallas relacionadas.
+Cambio de prioridad de un centro encargado dentro de una actividad.
 
 ## Objetivo De Usuario
 
-Gestiona CentroEncargadoReordenar. Reordena un CentroEncargado (mas / menos prioridad).
+El usuario sube (**+ prioridad**) o baja (**- prioridad**) un centro encargado en el listado de una
+actividad. Internamente se intercambia el `num_orden` con el centro vecino.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): la función
+`fnjs_reordenar` llama a este endpoint desde el popup de orden de un centro.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Escenarios Inferidos
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Pulsar un centro encargado ya asignado para abrir el popup de orden.
+2. Elegir **+ prioridad** o **- prioridad**.
+3. El sistema reordena y refresca la celda de centros de la actividad.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadescentro/centro_encargado_reordenar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -54,9 +58,11 @@ Acciones JavaScript:
 - ``direccion de orden incorrecta (mas / menos)``
 - ``faltan parametros id_activ / id_ubi``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+  agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+  asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.

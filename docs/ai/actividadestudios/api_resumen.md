@@ -77,7 +77,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.ca_posibles_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/ca_posibles_data.php`
-- Entrada: `post.ca_estudios:string`, `post.ca_repaso:string`, `post.ca_todos:string`, `post.empiezamax:string`, `post.empiezamin:string`, `post.grupo_estudios:string`, `post.id_ctr_agd:integer`, `post.id_ctr_n:integer`, `post.idca:string`, `post.na:string`, `post.obj_pau:string`, `post.periodo:string`, `post.ref:string`, `post.sel:mixed`, `post.texto:string`, `post.year:integer`
+- Entrada: `post.na:string`, `post.id_ctr_n:integer`, `post.id_ctr_agd:integer`, `post.ca_estudios:string`, `post.ca_repaso:string`, `post.ca_todos:string`, `post.grupo_estudios:string`, `post.periodo:string`, `post.year:integer`, `post.empiezamin:string`, `post.empiezamax:string`, `post.idca:string`, `post.texto:string`, `post.ref:string`, `post.obj_pau:string`, `post.sel:array`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/ca_posibles_que_data`
@@ -98,7 +98,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.e43_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/e43_data.php`
-- Entrada: `post.append_blank_footer:mixed`, `post.id_activ:integer`, `post.id_nom:integer`
+- Entrada: `post.id_nom:integer`, `post.id_activ:integer`, `post.append_blank_footer:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/e43_imprimir_mpdf_data`
@@ -112,14 +112,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.form_asignaturas_de_una_actividad_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/form_asignaturas_de_una_actividad_data.php`
-- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_pau:integer`, `post.pau:string`, `post.sel:mixed`
+- Entrada: `post.sel:array`, `post.pau:string`, `post.id_pau:integer`, `post.id_activ:integer`, `post.id_asignatura:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/form_matriculas_de_una_persona_data`
 
 - Id: `actividadestudios.form_matriculas_de_una_persona_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/form_matriculas_de_una_persona_data.php`
-- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_nom:integer`, `post.sel:mixed`
+- Entrada: `post.sel:array`, `post.id_nom:integer`, `post.id_pau:integer`, `post.id_activ:integer`, `post.id_asignatura:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/lista_clases_ca_data`
@@ -161,14 +161,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.matriculas_lista_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/matriculas_lista_data.php`
-- Entrada: `post.finIso:string`, `post.fin_iso:string`, `post.inicioIso:string`, `post.inicio_iso:string`
+- Entrada: `post.inicioIso:string`, `post.finIso:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/matriculas_lista_otras_r_data`
 
 - Id: `actividadestudios.matriculas_lista_otras_r_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/matriculas_lista_otras_r_data.php`
-- Entrada: `post.apellido1:string`, `post.esquema:string`, `post.esquema_region_stgr:string`
+- Entrada: `post.apellido1:string`, `post.esquema_region_stgr:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/matriculas_pendientes_data`
@@ -196,5 +196,5 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.profesores_desplegable_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/profesores_desplegable_data.php`
-- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_profesor:integer`, `post.salida:string`
+- Entrada: `post.salida:string`, `post.id_asignatura:integer`, `post.id_activ:integer`, `post.id_profesor:integer`
 - Respuesta: `standard_envelope_string_data`

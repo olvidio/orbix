@@ -2,58 +2,35 @@
 id: "planning.planning_ctr_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Gestionar Planning Ctr Select"
+nombre: "Flujo - Planning por centro (calendario)"
 capacidad: "planning.planning_ctr_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["planning.pantalla.planning_ctr_que"]
 fragmentos: ["planning.pantalla.planning_ctr_select"]
-acciones: ["obtener_datos"]
+acciones: ["cargar_calendario", "exportar"]
 endpoints: ["/src/planning/planning_ctr_select_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Planning Ctr Select
+# Flujo - Planning por centro (calendario)
 
-Propuesta generada automaticamente desde la capacidad `planning.planning_ctr_select.gestionar` y sus pantallas relacionadas.
+Calendario de personas y actividades por centro tras enviar filtros en `planning_ctr_que`.
 
 ## Objetivo De Usuario
 
-Gestiona PlanningCtrSelect. Personas + actividades agrupadas por centro para planning_ctr_select.
+Ver el planning de un centro o de todos los centros (por colectivo n/agd/s) en un periodo.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `planning_ctr_que.php` → AJAX `planning_ctr_select`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `planning.pantalla.planning_ctr_select`
+### Ver calendario
 
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.ctr`
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.modelo`
-- `post.periodo`
-- `post.sacd`
-- `post.tipo`
-- `post.todos_agd`
-- `post.todos_n`
-- `post.todos_s`
-- `post.year`
-
-Acciones JavaScript:
-- `fnjs_exportar`
+1. Elegir centro o checkboxes de colectivo, periodo y filtro sacd.
+2. `planning_ctr_select_data` resuelve personas y actividades agrupadas.
+3. Revisar avisos (`msg_txt`) si algún ctr no tiene personas.
+4. Exportar o consultar leyenda.
 
 ## Endpoints Del Flujo
 
@@ -61,11 +38,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Faltan fechas de periodo`
+- `No encuentro este ctr`
+- `No encuentro personas para %s`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** `dre > planning > por centro`
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning por ctr`

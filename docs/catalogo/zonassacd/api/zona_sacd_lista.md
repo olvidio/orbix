@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "zonassacd"
 url: "/src/zonassacd/zona_sacd_lista"
 metodos: ["GET", "POST"]
-operacion: "consulta"
+operacion: "lista_data"
 controller: "src/zonassacd/infrastructure/ui/http/controllers/zona_sacd_lista.php"
 entrada: ["post.id_zona:string"]
 entrada_obligatoria: []
@@ -14,47 +14,54 @@ frontend_referencias: ["frontend/zonassacd/controller/zona_sacd_lista_ajax.php"]
 casos_uso: ["src\\zonassacd\\application\\ZonaSacdLista"]
 tags: ["zonassacd", "zona", "sacd", "lista"]
 estado_revision: "revisado"
+errores: []
 ---
 
 # Zona Sacd Lista
 
-Devuelve la estructura de tabla con los **sacd asignados a una zona**, con su flag
-`propia` y los dias de atencion semanal (L–D como `x`/`-`).
+Tabla de sacd de una zona (id_zona numérico), sacd sin zona (id_zona=no) o vacía si id_zona inválido. Columnas propia y días L–D como x/-.
 
-- `id_zona` numerico: sacds de esa zona, ordenados por apellidos.
-- `id_zona = 'no'`: sacds activos de la dl (tablas `n, a, sssc, pa, pn`) **sin ninguna**
-  asignacion de zona.
-- `id_zona` vacio o invalido: tabla vacia.
+Linaje: Case get_lista del legacy zona_sacd_ajax.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Tabla de sacd de una zona (id_zona numérico), sacd sin zona (id_zona=no) o vacía si id_zona inválido. Columnas propia y días L–D como x/-.
 
 ## Endpoint
 
 - URL: `/src/zonassacd/zona_sacd_lista`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/zonassacd/infrastructure/ui/http/controllers/zona_sacd_lista.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_zona` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_zona` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- `data`: estructura de tabla para `Lista`: `tipo: "tabla"`, `id_tabla: "zona_sacd_ajax"`,
-  `a_cabeceras` (sacd, zona, propia, L, M, X, J, V, S, D), `a_botones`, `con_sel`, `a_valores`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse` salvo vacío):
+  - `tipo`: tabla
+  - `id_tabla`: zona_sacd_ajax
+  - `a_cabeceras`: sacd, zona, propia, L..D
+  - `a_botones`: modificar si perm_des
+  - `con_sel`: boolean
+  - `a_valores`: filas con sel=id_nom
+  - `error`: string vacío
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
 
 ## Permisos
 
-- Los datos se devuelven a cualquier usuario autenticado; el permiso oficina `des` o
-  `vcsd` activa `con_sel` (checkboxes) y el boton `modificar` (modal dias de la semana,
-  restaurado jun 2026 tras perderse en la migracion desde `apps/`).
+con_sel y botón modificar solo con perm_des (des/vcsd).
 
 ## Casos De Uso
 
@@ -62,9 +69,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/zonassacd/controller/zona_sacd_lista_ajax.php`
-
-## Revision Manual
-
-- Revisado jun 2026 (lectura de `ZonaSacdLista::execute`).
-- Pendiente: ejemplos reales de request/response.
+- Ver `frontend_referencias` en front matter (`["frontend/zonassacd/controller/zona_sacd_lista_ajax.php"]`).

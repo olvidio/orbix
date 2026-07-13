@@ -1,109 +1,48 @@
 ---
 id: "personas.pantalla.personas_select"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "personas"
-nombre: "Personas Select"
+nombre: "Resultado búsqueda personas"
 controller: "frontend/personas/controller/personas_select.php"
 vistas: ["frontend/personas/view/personas_select.phtml"]
-fragmentos_frontend: ["frontend/actividadessacd/controller/com_sacd_activ_periodo.php", "frontend/actividadestudios/controller/ca_posibles.php", "frontend/actividadplazas/controller/peticiones_activ.php", "frontend/certificados/controller/certificado_emitido_imprimir.php", "frontend/certificados/controller/certificado_recibido_adjuntar.php", "frontend/dossiers/controller/dossiers_ver.php", "frontend/notas/controller/tessera_copiar_select.php", "frontend/notas/controller/tessera_imprimir.php", "frontend/notas/controller/tessera_ver.php", "frontend/personas/controller/home_persona.php", "frontend/personas/controller/personas_editar.php", "frontend/personas/controller/stgr_cambio.php", "frontend/personas/controller/traslado_form.php", "frontend/profesores/controller/ficha_profesor_stgr.php"]
+fragmentos_frontend: []
 endpoints: ["/src/personas/personas_select_data"]
 capacidades: ["personas.personas_select.gestionar"]
-campos: ["form.id_dossier", "form.que", "form.sel", "html.id_dossier", "html.que", "post.apellido1", "post.apellido2", "post.centro", "post.cmb", "post.es_sacd", "post.exacto", "post.id_sel", "post.na", "post.nombre", "post.que", "post.scroll_id", "post.stack", "post.tabla", "post.tipo"]
-acciones: ["fnjs_actividades", "fnjs_copiar_tessera", "fnjs_dossiers", "fnjs_enviar_formulario", "fnjs_ficha", "fnjs_ficha_profe", "fnjs_home", "fnjs_imp_certificado", "fnjs_imp_tessera", "fnjs_lista_activ", "fnjs_matriculas", "fnjs_modificar", "fnjs_modificar_ctr", "fnjs_notas", "fnjs_peticion_activ", "fnjs_posibles_ca", "fnjs_solo_uno", "fnjs_tessera", "fnjs_update_div", "fnjs_upload_certificado"]
-estado_revision: "generado"
+campos: ["form.sel", "form.que", "form.id_dossier"]
+acciones: ["fnjs_home", "fnjs_ficha", "fnjs_dossiers", "fnjs_modificar", "fnjs_modificar_ctr", "fnjs_actividades", "fnjs_tessera", "fnjs_notas", "fnjs_matriculas", "fnjs_posibles_ca", "fnjs_peticion_activ", "fnjs_lista_activ", "fnjs_ficha_profe", "fnjs_imp_tessera", "fnjs_copiar_tessera", "fnjs_imp_certificado", "fnjs_upload_certificado"]
+estado_revision: "revisado"
 ---
 
-# Personas Select
+# Resultado búsqueda personas
 
-Tabla de personas que cumplen la condicion introducida en `personas_que`.
+Tabla `web\Lista` con personas que cumplen los criterios de `personas_que`. Botones contextuales
+según colectivo, `permiso`, módulos instalados (`asistentes`, `notas`, `actividadestudios`, etc.)
+y ámbito (`rstgr` simplifica botones).
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal` (segunda pantalla del flujo búsqueda; también destino de otros módulos)
 - Controller: `frontend/personas/controller/personas_select.php`
-
-## Vistas Relacionadas
-
-- `frontend/personas/view/personas_select.phtml`
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/actividadessacd/controller/com_sacd_activ_periodo.php`
-- `frontend/actividadestudios/controller/ca_posibles.php`
-- `frontend/actividadplazas/controller/peticiones_activ.php`
-- `frontend/certificados/controller/certificado_emitido_imprimir.php`
-- `frontend/certificados/controller/certificado_recibido_adjuntar.php`
-- `frontend/dossiers/controller/dossiers_ver.php`
-- `frontend/notas/controller/tessera_copiar_select.php`
-- `frontend/notas/controller/tessera_imprimir.php`
-- `frontend/notas/controller/tessera_ver.php`
-- `frontend/personas/controller/home_persona.php`
-- `frontend/personas/controller/personas_editar.php`
-- `frontend/personas/controller/stgr_cambio.php`
-- `frontend/personas/controller/traslado_form.php`
-- `frontend/profesores/controller/ficha_profesor_stgr.php`
 
 ## Endpoints Usados
 
 - `/src/personas/personas_select_data`
 
-## Capacidades Relacionadas
+## Acciones principales
 
-- `personas.personas_select.gestionar`
+- `fnjs_home` / enlace → cabecera persona
+- `fnjs_ficha` → alta (`nuevo=1`) o edición
+- `fnjs_dossiers`, `fnjs_actividades`, tessera/notas/certificados (según permisos)
+- `fnjs_modificar` → cambio STGR (`est`)
+- `fnjs_modificar_ctr` → traslado centro (`sm`)
 
-## Campos Detectados
-
-- `form.id_dossier`
-- `form.que`
-- `form.sel`
-- `html.id_dossier`
-- `html.que`
-- `post.apellido1`
-- `post.apellido2`
-- `post.centro`
-- `post.cmb`
-- `post.es_sacd`
-- `post.exacto`
-- `post.id_sel`
-- `post.na`
-- `post.nombre`
-- `post.que`
-- `post.scroll_id`
-- `post.stack`
-- `post.tabla`
-- `post.tipo`
-
-## Acciones Detectadas
-
-- `fnjs_actividades`
-- `fnjs_copiar_tessera`
-- `fnjs_dossiers`
-- `fnjs_enviar_formulario`
-- `fnjs_ficha`
-- `fnjs_ficha_profe`
-- `fnjs_home`
-- `fnjs_imp_certificado`
-- `fnjs_imp_tessera`
-- `fnjs_lista_activ`
-- `fnjs_matriculas`
-- `fnjs_modificar`
-- `fnjs_modificar_ctr`
-- `fnjs_notas`
-- `fnjs_peticion_activ`
-- `fnjs_posibles_ca`
-- `fnjs_solo_uno`
-- `fnjs_tessera`
-- `fnjs_update_div`
-- `fnjs_upload_certificado`
+Token fila: `sel = id_nom#id_tabla`.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/personas/controller/personas_select.php`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Misma entrada que `personas_que` (resultado tras buscar). Sin entrada de menú directa independiente.

@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.tessera_copiar_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/tessera_copiar_select_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Tessera Copiar Select
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.tessera_copiar_sele
 
 ## Objetivo De Usuario
 
-Gestiona TesseraCopiarSelect. Prepara los datos para elegir a que persona (con el mismo primer apellido) se copiara la tessera de otra persona. Devuelve ['nom' => string, 'posibles_personas' => [id_nom => nombre]]. Lanza RuntimeException si no encuentra la persona origen ni como numerario ni como agregado.
+Elegir destino y ejecutar copia de tessera.
 
 ## Punto De Entrada
 
@@ -58,10 +58,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

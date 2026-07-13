@@ -11,7 +11,7 @@ endpoints: ["/src/encargossacd/encargo_horario_select_data"]
 capacidades: ["encargossacd.encargo_horario_select.gestionar"]
 campos: ["html.desc_enc", "html.mod", "html.origen", "post.id_enc", "post.mod", "post.origen", "post.sel"]
 acciones: ["fnjs_borrar", "fnjs_enviar_formulario", "fnjs_modificar", "fnjs_solo_uno", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Encargo Horario Select
@@ -58,13 +58,19 @@ Listado de horarios de un encargo.
 - `fnjs_solo_uno`
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+

@@ -2,73 +2,31 @@
 id: "actividades.actividad_status_labels.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Actividad Status Labels"
+nombre: "Flujo - Etiquetas de estado actividad"
 capacidad: "actividades.actividad_status_labels.gestionar"
-pantallas_principales: []
-fragmentos: ["actividades.pantalla.actividad_ver", "actividades.pantalla.planning_casa_modificar", "actividades.pantalla.planning_casa_nueva"]
+pantallas_principales: ["actividades.pantalla.actividad_ver"]
+fragmentos: ["actividades.pantalla.planning_casa_modificar", "actividades.pantalla.planning_casa_nueva"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividades/actividad_status_labels_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad Status Labels
+# Flujo - Etiquetas de estado actividad
 
-Propuesta generada automaticamente desde la capacidad `actividades.actividad_status_labels.gestionar` y sus pantallas relacionadas.
+Mapa id → etiqueta legible de estados de actividad para el desplegable de la ficha.
 
 ## Objetivo De Usuario
 
-Gestiona ActividadStatusLabelsDatos. Etiquetas de status ({.
+Ver nombres de estado correctos según sf/sv y permisos al abrir ficha o planning.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-- `actividades.pantalla.actividad_ver`
-- `actividades.pantalla.planning_casa_modificar`
-- `actividades.pantalla.planning_casa_nueva`
-
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.dl_org`
-- `form.isfsv`
-- `form.ssfsv`
-- `post.id_activ`
-- `post.id_tipo_activ`
-- `post.id_ubi`
-- `post.mod`
-- `post.obj_pau`
-- `post.refresh`
-- `post.sactividad`
-- `post.sasistentes`
-- `post.sel`
-
-Acciones JavaScript:
-- Ninguna detectada.
+Render de `actividad_ver` / planning (PostRequest en servidor al montar formulario).
 
 ## Endpoints Del Flujo
 
 - `/src/actividades/actividad_status_labels_datos`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada propia (paso interno de ficha/planning).

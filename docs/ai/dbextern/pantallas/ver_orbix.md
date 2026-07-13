@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "dbextern"
-titulo: "Ver Orbix"
+titulo: "Personas Aquinate sin BDU"
 pantalla: "dbextern.pantalla.ver_orbix"
-preguntas: ["Que se puede hacer en Ver Orbix?", "Que campos tiene Ver Orbix?", "Que acciones hay en Ver Orbix?"]
+preguntas: ["Que se puede hacer en Personas Aquinate sin BDU?", "Que campos tiene Personas Aquinate sin BDU?", "Que acciones hay en Personas Aquinate sin BDU?"]
 capacidades: ["dbextern.sincro_unir.gestionar", "dbextern.ver_orbix.gestionar"]
 endpoints: ["/src/dbextern/sincro_unir", "/src/dbextern/ver_orbix_datos"]
 source: "docs/catalogo/dbextern/pantallas/ver_orbix.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Ver Orbix
+# Ayuda IA Pantalla - Personas Aquinate sin BDU
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Subpantalla del punto 9: personas activas en Aquinate sin correspondencia en BDU; permite unir con candidato BDU si existe.
 
 ## Uso En Ayuda
 
@@ -38,8 +38,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Acciones Detectadas
 
-- `button:<`
-- `fnjs_enviar_formulario`
 - `fnjs_submit`
 - `fnjs_unir_bdu`
 

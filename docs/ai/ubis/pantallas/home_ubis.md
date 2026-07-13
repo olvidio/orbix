@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Ficha resumen de un ubi con enlaces a edición, direcciones, telecomunicaciones y dossiers.
 
 ## Uso En Ayuda
 

@@ -17,9 +17,9 @@ paths:
       operationId: "post_actividadescentro_activ_ctr_shell_data"
       summary: "Activ Ctr Shell Data"
       description: |
-        Tipo resuelto y especificaciones de URL para la shell de `activ_ctr` (sin `HashFront` en `src/`). La firma `linkSinVal` se aplica en {
+        Resuelve el `tipo` efectivo y devuelve las especificaciones de URL (`path` + `campos_form`) de los demás endpoints del módulo, para que la shell frontend `activ_ctr` monte los enlaces AJAX. La firma `HashFront::linkSinVal()` se aplica en el controller frontend `frontend\actividadescentro\controller\activ_ctr`, no en `src/`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadescentro/api/activ_ctr_shell_data.md`
       tags:
@@ -55,7 +55,7 @@ paths:
       operationId: "post_actividadescentro_centro_encargado_asignar"
       summary: "Centro Encargado Asignar"
       description: |
-        Endpoint backend: asigna un CentroEncargado a una actividad.
+        Asigna un nuevo `CentroEncargado` (centro `id_ubi`) a una actividad (`id_activ`).
         
         Operacion: `mutacion`.
         
@@ -94,7 +94,7 @@ paths:
       operationId: "post_actividadescentro_centro_encargado_eliminar"
       summary: "Centro Encargado Eliminar"
       description: |
-        Endpoint backend: elimina un CentroEncargado de una actividad.
+        Elimina un `CentroEncargado` (`{id_activ, id_ubi}`) del listado de centros encargados de una actividad.
         
         Operacion: `mutacion`.
         
@@ -133,7 +133,7 @@ paths:
       operationId: "post_actividadescentro_centro_encargado_reordenar"
       summary: "Centro Encargado Reordenar"
       description: |
-        Endpoint backend: reordena un CentroEncargado (mas / menos prioridad).
+        Sube o baja la prioridad de un `CentroEncargado` dentro del listado de centros encargados de una actividad.
         
         Operacion: `mutacion`.
         
@@ -174,9 +174,9 @@ paths:
       operationId: "post_actividadescentro_centros_disponibles_data"
       summary: "Centros Disponibles Data"
       description: |
-        Endpoint backend: devuelve los centros disponibles (candidatos) para asignar como encargado de una actividad, filtrados por `tipo` (sg / sr / nagd / sssc / sfsg / sfsr / sfnagd).
+        Devuelve los centros candidatos para asignar como encargados de una actividad, filtrados por `tipo` (`sg` / `sr` / `nagd` / `sssc` / `sfsg` / `sfsr` / `sfnagd`).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadescentro/api/centros_disponibles_data.md`
       tags:
@@ -216,9 +216,9 @@ paths:
       operationId: "post_actividadescentro_centros_encargados_data"
       summary: "Centros Encargados Data"
       description: |
-        Endpoint backend: devuelve los centros encargados actuales de una actividad en un array serializable, junto con los flags de permiso.
+        Devuelve los centros encargados actuales de una actividad y los flags `permite_ver` / `permite_modificar`, usados por el frontend para repintar la celda de centros tras una mutación (asignar / reordenar / eliminar).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadescentro/api/centros_encargados_data.md`
       tags:
@@ -254,9 +254,9 @@ paths:
       operationId: "post_actividadescentro_lista_actividades_ctr_data"
       summary: "Lista Actividades Ctr Data"
       description: |
-        Endpoint backend: devuelve el listado de actividades del tipo + periodo elegidos, junto con los centros encargados de cada una y los flags de permiso (ver / modificar / crear) para cada fila.
+        Builder de la tabla principal de `actividadescentro/activ_ctr`: devuelve las actividades del tipo + periodo elegidos y, para cada una, sus centros encargados y los flags de permiso (modificar / crear centros) que el frontend usa para decidir cómo renderizar cada celda.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadescentro/api/lista_actividades_ctr_data.md`
       tags:
@@ -346,9 +346,12 @@ components:
     actividadescentro_CentrosDisponiblesDataData:
       type: object
       properties:
-        "0":
-          type: array
-          items: {}
+        tipo:
+          type: "string"
+        id_activ:
+          type: "integer"
+        centros:
+          type: "string"
     actividadescentro_CentrosDisponiblesDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"

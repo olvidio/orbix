@@ -66,10 +66,20 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Cama. Datos para frontend/ubiscamas/controller/cama_form.php. La composición de HashFront ocurre en {. Descripcion funcional pendiente de revisar.
+Crear, editar o eliminar camas individuales asociadas a una habitación.
+
+## Errores Documentados
+
+- `ID de cama no proporcionado`
+- `No se encontró la cama a eliminar`
+- `hay un error, no se ha eliminado la cama`
+- `Error al eliminar la cama`
+- `Habitación no válida`
+- `Cama no válida`
+- `Error al guardar la cama`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

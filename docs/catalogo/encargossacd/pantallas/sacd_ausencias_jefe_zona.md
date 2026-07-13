@@ -1,7 +1,7 @@
 ---
 id: "encargossacd.pantalla.sacd_ausencias_jefe_zona"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "encargossacd"
 nombre: "Sacd Ausencias Jefe Zona"
 controller: "frontend/encargossacd/controller/sacd_ausencias_jefe_zona.php"
@@ -11,7 +11,7 @@ endpoints: ["/src/encargossacd/sacd_ausencias_jefe_zona_data"]
 capacidades: ["encargossacd.sacd_ausencias_jefe_zona.gestionar"]
 campos: ["form.filtro_sacd", "form.historial", "form.id_nom"]
 acciones: ["fnjs_horario", "fnjs_lista_sacd", "fnjs_ver_ficha"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Sacd Ausencias Jefe Zona
@@ -20,7 +20,7 @@ Muestra la ficha de ausencias para un jefe de zona / oficial.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/encargossacd/controller/sacd_ausencias_jefe_zona.php`
 
 ## Vistas Relacionadas
@@ -51,13 +51,19 @@ Muestra la ficha de ausencias para un jefe de zona / oficial.
 - `fnjs_lista_sacd`
 - `fnjs_ver_ficha`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** exterior > sacd > Misas > Ausencias
+- **Pills2:** sin entrada de menú en el índice
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** exterior > sacd > Misas > Ausencias
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** exterior > sacd > Misas > Ausencias
+- **Pills2:** sin entrada de menú en el índice
+

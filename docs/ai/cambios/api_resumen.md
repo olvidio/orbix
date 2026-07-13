@@ -63,7 +63,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `cambios.cambio_usuario_propiedad_pref_guardar_todas`
 - Controller: `src/cambios/infrastructure/ui/http/controllers/cambio_usuario_propiedad_pref_guardar_todas.php`
-- Entrada: `post.id_item_usuario_objeto_prop:mixed`, `post.objeto_prop:mixed`
+- Entrada: `post.id_item_usuario_objeto_prop:integer`, `post.objeto_prop:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/cambios/cambio_usuario_propiedad_pref_item_data`

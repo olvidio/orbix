@@ -7,20 +7,26 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/menus/infrastructure/ui/http/controllers/grupmenu_guardar.php"
 entrada: ["post.grupmenu:string", "post.id_grupmenu:integer", "post.orden:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["grupmenu"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: []
+errores: ["No encuentro el grupmenu", "hay un error, no se ha guardado", "debe poner un nombre"]
+frontend_referencias: ["frontend/menus/controller/grupmenu_form.php"]
 casos_uso: []
 tags: ["menus", "grupmenu", "guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Grupmenu Guardar
+# Guardar grupmenu
 
-Descripcion funcional pendiente de revisar.
+Alta o edición de un grupo de menú (nombre + orden).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+- **Alta** (`id_grupmenu` vacío): crea registro con nuevo id.
+- **Edición** (`id_grupmenu` > 0): actualiza nombre (`grupmenu`) y `orden`.
 
 ## Endpoint
 
@@ -33,28 +39,29 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `grupmenu` | `string` | controller | No | controller |
-| `id_grupmenu` | `integer` | controller | No | controller |
-| `orden` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `grupmenu` | `string` | POST | Si | Nombre del grupo |
+| `id_grupmenu` | `integer` | POST | No | Vacío → alta |
+| `orden` | `integer` | POST | No | Orden de visualización |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data: "ok"`, `mensaje` vacío.
+
+## Errores conocidos
+
+- `debe poner un nombre`
+- `No encuentro el grupmenu`
+- `hay un error, no se ha guardado`
+
+## Permisos
+
+- Menú administración usuarios web / grupmenu.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- Lógica inline en controller.
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/menus/controller/grupmenu_form.php`

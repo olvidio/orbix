@@ -4,60 +4,59 @@ tipo: "endpoint"
 modulo: "cambios"
 url: "/src/cambios/cambio_usuario_propiedad_pref_preview"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/cambios/infrastructure/ui/http/controllers/cambio_usuario_propiedad_pref_preview.php"
 entrada: ["post.id_item:integer", "post.id_ubi:array", "post.objeto:string", "post.operador:string", "post.propiedad:string", "post.valor:string", "post.valor_new:string", "post.valor_old:string"]
-entrada_obligatoria: []
+entrada_obligatoria: ["propiedad"]
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "cambios_CambioUsuarioPropiedadPrefPreviewData"
-respuesta_data: ["error:string", "id_item:integer", "objeto:string", "propiedad:string", "condicion:string", "cambio_prop:string"]
 requiere_hashb: false
-frontend_referencias: []
+frontend_referencias: ["frontend/cambios/controller/usuario_avisos_pref.php"]
 casos_uso: ["src\\cambios\\application\\CambioUsuarioPropiedadPrefPreview"]
 tags: ["cambios", "cambio", "usuario", "propiedad", "pref", "preview"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Cambio Usuario Propiedad Pref Preview
 
-Endpoint JSON: construye el texto de preview de la condicion y el array serializado (cambio_prop) sin persistir nada.
+Calcula el texto de preview de una condición sin persistir (operación de lectura/cálculo).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Construye `condicion` (texto legible vía `getTextCambio`) y `cambio_prop` (JSON serializado) a partir
+de los campos del modal. Si `propiedad=id_ubi`, concatena `id_ubi[]` en `valor`.
 
 ## Endpoint
 
 - URL: `/src/cambios/cambio_usuario_propiedad_pref_preview`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/cambios/infrastructure/ui/http/controllers/cambio_usuario_propiedad_pref_preview.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `integer` | controller+application | No | controller+application |
-| `id_ubi` | `array` | controller+application | No | controller+application |
-| `objeto` | `string` | controller+application | No | controller+application |
-| `operador` | `string` | controller+application | No | controller+application |
-| `propiedad` | `string` | controller+application | No | controller+application |
-| `valor` | `string` | controller+application | No | controller+application |
-| `valor_new` | `string` | controller+application | No | controller+application |
-| `valor_old` | `string` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `propiedad` | `string` | controller+application | Sí | Campo vigilado |
+| `objeto` | `string` | controller+application | No | |
+| `id_item` | `integer` | controller+application | No | |
+| `operador` | `string` | controller+application | No | |
+| `valor` | `string` | controller+application | No | Sustituido por `id_ubi[]` si aplica |
+| `valor_old` / `valor_new` | `string` | controller+application | No | Checkboxes del modal |
+| `id_ubi` | `array` | controller+application | No | Solo si `propiedad=id_ubi` |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `cambios_CambioUsuarioPropiedadPrefPreviewData`):
-  - `error` (`string`)
-  - `id_item` (`integer`)
-  - `objeto` (`string`)
-  - `propiedad` (`string`)
-  - `condicion` (`string`)
-  - `cambio_prop` (`string`)
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Payload en `data`:
+  - `id_item`, `objeto`, `propiedad`
+  - `condicion` (`string`): texto de la condición
+  - `cambio_prop` (`string`): JSON con `iid_item`, `spropiedad`, `soperador`, `svalor`, `bvalor_old`, `bvalor_new`
+
+## Permisos
+
+- Sin control propio; invocado desde el modal de condición antes de grabar el conjunto.
 
 ## Casos De Uso
 
@@ -65,10 +64,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/cambios/controller/usuario_avisos_pref.php`: `fnjs_guardar_cond` llama a
+  `url_preview_cond` y actualiza la celda de condición en la tabla de propiedades.

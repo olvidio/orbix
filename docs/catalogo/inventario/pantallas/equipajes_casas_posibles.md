@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.equipajes_casas_posibles"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "fragmento"
 modulo: "inventario"
-nombre: "Equipajes Casas Posibles"
+nombre: "Casas posibles"
 controller: "frontend/inventario/controller/equipajes_casas_posibles.php"
 vistas: []
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_casas_posibles_periodo"]
 capacidades: ["inventario.lista_casas_posibles_periodo.gestionar"]
 campos: ["post.empiezamax", "post.empiezamin", "post.fin", "post.inicio", "post.periodo", "post.year"]
 acciones: ["fnjs_ver_actividades_casa"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Casas Posibles
+# Casas posibles
 
-Descripcion funcional pendiente de revisar.
+Desplegable casas en periodo.
+
 
 ## Tipo
 
@@ -54,11 +55,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Desplegable casas en periodo.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú
+- **Pills2:** —

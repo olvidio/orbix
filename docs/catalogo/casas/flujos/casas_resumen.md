@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["casas.pantalla.casas_resumen_lista"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/casas/casas_resumen_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Casas Resumen
@@ -58,10 +58,8 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** adl > Gestión casas > estadística  por casas
+- **Pills2:** CASAS Y CTR > Gestión casas > estadística  por casas
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Confirmación y ejecución masiva ref→aux por esquema(s). Controller HTTP en `src/menus/`.
 
 ## Uso En Ayuda
 

@@ -4,56 +4,62 @@ tipo: "endpoint"
 modulo: "inventario"
 url: "/src/inventario/lista_docs_de_dlb"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/inventario/infrastructure/ui/http/controllers/lista_docs_de_dlb.php"
 entrada: ["post.id_tipo_doc:integer", "post.inventario:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/inventario/controller/doc_de_dlb.php"]
 casos_uso: []
 tags: ["inventario", "lista", "docs", "de", "dlb"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Lista Docs De Dlb
+# Documentos DLB de un tipo
 
-Descripcion funcional pendiente de revisar.
+Lista documentos DLB/casa de un tipo para inventario o impresión.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Lista documentos DLB/casa de un tipo para inventario o impresión.
 
 ## Endpoint
 
 - URL: `/src/inventario/lista_docs_de_dlb`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/lista_docs_de_dlb.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tipo_doc` | `integer` | controller | No | controller |
-| `inventario` | `integer` | controller | No | controller |
+| `id_tipo_doc` | `integer` | POST | No | |
+| `inventario` | `integer` | POST | No | |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Payload `{a_valores, aGrupos, nombreDoc}`.
+
+## Errores conocidos
+
+- Sin mensajes `_()` documentados en controller.
+
+## Permisos
+
+- Sin control de permisos propio en el controller; autorización de oficina vía frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- Lógica inline en controller (sin `application/`).
 
 ## Frontend Relacionado
 
 - `frontend/inventario/controller/doc_de_dlb.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

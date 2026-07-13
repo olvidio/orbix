@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el listado de actividades (`actividad_select`), seleccionar una actividad CA.
+2. Pulsar la acción **lista clase**.
+3. El sistema carga `lista_clases_ca` y consulta `lista_clases_ca_data`.
+4. Se muestra el informe con director de estudios y tabla por asignatura.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/lista_clases_ca_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaClasesCa. Descripcion funcional pendiente de revisar.
+El usuario consulta, para una actividad CA seleccionada, el listado de clases: por cada asignatura impartida muestra profesor, tipo y alumnos matriculados.
 
 ## Limites De La Respuesta
 

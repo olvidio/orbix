@@ -2,52 +2,33 @@
 id: "dbextern.sincro_baja.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Gestionar Sincro Baja"
+nombre: "Flujo - Baja ficha Aquinate"
 capacidad: "dbextern.sincro_baja.gestionar"
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_desaparecidos_de_listas"]
-acciones: ["ejecutar"]
+acciones: ["baja"]
 endpoints: ["/src/dbextern/sincro_baja"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Sincro Baja
+# Flujo - Baja ficha Aquinate
 
-Propuesta generada automaticamente desde la capacidad `dbextern.sincro_baja.gestionar` y sus pantallas relacionadas.
+Da de baja personas del punto 8 (situación `B`).
 
 ## Objetivo De Usuario
 
-Gestiona BajaPersonaUseCase. Da de baja a una persona (fallecido o traslado a otra región).
+Cerrar la ficha Aquinate cuando la persona ya no está en la BDU.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+**baja** en `ver_desaparecidos_de_listas` (`fnjs_baja`).
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `dbextern.pantalla.ver_desaparecidos_de_listas`
+### Baja
 
-## Escenarios Inferidos
-
-### Ejecutar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.id_nom_orbix`
-- `form.tipo_persona`
-- `post.ids_desaparecidos_de_listas`
-- `post.tipo_persona`
-
-Acciones JavaScript:
-- `fnjs_baja`
-- `fnjs_traslado`
+1. POST `id_nom_orbix`, `tipo_persona`, `dl`.
+2. Usa dominio `Trasladar` con situación `B`.
 
 ## Endpoints Del Flujo
 
@@ -55,11 +36,8 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.``
+- `OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

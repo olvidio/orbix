@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.delegacion_que"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "modal"
 modulo: "ubis"
 nombre: "Delegacion Que"
 controller: "frontend/ubis/controller/delegacion_que.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/delegacion_que_data"]
 capacidades: ["ubis.delegacion_que.gestionar"]
 campos: []
 acciones: ["fnjs_cerrar", "fnjs_cmb_id_dl", "fnjs_trasladar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Delegacion Que
 
-Descripcion funcional pendiente de revisar.
+Modal de selección de delegación destino para trasladar ubis desde list_ctr.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `modal`
+
+
 - Controller: `frontend/ubis/controller/delegacion_que.php`
 
 ## Vistas Relacionadas
@@ -49,13 +51,7 @@ No se han detectado campos de formulario.
 - `fnjs_cmb_id_dl`
 - `fnjs_trasladar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["inventario.pantalla.cabecera_pie_txt", "inventario.pantalla.equipajes_imprimir"]
 acciones: ["ejecutar", "guardar"]
 endpoints: ["/src/inventario/cabecera_pie_txt", "/src/inventario/cabecera_pie_txt_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Cabecera Pie Txt
@@ -17,11 +17,13 @@ Propuesta generada automaticamente desde la capacidad `inventario.cabecera_pie_t
 
 ## Objetivo De Usuario
 
-Gestiona CabeceraPieTxt. Descripcion funcional pendiente de revisar.
+Editar textos globales de cabecera/pie para impresión de equipajes.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `inventario.pantalla.cabecera_pie_txt`
+
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -73,9 +75,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > Inventario > equipajes > tipos de texto
+- **Pills2:** —

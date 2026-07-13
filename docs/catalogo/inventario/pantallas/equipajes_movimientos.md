@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.equipajes_movimientos"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "inventario"
-nombre: "Equipajes Movimientos"
+nombre: "Movimientos maletas — resultado"
 controller: "frontend/inventario/controller/equipajes_movimientos.php"
 vistas: []
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/equipajes_movimientos"]
 capacidades: ["inventario.equipajes_movimientos.gestionar"]
 campos: ["post.sel"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Movimientos
+# Movimientos maletas — resultado
 
-Descripcion funcional pendiente de revisar.
+Muestra entradas/salidas de documentos entre equipajes.
+
 
 ## Tipo
 
@@ -49,11 +50,9 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Muestra entradas/salidas de documentos entre equipajes.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada directa
+- **Pills2:** —

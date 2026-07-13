@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.equipajes_lista_activ_periodo"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "fragmento"
 modulo: "inventario"
-nombre: "Equipajes Lista Activ Periodo"
+nombre: "Actividades por periodo"
 controller: "frontend/inventario/controller/equipajes_lista_activ_periodo.php"
 vistas: ["frontend/inventario/view/equipajes_lista_activ_periodo.phtml"]
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/equipajes_lista_activ_periodo"]
 capacidades: ["inventario.equipajes_lista_activ_periodo.gestionar"]
 campos: ["form.sel", "post.empiezamax", "post.empiezamin", "post.fin", "post.id_cdc", "post.inicio", "post.periodo", "post.year"]
 acciones: ["fnjs_nombrar_equipaje"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Lista Activ Periodo
+# Actividades por periodo
 
-Descripcion funcional pendiente de revisar.
+Tabla actividades filtradas por CDC y periodo.
+
 
 ## Tipo
 
@@ -56,11 +57,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Tabla actividades filtradas por CDC y periodo.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú
+- **Pills2:** —

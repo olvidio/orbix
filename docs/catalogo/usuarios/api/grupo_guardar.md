@@ -6,21 +6,26 @@ url: "/src/usuarios/grupo_guardar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php"
-entrada: ["post.id_usuario:integer", "post.usuario:string"]
-entrada_obligatoria: []
+entrada: ["post.usuario:string", "post.id_usuario:integer"]
+entrada_obligatoria: ["usuario"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: []
 casos_uso: []
 tags: ["usuarios", "grupo", "guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["debe poner un nombre", "Grupo no encontrado", "hay un error, no se ha guardado"]
 ---
 
 # Grupo Guardar
 
-Descripcion funcional pendiente de revisar.
+Crea o actualiza un grupo de permisos (nombre en campo `usuario`, id en `id_usuario`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Crea o actualiza un grupo de permisos (nombre en campo `usuario`, id en `id_usuario`).
 
 ## Endpoint
 
@@ -33,25 +38,28 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_usuario` | `integer` | controller | No | controller |
-| `usuario` | `string` | controller | No | controller |
+| `usuario` | `string` | application | Si | |
+| `id_usuario` | `integer` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacío serializado).
+
+## Errores conocidos
+- `debe poner un nombre`
+- `Grupo no encontrado`
+- `hay un error, no se ha guardado`
+
+## Permisos
+
+Admin id_role≤3 en frontend `grupo_form`.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`[]`).

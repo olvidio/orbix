@@ -6,21 +6,26 @@ url: "/src/usuarios/usuario_grupo_del"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del.php"
-entrada: ["post.ctx:string", "post.id_grupo:integer", "post.id_usuario:integer"]
-entrada_obligatoria: []
+entrada: ["post.ctx:string"]
+entrada_obligatoria: ["ctx"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/usuario_grupo_del_lst.php", "frontend/usuarios/view/usuario_grupo.phtml"]
 casos_uso: []
 tags: ["usuarios", "usuario", "grupo", "del"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Operación no autorizada", "hay un error, no se ha eliminado"]
 ---
 
 # Usuario Grupo Del
 
-Descripcion funcional pendiente de revisar.
+Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).
 
 ## Endpoint
 
@@ -33,27 +38,26 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `ctx` | `string` | controller | No | controller |
-| `id_grupo` | `integer` | controller | No | controller |
-| `id_usuario` | `integer` | controller | No | controller |
+| `ctx` | `string` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacío serializado).
+
+## Errores conocidos
+- `Operación no autorizada`
+- `hay un error, no se ha eliminado`
+
+## Permisos
+
+Admin; ctx firmado.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-- `frontend/usuarios/controller/usuario_grupo_del_lst.php`
-- `frontend/usuarios/view/usuario_grupo.phtml`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/usuarios/controller/usuario_grupo_del_lst.php", "frontend/usuarios/view/usuario_grupo.phtml"]`).

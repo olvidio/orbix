@@ -8,20 +8,22 @@ pantallas_principales: []
 fragmentos: ["actividadplazas.pantalla.peticiones_activ"]
 acciones: ["eliminar", "guardar"]
 endpoints: ["/src/actividadplazas/peticiones_eliminar", "/src/actividadplazas/peticiones_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Peticiones
 
-Propuesta generada automaticamente desde la capacidad `actividadplazas.peticiones.gestionar` y sus pantallas relacionadas.
+Guarda o elimina las peticiones de plaza ordenadas de una persona para un tipo de actividad.
 
 ## Objetivo De Usuario
 
-Gestiona Peticiones. Elimina todas las peticiones de una persona+tipo. Guarda las peticiones de una persona+tipo (borra las anteriores y crea las nuevas en orden).
+Definir (o borrar) la lista priorizada de actividades que una persona solicita como petición de plaza
+para un tipo y colectivo (`n`, `a`, `agd`).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `peticiones_activ`, abierta al seleccionar una persona desde los listados de colectivos
+(n / a / agd). No tiene entrada directa en el menú de plazas.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,24 +31,25 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
+### Guardar
+
+1. En la pantalla de peticiones, ordenar las actividades con los desplegables (`DesplegableArray`).
+2. Añadir filas con **más actividades** (`fnjs_mas_actividades`) si hace falta.
+3. Pulsar el botón de guardar (`fnjs_guardar`): envía `id_nom`, `sactividad` y la lista ordenada a
+   `peticiones_guardar` (borra las anteriores y crea las nuevas en orden).
+4. Si tiene éxito, vuelve atrás (`fnjs_nav_atras`).
+
+Endpoints asociados:
+- `/src/actividadplazas/peticiones_guardar`
+
 ### Eliminar
 
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. En la misma pantalla, pulsar **Borrar** (`fnjs_borrar`).
+2. El sistema elimina todas las peticiones de esa persona+tipo vía `peticiones_eliminar`.
+3. Si tiene éxito, refresca la pantalla (`fnjs_actualizar`).
 
 Endpoints asociados:
 - `/src/actividadplazas/peticiones_eliminar`
-
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -79,13 +82,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``faltan parametros id_nom / sactividad``
-- ``hay un error, no se ha podido eliminar``
-- ``hay un error, no se han guardado todas las peticiones``
+- `faltan parametros id_nom / sactividad`
+- `hay un error, no se ha podido eliminar`
+- `hay un error, no se han guardado todas las peticiones`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- Sin entrada de menú en el índice: se abre desde la selección de una persona (colectivos n / a / agd),
+  no directamente desde un menú.

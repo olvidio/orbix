@@ -11,16 +11,18 @@ endpoints: ["/src/misas/ver_plan_sacd_data"]
 capacidades: ["misas.ver_plan_sacd.gestionar"]
 campos: ["post.empiezamax", "post.empiezamin", "post.id_sacd", "post.periodo"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Ver Plan Sacd
+# Ver plan sacd
 
-Descripcion funcional pendiente de revisar.
+Resultado: lista cronológica de misas del sacerdote (`ver_plan_sacd_data`).
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/misas/controller/ver_plan_sacd.php`
 
 ## Vistas Relacionadas
@@ -50,13 +52,7 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/delegaciones_region_stgr_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Delegaciones Region Stgr
-
-Propuesta generada automaticamente desde la capacidad `ubis.delegaciones_region_stgr.gestionar` y sus pantallas relacionadas.
+# Flujo - Delegaciones Region Stgr
 
 ## Objetivo De Usuario
 
-Gestiona DelegacionesRegionStgr. Delegaciones de una región STGR para desplegables (id_dl => sigla_dl).
+Lista delegaciones de una región STGR para desplegables dependientes.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Se requiere region_stgr`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

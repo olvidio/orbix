@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Renderer frontend del arbol del proceso.
+Fragmento AJAX que renderiza el árbol jerárquico de fases del tipo de proceso seleccionado en `procesos_select`.
 
 ## Uso En Ayuda
 

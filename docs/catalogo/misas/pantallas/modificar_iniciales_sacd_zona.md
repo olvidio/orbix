@@ -1,7 +1,7 @@
 ---
 id: "misas.pantalla.modificar_iniciales_sacd_zona"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "misas"
 nombre: "Modificar Iniciales Sacd Zona"
 controller: "frontend/misas/controller/modificar_iniciales_sacd_zona.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/misas/modificar_iniciales_sacd_zona_data"]
 capacidades: ["misas.modificar_iniciales_sacd_zona.gestionar"]
 campos: ["form.id_zona"]
 acciones: ["fnjs_ver_iniciales_sacd_zona"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Modificar Iniciales Sacd Zona
+# Modificar iniciales sacd zona
 
-Descripcion funcional pendiente de revisar.
+Entry point para editar iniciales y color de sacerdotes por zona. Selector de zona y carga AJAX de `ver_iniciales_zona`.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/misas/controller/modificar_iniciales_sacd_zona.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ Descripcion funcional pendiente de revisar.
 
 - `fnjs_ver_iniciales_sacd_zona`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Misas > Iniciales sacd
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd

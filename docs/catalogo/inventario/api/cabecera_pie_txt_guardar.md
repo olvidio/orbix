@@ -10,17 +10,22 @@ entrada: ["post.cabecera:string", "post.cabeceraB:string", "post.firma:string", 
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: []
+errores: []
+frontend_referencias: ["frontend/inventario/controller/cabecera_pie_txt.php"]
 casos_uso: []
 tags: ["inventario", "cabecera", "pie", "txt", "guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Cabecera Pie Txt Guardar
+# Guardar textos globales cabecera/pie
 
-Descripcion funcional pendiente de revisar.
+Persiste en `cabecera_pie_textos.ini` los textos por defecto de cabecera, cabecera B, firma y pie para impresión de equipajes.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Persiste en `cabecera_pie_textos.ini` los textos por defecto de cabecera, cabecera B, firma y pie para impresión de equipajes.
 
 ## Endpoint
 
@@ -33,29 +38,30 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `cabecera` | `string` | controller | No | controller |
-| `cabeceraB` | `string` | controller | No | controller |
-| `firma` | `string` | controller | No | controller |
-| `pie` | `string` | controller | No | controller |
+| `cabecera` | `string` | POST | No | |
+| `cabeceraB` | `string` | POST | No | |
+| `firma` | `string` | POST | No | |
+| `pie` | `string` | POST | No | |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data: "ok"`. Errores de ConfigMagik en `mensaje` (unidos con `;`).
+
+## Errores conocidos
+
+- Sin mensajes `_()` documentados en controller.
+
+## Permisos
+
+- Sin control de permisos propio en el controller; autorización de oficina vía frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- Lógica inline en controller (sin `application/`).
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/inventario/controller/cabecera_pie_txt.php`

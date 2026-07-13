@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["encargossacd.pantalla.sacd_ficha_ajax"]
 acciones: ["crear_actualizar", "obtener_datos"]
 endpoints: ["/src/encargossacd/sacd_ficha_data", "/src/encargossacd/sacd_ficha_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Sacd Ficha
@@ -21,7 +21,8 @@ Gestiona SacdFicha. Datos para la ficha de encargos de un SACD (sacd_ficha_ajax?
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú: dre > Encargos > ficha sacd.
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -83,9 +84,14 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Encargos > ficha sacd
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
+
+
+## Ruta de menú
+
+- **Legacy:** dre > Encargos > ficha sacd
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
+

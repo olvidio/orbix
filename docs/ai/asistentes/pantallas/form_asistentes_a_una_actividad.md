@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario dossier 3101: alta/edición de asistente en una actividad.
 
 ## Uso En Ayuda
 

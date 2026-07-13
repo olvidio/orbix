@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla unificada para la comunicacion de actividades a los sacd.
+Pantalla unificada para la comunicación de actividades a los sacd. Cubre dos entradas: (1) desde el menú, con formulario de periodo + botones **buscar** / **enviar mail**; y (2) desde `personas_select` con `que=un_sacd` + `sel[]`, que abre la pantalla y auto-dispara la búsqueda sobre el sacd elegido. El listado y el envío se cargan por AJAX contra `comunicacion_activ_sacd_data` y `comunicacion_activ_sacd_enviar`; la configuración inicial (`perm_mod_txt`) viene de `com_sacd_activ_periodo_page_data`.
 
 ## Uso En Ayuda
 

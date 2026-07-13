@@ -11,12 +11,12 @@ endpoints: ["/src/actividadtarifas/tarifa_ubi_copiar", "/src/actividadtarifas/ta
 capacidades: ["actividadtarifas.tarifa_ubi.gestionar"]
 campos: ["form.cantidad", "form.id_item", "form.id_serie", "form.id_tarifa", "form.id_ubi", "form.letra", "form.year", "html.buscar"]
 acciones: ["fnjs_cerrar", "fnjs_copiar_tarifas", "fnjs_guardar", "fnjs_modificar", "fnjs_update_div", "fnjs_ver"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tarifa Ubi
 
-Pantalla principal del modulo `actividadtarifas` - tarifas por casa y año (`TarifaUbi`).
+Tarifas económicas por casa y año (`TarifaUbi`): filtros casa/año, listado AJAX, popup con HashB.
 
 ## Tipo
 
@@ -64,11 +64,15 @@ Pantalla principal del modulo `actividadtarifas` - tarifas por casa y año (`Tar
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Elegir casa y año y pulsar **buscar** (`fnjs_ver`).
+2. En el listado, modificar una tarifa o añadir nueva; copiar desde año anterior usa `ctx_copiar`
+   (cápsula HashB del listado).
+3. El formulario lleva `ctx_update` / `ctx_eliminar`; guardar/eliminar POST a endpoints firmados.
 
-## Revision Manual
+Mutaciones `update`/`eliminar`/`copiar` requieren cápsula `HashB` válida.
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+## Ruta de menú
+
+- **Legacy:** adl > Tarifas > tarifas por casa y año; Calendario/dre/exterior > Nuevo calendario >
+  Tarifas > tarifas por casa y año.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifas por casa y año.

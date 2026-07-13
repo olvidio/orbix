@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "usuarios"
 url: "/src/usuarios/usuario_preferencias"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php"
 entrada: []
 entrada_obligatoria: []
@@ -13,42 +13,58 @@ requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/preferencias.php"]
 casos_uso: []
 tags: ["usuarios", "usuario", "preferencias"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Usuario Preferencias
 
-Descripcion funcional pendiente de revisar.
+Builder pantalla preferencias: layout, inicio, oficina, estilo y opciones según rol/apps.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Builder pantalla preferencias: layout, inicio, oficina, estilo y opciones según rol/apps.
 
 ## Endpoint
 
 - URL: `/src/usuarios/usuario_preferencias`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| _(ninguno)_ | | | | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse` salvo JsonResponse directo):
+  - `layout`: legacy|pills
+  - `inicio`: string
+  - `oficina`: id_grupmenu
+  - `oficinas_posibles`: map
+  - `estilo_color`: string
+  - `tipo_menu`: string
+  - `aOpciones`: páginas inicio
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Cualquier usuario autenticado.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-- `frontend/usuarios/controller/preferencias.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/usuarios/controller/preferencias.php"]`).

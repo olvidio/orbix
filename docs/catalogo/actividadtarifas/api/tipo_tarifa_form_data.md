@@ -15,14 +15,20 @@ requiere_hashb: false
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa_form.php"]
 casos_uso: ["src\\actividadtarifas\\application\\TipoTarifaFormData"]
 tags: ["actividadtarifas", "tipo", "tarifa", "form", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tipo Tarifa Form Data
 
-Endpoint backend: datos del form modificar/nuevo `TipoTarifa`.
+Datos del formulario alta/edición de `TipoTarifa`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Builder del popup de catálogo de tarifas. Alta: `id_tarifa` vacío o ausente → `es_nuevo=true`,
+`id_tarifa='nuevo'`. Edición: carga `letra`, `modo`, `observ` del registro. Incluye
+`opciones_modo` (`TarifaModoId::getArrayModo()`).
 
 ## Endpoint
 
@@ -35,21 +41,16 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tarifa` | `string` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_tarifa` | `string` | application | No | Vacío/`nuevo` = alta; numérico = edición |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Payload en `data` (schema `actividadtarifas_TipoTarifaFormDataData`):
-  - `id_tarifa` (`string`)
-  - `es_nuevo` (`boolean`)
-  - `letra` (`string`)
-  - `modo` (`integer`)
-  - `observ` (`string`)
-  - `opciones_modo` (`array`)
+- Helper: `ContestarJson::enviar` → doble `JSON.parse` en cliente.
+- Payload: `id_tarifa`, `es_nuevo`, `letra`, `modo`, `observ`, `opciones_modo`.
+
+## Permisos
+
+- Sin control propio; formulario accesible según permisos del listado (`puede_anadir` / enlace modificar).
 
 ## Casos De Uso
 
@@ -57,10 +58,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/actividadtarifas/controller/tarifa_form.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/actividadtarifas/controller/tarifa_form.php` → `tarifa_form.phtml`.

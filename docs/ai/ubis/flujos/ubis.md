@@ -66,13 +66,12 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Ubis. Descripcion funcional pendiente de revisar.
+Elimina un ubi (centro o casa) del repositorio correspondiente a obj_pau.
 
 ## Errores Documentados
 
-- `hay un error, no se ha eliminado`
-- `hay un error, no se ha guardado`
 - `no se encuentra el ubi a borrar`
+- `hay un error, no se ha eliminado`
 
 ## Limites De La Respuesta
 

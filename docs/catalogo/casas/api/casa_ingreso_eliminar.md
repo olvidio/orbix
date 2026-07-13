@@ -7,22 +7,26 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/casas/infrastructure/ui/http/controllers/casa_ingreso_eliminar.php"
 entrada: ["post.id_activ:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_activ"]
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "casas_CasaIngresoEliminarData"
-respuesta_data: ["ok:bool, mensaje: string, data: string"]
 requiere_hashb: false
-frontend_referencias: ["frontend/casas/controller/casa.php"]
+errores: ["no sé cuál he de borar", "Ingreso no encontrado", "Hay un error, no se ha eliminado"]
+frontend_referencias: ["frontend/casas/controller/casa.php", "frontend/casas/controller/casa_ingreso_form.php"]
 casos_uso: ["src\\casas\\application\\CasaIngresoEliminar"]
 tags: ["casas", "casa", "ingreso", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Casa Ingreso Eliminar
 
-Endpoint backend: eliminar el Ingreso de una actividad.
+Elimina el `Ingreso` asociado a una actividad.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Sucesor de la rama `que=eliminar` de `apps/casas/controller/casa_ajax.php`. Borra el registro de
+ingreso de la actividad indicada (no modifica la actividad en sí).
 
 ## Endpoint
 
@@ -35,22 +39,23 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `integer` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_activ` | `integer` | controller+application | Sí | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `casas_CasaIngresoEliminarData`):
-  - `ok` (`bool, mensaje: string, data: string`)
+- Helper: `ContestarJson::enviar($mensaje, $data)`.
+- Éxito: `success: true`, `data: ""`.
+- Error: mensaje en `data`.
 
-## Efectos colaterales
+## Errores conocidos
 
-- Use case: eliminar el Ingreso asociado a una actividad.
-- Sucesor de la rama `que=eliminar` de `apps/casas/controller/casa_ajax.php`.
+- `no sé cuál he de borar` (texto legacy conservado)
+- `Ingreso no encontrado`
+- `Hay un error, no se ha eliminado`
+
+## Permisos
+
+- Sin control propio; autorización en frontend + permisos de actividad (`economic`).
 
 ## Casos De Uso
 
@@ -58,10 +63,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/casas/controller/casa.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/casas/controller/casa_ingreso_form.php`: acción de eliminar desde el modal.

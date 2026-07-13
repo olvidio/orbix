@@ -11,7 +11,7 @@ endpoints: ["/src/encargossacd/sacd_ausencias_get_data"]
 capacidades: ["encargossacd.sacd_ausencias_get.gestionar"]
 campos: ["form.fin", "form.id_enc", "form.id_item", "form.inicio", "html.ok", "post.filtro_sacd", "post.historial", "post.id_nom"]
 acciones: ["fnjs_date_fin", "fnjs_guardar", "fnjs_horario", "fnjs_mas_enc", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Sacd Ausencias Get
@@ -59,13 +59,19 @@ Muestra las ausencias de un SACD.
 - `fnjs_mas_enc`
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+

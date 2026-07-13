@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.ubis_editar"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/ubis_editar_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ubis Editar
-
-Propuesta generada automaticamente desde la capacidad `ubis.ubis_editar.gestionar` y sus pantallas relacionadas.
+# Flujo - Ubis Editar
 
 ## Objetivo De Usuario
 
-Gestiona UbisEditarOpciones. Opciones de desplegables para frontend/ubis/controller/ubis_editar.php.
+Devuelve desplegables dependientes para el formulario de edición de ubi.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -75,11 +73,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

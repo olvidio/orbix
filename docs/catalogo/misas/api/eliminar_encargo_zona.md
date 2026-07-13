@@ -7,20 +7,27 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/eliminar_encargo_zona.php"
 entrada: ["post.id_enc:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_enc"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/ver_encargos_zona.php"]
 casos_uso: ["src\\misas\\application\\EliminarEncargoZona"]
 tags: ["misas", "eliminar", "encargo", "zona"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["No se encuentra el encargo %d", "<repositorio getErrorTxt()>"]
 ---
 
-# Eliminar Encargo Zona
+# Eliminar encargo zona
 
-Elimina un `Encargo` por id. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+Elimina un Encargo de zona (grupo ZONAS_MISAS) por id_enc.
+
+Linaje: Slice 4 — rama borrar de apps/misas/controller/update_encargos_zona.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Elimina un Encargo de zona (grupo ZONAS_MISAS) por id_enc.
 
 ## Endpoint
 
@@ -33,17 +40,22 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_enc` | `integer` | controller | No | controller |
+| `id_enc` | `integer` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `id_enc`: integer
 
-## Efectos colaterales
+## Errores conocidos
+- `No se encuentra el encargo %d`
+- `<repositorio getErrorTxt()>`
 
-- Elimina un `Encargo` por id.
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -51,10 +63,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/ver_encargos_zona.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/ver_encargos_zona.php"]`).

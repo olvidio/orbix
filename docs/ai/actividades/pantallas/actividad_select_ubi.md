@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "actividades"
-titulo: "Actividad Select Ubi"
+titulo: "Seleccionar lugar (popup)"
 pantalla: "actividades.pantalla.actividad_select_ubi"
-preguntas: ["Que se puede hacer en Actividad Select Ubi?", "Que campos tiene Actividad Select Ubi?", "Que acciones hay en Actividad Select Ubi?"]
+preguntas: ["Que se puede hacer en Seleccionar lugar (popup)?", "Que campos tiene Seleccionar lugar (popup)?", "Que acciones hay en Seleccionar lugar (popup)?"]
 capacidades: ["actividades.actividad_select_ubi_desplegable.gestionar", "actividades.actividad_tipo.gestionar"]
 endpoints: ["/src/actividades/actividad_select_ubi_desplegable", "/src/actividades/actividad_tipo_get"]
 source: "docs/catalogo/actividades/pantallas/actividad_select_ubi.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Actividad Select Ubi
+# Ayuda IA Pantalla - Seleccionar lugar (popup)
 
 ## Resumen
 
-Controlador frontend de la pantalla "seleccionar lugar para una actividad".
+Ventana auxiliar para **elegir ubicación** de una actividad. Cinco modos: historial reciente, región, búsqueda por nombre (enlace a `ubis_lista.php`), lugar especial o *por determinar*. Los desplegables dinámicos cargan vía `actividad_select_ubi_desplegable`; la cascada país/dl usa `actividad_tipo_get` (`salida=lugar`). Al aceptar, devuelve `id_ubi` y texto al `window.opener` (ficha `actividad_ver`, planning, etc.).
 
 ## Uso En Ayuda
 

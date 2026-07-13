@@ -11,12 +11,12 @@ endpoints: ["/src/ubis/delegaciones_region_stgr_data"]
 capacidades: []
 campos: ["form.dl", "post.dl", "post.filtro"]
 acciones: ["fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Resumen Anual
 
-Descripcion funcional pendiente de revisar.
+Resúmenes estadísticos anuales (legacy `Resumen`).
 
 ## Tipo
 
@@ -54,13 +54,11 @@ No se han detectado capacidades relacionadas.
 
 - `fnjs_update_div`
 
+## Ruta de menú
+
+- **Legacy:** vest > actas... > resúmenes
+- **Pills2:** vest > actas... > resúmenes
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

@@ -7,20 +7,27 @@ metodos: ["GET", "POST"]
 operacion: "form_data"
 controller: "src/cambios/infrastructure/ui/http/controllers/usuario_avisos_pref_form_data.php"
 entrada: ["post.id_item_usuario_objeto:integer", "post.id_usuario:integer", "post.quien:string", "post.salida:string", "post.sel:array"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_usuario"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/cambios/controller/usuario_avisos_pref.php"]
 casos_uso: ["src\\cambios\\application\\UsuarioAvisosPrefFormData"]
 tags: ["cambios", "usuario", "avisos", "pref", "form", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Usuario Avisos Pref Form Data
 
-Endpoint JSON que devuelve la informacion necesaria para pintar el formulario `usuario_avisos_pref` (edicion de un aviso de usuario/grupo).
+Bootstrap del formulario `usuario_avisos_pref` (configurar aviso para usuario o grupo).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Con `salida=nuevo` inicializa valores por defecto; con `salida=modificar` carga el
+`CambioUsuarioObjetoPref` existente. Resuelve usuario vs grupo (`id_usuario` que empieza por `4` =
+usuario, si no = grupo). Emite opciones de objetos, tipos de aviso, fases/estados, casas, flags de
+permiso y especificaciones `hash_*`/`paths` para los sub-endpoints AJAX.
 
 ## Endpoint
 
@@ -33,24 +40,29 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item_usuario_objeto` | `integer` | controller+application | No | controller+application |
-| `id_usuario` | `integer` | controller+application | No | controller+application |
-| `quien` | `string` | controller+application | No | controller+application |
-| `salida` | `string` | controller+application | No | controller+application |
-| `sel` | `array` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_usuario` | `integer` | controller+application | Sí | Usuario o grupo |
+| `salida` | `string` | controller+application | No | `nuevo` / `modificar` |
+| `id_item_usuario_objeto` | `integer` | controller+application | No | Obligatorio en `modificar` |
+| `quien` | `string` | controller+application | No | Contexto del llamador |
+| `sel` | `array` | controller | No | Alternativa para extraer ids |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Payload amplio: `nombre`, `grupo`, `aObjetos`, `aTiposAviso`, `aFases`, `aOpcionesCasas`,
+  preselección (`objeto`, `id_tipo_activ`, `aviso_tipo`, flags `aviso_*`), `perm_jefe`,
+  `hash_main`, `paths`, `hash_ajax_fases`, `hash_ajax_propiedades`, `hash_ajax_mod`.
+
+## Errores conocidos
+
+- `falta id_usuario`
+- `usuario/grupo no encontrado`
+- `preferencia no encontrada`
 
 ## Permisos
 
-- Permiso oficina `des`
-- Permiso oficina `vcsd`
-- Permiso oficina `calendario`
+- `perm_jefe` según: `is_jefeCalendario()`, permisos oficina `des`/`vcsd` (sv), rol `PAU_CDC`/`PAU_SACD`,
+  permiso oficina `calendario`. Sin bloqueo duro en el caso de uso.
 
 ## Casos De Uso
 
@@ -58,10 +70,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/cambios/controller/usuario_avisos_pref.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/cambios/controller/usuario_avisos_pref.php`: carga inicial;
+  `UsuarioAvisosPrefFormRender::enrich` resuelve URLs absolutas.

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Edición de metadatos de un certificado recibido existente.
 
 ## Uso En Ayuda
 

@@ -11,12 +11,12 @@ endpoints: ["/src/notas/informe_stgr_n_data"]
 capacidades: ["notas.informe_stgr_n.gestionar"]
 campos: ["post.dl", "post.lista"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Informe Stgr N
 
-Informe anual STGR - Numerarios (puntos 1..18 + `x`).
+Informe anual de numerarios.
 
 ## Tipo
 
@@ -48,13 +48,11 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** ESTUDIOS > Datos e informes > Informe anual n > Con números / Con listados
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

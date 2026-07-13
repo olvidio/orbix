@@ -7,21 +7,26 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/procesos_clonar.php"
 entrada: ["post.id_tipo_proceso:integer", "post.id_tipo_proceso_ref:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_tipo_proceso", "id_tipo_proceso_ref"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["no se ha indicado el proceso a clonar"]
 frontend_referencias: ["frontend/procesos/controller/procesos_select.php"]
 casos_uso: ["src\\procesos\\application\\ProcesosClonar"]
 tags: ["procesos", "clonar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Procesos Clonar
 
-Caso de uso: clona las tareas de un proceso de referencia al proceso indicado.
+Clona las tareas de un proceso de referencia al proceso indicado.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Elimina todas las `tareas_proceso` del proceso destino (`id_tipo_proceso`) y copia las del proceso
+referencia (`id_tipo_proceso_ref`), asignando nuevos `id_item`.
 
 ## Endpoint
 
@@ -34,10 +39,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tipo_proceso` | `integer` | application | No | application |
-| `id_tipo_proceso_ref` | `integer` | application | No | application |
+| `id_tipo_proceso` | `integer` | application | Si | Proceso destino (> 0) |
+| `id_tipo_proceso_ref` | `integer` | application | Si | Proceso origen a copiar (> 0) |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+El controller pasa `$_POST` completo al caso de uso.
 
 ## Salida
 
@@ -49,16 +54,14 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - `no se ha indicado el proceso a clonar`
 
+## Permisos
+
+- Sin control de permisos propio; autorización en `procesos_select.php` y `$_SESSION['oPerm']`.
+
 ## Casos De Uso
 
 - `src\procesos\application\ProcesosClonar`
 
 ## Frontend Relacionado
 
-- `frontend/procesos/controller/procesos_select.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/procesos/controller/procesos_select.php` (URL emitida como `url_clonar`)

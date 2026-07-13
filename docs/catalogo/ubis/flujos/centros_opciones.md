@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/centros_opciones_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Centros Opciones
-
-Propuesta generada automaticamente desde la capacidad `ubis.centros_opciones.gestionar` y sus pantallas relacionadas.
+# Flujo - Centros Opciones
 
 ## Objetivo De Usuario
 
-Gestiona CentrosOpciones. Devuelve el payload (solo datos) para poblar el <select> de centros en frontend\shared\web\CentrosQue. Sustituye el acceso directo desde CentrosQue al repositorio CentroDlRepositoryInterface (separación frontend ↔ backend, ver refactor.md).
+Devuelve opciones de centros filtradas para desplegables compartidos del frontend.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

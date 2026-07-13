@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Dialogo "buscar actividad" que abre `form_notas_de_una_persona.phtml` al pulsar "añadir ca".
+Búsqueda de actividad CA para vincular al acta (popup en `acta_ver`).
 
 ## Uso En Ayuda
 

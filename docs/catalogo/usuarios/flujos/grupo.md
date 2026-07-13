@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["usuarios.pantalla.grupo_lista"]
 acciones: ["eliminar", "guardar", "listar"]
 endpoints: ["/src/usuarios/grupo_eliminar", "/src/usuarios/grupo_guardar", "/src/usuarios/grupo_lista"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Grupo
-
-Propuesta generada automaticamente desde la capacidad `usuarios.grupo.gestionar` y sus pantallas relacionadas.
+# Flujo - Grupo
 
 ## Objetivo De Usuario
 
-Gestiona GruposLista. Descripcion funcional pendiente de revisar.
+Administración de grupos de permisos: listar, alta/edición y borrado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: sistema > usuarios web > grupos. Pills2: ADMIN LOCAL > usuarios web > grupos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -89,11 +87,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Grupo no encontrado`
+- `hay un error, no se ha eliminado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > usuarios web > grupos
+- **Pills2:** ADMIN LOCAL > usuarios web > grupos

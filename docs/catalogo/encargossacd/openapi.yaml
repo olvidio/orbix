@@ -54,7 +54,7 @@ paths:
       description: |
         Datos de la pantalla `ctr_ficha`: - calcula el `filtro_ctr` efectivo a partir del centro (cuando no viene del POST) - devuelve las `opciones_seccion` para el desplegable de grupo de ctrs. Reemplaza la lectura directa de repos y el acceso a `EncargoAplicacionService` que el frontend hacia en `ctr_ficha.php`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/ctr_ficha_data.md`
       tags:
@@ -160,7 +160,7 @@ paths:
       description: |
         Lectura de la ficha de atencion sacerdotal de un centro. Puerto del antiguo `frontend/encargossacd/controller/ctr_get_ficha.php`. Devuelve arrays planos/estructurados para que el controlador frontend arme `frontend\shared\web\Desplegable` y la HTML sin instanciar nada de `src\`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/ctr_get_ficha_data.md`
       tags:
@@ -196,7 +196,7 @@ paths:
       description: |
         Payload JSON para el desplegable de centros segun filtro (y zona opcional). Devuelve el contrato estandar definido en `refactor.md` (`id`, `name`, `opciones`, `selected`, `blanco`, `val_blanco`, `action`) para que el frontend monte el `<select>` con `fnjs_construir_desplegable` (o el modelo `frontend/encargossacd/model/DesplCentros`). Importante: esta clase vive en capa `application` y por tanto **no** puede instanciar `frontend\shared\web\Desplegable` (ver `refactor.md`).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/ctr_get_select_data.md`
       tags:
@@ -234,7 +234,7 @@ paths:
       description: |
         Datos para la lista de horarios de un encargo (`encargo_horario_select`). Se devuelven ya precalculados el texto descriptivo del horario y las fechas formateadas para que el frontend solo arme `frontend\shared\web\Lista`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/encargo_horario_select_data.md`
       tags:
@@ -268,7 +268,7 @@ paths:
       description: |
         Payload de desplegable de tipos de encargo filtrados por prefijo de grupo (`id_tipo_enc ~ ^grupo`).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/encargo_lst_tipo_enc_data.md`
       tags:
@@ -304,7 +304,7 @@ paths:
       description: |
         Datos para la lista de encargos (`encargo_select`). El frontend construye la `frontend\shared\web\Lista` y los enlaces; aqui devolvemos unicamente los datos planos de cada fila.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/encargo_select_data.md`
       tags:
@@ -340,7 +340,7 @@ paths:
       description: |
         Datos para la pantalla `encargo_ver` (nuevo / editar encargo). El frontend arma los `frontend\shared\web\Desplegable` a partir de los arrays devueltos.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/encargo_ver_data.md`
       tags:
@@ -559,7 +559,7 @@ paths:
       description: |
         Datos del formulario horario sacd (ficha tareas).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/horario_sacd_ver_data.md`
       tags:
@@ -634,7 +634,7 @@ paths:
       description: |
         Datos del formulario de horario de encargo (no sacd).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/horario_ver_data.md`
       tags:
@@ -672,7 +672,7 @@ paths:
       description: |
         Genera el listado de atencion SACD "a" (cr 9/05, Anexo2, 9.4 a). Sustituye la logica que habia en `frontend/encargossacd/controller/listas_a.php`. Devuelve el HTML completo junto con los textos de cabecera, listos para inyectarlos en la vista `listas.phtml`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/listas_a_data.md`
       tags:
@@ -706,7 +706,7 @@ paths:
       description: |
         Genera el listado de atencion SACD "b" (cr 9/05, Anexo2, 9.4 b). Sustituye la logica de `frontend/encargossacd/controller/listas_b.php`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/listas_b_data.md`
       tags:
@@ -740,7 +740,7 @@ paths:
       description: |
         Genera el listado de atencion SACD "c" (cr 9/05, Anexo2, 9.4 c). Sustituye la logica de `frontend/encargossacd/controller/listas_c.php`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/listas_c_data.md`
       tags:
@@ -775,7 +775,7 @@ paths:
       description: |
         Listado de cl para cr, restringido a los centros de la sss+. Sustituye la logica de `frontend/encargossacd/controller/listas_cl.php` (era una plantilla con SQL crudo). Devuelve el HTML completo listo para volcarlo al cliente; el frontend se limita a pasar `sf` y a echo del resultado.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/listas_cl_data.md`
       tags:
@@ -810,7 +810,7 @@ paths:
       description: |
         Datos para la comunicacion a los centros. Sustituye la logica de `frontend/encargossacd/controller/listas_com_ctr.php`. El modelo de salida replica el consumido por la vista `listas_com_ctr.phtml`: - `array_atn_sacd[nombre_ubi]` con titular, suplente, colaboradores y el texto de comunicacion traducido al idioma del idioma actual. - `origen_txt` cabecera de emisor y `lugar_fecha` pie.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/listas_com_ctr_data.md`
       tags:
@@ -844,7 +844,7 @@ paths:
       description: |
         Datos para la comunicacion a los SACD. Sustituye la logica de `frontend/encargossacd/controller/listas_com_sacd.php`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/listas_com_sacd_data.md`
       tags:
@@ -878,7 +878,7 @@ paths:
       description: |
         Datos para la pantalla de textos de comunicacion (`frontend/encargossacd/controller/listas_com_txt.php`). Devuelve las opciones de idiomas configurados y el texto inicial correspondiente a la clave/idioma por defecto (`com_sacd` / `es`).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/listas_com_txt_data.md`
       tags:
@@ -913,7 +913,7 @@ paths:
       description: |
         Lectura del texto de comunicacion para un par (clave, idioma). Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/listas_com_txt_get.md`
       tags:
@@ -987,7 +987,7 @@ paths:
       description: |
         Genera el listado "d" de atencion SACD (cr 9/20, 10). Sustituye la logica de `frontend/encargossacd/controller/listas_d.php`. La vista original devolvia dos tablas HTML sueltas (cabecera + listado); aqui se componen ambas en `Html` para que el frontend solo tenga que volcarlas al cliente.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/listas_d_data.md`
       tags:
@@ -1021,7 +1021,7 @@ paths:
       description: |
         Listado de exigencias SACD por centro/iglesia. Sustituye la logica de `frontend/encargossacd/controller/listas_exigencia_ctr.php`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/listas_exigencia_ctr_data.md`
       tags:
@@ -1057,7 +1057,7 @@ paths:
       description: |
         Datos para la ficha de ausencias de un SACD (`frontend/encargossacd/controller/sacd_ausencias_get.php`). Devuelve la lista de tipos de ausencia disponibles (encargos con prefijo 7/4) y las filas asociadas al SACD. Con `historial=1` incluye todas las ausencias; sin historial solo muestra las que aun tienen vigencia.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/sacd_ausencias_get_data.md`
       tags:
@@ -1093,7 +1093,7 @@ paths:
       description: |
         Datos para el listado de SACDs susceptibles de gestionar ausencias desde la ficha de jefe de zona (`frontend/encargossacd/controller/sacd_ausencias_jefe_zona.php`). Recopila los SACDs de la(s) zona(s) del jefe y, cuando corresponde (Oficial_dl o jefe de calendario), la totalidad de SACDs activos. El array se devuelve ordenado por iniciales para alimentar el desplegable.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/sacd_ausencias_jefe_zona_data.md`
       tags:
@@ -1163,7 +1163,7 @@ paths:
       description: |
         Datos para la ficha de encargos de un SACD (`sacd_ficha_ajax?que=ficha`).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/sacd_ficha_data.md`
       tags:
@@ -1245,7 +1245,7 @@ paths:
       description: |
         Opciones para el desplegable de SACDs filtrados por tabla (`sacd_ficha_ajax?que=get_select`).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/sacd_select_data.md`
       tags:
@@ -1281,7 +1281,7 @@ paths:
       description: |
         Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en `refactor.md`, sin instanciar `frontend\shared\web\Desplegable` (responsabilidad exclusiva del frontend).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/encargossacd/api/zonas_get_select_data.md`
       tags:

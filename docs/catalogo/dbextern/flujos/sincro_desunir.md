@@ -2,51 +2,33 @@
 id: "dbextern.sincro_desunir.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Gestionar Sincro Desunir"
+nombre: "Flujo - Desunir vínculo BDU"
 capacidad: "dbextern.sincro_desunir.gestionar"
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_desaparecidos_de_orbix"]
-acciones: ["ejecutar"]
+acciones: ["desunir"]
 endpoints: ["/src/dbextern/sincro_desunir"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Sincro Desunir
+# Flujo - Desunir vínculo BDU
 
-Propuesta generada automaticamente desde la capacidad `dbextern.sincro_desunir.gestionar` y sus pantallas relacionadas.
+Elimina `id_match` para personas del punto 3.
 
 ## Objetivo De Usuario
 
-Gestiona DesunirPersonaUseCase. Descripcion funcional pendiente de revisar.
+Romper el vínculo incorrecto para poder re-unir o crear la ficha después.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+**desunir** en `ver_desaparecidos_de_orbix` (`fnjs_desunir`).
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `dbextern.pantalla.ver_desaparecidos_de_orbix`
+### Desunir
 
-## Escenarios Inferidos
-
-### Ejecutar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.id_nom_listas`
-- `form.tipo_persona`
-- `post.ids_desaparecidos_de_orbix`
-- `post.tipo_persona`
-
-Acciones JavaScript:
-- `fnjs_desunir`
+1. POST `id_nom_listas`, `tipo_persona`.
+2. Fila tachada si éxito.
 
 ## Endpoints Del Flujo
 
@@ -54,12 +36,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``hay un error, no se ha eliminado``
-- ``no se encontró el registro a desunir``
+- `no se encontró el registro a desunir`
+- `hay un error, no se ha eliminado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Informe anual STGR - Profesores (puntos 36..47).
+Informe anual del claustro/docencia.
 
 ## Uso En Ayuda
 

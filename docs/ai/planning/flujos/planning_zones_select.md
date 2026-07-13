@@ -2,47 +2,40 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "planning"
-titulo: "Planning Zones Select"
+titulo: "Planning por zonas SACD (calendario)"
 flujo: "planning.planning_zones_select.gestionar.flujo"
-preguntas: ["Como obtener datos en Planning Zones Select?"]
-pantallas_principales: []
+preguntas: []
+pantallas_principales: ["planning.pantalla.planning_zones_que"]
 fragmentos: ["planning.pantalla.planning_zones_select"]
 endpoints: ["/src/planning/planning_zones_select_data"]
 source: "docs/catalogo/planning/flujos/planning_zones_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Planning Zones Select
+# Ayuda IA - Planning por zonas SACD (calendario)
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Planning Zones Select`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Planning por zonas SACD (calendario)`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Planning Zones Select?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Planning por zonas SACD (filtros) (`planning.pantalla.planning_zones_que`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
+- `planning.pantalla.planning_zones_que`
 - `planning.pantalla.planning_zones_select`
 
 ## Objetivo
 
-Gestiona PlanningZonesSelect. Dataset para {.
+Visualizar y exportar el planning por zonas en el trimestre elegido.
 
 ## Limites De La Respuesta
 

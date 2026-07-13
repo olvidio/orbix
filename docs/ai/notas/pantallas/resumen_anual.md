@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Resúmenes estadísticos anuales (legacy `Resumen`).
 
 ## Uso En Ayuda
 

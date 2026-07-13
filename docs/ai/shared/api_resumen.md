@@ -28,14 +28,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `shared.tablaDB_depende_datos`
 - Controller: `src/shared/infrastructure/ui/http/controllers/tablaDB_depende_datos.php`
-- Entrada: `post.clase_info:string`, `post.opcion_sel:string`, `post.pKeyRepository:string`, `post.valor_depende:string`
+- Entrada: `post.accion:string`, `post.clase_info:string`, `post.opcion_sel:string`, `post.pKeyRepository:string`, `post.valor_depende:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/shared/tablaDB_formulario_datos`
 
 - Id: `shared.tablaDB_formulario_datos`
 - Controller: `src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php`
-- Entrada: `post.a_pkey:mixed`, `post.clase_info:mixed`, `post.mod:mixed`, `post.obj_pau:mixed`
+- Entrada: `post.a_pkey:mixed`, `post.clase_info:string`, `post.mod:string`, `post.obj_pau:mixed`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/shared/tablaDB_lista_datos`

@@ -8,56 +8,36 @@ pantallas_principales: []
 fragmentos: ["dossiers.pantalla.perm_dossier_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/dossiers/perm_dossier_ver_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Perm Dossier Ver
-
-Propuesta generada automaticamente desde la capacidad `dossiers.perm_dossier_ver.gestionar` y sus pantallas relacionadas.
+# Flujo - Perm Dossier Ver
 
 ## Objetivo De Usuario
 
-Gestiona PermDossierVer. Formulario "permisos de acceso" para un tipo de dossier. El backend devuelve sólo datos: - go_to_link_spec ({path, query}) para que el frontend firme con HashFront. - hash_config (campos_form, campos_no, campos_hidden) para que el frontend componga el bloque hidden con HashFront; el valor de go_to dentro de campos_hidden se inyecta firmado en el borde del frontend. - permiso_dossier_bit_map + enteros permiso_lectura / permiso_escritura; el HTML de checkboxes lo genera el controlador frontend con {.
+Consultar o modificar la definición y máscaras de permiso de un `TipoDossier` concreto; volver al listado tras guardar o eliminar.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: sistema > perm_dossiers > ubis · sistema > perm_dossiers > personas · sistema > perm_dossiers > actividades. Pills2: ADMIN LOCAL > perm_dossiers > ubis · ADMIN LOCAL > perm_dossiers > personas · ADMIN LOCAL > perm_dossiers > actividades.
+
+## Escenarios
+
+### Consultar permisos de un tipo
+
+1. Llega `tipo` + `id_tipo_dossier` desde el listado.
+2. `perm_dossier_ver_data` devuelve metadatos, máscaras y `permiso_dossier_bit_map`.
+3. Si el usuario no es `admin_sv`/`admin_sf`, el formulario es solo lectura (`botones=0`).
+
+### Guardar o eliminar (admin)
+
+1. Con `perm_admin`, aparecen botones guardar/eliminar.
+2. Guardar: POST `tipo_dossier_guardar` con campos del formulario y arrays `Permiso_lectura[]`/`Permiso_escritura[]`.
+3. Eliminar: confirmación con `txt_eliminar`, POST `tipo_dossier_eliminar`, vuelta al listado con `go_to`.
 
 ## Fragmentos O Pantallas Auxiliares
 
 - `dossiers.pantalla.perm_dossier_ver`
-
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `html.app`
-- `html.campo_to`
-- `html.class`
-- `html.codigo`
-- `html.depende_modificar`
-- `html.descripcion`
-- `html.id_tipo_dossier`
-- `html.id_tipo_dossier_rel`
-- `html.que`
-- `html.tabla_from`
-- `html.tabla_to`
-- `post.id_tipo_dossier`
-- `post.tipo`
-
-Acciones JavaScript:
-- `fnjs_eliminar`
-- `fnjs_guardar`
-- `fnjs_update_div`
 
 ## Endpoints Del Flujo
 
@@ -65,11 +45,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No se encuentra el dossier: <id>`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > perm_dossiers > ubis · sistema > perm_dossiers > personas · sistema > perm_dossiers > actividades
+- **Pills2:** ADMIN LOCAL > perm_dossiers > ubis · ADMIN LOCAL > perm_dossiers > personas · ADMIN LOCAL > perm_dossiers > actividades

@@ -11,7 +11,7 @@ endpoints: ["/src/casas/casas_resumen_data"]
 capacidades: ["casas.casas_resumen.gestionar"]
 campos: ["post.cdc_sel", "post.empiezamax", "post.empiezamin", "post.id_cdc", "post.periodo", "post.que", "post.year"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Casas Resumen Lista
@@ -56,10 +56,8 @@ No se han detectado acciones.
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** adl > Gestión casas > estadística  por casas
+- **Pills2:** CASAS Y CTR > Gestión casas > estadística  por casas
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

@@ -84,7 +84,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `procesos.procesos_depende`
 - Controller: `src/procesos/infrastructure/ui/http/controllers/procesos_depende.php`
-- Entrada: `post.acc:string`, `post.valor_depende:integer`
+- Entrada: `post.acc:string`, `post.valor_depende:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/procesos/procesos_eliminar`

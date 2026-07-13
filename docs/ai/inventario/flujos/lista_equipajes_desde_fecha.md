@@ -44,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaEquipajesDesdeFecha. Descripcion funcional pendiente de revisar.
+Gestiona ListaEquipajesDesdeFecha. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Limites De La Respuesta
 

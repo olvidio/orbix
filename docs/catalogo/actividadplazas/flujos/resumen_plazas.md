@@ -8,20 +8,22 @@ pantallas_principales: []
 fragmentos: ["actividadplazas.pantalla.resumen_plazas"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadplazas/resumen_plazas_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Resumen Plazas
 
-Propuesta generada automaticamente desde la capacidad `actividadplazas.resumen_plazas.gestionar` y sus pantallas relacionadas.
+Consulta el desglose de plazas de una actividad por delegación (calendario, cedidas, conseguidas,
+disponibles, ocupadas y libres) y prepara el formulario de cesión.
 
 ## Objetivo De Usuario
 
-Gestiona ResumenPlazas. Datos del resumen de plazas por actividad (calendario/cedidas/conseguidas/disponibles/ocupadas por dl) + opciones del desplegable para "ceder" y flags publicado/otra_dl.
+Ver el estado completo de plazas de una actividad (por dl y totales), comprobar avisos de publicación
+o visibilidad, y acceder al formulario para ceder plazas a otra delegación.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú «Plazas» de una actividad concreta: abre `resumen_plazas` con `id_activ` (y contexto `sel`).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +33,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Desde una actividad, abrir la opción de plazas/resumen.
+2. El sistema carga `resumen_plazas_data` con el desglose por delegación y totales.
+3. Muestra avisos si la actividad no está publicada o si solo se ven las ocupadas por la propia dl
+   (`otra_dl`).
+4. Pinta la tabla (calendario, cedidas, conseguidas, disponibles, ocupadas, libres) y el desplegable
+   de delegaciones para el bloque **Ceder** (flujo `plazas_ceder`).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadplazas/resumen_plazas_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -61,11 +67,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+No se han documentado errores en la capacidad (el builder devuelve el payload o falla en el controller).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- Sin entrada de menú en el índice: se abre desde una actividad concreta (menú «Plazas» de la
+  actividad), no directamente desde un menú.

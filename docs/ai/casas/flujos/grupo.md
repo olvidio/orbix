@@ -83,12 +83,12 @@ Gestiona GrupoCasa. Crea o actualiza un GrupoCasa. Datos del formulario GrupoCas
 
 ## Errores Documentados
 
-- `Hay un error, no se ha eliminado.`
-- `Hay un error, no se ha guardado.`
-- `No puede ser la misma casa`
-- `debe indicar el grupo a eliminar`
 - `debe indicar las dos casas`
+- `No puede ser la misma casa`
 - `no se encuentra el grupo`
+- `debe indicar el grupo a eliminar`
+- `Hay un error, no se ha guardado.`
+- `Hay un error, no se ha eliminado.`
 
 ## Limites De La Respuesta
 

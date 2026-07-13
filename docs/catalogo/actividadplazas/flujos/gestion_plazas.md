@@ -8,20 +8,23 @@ pantallas_principales: []
 fragmentos: ["actividadplazas.pantalla.gestion_plazas", "actividadplazas.pantalla.plazas_balance_dl"]
 acciones: ["crear_actualizar", "obtener_datos"]
 endpoints: ["/src/actividadplazas/gestion_plazas_data", "/src/actividadplazas/gestion_plazas_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Gestion Plazas
 
-Propuesta generada automaticamente desde la capacidad `actividadplazas.gestion_plazas.gestionar` y sus pantallas relacionadas.
+Distribuir plazas entre las delegaciones del grupo de estudios: consultar el cuadro de plazas del
+periodo y editar totales, concedidas o pedidas por celda.
 
 ## Objetivo De Usuario
 
-Gestiona GestionPlazas. Actualiza las plazas (totales, concedidas o pedidas) desde la edicion inline de frontend\shared\web\TablaEditable. Devuelve los datos del cuadro de gestion de plazas (cabeceras, valores, a_grupo y metadatos de periodo/tipo) para que el controller frontend monte el frontend\shared\web\TablaEditable.
+Ver, para un periodo y tipo de actividad, cuántas plazas tiene cada actividad y cómo se reparten
+(concedidas/pedidas) entre las delegaciones del grupo, y ajustar esos valores desde la propia tabla.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú de plazas → **Gestión de plazas** (ver "Ruta de menú"). Se abre la pantalla
+`actividadplazas.pantalla.gestion_plazas`.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,24 +33,23 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
+### Obtener Datos
+
+1. Elegir el periodo (año + periodo, o rango de fechas) y pulsar **Buscar**.
+2. El sistema carga el cuadro desde `gestion_plazas_data` (actividades × delegaciones).
+
+Endpoints asociados:
+- `/src/actividadplazas/gestion_plazas_data`
+
 ### Crear Actualizar
 
-Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Localizar la actividad en la tabla.
+2. Doble clic en una celda editable (total, concedidas `-c` o pedidas `-p` de mi delegación).
+3. Escribir el nuevo valor; se guarda al instante vía `gestion_plazas_update`.
+4. Si la actividad no tiene plazas en el calendario común, se muestra el aviso para darlas de alta antes.
 
 Endpoints asociados:
 - `/src/actividadplazas/gestion_plazas_update`
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -78,11 +80,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``no se encuentra la actividad``
+- `no se encuentra la actividad`
+- `hay un error, no se ha guardado`
+- Aviso de calendario (la actividad aún no tiene plazas en el calendario común).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vsm > ca > Gestión de plazas (y variantes por perfil/tipo: dagd, vsg, vest…)
+- **Pills2:** ACTIVIDADES > Gestión de plazas y peticiones > Distribución plazas ca n entre r/dl (y variantes por tipo/colectivo)

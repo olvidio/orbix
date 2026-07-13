@@ -7,20 +7,25 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php"
 entrada: ["post.certificado:string", "post.destino:string", "post.f_certificado:string", "post.f_recibido:string", "post.firmado:string", "post.id_item:integer", "post.id_nom:integer", "post.idioma:string"]
-entrada_obligatoria: []
-respuesta: "raw_response"
+entrada_obligatoria: ["id_nom"]
+respuesta: "json_direct"
 requiere_hashb: false
-frontend_referencias: ["frontend/certificados/controller/certificado_recibido_adjuntar.php", "frontend/certificados/controller/certificado_recibido_modificar.php", "frontend/certificados/controller/certificado_recibido_pdf_upload.php"]
-casos_uso: []
+frontend_referencias: ["frontend/certificados/controller/certificado_recibido_pdf_upload.php", "frontend/certificados/controller/certificado_recibido_adjuntar.php"]
+casos_uso: ["src\\certificados\\domain\\CertificadoRecibidoUpload"]
 tags: ["certificados", "certificado", "recibido", "pdf", "upload"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Certificado Recibido Pdf Upload
 
-Descripcion funcional pendiente de revisar.
+Subida multipart del PDF de un certificado recibido (alta o actualización).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Recibe `certificado_pdf` y crea o actualiza un `CertificadoRecibido` con metadatos del POST
+(`id_item ≤ 0` implica alta).
 
 ## Endpoint
 
@@ -33,35 +38,32 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `certificado` | `string` | controller | No | controller |
-| `destino` | `string` | controller | No | controller |
-| `f_certificado` | `string` | controller | No | controller |
-| `f_recibido` | `string` | controller | No | controller |
-| `firmado` | `string` | controller | No | controller |
-| `id_item` | `integer` | controller | No | controller |
-| `id_nom` | `integer` | controller | No | controller |
-| `idioma` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `certificado_pdf` | `file` | multipart | Sí | PDF |
+| `id_item` | `integer` | controller | No | `≤0` = nuevo |
+| `id_nom` | `integer` | controller | Sí | Persona |
+| `idioma`, `certificado`, `firmado`, `f_certificado`, `f_recibido`, `destino` | varios | controller | No | Metadatos |
 
 ## Salida
 
-- Helper: `echo`
-- Forma: `raw_response`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `echo json_encode` (no envelope estándar).
+- Éxito: `{success: true}`
+- Error: `{success: false, mensaje: "<texto>"}`
+
+## Errores conocidos
+
+- `No se puede subir/abrir/leer el archivo %s`
+- `No se encuentra la persona con id_nom: %d`
+- `No se encuentra el certificado`
+- Errores de BD al guardar
+
+## Permisos
+
+- HashFront en formularios frontend.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- `src\certificados\domain\CertificadoRecibidoUpload`
 
 ## Frontend Relacionado
 
 - `frontend/certificados/controller/certificado_recibido_adjuntar.php`
-- `frontend/certificados/controller/certificado_recibido_modificar.php`
-- `frontend/certificados/controller/certificado_recibido_pdf_upload.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

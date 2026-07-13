@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Para asegurar que inicia la sesión, y poder acceder a los permisos
+Listado de matrículas con examen pendiente de acta (sin nota definitiva), con las mismas acciones de consulta y borrado que `matriculas_lista`. El HTML se genera en el controller (sin vista PHTML separada).
 
 ## Uso En Ayuda
 

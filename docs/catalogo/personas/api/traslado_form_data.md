@@ -10,17 +10,25 @@ entrada: ["post.id_pau:integer", "post.sel:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["No encuentro a nadie con id_nom: %d", "con las personas de paso no tiene sentido."]
 frontend_referencias: ["frontend/personas/controller/traslado_form.php"]
 casos_uso: ["src\\personas\\application\\TrasladoFormData"]
 tags: ["personas", "traslado", "form", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Traslado Form Data
 
-Endpoint JSON: datos para el formulario de traslado.
+Datos iniciales del formulario de traslado de centro y/o delegación (`traslado_form.phtml`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Localiza la persona en el esquema global (`PersonaFinderService::findPersonaEnGlobal`) por
+`sel` o `id_pau`. Rechaza `PersonaPub` (de paso publicadas). Precarga centro y delegación
+actuales, fecha de hoy, y opciones de centros (excluye tipos c/g/i), delegaciones destino
+y situaciones válidas para traslado.
 
 ## Endpoint
 
@@ -33,15 +41,24 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_pau` | `integer` | application | No | application |
-| `sel` | `mixed` | application | No | application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `sel` | `mixed` | application | No | Token `id_nom#…` (usa id_nom como id_pau) |
+| `id_pau` | `integer` | application | No | Alias de `id_nom` de la persona |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Claves: `titulo`, `id_ctr`, `nombre_ctr`, `dl`, `hoy`, `id_pau`, `opciones_centros`,
+  `opciones_dl`, `opciones_situacion`.
+
+## Permisos
+
+- Sin control en el caso de uso. Enlace «traslado» solo en ficha edición (`personas_editar`)
+  con permiso de edición del colectivo.
+
+## Errores conocidos
+
+- `No encuentro a nadie con id_nom: <id>`
+- `con las personas de paso no tiene sentido.`
 
 ## Casos De Uso
 
@@ -49,10 +66,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/personas/controller/traslado_form.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/personas/controller/traslado_form.php` (desde ficha `ir_a_traslado`)

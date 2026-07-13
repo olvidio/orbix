@@ -42,10 +42,20 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona RecuperarPasswordMail. Página para recuperar la contraseña de un usuario.
+Recuperación contraseña: genera pwd temporal, marca cambio obligatorio y envía mail.
+
+## Errores Documentados
+
+- `Esquema no válido`
+- `Error al preparar la consulta`
+- `Error al ejecutar la consulta`
+- `No hay email asociado a este usuario`
+- `Error al enviar el correo electrónico`
+- `Error al actualizar la contraseña`
+- `No se encontró ningún usuario con ese nombre`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

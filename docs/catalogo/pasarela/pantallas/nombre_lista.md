@@ -1,63 +1,51 @@
 ---
 id: "pasarela.pantalla.nombre_lista"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "pasarela"
-nombre: "Nombre Lista"
+nombre: "Nombres de actividades particulares"
 controller: "frontend/pasarela/controller/nombre_lista.php"
-vistas: []
-fragmentos_frontend: ["frontend/pasarela/controller/nombre_ajax.php"]
-endpoints: ["/src/", "/src/pasarela/nombre_excepcion_guardar"]
-capacidades: ["pasarela.nombre_excepcion.gestionar"]
-campos: ["form.id_tipo_activ", "form.nombre_actividad", "form.que", "form.valor"]
+vistas:
+  - "frontend\/pasarela\/view\/nombre_lista.html.twig"
+fragmentos_frontend:
+  - "frontend\/pasarela\/controller\/nombre_ajax.php"
+endpoints:
+  - "\/src\/pasarela\/nombre_lista"
+  - "\/src\/pasarela\/nombre_excepcion_guardar"
+  - "\/src\/pasarela\/nombre_excepcion_eliminar"
+  - "\/src\/pasarela\/tipo_activ_txt_data"
+capacidades:
+  - "pasarela.nombre.gestionar"
+campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Nombre Lista
+# Nombres de actividades particulares
 
-Descripcion funcional pendiente de revisar.
+Nombres exportados distintos al tipo genérico, solo por excepción (sin valor default).
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla`
 - Controller: `frontend/pasarela/controller/nombre_lista.php`
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/pasarela/controller/nombre_ajax.php`
+- `frontend/pasarela/view/nombre_lista.html.twig`
 
 ## Endpoints Usados
 
-- `/src/`
+- `/src/pasarela/nombre_lista`
 - `/src/pasarela/nombre_excepcion_guardar`
-
-## Capacidades Relacionadas
-
-- `pasarela.nombre_excepcion.gestionar`
-
-## Campos Detectados
-
-- `form.id_tipo_activ`
-- `form.nombre_actividad`
-- `form.que`
-- `form.valor`
-
-## Acciones Detectadas
-
-No se han detectado acciones.
+- `/src/pasarela/nombre_excepcion_eliminar`
+- `/src/pasarela/tipo_activ_txt_data`
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Desde parámetros pasarela.
+2. Añadir, editar o eliminar nombres por tipo.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).

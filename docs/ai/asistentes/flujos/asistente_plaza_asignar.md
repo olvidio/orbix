@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AsistentePlazaAsignar. Cambia la plaza de un lote de asistentes.
+Asignar plaza común a varios asistentes seleccionados.
 
 ## Errores Documentados
 

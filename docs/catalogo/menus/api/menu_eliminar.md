@@ -7,41 +7,25 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/menus/infrastructure/ui/http/controllers/menu_eliminar.php"
 entrada: ["post.id_menu:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_menu"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: []
+errores: ["No encuentro el menu", "hay un error, no se ha eliminado"]
+frontend_referencias: ["frontend/menus/view/menus_get.phtml"]
 casos_uso: ["src\\menus\\application\\MenuEliminar"]
 tags: ["menus", "menu", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Menu Eliminar
+# Eliminar ítem de menú
 
-Descripcion funcional pendiente de revisar.
+Borra un registro de `aux_menus`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
-## Endpoint
-
-- URL: `/src/menus/menu_eliminar`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
-- Controller: `src/menus/infrastructure/ui/http/controllers/menu_eliminar.php`
-
-## Entrada
-
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `id_menu` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
-
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data: "ok"`.
 
 ## Casos De Uso
 
@@ -49,10 +33,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/menus/view/menus_get.phtml`

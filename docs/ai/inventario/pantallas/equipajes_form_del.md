@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Form Del"
+titulo: "Quitar doc de maleta"
 pantalla: "inventario.pantalla.equipajes_form_del"
-preguntas: ["Que se puede hacer en Equipajes Form Del?", "Que campos tiene Equipajes Form Del?", "Que acciones hay en Equipajes Form Del?"]
+preguntas: ["Que se puede hacer en Quitar doc de maleta?", "Que campos tiene Quitar doc de maleta?", "Que acciones hay en Quitar doc de maleta?"]
 capacidades: ["inventario.lista_docs_de_egm.gestionar"]
 endpoints: ["/src/inventario/lista_docs_de_egm"]
 source: "docs/catalogo/inventario/pantallas/equipajes_form_del.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Form Del
+# Ayuda IA Pantalla - Quitar doc de maleta
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario del doc → `equipajes_del_doc`.
 
 ## Uso En Ayuda
 

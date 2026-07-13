@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.procesos_get", "procesos.pantalla.procesos_select", "procesos.pantalla.procesos_ver"]
 acciones: ["crear_actualizar", "eliminar", "obtener"]
 endpoints: ["/src/procesos/procesos_eliminar", "/src/procesos/procesos_get", "/src/procesos/procesos_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Procesos
-
-Propuesta generada automaticamente desde la capacidad `procesos.procesos.gestionar` y sus pantallas relacionadas.
+# Flujo - Gestionar procesos
 
 ## Objetivo De Usuario
 
-Gestiona Procesos, ProcesosGet. Caso de uso: devuelve la estructura de padres/hijos del arbol de fases del proceso filtrando segun el sfsv/role del usuario. Retorna un array donde cada clave es el id de fase padre (0 = raiz) y cada valor es una lista de ['id', 'nom']. El HTML del árbol lo genera {. Caso de uso: elimina una tarea_proceso por su id_item. Caso de uso: guarda una tarea_proceso (fase/tarea/responsable/status y fases_previas) del proceso.
+Administración del árbol de fases/tareas de un tipo de proceso: visualizar estructura, crear o editar tareas con dependencias y eliminar tareas existentes.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > procesos activ. > procesos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -96,9 +94,7 @@ Acciones JavaScript:
 - ``no se encuentra la tarea a borrar``
 - ``no sé cuál he de borar``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > procesos activ. > procesos
+- **Pills2:** ADMIN LOCAL > procesos activ. > procesos

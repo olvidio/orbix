@@ -21,21 +21,21 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadessacd.comunicacion_activ_sacd_data`
 - Controller: `src/actividadessacd/infrastructure/ui/http/controllers/comunicacion_activ_sacd_data.php`
-- Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.id_nom:integer`, `post.periodo:string`, `post.propuesta:string`, `post.que:string`, `post.sel:mixed`, `post.year:string`
+- Entrada: `post.que:string`, `post.id_nom:integer`, `post.propuesta:string`, `post.periodo:string`, `post.year:string`, `post.empiezamin:string`, `post.empiezamax:string`, `post.sel:array`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadessacd/comunicacion_activ_sacd_enviar`
 
 - Id: `actividadessacd.comunicacion_activ_sacd_enviar`
 - Controller: `src/actividadessacd/infrastructure/ui/http/controllers/comunicacion_activ_sacd_enviar.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.que:string`, `post.id_nom:integer`, `post.propuesta:string`, `post.periodo:string`, `post.year:string`, `post.empiezamin:string`, `post.empiezamax:string`, `post.sel:array`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadessacd/lista_actividades_sacd_data`
 
 - Id: `actividadessacd.lista_actividades_sacd_data`
 - Controller: `src/actividadessacd/infrastructure/ui/http/controllers/lista_actividades_sacd_data.php`
-- Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.periodo:string`, `post.tipo:string`, `post.year:string`
+- Entrada: `post.tipo:string`, `post.year:string`, `post.periodo:string`, `post.empiezamin:string`, `post.empiezamax:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadessacd/locales_desplegable_data`
@@ -84,14 +84,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadessacd.sacds_encargados_data`
 - Controller: `src/actividadessacd/infrastructure/ui/http/controllers/sacds_encargados_data.php`
-- Entrada: `post.dl_org:string`, `post.id_activ:integer`, `post.id_tipo_activ:string`
+- Entrada: `post.id_activ:integer`, `post.id_tipo_activ:string`, `post.dl_org:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadessacd/solapes_sacd_data`
 
 - Id: `actividadessacd.solapes_sacd_data`
 - Controller: `src/actividadessacd/infrastructure/ui/http/controllers/solapes_sacd_data.php`
-- Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.periodo:string`, `post.year:string`
+- Entrada: `post.year:string`, `post.periodo:string`, `post.empiezamin:string`, `post.empiezamax:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadessacd/texto_comunicacion_data`

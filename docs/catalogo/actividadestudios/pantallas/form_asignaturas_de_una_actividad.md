@@ -11,12 +11,13 @@ endpoints: ["/src/actividadestudios/actividad_asignatura_editar", "/src/activida
 capacidades: ["actividadestudios.actividad_asignatura.gestionar", "actividadestudios.actividad_asignatura_editar.gestionar", "actividadestudios.form_asignaturas_de_una_actividad.gestionar", "actividadestudios.profesores_desplegable.gestionar"]
 campos: ["form.id_activ", "form.id_asignatura", "form.salida", "html.avis_profesor", "html.f_fin", "html.f_ini", "html.guardar", "html.mod", "html.tipo", "post.id_activ", "post.id_asignatura", "post.id_pau", "post.pau", "post.sel"]
 acciones: ["fnjs_comprobar_fecha", "fnjs_construir_desplegable", "fnjs_guardar", "fnjs_mas_profes"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Form Asignaturas De Una Actividad
 
-Form de alta / edicion de una `ActividadAsignatura` desde el dossier `asignaturas_de_una_actividad` (3005).
+Formulario de alta o edición de una `ActividadAsignatura` desde el dossier
+`asignaturas_de_una_actividad` (3005). Sucesor de `apps/actividadestudios/controller/form_3005.php`.
 
 ## Tipo
 
@@ -33,10 +34,10 @@ No se han detectado controladores frontend relacionados.
 
 ## Endpoints Usados
 
-- `/src/actividadestudios/actividad_asignatura_editar`
-- `/src/actividadestudios/actividad_asignatura_nueva`
-- `/src/actividadestudios/form_asignaturas_de_una_actividad_data`
-- `/src/actividadestudios/profesores_desplegable_data`
+- `/src/actividadestudios/form_asignaturas_de_una_actividad_data` (carga del formulario)
+- `/src/actividadestudios/profesores_desplegable_data` (`fnjs_mas_profes`)
+- `/src/actividadestudios/actividad_asignatura_nueva` (`fnjs_guardar`, modo alta)
+- `/src/actividadestudios/actividad_asignatura_editar` (`fnjs_guardar`, modo edición)
 
 ## Capacidades Relacionadas
 
@@ -71,11 +72,17 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Se abre como hijo de dossier con `id_activ` y, en edición, `id_asignatura`. El controller carga
+`form_asignaturas_de_una_actividad_data` y pinta:
 
-## Revision Manual
+- Asignatura (desplegable en alta; texto fijo en edición).
+- Profesor con tres filtros AJAX: **corresponde** (por asignatura), **dl y asistentes**, **otros de
+  paso** (`profesores_desplegable_data`).
+- Tipo (preceptor), aviso al profesor (avisado/confirmado), fechas inicio/fin de clases.
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+**Guardar** envía por AJAX a `actividad_asignatura_nueva` o `actividad_asignatura_editar` según
+`mod`; si tiene éxito, vuelve al dossier padre.
+
+## Ruta de menú
+
+sin entrada de menú en el índice (formulario del dossier 3005)

@@ -11,12 +11,12 @@ endpoints: ["/src/actividadtarifas/tarifa_ubi_lista_data"]
 capacidades: ["actividadtarifas.tarifa_ubi.gestionar"]
 campos: ["post.id_ubi", "post.year"]
 acciones: ["fnjs_copiar_tarifas", "fnjs_modificar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tarifa Ubi Lista
 
-Controlador AJAX HTML: listado de `TarifaUbi` por casa y año.
+Fragmento AJAX: tabla de `TarifaUbi` para la casa/año seleccionados; emite `token_copiar` (HashB).
 
 ## Tipo
 
@@ -51,11 +51,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Recibe `id_ubi` y `year` del formulario principal. Muestra botón copiar tarifas del año anterior
+si `puede_anadir`; pasa `token_copiar` a `fnjs_copiar_tarifas`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Sin entrada propia; fragmento de `tarifa_ubi.php`.

@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["obtener"]
 endpoints: ["/src/usuarios/preferencia_tabla_get"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Preferencia Tabla
-
-Propuesta generada automaticamente desde la capacidad `usuarios.preferencia_tabla.gestionar` y sus pantallas relacionadas.
+# Flujo - Preferencia Tabla
 
 ## Objetivo De Usuario
 
-Gestiona PreferenciaTabla. Devuelve las preferencias de usuario necesarias para renderizar una tabla (HTML simple o SlickGrid) en el front. Entrada: - id_tabla (opcional): identificador del grid. Si viene vacío, no se devolverán preferencias específicas del grid (útil cuando sólo se necesita saber si el usuario prefiere HTML o SlickGrid). Salida: array asociativo con la forma: [ 'formato_tabla' => ''|'html'|'slickgrid', // prefs 'tabla_presentacion' 'slickgrid' => null|array, // prefs 'slickGrid_<id_tabla>_<idioma>' ] Para slickgrid se busca primero la preferencia del usuario actual; si no existe, se usa la del usuario 44 (default).
+Devuelve preferencias de presentación de tablas (global y SlickGrid por id_tabla+idioma).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: menú usuario > preferencias. Pills2: menú usuario > preferencias.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** menú usuario > preferencias
+- **Pills2:** menú usuario > preferencias

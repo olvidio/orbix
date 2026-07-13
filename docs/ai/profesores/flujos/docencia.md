@@ -2,39 +2,40 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "profesores"
-titulo: "Docencia"
+titulo: "Ver docencia global"
 flujo: "profesores.docencia.gestionar.flujo"
-preguntas: ["Como ejecutar en Docencia?"]
-pantallas_principales: []
-fragmentos: ["profesores.pantalla.docencia"]
+preguntas: ["Como consultar en Ver docencia global?"]
+pantallas_principales: ["profesores.pantalla.docencia"]
+fragmentos: []
 endpoints: ["/src/profesores/docencia"]
 source: "docs/catalogo/profesores/flujos/docencia.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Docencia
+# Ayuda IA - Ver docencia global
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Docencia`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver docencia global`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Docencia?
+- Como consultar en Ver docencia global?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ver docencia (`profesores.pantalla.docencia`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Consultar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **ver docencia** desde el menú `stgr2`.
+2. Revisar la tabla `tabla_docencia`.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/profesores/docencia`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona DocenciaLista. Descripcion funcional pendiente de revisar.
+Revisar qué docencia consta registrada por profesor, curso, asignatura y acta.
 
 ## Limites De La Respuesta
 

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Índice de navegación del módulo con enlaces HashFront a las 10 pantallas principales (plan, encargos, plantilla, iniciales, status). Sin backend JSON.
 
 ## Uso En Ayuda
 

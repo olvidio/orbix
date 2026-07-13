@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página sirve para asignar una dirección a un determinado ubi.
+Pantalla principal de consulta y edición masiva de datos de centros DL (labor, num, plazas).
 
 ## Uso En Ayuda
 

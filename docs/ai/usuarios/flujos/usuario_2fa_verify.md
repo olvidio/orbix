@@ -42,10 +42,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Usuario2faVerify. Descripcion funcional pendiente de revisar.
+Valida código TOTP contra secret provisional (paso previo a activar 2FA).
+
+## Errores Documentados
+
+- `Código de verificación o clave secreta no válidos`
+- `Código de verificación inválido`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

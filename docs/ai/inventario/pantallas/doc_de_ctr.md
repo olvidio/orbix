@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Doc De Ctr"
+titulo: "Inventario por centros"
 pantalla: "inventario.pantalla.doc_de_ctr"
-preguntas: ["Que se puede hacer en Doc De Ctr?", "Que campos tiene Doc De Ctr?", "Que acciones hay en Doc De Ctr?"]
+preguntas: ["Que se puede hacer en Inventario por centros?", "Que campos tiene Inventario por centros?", "Que acciones hay en Inventario por centros?"]
 capacidades: ["inventario.lista_de_ctr_con_docs.gestionar"]
 endpoints: ["/src/inventario/lista_de_ctr_con_docs"]
 source: "docs/catalogo/inventario/pantallas/doc_de_ctr.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Doc De Ctr
+# Ayuda IA Pantalla - Inventario por centros
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Selección de tipo doc y centros; enlaces a asignar, modificar e imprimir inventario CTR.
 
 ## Uso En Ayuda
 

@@ -1,7 +1,7 @@
 ---
 id: "menus.pantalla.grupmenu_lista"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "menus"
 nombre: "Grupmenu Lista"
 controller: "frontend/menus/controller/grupmenu_lista.php"
@@ -11,60 +11,22 @@ endpoints: ["/src/menus/grupmenu_eliminar", "/src/menus/grupmenu_lista"]
 capacidades: ["menus.grupmenu.gestionar"]
 campos: ["form.sel", "post.filtro_grupo", "post.id_menu", "post.nuevo"]
 acciones: ["fnjs_actualizar", "fnjs_eliminar", "fnjs_enviar_formulario", "fnjs_left_side_hide", "fnjs_modificar", "fnjs_solo_uno", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Grupmenu Lista
+# Lista de grupos de menú
 
-Descripcion funcional pendiente de revisar.
+Tabla CRUD de `aux_grupmenu` (nombre, orden); acceso también vía TablaDB InfoGrupMenus.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
-- Controller: `frontend/menus/controller/grupmenu_lista.php`
+- Subtipo: `pantalla_principal`
 
-## Vistas Relacionadas
+## Ruta de menú
 
-- `frontend/menus/view/grupmenu_lista.phtml`
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/menus/controller/grupmenu_form.php`
-- `frontend/menus/controller/grupmenu_lista.php`
-
-## Endpoints Usados
-
-- `/src/menus/grupmenu_eliminar`
-- `/src/menus/grupmenu_lista`
-
-## Capacidades Relacionadas
-
-- `menus.grupmenu.gestionar`
-
-## Campos Detectados
-
-- `form.sel`
-- `post.filtro_grupo`
-- `post.id_menu`
-- `post.nuevo`
-
-## Acciones Detectadas
-
-- `fnjs_actualizar`
-- `fnjs_eliminar`
-- `fnjs_enviar_formulario`
-- `fnjs_left_side_hide`
-- `fnjs_modificar`
-- `fnjs_solo_uno`
-- `fnjs_update_div`
+- **Legacy:** sistema > usuarios web > grup menu
+- **Pills2:** ADMIN LOCAL > usuarios web > grup menu
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+1. Listar grupos. 2. Nuevo/modificar/eliminar.

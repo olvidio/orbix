@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Muestra un aviso HTML legible (p.
+Fragmento HTML de aviso tras operaciones de certificado emitido.
 
 ## Uso En Ayuda
 

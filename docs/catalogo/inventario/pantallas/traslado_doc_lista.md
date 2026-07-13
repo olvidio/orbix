@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.traslado_doc_lista"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "inventario"
-nombre: "Traslado Doc Lista"
+nombre: "Traslado — lista y guardar"
 controller: "frontend/inventario/controller/traslado_doc_lista.php"
 vistas: []
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_docs_de_ctr"]
 capacidades: ["inventario.lista_docs_de_ctr.gestionar"]
 campos: ["post.id_lugar", "post.id_ubi"]
 acciones: ["fnjs_selectAll"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Traslado Doc Lista
+# Traslado — lista y guardar
 
-Descripcion funcional pendiente de revisar.
+Lista docs del centro/lugar y ejecuta `traslado_doc_guardar`.
+
 
 ## Tipo
 
@@ -50,11 +51,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Lista docs del centro/lugar y ejecuta `traslado_doc_guardar`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada directa
+- **Pills2:** —

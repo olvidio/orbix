@@ -2,76 +2,45 @@
 id: "cambios.usuario_avisos_pref.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cambios"
-nombre: "Flujo - Gestionar Usuario Avisos Pref"
+nombre: "Flujo - Configurar preferencia de aviso"
 capacidad: "cambios.usuario_avisos_pref.gestionar"
 pantallas_principales: []
-fragmentos: ["cambios.pantalla.usuario_avisos_pref"]
-acciones: ["ver_formulario"]
-endpoints: ["/src/cambios/usuario_avisos_pref_form_data"]
-estado_revision: "generado"
+fragmentos: ["cambios.pantalla.usuario_avisos_pref", "cambios.pantalla.usuario_avisos_pref_fases", "cambios.pantalla.usuario_avisos_pref_propiedades", "cambios.pantalla.usuario_avisos_pref_condicion"]
+acciones: ["cargar", "grabar"]
+endpoints: ["/src/cambios/usuario_avisos_pref_form_data", "/src/cambios/cambio_usuario_objeto_pref_guardar", "/src/cambios/cambio_usuario_propiedad_pref_guardar_todas", "/src/cambios/cambio_usuario_propiedad_pref_preview"]
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Usuario Avisos Pref
-
-Propuesta generada automaticamente desde la capacidad `cambios.usuario_avisos_pref.gestionar` y sus pantallas relacionadas.
+# Flujo - Configurar preferencia de aviso
 
 ## Objetivo De Usuario
 
-Gestiona UsuarioAvisosPref. Endpoint JSON que devuelve la informacion necesaria para pintar el formulario usuario_avisos_pref (edicion de un aviso de usuario/grupo).
+Definir qué cambios debe recibir un usuario o grupo: objeto, ámbito (tipo/fase/casas) y propiedades con
+condiciones opcionales.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Desde `usuario_form_avisos` (o gestión de grupos) con `salida=nuevo|modificar`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `cambios.pantalla.usuario_avisos_pref`
+### Cargar formulario
 
-## Escenarios Inferidos
+1. `usuario_avisos_pref_form_data` devuelve opciones y preselección.
+2. Al cambiar objeto/tipo, AJAX refresca fases y tabla de propiedades.
 
-### Ver Formulario
+### Grabar
 
-Pasos propuestos:
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Endpoints asociados:
-- `/src/cambios/usuario_avisos_pref_form_data`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `html.dl_propia`
-- `html.id_tipo_activ`
-- `html.salida`
-- `post.id_item_usuario_objeto`
-- `post.id_usuario`
-- `post.quien`
-- `post.salida`
-- `post.sel`
-
-Acciones JavaScript:
-- `fnjs_actualizar_fases`
-- `fnjs_actualizar_propiedades`
-- `fnjs_cerrar`
-- `fnjs_grabar_todo`
-- `fnjs_guardar_cond`
-- `fnjs_mas_casas`
-- `fnjs_modificar`
-- `fnjs_update_div`
-
-## Endpoints Del Flujo
-
-- `/src/cambios/usuario_avisos_pref_form_data`
+1. `fnjs_grabar_todo` → `cambio_usuario_objeto_pref_guardar`.
+2. Si OK → `cambio_usuario_propiedad_pref_guardar_todas` con el POST de propiedades.
+3. Condiciones intermedias: `cambio_usuario_propiedad_pref_preview` actualiza celdas sin persistir.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `falta id_usuario`, `usuario/grupo no encontrado`, `preferencia no encontrada`
+- `id_tipo_activ invalido`, `Hay un error, no se ha guardado`
+- `faltan parametros` (propiedades)
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice

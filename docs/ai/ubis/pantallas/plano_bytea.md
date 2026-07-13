@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Página que pregunta dónde está la foto, y la copia en la base de datos
+Sube, descarga o elimina el plano (bytea) asociado a una dirección.
 
 ## Uso En Ayuda
 

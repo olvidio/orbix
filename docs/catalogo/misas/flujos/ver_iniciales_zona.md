@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.ver_iniciales_zona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/ver_iniciales_zona_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ver Iniciales Zona
-
-Propuesta generada automaticamente desde la capacidad `misas.ver_iniciales_zona.gestionar` y sus pantallas relacionadas.
+# Flujo - Ver iniciales zona
 
 ## Objetivo De Usuario
 
-Gestiona VerInicialesZona. Descripcion funcional pendiente de revisar.
+Lista sacds de una zona con sus iniciales y color para edición inline en SlickGrid.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Iniciales sacd. Pills2: ATENCIÓN SACD > Gestión de misas > Iniciales sacd.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -54,11 +52,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Iniciales sacd
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd

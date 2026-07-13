@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "personas"
-titulo: "Personas Select"
+titulo: "Resultado búsqueda personas"
 pantalla: "personas.pantalla.personas_select"
-preguntas: ["Que se puede hacer en Personas Select?", "Que campos tiene Personas Select?", "Que acciones hay en Personas Select?"]
+preguntas: ["Que se puede hacer en Resultado búsqueda personas?", "Que campos tiene Resultado búsqueda personas?", "Que acciones hay en Resultado búsqueda personas?"]
 capacidades: ["personas.personas_select.gestionar"]
 endpoints: ["/src/personas/personas_select_data"]
 source: "docs/catalogo/personas/pantallas/personas_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Personas Select
+# Ayuda IA Pantalla - Resultado búsqueda personas
 
 ## Resumen
 
-Tabla de personas que cumplen la condicion introducida en `personas_que`.
+Tabla `web\Lista` con personas que cumplen los criterios de `personas_que`. Botones contextuales según colectivo, `permiso`, módulos instalados (`asistentes`, `notas`, `actividadestudios`, etc.) y ámbito (`rstgr` simplifica botones).
 
 ## Uso En Ayuda
 
@@ -23,47 +23,28 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Campos Detectados
 
-- `form.id_dossier`
-- `form.que`
 - `form.sel`
-- `html.id_dossier`
-- `html.que`
-- `post.apellido1`
-- `post.apellido2`
-- `post.centro`
-- `post.cmb`
-- `post.es_sacd`
-- `post.exacto`
-- `post.id_sel`
-- `post.na`
-- `post.nombre`
-- `post.que`
-- `post.scroll_id`
-- `post.stack`
-- `post.tabla`
-- `post.tipo`
+- `form.que`
+- `form.id_dossier`
 
 ## Acciones Detectadas
 
-- `fnjs_actividades`
-- `fnjs_copiar_tessera`
-- `fnjs_dossiers`
-- `fnjs_enviar_formulario`
-- `fnjs_ficha`
-- `fnjs_ficha_profe`
 - `fnjs_home`
-- `fnjs_imp_certificado`
-- `fnjs_imp_tessera`
-- `fnjs_lista_activ`
-- `fnjs_matriculas`
+- `fnjs_ficha`
+- `fnjs_dossiers`
 - `fnjs_modificar`
 - `fnjs_modificar_ctr`
-- `fnjs_notas`
-- `fnjs_peticion_activ`
-- `fnjs_posibles_ca`
-- `fnjs_solo_uno`
+- `fnjs_actividades`
 - `fnjs_tessera`
-- `fnjs_update_div`
+- `fnjs_notas`
+- `fnjs_matriculas`
+- `fnjs_posibles_ca`
+- `fnjs_peticion_activ`
+- `fnjs_lista_activ`
+- `fnjs_ficha_profe`
+- `fnjs_imp_tessera`
+- `fnjs_copiar_tessera`
+- `fnjs_imp_certificado`
 - `fnjs_upload_certificado`
 
 ## Capacidades Relacionadas

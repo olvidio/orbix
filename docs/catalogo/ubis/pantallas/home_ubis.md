@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/home_ubis_data"]
 capacidades: ["ubis.home_ubis.gestionar"]
 campos: ["post.bloque", "post.id_ubi", "post.sel", "post.stack"]
 acciones: ["fnjs_left_side_show", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Home Ubis
 
-Descripcion funcional pendiente de revisar.
+Ficha resumen de un ubi con enlaces a edición, direcciones, telecomunicaciones y dossiers.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/ubis/controller/home_ubis.php`
 
 ## Vistas Relacionadas
@@ -56,13 +58,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_left_side_show`
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

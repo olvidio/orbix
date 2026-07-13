@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Alta o edición de permisos de actividad para un usuario: selector de tipo de actividad (DL propia/otras), ámbitos afectados, fase de referencia y permisos on/off por fila.
 
 ## Uso En Ayuda
 

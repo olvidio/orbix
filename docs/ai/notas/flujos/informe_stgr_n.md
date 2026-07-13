@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona InformeStgrNumerarios. Calcula el informe anual STGR de "numerarios" (puntos 1..18 + x). Encapsula el uso de src\notas\application\legacy\Resumen (legacy) para que los controllers del frontend no importen la clase legacy directamente. Devuelve un array neutro {res, textos, curso_txt} listo para renderizado.
+Generar informe anual de numerarios.
 
 ## Limites De La Respuesta
 

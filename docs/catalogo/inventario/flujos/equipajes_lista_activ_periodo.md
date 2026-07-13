@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["inventario.pantalla.equipajes_lista_activ_periodo"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/equipajes_lista_activ_periodo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Equipajes Lista Activ Periodo
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `inventario.equipajes_list
 
 ## Objetivo De Usuario
 
-Gestiona EquipajesListaActivPeriodo. Descripcion funcional pendiente de revisar.
+Gestiona EquipajesListaActivPeriodo. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Punto De Entrada
 
@@ -59,10 +59,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

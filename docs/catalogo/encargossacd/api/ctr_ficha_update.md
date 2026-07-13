@@ -14,15 +14,19 @@ respuesta_data: ["error:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/ctr_ficha_update.php"]
 casos_uso: ["src\\encargossacd\\application\\CtrFichaUpdate"]
+errores: ["Debe nombrar un sacerdote tirular", "grupo de encargo no valido", "hay un error, no se ha guardado", "Debe nombrar un sacerdote titular", "El sacd titular y suplente deben ser distintos", "hay un error, no se ha eliminado"]
 tags: ["encargossacd", "ctr", "ficha", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Ctr Ficha Update
 
 Mutacion de la ficha de atencion sacerdotal de un centro. Puerto de `frontend/encargossacd/controller/ctr_ficha_update.php`. Devuelve siempre `['error' => string]` (vacio = exito). El controlador HTTP convierte ese resultado en JSON `{success, mensaje}` (el proxy legacy en `frontend/` preserva el contrato "alert(rta_txt)" reemitiendo `mensaje`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Guarda la ficha de atención sacerdotal de un centro: encargos titular/suplente, dedicación, observaciones y horarios. Sucesor de `apps/encargossacd/controller/ctr_ficha_update.php`. Recibe campos indexados por fila `e` (`mod_e`, `id_enc_e`, `id_ubi_e`, etc.).
 
 ## Endpoint
 
@@ -59,11 +63,23 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_CtrFichaUpdateData`):
-  - `error` (`string`)
+- Helper: `ContestarJson::enviar`.
+- Éxito: `success: true`, `data: ""` si `error` vacío.
+- Error: mensaje HTML en `data` (`error` del caso de uso).
+
+
+## Errores conocidos
+
+- `Debe nombrar un sacerdote tirular`
+- `grupo de encargo no valido`
+- `hay un error, no se ha guardado`
+- `Debe nombrar un sacerdote titular`
+- `El sacd titular y suplente deben ser distintos`
+- `hay un error, no se ha eliminado`
+
+## Permisos
+
+Sin control propio en el caso de uso; frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -73,8 +89,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - `frontend/encargossacd/controller/ctr_ficha_update.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

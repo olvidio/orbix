@@ -8,34 +8,41 @@ pantallas_principales: []
 fragmentos: ["actividadplazas.pantalla.plazas_balance_dl"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadplazas/plazas_balance_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Plazas Balance
 
-Propuesta generada automaticamente desde la capacidad `actividadplazas.plazas_balance.gestionar` y sus pantallas relacionadas.
+Carga el grid comparativo A vs B (mi dl frente a otra delegación) con plazas concedidas y libres por
+actividad, insertado en la pantalla de balance.
 
 ## Objetivo De Usuario
 
-Gestiona PlazasBalance. Datos del grid comparativo A vs B (plazas concedidas y libres entre dos dl para un tipo de actividad).
+Comparar, para un tipo de actividad, cuántas plazas concedidas y libres tiene cada actividad en mi
+delegación frente a otra delegación elegida en el desplegable.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Fragmento `plazas_balance_dl`, invocado por AJAX desde `plazas_balance_que` al elegir una delegación
+en el desplegable (`fnjs_comparativa`). No tiene menú propio.
 
 ## Fragmentos O Pantallas Auxiliares
 
 - `actividadplazas.pantalla.plazas_balance_dl`
+- `actividadplazas.pantalla.plazas_balance_que` (contenedor)
 
 ## Escenarios Inferidos
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Balance de plazas**, elegir la delegación a comparar en el desplegable.
+2. El sistema carga el HTML del grid en `#comparativa` vía `plazas_balance_dl.php`.
+3. Ese fragmento obtiene los datos de `plazas_balance_data` (`dlA` = mi dl, `dlB` = la elegida):
+   cabecera con concedidas cruzadas (A→B y B→A) y tabla con concedidas/libres por actividad.
+4. Las celdas de mi dl son editables (doble clic → `gestion_plazas_update`).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadplazas/plazas_balance_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -46,7 +53,7 @@ Campos:
 - `post.id_tipo_activ`
 
 Acciones JavaScript:
-- Ninguna detectada.
+- Ninguna detectada (la edición delega en `TablaEditable` del fragmento).
 
 ## Endpoints Del Flujo
 
@@ -54,11 +61,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `falta parametro dl`
+- `no se puede comparar una dl consigo misma`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- Sin entrada de menú en el índice: fragmento invocado desde **Balance de plazas** (`plazas_balance_que`):
+  - **Legacy:** vsm > ca > Balance de plazas (y variantes por perfil/tipo: dagd, vsg…)
+  - **Pills2:** ACTIVIDADES > Gestión de plazas y peticiones > Balance plazas ca n entre r/dl (y variantes por tipo/colectivo)

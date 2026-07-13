@@ -11,12 +11,12 @@ endpoints: ["/src/devel_db_admin/corregir_renombrar_esquema"]
 capacidades: ["devel_db_admin.corregir_renombrar_esquema.gestionar"]
 campos: ["post.comun", "post.dl", "post.esquema", "post.esquema_origen", "post.region", "post.sf", "post.sv"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Db Corregir Renombrar Esquema
 
-Descripcion funcional pendiente de revisar.
+Fragmento para reparar un renombre interrumpido (defaults, roles, .inc).
 
 ## Tipo
 
@@ -55,11 +55,11 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Acceder desde el menú de administración DB o configuración.
+2. Completar el formulario y ejecutar la acción.
+3. Revisar avisos/errores en el panel de respuesta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

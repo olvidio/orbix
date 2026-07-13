@@ -2,75 +2,40 @@
 id: "shared.tablaDB_depende.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "shared"
-nombre: "Flujo - Gestionar TablaDB Depende"
+nombre: "Flujo - Desplegable dependiente"
 capacidad: "shared.tablaDB_depende.gestionar"
 pantallas_principales: []
 fragmentos: ["shared.pantalla.tablaDB_formulario_ver"]
-acciones: ["obtener_datos"]
+acciones: ["actualizar_opciones"]
 endpoints: ["/src/shared/tablaDB_depende_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar TablaDB Depende
-
-Propuesta generada automaticamente desde la capacidad `shared.tablaDB_depende.gestionar` y sus pantallas relacionadas.
+# Flujo - Desplegable dependiente
 
 ## Objetivo De Usuario
 
-Gestiona TablaDBDepende. ************ datos *********************************.
+Actualizar las opciones de un campo hijo cuando cambia el valor del campo padre en un formulario
+`tablaDB` (p. ej. centro → lugar en inventario).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+`onchange` en `<select>` padre → `fnjs_actualizar_depende(camp, accion)` en `tablaDB_formulario.phtml`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `shared.pantalla.tablaDB_formulario_ver`
+### Actualizar opciones
 
-## Escenarios Inferidos
+1. Leer valor del padre (`valor_depende`).
+2. POST a `tablaDB_depende_datos` con `clase_info`, `accion` (id hijo) y hash.
+3. Sustituir HTML del `<select>` hijo con `data.aOpciones`.
 
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.accion`
-- `form.clase_info`
-- `form.valor_depende`
-- `html.<?= $nom_camp ?>`
-- `post.aSerieBuscar`
-- `post.clase_info`
-- `post.datos_buscar`
-- `post.id_pau`
-- `post.k_buscar`
-- `post.mod`
-- `post.obj_pau`
-- `post.permiso`
-- `post.sel`
-
-Acciones JavaScript:
-- `fnjs_actualizar_depende`
-- `fnjs_cancelar`
-- `fnjs_comprobar_fecha`
-- `fnjs_grabar`
-
-## Endpoints Del Flujo
-
-- `/src/shared/tablaDB_depende_datos`
+Solo aplica en `Info*` que implementan `getArrayCamposDepende` / `getOpcionesParaCondicion`.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- Error AJAX mostrado en `alert` con `json.mensaje`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (subflujo del formulario).

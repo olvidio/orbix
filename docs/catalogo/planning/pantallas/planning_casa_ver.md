@@ -3,7 +3,7 @@ id: "planning.pantalla.planning_casa_ver"
 tipo: "pantalla_frontend"
 subtipo: "fragmento_ajax"
 modulo: "planning"
-nombre: "Planning Casa Ver"
+nombre: "Planning por casas (calendario)"
 controller: "frontend/planning/controller/planning_casa_ver.php"
 vistas: ["frontend/planning/view/planning_casa_ver.phtml"]
 fragmentos_frontend: ["frontend/planning/controller/leyenda.php"]
@@ -11,54 +11,32 @@ endpoints: ["/src/planning/planning_casa_ver_data"]
 capacidades: ["planning.planning_casa_ver.gestionar"]
 campos: ["post.empiezamax", "post.empiezamin", "post.modelo", "post.periodo", "post.propuesta_calendario", "post.year"]
 acciones: ["fnjs_exportar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Planning Casa Ver
+# Planning por casas (calendario)
 
-Planning (calendario) de actividades de un grupo de casas en un periodo dado.
+Cuadrícula de actividades por casa en el periodo elegido. Se carga por AJAX desde
+`planning_casa_select` tras confirmar casas.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
 - Controller: `frontend/planning/controller/planning_casa_ver.php`
 
-## Vistas Relacionadas
-
-- `frontend/planning/view/planning_casa_ver.phtml`
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/planning/controller/leyenda.php`
-
 ## Endpoints Usados
 
 - `/src/planning/planning_casa_ver_data`
 
-## Capacidades Relacionadas
+## Acciones
 
-- `planning.planning_casa_ver.gestionar`
-
-## Campos Detectados
-
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.modelo`
-- `post.periodo`
-- `post.propuesta_calendario`
-- `post.year`
-
-## Acciones Detectadas
-
-- `fnjs_exportar`
+- Exportar calendario
+- Leyenda de colores (`leyenda.php`)
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Fragmento sin entrada de menú directa; acceso vía flujo casas (`planning_casa_que` → `planning_casa_select`).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+sin entrada de menú en el índice (fragmento del flujo por casas)

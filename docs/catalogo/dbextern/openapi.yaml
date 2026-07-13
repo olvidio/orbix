@@ -17,7 +17,7 @@ paths:
       operationId: "post_dbextern_refrescar_bdu"
       summary: "Refrescar Bdu"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Recrea la tabla temporal `tmp_bdu` copiando datos actuales de la BDU (operación larga, ~2–3 min).
         
         Operacion: `mutacion`.
         
@@ -25,15 +25,14 @@ paths:
       tags:
         - "dbextern"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
+                que:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -52,7 +51,7 @@ paths:
       operationId: "post_dbextern_sincro_baja"
       summary: "Sincro Baja"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Da de baja (situación `B`) una persona Aquinate cuya correspondencia BDU desapareció (punto 8).
         
         Operacion: `mutacion`.
         
@@ -90,7 +89,7 @@ paths:
       operationId: "post_dbextern_sincro_crear"
       summary: "Sincro Crear"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Alta de persona en Aquinate a partir de ficha BDU y creación del `id_match` (punto 4).
         
         Operacion: `mutacion`.
         
@@ -128,7 +127,7 @@ paths:
       operationId: "post_dbextern_sincro_crear_todos"
       summary: "Sincro Crear Todos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Crea en bloque todas las personas BDU de la DL sin `id_match` (acción «crear todos» en punto 4).
         
         Operacion: `mutacion`.
         
@@ -154,19 +153,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dbextern_CrearTodosDesdeListasUseCaseDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dbextern_CrearTodosDesdeListasUseCaseDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/dbextern/sincro_desunir":
     post:
       operationId: "post_dbextern_sincro_desunir"
       summary: "Sincro Desunir"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina el vínculo `id_match` de una persona BDU (punto 3 del dashboard).
         
         Operacion: `mutacion`.
         
@@ -202,9 +201,9 @@ paths:
       operationId: "post_dbextern_sincro_index_datos"
       summary: "Sincro Index Datos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Bootstrap del dashboard de sincronización BDU↔Aquinate: calcula los contadores de las 9 situaciones (puntos 1–4 en BDU, 7–9 en Aquinate) y devuelve los `link_spec_*` para abrir cada subpantalla.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/dbextern/api/sincro_index_datos.md`
       tags:
@@ -236,7 +235,7 @@ paths:
       operationId: "post_dbextern_sincro_syncro"
       summary: "Sincro Syncro"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Sincroniza (punto 1) todas las personas BDU ya unidas a Aquinate en la DL actual.
         
         Operacion: `mutacion`.
         
@@ -262,19 +261,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dbextern_SincroPersonasDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dbextern_SincroPersonasDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/dbextern/sincro_trasladar":
     post:
       operationId: "post_dbextern_sincro_trasladar"
       summary: "Sincro Trasladar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Traslada a esta DL una persona que está activa en otra DL Orbix (punto 2).
         
         Operacion: `mutacion`.
         
@@ -300,19 +299,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dbextern_TrasladarPersonaUseCaseDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dbextern_TrasladarPersonaUseCaseDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/dbextern/sincro_trasladar_a":
     post:
       operationId: "post_dbextern_sincro_trasladar_a"
       summary: "Sincro Trasladar A"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Traslada una persona Aquinate activa hacia la DL donde está su correspondencia BDU (punto 7).
         
         Operacion: `mutacion`.
         
@@ -338,19 +337,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dbextern_TrasladarPersonaUseCaseDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dbextern_TrasladarPersonaUseCaseDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/dbextern/sincro_unir":
     post:
       operationId: "post_dbextern_sincro_unir"
       summary: "Sincro Unir"
       description: |
-        Vincula una persona de BDU con una persona de Orbix.
+        Crea el vínculo `id_match` entre una persona BDU (`id_nom_listas`) y una Orbix (`id_orbix`).
         
         Operacion: `mutacion`.
         
@@ -390,9 +389,9 @@ paths:
       operationId: "post_dbextern_ver_desaparecidos_de_listas_datos"
       summary: "Ver Desaparecidos De Listas Datos"
       description: |
-        Obtiene datos de personas de Orbix desaparecidas de la BDU.
+        Detalle del punto 8: personas Aquinate con `id_match` cuya ficha BDU ya no existe o está vacía.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/dbextern/api/ver_desaparecidos_de_listas_datos.md`
       tags:
@@ -426,9 +425,9 @@ paths:
       operationId: "post_dbextern_ver_desaparecidos_de_orbix_datos"
       summary: "Ver Desaparecidos De Orbix Datos"
       description: |
-        Obtiene datos de personas BDU desaparecidas de Orbix.
+        Detalle del punto 3: personas en BDU con `id_match` pero sin ficha activa en Aquinate de esta DL.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/dbextern/api/ver_desaparecidos_de_orbix_datos.md`
       tags:
@@ -462,9 +461,9 @@ paths:
       operationId: "post_dbextern_ver_listas_datos"
       summary: "Ver Listas Datos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista personas de la BDU sin correspondencia en Aquinate (punto 4 del dashboard) o busca posibles coincidencias Orbix para una persona concreta.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/dbextern/api/ver_listas_datos.md`
       tags:
@@ -504,9 +503,9 @@ paths:
       operationId: "post_dbextern_ver_orbix_datos"
       summary: "Ver Orbix Datos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista personas Aquinate activas sin correspondencia en BDU (punto 9) o busca candidatos BDU para unir.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/dbextern/api/ver_orbix_datos.md`
       tags:
@@ -544,9 +543,9 @@ paths:
       operationId: "post_dbextern_ver_orbix_otradl_datos"
       summary: "Ver Orbix Otradl Datos"
       description: |
-        Obtiene datos de personas BDU que están en otra DL en Orbix.
+        Detalle del punto 7: personas Aquinate activas cuya correspondencia BDU está en otra DL.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/dbextern/api/ver_orbix_otradl_datos.md`
       tags:
@@ -580,9 +579,9 @@ paths:
       operationId: "post_dbextern_ver_traslados_datos"
       summary: "Ver Traslados Datos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Detalle del punto 2 del dashboard: personas unidas a BDU pero situadas en otra DL en Orbix.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/dbextern/api/ver_traslados_datos.md`
       tags:
@@ -618,63 +617,6 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
-    OrbixStandardResponseEnvelope:
-      type: object
-      required:
-        - success
-        - data
-      properties:
-        success:
-          type: boolean
-        mensaje:
-          type: string
-        data:
-          description: "Ver schema concreto de cada operacion."
-    dbextern_CrearTodosDesdeListasUseCaseData:
-      type: object
-      properties:
-        count:
-          type: "string"
-    dbextern_CrearTodosDesdeListasUseCaseDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/dbextern_CrearTodosDesdeListasUseCaseData"
-    dbextern_SincroPersonasData:
-      type: object
-      properties:
-        count:
-          type: "string"
-    dbextern_SincroPersonasDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/dbextern_SincroPersonasData"
-    dbextern_TrasladarPersonaUseCaseData:
-      type: object
-      properties:
-        success:
-          type: "string"
-    dbextern_TrasladarPersonaUseCaseDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/dbextern_TrasladarPersonaUseCaseData"
     OrbixStandardResponseStringData:
       type: object
       required:

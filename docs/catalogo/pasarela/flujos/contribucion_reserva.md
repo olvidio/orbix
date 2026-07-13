@@ -2,77 +2,50 @@
 id: "pasarela.contribucion_reserva.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "pasarela"
-nombre: "Flujo - Gestionar Contribucion Reserva"
+nombre: "Flujo - Gestionar contribución reserva"
 capacidad: "pasarela.contribucion_reserva.gestionar"
 pantallas_principales: []
-fragmentos: ["pasarela.pantalla.contribucion_reserva_ajax"]
-acciones: ["listar"]
-endpoints: ["/src/pasarela/contribucion_reserva_lista"]
-estado_revision: "generado"
+fragmentos:
+  - "pasarela.pantalla.contribucion_reserva_ajax"
+acciones: ["listar", "guardar", "eliminar"]
+endpoints:
+  - "\/src\/pasarela\/contribucion_reserva_lista"
+  - "\/src\/pasarela\/contribucion_reserva_default_data"
+  - "\/src\/pasarela\/contribucion_reserva_default_guardar"
+  - "\/src\/pasarela\/contribucion_reserva_excepcion_guardar"
+  - "\/src\/pasarela\/contribucion_reserva_excepcion_eliminar"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Contribucion Reserva
-
-Propuesta generada automaticamente desde la capacidad `pasarela.contribucion_reserva.gestionar` y sus pantallas relacionadas.
+# Flujo - Gestionar contribución reserva
 
 ## Objetivo De Usuario
 
-Gestiona ContribucionReservaLista. Devuelve el listado del parámetro contribucion_reserva listo para serializar. Estructura: {default, excepciones: [{id_tipo_activ, etiqueta, valor}]}.
+Porcentaje de contribución en reserva de plaza.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+`contribucion_reserva_lista.php` desde parámetros.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `pasarela.pantalla.contribucion_reserva_ajax`
-
-## Escenarios Inferidos
-
-### Listar
-
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Endpoints asociados:
-- `/src/pasarela/contribucion_reserva_lista`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.contribucion`
-- `form.default`
-- `form.iactividad_val`
-- `form.iasistentes_val`
-- `form.id_tipo_activ`
-- `form.inom_tipo_val`
-- `form.isfsv_val`
-- `post.contribucion`
-- `post.default`
-- `post.id_tipo_activ`
-- `post.que`
-- `post.sactividad`
-- `post.sasistentes`
-- `post.snom_tipo`
-
-Acciones JavaScript:
-- `fnjs_modificar`
-- `fnjs_modificar_default`
+Listar, default y excepciones (misma UX que no duerme).
 
 ## Endpoints Del Flujo
 
 - `/src/pasarela/contribucion_reserva_lista`
+- `/src/pasarela/contribucion_reserva_default_data`
+- `/src/pasarela/contribucion_reserva_default_guardar`
+- `/src/pasarela/contribucion_reserva_excepcion_guardar`
+- `/src/pasarela/contribucion_reserva_excepcion_eliminar`
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Falta valor por defecto`
+- `Debe ser un numero entero del 1 al 100`
+- `Falta id_tipo_activ`
+- `Falta valor de contribución`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).

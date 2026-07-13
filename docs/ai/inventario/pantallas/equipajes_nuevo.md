@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Nuevo"
+titulo: "Nuevo equipaje"
 pantalla: "inventario.pantalla.equipajes_nuevo"
-preguntas: ["Que se puede hacer en Equipajes Nuevo?", "Que campos tiene Equipajes Nuevo?", "Que acciones hay en Equipajes Nuevo?"]
+preguntas: ["Que se puede hacer en Nuevo equipaje?", "Que campos tiene Nuevo equipaje?", "Que acciones hay en Nuevo equipaje?"]
 capacidades: []
 endpoints: []
 source: "docs/catalogo/inventario/pantallas/equipajes_nuevo.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Nuevo
+# Ayuda IA Pantalla - Nuevo equipaje
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Wizard alta equipaje: periodo, actividades, nombre.
 
 ## Uso En Ayuda
 

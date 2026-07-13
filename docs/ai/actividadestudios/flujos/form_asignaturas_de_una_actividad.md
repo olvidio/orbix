@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el dossier 3005, pulsar **nuevo** o **modificar** sobre una asignatura.
+2. El sistema carga el formulario consultando `form_asignaturas_de_una_actividad_data`.
+3. Se muestran desplegables, fechas y botón guardar con hash de seguridad.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/form_asignaturas_de_una_actividad_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona FormAsignaturasDeUnaActividad. Descripcion funcional pendiente de revisar.
+El usuario abre el formulario para crear o editar una asignatura impartida en una actividad CA: el sistema devuelve desplegables de asignaturas y profesores, fechas, flags de aviso y permisos según el modo (nuevo/editar).
 
 ## Limites De La Respuesta
 

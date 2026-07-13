@@ -2,39 +2,31 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Actividad Nivel Stgr Default"
+titulo: "Nivel STGR por defecto"
 flujo: "actividades.actividad_nivel_stgr_default.gestionar.flujo"
-preguntas: ["Como obtener datos en Actividad Nivel Stgr Default?"]
-pantallas_principales: []
-fragmentos: ["actividades.pantalla.actividad_ver"]
+preguntas: []
+pantallas_principales: ["actividades.pantalla.actividad_ver"]
+fragmentos: []
 endpoints: ["/src/actividades/actividad_nivel_stgr_default_datos"]
 source: "docs/catalogo/actividades/flujos/actividad_nivel_stgr_default.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Actividad Nivel Stgr Default
+# Ayuda IA - Nivel STGR por defecto
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Actividad Nivel Stgr Default`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Nivel STGR por defecto`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Actividad Nivel Stgr Default?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (`actividades.pantalla.actividad_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
-
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +34,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActividadVerDatos. Nivel STGR por defecto según id_tipo_activ ({.
+Al concretar tipo de actividad, el desplegable STGR se pre-rellena con el nivel habitual.
 
 ## Limites De La Respuesta
 

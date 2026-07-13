@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "planning"
-titulo: "Planning Persona Que"
+titulo: "Planning por persona (filtros)"
 pantalla: "planning.pantalla.planning_persona_que"
-preguntas: ["Que se puede hacer en Planning Persona Que?", "Que campos tiene Planning Persona Que?", "Que acciones hay en Planning Persona Que?"]
+preguntas: ["Que se puede hacer en Planning por persona (filtros)?", "Que campos tiene Planning por persona (filtros)?", "Que acciones hay en Planning por persona (filtros)?"]
 capacidades: []
 endpoints: []
 source: "docs/catalogo/planning/pantallas/planning_persona_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Planning Persona Que
+# Ayuda IA Pantalla - Planning por persona (filtros)
 
 ## Resumen
 
-Formulario de filtros para el planning por persona (numerarios, agd, supernumerarios, sacd, de paso...).
+Criterios de búsqueda de personas y periodo. El colectivo (`obj_pau`, `na`) lo fija la entrada de menú. Al enviar abre `planning_persona_select`.
 
 ## Uso En Ayuda
 

@@ -8,42 +8,22 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/zonassacd/zona_ctr_ajax"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Zona Ctr Ajax
-
-Propuesta generada automaticamente desde la capacidad `zonassacd.zona_ctr_ajax.gestionar` y sus pantallas relacionadas.
+# Flujo - Zona Ctr Ajax
 
 ## Objetivo De Usuario
 
-Gestiona ZonaCtrAjax. Descripcion funcional pendiente de revisar.
+Endpoint legacy sin implementación; funcionalidad en zona_ctr_lista y zona_ctr_update.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o endpoint legacy.
 
 ## Fragmentos O Pantallas Auxiliares
 
 No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
-
-### Ejecutar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -51,11 +31,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

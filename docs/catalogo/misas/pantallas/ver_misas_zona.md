@@ -1,7 +1,7 @@
 ---
 id: "misas.pantalla.ver_misas_zona"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "misas"
 nombre: "Ver Misas Zona"
 controller: "frontend/misas/controller/ver_misas_zona.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/misas/ver_misas_zona_data"]
 capacidades: ["misas.ver_misas_zona.gestionar"]
 campos: ["post.empiezamax", "post.empiezamin", "post.id_zona", "post.seleccion"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Ver Misas Zona
+# Ver misas zona
 
-Descripcion funcional pendiente de revisar.
+Consulta de misas por zona y fechas (solo lectura). Sin entrada de menú en el índice; acceso vía enlaces internos.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/misas/controller/ver_misas_zona.php`
 
 ## Vistas Relacionadas
@@ -50,13 +52,7 @@ No se han detectado vistas PHTML relacionadas.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

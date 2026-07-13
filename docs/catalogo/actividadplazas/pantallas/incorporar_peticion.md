@@ -11,12 +11,13 @@ endpoints: ["/src/actividadplazas/peticiones_incorporar"]
 capacidades: ["actividadplazas.peticiones_incorporar.gestionar"]
 campos: ["form.sactividad", "form.sasistentes", "post.sactividad", "post.sasistentes"]
 acciones: ["fnjs_incorporar_peticiones", "fnjs_left_side_hide"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Incorporar Peticion
 
-Pantalla que dispara la incorporacion de las primeras peticiones como asistencia (accion contra `/src/actividadplazas/peticiones_incorporar`).
+Pantalla que dispara la incorporación de las primeras peticiones de plaza como asistencia (acción
+contra `/src/actividadplazas/peticiones_incorporar`).
 
 ## Tipo
 
@@ -53,11 +54,12 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla con un texto explicativo y un botón **Continuar** (`fnjs_incorporar_peticiones`) que lanza el
+proceso contra `peticiones_incorporar`. Al terminar muestra en `#resultado` cuántas peticiones se
+incorporaron y el aviso de que no se incorporan personas que ya tienen una actividad propia en el
+periodo. El botón se deshabilita mientras se ejecuta para evitar dobles envíos.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** vsm > ca > Incorporar 1ª petición (y variantes por perfil/tipo: dagd, crt…)
+- **Pills2:** ACTIVIDADES > Gestión de plazas y peticiones > Incorporar 1ª petición > ca n (y variantes por tipo/colectivo)

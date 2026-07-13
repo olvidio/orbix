@@ -6,7 +6,7 @@ titulo: "Cartas Presentacion"
 pantalla: "cartaspresentacion.pantalla.cartas_presentacion"
 preguntas: ["Que se puede hacer en Cartas Presentacion?", "Que campos tiene Cartas Presentacion?", "Que acciones hay en Cartas Presentacion?"]
 capacidades: ["cartaspresentacion.cartas_presentacion_shell.gestionar"]
-endpoints: ["/src/cartaspresentacion/cartas_presentacion_shell_data"]
+endpoints: ["/src/cartaspresentacion/cartas_presentacion_shell_data", "/src/cartaspresentacion/ubis_lista_data", "/src/cartaspresentacion/poblaciones_data", "/src/cartaspresentacion/carta_presentacion_form_data", "/src/cartaspresentacion/carta_presentacion_update", "/src/cartaspresentacion/carta_presentacion_eliminar"]
 source: "docs/catalogo/cartaspresentacion/pantallas/cartas_presentacion.md"
 estado_revision: "generado"
 ---
@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla principal del modulo `cartaspresentacion` — shell con filtro dl/r + poblacion, listado AJAX de centros y modal de modificacion.
+Pantalla principal del módulo: selección dl/regiones + población, listado AJAX de centros con estado de carta de presentación y modal de modificación.
 
 ## Uso En Ayuda
 
@@ -24,6 +24,8 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 ## Campos Detectados
 
 - `html.buscar`
+- `html.tipo_lista`
+- `html.poblacion_sel`
 
 ## Acciones Detectadas
 
@@ -34,7 +36,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `fnjs_left_side_hide`
 - `fnjs_modificar`
 - `fnjs_poblacion`
-- `fnjs_update_div`
 - `fnjs_ver`
 - `fnjs_ver_ubi`
 
@@ -45,6 +46,11 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 ## Endpoints Relacionados
 
 - `/src/cartaspresentacion/cartas_presentacion_shell_data`
+- `/src/cartaspresentacion/ubis_lista_data`
+- `/src/cartaspresentacion/poblaciones_data`
+- `/src/cartaspresentacion/carta_presentacion_form_data`
+- `/src/cartaspresentacion/carta_presentacion_update`
+- `/src/cartaspresentacion/carta_presentacion_eliminar`
 
 ## Precauciones
 

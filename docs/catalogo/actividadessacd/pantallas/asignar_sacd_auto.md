@@ -11,12 +11,15 @@ endpoints: ["/src/actividadessacd/sacd_asignar_auto"]
 capacidades: ["actividadessacd.sacd_asignar_auto.gestionar"]
 campos: []
 acciones: ["fnjs_asignar_sacd_auto", "fnjs_esc_asauto"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Asignar Sacd Auto
 
-Pantalla auxiliar "Auto asignar sacd a actividades".
+Pantalla auxiliar "Auto asignar sacd a actividades": muestra el criterio de asignación automática
+(sacd titular del centro encargado a actividades sr/sg actuales posteriores al inicio de curso des)
+y un botón **continuar** que dispara el endpoint `/src/actividadessacd/sacd_asignar_auto` y pinta el
+resultado (`asignadas`, `sin_asignar`) sin recargar.
 
 ## Tipo
 
@@ -50,11 +53,12 @@ No se han detectado campos de formulario.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Leer el texto que describe qué hará la asignación automática (sacd titular del centro a las
+   actividades sr/sg con centro encargado, actuales y a partir del inicio de curso des).
+2. Pulsar **continuar**: el sistema procesa y muestra cuántas actividades se han asignado y cuántas
+   quedan sin asignar. En las asignadas automáticamente, el campo observaciones queda con `auto`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- Sin entrada de menú en el índice: pantalla auxiliar invocada desde la pantalla "Asignar sacd a
+  actividades" (`activ_sacd`).

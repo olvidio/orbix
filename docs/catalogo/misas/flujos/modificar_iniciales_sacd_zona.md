@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.modificar_iniciales_sacd_zona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/modificar_iniciales_sacd_zona_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Modificar Iniciales Sacd Zona
-
-Propuesta generada automaticamente desde la capacidad `misas.modificar_iniciales_sacd_zona.gestionar` y sus pantallas relacionadas.
+# Flujo - Modificar iniciales sacd zona
 
 ## Objetivo De Usuario
 
-Gestiona ModificarInicialesSacdZona. Descripcion funcional pendiente de revisar.
+Devuelve el desplegable de todas las zonas para la pantalla de edición de iniciales SACD.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Iniciales sacd. Pills2: ATENCIÓN SACD > Gestión de misas > Iniciales sacd.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Iniciales sacd
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd

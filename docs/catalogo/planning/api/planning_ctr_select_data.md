@@ -4,56 +4,75 @@ tipo: "endpoint"
 modulo: "planning"
 url: "/src/planning/planning_ctr_select_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/planning/infrastructure/ui/http/controllers/planning_ctr_select_data.php"
 entrada: ["post.ctr:string", "post.empiezamax:string", "post.empiezamin:string", "post.periodo:string", "post.sacd:string", "post.todos_agd:string", "post.todos_n:string", "post.todos_s:string", "post.year:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "planning_PlanningCtrSelectDataData"
-respuesta_data: ["msg_txt:string, cabecera_title: string, a_actividades2: array<int|string, mixed>"]
 requiere_hashb: false
+errores: ["Faltan fechas de periodo", "No encuentro este ctr", "No encuentro personas para %s"]
 frontend_referencias: ["frontend/planning/controller/planning_ctr_select.php"]
 casos_uso: ["src\\planning\\application\\PlanningCtrSelectData"]
 tags: ["planning", "ctr", "select", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Planning Ctr Select Data
 
-Personas + actividades agrupadas por centro para `planning_ctr_select`.
+Personas y actividades agrupadas por centro para el calendario de `planning_ctr_select`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Dos modos según `ctr`:
+
+- **Centro concreto** (`ctr` no vacío): busca el centro por nombre (sin acentos) y lista personas
+  activas de ese ctr. Acumula avisos en `msg_txt` si algún ctr no tiene personas.
+- **Todos los centros** (`ctr` vacío): lista personas según `todos_n` / `todos_agd` / `todos_s`
+  (tabla `n`, `a` o `s`).
+
+Con las personas encontradas, `ActividadesDePersonaService` devuelve `a_actividades2` agrupado por centro.
+El periodo se calcula en el controller con `Periodo::conCalendarioDesdeBackend()`.
 
 ## Endpoint
 
 - URL: `/src/planning/planning_ctr_select_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/planning/infrastructure/ui/http/controllers/planning_ctr_select_data.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `ctr` | `string` | application | No | application |
-| `empiezamax` | `string` | controller | No | controller |
-| `empiezamin` | `string` | controller | No | controller |
-| `periodo` | `string` | controller | No | controller |
-| `sacd` | `string` | application | No | application |
-| `todos_agd` | `string` | application | No | application |
-| `todos_n` | `string` | application | No | application |
-| `todos_s` | `string` | application | No | application |
-| `year` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `year` | `integer` | controller | No | Año del periodo |
+| `periodo` | `string` | controller | No | Código de periodo calendario |
+| `empiezamin` | `string` | controller | No | Límite inferior de inicio de actividad |
+| `empiezamax` | `string` | controller | No | Límite superior de inicio de actividad |
+| `ctr` | `string` | application | No | Nombre de centro; vacío = todos |
+| `sacd` | `string` | application | No | Vacío excluye sacd (`sacd=f` en filtro) |
+| `todos_n` | `string` | application | No | Checkbox numerarios (tabla `n`) |
+| `todos_agd` | `string` | application | No | Checkbox agd (tabla `a`) |
+| `todos_s` | `string` | application | No | Checkbox supernumerarios (tabla `s`) |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `planning_PlanningCtrSelectDataData`):
-  - `msg_txt` (`string, cabecera_title: string, a_actividades2: array<int|string, mixed>`)
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- `data`:
+  - `msg_txt` (`string`): avisos HTML (ctr sin personas, ctr no encontrado).
+  - `cabecera_title` (`string`): título de la vista.
+  - `a_actividades2` (`array`): actividades por persona/centro en el periodo.
+
+## Permisos
+
+- Sin control propio; autorización en frontend + menú.
+
+## Errores conocidos
+
+- `Faltan fechas de periodo` — periodo no resuelto en el controller.
+- `No encuentro este ctr` — nombre de centro sin coincidencia.
+- `No encuentro personas para %s` — ctr válido pero sin personas (mensaje acumulable).
 
 ## Casos De Uso
 
@@ -62,9 +81,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 ## Frontend Relacionado
 
 - `frontend/planning/controller/planning_ctr_select.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

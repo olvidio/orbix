@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.form_notas_de_una_persona"]
 acciones: ["ver_formulario"]
 endpoints: ["/src/notas/nota_persona_form_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Nota Persona
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.nota_persona.gestio
 
 ## Objetivo De Usuario
 
-Gestiona NotaPersona. Endpoint backend que prepara los datos para form_notas_de_una_persona.phtml (alta/edicion de PersonaNota).
+Formulario completo de nota: carga (`nota_persona_form_data`) y mutaciones.
 
 ## Punto De Entrada
 
@@ -84,10 +84,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

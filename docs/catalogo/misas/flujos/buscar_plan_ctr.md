@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.buscar_plan_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/buscar_plan_ctr_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Buscar Plan Ctr
-
-Propuesta generada automaticamente desde la capacidad `misas.buscar_plan_ctr.gestionar` y sus pantallas relacionadas.
+# Flujo - Buscar plan ctr
 
 ## Objetivo De Usuario
 
-Gestiona BuscarPlanCtr. Formulario buscador del plan de misas por centro (zonas + centros + periodo).
+Inicializa el formulario de búsqueda del plan CTR: zonas, centros disponibles y selección por defecto según rol del usuario.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Plan centro. Pills2: ATENCIÓN SACD > Gestión de misas > Plan ctr.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -57,11 +55,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No tiene permiso para ver esta página`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Plan centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan ctr

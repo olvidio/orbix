@@ -3,65 +3,37 @@ id: "actividades.pantalla.planning_casa_nueva"
 tipo: "pantalla_frontend"
 subtipo: "fragmento_ajax"
 modulo: "actividades"
-nombre: "Planning Casa Nueva"
+nombre: "Nueva actividad desde planning"
 controller: "frontend/actividades/controller/planning_casa_nueva.php"
-vistas: []
-fragmentos_frontend: ["frontend/actividades/controller/actividad_select_ubi.php", "frontend/actividades/controller/planning_casa_nueva.php"]
+vistas: ["frontend/actividades/view/actividad_form.html.twig", "frontend/actividades/view/_actividad_form_head.html.twig", "frontend/actividades/view/_actividad_form_body.html.twig", "frontend/actividades/view/_actividad_form_botones.html.twig"]
+fragmentos_frontend: ["frontend/actividades/controller/actividad_select_ubi.php"]
 endpoints: ["/src/actividades/actividad_que_datos", "/src/actividades/actividad_status_labels_datos", "/src/actividades/actividad_ver_datos"]
 capacidades: ["actividades.actividad_que.gestionar", "actividades.actividad_status_labels.gestionar", "actividades.actividad_ver.gestionar"]
 campos: ["form.dl_org", "form.isfsv", "form.ssfsv", "post.id_ubi"]
-acciones: []
-estado_revision: "generado"
+acciones: ["fnjs_guardar"]
+estado_revision: "revisado"
 ---
 
-# Planning Casa Nueva
+# Nueva actividad desde planning
 
-Formulario para crear una actividad nueva desde el planning de casas.
+Fragmento para **alta de actividad** en el planning de casas. Recibe `id_ubi` (casa
+del calendario), precarga delegación y sf/sv del usuario, status inicial *proyecto*
+y formulario vacío vía `actividad_ver_datos` (`id_activ=0`). Cascada de tipo con
+`actividad_que_datos`. Guardar usa `actividad_nuevo` (JS compartido con ficha).
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `fragmento_ajax` (popup/div del planning)
 - Controller: `frontend/actividades/controller/planning_casa_nueva.php`
-
-## Vistas Relacionadas
-
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/actividades/controller/actividad_select_ubi.php`
-- `frontend/actividades/controller/planning_casa_nueva.php`
-
-## Endpoints Usados
-
-- `/src/actividades/actividad_que_datos`
-- `/src/actividades/actividad_status_labels_datos`
-- `/src/actividades/actividad_ver_datos`
-
-## Capacidades Relacionadas
-
-- `actividades.actividad_que.gestionar`
-- `actividades.actividad_status_labels.gestionar`
-- `actividades.actividad_ver.gestionar`
-
-## Campos Detectados
-
-- `form.dl_org`
-- `form.isfsv`
-- `form.ssfsv`
-- `post.id_ubi`
-
-## Acciones Detectadas
-
-No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+En planning por casas: crear actividad en una casa/fecha → completar tipo y datos →
+guardar.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+sin entrada de menú en el índice (popup desde planning):
+
+- **Legacy / Pills2:** Calendario/dre/adl/… > planning > por casas o *nuevo planing*
+  en estudio (`planning_casa_que.php`).

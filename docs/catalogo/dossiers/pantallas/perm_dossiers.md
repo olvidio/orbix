@@ -1,7 +1,7 @@
 ---
 id: "dossiers.pantalla.perm_dossiers"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "dossiers"
 nombre: "Perm Dossiers"
 controller: "frontend/dossiers/controller/perm_dossiers.php"
@@ -11,16 +11,16 @@ endpoints: ["/src/dossiers/perm_dossiers_data"]
 capacidades: ["dossiers.perm_dossiers.gestionar"]
 campos: ["post.tipo"]
 acciones: ["fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Perm Dossiers
 
-Página de selección de los dossiers cuyos permisos deseo visualizar o modificar.
+Listado de tipos de dossier para administrar permisos de un ámbito (`tipo` = `p` personas, `u` ubis, `a` actividades). Cada fila enlaza a `perm_dossier_ver` para ver o modificar la definición del tipo.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/dossiers/controller/perm_dossiers.php`
 
 ## Vistas Relacionadas
@@ -49,11 +49,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/dossiers/` y `src/dossiers/`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > perm_dossiers > ubis · sistema > perm_dossiers > personas · sistema > perm_dossiers > actividades
+- **Pills2:** ADMIN LOCAL > perm_dossiers > ubis · ADMIN LOCAL > perm_dossiers > personas · ADMIN LOCAL > perm_dossiers > actividades

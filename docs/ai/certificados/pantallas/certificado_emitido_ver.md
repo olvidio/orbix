@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Vista Twig de consulta/edición de un certificado emitido (metadatos y PDF embebido). Abierta desde el listado de emitidos.
 
 ## Uso En Ayuda
 

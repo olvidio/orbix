@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AsistenteMover. JSON para {.
+Mover asistente de una actividad a otra del mismo tipo.
 
 ## Limites De La Respuesta
 

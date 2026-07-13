@@ -8,42 +8,48 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadestudios/asistente_observ_est"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Asistente Observ Est
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.asistente_observ_est.gestionar` y sus pantallas relacionadas.
+Guardado del campo `observ_est` (observaciones de plan de estudios) de un asistente.
 
 ## Objetivo De Usuario
 
-Gestiona AsistenteObservEst. Guarda el texto observ_est de un Asistente (persona en una actividad de estudios). Sustituye al case observ_est de update_3103.php.
+El usuario guarda las observaciones de plan de estudios (`observ_est`) de un asistente
+en su actividad vigente. Sustituye al case `observ_est` de `update_3103.php`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Fragmento `select_matriculas_de_una_persona` (dossier 1303): `fnjs_grabar_observ` en
+`frontend/actividadestudios/view/select_matriculas_de_una_persona.phtml` llama al endpoint
+por AJAX al grabar observaciones de estudios.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `frontend/actividadestudios/view/select_matriculas_de_una_persona.phtml` (dossier 1303)
 
 ## Escenarios Inferidos
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En el dossier de matrículas de una persona (1303), editar el campo de observaciones de
+   plan de estudios de un asistente.
+2. Pulsar grabar observaciones (`fnjs_grabar_observ`).
+3. El sistema envía el formulario serializado al endpoint y refresca el fragmento si tiene éxito.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/asistente_observ_est`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- Ninguno detectado.
+- Ninguno detectado en metadatos del flujo (campo `observ_est` en el fragmento dossier).
 
 Acciones JavaScript:
-- Ninguna detectada.
+- `fnjs_grabar_observ`
 
 ## Endpoints Del Flujo
 
@@ -55,9 +61,9 @@ Acciones JavaScript:
 - ``hay un error, no se ha guardado``
 - ``no encuentro al asistente``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo desde dossier 1303 «matrículas de una persona»).
+
+- **Legacy:** vest > buscar persona > n r/dl; stgr > personas > n r/dl.
+- **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl; PERSONAS > Agregados > Buscar agd de la r/dl.

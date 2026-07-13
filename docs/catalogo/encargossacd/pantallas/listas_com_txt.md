@@ -11,7 +11,7 @@ endpoints: ["/src/encargossacd/listas_com_txt_data", "/src/encargossacd/listas_c
 capacidades: ["encargossacd.listas_com_txt.gestionar"]
 campos: ["form.clave", "form.comunicacion", "form.idioma", "html.comunicacion"]
 acciones: ["fnjs_get_texto", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Listas Com Txt
@@ -54,13 +54,19 @@ Pantalla para editar los textos de comunicacion de los encargos a los SACD.
 - `fnjs_get_texto`
 - `fnjs_guardar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+

@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["devel_db_admin.pantalla.db_verificar_renombrar_esquema"]
 acciones: ["ejecutar"]
 endpoints: ["/src/devel_db_admin/verificar_renombrar_esquema"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Verificar Renombrar Esquema
@@ -17,7 +17,8 @@ Propuesta generada automaticamente desde la capacidad `devel_db_admin.verificar_
 
 ## Objetivo De Usuario
 
-Gestiona RenombrarEsquemaVerificacionContexto, VerificarEstadoRenombrarEsquema. Verificación de estado del renombre (POST: esquema_origen opcional para solo comprobar el destino; región y dl obligatorios; acepta POST esquema legado con sufijo v/f como origen).
+Comprobar estado del renombre antes/después.
+
 
 ## Punto De Entrada
 
@@ -31,8 +32,11 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Abrir la pantalla de entrada del flujo.
+2. Completar parámetros (región, dl, flags).
+3. Ejecutar y revisar avisos en pantalla.
+
 
 Endpoints asociados:
 - Ninguno inferido para esta accion.
@@ -59,9 +63,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

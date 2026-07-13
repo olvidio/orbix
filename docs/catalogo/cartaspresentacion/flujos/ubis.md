@@ -8,58 +8,34 @@ pantallas_principales: []
 fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion_ubis_lista"]
 acciones: ["listar"]
 endpoints: ["/src/cartaspresentacion/ubis_lista_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ubis
+# Flujo - Listado de centros con estado de carta
 
-Propuesta generada automaticamente desde la capacidad `cartaspresentacion.ubis.gestionar` y sus pantallas relacionadas.
+Tabla interactiva de centros y su carta de presentación (sí/no).
 
 ## Objetivo De Usuario
 
-Gestiona CartasPresentacionUbis. Listado de centros con el estado de su carta de presentacion, en dos variantes (delegacion del usuario o centros extranjeros).
+Ver qué centros tienen carta de presentación y acceder a modificar, ver ficha o quitar.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `cartas_presentacion`: tras pulsar **buscar**, se carga `cartas_presentacion_ubis_lista.php`
+en `#ficha2`.
 
-## Fragmentos O Pantallas Auxiliares
-
-- `cartaspresentacion.pantalla.cartas_presentacion_ubis_lista`
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Listar
 
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Endpoints asociados:
-- `/src/cartaspresentacion/ubis_lista_data`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.poblacion_sel`
-- `post.tipo_lista`
-
-Acciones JavaScript:
-- Ninguna detectada.
+1. Elegir filtro dl/regiones (+ población si `get_dl`).
+2. Pulsar **buscar** → `ubis_lista_data` con `tipo_lista` y `poblacion_sel`.
+3. Tabla con columnas director, centro, carta de presentación, dirección.
 
 ## Endpoints Del Flujo
 
 - `/src/cartaspresentacion/ubis_lista_data`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (fragmento de `cartas_presentacion` > modificar).

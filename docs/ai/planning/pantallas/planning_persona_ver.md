@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "planning"
-titulo: "Planning Persona Ver"
+titulo: "Planning por persona (calendario)"
 pantalla: "planning.pantalla.planning_persona_ver"
-preguntas: ["Que se puede hacer en Planning Persona Ver?", "Que campos tiene Planning Persona Ver?", "Que acciones hay en Planning Persona Ver?"]
+preguntas: ["Que se puede hacer en Planning por persona (calendario)?", "Que campos tiene Planning por persona (calendario)?", "Que acciones hay en Planning por persona (calendario)?"]
 capacidades: ["planning.planning_persona_ver.gestionar"]
 endpoints: ["/src/planning/planning_persona_ver_data"]
 source: "docs/catalogo/planning/pantallas/planning_persona_ver.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Planning Persona Ver
+# Ayuda IA Pantalla - Planning por persona (calendario)
 
 ## Resumen
 
-Planning (calendario) de las actividades asignadas a un conjunto de personas seleccionadas en `planning_persona_select`.
+Calendario de actividades de las personas seleccionadas en `planning_persona_select`.
 
 ## Uso En Ayuda
 

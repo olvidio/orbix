@@ -6,7 +6,7 @@ url: "/src/ubis/calendario_periodos_guardar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/calendario_periodos_guardar.php"
-entrada: ["post.f_fin:string", "post.f_ini:string", "post.id_item:integer", "post.id_ubi:integer", "post.sfsv:integer"]
+entrada: ["post.id_item:integer", "post.id_ubi:integer", "post.f_ini:string", "post.f_fin:string", "post.sfsv:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -14,14 +14,18 @@ errores: ["hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/ubis/controller/calendario_periodos.php"]
 casos_uso: ["src\\ubis\\application\\CalendarioPeriodoGuardar"]
 tags: ["ubis", "calendario", "periodos", "guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Calendario Periodos Guardar
 
-Descripcion funcional pendiente de revisar.
+Crea o actualiza un periodo de calendario CDC con fechas y asignación sfsv.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Crea o actualiza un periodo de calendario CDC con fechas y asignación sfsv.
 
 ## Endpoint
 
@@ -34,23 +38,24 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `f_fin` | `string` | controller | No | controller |
-| `f_ini` | `string` | controller | No | controller |
-| `id_item` | `integer` | controller | No | controller |
-| `id_ubi` | `integer` | controller | No | controller |
-| `sfsv` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_item` | `integer` | application | No | |
+| `id_ubi` | `integer` | application | No | |
+| `f_ini` | `string` | application | No | |
+| `f_fin` | `string` | application | No | |
+| `sfsv` | `integer` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacío serializado).
 
 ## Errores conocidos
-
 - `hay un error, no se ha guardado`
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `UbiPermisos` (`puedeModificarPorObjeto`, `dlPerteneceAMiDelegacion`), `have_perm_oficina(scdl|scl|vcsd|des|admin_sv)` y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -58,10 +63,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/ubis/controller/calendario_periodos.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/ubis/controller/calendario_periodos.php"]`).

@@ -66,37 +66,37 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Pantallas Disponibles
 
-- Cabecera Pie Txt -> `pantallas/cabecera_pie_txt.md`
-- Doc Asignado -> `pantallas/doc_asignado.md`
-- Doc Asignar Ctr -> `pantallas/doc_asignar_ctr.md`
-- Doc Asignar Dlb -> `pantallas/doc_asignar_dlb.md`
-- Doc De Ctr -> `pantallas/doc_de_ctr.md`
-- Doc De Dlb -> `pantallas/doc_de_dlb.md`
-- Doc Imprimir Ctr -> `pantallas/doc_imprimir_ctr.md`
-- Doc Imprimir Dlb -> `pantallas/doc_imprimir_dlb.md`
-- Doc No Asignado -> `pantallas/doc_no_asignado.md`
-- Docs Asignar Que -> `pantallas/docs_asignar_que.md`
-- Docs Con Observaciones -> `pantallas/docs_con_observaciones.md`
-- Docs En Busqueda -> `pantallas/docs_en_busqueda.md`
-- Docs Perdidos -> `pantallas/docs_perdidos.md`
-- Documentos Form -> `pantallas/documentos_form.md`
-- Equipajes Casas Posibles -> `pantallas/equipajes_casas_posibles.md`
-- Equipajes Desplegable -> `pantallas/equipajes_desplegable.md`
-- Equipajes Doc Casa -> `pantallas/equipajes_doc_casa.md`
-- Equipajes Docs Libres -> `pantallas/equipajes_docs_libres.md`
-- Equipajes Form Add -> `pantallas/equipajes_form_add.md`
-- Equipajes Form Del -> `pantallas/equipajes_form_del.md`
-- Equipajes Form Nuevo -> `pantallas/equipajes_form_nuevo.md`
-- Equipajes Form Texto Listado -> `pantallas/equipajes_form_texto_listado.md`
-- Equipajes Imprimir -> `pantallas/equipajes_imprimir.md`
-- Equipajes Lista Activ Periodo -> `pantallas/equipajes_lista_activ_periodo.md`
-- Equipajes Lista Docs -> `pantallas/equipajes_lista_docs.md`
-- Equipajes Movimientos -> `pantallas/equipajes_movimientos.md`
-- Equipajes Movimientos Que -> `pantallas/equipajes_movimientos_que.md`
-- Equipajes Nuevo -> `pantallas/equipajes_nuevo.md`
-- Equipajes Posibles Maletas -> `pantallas/equipajes_posibles_maletas.md`
-- Equipajes Ver -> `pantallas/equipajes_ver.md`
-- Equipajes Ver Docs -> `pantallas/equipajes_ver_docs.md`
-- Inventario Que -> `pantallas/inventario_que.md`
-- Traslado Doc Lista -> `pantallas/traslado_doc_lista.md`
-- Traslado Doc Que -> `pantallas/traslado_doc_que.md`
+- Textos cabecera/pie equipajes -> `pantallas/cabecera_pie_txt.md`
+- Documentos ya asignados -> `pantallas/doc_asignado.md`
+- Formulario asignar a centros -> `pantallas/doc_asignar_ctr.md`
+- Formulario asignar DLB -> `pantallas/doc_asignar_dlb.md`
+- Inventario por centros -> `pantallas/doc_de_ctr.md`
+- Inventario DLB/casa -> `pantallas/doc_de_dlb.md`
+- Imprimir inventario centros -> `pantallas/doc_imprimir_ctr.md`
+- Imprimir inventario DLB -> `pantallas/doc_imprimir_dlb.md`
+- Centros sin documento -> `pantallas/doc_no_asignado.md`
+- Asignar documentos — selector -> `pantallas/docs_asignar_que.md`
+- Documentos con observaciones -> `pantallas/docs_con_observaciones.md`
+- Documentos pendientes -> `pantallas/docs_en_busqueda.md`
+- Documentos perdidos -> `pantallas/docs_perdidos.md`
+- Edición masiva documentos -> `pantallas/documentos_form.md`
+- Casas posibles -> `pantallas/equipajes_casas_posibles.md`
+- Desplegable equipajes -> `pantallas/equipajes_desplegable.md`
+- Docs por casa (equipaje) -> `pantallas/equipajes_doc_casa.md`
+- Docs libres -> `pantallas/equipajes_docs_libres.md`
+- Añadir doc a maleta -> `pantallas/equipajes_form_add.md`
+- Quitar doc de maleta -> `pantallas/equipajes_form_del.md`
+- Fragmento selección actividades -> `pantallas/equipajes_form_nuevo.md`
+- Editar texto listado -> `pantallas/equipajes_form_texto_listado.md`
+- Imprimir equipaje -> `pantallas/equipajes_imprimir.md`
+- Actividades por periodo -> `pantallas/equipajes_lista_activ_periodo.md`
+- Lista docs EGM/lugar -> `pantallas/equipajes_lista_docs.md`
+- Movimientos maletas — resultado -> `pantallas/equipajes_movimientos.md`
+- Movimientos maletas — filtro -> `pantallas/equipajes_movimientos_que.md`
+- Nuevo equipaje -> `pantallas/equipajes_nuevo.md`
+- Elegir maleta/grupo -> `pantallas/equipajes_posibles_maletas.md`
+- Gestionar equipajes -> `pantallas/equipajes_ver.md`
+- Ver docs de lugar -> `pantallas/equipajes_ver_docs.md`
+- Elegir inventario centros o DLB -> `pantallas/inventario_que.md`
+- Traslado — lista y guardar -> `pantallas/traslado_doc_lista.md`
+- Traslado de documentos — filtro -> `pantallas/traslado_doc_que.md`

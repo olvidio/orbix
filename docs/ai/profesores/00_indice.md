@@ -21,18 +21,18 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Congresos -> `flujos/congresos.md`
-- Docencia -> `flujos/docencia.md`
-- Ficha Profesor Stgr -> `flujos/ficha_profesor_stgr.md`
-- Lista Por Departamentos -> `flujos/lista_por_departamentos.md`
-- Profesor Asignatura Ajax -> `flujos/profesor_asignatura_ajax.md`
-- Profesor Asignatura Que -> `flujos/profesor_asignatura_que.md`
+- Consultar congresos -> `flujos/congresos.md`
+- Ver docencia global -> `flujos/docencia.md`
+- Ver ficha profesor STGR -> `flujos/ficha_profesor_stgr.md`
+- Consultar claustro -> `flujos/lista_por_departamentos.md`
+- Tabla AJAX profesores asignatura -> `flujos/profesor_asignatura_ajax.md`
+- Buscar profesor para asignatura -> `flujos/profesor_asignatura_que.md`
 
 ## Pantallas Disponibles
 
-- Congresos -> `pantallas/congresos.md`
-- Docencia -> `pantallas/docencia.md`
-- Ficha Profesor Stgr -> `pantallas/ficha_profesor_stgr.md`
-- Lista Por Departamentos -> `pantallas/lista_por_departamentos.md`
-- Profesor Asignatura Ajax -> `pantallas/profesor_asignatura_ajax.md`
-- Profesor Asignatura Que -> `pantallas/profesor_asignatura_que.md`
+- Asistencia a congresos -> `pantallas/congresos.md`
+- Ver docencia -> `pantallas/docencia.md`
+- Ficha profesor STGR -> `pantallas/ficha_profesor_stgr.md`
+- Claustro por departamentos -> `pantallas/lista_por_departamentos.md`
+- Tabla profesores por asignatura -> `pantallas/profesor_asignatura_ajax.md`
+- Profesor para asignatura -> `pantallas/profesor_asignatura_que.md`

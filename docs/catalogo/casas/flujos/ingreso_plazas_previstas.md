@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["casas.pantalla.prevision_asistentes"]
 acciones: ["crear_actualizar"]
 endpoints: ["/src/casas/ingreso_plazas_previstas_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Ingreso Plazas Previstas
@@ -71,10 +71,8 @@ Acciones JavaScript:
 
 - ``Hay un error, no se ha guardado``
 - ``no se encuentra el ingreso``
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** adl > Nuevo Calendario > previsión asistentes
+- **Pills2:** Calendario > Nuevo calendario > previsión asistentes
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

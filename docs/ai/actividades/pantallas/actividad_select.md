@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "actividades"
-titulo: "Actividad Select"
+titulo: "Resultados buscar actividad"
 pantalla: "actividades.pantalla.actividad_select"
-preguntas: ["Que se puede hacer en Actividad Select?", "Que campos tiene Actividad Select?", "Que acciones hay en Actividad Select?"]
+preguntas: ["Que se puede hacer en Resultados buscar actividad?", "Que campos tiene Resultados buscar actividad?", "Que acciones hay en Resultados buscar actividad?"]
 capacidades: ["actividades.actividad_select.gestionar"]
 endpoints: ["/src/actividades/actividad_select_datos"]
 source: "docs/catalogo/actividades/pantallas/actividad_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Actividad Select
+# Ayuda IA Pantalla - Resultados buscar actividad
 
 ## Resumen
 
-Lista de actividades que cumplen con los filtros de actividad_que.
+Pantalla de **resultados** tras `actividad_que` (o acceso directo con filtros en URL). Lista actividades vía `actividad_select_datos`; construye tabla `Lista` con enlaces firmados a ficha (`actividad_ver`), dossiers, importar/publicar según `modo`/`que`. Si hay >200 filas pide `continuar=1` antes de mostrar.
 
 ## Uso En Ayuda
 
@@ -56,7 +56,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Acciones Detectadas
 
-- `button:. _(`
 - `fnjs_borrar`
 - `fnjs_buscar`
 - `fnjs_enviar_formulario`

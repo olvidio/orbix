@@ -11,52 +11,22 @@ endpoints: []
 capacidades: []
 campos: ["get.seguro", "get.todos", "post.seguro", "post.todos"]
 acciones: ["fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Menus Importar De Ficheros A Ref
+# Restaurar menús por defecto (ref→DL)
 
-Descripcion funcional pendiente de revisar.
+Confirmación y ejecución masiva ref→aux por esquema(s). Controller HTTP en `src/menus/`.
 
 ## Tipo
 
 - Subtipo: `pantalla`
-- Controller: `frontend/menus/controller/menus_importar_de_ficheros_a_ref.php`
 
-## Vistas Relacionadas
+## Ruta de menú
 
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-No se han detectado controladores frontend relacionados.
-
-## Endpoints Usados
-
-No se han detectado endpoints `/src/...`.
-
-## Capacidades Relacionadas
-
-No se han detectado capacidades relacionadas.
-
-## Campos Detectados
-
-- `get.seguro`
-- `get.todos`
-- `post.seguro`
-- `post.todos`
-
-## Acciones Detectadas
-
-- `fnjs_update_div`
+- **Legacy:** sistema > menus > importar desde ficheros
+- **Pills2:** sin entrada de menú en el índice
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Operación destructiva de mantenimiento; requiere confirmación en pantalla.

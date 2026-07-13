@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Controlador AJAX HTML: listado del catalogo `TipoTarifa`.
+Fragmento AJAX: renderiza la tabla HTML del catálogo `TipoTarifa` a partir de `tipo_tarifa_lista_data`.
 
 ## Uso En Ayuda
 

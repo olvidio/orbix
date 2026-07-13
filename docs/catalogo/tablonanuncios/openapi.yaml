@@ -17,7 +17,7 @@ paths:
       operationId: "post_tablonanuncios_anuncio_delete"
       summary: "Anuncio Delete"
       description: |
-        Borrado lógico de un anuncio (marca t_eliminado).
+        Borrado lógico de un anuncio (marca `t_eliminado`).
         
         Operacion: `mutacion`.
         

@@ -45,10 +45,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona UsuarioInfo. Descripcion funcional pendiente de revisar.
+Resumen usuario para cabecera ficha (grupos, login, email).
+
+## Errores Documentados
+
+- `Id de usuario no válido`
+- `Usuario no encontrado`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

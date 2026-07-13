@@ -6,23 +6,28 @@ url: "/src/ubiscamas/update_cama_asistente"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubiscamas/infrastructure/ui/http/controllers/update_cama_asistente.php"
-entrada: ["post.ctx:string", "post.id_activ:integer", "post.id_cama:string", "post.id_nom:integer"]
-entrada_obligatoria: []
+entrada: ["post.ctx:string", "post.id_nom:integer", "post.id_cama:string"]
+entrada_obligatoria: ["ctx", "id_nom"]
 respuesta: "raw_response"
 respuesta_data_schema: "ubiscamas_UpdateCamaAsistenteData"
 respuesta_data: ["success:bool, mensaje: string"]
-requiere_hashb: false
-frontend_referencias: []
-casos_uso: ["src\\ubiscamas\\application\\UpdateCamaAsistente"]
+requiere_hashb: true
+frontend_referencias: ["frontend/ubiscamas/view/lista_habitaciones.phtml"]
+casos_uso: ["src\ubiscamas\application\UpdateCamaAsistente"]
 tags: ["ubiscamas", "update", "cama", "asistente"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Operación no autorizada", "Asistencia no encontrada para id_nom", "Error al guardar la asignación de la cama"]
 ---
 
 # Update Cama Asistente
 
-Descripcion funcional pendiente de revisar.
+Asigna o reasigna la cama de un asistente en una actividad. `id_activ` se extrae de la cápsula `ctx` firmada (`HashB::sign('update_cama_asistente', {id_activ})`); `id_cama` vacío desasigna.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Asigna o reasigna la cama de un asistente en una actividad. `id_activ` se extrae de la cápsula `ctx` firmada (`HashB::sign('update_cama_asistente', {id_activ})`); `id_cama` vacío desasigna.
 
 ## Endpoint
 
@@ -35,20 +40,26 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `ctx` | `string` | controller | No | controller |
-| `id_activ` | `integer` | controller | No | controller |
-| `id_cama` | `string` | controller | No | controller |
-| `id_nom` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `ctx` | `string` | application | Si | Cápsula HashB; `id_activ` se lee del contexto abierto |
+| `id_nom` | `integer` | application | Si |  |
+| `id_cama` | `string` | application | No |  |
 
 ## Salida
 
-- Helper: `echo`
-- Forma: `raw_response`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `ubiscamas_UpdateCamaAsistenteData`):
-  - `success` (`bool, mensaje: string`)
+- Helper: `echo json_encode` (JSON directo, sin sobre de `ContestarJson`).
+- Forma: `raw_response`.
+- Exito: `success: true`, `mensaje: "ok"`.
+  - `success`: boolean
+  - `mensaje`: ok o texto error
+
+## Errores conocidos
+- `Operación no autorizada`
+- `Asistencia no encontrada para id_nom`
+- `Error al guardar la asignación de la cama`
+
+## Permisos
+
+Autorización vía cápsula HashB `ctx`; sin perm_* en caso de uso.
 
 ## Casos De Uso
 
@@ -56,10 +67,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/ubiscamas/view/lista_habitaciones.phtml`

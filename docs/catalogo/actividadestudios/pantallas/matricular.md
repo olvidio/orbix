@@ -11,12 +11,13 @@ endpoints: ["/src/actividadestudios/matricula_automatica"]
 capacidades: ["actividadestudios.matricula_automatica.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Matricular
 
-Pantalla de menu "matricular a todos".
+Ejecuta la matriculación automática masiva («matricular a todos») y muestra el informe de
+resultado. Sucesor de `apps/actividadestudios/controller/matricular.php`.
 
 ## Tipo
 
@@ -33,7 +34,7 @@ No se han detectado controladores frontend relacionados.
 
 ## Endpoints Usados
 
-- `/src/actividadestudios/matricula_automatica`
+- `/src/actividadestudios/matricula_automatica` (invocado al cargar la pantalla)
 
 ## Capacidades Relacionadas
 
@@ -49,11 +50,14 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Al abrir la entrada de menú, el controller invoca inmediatamente `matricula_automatica` con el
+POST recibido (sin formulario intermedio) y renderiza el mensaje de salida (`msg`) en un bloque
+`<pre>` bajo el título «Matricular».
 
-## Revision Manual
+Es una operación batch de un solo paso: el usuario solo lee el resultado y puede volver atrás con
+la navegación estándar.
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+## Ruta de menú
+
+- **Legacy:** vest > buscar persona > matricular a todos
+- **Pills2:** vest > buscar persona > matricular a todos; ESTUDIOS > Preparación planes estudio > Matricular a todos

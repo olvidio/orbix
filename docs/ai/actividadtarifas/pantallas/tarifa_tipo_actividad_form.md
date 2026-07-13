@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Controlador AJAX HTML: form modificar/nuevo de `RelacionTarifaTipoActividad`.
+Fragmento AJAX: formulario popup modificar/nuevo de `RelacionTarifaTipoActividad` (twig).
 
 ## Uso En Ayuda
 

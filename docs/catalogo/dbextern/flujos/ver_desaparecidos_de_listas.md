@@ -2,64 +2,38 @@
 id: "dbextern.ver_desaparecidos_de_listas.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Gestionar Ver Desaparecidos De Listas"
+nombre: "Flujo - Aquinate con BDU vacía"
 capacidad: "dbextern.ver_desaparecidos_de_listas.gestionar"
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_desaparecidos_de_listas"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/dbextern/ver_desaparecidos_de_listas_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ver Desaparecidos De Listas
+# Flujo - Aquinate con BDU vacía
 
-Propuesta generada automaticamente desde la capacidad `dbextern.ver_desaparecidos_de_listas.gestionar` y sus pantallas relacionadas.
+Listado del punto 8.
 
 ## Objetivo De Usuario
 
-Gestiona VerDesaparecidosDeListas. Obtiene datos de personas de Orbix desaparecidas de la BDU.
+Revisar fichas Aquinate cuya correspondencia BDU ya no existe.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+**ver** del punto 8 en `sincro_index`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `dbextern.pantalla.ver_desaparecidos_de_listas`
+### Obtener datos
 
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.id_nom_orbix`
-- `form.tipo_persona`
-- `post.ids_desaparecidos_de_listas`
-- `post.tipo_persona`
-
-Acciones JavaScript:
-- `fnjs_baja`
-- `fnjs_traslado`
+1. Envía `ids_desaparecidos_de_listas` (JSON).
+2. Tabla con acciones **baja** y enlace a traslado externo (`fnjs_traslado`).
 
 ## Endpoints Del Flujo
 
 - `/src/dbextern/ver_desaparecidos_de_listas_datos`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

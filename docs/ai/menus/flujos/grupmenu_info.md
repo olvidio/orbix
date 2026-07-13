@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "menus"
 titulo: "Grupmenu Info"
 flujo: "menus.grupmenu_info.gestionar.flujo"
-preguntas: ["Como ejecutar en Grupmenu Info?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["menus.pantalla.grupmenu_form"]
 endpoints: ["/src/menus/grupmenu_info"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Grupmenu Info?
 
 ## Donde Entrar
 
@@ -29,20 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `menus.pantalla.grupmenu_form`
 
 ## Objetivo
 
-Gestiona GrupmenuInfo. Descripcion funcional pendiente de revisar.
+Precarga formulario edición grupmenu.
 
 ## Limites De La Respuesta
 

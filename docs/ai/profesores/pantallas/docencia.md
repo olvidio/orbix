@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "profesores"
-titulo: "Docencia"
+titulo: "Ver docencia"
 pantalla: "profesores.pantalla.docencia"
-preguntas: ["Que se puede hacer en Docencia?", "Que campos tiene Docencia?", "Que acciones hay en Docencia?"]
+preguntas: ["Que se puede hacer en Ver docencia?", "Que campos tiene Ver docencia?", "Que acciones hay en Ver docencia?"]
 capacidades: ["profesores.docencia.gestionar"]
 endpoints: ["/src/profesores/docencia"]
 source: "docs/catalogo/profesores/pantallas/docencia.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Docencia
+# Ayuda IA Pantalla - Ver docencia
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla global de docencia STGR: delegación (RSTGR), profesor, curso de inicio, asignatura, modo y acta. Datos alimentados por **actualizar docencia** al cerrar cursos.
 
 ## Uso En Ayuda
 

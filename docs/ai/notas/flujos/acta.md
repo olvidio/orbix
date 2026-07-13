@@ -32,10 +32,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Crear
 
-1. Revisar manualmente los pasos de esta accion.
+1. En `acta_select`, pulsar **añadir acta** (`fnjs_nuevo`).
+2. Se abre `acta_ver` en modo nuevo; rellenar asignatura, actividad, fechas y tribunal.
+3. Guardar (`fnjs_guardar_acta` → `acta_nueva`).
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/notas/acta_nueva`
+- `/src/notas/acta_ver_form_data`
 
 ## Eliminar
 
@@ -54,7 +57,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Acta. Descripcion funcional pendiente de revisar.
+Ciclo completo de actas: listar en `acta_select`, abrir `acta_ver`, crear (`acta_nueva`), modificar (`acta_modificar`) o eliminar (`acta_eliminar`), con PDF e impresión.
 
 ## Errores Documentados
 

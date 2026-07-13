@@ -6,7 +6,7 @@ titulo: "Lista Actividades Ctr"
 flujo: "actividadescentro.lista_actividades_ctr.gestionar.flujo"
 preguntas: ["Como obtener datos en Lista Actividades Ctr?"]
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 endpoints: ["/src/actividadescentro/lista_actividades_ctr_data"]
 source: "docs/catalogo/actividadescentro/flujos/lista_actividades_ctr.md"
 estado_revision: "generado"
@@ -38,11 +38,11 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Objetivo
 
-Gestiona ListaActividadesCtr. Devuelve el listado de actividades del tipo + periodo elegidos, junto con los centros encargados de cada una y los flags de permiso (ver / modificar / crear) para cada fila.
+El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de actividades del colectivo (`tipo`) en ese periodo y, por cada una, los centros encargados actuales y los flags de permiso (modificar / crear centros) que deciden qué acciones se ofrecen.
 
 ## Limites De La Respuesta
 

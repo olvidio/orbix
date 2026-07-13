@@ -8,20 +8,20 @@ pantallas_principales: []
 fragmentos: ["certificados.pantalla.certificado_emitido_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/certificados/certificado_emitido_ver_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Certificado Emitido Ver
 
-Propuesta generada automaticamente desde la capacidad `certificados.certificado_emitido_ver.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Gestiona CertificadoEmitidoVer. Descripcion funcional pendiente de revisar.
+Consultar detalle de un certificado emitido seleccionado en el listado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Listado Certificados → modificar/ver fila.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -61,9 +61,6 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

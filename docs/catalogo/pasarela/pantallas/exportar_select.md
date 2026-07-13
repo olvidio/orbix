@@ -3,20 +3,22 @@ id: "pasarela.pantalla.exportar_select"
 tipo: "pantalla_frontend"
 subtipo: "fragmento_ajax"
 modulo: "pasarela"
-nombre: "Exportar Select"
+nombre: "Resultado exportación actividades"
 controller: "frontend/pasarela/controller/exportar_select.php"
-vistas: []
-fragmentos_frontend: []
-endpoints: ["/src/pasarela/exportar_actividades_data"]
-capacidades: ["pasarela.exportar_actividades.gestionar"]
-campos: ["post.empiezamax", "post.empiezamin", "post.iactividad_val", "post.iasistentes_val", "post.id_cdc", "post.id_tipo_activ", "post.isfsv_val", "post.periodo", "post.year"]
+vistas:[]
+fragmentos_frontend:[]
+endpoints:
+  - "\/src\/pasarela\/exportar_actividades_data"
+capacidades:
+  - "pasarela.exportar_actividades.gestionar"
+campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Exportar Select
+# Resultado exportación actividades
 
-Resultado del filtro "exportar actividades": delega el armado del listado en `/src/pasarela/exportar_actividades_data` (caso de uso {@see \src\pasarela\application\ExportarActividadesData}) y solo se ocupa de renderizar la tabla con `frontend\shared\web\Lista`.
+Calcula periodo en frontend (`Periodo`) y muestra la tabla HTML devuelta por `exportar_actividades_data`.
 
 ## Tipo
 
@@ -25,43 +27,16 @@ Resultado del filtro "exportar actividades": delega el armado del listado en `/s
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-No se han detectado controladores frontend relacionados.
+No aplica (respuesta HTML generada en controller).
 
 ## Endpoints Usados
 
 - `/src/pasarela/exportar_actividades_data`
 
-## Capacidades Relacionadas
-
-- `pasarela.exportar_actividades.gestionar`
-
-## Campos Detectados
-
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.iactividad_val`
-- `post.iasistentes_val`
-- `post.id_cdc`
-- `post.id_tipo_activ`
-- `post.isfsv_val`
-- `post.periodo`
-- `post.year`
-
-## Acciones Detectadas
-
-No se han detectado acciones.
-
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Fragmento AJAX invocado desde `exportar_que`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (fragmento AJAX de `exportar_que`).

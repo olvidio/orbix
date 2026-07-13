@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "profesores"
 url: "/src/profesores/profesor_asignatura_que"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/profesores/infrastructure/ui/http/controllers/profesor_asignatura_que.php"
 entrada: []
 entrada_obligatoria: []
@@ -15,12 +15,12 @@ requiere_hashb: false
 frontend_referencias: ["frontend/profesores/controller/profesor_asignatura_que.php"]
 casos_uso: ["src\\profesores\\application\\ProfesorAsignaturaQueData"]
 tags: ["profesores", "profesor", "asignatura", "que"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Profesor Asignatura Que
 
-Opciones del desplegable de asignatura en profesor_asignatura_que.
+Opciones del desplegable de asignatura para consultar profesores habilitados.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -28,20 +28,27 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - URL: `/src/profesores/profesor_asignatura_que`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/profesores/infrastructure/ui/http/controllers/profesor_asignatura_que.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Sin parámetros POST.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `profesores_ProfesorAsignaturaQueDataData`):
-  - `aOpciones` (`array`)
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Éxito: `success: true`, `data.aOpciones` — mapa id→nombre de asignaturas con separadores de
+  departamento (`getArrayAsignaturasConSeparador`).
+
+## Objetivo funcional
+
+Carga inicial del formulario de consulta «profesor para asignatura». El cambio de asignatura
+dispara AJAX a `profesor_asignatura_ajax`.
+
+## Permisos
+
+- Sin `perm_*` en caso de uso; autorización en frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -49,10 +56,5 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/profesores/controller/profesor_asignatura_que.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/profesores/controller/profesor_asignatura_que.php` — desplegable + hash hacia
+  `profesor_asignatura_ajax.php`.

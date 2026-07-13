@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["casas.pantalla.casa_actividades_lista"]
 acciones: ["listar"]
 endpoints: ["/src/casas/casa_actividades_lista_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Casa Actividades
@@ -59,10 +59,8 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** exterior > casas > lista actividades
+- **Pills2:** exterior > casas > lista actividades
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

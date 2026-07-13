@@ -7,19 +7,19 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/notas/infrastructure/ui/http/controllers/acta_modificar.php"
 entrada: ["post.acta:string", "post.examinadores:array", "post.f_acta:string", "post.id_activ:integer", "post.id_asignatura:integer", "post.libro:integer", "post.linea:integer", "post.lugar:string", "post.observ:string", "post.pagina:integer", "post.sel:array"]
-entrada_obligatoria: []
+entrada_obligatoria: ["acta"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["No se encuentra el acta"]
+errores: ["No se encuentra el acta", "hay un error, no se ha guardado", "hay un error, no se ha eliminado"]
 frontend_referencias: ["frontend/notas/controller/acta_ver.php"]
 casos_uso: ["src\\notas\\application\\ActaModificar"]
 tags: ["notas", "acta", "modificar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Acta Modificar
 
-Descripcion funcional pendiente de revisar.
+Actualiza los datos de cabecera de un acta existente y su tribunal.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -52,11 +52,21 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `success: true`, `data: "ok"`. Error en `mensaje`.
+
+## Objetivo funcional
+
+Edición del acta abierto en `acta_ver`. Requiere `acta` existente; actualiza asignatura, actividad, fechas, registro y examinadores.
+
+## Permisos
+
+- Igual que `acta_nueva` (`est` en DL).
 
 ## Errores conocidos
 
 - `No se encuentra el acta`
+- `hay un error, no se ha guardado`
+- `hay un error, no se ha eliminado`
 
 ## Casos De Uso
 
@@ -64,10 +74,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/acta_ver.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/acta_ver.php` (`fnjs_guardar_acta`).

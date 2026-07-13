@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "shared"
-titulo: "TablaDB Lista Ver"
+titulo: "Mantenimiento genérico de tablas (listado)"
 pantalla: "shared.pantalla.tablaDB_lista_ver"
-preguntas: ["Que se puede hacer en TablaDB Lista Ver?", "Que campos tiene TablaDB Lista Ver?", "Que acciones hay en TablaDB Lista Ver?"]
+preguntas: ["Que se puede hacer en Mantenimiento genérico de tablas (listado)?", "Que campos tiene Mantenimiento genérico de tablas (listado)?", "Que acciones hay en Mantenimiento genérico de tablas (listado)?"]
 capacidades: ["shared.tablaDB_buscar.gestionar", "shared.tablaDB_lista.gestionar"]
-endpoints: ["/src/shared/infrastructure/ui/http/controllers/tablaDB_buscar_datos", "/src/shared/tablaDB_buscar_datos", "/src/shared/tablaDB_lista_datos"]
+endpoints: ["/src/shared/tablaDB_buscar_datos", "/src/shared/tablaDB_lista_datos"]
 source: "docs/catalogo/shared/pantallas/tablaDB_lista_ver.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - TablaDB Lista Ver
+# Ayuda IA Pantalla - Mantenimiento genérico de tablas (listado)
 
 ## Resumen
 
-******************************************************************* ******** mostrar formulario de búsqueda ********************************************************************
+Shell transversal de listado CRUD: formulario de búsqueda (si aplica) + tabla editable con selección, botón «nuevo» (solo `permiso === 3`) y acciones de fila definidas por cada `Info*`.
 
 ## Uso En Ayuda
 
@@ -25,7 +25,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 - `form.sel`
 - `html.btn_new`
-- `html.btn_ok`
 - `html.k_buscar`
 - `html.mod`
 - `post.aSerieBuscar`
@@ -40,7 +39,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `post.refresh`
 - `post.scroll_id`
 - `post.sel`
-- `post.stack`
 
 ## Acciones Detectadas
 
@@ -55,7 +53,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Endpoints Relacionados
 
-- `/src/shared/infrastructure/ui/http/controllers/tablaDB_buscar_datos`
 - `/src/shared/tablaDB_buscar_datos`
 - `/src/shared/tablaDB_lista_datos`
 

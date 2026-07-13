@@ -28,7 +28,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `devel_db_admin.apptables_update`
 - Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/apptables_update.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.accion:string`, `post.esquema:string`, `post.id_app:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/devel_db_admin/copiar_esquema`
@@ -64,13 +64,13 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `devel_db_admin.db_lugar`
 - Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/db_lugar.php`
 - Entrada: `post.region:string`
-- Respuesta: `raw_response`
+- Respuesta: `standard_envelope_string_data`
 
 ## `/src/devel_db_admin/db_propiedades_data`
 
 - Id: `devel_db_admin.db_propiedades_data`
 - Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/db_propiedades_data.php`
-- Entrada: `post.default_esquema:mixed`, `post.op:mixed`, `post.tabla:mixed`
+- Entrada: `post.default_esquema:string`, `post.op:string`, `post.tabla:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/devel_db_admin/eliminar_esquema`
@@ -84,7 +84,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `devel_db_admin.migraciones_ejecutar`
 - Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_ejecutar.php`
-- Entrada: `post.modo:mixed`, `post.prefijo_hasta:mixed`, `post.sel:mixed`
+- Entrada: `post.modo:string`, `post.prefijo_hasta:string`, `post.sel:array`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/devel_db_admin/migraciones_lista_data`
@@ -98,14 +98,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `devel_db_admin.migraciones_quitar_registro`
 - Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_quitar_registro.php`
-- Entrada: `post.sel:mixed`
+- Entrada: `post.sel:array`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/devel_db_admin/mover_tabla`
 
 - Id: `devel_db_admin.mover_tabla`
 - Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/mover_tabla.php`
-- Entrada: `post.tabla:mixed`
+- Entrada: `post.tabla:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/devel_db_admin/renombrar_esquema`

@@ -42,10 +42,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona UsuarioGuardarPwd. Descripcion funcional pendiente de revisar.
+Cambia contraseña tras validar fortaleza; limpia flag cambio_password.
+
+## Errores Documentados
+
+- `Usuario no encontrado`
+- `hay un error, no se ha guardado`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

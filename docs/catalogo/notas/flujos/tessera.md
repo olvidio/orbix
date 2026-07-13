@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.tessera_copiar_select"]
 acciones: ["copiar"]
 endpoints: ["/src/notas/tessera_copiar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Tessera
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.tessera.gestionar` 
 
 ## Objetivo De Usuario
 
-Gestiona Tessera. Copia todas las PersonaNota de una persona origen hacia una persona destino. Utilizado por personas_select.phtml (pagina de traslado de tessera entre numerarios / supernumerarios). Devuelve una cadena con los errores (separados por <br>) o vacia si todo ha ido bien.
+Flujo tessera: ver, imprimir y copiar entre personas.
 
 ## Punto De Entrada
 
@@ -62,9 +62,7 @@ Acciones JavaScript:
 
 - ``No se han recibido las personas de origen y destino``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/dossier)

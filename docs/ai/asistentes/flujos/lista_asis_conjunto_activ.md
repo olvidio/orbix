@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaAsisConjuntoActiv. Listados conjuntos de plazas/actividades (lista_asis_conjunto_activ.php).
+Listado conjunto de plazas en varias actividades.
 
 ## Limites De La Respuesta
 

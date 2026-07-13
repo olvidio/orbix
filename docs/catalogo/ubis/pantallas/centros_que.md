@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.centros_que"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "pantalla_principal"
 modulo: "ubis"
 nombre: "Centros Que"
 controller: "frontend/ubis/controller/centros_que.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/centros_update"]
 capacidades: ["ubis.centros.gestionar"]
 campos: ["form.id_ubi", "form.que", "html.buscar"]
 acciones: ["fnjs_cerrar", "fnjs_guardar", "fnjs_modificar", "fnjs_update_div", "fnjs_ver"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Centros Que
 
-Esta página sirve para asignar una dirección a un determinado ubi.
+Pantalla principal de consulta y edición masiva de datos de centros DL (labor, num, plazas).
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/ubis/controller/centros_que.php`
 
 ## Vistas Relacionadas
@@ -58,13 +60,7 @@ Esta página sirve para asignar una dirección a un determinado ubi.
 - `fnjs_update_div`
 - `fnjs_ver`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros

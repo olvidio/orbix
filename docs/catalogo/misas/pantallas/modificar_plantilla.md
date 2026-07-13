@@ -1,7 +1,7 @@
 ---
 id: "misas.pantalla.modificar_plantilla"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "misas"
 nombre: "Modificar Plantilla"
 controller: "frontend/misas/controller/modificar_plantilla.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/misas/modificar_plantilla_data"]
 capacidades: ["misas.modificar_plantilla.gestionar"]
 campos: ["form.id_zona", "form.importar_de_plantilla", "form.orden", "form.tipo_plantilla", "form.tipo_plantilla_destino", "form.tipo_plantilla_origen", "html.importar"]
 acciones: ["button:importar", "fnjs_importar_de_plantilla_zona", "fnjs_ver_plantilla_zona"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Modificar Plantilla
+# Modificar plantilla
 
-Descripcion funcional pendiente de revisar.
+Editor de plantilla semanal (-1): centros/tareas/horarios por zona. Grid plantilla + `anadir_ctr_tarea`, `quitar_horario`, `importar_plantilla`.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/misas/controller/modificar_plantilla.php`
 
 ## Vistas Relacionadas
@@ -57,13 +59,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_importar_de_plantilla_zona`
 - `fnjs_ver_plantilla_zona`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Misas > Modificar plantilla
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario de alta/edición de habitación CDC con gestión inline de camas.
 
 ## Uso En Ayuda
 

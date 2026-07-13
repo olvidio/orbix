@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "actividadplazas"
 titulo: "Peticiones"
 flujo: "actividadplazas.peticiones.gestionar.flujo"
-preguntas: ["Como eliminar en Peticiones?", "Como guardar en Peticiones?"]
+preguntas: ["Como guardar en Peticiones?", "Como eliminar en Peticiones?"]
 pantallas_principales: []
 fragmentos: ["actividadplazas.pantalla.peticiones_activ"]
 endpoints: ["/src/actividadplazas/peticiones_eliminar", "/src/actividadplazas/peticiones_guardar"]
@@ -19,8 +19,8 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como eliminar en Peticiones?
 - Como guardar en Peticiones?
+- Como eliminar en Peticiones?
 
 ## Donde Entrar
 
@@ -30,22 +30,24 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Guardar
+
+1. En la pantalla de peticiones, ordenar las actividades con los desplegables (`DesplegableArray`).
+2. Añadir filas con **más actividades** (`fnjs_mas_actividades`) si hace falta.
+3. Pulsar el botón de guardar (`fnjs_guardar`): envía `id_nom`, `sactividad` y la lista ordenada a
+4. Si tiene éxito, vuelve atrás (`fnjs_nav_atras`).
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividadplazas/peticiones_guardar`
+
 ## Eliminar
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. En la misma pantalla, pulsar **Borrar** (`fnjs_borrar`).
+2. El sistema elimina todas las peticiones de esa persona+tipo vía `peticiones_eliminar`.
+3. Si tiene éxito, refresca la pantalla (`fnjs_actualizar`).
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadplazas/peticiones_eliminar`
-
-## Guardar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -53,7 +55,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Peticiones. Elimina todas las peticiones de una persona+tipo. Guarda las peticiones de una persona+tipo (borra las anteriores y crea las nuevas en orden).
+Definir (o borrar) la lista priorizada de actividades que una persona solicita como petición de plaza para un tipo y colectivo (`n`, `a`, `agd`).
 
 ## Errores Documentados
 

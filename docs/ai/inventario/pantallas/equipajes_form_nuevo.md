@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Form Nuevo"
+titulo: "Fragmento selección actividades"
 pantalla: "inventario.pantalla.equipajes_form_nuevo"
-preguntas: ["Que se puede hacer en Equipajes Form Nuevo?", "Que campos tiene Equipajes Form Nuevo?", "Que acciones hay en Equipajes Form Nuevo?"]
+preguntas: ["Que se puede hacer en Fragmento selección actividades?", "Que campos tiene Fragmento selección actividades?", "Que acciones hay en Fragmento selección actividades?"]
 capacidades: ["inventario.equipajes_lista_activ_sel.gestionar"]
 endpoints: ["/src/inventario/equipajes_lista_activ_sel"]
 source: "docs/catalogo/inventario/pantallas/equipajes_form_nuevo.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Form Nuevo
+# Ayuda IA Pantalla - Fragmento selección actividades
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+AJAX selección actividades al crear equipaje.
 
 ## Uso En Ayuda
 

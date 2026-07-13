@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.horario_tarea"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/quitar_horario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Quitar Horario
-
-Propuesta generada automaticamente desde la capacidad `misas.quitar_horario.gestionar` y sus pantallas relacionadas.
+# Flujo - Quitar horario
 
 ## Objetivo De Usuario
 
-Gestiona QuitarHorarioPlantilla. Descripcion funcional pendiente de revisar.
+Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -55,11 +53,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Error: falta el id_item`
+- `No se encuentra la plantilla %d`
+- `<repositorio getErrorTxt()>`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Modificar plantilla
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla

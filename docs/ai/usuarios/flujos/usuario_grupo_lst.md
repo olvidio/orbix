@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona UsuarioGrupoLst. Descripcion funcional pendiente de revisar.
+Lista grupos disponibles para asignar al usuario (id ~ ^5, excluye ya asignados).
+
+## Errores Documentados
+
+- `Usuario no encontrado`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "planning"
-titulo: "Planning Zones Que"
+titulo: "Planning por zonas SACD (filtros)"
 pantalla: "planning.pantalla.planning_zones_que"
-preguntas: ["Que se puede hacer en Planning Zones Que?", "Que campos tiene Planning Zones Que?", "Que acciones hay en Planning Zones Que?"]
+preguntas: ["Que se puede hacer en Planning por zonas SACD (filtros)?", "Que campos tiene Planning por zonas SACD (filtros)?", "Que acciones hay en Planning por zonas SACD (filtros)?"]
 capacidades: ["planning.planning_zones_que.gestionar"]
 endpoints: ["/src/planning/planning_zones_que_data"]
 source: "docs/catalogo/planning/pantallas/planning_zones_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Planning Zones Que
+# Ayuda IA Pantalla - Planning por zonas SACD (filtros)
 
 ## Resumen
 
-Formulario de filtros para el planning por zonas (sacd).
+Formulario: zona SACD, trimestre, año y filtro de actividad. Carga zonas permitidas vía `planning_zones_que_data`. Al enviar abre `planning_zones_select`.
 
 ## Uso En Ayuda
 

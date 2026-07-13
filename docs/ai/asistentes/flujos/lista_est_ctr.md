@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaEstCtr. Listado estudios por centro (lista_est_ctr.php).
+Ver estudios matriculados por centro.
 
 ## Limites De La Respuesta
 

@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "dossiers"
 titulo: "Dossiers Ver Pantalla"
 flujo: "dossiers.dossiers_ver_pantalla.gestionar.flujo"
-preguntas: ["Como obtener datos en Dossiers Ver Pantalla?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["dossiers.pantalla.dossiers_ver"]
 endpoints: ["/src/dossiers/dossiers_ver_pantalla_data"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Dossiers Ver Pantalla?
 
 ## Donde Entrar
 
@@ -29,23 +28,25 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `dossiers.pantalla.dossiers_ver`
 
 ## Objetivo
 
-Gestiona DossiersVerPantalla. Cuerpo de dossiers_ver: datos de cabecera + lista o ficha. El backend NO firma URLs: devuelve *_link_spec ({path, query}) que firma el frontend. En modo ficha, ficha_segmentos mezcla: - Segmentos html ya generados por los Select_* (TODO: refactorizar para que tampoco lleven HTML/HashFront desde src/). - Segmentos datos_tabla con datos puros (action_tabla_link_spec, ins_traslado_link_spec, script_ctx, hash, tabla, permiso) que el frontend compone con HashFront, Lista y el script JS de DatosTablaRepo.
+Abrir y navegar los dossiers de una persona, actividad o ubi: cabecera, relación de carpetas o ficha con widgets embebidos (matrículas, asistentes, certificados, tablas genéricas). Reutilizado desde `home_persona`, `home_ubis`, `actividad_ver` y otras pantallas vía `fnjs_update_div`.
+
+## Errores Documentados
+
+- `clase_info invalida`
+- `No encuentro a nadie con id_nom: <id>`
+- `ubi no encontrada`
+- `actividad no encontrada`
+- `pau desconocido`
+- `El dossier <id> no está disponible (sin widget ni datos configurados en d_tipos_dossiers).`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario modal de alta de periodo de calendario con fechas y sfsv sugeridos.
 
 ## Uso En Ayuda
 

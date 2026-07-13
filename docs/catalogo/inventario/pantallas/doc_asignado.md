@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.doc_asignado"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "inventario"
-nombre: "Doc Asignado"
+nombre: "Documentos ya asignados"
 controller: "frontend/inventario/controller/doc_asignado.php"
 vistas: ["frontend/inventario/view/doc_asignado.phtml"]
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_docs_asignados_por_tipo"]
 capacidades: ["inventario.lista_docs_asignados_por_tipo.gestionar"]
 campos: ["form.id_tipo_doc", "post.id_tipo_doc", "post.inventario"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Doc Asignado
+# Documentos ya asignados
 
-Descripcion funcional pendiente de revisar.
+Lista centros con el tipo doc asignado.
+
 
 ## Tipo
 
@@ -51,11 +52,9 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Lista centros con el tipo doc asignado.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada directa (desde docs_asignar_que)
+- **Pills2:** —

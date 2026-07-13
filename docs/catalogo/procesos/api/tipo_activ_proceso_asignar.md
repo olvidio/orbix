@@ -7,21 +7,27 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php"
 entrada: ["post.id_tipo_activ:integer", "post.id_tipo_proceso:integer", "post.propio:string"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_tipo_activ"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["tipo de actividad no encontrado", "hay un error, no se ha guardado el proceso"]
 frontend_referencias: ["frontend/procesos/controller/tipo_activ_proceso.php"]
 casos_uso: ["src\\procesos\\application\\TipoActivProcesoAsignar"]
 tags: ["procesos", "tipo", "activ", "proceso", "asignar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tipo Activ Proceso Asignar
 
-Caso de uso: asigna id_tipo_proceso al tipo de actividad (propio / no-propio).
+Asigna un proceso tipo a un tipo de actividad (propio o no propio).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Vincula `id_tipo_proceso` al `TipoDeActividad` indicado. Si `propio` es verdadero actualiza el
+proceso de delegación propia (`setId_tipo_proceso`); si no, el de actividades ajenas
+(`setId_tipo_proceso_ex`), ambos para el SFSV de sesión.
 
 ## Endpoint
 
@@ -34,11 +40,11 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tipo_activ` | `integer` | application | No | application |
-| `id_tipo_proceso` | `integer` | application | No | application |
-| `propio` | `string` | application | No | application |
+| `id_tipo_activ` | `integer` | application | Si | Tipo de actividad destino |
+| `id_tipo_proceso` | `integer` | application | No | Proceso a asignar (0 = quitar) |
+| `propio` | `string` | application | No | `t`/`f`; propio vs no propio |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+El controller pasa `$_POST` completo al caso de uso.
 
 ## Salida
 
@@ -51,16 +57,14 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - `tipo de actividad no encontrado`
 - `hay un error, no se ha guardado el proceso`
 
+## Permisos
+
+- Sin control de permisos propio; autorización en `tipo_activ_proceso.php` y `$_SESSION['oPerm']`.
+
 ## Casos De Uso
 
 - `src\procesos\application\TipoActivProcesoAsignar`
 
 ## Frontend Relacionado
 
-- `frontend/procesos/controller/tipo_activ_proceso.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/procesos/controller/tipo_activ_proceso.php` (URL emitida como `url_asignar`)

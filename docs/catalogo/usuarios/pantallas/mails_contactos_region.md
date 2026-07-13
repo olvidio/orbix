@@ -1,7 +1,7 @@
 ---
 id: "usuarios.pantalla.mails_contactos_region"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "fragmento_ajax"
 modulo: "usuarios"
 nombre: "Mails Contactos Region"
 controller: "frontend/usuarios/controller/mails_contactos_region.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/mails_contactos_region"]
 capacidades: ["usuarios.mails_contactos_region.gestionar"]
 campos: ["get.region", "post.region"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Mails Contactos Region
 
-Descripcion funcional pendiente de revisar.
+Listado contactos regionales para pantalla recovery.
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/mails_contactos_region.php`
 
 ## Vistas Relacionadas
@@ -48,13 +50,7 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

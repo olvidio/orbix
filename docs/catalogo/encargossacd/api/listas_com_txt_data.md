@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "encargossacd"
 url: "/src/encargossacd/listas_com_txt_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/encargossacd/infrastructure/ui/http/controllers/listas_com_txt_data.php"
 entrada: []
 entrada_obligatoria: []
@@ -15,20 +15,23 @@ requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/listas_com_txt.php"]
 casos_uso: ["src\\encargossacd\\application\\ListasComTxtData"]
 tags: ["encargossacd", "listas", "com", "txt", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Listas Com Txt Data
 
 Datos para la pantalla de textos de comunicacion (`frontend/encargossacd/controller/listas_com_txt.php`). Devuelve las opciones de idiomas configurados y el texto inicial correspondiente a la clave/idioma por defecto (`com_sacd` / `es`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
+## Objetivo funcional
+
+Opciones de idiomas y texto inicial (`com_sacd`/`es`) para editor de textos de comunicación.
+
 ## Endpoint
 
 - URL: `/src/encargossacd/listas_com_txt_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/listas_com_txt_data.php`
 
 ## Entrada
@@ -37,11 +40,12 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_ListasComTxtDataData`):
-  - `a_locales` (`array`)
+- Claves: `a_locales`, `texto_inicial` (doble `JSON.parse`).
+
+
+## Permisos
+
+Sin control propio; menú listados.
 
 ## Casos De Uso
 
@@ -51,8 +55,3 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 - `frontend/encargossacd/controller/listas_com_txt.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

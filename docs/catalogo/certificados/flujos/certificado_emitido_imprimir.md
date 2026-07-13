@@ -8,20 +8,20 @@ pantallas_principales: []
 fragmentos: ["certificados.pantalla.certificado_emitido_imprimir"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/certificados/certificado_emitido_imprimir_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Certificado Emitido Imprimir
 
-Propuesta generada automaticamente desde la capacidad `certificados.certificado_emitido_imprimir.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Gestiona CertificadoEmitidoImprimir. Descripcion funcional pendiente de revisar.
+Preparar datos e iniciar impresión de certificado nuevo para un alumno.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dossier persona / matrículas.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -63,9 +63,6 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

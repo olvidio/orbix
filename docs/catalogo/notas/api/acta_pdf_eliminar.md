@@ -7,17 +7,19 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/notas/infrastructure/ui/http/controllers/acta_pdf_eliminar.php"
 entrada: ["post.acta_num:string"]
-entrada_obligatoria: []
+entrada_obligatoria: ["acta_num"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["No se encuentra el acta"]
 frontend_referencias: []
 casos_uso: ["src\\notas\\application\\ActaPdfEliminar"]
 tags: ["notas", "acta", "pdf", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Acta Pdf Eliminar
+
+Elimina el PDF adjunto a un acta.
 
 Elimina el PDF firmado asociado a un `Acta` (sin borrar el acta).
 
@@ -42,11 +44,19 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `success: true`, `data: "ok"`. Error en `mensaje`.
 
 ## Efectos colaterales
 
 - Elimina el PDF firmado asociado a un `Acta` (sin borrar el acta).
+
+## Objetivo funcional
+
+Borrado del fichero PDF asociado (`acta_num` = número de acta).
+
+## Permisos
+
+- Desde `acta_ver` con permiso de edición de actas.
 
 ## Errores conocidos
 
@@ -58,10 +68,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/acta_pdf_delete.php` → `acta_ver`.

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "planning"
-titulo: "Planning Casa Ver"
+titulo: "Planning por casas (calendario)"
 pantalla: "planning.pantalla.planning_casa_ver"
-preguntas: ["Que se puede hacer en Planning Casa Ver?", "Que campos tiene Planning Casa Ver?", "Que acciones hay en Planning Casa Ver?"]
+preguntas: ["Que se puede hacer en Planning por casas (calendario)?", "Que campos tiene Planning por casas (calendario)?", "Que acciones hay en Planning por casas (calendario)?"]
 capacidades: ["planning.planning_casa_ver.gestionar"]
 endpoints: ["/src/planning/planning_casa_ver_data"]
 source: "docs/catalogo/planning/pantallas/planning_casa_ver.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Planning Casa Ver
+# Ayuda IA Pantalla - Planning por casas (calendario)
 
 ## Resumen
 
-Planning (calendario) de actividades de un grupo de casas en un periodo dado.
+Cuadrícula de actividades por casa en el periodo elegido. Se carga por AJAX desde `planning_casa_select` tras confirmar casas.
 
 ## Uso En Ayuda
 

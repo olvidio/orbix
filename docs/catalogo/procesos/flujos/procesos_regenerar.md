@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.procesos_select"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/procesos_regenerar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Procesos Regenerar
-
-Propuesta generada automaticamente desde la capacidad `procesos.procesos_regenerar.gestionar` y sus pantallas relacionadas.
+# Flujo - Regenerar procesos en actividades
 
 ## Objetivo De Usuario
 
-Gestiona ProcesosRegenerar. Caso de uso: regenera las tareas del proceso a partir de las fases definidas en tareas_proceso, eliminando las sobrantes.
+Regenerar masivamente las tareas de proceso de las actividades asociadas a un tipo de proceso, a partir de la definición de fases/tareas del proceso.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > procesos activ. > procesos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -52,11 +50,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > procesos activ. > procesos
+- **Pills2:** ADMIN LOCAL > procesos activ. > procesos

@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.equipajes_form_add"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "fragmento"
 modulo: "inventario"
-nombre: "Equipajes Form Add"
+nombre: "Añadir doc a maleta"
 controller: "frontend/inventario/controller/equipajes_form_add.php"
 vistas: ["frontend/inventario/view/equipajes_form_add.phtml"]
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_tipo_doc"]
 capacidades: ["inventario.lista_tipo_doc.gestionar"]
 campos: ["form.id_tipo_doc", "form.sel", "post.id_equipaje", "post.id_grupo", "post.id_item_egm"]
 acciones: ["fnjs_add_doc", "fnjs_cerrar", "fnjs_docs_libres"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Form Add
+# Añadir doc a maleta
 
-Descripcion funcional pendiente de revisar.
+Formulario add doc → `equipajes_add_doc`.
+
 
 ## Tipo
 
@@ -55,11 +56,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Formulario add doc → `equipajes_add_doc`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú
+- **Pills2:** —

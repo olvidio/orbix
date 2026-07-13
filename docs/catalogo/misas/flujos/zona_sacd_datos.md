@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["obtener"]
 endpoints: ["/src/misas/zona_sacd_datos_get"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Zona Sacd Datos
-
-Propuesta generada automaticamente desde la capacidad `misas.zona_sacd_datos.gestionar` y sus pantallas relacionadas.
+# Flujo - Zona sacd datos
 
 ## Objetivo De Usuario
 
-Gestiona ZonaSacdDatosGet. Descripcion funcional pendiente de revisar.
+Lee datos de disponibilidad semanal (propia, dw1-dw7) de un SACD en una zona para el modal zona_sacd.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No existe`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

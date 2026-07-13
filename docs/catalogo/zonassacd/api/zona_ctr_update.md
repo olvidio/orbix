@@ -6,7 +6,7 @@ url: "/src/zonassacd/zona_ctr_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/zonassacd/infrastructure/ui/http/controllers/zona_ctr_update.php"
-entrada: ["post.id_zona_new:string", "post.sel:array"]
+entrada: ["post.id_zona_new:string", "post.sel:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -14,18 +14,20 @@ frontend_referencias: ["frontend/zonassacd/controller/zona_ctr_update_ajax.php"]
 casos_uso: ["src\\zonassacd\\application\\ZonaCtrUpdate"]
 tags: ["zonassacd", "zona", "ctr", "update"]
 estado_revision: "revisado"
+errores: ["hay un error, no se ha guardado."]
 ---
 
 # Zona Ctr Update
 
-Reasigna los centros marcados (`sel[]`, ids de ubi) a la zona `id_zona_new`.
+Reasigna centros marcados (sel=id_ubi) a id_zona_new. Primer dígito del id_ubi elige repo dl (1) o sf. id_zona_new=no deja sin zona.
 
-- El primer digito del `id_ubi` decide el repositorio: `1` → centros dl
-  (`CentroDlRepository`), otro → centros sf (`CentroEllasRepository`).
-- `id_zona_new = 'no'`: deja el centro sin zona (`id_zona = NULL`).
-- Ids vacios o centros inexistentes se ignoran silenciosamente.
+Linaje: Case update del legacy zona_ctr_ajax.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Reasigna centros marcados (sel=id_ubi) a id_zona_new. Primer dígito del id_ubi elige repo dl (1) o sf. id_zona_new=no deja sin zona.
 
 ## Endpoint
 
@@ -38,22 +40,21 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_zona_new` | `string` | controller | No | controller |
-| `sel` | `array` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_zona_new` | `string` | application | No | |
+| `sel` | `array` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Errores parciales de persistencia van acumulados en `mensaje`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"`. Errores parciales en `mensaje`.
+
+## Errores conocidos
+- `hay un error, no se ha guardado.`
 
 ## Permisos
 
-- El caso de uso no valida permisos; el control de acceso está en la UI
-  (checkboxes y boton asignar solo con permiso oficina `des` o `vcsd`).
+Sin validación en caso de uso; UI restringe a perm_des.
 
 ## Casos De Uso
 
@@ -61,9 +62,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/zonassacd/controller/zona_ctr_update_ajax.php`
-
-## Revision Manual
-
-- Revisado jun 2026 (lectura de `ZonaCtrUpdate::execute`).
-- Pendiente: ejemplos reales de request/response.
+- Ver `frontend_referencias` en front matter (`["frontend/zonassacd/controller/zona_ctr_update_ajax.php"]`).

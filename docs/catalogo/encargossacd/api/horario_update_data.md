@@ -14,15 +14,19 @@ respuesta_data: ["ok:true"]
 requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/horario_update.php"]
 casos_uso: ["src\\encargossacd\\application\\EncargoHorarioUpdate"]
+errores: ["acción no válida", "Debe llenar todos los campos que tengan un (*)", "registro no encontrado", "hay un error, no se ha guardado"]
 tags: ["encargossacd", "horario", "update", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Horario Update Data
 
 Alta/edición/baja de horario de encargo (tabla encargo_horario).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Alta/edición/baja de horario de encargo (`encargo_horario`). Sucesor de `apps/encargossacd/controller/horario_update.php`. `mod`: nuevo|editar|eliminar; eliminar usa `sel_nom[0]` token `id_item_h#...`.
 
 ## Endpoint
 
@@ -39,11 +43,21 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_EncargoHorarioUpdateData`):
-  - `ok` (`true`)
+- Helper: `ContestarJson::enviar`.
+- Éxito: `data: ""`, `{ok: true}`.
+- Error: mensaje en `data`.
+
+
+## Errores conocidos
+
+- `acción no válida`
+- `Debe llenar todos los campos que tengan un (*)`
+- `registro no encontrado`
+- `hay un error, no se ha guardado`
+
+## Permisos
+
+Sin control propio; frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -53,8 +67,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - `frontend/encargossacd/controller/horario_update.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

@@ -6,22 +6,26 @@ url: "/src/ubis/trasladar_ubis"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/trasladar_ubis.php"
-entrada: ["post.dl_dst:string", "post.sel:mixed"]
-entrada_obligatoria: []
+entrada: ["post.dl_dst:string", "post.sel:string"]
+entrada_obligatoria: ["dl_dst", "sel"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["No se han seleccionado ubis."]
 frontend_referencias: ["frontend/ubis/controller/trasladar_ubis.php"]
 casos_uso: ["src\\ubis\\application\\TrasladarUbis"]
 tags: ["ubis", "trasladar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Trasladar Ubis
 
-Descripcion funcional pendiente de revisar.
+Traslada centros y casas seleccionados a otra delegación destino.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Traslada centros y casas seleccionados a otra delegación destino.
 
 ## Endpoint
 
@@ -34,20 +38,22 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `dl_dst` | `string` | application | No | application |
-| `sel` | `mixed` | application | No | application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `dl_dst` | `string` | application | Si | |
+| `sel` | `mixed` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `ok`: 1
 
 ## Errores conocidos
-
 - `No se han seleccionado ubis.`
+
+## Permisos
+
+have_perm_oficina(admin_sv): botón trasladar en list_ctr frontend.
 
 ## Casos De Uso
 
@@ -55,10 +61,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/ubis/controller/trasladar_ubis.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/ubis/controller/trasladar_ubis.php"]`).

@@ -7,21 +7,25 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/procesos_eliminar.php"
 entrada: ["post.id_item:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_item"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["no sé cuál he de borar", "no se encuentra la tarea a borrar", "hay un error, no se ha eliminado"]
 frontend_referencias: ["frontend/procesos/controller/procesos_select.php"]
 casos_uso: ["src\\procesos\\application\\ProcesosEliminar"]
 tags: ["procesos", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Procesos Eliminar
 
-Caso de uso: elimina una tarea_proceso por su id_item.
+Elimina una `tarea_proceso` por su `id_item`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Borra la definición de tarea del proceso tipo indicado. Requiere `id_item` válido (> 0).
 
 ## Endpoint
 
@@ -34,9 +38,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `integer` | application | No | application |
+| `id_item` | `integer` | application | Si | PK de `tareas_proceso` |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+El controller pasa `$_POST` completo al caso de uso.
 
 ## Salida
 
@@ -44,15 +48,15 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 
-## Efectos colaterales
-
-- Caso de uso: elimina una tarea_proceso por su id_item.
-
 ## Errores conocidos
 
 - `no sé cuál he de borar`
 - `no se encuentra la tarea a borrar`
-- `hay un error, no se ha eliminado`
+- `hay un error, no se ha eliminado` (puede concatenar error de repositorio)
+
+## Permisos
+
+- Sin control de permisos propio; autorización en `procesos_select.php` y `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -60,10 +64,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/procesos/controller/procesos_select.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/procesos/controller/procesos_select.php` (URL emitida como `url_eliminar`)

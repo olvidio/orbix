@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Pantalla Zonas-ctr: listar centros por zona y reasignarlos. Opción sin zona sf solo con perm_des.
 
 ## Uso En Ayuda
 

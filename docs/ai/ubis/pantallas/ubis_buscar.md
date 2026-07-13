@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Es un formulario para introducir las condiciones de búsqueda de los ubis.
+Formulario de criterios de búsqueda de centros y casas que alimenta ubis_tabla.
 
 ## Uso En Ayuda
 

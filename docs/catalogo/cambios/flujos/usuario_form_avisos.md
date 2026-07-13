@@ -2,65 +2,46 @@
 id: "cambios.usuario_form_avisos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cambios"
-nombre: "Flujo - Gestionar Usuario Form Avisos"
+nombre: "Flujo - Gestionar avisos del usuario"
 capacidad: "cambios.usuario_form_avisos.gestionar"
 pantallas_principales: []
 fragmentos: ["cambios.pantalla.usuario_form_avisos"]
-acciones: ["obtener_datos"]
-endpoints: ["/src/cambios/usuario_form_avisos_data"]
-estado_revision: "generado"
+acciones: ["listar", "nuevo", "modificar", "eliminar"]
+endpoints: ["/src/cambios/usuario_form_avisos_data", "/src/cambios/cambio_usuario_objeto_pref_eliminar"]
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Usuario Form Avisos
-
-Propuesta generada automaticamente desde la capacidad `cambios.usuario_form_avisos.gestionar` y sus pantallas relacionadas.
+# Flujo - Gestionar avisos del usuario
 
 ## Objetivo De Usuario
 
-Gestiona UsuarioFormAvisos. Datos para el listado de avisos de un usuario.
+Consultar y mantener las reglas de aviso configuradas para un usuario web.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Fragmento `usuario_form_avisos` embebido en la ficha de usuario (`quien=usuario`).
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `cambios.pantalla.usuario_form_avisos`
+### Listar
 
-## Escenarios Inferidos
+1. Abrir pestaña de avisos del usuario.
+2. `usuario_form_avisos_data` carga la tabla de preferencias.
 
-### Obtener Datos
+### Nuevo / Modificar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Pulsar añadir o modificar (una fila seleccionada).
+2. Se abre `usuario_avisos_pref` con `salida=nuevo` o `modificar`.
 
-Endpoints asociados:
-- Ninguno inferido para esta accion.
+### Eliminar
 
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.id_usuario`
-- `post.quien`
-
-Acciones JavaScript:
-- `fnjs_add_cambio`
-- `fnjs_del_cambio`
-- `fnjs_enviar_formulario`
-- `fnjs_mod_cambio`
-- `fnjs_solo_uno`
-
-## Endpoints Del Flujo
-
-- `/src/cambios/usuario_form_avisos_data`
+1. Seleccionar fila y pulsar eliminar.
+2. `cambio_usuario_objeto_pref_eliminar` borra la preferencia.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No tiene permiso`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice

@@ -1,9 +1,9 @@
 ---
 id: "planning.pantalla.leyenda"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "fragmento_ajax"
 modulo: "planning"
-nombre: "Leyenda"
+nombre: "Leyenda del planning"
 controller: "frontend/planning/controller/leyenda.php"
 vistas: ["frontend/planning/view/leyenda.phtml"]
 fragmentos_frontend: []
@@ -11,49 +11,23 @@ endpoints: []
 capacidades: []
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Leyenda
+# Leyenda del planning
 
-Popup estatico con la leyenda de colores/estilos del planning.
+Popup estático con la leyenda de colores y estilos del calendario de planning. Se abre desde las
+vistas `*_select` y `*_ver` del módulo.
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `fragmento_ajax`
 - Controller: `frontend/planning/controller/leyenda.php`
-
-## Vistas Relacionadas
-
-- `frontend/planning/view/leyenda.phtml`
-
-## Fragmentos Frontend Relacionados
-
-No se han detectado controladores frontend relacionados.
-
-## Endpoints Usados
-
-No se han detectado endpoints `/src/...`.
-
-## Capacidades Relacionadas
-
-No se han detectado capacidades relacionadas.
-
-## Campos Detectados
-
-No se han detectado campos de formulario.
-
-## Acciones Detectadas
-
-No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Sin lógica de negocio ni endpoints; solo HTML de referencia visual.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+sin entrada de menú en el índice

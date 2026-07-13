@@ -2,58 +2,40 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Actividad"
+titulo: "Crear y eliminar actividad"
 flujo: "actividades.actividad.gestionar.flujo"
-preguntas: ["Como crear en Actividad?", "Como eliminar en Actividad?"]
-pantallas_principales: []
-fragmentos: []
+preguntas: []
+pantallas_principales: ["actividades.pantalla.actividad_ver"]
+fragmentos: ["actividades.pantalla.actividad_select"]
 endpoints: ["/src/actividades/actividad_eliminar", "/src/actividades/actividad_nuevo"]
 source: "docs/catalogo/actividades/flujos/actividad.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Actividad
+# Ayuda IA - Crear y eliminar actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Actividad`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Crear y eliminar actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear en Actividad?
-- Como eliminar en Actividad?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (`actividades.pantalla.actividad_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
-## Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/actividades/actividad_eliminar`
-
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `actividades.pantalla.actividad_ver`
+- `actividades.pantalla.actividad_select`
 
 ## Objetivo
 
-Gestiona Actividad, BorrarActividad. Endpoint backend AJAX: crea una nueva actividad a partir de los datos del formulario. Endpoint backend AJAX: elimina las actividades indicadas.
+- **Crear:** rellenar la ficha en modo *nuevo* y guardar (`actividad_nuevo`). - **Eliminar:** seleccionar actividad(es) en un listado y confirmar borrado (`actividad_eliminar`).
 
 ## Limites De La Respuesta
 

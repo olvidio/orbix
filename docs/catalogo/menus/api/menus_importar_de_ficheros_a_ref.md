@@ -6,52 +6,45 @@ url: "/src/menus/menus_importar_de_ficheros_a_ref"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php"
-entrada: ["post.seguro:mixed", "post.todos:mixed"]
+entrada: ["get.seguro:integer", "get.todos:integer", "post.seguro:integer", "post.todos:integer"]
 entrada_obligatoria: []
 respuesta: "raw_response"
-requiere_hashb: false
+requiere_hashb: true
+errores: []
 frontend_referencias: []
 casos_uso: []
-tags: ["menus", "importar", "de", "ficheros", "a", "ref"]
-estado_revision: "generado"
+tags: ["menus", "importar", "ficheros", "ref"]
+estado_revision: "revisado"
 ---
 
-# Menus Importar De Ficheros A Ref
+# Restaurar menús por defecto (ref → esquemas DL)
 
-Descripcion funcional pendiente de revisar.
+Flujo HTML en dos pasos: confirmación (`seguro=2`) y ejecución (`seguro=1`). Copia tablas `ref_*` de BD
+pública a `aux_*` de uno o todos los esquemas regionales. **No JSON.**
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
-## Endpoint
+## Objetivo funcional
 
-- URL: `/src/menus/menus_importar_de_ficheros_a_ref`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
-- Controller: `src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php`
+- `seguro=2`: pantalla de advertencia con enlaces HashFront.
+- `seguro=1`: TRUNCATE+INSERT por esquema (`todos=1` → todas las DL excepto `H-Hv`).
+- En esquemas `sf` (`…f`) **no** copia `aux_grupmenu_rol` (roles distintos).
 
 ## Entrada
 
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `seguro` | `mixed` | controller | No | controller |
-| `todos` | `mixed` | controller | No | controller |
+| Campo | Notas |
+|-------|-------|
+| `seguro` | `2` confirmación, `1` ejecutar |
+| `todos` | `1` = todas las DL (solo desde dlb) |
 
 ## Salida
 
-- Helper: `echo`
-- Forma: `raw_response`
-- Exito: `success: true`, `data: "ok"`.
+- HTML progreso en `#main` vía `fnjs_update_div`.
 
-## Casos De Uso
+## Permisos
 
-No se han detectado imports de `src\...\application\...`.
+- Menú `sistema > menus > importar desde ficheros`.
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Enlace desde menú (legacy); controller en `src/menus/…` servido con HashFront.

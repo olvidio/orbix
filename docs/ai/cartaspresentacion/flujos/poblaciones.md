@@ -4,8 +4,8 @@ subtipo: "flujo"
 modulo: "cartaspresentacion"
 titulo: "Poblaciones"
 flujo: "cartaspresentacion.poblaciones.gestionar.flujo"
-preguntas: ["Como obtener datos en Poblaciones?"]
-pantallas_principales: []
+preguntas: []
+pantallas_principales: ["cartaspresentacion.pantalla.cartas_presentacion"]
 fragmentos: []
 endpoints: ["/src/cartaspresentacion/poblaciones_data"]
 source: "docs/catalogo/cartaspresentacion/flujos/poblaciones.md"
@@ -19,30 +19,22 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Poblaciones?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Cartas Presentacion (`cartaspresentacion.pantalla.cartas_presentacion`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `cartaspresentacion.pantalla.cartas_presentacion`
 
 ## Objetivo
 
-Gestiona CartasPresentacionPoblaciones. Opciones del desplegable de poblaciones segun el filtro elegido (get_H, get_r, get_dl).
+Filtrar el listado de centros por población dentro de la delegación (modo `get_dl`).
 
 ## Limites De La Respuesta
 

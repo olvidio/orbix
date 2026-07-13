@@ -11,7 +11,7 @@ endpoints: ["/src/actividadplazas/gestion_plazas_update", "/src/actividadplazas/
 capacidades: ["actividadplazas.gestion_plazas.gestionar", "actividadplazas.plazas_balance.gestionar"]
 campos: ["form.colName", "form.data", "post.dl", "post.id_tipo_activ"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Plazas Balance Dl
@@ -54,11 +54,12 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Fragmento AJAX (no tiene menú propio): se carga dentro de `#comparativa` de la pantalla
+`plazas_balance_que` cuando el usuario elige una delegación en el desplegable. Pinta la cabecera con
+las concedidas cruzadas (A→B y B→A) y una `TablaEditable` con las concedidas y libres de cada
+actividad en las dos delegaciones. Las celdas editables (las de mi dl) se guardan con doble clic
+contra `gestion_plazas_update`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- Sin entrada de menú en el índice: es un fragmento invocado por `plazas_balance_que`.

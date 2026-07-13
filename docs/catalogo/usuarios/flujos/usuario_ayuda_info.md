@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_ayuda_info"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Usuario Ayuda Info
-
-Propuesta generada automaticamente desde la capacidad `usuarios.usuario_ayuda_info.gestionar` y sus pantallas relacionadas.
+# Flujo - Usuario Ayuda Info
 
 ## Objetivo De Usuario
 
-Gestiona UsuarioAyudaInfo. Descripcion funcional pendiente de revisar.
+Ayuda acceso login: email ofuscado del usuario y contacto admin regional.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Esquema no válido`
+- `Debe ingresar un nombre de usuario válido`
+- `No hay email asociado a este usuario`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

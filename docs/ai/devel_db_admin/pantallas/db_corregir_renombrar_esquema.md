@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento para reparar un renombre interrumpido (defaults, roles, .inc).
 
 ## Uso En Ayuda
 

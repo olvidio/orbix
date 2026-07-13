@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/que_ctr_lista_data"]
 capacidades: ["asistentes.que_ctr.gestionar"]
 campos: ["html.btn_ok", "html.n_agd"]
 acciones: ["fnjs_buscar", "fnjs_comprobar_fecha", "fnjs_enviar_formulario", "fnjs_otro"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Que Ctr Lista
 
-Descripcion funcional pendiente de revisar.
+Formulario intermedio: elige tipo de persona (n/agd/…), centro y periodo antes de abrir el listado por centros.
 
 ## Tipo
 
@@ -53,11 +53,8 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** Varias entradas según `lista`/`sactividad` (vsm/vest/dagd > crt/ca/cv > list por ctr; dre > personas > pendientes)
+- **Pills2:** ACTIVIDADES > Listados > Listado de asistentes ca/crt por ctr, Mejores ca para n/agd, Listado de personas sin ca/crt

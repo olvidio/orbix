@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoEmitidoImprimirMpdf. Descripcion funcional pendiente de revisar.
+Generar el PDF del certificado con notas y textos traducidos.
 
 ## Limites De La Respuesta
 

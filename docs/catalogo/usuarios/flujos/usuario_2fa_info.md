@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["usuarios.pantalla.usuario_form_2fa"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_2fa_info"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Usuario 2fa Info
-
-Propuesta generada automaticamente desde la capacidad `usuarios.usuario_2fa_info.gestionar` y sus pantallas relacionadas.
+# Flujo - Usuario 2fa Info
 
 ## Objetivo De Usuario
 
-Gestiona Usuario2faInfo. Descripcion funcional pendiente de revisar.
+Estado 2FA del usuario para formulario configuración.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -60,11 +58,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Id de usuario no válido`
+- `Usuario no encontrado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla CRUD de `aux_grupmenu` (nombre, orden); acceso también vía TablaDB InfoGrupMenus.
 
 ## Uso En Ayuda
 

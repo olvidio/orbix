@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.equipajes_doc_casa"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "fragmento"
 modulo: "inventario"
-nombre: "Equipajes Doc Casa"
+nombre: "Docs por casa (equipaje)"
 controller: "frontend/inventario/controller/equipajes_doc_casa.php"
 vistas: ["frontend/inventario/view/equipajes_doc_casa.phtml", "frontend/inventario/view/equipajes_doc_maleta.phtml"]
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/equipajes_doc_casa", "/src/inventario/equipajes_egm
 capacidades: ["inventario.equipajes_doc_casa.gestionar", "inventario.equipajes_egm.gestionar"]
 campos: ["post.id_equipaje"]
 acciones: ["fnjs_eliminar_grupo", "fnjs_modificar_form_add", "fnjs_modificar_form_del", "fnjs_nuevo_grupo", "fnjs_ver_equipaje"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Doc Casa
+# Docs por casa (equipaje)
 
-Descripcion funcional pendiente de revisar.
+Fragmento impresión documentos por casa.
+
 
 ## Tipo
 
@@ -56,11 +57,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Fragmento impresión documentos por casa.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú
+- **Pills2:** —

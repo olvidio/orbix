@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.fases_activ_cambio"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/fases_activ_cambio_tipo_html"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Fases Activ Cambio Tipo Html
-
-Propuesta generada automaticamente desde la capacidad `procesos.fases_activ_cambio_tipo_html.gestionar` y sus pantallas relacionadas.
+# Flujo - Selector tipo actividad (cambio de fase)
 
 ## Objetivo De Usuario
 
-Gestiona FasesActivCambioTipoActividadHtml. Payload para {.
+Generar el HTML del selector de tipo de actividad usado en la pantalla de cambio de fase masivo.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: Calendario > actividades > cambiar de fase (también dre y variantes vest/vsm/dagd/vsg). Pills2: ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -76,11 +74,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** Calendario > actividades > cambiar de fase; dre > actividades > cambiar de fase
+- **Pills2:** ATENCIÓN SACD > Actividades > cambiar de fase; dre > actividades > cambiar de fase; Calendario > actividades > cambiar de fase; ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades

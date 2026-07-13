@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Vista AJAX legacy de periodos de calendario con acciones grabar y borrar inline.
 
 ## Uso En Ayuda
 

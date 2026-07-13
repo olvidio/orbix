@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/modificar_plantilla_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/misas/infrastructure/ui/http/controllers/modificar_plantilla_data.php"
 entrada: []
 entrada_obligatoria: []
@@ -15,35 +15,53 @@ requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/modificar_plantilla.php"]
 casos_uso: ["src\\misas\\application\\PlanDeMisasPantallaData"]
 tags: ["misas", "modificar", "plantilla", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Usuario no encontrado", "No tiene permiso para ver esta página"]
 ---
 
-# Modificar Plantilla Data
+# Modificar plantilla Data
 
-Datos comunes para las pantallas preparar / modificar / ver plan de misas y para modificar plantilla (mismos desplegables de zona / tipo / orden).
+Carga desplegables de zona, orden y tipos de plantilla (con preferencia ultima_plantilla) para modificar plantilla.
+
+Linaje: Slice 9 — reutiliza PlanDeMisasPantallaData con pantalla=modificar_plantilla; migrado desde apps/misas/controller/modificar_plantilla.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Carga desplegables de zona, orden y tipos de plantilla (con preferencia ultima_plantilla) para modificar plantilla.
 
 ## Endpoint
 
 - URL: `/src/misas/modificar_plantilla_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/modificar_plantilla_data.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| _(ninguno)_ | | | | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `misas_PlanDeMisasPantallaDataData`):
-  - `pantalla` (`string`)
-  - `zonas_opciones` (`array`)
-  - `orden_opciones` (`array`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `pantalla`: modificar_plantilla
+  - `zonas_opciones`: array
+  - `orden_opciones`: array
+  - `tipos_plantilla`: array
+  - `plantilla_selected`: string
+
+## Errores conocidos
+- `Usuario no encontrado`
+- `No tiene permiso para ver esta página`
+
+## Permisos
+
+IdNomJefeResolver
 
 ## Casos De Uso
 
@@ -51,10 +69,4 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/modificar_plantilla.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/modificar_plantilla.php"]`).

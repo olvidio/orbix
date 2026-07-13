@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "dbextern"
-titulo: "Sincro Crear Todos"
+titulo: "Crear todas desde BDU"
 flujo: "dbextern.sincro_crear_todos.gestionar.flujo"
-preguntas: ["Como ejecutar en Sincro Crear Todos?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_listas"]
 endpoints: ["/src/dbextern/sincro_crear_todos"]
@@ -12,14 +12,13 @@ source: "docs/catalogo/dbextern/flujos/sincro_crear_todos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Sincro Crear Todos
+# Ayuda IA - Crear todas desde BDU
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Sincro Crear Todos`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Crear todas desde BDU`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Sincro Crear Todos?
 
 ## Donde Entrar
 
@@ -29,25 +28,17 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `dbextern.pantalla.ver_listas`
 
 ## Objetivo
 
-Gestiona CrearPersonaDesdeListasUseCase, CrearTodosDesdeListasUseCase. Crea una persona en Orbix desde la BDU y la vincula.
+Crear en bloque todas las fichas pendientes del punto 4 sin revisar una a una.
 
 ## Errores Documentados
 
-- `hay un error, no se ha guardado`
-- `no se encontró la persona en la BDU`
+- `Errores de sincro_crear por cada persona fallida`
 
 ## Limites De La Respuesta
 

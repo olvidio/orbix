@@ -1,9 +1,9 @@
 ---
 id: "actividades.pantalla.lista_sr_csv"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "actividades"
-nombre: "Lista Sr Csv"
+nombre: "Listado SR (tabla/CSV)"
 controller: "frontend/actividades/controller/lista_sr_csv.php"
 vistas: ["frontend/actividades/view/lista_sr_csv.phtml"]
 fragmentos_frontend: ["frontend/actividades/controller/lista_sr_csv.php"]
@@ -11,57 +11,32 @@ endpoints: ["/src/actividades/lista_sr_csv_datos"]
 capacidades: ["actividades.lista_sr_csv.gestionar"]
 campos: ["post.c_activ", "post.dl_org", "post.empiezamax", "post.empiezamin", "post.id_cdc", "post.periodo", "post.que", "post.status", "post.year"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Lista Sr Csv
+# Listado SR (tabla/CSV)
 
-Listado de actividades de SR para exportar como CSV o mostrar en pantalla.
+Pantalla de **resultados** del listado CSV de San Rafael: recibe filtros de
+`lista_sr_csv_que` (periodo, casas `id_cdc`, tipos `c_activ`, estados) y llama a
+`lista_sr_csv_datos`. Según `que` muestra tabla HTML o fuerza descarga CSV.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal` (nav + tabla en `lista_sr_csv.phtml`)
 - Controller: `frontend/actividades/controller/lista_sr_csv.php`
-
-## Vistas Relacionadas
-
-- `frontend/actividades/view/lista_sr_csv.phtml`
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/actividades/controller/lista_sr_csv.php`
 
 ## Endpoints Usados
 
 - `/src/actividades/lista_sr_csv_datos`
 
-## Capacidades Relacionadas
-
-- `actividades.lista_sr_csv.gestionar`
-
-## Campos Detectados
-
-- `post.c_activ`
-- `post.dl_org`
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.id_cdc`
-- `post.periodo`
-- `post.que`
-- `post.status`
-- `post.year`
-
-## Acciones Detectadas
-
-No se han detectado acciones.
-
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Tras filtrar en `lista_sr_csv_que`, el usuario ve el listado o exporta CSV según
+el botón elegido.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Destino del formulario de `lista_sr_csv_que`:
+
+- **Legacy:** vsr > listas actividades > listado csv (resultado).
+- **Pills2:** sin entrada dedicada (hereda vsr).

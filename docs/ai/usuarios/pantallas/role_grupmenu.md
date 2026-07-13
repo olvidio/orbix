@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Pantalla asignación grupmenu↔rol (añadir desde candidatos).
 
 ## Uso En Ayuda
 

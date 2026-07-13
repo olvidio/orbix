@@ -10,50 +10,48 @@ entrada: ["post.filtro_grupo:integer", "post.id_menu:integer", "post.id_metamenu
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["No encuentro el menu"]
-frontend_referencias: []
+errores: ["No encuentro el menu", "hay un error, no se ha guardado"]
+frontend_referencias: ["frontend/menus/view/menus_get.phtml"]
 casos_uso: ["src\\menus\\application\\MenuGuardar"]
 tags: ["menus", "menu", "guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Menu Guardar
+# Guardar ítem de menú
 
-Descripcion funcional pendiente de revisar.
+Alta o edición de una entrada del árbol de menú por layout (`aux_menus`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
-## Endpoint
+## Objetivo funcional
 
-- URL: `/src/menus/menu_guardar`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
-- Controller: `src/menus/infrastructure/ui/http/controllers/menu_guardar.php`
+- **Alta** (`id_menu` vacío): nuevo id.
+- **Edición**: actualiza campos.
+- `filtro_grupo` → `id_grupmenu`.
+- `orden`: CSV convertido a array PostgreSQL (`explode(',', $orden)`).
+- `perm_menu[]`: checkboxes combinados con `PermisoMenuBits::combineSelectedBits`.
+- `ok`: checkbox activo/inactivo del ítem.
 
 ## Entrada
 
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `filtro_grupo` | `integer` | controller | No | controller |
-| `id_menu` | `integer` | controller | No | controller |
-| `id_metamenu` | `integer` | controller | No | controller |
-| `ok` | `string` | controller | No | controller |
-| `orden` | `string` | controller | No | controller |
-| `parametros` | `string` | controller | No | controller |
-| `perm_menu` | `array` | controller | No | controller |
-| `txt_menu` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| Campo | Tipo | Notas |
+|-------|------|-------|
+| `filtro_grupo` | `integer` | `id_grupmenu` |
+| `id_menu` | `integer` | Vacío = alta |
+| `txt_menu` | `string` | Etiqueta visible |
+| `id_metamenu` | `integer` | Destino (metamenu) |
+| `parametros` | `string` | Query string extra (HashFront) |
+| `orden` | `string` | Ruta jerárquica CSV, p. ej. `1,2,3` |
+| `perm_menu` | `array` | Bits de permiso |
+| `ok` | `string` | Checkbox activo |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data: "ok"`.
 
-## Errores conocidos
+## Permisos
 
-- `No encuentro el menu`
+- Gestor de menús (`menus_que`); bits `perm_menu` en el propio ítem.
 
 ## Casos De Uso
 
@@ -61,10 +59,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/menus/view/menus_get.phtml` (`fnjs_guardar`)

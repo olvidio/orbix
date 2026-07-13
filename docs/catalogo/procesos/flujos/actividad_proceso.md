@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.actividad_proceso", "procesos.pantalla.actividad_proceso_get"]
 acciones: ["crear_actualizar", "obtener", "obtener_datos"]
 endpoints: ["/src/procesos/actividad_proceso_data", "/src/procesos/actividad_proceso_get", "/src/procesos/actividad_proceso_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad Proceso
-
-Propuesta generada automaticamente desde la capacidad `procesos.actividad_proceso.gestionar` y sus pantallas relacionadas.
+# Flujo - Proceso de actividad
 
 ## Objetivo De Usuario
 
-Gestiona ActividadProceso, ActividadProcesoGet. Caso de uso: datos para la pantalla actividad_proceso (vista de las fases del proceso de una actividad concreta). Caso de uso: devuelve las tareas del proceso para un id_activ como estructura (completado, fase, tarea, responsable, observ) + flag de permiso de edicion. El render HTML se hace en el frontend. Caso de uso: guarda el estado (completado/observaciones) de una tarea concreta (id_item) del proceso de una actividad.
+Consulta y edición del proceso de una actividad: ver tareas por fase, marcar completado, guardar observaciones y actualizar el estado de cada tarea.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada directa de menú; se abre embebido desde otras pantallas (p. ej. cambio de fase o dossier de actividad).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -83,9 +81,7 @@ Acciones JavaScript:
 
 - ``hay un error, no se ha guardado``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -8,20 +8,20 @@ pantallas_principales: []
 fragmentos: ["certificados.pantalla.certificado_emitido_imprimir"]
 acciones: ["eliminar", "guardar"]
 endpoints: ["/src/certificados/certificado_emitido_delete", "/src/certificados/certificado_emitido_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Certificado Emitido
 
-Propuesta generada automaticamente desde la capacidad `certificados.certificado_emitido.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Gestiona CertificadoEmitidoGuardarMessages. Descripcion funcional pendiente de revisar. Mensajes legibles al guardar un certificado emitido (errores de BD, etc.).
+Imprimir, guardar o eliminar un certificado emitido desde el formulario de impresión.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Desde dossier de persona o flujo de impresión (`certificado_emitido_imprimir`).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -75,9 +75,6 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

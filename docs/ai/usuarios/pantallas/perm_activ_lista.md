@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Pestaña permisos actividad-proceso en ficha usuario.
 
 ## Uso En Ayuda
 

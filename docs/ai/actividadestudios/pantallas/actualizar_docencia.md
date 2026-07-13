@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla "actualizar docencia" (menu).
+Herramienta de mantenimiento que recalcula y graba en el dossier de actividad docente los datos derivados de los cursos anuales (CA) terminados en un periodo elegido. Sucesor de `apps/actividadestudios/controller/actualizar_docencia.php`.
 
 ## Uso En Ayuda
 

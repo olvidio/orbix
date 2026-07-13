@@ -8,20 +8,20 @@ pantallas_principales: []
 fragmentos: ["certificados.pantalla.certificado_emitido_lista"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/certificados/certificado_emitido_lista_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Certificado Emitido Lista
 
-Propuesta generada automaticamente desde la capacidad `certificados.certificado_emitido_lista.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Gestiona CertificadoEmitidoLista. Esta página muestra una tabla con los certificados.
+Consultar y gestionar certificados emitidos pendientes de envío en la región STGR.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú ESTUDIOS > Actas y certificados > Certificados (`certificado_emitido_lista.php`). Solo ámbito rstgr/r.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -73,9 +73,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** —
+- **Pills2:** ESTUDIOS > Actas y certificados > Certificados

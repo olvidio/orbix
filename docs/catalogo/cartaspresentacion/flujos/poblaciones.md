@@ -4,58 +4,38 @@ tipo: "flujo_frontend"
 modulo: "cartaspresentacion"
 nombre: "Flujo - Gestionar Poblaciones"
 capacidad: "cartaspresentacion.poblaciones.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cartaspresentacion.pantalla.cartas_presentacion"]
 fragmentos: []
 acciones: ["obtener_datos"]
 endpoints: ["/src/cartaspresentacion/poblaciones_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Poblaciones
+# Flujo - Desplegable de poblaciones
 
-Propuesta generada automaticamente desde la capacidad `cartaspresentacion.poblaciones.gestionar` y sus pantallas relacionadas.
+Recarga del desplegable de población al cambiar el filtro dl/regiones en la pantalla principal.
 
 ## Objetivo De Usuario
 
-Gestiona CartasPresentacionPoblaciones. Opciones del desplegable de poblaciones segun el filtro elegido (get_H, get_r, get_dl).
+Filtrar el listado de centros por población dentro de la delegación (modo `get_dl`).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `cartas_presentacion`: al cambiar el desplegable «según dl» se invoca `fnjs_poblacion`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-No se han detectado fragmentos AJAX relacionados.
+### Obtener poblaciones
 
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+1. Usuario elige `get_dl` en `tipo_lista`.
+2. AJAX a `poblaciones_data` con `filtro=get_dl`.
+3. Se reconstruye el desplegable `poblacion_sel` con `fnjs_construir_desplegable`.
+4. Si elige `get_r`, se oculta el desplegable de población (sin llamada AJAX).
 
 ## Endpoints Del Flujo
 
 - `/src/cartaspresentacion/poblaciones_data`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (auxiliar de `cartas_presentacion` > modificar).

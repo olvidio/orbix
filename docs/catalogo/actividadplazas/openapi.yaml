@@ -17,9 +17,9 @@ paths:
       operationId: "post_actividadplazas_gestion_plazas_data"
       summary: "Gestion Plazas Data"
       description: |
-        Endpoint backend: devuelve los datos del cuadro de gestion de plazas (cabeceras, valores, a_grupo y metadatos de periodo/tipo) para que el controller frontend monte el `frontend\shared\web\TablaEditable`.
+        Data builder de la pantalla principal `gestion_plazas`: devuelve el cuadro (cabeceras + filas por actividad y dl del grupo de estudios de mi dl) con las plazas totales, concedidas y pedidas, para que el controller frontend monte la `frontend\shared\web\TablaEditable`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadplazas/api/gestion_plazas_data.md`
       tags:
@@ -65,7 +65,7 @@ paths:
       operationId: "post_actividadplazas_gestion_plazas_update"
       summary: "Gestion Plazas Update"
       description: |
-        Endpoint backend: actualiza las plazas (totales, concedidas o pedidas) desde la edicion inline de `frontend\shared\web\TablaEditable`.
+        Mutación de una celda de la `frontend\shared\web\TablaEditable` de `gestion_plazas` (y también de `plazas_balance_dl`): actualiza las plazas totales, concedidas o pedidas de una actividad.
         
         Operacion: `mutacion`.
         
@@ -101,9 +101,9 @@ paths:
       operationId: "post_actividadplazas_peticiones_activ_data"
       summary: "Peticiones Activ Data"
       description: |
-        Endpoint backend: lista de actividades candidatas + peticiones actuales para una persona+tipo.
+        Data builder de la pantalla `peticiones_activ`: lista de actividades candidatas (opciones del desplegable) + peticiones actuales de una persona para un tipo de actividad.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadplazas/api/peticiones_activ_data.md`
       tags:
@@ -147,7 +147,7 @@ paths:
       operationId: "post_actividadplazas_peticiones_eliminar"
       summary: "Peticiones Eliminar"
       description: |
-        Endpoint backend: elimina todas las peticiones de una persona+tipo.
+        Elimina todas las peticiones de plaza de una persona para un tipo de actividad.
         
         Operacion: `mutacion`.
         
@@ -162,6 +162,7 @@ paths:
               type: object
               required:
                 - "id_nom"
+                - "sactividad"
               properties:
                 id_nom:
                   type: "integer"
@@ -185,7 +186,7 @@ paths:
       operationId: "post_actividadplazas_peticiones_guardar"
       summary: "Peticiones Guardar"
       description: |
-        Endpoint backend: guarda las peticiones de una persona+tipo (borra las anteriores y crea las nuevas en orden).
+        Guarda las peticiones de plaza de una persona para un tipo de actividad: borra todas las anteriores y crea las nuevas en el orden recibido.
         
         Operacion: `mutacion`.
         
@@ -200,6 +201,7 @@ paths:
               type: object
               required:
                 - "id_nom"
+                - "sactividad"
               properties:
                 actividades:
                   type: "array"
@@ -227,7 +229,7 @@ paths:
       operationId: "post_actividadplazas_peticiones_incorporar"
       summary: "Peticiones Incorporar"
       description: |
-        Endpoint backend: incorpora las primeras peticiones de plaza de cada persona como asistencia con plaza asignada/pedida (segun si la actividad es de midele o de otra dl).
+        Incorpora la primera petición de plaza de cada persona como asistencia con plaza asignada (si la actividad es de mi dl) o pedida (si es de otra dl), para un tipo y colectivo.
         
         Operacion: `mutacion`.
         
@@ -263,9 +265,9 @@ paths:
       operationId: "post_actividadplazas_plazas_balance_data"
       summary: "Plazas Balance Data"
       description: |
-        Endpoint backend: datos del grid comparativo A vs B (plazas concedidas y libres entre dos dl para un tipo de actividad).
+        Data builder del grid comparativo A vs B: plazas concedidas y libres entre mi dl (A) y otra dl (B) para un tipo de actividad en el curso vigente.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadplazas/api/plazas_balance_data.md`
       tags:
@@ -299,9 +301,9 @@ paths:
       operationId: "post_actividadplazas_plazas_balance_que_data"
       summary: "Plazas Balance Que Data"
       description: |
-        Datos para la pantalla plazas_balance_que (opciones dl + id_tipo_activ).
+        Data builder de la pantalla de filtro `plazas_balance_que`: resuelve el `id_tipo_activ` y devuelve el desplegable de delegaciones activas para elegir con qué dl comparar.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadplazas/api/plazas_balance_que_data.md`
       tags:
@@ -337,7 +339,7 @@ paths:
       operationId: "post_actividadplazas_plazas_ceder"
       summary: "Plazas Ceder"
       description: |
-        Endpoint backend: actualiza el array `cedidas` de `ActividadPlazasDl` para ceder (o quitar) plazas de `mi_dele` a otra dl en una actividad.
+        Cede (o deja de ceder) plazas de mi dl a otra dl en una actividad, actualizando el array `cedidas` de `ActividadPlazasDl`.
         
         Operacion: `mutacion`.
         
@@ -352,6 +354,7 @@ paths:
               type: object
               required:
                 - "id_activ"
+                - "region_dl"
               properties:
                 id_activ:
                   type: "integer"
@@ -377,9 +380,9 @@ paths:
       operationId: "post_actividadplazas_posibles_propietarios_data"
       summary: "Posibles Propietarios Data"
       description: |
-        Endpoint backend: devuelve el payload JSON estandar de desplegable (`id`, `opciones`, `selected`, `blanco`, `val_blanco`) con los posibles propietarios de plaza para la persona+actividad indicadas.
+        Data builder del desplegable "posibles propietarios de plaza" para una persona + actividad. Devuelve el payload estándar de desplegable (`id`, `opciones`, `selected`, `blanco`, `val_blanco`) que el frontend monta con `fnjs_construir_desplegable`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadplazas/api/posibles_propietarios_data.md`
       tags:
@@ -390,6 +393,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom"
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -413,9 +419,9 @@ paths:
       operationId: "post_actividadplazas_resumen_plazas_data"
       summary: "Resumen Plazas Data"
       description: |
-        Endpoint backend: datos del resumen de plazas por actividad (calendario/cedidas/conseguidas/disponibles/ocupadas por dl) + opciones del desplegable para "ceder" y flags publicado/otra_dl.
+        Data builder del resumen de plazas por actividad: plazas por dl (calendario, cedidas, conseguidas, disponibles, ocupadas), totales agregados, opciones del desplegable de dl para "ceder" y flags `publicado` / `otra_dl`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadplazas/api/resumen_plazas_data.md`
       tags:
@@ -530,6 +536,8 @@ components:
       type: object
       properties:
         incorporadas:
+          type: "integer"
+        mensaje_final:
           type: "string"
     actividadplazas_PeticionesIncorporarDataResponse:
       allOf:
@@ -571,6 +579,8 @@ components:
       type: object
       properties:
         id_tipo_activ:
+          type: "string"
+        delegaciones_opciones:
           type: "string"
     actividadplazas_PlazasBalanceQueDataDataResponse:
       allOf:

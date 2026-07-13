@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TextosCertificados. Descripcion funcional pendiente de revisar.
+Plantilla de textos legales incluida al generar PDF (no flujo de usuario directo).
 
 ## Limites De La Respuesta
 

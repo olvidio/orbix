@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Controlador AJAX HTML: formulario modificar/nuevo de `TipoTarifa`.
+Fragmento AJAX: formulario popup modificar/nuevo de `TipoTarifa` (`tarifa_form.phtml`).
 
 ## Uso En Ayuda
 
@@ -25,6 +25,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 - `html.id_tarifa`
 - `html.letra`
+- `html.modo`
 - `html.observ`
 - `post.id_tarifa`
 

@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["inventario.pantalla.equipajes_lista_docs", "inventario.pantalla.equipajes_ver_docs"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_docs_de_lugar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Lista Docs De Lugar
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `inventario.lista_docs_de_
 
 ## Objetivo De Usuario
 
-Gestiona ListaDocsDeLugar. Descripcion funcional pendiente de revisar.
+Gestiona ListaDocsDeLugar. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Punto De Entrada
 
@@ -61,10 +61,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

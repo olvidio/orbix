@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página sirve para las actas.
+Presentación HTML para impresión de acta seleccionada.
 
 ## Uso En Ayuda
 

@@ -9,14 +9,14 @@ vistas: ["frontend/cartaspresentacion/view/cartas_presentacion_buscar.phtml"]
 fragmentos_frontend: ["frontend/cartaspresentacion/controller/cartas_presentacion_lista.php"]
 endpoints: ["/src/cartaspresentacion/cartas_presentacion_buscar_data"]
 capacidades: ["cartaspresentacion.cartas_presentacion_buscar.gestionar"]
-campos: ["html.btn_ok", "html.poblacion"]
+campos: ["html.btn_ok", "html.poblacion", "html.region", "html.pais", "html.dl"]
 acciones: ["fnjs_buscar", "fnjs_enviar", "fnjs_enviar_formulario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Cartas Presentacion Buscar
 
-Pantalla frontend: formulario de busqueda de cartas de presentacion.
+Formulario de búsqueda de cartas de presentación por población, región, país y delegación.
 
 ## Tipo
 
@@ -29,34 +29,28 @@ Pantalla frontend: formulario de busqueda de cartas de presentacion.
 
 ## Fragmentos Frontend Relacionados
 
-- `frontend/cartaspresentacion/controller/cartas_presentacion_lista.php`
+- `frontend/cartaspresentacion/controller/cartas_presentacion_lista.php` (resultados en `#resultados`)
 
 ## Endpoints Usados
 
-- `/src/cartaspresentacion/cartas_presentacion_buscar_data`
-
-## Capacidades Relacionadas
-
-- `cartaspresentacion.cartas_presentacion_buscar.gestionar`
+- `/src/cartaspresentacion/cartas_presentacion_buscar_data` (bootstrap de desplegables)
 
 ## Campos Detectados
 
-- `html.btn_ok`
-- `html.poblacion`
+- `html.poblacion` — texto libre
+- `html.region`, `html.pais`, `html.dl` — desplegables
+- `html.btn_ok` — botón buscar
 
 ## Acciones Detectadas
 
-- `fnjs_buscar`
-- `fnjs_enviar`
-- `fnjs_enviar_formulario`
+- `fnjs_buscar` — envía el formulario a `cartas_presentacion_lista.php` con `que=get`
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Rellenar uno o más filtros (población, región, país, delegación H).
+2. Pulsar **buscar**: los resultados aparecen debajo en `#resultados` como listado HTML agrupado.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** scdl > direcciones > cartas presentacion > buscar
+- **Pills2:** scdl > direcciones > cartas presentacion > buscar

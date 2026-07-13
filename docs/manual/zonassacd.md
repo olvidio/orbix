@@ -2,127 +2,142 @@
 tipo: "manual_usuario"
 modulo: "zonassacd"
 flujos: 5
-estado_revision: "revisado"
+estado_revision: "generado"
 ---
 
 # Manual De Usuario - zonassacd
 
-Gestión de **zonas geográficas** y asignación de SACD y centros a zonas. Rutas de menú desde `documentacion/Documentacion_Obix/menus.csv` (rol Exterior 8 / Dre).
+Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
 
-## Acceso Por Menu
+## Como Usar Este Manual
 
-| Texto en menu | Pantalla | Seccion manual |
-|---------------|----------|----------------|
-| **Zonas geogr.** / **Zonas** | `shared/tablaDB_lista_ver.php` (`InfoZona`) | Mantenimiento tablas zonas (modulo `shared`) |
-| **Zonas-ctr** | `frontend/zonassacd/controller/zona_ctr.php` | Zona centros |
-| **Zonas-sacd** | `frontend/zonassacd/controller/zona_sacd.php` | Zona SACD |
-| **Lista sacd-zona** | Endpoint `/src/zonassacd/zona_sacd_lista_tot` (legacy menu apuntaba a ajax) | Lista total SACD |
+Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
 
-Permisos de escritura habituales: oficina **`des`** o **`vcsd`**.
-
-## Conceptos
-
-| Termino | Significado |
-|---------|-------------|
-| **zona** | Agrupacion geografica de centros; determina que SACD los atiende (se usa en `misas`). |
-| **asignacion propia** | Cada SACD tiene una zona principal (`propia = si`) y puede tener asignaciones adicionales iglesia/CGI (`propia = no`). |
-| **dias L–D** | Dias de la semana (`dw1..dw7`) en que el SACD atiende esa zona. |
-| **centro dl / sf** | `id_ubi` que empieza por `1` = centro dl; por `2` = centro sf/ellas (estos solo visibles con permiso). |
-
-## Zona SACD
-
-> Seccion revisada manualmente.
+## Zona Ctr
 
 ### Para Que Sirve
 
-Consultar los **SACD asignados a una zona** (o sin zona), reasignarlos a otra zona, añadir asignación iglesia/CGI, y editar **días de la semana** (L–D) de un SACD en la zona (modal).
+Consultar y reasignar centros (dl y sf) a zonas geográficas desde el desplegable de zona.
 
 ### Donde Entrar
 
-- Menu **Zonas-sacd** → `frontend/zonassacd/controller/zona_sacd.php`
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
 
 ### Tareas Habituales
 
-#### Consultar SACD de una zona
-
-1. Elegir zona en **Lista de SACD de la zona** (incluye *sin asignar zona*).
-2. Revisar la tabla cargada en `#lst_sacds`.
-
-#### Reasignar SACD marcados
-
-1. Marcar filas en la tabla.
-2. Elegir zona destino en **Asignar los SACD marcados a la zona**.
-3. Pulsar **Cambiar asignación zona** (sustituye) o **Añadir asignación iglesia/CGI** (acumula).
-4. Revisar aviso si aparece; la lista se refresca sola.
-
-#### Editar dias de la semana de un SACD
-
-1. Marcar **una** fila y pulsar el boton **modificar** del listado (abre el modal).
-   *Nota: este boton se perdio en la migracion desde `apps/` y fue restaurado en jun 2026.*
-2. Marcar/desmarcar Lunes–Domingo.
-3. Pulsar **Grabar** (llama modulo **misas**: `zona_sacd_datos_get` / `zona_sacd_datos_put`).
+Pendiente de revisar. No se han inferido tareas desde el flujo.
 
 ### Errores O Avisos Frecuentes
 
-| Mensaje | Que hacer |
-|---------|-----------|
-| Texto en alert **respuesta:** | Leer mensaje del servidor tras update o edicion dias |
-| Lista vacia | Comprobar zona seleccionada |
-| Sin botones de asignacion | Usuario sin permiso `des` |
-
-### Referencias Internas
-
-- Flujo: `zonassacd.zona_sacd.gestionar.flujo`
-- Modulo relacionado: `misas` (dias semana SACD)
-
-## Zona Centros
-
-> Seccion revisada manualmente.
-
-### Para Que Sirve
-
-Consultar **centros** asignados a una zona (o sin zona / sin zona SF) y **reasignar** centros marcados a otra zona.
-
-### Donde Entrar
-
-- Menu **Zonas-ctr** → `frontend/zonassacd/controller/zona_ctr.php`
-
-### Tareas Habituales
-
-1. Elegir zona en el desplegable (opciones *sin asignar zona*, *sin asignar zona sf* si hay permiso `des`).
-2. Revisar tabla de centros.
-3. Marcar centros, elegir zona destino, pulsar **Asignar**.
-4. Comprobar que la lista se actualiza.
-
-### Errores O Avisos Frecuentes
-
-- Alert **respuesta:** tras guardar — leer texto y corregir seleccion.
+- `hay un error, no se ha guardado.`
 
 ### Referencias Internas
 
 - Flujo: `zonassacd.zona_ctr.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/zonassacd/flujos/zona_ctr.md`
 
-## Lista Total SACD-Zona
-
-> Seccion revisada manualmente (API; pantalla legacy en migracion).
+## Zona Ctr Ajax
 
 ### Para Que Sirve
 
-Obtener listado **global** de todos los SACD de la delegacion con sus zonas (y flag *propia*), para consulta/exportacion.
+Endpoint legacy sin implementación; funcionalidad en zona_ctr_lista y zona_ctr_update.
 
 ### Donde Entrar
 
-- Menu **Lista sacd-zona** (rol Dre: refmenu `que=get_lista_tot`)
-- Endpoint JSON: `/src/zonassacd/zona_sacd_lista_tot`
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
 
-### Notas
+### Tareas Habituales
 
-- Confirmado (jun 2026): las rutas `/src/zonassacd/zona_sacd_ajax` y `zona_ctr_ajax`
-  estan registradas en `routes.php` pero sus controllers **no existen** (rutas muertas,
-  pendiente limpiarlas). Usar `zona_sacd_lista_tot` como endpoint canonico.
-- `zona_sacd_lista_tot` no tiene aun pantalla frontend que lo consuma.
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `_(ninguno documentado)_`
+
+### Referencias Internas
+
+- Flujo: `zonassacd.zona_ctr_ajax.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/zonassacd/flujos/zona_ctr_ajax.md`
+
+## Zona Sacd
+
+### Para Que Sirve
+
+Consultar y gestionar la asignación de sacerdotes (sacd) a zonas geográficas: listado por zona, cambio de zona propia, asignaciones iglesia/cgi y edición de días de atención semanal.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `hay un error, no se ha guardado`
+- `hay un error, no se ha eliminado`
+
+### Referencias Internas
+
+- Flujo: `zonassacd.zona_sacd.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/zonassacd/flujos/zona_sacd.md`
+
+## Zona Sacd Ajax
+
+### Para Que Sirve
+
+Endpoint legacy sin implementación; funcionalidad repartida en zona_sacd_lista, zona_sacd_update y zona_sacd_lista_tot.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `_(ninguno documentado)_`
+
+### Referencias Internas
+
+- Flujo: `zonassacd.zona_sacd_ajax.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/zonassacd/flujos/zona_sacd_ajax.md`
+
+## Zona Sacd Lista Tot
+
+### Para Que Sirve
+
+- Ver el listado global sacd–zona de toda la delegación (una fila por asignación).
+- Entrada de menú Lista sacd-zona.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `_(ninguno documentado)_`
+
+### Referencias Internas
+
+- Flujo: `zonassacd.zona_sacd_lista_tot.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/zonassacd/flujos/zona_sacd_lista_tot.md`
 
 ## Revision Pendiente
 
-- Crear pantalla frontend para **lista sacd-zona** (consumidor de `zona_sacd_lista_tot`).
-- Eliminar rutas muertas `zona_sacd_ajax` / `zona_ctr_ajax` de `src/zonassacd/config/routes.php`.
+- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
+- Completar rutas de menu.
+- Confirmar permisos necesarios.
+- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.

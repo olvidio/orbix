@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla principal del modulo `actividadessacd`.
+Pantalla principal del módulo `actividadessacd`: "Asignar sacd a actividades". Lista las actividades del tipo elegido en el menú (`na` / `sg` / `sr` / `sssc` / `sf` / `sf_na` / `sf_sg` / `sf_sr` / `falta_sacd` / `solape`) y, por cada una, sus sacd encargados, permitiendo asignar, reordenar y borrar. El controller solo pinta la barra de filtros (periodo) y contenedores vacíos; el listado y las mutaciones se cargan por AJAX contra los endpoints `/src/actividadessacd/*` (URLs firmadas con `HashFront`).
 
 ## Uso En Ayuda
 

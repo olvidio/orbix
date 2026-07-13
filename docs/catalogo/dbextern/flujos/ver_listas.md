@@ -2,76 +2,42 @@
 id: "dbextern.ver_listas.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Gestionar Ver Listas"
+nombre: "Flujo - Revisar BDU no unidas"
 capacidad: "dbextern.ver_listas.gestionar"
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_listas"]
-acciones: ["obtener_datos"]
+acciones: ["obtener_datos", "navegar"]
 endpoints: ["/src/dbextern/ver_listas_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ver Listas
+# Flujo - Revisar BDU no unidas
 
-Propuesta generada automaticamente desde la capacidad `dbextern.ver_listas.gestionar` y sus pantallas relacionadas.
+Exploración del punto 4: cola de personas BDU sin vínculo.
 
 ## Objetivo De Usuario
 
-Gestiona VerListas. Obtiene la lista de personas BDU sin unir y los posibles matches Orbix.
+Revisar una a una las personas de la BDU no unidas, viendo posibles coincidencias en Aquinate.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+**ver** del punto 4 en `sincro_index` → `ver_listas.php`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `dbextern.pantalla.ver_listas`
+### Obtener datos
 
-## Escenarios Inferidos
+1. Primera carga: `ver_listas_datos` con `first_load=1`, uniones automáticas, sesión `DBListas`.
+2. Por cada registro: `ver_listas_datos` con `id_nom_bdu` para candidatos Orbix.
 
-### Obtener Datos
+### Navegar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.dl`
-- `form.id`
-- `form.id_nom_listas`
-- `form.id_orbix`
-- `form.region`
-- `form.tipo_persona`
-- `html.mov`
-- `post.dl`
-- `post.id`
-- `post.mov`
-- `post.region`
-- `post.tipo_persona`
-
-Acciones JavaScript:
-- `button:<`
-- `fnjs_crear`
-- `fnjs_crear_todos`
-- `fnjs_enviar_formulario`
-- `fnjs_submit`
-- `fnjs_unir`
+1. Botones anterior/siguiente actualizan `id` en sesión vía POST al mismo controller.
 
 ## Endpoints Del Flujo
 
 - `/src/dbextern/ver_listas_datos`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

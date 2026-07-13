@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado de grupos de permisos (id ~ ^5) con alta/edición/borrado.
 
 ## Uso En Ayuda
 

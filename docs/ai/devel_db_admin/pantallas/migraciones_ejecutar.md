@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Proxy JSON de ejecución de migraciones desde la lista.
 
 ## Uso En Ayuda
 

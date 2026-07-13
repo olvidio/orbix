@@ -2,60 +2,32 @@
 id: "actividades.actividad_fase_completada.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Actividad Fase Completada"
+nombre: "Flujo - Consultar fase completada"
 capacidad: "actividades.actividad_fase_completada.gestionar"
 pantallas_principales: []
 fragmentos: []
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividades/actividad_fase_completada_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad Fase Completada
+# Flujo - Consultar fase completada
 
-Propuesta generada automaticamente desde la capacidad `actividades.actividad_fase_completada.gestionar` y sus pantallas relacionadas.
+Consulta puntual de si una fase concreta está completada para una actividad (uso AJAX
+desde otros módulos o JS de procesos).
 
 ## Objetivo De Usuario
 
-Gestiona ActividadFaseCompletadaDatos. JSON: si una fase concreta está completada (paridad con faseCompletada del repositorio).
+Validar estado de una fase sin recargar toda la ficha.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+Llamadas AJAX desde integraciones con `procesos` (no pantalla dedicada en actividades).
 
 ## Endpoints Del Flujo
 
 - `/src/actividades/actividad_fase_completada_datos`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice.

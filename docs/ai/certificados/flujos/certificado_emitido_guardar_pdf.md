@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoEmitidoGuardarMessages. Mensajes legibles al guardar un certificado emitido (errores de BD, etc.).
+Persistir el PDF generado y el número de certificado en BD.
 
 ## Limites De La Respuesta
 

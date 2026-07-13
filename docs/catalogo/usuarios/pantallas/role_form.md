@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/role_grupmenu_del", "/src/usuarios/role_guardar", "/s
 capacidades: ["usuarios.role.gestionar", "usuarios.role_grupmenu_del.gestionar", "usuarios.role_info.gestionar"]
 campos: ["form.dmz", "form.pau", "form.que", "form.role", "form.sel", "form.sf", "form.sv", "html.dmz", "html.que", "html.role", "html.sf", "html.sv", "post.id_role", "post.que", "post.refresh", "post.scroll_id", "post.sel", "post.stack"]
 acciones: ["fnjs_actualizar", "fnjs_add_grupmenu", "fnjs_del_grupmenu", "fnjs_enviar_formulario", "fnjs_guardar", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Role Form
 
-Descripcion funcional pendiente de revisar.
+Alta/edición de rol (sf/sv/pau/dmz) y tabla grupmenus asignados.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/role_form.php`
 
 ## Vistas Relacionadas
@@ -74,13 +76,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_guardar`
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

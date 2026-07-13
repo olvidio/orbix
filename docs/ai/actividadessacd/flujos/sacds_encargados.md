@@ -31,10 +31,11 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Tras una asignación, reordenación o borrado, el sistema actualiza la celda `<id_activ>_sacds`.
+2. Se repintan los sacd encargados con sus enlaces de menú contextual.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadessacd/sacds_encargados_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona SacdsEncargados. Devuelve los sacd encargados actuales de una actividad en un array serializable, junto con los flags de permiso.
+Tras asignar, reordenar o borrar un sacd, el sistema refresca la celda de sacd de la actividad consultando los encargados actuales y los flags de permiso que deciden si se muestran como enlaces interactivos.
 
 ## Limites De La Respuesta
 

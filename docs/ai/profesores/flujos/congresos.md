@@ -2,39 +2,40 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "profesores"
-titulo: "Congresos"
+titulo: "Consultar congresos"
 flujo: "profesores.congresos.gestionar.flujo"
-preguntas: ["Como ejecutar en Congresos?"]
-pantallas_principales: []
-fragmentos: ["profesores.pantalla.congresos"]
+preguntas: ["Como consultar en Consultar congresos?"]
+pantallas_principales: ["profesores.pantalla.congresos"]
+fragmentos: []
 endpoints: ["/src/profesores/congresos"]
 source: "docs/catalogo/profesores/flujos/congresos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Congresos
+# Ayuda IA - Consultar congresos
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Congresos`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar congresos`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Congresos?
+- Como consultar en Consultar congresos?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Asistencia a congresos (`profesores.pantalla.congresos`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Consultar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **asistencia a congresos** desde el menú `stgr2`.
+2. Revisar la tabla `tabla_congreso`.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/profesores/congresos`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CongresosLista. Descripcion funcional pendiente de revisar.
+Revisar congresos registrados por profesor (tipo, lugar, fechas, organizador).
 
 ## Limites De La Respuesta
 

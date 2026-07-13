@@ -8,64 +8,49 @@ pantallas_principales: ["actividadessacd.pantalla.activ_sacd"]
 fragmentos: []
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadessacd/lista_actividades_sacd_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Lista Actividades Sacd
 
-Propuesta generada automaticamente desde la capacidad `actividadessacd.lista_actividades_sacd.gestionar` y sus pantallas relacionadas.
+Listado de actividades del tipo + periodo elegidos, con sus sacd encargados.
 
 ## Objetivo De Usuario
 
-Gestiona ListaActividadesSacd. Devuelve el listado de actividades del tipo + periodo elegidos junto con los sacd encargados y los flags de permiso.
+El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de actividades del tipo
+(`na` / `sg` / `sr` / `sssc` / `sf` / variantes `sf_*` / `falta_sacd` / `solape`) en ese periodo y,
+por cada una, los sacd encargados actuales y los flags de permiso que deciden qué acciones se
+ofrecen (asignar, reordenar, borrar).
 
 ## Punto De Entrada
 
-- `actividadessacd.pantalla.activ_sacd`
+Pantalla `activ_sacd` (`frontend/actividadessacd/controller/activ_sacd.php`): la función `fnjs_ver`
+llama a este endpoint al pulsar el botón **buscar**. Si el tipo es `solape`, usa
+`solapes_sacd_data` en su lugar.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadessacd.pantalla.activ_sacd`
 
 ## Escenarios Inferidos
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Elegir periodo (año + trimestre o rango libre) en la barra de filtros.
+2. Pulsar **buscar**.
+3. El sistema construye la tabla con actividades, sacd encargados y leyenda de colores.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadessacd/lista_actividades_sacd_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.periodo`
-- `form.tipo`
-- `form.year`
-- `post.periodo`
-- `post.tipo`
-- `post.year`
+- Ninguno detectado.
 
 Acciones JavaScript:
-- `fnjs_actualizar_activ`
-- `fnjs_asignar_sacd`
-- `fnjs_cambiar_sacd`
-- `fnjs_cerrar`
-- `fnjs_construir_celda_sacds`
-- `fnjs_construir_leyenda`
-- `fnjs_construir_tabla_disponibles`
-- `fnjs_construir_tabla_lista`
-- `fnjs_construir_tabla_solapes`
-- `fnjs_enviar`
-- `fnjs_esc`
-- `fnjs_left_side_hide`
-- `fnjs_nuevo_sacd`
-- `fnjs_orden`
-- `fnjs_parse_rta`
-- `fnjs_ver`
+- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -75,9 +60,10 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
+
+- **Legacy:** dre > propuestas > asignar sacd (variantes: activ sv sg, activ sv sr, activ sv n y
+  agd, activ sf sg, activ sf sr, activ sf n,nax y agd, activ sss+, sf).
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).

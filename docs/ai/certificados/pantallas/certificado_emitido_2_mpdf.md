@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Variante de generación/guardado PDF del certificado emitido (segunda plantilla mPDF).
 
 ## Uso En Ayuda
 

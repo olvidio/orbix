@@ -11,7 +11,7 @@ endpoints: ["/src/actividadtarifas/tarifa_ubi_update_inc", "/src/casas/calendari
 capacidades: ["casas.calendario_ubi_resumen.gestionar"]
 campos: ["form.G", "form.id_ubi", "form.inc_cantidad", "form.inc_t", "form.seccion", "form.year", "html.G", "html.inc_t", "html.seccion", "post.G", "post.id_ubi", "post.inc_t"]
 acciones: ["button:resumen sf", "button:resumen sv", "fnjs_guardar", "fnjs_ver"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Calendario Ubi Resumen
@@ -66,10 +66,8 @@ Pantalla `calendario_ubi_resumen`: estudio económico y de ocupación de una cas
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** adl > Nuevo Calendario > Previsión económica
+- **Pills2:** ACTIVIDADES > Estadísticas económicas > Previsión económica
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["encargossacd.pantalla.ctr_ficha", "encargossacd.pantalla.ctr_ficha_update"]
 acciones: ["crear_actualizar", "obtener_datos"]
 endpoints: ["/src/encargossacd/ctr_ficha_data", "/src/encargossacd/ctr_ficha_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Ctr Ficha
@@ -21,7 +21,8 @@ Gestiona CtrFicha. Datos de la pantalla ctr_ficha: - calcula el filtro_ctr efect
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú: dre > Encargos > ficha ctr.
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -72,9 +73,14 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Encargos > ficha ctr
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
+
+
+## Ruta de menú
+
+- **Legacy:** dre > Encargos > ficha ctr
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
+

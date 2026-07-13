@@ -43,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActaImprimirPresentacion. Datos compartidos por acta_imprimir y el HTML de acta_imprimir_mpdf.
+Obtener datos de presentación e imprimir acta (HTML/PDF).
 
 ## Limites De La Respuesta
 

@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.horario_tarea"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/horario_tarea_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Horario Tarea
-
-Propuesta generada automaticamente desde la capacidad `misas.horario_tarea.gestionar` y sus pantallas relacionadas.
+# Flujo - Horario tarea
 
 ## Objetivo De Usuario
 
-Gestiona HorarioTarea. Datos del horario de una tarea (modal horario_tarea.phtml). Simple lectura de t_start/t_end del EncargoHorario indicado por id_item_h. Se saca de la vista frontend para cumplir la regla de refactor.md: los controladores frontend/ no pueden instanciar repositorios de src\ ni tocar $GLOBALS['container'].
+Lee las horas actuales de un EncargoHorario para poblar el modal horario_tarea.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -55,11 +53,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Modificar plantilla
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla

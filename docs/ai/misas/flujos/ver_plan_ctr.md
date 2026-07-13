@@ -43,10 +43,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona VerPlanCtr. Datos para la vista ver_plan_ctr.phtml: cuadricula del plan de misas por centro (filas: encargos, columnas: días).
+Genera la cuadrícula del plan de misas por centro: encargos en filas, días en columnas, con leyenda de sacds.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

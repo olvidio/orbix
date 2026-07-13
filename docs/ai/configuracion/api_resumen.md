@@ -28,7 +28,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `configuracion.modulos_update`
 - Controller: `src/configuracion/infrastructure/ui/http/controllers/modulos_update.php`
-- Entrada: `post.descripcion:string`, `post.id_mod:integer`, `post.mod:string`, `post.nom:string`, `post.sel:mixed`
+- Entrada: `post.descripcion:string`, `post.id_mod:integer`, `post.mod:string`, `post.nom:string`, `post.sel:mixed`, `post.sel_apps:array`, `post.sel_mods:array`
 - Respuesta: `raw_response`
 
 ## `/src/configuracion/parametros_lista`
@@ -43,7 +43,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `configuracion.parametros_update`
 - Controller: `src/configuracion/infrastructure/ui/http/controllers/parametros_update.php`
 - Entrada: `post.fin_dia:integer`, `post.fin_mes:integer`, `post.ini_dia:integer`, `post.ini_mes:integer`, `post.parametro:string`, `post.valor:string`
-- Respuesta: `pendiente_revision`
+- Respuesta: `standard_envelope_string_data`
 
 ## `/src/configuracion/periodo_calendario_escolar_data`
 

@@ -7,21 +7,26 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/personas/infrastructure/ui/http/controllers/stgr_update.php"
 entrada: ["post.id_nom:integer", "post.id_tabla:string", "post.nivel_stgr:string"]
-entrada_obligatoria: []
+entrada_obligatoria: ["post.id_nom", "post.id_tabla", "post.nivel_stgr"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["No existe la clase de la persona", "No se encuentra la persona"]
+errores: ["No existe la clase de la persona", "No se encuentra la persona", "hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/personas/view/stgr_cambio.phtml"]
 casos_uso: ["src\\personas\\application\\StgrUpdate"]
 tags: ["personas", "stgr", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Stgr Update
 
-Endpoint JSON: actualiza el `nivel_stgr` de una persona.
+Actualiza el campo `nivel_stgr` de una persona.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Deriva `obj_pau` de `id_tabla` (`n`→PersonaN, `a`→Agd, `s`→S, `sssc`, `x`→Nax, códigos Ex/Sacd).
+Carga persona, asigna `nivel_stgr` y persiste. Linaje: `apps/personas/controller/stgr_update.php`.
 
 ## Endpoint
 
@@ -34,22 +39,24 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_nom` | `integer` | controller | No | controller |
-| `id_tabla` | `string` | controller | No | controller |
-| `nivel_stgr` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_nom` | `integer` | controller | Sí | |
+| `id_tabla` | `string` | controller | Sí | Código tabla persona |
+| `nivel_stgr` | `string` | controller | Sí | Valor numérico del desplegable |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar($error_txt, 'ok')`.
+- Éxito: `data: "ok"`.
+
+## Permisos
+
+- Frontend: acción «modificar stgr» requiere `have_perm_oficina('est')` en el listado.
 
 ## Errores conocidos
 
-- `No existe la clase de la persona`
+- `No existe la clase de la persona` (`id_tabla` no mapeado)
 - `No se encuentra la persona`
+- `hay un error, no se ha guardado` (+ detalle repositorio)
 
 ## Casos De Uso
 
@@ -57,10 +64,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/personas/view/stgr_cambio.phtml`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/personas/view/stgr_cambio.phtml` (`fnjs_guardar_stgr`)

@@ -11,7 +11,7 @@ endpoints: ["/src/encargossacd/ctr_get_ficha_data"]
 capacidades: ["encargossacd.ctr_get_ficha.gestionar"]
 campos: ["form.id_ubi", "form.seleccion_sacd", "html.ok", "post.id_ubi", "post.seleccion_sacd"]
 acciones: ["fnjs_cambiar_lista_sacd", "fnjs_cerrar", "fnjs_crear_horario", "fnjs_guardar", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Ctr Get Ficha
@@ -56,13 +56,19 @@ Ficha de atencion sacerdotal de un centro.
 - `fnjs_guardar`
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+

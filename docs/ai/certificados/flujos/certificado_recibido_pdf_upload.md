@@ -44,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoRecibidoPdfUpload. Subida AJAX del PDF (certificado recibido, FormData multipart).
+Subir PDF de certificado recibido.
 
 ## Limites De La Respuesta
 

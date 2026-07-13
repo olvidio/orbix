@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado de migraciones SQL pendientes/aplicadas con ejecución y borrado de registro.
 
 ## Uso En Ayuda
 

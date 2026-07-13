@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX que renderiza la tabla de tipos de actividad con el proceso asignado (propio y no propio) mediante `tipo_activ_proceso_lista`.
 
 ## Uso En Ayuda
 

@@ -8,20 +8,24 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.ca_posibles_que"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/ca_posibles_que_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Ca Posibles Que
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.ca_posibles_que.gestionar` y sus pantallas relacionadas.
+Pantalla de filtros para el informe de posibles CA.
 
 ## Objetivo De Usuario
 
-Gestiona CaPosiblesQue. Desplegables y texto de grupo para ca_posibles_que.php.
+El usuario configura los filtros del informe de posibles CA: centro (N o AGD), periodo,
+grupo de estudios y opciones de inclusión (estudios, repaso, todos). Al cargar la pantalla
+obtiene los desplegables y textos iniciales.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `ca_posibles_que` (`frontend/actividadestudios/controller/ca_posibles_que.php`):
+al abrirse llama a `ca_posibles_que_data` para cargar desplegables de centros y grupo de
+estudios. El formulario envía a `ca_posibles.php` al pulsar **buscar**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +35,13 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Abrir la entrada de menú **posibles ca**.
+2. El sistema carga desplegables de centros N/AGD y texto de grupo vía `ca_posibles_que_data`.
+3. El usuario ajusta periodo, centro y flags; al buscar pasa al flujo `ca_posibles`.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/ca_posibles_que_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -89,9 +95,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > posibles ca > posibles ca.
+- **Pills2:** vest > posibles ca > posibles ca.

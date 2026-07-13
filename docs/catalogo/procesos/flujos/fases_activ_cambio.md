@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.fases_activ_cambio", "procesos.pantalla.fases_activ_cambio_lista"]
 acciones: ["crear_actualizar", "listar", "obtener"]
 endpoints: ["/src/procesos/fases_activ_cambio_get", "/src/procesos/fases_activ_cambio_lista", "/src/procesos/fases_activ_cambio_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Fases Activ Cambio
-
-Propuesta generada automaticamente desde la capacidad `procesos.fases_activ_cambio.gestionar` y sus pantallas relacionadas.
+# Flujo - Cambiar de fase
 
 ## Objetivo De Usuario
 
-Gestiona FasesActivCambio, FasesActivCambioGet, FasesActivCambioLista. Caso de uso: aplica setCompletado(t|f) a la tarea de la fase nueva para cada id_activ seleccionado, respetando permisos de oficina del responsable. Caso de uso: devuelve las fases posibles para el id_tipo_activ y la dl_propia actual, incluyendo la opcion seleccionada por id_fase_sel. Respuesta conforme al contrato de refactor.md para desplegables (payload JSON con id, opciones, selected, blanco, action). El frontend construye el <select> con el helper JS estandar. Caso de uso: devuelve los datos estructurados para la tabla de actividades candidatas a cambiar de fase, segun filtros de tipo de actividad, dl_propia, periodo y accion (marcar/desmarcar). El frontend renderiza el formulario con frontend\shared\web\Lista + web\Hash.
+Cambio masivo de fase en actividades: filtrar por tipo, periodo y fase destino; listar candidatas; marcar o desmarcar la tarea de la fase nueva en las actividades seleccionadas.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: Calendario > actividades > cambiar de fase (también dre y variantes vest/vsm/dagd/vsg). Pills2: ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades (también ATENCIÓN SACD, dre y Calendario).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -104,11 +102,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** Calendario > actividades > cambiar de fase; dre > actividades > cambiar de fase
+- **Pills2:** ATENCIÓN SACD > Actividades > cambiar de fase; dre > actividades > cambiar de fase; Calendario > actividades > cambiar de fase; ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades

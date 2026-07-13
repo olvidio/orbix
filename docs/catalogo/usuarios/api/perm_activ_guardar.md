@@ -6,21 +6,26 @@ url: "/src/usuarios/perm_activ_guardar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php"
-entrada: ["post.afecta_a:array", "post.dl_propia:string", "post.fase_ref:array", "post.iactividad_val:string", "post.iasistentes_val:string", "post.id_item:integer", "post.id_tipo_activ:integer", "post.id_usuario:integer", "post.inom_tipo_val:string", "post.isfsv_val:string", "post.perm_off:array", "post.perm_on:array"]
-entrada_obligatoria: []
+entrada: ["post.id_usuario:integer", "post.id_tipo_activ:integer", "post.id_item:integer", "post.dl_propia:string", "post.fase_ref:array", "post.perm_on:array", "post.perm_off:array", "post.afecta_a:array"]
+entrada_obligatoria: ["id_usuario"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/procesos/controller/usuario_perm_activ.php"]
 casos_uso: []
 tags: ["usuarios", "perm", "activ", "guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["hay un error, no se ha guardado", "hay un error."]
 ---
 
 # Perm Activ Guardar
 
-Descripcion funcional pendiente de revisar.
+Crea/actualiza/elimina permisos de actividad por tipo, fase y bits on/off para cada `afecta_a`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Crea/actualiza/elimina permisos de actividad por tipo, fase y bits on/off para cada `afecta_a`.
 
 ## Endpoint
 
@@ -33,35 +38,33 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `afecta_a` | `array` | controller | No | controller |
-| `dl_propia` | `string` | controller | No | controller |
-| `fase_ref` | `array` | controller | No | controller |
-| `iactividad_val` | `string` | controller | No | controller |
-| `iasistentes_val` | `string` | controller | No | controller |
-| `id_item` | `integer` | controller | No | controller |
-| `id_tipo_activ` | `integer` | controller | No | controller |
-| `id_usuario` | `integer` | controller | No | controller |
-| `inom_tipo_val` | `string` | controller | No | controller |
-| `isfsv_val` | `string` | controller | No | controller |
-| `perm_off` | `array` | controller | No | controller |
-| `perm_on` | `array` | controller | No | controller |
+| `id_usuario` | `integer` | application | Si | |
+| `id_tipo_activ` | `integer` | application | No | |
+| `id_item` | `integer` | application | No | |
+| `dl_propia` | `string` | application | No | |
+| `fase_ref` | `array` | application | No | |
+| `perm_on` | `array` | application | No | |
+| `perm_off` | `array` | application | No | |
+| `afecta_a` | `array` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacío serializado).
+
+## Errores conocidos
+- `hay un error, no se ha guardado`
+- `hay un error.`
+
+## Permisos
+
+Admin en modal permisos actividad del usuario.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-- `frontend/procesos/controller/usuario_perm_activ.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/procesos/controller/usuario_perm_activ.php"]`).

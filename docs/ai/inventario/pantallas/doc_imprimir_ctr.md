@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Doc Imprimir Ctr"
+titulo: "Imprimir inventario centros"
 pantalla: "inventario.pantalla.doc_imprimir_ctr"
-preguntas: ["Que se puede hacer en Doc Imprimir Ctr?", "Que campos tiene Doc Imprimir Ctr?", "Que acciones hay en Doc Imprimir Ctr?"]
+preguntas: ["Que se puede hacer en Imprimir inventario centros?", "Que campos tiene Imprimir inventario centros?", "Que acciones hay en Imprimir inventario centros?"]
 capacidades: ["inventario.inventario_css_inline.gestionar", "inventario.inventario_ctr.gestionar"]
 endpoints: ["/src/inventario/inventario_css_inline_data", "/src/inventario/inventario_ctr"]
 source: "docs/catalogo/inventario/pantallas/doc_imprimir_ctr.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Doc Imprimir Ctr
+# Ayuda IA Pantalla - Imprimir inventario centros
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Vista de impresión: llama `inventario_ctr` + CSS inline.
 
 ## Uso En Ayuda
 

@@ -2,48 +2,37 @@
 id: "profesores.congresos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Gestionar Congresos"
+nombre: "Flujo - Consultar congresos"
 capacidad: "profesores.congresos.gestionar"
-pantallas_principales: []
-fragmentos: ["profesores.pantalla.congresos"]
-acciones: ["ejecutar"]
+pantallas_principales: ["profesores.pantalla.congresos"]
+fragmentos: []
+acciones: ["consultar"]
 endpoints: ["/src/profesores/congresos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Congresos
+# Flujo - Consultar congresos
 
-Propuesta generada automaticamente desde la capacidad `profesores.congresos.gestionar` y sus pantallas relacionadas.
+Consulta global de asistencia a congresos del claustro STGR.
 
 ## Objetivo De Usuario
 
-Gestiona CongresosLista. Descripcion funcional pendiente de revisar.
+Revisar congresos registrados por profesor (tipo, lugar, fechas, organizador).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-- `profesores.pantalla.congresos`
+Pantalla `congresos` (`frontend/profesores/controller/congresos.php`).
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Abrir **asistencia a congresos** desde el menú `stgr2`.
+2. Revisar la tabla `tabla_congreso`.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+- `/src/profesores/congresos`
 
 ## Endpoints Del Flujo
 
@@ -53,9 +42,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > actas... > asitencia a congresos
+- **Pills2:** sin entrada en el índice

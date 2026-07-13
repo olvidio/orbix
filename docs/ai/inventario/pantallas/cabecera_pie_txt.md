@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Cabecera Pie Txt"
+titulo: "Textos cabecera/pie equipajes"
 pantalla: "inventario.pantalla.cabecera_pie_txt"
-preguntas: ["Que se puede hacer en Cabecera Pie Txt?", "Que campos tiene Cabecera Pie Txt?", "Que acciones hay en Cabecera Pie Txt?"]
+preguntas: ["Que se puede hacer en Textos cabecera/pie equipajes?", "Que campos tiene Textos cabecera/pie equipajes?", "Que acciones hay en Textos cabecera/pie equipajes?"]
 capacidades: ["inventario.cabecera_pie_txt.gestionar"]
 endpoints: ["/src/inventario/cabecera_pie_txt"]
 source: "docs/catalogo/inventario/pantallas/cabecera_pie_txt.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Cabecera Pie Txt
+# Ayuda IA Pantalla - Textos cabecera/pie equipajes
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Edita textos globales de impresión de equipajes.
 
 ## Uso En Ayuda
 

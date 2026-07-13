@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActaSelect. Lista de actas y mapa de asignaturas para acta_select (frontend sin repositorios).
+Buscar y seleccionar actas del curso; navegar a ver, modificar, imprimir o descargar PDF.
 
 ## Limites De La Respuesta
 

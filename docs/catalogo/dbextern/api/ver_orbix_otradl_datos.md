@@ -4,45 +4,50 @@ tipo: "endpoint"
 modulo: "dbextern"
 url: "/src/dbextern/ver_orbix_otradl_datos"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/dbextern/infrastructure/ui/http/controllers/ver_orbix_otradl_datos.php"
 entrada: ["post.ids_traslados_A:string", "post.tipo_persona:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
 frontend_referencias: ["frontend/dbextern/controller/ver_orbix_otradl.php"]
 casos_uso: ["src\\dbextern\\application\\VerOrbixOtraDlData"]
 tags: ["dbextern", "ver", "orbix", "otradl", "datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Ver Orbix Otradl Datos
 
-Obtiene datos de personas BDU que están en otra DL en Orbix.
+Detalle del punto 7: personas Aquinate activas cuya correspondencia BDU está en otra DL.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Recibe JSON de IDs listas (`ids_traslados_A`), resuelve `id_match` y datos BDU, formatea la DL destino
+y devuelve filas para traslado con `sincro_trasladar_a`.
 
 ## Endpoint
 
 - URL: `/src/dbextern/ver_orbix_otradl_datos`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/dbextern/infrastructure/ui/http/controllers/ver_orbix_otradl_datos.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `ids_traslados_A` | `string` | controller | No | controller |
-| `tipo_persona` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `tipo_persona` | `string` | controller | Sí | |
+| `ids_traslados_A` | `string` | controller | Sí | JSON urlencoded de `id_nom_listas` |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (doble `JSON.parse` en front).
+- `personas`: filas con `id_nom_orbix`, `id_nom_listas`, `ape_nom`, `dl` (DL destino formateada).
+
+## Permisos
+
+- Sin control propio.
 
 ## Casos De Uso
 
@@ -51,9 +56,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 ## Frontend Relacionado
 
 - `frontend/dbextern/controller/ver_orbix_otradl.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

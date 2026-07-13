@@ -11,12 +11,12 @@ endpoints: ["/src/notas/tessera_ver_data"]
 capacidades: ["notas.tessera_ver.gestionar"]
 campos: ["post.sel"]
 acciones: ["fnjs_left_side_hide"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tessera Ver
 
-Tessera de una persona (vista HTML): muestra por cada asignatura del bienio+cuadrienio si esta pendiente, cursada o aprobada, con nota y fecha.
+Visualización de tessera de estudios de una persona.
 
 ## Tipo
 
@@ -47,13 +47,11 @@ No se han detectado controladores frontend relacionados.
 
 - `fnjs_left_side_hide`
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

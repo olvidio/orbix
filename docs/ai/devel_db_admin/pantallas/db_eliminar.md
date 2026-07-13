@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX que ejecuta la eliminación de esquema.
 
 ## Uso En Ayuda
 

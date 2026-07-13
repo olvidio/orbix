@@ -5,18 +5,18 @@ subtipo: "pantalla"
 modulo: "procesos"
 nombre: "Tipo Activ Proceso"
 controller: "frontend/procesos/controller/tipo_activ_proceso.php"
-vistas: []
+vistas: ["frontend/procesos/view/tipo_activ_proceso.html.twig"]
 fragmentos_frontend: ["frontend/procesos/controller/tipo_activ_proceso_lista.php", "frontend/procesos/controller/tipo_activ_proceso_lst_posibles.php"]
 endpoints: ["/src/procesos/tipo_activ_proceso_asignar", "/src/procesos/tipo_activ_proceso_lst_posibles"]
 capacidades: ["procesos.tipo_activ_proceso_asignar.gestionar", "procesos.tipo_activ_proceso_lst_posibles.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tipo Activ Proceso
 
-Descripcion funcional pendiente de revisar.
+Asignación de procesos a tipos de actividad: tabla con proceso propio (DL) y no propio; al pulsar un proceso se despliega la mini-tabla de procesos posibles para asignar.
 
 ## Tipo
 
@@ -25,7 +25,7 @@ Descripcion funcional pendiente de revisar.
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
+- `frontend/procesos/view/tipo_activ_proceso.html.twig`
 
 ## Fragmentos Frontend Relacionados
 
@@ -50,13 +50,7 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > procesos activ. > tipo activ - proceso
+- **Pills2:** ADMIN LOCAL > procesos activ. > tipo activ - proceso

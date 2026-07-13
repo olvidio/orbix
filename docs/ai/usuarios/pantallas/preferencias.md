@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Preferencias personales: layout, inicio, idioma, tablas, estilo.
 
 ## Uso En Ayuda
 

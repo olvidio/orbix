@@ -11,12 +11,12 @@ endpoints: ["/src/notas/comprobar_notas_page_data"]
 capacidades: ["notas.comprobar_notas_page.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Comprobar Notas
 
-Pantalla “comprobar notas”: el SQL y mutaciones corren en {@see src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_data.php}.
+Informes de consistencia de datos de notas (SQL legacy) para numerarios o agregados.
 
 ## Tipo
 
@@ -47,13 +47,11 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice (variantes id_tabla)
+- **Pills2:** ESTUDIOS > Datos e informes > Comprobar datos n / Comprobar datos agd
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

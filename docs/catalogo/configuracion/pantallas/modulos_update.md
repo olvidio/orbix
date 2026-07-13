@@ -1,9 +1,9 @@
 ---
 id: "configuracion.pantalla.modulos_update"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "fragmento_ajax"
 modulo: "configuracion"
-nombre: "Modulos Update"
+nombre: "Proxy AJAX modulos_update"
 controller: "frontend/configuracion/controller/modulos_update.php"
 vistas: []
 fragmentos_frontend: []
@@ -11,49 +11,29 @@ endpoints: ["/src/configuracion/modulos_update"]
 capacidades: ["configuracion.modulos.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Modulos Update
+# Proxy AJAX modulos_update
 
-Descripcion funcional pendiente de revisar.
+Controlador frontend sin vista: reenvía el POST firmado (HashFront) a
+`/src/configuracion/modulos_update` y convierte la respuesta texto plano legacy en JSON
+para `fnjs_ajax_json`.
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `fragmento_ajax` (proxy de mutación, invocado desde `modulos_form` y `modulos_select`)
 - Controller: `frontend/configuracion/controller/modulos_update.php`
-
-## Vistas Relacionadas
-
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-No se han detectado controladores frontend relacionados.
 
 ## Endpoints Usados
 
-- `/src/configuracion/modulos_update`
-
-## Capacidades Relacionadas
-
-- `configuracion.modulos.gestionar`
-
-## Campos Detectados
-
-No se han detectado campos de formulario.
-
-## Acciones Detectadas
-
-No se han detectado acciones.
+- `/src/configuracion/modulos_update` — `mod=nuevo|eliminar|editar` según contexto
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+No es pantalla visible: el usuario interactúa desde el listado o la ficha de módulo; este
+controlador solo transporta la petición AJAX.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Sin entrada de menú en el índice.

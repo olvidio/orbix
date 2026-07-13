@@ -1,64 +1,56 @@
 ---
 id: "pasarela.pantalla.activacion_lista"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "pasarela"
-nombre: "Activacion Lista"
+nombre: "Fecha de activación"
 controller: "frontend/pasarela/controller/activacion_lista.php"
-vistas: []
-fragmentos_frontend: ["frontend/pasarela/controller/activacion_ajax.php"]
-endpoints: ["/src/", "/src/pasarela/activacion_excepcion_eliminar", "/src/pasarela/activacion_excepcion_guardar"]
-capacidades: ["pasarela.activacion_excepcion.gestionar"]
-campos: ["form.activacion", "form.id_tipo_activ", "form.que", "form.valor"]
+vistas:
+  - "frontend\/pasarela\/view\/activacion_lista.html.twig"
+fragmentos_frontend:
+  - "frontend\/pasarela\/controller\/activacion_ajax.php"
+endpoints:
+  - "\/src\/pasarela\/activacion_lista"
+  - "\/src\/pasarela\/activacion_default_data"
+  - "\/src\/pasarela\/activacion_default_guardar"
+  - "\/src\/pasarela\/activacion_excepcion_guardar"
+  - "\/src\/pasarela\/activacion_excepcion_eliminar"
+  - "\/src\/pasarela\/tipo_activ_txt_data"
+capacidades:
+  - "pasarela.activacion.gestionar"
+campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Activacion Lista
+# Fecha de activación
 
-Descripcion funcional pendiente de revisar.
+Gestiona cuándo se activa cada tipo de actividad en la pasarela (días antes del inicio o `upload`).
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla`
 - Controller: `frontend/pasarela/controller/activacion_lista.php`
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/pasarela/controller/activacion_ajax.php`
+- `frontend/pasarela/view/activacion_lista.html.twig`
 
 ## Endpoints Usados
 
-- `/src/`
-- `/src/pasarela/activacion_excepcion_eliminar`
+- `/src/pasarela/activacion_lista`
+- `/src/pasarela/activacion_default_data`
+- `/src/pasarela/activacion_default_guardar`
 - `/src/pasarela/activacion_excepcion_guardar`
-
-## Capacidades Relacionadas
-
-- `pasarela.activacion_excepcion.gestionar`
-
-## Campos Detectados
-
-- `form.activacion`
-- `form.id_tipo_activ`
-- `form.que`
-- `form.valor`
-
-## Acciones Detectadas
-
-No se han detectado acciones.
+- `/src/pasarela/activacion_excepcion_eliminar`
+- `/src/pasarela/tipo_activ_txt_data`
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Desde parámetros pasarela, abrir «fecha de activación».
+2. Editar valor por defecto o añadir excepciones por tipo.
+3. Guardar o eliminar filas.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).

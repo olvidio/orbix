@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/recuperar_password_mail"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Recuperar Password Mail
-
-Propuesta generada automaticamente desde la capacidad `usuarios.recuperar_password_mail.gestionar` y sus pantallas relacionadas.
+# Flujo - Recuperar Password Mail
 
 ## Objetivo De Usuario
 
-Gestiona RecuperarPasswordMail. Página para recuperar la contraseña de un usuario.
+Recuperación contraseña: genera pwd temporal, marca cambio obligatorio y envía mail.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,15 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Esquema no válido`
+- `Error al preparar la consulta`
+- `Error al ejecutar la consulta`
+- `No hay email asociado a este usuario`
+- `Error al enviar el correo electrónico`
+- `Error al actualizar la contraseña`
+- `No se encontró ningún usuario con ese nombre`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

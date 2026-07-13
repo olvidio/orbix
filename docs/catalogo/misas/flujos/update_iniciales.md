@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.ver_iniciales_zona"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/update_iniciales"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Update Iniciales
-
-Propuesta generada automaticamente desde la capacidad `misas.update_iniciales.gestionar` y sus pantallas relacionadas.
+# Flujo - Update iniciales
 
 ## Objetivo De Usuario
 
-Gestiona UpdateIniciales. Inserta o actualiza la fila de iniciales/color para un sacerdote. Devuelve texto vacio si todo fue bien; en otro caso, el mensaje de error del repositorio. El controlador HTTP es quien serializa la respuesta con ContestarJson::enviar(...).
+Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Iniciales sacd. Pills2: ATENCIÓN SACD > Gestión de misas > Iniciales sacd.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -54,11 +52,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `<repositorio getErrorTxt()>`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Iniciales sacd
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd

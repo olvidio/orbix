@@ -11,7 +11,7 @@ endpoints: ["/src/encargossacd/ctr_get_select_data", "/src/encargossacd/encargo_
 capacidades: ["encargossacd.ctr_get_select.gestionar", "encargossacd.encargo_lst_tipo_enc.gestionar", "encargossacd.encargo_ver.gestionar", "encargossacd.encargo_ver_editar.gestionar", "encargossacd.zonas_get_select.gestionar"]
 campos: ["form.desc_enc", "form.desc_lugar", "form.filtro_ctr", "form.grupo", "form.id_enc", "form.id_tipo_enc", "form.id_zona", "form.idioma_enc", "form.lst_ctrs", "form.nom_tipo", "form.observ", "form.que", "html.desc_enc", "html.desc_lugar", "post.desc_enc", "post.desc_lugar", "post.filtro_ctr", "post.grupo", "post.id_enc", "post.id_tipo_enc", "post.id_zona", "post.que", "post.refresh", "post.sel"]
 acciones: ["fnjs_construir_desplegable", "fnjs_generarNomEnc", "fnjs_guardar", "fnjs_lista_ctrs", "fnjs_lista_ctrs_por_zona", "fnjs_lista_zonas", "fnjs_lst_tipo_enc", "fnjs_strip_hash_params"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Encargo Ver
@@ -86,13 +86,19 @@ Ficha de alta/edicion de un encargo.
 - `fnjs_lst_tipo_enc`
 - `fnjs_strip_hash_params`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+

@@ -8,12 +8,12 @@ pantallas_principales: ["actividadtarifas.pantalla.tarifa_tipo_actividad"]
 fragmentos: ["actividadtarifas.pantalla.tarifa_tipo_actividad_form", "actividadtarifas.pantalla.tarifa_tipo_actividad_lista"]
 acciones: ["crear_actualizar", "eliminar", "listar", "ver_formulario"]
 endpoints: ["/src/actividadtarifas/relacion_tarifa_eliminar", "/src/actividadtarifas/relacion_tarifa_form_data", "/src/actividadtarifas/relacion_tarifa_lista_data", "/src/actividadtarifas/relacion_tarifa_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Relacion Tarifa
 
-Propuesta generada automaticamente desde la capacidad `actividadtarifas.relacion_tarifa.gestionar` y sus pantallas relacionadas.
+Definir qué tipo de tarifa del catálogo corresponde a cada tipo de actividad.
 
 ## Objetivo De Usuario
 
@@ -104,16 +104,19 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``debe indicar el tipo de actividad``
-- ``debe indicar la tarifa``
-- ``hay un error, no se ha borrado``
-- ``hay un error, no se ha guardado``
-- ``no se encuentra la relación``
-- ``no sé cuál he de borrar``
+- `debe indicar el tipo de actividad`
+- `debe indicar la tarifa`
+- `hay un error, no se ha borrado`
+- `hay un error, no se ha guardado`
+- `no se encuentra la relación`
+- `no sé cuál he de borrar`
 
-## Revision Manual
+## Permisos
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- Modificar fila: `have_perm_oficina('adl')` y sección del tipo de actividad coincidente.
+- Alta: `adl`, `pr` o `calendario`. Formulario usa `HashFront` (no HashB).
+
+## Ruta de menú
+
+- **Legacy:** adl > Tarifas > tarifa <-> tipo de actividad; dre/Calendario/exterior > Tarifas > tarifa <-> tipo actividad.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifa-tipo actividad.

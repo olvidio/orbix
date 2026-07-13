@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Casas Posibles"
+titulo: "Casas posibles"
 pantalla: "inventario.pantalla.equipajes_casas_posibles"
-preguntas: ["Que se puede hacer en Equipajes Casas Posibles?", "Que campos tiene Equipajes Casas Posibles?", "Que acciones hay en Equipajes Casas Posibles?"]
+preguntas: ["Que se puede hacer en Casas posibles?", "Que campos tiene Casas posibles?", "Que acciones hay en Casas posibles?"]
 capacidades: ["inventario.lista_casas_posibles_periodo.gestionar"]
 endpoints: ["/src/inventario/lista_casas_posibles_periodo"]
 source: "docs/catalogo/inventario/pantallas/equipajes_casas_posibles.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Casas Posibles
+# Ayuda IA Pantalla - Casas posibles
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Desplegable casas en periodo.
 
 ## Uso En Ayuda
 

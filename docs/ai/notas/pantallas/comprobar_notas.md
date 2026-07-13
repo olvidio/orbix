@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla “comprobar notas”: el SQL y mutaciones corren en {@see src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_data.php}.
+Informes de consistencia de datos de notas (SQL legacy) para numerarios o agregados.
 
 ## Uso En Ayuda
 

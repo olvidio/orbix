@@ -6,7 +6,7 @@ titulo: "Activ Ctr"
 pantalla: "actividadescentro.pantalla.activ_ctr"
 preguntas: ["Que se puede hacer en Activ Ctr?", "Que campos tiene Activ Ctr?", "Que acciones hay en Activ Ctr?"]
 capacidades: ["actividadescentro.activ_ctr_shell.gestionar"]
-endpoints: ["/src/actividadescentro/", "/src/actividadescentro/activ_ctr_shell_data"]
+endpoints: ["/src/actividadescentro/activ_ctr_shell_data", "/src/actividadescentro/lista_actividades_ctr_data", "/src/actividadescentro/centros_encargados_data", "/src/actividadescentro/centros_disponibles_data", "/src/actividadescentro/centro_encargado_asignar", "/src/actividadescentro/centro_encargado_reordenar", "/src/actividadescentro/centro_encargado_eliminar"]
 source: "docs/catalogo/actividadescentro/pantallas/activ_ctr.md"
 estado_revision: "generado"
 ---
@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla principal del modulo `actividadescentro`.
+Pantalla principal del módulo `actividadescentro`: lista las actividades de un colectivo (`tipo`) en un periodo y permite gestionar, por actividad, los **centros encargados** (asignar, reordenar, eliminar).
 
 ## Uso En Ayuda
 
@@ -56,8 +56,13 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Endpoints Relacionados
 
-- `/src/actividadescentro/`
 - `/src/actividadescentro/activ_ctr_shell_data`
+- `/src/actividadescentro/lista_actividades_ctr_data`
+- `/src/actividadescentro/centros_encargados_data`
+- `/src/actividadescentro/centros_disponibles_data`
+- `/src/actividadescentro/centro_encargado_asignar`
+- `/src/actividadescentro/centro_encargado_reordenar`
+- `/src/actividadescentro/centro_encargado_eliminar`
 
 ## Precauciones
 

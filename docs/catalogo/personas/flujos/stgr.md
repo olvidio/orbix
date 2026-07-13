@@ -2,55 +2,34 @@
 id: "personas.stgr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Gestionar Stgr"
+nombre: "Flujo - Guardar nivel STGR"
 capacidad: "personas.stgr.gestionar"
 pantallas_principales: []
 fragmentos: ["personas.pantalla.stgr_cambio"]
 acciones: ["crear_actualizar"]
 endpoints: ["/src/personas/stgr_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Stgr
+# Flujo - Guardar nivel STGR
 
-Propuesta generada automaticamente desde la capacidad `personas.stgr.gestionar` y sus pantallas relacionadas.
+Aplica el nuevo nivel STGR seleccionado en el formulario modal.
 
 ## Objetivo De Usuario
 
-Gestiona Stgr. Endpoint JSON: actualiza el nivel_stgr de una persona.
+Actualizar el nivel STGR de una persona del listado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `stgr_cambio.phtml` → `fnjs_guardar_stgr`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `personas.pantalla.stgr_cambio`
+### Guardar cambio
 
-## Escenarios Inferidos
-
-### Crear Actualizar
-
-Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/personas/stgr_update`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.nivel_stgr`
-- `html.guardar`
-- `post.id_nom`
-- `post.id_tabla`
-- `post.sel`
-
-Acciones JavaScript:
-- `fnjs_guardar_stgr`
+1. Elegir nivel en el desplegable.
+2. Guardar → `stgr_update` con `id_nom`, `id_tabla`, `nivel_stgr`.
+3. Volver al listado y comprobar columna STGR.
 
 ## Endpoints Del Flujo
 
@@ -58,12 +37,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``No existe la clase de la persona``
-- ``No se encuentra la persona``
+- `No existe la clase de la persona`
+- `No se encuentra la persona`
+- `hay un error, no se ha guardado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice.

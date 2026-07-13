@@ -8,20 +8,25 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.form_matriculas_de_una_persona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/form_matriculas_de_una_persona_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Form Matriculas De Una Persona
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.form_matriculas_de_una_persona.gestionar` y sus pantallas relacionadas.
+Carga del formulario de alta/edición de matrícula (dossiers 1303 y 3103).
 
 ## Objetivo De Usuario
 
-Gestiona FormMatriculasDeUnaPersona. Descripcion funcional pendiente de revisar.
+El usuario abre el formulario para matricular o editar la matrícula de una persona en una
+asignatura de una actividad: el sistema devuelve desplegables de nivel, asignatura,
+preceptor y datos de la actividad según el modo.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `form_matriculas_de_una_persona`
+(`frontend/actividadestudios/controller/form_matriculas_de_una_persona.php`): al abrirse
+desde dossier 1303 (persona) o 3103 (actividad) llama a
+`form_matriculas_de_una_persona_data`. Sucesor de `apps/actividadestudios/controller/form_1303.php`.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +36,13 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En el dossier de matrículas (1303 o 3103), pulsar **nuevo** o **modificar**.
+2. El sistema carga el formulario con `id_nom`, `id_activ`, `id_nivel`, `id_asignatura`.
+3. Se muestran desplegables de nivel y preceptor, con enlaces AJAX a opcionales/preceptores.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/form_matriculas_de_una_persona_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -63,9 +70,9 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo desde dossier 1303 o 3103).
+
+- **Legacy:** vest > buscar persona > n r/dl (dossier 1303); vsm > ca > buscar ca (dossier 3103).
+- **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl; ACTIVIDADES > Buscar actividad > ca n.

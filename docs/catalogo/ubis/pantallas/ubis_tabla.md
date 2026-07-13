@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.ubis_tabla"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "ubis"
 nombre: "Ubis Tabla"
 controller: "frontend/ubis/controller/ubis_tabla.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/ubis_tabla_data"]
 capacidades: ["ubis.ubis_tabla.gestionar"]
 campos: ["form.sel", "html.b_mas", "post.stack"]
 acciones: ["fnjs_borrar", "fnjs_enviar_formulario", "fnjs_modificar", "fnjs_solo_uno", "fnjs_trasladar", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Ubis Tabla
 
-Esta página muestra una tabla con los ubis seleccionados.
+Tabla de resultados de búsqueda de ubis con navegación y acciones sobre selección.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/ubis/controller/ubis_tabla.php`
 
 ## Vistas Relacionadas
@@ -55,13 +57,7 @@ Esta página muestra una tabla con los ubis seleccionados.
 - `fnjs_trasladar`
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

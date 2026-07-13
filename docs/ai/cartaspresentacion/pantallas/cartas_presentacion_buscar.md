@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla frontend: formulario de busqueda de cartas de presentacion.
+Formulario de búsqueda de cartas de presentación por población, región, país y delegación.
 
 ## Uso En Ayuda
 
@@ -25,6 +25,9 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 - `html.btn_ok`
 - `html.poblacion`
+- `html.region`
+- `html.pais`
+- `html.dl`
 
 ## Acciones Detectadas
 

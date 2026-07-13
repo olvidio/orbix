@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario dossier **1302**: alta o edición de un cargo de una persona en una actividad (vista por persona).
 
 ## Uso En Ayuda
 

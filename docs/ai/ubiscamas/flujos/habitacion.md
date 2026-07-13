@@ -66,10 +66,18 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Habitacion. Datos para frontend/ubiscamas/controller/habitacion_form.php. La composición de HashFront ocurre en {. Descripcion funcional pendiente de revisar.
+Dar de alta, modificar o eliminar habitaciones de un ubi CDC, incluyendo creación automática de camas según número indicado.
+
+## Errores Documentados
+
+- `No se encontró la habitación a eliminar`
+- `hay un error, no se ha eliminado la habitación`
+- `Error al eliminar la habitación`
+- `Habitación no válida`
+- `Error al guardar la habitación`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

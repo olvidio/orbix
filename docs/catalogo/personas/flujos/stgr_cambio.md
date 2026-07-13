@@ -2,52 +2,36 @@
 id: "personas.stgr_cambio.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Gestionar Stgr Cambio"
+nombre: "Flujo - Cambiar nivel STGR (formulario)"
 capacidad: "personas.stgr_cambio.gestionar"
 pantallas_principales: []
 fragmentos: ["personas.pantalla.stgr_cambio"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/personas/stgr_cambio_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Stgr Cambio
+# Flujo - Cambiar nivel STGR (formulario)
 
-Propuesta generada automaticamente desde la capacidad `personas.stgr_cambio.gestionar` y sus pantallas relacionadas.
+Apertura del formulario de cambio de nivel STGR desde el listado.
 
 ## Objetivo De Usuario
 
-Gestiona StgrCambio. Endpoint JSON: datos para el formulario stgr_cambio.phtml.
+Ver el nivel actual y las opciones disponibles antes de guardar el cambio.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- Listado `personas_select`: botón «modificar stgr» (`have_perm_oficina('est')`).
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `personas.pantalla.stgr_cambio`
+### Abrir formulario
 
-## Escenarios Inferidos
+1. Seleccionar exactamente una persona.
+2. Pulsar «modificar stgr».
+3. `stgr_cambio_data` devuelve nombre, nivel actual y opciones.
 
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.nivel_stgr`
-- `html.guardar`
-- `post.id_nom`
-- `post.id_tabla`
-- `post.sel`
-
-Acciones JavaScript:
-- `fnjs_guardar_stgr`
+La persistencia es el flujo `stgr` (`stgr_update`).
 
 ## Endpoints Del Flujo
 
@@ -55,11 +39,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No existe la clase de la persona`
+- `No se encuentra la persona`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice.

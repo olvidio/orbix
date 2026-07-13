@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Segunda plantilla PDF de tessera.
 
 ## Uso En Ayuda
 

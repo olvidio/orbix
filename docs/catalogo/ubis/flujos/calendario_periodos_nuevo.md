@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.calendario_periodos_nuevo"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/calendario_periodos_nuevo_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Calendario Periodos Nuevo
-
-Propuesta generada automaticamente desde la capacidad `ubis.calendario_periodos_nuevo.gestionar` y sus pantallas relacionadas.
+# Flujo - Calendario Periodos Nuevo
 
 ## Objetivo De Usuario
 
-Gestiona CalendarioPeriodosNuevo. Descripcion funcional pendiente de revisar.
+Precarga el formulario de alta de periodo con fecha siguiente y sfsv del último periodo del año.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: adl > Nuevo Calendario > Definir periodos. Pills2: ACTIVIDADES > Herramientas de calendario > Definir periodos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -56,11 +54,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos

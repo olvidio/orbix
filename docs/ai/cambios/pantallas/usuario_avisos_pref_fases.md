@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "cambios"
-titulo: "Usuario Avisos Pref Fases"
+titulo: "Desplegable de fases"
 pantalla: "cambios.pantalla.usuario_avisos_pref_fases"
-preguntas: ["Que se puede hacer en Usuario Avisos Pref Fases?", "Que campos tiene Usuario Avisos Pref Fases?", "Que acciones hay en Usuario Avisos Pref Fases?"]
+preguntas: ["Que se puede hacer en Desplegable de fases?", "Que campos tiene Desplegable de fases?", "Que acciones hay en Desplegable de fases?"]
 capacidades: ["cambios.cambio_usuario_objeto_pref_fases.gestionar"]
 endpoints: ["/src/cambios/cambio_usuario_objeto_pref_fases_data"]
 source: "docs/catalogo/cambios/pantallas/usuario_avisos_pref_fases.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Usuario Avisos Pref Fases
+# Ayuda IA Pantalla - Desplegable de fases
 
 ## Resumen
 
-Controlador AJAX HTML: fragmento con el desplegable de fases para el `id_tipo_activ` y `dl_propia` indicados.
+Fragmento AJAX que devuelve HTML del desplegable de fase/estado de referencia al cambiar objeto o tipo de actividad en `usuario_avisos_pref`.
 
 ## Uso En Ayuda
 

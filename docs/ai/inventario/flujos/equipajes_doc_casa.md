@@ -43,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona EquipajesDocCasa. Descripcion funcional pendiente de revisar.
+Gestiona EquipajesDocCasa. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Limites De La Respuesta
 

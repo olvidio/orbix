@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Buscador de plan por sacerdote: desplegable sacd filtrado por rol y rango de fechas.
 
 ## Uso En Ayuda
 

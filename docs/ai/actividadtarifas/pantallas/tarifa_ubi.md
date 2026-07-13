@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla principal del modulo `actividadtarifas` - tarifas por casa y año (`TarifaUbi`).
+Tarifas económicas por casa y año (`TarifaUbi`): filtros casa/año, listado AJAX, popup con HashB.
 
 ## Uso En Ayuda
 

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "profesores"
-titulo: "Lista Por Departamentos"
+titulo: "Claustro por departamentos"
 pantalla: "profesores.pantalla.lista_por_departamentos"
-preguntas: ["Que se puede hacer en Lista Por Departamentos?", "Que campos tiene Lista Por Departamentos?", "Que acciones hay en Lista Por Departamentos?"]
+preguntas: ["Que se puede hacer en Claustro por departamentos?", "Que campos tiene Claustro por departamentos?", "Que acciones hay en Claustro por departamentos?"]
 capacidades: ["profesores.lista_por_departamentos.gestionar"]
 endpoints: ["/src/profesores/lista_por_departamentos"]
 source: "docs/catalogo/profesores/pantallas/lista_por_departamentos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Lista Por Departamentos
+# Ayuda IA Pantalla - Claustro por departamentos
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado del claustro STGR agrupado por departamento: subsección **director** y cada **tipo de profesor**, con nombre y centro (y delegación en RSTGR). En ámbito regional muestra primero un filtro de delegaciones.
 
 ## Uso En Ayuda
 

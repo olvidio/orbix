@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.doc_de_ctr"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "inventario"
-nombre: "Doc De Ctr"
+nombre: "Inventario por centros"
 controller: "frontend/inventario/controller/doc_de_ctr.php"
 vistas: ["frontend/inventario/view/doc_de_ctr.phtml"]
 fragmentos_frontend: ["frontend/inventario/controller/doc_asignar_ctr.php", "frontend/inventario/controller/doc_imprimir_ctr.php"]
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_de_ctr_con_docs"]
 capacidades: ["inventario.lista_de_ctr_con_docs.gestionar"]
 campos: ["form.sel", "post.id_tipo_doc", "post.inventario"]
 acciones: ["fnjs_go", "fnjs_selectAll"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Doc De Ctr
+# Inventario por centros
 
-Descripcion funcional pendiente de revisar.
+Selección de tipo doc y centros; enlaces a asignar, modificar e imprimir inventario CTR.
+
 
 ## Tipo
 
@@ -53,11 +54,9 @@ Descripcion funcional pendiente de revisar.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Selección de tipo doc y centros; enlaces a asignar, modificar e imprimir inventario CTR.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada directa (desde inventario_que)
+- **Pills2:** —

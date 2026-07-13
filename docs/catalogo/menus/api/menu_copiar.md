@@ -6,43 +6,37 @@ url: "/src/menus/menu_copiar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/menus/infrastructure/ui/http/controllers/menu_copiar.php"
-entrada: ["post.gm_new:string", "post.id_menu:integer"]
-entrada_obligatoria: []
+entrada: ["post.id_menu:integer", "post.gm_new:string"]
+entrada_obligatoria: ["gm_new"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: []
+errores: ["hay un error. Debe indicar el destino", "No encuentro el menu", "hay un error, no se ha guardado"]
+frontend_referencias: ["frontend/menus/controller/menus_get.php"]
 casos_uso: ["src\\menus\\application\\MenuCopiar"]
 tags: ["menus", "menu", "copiar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Menu Copiar
+# Copiar ítem de menú
 
-Descripcion funcional pendiente de revisar.
+Clona un ítem de menú en otro grupmenu (`gm_new`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
-## Endpoint
+## Objetivo funcional
 
-- URL: `/src/menus/menu_copiar`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
-- Controller: `src/menus/infrastructure/ui/http/controllers/menu_copiar.php`
+Duplica el registro `aux_menus` con nuevo `id_menu` y `id_grupmenu` destino; conserva orden, texto, metamenu, permisos y parámetros.
 
 ## Entrada
 
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `gm_new` | `string` | controller | No | controller |
-| `id_menu` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| Campo | Tipo | Obligatorio | Notas |
+|-------|------|-------------|-------|
+| `id_menu` | `integer` | Si | Origen |
+| `gm_new` | `string` | Si | `id_grupmenu` destino |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data: "ok"`.
 
 ## Casos De Uso
 
@@ -50,10 +44,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/menus/view/menus_get.phtml` (form copiar)

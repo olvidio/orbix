@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario para editar plan existente: zona, orden y rango de fechas. Carga cuadrícula `ver_cuadricula_zona`.
 
 ## Uso En Ayuda
 

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página sirve para generar un cuadro con el numero de alumnos que tienen pendiente cada asignatura.
+Resumen agregado: cuántos alumnos deben cada asignatura.
 
 ## Uso En Ayuda
 

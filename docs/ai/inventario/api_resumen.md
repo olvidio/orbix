@@ -28,21 +28,21 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `inventario.doc_asignar_ctr_guardar`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/doc_asignar_ctr_guardar.php`
-- Entrada: `post.f_asignado:string`, `post.f_recibido:string`, `post.id_tipo_doc:string`, `post.numerado:string`, `post.str_selected_id:string`
+- Entrada: `post.id_tipo_doc:string`, `post.numerado:string`, `post.str_selected_id:string`, `post.f_recibido:string`, `post.f_asignado:string`, `post.num_{id_ubi}:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/doc_asignar_dlb_guardar`
 
 - Id: `inventario.doc_asignar_dlb_guardar`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/doc_asignar_dlb_guardar.php`
-- Entrada: `post.f_asignado:string`, `post.f_recibido:string`, `post.id_tipo_doc:string`, `post.numerado:string`, `post.str_selected_id:string`
+- Entrada: `post.id_tipo_doc:string`, `post.numerado:string`, `post.str_selected_id:string`, `post.f_recibido:string`, `post.f_asignado:string`, `post.num_{id_lugar}:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/documentos_guardar`
 
 - Id: `inventario.documentos_guardar`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php`
-- Entrada: `post.chk_eliminado:string`, `post.chk_f_asignado:string`, `post.chk_f_eliminado:string`, `post.chk_f_recibido:string`, `post.chk_num_fin:string`, `post.chk_num_ini:string`, `post.documentos:string`, `post.eliminado:integer`, `post.f_asignado:string`, `post.f_eliminado:string`, `post.f_recibido:string`, `post.num_fin:string`, `post.num_ini:string`
+- Entrada: `post.documentos:string`, `post.chk_f_recibido:string`, `post.f_recibido:string`, `post.chk_f_asignado:string`, `post.f_asignado:string`, `post.chk_eliminado:string`, `post.eliminado:integer`, `post.chk_f_eliminado:string`, `post.f_eliminado:string`, `post.chk_num_ini:string`, `post.num_ini:string`, `post.chk_num_fin:string`, `post.num_fin:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/equipajes_add_doc`
@@ -84,7 +84,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `inventario.equipajes_eliminar_grupo`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/equipajes_eliminar_grupo.php`
-- Entrada: `post.id_equipaje:integer`, `post.id_grupo:integer`
+- Entrada: `post.id_grupo:integer`, `post.id_equipaje:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/equipajes_lista_activ_equipaje`
@@ -98,7 +98,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `inventario.equipajes_lista_activ_periodo`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php`
-- Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.fin:string`, `post.id_cdc:integer`, `post.inicio:string`, `post.periodo:string`, `post.year:integer`
+- Entrada: `post.id_cdc:integer`, `post.periodo:string`, `post.year:integer`, `post.empiezamin:string`, `post.empiezamax:string`, `post.inicio:string`, `post.fin:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/equipajes_lista_activ_sel`
@@ -119,21 +119,21 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `inventario.equipajes_nuevo_guardar`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/equipajes_nuevo_guardar.php`
-- Entrada: `post.f_fin:string`, `post.f_ini:string`, `post.id_ubi_activ:integer`, `post.ids_activ:string`, `post.lugar:string`, `post.nom_equipaje:string`
+- Entrada: `post.id_ubi_activ:integer`, `post.nom_equipaje:string`, `post.ids_activ:string`, `post.f_ini:string`, `post.f_fin:string`, `post.lugar:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/equipajes_texto_listado_guardar`
 
 - Id: `inventario.equipajes_texto_listado_guardar`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php`
-- Entrada: `post.id_equipaje:integer`, `post.loc:string`, `post.texto:string`
+- Entrada: `post.texto:string`, `post.loc:string`, `post.id_equipaje:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/equipajes_update_grupo`
 
 - Id: `inventario.equipajes_update_grupo`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/equipajes_update_grupo.php`
-- Entrada: `post.id_equipaje:integer`, `post.id_grupo:integer`, `post.id_lugar:integer`, `post.sel:array`
+- Entrada: `post.id_grupo:integer`, `post.id_equipaje:integer`, `post.id_lugar:integer`, `post.sel:array`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/inventario_css_inline_data`
@@ -161,7 +161,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `inventario.lista_casas_posibles_periodo`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/lista_casas_posibles_periodo.php`
-- Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.fin:string`, `post.inicio:string`, `post.periodo:string`, `post.year:integer`
+- Entrada: `post.periodo:string`, `post.year:integer`, `post.empiezamin:string`, `post.empiezamax:string`, `post.inicio:string`, `post.fin:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/lista_colecciones`
@@ -217,7 +217,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `inventario.lista_docs_de_ctr`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/lista_docs_de_ctr.php`
-- Entrada: `post.id_lugar:integer`, `post.id_ubi:integer`
+- Entrada: `post.id_ubi:integer`, `post.id_lugar:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/lista_docs_de_dlb`
@@ -308,5 +308,5 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `inventario.traslado_doc_guardar`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/traslado_doc_guardar.php`
-- Entrada: `post.id_lugar_new:integer`, `post.id_ubi_new:integer`, `post.sel:array`
+- Entrada: `post.sel:array`, `post.id_ubi_new:integer`, `post.id_lugar_new:integer`
 - Respuesta: `standard_envelope_string_data`

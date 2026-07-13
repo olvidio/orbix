@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Renderer frontend de la mini-tabla de procesos posibles para asignar a un tipo de actividad.
+Fragmento AJAX que renderiza la mini-tabla clickable de procesos posibles para asignar a un tipo de actividad concreto.
 
 ## Uso En Ayuda
 

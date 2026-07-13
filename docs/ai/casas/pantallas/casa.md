@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla principal del módulo `casas` — filtro casa + periodo y delegación a distintas vistas AJAX según `tipo_lista`: - default → listado económico (`casa_ingresos_lista.php`) - `lista_activ` → listado de actividades (`casa_actividades_lista.php`) - `ctrsEncargados` → `frontend/actividades/controller/calendario_listas.php` - `datosEcGastos` → `frontend/casas/controller/casa_ec_gastos_lista.php` Migrada desde `apps/casas/controller/casa_que.php` + `casa_ajax.php` siguiendo `refactor.md`.
+Shell de gestión por casa: filtro de casa(s) y periodo, con delegación AJAX según `tipo_lista`:
 
 ## Uso En Ayuda
 

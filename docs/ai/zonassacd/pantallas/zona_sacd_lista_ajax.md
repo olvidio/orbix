@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX: tabla sacd (`id_zona`) desde zona_sacd, o listado global si `que=get_lista_tot` (menú Lista sacd-zona).
 
 ## Uso En Ayuda
 

@@ -11,7 +11,7 @@ endpoints: ["/src/encargossacd/horario_sacd_ver_data"]
 capacidades: ["encargossacd.horario_sacd_ver.gestionar"]
 campos: ["html.desc_enc", "html.dia", "html.dia_inc", "html.dia_num", "html.dia_ref", "html.f_fin", "html.f_ini", "html.filtro_sacd", "html.h_fin", "html.h_ini", "html.id_enc", "html.id_item", "html.id_nom", "html.mas_menos", "html.mod", "post.desc_enc", "post.filtro_sacd", "post.id_enc", "post.id_item", "post.id_nom", "post.mod"]
 acciones: ["fnjs_enviar_formulario", "fnjs_guardar_horario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Horario Sacd Ver
@@ -69,13 +69,19 @@ Horario encargo sacd en ficha.
 - `fnjs_enviar_formulario`
 - `fnjs_guardar_horario`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+

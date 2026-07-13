@@ -31,10 +31,10 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Consultar el listado
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir **Matrículas** desde el menú.
+2. Elegir año y periodo (por defecto `curso_ca`) y pulsar **buscar**.
+3. El sistema consulta `matriculas_lista_data` y muestra la tabla paginada.
+4. Opcionalmente, seleccionar filas para ver dossier CA o borrar matrículas.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/matriculas_lista_data`
@@ -45,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Matriculas. Listado de matrículas en un intervalo de fechas (actividades cuyo f_ini cae en el periodo). Usado por matriculas_lista vía PostRequest.
+El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de matrículas de actividades cuyo `f_ini` cae en ese intervalo, con alumno, centro, actividad, asignatura, preceptor y nota.
 
 ## Limites De La Respuesta
 

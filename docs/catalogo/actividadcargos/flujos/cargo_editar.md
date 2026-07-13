@@ -5,47 +5,55 @@ modulo: "actividadcargos"
 nombre: "Flujo - Gestionar Cargo Editar"
 capacidad: "actividadcargos.cargo_editar.gestionar"
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadcargos.pantalla.form_cargos_de_actividad", "actividadcargos.pantalla.form_cargos_personas_en_actividad"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadcargos/cargo_editar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Cargo Editar
 
-Propuesta generada automaticamente desde la capacidad `actividadcargos.cargo_editar.gestionar` y sus pantallas relacionadas.
+Persistencia de cambios en un cargo existente (o alta implícita si `id_item` vacío en edición legacy).
 
 ## Objetivo De Usuario
 
-Guardar cambios en un cargo existente (tipo, AGD, observaciones y sincronización de asistente).
-
-Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Cargo Editar).
+Guardar cambios en un cargo existente: tipo de cargo, flag AGD, observaciones y, cuando el formulario incluye **¿asiste?**, sincronizar el registro de asistente (alta/baja).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- Formulario **Cargo de una actividad** abierto en modo `editar` desde **modificar cargo** en el widget de relación (dossier 3102 o 1302).
+- Invocado al pulsar **Guardar datos del cargo** (`fnjs_guardar_cargo_act` / `fnjs_guardar_cargo_pers`) cuando `mod === 'editar'`.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadcargos.pantalla.form_cargos_de_actividad`
+- `actividadcargos.pantalla.form_cargos_personas_en_actividad`
 
 ## Escenarios Inferidos
 
 ### Ejecutar
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la relación de cargos, seleccionar una fila y pulsar **modificar cargo**.
+2. Ajustar **Cargo**, **¿Puede ser agd?** u **Observaciones** (persona y actividad suelen venir fijas).
+3. Si aparece **¿asiste?**, marcar o desmarcar según corresponda.
+4. Pulsar **Guardar datos del cargo**.
+5. En éxito, el panel se cierra y el listado refleja los cambios.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadcargos/cargo_editar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- Ninguno detectado.
+- `id_cargo`, `puede_agd`, `observ`
+- Hidden: `id_item`, `id_activ`, `id_nom`, `mod`, `asis_presente`
+- `asis` (si el form lo muestra)
 
 Acciones JavaScript:
-- Ninguna detectada.
+- `fnjs_guardar_cargo_act` (form 3102)
+- `fnjs_guardar_cargo_pers` (form 1302)
+- `fnjs_cargo_de_actividad_datos_ok` / `fnjs_cargos_pers_datos_ok` (validación previa)
 
 ## Endpoints Del Flujo
 
@@ -53,16 +61,13 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``faltan parametros id_activ / id_nom / id_cargo``
-- ``hay un error, no se ha eliminado el asistente``
-- ``hay un error, no se ha guardado``
-- ``hay un error, no se ha guardado el asistente``
-- ``no encuentro el cargo``
-- ``ya existe este cargo para esta actividad``
+- `faltan parametros id_activ / id_nom / id_cargo`
+- `hay un error, no se ha eliminado el asistente`
+- `hay un error, no se ha guardado`
+- `hay un error, no se ha guardado el asistente`
+- `no encuentro el cargo`
+- `ya existe este cargo para esta actividad`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (subflujo del formulario de cargo, accesible desde dossiers 3102/1302).

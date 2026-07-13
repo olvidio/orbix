@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "personas"
-titulo: "Home Persona"
+titulo: "Cabecera de persona"
 pantalla: "personas.pantalla.home_persona"
-preguntas: ["Que se puede hacer en Home Persona?", "Que campos tiene Home Persona?", "Que acciones hay en Home Persona?"]
+preguntas: ["Que se puede hacer en Cabecera de persona?", "Que campos tiene Cabecera de persona?", "Que acciones hay en Cabecera de persona?"]
 capacidades: ["personas.home_persona.gestionar"]
 endpoints: ["/src/personas/home_persona_data"]
 source: "docs/catalogo/personas/pantallas/home_persona.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Home Persona
+# Ayuda IA Pantalla - Cabecera de persona
 
 ## Resumen
 
-Pantalla de cabecera de una persona (datos basicos + acceso a dossiers y ficha).
+Resumen de datos básicos (nombre, dl, centro, STGR, teléfonos, e-mail, situación) y accesos a ficha, dossiers y lista embebida de dossiers.
 
 ## Uso En Ayuda
 

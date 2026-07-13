@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado contactos regionales para pantalla recovery.
 
 ## Uso En Ayuda
 

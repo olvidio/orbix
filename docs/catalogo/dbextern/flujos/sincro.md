@@ -2,64 +2,33 @@
 id: "dbextern.sincro.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Gestionar Sincro"
+nombre: "Flujo - Crear persona desde BDU"
 capacidad: "dbextern.sincro.gestionar"
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_listas"]
 acciones: ["crear"]
 endpoints: ["/src/dbextern/sincro_crear"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Sincro
+# Flujo - Crear persona desde BDU
 
-Propuesta generada automaticamente desde la capacidad `dbextern.sincro.gestionar` y sus pantallas relacionadas.
+Alta individual de ficha Aquinate desde la BDU (punto 4).
 
 ## Objetivo De Usuario
 
-Gestiona CrearPersonaDesdeListasUseCase. Crea una persona en Orbix desde la BDU y la vincula.
+Cuando no hay coincidencia Orbix, crear una ficha nueva y vincularla automáticamente.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Botón **crear nuevo** en `ver_listas` (`fnjs_crear`).
 
-## Fragmentos O Pantallas Auxiliares
-
-- `dbextern.pantalla.ver_listas`
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Crear
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.dl`
-- `form.id`
-- `form.id_nom_listas`
-- `form.id_orbix`
-- `form.region`
-- `form.tipo_persona`
-- `html.mov`
-- `post.dl`
-- `post.id`
-- `post.mov`
-- `post.region`
-- `post.tipo_persona`
-
-Acciones JavaScript:
-- `button:<`
-- `fnjs_crear`
-- `fnjs_crear_todos`
-- `fnjs_enviar_formulario`
-- `fnjs_submit`
-- `fnjs_unir`
+1. Envía `id_nom_listas`, `tipo_persona`, `id` (índice en sesión).
+2. Tras éxito, avanza al siguiente registro (`fnjs_submit` con `-`).
 
 ## Endpoints Del Flujo
 
@@ -67,12 +36,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``hay un error, no se ha guardado``
-- ``no se encontró la persona en la BDU``
+- `no se encontró la persona en la BDU`
+- `no se pudo resolver la delegación de listas`
+- `hay un error, no se ha guardado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.doc_no_asignado"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "inventario"
-nombre: "Doc No Asignado"
+nombre: "Centros sin documento"
 controller: "frontend/inventario/controller/doc_no_asignado.php"
 vistas: ["frontend/inventario/view/doc_no_asignado.phtml"]
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_docs_no_asignados_por_tipo"]
 capacidades: ["inventario.lista_docs_no_asignados_por_tipo.gestionar"]
 campos: ["form.id_tipo_doc", "post.id_tipo_doc", "post.inventario"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Doc No Asignado
+# Centros sin documento
 
-Descripcion funcional pendiente de revisar.
+Centros pendientes de recibir el tipo doc.
+
 
 ## Tipo
 
@@ -51,11 +52,9 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Centros pendientes de recibir el tipo doc.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada directa
+- **Pills2:** —

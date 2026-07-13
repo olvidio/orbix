@@ -1,7 +1,7 @@
 ---
 id: "misas.pantalla.buscar_plan_ctr"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "misas"
 nombre: "Buscar Plan Ctr"
 controller: "frontend/misas/controller/buscar_plan_ctr.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/misas/buscar_plan_ctr_data"]
 capacidades: ["misas.buscar_plan_ctr.gestionar"]
 campos: ["form.empiezamax", "form.empiezamin", "form.id_ubi", "form.id_zona", "form.periodo", "post.id_zona"]
 acciones: ["fnjs_buscar_plan_ctr", "fnjs_ver_plan_ctr"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Buscar Plan Ctr
+# Buscar plan ctr
 
-Descripcion funcional pendiente de revisar.
+Buscador de plan por centro: zona y centro según rol (ctr/sacd/jefe).
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/misas/controller/buscar_plan_ctr.php`
 
 ## Vistas Relacionadas
@@ -55,13 +57,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_buscar_plan_ctr`
 - `fnjs_ver_plan_ctr`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Misas > Plan centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan ctr

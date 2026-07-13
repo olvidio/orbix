@@ -5,27 +5,31 @@ modulo: "actividadescentro"
 nombre: "Flujo - Gestionar Centros Disponibles"
 capacidad: "actividadescentro.centros_disponibles.gestionar"
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadescentro/centros_disponibles_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Centros Disponibles
 
-Propuesta generada automaticamente desde la capacidad `actividadescentro.centros_disponibles.gestionar` y sus pantallas relacionadas.
+Desplegable de centros candidatos para asignar como encargados de una actividad.
 
 ## Objetivo De Usuario
 
-Gestiona CentrosDisponibles. Devuelve los centros disponibles (candidatos) para asignar como encargado de una actividad, filtrados por tipo (sg / sr / nagd / sssc / sfsg / sfsr / sfnagd).
+Al pulsar **nuevo** en una actividad, el usuario ve la lista de centros candidatos (filtrada por el
+colectivo `tipo`) para elegir cuál asignar como encargado. Para el tipo `sg` la lista incluye, por
+centro, el número de actividades en el periodo y la diferencia de días con su actividad más próxima,
+para ayudar a repartir la carga.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): la función
+`fnjs_nuevo_ctr` llama a este endpoint al pulsar **nuevo**.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Escenarios Inferidos
 
@@ -53,9 +57,11 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+  agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+  asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.

@@ -42,10 +42,17 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Recuperar2faMail. Descripcion funcional pendiente de revisar.
+Recuperación 2FA: genera código/link y envía mail al usuario.
+
+## Errores Documentados
+
+- `Esquema no válido`
+- `No hay email asociado a este usuario`
+- `Error al enviar el correo electrónico`
+- `No se encontró ningún usuario con ese nombre`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

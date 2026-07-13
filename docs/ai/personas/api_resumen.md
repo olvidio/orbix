@@ -14,7 +14,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `personas.home_persona_data`
 - Controller: `src/personas/infrastructure/ui/http/controllers/home_persona_data.php`
-- Entrada: `post.obj_pau:string`, `post.sel:mixed`
+- Entrada: `post.id_nom:integer`, `post.id_tabla:string`, `post.obj_pau:string`, `post.sel:mixed`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/personas/persona_eliminar`

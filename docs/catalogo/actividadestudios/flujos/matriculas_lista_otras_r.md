@@ -8,20 +8,23 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.matriculas_lista_otras_r"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/matriculas_lista_otras_r_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Matriculas Lista Otras R
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.matriculas_lista_otras_r.gestionar` y sus pantallas relacionadas.
+Listado de alumnos de otras regiones STGR para certificados.
 
 ## Objetivo De Usuario
 
-Gestiona MatriculasListaOtrasR. Descripcion funcional pendiente de revisar.
+El usuario busca alumnos de otras regiones por apellido para consultar sus asignaturas
+matriculadas y emitir certificados E43. Solo visible en ámbito región STGR (`rstgr` o `r`).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `matriculas_lista_otras_r`
+(`frontend/actividadestudios/controller/matriculas_lista_otras_r.php`): al cargar o buscar
+por apellidos llama a `matriculas_lista_otras_r_data`.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +34,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Abrir **Envío información a otras r** (solo regiones STGR).
+2. Opcionalmente filtrar por apellido y pulsar **buscar**.
+3. El sistema consulta `matriculas_lista_otras_r_data` y muestra alumnos con alertas y
+   asignaturas.
+4. Seleccionar un alumno para **imprimir certificado** (`fnjs_imp_certificado`).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/matriculas_lista_otras_r_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -66,9 +73,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** — (sin entrada en el índice Legacy).
+- **Pills2:** ESTUDIOS > Actas y certificados > Envío información a otras r.

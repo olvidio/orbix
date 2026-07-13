@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona BuscarActa. Busca un acta por su numero abreviado.
+Autocompletar/búsqueda de acta al rellenar notas.
 
 ## Limites De La Respuesta
 

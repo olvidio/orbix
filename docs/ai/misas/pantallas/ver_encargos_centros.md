@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento SlickGrid EncargoCtr con modal y desplegables dinámicos (`desplegable_encargos`, `desplegable_centros_zona`).
 
 ## Uso En Ayuda
 

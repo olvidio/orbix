@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.tipo_activ_proceso_lista"]
 acciones: ["listar"]
 endpoints: ["/src/procesos/tipo_activ_proceso_lista"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Tipo Activ Proceso
-
-Propuesta generada automaticamente desde la capacidad `procesos.tipo_activ_proceso.gestionar` y sus pantallas relacionadas.
+# Flujo - Tipo activ proceso
 
 ## Objetivo De Usuario
 
-Gestiona TipoActivProcesoLista. Caso de uso: devuelve el listado estructurado de tipos de actividad con el proceso propio / no-propio asignado. El frontend renderiza la tabla con frontend\shared\web\Lista.
+Listado de tipos de actividad con el proceso asignado (propio y no propio) para su gestión desde la pantalla de asignación.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: sistema > procesos activ. > tipo activ - proceso. Pills2: ADMIN LOCAL > procesos activ. > tipo activ - proceso.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -54,11 +52,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > procesos activ. > tipo activ - proceso
+- **Pills2:** ADMIN LOCAL > procesos activ. > tipo activ - proceso

@@ -2,47 +2,40 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "planning"
-titulo: "Planning Persona Select"
+titulo: "Planning por persona (listado)"
 flujo: "planning.planning_persona_select.gestionar.flujo"
-preguntas: ["Como obtener datos en Planning Persona Select?"]
-pantallas_principales: []
+preguntas: []
+pantallas_principales: ["planning.pantalla.planning_persona_que"]
 fragmentos: ["planning.pantalla.planning_persona_select"]
 endpoints: ["/src/planning/planning_persona_select_data"]
 source: "docs/catalogo/planning/flujos/planning_persona_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Planning Persona Select
+# Ayuda IA - Planning por persona (listado)
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Planning Persona Select`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Planning por persona (listado)`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Planning Persona Select?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Planning por persona (filtros) (`planning.pantalla.planning_persona_que`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
+- `planning.pantalla.planning_persona_que`
 - `planning.pantalla.planning_persona_select`
 
 ## Objetivo
 
-Gestiona PlanningPersonaSelect. Listado de personas para planning_persona_select.
+Encontrar personas del colectivo del menú y abrir su calendario de actividades.
 
 ## Limites De La Respuesta
 

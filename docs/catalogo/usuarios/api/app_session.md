@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "usuarios"
 url: "/src/usuarios/app_session"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/usuarios/infrastructure/ui/http/controllers/app_session.php"
 entrada: []
 entrada_obligatoria: []
@@ -13,42 +13,55 @@ requiere_hashb: false
 frontend_referencias: []
 casos_uso: []
 tags: ["usuarios", "app", "session"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # App Session
 
-Comprueba si hay sesión autenticada (útil al arrancar la app).
+Comprueba si hay sesión autenticada al arrancar la app móvil (sin credenciales).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Comprueba si hay sesión autenticada al arrancar la app móvil (sin credenciales).
 
 ## Endpoint
 
 - URL: `/src/usuarios/app_session`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/app_session.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| _(ninguno)_ | | | | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse` salvo JsonResponse directo):
+  - `authenticated`: boolean
+  - `id_usuario`: int si autenticado
+  - `username`: string
+  - `esquema`: string
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Lee `$_SESSION['session_auth']`; sin permisos de oficina.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`[]`).

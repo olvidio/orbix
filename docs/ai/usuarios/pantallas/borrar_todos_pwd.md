@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Herramienta pruebas: reset masivo contraseñas (solo entorno pruebas).
 
 ## Uso En Ayuda
 

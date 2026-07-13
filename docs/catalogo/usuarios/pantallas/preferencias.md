@@ -1,7 +1,7 @@
 ---
 id: "usuarios.pantalla.preferencias"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "usuarios"
 nombre: "Preferencias"
 controller: "frontend/usuarios/controller/preferencias.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/shared/locales_posibles", "/src/usuarios/usuario_preferencias"
 capacidades: ["usuarios.usuario_preferencias.gestionar"]
 campos: ["form.estilo_color", "form.idioma_nou", "form.inicio", "form.layout", "form.oficina", "form.ordenApellidos", "form.tipo_menu", "form.tipo_tabla", "form.zona_horaria_nou"]
 acciones: ["button:guardar preferencias", "fnjs_guardar_preferencias", "fnjs_left_side_hide", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Preferencias
 
-Descripcion funcional pendiente de revisar.
+Preferencias personales: layout, inicio, idioma, tablas, estilo.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/usuarios/controller/preferencias.php`
 
 ## Vistas Relacionadas
@@ -63,13 +65,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_left_side_hide`
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** menú usuario > preferencias
+- **Pills2:** menú usuario > preferencias

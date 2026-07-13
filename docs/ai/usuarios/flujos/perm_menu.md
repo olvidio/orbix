@@ -65,10 +65,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PermMenu. Descripcion funcional pendiente de revisar.
+Gestión permisos menú DL de un usuario desde su ficha.
+
+## Errores Documentados
+
+- `no existe el registro`
+- `hay un error, no se ha eliminado`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

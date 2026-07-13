@@ -11,16 +11,17 @@ endpoints: ["/src/ubiscamas/actividad_habitaciones_lista"]
 capacidades: ["ubiscamas.actividad_habitaciones.gestionar"]
 campos: ["post.id_activ", "post.refresh", "post.sel"]
 acciones: ["fnjs_actualizar", "fnjs_lista_distribucion", "fnjs_lista_nombres", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Lista Habitaciones
 
-Descripcion funcional pendiente de revisar.
+Asignación visual de asistentes a camas de una actividad (dossier actividad, enlace `camas`).
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
 - Controller: `frontend/ubiscamas/controller/lista_habitaciones.php`
 
 ## Vistas Relacionadas
@@ -52,13 +53,7 @@ No se han detectado controladores frontend relacionados.
 - `fnjs_lista_nombres`
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

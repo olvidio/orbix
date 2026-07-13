@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["inventario.pantalla.doc_imprimir_ctr"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/inventario_ctr"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Inventario Ctr
@@ -17,11 +17,13 @@ Propuesta generada automaticamente desde la capacidad `inventario.inventario_ctr
 
 ## Objetivo De Usuario
 
-Gestiona InventarioCtr. Descripcion funcional pendiente de revisar.
+Impresión inventario de centros: selección en `doc_de_ctr`, render en `doc_imprimir_ctr` vía `inventario_ctr`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `inventario.pantalla.inventario_que → doc_de_ctr`
+
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -54,9 +56,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > Inventario > inventarios > de centros o dlb
+- **Pills2:** —

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla que dispara la incorporacion de las primeras peticiones como asistencia (accion contra `/src/actividadplazas/peticiones_incorporar`).
+Pantalla que dispara la incorporación de las primeras peticiones de plaza como asistencia (acción contra `/src/actividadplazas/peticiones_incorporar`).
 
 ## Uso En Ayuda
 

@@ -9,14 +9,14 @@ vistas: ["frontend/actividadtarifas/view/tarifa_form.phtml"]
 fragmentos_frontend: []
 endpoints: ["/src/actividadtarifas/tipo_tarifa_form_data", "/src/actividadtarifas/tipo_tarifa_update"]
 capacidades: ["actividadtarifas.tipo_tarifa.gestionar"]
-campos: ["html.id_tarifa", "html.letra", "html.observ", "post.id_tarifa"]
+campos: ["html.id_tarifa", "html.letra", "html.modo", "html.observ", "post.id_tarifa"]
 acciones: ["fnjs_cerrar", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tarifa Form
 
-Controlador AJAX HTML: formulario modificar/nuevo de `TipoTarifa`.
+Fragmento AJAX: formulario popup modificar/nuevo de `TipoTarifa` (`tarifa_form.phtml`).
 
 ## Tipo
 
@@ -44,6 +44,7 @@ No se han detectado controladores frontend relacionados.
 
 - `html.id_tarifa`
 - `html.letra`
+- `html.modo`
 - `html.observ`
 - `post.id_tarifa`
 
@@ -54,11 +55,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Campos: letra, modo (desplegable), observaciones. Guardar/eliminar delegan en el JS de `tarifa.phtml`.
+En edición muestra botón eliminar con confirmación.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Sin entrada propia; popup de `tarifa.php`.

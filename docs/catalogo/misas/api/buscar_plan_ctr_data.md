@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/buscar_plan_ctr_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/misas/infrastructure/ui/http/controllers/buscar_plan_ctr_data.php"
 entrada: ["post.id_zona:integer"]
 entrada_obligatoria: []
@@ -15,40 +15,53 @@ requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/buscar_plan_ctr.php"]
 casos_uso: ["src\\misas\\application\\BuscarPlanCtrData"]
 tags: ["misas", "buscar", "plan", "ctr", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["No tiene permiso para ver esta página"]
 ---
 
-# Buscar Plan Ctr Data
+# Buscar plan ctr Data
 
-Formulario buscador del plan de misas por centro (zonas + centros + periodo).
+Inicializa el formulario de búsqueda del plan CTR: zonas, centros disponibles y selección por defecto según rol del usuario.
+
+Linaje: Slice 7 — migrado desde apps/misas/controller/buscar_plan_ctr.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Inicializa el formulario de búsqueda del plan CTR: zonas, centros disponibles y selección por defecto según rol del usuario.
 
 ## Endpoint
 
 - URL: `/src/misas/buscar_plan_ctr_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/buscar_plan_ctr_data.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_zona` | `integer` | controller | No | controller |
+| `id_zona` | `integer` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `misas_BuscarPlanCtrDataData`):
-  - `view` (`'sacd'|'centro'|'none'`)
-  - `zonas_opciones` (`array`)
-  - `zonas_selected` (`integer`)
-  - `centros_opciones` (`array`)
-  - `centros_selected` (`string`)
-  - `id_ubi_centro` (`string`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `view`: sacd|centro|none
+  - `zonas_opciones`: array<int|string, string>
+  - `zonas_selected`: integer
+  - `centros_opciones`: array<int|string, string>
+  - `centros_selected`: string
+  - `id_ubi_centro`: string
+
+## Errores conocidos
+- `No tiene permiso para ver esta página`
+
+## Permisos
+
+Rol Centro sv/sf: solo su centro Rol p-sacd: IdNomJefeResolver (jefe calendario ve todas las zonas; sacd no-jefe solo sus zonas) view=none si sin permiso o usuario no encontrado
 
 ## Casos De Uso
 
@@ -56,10 +69,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/buscar_plan_ctr.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/buscar_plan_ctr.php"]`).

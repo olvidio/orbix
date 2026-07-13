@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el dossier 3005, seleccionar una asignatura impartida y pulsar **modificar**.
+2. Ajustar profesor, fechas, aviso a profesor o tipo en el formulario.
+3. Pulsar **guardar**; el sistema persiste los cambios en la `ActividadAsignatura`.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/actividad_asignatura_editar`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActividadAsignaturaEditar. Edita una ActividadAsignatura existente. Sustituye al case editar del antiguo update_3005.php dispatcher.
+El usuario modifica profesor, fechas, tipo u otros datos de una asignatura ya impartida en la actividad y guarda los cambios. Sustituye el case `editar` del antiguo `update_3005.php`.
 
 ## Errores Documentados
 

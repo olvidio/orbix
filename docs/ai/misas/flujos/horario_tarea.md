@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona HorarioTarea. Datos del horario de una tarea (modal horario_tarea.phtml). Simple lectura de t_start/t_end del EncargoHorario indicado por id_item_h. Se saca de la vista frontend para cumplir la regla de refactor.md: los controladores frontend/ no pueden instanciar repositorios de src\ ni tocar $GLOBALS['container'].
+Lee las horas actuales de un EncargoHorario para poblar el modal horario_tarea.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

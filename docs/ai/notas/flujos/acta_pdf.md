@@ -45,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActaPdf. Elimina el PDF firmado asociado a un Acta (sin borrar el acta).
+Gestión del PDF escaneado: subir, descargar y eliminar.
 
 ## Errores Documentados
 

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "actividades"
-titulo: "Lista Centros Activ"
+titulo: "Listado actividades por centro"
 pantalla: "actividades.pantalla.lista_centros_activ"
-preguntas: ["Que se puede hacer en Lista Centros Activ?", "Que campos tiene Lista Centros Activ?", "Que acciones hay en Lista Centros Activ?"]
+preguntas: ["Que se puede hacer en Listado actividades por centro?", "Que campos tiene Listado actividades por centro?", "Que acciones hay en Listado actividades por centro?"]
 capacidades: ["actividades.lista_centros_activ.gestionar"]
 endpoints: ["/src/actividades/lista_centros_activ_datos"]
 source: "docs/catalogo/actividades/pantallas/lista_centros_activ.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Lista Centros Activ
+# Ayuda IA Pantalla - Listado actividades por centro
 
 ## Resumen
 
-Fragmento HTML con la lista de centros y sus actividades en un periodo.
+Fragmento **HTML devuelto por AJAX** (`AjaxJsonSupport::html`) con el listado de centros seleccionados y sus actividades en el periodo indicado. Se invoca desde `actividades_centro_que` cuando `tipo_lista` es `crt` o `cv`; el HTML se inyecta en `#exportar`.
 
 ## Uso En Ayuda
 

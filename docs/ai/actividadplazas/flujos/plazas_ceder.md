@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el resumen de plazas de la actividad.
+2. En el bloque **Ceder**, escribir el número de plazas y elegir la delegación destino.
+3. Pulsar **Guardar** (`fnjs_guardar`): envía `id_activ`, `num_plazas` y `region_dl` a
+4. Si tiene éxito, la pantalla se recarga (`fnjs_actualizar`) mostrando el nuevo reparto.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadplazas/plazas_ceder`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PlazasCeder. Actualiza el array cedidas de ActividadPlazasDl para ceder (o quitar) plazas de mi_dele a otra dl en una actividad.
+Desde el resumen de plazas de una actividad, indicar cuántas plazas ceder a otra delegación y confirmar el cambio.
 
 ## Errores Documentados
 

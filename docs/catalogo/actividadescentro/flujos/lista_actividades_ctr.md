@@ -5,27 +5,30 @@ modulo: "actividadescentro"
 nombre: "Flujo - Gestionar Lista Actividades Ctr"
 capacidad: "actividadescentro.lista_actividades_ctr.gestionar"
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadescentro/lista_actividades_ctr_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Lista Actividades Ctr
 
-Propuesta generada automaticamente desde la capacidad `actividadescentro.lista_actividades_ctr.gestionar` y sus pantallas relacionadas.
+Listado de actividades del colectivo + periodo elegidos, con sus centros encargados.
 
 ## Objetivo De Usuario
 
-Gestiona ListaActividadesCtr. Devuelve el listado de actividades del tipo + periodo elegidos, junto con los centros encargados de cada una y los flags de permiso (ver / modificar / crear) para cada fila.
+El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de actividades del
+colectivo (`tipo`) en ese periodo y, por cada una, los centros encargados actuales y los flags de
+permiso (modificar / crear centros) que deciden qué acciones se ofrecen.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): la función `fnjs_ver`
+llama a este endpoint al pulsar el botón **buscar**.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Escenarios Inferidos
 
@@ -53,9 +56,11 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+  agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+  asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.

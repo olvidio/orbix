@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/lista_activ_ctr_data"]
 capacidades: ["asistentes.lista_activ_ctr.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Lista Activ Ctr
 
-Descripcion funcional pendiente de revisar.
+Resultado del filtro `que_ctr_lista`: personas por centro con sus actividades asistidas en el periodo.
 
 ## Tipo
 
@@ -49,11 +49,8 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** Destino del submit de que_ctr_lista (`lista=list_activ`)
+- **Pills2:** ACTIVIDADES > Listados > Listado de asistentes ca/crt por ctr

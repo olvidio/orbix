@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoEmitidoLista. Esta página muestra una tabla con los certificados.
+Consultar y gestionar certificados emitidos pendientes de envío en la región STGR.
 
 ## Limites De La Respuesta
 

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "actividades"
-titulo: "Actividades Centro Que"
+titulo: "Seleccionar centro y periodo (listados por ctr)"
 pantalla: "actividades.pantalla.actividades_centro_que"
-preguntas: ["Que se puede hacer en Actividades Centro Que?", "Que campos tiene Actividades Centro Que?", "Que acciones hay en Actividades Centro Que?"]
+preguntas: ["Que se puede hacer en Seleccionar centro y periodo (listados por ctr)?", "Que campos tiene Seleccionar centro y periodo (listados por ctr)?", "Que acciones hay en Seleccionar centro y periodo (listados por ctr)?"]
 capacidades: []
 endpoints: []
 source: "docs/catalogo/actividades/pantallas/actividades_centro_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Actividades Centro Que
+# Ayuda IA Pantalla - Seleccionar centro y periodo (listados por ctr)
 
 ## Resumen
 
-Formulario para escoger un centro (y un periodo) y lanzar un listado de actividades, datos economicos, cdc, etc.
+Formulario para **elegir centro(s) y periodo** y lanzar distintos listados según `tipo_lista`: actividades del centro (`crt`/`cv` → `lista_centros_activ`), datos económicos (`datosEc`), centros encargados (`ctrsEncargados` → `calendario_listas`), etc. Usa `CentrosQue` + desplegables múltiples de centros y `PeriodoQue`.
 
 ## Uso En Ayuda
 

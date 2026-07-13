@@ -15,11 +15,11 @@ paths:
   "/src/menus/grupmenu_coleccion":
     post:
       operationId: "post_menus_grupmenu_coleccion"
-      summary: "Grupmenu Coleccion"
+      summary: "Grupmenu Colección (menú lateral)"
       description: |
-        Grupmenus visibles para el usuario actual, mismo criterio que el menú lateral en {
+        Grupos de menú visibles para el usuario actual (mismo criterio que el menú lateral en `index.php`: rol en `aux_grupmenu_rol`, al menos un ítem en menú, `orden` ≥ 1). Por cada grupo devuelve las entradas visibles filtradas por permisos Bit, módulos y apps instalados.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/menus/api/grupmenu_coleccion.md`
       tags:
@@ -50,9 +50,9 @@ paths:
   "/src/menus/grupmenu_eliminar":
     post:
       operationId: "post_menus_grupmenu_eliminar"
-      summary: "Grupmenu Eliminar"
+      summary: "Eliminar grupmenu"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina un grupo de menú a partir del token `sel` de la lista.
         
         Operacion: `mutacion`.
         
@@ -65,6 +65,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "sel"
               properties:
                 sel:
                   type: "array"
@@ -86,9 +88,9 @@ paths:
   "/src/menus/grupmenu_guardar":
     post:
       operationId: "post_menus_grupmenu_guardar"
-      summary: "Grupmenu Guardar"
+      summary: "Guardar grupmenu"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Alta o edición de un grupo de menú (nombre + orden).
         
         Operacion: `mutacion`.
         
@@ -101,6 +103,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "grupmenu"
               properties:
                 grupmenu:
                   type: "string"
@@ -124,11 +128,11 @@ paths:
   "/src/menus/grupmenu_info":
     post:
       operationId: "post_menus_grupmenu_info"
-      summary: "Grupmenu Info"
+      summary: "Datos de un grupmenu"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve nombre y orden de un grupo de menú para el formulario de edición.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/menus/api/grupmenu_info.md`
       tags:
@@ -139,6 +143,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_grupmenu"
               properties:
                 id_grupmenu:
                   type: "integer"
@@ -158,11 +164,11 @@ paths:
   "/src/menus/grupmenu_lista":
     post:
       operationId: "post_menus_grupmenu_lista"
-      summary: "Grupmenu Lista"
+      summary: "Lista de grupmenu"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Listado de todos los grupos de menú para tablas y desplegables.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/menus/api/grupmenu_lista.md`
       tags:
@@ -183,21 +189,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/menus_GrupMenuListaUseCaseDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/menus_GrupMenuListaUseCaseDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/menus/lista_meta_menus":
     post:
       operationId: "post_menus_lista_meta_menus"
-      summary: "Lista Meta Menus"
+      summary: "Lista de metamenús"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Opciones para el desplegable de destino (metamenu) al editar un ítem de menú.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/menus/api/lista_meta_menus.md`
       tags:
@@ -218,21 +224,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/menus_ListaMetaMenusDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/menus_ListaMetaMenusDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/menus/lista_templates":
     post:
       operationId: "post_menus_lista_templates"
-      summary: "Lista Templates"
+      summary: "Lista de plantillas de menú"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Plantillas (`ref_*` en BD pública) disponibles para importar un conjunto de menús.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/menus/api/lista_templates.md`
       tags:
@@ -253,19 +259,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/menus_ListaTemplatesMenusDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/menus_ListaTemplatesMenusDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/menus/menu_copiar":
     post:
       operationId: "post_menus_menu_copiar"
-      summary: "Menu Copiar"
+      summary: "Copiar ítem de menú"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Clona un ítem de menú en otro grupmenu (`gm_new`).
         
         Operacion: `mutacion`.
         
@@ -278,11 +284,13 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "gm_new"
               properties:
-                gm_new:
-                  type: "string"
                 id_menu:
                   type: "integer"
+                gm_new:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -299,9 +307,9 @@ paths:
   "/src/menus/menu_eliminar":
     post:
       operationId: "post_menus_menu_eliminar"
-      summary: "Menu Eliminar"
+      summary: "Eliminar ítem de menú"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Borra un registro de `aux_menus`.
         
         Operacion: `mutacion`.
         
@@ -314,6 +322,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_menu"
               properties:
                 id_menu:
                   type: "integer"
@@ -333,9 +343,9 @@ paths:
   "/src/menus/menu_guardar":
     post:
       operationId: "post_menus_menu_guardar"
-      summary: "Menu Guardar"
+      summary: "Guardar ítem de menú"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Alta o edición de una entrada del árbol de menú por layout (`aux_menus`).
         
         Operacion: `mutacion`.
         
@@ -383,9 +393,9 @@ paths:
   "/src/menus/menu_mover":
     post:
       operationId: "post_menus_menu_mover"
-      summary: "Menu Mover"
+      summary: "Mover ítem de menú"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Cambia el `id_grupmenu` de un ítem existente.
         
         Operacion: `mutacion`.
         
@@ -398,11 +408,13 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "gm_new"
               properties:
-                gm_new:
-                  type: "string"
                 id_menu:
                   type: "integer"
+                gm_new:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -419,11 +431,11 @@ paths:
   "/src/menus/menus_burger_layout_data":
     post:
       operationId: "post_menus_menus_burger_layout_data"
-      summary: "Menus Burger Layout Data"
+      summary: "Datos menú layout Burger/Pills2"
       description: |
-        Datos para {
+        Árbol de menú para layouts modernos: grupo Utilidades (HTML usuario) + resto de grupos según `lista_grup_menu_json`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/menus/api/menus_burger_layout_data.md`
       tags:
@@ -443,19 +455,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/menus_MenusBurgerLayoutDataUseCaseDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/menus_MenusBurgerLayoutDataUseCaseDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/menus/menus_exportar":
     post:
       operationId: "post_menus_menus_exportar"
-      summary: "Menus Exportar"
+      summary: "Exportar menús a plantilla (ref)"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Copia `aux_grupmenu`, `aux_grupmenu_rol` y `aux_menus` (ok=true) del esquema activo a tablas `ref_*` en BD pública, asociadas a una plantilla (`id_template_menu`).
         
         Operacion: `mutacion`.
         
@@ -468,6 +480,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "nombre"
               properties:
                 nombre:
                   type: "string"
@@ -489,9 +503,9 @@ paths:
   "/src/menus/menus_exportar_ref_a_ficheros":
     post:
       operationId: "post_menus_menus_exportar_ref_a_ficheros"
-      summary: "Menus Exportar Ref A Ficheros"
+      summary: "Exportar/importar ref menús ↔ ficheros SQL"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Operación de mantenimiento: genera ficheros COPY en `log/menus/` o ejecuta `psql` para volcar ref→BD pública. **No devuelve JSON**; respuesta vacía o errores en `log/menus/menus.log`.
         
         Operacion: `mutacion`.
         
@@ -504,6 +518,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "accion"
               properties:
                 accion:
                   type: "string"
@@ -523,9 +539,9 @@ paths:
   "/src/menus/menus_generar_txt":
     post:
       operationId: "post_menus_menus_generar_txt"
-      summary: "Menus Generar Txt"
+      summary: "Generar fichero de textos para gettext"
       description: |
-        Esta página genera un fichero con todos los textos de los menús que hay en la base de datos, para poder traducirlos por gettex
+        Regenera `frontend/menus/view/traducir_menu.phtml` con llamadas `_()` por cada etiqueta de menú activo y tipos de repetición de actividades.
         
         Operacion: `mutacion`.
         
@@ -558,11 +574,11 @@ paths:
   "/src/menus/menus_get_page_data":
     post:
       operationId: "post_menus_menus_get_page_data"
-      summary: "Menus Get Page Data"
+      summary: "Datos página gestor de menú (lista o ficha)"
       description: |
-        Datos para `frontend/menus/controller/menus_get.php` (formulario o listado).
+        Builder para `menus_get.php`: modo listado de ítems del grupmenu seleccionado o modo edición/alta.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/menus/api/menus_get_page_data.md`
       tags:
@@ -576,9 +592,9 @@ paths:
               properties:
                 filtro_grupo:
                   type: "string"
-                id_menu:
-                  type: "string"
                 nuevo:
+                  type: "string"
+                id_menu:
                   type: "string"
       responses:
         "200":
@@ -596,9 +612,9 @@ paths:
   "/src/menus/menus_importar":
     post:
       operationId: "post_menus_menus_importar"
-      summary: "Menus Importar"
+      summary: "Importar plantilla de menú al esquema activo"
       description: |
-        Descripcion funcional pendiente de revisar.
+        TRUNCATE + INSERT desde `ref_*` (BD pública) hacia `aux_grupmenu`, `aux_grupmenu_rol`, `aux_menus` del esquema de trabajo. **Destructivo**: borra menús locales antes de importar.
         
         Operacion: `mutacion`.
         
@@ -611,6 +627,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_template_menu"
               properties:
                 id_template_menu:
                   type: "integer"
@@ -630,9 +648,11 @@ paths:
   "/src/menus/menus_importar_de_ficheros_a_ref":
     post:
       operationId: "post_menus_menus_importar_de_ficheros_a_ref"
-      summary: "Menus Importar De Ficheros A Ref"
+      summary: "Restaurar menús por defecto (ref → esquemas DL)"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Flujo HTML en dos pasos: confirmación (`seguro=2`) y ejecución (`seguro=1`). Copia tablas `ref_*` de BD pública a `aux_*` de uno o todos los esquemas regionales. **No JSON.**
+        
+        Requiere cápsula HashB en `` (accion ``).
         
         Operacion: `mutacion`.
         
@@ -647,9 +667,46 @@ paths:
               type: object
               properties:
                 seguro:
-                  type: "string"
+                  type: "integer"
                 todos:
-                  type: "string"
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+    get:
+      operationId: "get_menus_menus_importar_de_ficheros_a_ref"
+      summary: "Restaurar menús por defecto (ref → esquemas DL)"
+      description: |
+        Flujo HTML en dos pasos: confirmación (`seguro=2`) y ejecución (`seguro=1`). Copia tablas `ref_*` de BD pública a `aux_*` de uno o todos los esquemas regionales. **No JSON.**
+        
+        Requiere cápsula HashB en `` (accion ``).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/menus/api/menus_importar_de_ficheros_a_ref.md`
+      tags:
+        - "menus"
+      parameters:
+        - name: "seguro"
+          in: query
+          required: false
+          schema:
+            type: "integer"
+        - name: "todos"
+          in: query
+          required: false
+          schema:
+            type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -666,11 +723,11 @@ paths:
   "/src/menus/menus_legacy_layout_items_data":
     post:
       operationId: "post_menus_menus_legacy_layout_items_data"
-      summary: "Menus Legacy Layout Items Data"
+      summary: "Ítems menú layout Legacy"
       description: |
-        Entradas de menú para el layout legacy (grupos 1 y el seleccionado, mismo filtro que el antiguo {
+        Entradas visibles para grupmenu 1 (Utilidades) + el grupmenu activo, con filtro de raíz jerárquica (`orden[0]`).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/menus/api/menus_legacy_layout_items_data.md`
       tags:
@@ -704,82 +761,6 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
-    OrbixStandardResponseEnvelope:
-      type: object
-      required:
-        - success
-        - data
-      properties:
-        success:
-          type: boolean
-        mensaje:
-          type: string
-        data:
-          description: "Ver schema concreto de cada operacion."
-    menus_GrupMenuListaUseCaseData:
-      type: object
-      properties:
-        a_lista:
-          type: array
-          items: {}
-    menus_GrupMenuListaUseCaseDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/menus_GrupMenuListaUseCaseData"
-    menus_ListaMetaMenusData:
-      type: object
-      properties:
-        a_opciones:
-          type: array
-          items: {}
-    menus_ListaMetaMenusDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/menus_ListaMetaMenusData"
-    menus_ListaTemplatesMenusData:
-      type: object
-      properties:
-        a_opciones:
-          type: array
-          items: {}
-    menus_ListaTemplatesMenusDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/menus_ListaTemplatesMenusData"
-    menus_MenusBurgerLayoutDataUseCaseData:
-      type: object
-      properties:
-        menu_config:
-          type: array
-          items: {}
-    menus_MenusBurgerLayoutDataUseCaseDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/menus_MenusBurgerLayoutDataUseCaseData"
     OrbixStandardResponseStringData:
       type: object
       required:

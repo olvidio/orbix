@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "zonassacd"
 titulo: "Zona Sacd"
 flujo: "zonassacd.zona_sacd.gestionar.flujo"
-preguntas: ["Como crear o modificar en Zona Sacd?", "Como ejecutar en Zona Sacd?", "Como consultar el listado en Zona Sacd?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["zonassacd.pantalla.zona_sacd", "zonassacd.pantalla.zona_sacd_lista_ajax", "zonassacd.pantalla.zona_sacd_update_ajax"]
 endpoints: ["/src/zonassacd/zona_sacd", "/src/zonassacd/zona_sacd_lista", "/src/zonassacd/zona_sacd_update"]
@@ -19,9 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Zona Sacd?
-- Como ejecutar en Zona Sacd?
-- Como consultar el listado en Zona Sacd?
 
 ## Donde Entrar
 
@@ -31,33 +28,6 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
-
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/zonassacd/zona_sacd_update`
-
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
-## Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/zonassacd/zona_sacd_lista`
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `zonassacd.pantalla.zona_sacd`
@@ -66,10 +36,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ZonaSacd, ZonaSacdLista, ZonaSacdPage. Descripcion funcional pendiente de revisar.
+Consultar y gestionar la asignación de sacerdotes (sacd) a zonas geográficas: listado por zona, cambio de zona propia, asignaciones iglesia/cgi y edición de días de atención semanal.
+
+## Errores Documentados
+
+- `hay un error, no se ha guardado`
+- `hay un error, no se ha eliminado`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

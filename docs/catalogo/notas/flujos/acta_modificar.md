@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.acta_ver"]
 acciones: ["ejecutar"]
 endpoints: ["/src/notas/acta_modificar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Modificar
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_modificar.gest
 
 ## Objetivo De Usuario
 
-Gestiona ActaModificar. Descripcion funcional pendiente de revisar.
+Guardar cambios de un acta existente desde `acta_ver`.
 
 ## Punto De Entrada
 
@@ -65,10 +65,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 - ``No se encuentra el acta``
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

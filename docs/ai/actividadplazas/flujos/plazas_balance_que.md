@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **Balance de plazas** desde el menú (según tipo y colectivo).
+2. El sistema carga `plazas_balance_que_data`: opciones del desplegable de delegaciones e
+3. Al elegir una delegación (`fnjs_comparativa`), solicita por AJAX `plazas_balance_dl` e inserta el
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadplazas/plazas_balance_que_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PlazasBalanceQue. Datos para la pantalla plazas_balance_que (opciones dl + id_tipo_activ).
+Acceder al balance de plazas entre delegaciones, elegir con qué dl comparar la propia, y ver el grid comparativo que se carga debajo.
 
 ## Limites De La Respuesta
 

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento de verificación del estado del renombre (checklist BD, .inc, db_idschema).
 
 ## Uso En Ayuda
 

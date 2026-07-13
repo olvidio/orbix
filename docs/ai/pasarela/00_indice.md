@@ -21,32 +21,32 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Activacion -> `flujos/activacion.md`
-- Activacion Default -> `flujos/activacion_default.md`
-- Activacion Excepcion -> `flujos/activacion_excepcion.md`
-- Contribucion No Duerme -> `flujos/contribucion_no_duerme.md`
-- Contribucion No Duerme Default -> `flujos/contribucion_no_duerme_default.md`
-- Contribucion No Duerme Excepcion -> `flujos/contribucion_no_duerme_excepcion.md`
-- Contribucion Reserva -> `flujos/contribucion_reserva.md`
-- Contribucion Reserva Default -> `flujos/contribucion_reserva_default.md`
-- Contribucion Reserva Excepcion -> `flujos/contribucion_reserva_excepcion.md`
-- Exportar Actividades -> `flujos/exportar_actividades.md`
-- Exportar Que Actividad Tipo Html -> `flujos/exportar_que_actividad_tipo_html.md`
-- Nombre -> `flujos/nombre.md`
-- Nombre Excepcion -> `flujos/nombre_excepcion.md`
-- Tipo Activ Txt -> `flujos/tipo_activ_txt.md`
+- fecha de activación -> `flujos/activacion.md`
+- Editar activación por defecto -> `flujos/activacion_default.md`
+- Excepción de activación por tipo -> `flujos/activacion_excepcion.md`
+- contribución no duerme -> `flujos/contribucion_no_duerme.md`
+- Default contribución no duerme -> `flujos/contribucion_no_duerme_default.md`
+- Excepción contribución no duerme -> `flujos/contribucion_no_duerme_excepcion.md`
+- contribución reserva -> `flujos/contribucion_reserva.md`
+- Default contribución reserva -> `flujos/contribucion_reserva_default.md`
+- Excepción contribución reserva -> `flujos/contribucion_reserva_excepcion.md`
+- Exportar actividades al exterior -> `flujos/exportar_actividades.md`
+- Selector tipo en exportar -> `flujos/exportar_que_actividad_tipo_html.md`
+- nombres particulares -> `flujos/nombre.md`
+- Alta/edición nombre por tipo -> `flujos/nombre_excepcion.md`
+- Texto descriptivo del tipo -> `flujos/tipo_activ_txt.md`
 
 ## Pantallas Disponibles
 
-- Activacion Ajax -> `pantallas/activacion_ajax.md`
-- Activacion Lista -> `pantallas/activacion_lista.md`
-- Contribucion No Duerme Ajax -> `pantallas/contribucion_no_duerme_ajax.md`
-- Contribucion No Duerme Lista -> `pantallas/contribucion_no_duerme_lista.md`
-- Contribucion Reserva Ajax -> `pantallas/contribucion_reserva_ajax.md`
-- Contribucion Reserva Lista -> `pantallas/contribucion_reserva_lista.md`
-- Exportar Que -> `pantallas/exportar_que.md`
-- Exportar Select -> `pantallas/exportar_select.md`
-- Nombre Ajax -> `pantallas/nombre_ajax.md`
-- Nombre Form -> `pantallas/nombre_form.md`
-- Nombre Lista -> `pantallas/nombre_lista.md`
-- Parametros Menu -> `pantallas/parametros_menu.md`
+- Dispatcher AJAX activación -> `pantallas/activacion_ajax.md`
+- Fecha de activación -> `pantallas/activacion_lista.md`
+- Dispatcher AJAX contribución no duerme -> `pantallas/contribucion_no_duerme_ajax.md`
+- Contribución no duerme -> `pantallas/contribucion_no_duerme_lista.md`
+- Dispatcher AJAX contribución reserva -> `pantallas/contribucion_reserva_ajax.md`
+- Contribución reserva -> `pantallas/contribucion_reserva_lista.md`
+- Exportar actividades -> `pantallas/exportar_que.md`
+- Resultado exportación actividades -> `pantallas/exportar_select.md`
+- Dispatcher AJAX nombre -> `pantallas/nombre_ajax.md`
+- Formulario nombre (Twig) -> `pantallas/nombre_form.md`
+- Nombres de actividades particulares -> `pantallas/nombre_lista.md`
+- Parámetros pasarela -> `pantallas/parametros_menu.md`

@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.equipajes_form_texto_listado"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "fragmento"
 modulo: "inventario"
-nombre: "Equipajes Form Texto Listado"
+nombre: "Editar texto listado"
 controller: "frontend/inventario/controller/equipajes_form_texto_listado.php"
 vistas: ["frontend/inventario/view/equipajes_form_texto_listado.phtml"]
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/texto_de_egm"]
 capacidades: ["inventario.texto_de_egm.gestionar"]
 campos: ["form.texto", "html.texto", "post.id_equipaje", "post.loc", "post.texto"]
 acciones: ["fnjs_cerrar", "fnjs_guardar_listado"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Form Texto Listado
+# Editar texto listado
 
-Descripcion funcional pendiente de revisar.
+Editor texto grupo EGM.
+
 
 ## Tipo
 
@@ -54,11 +55,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Editor texto grupo EGM.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú
+- **Pills2:** —

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Página para recuperar la contraseña de un usuario.
+Formulario solicitud recuperación contraseña por email.
 
 ## Uso En Ayuda
 

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Resultado del filtro `que_ctr_lista`: personas por centro con sus actividades asistidas en el periodo.
 
 ## Uso En Ayuda
 

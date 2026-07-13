@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Pantalla para cambio masivo de estado de encargos en un rango de fechas (`cambiar_status_data`, `nuevo_status`).
 
 ## Uso En Ayuda
 

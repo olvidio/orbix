@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/tabla_peticiones_data"]
 capacidades: ["asistentes.tabla_peticiones.gestionar"]
 campos: ["post.id_activ_old", "post.sel"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tabla Peticiones
 
-Descripcion funcional pendiente de revisar.
+Tabla de peticiones de plaza por asistente; enlaces para mover a actividad preferida.
 
 ## Tipo
 
@@ -50,11 +50,7 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

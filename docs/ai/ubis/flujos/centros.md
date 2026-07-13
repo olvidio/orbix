@@ -48,7 +48,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Centros. Actualiza datos de centro DL (labor / num / plazas según POST).
+Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plazas).
 
 ## Errores Documentados
 

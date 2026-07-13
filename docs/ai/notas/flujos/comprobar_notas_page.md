@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ComprobarNotasPage. HTML de {.
+Ejecutar comprobaciones y mostrar HTML de incidencias.
 
 ## Limites De La Respuesta
 

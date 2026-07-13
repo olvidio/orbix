@@ -6,7 +6,7 @@ titulo: "Centros Encargados"
 flujo: "actividadescentro.centros_encargados.gestionar.flujo"
 preguntas: ["Como obtener datos en Centros Encargados?"]
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 endpoints: ["/src/actividadescentro/centros_encargados_data"]
 source: "docs/catalogo/actividadescentro/flujos/centros_encargados.md"
 estado_revision: "generado"
@@ -38,11 +38,11 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Objetivo
 
-Gestiona CentrosEncargados. Devuelve los centros encargados actuales de una actividad en un array serializable, junto con los flags de permiso.
+Tras asignar, reordenar o eliminar un centro encargado, la celda de esa actividad se refresca con la lista actualizada de centros y el flag `permite_modificar` (que decide si cada centro se pinta como enlace o como texto plano). Es un paso automático, no una acción explícita del usuario.
 
 ## Limites De La Respuesta
 

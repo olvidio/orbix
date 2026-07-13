@@ -11,12 +11,12 @@ endpoints: ["/src/devel_db_admin/apptables_apps_data", "/src/devel_db_admin/db_p
 capacidades: ["devel_db_admin.apptables_apps.gestionar", "devel_db_admin.db_propiedades.gestionar"]
 campos: ["form.esquema", "form.id_app", "html.bce", "html.bcg", "html.bee", "html.beg"]
 acciones: ["fnjs_db", "fnjs_enviar_formulario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Apptables
 
-La idea de esta página es poder crear y eliminar las tablas correspondientes a cada app.
+Gestión de tablas globales y por esquema de cada aplicación instalada (crear/eliminar/rellenar).
 
 ## Tipo
 
@@ -57,11 +57,11 @@ La idea de esta página es poder crear y eliminar las tablas correspondientes a 
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Acceder desde el menú de administración DB o configuración.
+2. Completar el formulario y ejecutar la acción.
+3. Revisar avisos/errores en el panel de respuesta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > Configuración > Tablas de apps
+- **Pills2:** sistema > Configuración > Tablas de apps / ADMIN GLOBAL > Configuración > Tablas de apps

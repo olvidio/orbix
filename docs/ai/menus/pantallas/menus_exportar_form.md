@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Guarda el menú actual del esquema como plantilla ref en BD pública.
 
 ## Uso En Ayuda
 

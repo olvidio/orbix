@@ -6,21 +6,27 @@ url: "/src/certificados/certificado_emitido_delete"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/certificados/infrastructure/ui/http/controllers/certificado_emitido_delete.php"
-entrada: ["post.id_item:integer", "post.sel:array"]
+entrada: ["post.id_item:integer", "post.sel:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: ["frontend/certificados/controller/certificado_emitido_imprimir.php"]
-casos_uso: []
+frontend_referencias: ["frontend/certificados/controller/certificado_emitido_lista.php"]
+casos_uso: ["src\\certificados\\domain\\CertificadoEmitidoDelete"]
 tags: ["certificados", "certificado", "emitido", "delete"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Certificado Emitido Delete
 
-Descripcion funcional pendiente de revisar.
+Elimina un certificado emitido y su referencia en notas de otras regiones.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Borra el registro en `e_certificados_rstgr` y, si tiene número, llama a
+`PersonaNotaOtraRegionStgrRepository::deleteCertificado`. Acepta `id_item` directo o extraído de
+`sel[0]` (token antes del `#`).
 
 ## Endpoint
 
@@ -33,27 +39,27 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `integer` | controller | No | controller |
-| `sel` | `array` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `sel` | `string` | controller | No | Lista; usa `id_item` antes del `#` |
+| `id_item` | `integer` | controller | No | Alternativa a `sel` |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `success: true`, `data: "ok"`
+
+## Errores conocidos
+
+- `No se encuentra el certificado` (`id_item` ≤ 0 o registro inexistente)
+- Errores de BD del repositorio en `mensaje`
+
+## Permisos
+
+- Botón expuesto solo si `soy_region_stgr()` en el builder de lista; sin check adicional aquí.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- `src\certificados\domain\CertificadoEmitidoDelete`
 
 ## Frontend Relacionado
 
-- `frontend/certificados/controller/certificado_emitido_imprimir.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/certificados/controller/certificado_emitido_lista.php`: acción `fnjs_eliminar`.

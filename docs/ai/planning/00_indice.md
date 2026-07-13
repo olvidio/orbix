@@ -21,24 +21,24 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Planning Casa Que -> `flujos/planning_casa_que.md`
-- Planning Casa Ver -> `flujos/planning_casa_ver.md`
-- Planning Ctr Select -> `flujos/planning_ctr_select.md`
-- Planning Persona Select -> `flujos/planning_persona_select.md`
-- Planning Persona Ver -> `flujos/planning_persona_ver.md`
-- Planning Zones Que -> `flujos/planning_zones_que.md`
-- Planning Zones Select -> `flujos/planning_zones_select.md`
+- Planning por casas (filtros) -> `flujos/planning_casa_que.md`
+- Planning por casas (calendario) -> `flujos/planning_casa_ver.md`
+- Planning por centro (calendario) -> `flujos/planning_ctr_select.md`
+- Planning por persona (listado) -> `flujos/planning_persona_select.md`
+- Planning por persona (calendario) -> `flujos/planning_persona_ver.md`
+- Planning por zonas SACD (filtros) -> `flujos/planning_zones_que.md`
+- Planning por zonas SACD (calendario) -> `flujos/planning_zones_select.md`
 
 ## Pantallas Disponibles
 
-- Leyenda -> `pantallas/leyenda.md`
-- Planning Casa Que -> `pantallas/planning_casa_que.md`
-- Planning Casa Select -> `pantallas/planning_casa_select.md`
-- Planning Casa Ver -> `pantallas/planning_casa_ver.md`
-- Planning Ctr Que -> `pantallas/planning_ctr_que.md`
-- Planning Ctr Select -> `pantallas/planning_ctr_select.md`
-- Planning Persona Que -> `pantallas/planning_persona_que.md`
-- Planning Persona Select -> `pantallas/planning_persona_select.md`
-- Planning Persona Ver -> `pantallas/planning_persona_ver.md`
-- Planning Zones Que -> `pantallas/planning_zones_que.md`
-- Planning Zones Select -> `pantallas/planning_zones_select.md`
+- Leyenda del planning -> `pantallas/leyenda.md`
+- Planning por casas (filtros) -> `pantallas/planning_casa_que.md`
+- Selección de casas (planning) -> `pantallas/planning_casa_select.md`
+- Planning por casas (calendario) -> `pantallas/planning_casa_ver.md`
+- Planning por centro (filtros) -> `pantallas/planning_ctr_que.md`
+- Planning por centro (calendario) -> `pantallas/planning_ctr_select.md`
+- Planning por persona (filtros) -> `pantallas/planning_persona_que.md`
+- Listado de personas (planning) -> `pantallas/planning_persona_select.md`
+- Planning por persona (calendario) -> `pantallas/planning_persona_ver.md`
+- Planning por zonas SACD (filtros) -> `pantallas/planning_zones_que.md`
+- Planning por zonas SACD (calendario) -> `pantallas/planning_zones_select.md`

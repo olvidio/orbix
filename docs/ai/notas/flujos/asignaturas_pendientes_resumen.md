@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AsignaturasPendientesResumen. Resumen: número de alumnos con cada asignatura pendiente, desglosado por tramo (nb, nc1, nc2, n total, ab, ac1, ac2, a total). Sucesor de la lógica embebida en frontend/notas/controller/asignaturas_pendientes_resumen.php.
+Ver resumen de pendientes por asignatura.
 
 ## Limites De La Respuesta
 

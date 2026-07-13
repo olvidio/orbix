@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["usuarios.pantalla.usuario_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_grupo_add"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Usuario Grupo Add
-
-Propuesta generada automaticamente desde la capacidad `usuarios.usuario_grupo_add.gestionar` y sus pantallas relacionadas.
+# Flujo - Usuario Grupo Add
 
 ## Objetivo De Usuario
 
-Gestiona UsuarioGrupoAdd. Descripcion funcional pendiente de revisar.
+Asocia grupo permisos a usuario (ctx HashB `usuario_grupo_add`).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -70,11 +68,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Operación no autorizada`
+- `hay un error, no se ha guardado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

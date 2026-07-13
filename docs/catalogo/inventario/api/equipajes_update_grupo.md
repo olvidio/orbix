@@ -6,21 +6,26 @@ url: "/src/inventario/equipajes_update_grupo"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/inventario/infrastructure/ui/http/controllers/equipajes_update_grupo.php"
-entrada: ["post.id_equipaje:integer", "post.id_grupo:integer", "post.id_lugar:integer", "post.sel:array"]
-entrada_obligatoria: []
+entrada: ["post.id_grupo:integer", "post.id_equipaje:integer", "post.id_lugar:integer", "post.sel:array"]
+entrada_obligatoria: ["id_equipaje", "id_grupo", "id_lugar"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: []
+errores: ["hay un error, no se ha guardado"]
+frontend_referencias: ["frontend/inventario/controller/equipajes_posibles_maletas.php"]
 casos_uso: []
 tags: ["inventario", "equipajes", "update", "grupo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Update Grupo
+# Crear grupo y asignar documentos
 
-Descripcion funcional pendiente de revisar.
+Crea item EGM en grupo/lugar si no existe y asocia documentos (`sel`) vía Whereis. Devuelve `id_item_egm` creado.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Crea item EGM en grupo/lugar si no existe y asocia documentos (`sel`) vía Whereis. Devuelve `id_item_egm` creado.
 
 ## Endpoint
 
@@ -33,29 +38,30 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_equipaje` | `integer` | controller | No | controller |
-| `id_grupo` | `integer` | controller | No | controller |
-| `id_lugar` | `integer` | controller | No | controller |
-| `sel` | `array` | controller | No | controller |
+| `id_grupo` | `integer` | POST | Si | |
+| `id_equipaje` | `integer` | POST | Si | |
+| `id_lugar` | `integer` | POST | Si | |
+| `sel` | `array` | POST | No | |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data: {id_item_egm}`.
+
+## Errores conocidos
+
+  - `hay un error, no se ha guardado`
+
+## Permisos
+
+- Sin control de permisos propio en el controller; autorización de oficina vía frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- Lógica inline en controller (sin `application/`).
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/inventario/controller/equipajes_posibles_maletas.php`

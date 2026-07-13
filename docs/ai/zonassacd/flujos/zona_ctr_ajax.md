@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "zonassacd"
 titulo: "Zona Ctr Ajax"
 flujo: "zonassacd.zona_ctr_ajax.gestionar.flujo"
-preguntas: ["Como ejecutar en Zona Ctr Ajax?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/zonassacd/zona_ctr_ajax"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Zona Ctr Ajax?
 
 ## Donde Entrar
 
@@ -29,23 +28,20 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - Ninguna pantalla relacionada.
 
 ## Objetivo
 
-Gestiona ZonaCtrAjax. Descripcion funcional pendiente de revisar.
+Endpoint legacy sin implementación; funcionalidad en zona_ctr_lista y zona_ctr_update.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

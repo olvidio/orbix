@@ -14,15 +14,19 @@ respuesta_data: ["error:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/encargo_ver.php"]
 casos_uso: ["src\\encargossacd\\application\\EncargoVerNuevo"]
+errores: ["Debe seleccionar un tipo de encargo", "Debe llenar el campo descripción", "grupo de encargo no valido", "hay un error, no se ha guardado"]
 tags: ["encargossacd", "encargo", "ver", "nuevo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Encargo Ver Nuevo
 
 Alta de encargo desde el formulario de `encargo_ver` (antes `encargo_ajax.php` que=nuevo).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Alta de encargo desde `encargo_ver`. Sucesor de `encargo_ajax.php` con `que=nuevo`.
 
 ## Endpoint
 
@@ -50,11 +54,21 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_EncargoVerNuevoData`):
-  - `error` (`string`)
+- Helper: `ContestarJson::enviar`.
+- Éxito: `data: ""`.
+- Error: mensaje en `data`.
+
+
+## Errores conocidos
+
+- `Debe seleccionar un tipo de encargo`
+- `Debe llenar el campo descripción`
+- `grupo de encargo no valido`
+- `hay un error, no se ha guardado`
+
+## Permisos
+
+Sin control propio; frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -64,8 +78,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - `frontend/encargossacd/controller/encargo_ver.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

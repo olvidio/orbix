@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento SlickGrid de encargos 8100+ con modal alta/edición/borrado (`guardar_encargo_zona`, `eliminar_encargo_zona`).
 
 ## Uso En Ayuda
 

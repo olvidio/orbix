@@ -8,49 +8,34 @@ pantallas_principales: []
 fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion_lista"]
 acciones: ["listar"]
 endpoints: ["/src/cartaspresentacion/cartas_presentacion_lista_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Cartas Presentacion
+# Flujo - Consultar listado de cartas de presentación
 
-Propuesta generada automaticamente desde la capacidad `cartaspresentacion.cartas_presentacion.gestionar` y sus pantallas relacionadas.
+Visualización del listado agrupado de cartas (solo lectura) desde el menú o desde buscar.
 
 ## Objetivo De Usuario
 
-Gestiona CartasPresentacion. Listado agrupado de cartas de presentacion (modo lista_dl, lista_todo o get con filtros).
+Consultar todas las cartas de presentación organizadas por tipo de labor, delegación y población.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- Menú **lista dl** o **lista todo** → `cartas_presentacion_lista.php` con `que=lista_dl` o
+  `que=lista_todo`.
+- Pantalla **buscar** → mismo fragmento con `que=get` y filtros.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `cartaspresentacion.pantalla.cartas_presentacion_lista`
+### Listar (menú)
 
-## Escenarios Inferidos
+1. Abrir lista dl (solo mi delegación) o lista todo (todas las delegaciones).
+2. El sistema muestra tablas HTML agrupadas con datos de contacto.
 
-### Listar
+### Listar (buscar)
 
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Endpoints asociados:
-- `/src/cartaspresentacion/cartas_presentacion_lista_data`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.dl`
-- `post.pais`
-- `post.poblacion`
-- `post.que`
-- `post.region`
-
-Acciones JavaScript:
-- Ninguna detectada.
+1. Desde buscar, rellenar filtros y pulsar **buscar**.
+2. Los resultados se cargan en `#resultados`.
 
 ## Endpoints Del Flujo
 
@@ -58,11 +43,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- Centros con `tipo_labor` mal configurado aparecen en aviso al pie (`html_errores`), no como error AJAX.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > direcciones > cartas presentacion > lista dl / lista todo
+- **Pills2:** scdl > direcciones > cartas presentacion > lista dl / lista todo

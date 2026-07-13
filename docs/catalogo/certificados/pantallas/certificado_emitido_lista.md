@@ -1,7 +1,7 @@
 ---
 id: "certificados.pantalla.certificado_emitido_lista"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "certificados"
 nombre: "Certificado Emitido Lista"
 controller: "frontend/certificados/controller/certificado_emitido_lista.php"
@@ -11,16 +11,16 @@ endpoints: ["/src/certificados/certificado_emitido_lista_datos"]
 capacidades: ["certificados.certificado_emitido_lista.gestionar"]
 campos: ["form.certificado", "form.mod", "form.sel", "html.btn_ok", "html.certificado", "html.mod", "html.refresh", "post.certificado", "post.refresh", "post.stack", "post.titulo"]
 acciones: ["fnjs_actualizar", "fnjs_descargar_pdf", "fnjs_eliminar", "fnjs_enviar", "fnjs_enviar_certificado", "fnjs_enviar_formulario", "fnjs_left_side_hide", "fnjs_modificar", "fnjs_nuevo", "fnjs_solo_uno", "fnjs_upload_certificado"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Certificado Emitido Lista
 
-Esta página muestra una tabla con los certificados.
+Listado principal de certificados emitidos no enviados (región STGR). Filtro por número o rango de curso académico. Acciones: nuevo, modificar, enviar, subir PDF firmado, descargar y eliminar.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/certificados/controller/certificado_emitido_lista.php`
 
 ## Vistas Relacionadas
@@ -69,13 +69,7 @@ Esta página muestra una tabla con los certificados.
 - `fnjs_solo_uno`
 - `fnjs_upload_certificado`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** —
+- **Pills2:** ESTUDIOS > Actas y certificados > Certificados

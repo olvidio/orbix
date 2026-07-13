@@ -14,7 +14,7 @@ errores: ["falta id_item", "no encuentro el cargo", "hay un error, no se ha elim
 frontend_referencias: []
 casos_uso: ["src\\actividadcargos\\application\\ActividadCargoEliminar"]
 tags: ["actividadcargos", "cargo", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Cargo Eliminar
@@ -22,6 +22,13 @@ estado_revision: "generado"
 Elimina un `ActividadCargo` y, si procede, su `Asistente`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Borra el vínculo persona–cargo–actividad y cierra su dossier `1302`. Cuando `elim_asis === 2` y el
+tipo de actividad admite asistentes (`s`/`sg`), elimina también el `Asistente` (si tiene permiso de
+modificación) y cierra el dossier `1301`. Réplica del case `eliminar` del legacy `update_3102.php`.
+`id_item` y `elim_asis` pueden llegar sueltos o dentro de `sel` (`id_nom#id_item#elim_asis#id_schema`).
 
 ## Endpoint
 
@@ -58,16 +65,15 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - `hay un error, no se ha eliminado`
 - `hay un error, no se ha eliminado el asistente`
 
+## Permisos
+
+- El caso de uso comprueba `perm_modificar()` del `Asistente` antes de eliminarlo; el resto de
+  autorización de oficina se resuelve en el frontend y en `$_SESSION['oPerm']`.
+
 ## Casos De Uso
 
 - `src\actividadcargos\application\ActividadCargoEliminar`
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Invocado desde el listado/dossier de cargos. No hay referencia literal a la URL en `frontend/`.

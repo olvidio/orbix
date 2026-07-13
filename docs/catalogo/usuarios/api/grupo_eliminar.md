@@ -7,20 +7,25 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php"
 entrada: ["post.sel:array"]
-entrada_obligatoria: []
+entrada_obligatoria: ["sel"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/view/grupo_lista.phtml"]
 casos_uso: []
 tags: ["usuarios", "grupo", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Grupo no encontrado", "hay un error, no se ha eliminado"]
 ---
 
 # Grupo Eliminar
 
-Descripcion funcional pendiente de revisar.
+Elimina un grupo de permisos (`aux_grupos`) seleccionado en la lista.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Elimina un grupo de permisos (`aux_grupos`) seleccionado en la lista.
 
 ## Endpoint
 
@@ -33,24 +38,26 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `sel` | `array` | controller | No | controller |
+| `sel` | `array` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacío serializado).
+
+## Errores conocidos
+- `Grupo no encontrado`
+- `hay un error, no se ha eliminado`
+
+## Permisos
+
+Admin id_role≤3 en frontend `grupo_lista`.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-- `frontend/usuarios/view/grupo_lista.phtml`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/usuarios/view/grupo_lista.phtml"]`).

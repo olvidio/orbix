@@ -8,22 +8,20 @@ pantallas_principales: []
 fragmentos: ["actividadcargos.pantalla.form_cargos_de_actividad"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadcargos/form_cargos_de_actividad_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Form Cargos De Actividad
 
-Propuesta generada automaticamente desde la capacidad `actividadcargos.form_cargos_de_actividad.gestionar` y sus pantallas relacionadas.
+Bootstrap del formulario de cargo en la vista por actividad (dossier 3102).
 
 ## Objetivo De Usuario
 
-Asignar o editar el cargo de una persona en una actividad (tipo de cargo, AGD, observaciones y, en altas, si asiste).
-
-Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Form Cargos De Actividad).
+Asignar o editar el cargo de una persona en una actividad: el sistema carga desplegables, valores actuales, hash de campos y URLs de mutación antes de mostrar el formulario.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Controller `frontend/actividadcargos/controller/form_cargos_de_actividad.php`, invocado desde el widget 3102 (enlace **añadir …** o botón **modificar cargo**) vía `fnjs_enviar_formulario` al bloque del dossier.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,10 +32,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 ### Obtener Datos
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. El usuario abre el formulario desde el widget de relación de cargos (modo `nuevo` o `editar`).
+2. El controller POSTea a `form_cargos_de_actividad_data` con contexto del dossier (`pau`, `id_pau`, `obj_pau`, `sel`, `mod`, `permiso`).
+3. El backend devuelve payload con desplegables (`personas_select`, `cargos_select`), valores (`observ`, `chk`), flags (`show_asis`, `id_nom_real`) y `hash_form_config`.
+4. El front compone HTML de desplegables y hash; pinta el formulario en el bloque AJAX.
+5. Si falta contexto válido, puede devolver `redir: go_atras` o `error`.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadcargos/form_cargos_de_actividad_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -60,11 +62,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `no encuentro el cargo` (edición con `sel` inválido)
+- Mensajes HTML de persona no encontrada (`No encuentro a nadie con id_nom: …`)
+- `redir: go_atras` cuando falta `obj_pau` en altas
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (fragmento AJAX del dossier 3102; entrada habitual vía ficha de actividad).

@@ -1,62 +1,55 @@
 ---
 id: "pasarela.pantalla.contribucion_reserva_lista"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "pasarela"
-nombre: "Contribucion Reserva Lista"
+nombre: "Contribución reserva"
 controller: "frontend/pasarela/controller/contribucion_reserva_lista.php"
-vistas: []
-fragmentos_frontend: ["frontend/pasarela/controller/contribucion_reserva_ajax.php"]
-endpoints: ["/src/pasarela/contribucion_reserva_excepcion_guardar"]
-capacidades: ["pasarela.contribucion_reserva_excepcion.gestionar"]
-campos: ["form.contribucion", "form.id_tipo_activ", "form.que", "form.valor"]
+vistas:
+  - "frontend\/pasarela\/view\/contribucion_reserva_lista.html.twig"
+fragmentos_frontend:
+  - "frontend\/pasarela\/controller\/contribucion_reserva_ajax.php"
+endpoints:
+  - "\/src\/pasarela\/contribucion_reserva_lista"
+  - "\/src\/pasarela\/contribucion_reserva_default_data"
+  - "\/src\/pasarela\/contribucion_reserva_default_guardar"
+  - "\/src\/pasarela\/contribucion_reserva_excepcion_guardar"
+  - "\/src\/pasarela\/contribucion_reserva_excepcion_eliminar"
+  - "\/src\/pasarela\/tipo_activ_txt_data"
+capacidades:
+  - "pasarela.contribucion_reserva.gestionar"
+campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Contribucion Reserva Lista
+# Contribución reserva
 
-Descripcion funcional pendiente de revisar.
+Porcentaje de contribución en reserva de plaza, por defecto y por tipo de actividad.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla`
 - Controller: `frontend/pasarela/controller/contribucion_reserva_lista.php`
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/pasarela/controller/contribucion_reserva_ajax.php`
+- `frontend/pasarela/view/contribucion_reserva_lista.html.twig`
 
 ## Endpoints Usados
 
+- `/src/pasarela/contribucion_reserva_lista`
+- `/src/pasarela/contribucion_reserva_default_data`
+- `/src/pasarela/contribucion_reserva_default_guardar`
 - `/src/pasarela/contribucion_reserva_excepcion_guardar`
-
-## Capacidades Relacionadas
-
-- `pasarela.contribucion_reserva_excepcion.gestionar`
-
-## Campos Detectados
-
-- `form.contribucion`
-- `form.id_tipo_activ`
-- `form.que`
-- `form.valor`
-
-## Acciones Detectadas
-
-No se han detectado acciones.
+- `/src/pasarela/contribucion_reserva_excepcion_eliminar`
+- `/src/pasarela/tipo_activ_txt_data`
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Desde parámetros pasarela.
+2. Configurar default y excepciones.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).

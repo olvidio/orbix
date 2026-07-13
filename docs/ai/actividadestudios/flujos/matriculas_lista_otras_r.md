@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **Envío información a otras r** (solo regiones STGR).
+2. Opcionalmente filtrar por apellido y pulsar **buscar**.
+3. El sistema consulta `matriculas_lista_otras_r_data` y muestra alumnos con alertas y
+4. Seleccionar un alumno para **imprimir certificado** (`fnjs_imp_certificado`).
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/matriculas_lista_otras_r_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona MatriculasListaOtrasR. Descripcion funcional pendiente de revisar.
+El usuario busca alumnos de otras regiones por apellido para consultar sus asignaturas matriculadas y emitir certificados E43. Solo visible en ámbito región STGR (`rstgr` o `r`).
 
 ## Limites De La Respuesta
 

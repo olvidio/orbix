@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/lista_ultima_activ_data"]
 capacidades: ["asistentes.lista_ultima_activ.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Lista Ultima Activ
 
-Descripcion funcional pendiente de revisar.
+Tabla de personas s pendientes de asistir según el informe (`que`) y centro elegido.
 
 ## Tipo
 
@@ -49,11 +49,8 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** Destino del submit de lista_ultim_que_ctr
+- **Pills2:** vsg > crt/cv > informes de seguimiento

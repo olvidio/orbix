@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "configuracion"
-titulo: "Modulos Form"
+titulo: "Ficha de módulo"
 pantalla: "configuracion.pantalla.modulos_form"
-preguntas: ["Que se puede hacer en Modulos Form?", "Que campos tiene Modulos Form?", "Que acciones hay en Modulos Form?"]
+preguntas: ["Que se puede hacer en Ficha de módulo?", "Que campos tiene Ficha de módulo?", "Que acciones hay en Ficha de módulo?"]
 capacidades: ["configuracion.modulos.gestionar"]
-endpoints: ["/src/configuracion/modulos_form_data"]
+endpoints: ["/src/configuracion/modulos_form_data", "/src/configuracion/modulos_update"]
 source: "docs/catalogo/configuracion/pantallas/modulos_form.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Modulos Form
+# Ayuda IA Pantalla - Ficha de módulo
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario de alta o edición de un módulo: nombre, descripción, checkboxes de módulos requeridos y aplicaciones requeridas. Las apps heredadas de módulos requeridos aparecen marcadas y deshabilitadas (`a_apps_mod`).
 
 ## Uso En Ayuda
 
@@ -23,11 +23,12 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Campos Detectados
 
-- `html.descripcion`
 - `html.nom`
-- `html.refresh`
-- `html.sel_apps[]`
+- `html.descripcion`
 - `html.sel_mods[]`
+- `html.sel_apps[]`
+- `html.id_mod`
+- `html.mod`
 - `post.refresh`
 
 ## Acciones Detectadas
@@ -44,6 +45,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 ## Endpoints Relacionados
 
 - `/src/configuracion/modulos_form_data`
+- `/src/configuracion/modulos_update`
 
 ## Precauciones
 

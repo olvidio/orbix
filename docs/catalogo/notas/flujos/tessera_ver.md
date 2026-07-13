@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.tessera_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/tessera_ver_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Tessera Ver
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.tessera_ver.gestion
 
 ## Objetivo De Usuario
 
-Gestiona TesseraVer. Dataset JSON para {.
+Visualizar tessera de estudios.
 
 ## Punto De Entrada
 
@@ -52,10 +52,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

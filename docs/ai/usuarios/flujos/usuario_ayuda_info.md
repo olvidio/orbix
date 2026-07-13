@@ -42,10 +42,16 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona UsuarioAyudaInfo. Descripcion funcional pendiente de revisar.
+Ayuda acceso login: email ofuscado del usuario y contacto admin regional.
+
+## Errores Documentados
+
+- `Esquema no válido`
+- `Debe ingresar un nombre de usuario válido`
+- `No hay email asociado a este usuario`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

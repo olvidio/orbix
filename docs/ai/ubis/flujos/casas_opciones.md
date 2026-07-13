@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CasasOpciones. Devuelve el payload (solo datos) para poblar el <select> de casas en frontend\shared\web\CasasQue. La vista/componente frontend es quien construye el HTML del desplegable; aquí solo se exponen las opciones. Sustituye el acceso directo desde CasasQue al repositorio CasaDlRepositoryInterface (separación frontend ↔ backend, ver refactor.md).
+Devuelve opciones de casas filtradas para desplegables compartidos del frontend.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

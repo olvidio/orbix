@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActaPdfDownload. Descripcion funcional pendiente de revisar.
+Descargar PDF con token firmado.
 
 ## Limites De La Respuesta
 

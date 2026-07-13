@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ProcesosClonar. Caso de uso: clona las tareas de un proceso de referencia al proceso indicado (borrando las existentes previamente). Devuelve '' si ha ido bien o un mensaje de error. El frontend se encarga de recargar la vista del proceso tras el clonado.
+Clonar las tareas de un tipo de proceso de referencia sobre el proceso seleccionado, sustituyendo las tareas existentes.
 
 ## Errores Documentados
 

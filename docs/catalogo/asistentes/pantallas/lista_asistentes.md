@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/lista_asistentes_data"]
 capacidades: ["asistentes.lista_asistentes.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Lista Asistentes
 
-Descripcion funcional pendiente de revisar.
+Listado de asistentes y cargos-asistentes de una actividad concreta.
 
 ## Tipo
 
@@ -49,11 +49,7 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

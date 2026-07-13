@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla de peticiones de plaza por asistente; enlaces para mover a actividad preferida.
 
 ## Uso En Ayuda
 

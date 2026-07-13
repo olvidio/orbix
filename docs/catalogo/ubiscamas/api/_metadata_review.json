@@ -1,0 +1,238 @@
+{
+    "habitacion_form_data": {
+        "operacion": "form_data",
+        "entrada": {
+            "id_habitacion": "string",
+            "id_ubi": "integer",
+            "nuevo": "string",
+            "sel": "array"
+        },
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {
+            "success_data": {
+                "hash_form": "config HashFront (campos_form/chk/no/hidden)",
+                "hash_actualizar": "config HashFront para submit habitacion_update",
+                "cama_form_hash": "url y campos hacia cama_form",
+                "cama_delete_hash": "url y campos hacia cama_delete",
+                "id_habitacion": "uuid o vacío en alta",
+                "id_ubi": "ubi CDC",
+                "orden": "entero orden",
+                "nombre": "nombre habitación",
+                "numero_camas": "total camas previstas",
+                "numero_camas_vip": "camas VIP previstas",
+                "planta": "planta",
+                "sillon": "boolean",
+                "adaptada": "boolean",
+                "observaciones": "texto",
+                "despacho": "boolean",
+                "tipoLavabo": "entero código",
+                "a_tipos_tipoLavabo": "mapa código=>etiqueta",
+                "a_camas": "filas {id_cama, descripcion, larga, vip}"
+            }
+        },
+        "objetivo_funcional": "Prepara el formulario de alta o edición de una habitación en un ubi CDC. Con `nuevo` vacío y `sel` o `id_habitacion` carga la habitación y sus camas; sin id genera orden siguiente y defaults (1 cama, 1 VIP). `sel` usa token `id_habitacion#...`.",
+        "permisos": [],
+        "casos_uso": ["HabitacionFormData"],
+        "frontend_referencias": ["frontend/ubiscamas/controller/habitacion_form.php", "frontend/ubiscamas/helpers/UbiscamasFormHashCompose.php"]
+    },
+    "cama_form_data": {
+        "operacion": "form_data",
+        "entrada": {
+            "id_cama": "string",
+            "id_habitacion": "string",
+            "id_ubi": "integer",
+            "mod": "string"
+        },
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {
+            "success_data": {
+                "hash_form": "config HashFront descripcion/larga/vip",
+                "id_cama": "uuid (nuevo si vacío)",
+                "id_habitacion": "uuid habitación",
+                "id_ubi": "ubi",
+                "descripcion": "texto cama",
+                "larga": "boolean",
+                "vip": "boolean"
+            }
+        },
+        "objetivo_funcional": "Carga el modal de edición de una cama. Si `id_cama` vacío genera UUID nuevo; si existe lee descripción, larga y VIP del repositorio.",
+        "permisos": [],
+        "casos_uso": ["CamaFormData"],
+        "frontend_referencias": ["frontend/ubiscamas/controller/cama_form.php", "frontend/ubiscamas/helpers/UbiscamasFormHashCompose.php"]
+    },
+    "actividad_habitaciones_lista": {
+        "operacion": "lista_data",
+        "entrada": {
+            "id_activ": "integer"
+        },
+        "entrada_obligatoria": ["id_activ"],
+        "errores": ["Actividad not found", "No Ubi assigned to activity"],
+        "salida": {
+            "success_data": {
+                "success": "true si ok",
+                "id_activ": "actividad",
+                "id_ubi": "ubi de la actividad",
+                "solo_vip": "boolean (desc_activ=camasVIP)",
+                "habitaciones_con_camas": "map id_hab=>{habitacion, camas[]}",
+                "camas_con_asistentes": "map id_cama=>{id_nom, apellidos}",
+                "asistentes_sin_cama": "lista {id_nom, apellidos}",
+                "a_cabeceras": "cabeceras tabla",
+                "a_botones": "botones (vacío)",
+                "a_valores": "filas con sel id_habitacion#id_cama",
+                "reload_main_link_spec": "link_spec lista_habitaciones",
+                "url_update_cama_full": "URL update_cama_asistente",
+                "ctx_update_cama": "HashB firmado",
+                "update_solo_vip_full_url": "URL update_solo_vip",
+                "ctx_update_solo_vip": "HashB firmado",
+                "distribucion_open_link_spec": "link_spec distribución",
+                "nombres_open_link_spec": "link_spec nombres"
+            }
+        },
+        "objetivo_funcional": "Construye el listado de habitaciones/camas de la ubi de una actividad con ocupación por asistente. Filtra solo camas VIP si la actividad tiene `desc_activ=camasVIP`. El controller añade URLs firmadas para asignar cama, toggle VIP y subvistas.",
+        "permisos": [],
+        "casos_uso": ["HabitacionesCamaLista"],
+        "frontend_referencias": [
+            "frontend/ubiscamas/controller/lista_habitaciones.php",
+            "frontend/ubiscamas/controller/lista_habitaciones_distribucion.php",
+            "frontend/ubiscamas/controller/lista_habitaciones_nombres.php"
+        ]
+    },
+    "habitacion_update": {
+        "operacion": "mutacion",
+        "entrada": {
+            "sel": "array",
+            "id_habitacion": "string",
+            "id_ubi": "integer",
+            "orden": "integer",
+            "nombre": "string",
+            "numero_camas": "integer",
+            "numero_camas_vip": "integer",
+            "planta": "string",
+            "tipoLavabo": "integer",
+            "sillon": "string",
+            "adaptada": "string",
+            "observaciones": "string",
+            "despacho": "string",
+            "new_camas_desc": "array",
+            "new_camas_larga": "array",
+            "new_camas_vip": "array"
+        },
+        "entrada_obligatoria": [],
+        "errores": ["Habitación no válida", "Error al guardar la habitación"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Alta o actualización de habitación CDC y sincronización de camas: guarda datos de habitación, crea camas desde `new_camas_*` y auto-genera camas hasta alcanzar `numero_camas` (marcando VIP hasta `numero_camas_vip`). `sel` puede traer `id_habitacion` como primer token.",
+        "permisos": [],
+        "casos_uso": [],
+        "frontend_referencias": ["frontend/ubiscamas/view/habitacion_form.phtml", "frontend/ubiscamas/helpers/UbiscamasFormHashCompose.php"]
+    },
+    "habitacion_delete": {
+        "operacion": "mutacion",
+        "entrada": {
+            "sel": "array",
+            "id_habitacion": "string"
+        },
+        "entrada_obligatoria": [],
+        "errores": [
+            "No se encontró la habitación a eliminar",
+            "hay un error, no se ha eliminado la habitación",
+            "Error al eliminar la habitación"
+        ],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Elimina una habitación CDC por `id_habitacion` o token `sel` (`id_habitacion#...`).",
+        "permisos": [],
+        "casos_uso": [],
+        "frontend_referencias": [
+            "frontend/ubiscamas/view/habitacion_form.phtml",
+            "frontend/ubiscamas/view/select_habitaciones_cdc.phtml"
+        ]
+    },
+    "cama_update": {
+        "operacion": "mutacion",
+        "entrada": {
+            "sel": "array",
+            "id_cama": "string",
+            "id_habitacion": "string",
+            "descripcion": "string",
+            "larga": "string",
+            "vip": "string"
+        },
+        "entrada_obligatoria": [],
+        "errores": ["Habitación no válida", "Cama no válida", "Error al guardar la cama"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Alta o edición de una cama (descripción, larga, VIP) en una habitación. `sel` puede traer `id_cama` como primer token.",
+        "permisos": [],
+        "casos_uso": [],
+        "frontend_referencias": ["frontend/ubiscamas/view/cama_form.phtml", "frontend/ubiscamas/helpers/UbiscamasFormHashCompose.php"]
+    },
+    "cama_delete": {
+        "operacion": "mutacion",
+        "entrada": {
+            "id_cama": "string"
+        },
+        "entrada_obligatoria": ["id_cama"],
+        "errores": [
+            "ID de cama no proporcionado",
+            "No se encontró la cama a eliminar",
+            "hay un error, no se ha eliminado la cama",
+            "Error al eliminar la cama"
+        ],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Elimina una cama por UUID desde el formulario de habitación.",
+        "permisos": [],
+        "casos_uso": [],
+        "frontend_referencias": ["frontend/ubiscamas/view/habitacion_form.phtml"]
+    },
+    "update_cama_asistente": {
+        "operacion": "mutacion",
+        "requiere_hashb": true,
+        "respuesta": "raw_response",
+        "entrada": {
+            "ctx": "string",
+            "id_nom": "integer",
+            "id_cama": "string"
+        },
+        "entrada_obligatoria": ["ctx", "id_nom"],
+        "errores": [
+            "Operación no autorizada",
+            "Asistencia no encontrada para id_nom",
+            "Error al guardar la asignación de la cama"
+        ],
+        "salida": {
+            "success_data": {
+                "success": "boolean",
+                "mensaje": "ok o texto error"
+            }
+        },
+        "objetivo_funcional": "Asigna o reasigna la cama de un asistente en una actividad. `id_activ` se extrae de la cápsula `ctx` firmada (`HashB::sign('update_cama_asistente', {id_activ})`); `id_cama` vacío desasigna.",
+        "permisos": ["Autorización vía cápsula HashB `ctx`; sin perm_* en caso de uso."],
+        "casos_uso": ["UpdateCamaAsistente"],
+        "frontend_referencias": ["frontend/ubiscamas/view/lista_habitaciones.phtml"]
+    },
+    "update_solo_vip": {
+        "operacion": "mutacion",
+        "requiere_hashb": true,
+        "respuesta": "raw_response",
+        "entrada": {
+            "ctx": "string",
+            "solo_vip": "string"
+        },
+        "entrada_obligatoria": ["ctx"],
+        "errores": [
+            "Operación no autorizada",
+            "Actividad no encontrada",
+            "Error al guardar el estado VIP de la actividad"
+        ],
+        "salida": {
+            "success_data": {
+                "success": "boolean",
+                "mensaje": "ok o texto error"
+            }
+        },
+        "objetivo_funcional": "Marca o desmarca el modo «solo camas VIP» de una actividad (`desc_activ=camasVIP` si `solo_vip=true`). `id_activ` viene de la cápsula `ctx` (`HashB::sign('update_solo_vip', {id_activ})`).",
+        "permisos": ["Autorización vía cápsula HashB `ctx`; sin perm_* en controller."],
+        "casos_uso": [],
+        "frontend_referencias": ["frontend/ubiscamas/view/lista_habitaciones.phtml"]
+    }
+}

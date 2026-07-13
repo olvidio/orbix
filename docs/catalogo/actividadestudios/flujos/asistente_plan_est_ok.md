@@ -8,42 +8,47 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadestudios/asistente_plan_est_ok"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Asistente Plan Est Ok
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.asistente_plan_est_ok.gestionar` y sus pantallas relacionadas.
+Confirmación del plan de estudios de un asistente (`est_ok`).
 
 ## Objetivo De Usuario
 
-Gestiona AsistentePlanEstOk. Marca el flag est_ok (plan de estudios confirmado) de un Asistente. Sustituye al case plan de update_3103.php.
+El usuario marca el plan de estudios de un asistente como confirmado (`est_ok`). Sustituye
+al case `plan` de `update_3103.php`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Fragmento `select_matriculas_de_una_persona` (dossier 1303): `fnjs_grabar_est` en
+`frontend/actividadestudios/view/select_matriculas_de_una_persona.phtml` llama al endpoint
+por AJAX.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `frontend/actividadestudios/view/select_matriculas_de_una_persona.phtml` (dossier 1303)
 
 ## Escenarios Inferidos
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En el dossier de matrículas de una persona (1303), marcar o confirmar el plan de estudios.
+2. Pulsar la acción de confirmar plan (`fnjs_grabar_est`).
+3. El sistema actualiza el flag `est_ok` del asistente y refresca el fragmento.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/asistente_plan_est_ok`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- Ninguno detectado.
+- Ninguno detectado en metadatos del flujo.
 
 Acciones JavaScript:
-- Ninguna detectada.
+- `fnjs_grabar_est`
 
 ## Endpoints Del Flujo
 
@@ -55,9 +60,9 @@ Acciones JavaScript:
 - ``hay un error, no se ha guardado``
 - ``no encuentro al asistente``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo desde dossier 1303).
+
+- **Legacy:** vest > buscar persona > n r/dl; stgr > personas > n r/dl.
+- **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl.

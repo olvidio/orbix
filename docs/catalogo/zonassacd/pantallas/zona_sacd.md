@@ -16,14 +16,25 @@ estado_revision: "revisado"
 
 # Zona Sacd
 
-Pantalla **Zonas-sacd**: consultar que sacd atienden cada zona (con flag propia y
-dias de la semana L–D) y, con permiso `des`/`vcsd`, cambiar sus asignaciones de
-zona, añadir asignaciones iglesia/cgi y editar los dias de atencion (modal).
+Pantalla Zonas-sacd: listar sacd por zona, reasignar zonas (propia/iglesia) y modal de días L–D (vía misas/zona_sacd_datos_*). Requiere perm_des para mutaciones.
 
 ## Tipo
 
-- Subtipo: `pantalla_principal` (se carga en `#main`; la tabla llega por AJAX)
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/zonassacd/controller/zona_sacd.php`
+
+## Acciones (revisadas)
+
+| Accion | Funcion JS | Llama a | Parametros |
+|--------|-----------|---------|------------|
+| Listar sacds de una zona | `fnjs_busca_sacds()` (onchange del desplegable) | `zona_sacd_lista_ajax.php` | `id_zona` (`int` / `'no'`) |
+| Cambiar asignacion de zona | `fnjs_guardar(form, 1)` | `zona_sacd_update_ajax.php` | `id_zona`, `id_zona_new`, `acumular=1`, `sel[]` |
+| Añadir asignacion iglesia/cgi | `fnjs_guardar(form, 2)` | idem | idem con `acumular=2` |
+| Abrir modal de dias (1 sacd marcado) | boton `modificar` de la tabla → `fnjs_modificar(form)` → `fnjs_modal_zona_sacd_ver(id_sacd)` | `/src/misas/zona_sacd_datos_get` | `id_zona`, `id_sacd` |
+| Grabar dias de la semana | boton Grabar del modal (`commitCurrentEdit`) | `/src/misas/zona_sacd_datos_put` | `id_zona`, `id_sacd`, `dw1..dw7` |
+
+**Validaciones en cliente**: zona destino obligatoria; al menos un sacd marcado;
+el modal exige exactamente un sacd marcado (`fnjs_solo_uno`).
 
 ## Vistas Relacionadas
 
@@ -77,25 +88,7 @@ zona, añadir asignaciones iglesia/cgi y editar los dias de atencion (modal).
 - `fnjs_modificar`
 - `fnjs_solo_uno`
 
-## Acciones (revisadas)
+## Ruta de menú
 
-| Accion | Funcion JS | Llama a | Parametros |
-|--------|-----------|---------|------------|
-| Listar sacds de una zona | `fnjs_busca_sacds()` (onchange del desplegable) | `zona_sacd_lista_ajax.php` | `id_zona` (`int` / `'no'`) |
-| Cambiar asignacion de zona | `fnjs_guardar(form, 1)` | `zona_sacd_update_ajax.php` | `id_zona`, `id_zona_new`, `acumular=1`, `sel[]` |
-| Añadir asignacion iglesia/cgi | `fnjs_guardar(form, 2)` | idem | idem con `acumular=2` |
-| Abrir modal de dias (1 sacd marcado) | boton `modificar` de la tabla → `fnjs_modificar(form)` → `fnjs_modal_zona_sacd_ver(id_sacd)` | `/src/misas/zona_sacd_datos_get` | `id_zona`, `id_sacd` |
-| Grabar dias de la semana | boton Grabar del modal (`commitCurrentEdit`) | `/src/misas/zona_sacd_datos_put` | `id_zona`, `id_sacd`, `dw1..dw7` |
-
-**Validaciones en cliente**: zona destino obligatoria; al menos un sacd marcado;
-el modal exige exactamente un sacd marcado (`fnjs_solo_uno`).
-
-## Manual De Usuario
-
-Ver [`manual/zonassacd.md`](../../../manual/zonassacd.md), seccion *Zona SACD*.
-
-## Revision Manual
-
-- Revisado jun 2026: pantalla principal confirmada; acciones y validaciones documentadas.
-- Nota: el boton `modificar` (modal de dias) se perdio en la migracion desde `apps/`
-  y fue restaurado en jun 2026 (`ZonaSacdLista::buildTablaResponse`, requiere `perm_des`).
+- **Legacy:** dre > zonas > zonas-sacd
+- **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-sacd

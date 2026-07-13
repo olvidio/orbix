@@ -11,7 +11,7 @@ endpoints: ["/src/casas/casa_ec_gastos_form_data", "/src/casas/casa_ec_gastos_gu
 capacidades: ["casas.casa_ec_gastos.gestionar"]
 campos: ["html.id_ubi", "html.year", "post.id_cdc", "post.year"]
 acciones: ["fnjs_comprobar_dinero", "fnjs_gastos_guardar", "fnjs_ver"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Casa Ec Gastos Lista
@@ -56,10 +56,8 @@ No se han detectado controladores frontend relacionados.
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** exterior > casas > gastos casa
+- **Pills2:** CASAS Y CTR > Gestión casas > gastos casas
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

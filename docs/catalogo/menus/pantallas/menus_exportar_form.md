@@ -1,7 +1,7 @@
 ---
 id: "menus.pantalla.menus_exportar_form"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "menus"
 nombre: "Menus Exportar Form"
 controller: "frontend/menus/controller/menus_exportar_form.php"
@@ -11,52 +11,22 @@ endpoints: ["/src/menus/menus_exportar"]
 capacidades: ["menus.menus_exportar.gestionar"]
 campos: ["form.nombre", "html.btn_ok", "html.nombre"]
 acciones: ["fnjs_enviar", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Menus Exportar Form
+# Exportar menús a plantilla
 
-Descripcion funcional pendiente de revisar.
+Guarda el menú actual del esquema como plantilla ref en BD pública.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
-- Controller: `frontend/menus/controller/menus_exportar_form.php`
+- Subtipo: `pantalla_principal`
 
-## Vistas Relacionadas
+## Ruta de menú
 
-- `frontend/menus/view/menus_exportar_form.phtml`
-
-## Fragmentos Frontend Relacionados
-
-No se han detectado controladores frontend relacionados.
-
-## Endpoints Usados
-
-- `/src/menus/menus_exportar`
-
-## Capacidades Relacionadas
-
-- `menus.menus_exportar.gestionar`
-
-## Campos Detectados
-
-- `form.nombre`
-- `html.btn_ok`
-- `html.nombre`
-
-## Acciones Detectadas
-
-- `fnjs_enviar`
-- `fnjs_guardar`
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** ADMIN LOCAL > Exportar menús
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+1. Indicar nombre plantilla. 2. Exportar (opción sobreescribir en formulario).

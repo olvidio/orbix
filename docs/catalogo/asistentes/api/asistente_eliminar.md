@@ -10,18 +10,23 @@ entrada: ["post.id_activ:integer", "post.id_nom:integer", "post.id_pau:integer",
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["faltan parametros id_activ / id_nom", "los datos de asistencia los modifica la dl del asistente", "hay un error, no se ha eliminado"]
+errores: ["faltan parametros id_activ / id_nom", "no se encuentra el asistente (id_nom: %s, id_activ: %s)", "los datos de asistencia los modifica la dl del asistente", "hay un error, no se ha eliminado"]
 frontend_referencias: []
 casos_uso: ["src\\asistentes\\application\\AsistenteEliminar"]
 tags: ["asistentes", "asistente", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Asistente Eliminar
 
-Elimina un `Asistente` y sus matriculas.
+Elimina un `Asistente` y sus matrículas asociadas.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Case `eliminar` del legacy `update_3101.php`: borra el asistente, elimina matrículas de la actividad,
+cierra el dossier `1301` de la persona y valida `perm_modificar()`.
 
 ## Endpoint
 
@@ -34,13 +39,13 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `integer` | application | No | application |
-| `id_nom` | `integer` | application | No | application |
-| `id_pau` | `integer` | application | No | application |
-| `pau` | `string` | application | No | application |
-| `sel` | `array` | application | No | application |
+| `pau` | `string` | application | No | `p` o `a`; con `sel` resuelve el par `id_activ`/`id_nom` |
+| `sel` | `array` | application | No | Primer token: `id_activ#...` si `pau=p`, o `id_nom#...` si `pau=a` |
+| `id_activ` | `integer` | application | Si* | Alternativa directa sin `sel` |
+| `id_nom` | `integer` | application | Si* | Alternativa directa sin `sel` |
+| `id_pau` | `integer` | application | No | Complemento de `sel` (`id_nom` si `pau=p`, `id_activ` si `pau=a`) |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+\* Ambos deben resolverse distintos de 0.
 
 ## Salida
 
@@ -50,14 +55,20 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Efectos colaterales
 
-- Elimina un `Asistente` y las `Matricula`s asociadas, cerrando tambien el dossier 1301.
-- Sustituye al case `eliminar` del antiguo `apps/asistentes/controller/update_3101.php`.
+- Elimina matrículas (`MatriculaRepository`) de la pareja `id_activ`/`id_nom`.
+- Cierra dossier `1301` de la persona.
 
 ## Errores conocidos
 
 - `faltan parametros id_activ / id_nom`
+- `no se encuentra el asistente (id_nom: %s, id_activ: %s)`
 - `los datos de asistencia los modifica la dl del asistente`
-- `hay un error, no se ha eliminado`
+- `hay un error, no se ha eliminado` (puede acumularse al borrar matrículas)
+
+## Permisos
+
+- Comprueba `Asistente::perm_modificar()` antes de eliminar.
+- Invocación desde listados/forms: autorización en frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -65,10 +76,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Invocado desde dossiers `1301`/`3101` y listados de asistentes (acción eliminar). También lo llama
+  internamente `AsistenteGuardar` en `mod=mover`. URL emitida en payloads de formulario.

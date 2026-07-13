@@ -11,7 +11,7 @@ endpoints: []
 capacidades: []
 campos: ["html.buscar"]
 acciones: ["fnjs_detalles", "fnjs_mas_casas", "fnjs_ver"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Casa Ec
@@ -52,10 +52,8 @@ No se han detectado capacidades relacionadas.
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** adl > Gestión casas > estadística por años
+- **Pills2:** CASAS Y CTR > Gestión casas > estadística por años
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

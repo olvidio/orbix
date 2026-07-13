@@ -42,10 +42,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona UsuarioGrupoDel. Descripcion funcional pendiente de revisar.
+Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).
+
+## Errores Documentados
+
+- `Operación no autorizada`
+- `hay un error, no se ha eliminado`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

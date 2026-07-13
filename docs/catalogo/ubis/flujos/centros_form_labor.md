@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.centros_form_labor"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/centros_form_labor"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Centros Form Labor
-
-Propuesta generada automaticamente desde la capacidad `ubis.centros_form_labor.gestionar` y sus pantallas relacionadas.
+# Flujo - Centros Form Labor
 
 ## Objetivo De Usuario
 
-Gestiona Centros. Datos comunes para los formularios de centro dl (labor / num / plazas). Los tres formularios muestran sobre un mismo centro un subconjunto de campos distinto según el modo indicado.
+Carga datos del formulario modal de tipo de labor de un centro DL.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones > modificar centros.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -55,11 +53,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros

@@ -8,44 +8,50 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.form_matriculas_de_una_persona", "actividadestudios.pantalla.matriculas_lista", "actividadestudios.pantalla.matriculas_pendientes"]
 acciones: ["crear", "eliminar"]
 endpoints: ["/src/actividadestudios/matricula_eliminar", "/src/actividadestudios/matricula_nueva"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Matricula
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.matricula.gestionar` y sus pantallas relacionadas.
+Alta y baja de matrículas de alumnos en asignaturas de actividades CA.
 
 ## Objetivo De Usuario
 
-Gestiona Matricula. Crea una matricula. Elimina una o varias matriculas.
+El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o elimina
+una o varias matrículas seleccionadas desde listados o formularios de dossier.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- **crear:** `form_matriculas_de_una_persona`, `fnjs_guardar` con modo nuevo →
+  `matricula_nueva`.
+- **eliminar:** `matriculas_lista`, `matriculas_pendientes` o fragmentos de dossier,
+  `fnjs_borrar` → `matricula_eliminar` por AJAX.
 
 ## Fragmentos O Pantallas Auxiliares
 
 - `actividadestudios.pantalla.form_matriculas_de_una_persona`
 - `actividadestudios.pantalla.matriculas_lista`
 - `actividadestudios.pantalla.matriculas_pendientes`
+- `frontend/actividadestudios/view/select_matriculas_de_una_actividad.phtml`
 
 ## Escenarios Inferidos
 
 ### Crear
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En dossier 1303 o 3103, pulsar **nuevo** para abrir el formulario de matrícula.
+2. Elegir nivel, asignatura y opciones de preceptor.
+3. Pulsar **guardar**; el sistema crea la matrícula y actualiza dossiers 1303/3103.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/matricula_nueva`
 
 ### Eliminar
 
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+Pasos:
+1. En un listado de matrículas, seleccionar una o varias filas.
+2. Pulsar **borrar matrícula** y confirmar.
+3. El sistema elimina las matrículas y refresca el listado.
 
 Endpoints asociados:
 - `/src/actividadestudios/matricula_eliminar`
@@ -104,9 +110,11 @@ Acciones JavaScript:
 - ``no encuentro asignatura para ese nivel``
 - ``no encuentro la matricula``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú directa; las altas se hacen desde dossiers y las bajas también desde
+listados de menú:
+
+- **Legacy:** vest > actas... > Matrículas / Matr. Pendientes; vest > buscar persona > n r/dl.
+- **Pills2:** ESTUDIOS > Actas y certificados > Matrículas realizadas / Exam. pendientes de acta;
+  PERSONAS > Numerarios > Buscar n de la r/dl.

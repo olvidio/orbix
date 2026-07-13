@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ProcesosVer. Caso de uso: datos para la pantalla procesos_ver (formulario editar / nuevo de una fase dentro de un tipo de proceso). Devuelve todos los arrays necesarios para que el controlador frontend monte los frontend\shared\web\Desplegable (fases, tareas, status, oficinas responsables, fases previas y sus tareas) y el formulario de edicion.
+Carga del formulario modal de alta o edición de una tarea dentro de un tipo de proceso, con desplegables de fases, tareas, status, oficina y dependencias.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

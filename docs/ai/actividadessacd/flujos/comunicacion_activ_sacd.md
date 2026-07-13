@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Seleccionar periodo en la barra de filtros (o entrar con un sacd preseleccionado).
+2. Pulsar **buscar** (o auto-carga si `AUTO_CARGAR`).
+3. El sistema pinta el listado por sacd con actividades, textos y leyenda.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadessacd/comunicacion_activ_sacd_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ComunicacionActividadesSacd. Construye el listado de atencion de actividades a comunicar a los sacd (incluidas las de los "sacd de paso" cuando procede).
+El usuario selecciona un periodo y pulsa **buscar**: el sistema construye, por cada sacd, la lista de actividades a comunicar (incluidas las de los "sacd de paso" cuando procede) con los textos de la carta y las cabeceras de columnas.
 
 ## Limites De La Respuesta
 

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Página de ayuda para restablecer la autenticación de dos factores (2FA).
+Ayuda acceso: muestra email ofuscado y contacto admin.
 
 ## Uso En Ayuda
 

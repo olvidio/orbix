@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla del acta de notas para una asignatura concreta de una actividad.
+Pantalla del acta de notas de una asignatura concreta dentro de una actividad: incluye el formulario del acta (módulo `notas`) y, debajo, la tabla de alumnos matriculados con nota, preceptor y situación de acta. Sucesor de `apps/actividadestudios/controller/acta_notas.php`.
 
 ## Uso En Ayuda
 
@@ -49,7 +49,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `fnjs_guardar_nota`
 - `fnjs_guardar_tessera`
 - `fnjs_imprimir`
-- `fnjs_left_side_hide`
 - `fnjs_nota`
 
 ## Capacidades Relacionadas

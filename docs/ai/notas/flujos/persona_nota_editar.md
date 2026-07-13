@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PersonaNotaEditar. Edita una PersonaNota existente.
+Edición de nota existente.
 
 ## Limites De La Respuesta
 

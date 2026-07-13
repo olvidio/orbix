@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Muestra y edita las direcciones vinculadas a un ubi dentro de la ficha.
 
 ## Uso En Ayuda
 

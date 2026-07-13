@@ -13,14 +13,22 @@ requiere_hashb: false
 frontend_referencias: ["frontend/cambios/controller/avisos_generar.php"]
 casos_uso: ["src\\cambios\\application\\AvisosGenerarListaData"]
 tags: ["cambios", "avisos", "generar", "lista", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Avisos Generar Lista Data
 
-Endpoint backend: listado de avisos `CambioUsuario` (con `avisado=false`) para el usuario/aviso_tipo dado + opciones de desplegables de la pantalla `avisos_generar`.
+Listado de `CambioUsuario` pendientes de avisar (`avisado=false`) para el usuario y tipo de aviso
+indicados, más opciones de desplegables y metadatos de borrado de la pantalla `avisos_generar`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Construye la tabla de cambios anotados no avisados. Si `is_admin=0`, ignora `id_usuario`/`aviso_tipo`
+del POST y usa `ConfigGlobal::mi_id_usuario()` y `AvisoTipoId::TIPO_LISTA`. Si `is_admin=1`, toma
+los valores del formulario. Con `id_usuario=0` devuelve solo los desplegables vacíos. Con usuario
+válido añade `paths` y `hash_*` para que `AvisosGenerarListaRender` firme las URLs de eliminación.
 
 ## Endpoint
 
@@ -33,20 +41,26 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `aviso_tipo` | `integer` | controller+application | No | controller+application |
-| `id_usuario` | `integer` | controller+application | No | controller+application |
-| `is_admin` | `integer` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `is_admin` | `integer` | controller | No | `1` = admin elige usuario/tipo; `0` = sesión |
+| `id_usuario` | `integer` | controller+application | No | Solo efectivo si `is_admin=1` |
+| `aviso_tipo` | `integer` | controller+application | No | Solo efectivo si `is_admin=1` |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
+- Helper: `ContestarJson::enviar` (doble `JSON.parse` en frontend).
+- Payload en `data`:
+  - `error` (`string`): vacío en éxito.
+  - `a_valores` (`array`): filas ordenadas por timestamp; cada fila tiene `sel` =
+    `id_item_cambio#id_usuario#sfsv#aviso_tipo`, `1` = fecha local, `2` = quien cambió, `3` = texto
+    del aviso.
+  - `aOpcionesUsuarios`, `aOpcionesAvisoTipo` (`array`): opciones de desplegables.
+  - `effective_id_usuario`, `effective_aviso_tipo` (`int`): valores aplicados.
+  - Si `effective_id_usuario > 0`: `paths` (`eliminar`, `eliminar_fecha`), `hash_eliminar`
+    (`campos_no: sel`), `hash_eliminar_fecha` (`campos_form: f_fin`).
 
-## Efectos colaterales
+## Permisos
 
-- URLs y fragmentos hash de eliminación: {@see \frontend\cambios\helpers\AvisosGenerarListaRender}.
+- Sin control propio; `is_admin` lo calcula `CambiosPermSupport::isAdmin()` en el frontend.
 
 ## Casos De Uso
 
@@ -54,10 +68,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/cambios/controller/avisos_generar.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/cambios/controller/avisos_generar.php`: carga el listado vía `PostRequest::getDataFromUrl`;
+  `AvisosGenerarListaRender::enrich` firma URLs de borrado con `HashFront`.

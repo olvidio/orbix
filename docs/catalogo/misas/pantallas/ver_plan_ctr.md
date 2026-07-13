@@ -11,16 +11,18 @@ endpoints: ["/src/misas/ver_plan_ctr_data"]
 capacidades: ["misas.ver_plan_ctr.gestionar"]
 campos: ["post.empiezamax", "post.empiezamin", "post.id_ubi", "post.id_zona", "post.periodo"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Ver Plan Ctr
+# Ver plan ctr
 
-Descripcion funcional pendiente de revisar.
+Resultado: cuadrícula encargo×día del centro (`ver_plan_ctr_data`) con leyenda de sacds.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/misas/controller/ver_plan_ctr.php`
 
 ## Vistas Relacionadas
@@ -51,13 +53,7 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

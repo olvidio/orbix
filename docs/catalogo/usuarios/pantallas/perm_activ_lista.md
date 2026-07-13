@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/perm_activ_lista"]
 capacidades: ["usuarios.perm_activ.gestionar"]
 campos: ["form.que", "form.sel", "html.que", "post.id_usuario", "post.olvidar", "post.quien"]
 acciones: ["fnjs_add_perm_activ", "fnjs_del_perm_activ", "fnjs_enviar_formulario", "fnjs_mod_perm_activ", "fnjs_solo_uno"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Perm Activ Lista
 
-Descripcion funcional pendiente de revisar.
+Pestaña permisos actividad-proceso en ficha usuario.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/perm_activ_lista.php`
 
 ## Vistas Relacionadas
@@ -56,13 +58,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_mod_perm_activ`
 - `fnjs_solo_uno`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

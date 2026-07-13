@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir periodo (año + trimestre o rango libre) en la barra de filtros.
+2. Pulsar **buscar**.
+3. El sistema construye la tabla con actividades, sacd encargados y leyenda de colores.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadessacd/lista_actividades_sacd_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaActividadesSacd. Devuelve el listado de actividades del tipo + periodo elegidos junto con los sacd encargados y los flags de permiso.
+El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de actividades del tipo (`na` / `sg` / `sr` / `sssc` / `sf` / variantes `sf_*` / `falta_sacd` / `solape`) en ese periodo y, por cada una, los sacd encargados actuales y los flags de permiso que deciden qué acciones se ofrecen (asignar, reordenar, borrar).
 
 ## Limites De La Respuesta
 

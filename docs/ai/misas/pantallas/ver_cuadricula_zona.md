@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Cuadrícula SlickGrid de asignaciones EncargoDia (filas sacd × columnas día/encargo). Edición vía `cuadricula_update` y `desplegable_sacd`.
 
 ## Uso En Ayuda
 

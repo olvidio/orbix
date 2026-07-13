@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Renderer frontend de la tabla de fases del proceso.
+Fragmento AJAX que renderiza la tabla tabular de fases/tareas del proceso con acciones para modificar y eliminar cada tarea.
 
 ## Uso En Ayuda
 

@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoEmitidoAdjuntar. Datos para el formulario “adjuntar certificado emitido” (solo lectura inicial).
+Adjuntar PDF de certificado emitido a una persona.
 
 ## Limites De La Respuesta
 

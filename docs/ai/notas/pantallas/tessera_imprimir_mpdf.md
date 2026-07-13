@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página sirve para la tessera de una persona.
+PDF de tessera vía mPDF.
 
 ## Uso En Ayuda
 

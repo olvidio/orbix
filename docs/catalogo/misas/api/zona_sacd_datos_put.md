@@ -6,8 +6,8 @@ url: "/src/misas/zona_sacd_datos_put"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/zona_sacd_datos_put.php"
-entrada: ["post.dw1:string", "post.dw2:string", "post.dw3:string", "post.dw4:string", "post.dw5:string", "post.dw6:string", "post.dw7:string", "post.id_sacd:integer", "post.id_zona:integer"]
-entrada_obligatoria: []
+entrada: ["post.id_zona:integer", "post.id_sacd:integer", "post.propia:string", "post.dw1:string", "post.dw2:string", "post.dw3:string", "post.dw4:string", "post.dw5:string", "post.dw6:string", "post.dw7:string"]
+entrada_obligatoria: ["id_zona", "id_sacd"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_ZonaSacdDatosPutData"
 respuesta_data: ["error:string"]
@@ -15,14 +15,21 @@ requiere_hashb: false
 frontend_referencias: ["frontend/zonassacd/controller/zona_sacd.php"]
 casos_uso: ["src\\misas\\application\\ZonaSacdDatosPut"]
 tags: ["misas", "zona", "sacd", "datos", "put"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["No existe", "<repositorio getErrorTxt()>"]
 ---
 
-# Zona Sacd Datos Put
+# Zona sacd datos put
 
-Descripcion funcional pendiente de revisar.
+Guarda flags de disponibilidad semanal de un SACD en una zona (ZonaSacd).
+
+Linaje: Slice 10 — migrado desde apps/misas/controller/zona_sacd_datos_put.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Guarda flags de disponibilidad semanal de un SACD en una zona (ZonaSacd).
 
 ## Endpoint
 
@@ -35,23 +42,30 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `dw1` | `string` | controller | No | controller |
-| `dw2` | `string` | controller | No | controller |
-| `dw3` | `string` | controller | No | controller |
-| `dw4` | `string` | controller | No | controller |
-| `dw5` | `string` | controller | No | controller |
-| `dw6` | `string` | controller | No | controller |
-| `dw7` | `string` | controller | No | controller |
-| `id_sacd` | `integer` | controller | No | controller |
-| `id_zona` | `integer` | controller | No | controller |
+| `id_zona` | `integer` | application | Si | |
+| `id_sacd` | `integer` | application | Si | |
+| `propia` | `string→boolean` | application | No | |
+| `dw1` | `string→boolean` | application | No | |
+| `dw2` | `string→boolean` | application | No | |
+| `dw3` | `string→boolean` | application | No | |
+| `dw4` | `string→boolean` | application | No | |
+| `dw5` | `string→boolean` | application | No | |
+| `dw6` | `string→boolean` | application | No | |
+| `dw7` | `string→boolean` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `misas_ZonaSacdDatosPutData`):
-  - `error` (`string`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacio serializado).
+
+## Errores conocidos
+- `No existe`
+- `<repositorio getErrorTxt()>`
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -59,10 +73,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/zonassacd/controller/zona_sacd.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/zonassacd/controller/zona_sacd.php"]`).

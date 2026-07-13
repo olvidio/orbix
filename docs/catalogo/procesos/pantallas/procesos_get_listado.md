@@ -11,12 +11,12 @@ endpoints: ["/src/procesos/procesos_get_listado"]
 capacidades: ["procesos.procesos_get_listado.gestionar"]
 campos: []
 acciones: ["fnjs_eliminar", "fnjs_modificar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Procesos Get Listado
 
-Renderer frontend de la tabla de fases del proceso.
+Fragmento AJAX que renderiza la tabla tabular de fases/tareas del proceso con acciones para modificar y eliminar cada tarea.
 
 ## Tipo
 
@@ -48,13 +48,7 @@ No se han detectado campos de formulario.
 - `fnjs_eliminar`
 - `fnjs_modificar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

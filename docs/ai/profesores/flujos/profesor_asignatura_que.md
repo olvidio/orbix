@@ -2,36 +2,38 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "profesores"
-titulo: "Profesor Asignatura Que"
+titulo: "Buscar profesor para asignatura"
 flujo: "profesores.profesor_asignatura_que.gestionar.flujo"
-preguntas: ["Como ejecutar en Profesor Asignatura Que?"]
-pantallas_principales: []
-fragmentos: ["profesores.pantalla.profesor_asignatura_que"]
-endpoints: ["/src/profesores/profesor_asignatura_que"]
+preguntas: ["Como consultar en Buscar profesor para asignatura?"]
+pantallas_principales: ["profesores.pantalla.profesor_asignatura_que"]
+fragmentos: ["profesores.pantalla.profesor_asignatura_ajax"]
+endpoints: ["/src/profesores/profesor_asignatura_que", "/src/profesores/profesor_asignatura_ajax"]
 source: "docs/catalogo/profesores/flujos/profesor_asignatura_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Profesor Asignatura Que
+# Ayuda IA - Buscar profesor para asignatura
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Profesor Asignatura Que`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Buscar profesor para asignatura`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Profesor Asignatura Que?
+- Como consultar en Buscar profesor para asignatura?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Profesor para asignatura (`profesores.pantalla.profesor_asignatura_que`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Consultar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **profesor para asignatura** desde el menú.
+2. Elegir asignatura en el desplegable (`fnjs_profes`).
+3. Revisar la tabla AJAX con profesores, centro, docencia y contacto.
 
 Referencias tecnicas para verificar la respuesta:
 - Ninguna referencia API inferida.
@@ -39,10 +41,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `profesores.pantalla.profesor_asignatura_que`
+- `profesores.pantalla.profesor_asignatura_ajax`
 
 ## Objetivo
 
-Gestiona ProfesorAsignaturaQue. Descripcion funcional pendiente de revisar.
+Elegir asignatura y ver candidatos (departamento + ampliación) con datos de contacto y docencia previa, como apoyo antes de asignar en el curso académico.
 
 ## Limites De La Respuesta
 

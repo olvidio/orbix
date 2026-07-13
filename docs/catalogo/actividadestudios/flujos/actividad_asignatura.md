@@ -8,42 +8,50 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 acciones: ["crear", "eliminar"]
 endpoints: ["/src/actividadestudios/actividad_asignatura_eliminar", "/src/actividadestudios/actividad_asignatura_nueva"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Actividad Asignatura
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.actividad_asignatura.gestionar` y sus pantallas relacionadas.
+Alta y baja de asignaturas impartidas en una actividad CA (dossier 3005).
 
 ## Objetivo De Usuario
 
-Gestiona ActividadAsignatura. Crea una ActividadAsignatura (asignatura impartida en un ca) y abre el dossier 3005 de la actividad. Sustituye al case nuevo del antiguo update_3005.php dispatcher. Elimina una ActividadAsignatura (asignatura impartida en un ca). Sustituye al case eliminar del antiguo update_3005.php dispatcher.
+El usuario crea una nueva asignatura impartida en la actividad (profesor, fechas, tipo) o
+elimina una existente desde el dossier de asignaturas. Sustituye los cases `nuevo` y
+`eliminar` del antiguo `update_3005.php`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `form_asignaturas_de_una_actividad`
+(`frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php`):
+- **crear:** formulario en modo alta, `fnjs_guardar` con `mod=nuevo` → `actividad_asignatura_nueva`.
+- **eliminar:** listado `select_asignaturas_de_una_actividad`, `fnjs_borrar_asignatura` con
+  `mod=eliminar` → `actividad_asignatura_eliminar`.
 
 ## Fragmentos O Pantallas Auxiliares
 
 - `actividadestudios.pantalla.form_asignaturas_de_una_actividad`
+- `frontend/actividadestudios/controller/select_asignaturas_de_una_actividad` (listado dossier 3005)
 
 ## Escenarios Inferidos
 
 ### Crear
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En el dossier 3005 de una actividad, pulsar **nuevo** para abrir el formulario de alta.
+2. Elegir asignatura, profesor, fechas y tipo; pulsar **guardar**.
+3. El sistema crea la `ActividadAsignatura` y abre el dossier 3005 de la actividad.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/actividad_asignatura_nueva`
 
 ### Eliminar
 
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+Pasos:
+1. En el listado de asignaturas del dossier 3005, seleccionar una fila.
+2. Pulsar **borrar** y confirmar.
+3. El sistema elimina la asignatura impartida y refresca el listado.
 
 Endpoints asociados:
 - `/src/actividadestudios/actividad_asignatura_eliminar`
@@ -85,9 +93,10 @@ Acciones JavaScript:
 - ``no encuentro la asignatura``
 - ``sólo se puede eliminar una asignatura desde el dossier de la actividad``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo desde dossier 3005, accesible al buscar una
+actividad CA y abrir asignaturas).
+
+- **Legacy:** vsm > ca > buscar ca.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades.

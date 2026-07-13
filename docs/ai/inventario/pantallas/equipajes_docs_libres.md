@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Docs Libres"
+titulo: "Docs libres"
 pantalla: "inventario.pantalla.equipajes_docs_libres"
-preguntas: ["Que se puede hacer en Equipajes Docs Libres?", "Que campos tiene Equipajes Docs Libres?", "Que acciones hay en Equipajes Docs Libres?"]
+preguntas: ["Que se puede hacer en Docs libres?", "Que campos tiene Docs libres?", "Que acciones hay en Docs libres?"]
 capacidades: ["inventario.lista_docs_libres.gestionar"]
 endpoints: ["/src/inventario/lista_docs_libres"]
 source: "docs/catalogo/inventario/pantallas/equipajes_docs_libres.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Docs Libres
+# Ayuda IA Pantalla - Docs libres
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Documentos disponibles para añadir a maleta.
 
 ## Uso En Ayuda
 

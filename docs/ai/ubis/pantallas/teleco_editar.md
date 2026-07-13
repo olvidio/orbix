@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario modal de alta o edición de una telecomunicación del ubi.
 
 ## Uso En Ayuda
 

@@ -7,22 +7,25 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/cambios/infrastructure/ui/http/controllers/cambio_usuario_objeto_pref_eliminar.php"
 entrada: ["post.id_item_usuario_objeto:integer", "post.sel:array"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_item_usuario_objeto"]
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "cambios_CambioUsuarioObjetoPrefEliminarData"
-respuesta_data: ["error:string"]
 requiere_hashb: false
-frontend_referencias: []
+frontend_referencias: ["frontend/cambios/controller/usuario_form_avisos.php"]
 casos_uso: ["src\\cambios\\application\\CambioUsuarioObjetoPrefEliminar"]
 tags: ["cambios", "cambio", "usuario", "objeto", "pref", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Cambio Usuario Objeto Pref Eliminar
 
-Endpoint JSON: elimina un `CambioUsuarioObjetoPref`.
+Elimina un `CambioUsuarioObjetoPref` (preferencia de aviso sobre un objeto/tipo de actividad).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Borra la preferencia indicada por `id_item_usuario_objeto`. Si llega `sel[]`, extrae el id del
+segundo segmento del primer token (`id_usuario#id_item_usuario_objeto`).
 
 ## Endpoint
 
@@ -35,23 +38,24 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item_usuario_objeto` | `integer` | controller+application | No | controller+application |
-| `sel` | `array` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_item_usuario_objeto` | `integer` | controller+application | Sí | Directo o vía `sel[0]` (`#` separador) |
+| `sel` | `array` | controller | No | Alternativa: `id_usuario#id_item_usuario_objeto` |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `cambios_CambioUsuarioObjetoPrefEliminarData`):
-  - `error` (`string`)
+- Éxito: `success: true`, `data: []` (array vacío).
+- Error: mensaje en el envelope.
 
-## Efectos colaterales
+## Errores conocidos
 
-- Mutacion: elimina un `CambioUsuarioObjetoPref` por id.
-- Sucesor de la rama `eliminar` del dispatcher legacy `apps/cambios/controller/usuario_avisos_pref_ajax.php`.
+- `falta id_item_usuario_objeto`
+- `preferencia no encontrada`
+- `Hay un error, no se ha eliminado`
+
+## Permisos
+
+- Sin control propio; autorización en `usuario_form_avisos` + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -59,10 +63,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/cambios/controller/usuario_form_avisos.php`: `fnjs_del_cambio` redirige el formulario a
+  este endpoint con `sel` de la fila seleccionada.

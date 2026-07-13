@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoEmitidoImprimir. Descripcion funcional pendiente de revisar.
+Preparar datos e iniciar impresión de certificado nuevo para un alumno.
 
 ## Limites De La Respuesta
 

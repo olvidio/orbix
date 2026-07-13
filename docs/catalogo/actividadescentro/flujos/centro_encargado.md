@@ -5,37 +5,37 @@ modulo: "actividadescentro"
 nombre: "Flujo - Gestionar Centro Encargado"
 capacidad: "actividadescentro.centro_encargado.gestionar"
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["eliminar"]
 endpoints: ["/src/actividadescentro/centro_encargado_eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Centro Encargado
 
-Propuesta generada automaticamente desde la capacidad `actividadescentro.centro_encargado.gestionar` y sus pantallas relacionadas.
+Eliminación de un centro encargado de una actividad.
 
 ## Objetivo De Usuario
 
-Gestiona CentroEncargado. Elimina un CentroEncargado de una actividad.
+El usuario quita un centro de la lista de encargados de una actividad.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): la función
+`fnjs_eliminar` llama a este endpoint desde la opción **borrar** del popup de orden.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Escenarios Inferidos
 
 ### Eliminar
 
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+Pasos:
+1. Pulsar un centro encargado ya asignado para abrir el popup de orden.
+2. Elegir **borrar**.
+3. El sistema lo elimina y refresca la celda de centros de la actividad.
 
 Endpoints asociados:
 - `/src/actividadescentro/centro_encargado_eliminar`
@@ -58,9 +58,11 @@ Acciones JavaScript:
 - ``hay un error, no se ha eliminado el centro``
 - ``no se sabe cual borrar``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+  agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+  asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.

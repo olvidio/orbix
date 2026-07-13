@@ -2,87 +2,44 @@
 id: "pasarela.nombre_excepcion.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "pasarela"
-nombre: "Flujo - Gestionar Nombre Excepcion"
-capacidad: "pasarela.nombre_excepcion.gestionar"
+nombre: "Flujo - Alta/edición nombre por tipo"
+capacidad: "pasarela.nombre.gestionar"
 pantallas_principales: []
-fragmentos: ["pasarela.pantalla.nombre_ajax", "pasarela.pantalla.nombre_lista"]
-acciones: ["eliminar", "guardar"]
-endpoints: ["/src/pasarela/nombre_excepcion_eliminar", "/src/pasarela/nombre_excepcion_guardar"]
-estado_revision: "generado"
+fragmentos:
+  - "pasarela.pantalla.nombre_ajax"
+acciones: ["listar", "guardar", "eliminar"]
+endpoints:
+  - "\/src\/pasarela\/nombre_excepcion_guardar"
+  - "\/src\/pasarela\/nombre_excepcion_eliminar"
+  - "\/src\/pasarela\/tipo_activ_txt_data"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Nombre Excepcion
-
-Propuesta generada automaticamente desde la capacidad `pasarela.nombre_excepcion.gestionar` y sus pantallas relacionadas.
+# Flujo - Alta/edición nombre por tipo
 
 ## Objetivo De Usuario
 
-Gestiona NombreExcepcion. Elimina una excepción del parámetro nombre para un id_tipo_activ concreto. Inserta o actualiza una excepción del parámetro nombre para un id_tipo_activ concreto.
+Guardar o borrar un nombre concreto.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Formulario desde listado nombre.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `pasarela.pantalla.nombre_ajax`
-- `pasarela.pantalla.nombre_lista`
-
-## Escenarios Inferidos
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-Endpoints asociados:
-- `/src/pasarela/nombre_excepcion_eliminar`
-
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.iactividad_val`
-- `form.iasistentes_val`
-- `form.id_tipo_activ`
-- `form.inom_tipo_val`
-- `form.isfsv_val`
-- `form.nombre_actividad`
-- `form.que`
-- `form.valor`
-- `post.id_tipo_activ`
-- `post.nombre_actividad`
-- `post.que`
-- `post.sactividad`
-- `post.sasistentes`
-- `post.snom_tipo`
-
-Acciones JavaScript:
-- `fnjs_modificar`
+Seleccionar tipo, escribir nombre, guardar o eliminar.
 
 ## Endpoints Del Flujo
 
-- `/src/pasarela/nombre_excepcion_eliminar`
 - `/src/pasarela/nombre_excepcion_guardar`
+- `/src/pasarela/nombre_excepcion_eliminar`
+- `/src/pasarela/tipo_activ_txt_data`
 
 ## Errores Conocidos
 
-- ``Falta id_tipo_activ``
-- ``Falta nombre``
+- `Falta id_tipo_activ`
+- `Falta nombre`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).

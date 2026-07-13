@@ -15,14 +15,20 @@ requiere_hashb: false
 frontend_referencias: ["frontend/casas/controller/grupo_form.php"]
 casos_uso: ["src\\casas\\application\\GrupoCasaFormData"]
 tags: ["casas", "grupo", "form", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Grupo Form Data
 
-Endpoint backend: datos del formulario `GrupoCasa`.
+Datos del formulario de alta/edición de un `GrupoCasa`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Sucesor de `apps/casas/controller/grupo_form.php`. Si `id_item` es vacío o `nuevo`, prepara un alta;
+en caso contrario carga el registro existente. Devuelve las opciones del desplegable de casas activas y
+los IDs seleccionados de padre/hijo.
 
 ## Endpoint
 
@@ -35,20 +41,20 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `string` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_item` | `string` | controller+application | No | Vacío o `nuevo` = alta; numérico = edición |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Payload en `data` (schema `casas_GrupoCasaFormDataData`):
-  - `es_nuevo` (`boolean`)
-  - `id_item` (`string`)
-  - `id_ubi_padre` (`integer`)
-  - `id_ubi_hijo` (`integer`)
-  - `opciones_casas` (`array`)
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Payload en `data`:
+  - `es_nuevo` (`boolean`): `true` si es alta o el `id_item` no existe.
+  - `id_item` (`string`): `nuevo` en alta, o el ID recibido.
+  - `id_ubi_padre` / `id_ubi_hijo` (`integer`): casas seleccionadas (0 en alta).
+  - `opciones_casas` (`array<int|string,string>`): casas activas (`active = 't'`).
+
+## Permisos
+
+- Sin control propio; la autorización se resuelve en frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -56,10 +62,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/casas/controller/grupo_form.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/casas/controller/grupo_form.php`: modal de crear/editar grupo.

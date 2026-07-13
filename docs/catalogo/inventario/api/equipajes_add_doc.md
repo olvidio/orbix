@@ -7,20 +7,25 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/inventario/infrastructure/ui/http/controllers/equipajes_add_doc.php"
 entrada: ["post.id_item_egm:integer", "post.sel:array"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_item_egm"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: []
+errores: ["hay un error, no se ha guardado"]
+frontend_referencias: ["frontend/inventario/controller/equipajes_form_add.php"]
 casos_uso: []
 tags: ["inventario", "equipajes", "add", "doc"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Add Doc
+# Añadir documento a maleta (EGM)
 
-Descripcion funcional pendiente de revisar.
+Asocia un documento libre a un item EGM (`id_item_egm`) creando registro Whereis.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Asocia un documento libre a un item EGM (`id_item_egm`) creando registro Whereis.
 
 ## Endpoint
 
@@ -33,27 +38,28 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item_egm` | `integer` | controller | No | controller |
-| `sel` | `array` | controller | No | controller |
+| `id_item_egm` | `integer` | POST | Si | |
+| `sel` | `array` | POST | No | |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data: "ok"`.
+
+## Errores conocidos
+
+  - `hay un error, no se ha guardado`
+
+## Permisos
+
+- Sin control de permisos propio en el controller; autorización de oficina vía frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- Lógica inline en controller (sin `application/`).
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/inventario/controller/equipajes_form_add.php`

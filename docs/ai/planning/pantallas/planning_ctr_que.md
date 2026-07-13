@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "planning"
-titulo: "Planning Ctr Que"
+titulo: "Planning por centro (filtros)"
 pantalla: "planning.pantalla.planning_ctr_que"
-preguntas: ["Que se puede hacer en Planning Ctr Que?", "Que campos tiene Planning Ctr Que?", "Que acciones hay en Planning Ctr Que?"]
+preguntas: ["Que se puede hacer en Planning por centro (filtros)?", "Que campos tiene Planning por centro (filtros)?", "Que acciones hay en Planning por centro (filtros)?"]
 capacidades: []
 endpoints: []
 source: "docs/catalogo/planning/pantallas/planning_ctr_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Planning Ctr Que
+# Ayuda IA Pantalla - Planning por centro (filtros)
 
 ## Resumen
 
-Formulario de filtros para el planning por centros (personas de un centro determinado).
+Formulario: centro concreto o todos (`todos_n`/`todos_agd`/`todos_s`), periodo y filtro sacd. Al enviar carga `planning_ctr_select` por AJAX.
 
 ## Uso En Ayuda
 

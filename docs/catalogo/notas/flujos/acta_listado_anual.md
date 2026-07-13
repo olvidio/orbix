@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.acta_listado_anual"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/acta_listado_anual_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Listado Anual
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_listado_anual.
 
 ## Objetivo De Usuario
 
-Gestiona ListadoAnualActas. Lista las actas en un rango de fechas (ISO) ordenadas por nivel y fecha. En ambito rstgr considera todas las delegaciones de la region de stgr; en los demas ambitos, solo la delegacion actual. Cada item es un array asociativo {id_nivel, acta, f_acta, nombre_corto}.
+Consultar actas por rango de fechas en vista anual.
 
 ## Punto De Entrada
 
@@ -65,9 +65,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > actas... > listado actas
+- **Pills2:** ESTUDIOS > Actas y certificados > Listado de actas; vest > actas... > listado actas

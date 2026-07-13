@@ -8,64 +8,47 @@ pantallas_principales: ["actividadessacd.pantalla.activ_sacd"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadessacd/sacd_asignar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Sacd Asignar
 
-Propuesta generada automaticamente desde la capacidad `actividadessacd.sacd_asignar.gestionar` y sus pantallas relacionadas.
+Asignación de un sacd a una actividad.
 
 ## Objetivo De Usuario
 
-Gestiona SacdAsignar. Asigna un sacd a una actividad (y, si es sv, tambien crea la asistencia).
+El usuario asigna un sacd candidato (elegido en el desplegable de disponibles) a una actividad. El
+sacd queda en el primer hueco libre de cargos tipo `sacd`. Si la actividad es de sv
+(`id_tipo_activ` empieza por `1`), se crea además la fila de asistencia.
 
 ## Punto De Entrada
 
-- `actividadessacd.pantalla.activ_sacd`
+Pantalla `activ_sacd` (`frontend/actividadessacd/controller/activ_sacd.php`): la función
+`fnjs_asignar_sacd` llama a este endpoint al elegir un sacd del popup de candidatos.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadessacd.pantalla.activ_sacd`
 
 ## Escenarios Inferidos
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En una actividad con permiso, pulsar **nuevo** para ver los sacd candidatos.
+2. Pulsar el sacd deseado (titular del centro o global según checkboxes de selección).
+3. El sistema lo guarda como encargado y refresca la celda de sacd de la actividad.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadessacd/sacd_asignar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.periodo`
-- `form.tipo`
-- `form.year`
-- `post.periodo`
-- `post.tipo`
-- `post.year`
+- Ninguno detectado.
 
 Acciones JavaScript:
-- `fnjs_actualizar_activ`
-- `fnjs_asignar_sacd`
-- `fnjs_cambiar_sacd`
-- `fnjs_cerrar`
-- `fnjs_construir_celda_sacds`
-- `fnjs_construir_leyenda`
-- `fnjs_construir_tabla_disponibles`
-- `fnjs_construir_tabla_lista`
-- `fnjs_construir_tabla_solapes`
-- `fnjs_enviar`
-- `fnjs_esc`
-- `fnjs_left_side_hide`
-- `fnjs_nuevo_sacd`
-- `fnjs_orden`
-- `fnjs_parse_rta`
-- `fnjs_ver`
+- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -78,9 +61,9 @@ Acciones JavaScript:
 - ``hay un error, no se ha guardado el cargo``
 - ``hay un error, no se ha guardado la asistencia``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
+
+- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).

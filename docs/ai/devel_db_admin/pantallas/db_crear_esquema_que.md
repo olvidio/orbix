@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Asistente «nuevo esquema»: referencia, región/dl destino, crear usuarios, estructura e importar datos.
 
 ## Uso En Ayuda
 

@@ -8,64 +8,47 @@ pantallas_principales: ["actividadessacd.pantalla.activ_sacd"]
 fragmentos: []
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadessacd/solapes_sacd_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Solapes Sacd
 
-Propuesta generada automaticamente desde la capacidad `actividadessacd.solapes_sacd.gestionar` y sus pantallas relacionadas.
+Listado de sacd con actividades incompatibles en el periodo.
 
 ## Objetivo De Usuario
 
-Gestiona SolapesSacd. Devuelve el listado de sacd con actividades incompatibles (solapes) en el periodo.
+Con el tipo de menú `solape`, el usuario elige un periodo y pulsa **buscar**: el sistema muestra los
+sacd que tienen actividades incompatibles (solapes horarios) y, para cada uno, las actividades
+afectadas.
 
 ## Punto De Entrada
 
-- `actividadessacd.pantalla.activ_sacd`
+Pantalla `activ_sacd` (`frontend/actividadessacd/controller/activ_sacd.php`): cuando el parámetro
+`tipo=solape`, la función `fnjs_ver` llama a este endpoint en lugar de `lista_actividades_sacd_data`.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadessacd.pantalla.activ_sacd`
 
 ## Escenarios Inferidos
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Entrar desde el menú con tipo `solape`.
+2. Elegir periodo y pulsar **buscar**.
+3. El sistema construye la tabla de sacd con sus actividades incompatibles y la leyenda de colores.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadessacd/solapes_sacd_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.periodo`
-- `form.tipo`
-- `form.year`
-- `post.periodo`
-- `post.tipo`
-- `post.year`
+- Ninguno detectado.
 
 Acciones JavaScript:
-- `fnjs_actualizar_activ`
-- `fnjs_asignar_sacd`
-- `fnjs_cambiar_sacd`
-- `fnjs_cerrar`
-- `fnjs_construir_celda_sacds`
-- `fnjs_construir_leyenda`
-- `fnjs_construir_tabla_disponibles`
-- `fnjs_construir_tabla_lista`
-- `fnjs_construir_tabla_solapes`
-- `fnjs_enviar`
-- `fnjs_esc`
-- `fnjs_left_side_hide`
-- `fnjs_nuevo_sacd`
-- `fnjs_orden`
-- `fnjs_parse_rta`
-- `fnjs_ver`
+- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -75,9 +58,10 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `activ_sacd` con `tipo=solape` (sin entrada dedicada en el índice; se
+abre desde la misma entrada "Asignar sacd" con el tipo correspondiente):
+
+- **Legacy:** dre > propuestas > asignar sacd
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "profesores"
-titulo: "Ficha Profesor Stgr"
+titulo: "Ficha profesor STGR"
 pantalla: "profesores.pantalla.ficha_profesor_stgr"
-preguntas: ["Que se puede hacer en Ficha Profesor Stgr?", "Que campos tiene Ficha Profesor Stgr?", "Que acciones hay en Ficha Profesor Stgr?"]
+preguntas: ["Que se puede hacer en Ficha profesor STGR?", "Que campos tiene Ficha profesor STGR?", "Que acciones hay en Ficha profesor STGR?"]
 capacidades: ["profesores.ficha_profesor_stgr.gestionar"]
 endpoints: ["/src/profesores/ficha_profesor_stgr"]
 source: "docs/catalogo/profesores/pantallas/ficha_profesor_stgr.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Ficha Profesor Stgr
+# Ayuda IA Pantalla - Ficha profesor STGR
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Dossier académico del profesor: cabecera (nombre, centro, departamento, flags n/agd/sacd), bloques de curriculum, nombramientos, ampliaciones, congresos, docencia, director, juramento y publicaciones. Enlaces **[modificar]** según `aPerm` hacia submantenimientos `tablaDB_lista_ver`. Vista imprimible con `[imprimir]`.
 
 ## Uso En Ayuda
 

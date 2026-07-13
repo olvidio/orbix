@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Página de visualización de los permisos de los dossiers.
+Formulario de permisos de acceso a un tipo de dossier: metadatos (descripción, tablas, app/class/código), checkbox `depende_modificar` y máscaras de lectura/escritura por oficina. Guardar/eliminar solo con `admin_sv`/`admin_sf` (`perm_admin`).
 
 ## Uso En Ayuda
 

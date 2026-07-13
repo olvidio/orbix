@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.ver_encargos_zona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/ver_encargos_zona_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ver Encargos Zona
-
-Propuesta generada automaticamente desde la capacidad `misas.ver_encargos_zona.gestionar` y sus pantallas relacionadas.
+# Flujo - Ver encargos zona
 
 ## Objetivo De Usuario
 
-Gestiona VerEncargosZona. Devuelve los datos necesarios para pintar el SlickGrid de encargos de una zona + los desplegables del modal de edicion. Replica la consulta de apps/misas/controller/ver_encargos_zona.php: encargos con id_tipo_enc >= 8100 (grupo 8...) de la zona indicada, ordenados por $orden (orden, prioridad o desc_enc).
+Devuelve encargos 8100+ de una zona ordenados para SlickGrid y datos del modal de edición.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Modificar encargos. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar encargos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -65,11 +63,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Modificar encargos
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos

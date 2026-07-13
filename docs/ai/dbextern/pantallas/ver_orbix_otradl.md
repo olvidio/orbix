@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "dbextern"
-titulo: "Ver Orbix Otradl"
+titulo: "Trasladar a otra DL"
 pantalla: "dbextern.pantalla.ver_orbix_otradl"
-preguntas: ["Que se puede hacer en Ver Orbix Otradl?", "Que campos tiene Ver Orbix Otradl?", "Que acciones hay en Ver Orbix Otradl?"]
+preguntas: ["Que se puede hacer en Trasladar a otra DL?", "Que campos tiene Trasladar a otra DL?", "Que acciones hay en Trasladar a otra DL?"]
 capacidades: ["dbextern.sincro_trasladar_a.gestionar", "dbextern.ver_orbix_otradl.gestionar"]
 endpoints: ["/src/dbextern/sincro_trasladar_a", "/src/dbextern/ver_orbix_otradl_datos"]
 source: "docs/catalogo/dbextern/pantallas/ver_orbix_otradl.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Ver Orbix Otradl
+# Ayuda IA Pantalla - Trasladar a otra DL
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Subpantalla del punto 7: personas Aquinate activas cuya BDU pertenece a otra DL.
 
 ## Uso En Ayuda
 

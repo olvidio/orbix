@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Delegación al controlador HTTP del módulo (multipart upload).
+Endpoint frontend proxy de subida multipart del PDF (redirect POST al API).
 
 ## Uso En Ayuda
 

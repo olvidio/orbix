@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["encargossacd.pantalla.sacd_ausencias_jefe_zona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/sacd_ausencias_jefe_zona_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Sacd Ausencias Jefe Zona
@@ -21,7 +21,8 @@ Gestiona SacdAusenciasJefeZona. Datos para el listado de SACDs susceptibles de g
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú: exterior > sacd > Misas > Ausencias.
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -57,9 +58,14 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** exterior > sacd > Misas > Ausencias
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** exterior > sacd > Misas > Ausencias
+- **Pills2:** sin entrada de menú en el índice
+

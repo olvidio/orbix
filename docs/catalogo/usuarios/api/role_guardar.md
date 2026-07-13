@@ -6,21 +6,26 @@ url: "/src/usuarios/role_guardar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/role_guardar.php"
-entrada: ["post.dmz:integer", "post.id_role:integer", "post.pau:string", "post.role:string", "post.sf:integer", "post.sv:integer"]
-entrada_obligatoria: []
+entrada: ["post.role:string", "post.id_role:integer", "post.sf:integer", "post.sv:integer", "post.pau:string", "post.dmz:integer"]
+entrada_obligatoria: ["role"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/view/role_form.phtml"]
 casos_uso: []
 tags: ["usuarios", "role", "guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Rol no encontrado", "hay un error, no se ha guardado", "debe poner un nombre"]
 ---
 
 # Role Guardar
 
-Descripcion funcional pendiente de revisar.
+Crea o actualiza rol con flags sf/sv, pau y dmz.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Crea o actualiza rol con flags sf/sv, pau y dmz.
 
 ## Endpoint
 
@@ -33,29 +38,32 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `dmz` | `integer` | controller | No | controller |
-| `id_role` | `integer` | controller | No | controller |
-| `pau` | `string` | controller | No | controller |
-| `role` | `string` | controller | No | controller |
-| `sf` | `integer` | controller | No | controller |
-| `sv` | `integer` | controller | No | controller |
+| `role` | `string` | application | Si | |
+| `id_role` | `integer` | application | No | |
+| `sf` | `integer` | application | No | |
+| `sv` | `integer` | application | No | |
+| `pau` | `string` | application | No | |
+| `dmz` | `integer` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacío serializado).
+
+## Errores conocidos
+- `Rol no encontrado`
+- `hay un error, no se ha guardado`
+- `debe poner un nombre`
+
+## Permisos
+
+Superadmin en `role_form`.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-- `frontend/usuarios/view/role_form.phtml`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/usuarios/view/role_form.phtml"]`).

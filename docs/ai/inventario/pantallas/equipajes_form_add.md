@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Form Add"
+titulo: "Añadir doc a maleta"
 pantalla: "inventario.pantalla.equipajes_form_add"
-preguntas: ["Que se puede hacer en Equipajes Form Add?", "Que campos tiene Equipajes Form Add?", "Que acciones hay en Equipajes Form Add?"]
+preguntas: ["Que se puede hacer en Añadir doc a maleta?", "Que campos tiene Añadir doc a maleta?", "Que acciones hay en Añadir doc a maleta?"]
 capacidades: ["inventario.lista_tipo_doc.gestionar"]
 endpoints: ["/src/inventario/lista_tipo_doc"]
 source: "docs/catalogo/inventario/pantallas/equipajes_form_add.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Form Add
+# Ayuda IA Pantalla - Añadir doc a maleta
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario add doc → `equipajes_add_doc`.
 
 ## Uso En Ayuda
 

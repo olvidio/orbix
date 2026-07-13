@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.asignaturas_pendientes"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/asignaturas_pendientes_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Asignaturas Pendientes
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.asignaturas_pendien
 
 ## Objetivo De Usuario
 
-Gestiona AsignaturasPendientes. Datos para la pantalla asignaturas_pendientes (matriz alumnos × asignaturas). La UI (Lista, desplegable rstgr) se monta en el controlador frontend.
+Consultar matriz de asignaturas pendientes por alumno.
 
 ## Punto De Entrada
 
@@ -54,9 +54,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > actas... > tabla alumnos-asignaturas; stgr > actas > tabla alumnos-asignaturas
+- **Pills2:** ESTUDIOS > Preparación planes estudio > Tab. Alumn/asig.; vest > actas... > tabla alumnos-asignaturas; stgr > actas > tabla alumnos-asignaturas

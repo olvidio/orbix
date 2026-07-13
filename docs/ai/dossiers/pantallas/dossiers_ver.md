@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Para asegurar que inicia la sesion, y poder acceder a los permisos
+Visor de dossiers de una entidad (persona/actividad/ubi): cabecera con enlaces «dossiers» y «home», modo lista de carpetas o modo ficha con segmentos `select_*` y tablas `datos_tabla`. Gestiona navegación con `ListNavSupport` y firma `link_spec` en el frontend (`HashFront`).
 
 ## Uso En Ayuda
 

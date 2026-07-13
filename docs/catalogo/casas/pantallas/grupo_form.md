@@ -11,7 +11,7 @@ endpoints: ["/src/casas/grupo_form_data"]
 capacidades: ["casas.grupo.gestionar"]
 campos: ["html.cancelar", "html.id_item", "html.ok", "post.id_item"]
 acciones: ["fnjs_cerrar", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Grupo Form
@@ -54,10 +54,8 @@ Controlador AJAX HTML: formulario `GrupoCasa` (nuevo/editar).
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** adl > Gestión casas > grupos
+- **Pills2:** CASAS Y CTR > Gestión casas > grupos
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

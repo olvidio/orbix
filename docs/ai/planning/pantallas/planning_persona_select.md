@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "planning"
-titulo: "Planning Persona Select"
+titulo: "Listado de personas (planning)"
 pantalla: "planning.pantalla.planning_persona_select"
-preguntas: ["Que se puede hacer en Planning Persona Select?", "Que campos tiene Planning Persona Select?", "Que acciones hay en Planning Persona Select?"]
+preguntas: ["Que se puede hacer en Listado de personas (planning)?", "Que campos tiene Listado de personas (planning)?", "Que acciones hay en Listado de personas (planning)?"]
 capacidades: ["planning.planning_persona_select.gestionar"]
 endpoints: ["/src/planning/planning_persona_select_data"]
 source: "docs/catalogo/planning/pantallas/planning_persona_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Planning Persona Select
+# Ayuda IA Pantalla - Listado de personas (planning)
 
 ## Resumen
 
-Lista de personas que cumplen los filtros del formulario anterior (`planning_persona_que`).
+Tabla de personas que cumplen los filtros. Llama a `planning_persona_select_data` y permite ver el planning de la selección o acceder a ficha/dossier.
 
 ## Uso En Ayuda
 

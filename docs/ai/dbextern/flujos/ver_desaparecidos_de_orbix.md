@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "dbextern"
-titulo: "Ver Desaparecidos De Orbix"
+titulo: "BDU sin ficha Aquinate"
 flujo: "dbextern.ver_desaparecidos_de_orbix.gestionar.flujo"
-preguntas: ["Como obtener datos en Ver Desaparecidos De Orbix?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_desaparecidos_de_orbix"]
 endpoints: ["/src/dbextern/ver_desaparecidos_de_orbix_datos"]
@@ -12,14 +12,13 @@ source: "docs/catalogo/dbextern/flujos/ver_desaparecidos_de_orbix.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Ver Desaparecidos De Orbix
+# Ayuda IA - BDU sin ficha Aquinate
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver Desaparecidos De Orbix`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `BDU sin ficha Aquinate`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Ver Desaparecidos De Orbix?
 
 ## Donde Entrar
 
@@ -29,20 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `dbextern.pantalla.ver_desaparecidos_de_orbix`
 
 ## Objetivo
 
-Gestiona VerDesaparecidosDeOrbix. Obtiene datos de personas BDU desaparecidas de Orbix.
+Revisar personas BDU con vínculo pero sin ficha activa en esta DL.
 
 ## Limites De La Respuesta
 

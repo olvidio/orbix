@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Proxy de descarga PDF con token firmado hacia el API de emitidos.
 
 ## Uso En Ayuda
 

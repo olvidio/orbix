@@ -7,20 +7,25 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php"
 entrada: ["post.id_usuario:integer", "post.password:string"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_usuario", "password"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/usuario_form_pwd.php"]
 casos_uso: []
 tags: ["usuarios", "usuario", "guardar", "pwd"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Usuario no encontrado", "hay un error, no se ha guardado"]
 ---
 
 # Usuario Guardar Pwd
 
-Descripcion funcional pendiente de revisar.
+Cambia contraseña tras validar fortaleza; limpia flag cambio_password.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Cambia contraseña tras validar fortaleza; limpia flag cambio_password.
 
 ## Endpoint
 
@@ -33,25 +38,27 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_usuario` | `integer` | controller | No | controller |
-| `password` | `string` | controller | No | controller |
+| `id_usuario` | `integer` | application | Si | |
+| `password` | `string` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacío serializado).
+
+## Errores conocidos
+- `Usuario no encontrado`
+- `hay un error, no se ha guardado`
+
+## Permisos
+
+Usuario autenticado en `usuario_form_pwd`.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-- `frontend/usuarios/controller/usuario_form_pwd.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/usuarios/controller/usuario_form_pwd.php"]`).

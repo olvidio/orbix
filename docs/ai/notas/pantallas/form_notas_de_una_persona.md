@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Form de alta / edicion de una `PersonaNota` de un dossier.
+Dossier 1011: listado y formulario de notas de una persona (alta/edición/borrado).
 
 ## Uso En Ayuda
 

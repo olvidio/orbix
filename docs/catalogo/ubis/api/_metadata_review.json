@@ -1,0 +1,402 @@
+{
+    "calendario_periodos_eliminar": {
+        "operacion": "mutacion",
+        "entrada": {"id_item": "integer"},
+        "entrada_obligatoria": ["id_item"],
+        "errores": ["no sé cuál he de borar", "no se encuentra el periodo a borrar", "hay un error, no se ha eliminado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Elimina un periodo de calendario CDC identificado por id_item.",
+        "permisos": [],
+        "casos_uso": ["CalendarioPeriodoEliminar"]
+    },
+    "calendario_periodos_form_periodo_data": {
+        "operacion": "form_data",
+        "entrada": {"id_item": "integer"},
+        "entrada_obligatoria": ["id_item"],
+        "errores": [],
+        "salida": {"success_data": {"id_item": "id del periodo", "f_ini": "fecha inicio local", "f_fin": "fecha fin local", "sel_sv": "selected si sfsv=1", "sel_sf": "selected si sfsv=2", "sel_res": "selected si sfsv=3"}},
+        "objetivo_funcional": "Carga los campos del formulario de edición de un periodo de calendario existente.",
+        "permisos": [],
+        "casos_uso": ["CalendarioPeriodosFormPeriodoData"]
+    },
+    "calendario_periodos_get2_data": {
+        "operacion": "lista_data",
+        "entrada": {"id_ubi": "integer", "year": "integer"},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"a_cabeceras": "cabeceras tabla periodos", "a_valores": "filas con fechas y asignación sfsv", "overlap_error": "mensaje solape periodos o vacío", "show_nuevo": "boolean mostrar botón nuevo"}},
+        "objetivo_funcional": "Lista los periodos de una casa en un año con detección de solapes.",
+        "permisos": [],
+        "casos_uso": ["CalendarioPeriodosGet2Data"]
+    },
+    "calendario_periodos_get_data": {
+        "operacion": "lista_data",
+        "entrada": {"id_ubi": "integer"},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"rows": "array de {id_item,id_ubi,f_ini,f_fin,sfsv}"}},
+        "objetivo_funcional": "Devuelve todos los periodos de calendario de una casa ordenados por fecha inicio.",
+        "permisos": [],
+        "casos_uso": ["CalendarioPeriodosGetData"]
+    },
+    "calendario_periodos_guardar": {
+        "operacion": "mutacion",
+        "entrada": {"id_item": "integer", "id_ubi": "integer", "f_ini": "string", "f_fin": "string", "sfsv": "integer"},
+        "entrada_obligatoria": [],
+        "errores": ["hay un error, no se ha guardado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Crea o actualiza un periodo de calendario CDC con fechas y asignación sfsv.",
+        "permisos": [],
+        "casos_uso": ["CalendarioPeriodoGuardar"]
+    },
+    "calendario_periodos_nuevo_data": {
+        "operacion": "form_data",
+        "entrada": {"id_ubi": "integer", "year": "integer"},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"f_next": "fecha inicio sugerida tras último periodo", "sf_chk": "selected sf", "sv_chk": "selected sv"}},
+        "objetivo_funcional": "Precarga el formulario de alta de periodo con fecha siguiente y sfsv del último periodo del año.",
+        "permisos": [],
+        "casos_uso": ["CalendarioPeriodosNuevoData"]
+    },
+    "casas_opciones_data": {
+        "operacion": "form_data",
+        "entrada": {"active": "mixed", "sv": "mixed", "sf": "mixed", "id_ubi_in": "mixed"},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"opciones": "map id_ubi=>nombre para desplegable CasasQue"}},
+        "objetivo_funcional": "Devuelve opciones de casas filtradas para desplegables compartidos del frontend.",
+        "permisos": ["Consumido por CasasQue en otros módulos; sin permisos propios."],
+        "casos_uso": ["CasasOpcionesData"]
+    },
+    "centros_form_labor": {
+        "operacion": "form_data",
+        "entrada": {"id_ubi": "integer"},
+        "entrada_obligatoria": ["id_ubi"],
+        "errores": [],
+        "salida": {"success_data": {"id_ubi": "id centro", "nombre_ubi": "nombre", "tipo_ctr": "tipo centro", "tipo_labor": "entero bitmask", "tipo_labor_bit_map": "mapa bits etiquetados"}},
+        "objetivo_funcional": "Carga datos del formulario modal de tipo de labor de un centro DL.",
+        "permisos": [],
+        "casos_uso": ["CentrosFormData"]
+    },
+    "centros_form_num": {
+        "operacion": "form_data",
+        "entrada": {"id_ubi": "integer"},
+        "entrada_obligatoria": ["id_ubi"],
+        "errores": [],
+        "salida": {"success_data": {"id_ubi": "id centro", "nombre_ubi": "nombre", "n_buzon": "número buzón", "num_pi": "número pi", "num_cartas": "número cartas"}},
+        "objetivo_funcional": "Carga datos del formulario modal de números (buzón, pi, cartas) de un centro DL.",
+        "permisos": [],
+        "casos_uso": ["CentrosFormData"]
+    },
+    "centros_form_plazas": {
+        "operacion": "form_data",
+        "entrada": {"id_ubi": "integer"},
+        "entrada_obligatoria": ["id_ubi"],
+        "errores": [],
+        "salida": {"success_data": {"id_ubi": "id centro", "nombre_ubi": "nombre", "num_habit_indiv": "habitaciones", "plazas": "plazas", "sede": "boolean sede"}},
+        "objetivo_funcional": "Carga datos del formulario modal de plazas y sede de un centro DL.",
+        "permisos": [],
+        "casos_uso": ["CentrosFormData"]
+    },
+    "centros_get_labor": {
+        "operacion": "lista_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"a_cabeceras": "cabeceras tabla", "a_valores": "filas centros con tipo_ctr y tipo_labor", "tipo_labor_bit_map": "mapa bits etiquetados"}},
+        "objetivo_funcional": "Lista todos los centros DL activos con su tipo de centro y tipo de labor.",
+        "permisos": [],
+        "casos_uso": ["CentrosGetLaborData"]
+    },
+    "centros_get_num": {
+        "operacion": "lista_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"a_cabeceras": "cabeceras tabla", "a_valores": "filas con n_buzon, num_pi, num_cartas"}},
+        "objetivo_funcional": "Lista centros DL activos con sus datos numéricos de buzón, pi y cartas.",
+        "permisos": [],
+        "casos_uso": ["CentrosGetNumData"]
+    },
+    "centros_get_plazas": {
+        "operacion": "lista_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"a_cabeceras": "cabeceras tabla", "a_valores": "filas con habitaciones, plazas y sede"}},
+        "objetivo_funcional": "Lista centros DL activos con plazas, habitaciones individuales y flag sede.",
+        "permisos": [],
+        "casos_uso": ["CentrosGetPlazasData"]
+    },
+    "centros_opciones_data": {
+        "operacion": "form_data",
+        "entrada": {"active": "mixed", "sv": "mixed", "sf": "mixed", "id_ubi_in": "mixed", "tipo_ctr": "string"},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"opciones": "map id_ubi=>nombre para desplegable CentrosQue"}},
+        "objetivo_funcional": "Devuelve opciones de centros filtradas para desplegables compartidos del frontend.",
+        "permisos": ["Consumido por CentrosQue en otros módulos; sin permisos propios."],
+        "casos_uso": ["CentrosOpcionesData"]
+    },
+    "centros_update": {
+        "operacion": "mutacion",
+        "entrada": {"id_ubi": "integer", "labor": "string", "tipo_ctr": "string", "tipo_labor": "mixed", "n_buzon": "integer", "num_pi": "integer", "num_cartas": "integer", "num_habit_indiv": "integer", "plazas": "integer", "sede": "string"},
+        "entrada_obligatoria": ["id_ubi"],
+        "errores": ["Hay un error, no se ha guardado."],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plazas).",
+        "permisos": [],
+        "casos_uso": ["CentrosUpdate"]
+    },
+    "delegacion_que_data": {
+        "operacion": "form_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"opciones_dl_destino": "map dl destino para traslado"}},
+        "objetivo_funcional": "Devuelve delegaciones destino disponibles para el traslado de ubis.",
+        "permisos": [],
+        "casos_uso": ["DelegacionQueData"]
+    },
+    "delegaciones_region_stgr_data": {
+        "operacion": "form_data",
+        "entrada": {"region_stgr": "string"},
+        "entrada_obligatoria": ["region_stgr"],
+        "errores": ["Se requiere region_stgr"],
+        "salida": {"success_data": {"a_delegaciones": "map id_dl=>sigla_dl de la región STGR"}},
+        "objetivo_funcional": "Lista delegaciones de una región STGR para desplegables dependientes.",
+        "permisos": ["Desplegable compartido sin pantalla ubis directa."],
+        "casos_uso": ["DelegacionesRegionStgrData"]
+    },
+    "direccion_update": {
+        "operacion": "mutacion",
+        "entrada": {"obj_dir": "string", "id_ubi": "integer", "idx": "string", "id_direccion": "string", "nom_sede": "string", "direccion": "string", "a_p": "string", "c_p": "string", "poblacion": "string", "provincia": "string", "pais": "string", "observ": "string", "f_direccion": "string", "latitud": "string", "longitud": "string", "cp_dcha": "string", "propietario": "string", "principal": "string"},
+        "entrada_obligatoria": ["obj_dir", "id_ubi"],
+        "errores": ["no se encuentra el ubi", "operación no soportada para este tipo de dirección", "no se encuentra la dirección"],
+        "salida": {"success_data": {"ok": true}},
+        "objetivo_funcional": "Crea o modifica una dirección y su relación con el ubi (principal, propietario).",
+        "permisos": ["UbiPermisos: frontend oculta botones si no puedeModificarPorObjeto."],
+        "casos_uso": ["DireccionUpdate"]
+    },
+    "direcciones_asignar": {
+        "operacion": "mutacion",
+        "entrada": {"id_ubi": "integer", "obj_dir": "string", "id_direccion": "integer"},
+        "entrada_obligatoria": ["id_ubi", "obj_dir", "id_direccion"],
+        "errores": [],
+        "salida": {"success_data": {"ok": "boolean"}},
+        "objetivo_funcional": "Asocia una dirección existente a un ubi sin marcarla como propietaria.",
+        "permisos": [],
+        "casos_uso": ["DireccionesAsignar"]
+    },
+    "direcciones_editar": {
+        "operacion": "form_data",
+        "entrada": {"id_ubi": "integer", "mod": "string", "obj_dir": "string", "id_direccion": "string", "idx": "integer", "inc": "string"},
+        "entrada_obligatoria": ["id_ubi", "obj_dir"],
+        "errores": [],
+        "salida": {"success_data": {"dl": "delegación ubi", "sin_direccion": "boolean", "msg_sin_direccion": "aviso sin dirección", "idx": "índice dirección actual", "botones": "códigos botones según UbiPermisos", "mas/menos": "navegación entre direcciones"}},
+        "objetivo_funcional": "Carga la ficha de edición de direcciones de un ubi, con navegación entre varias direcciones.",
+        "permisos": ["UbiPermisos.puedeModificarPorObjeto: controla botones 1,4,5."],
+        "casos_uso": ["DireccionesEditarData"]
+    },
+    "direcciones_que": {
+        "operacion": "form_data",
+        "entrada": {"id_ubi": "integer"},
+        "entrada_obligatoria": ["id_ubi"],
+        "errores": [],
+        "salida": {"success_data": {"tipo_ubi": "tipo del ubi", "titulo": "título formulario búsqueda"}},
+        "objetivo_funcional": "Prepara el formulario de búsqueda de direcciones existentes para asignar a un ubi.",
+        "permisos": [],
+        "casos_uso": ["DireccionesQueData"]
+    },
+    "direcciones_quitar": {
+        "operacion": "mutacion",
+        "entrada": {"id_ubi": "integer", "idx": "integer", "obj_dir": "string", "id_direccion": "string"},
+        "entrada_obligatoria": ["id_ubi", "obj_dir", "id_direccion"],
+        "errores": [],
+        "salida": {"success_data": {"ok": "boolean"}},
+        "objetivo_funcional": "Desvincula una dirección del ubi según el índice en la lista CSV de ids.",
+        "permisos": [],
+        "casos_uso": ["DireccionesQuitar"]
+    },
+    "direcciones_tabla": {
+        "operacion": "lista_data",
+        "entrada": {"id_ubi": "integer", "obj_dir": "string", "c_p": "string", "ciudad": "string", "pais": "string"},
+        "entrada_obligatoria": ["id_ubi", "obj_dir"],
+        "errores": [],
+        "salida": {"success_data": {"a_cabeceras": "cabeceras tabla direcciones", "a_valores": "filas con id y enlace asignar", "url_nueva": "ruta alta dirección", "id_ubi": "id ubi", "obj_dir": "objeto dirección"}},
+        "objetivo_funcional": "Busca direcciones por cp/ciudad/país y muestra tabla para asignar al ubi.",
+        "permisos": [],
+        "casos_uso": ["DireccionesTablaData"]
+    },
+    "home_ubis_data": {
+        "operacion": "form_data",
+        "entrada": {"id_ubi": "integer"},
+        "entrada_obligatoria": ["id_ubi"],
+        "errores": [],
+        "salida": {"success_data": {"id_ubi": "id", "id_pau": "id pau", "pau": "tipo pau u", "nombre_ubi": "nombre", "dl": "delegación", "region": "región", "direccion": "texto HTML multilínea", "obj_pau": "CentroDl/CasaDl/etc", "obj_dir": "DireccionCentroDl/etc", "ubi": "centro|casa", "telfs/fax/mails": "texto telecomunicaciones"}},
+        "objetivo_funcional": "Construye la ficha resumen de un ubi con dirección, telecomunicaciones y objetos pau/dir.",
+        "permisos": ["UbiPermisos.dlPerteneceAMiDelegacion: resuelve obj_pau CentroDl vs Centro."],
+        "casos_uso": ["HomeUbisData"]
+    },
+    "list_ctr_data": {
+        "operacion": "lista_data",
+        "entrada": {"loc": "string", "que_lista": "string", "id_sel": "string", "scroll_id": "string"},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"opciones_loc": "desplegable ubicación", "opciones_que_lista": "filtros tipo lista", "a_cabeceras": "cabeceras tabla", "a_valores": "filas centros/casas", "a_botones": "modificar y opcional trasladar"}},
+        "objetivo_funcional": "Lista centros y casas filtrados por delegación/exterior y tipo, con teléfonos y enlaces a ficha.",
+        "permisos": ["have_perm_oficina(vcsd|des): filtro sv en casas.", "have_perm_oficina(admin_sv): botón trasladar."],
+        "casos_uso": ["ListCtrData"]
+    },
+    "lista_ctrs_data": {
+        "operacion": "lista_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"a_cabeceras": "centro, num s", "a_valores": "filas nombre y cuenta sacerdotes", "num_total_s": "total sacerdotes"}},
+        "objetivo_funcional": "Lista centros tipo s de la delegación con el número de sacerdotes asignados en cada uno.",
+        "permisos": [],
+        "casos_uso": ["CentrosSListaData"]
+    },
+    "teleco_desc_lista": {
+        "operacion": "form_data",
+        "entrada": {"id_tipo_teleco": "integer"},
+        "entrada_obligatoria": ["id_tipo_teleco"],
+        "errores": [],
+        "salida": {"success_data": {"a_desc": "map id_desc=>descripción según tipo teleco"}},
+        "objetivo_funcional": "Devuelve descripciones de telecomunicación dependientes del tipo seleccionado.",
+        "permisos": [],
+        "casos_uso": ["TelecoDescLista"]
+    },
+    "teleco_editar": {
+        "operacion": "form_data",
+        "entrada": {"obj_pau": "string", "mod": "string", "id_ubi": "integer", "sel": "mixed", "s_pkey": "string"},
+        "entrada_obligatoria": ["obj_pau", "id_ubi"],
+        "errores": [],
+        "salida": {"success_data": {"obj": "clase repositorio teleco", "dl": "delegación ubi", "botones": "1,3 o 0 según UbiPermisos", "id_tipo_teleco": "tipo seleccionado", "a_tipos": "tipos teleco", "a_desc": "descripciones"}},
+        "objetivo_funcional": "Carga el formulario de alta/edición de una telecomunicación de un ubi.",
+        "permisos": ["UbiPermisos.puedeModificarPorObjeto: controla botones."],
+        "casos_uso": ["TelecoEditarData"]
+    },
+    "teleco_eliminar": {
+        "operacion": "mutacion",
+        "entrada": {"obj_pau": "string", "sel": "mixed"},
+        "entrada_obligatoria": ["obj_pau"],
+        "errores": [],
+        "salida": {"success_data": {"ok": true}},
+        "objetivo_funcional": "Elimina una o más telecomunicaciones del ubi por claves primarias codificadas.",
+        "permisos": [],
+        "casos_uso": ["TelecoEliminar"]
+    },
+    "teleco_guardar": {
+        "operacion": "mutacion",
+        "entrada": {"obj_pau": "string", "id_ubi": "integer", "id_tipo_teleco": "integer", "id_desc_teleco": "integer", "num_teleco": "string", "observ": "string", "sel": "mixed", "s_pkey": "string"},
+        "entrada_obligatoria": ["obj_pau", "id_ubi"],
+        "errores": ["No se encuentra teleco id %s"],
+        "salida": {"success_data": {"ok": true}},
+        "objetivo_funcional": "Crea o actualiza un registro de telecomunicación asociado a un ubi.",
+        "permisos": [],
+        "casos_uso": ["TelecoGuardar"]
+    },
+    "teleco_tabla": {
+        "operacion": "lista_data",
+        "entrada": {"obj_pau": "string", "id_ubi": "integer"},
+        "entrada_obligatoria": ["obj_pau", "id_ubi"],
+        "errores": [],
+        "salida": {"success_data": {"botones": "1 o 0", "dl": "delegación", "tit_txt": "título tabla", "a_cabeceras": "cabeceras dinámicas", "a_valores": "filas teleco", "a_botones": "modificar/eliminar si permitido"}},
+        "objetivo_funcional": "Lista las telecomunicaciones de un centro o casa con botones según permisos.",
+        "permisos": ["UbiPermisos.puedeModificarPorObjeto: botones y a_botones."],
+        "casos_uso": ["TelecoTablaData"]
+    },
+    "trasladar_ubis": {
+        "operacion": "mutacion",
+        "entrada": {"dl_dst": "string", "sel": "mixed"},
+        "entrada_obligatoria": ["dl_dst", "sel"],
+        "errores": ["No se han seleccionado ubis."],
+        "salida": {"success_data": {"ok": true}},
+        "objetivo_funcional": "Traslada centros y casas seleccionados a otra delegación destino.",
+        "permisos": ["have_perm_oficina(admin_sv): botón trasladar en list_ctr frontend."],
+        "casos_uso": ["TrasladarUbis"]
+    },
+    "ubis_buscar_data": {
+        "operacion": "form_data",
+        "entrada": {},
+        "entrada_obligatoria": [],
+        "errores": [],
+        "salida": {"success_data": {"opciones_region": "regiones activas", "opciones_tipo_ctr": "tipos centro", "opciones_tipo_casa": "tipos casa", "opciones_pais": "países"}},
+        "objetivo_funcional": "Devuelve opciones de desplegables para el formulario de búsqueda de ubis.",
+        "permisos": [],
+        "casos_uso": ["UbisBuscarOpcionesData"]
+    },
+    "ubis_editar_data": {
+        "operacion": "form_data",
+        "entrada": {"obj_pau": "string", "tipo_ubi": "string", "dl": "string", "region": "string"},
+        "entrada_obligatoria": ["obj_pau"],
+        "errores": [],
+        "salida": {"success_data": {"opciones_dl": "delegaciones", "opciones_region": "regiones", "opciones_tipo_ctr": "tipos centro", "opciones_tipo_casa": "tipos casa", "opciones_id_ctr_padre": "centros padre"}},
+        "objetivo_funcional": "Devuelve desplegables dependientes para el formulario de edición de ubi.",
+        "permisos": [],
+        "casos_uso": ["UbisEditarOpcionesData"]
+    },
+    "ubis_editar_load_data": {
+        "operacion": "form_data",
+        "entrada": {"id_ubi": "integer", "obj_pau": "string", "nuevo": "string", "tipo_ubi": "string", "dl": "string", "region": "string", "nombre_ubi": "string"},
+        "entrada_obligatoria": [],
+        "errores": ["falta definir obj_pau", "No se encuentra ubi id %s", "tipo de entidad inesperado para centro dl", "tipo de entidad inesperado para centro ex", "tipo de entidad inesperado para casa"],
+        "salida": {"success_data": {"tipo_ubi": "tipo", "obj_pau": "objeto pau normalizado", "id_ubi": "id", "es_de_dl": "boolean delegación propia", "botones": "1,2 o 0", "campos ficha": "según tipo ctrdl/ctrex/cdcdl/cdcex"}},
+        "objetivo_funcional": "Carga la ficha completa de un ubi para edición o alta, normalizando obj_pau de delegación.",
+        "permisos": ["UbiPermisos.puedeModificarPorObjeto: botones.", "UbiPermisos.dlPerteneceAMiDelegacion: reclasifica Ex vs Dl."],
+        "casos_uso": ["UbisEditarLoadData"]
+    },
+    "ubis_editar_normalize_dl_data": {
+        "operacion": "form_data",
+        "entrada": {"id_ubi": "integer", "tipo_ubi": "string", "nombre_ubi": "string", "obj_pau": "string"},
+        "entrada_obligatoria": ["id_ubi", "tipo_ubi", "obj_pau"],
+        "errores": [],
+        "salida": {"success_data": {"obj_pau": "CentroDl o CasaDl si pertenece a delegación"}},
+        "objetivo_funcional": "Ajusta obj_pau a CentroDl/CasaDl cuando la ficha pertenece a la delegación del usuario.",
+        "permisos": ["Llamado desde flujo ubis_editar en frontend."],
+        "casos_uso": ["UbisEditarNormalizeDlData"]
+    },
+    "ubis_eliminar": {
+        "operacion": "mutacion",
+        "entrada": {"obj_pau": "string", "id_ubi": "integer"},
+        "entrada_obligatoria": ["obj_pau", "id_ubi"],
+        "errores": ["no se encuentra el ubi a borrar", "hay un error, no se ha eliminado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Elimina un ubi (centro o casa) del repositorio correspondiente a obj_pau.",
+        "permisos": ["have_perm_oficina(scl): botón eliminar en ubis_tabla frontend."],
+        "casos_uso": ["UbisEliminar"]
+    },
+    "ubis_guardar": {
+        "operacion": "mutacion",
+        "entrada": {"obj_pau": "string", "id_ubi": "integer", "tipo_ubi": "string", "nombre_ubi": "string", "dl": "string", "region": "string", "active": "string", "sv": "string", "sf": "string", "tipo_casa": "string", "plazas": "integer", "plazas_min": "integer", "num_sacd": "integer", "tipo_ctr": "string", "cdc": "string", "id_ctr_padre": "integer", "tipo_labor": "mixed", "n_buzon": "integer", "num_pi": "integer", "num_cartas": "integer", "num_cartas_mensuales": "integer", "num_habit_indiv": "integer", "observ": "string"},
+        "entrada_obligatoria": ["obj_pau"],
+        "errores": ["No existe la clase del ubi", "no se encuentra el ubi", "hay un error, no se ha guardado"],
+        "salida": {"success_data": "ok"},
+        "objetivo_funcional": "Crea o actualiza un ubi (casa o centro) según obj_pau y campos del formulario.",
+        "permisos": ["UbiPermisos: frontend ubis_editar solo muestra guardar si puedeModificar."],
+        "casos_uso": ["UbisGuardar"]
+    },
+    "ubis_lista_data": {
+        "operacion": "lista_data",
+        "entrada": {"nombre_ubi": "string"},
+        "entrada_obligatoria": [],
+        "errores": ["opción no definida en switch en %s, linea %s"],
+        "salida": {"success_data": {"a_cabeceras": "cabeceras tabla", "a_valores": "filas casas y centros activos"}},
+        "objetivo_funcional": "Busca casas y centros activos por nombre para el autocompletado de lista.",
+        "permisos": ["have_perm_oficina(vcsd|des): ver sf en sfsv=1 sin filtrar sv."],
+        "casos_uso": ["UbisListaData"]
+    },
+    "ubis_tabla_data": {
+        "operacion": "lista_data",
+        "entrada": {"loc": "string", "tipo": "string", "simple": "integer", "sWhere": "string", "sOperador": "string", "sWhereD": "string", "sOperadorD": "string", "metodo": "string", "titulo": "string", "cmb": "string", "obj_pau": "mixed", "id_sel": "string", "scroll_id": "string", "nombre_ubi": "string", "region": "string", "dl": "string", "tipo_ctr": "string", "tipo_casa": "string", "ciudad": "string", "pais": "string"},
+        "entrada_obligatoria": [],
+        "errores": ["debe poner algún criterio de búsqueda"],
+        "salida": {"success_data": {"titulo": "título tabla", "nueva_ficha": "nueva|aviso|especificar", "pagina_link_spec": "enlace alta", "a_cabeceras": "cabeceras", "a_valores": "filas con links", "a_botones": "modificar/eliminar", "go_back": "estado navegación", "hash_hidden": "filtros serializados"}},
+        "objetivo_funcional": "Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla navegable.",
+        "permisos": ["have_perm_oficina(scl): botón eliminar.", "have_perm_oficina(vcsd|des): tablas sf."],
+        "casos_uso": ["UbisTablaData"]
+    }
+}

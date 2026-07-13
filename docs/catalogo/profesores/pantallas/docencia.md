@@ -1,9 +1,9 @@
 ---
 id: "profesores.pantalla.docencia"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "profesores"
-nombre: "Docencia"
+nombre: "Ver docencia"
 controller: "frontend/profesores/controller/docencia.php"
 vistas: ["frontend/profesores/view/docencia.phtml"]
 fragmentos_frontend: []
@@ -11,49 +11,35 @@ endpoints: ["/src/profesores/docencia"]
 capacidades: ["profesores.docencia.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Docencia
+# Ver docencia
 
-Descripcion funcional pendiente de revisar.
+Tabla global de docencia STGR: delegación (RSTGR), profesor, curso de inicio, asignatura, modo y
+acta. Datos alimentados por **actualizar docencia** al cerrar cursos.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal` (menú `stgr2`)
 - Controller: `frontend/profesores/controller/docencia.php`
 
 ## Vistas Relacionadas
 
 - `frontend/profesores/view/docencia.phtml`
 
-## Fragmentos Frontend Relacionados
-
-No se han detectado controladores frontend relacionados.
-
 ## Endpoints Usados
 
 - `/src/profesores/docencia`
 
-## Capacidades Relacionadas
-
-- `profesores.docencia.gestionar`
-
-## Campos Detectados
-
-No se han detectado campos de formulario.
-
-## Acciones Detectadas
-
-No se han detectado acciones.
-
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Abrir **ver docencia** desde el menú (ámbito `stgr2`).
+2. Consultar la tabla de registros históricos.
 
-## Revision Manual
+Pantalla de solo consulta, sin filtros ni mutaciones.
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+## Ruta de menú
+
+- **Legacy:** vest > actas... > ver docencia
+- **Pills2:** sin entrada en el índice

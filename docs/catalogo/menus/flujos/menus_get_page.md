@@ -8,74 +8,24 @@ pantallas_principales: []
 fragmentos: ["menus.pantalla.menus_get"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/menus/menus_get_page_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Menus Get Page
-
-Propuesta generada automaticamente desde la capacidad `menus.menus_get_page.gestionar` y sus pantallas relacionadas.
+# Flujo - Cargar listado/ficha menú
 
 ## Objetivo De Usuario
 
-Gestiona MenusGetPage. Datos para frontend/menus/controller/menus_get.php (formulario o listado).
+Builder AJAX lista vs edición en gestor de menús.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
-
-## Fragmentos O Pantallas Auxiliares
-
-- `menus.pantalla.menus_get`
-
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.$campos_chk`
-- `form.filtro_grupo`
-- `form.gm_new`
-- `form.id_menu`
-- `form.id_metamenu`
-- `form.orden`
-- `form.parametros`
-- `form.perm_menu`
-- `form.txt_menu`
-- `html.bnada`
-- `html.btodo`
-- `html.orden`
-- `html.parametros`
-- `html.txt_menu`
-- `post.filtro_grupo`
-- `post.id_menu`
-- `post.nuevo`
-
-Acciones JavaScript:
-- `fnjs_enviar_formulario`
-- `fnjs_guardar`
-- `fnjs_lista_menus`
-- `fnjs_selectAll`
-- `fnjs_ver_ficha`
+`menus_get` fragmento.
 
 ## Endpoints Del Flujo
 
 - `/src/menus/menus_get_page_data`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

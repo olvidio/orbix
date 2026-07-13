@@ -6,21 +6,26 @@ url: "/src/usuarios/usuario_2fa_verify"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_verify.php"
-entrada: ["post.secret_2fa:mixed", "post.verification_code:mixed"]
-entrada_obligatoria: []
+entrada: ["post.verification_code:string", "post.secret_2fa:string"]
+entrada_obligatoria: ["verification_code", "secret_2fa"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/usuario_form_2fa.php"]
 casos_uso: []
 tags: ["usuarios", "usuario", "2fa", "verify"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Código de verificación o clave secreta no válidos", "Código de verificación inválido"]
 ---
 
 # Usuario 2fa Verify
 
-Descripcion funcional pendiente de revisar.
+Valida código TOTP contra secret provisional (paso previo a activar 2FA).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Valida código TOTP contra secret provisional (paso previo a activar 2FA).
 
 ## Endpoint
 
@@ -33,25 +38,28 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `secret_2fa` | `mixed` | controller | No | controller |
-| `verification_code` | `mixed` | controller | No | controller |
+| `verification_code` | `string` | application | Si | |
+| `secret_2fa` | `string` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `valid`: boolean
+
+## Errores conocidos
+- `Código de verificación o clave secreta no válidos`
+- `Código de verificación inválido`
+
+## Permisos
+
+Usuario en wizard 2FA.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-- `frontend/usuarios/controller/usuario_form_2fa.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/usuarios/controller/usuario_form_2fa.php"]`).

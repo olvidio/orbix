@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "notas"
 url: "/src/notas/asignaturas_pendientes_resumen_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/notas/infrastructure/ui/http/controllers/asignaturas_pendientes_resumen_data.php"
 entrada: []
 entrada_obligatoria: []
@@ -15,10 +15,12 @@ requiere_hashb: false
 frontend_referencias: ["frontend/notas/controller/asignaturas_pendientes_resumen.php"]
 casos_uso: ["src\\notas\\application\\AsignaturasPendientesResumenData"]
 tags: ["notas", "asignaturas", "pendientes", "resumen", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Asignaturas Pendientes Resumen Data
+
+Resumen: número de alumnos por asignatura pendiente.
 
 Resumen: número de alumnos con cada asignatura pendiente, desglosado por tramo (nb, nc1, nc2, n total, ab, ac1, ac2, a total). Sucesor de la lógica embebida en `frontend/notas/controller/asignaturas_pendientes_resumen.php`.
 
@@ -28,7 +30,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - URL: `/src/notas/asignaturas_pendientes_resumen_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/asignaturas_pendientes_resumen_data.php`
 
 ## Entrada
@@ -39,9 +41,18 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (doble `JSON.parse` salvo excepciones).
+- Tabla resumen en `data`.
 - Payload en `data` (schema `notas_AsignaturasPendientesResumenDataData`):
   - `pendientes` (`array`)
+
+## Objetivo funcional
+
+Agrega conteos por asignatura para la pantalla resumen.
+
+## Permisos
+
+- Menú resumen pendientes.
 
 ## Casos De Uso
 
@@ -49,10 +60,4 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/asignaturas_pendientes_resumen.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/asignaturas_pendientes_resumen.php`.

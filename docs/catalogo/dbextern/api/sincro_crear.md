@@ -9,19 +9,23 @@ controller: "src/dbextern/infrastructure/ui/http/controllers/sincro_crear.php"
 entrada: ["post.id:integer", "post.id_nom_listas:integer", "post.tipo_persona:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
-errores: ["no se encontró la persona en la BDU", "no se pudo resolver la delegación de listas", "No existe la clase de la persona", "hay un error, no se ha guardado"]
+errores: ["no se encontró la persona en la BDU", "no se pudo resolver la delegación de listas", "opción no definida para tipo persona %s", "No existe la clase de la persona", "hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/dbextern/controller/ver_listas.php"]
 casos_uso: ["src\\dbextern\\application\\CrearPersonaDesdeListasUseCase"]
 tags: ["dbextern", "sincro", "crear"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Sincro Crear
 
-Descripcion funcional pendiente de revisar.
+Alta de persona en Aquinate a partir de ficha BDU y creación del `id_match` (punto 4).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Lee datos de `PersonaBDU`, crea ficha en el repositorio del colectivo (`PersonaN`/`Agd`/`S`/`SSSC`),
+situación `A`, y guarda `IdMatchPersona`. Opcionalmente avanza la lista en sesión (`id`).
 
 ## Endpoint
 
@@ -34,24 +38,27 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id` | `integer` | controller | No | controller |
-| `id_nom_listas` | `integer` | controller | No | controller |
-| `tipo_persona` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_nom_listas` | `integer` | controller | Sí | ID en BDU |
+| `tipo_persona` | `string` | controller | Sí | `n`/`a`/`s`/`sssc` |
+| `id` | `integer` | controller | No | Índice en `$_SESSION['DBListas']` |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Éxito: `success: true`, `data: "ok"`.
+- Error: `success: false`, mensaje del caso de uso.
 
 ## Errores conocidos
 
 - `no se encontró la persona en la BDU`
 - `no se pudo resolver la delegación de listas`
+- `opción no definida para tipo persona %s`
 - `No existe la clase de la persona`
-- `hay un error, no se ha guardado`
+- `hay un error, no se ha guardado` (+ `getErrorTxt()` en match)
+
+## Permisos
+
+- HashFront en `ver_listas.phtml` (`h_crear`).
 
 ## Casos De Uso
 
@@ -59,10 +66,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/dbextern/controller/ver_listas.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/dbextern/controller/ver_listas.php` → `fnjs_crear`

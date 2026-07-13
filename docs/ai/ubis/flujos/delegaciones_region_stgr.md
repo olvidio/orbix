@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona DelegacionesRegionStgr. Delegaciones de una región STGR para desplegables (id_dl => sigla_dl).
+Lista delegaciones de una región STGR para desplegables dependientes.
+
+## Errores Documentados
+
+- `Se requiere region_stgr`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

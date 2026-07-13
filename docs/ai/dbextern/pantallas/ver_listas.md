@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "dbextern"
-titulo: "Ver Listas"
+titulo: "Personas BDU no unidas"
 pantalla: "dbextern.pantalla.ver_listas"
-preguntas: ["Que se puede hacer en Ver Listas?", "Que campos tiene Ver Listas?", "Que acciones hay en Ver Listas?"]
+preguntas: ["Que se puede hacer en Personas BDU no unidas?", "Que campos tiene Personas BDU no unidas?", "Que acciones hay en Personas BDU no unidas?"]
 capacidades: ["dbextern.sincro.gestionar", "dbextern.sincro_crear_todos.gestionar", "dbextern.sincro_unir.gestionar", "dbextern.ver_listas.gestionar"]
 endpoints: ["/src/dbextern/sincro_crear", "/src/dbextern/sincro_crear_todos", "/src/dbextern/sincro_unir", "/src/dbextern/ver_listas_datos"]
 source: "docs/catalogo/dbextern/pantallas/ver_listas.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Ver Listas
+# Ayuda IA Pantalla - Personas BDU no unidas
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Subpantalla del punto 4: recorre personas de la BDU sin `id_match`, muestra candidatos Orbix para unir o permite crear ficha nueva / crear todas.
 
 ## Uso En Ayuda
 
@@ -38,10 +38,8 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Acciones Detectadas
 
-- `button:<`
 - `fnjs_crear`
 - `fnjs_crear_todos`
-- `fnjs_enviar_formulario`
 - `fnjs_submit`
 - `fnjs_unir`
 

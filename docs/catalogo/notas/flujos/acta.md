@@ -8,20 +8,20 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.acta_select", "notas.pantalla.acta_ver"]
 acciones: ["crear", "eliminar"]
 endpoints: ["/src/notas/acta_eliminar", "/src/notas/acta_nueva"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta
 
-Propuesta generada automaticamente desde la capacidad `notas.acta.gestionar` y sus pantallas relacionadas.
+Gestión del ciclo de vida de actas: listado, alta, edición, eliminación, PDF e impresión.
 
 ## Objetivo De Usuario
 
-Gestiona Acta. Descripcion funcional pendiente de revisar.
+Ciclo completo de actas: listar en `acta_select`, abrir `acta_ver`, crear (`acta_nueva`), modificar (`acta_modificar`) o eliminar (`acta_eliminar`), con PDF e impresión.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **vest > actas... > actas** / **ESTUDIOS > Actas y certificados > Actas** (`acta_select.php`). También accesible desde `actividadestudios` al abrir acta de una asignatura CA.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,11 +32,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Crear
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En `acta_select`, pulsar **añadir acta** (`fnjs_nuevo`).
+2. Se abre `acta_ver` en modo nuevo; rellenar asignatura, actividad, fechas y tribunal.
+3. Guardar (`fnjs_guardar_acta` → `acta_nueva`).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/acta_nueva`
+- `/src/notas/acta_ver_form_data`
 
 ### Eliminar
 
@@ -90,16 +93,17 @@ Acciones JavaScript:
 
 ## Endpoints Del Flujo
 
-- `/src/notas/acta_eliminar`
+- `/src/notas/acta_select_data`
+- `/src/notas/acta_ver_form_data`
 - `/src/notas/acta_nueva`
+- `/src/notas/acta_modificar`
+- `/src/notas/acta_eliminar`
 
 ## Errores Conocidos
 
 - ``No se encuentra el acta``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/dossier)

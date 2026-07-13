@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la pantalla de comunicación a los sacd.
+2. El sistema resuelve `perm_mod_txt` según el rol del usuario.
+3. Si hay permiso, se muestra el enlace para editar textos.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadessacd/com_sacd_activ_periodo_page_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ComSacdActivPeriodoPage. Descripcion funcional pendiente de revisar.
+Al cargar la pantalla de comunicación, el sistema determina si el usuario puede editar los textos base (`perm_mod_txt`). Los usuarios con rol `p-sacd` no tienen permiso de edición.
 
 ## Limites De La Respuesta
 

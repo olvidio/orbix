@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActaModificar. Descripcion funcional pendiente de revisar.
+Guardar cambios de un acta existente desde `acta_ver`.
 
 ## Errores Documentados
 

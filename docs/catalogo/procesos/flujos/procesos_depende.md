@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.procesos_ver"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/procesos_depende"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Procesos Depende
-
-Propuesta generada automaticamente desde la capacidad `procesos.procesos_depende.gestionar` y sus pantallas relacionadas.
+# Flujo - Dependencias de tarea de proceso
 
 ## Objetivo De Usuario
 
-Gestiona ProcesosDepende. Caso de uso: devuelve las opciones disponibles para el desplegable de tareas dependientes de la fase indicada (usado al cambiar de fase o fase_previa en el formulario procesos_ver). Respuesta JSON con opciones (value => label). El frontend inyecta los <option> en el <select> destino indicado por acc.
+Actualización dinámica del desplegable de tareas dependientes al cambiar la fase o fase previa en el formulario de edición de una tarea de proceso.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada directa de menú; se invoca desde el formulario modal de `procesos_ver`.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -63,11 +61,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

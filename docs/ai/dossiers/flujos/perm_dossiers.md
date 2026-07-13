@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "dossiers"
 titulo: "Perm Dossiers"
 flujo: "dossiers.perm_dossiers.gestionar.flujo"
-preguntas: ["Como obtener datos en Perm Dossiers?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["dossiers.pantalla.perm_dossiers"]
 endpoints: ["/src/dossiers/perm_dossiers_data"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Perm Dossiers?
 
 ## Donde Entrar
 
@@ -29,23 +28,20 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `dossiers.pantalla.perm_dossiers`
 
 ## Objetivo
 
-Gestiona PermDossiers. Listado de tipos de dossier para pantalla de permisos. pagina_link_spec se firma en perm_dossiers_data.php.
+Elegir el ámbito de tipos de dossier (personas/ubis/actividades) y abrir la edición de permisos de cada tipo desde el menú de administración.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

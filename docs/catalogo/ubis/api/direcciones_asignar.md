@@ -6,8 +6,8 @@ url: "/src/ubis/direcciones_asignar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/direcciones_asignar.php"
-entrada: ["post.id_direccion:integer", "post.id_ubi:integer", "post.obj_dir:string"]
-entrada_obligatoria: []
+entrada: ["post.id_ubi:integer", "post.obj_dir:string", "post.id_direccion:integer"]
+entrada_obligatoria: ["id_ubi", "obj_dir", "id_direccion"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "ubis_DireccionesAsignarData"
 respuesta_data: ["ok:boolean"]
@@ -15,14 +15,19 @@ requiere_hashb: false
 frontend_referencias: ["frontend/ubis/controller/direcciones_asignar.php"]
 casos_uso: ["src\\ubis\\application\\DireccionesAsignar"]
 tags: ["ubis", "direcciones", "asignar"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Direcciones Asignar
 
-Descripcion funcional pendiente de revisar.
+Asocia una dirección existente a un ubi sin marcarla como propietaria.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Asocia una dirección existente a un ubi sin marcarla como propietaria.
 
 ## Endpoint
 
@@ -35,19 +40,24 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_direccion` | `integer` | controller | No | controller |
-| `id_ubi` | `integer` | controller | No | controller |
-| `obj_dir` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_ubi` | `integer` | application | Si | |
+| `obj_dir` | `string` | application | Si | |
+| `id_direccion` | `integer` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `ubis_DireccionesAsignarData`):
-  - `ok` (`boolean`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `ok`: boolean
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `UbiPermisos` (`puedeModificarPorObjeto`, `dlPerteneceAMiDelegacion`), `have_perm_oficina(scdl|scl|vcsd|des|admin_sv)` y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -55,10 +65,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/ubis/controller/direcciones_asignar.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/ubis/controller/direcciones_asignar.php"]`).

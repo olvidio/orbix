@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_guardar_mail"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Usuario Guardar Mail
-
-Propuesta generada automaticamente desde la capacidad `usuarios.usuario_guardar_mail.gestionar` y sus pantallas relacionadas.
+# Flujo - Usuario Guardar Mail
 
 ## Objetivo De Usuario
 
-Gestiona UsuarioGuardarMail. Descripcion funcional pendiente de revisar.
+Actualiza email del usuario (preferencias o admin).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: menú usuario > preferencias. Pills2: menú usuario > preferencias.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Usuario no encontrado`
+- `hay un error, no se ha guardado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** menú usuario > preferencias
+- **Pills2:** menú usuario > preferencias

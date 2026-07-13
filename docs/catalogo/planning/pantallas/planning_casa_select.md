@@ -3,7 +3,7 @@ id: "planning.pantalla.planning_casa_select"
 tipo: "pantalla_frontend"
 subtipo: "pantalla"
 modulo: "planning"
-nombre: "Planning Casa Select"
+nombre: "Selección de casas (planning)"
 controller: "frontend/planning/controller/planning_casa_select.php"
 vistas: ["frontend/planning/view/planning_casa_select.phtml"]
 fragmentos_frontend: ["frontend/actividades/controller/planning_casa_modificar.php", "frontend/actividades/controller/planning_casa_nueva.php", "frontend/planning/controller/planning_casa_ver.php"]
@@ -11,65 +11,29 @@ endpoints: []
 capacidades: []
 campos: ["form.id_activ", "form.id_ubi", "post.cdc_sel", "post.empiezamax", "post.empiezamin", "post.id_cdc", "post.modelo", "post.periodo", "post.propuesta_calendario", "post.sin_activ", "post.year"]
 acciones: ["fnjs_cambiar_activ", "fnjs_cerrar", "fnjs_nueva_activ", "fnjs_update_div", "fnjs_ver"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Planning Casa Select
+# Selección de casas (planning)
 
-Pantalla intermedia entre `planning_casa_que` y `planning_casa_ver`.
+Pantalla intermedia: lista las casas del grupo elegido y permite abrir el calendario, crear o
+modificar actividades de casa (`planning_casa_nueva` / `planning_casa_modificar` en módulo actividades).
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla` (paso intermedio, no entrada de menú)
 - Controller: `frontend/planning/controller/planning_casa_select.php`
 
-## Vistas Relacionadas
+## Acciones
 
-- `frontend/planning/view/planning_casa_select.phtml`
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/actividades/controller/planning_casa_modificar.php`
-- `frontend/actividades/controller/planning_casa_nueva.php`
-- `frontend/planning/controller/planning_casa_ver.php`
-
-## Endpoints Usados
-
-No se han detectado endpoints `/src/...`.
-
-## Capacidades Relacionadas
-
-No se han detectado capacidades relacionadas.
-
-## Campos Detectados
-
-- `form.id_activ`
-- `form.id_ubi`
-- `post.cdc_sel`
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.id_cdc`
-- `post.modelo`
-- `post.periodo`
-- `post.propuesta_calendario`
-- `post.sin_activ`
-- `post.year`
-
-## Acciones Detectadas
-
-- `fnjs_cambiar_activ`
-- `fnjs_cerrar`
-- `fnjs_nueva_activ`
-- `fnjs_update_div`
-- `fnjs_ver`
+- Ver planning → carga `planning_casa_ver` por AJAX
+- Nueva / modificar actividad de casa
+- Cambiar actividad asociada a una ubi
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Sin endpoint `/src/` propio; propaga filtros de `planning_casa_que` vía POST.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+sin entrada de menú en el índice

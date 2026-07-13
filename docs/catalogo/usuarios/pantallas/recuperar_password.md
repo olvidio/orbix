@@ -1,7 +1,7 @@
 ---
 id: "usuarios.pantalla.recuperar_password"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "usuarios"
 nombre: "Recuperar Password"
 controller: "frontend/usuarios/controller/recuperar_password.php"
@@ -11,16 +11,18 @@ endpoints: []
 capacidades: []
 campos: ["get.esquema", "get.esquema_web", "get.ubicacion", "get.url_base", "get.username"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Recuperar Password
 
-Página para recuperar la contraseña de un usuario.
+Formulario solicitud recuperación contraseña por email.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/usuarios/controller/recuperar_password.php`
 
 ## Vistas Relacionadas
@@ -51,13 +53,7 @@ No se han detectado capacidades relacionadas.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

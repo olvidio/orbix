@@ -14,14 +14,20 @@ errores: ["faltan parametros id_activ / id_nom / id_cargo", "ya existe este carg
 frontend_referencias: []
 casos_uso: ["src\\actividadcargos\\application\\ActividadCargoNuevo"]
 tags: ["actividadcargos", "cargo", "nuevo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Cargo Nuevo
 
-Crea un `ActividadCargo`.
+Crea un `ActividadCargo` (asigna un cargo a una persona en una actividad).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Da de alta el vínculo persona–cargo–actividad. Si el formulario marca `asis` (checkbox de
+asistencia, controlado por `asis_presente`), además crea el `Asistente` correspondiente y abre los
+dossiers `1301`/`3101`. Réplica del case `nuevo` del legacy `update_3102.php`.
 
 ## Endpoint
 
@@ -60,16 +66,16 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - `ya existe este cargo para esta actividad`
 - `hay un error, no se ha guardado el asistente`
 
+## Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
+  frontend (form de cargos) y en `$_SESSION['oPerm']`. No inferir permisos concretos aquí.
+
 ## Casos De Uso
 
 - `src\actividadcargos\application\ActividadCargoNuevo`
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Invocado desde el submit del form `form_cargos_de_actividad` / `form_cargos_personas_en_actividad`
+  (URL emitida en su payload como `url_cargo_nuevo`). No hay referencia literal a la URL en `frontend/`.

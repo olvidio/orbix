@@ -66,7 +66,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Procesos, ProcesosGet. Caso de uso: devuelve la estructura de padres/hijos del arbol de fases del proceso filtrando segun el sfsv/role del usuario. Retorna un array donde cada clave es el id de fase padre (0 = raiz) y cada valor es una lista de ['id', 'nom']. El HTML del árbol lo genera {. Caso de uso: elimina una tarea_proceso por su id_item. Caso de uso: guarda una tarea_proceso (fase/tarea/responsable/status y fases_previas) del proceso.
+Administración del árbol de fases/tareas de un tipo de proceso: visualizar estructura, crear o editar tareas con dependencias y eliminar tareas existentes.
 
 ## Errores Documentados
 

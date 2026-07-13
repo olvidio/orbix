@@ -1,9 +1,9 @@
 ---
 id: "planning.pantalla.planning_zones_que"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "planning"
-nombre: "Planning Zones Que"
+nombre: "Planning por zonas SACD (filtros)"
 controller: "frontend/planning/controller/planning_zones_que.php"
 vistas: ["frontend/planning/view/planning_zones_que.phtml"]
 fragmentos_frontend: ["frontend/planning/controller/planning_zones_select.php"]
@@ -11,62 +11,36 @@ endpoints: ["/src/planning/planning_zones_que_data"]
 capacidades: ["planning.planning_zones_que.gestionar"]
 campos: ["form.actividad", "form.id_zona", "form.trimestre", "form.year", "html.actividad", "html.id_zona", "html.trimestre", "post.actividad", "post.id_zona", "post.modo", "post.stack", "post.trimestre", "post.year"]
 acciones: ["fnjs_enviar_formulario", "fnjs_ver_planning"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Planning Zones Que
+# Planning por zonas SACD (filtros)
 
-Formulario de filtros para el planning por zonas (sacd).
+Formulario: zona SACD, trimestre, año y filtro de actividad. Carga zonas permitidas vía
+`planning_zones_que_data`. Al enviar abre `planning_zones_select`.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/planning/controller/planning_zones_que.php`
 
-## Vistas Relacionadas
+## Campos
 
-- `frontend/planning/view/planning_zones_que.phtml`
+- `id_zona`, `trimestre`, `year`, `actividad`
+- Hidden: `propuesta` (modo propuesta de calendario)
 
-## Fragmentos Frontend Relacionados
+## Acciones
 
-- `frontend/planning/controller/planning_zones_select.php`
-
-## Endpoints Usados
-
-- `/src/planning/planning_zones_que_data`
-
-## Capacidades Relacionadas
-
-- `planning.planning_zones_que.gestionar`
-
-## Campos Detectados
-
-- `form.actividad`
-- `form.id_zona`
-- `form.trimestre`
-- `form.year`
-- `html.actividad`
-- `html.id_zona`
-- `html.trimestre`
-- `post.actividad`
-- `post.id_zona`
-- `post.modo`
-- `post.stack`
-- `post.trimestre`
-- `post.year`
-
-## Acciones Detectadas
-
-- `fnjs_enviar_formulario`
-- `fnjs_ver_planning`
+- Ver planning → `planning_zones_select.php`
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Revisado contra `frontend/planning/`. Plantilla PHTML (sin Twig).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Variantes según `propuesta` en `_referencia_menus.md`:
+
+- **Legacy:** `dre > planning > por zonas` · `exterior > sacd > planning zonas`
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > por zonas`
+- Con `propuesta=true`: `dre > propuestas > planing zonas`

@@ -11,12 +11,12 @@ endpoints: ["/src/actividadtarifas/relacion_tarifa_eliminar", "/src/actividadtar
 capacidades: ["actividadtarifas.relacion_tarifa.gestionar"]
 campos: ["form.id_item", "form.id_tarifa", "form.id_tipo_activ"]
 acciones: ["fnjs_cerrar", "fnjs_guardar", "fnjs_id_activ", "fnjs_modificar", "fnjs_update_div", "fnjs_ver"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tarifa Tipo Actividad
 
-Pantalla principal del modulo `actividadtarifas` - relacion `TipoTarifa` ↔ tipo de actividad (`RelacionTarifaTipoActividad`).
+Relación tarifa ↔ tipo de actividad (`RelacionTarifaTipoActividad`): listado, alta/edición en popup.
 
 ## Tipo
 
@@ -58,11 +58,12 @@ Pantalla principal del modulo `actividadtarifas` - relacion `TipoTarifa` ↔ tip
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Listado al cargar (`fnjs_ver`). Alta abre formulario con selector de tipo de actividad
+(`actividad_que_datos`) y tarifa; edición solo cambia la tarifa asignada. Mutaciones con `HashFront`
+en el formulario (no HashB).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** adl > Tarifas > tarifa <-> tipo de actividad; dre/Calendario/exterior > Nuevo
+  calendario > Tarifas > tarifa <-> tipo actividad.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifa-tipo actividad.

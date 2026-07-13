@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Entrada de menú histórica («nuevo esquema»): redirige a la pantalla de creación.
+Redirección histórica al asistente de nuevo esquema (`db_crear_esquema_que`).
 
 ## Uso En Ayuda
 

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Controlador AJAX HTML: listado de `TarifaUbi` por casa y año.
+Fragmento AJAX: tabla de `TarifaUbi` para la casa/año seleccionados; emite `token_copiar` (HashB).
 
 ## Uso En Ayuda
 

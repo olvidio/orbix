@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActivCtrShell. Tipo resuelto y especificaciones de URL para la shell de activ_ctr (sin HashFront en src/). La firma linkSinVal se aplica en {.
+Al abrir la pantalla de asignación de centros encargados, el sistema resuelve el colectivo (`tipo`, que puede remaparse a `sf*` en el semestre de formación) y firma las URLs AJAX que usará el resto de acciones. Es un paso transparente para el usuario, previo a mostrar los filtros de periodo.
 
 ## Limites De La Respuesta
 

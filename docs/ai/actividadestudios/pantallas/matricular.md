@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla de menu "matricular a todos".
+Ejecuta la matriculación automática masiva («matricular a todos») y muestra el informe de resultado. Sucesor de `apps/actividadestudios/controller/matricular.php`.
 
 ## Uso En Ayuda
 

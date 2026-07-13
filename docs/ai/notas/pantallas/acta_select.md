@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página muestra una tabla con las actas.
+Listado de actas del curso o búsqueda por número, con acciones ver/modificar/eliminar/imprimir/descargar PDF según permisos de oficina `est`.
 
 ## Uso En Ayuda
 

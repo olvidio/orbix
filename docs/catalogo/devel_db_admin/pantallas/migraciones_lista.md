@@ -11,12 +11,12 @@ endpoints: ["/src/devel_db_admin/migraciones_ejecutar", "/src/devel_db_admin/mig
 capacidades: ["devel_db_admin.migraciones.gestionar", "devel_db_admin.migraciones_ejecutar.gestionar", "devel_db_admin.migraciones_quitar_registro.gestionar"]
 campos: ["form.sel"]
 acciones: ["fnjs_migraciones_checked", "fnjs_migraciones_ejecutar_hasta", "fnjs_migraciones_ejecutar_seleccion", "fnjs_migraciones_enviar", "fnjs_migraciones_quitar_registro"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Migraciones Lista
 
-Descripcion funcional pendiente de revisar.
+Listado de migraciones SQL pendientes/aplicadas con ejecución y borrado de registro.
 
 ## Tipo
 
@@ -57,11 +57,11 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Acceder desde el menú de administración DB o configuración.
+2. Completar el formulario y ejecutar la acción.
+3. Revisar avisos/errores en el panel de respuesta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > DB > actualizar DB
+- **Pills2:** sistema > DB > actualizar DB

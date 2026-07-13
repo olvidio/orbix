@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Página para realizar algunos listados standard de ubis Llegamos desde menú: "centros y casas" y submenú "listados" Las funciones que podré hacer con los ubis son idénticas a las que realizamos en submenú "buscar" Se tiene en cuenta si es una vuelta de un go_to
+Pantalla principal de listado de centros y casas con filtros por delegación y tipo.
 
 ## Uso En Ayuda
 

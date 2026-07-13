@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["usuarios.pantalla.grupo_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/grupo_info"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Grupo Info
-
-Propuesta generada automaticamente desde la capacidad `usuarios.grupo_info.gestionar` y sus pantallas relacionadas.
+# Flujo - Grupo Info
 
 ## Objetivo De Usuario
 
-Gestiona GrupoInfo. Descripcion funcional pendiente de revisar.
+Devuelve el nombre de un grupo para el formulario de edición.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -66,11 +64,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Grupo no encontrado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

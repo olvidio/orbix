@@ -2,78 +2,59 @@
 id: "pasarela.activacion.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "pasarela"
-nombre: "Flujo - Gestionar Activacion"
+nombre: "Flujo - Gestionar fecha de activación"
 capacidad: "pasarela.activacion.gestionar"
 pantallas_principales: []
-fragmentos: ["pasarela.pantalla.activacion_ajax"]
-acciones: ["listar"]
-endpoints: ["/src/pasarela/activacion_lista"]
-estado_revision: "generado"
+fragmentos:
+  - "pasarela.pantalla.activacion_ajax"
+acciones: ["listar", "guardar", "eliminar"]
+endpoints:
+  - "\/src\/pasarela\/activacion_lista"
+  - "\/src\/pasarela\/activacion_default_data"
+  - "\/src\/pasarela\/activacion_default_guardar"
+  - "\/src\/pasarela\/activacion_excepcion_guardar"
+  - "\/src\/pasarela\/activacion_excepcion_eliminar"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Activacion
-
-Propuesta generada automaticamente desde la capacidad `pasarela.activacion.gestionar` y sus pantallas relacionadas.
+# Flujo - Gestionar fecha de activación
 
 ## Objetivo De Usuario
 
-Gestiona ActivacionLista. Devuelve el listado del parámetro fecha_activacion listo para serializar: - default: valor por defecto. - excepciones: array de filas {id_tipo_activ, etiqueta, valor}. El frontend renderiza la tabla a partir de estos datos; este caso de uso no genera HTML.
+Configurar cuándo se publica/activa cada tipo de actividad en la pasarela exterior.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+`activacion_lista.php` desde `parametros_menu`.
 
-## Fragmentos O Pantallas Auxiliares
-
-- `pasarela.pantalla.activacion_ajax`
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Listar
+1. Abrir fecha de activación.
+2. Carga automática vía `activacion_lista`.
 
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+### Editar default
+1. Pulsar modificar default → `form_default`.
+2. Guardar → `activacion_default_guardar`.
 
-Endpoints asociados:
-- `/src/pasarela/activacion_lista`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.activacion`
-- `form.default`
-- `form.extendida`
-- `form.iactividad_val`
-- `form.iasistentes_val`
-- `form.id_tipo_activ`
-- `form.inom_tipo_val`
-- `form.isfsv_val`
-- `post.activacion`
-- `post.default`
-- `post.id_tipo_activ`
-- `post.que`
-- `post.sactividad`
-- `post.sasistentes`
-- `post.snom_tipo`
-
-Acciones JavaScript:
-- `fnjs_modificar_activacion`
-- `fnjs_modificar_activacion_default`
+### Excepción
+1. Nueva fila o editar → selector tipo + valor.
+2. Guardar/eliminar vía endpoints de excepción.
 
 ## Endpoints Del Flujo
 
 - `/src/pasarela/activacion_lista`
+- `/src/pasarela/activacion_default_data`
+- `/src/pasarela/activacion_default_guardar`
+- `/src/pasarela/activacion_excepcion_guardar`
+- `/src/pasarela/activacion_excepcion_eliminar`
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Falta valor por defecto`
+- `Falta id_tipo_activ`
+- `Falta valor de activación`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).

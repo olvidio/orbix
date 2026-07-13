@@ -11,12 +11,12 @@ endpoints: ["/src/dossiers/dossiers_ver_pantalla_data"]
 capacidades: ["dossiers.dossiers_ver_pantalla.gestionar"]
 campos: []
 acciones: ["fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Dossiers Ver
 
-Para asegurar que inicia la sesion, y poder acceder a los permisos
+Visor de dossiers de una entidad (persona/actividad/ubi): cabecera con enlaces «dossiers» y «home», modo lista de carpetas o modo ficha con segmentos `select_*` y tablas `datos_tabla`. Gestiona navegación con `ListNavSupport` y firma `link_spec` en el frontend (`HashFront`).
 
 ## Tipo
 
@@ -50,11 +50,9 @@ No se han detectado campos de formulario.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/dossiers/` y `src/dossiers/`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

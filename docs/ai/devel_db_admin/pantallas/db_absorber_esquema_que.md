@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario para unir (absorber) un esquema DL en otro esquema matriz.
 
 ## Uso En Ayuda
 

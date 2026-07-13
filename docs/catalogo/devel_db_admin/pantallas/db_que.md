@@ -11,12 +11,12 @@ endpoints: []
 capacidades: []
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Db Que
 
-Entrada de menú histórica («nuevo esquema»): redirige a la pantalla de creación.
+Redirección histórica al asistente de nuevo esquema (`db_crear_esquema_que`).
 
 ## Tipo
 
@@ -49,11 +49,11 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Acceder desde el menú de administración DB o configuración.
+2. Completar el formulario y ejecutar la acción.
+3. Revisar avisos/errores en el panel de respuesta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > DB > nuevo esquema
+- **Pills2:** sistema > DB > nuevo esquema

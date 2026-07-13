@@ -11,12 +11,12 @@ endpoints: ["/src/notas/acta_imprimir_presentacion_data"]
 capacidades: ["notas.acta_imprimir_presentacion.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Acta Imprimir Mpdf
 
-Esta página está como include de acta_2_mpdf.php
+Generación PDF (mPDF) del acta.
 
 ## Tipo
 
@@ -47,13 +47,11 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

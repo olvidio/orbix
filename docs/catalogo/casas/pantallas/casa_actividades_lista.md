@@ -11,7 +11,7 @@ endpoints: ["/src/casas/casa_actividades_lista_data"]
 capacidades: ["casas.casa_actividades.gestionar"]
 campos: ["post.empiezamax", "post.empiezamin", "post.id_cdc", "post.periodo", "post.year"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Casa Actividades Lista
@@ -54,10 +54,8 @@ No se han detectado acciones.
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** exterior > casas > lista actividades
+- **Pills2:** exterior > casas > lista actividades
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

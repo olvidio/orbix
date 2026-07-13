@@ -2,78 +2,45 @@
 id: "shared.tablaDB.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "shared"
-nombre: "Flujo - Gestionar TablaDB"
+nombre: "Flujo - Persistir registro tabla genérica"
 capacidad: "shared.tablaDB.gestionar"
 pantallas_principales: []
-fragmentos: ["shared.pantalla.tablaDB_formulario_ver"]
-acciones: ["crear_actualizar"]
+fragmentos: ["shared.pantalla.tablaDB_formulario_ver", "shared.pantalla.tablaDB_lista_ver"]
+acciones: ["nuevo", "editar", "eliminar"]
 endpoints: ["/src/shared/tablaDB_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar TablaDB
-
-Propuesta generada automaticamente desde la capacidad `shared.tablaDB.gestionar` y sus pantallas relacionadas.
+# Flujo - Persistir registro tabla genérica
 
 ## Objetivo De Usuario
 
-Gestiona TablaDB. Descripcion funcional pendiente de revisar.
+Dar de alta, modificar o eliminar un registro en cualquier tabla mantenida con el patrón `Info*` +
+repositorio CRUD.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- Formulario: `fnjs_grabar` (`mod` nuevo/editar).
+- Listado: acción eliminar con `mod=eliminar` y `sel[]`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `shared.pantalla.tablaDB_formulario_ver`
+### Nuevo / editar
 
-## Escenarios Inferidos
+1. Formulario envía `$_POST` completo a `tablaDB_update` con `mod` y `clase_info`.
+2. `DatosUpdateRepo` mapea campos (check, fecha, decimal) y llama `Guardar`.
+3. Casos especiales: `ModuloInstalado` (tablas al activar), `ProfesorLatin` (id fijo).
 
-### Crear Actualizar
+### Eliminar
 
-Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/shared/tablaDB_update`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.accion`
-- `form.clase_info`
-- `form.valor_depende`
-- `html.<?= $nom_camp ?>`
-- `post.aSerieBuscar`
-- `post.clase_info`
-- `post.datos_buscar`
-- `post.id_pau`
-- `post.k_buscar`
-- `post.mod`
-- `post.obj_pau`
-- `post.permiso`
-- `post.sel`
-
-Acciones JavaScript:
-- `fnjs_actualizar_depende`
-- `fnjs_cancelar`
-- `fnjs_comprobar_fecha`
-- `fnjs_grabar`
-
-## Endpoints Del Flujo
-
-- `/src/shared/tablaDB_update`
+1. `mod=eliminar` con `s_pkey` o `sel[0]`.
+2. `DatosUpdateRepo::eliminar`; en módulos instalados puede ejecutar `dropTables`.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `no se ha ejecutado la acción`
+- Errores de repositorio y validación de módulos (ver API `tablaDB_update`).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada directa; mutación desde listado/formulario cuya ruta depende de `clase_info`.

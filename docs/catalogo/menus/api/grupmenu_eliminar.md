@@ -7,20 +7,25 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/menus/infrastructure/ui/http/controllers/grupmenu_eliminar.php"
 entrada: ["post.sel:array"]
-entrada_obligatoria: []
+entrada_obligatoria: ["sel"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: ["frontend/menus/view/grupmenu_lista.phtml"]
+errores: ["No encuentro el grupmenu", "hay un error, no se ha eliminado"]
+frontend_referencias: ["frontend/menus/controller/grupmenu_lista.php"]
 casos_uso: []
 tags: ["menus", "grupmenu", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Grupmenu Eliminar
+# Eliminar grupmenu
 
-Descripcion funcional pendiente de revisar.
+Elimina un grupo de menú a partir del token `sel` de la lista.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Borra el registro en `aux_grupmenu` identificado por el primer token de `sel` (`id_grupmenu#`).
 
 ## Endpoint
 
@@ -33,24 +38,27 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `sel` | `array` | controller | No | controller |
+| `sel` | `array` | POST | Si | Primer elemento: `id_grupmenu#` |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `success: true`, `data: "ok"`, `mensaje` vacío.
+- Error: `mensaje` con texto `_()`; `data` sigue siendo `"ok"`.
+
+## Errores conocidos
+
+- `No encuentro el grupmenu`
+- `hay un error, no se ha eliminado` (+ detalle repositorio)
+
+## Permisos
+
+- Sin control propio; autorización vía menú de administración (`frontend/menus/controller/grupmenu_lista.php`).
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- Lógica inline en controller (repositorio `GrupMenuRepositoryInterface`).
 
 ## Frontend Relacionado
 
-- `frontend/menus/view/grupmenu_lista.phtml`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/menus/controller/grupmenu_lista.php` (`fnjs_eliminar`)

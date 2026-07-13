@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página sirve para calcular los créditos cursables para cada alumno en cada ca.
+Informe de asignaturas posibles por CA: cuántos alumnos pueden cursar cada asignatura y listado de alumnos a los que les faltan pocas asignaturas para terminar el cuadrienio.
 
 ## Uso En Ayuda
 
@@ -27,7 +27,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Acciones Detectadas
 
-- No hay acciones detectadas.
+- `fnjs_detalles`
 
 ## Capacidades Relacionadas
 

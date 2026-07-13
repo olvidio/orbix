@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario dossier **3102** (y **3101** con persona fija): alta o edición del cargo de una persona en una actividad.
 
 ## Uso En Ayuda
 

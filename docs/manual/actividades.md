@@ -1,107 +1,826 @@
 ---
-tipo: manual_usuario
-modulo: actividades
+tipo: "manual_usuario"
+modulo: "actividades"
 flujos: 28
-estado_revision: revisado_parcial
+estado_revision: "generado"
 ---
 
 # Manual De Usuario - actividades
 
-Modulo **hub**: busqueda, alta, edicion, calendarios y tipos de actividad. Casi todos los menus de actividades (roles 2, 3, 8, 10, 20…) apuntan aqui.
+Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
 
-## Acceso Por Menu (patrones)
+## Como Usar Este Manual
 
-| Accion | Controller | Parametros tipicos |
-|--------|------------|-------------------|
-| **Buscar** crt/ca/cv/cve | `actividad_select.php` | `sactividad`, `sasistentes`, `que=ver` |
-| **Importar** | `actividad_que.php` | `modo=importar` |
-| **List varios** | `actividad_que.php` | `que=list_cjto` |
-| **Calendario casas** | `calendario_listas.php` | `que=c_comunes`, `c_comunes_sf/sv` |
-| **Tipo actividad** | `tipo_activ.php` | Catalogo tipos |
-| **Nuevo curso** | `actividad_nuevo_curso.php` | Duplicar actividades curso |
+Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
 
-Parametros `sactividad`: `crt`, `ca`, `cv`, `cve`, etc. definen subconjunto y permisos.
+## Crear y eliminar actividad
 
-## Conceptos Del Dominio (ficha de actividad)
+### Para Que Sirve
 
-- **Tipo de actividad** (`id_tipo_activ`, 6 digitos): se compone en cascada
-  seccion (sf/sv) → asistentes → actividad → tipo. Los niveles sin concretar se
-  representan con `.` en las busquedas.
-- **Estado** (`status`): 1 proyecto, 2 actual, 3 terminada, 4 borrable
-  (9 = cualquiera, solo como filtro). Con la app `procesos` instalada el estado
-  no se cambia a mano: lo gobiernan las fases del proceso.
-- **Organiza** (`dl_org`): si la actividad es de **otra dl**, el alta la crea
-  como "externa" (queda publicada, en estado actual e importada automaticamente);
-  no se permite crearla si esa dl ya usa Orbix (debe crearla ella).
-- **Lugar**: una casa (`id_ubi`), un "lugar especial" en texto libre
-  (`id_ubi=1` + `lugar_esp`) o "sin determinar".
-- **Publicada**: visible para otras dl. Se publica en masa desde el modo
-  publicar; se despublica editando la ficha.
+- - **Crear:** rellenar la ficha en modo *nuevo* y guardar (`actividad_nuevo`).
+- - **Eliminar:** seleccionar actividad(es) en un listado y confirmar borrado (`actividad_eliminar`).
 
-## Buscar Y Abrir Actividades
+### Donde Entrar
 
-1. Menu **Buscar …** segun rol (crt, ca, agd…).
-2. Pantalla de filtros `actividad_que` (tipo en cascada, estado, nombre, lugar,
-   organiza, publicada, periodo y fases si hay procesos). Los roles de centro
-   no ven los filtros de lugar/organiza/publicada.
-3. Listado (`actividad_select`) → abrir ficha (`actividad_ver`) con dossiers
-   (asistentes, cargos, plazas, procesos…).
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
+- Ruta de menu: pendiente de documentar.
 
-## Crear, Editar, Eliminar (tareas habituales)
+### Tareas Habituales
 
-- **¿Como creo una actividad?** Ficha en blanco (`actividad_ver`, modo nuevo):
-  concretar el tipo completo en la cascada, rellenar nombre, fechas, estado y
-  organiza (campos con `*`) y pulsar *crear ficha*. Con `procesos`, el sistema
-  comprueba el permiso de crear para ese tipo y fija el estado inicial segun el
-  proceso. Tras crear, el formulario se vacia para crear otra.
-- **¿Como edito?** Abrir la ficha y *guardar cambios* (boton visible solo con
-  permiso de modificar). Cambiar las plazas propaga el valor al modulo de
-  plazas; cambiar el organiza desde/hacia la propia dl regenera el proceso.
-- **¿Como cambio el tipo?** Accion *cambiar tipo* (ficha/listado): la actividad
-  vuelve a proyecto y hay que volver a marcar las fases. El sistema sugiere
-  regenerar el nombre.
-- **¿Como elimino?** Desde los listados (`actividad_select`,
-  `lista_actividades_sg`) con las actividades marcadas. Solo se borra de verdad
-  si esta en *proyecto* y es de la propia dl; en otro caso queda *borrable*
-  (o, si era importada, solo se quita la importacion). Con `procesos` se exige
-  el permiso de borrar por actividad.
-- **¿Como duplico?** Accion *duplicar* en el listado: copia **la primera**
-  actividad marcada como `dup <nombre>` en estado proyecto.
-- **¿Como importo actividades de otra dl?** Menu *Importar*
-  (`actividad_que?modo=importar`) → marcar → importar. Pueden salir avisos de
-  fases del proceso.
-- **¿Como publico?** Menu *Publicar* (`actividad_que?modo=publicar`) → marcar →
-  publicar (solo actividades de la propia dl).
+Pendiente de revisar. No se han inferido tareas desde el flujo.
 
-## Calendario Y Listas Por Casa
+### Errores O Avisos Frecuentes
 
-- **Casas comunes** (roles 8, 20): `calendario_listas.php` — variantes sf/sv/comunes.
-- Enlace a **casas**, **actividadtarifas**, **resumen plazas** desde JS actividades.
+- `actividad no encontrada`
+- `sesión de permisos no disponible`
+- `No tiene permiso para borrar esta actividad`
+- `hay un error, no se ha eliminado`
+- `hay un error, no se ha guardado`
+- `debe seleccionar un tipo de actividad`
+- `No puede crear una actividad que organiza una dl/r que ya usa aquinate`
+- `No tiene permiso para crear una actividad de este tipo`
+- `debe llenar todos los campos que tengan un (*)`
+- `tipo de actividad incorrecto`
+- `hay un error, no se ha importado`
 
-## Tipos De Actividad
+### Permisos
 
-- Mantenimiento catalogo `tipo_activ` — metadata, formularios modificar.
-- Afecta permisos en asistentes, cargos, SACD, procesos.
+- Si la app `procesos` esta instalada: por **cada** actividad exige
+- Sin `procesos`: no hay validacion de permisos en servidor.
+- Si la app `procesos` esta instalada: exige `$_SESSION['oPermActividades']`
+- Sin `procesos`: no hay validacion de permisos en servidor (control en UI).
 
-## Modulos Dependientes (documentados aparte)
+### Referencias Internas
 
-actividadplazas, actividadcargos, asistentes, actividadtarifas, actividadessacd, actividadescentro, procesos, planning, pasarela, notas, casas…
+- Flujo: `actividades.actividad.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad.md`
 
-Legacy: mapas `documentacion/Documentacion_Obix/actividades/mapa_*.md`
+## Cambiar tipo de actividad
 
-## Notas De Revision (tanda 1 ficha actividad, jun 2026)
+### Para Que Sirve
 
-Hallazgos de la revision profunda de `actividad_*` (no se ha tocado codigo):
+Seleccionar un nuevo tipo en la cascada, confirmar aviso de vuelta a *proyecto* y guardar.
 
-- **Regresion latente**: `_actividad_form_body.html.twig` usa la clase legacy
-  `actividades\model\value_objects\StatusId` (ya inexistente) en la rama que se
-  renderiza cuando la app `procesos` NO esta instalada; en ese escenario la
-  ficha fallaria. Con `procesos` instalada (caso habitual) no afecta.
-- **Entrada muerta**: `tipo_horario` se lee en el endpoint `actividad_nuevo`
-  pero no se guarda (el legacy original si lo guardaba en editar/cambiar_tipo);
-  el formulario actual no tiene ese campo.
-- **Endpoint sin consumidor**: `/src/actividades/actividad_fase_completada_datos`
-  no se llama desde ningun sitio (API de paridad documentada en `agents.md`).
-- **Permisos**: editar, cambiar tipo, publicar, importar y duplicar no
-  re-validan permisos en servidor; el control esta en la UI (botones segun
-  `PermisosActividades`). Crear y eliminar si validan (con `procesos`).
+### Donde Entrar
+
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `debe seleccionar un tipo de actividad`
+- `actividad no encontrada`
+- `hay un error, no se ha guardado + detalle`
+
+### Permisos
+
+- **No valida permisos en servidor**; el control esta en la UI (la accion
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_cambiar_tipo.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_cambiar_tipo.md`
+
+## Duplicar actividad
+
+### Para Que Sirve
+
+Seleccionar actividad origen y duplicarla (nueva ficha en proyecto).
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `no se ha seleccionado ninguna actividad`
+- `actividad no encontrada`
+- `no se puede duplicar actividades que no sean de la propia dl`
+- `hay un error, no se ha guardado + detalle`
+
+### Permisos
+
+- No exige permiso para duplicar actividades de la propia dl (control en la UI:
+- El permiso oficina `des` (`$_SESSION['oPerm']`) solo amplia el origen permitido
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_duplicar.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_duplicar.md`
+
+## Guardar edición de actividad
+
+### Para Que Sirve
+
+Modificar campos de la actividad (fechas, lugar, plazas, observaciones, etc.) y guardar sin cambiar el tipo.
+
+### Donde Entrar
+
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `sesión de permisos no disponible`
+- `debe seleccionar un tipo de actividad`
+- `actividad no encontrada`
+- `hay un error, no se ha guardado + detalle`
+
+### Permisos
+
+- Exige `$_SESSION['oPermActividades']` (`PermisosActividades`); sin ella responde error.
+- **No valida el permiso `modificar` en servidor**: el control esta en la UI
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_editar.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_editar.md`
+
+## Consultar fase completada
+
+### Para Que Sirve
+
+Validar estado de una fase sin recargar toda la ficha.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- No valida permisos.
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_fase_completada.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_fase_completada.md`
+
+## Prefill fases completadas
+
+### Para Que Sirve
+
+Ver checkboxes de fases coherentes con el estado real del proceso al editar/crear.
+
+### Donde Entrar
+
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- No valida permisos: cualquier sesion puede consultar las fases de cualquier
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_fases_completadas.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_fases_completadas.md`
+
+## Importar actividad de otra dl
+
+### Para Que Sirve
+
+Buscar actividades externas (`modo=importar`), seleccionar una o varias e importarlas.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `hay un error, no se ha importado + detalle (por id fallido)`
+
+### Permisos
+
+- El caso de uso no valida permisos; el control de acceso esta en la UI
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_importar.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_importar.md`
+
+## Nivel STGR por defecto
+
+### Para Que Sirve
+
+Al concretar tipo de actividad, el desplegable STGR se pre-rellena con el nivel habitual.
+
+### Donde Entrar
+
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_nivel_stgr_default.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_nivel_stgr_default.md`
+
+## Ejecutar generación nuevo curso
+
+### Para Que Sirve
+
+Confirmar años en `actividad_nuevo_curso` y lanzar la generación (puede tardar varios minutos).
+
+### Donde Entrar
+
+- Generar actividades del nuevo curso (frontend/actividades/controller/actividad_nuevo_curso.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; opera siempre sobre la delegación actual. La
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_nuevo_curso_ejecutar.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_nuevo_curso_ejecutar.md`
+
+## Permiso crear actividad
+
+### Para Que Sirve
+
+Al crear ficha nueva, el sistema bloquea o permite el formulario según permisos de proceso.
+
+### Donde Entrar
+
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `Sesión sin permisos de actividades`
+
+### Permisos
+
+- Requiere sesion con `$_SESSION['oPermActividades']` (`PermisosActividades`);
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_permiso_crear.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_permiso_crear.md`
+
+## Publicar actividades
+
+### Para Que Sirve
+
+Buscar actividades en modo publicar, seleccionar y ejecutar publicación masiva.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `hay un error, no se ha guardado + detalle (por id fallido)`
+
+### Permisos
+
+- El caso de uso no valida permisos; el control de acceso esta en la UI
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_publicar.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_publicar.md`
+
+## Selector tipo en buscar actividad
+
+### Para Que Sirve
+
+Al cargar `actividad_que` o el bloque tipo del planning, ver desplegables coherentes con permisos y parámetros (`sasistentes`, `sactividad`, `ssfsv`).
+
+### Donde Entrar
+
+- Buscar actividad (filtros) (frontend/actividades/controller/actividad_que.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- No exige permiso para llamar; los permisos de oficina de la sesion
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_que.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_que.md`
+
+## Filtros extra buscar actividad
+
+### Para Que Sirve
+
+Tras abrir buscar actividad, ver filtros adicionales según rol (ocultos para usuarios `ctr`).
+
+### Donde Entrar
+
+- Buscar actividad (filtros) (frontend/actividades/controller/actividad_que.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- El bloque solo se devuelve si el rol del usuario **no** es un rol PAU de
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_que_filtros.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_que_filtros.md`
+
+## Listar resultados buscar actividad
+
+### Para Que Sirve
+
+Ver listado tras buscar, con enlaces a ficha, importar, publicar o seleccionar según modo.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- Sin control que bloquee el endpoint. Lee `$_SESSION['oPerm']`/rol PAU para decidir columnas y si se
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_select.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_select.md`
+
+## Desplegables lugar (popup)
+
+### Para Que Sirve
+
+Al elegir modo historial o región, cargar casas/ubis candidatas antes de confirmar.
+
+### Donde Entrar
+
+- Seleccionar lugar (popup) (frontend/actividades/controller/actividad_select_ubi.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `opción no definida: tipo=…`
+- `falta saber quien organiza (modo freq sin dl_org)`
+
+### Permisos
+
+- Sin control de permisos propio. La autorización se resuelve en el frontend
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_select_ubi_desplegable.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_select_ubi_desplegable.md`
+
+## Etiquetas de estado actividad
+
+### Para Que Sirve
+
+Ver nombres de estado correctos según sf/sv y permisos al abrir ficha o planning.
+
+### Donde Entrar
+
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_status_labels.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_status_labels.md`
+
+## Cascada tipo actividad (AJAX)
+
+### Para Que Sirve
+
+Al cambiar un nivel de la cascada, actualizar los desplegables dependientes sin recargar toda la página.
+
+### Donde Entrar
+
+- Seleccionar lugar (popup) (frontend/actividades/controller/actividad_select_ubi.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `opción no definida: salida=<valor>`
+
+### Permisos
+
+- No exige permiso para llamar; en `salida=asistentes` los permisos de oficina
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_tipo.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_tipo.md`
+
+## Cargar datos de ficha actividad
+
+### Para Que Sirve
+
+Al abrir ver/editar/nuevo/planning, el sistema carga en servidor los datos necesarios para pintar la ficha sin acceder a `src/` desde el navegador.
+
+### Donde Entrar
+
+- Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- No valida permisos: devuelve los datos de cualquier `id_activ`. El control de
+
+### Referencias Internas
+
+- Flujo: `actividades.actividad_ver.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_ver.md`
+
+## Listados calendario nuevo
+
+### Para Que Sirve
+
+Desde menú *Nuevo calendario > listados*, elegir informe y periodo; ver tabla de actividades.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `opción no definida en switch… ( que inválido; aparece dentro del HTML)`
+
+### Permisos
+
+- Sin control que bloquee el endpoint. En modo `o_actual` filtra los grupos de oficina con
+
+### Referencias Internas
+
+- Flujo: `actividades.calendario_listas.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/calendario_listas.md`
+
+## Tabla listado actividades
+
+### Para Que Sirve
+
+Ver tabla de actividades tras enviar filtros desde `lista_activ_que` o `actividad_que`.
+
+### Donde Entrar
+
+- Filtros listados SR/SG (frontend/actividades/controller/lista_activ_que.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- El controller lee `$_SESSION['oPerm']` para calcular flags de oficina (`vcsd`, `des`, `sg`, `admin`)
+
+### Referencias Internas
+
+- Flujo: `actividades.lista_activ.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/lista_activ.md`
+
+## Listado actividades SG
+
+### Para Que Sirve
+
+Consultar actividades SG de la r/dl o del centro, filtrar y abrir fichas desde la tabla.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- No hay control de permisos que bloquee el endpoint. La visibilidad de cada actividad depende de
+
+### Referencias Internas
+
+- Flujo: `actividades.lista_actividades_sg.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/lista_actividades_sg.md`
+
+## Listado por centros
+
+### Para Que Sirve
+
+Tras elegir centro y periodo en *de cada ctr*, ver el listado AJAX en la misma pantalla.
+
+### Donde Entrar
+
+- Seleccionar centro y periodo (listados por ctr) (frontend/actividades/controller/actividades_centro_que.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- Sin control de permisos propio en el caso de uso. La autorización se resuelve en el frontend
+
+### Referencias Internas
+
+- Flujo: `actividades.lista_centros_activ.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/lista_centros_activ.md`
+
+## Resultado listado CSV SR
+
+### Para Que Sirve
+
+Visualizar listado o descargar CSV para San Rafael.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `hay un error, no se ha guardado la preferencia (en pref_error, no bloquea listado)`
+
+### Permisos
+
+- Sin control de permisos que bloquee el endpoint. Lee `$_SESSION['oPerm']` para ocultar el nombre de
+
+### Referencias Internas
+
+- Flujo: `actividades.lista_sr_csv.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/lista_sr_csv.md`
+
+## Bootstrap listado CSV SR
+
+### Para Que Sirve
+
+Ver el formulario pre-rellenado con la última preferencia guardada del usuario.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- Sin control de permisos propio; solo lee la preferencia del usuario actual. La autorización se
+
+### Referencias Internas
+
+- Flujo: `actividades.lista_sr_csv_que.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/lista_sr_csv_que.md`
+
+## tipos de actividad
+
+### Para Que Sirve
+
+Listar tipos, crear uno nuevo, renombrar o eliminar desde la pantalla de administración.
+
+### Donde Entrar
+
+- Gestión de tipos de actividad (frontend/actividades/controller/tipo_activ.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `tipo de actividad no encontrado`
+- `Id incorrecto (alta)`
+- `hay un error, no se ha guardado / hay un error, no se ha eliminado`
+- `Aviso: IMPORTANTE: Debe añadir un proceso… (con procesos instalado)`
+
+### Permisos
+
+- Sin control de permisos propio. La autorización se resuelve en el frontend (`tipo_activ.php`, firma
+- El caso de uso no aplica control de permisos propio. La autorización de oficina se resuelve en el
+
+### Referencias Internas
+
+- Flujo: `actividades.tipo_activ.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/tipo_activ.md`
+
+## Formulario alta tipo actividad
+
+### Para Que Sirve
+
+Pulsar *nuevo* en gestión de tipos y ver el formulario vacío con desplegables.
+
+### Donde Entrar
+
+- Gestión de tipos de actividad (frontend/actividades/controller/tipo_activ.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- El formulario se construye con `perm_jefe(true)`. El control de acceso real se resuelve en el
+
+### Referencias Internas
+
+- Flujo: `actividades.tipo_activ_form.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/tipo_activ_form.md`
+
+## Formulario editar tipo actividad
+
+### Para Que Sirve
+
+Elegir tipo en la lista y abrir formulario con nombre actual para modificar.
+
+### Donde Entrar
+
+- Gestión de tipos de actividad (frontend/actividades/controller/tipo_activ.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- Sin control de permisos propio en el caso de uso. La autorización se resuelve en el frontend
+
+### Referencias Internas
+
+- Flujo: `actividades.tipo_activ_form_modificar.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/tipo_activ_form_modificar.md`
+
+## Metadatos cascada tipo actividad
+
+### Para Que Sirve
+
+Al cambiar un nivel en el formulario de tipos, actualizar los siguientes desplegables.
+
+### Donde Entrar
+
+- Gestión de tipos de actividad (frontend/actividades/controller/tipo_activ.php)
+- Ruta de menu: pendiente de documentar.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- Sin control de permisos propio; se trata de metadatos de catálogo. La autorización de contexto la
+
+### Referencias Internas
+
+- Flujo: `actividades.tipo_activ_metadata.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/actividades/flujos/tipo_activ_metadata.md`
+
+## Revision Pendiente
+
+- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
+- Completar rutas de menu.
+- Confirmar permisos necesarios.
+- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.

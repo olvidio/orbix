@@ -4,44 +4,52 @@ tipo: "endpoint"
 modulo: "pasarela"
 url: "/src/pasarela/contribucion_reserva_default_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/pasarela/infrastructure/ui/http/controllers/contribucion_reserva_default_data.php"
-entrada: []
+entrada:[]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "pasarela_ContribucionReservaDefaultDataData"
-respuesta_data: ["default:string"]
 requiere_hashb: false
-frontend_referencias: ["frontend/pasarela/controller/contribucion_reserva_ajax.php"]
-casos_uso: ["src\\pasarela\\application\\ContribucionReservaDefaultData"]
-tags: ["pasarela", "contribucion", "reserva", "default", "data"]
-estado_revision: "generado"
+errores:[]
+frontend_referencias:
+  - "frontend\/pasarela\/controller\/contribucion_reserva_ajax.php"
+casos_uso: ["src\pasarela\application\ContribucionReservaDefaultData"]
+tags: ["pasarela"]
+estado_revision: "revisado"
 ---
 
 # Contribucion Reserva Default Data
 
-Devuelve solo el valor por defecto del parámetro `contribucion_reserva`, para alimentar el formulario `form_default` desde el frontend.
+Valor por defecto de `contribucion_reserva` para `form_default`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Precarga `{default}`.
 
 ## Endpoint
 
 - URL: `/src/pasarela/contribucion_reserva_default_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/contribucion_reserva_default_data.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Sin parámetros POST (listados sin filtros o lectura de configuración persistida).
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `pasarela_ContribucionReservaDefaultDataData`):
-  - `default` (`string`)
+- Payload: `{default: string}`.
+
+## Errores conocidos
+
+No devuelve errores `_()` propios (solo validación vacía en mutaciones).
+
+## Permisos
+
+Sin control en el caso de uso; autorización en frontend.
 
 ## Casos De Uso
 
@@ -50,9 +58,3 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 ## Frontend Relacionado
 
 - `frontend/pasarela/controller/contribucion_reserva_ajax.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

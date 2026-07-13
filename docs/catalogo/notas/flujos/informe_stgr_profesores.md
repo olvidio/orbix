@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.informe_stgr_profesores"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/informe_stgr_profesores_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Informe Stgr Profesores
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.informe_stgr_profes
 
 ## Objetivo De Usuario
 
-Gestiona InformeStgrProfesores. Calcula el informe anual STGR de "profesores" (puntos 36..47). Encapsula el uso de src\notas\application\legacy\Resumen (legacy) para que los controllers del frontend no importen la clase legacy directamente. Devuelve un array neutro {res, textos, curso_txt} listo para renderizado. Tipos de profesor utilizados: 1 Ordinario 2 Extraordinario 3 Adjunto 4 Encargado 5 Ayudante 6 Asociado 0 (todos).
+Generar informe anual de profesores.
 
 ## Punto De Entrada
 
@@ -53,9 +53,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** ESTUDIOS > Datos e informes > Informe anual profesores > Con números / Con listados

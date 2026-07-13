@@ -17,9 +17,9 @@ paths:
       operationId: "post_asignaturas_asignaturas_con_separador_data"
       summary: "Asignaturas Con Separador Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve el mapa `id_asignatura => nombre_asignatura` de las asignaturas activas, ordenado por grupo (`op`) y nombre, para poblar un desplegable de selección de asignatura.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/asignaturas/api/asignaturas_con_separador_data.md`
       tags:
@@ -51,9 +51,9 @@ paths:
       operationId: "post_asignaturas_asignaturas_map_data"
       summary: "Asignaturas Map Data"
       description: |
-        Mapa id_asignatura => nombre_corto para pantallas que no deben usar el contenedor en frontend.
+        Devuelve el mapa `id_asignatura => nombre_corto` de todas las asignaturas, pensado para pantallas que necesitan la correspondencia id→nombre sin montar el contenedor de asignaturas en frontend.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/asignaturas/api/asignaturas_map_data.md`
       tags:

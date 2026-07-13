@@ -4,42 +4,54 @@ tipo: "endpoint"
 modulo: "actividades"
 url: "/src/actividades/tipo_activ_form_nuevo"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/actividades/infrastructure/ui/http/controllers/tipo_activ_form_nuevo.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/actividades/controller/tipo_activ.php"]
 casos_uso: ["src\\actividades\\application\\TipoActivFormNuevo"]
 tags: ["actividades", "tipo", "activ", "form", "nuevo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tipo Activ Form Nuevo
 
-Devuelve el HTML del formulario para crear un nuevo tipo de actividad. Portado del case `form_nuevo` del dispatcher legacy.
+Devuelve el HTML del formulario para crear un nuevo tipo de actividad. Portado del case `form_nuevo`
+del dispatcher legacy.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Compone el formulario de alta de tipo de actividad. Renderiza el selector de composición del código
+(`ActividadTipo` en modo gestión, con `perm_jefe`) más los inputs `id_nom_tipo_activ` (dígito final del
+id) y `nom_tipo_activ` (nombre), e incluye la cápsula HashB de alta
+(`TipoActivGestionFormHashCompose::nuevoHiddenHtml`). El submit llama a `fnjs_guardar_nuevo`.
 
 ## Endpoint
 
 - URL: `/src/actividades/tipo_activ_form_nuevo`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_form_nuevo.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+Sin parámetros. El caso de uso no lee `$_POST`.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (data serializada como string JSON; el front hace segundo `JSON.parse`).
+- Forma: `standard_envelope_string_data`.
+- `data` es un objeto con una única clave `html` que contiene el formulario de alta renderizado.
+
+## Permisos
+
+- El formulario se construye con `perm_jefe(true)`. El control de acceso real se resuelve en el
+  frontend (`tipo_activ.php`, firma `HashFront`) y en `$_SESSION['oPerm']`; no inferir permisos aquí.
 
 ## Casos De Uso
 
@@ -47,10 +59,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/actividades/controller/tipo_activ.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/actividades/controller/tipo_activ.php` (emite la URL como `url_form_nuevo`, firmada con `HashFront`).

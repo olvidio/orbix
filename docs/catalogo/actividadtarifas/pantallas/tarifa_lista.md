@@ -11,12 +11,12 @@ endpoints: ["/src/actividadtarifas/tipo_tarifa_lista_data"]
 capacidades: ["actividadtarifas.tipo_tarifa.gestionar"]
 campos: []
 acciones: ["fnjs_modificar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tarifa Lista
 
-Controlador AJAX HTML: listado del catalogo `TipoTarifa`.
+Fragmento AJAX: renderiza la tabla HTML del catálogo `TipoTarifa` a partir de `tipo_tarifa_lista_data`.
 
 ## Tipo
 
@@ -49,11 +49,9 @@ No se han detectado campos de formulario.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Cargado automáticamente al abrir `tarifa.phtml`. Muestra columnas id, sección, letra, modo y
+observaciones; la columna acción invoca `fnjs_modificar(id_tarifa)` si el backend lo permite.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Sin entrada propia; accesible como fragmento de `tarifa.php` (definir tarifa).

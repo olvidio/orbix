@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.doc_de_dlb"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "inventario"
-nombre: "Doc De Dlb"
+nombre: "Inventario DLB/casa"
 controller: "frontend/inventario/controller/doc_de_dlb.php"
 vistas: ["frontend/inventario/view/doc_de_dlb.phtml"]
 fragmentos_frontend: ["frontend/inventario/controller/doc_asignar_dlb.php", "frontend/inventario/controller/doc_imprimir_dlb.php"]
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_docs_de_dlb"]
 capacidades: ["inventario.lista_docs_de_dlb.gestionar"]
 campos: ["form.sel", "post.id_tipo_doc", "post.inventario"]
 acciones: ["fnjs_go", "fnjs_selectAll"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Doc De Dlb
+# Inventario DLB/casa
 
-Descripcion funcional pendiente de revisar.
+Consulta documentos DLB por tipo; asignar, modificar e imprimir.
+
 
 ## Tipo
 
@@ -53,11 +54,9 @@ Descripcion funcional pendiente de revisar.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Consulta documentos DLB por tipo; asignar, modificar e imprimir.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada directa (desde inventario_que)
+- **Pills2:** —

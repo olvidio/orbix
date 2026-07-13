@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Alias de edición de cuadrícula; comparte vista y endpoints con `ver_cuadricula_zona` en modo modificar.
 
 ## Uso En Ayuda
 

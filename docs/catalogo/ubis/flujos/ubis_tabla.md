@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.ubis_tabla"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/ubis_tabla_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ubis Tabla
-
-Propuesta generada automaticamente desde la capacidad `ubis.ubis_tabla.gestionar` y sus pantallas relacionadas.
+# Flujo - Ubis Tabla
 
 ## Objetivo De Usuario
 
-Gestiona UbisTabla. Normaliza los parámetros de entrada del request.
+Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla navegable.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: scdl > direcciones > buscar. Pills2: scdl > direcciones > buscar.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -58,11 +56,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `debe poner algún criterio de búsqueda`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > direcciones > buscar
+- **Pills2:** scdl > direcciones > buscar

@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "encargossacd"
 url: "/src/encargossacd/encargo_select_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/encargossacd/infrastructure/ui/http/controllers/encargo_select_data.php"
 entrada: ["post.desc_enc:mixed", "post.id_tipo_enc:mixed"]
 entrada_obligatoria: []
@@ -15,20 +15,23 @@ requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/encargo_select.php"]
 casos_uso: ["src\\encargossacd\\application\\EncargoSelectData"]
 tags: ["encargossacd", "encargo", "select", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Encargo Select Data
 
 Datos para la lista de encargos (`encargo_select`). El frontend construye la `frontend\shared\web\Lista` y los enlaces; aqui devolvemos unicamente los datos planos de cada fila.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
+## Objetivo funcional
+
+Filas planas del listado de encargos (`desc_enc`, `id_tipo_enc`). El frontend construye la `Lista` y enlaces. Sucesor del listado en `encargo_select.php`.
+
 ## Endpoint
 
 - URL: `/src/encargossacd/encargo_select_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/encargo_select_data.php`
 
 ## Entrada
@@ -40,20 +43,13 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_EncargoSelectDataData`):
-  - `filas` (`list<array{`)
-  - `id_enc` (`integer`)
-  - `sf_sv` (`integer`)
-  - `idioma_enc` (`string`)
-  - `id_ubi` (`integer`)
-  - `desc_enc` (`string`)
-  - `desc_lugar` (`string`)
-  - `seccion` (`string`)
-  - `nombre_ubi` (`string`)
-  - `idioma` (`string`)
+- Helper: `ContestarJson::enviar`.
+- Claves: `filas[]` con `id_enc`, `sf_sv`, `desc_enc`, `desc_lugar`, `seccion`, `nombre_ubi`, `idioma` (doble `JSON.parse`).
+
+
+## Permisos
+
+Sin control propio; frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -63,8 +59,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - `frontend/encargossacd/controller/encargo_select.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

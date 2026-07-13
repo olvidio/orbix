@@ -7,22 +7,26 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/cambios/infrastructure/ui/http/controllers/cambio_usuario_objeto_pref_guardar.php"
 entrada: ["post.aviso_off:string", "post.aviso_on:string", "post.aviso_outdate:string", "post.aviso_tipo:integer", "post.casas:array", "post.dl_propia:string", "post.id_fase_ref:integer", "post.id_item_usuario_objeto:integer", "post.id_tipo_activ:string", "post.id_usuario:integer", "post.objeto:string"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_usuario"]
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "cambios_CambioUsuarioObjetoPrefGuardarData"
-respuesta_data: ["error:string, id_item_usuario_objeto: int"]
 requiere_hashb: false
-frontend_referencias: []
+frontend_referencias: ["frontend/cambios/controller/usuario_avisos_pref.php"]
 casos_uso: ["src\\cambios\\application\\CambioUsuarioObjetoPrefGuardar"]
 tags: ["cambios", "cambio", "usuario", "objeto", "pref", "guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Cambio Usuario Objeto Pref Guardar
 
-Endpoint JSON: crea o actualiza un `CambioUsuarioObjetoPref`.
+Crea o actualiza un `CambioUsuarioObjetoPref` (qué objeto/tipo/fase/tipo de aviso se escucha).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Alta (`id_item_usuario_objeto=0`) o edición de la preferencia de objeto. Normaliza `id_tipo_activ` a
+6 caracteres (relleno con `.`), calcula `dl_org` según `dl_propia`, y opcionalmente guarda casas
+(`casas[]` → `csv_id_pau`).
 
 ## Endpoint
 
@@ -35,27 +39,31 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `aviso_off` | `string` | controller+application | No | controller+application |
-| `aviso_on` | `string` | controller+application | No | controller+application |
-| `aviso_outdate` | `string` | controller+application | No | controller+application |
-| `aviso_tipo` | `integer` | controller+application | No | controller+application |
-| `casas` | `array` | controller+application | No | controller+application |
-| `dl_propia` | `string` | controller+application | No | controller+application |
-| `id_fase_ref` | `integer` | controller+application | No | controller+application |
-| `id_item_usuario_objeto` | `integer` | controller+application | No | controller+application |
-| `id_tipo_activ` | `string` | controller+application | No | controller+application |
-| `id_usuario` | `integer` | controller+application | No | controller+application |
-| `objeto` | `string` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_usuario` | `integer` | controller+application | Sí | Usuario o grupo destino |
+| `id_item_usuario_objeto` | `integer` | controller+application | No | `0` = alta |
+| `id_tipo_activ` | `string` | controller+application | No | 6 chars; se rellena con `.` |
+| `dl_propia` | `string` | controller+application | No | Checkbox delegación propia |
+| `objeto` | `string` | controller+application | No | Objeto del catálogo de avisos |
+| `aviso_tipo` | `integer` | controller+application | No | Tipo de aviso |
+| `id_fase_ref` | `integer` | controller+application | No | Fase/estado de referencia |
+| `aviso_off` / `aviso_on` / `aviso_outdate` | `string` | controller+application | No | Checkboxes |
+| `casas` | `array` | controller+application | No | IDs de ubicación filtradas |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `cambios_CambioUsuarioObjetoPrefGuardarData`):
-  - `error` (`string, id_item_usuario_objeto: int`)
+- Éxito: `data` con `id_item_usuario_objeto` (`int`).
+- Error: mensaje en envelope; `id_item_usuario_objeto: 0` en payload.
+
+## Errores conocidos
+
+- `falta id_usuario`
+- `id_tipo_activ invalido`
+- `Hay un error, no se ha guardado`
+
+## Permisos
+
+- Sin control propio; formulario `usuario_avisos_pref` + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -63,10 +71,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/cambios/controller/usuario_avisos_pref.php`: primer paso de `fnjs_grabar_todo` vía
+  `url_guardar_objeto` del payload de `usuario_avisos_pref_form_data`.

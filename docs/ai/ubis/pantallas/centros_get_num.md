@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla AJAX de datos numéricos (buzón, pi, cartas) de centros DL.
 
 ## Uso En Ayuda
 

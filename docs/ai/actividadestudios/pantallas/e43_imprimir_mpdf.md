@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento HTML del formulario E43 preparado para impresión/PDF. No es una pantalla autónoma: lo incluye `e43_2_mpdf.php` mediante `ob_start`/`include`.
 
 ## Uso En Ayuda
 
@@ -23,7 +23,8 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Campos Detectados
 
-- No hay campos detectados.
+- `get.id_activ`
+- `get.id_nom`
 
 ## Acciones Detectadas
 

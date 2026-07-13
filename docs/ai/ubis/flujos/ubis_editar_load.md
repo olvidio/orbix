@@ -42,10 +42,18 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona UbisEditarLoad. Carga ficha ubis (centro/casa) para frontend/ubis/controller/ubis_editar.php sin repositorios en el frontend.
+Carga la ficha completa de un ubi para edición o alta, normalizando obj_pau de delegación.
+
+## Errores Documentados
+
+- `falta definir obj_pau`
+- `No se encuentra ubi id %s`
+- `tipo de entidad inesperado para centro dl`
+- `tipo de entidad inesperado para centro ex`
+- `tipo de entidad inesperado para casa`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

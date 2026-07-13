@@ -2,24 +2,23 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "cambios"
-titulo: "Cambio Usuario Eliminar Hasta Fecha"
+titulo: "Purgar cambios hasta fecha"
 flujo: "cambios.cambio_usuario_eliminar_hasta_fecha.gestionar.flujo"
-preguntas: ["Como ejecutar en Cambio Usuario Eliminar Hasta Fecha?"]
+preguntas: []
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["cambios.pantalla.avisos_generar"]
 endpoints: ["/src/cambios/cambio_usuario_eliminar_hasta_fecha"]
 source: "docs/catalogo/cambios/flujos/cambio_usuario_eliminar_hasta_fecha.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Cambio Usuario Eliminar Hasta Fecha
+# Ayuda IA - Purgar cambios hasta fecha
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Cambio Usuario Eliminar Hasta Fecha`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Purgar cambios hasta fecha`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Cambio Usuario Eliminar Hasta Fecha?
 
 ## Donde Entrar
 
@@ -29,23 +28,21 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `cambios.pantalla.avisos_generar`
 
 ## Objetivo
 
-Gestiona CambioUsuarioEliminarHastaFecha. Elimina los CambioUsuario con fecha <= f_fin.
+Eliminar en bloque todos los cambios anotados con fecha anterior o igual a la indicada.
+
+## Errores Documentados
+
+- `debe indicar la fecha`
+- `Hay un error al eliminar los cambios hasta la fecha indicada`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

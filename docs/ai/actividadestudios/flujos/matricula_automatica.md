@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **matricular a todos** desde el menú (o desde búsqueda de persona con selección).
+2. El sistema recibe `id_pau`/`sel` (persona concreta) o procesa todas las personas activas.
+3. Para cada persona, borra matrículas previas si el plan no está confirmado y recalcula.
+4. Se muestra el mensaje resumen en `matricular.phtml`.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/matricula_automatica`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona MatriculaAutomatica. Matricula masivamente a una o varias personas en las asignaturas del plan de estudios de su actividad vigente.
+El usuario ejecuta la matriculación automática de una o todas las personas activas: el sistema determina la actividad de estudios vigente (`ca-n`, `cv-agd`), recalcula asignaturas matriculables respetando aprobadas y topes de opcionales, y crea las matrículas. Sustituye `apps/actividadestudios/controller/matricular.php`.
 
 ## Limites De La Respuesta
 

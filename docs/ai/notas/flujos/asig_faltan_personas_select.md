@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AsigFaltanPersonasSelectTabla. Tabla de asig_faltan_personas_select.
+Listar alumnos que deben una asignatura.
 
 ## Limites De La Respuesta
 

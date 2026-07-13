@@ -31,7 +31,9 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la pantalla de entrada del flujo.
+2. Completar parámetros (región, dl, flags).
+3. Ejecutar y revisar avisos en pantalla.
 
 Referencias tecnicas para verificar la respuesta:
 - Ninguna referencia API inferida.
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona RenombrarEsquemaVerificacionContexto, VerificarEstadoRenombrarEsquema. Verificación de estado del renombre (POST: esquema_origen opcional para solo comprobar el destino; región y dl obligatorios; acepta POST esquema legado con sufijo v/f como origen).
+Comprobar estado del renombre antes/después.
 
 ## Limites De La Respuesta
 

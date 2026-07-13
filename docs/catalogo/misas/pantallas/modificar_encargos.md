@@ -1,7 +1,7 @@
 ---
 id: "misas.pantalla.modificar_encargos"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "misas"
 nombre: "Modificar Encargos"
 controller: "frontend/misas/controller/modificar_encargos.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/misas/modificar_encargos_data"]
 capacidades: ["misas.modificar_encargos.gestionar"]
 campos: ["form.id_zona", "form.orden"]
 acciones: ["fnjs_ver_encargos_zona"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Modificar Encargos
+# Modificar encargos
 
-Descripcion funcional pendiente de revisar.
+Entry point para CRUD de encargos de zona (grupo ZONAS_MISAS). Selectores zona/orden y grid AJAX `ver_encargos_zona`.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/misas/controller/modificar_encargos.php`
 
 ## Vistas Relacionadas
@@ -48,13 +50,7 @@ Descripcion funcional pendiente de revisar.
 
 - `fnjs_ver_encargos_zona`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Misas > Modificar encargos
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos

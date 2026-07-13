@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Paso 2 del asistente: crea la estructura de esquemas en PostgreSQL.
 
 ## Uso En Ayuda
 

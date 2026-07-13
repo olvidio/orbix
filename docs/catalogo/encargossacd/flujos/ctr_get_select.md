@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["encargossacd.pantalla.ctr_ficha", "encargossacd.pantalla.encargo_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/ctr_get_select_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Ctr Get Select
@@ -21,7 +21,8 @@ Gestiona EncargoCtrSelect. Payload JSON para el desplegable de centros segun fil
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Fragmento AJAX embebido; sin entrada de menú directa.
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -87,9 +88,14 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+

@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "profesores"
-titulo: "Profesor Asignatura Ajax"
+titulo: "Tabla AJAX profesores asignatura"
 flujo: "profesores.profesor_asignatura_ajax.gestionar.flujo"
-preguntas: ["Como ejecutar en Profesor Asignatura Ajax?"]
+preguntas: ["Como consultar en Tabla AJAX profesores asignatura?"]
 pantallas_principales: []
 fragmentos: ["profesores.pantalla.profesor_asignatura_ajax"]
 endpoints: ["/src/profesores/profesor_asignatura_ajax"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/profesores/flujos/profesor_asignatura_ajax.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Profesor Asignatura Ajax
+# Ayuda IA - Tabla AJAX profesores asignatura
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Profesor Asignatura Ajax`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Tabla AJAX profesores asignatura`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Profesor Asignatura Ajax?
+- Como consultar en Tabla AJAX profesores asignatura?
 
 ## Donde Entrar
 
@@ -29,12 +29,14 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Consultar
 
-1. Revisar manualmente los pasos de esta accion.
+1. El usuario cambia la asignatura en el desplegable.
+2. POST a `profesor_asignatura_ajax.php` con `id_asignatura`.
+3. Se inserta HTML de tabla en el contenedor de la pantalla padre.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/profesores/profesor_asignatura_ajax`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ProfesoresAsignaturaLista. Descripcion funcional pendiente de revisar.
+Obtener la lista de profesores para la asignatura seleccionada sin recargar la pantalla principal.
 
 ## Limites De La Respuesta
 

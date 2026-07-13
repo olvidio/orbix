@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["casas.pantalla.calendario_ubi_resumen", "casas.pantalla.calendario_ubi_resumen_body"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/casas/calendario_ubi_resumen_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Calendario Ubi Resumen
@@ -72,10 +72,8 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** adl > Nuevo Calendario > Previsión económica
+- **Pills2:** ACTIVIDADES > Estadísticas económicas > Previsión económica
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

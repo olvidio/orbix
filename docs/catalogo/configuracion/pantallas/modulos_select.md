@@ -1,26 +1,27 @@
 ---
 id: "configuracion.pantalla.modulos_select"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "configuracion"
-nombre: "Modulos Select"
+nombre: "Definir módulos"
 controller: "frontend/configuracion/controller/modulos_select.php"
 vistas: ["frontend/configuracion/view/modulos_select.phtml"]
-fragmentos_frontend: ["frontend/configuracion/controller/modulos_form.php", "frontend/configuracion/controller/modulos_select.php", "frontend/configuracion/controller/modulos_update.php"]
+fragmentos_frontend: ["frontend/configuracion/controller/modulos_form.php", "frontend/configuracion/controller/modulos_update.php"]
 endpoints: ["/src/configuracion/modulos_select_data"]
 capacidades: ["configuracion.modulos_select.gestionar"]
-campos: ["html.mod", "html.refresh"]
+campos: ["html.mod", "html.refresh", "post.sel", "post.id_sel", "post.scroll_id"]
 acciones: ["fnjs_actualizar", "fnjs_eliminar", "fnjs_enviar_formulario", "fnjs_modificar", "fnjs_nuevo", "fnjs_solo_uno"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Modulos Select
+# Definir módulos
 
-Descripcion funcional pendiente de revisar.
+Listado de módulos del esquema Orbix: nombre, descripción, módulos requeridos y aplicaciones
+requeridas. Permite alta, modificación y baja desde botones de fila y enlace «añadir módulo».
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/configuracion/controller/modulos_select.php`
 
 ## Vistas Relacionadas
@@ -29,39 +30,29 @@ Descripcion funcional pendiente de revisar.
 
 ## Fragmentos Frontend Relacionados
 
-- `frontend/configuracion/controller/modulos_form.php`
-- `frontend/configuracion/controller/modulos_select.php`
-- `frontend/configuracion/controller/modulos_update.php`
+- `frontend/configuracion/controller/modulos_form.php` — ficha alta/edición
+- `frontend/configuracion/controller/modulos_update.php` — proxy AJAX guardar/eliminar
 
 ## Endpoints Usados
 
-- `/src/configuracion/modulos_select_data`
+- `/src/configuracion/modulos_select_data` — payload de tabla (`a_cabeceras`, `a_botones`, `a_valores`, hash lista)
 
-## Capacidades Relacionadas
+## Flujo en pantalla
 
-- `configuracion.modulos_select.gestionar`
-
-## Campos Detectados
-
-- `html.mod`
-- `html.refresh`
-
-## Acciones Detectadas
-
-- `fnjs_actualizar`
-- `fnjs_eliminar`
-- `fnjs_enviar_formulario`
-- `fnjs_modificar`
-- `fnjs_nuevo`
-- `fnjs_solo_uno`
+1. Carga `modulos_select_data` y pinta tabla con selección (`sel[]` = `id_mod#`).
+2. **Modificar** / **Eliminar** (requieren una fila seleccionada vía `fnjs_solo_uno`).
+3. **Añadir módulo** → `modulos_form.php` con `mod=nuevo`.
+4. Tras eliminar → refresco AJAX del listado (`refresh=1`).
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Abrir desde menú Configuración > definir módulos.
+2. Revisar el listado de módulos y sus dependencias (módulos/apps requeridos).
+3. Para crear: enlace «añadir módulo».
+4. Para editar o borrar: marcar una fila y pulsar el botón correspondiente.
+5. Al eliminar, confirmar el diálogo; si falla (p. ej. dependencias), se muestra el error del backend.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > Configuración > definir módulos
+- **Pills2:** sistema > Configuración > definir módulos; ADMIN GLOBAL > Configuración > definir módulos

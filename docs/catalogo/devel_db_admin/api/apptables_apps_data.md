@@ -4,44 +4,50 @@ tipo: "endpoint"
 modulo: "devel_db_admin"
 url: "/src/devel_db_admin/apptables_apps_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/devel_db_admin/infrastructure/ui/http/controllers/apptables_apps_data.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "devel_db_admin_ApptablesAppsDataData"
-respuesta_data: ["a_apps:array"]
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/devel_db_admin/controller/apptables.php"]
 casos_uso: ["src\\devel_db_admin\\application\\ApptablesAppsData"]
 tags: ["devel_db_admin", "apptables", "apps", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Apptables Apps Data
 
-JSON con el mapa `id_app` → nombre para {
+Mapa de aplicaciones instaladas para el formulario de gestión de tablas (`apptables`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve el desplegable de apps (`id_app` → nombre) leyendo `AppRepository::getApps()`. Se invoca al
+cargar la pantalla «Tablas de apps».
 
 ## Endpoint
 
 - URL: `/src/devel_db_admin/apptables_apps_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/apptables_apps_data.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Sin parámetros.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `devel_db_admin_ApptablesAppsDataData`):
-  - `a_apps` (`array`)
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
+- Payload en `data`:
+  - `a_apps` (`array<int|string, string>`): `id_app` → nombre de aplicación.
+
+## Permisos
+
+- Sin control propio; pantalla restringida al menú de configuración de desarrollo.
 
 ## Casos De Uso
 
@@ -50,9 +56,3 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 ## Frontend Relacionado
 
 - `frontend/devel_db_admin/controller/apptables.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

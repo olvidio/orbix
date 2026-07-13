@@ -11,12 +11,13 @@ endpoints: ["/src/actividadplazas/plazas_ceder", "/src/actividadplazas/resumen_p
 capacidades: ["actividadplazas.plazas_ceder.gestionar", "actividadplazas.resumen_plazas.gestionar"]
 campos: ["form.id_activ", "form.num_plazas", "form.region_dl", "html.btn_ok", "html.num_plazas", "html.refresh", "post.id_activ", "post.nom_activ", "post.sel"]
 acciones: ["fnjs_actualizar", "fnjs_enviar_formulario", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Resumen Plazas
 
-Pantalla resumen de plazas por actividad.
+Pantalla resumen de plazas de una actividad: desglose por delegación (calendario, cedidas,
+conseguidas, disponibles, ocupadas y libres) con totales, y formulario para ceder plazas a otra dl.
 
 ## Tipo
 
@@ -61,11 +62,13 @@ Pantalla resumen de plazas por actividad.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Presenta, por cada delegación implicada, las plazas de calendario, cedidas, conseguidas, disponibles,
+ocupadas y libres, con una fila de totales. Avisa si la actividad no está publicada o si solo se ven
+las ocupadas por la propia dl. En la parte inferior, el formulario **Ceder** permite indicar un número
+de plazas y una delegación destino; al **Guardar** (`fnjs_guardar`) se envía a `plazas_ceder` y, si
+tiene éxito, la pantalla se recarga (`fnjs_actualizar`).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- Sin entrada de menú en el índice: se abre desde una actividad concreta (menú «Plazas» de la
+  actividad), no directamente desde un menú.

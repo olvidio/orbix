@@ -229,6 +229,8 @@ Las **fichas embebidas** (dossiers) son el mecanismo para ver, desde una persona
 
 Cada usuario tiene un **rol**; el menú muestra solo las entradas permitidas. Los administradores mantienen plantillas de menú, grupos y permisos por pantalla.
 
+El menú se compone de **metamenús** (el destino: pantalla + módulo + parámetros, **iguales para todos**) y del **árbol de menús por layout** (etiquetas y orden, que cambian según el estilo: Legacy, Pills2…). La referencia actual, con las rutas en ambos layouts, está en [`docs/guias/_referencia_menus.md`](guias/_referencia_menus.md).
+
 ### API JSON bajo `/src/`
 
 La interfaz web y la app móvil consumen endpoints REST-like:

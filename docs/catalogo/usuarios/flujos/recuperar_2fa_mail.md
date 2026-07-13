@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/recuperar_2fa_mail"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Recuperar 2fa Mail
-
-Propuesta generada automaticamente desde la capacidad `usuarios.recuperar_2fa_mail.gestionar` y sus pantallas relacionadas.
+# Flujo - Recuperar 2fa Mail
 
 ## Objetivo De Usuario
 
-Gestiona Recuperar2faMail. Descripcion funcional pendiente de revisar.
+Recuperación 2FA: genera código/link y envía mail al usuario.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,12 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Esquema no válido`
+- `No hay email asociado a este usuario`
+- `Error al enviar el correo electrónico`
+- `No se encontró ningún usuario con ese nombre`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

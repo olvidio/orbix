@@ -2,53 +2,34 @@
 id: "planning.planning_persona_ver.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Gestionar Planning Persona Ver"
+nombre: "Flujo - Planning por persona (calendario)"
 capacidad: "planning.planning_persona_ver.gestionar"
-pantallas_principales: []
+pantallas_principales: ["planning.pantalla.planning_persona_que", "planning.pantalla.planning_persona_select"]
 fragmentos: ["planning.pantalla.planning_persona_ver"]
-acciones: ["obtener_datos"]
+acciones: ["cargar_calendario", "exportar"]
 endpoints: ["/src/planning/planning_persona_ver_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Planning Persona Ver
+# Flujo - Planning por persona (calendario)
 
-Propuesta generada automaticamente desde la capacidad `planning.planning_persona_ver.gestionar` y sus pantallas relacionadas.
+Calendario de actividades de las personas seleccionadas en el listado.
 
 ## Objetivo De Usuario
 
-Gestiona PlanningPersonaVer. Actividades por persona (vista plana) para planning_persona_ver.
+Visualizar y exportar el planning individual o múltiple en el periodo elegido.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- Desde `planning_persona_select` → AJAX `planning_persona_ver`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `planning.pantalla.planning_persona_ver`
+### Ver calendario
 
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.modelo`
-- `post.obj_pau`
-- `post.periodo`
-- `post.year`
-
-Acciones JavaScript:
-- `fnjs_exportar`
+1. Seleccionar persona(s) en el listado (`sel` o `sSeleccionados`).
+2. `planning_persona_ver_data` carga actividades en vista plana.
+3. Exportar o consultar leyenda.
 
 ## Endpoints Del Flujo
 
@@ -56,11 +37,8 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Faltan fechas de periodo`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (subflujo del planning por persona)

@@ -11,12 +11,12 @@ endpoints: ["/src/procesos/fases_activ_cambio_lista"]
 capacidades: ["procesos.fases_activ_cambio.gestionar"]
 campos: ["form.sel"]
 acciones: ["fnjs_cambiar", "fnjs_selectAll", "fnjs_ver_activ"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Fases Activ Cambio Lista
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX que renderiza la tabla de actividades candidatas al cambio de fase, con selección múltiple, acción de cambiar fase y enlace para ver el proceso de una actividad.
 
 ## Tipo
 
@@ -49,13 +49,7 @@ No se han detectado controladores frontend relacionados.
 - `fnjs_selectAll`
 - `fnjs_ver_activ`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

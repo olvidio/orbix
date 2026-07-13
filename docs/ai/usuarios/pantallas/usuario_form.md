@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Ficha usuario: datos, rol, pau, permisos menú/actividad y grupos (admin id_role≤3).
 
 ## Uso En Ayuda
 

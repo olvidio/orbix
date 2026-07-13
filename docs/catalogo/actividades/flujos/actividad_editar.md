@@ -2,48 +2,37 @@
 id: "actividades.actividad_editar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Actividad Editar"
+nombre: "Flujo - Guardar edición de actividad"
 capacidad: "actividades.actividad_editar.gestionar"
-pantallas_principales: []
-fragmentos: []
+pantallas_principales: ["actividades.pantalla.actividad_ver"]
+fragmentos: ["actividades.pantalla.planning_casa_modificar"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividades/actividad_editar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad Editar
+# Flujo - Guardar edición de actividad
 
-Propuesta generada automaticamente desde la capacidad `actividades.actividad_editar.gestionar` y sus pantallas relacionadas.
+Persistir cambios de una actividad existente desde la ficha o el planning.
 
 ## Objetivo De Usuario
 
-Gestiona ActividadEditar. Endpoint backend AJAX: guarda la edicion de una actividad existente.
+Modificar campos de la actividad (fechas, lugar, plazas, observaciones, etc.) y
+guardar sin cambiar el tipo.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `actividad_ver` (`mod=editar`, botón *guardar cambios*).
+- `planning_casa_modificar` (mismo formulario incrustado).
 
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
+1. Abrir ficha con `id_activ` y permiso `modificar`.
+2. Editar campos; validaciones JS de fechas/horas/tipo/organiza.
+3. `fnjs_guardar('editar')` POST a `actividad_editar`.
+4. Tras éxito, navegación atrás (`oPosicion`) o cierre del popup en planning.
 
 ## Endpoints Del Flujo
 
@@ -51,11 +40,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `sesión de permisos no disponible`
+- `debe seleccionar un tipo de actividad`
+- `actividad no encontrada`
+- `hay un error, no se ha guardado` + detalle
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (se llega desde ficha abierta vía buscar activ o planning).

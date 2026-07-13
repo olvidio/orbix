@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla frontend: listado agrupado de cartas de presentacion.
+Fragmento AJAX que imprime el listado agrupado de cartas de presentación en HTML.
 
 ## Uso En Ayuda
 

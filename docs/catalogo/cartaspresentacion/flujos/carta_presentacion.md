@@ -8,87 +8,45 @@ pantallas_principales: []
 fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion_form"]
 acciones: ["crear_actualizar", "eliminar", "ver_formulario"]
 endpoints: ["/src/cartaspresentacion/carta_presentacion_eliminar", "/src/cartaspresentacion/carta_presentacion_form_data", "/src/cartaspresentacion/carta_presentacion_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Carta Presentacion
+# Flujo - Alta/edición/eliminación de una carta
 
-Propuesta generada automaticamente desde la capacidad `cartaspresentacion.carta_presentacion.gestionar` y sus pantallas relacionadas.
+Operaciones sobre una carta individual (par centro + dirección).
 
 ## Objetivo De Usuario
 
-Gestiona CartaPresentacion. Crea / actualiza una CartaPresentacion. Datos del formulario de modificacion de una CartaPresentacion (valida permisos: solo dl propia o cr). Elimina una CartaPresentacion.
+Dar de alta, modificar o quitar los datos de presentación de un centro concreto.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Desde el listado de la pantalla principal (`cartas_presentacion`): enlace **director** (formulario) o
+**quitar** (eliminar). No tiene entrada de menú propia.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `cartaspresentacion.pantalla.cartas_presentacion_form`
+### Ver formulario / alta
 
-## Escenarios Inferidos
+1. Pulsar **director** → `carta_presentacion_form_data` con `id_ubi` + `id_direccion`.
+2. Si no hay carta, campos vacíos (alta al guardar). Si hay permiso denegado, mensaje de error.
 
-### Crear Actualizar
+### Crear / actualizar
 
-Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/cartaspresentacion/carta_presentacion_update`
+1. Rellenar nombre, teléfono, e-mail, zona, observaciones.
+2. **Guardar** → `carta_presentacion_update`.
 
 ### Eliminar
 
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-Endpoints asociados:
-- `/src/cartaspresentacion/carta_presentacion_eliminar`
-
-### Ver Formulario
-
-Pasos propuestos:
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Endpoints asociados:
-- `/src/cartaspresentacion/carta_presentacion_form_data`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `html.observ`
-- `html.pres_mail`
-- `html.pres_nom`
-- `html.pres_telf`
-- `html.zona`
-- `post.id_direccion`
-- `post.id_ubi`
-
-Acciones JavaScript:
-- `fnjs_cerrar`
-- `fnjs_guardar_cp`
-
-## Endpoints Del Flujo
-
-- `/src/cartaspresentacion/carta_presentacion_eliminar`
-- `/src/cartaspresentacion/carta_presentacion_form_data`
-- `/src/cartaspresentacion/carta_presentacion_update`
+1. En fila con carta, pulsar **quitar** → confirmación → `carta_presentacion_eliminar`.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Faltan id_ubi o id_direccion`
+- `No puede modificar datos de otra dl`
+- `Carta de presentacion no encontrada`
+- `Hay un error, no se ha guardado.` / `Hay un error, no se ha borrado.`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (subflujo de `cartas_presentacion` > modificar).

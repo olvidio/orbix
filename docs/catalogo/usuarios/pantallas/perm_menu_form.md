@@ -1,7 +1,7 @@
 ---
 id: "usuarios.pantalla.perm_menu_form"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "modal"
 modulo: "usuarios"
 nombre: "Perm Menu Form"
 controller: "frontend/usuarios/controller/perm_menu_form.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/perm_menu_guardar", "/src/usuarios/perm_menu_info"]
 capacidades: ["usuarios.perm_menu.gestionar", "usuarios.perm_menu_info.gestionar"]
 campos: ["form.menu_perm", "post.id_item", "post.id_usuario", "post.sel"]
 acciones: ["fnjs_grabar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Perm Menu Form
 
-Descripcion funcional pendiente de revisar.
+Modal permiso menú DL (bits oficina/grupo).
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `modal`
+
+
 - Controller: `frontend/usuarios/controller/perm_menu_form.php`
 
 ## Vistas Relacionadas
@@ -52,13 +54,7 @@ No se han detectado controladores frontend relacionados.
 
 - `fnjs_grabar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

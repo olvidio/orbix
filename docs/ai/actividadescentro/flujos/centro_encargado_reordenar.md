@@ -6,7 +6,7 @@ titulo: "Centro Encargado Reordenar"
 flujo: "actividadescentro.centro_encargado_reordenar.gestionar.flujo"
 preguntas: ["Como ejecutar en Centro Encargado Reordenar?"]
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 endpoints: ["/src/actividadescentro/centro_encargado_reordenar"]
 source: "docs/catalogo/actividadescentro/flujos/centro_encargado_reordenar.md"
 estado_revision: "generado"
@@ -31,18 +31,20 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Pulsar un centro encargado ya asignado para abrir el popup de orden.
+2. Elegir **+ prioridad** o **- prioridad**.
+3. El sistema reordena y refresca la celda de centros de la actividad.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadescentro/centro_encargado_reordenar`
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Objetivo
 
-Gestiona CentroEncargadoReordenar. Reordena un CentroEncargado (mas / menos prioridad).
+El usuario sube (**+ prioridad**) o baja (**- prioridad**) un centro encargado en el listado de una actividad. Internamente se intercambia el `num_orden` con el centro vecino.
 
 ## Errores Documentados
 

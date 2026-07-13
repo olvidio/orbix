@@ -17,9 +17,9 @@ paths:
       operationId: "post_profesores_congresos"
       summary: "Congresos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Listado global de asistencia a congresos del claustro: por cada profesor activo muestra delegación (en RSTGR), nombre, tipo, lugar, fechas y organizador.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/profesores/api/congresos.md`
       tags:
@@ -40,21 +40,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_CongresosListaDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_CongresosListaDataResponse"
   "/src/profesores/docencia":
     post:
       operationId: "post_profesores_docencia"
       summary: "Docencia"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Listado global de docencia STGR registrada: por cada profesor activo muestra delegación (en RSTGR), nombre, curso de inicio, asignatura, modo de impartición y acta.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/profesores/api/docencia.md`
       tags:
@@ -87,9 +87,9 @@ paths:
       operationId: "post_profesores_ficha_profesor_stgr"
       summary: "Ficha Profesor Stgr"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Dossier académico STGR de un profesor: datos personales, nombramientos, curriculum, ampliaciones, congresos, docencia, director de departamento, juramento y publicaciones. En modo impresión (`print`) omite director, juramento y publicaciones y filtra nombramientos sin cese.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/profesores/api/ficha_profesor_stgr.md`
       tags:
@@ -100,6 +100,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "post.id_nom"
               properties:
                 depende:
                   type: "string"
@@ -119,21 +121,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_FichaProfesorStgrDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_FichaProfesorStgrDataResponse"
   "/src/profesores/lista_por_departamentos":
     post:
       operationId: "post_profesores_lista_por_departamentos"
       summary: "Lista Por Departamentos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Claustro STGR agrupado por departamento: directores y profesores por tipo, o formulario de filtro por delegación en ámbito regional.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/profesores/api/lista_por_departamentos.md`
       tags:
@@ -157,21 +159,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_ListaPorDepartamentosDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_ListaPorDepartamentosDataResponse"
   "/src/profesores/profesor_asignatura_ajax":
     post:
       operationId: "post_profesores_profesor_asignatura_ajax"
       summary: "Profesor Asignatura Ajax"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Tabla de profesores habilitados para una asignatura: del departamento y por ampliación, con centro, historial de docencia y contacto.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/profesores/api/profesor_asignatura_ajax.md`
       tags:
@@ -182,6 +184,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "post.id_asignatura"
               properties:
                 id_asignatura:
                   type: "integer"
@@ -191,21 +195,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_ProfesoresAsignaturaListaDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_ProfesoresAsignaturaListaDataResponse"
   "/src/profesores/profesor_asignatura_que":
     post:
       operationId: "post_profesores_profesor_asignatura_que"
       summary: "Profesor Asignatura Que"
       description: |
-        Opciones del desplegable de asignatura en profesor_asignatura_que.
+        Opciones del desplegable de asignatura para consultar profesores habilitados.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/profesores/api/profesor_asignatura_que.md`
       tags:
@@ -252,11 +256,38 @@ components:
           type: string
         data:
           description: "Ver schema concreto de cada operacion."
+    profesores_CongresosListaData:
+      type: object
+      properties:
+        id_tabla:
+          type: "string"
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
+    profesores_CongresosListaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/profesores_CongresosListaData"
     profesores_DocenciaListaData:
       type: object
       properties:
         id_tabla:
           type: "string"
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
     profesores_DocenciaListaDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
@@ -267,6 +298,117 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/profesores_DocenciaListaData"
+    profesores_FichaProfesorStgrData:
+      type: object
+      properties:
+        aPerm:
+          type: array
+          items: {}
+        nom_ap:
+          type: "string"
+        nombre_ubi:
+          type: "string"
+        dep:
+          type: "string"
+        num_txt:
+          type: "string"
+        agd_txt:
+          type: "string"
+        sacd_txt:
+          type: "string"
+        latin_txt:
+          type: "string"
+        f_juramento:
+          type: "string"
+        a_curriculum:
+          type: array
+          items: {}
+        a_nombramientos:
+          type: array
+          items: {}
+        a_director:
+          type: array
+          items: {}
+        a_ampliacion:
+          type: array
+          items: {}
+        a_publicaciones:
+          type: array
+          items: {}
+        a_congresos:
+          type: array
+          items: {}
+        a_docencias:
+          type: array
+          items: {}
+        go_cosas_link_specs:
+          type: array
+          items: {}
+        ficha_self_link_spec:
+          type: array
+          items: {}
+        use_print_phtml:
+          type: "boolean"
+    profesores_FichaProfesorStgrDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/profesores_FichaProfesorStgrData"
+    profesores_ListaPorDepartamentosData:
+      type: object
+      properties:
+        modo:
+          type: "string"
+        rstgr:
+          type: "boolean"
+        a_checked:
+          type: array
+          items: {}
+        a_delegaciones:
+          type: array
+          items: {}
+        aClaustro:
+          type: array
+          items: {}
+    profesores_ListaPorDepartamentosDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/profesores_ListaPorDepartamentosData"
+    profesores_ProfesoresAsignaturaListaData:
+      type: object
+      properties:
+        id_tabla:
+          type: "string"
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
+        a_botones:
+          type: array
+          items: {}
+    profesores_ProfesoresAsignaturaListaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/profesores_ProfesoresAsignaturaListaData"
     profesores_ProfesorAsignaturaQueDataData:
       type: object
       properties:
@@ -283,20 +425,3 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/profesores_ProfesorAsignaturaQueDataData"
-    OrbixStandardResponseStringData:
-      type: object
-      required:
-        - success
-        - data
-      properties:
-        success:
-          type: boolean
-        mensaje:
-          type: string
-        data:
-          oneOf:
-            - type: string
-            - type: object
-            - type: array
-              items: {}
-          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

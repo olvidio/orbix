@@ -4,10 +4,10 @@ tipo: "endpoint"
 modulo: "ubis"
 url: "/src/ubis/centros_form_num"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/ubis/infrastructure/ui/http/controllers/centros_form_num.php"
 entrada: ["post.id_ubi:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_ubi"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "ubis_CentrosFormDataData"
 respuesta_data: ["tipo_ctr:string", "tipo_labor:integer", "tipo_labor_bit_map:array"]
@@ -15,41 +15,51 @@ requiere_hashb: false
 frontend_referencias: ["frontend/ubis/controller/centros_form_num.php"]
 casos_uso: ["src\\ubis\\application\\CentrosFormData"]
 tags: ["ubis", "centros", "form", "num"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Centros Form Num
 
-Datos comunes para los formularios de centro dl (labor / num / plazas). Los tres formularios muestran sobre un mismo centro un subconjunto de campos distinto según el modo indicado.
+Carga datos del formulario modal de números (buzón, pi, cartas) de un centro DL.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Carga datos del formulario modal de números (buzón, pi, cartas) de un centro DL.
 
 ## Endpoint
 
 - URL: `/src/ubis/centros_form_num`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/centros_form_num.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_ubi` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
-
-Nota: el controller tambien lee `$_GET` directamente.
+| `id_ubi` | `integer` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `ubis_CentrosFormDataData`):
-  - `tipo_ctr` (`string`)
-  - `tipo_labor` (`integer`)
-  - `tipo_labor_bit_map` (`array`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `id_ubi`: id centro
+  - `nombre_ubi`: nombre
+  - `n_buzon`: número buzón
+  - `num_pi`: número pi
+  - `num_cartas`: número cartas
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `UbiPermisos` (`puedeModificarPorObjeto`, `dlPerteneceAMiDelegacion`), `have_perm_oficina(scdl|scl|vcsd|des|admin_sv)` y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -57,10 +67,4 @@ Nota: el controller tambien lee `$_GET` directamente.
 
 ## Frontend Relacionado
 
-- `frontend/ubis/controller/centros_form_num.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/ubis/controller/centros_form_num.php"]`).

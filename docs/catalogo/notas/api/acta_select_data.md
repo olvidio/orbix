@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "notas"
 url: "/src/notas/acta_select_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/notas/infrastructure/ui/http/controllers/acta_select_data.php"
 entrada: ["post.acta:string", "post.mes_fin_stgr:integer", "post.titulo:string"]
 entrada_obligatoria: []
@@ -15,7 +15,7 @@ requiere_hashb: false
 frontend_referencias: ["frontend/notas/controller/acta_select.php"]
 casos_uso: ["src\\notas\\application\\ActaSelectData"]
 tags: ["notas", "acta", "select", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Acta Select Data
@@ -28,7 +28,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - URL: `/src/notas/acta_select_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/acta_select_data.php`
 
 ## Entrada
@@ -43,11 +43,20 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
+- Helper: `ContestarJson::enviar` (doble `JSON.parse`).
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `notas_ActaSelectDataData`):
-  - `titulo` (`string, a_asignaturas: array<int|string, string|null>, actas: list<array{acta:string, f_acta:?string, id_asignatura:int, has_pdf:bool}>`)
+- Payload en `data`:
+  - `titulo` (`string`)
+  - `a_asignaturas` (`array<int|string, string|null>`)
+  - `actas` (lista `{acta, f_acta, id_asignatura, has_pdf}`)
+
+## Objetivo funcional
+
+Sin `acta` en filtro: últimas 20 actas del curso actual. Con `acta`: búsqueda por patrón (soporta prefijo DL y año). Incluye `has_pdf` por fila.
+
+## Permisos
+
+- Menú actas; edición solo DL con `est`.
 
 ## Casos De Uso
 
@@ -55,10 +64,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/acta_select.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/acta_select.php`.

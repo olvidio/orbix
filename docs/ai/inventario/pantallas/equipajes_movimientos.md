@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Movimientos"
+titulo: "Movimientos maletas — resultado"
 pantalla: "inventario.pantalla.equipajes_movimientos"
-preguntas: ["Que se puede hacer en Equipajes Movimientos?", "Que campos tiene Equipajes Movimientos?", "Que acciones hay en Equipajes Movimientos?"]
+preguntas: ["Que se puede hacer en Movimientos maletas — resultado?", "Que campos tiene Movimientos maletas — resultado?", "Que acciones hay en Movimientos maletas — resultado?"]
 capacidades: ["inventario.equipajes_movimientos.gestionar"]
 endpoints: ["/src/inventario/equipajes_movimientos"]
 source: "docs/catalogo/inventario/pantallas/equipajes_movimientos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Movimientos
+# Ayuda IA Pantalla - Movimientos maletas — resultado
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Muestra entradas/salidas de documentos entre equipajes.
 
 ## Uso En Ayuda
 

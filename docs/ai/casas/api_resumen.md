@@ -35,7 +35,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `casas.casa_ec_gastos_guardar`
 - Controller: `src/casas/infrastructure/ui/http/controllers/casa_ec_gastos_guardar.php`
-- Entrada: `post.ap_sf$m:string`, `post.ap_sv$m:string`, `post.g$m:string`, `post.id_ubi:integer`, `post.year:integer`
+- Entrada: `post.id_ubi:integer`, `post.year:integer`, `post.g1:string`, `post.g2:string`, `post.g3:string`, `post.g4:string`, `post.g5:string`, `post.g6:string`, `post.g7:string`, `post.g8:string`, `post.g9:string`, `post.g10:string`, `post.g11:string`, `post.g12:string`, `post.ap_sv1:string`, `post.ap_sv2:string`, `post.ap_sv3:string`, `post.ap_sv4:string`, `post.ap_sv5:string`, `post.ap_sv6:string`, `post.ap_sv7:string`, `post.ap_sv8:string`, `post.ap_sv9:string`, `post.ap_sv10:string`, `post.ap_sv11:string`, `post.ap_sv12:string`, `post.ap_sf1:string`, `post.ap_sf2:string`, `post.ap_sf3:string`, `post.ap_sf4:string`, `post.ap_sf5:string`, `post.ap_sf6:string`, `post.ap_sf7:string`, `post.ap_sf8:string`, `post.ap_sf9:string`, `post.ap_sf10:string`, `post.ap_sf11:string`, `post.ap_sf12:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/casas/casa_ingreso_eliminar`

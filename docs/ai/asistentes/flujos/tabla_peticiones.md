@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TablaPeticiones. JSON para {.
+Ver peticiones de plaza y mover asistente a actividad preferida.
 
 ## Limites De La Respuesta
 

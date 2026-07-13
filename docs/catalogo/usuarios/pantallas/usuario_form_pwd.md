@@ -11,16 +11,18 @@ endpoints: ["/src/usuarios/usuario_check_pwd", "/src/usuarios/usuario_guardar_pw
 capacidades: ["usuarios.usuario_check_pwd.gestionar", "usuarios.usuario_guardar_pwd.gestionar", "usuarios.usuario_info.gestionar"]
 campos: ["form.id_usuario", "form.password", "form.password1", "html.password", "html.password1"]
 acciones: ["fnjs_chk_passwd", "fnjs_guardar", "fnjs_guardar_datos", "fnjs_logout"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Usuario Form Pwd
 
-Formulario para cambiar el password por parte del usuario.
+Formulario cambio de contraseña con validación de fortaleza.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/usuarios/controller/usuario_form_pwd.php`
 
 ## Vistas Relacionadas
@@ -58,13 +60,7 @@ No se han detectado controladores frontend relacionados.
 - `fnjs_guardar_datos`
 - `fnjs_logout`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -8,34 +8,39 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.matriculas_lista"]
 acciones: ["listar"]
 endpoints: ["/src/actividadestudios/matriculas_lista_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Matriculas
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.matriculas.gestionar` y sus pantallas relacionadas.
+Listado de matrículas realizadas en un periodo.
 
 ## Objetivo De Usuario
 
-Gestiona Matriculas. Listado de matrículas en un intervalo de fechas (actividades cuyo f_ini cae en el periodo). Usado por matriculas_lista vía PostRequest.
+El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de matrículas
+de actividades cuyo `f_ini` cae en ese intervalo, con alumno, centro, actividad, asignatura,
+preceptor y nota.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `matriculas_lista` (`frontend/actividadestudios/controller/matriculas_lista.php`):
+al cargar o al pulsar **buscar** (`fnjs_buscar` en `matriculas.phtml`) llama a
+`matriculas_lista_data` con `inicioIso` y `finIso` calculados del periodo.
 
 ## Fragmentos O Pantallas Auxiliares
 
 - `actividadestudios.pantalla.matriculas_lista`
+- `frontend/dossiers/controller/dossiers_ver.php` (destino de **ver asignaturas ca**)
 
 ## Escenarios Inferidos
 
 ### Listar
 
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+Pasos:
+1. Abrir **Matrículas** desde el menú.
+2. Elegir año y periodo (por defecto `curso_ca`) y pulsar **buscar**.
+3. El sistema consulta `matriculas_lista_data` y muestra la tabla paginada.
+4. Opcionalmente, seleccionar filas para ver dossier CA o borrar matrículas.
 
 Endpoints asociados:
 - `/src/actividadestudios/matriculas_lista_data`
@@ -77,9 +82,8 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > actas... > Matrículas.
+- **Pills2:** ESTUDIOS > Actas y certificados > Matrículas realizadas; ESTUDIOS > Preparación
+  planes estudio > Matrículas realizadas; vest > actas... > Matrículas.

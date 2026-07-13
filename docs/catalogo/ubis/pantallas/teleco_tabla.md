@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/teleco_tabla"]
 capacidades: ["ubis.teleco_tabla.gestionar"]
 campos: ["form.mod", "form.sel", "html.btn_new", "html.mod", "html.refresh", "post.id_ubi", "post.obj_pau"]
 acciones: ["fnjs_actualizar", "fnjs_eliminar", "fnjs_enviar_formulario", "fnjs_modificar", "fnjs_nuevo", "fnjs_solo_uno"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Teleco Tabla
 
-Descripcion funcional pendiente de revisar.
+Tabla AJAX de telecomunicaciones de un ubi con acciones modificar y eliminar.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/ubis/controller/teleco_tabla.php`
 
 ## Vistas Relacionadas
@@ -59,13 +61,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_nuevo`
 - `fnjs_solo_uno`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

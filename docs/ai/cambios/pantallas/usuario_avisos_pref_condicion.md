@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "cambios"
-titulo: "Usuario Avisos Pref Condicion"
+titulo: "Modal de condición"
 pantalla: "cambios.pantalla.usuario_avisos_pref_condicion"
-preguntas: ["Que se puede hacer en Usuario Avisos Pref Condicion?", "Que campos tiene Usuario Avisos Pref Condicion?", "Que acciones hay en Usuario Avisos Pref Condicion?"]
+preguntas: ["Que se puede hacer en Modal de condición?", "Que campos tiene Modal de condición?", "Que acciones hay en Modal de condición?"]
 capacidades: ["cambios.cambio_usuario_propiedad_pref_item.gestionar"]
 endpoints: ["/src/cambios/cambio_usuario_propiedad_pref_item_data"]
 source: "docs/catalogo/cambios/pantallas/usuario_avisos_pref_condicion.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Usuario Avisos Pref Condicion
+# Ayuda IA Pantalla - Modal de condición
 
 ## Resumen
 
-Controlador AJAX HTML: modal con el formulario para configurar una condicion sobre una propiedad.
+Fragmento AJAX con el formulario para definir operador, valor y alcance (old/new) de una propiedad vigilada. Incluye selector de casas si la propiedad es `id_ubi`.
 
 ## Uso En Ayuda
 
@@ -28,11 +28,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `form.propiedad`
 - `form.salida`
 - `form.valor`
-- `html.id_item`
-- `html.objeto`
-- `html.propiedad`
-- `html.salida`
-- `html.valor`
 - `post.id_item`
 - `post.objeto`
 - `post.propiedad`

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "actividades"
-titulo: "Planning Casa Modificar"
+titulo: "Editar actividad desde planning"
 pantalla: "actividades.pantalla.planning_casa_modificar"
-preguntas: ["Que se puede hacer en Planning Casa Modificar?", "Que campos tiene Planning Casa Modificar?", "Que acciones hay en Planning Casa Modificar?"]
+preguntas: ["Que se puede hacer en Editar actividad desde planning?", "Que campos tiene Editar actividad desde planning?", "Que acciones hay en Editar actividad desde planning?"]
 capacidades: ["actividades.actividad_que.gestionar", "actividades.actividad_status_labels.gestionar", "actividades.actividad_ver.gestionar"]
 endpoints: ["/src/actividades/actividad_que_datos", "/src/actividades/actividad_status_labels_datos", "/src/actividades/actividad_ver_datos"]
 source: "docs/catalogo/actividades/pantallas/planning_casa_modificar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Planning Casa Modificar
+# Ayuda IA Pantalla - Editar actividad desde planning
 
 ## Resumen
 
-Formulario para modificar una actividad desde el planning de casas.
+Fragmento con el **formulario de edición** de una actividad existente, incrustado en el planning de casas (`planning_casa_que`). Recibe `id_activ`, carga entidad y desplegables con `actividad_ver_datos`, bloque tipo con `actividad_que_datos` y etiquetas de status con `actividad_status_labels_datos`. Reutiliza las plantillas `_actividad_form_*` en modo `editar`; guardar llama a `actividad_editar` (JS compartido).
 
 ## Uso En Ayuda
 
@@ -30,7 +30,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Acciones Detectadas
 
-- No hay acciones detectadas.
+- `fnjs_guardar`
 
 ## Capacidades Relacionadas
 

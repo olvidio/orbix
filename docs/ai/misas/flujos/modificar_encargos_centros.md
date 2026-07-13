@@ -42,10 +42,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ModificarEncargosCentros. Devuelve el desplegable de zonas que el usuario actual puede ver, para pintar la pantalla modificar_encargos_centros. Replica la logica de permisos de apps/misas/controller/modificar_encargos_centros.php: si el rol es p-sacd y NO es jefe de calendario, se limitan las zonas a las del id_pau del propio usuario. Devuelve: - error : texto vacio si todo ok, mensaje si falta permiso. - a_opciones_zona: array id_zona => nombre_zona.
+Devuelve el desplegable de zonas permitidas para la pantalla modificar encargos de centros.
+
+## Errores Documentados
+
+- `Usuario no encontrado`
+- `No tiene permiso para ver esta página`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

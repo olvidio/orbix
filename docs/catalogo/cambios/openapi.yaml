@@ -17,7 +17,7 @@ paths:
       operationId: "post_cambios_avisos_generar_lista_data"
       summary: "Avisos Generar Lista Data"
       description: |
-        Endpoint backend: listado de avisos `CambioUsuario` (con `avisado=false`) para el usuario/aviso_tipo dado + opciones de desplegables de la pantalla `avisos_generar`.
+        Listado de `CambioUsuario` pendientes de avisar (`avisado=false`) para el usuario y tipo de aviso indicados, más opciones de desplegables y metadatos de borrado de la pantalla `avisos_generar`.
         
         Operacion: `lista_data`.
         
@@ -55,7 +55,7 @@ paths:
       operationId: "post_cambios_cambio_usuario_eliminar"
       summary: "Cambio Usuario Eliminar"
       description: |
-        Endpoint backend: elimina `CambioUsuario` por la clave compuesta `id_item_cambio#id_usuario#sfsv#aviso_tipo` recibida en `sel[]`.
+        Elimina uno o varios `CambioUsuario` por la clave compuesta recibida en `sel[]`.
         
         Operacion: `mutacion`.
         
@@ -79,19 +79,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioEliminarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioEliminarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/cambios/cambio_usuario_eliminar_hasta_fecha":
     post:
       operationId: "post_cambios_cambio_usuario_eliminar_hasta_fecha"
       summary: "Cambio Usuario Eliminar Hasta Fecha"
       description: |
-        Endpoint backend: elimina los `CambioUsuario` con fecha <= `f_fin`.
+        Elimina los `CambioUsuario` con fecha anterior o igual a `f_fin`.
         
         Operacion: `mutacion`.
         
@@ -104,6 +104,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "f_fin"
               properties:
                 f_fin:
                   type: "string"
@@ -113,19 +115,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioEliminarHastaFechaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioEliminarHastaFechaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/cambios/cambio_usuario_objeto_pref_eliminar":
     post:
       operationId: "post_cambios_cambio_usuario_objeto_pref_eliminar"
       summary: "Cambio Usuario Objeto Pref Eliminar"
       description: |
-        Endpoint JSON: elimina un `CambioUsuarioObjetoPref`.
+        Elimina un `CambioUsuarioObjetoPref` (preferencia de aviso sobre un objeto/tipo de actividad).
         
         Operacion: `mutacion`.
         
@@ -138,6 +140,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item_usuario_objeto"
               properties:
                 id_item_usuario_objeto:
                   type: "integer"
@@ -151,21 +155,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioObjetoPrefEliminarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioObjetoPrefEliminarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/cambios/cambio_usuario_objeto_pref_fases_data":
     post:
       operationId: "post_cambios_cambio_usuario_objeto_pref_fases_data"
       summary: "Cambio Usuario Objeto Pref Fases Data"
       description: |
-        Endpoint JSON: lista de fases para el tipo de actividad indicado.
+        Lista de fases (o estados de actividad) posibles para el `id_tipo_activ` indicado.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/cambios/api/cambio_usuario_objeto_pref_fases_data.md`
       tags:
@@ -176,6 +180,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "objeto"
               properties:
                 dl_propia:
                   type: "string"
@@ -201,7 +207,7 @@ paths:
       operationId: "post_cambios_cambio_usuario_objeto_pref_guardar"
       summary: "Cambio Usuario Objeto Pref Guardar"
       description: |
-        Endpoint JSON: crea o actualiza un `CambioUsuarioObjetoPref`.
+        Crea o actualiza un `CambioUsuarioObjetoPref` (qué objeto/tipo/fase/tipo de aviso se escucha).
         
         Operacion: `mutacion`.
         
@@ -214,6 +220,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
                 aviso_off:
                   type: "string"
@@ -245,21 +253,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioObjetoPrefGuardarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioObjetoPrefGuardarDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/cambios/cambio_usuario_objeto_pref_propiedades_data":
     post:
       operationId: "post_cambios_cambio_usuario_objeto_pref_propiedades_data"
       summary: "Cambio Usuario Objeto Pref Propiedades Data"
       description: |
-        Endpoint JSON: listado de propiedades configurables del objeto indicado, preseleccionadas segun las preferencias ya guardadas.
+        Listado de propiedades configurables del objeto, preseleccionadas según preferencias guardadas.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/cambios/api/cambio_usuario_objeto_pref_propiedades_data.md`
       tags:
@@ -270,6 +278,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "objeto"
               properties:
                 id_item_usuario_objeto:
                   type: "integer"
@@ -293,7 +303,7 @@ paths:
       operationId: "post_cambios_cambio_usuario_propiedad_pref_guardar_todas"
       summary: "Cambio Usuario Propiedad Pref Guardar Todas"
       description: |
-        Endpoint JSON: sincroniza las `CambioUsuarioPropiedadPref` para un `CambioUsuarioObjetoPref`.
+        Sincroniza las `CambioUsuarioPropiedadPref` de un `CambioUsuarioObjetoPref`.
         
         Operacion: `mutacion`.
         
@@ -306,9 +316,12 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item_usuario_objeto_prop"
+                - "objeto_prop"
               properties:
                 id_item_usuario_objeto_prop:
-                  type: "string"
+                  type: "integer"
                 objeto_prop:
                   type: "string"
       responses:
@@ -317,21 +330,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioPropiedadPrefGuardarTodasDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioPropiedadPrefGuardarTodasDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/cambios/cambio_usuario_propiedad_pref_item_data":
     post:
       operationId: "post_cambios_cambio_usuario_propiedad_pref_item_data"
       summary: "Cambio Usuario Propiedad Pref Item Data"
       description: |
-        Endpoint JSON: devuelve los datos de una condicion por `id_item` (si existe) y la lista de casas cuando la propiedad es `id_ubi`.
+        Datos del modal de condición para una propiedad (`id_item` existente o nueva).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/cambios/api/cambio_usuario_propiedad_pref_item_data.md`
       tags:
@@ -342,6 +355,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "propiedad"
               properties:
                 id_item:
                   type: "integer"
@@ -367,9 +382,9 @@ paths:
       operationId: "post_cambios_cambio_usuario_propiedad_pref_preview"
       summary: "Cambio Usuario Propiedad Pref Preview"
       description: |
-        Endpoint JSON: construye el texto de preview de la condicion y el array serializado (cambio_prop) sin persistir nada.
+        Calcula el texto de preview de una condición sin persistir (operación de lectura/cálculo).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/cambios/api/cambio_usuario_propiedad_pref_preview.md`
       tags:
@@ -380,6 +395,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "propiedad"
               properties:
                 id_item:
                   type: "integer"
@@ -405,19 +422,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioPropiedadPrefPreviewDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_CambioUsuarioPropiedadPrefPreviewDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/cambios/usuario_avisos_pref_form_data":
     post:
       operationId: "post_cambios_usuario_avisos_pref_form_data"
       summary: "Usuario Avisos Pref Form Data"
       description: |
-        Endpoint JSON que devuelve la informacion necesaria para pintar el formulario `usuario_avisos_pref` (edicion de un aviso de usuario/grupo).
+        Bootstrap del formulario `usuario_avisos_pref` (configurar aviso para usuario o grupo).
         
         Operacion: `form_data`.
         
@@ -430,6 +447,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
                 id_item_usuario_objeto:
                   type: "integer"
@@ -461,9 +480,9 @@ paths:
       operationId: "post_cambios_usuario_form_avisos_data"
       summary: "Usuario Form Avisos Data"
       description: |
-        Endpoint backend: datos para el listado de avisos de un usuario.
+        Listado de `CambioUsuarioObjetoPref` de un usuario para la tabla `usuario_form_avisos`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/cambios/api/usuario_form_avisos_data.md`
       tags:
@@ -474,6 +493,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
+                - "quien"
               properties:
                 id_usuario:
                   type: "integer"
@@ -485,13 +507,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_UsuarioFormAvisosDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_UsuarioFormAvisosDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
 components:
   securitySchemes:
     OrbixSession:
@@ -499,138 +521,6 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
-    OrbixStandardResponseEnvelope:
-      type: object
-      required:
-        - success
-        - data
-      properties:
-        success:
-          type: boolean
-        mensaje:
-          type: string
-        data:
-          description: "Ver schema concreto de cada operacion."
-    cambios_CambioUsuarioEliminarData:
-      type: object
-      properties:
-        ok:
-          type: "string"
-    cambios_CambioUsuarioEliminarDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/cambios_CambioUsuarioEliminarData"
-    cambios_CambioUsuarioEliminarHastaFechaData:
-      type: object
-      properties:
-        ok:
-          type: "string"
-    cambios_CambioUsuarioEliminarHastaFechaDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/cambios_CambioUsuarioEliminarHastaFechaData"
-    cambios_CambioUsuarioObjetoPrefEliminarData:
-      type: object
-      properties:
-        error:
-          type: "string"
-    cambios_CambioUsuarioObjetoPrefEliminarDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/cambios_CambioUsuarioObjetoPrefEliminarData"
-    cambios_CambioUsuarioObjetoPrefGuardarData:
-      type: object
-      properties:
-        error:
-          type: "string"
-    cambios_CambioUsuarioObjetoPrefGuardarDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/cambios_CambioUsuarioObjetoPrefGuardarData"
-    cambios_CambioUsuarioPropiedadPrefGuardarTodasData:
-      type: object
-      properties:
-        error:
-          type: "string"
-    cambios_CambioUsuarioPropiedadPrefGuardarTodasDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/cambios_CambioUsuarioPropiedadPrefGuardarTodasData"
-    cambios_CambioUsuarioPropiedadPrefPreviewData:
-      type: object
-      properties:
-        error:
-          type: "string"
-        id_item:
-          type: "integer"
-        objeto:
-          type: "string"
-        propiedad:
-          type: "string"
-        condicion:
-          type: "string"
-        cambio_prop:
-          type: "string"
-    cambios_CambioUsuarioPropiedadPrefPreviewDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/cambios_CambioUsuarioPropiedadPrefPreviewData"
-    cambios_UsuarioFormAvisosDataData:
-      type: object
-      properties:
-        error:
-          type: "string"
-        a_valores:
-          type: array
-          items: {}
-        nombre_usuario:
-          type: "string"
-    cambios_UsuarioFormAvisosDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/cambios_UsuarioFormAvisosDataData"
     OrbixStandardResponseStringData:
       type: object
       required:

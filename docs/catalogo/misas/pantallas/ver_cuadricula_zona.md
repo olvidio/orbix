@@ -11,16 +11,18 @@ endpoints: ["/src/misas/ver_cuadricula_zona_data"]
 capacidades: ["misas.ver_cuadricula_zona.gestionar"]
 campos: ["html.grupos_sacd", "post.columna", "post.empiezamax", "post.empiezamin", "post.fila", "post.id_zona", "post.orden", "post.periodo", "post.seleccion", "post.tipo_plantilla"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Ver Cuadricula Zona
+# Ver cuadricula zona
 
-Descripcion funcional pendiente de revisar.
+Cuadrícula SlickGrid de asignaciones EncargoDia (filas sacd × columnas día/encargo). Edición vía `cuadricula_update` y `desplegable_sacd`.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/misas/controller/ver_cuadricula_zona.php`
 
 ## Vistas Relacionadas
@@ -56,13 +58,7 @@ Descripcion funcional pendiente de revisar.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

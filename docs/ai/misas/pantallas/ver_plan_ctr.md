@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Resultado: cuadrícula encargo×día del centro (`ver_plan_ctr_data`) con leyenda de sacds.
 
 ## Uso En Ayuda
 

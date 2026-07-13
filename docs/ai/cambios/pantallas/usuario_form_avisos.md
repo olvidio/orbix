@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "cambios"
-titulo: "Usuario Form Avisos"
+titulo: "Avisos del usuario"
 pantalla: "cambios.pantalla.usuario_form_avisos"
-preguntas: ["Que se puede hacer en Usuario Form Avisos?", "Que campos tiene Usuario Form Avisos?", "Que acciones hay en Usuario Form Avisos?"]
+preguntas: ["Que se puede hacer en Avisos del usuario?", "Que campos tiene Avisos del usuario?", "Que acciones hay en Avisos del usuario?"]
 capacidades: ["cambios.usuario_form_avisos.gestionar"]
-endpoints: ["/src/cambios/usuario_form_avisos_data"]
+endpoints: ["/src/cambios/usuario_form_avisos_data", "/src/cambios/cambio_usuario_objeto_pref_eliminar"]
 source: "docs/catalogo/cambios/pantallas/usuario_form_avisos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Usuario Form Avisos
+# Ayuda IA Pantalla - Avisos del usuario
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento embebido en la ficha de usuario: tabla de preferencias de aviso (`CambioUsuarioObjetoPref`) configuradas para ese usuario.
 
 ## Uso En Ayuda
 
@@ -41,6 +41,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 ## Endpoints Relacionados
 
 - `/src/cambios/usuario_form_avisos_data`
+- `/src/cambios/cambio_usuario_objeto_pref_eliminar`
 
 ## Precauciones
 

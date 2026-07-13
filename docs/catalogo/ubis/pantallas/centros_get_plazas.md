@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/centros_get_plazas"]
 capacidades: ["ubis.centros_get_plazas.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Centros Get Plazas
 
-Descripcion funcional pendiente de revisar.
+Tabla AJAX de plazas y sede de todos los centros DL activos.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/ubis/controller/centros_get_plazas.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

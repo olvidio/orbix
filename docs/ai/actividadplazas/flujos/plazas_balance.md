@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Balance de plazas**, elegir la delegación a comparar en el desplegable.
+2. El sistema carga el HTML del grid en `#comparativa` vía `plazas_balance_dl.php`.
+3. Ese fragmento obtiene los datos de `plazas_balance_data` (`dlA` = mi dl, `dlB` = la elegida):
+4. Las celdas de mi dl son editables (doble clic → `gestion_plazas_update`).
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadplazas/plazas_balance_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,10 +45,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PlazasBalance. Datos del grid comparativo A vs B (plazas concedidas y libres entre dos dl para un tipo de actividad).
+Comparar, para un tipo de actividad, cuántas plazas concedidas y libres tiene cada actividad en mi delegación frente a otra delegación elegida en el desplegable.
+
+## Errores Documentados
+
+- `falta parametro dl`
+- `no se puede comparar una dl consigo misma`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

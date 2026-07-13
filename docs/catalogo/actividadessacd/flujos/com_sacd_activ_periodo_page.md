@@ -8,20 +8,23 @@ pantallas_principales: []
 fragmentos: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadessacd/com_sacd_activ_periodo_page_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Com Sacd Activ Periodo Page
 
-Propuesta generada automaticamente desde la capacidad `actividadessacd.com_sacd_activ_periodo_page.gestionar` y sus pantallas relacionadas.
+Configuración inicial de la pantalla de comunicación a los sacd.
 
 ## Objetivo De Usuario
 
-Gestiona ComSacdActivPeriodoPage. Descripcion funcional pendiente de revisar.
+Al cargar la pantalla de comunicación, el sistema determina si el usuario puede editar los textos
+base (`perm_mod_txt`). Los usuarios con rol `p-sacd` no tienen permiso de edición.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `com_sacd_activ_periodo` (`frontend/actividadessacd/controller/com_sacd_activ_periodo.php`):
+el controller consulta este endpoint al renderizar la página para decidir si muestra el enlace al
+fragmento de edición de textos (`com_sacd_txt`).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,38 +34,21 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Abrir la pantalla de comunicación a los sacd.
+2. El sistema resuelve `perm_mod_txt` según el rol del usuario.
+3. Si hay permiso, se muestra el enlace para editar textos.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadessacd/com_sacd_activ_periodo_page_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.iactividad_val`
-- `form.iasistentes_val`
-- `form.periodo`
-- `form.year`
-- `post.id_nom`
-- `post.periodo`
-- `post.propuesta`
-- `post.que`
-- `post.sel`
-- `post.year`
+- Ninguno detectado.
 
 Acciones JavaScript:
-- `fnjs_cancelar`
-- `fnjs_construir_listado`
-- `fnjs_enviar_mails`
-- `fnjs_esc_html`
-- `fnjs_left_side_hide`
-- `fnjs_parse_rta_txt`
-- `fnjs_pintar_sacds`
-- `fnjs_update_div`
-- `fnjs_ver`
+- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -72,9 +58,11 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `com_sacd_activ_periodo`:
+
+- **Legacy:** dre > actividades > comunic. sacd · exterior > sacd > atención actividades
+- **Pills2:** ATENCIÓN SACD > Actividades > Comunicación a los sacd
+
+Con `propuesta=true`: dre > propuestas > lista activ. sacd.

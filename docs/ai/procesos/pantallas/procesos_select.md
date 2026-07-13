@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Administración de tipos de proceso: desplegable de proceso, visualización en árbol o listado tabular de fases/tareas, alta y edición en ventana modal, clonado desde otro proceso y regeneración masiva de procesos en actividades.
 
 ## Uso En Ayuda
 

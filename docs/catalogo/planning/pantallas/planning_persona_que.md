@@ -1,9 +1,9 @@
 ---
 id: "planning.pantalla.planning_persona_que"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "pantalla_principal"
 modulo: "planning"
-nombre: "Planning Persona Que"
+nombre: "Planning por persona (filtros)"
 controller: "frontend/planning/controller/planning_persona_que.php"
 vistas: ["frontend/planning/view/planning_persona_que.phtml"]
 fragmentos_frontend: ["frontend/planning/controller/planning_persona_select.php"]
@@ -11,75 +11,37 @@ endpoints: []
 capacidades: []
 campos: ["form.apellido1", "form.apellido2", "form.centro", "form.empiezamax", "form.empiezamin", "form.iactividad_val", "form.iasistentes_val", "form.nombre", "form.periodo", "form.year", "html.apellido1", "html.apellido2", "html.btn_ok", "html.centro", "html.modelo", "html.nombre", "post.empiezamax", "post.empiezamin", "post.na", "post.obj_pau", "post.periodo", "post.stack", "post.year"]
 acciones: ["fnjs_comprobar_fecha", "fnjs_enviar", "fnjs_enviar_formulario", "fnjs_left_side_hide", "fnjs_ver_planning"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Planning Persona Que
+# Planning por persona (filtros)
 
-Formulario de filtros para el planning por persona (numerarios, agd, supernumerarios, sacd, de paso...).
+Criterios de búsqueda de personas y periodo. El colectivo (`obj_pau`, `na`) lo fija la entrada de menú.
+Al enviar abre `planning_persona_select`.
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/planning/controller/planning_persona_que.php`
 
-## Vistas Relacionadas
+## Campos
 
-- `frontend/planning/view/planning_persona_que.phtml`
+- Búsqueda: `nombre`, `apellido1`, `apellido2`, `centro`
+- Periodo: `year`, `periodo`, `empiezamin`, `empiezamax`
+- Hidden: `obj_pau`, `na` (según menú: `PersonaDl`, `PersonaSacd`, `PersonaEx`, …)
 
-## Fragmentos Frontend Relacionados
+## Acciones
 
-- `frontend/planning/controller/planning_persona_select.php`
-
-## Endpoints Usados
-
-No se han detectado endpoints `/src/...`.
-
-## Capacidades Relacionadas
-
-No se han detectado capacidades relacionadas.
-
-## Campos Detectados
-
-- `form.apellido1`
-- `form.apellido2`
-- `form.centro`
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.iactividad_val`
-- `form.iasistentes_val`
-- `form.nombre`
-- `form.periodo`
-- `form.year`
-- `html.apellido1`
-- `html.apellido2`
-- `html.btn_ok`
-- `html.centro`
-- `html.modelo`
-- `html.nombre`
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.na`
-- `post.obj_pau`
-- `post.periodo`
-- `post.stack`
-- `post.year`
-
-## Acciones Detectadas
-
-- `fnjs_comprobar_fecha`
-- `fnjs_enviar`
-- `fnjs_enviar_formulario`
-- `fnjs_left_side_hide`
-- `fnjs_ver_planning`
+- Buscar → `planning_persona_select.php`
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Revisado contra `frontend/planning/`. Soporta filtros legacy codificados (`saWhere`/`saWhereCtr`).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Variantes según `obj_pau`/`na`/`es_sacd` en `_referencia_menus.md`. Ejemplos Pills2:
+
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Plannig por personas` (`obj_pau=PersonaDl`)
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Plannig por personas sacd` (`obj_pau=PersonaSacd&es_sacd=1`)
+- **Legacy:** `dre > planning > persona r/dl` · `scdl > planning > persona dl` · `scdl > planning > agd/num de paso`

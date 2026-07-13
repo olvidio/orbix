@@ -63,7 +63,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `menus.menu_copiar`
 - Controller: `src/menus/infrastructure/ui/http/controllers/menu_copiar.php`
-- Entrada: `post.gm_new:string`, `post.id_menu:integer`
+- Entrada: `post.id_menu:integer`, `post.gm_new:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/menus/menu_eliminar`
@@ -84,14 +84,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `menus.menu_mover`
 - Controller: `src/menus/infrastructure/ui/http/controllers/menu_mover.php`
-- Entrada: `post.gm_new:string`, `post.id_menu:integer`
+- Entrada: `post.id_menu:integer`, `post.gm_new:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/menus/menus_burger_layout_data`
 
 - Id: `menus.menus_burger_layout_data`
 - Controller: `src/menus/infrastructure/ui/http/controllers/menus_burger_layout_data.php`
-- Entrada: `post.lista_grup_menu_json:mixed`
+- Entrada: `post.lista_grup_menu_json:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/menus/menus_exportar`
@@ -119,7 +119,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `menus.menus_get_page_data`
 - Controller: `src/menus/infrastructure/ui/http/controllers/menus_get_page_data.php`
-- Entrada: `post.filtro_grupo:string`, `post.id_menu:string`, `post.nuevo:string`
+- Entrada: `post.filtro_grupo:string`, `post.nuevo:string`, `post.id_menu:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/menus/menus_importar`
@@ -133,7 +133,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `menus.menus_importar_de_ficheros_a_ref`
 - Controller: `src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php`
-- Entrada: `post.seguro:mixed`, `post.todos:mixed`
+- Entrada: `get.seguro:integer`, `get.todos:integer`, `post.seguro:integer`, `post.todos:integer`
 - Respuesta: `raw_response`
 
 ## `/src/menus/menus_legacy_layout_items_data`

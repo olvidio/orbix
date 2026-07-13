@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoRecibidoAdjuntar. Datos para el formulario «adjuntar certificado recibido» (solo lectura inicial).
+Registrar un certificado recibido nuevo con PDF.
 
 ## Limites De La Respuesta
 

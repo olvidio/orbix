@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.actividad_buscar_form"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/actividades_buscar_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Actividades Buscar
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.actividades_buscar.
 
 ## Objetivo De Usuario
 
-Gestiona ActividadesBuscar. Datos (delegaciones + actividades) para el dialogo "buscar actividad" que abre frontend/notas/controller/actividad_buscar_form.php desde form_notas_de_una_persona.phtml al modificar una nota asociada a una actividad.
+Seleccionar actividad CA vinculada al acta.
 
 ## Punto De Entrada
 
@@ -61,10 +61,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

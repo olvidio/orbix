@@ -8,20 +8,22 @@ pantallas_principales: []
 fragmentos: ["asistentes.pantalla.lista_ultima_activ"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/lista_ultima_activ_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Lista Ultima Activ
 
-Propuesta generada automaticamente desde la capacidad `asistentes.lista_ultima_activ.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Gestiona ListaUltimaActiv. Listado última actividad / seguimiento (lista_ultima_activ.php).
+Informe de personas s sin asistencia reciente.
+
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `lista_ultima_activ` (`frontend/asistentes/controller/`).
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -53,9 +55,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** Destino del submit de lista_ultim_que_ctr
+- **Pills2:** vsg > crt/cv > informes de seguimiento

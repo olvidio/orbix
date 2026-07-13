@@ -8,20 +8,22 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["eliminar", "guardar"]
 endpoints: ["/src/asistentes/asistente_eliminar", "/src/asistentes/asistente_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Asistente
 
-Propuesta generada automaticamente desde la capacidad `asistentes.asistente.gestionar` y sus pantallas relacionadas.
+Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Gestiona Asistente. Crea, edita o mueve un Asistente. Elimina un Asistente y sus matriculas.
+Alta, edición, eliminación y movimiento de asistencia a actividades.
+
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `form_asistentes_a_una_actividad, form_actividades_de_una_persona, asistente_mover` (`frontend/asistentes/controller/`).
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -69,9 +71,6 @@ Acciones JavaScript:
 - ``hay un error, no se ha guardado``
 - ``los datos de asistencia los modifica la dl del asistente``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

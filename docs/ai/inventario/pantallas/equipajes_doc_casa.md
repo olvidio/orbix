@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Doc Casa"
+titulo: "Docs por casa (equipaje)"
 pantalla: "inventario.pantalla.equipajes_doc_casa"
-preguntas: ["Que se puede hacer en Equipajes Doc Casa?", "Que campos tiene Equipajes Doc Casa?", "Que acciones hay en Equipajes Doc Casa?"]
+preguntas: ["Que se puede hacer en Docs por casa (equipaje)?", "Que campos tiene Docs por casa (equipaje)?", "Que acciones hay en Docs por casa (equipaje)?"]
 capacidades: ["inventario.equipajes_doc_casa.gestionar", "inventario.equipajes_egm.gestionar"]
 endpoints: ["/src/inventario/equipajes_doc_casa", "/src/inventario/equipajes_egm"]
 source: "docs/catalogo/inventario/pantallas/equipajes_doc_casa.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Doc Casa
+# Ayuda IA Pantalla - Docs por casa (equipaje)
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento impresión documentos por casa.
 
 ## Uso En Ayuda
 

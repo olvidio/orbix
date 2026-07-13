@@ -4,45 +4,57 @@ tipo: "endpoint"
 modulo: "procesos"
 url: "/src/procesos/tipo_activ_proceso_lista"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_lista.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "procesos_TipoActivProcesoListaData"
-respuesta_data: ["a_cabeceras:list<string>", "a_tipos:list<array<string, mixed>>"]
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/procesos/controller/tipo_activ_proceso_lista.php"]
 casos_uso: ["src\\procesos\\application\\TipoActivProcesoLista"]
 tags: ["procesos", "tipo", "activ", "proceso", "lista"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tipo Activ Proceso Lista
 
-Caso de uso: listado de tipos de actividad con proceso propio / no-propio.
+Listado de tipos de actividad con proceso propio y no propio asignados.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve todas los tipos de actividad con el nombre del proceso asignado para delegación propia
+y para actividades ajenas (SFSV de sesión). Incluye cabeceras traducidas para la tabla.
 
 ## Endpoint
 
 - URL: `/src/procesos/tipo_activ_proceso_lista`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_lista.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Sin parámetros POST; el caso de uso no lee entrada.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `procesos_TipoActivProcesoListaData`):
+- Claves en `data` (doble `JSON.parse`):
   - `a_cabeceras` (`list<string>`)
-  - `a_tipos` (`list<array<string, mixed>>`)
+  - `a_tipos` (`list`): cada fila con `id_tipo_activ`, `nom`, `id_tipo_proceso`,
+    `nom_proceso_propio`, `id_tipo_proceso_ex`, `nom_proceso_no_propio` (`----` si sin asignar)
+
+## Errores conocidos
+
+- _(ninguno documentado en el caso de uso)_
+
+## Permisos
+
+- Sin control de permisos propio; autorización en frontend y `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -50,10 +62,4 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/procesos/controller/tipo_activ_proceso_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/procesos/controller/tipo_activ_proceso_lista.php` (renderer HTML; invocado desde `url_lista`)

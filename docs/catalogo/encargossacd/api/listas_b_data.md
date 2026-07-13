@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "encargossacd"
 url: "/src/encargossacd/listas_b_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/encargossacd/infrastructure/ui/http/controllers/listas_b_data.php"
 entrada: ["post.sf:mixed"]
 entrada_obligatoria: []
@@ -15,20 +15,23 @@ requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/listas_b.php"]
 casos_uso: ["src\\encargossacd\\application\\ListasBData"]
 tags: ["encargossacd", "listas", "b", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Listas B Data
 
 Genera el listado de atencion SACD "b" (cr 9/05, Anexo2, 9.4 b). Sustituye la logica de `frontend/encargossacd/controller/listas_b.php`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
+## Objetivo funcional
+
+Listado «b» (ref. cr 1/14, 10, b): iglesias/oc/lp con capellanes.
+
 ## Endpoint
 
 - URL: `/src/encargossacd/listas_b_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/listas_b_data.php`
 
 ## Entrada
@@ -39,14 +42,12 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_ListasBDataData`):
-  - `cabecera_left` (`string`)
-  - `cabecera_right` (`string`)
-  - `cabecera_right_2` (`string`)
-  - `Html` (`string`)
+- Claves: cabeceras + `Html` (doble `JSON.parse`).
+
+
+## Permisos
+
+Sin control propio; menú listados.
 
 ## Casos De Uso
 
@@ -56,8 +57,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - `frontend/encargossacd/controller/listas_b.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

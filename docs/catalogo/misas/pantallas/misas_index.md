@@ -1,7 +1,7 @@
 ---
 id: "misas.pantalla.misas_index"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "pantalla_principal"
 modulo: "misas"
 nombre: "Misas Index"
 controller: "frontend/misas/controller/misas_index.php"
@@ -11,16 +11,18 @@ endpoints: []
 capacidades: []
 campos: []
 acciones: ["fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Misas Index
+# Misas index
 
-Descripcion funcional pendiente de revisar.
+Índice de navegación del módulo con enlaces HashFront a las 10 pantallas principales (plan, encargos, plantilla, iniciales, status). Sin backend JSON.
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/misas/controller/misas_index.php`
 
 ## Vistas Relacionadas
@@ -56,13 +58,7 @@ No se han detectado campos de formulario.
 
 - `fnjs_update_div`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

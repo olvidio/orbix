@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["usuarios.pantalla.role_form", "usuarios.pantalla.role_lista"]
 acciones: ["eliminar", "guardar", "listar"]
 endpoints: ["/src/usuarios/role_eliminar", "/src/usuarios/role_guardar", "/src/usuarios/role_lista"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Role
-
-Propuesta generada automaticamente desde la capacidad `usuarios.role.gestionar` y sus pantallas relacionadas.
+# Flujo - Role
 
 ## Objetivo De Usuario
 
-Gestiona rolesLista. Descripcion funcional pendiente de revisar.
+Administración de roles: listar, crear/editar flags sf/sv/pau/dmz y asignar grupmenus.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: sistema > usuarios web > lista de roles. Pills2: ADMIN LOCAL > usuarios web > lista de roles.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -103,11 +101,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `no existe el registro`
+- `hay un error, no se ha eliminado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > usuarios web > lista de roles
+- **Pills2:** ADMIN LOCAL > usuarios web > lista de roles

@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.calendario_periodos_form_periodo"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "modal"
 modulo: "ubis"
 nombre: "Calendario Periodos Form Periodo"
 controller: "frontend/ubis/controller/calendario_periodos_form_periodo.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/calendario_periodos_form_periodo_data"]
 capacidades: ["ubis.calendario_periodos_form_periodo.gestionar"]
 campos: ["form.f_fin", "form.f_ini", "form.sfsv", "post.id_item"]
 acciones: ["fnjs_cerrar", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Calendario Periodos Form Periodo
 
-Descripcion funcional pendiente de revisar.
+Formulario modal de edición o eliminación de un periodo de calendario existente.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `modal`
+
+
 - Controller: `frontend/ubis/controller/calendario_periodos_form_periodo.php`
 
 ## Vistas Relacionadas
@@ -51,13 +53,7 @@ No se han detectado controladores frontend relacionados.
 - `fnjs_cerrar`
 - `fnjs_guardar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

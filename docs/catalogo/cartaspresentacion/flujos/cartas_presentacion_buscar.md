@@ -4,61 +4,40 @@ tipo: "flujo_frontend"
 modulo: "cartaspresentacion"
 nombre: "Flujo - Gestionar Cartas Presentacion Buscar"
 capacidad: "cartaspresentacion.cartas_presentacion_buscar.gestionar"
-pantallas_principales: []
-fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion_buscar"]
-acciones: ["obtener_datos"]
-endpoints: ["/src/cartaspresentacion/cartas_presentacion_buscar_data"]
-estado_revision: "generado"
+pantallas_principales: ["cartaspresentacion.pantalla.cartas_presentacion_buscar"]
+fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion_lista"]
+acciones: ["buscar"]
+endpoints: ["/src/cartaspresentacion/cartas_presentacion_buscar_data", "/src/cartaspresentacion/cartas_presentacion_lista_data"]
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Cartas Presentacion Buscar
+# Flujo - Buscar cartas de presentación
 
-Propuesta generada automaticamente desde la capacidad `cartaspresentacion.cartas_presentacion_buscar.gestionar` y sus pantallas relacionadas.
+Búsqueda filtrada por población, región, país y delegación.
 
 ## Objetivo De Usuario
 
-Gestiona CartasPresentacionBuscarOpciones. Opciones del formulario de busqueda de cartas de presentacion (region, pais, delegacion).
+Encontrar cartas de presentación que cumplan criterios geográficos o de delegación.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `cartas_presentacion_buscar` — menú scdl > direcciones > cartas presentacion > buscar.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `cartaspresentacion.pantalla.cartas_presentacion_buscar`
+### Buscar
 
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `html.btn_ok`
-- `html.poblacion`
-
-Acciones JavaScript:
-- `fnjs_buscar`
-- `fnjs_enviar`
-- `fnjs_enviar_formulario`
+1. Al abrir, se cargan desplegables (`cartas_presentacion_buscar_data`).
+2. Rellenar filtros y pulsar **buscar**.
+3. `cartas_presentacion_lista.php` invoca `cartas_presentacion_lista_data` con `que=get`.
+4. Resultados en `#resultados`.
 
 ## Endpoints Del Flujo
 
 - `/src/cartaspresentacion/cartas_presentacion_buscar_data`
+- `/src/cartaspresentacion/cartas_presentacion_lista_data`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > direcciones > cartas presentacion > buscar
+- **Pills2:** scdl > direcciones > cartas presentacion > buscar

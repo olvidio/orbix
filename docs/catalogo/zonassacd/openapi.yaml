@@ -17,9 +17,9 @@ paths:
       operationId: "post_zonassacd_zona_ctr"
       summary: "Zona Ctr"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Datos iniciales de Zonas-ctr: desplegable de zonas y perm_des (activa opción no_sf, checkboxes y botón asignar).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/zonassacd/api/zona_ctr.md`
       tags:
@@ -52,7 +52,7 @@ paths:
       operationId: "post_zonassacd_zona_ctr_ajax"
       summary: "Zona Ctr Ajax"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Ruta muerta: registrada en routes.php pero sin controller. Sustituida por zona_ctr_lista y zona_ctr_update.
         
         Operacion: `mutacion`.
         
@@ -87,9 +87,9 @@ paths:
       operationId: "post_zonassacd_zona_ctr_lista"
       summary: "Zona Ctr Lista"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Centros activos de una zona (id numérico), sin zona dl (no) o sin zona sf (no_sf). Centros sf solo visibles con perm_des.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/zonassacd/api/zona_ctr_lista.md`
       tags:
@@ -121,7 +121,7 @@ paths:
       operationId: "post_zonassacd_zona_ctr_update"
       summary: "Zona Ctr Update"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Reasigna centros marcados (sel=id_ubi) a id_zona_new. Primer dígito del id_ubi elige repo dl (1) o sf. id_zona_new=no deja sin zona.
         
         Operacion: `mutacion`.
         
@@ -138,9 +138,7 @@ paths:
                 id_zona_new:
                   type: "string"
                 sel:
-                  type: "array"
-                  items:
-                    type: string
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -159,9 +157,9 @@ paths:
       operationId: "post_zonassacd_zona_sacd"
       summary: "Zona Sacd"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Datos iniciales de la pantalla Zonas-sacd: opciones del desplegable de zonas y flag perm_des que activa checkboxes, botones de asignación y modal de días.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/zonassacd/api/zona_sacd.md`
       tags:
@@ -194,7 +192,7 @@ paths:
       operationId: "post_zonassacd_zona_sacd_ajax"
       summary: "Zona Sacd Ajax"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Ruta muerta: registrada en routes.php pero el controller no existe. Era dispatcher legacy (que=get_lista|update|get_lista_tot), sustituido por zona_sacd_lista, zona_sacd_update y zona_sacd_lista_tot.
         
         Operacion: `mutacion`.
         
@@ -229,9 +227,9 @@ paths:
       operationId: "post_zonassacd_zona_sacd_lista"
       summary: "Zona Sacd Lista"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Tabla de sacd de una zona (id_zona numérico), sacd sin zona (id_zona=no) o vacía si id_zona inválido. Columnas propia y días L–D como x/-.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/zonassacd/api/zona_sacd_lista.md`
       tags:
@@ -263,9 +261,9 @@ paths:
       operationId: "post_zonassacd_zona_sacd_lista_tot"
       summary: "Zona Sacd Lista Tot"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Listado global de todos los sacd de la delegación con sus zonas (zona propia primero). Sacd sin zona aparece con zona vacía.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/zonassacd/api/zona_sacd_lista_tot.md`
       tags:
@@ -298,7 +296,7 @@ paths:
       operationId: "post_zonassacd_zona_sacd_update"
       summary: "Zona Sacd Update"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Mueve, crea o elimina asignaciones sacd↔zona para sel[]. acumular=1 cambia zona propia; acumular=2 añade/quita asignación iglesia/cgi no propia. id_zona_new=no elimina; vacío no hace nada.
         
         Operacion: `mutacion`.
         
@@ -319,9 +317,7 @@ paths:
                 id_zona_new:
                   type: "string"
                 sel:
-                  type: "array"
-                  items:
-                    type: string
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -360,6 +356,8 @@ components:
         a_opciones:
           type: array
           items: {}
+        perm_des:
+          type: "boolean"
     zonassacd_ZonaCtrPageDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
@@ -376,6 +374,8 @@ components:
         a_opciones:
           type: array
           items: {}
+        perm_des:
+          type: "boolean"
     zonassacd_ZonaSacdPageDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"

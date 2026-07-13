@@ -11,12 +11,12 @@ endpoints: ["/src/zonassacd/zona_ctr_update"]
 capacidades: ["zonassacd.zona_ctr.gestionar"]
 campos: ["post.id_zona_new", "post.sel"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Zona Ctr Update Ajax
 
-Descripcion funcional pendiente de revisar.
+Proxy JSON POST a `/src/zonassacd/zona_ctr_update` desde fnjs_guardar en zona_ctr.
 
 ## Tipo
 
@@ -48,13 +48,7 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

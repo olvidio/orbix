@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "actividades"
-titulo: "Lista Sr Csv Que"
+titulo: "Filtros listado CSV San Rafael"
 pantalla: "actividades.pantalla.lista_sr_csv_que"
-preguntas: ["Que se puede hacer en Lista Sr Csv Que?", "Que campos tiene Lista Sr Csv Que?", "Que acciones hay en Lista Sr Csv Que?"]
+preguntas: ["Que se puede hacer en Filtros listado CSV San Rafael?", "Que campos tiene Filtros listado CSV San Rafael?", "Que acciones hay en Filtros listado CSV San Rafael?"]
 capacidades: ["actividades.lista_sr_csv_que.gestionar"]
 endpoints: ["/src/actividades/lista_sr_csv_que_datos"]
 source: "docs/catalogo/actividades/pantallas/lista_sr_csv_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Lista Sr Csv Que
+# Ayuda IA Pantalla - Filtros listado CSV San Rafael
 
 ## Resumen
 
-Pantalla del formulario para listados particulares de SR.
+Formulario para el **listado CSV de actividades SR**: periodo (`PeriodoQue`), selección múltiple de casas (`CasasQue`), tipos de actividad y estados. Al cargar consulta `lista_sr_csv_que_datos` para valores por defecto (preferencias del usuario). El action apunta a `lista_sr_csv.php`.
 
 ## Uso En Ayuda
 

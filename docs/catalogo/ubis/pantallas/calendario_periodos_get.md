@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/calendario_periodos_get_data"]
 capacidades: ["ubis.calendario_periodos_get.gestionar"]
 campos: ["post.id_ubi"]
 acciones: ["fnjs_grabar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Calendario Periodos Get
 
-Descripcion funcional pendiente de revisar.
+Vista AJAX legacy de periodos de calendario con acciones grabar y borrar inline.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/ubis/controller/calendario_periodos_get.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ No se han detectado controladores frontend relacionados.
 
 - `fnjs_grabar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

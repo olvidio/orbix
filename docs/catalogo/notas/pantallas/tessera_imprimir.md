@@ -11,12 +11,12 @@ endpoints: ["/src/notas/tessera_imprimir_data"]
 capacidades: ["notas.tessera_imprimir.gestionar"]
 campos: ["post.cara", "post.id_nom", "post.id_tabla", "post.refresh", "post.sel", "post.stack"]
 acciones: ["fnjs_left_side_hide", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tessera Imprimir
 
-Esta página sirve para la tessera de una persona.
+Impresión HTML de tessera.
 
 ## Tipo
 
@@ -54,13 +54,11 @@ No se han detectado vistas PHTML relacionadas.
 - `fnjs_left_side_hide`
 - `fnjs_update_div`
 
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

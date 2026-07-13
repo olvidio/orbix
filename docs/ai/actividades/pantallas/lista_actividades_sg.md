@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "actividades"
-titulo: "Lista Actividades Sg"
+titulo: "Listado actividades San Gabriel (crt/cv)"
 pantalla: "actividades.pantalla.lista_actividades_sg"
-preguntas: ["Que se puede hacer en Lista Actividades Sg?", "Que campos tiene Lista Actividades Sg?", "Que acciones hay en Lista Actividades Sg?"]
+preguntas: ["Que se puede hacer en Listado actividades San Gabriel (crt/cv)?", "Que campos tiene Listado actividades San Gabriel (crt/cv)?", "Que acciones hay en Listado actividades San Gabriel (crt/cv)?"]
 capacidades: ["actividades.lista_actividades_sg.gestionar"]
 endpoints: ["/src/actividades/lista_actividades_sg_datos"]
 source: "docs/catalogo/actividades/pantallas/lista_actividades_sg.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Lista Actividades Sg
+# Ayuda IA Pantalla - Listado actividades San Gabriel (crt/cv)
 
 ## Resumen
 
-Pantalla que lista actividades sf/sg (crt, cv) con los filtros de periodo, tipo, lugar y delegacion.
+Listado de actividades **SG** (`tipo_activ_sg=crt|cv`) con filtros de periodo, estado, lugar y delegación. Incluye barra de periodo (`PeriodoQue`), formulario de selección múltiple y tabla vía `lista_actividades_sg_datos`. Periodo por defecto: `curso_crt` o `curso_ca` según el tipo.
 
 ## Uso En Ayuda
 
@@ -46,7 +46,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Acciones Detectadas
 
-- `button:. _(`
 - `fnjs_borrar`
 - `fnjs_buscar`
 - `fnjs_enviar_formulario`

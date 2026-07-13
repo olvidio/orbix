@@ -17,7 +17,7 @@ paths:
       operationId: "post_actividadcargos_cargo_editar"
       summary: "Cargo Editar"
       description: |
-        Edita un `ActividadCargo` existente.
+        Edita un `ActividadCargo` existente (o lo crea si `id_item` viene vacío, preservando la semántica del legacy `update_3102` caso `editar`).
         
         Operacion: `mutacion`.
         
@@ -111,7 +111,7 @@ paths:
       operationId: "post_actividadcargos_cargo_nuevo"
       summary: "Cargo Nuevo"
       description: |
-        Crea un `ActividadCargo`.
+        Crea un `ActividadCargo` (asigna un cargo a una persona en una actividad).
         
         Operacion: `mutacion`.
         
@@ -159,9 +159,9 @@ paths:
       operationId: "post_actividadcargos_form_cargos_de_actividad_data"
       summary: "Form Cargos De Actividad Data"
       description: |
-        Datos para `form_cargos_de_actividad`. Los desplegables se construyen en el front ({
+        Construye los datos del formulario de cargos de una actividad (vista por actividad). Los desplegables (persona y cargo) se arman en el front (`FormCargosDeActividadHashCompose::withDesplegablesHtml`) a partir de `personas_select` / `cargos_select`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadcargos/api/form_cargos_de_actividad_data.md`
       tags:
@@ -207,9 +207,9 @@ paths:
       operationId: "post_actividadcargos_form_cargos_personas_en_actividad_data"
       summary: "Form Cargos Personas En Actividad Data"
       description: |
-        Datos para `form_cargos_personas_en_actividad` (vista por persona).
+        Construye los datos del formulario de cargos desde la **vista por persona**: dada una persona, permite asignarle un cargo en una actividad (o editar uno existente).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadcargos/api/form_cargos_personas_en_actividad_data.md`
       tags:

@@ -1,7 +1,7 @@
 ---
 id: "misas.pantalla.preparar_plan_de_misas"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "misas"
 nombre: "Preparar Plan De Misas"
 controller: "frontend/misas/controller/preparar_plan_de_misas.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/misas/plan_de_misas_pantalla_data"]
 capacidades: ["misas.plan_de_misas_pantalla.gestionar"]
 campos: ["form.empiezamax", "form.empiezamin", "form.id_zona", "form.orden", "form.periodo", "form.tipo_plantilla", "form.tipoplantilla", "html.preparar"]
 acciones: ["button:preparar", "fnjs_nuevo_periodo", "fnjs_ver_cuadricula_zona"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Preparar Plan De Misas
+# Preparar plan de misas
 
-Descripcion funcional pendiente de revisar.
+Formulario para crear un nuevo plan de misas: zona, orden, tipo plantilla y periodo. Redirige a `crear_nuevo_periodo`.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/misas/controller/preparar_plan_de_misas.php`
 
 ## Vistas Relacionadas
@@ -58,13 +60,7 @@ Descripcion funcional pendiente de revisar.
 - `fnjs_nuevo_periodo`
 - `fnjs_ver_cuadricula_zona`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Misas >  Nuevo plan
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Nuevo plan

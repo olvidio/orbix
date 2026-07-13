@@ -2,26 +2,26 @@
 id: "profesores.profesor_asignatura_ajax.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Gestionar Profesor Asignatura Ajax"
+nombre: "Flujo - Tabla AJAX profesores asignatura"
 capacidad: "profesores.profesor_asignatura_ajax.gestionar"
 pantallas_principales: []
 fragmentos: ["profesores.pantalla.profesor_asignatura_ajax"]
-acciones: ["ejecutar"]
+acciones: ["consultar"]
 endpoints: ["/src/profesores/profesor_asignatura_ajax"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Profesor Asignatura Ajax
+# Flujo - Tabla AJAX profesores asignatura
 
-Propuesta generada automaticamente desde la capacidad `profesores.profesor_asignatura_ajax.gestionar` y sus pantallas relacionadas.
+Fragmento que completa el flujo **profesor para asignatura**.
 
 ## Objetivo De Usuario
 
-Gestiona ProfesoresAsignaturaLista. Descripcion funcional pendiente de revisar.
+Obtener la lista de profesores para la asignatura seleccionada sin recargar la pantalla principal.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Invocado por `fnjs_profes` desde `profesor_asignatura_que` al cambiar `id_asignatura`.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,21 +29,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. El usuario cambia la asignatura en el desplegable.
+2. POST a `profesor_asignatura_ajax.php` con `id_asignatura`.
+3. Se inserta HTML de tabla en el contenedor de la pantalla padre.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `post.id_asignatura`
-
-Acciones JavaScript:
-- Ninguna detectada.
+- `/src/profesores/profesor_asignatura_ajax`
 
 ## Endpoints Del Flujo
 
@@ -53,9 +47,6 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+sin entrada de menú en el índice (fragmento AJAX de `profesor_asignatura_que`)

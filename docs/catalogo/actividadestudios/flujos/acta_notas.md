@@ -8,34 +8,46 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.acta_notas"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/acta_notas_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Notas
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.acta_notas.gestionar` y sus pantallas relacionadas.
+Carga y visualización del acta de notas de una asignatura concreta de una actividad CA,
+con la tabla de alumnos matriculados y sus notas en borrador.
 
 ## Objetivo De Usuario
 
-Gestiona ActaNotas. Descripcion funcional pendiente de revisar.
+El usuario abre el acta de una asignatura impartida en una actividad: el sistema muestra
+el formulario del acta (cabecera vía `acta_ver`) y debajo la lista de matriculados con
+nota, nota máxima, preceptor y situación de acta, según permisos de la DL propietaria.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `acta_notas` (`frontend/actividadestudios/controller/acta_notas.php`): al abrirse
+llama a `acta_notas_data` con `id_activ` e `id_asignatura`. Se llega desde el listado de
+asignaturas del dossier 3005 (`select_asignaturas_de_una_actividad`, acción **actas** /
+`fnjs_actas`).
 
 ## Fragmentos O Pantallas Auxiliares
 
 - `actividadestudios.pantalla.acta_notas`
+- `frontend/notas/controller/acta_ver.php` (cabecera del acta)
+- `frontend/notas/controller/acta_imprimir.php` (impresión)
 
 ## Escenarios Inferidos
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En el dossier de asignaturas de una actividad (3005), seleccionar una asignatura.
+2. Pulsar **actas** (`fnjs_actas`).
+3. El sistema carga `acta_notas` y consulta `acta_notas_data` con las claves de actividad
+   y asignatura.
+4. Se muestra el acta con matriculados, desplegable de situaciones y permiso de edición.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/acta_notas_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -76,9 +88,13 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo desde dossier 3005 «asignaturas de una actividad»).
+Acceso habitual: buscar actividad CA (`actividad_select`) → dossier asignaturas → **actas**.
+
+Menú de la pantalla padre de búsqueda de actividades:
+
+- **Legacy:** vsm > ca > buscar ca; vest > actas... > actas (vía módulo notas).
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Actas y certificados > Actas;
+  ESTUDIOS > Buscar actividades.

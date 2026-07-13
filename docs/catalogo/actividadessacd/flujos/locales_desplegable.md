@@ -8,20 +8,22 @@ pantallas_principales: []
 fragmentos: ["actividadessacd.pantalla.com_sacd_txt"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadessacd/locales_desplegable_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Locales Desplegable
 
-Propuesta generada automaticamente desde la capacidad `actividadessacd.locales_desplegable.gestionar` y sus pantallas relacionadas.
+Poblado del desplegable de idiomas en la edición de textos.
 
 ## Objetivo De Usuario
 
-Gestiona LocalesDesplegable. Descripcion funcional pendiente de revisar.
+Al abrir el fragmento de edición de textos, el sistema carga la lista de idiomas/locales disponibles
+para poblar el desplegable `idioma` del formulario de comunicación.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Fragmento `com_sacd_txt` (`frontend/actividadessacd/controller/com_sacd_txt.php`): el controller
+consulta este endpoint al renderizar el fragmento para construir el desplegable de idiomas.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,22 +33,20 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Abrir el fragmento de edición de textos desde la pantalla de comunicación.
+2. El sistema rellena el desplegable de idiomas con `a_locales`.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadessacd/locales_desplegable_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- `html.comunicacion`
+- Ninguno detectado.
 
 Acciones JavaScript:
-- `fnjs_cancelar`
-- `fnjs_get_texto`
-- `fnjs_guardar`
-- `fnjs_parse_rta_txt`
+- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -56,9 +56,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- Sin entrada de menú en el índice: fragmento invocado desde "Comunicación a los sacd"
+  (`com_sacd_activ_periodo`) cuando el usuario tiene permiso de edición (`perm_mod_txt`).

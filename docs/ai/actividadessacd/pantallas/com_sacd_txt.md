@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla de edicion de textos de comunicacion a los sacd.
+Fragmento de edición de los textos de comunicación a los sacd. Renderiza dos desplegables (`clave`, `idioma`) y un `<textarea>` precargado con `com_sacd/es`. Lee y guarda por AJAX contra `texto_comunicacion_data` y `texto_comunicacion_guardar`; el desplegable de idiomas se pobla desde `locales_desplegable_data`.
 
 ## Uso En Ayuda
 

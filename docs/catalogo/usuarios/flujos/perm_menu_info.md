@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["usuarios.pantalla.perm_menu_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/perm_menu_info"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Perm Menu Info
-
-Propuesta generada automaticamente desde la capacidad `usuarios.perm_menu_info.gestionar` y sus pantallas relacionadas.
+# Flujo - Perm Menu Info
 
 ## Objetivo De Usuario
 
-Gestiona PermMenuInfo. Descripcion funcional pendiente de revisar.
+Carga formulario modal de permiso menú (nuevo o edición).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -54,11 +52,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Grupo no encontrado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

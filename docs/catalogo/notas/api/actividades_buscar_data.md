@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "notas"
 url: "/src/notas/actividades_buscar_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/notas/infrastructure/ui/http/controllers/actividades_buscar_data.php"
 entrada: ["post.dl_org:string", "post.f_acta_iso:string", "post.id_activ:integer"]
 entrada_obligatoria: []
@@ -13,10 +13,12 @@ requiere_hashb: false
 frontend_referencias: ["frontend/notas/controller/actividad_buscar_form.php"]
 casos_uso: ["src\\notas\\application\\ActividadesBuscarData"]
 tags: ["notas", "actividades", "buscar", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Actividades Buscar Data
+
+Busca actividades CA para vincular a un acta/nota.
 
 Datos (delegaciones + actividades) para el dialogo "buscar actividad" que abre `frontend/notas/controller/actividad_buscar_form.php` desde `form_notas_de_una_persona.phtml` al modificar una nota asociada a una actividad.
 
@@ -26,7 +28,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - URL: `/src/notas/actividades_buscar_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/actividades_buscar_data.php`
 
 ## Entrada
@@ -43,7 +45,16 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (doble `JSON.parse` salvo excepciones).
+- Lista actividades en `data`.
+
+## Objetivo funcional
+
+Filtro por `dl_org`, `f_acta_iso`, `id_activ`; devuelve actividades candidatas.
+
+## Permisos
+
+- `actividad_buscar_form` en `acta_ver`.
 
 ## Casos De Uso
 
@@ -51,10 +62,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/actividad_buscar_form.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/actividad_buscar_form.php`.

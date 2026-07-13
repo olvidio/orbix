@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Leer el texto que describe el criterio de asignación automática.
+2. Pulsar **continuar**.
+3. El sistema procesa y muestra el resultado (`asignadas`, `sin_asignar`) sin recargar la página.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadessacd/sacd_asignar_auto`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona SacdAsignarAuto. Auto-asignacion masiva del sacd titular del centro encargado a actividades sr/sg sin sacd.
+El usuario confirma la asignación automática: el sistema asigna el sacd titular del centro encargado a las actividades sr/sg actuales posteriores al inicio de curso des que aún no tienen sacd. Devuelve cuántas se han asignado y cuántas quedan sin asignar; las asignadas quedan con observaciones `auto`.
 
 ## Limites De La Respuesta
 

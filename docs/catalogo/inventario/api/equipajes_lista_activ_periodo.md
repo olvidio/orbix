@@ -4,61 +4,67 @@ tipo: "endpoint"
 modulo: "inventario"
 url: "/src/inventario/equipajes_lista_activ_periodo"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php"
-entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.fin:string", "post.id_cdc:integer", "post.inicio:string", "post.periodo:string", "post.year:integer"]
-entrada_obligatoria: []
+entrada: ["post.id_cdc:integer", "post.periodo:string", "post.year:integer", "post.empiezamin:string", "post.empiezamax:string", "post.inicio:string", "post.fin:string"]
+entrada_obligatoria: ["id_cdc"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["debe seleccionar un lugar"]
 frontend_referencias: ["frontend/inventario/controller/equipajes_lista_activ_periodo.php"]
 casos_uso: []
 tags: ["inventario", "equipajes", "lista", "activ", "periodo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Lista Activ Periodo
+# Actividades por periodo y lugar
 
-Descripcion funcional pendiente de revisar.
+Filtra actividades de un CDC/lugar en un periodo para seleccionar al crear equipaje.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Filtra actividades de un CDC/lugar en un periodo para seleccionar al crear equipaje.
 
 ## Endpoint
 
 - URL: `/src/inventario/equipajes_lista_activ_periodo`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `empiezamax` | `string` | controller | No | controller |
-| `empiezamin` | `string` | controller | No | controller |
-| `fin` | `string` | controller | No | controller |
-| `id_cdc` | `integer` | controller | No | controller |
-| `inicio` | `string` | controller | No | controller |
-| `periodo` | `string` | controller | No | controller |
-| `year` | `integer` | controller | No | controller |
+| `id_cdc` | `integer` | POST | Si | |
+| `periodo` | `string` | POST | No | |
+| `year` | `integer` | POST | No | |
+| `empiezamin` | `string` | POST | No | |
+| `empiezamax` | `string` | POST | No | |
+| `inicio` | `string` | POST | No | |
+| `fin` | `string` | POST | No | |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Payload `{a_valores, nombre_ubi}`. Error en mensaje si falta lugar.
+
+## Errores conocidos
+
+  - `debe seleccionar un lugar`
+
+## Permisos
+
+- Sin control de permisos propio en el controller; autorización de oficina vía frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- Lógica inline en controller (sin `application/`).
 
 ## Frontend Relacionado
 
 - `frontend/inventario/controller/equipajes_lista_activ_periodo.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

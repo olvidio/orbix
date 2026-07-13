@@ -8,20 +8,25 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.actualizar_docencia"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadestudios/docencia_actualizar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Docencia Actualizar
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.docencia_actualizar.gestionar` y sus pantallas relacionadas.
+Actualización del dossier de docencia STGR a partir de actividades terminadas.
 
 ## Objetivo De Usuario
 
-Gestiona DocenciaActualizar. Ejecuta {.
+El usuario elige un periodo de actividades terminadas y ejecuta la actualización: el sistema
+recorre las asignaturas con profesor asignado y graba/actualiza registros en `d_docencia_stgr`
+(`ProfesorDocenciaStgr`). Sustituye la rama «continuar» del legacy
+`apps/actividadestudios/controller/actualizar_docencia.php`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `actualizar_docencia` (`frontend/actividadestudios/controller/actualizar_docencia.php`):
+primero muestra el formulario de periodo; al pulsar **buscar** con `continuar=1` llama a
+`docencia_actualizar` vía PostRequest.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,11 +36,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Abrir **actualizar docencia** desde el menú.
+2. Elegir año y periodo (o fechas personalizadas) y pulsar **buscar**.
+3. El sistema calcula la docencia de actividades terminadas en el rango y la persiste.
+4. Se muestra el mensaje de resultado en la misma pantalla.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/docencia_actualizar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -66,9 +74,8 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > mantenimiento > actualizar docencia.
+- **Pills2:** ESTUDIOS > Datos e informes > Actualizar docencia; vest > mantenimiento >
+  actualizar docencia.

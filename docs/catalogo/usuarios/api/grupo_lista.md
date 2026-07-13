@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "usuarios"
 url: "/src/usuarios/grupo_lista"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/usuarios/infrastructure/ui/http/controllers/grupo_lista.php"
 entrada: ["post.username:string"]
 entrada_obligatoria: []
@@ -15,37 +15,49 @@ requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/grupo_lista.php"]
 casos_uso: ["src\\usuarios\\application\\GruposLista"]
 tags: ["usuarios", "grupo", "lista"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Usuario no encontrado", "no tiene permisos para ver esto"]
 ---
 
 # Grupo Lista
 
-Descripcion funcional pendiente de revisar.
+Lista grupos de permisos (id_usuario ~ ^5) con filtro opcional por nombre.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Lista grupos de permisos (id_usuario ~ ^5) con filtro opcional por nombre.
 
 ## Endpoint
 
 - URL: `/src/usuarios/grupo_lista`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/grupo_lista.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `username` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `username` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `usuarios_GruposListaData`):
-  - `a_cabeceras` (`list<mixed>, a_botones: list<array<string, string>>, a_valores: array<int, array<int|string, mixed>>`)
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse` salvo JsonResponse directo):
+  - `a_cabeceras`: cabeceras tabla
+  - `a_botones`: botones
+  - `a_valores`: filas con sel id# y link editar
+
+## Errores conocidos
+- `Usuario no encontrado`
+- `no tiene permisos para ver esto`
+
+## Permisos
+
+id_role≤3; si >3 devuelve error de permisos.
 
 ## Casos De Uso
 
@@ -53,10 +65,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/usuarios/controller/grupo_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/usuarios/controller/grupo_lista.php"]`).

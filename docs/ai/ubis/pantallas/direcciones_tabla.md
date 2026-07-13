@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla AJAX de direcciones encontradas para asignar a un ubi.
 
 ## Uso En Ayuda
 

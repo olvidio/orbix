@@ -7,20 +7,25 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php"
 entrada: ["post.certificado:string", "post.certificado_old:string", "post.destino:string", "post.f_certificado:string", "post.f_recibido:string", "post.firmado:string", "post.id_item:integer", "post.id_nom:integer", "post.idioma:string", "post.nom:string", "post.nuevo:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_nom"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: ["frontend/certificados/controller/certificado_recibido_adjuntar.php", "frontend/certificados/controller/certificado_recibido_modificar.php"]
+frontend_referencias: ["frontend/certificados/controller/certificado_recibido_modificar.php"]
 casos_uso: []
 tags: ["certificados", "certificado", "recibido", "guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Certificado Recibido Guardar
 
-Descripcion funcional pendiente de revisar.
+Alta o edición de metadatos de un certificado recibido en la región STGR local.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Análogo a `certificado_emitido_guardar` pero sobre `CertificadoRecibido` y con `f_recibido` en
+lugar de `f_enviado`. Borra PDF temporal si cambia `certificado_old`.
 
 ## Endpoint
 
@@ -33,37 +38,31 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `certificado` | `string` | controller | No | controller |
-| `certificado_old` | `string` | controller | No | controller |
-| `destino` | `string` | controller | No | controller |
-| `f_certificado` | `string` | controller | No | controller |
-| `f_recibido` | `string` | controller | No | controller |
-| `firmado` | `string` | controller | No | controller |
-| `id_item` | `integer` | controller | No | controller |
-| `id_nom` | `integer` | controller | No | controller |
-| `idioma` | `string` | controller | No | controller |
-| `nom` | `string` | controller | No | controller |
-| `nuevo` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `nuevo` | `integer` | controller | No | `1` = alta |
+| `id_item` | `integer` | controller | No | Edición |
+| `id_nom` | `integer` | controller | Sí | Persona |
+| `nom`, `idioma`, `destino`, `certificado`, `firmado` | varios | controller | No | Metadatos |
+| `f_certificado`, `f_recibido` | `string` | controller | No | Fechas locales |
+| `certificado_old` | `string` | controller | No | Limpieza PDF tmp |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data` = `{mensaje: "ok", item: <id_item>}` (doble `JSON.parse`)
+
+## Errores conocidos
+
+- `No se encuentra el certificado`
+- Errores de BD del repositorio en `mensaje`
+
+## Permisos
+
+- Sin control de permisos propio; formularios en dossier de persona o modificar recibido.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- Lógica inline en el controller.
 
 ## Frontend Relacionado
 
-- `frontend/certificados/controller/certificado_recibido_adjuntar.php`
 - `frontend/certificados/controller/certificado_recibido_modificar.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

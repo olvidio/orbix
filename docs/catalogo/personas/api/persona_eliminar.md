@@ -7,21 +7,27 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/personas/infrastructure/ui/http/controllers/persona_eliminar.php"
 entrada: ["post.id_nom:integer", "post.obj_pau:string"]
-entrada_obligatoria: []
+entrada_obligatoria: ["post.id_nom", "post.obj_pau"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["No se ha pasado el id_nom", "No existe la clase de la persona", "No se encuentra la persona", "No se ha eliminado, porque no es de mi dl"]
+errores: ["No se ha pasado el id_nom", "No existe la clase de la persona", "No se encuentra la persona", "No se ha eliminado, porque no es de mi dl", "hay un error, no se ha eliminado"]
 frontend_referencias: ["frontend/personas/view/_persona_form_js.phtml"]
 casos_uso: ["src\\personas\\application\\PersonaEliminar"]
 tags: ["personas", "persona", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Persona Eliminar
 
-Endpoint JSON: elimina una persona.
+Elimina una persona del colectivo indicado, solo si pertenece a la delegación del usuario.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Resuelve repositorio por `obj_pau` (N, Agd, Nax, S, SSSC, Ex, Sacd). Comprueba
+`ConfigGlobal::mi_delef() === persona.getDl()` antes de `Eliminar`. Linaje:
+`apps/personas/controller/personas_update.php` (rama eliminar).
 
 ## Endpoint
 
@@ -34,21 +40,17 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_nom` | `integer` | controller | No | controller |
-| `obj_pau` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_nom` | `integer` | controller | Sí | |
+| `obj_pau` | `string` | controller | Sí | Incluye `PersonaSacd` |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar($error_txt, 'ok')`.
+- Éxito: `data: "ok"`. Error en `mensaje`.
 
-## Efectos colaterales
+## Permisos
 
-- Elimina una persona si pertenece a la dl del usuario actual.
-- Migrado desde la rama "eliminar" de `apps/personas/controller/personas_update.php` (slice 2 de la migracion del modulo `personas`).
+- Implícito: solo personas de `mi_delef`. Botón eliminar en ficha solo si `ok=1` (permiso oficina).
 
 ## Errores conocidos
 
@@ -56,6 +58,7 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - `No existe la clase de la persona`
 - `No se encuentra la persona`
 - `No se ha eliminado, porque no es de mi dl`
+- `hay un error, no se ha eliminado` (+ detalle repositorio)
 
 ## Casos De Uso
 
@@ -63,10 +66,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/personas/view/_persona_form_js.phtml`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/personas/view/_persona_form_js.phtml` (botón eliminar en ficha)

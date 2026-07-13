@@ -1,7 +1,7 @@
 ---
 id: "ubiscamas.pantalla.cama_form"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "modal"
 modulo: "ubiscamas"
 nombre: "Cama Form"
 controller: "frontend/ubiscamas/controller/cama_form.php"
@@ -11,16 +11,17 @@ endpoints: ["/src/ubiscamas/cama_form_data"]
 capacidades: ["ubiscamas.cama.gestionar"]
 campos: ["html.descripcion", "html.larga", "html.vip"]
 acciones: ["fnjs_cancelar", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Cama Form
 
-Descripcion funcional pendiente de revisar.
+Formulario modal para editar descripción, larga y VIP de una cama.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `modal`
+
 - Controller: `frontend/ubiscamas/controller/cama_form.php`
 
 ## Vistas Relacionadas
@@ -50,13 +51,7 @@ No se han detectado controladores frontend relacionados.
 - `fnjs_cancelar`
 - `fnjs_guardar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

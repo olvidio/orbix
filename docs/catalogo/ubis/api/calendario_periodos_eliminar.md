@@ -7,21 +7,25 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/calendario_periodos_eliminar.php"
 entrada: ["post.id_item:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_item"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["no sé cuál he de borar", "no se encuentra el periodo a borrar", "hay un error, no se ha eliminado"]
 frontend_referencias: ["frontend/ubis/controller/calendario_periodos.php"]
 casos_uso: ["src\\ubis\\application\\CalendarioPeriodoEliminar"]
 tags: ["ubis", "calendario", "periodos", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Calendario Periodos Eliminar
 
-Descripcion funcional pendiente de revisar.
+Elimina un periodo de calendario CDC identificado por id_item.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Elimina un periodo de calendario CDC identificado por id_item.
 
 ## Endpoint
 
@@ -34,21 +38,22 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_item` | `integer` | application | Si | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacío serializado).
 
 ## Errores conocidos
-
 - `no sé cuál he de borar`
 - `no se encuentra el periodo a borrar`
 - `hay un error, no se ha eliminado`
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `UbiPermisos` (`puedeModificarPorObjeto`, `dlPerteneceAMiDelegacion`), `have_perm_oficina(scdl|scl|vcsd|des|admin_sv)` y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -56,10 +61,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/ubis/controller/calendario_periodos.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/ubis/controller/calendario_periodos.php"]`).

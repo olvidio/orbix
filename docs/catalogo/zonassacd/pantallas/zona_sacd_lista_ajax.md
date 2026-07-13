@@ -11,12 +11,12 @@ endpoints: ["/src/zonassacd/zona_sacd_lista"]
 capacidades: ["zonassacd.zona_sacd.gestionar"]
 campos: ["post.id_zona"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Zona Sacd Lista Ajax
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX: tabla sacd (`id_zona`) desde zona_sacd, o listado global si `que=get_lista_tot` (menú Lista sacd-zona).
 
 ## Tipo
 
@@ -47,13 +47,7 @@ No se han detectado controladores frontend relacionados.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > zonas > lista sacd-zona
+- **Pills2:** ATENCIÓN SACD > Gestión de zonas > Lista sacd-zona

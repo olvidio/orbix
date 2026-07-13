@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Guarda los cambios del formulario de edición de ubi vía API ubis_guardar.
 
 ## Uso En Ayuda
 

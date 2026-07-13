@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubis.pantalla.ubis_eliminar", "ubis.pantalla.ubis_lista", "ubis.pantalla.ubis_update"]
 acciones: ["eliminar", "guardar", "listar"]
 endpoints: ["/src/ubis/ubis_eliminar", "/src/ubis/ubis_guardar", "/src/ubis/ubis_lista_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ubis
-
-Propuesta generada automaticamente desde la capacidad `ubis.ubis.gestionar` y sus pantallas relacionadas.
+# Flujo - Ubis
 
 ## Objetivo De Usuario
 
-Gestiona Ubis. Descripcion funcional pendiente de revisar.
+Elimina un ubi (centro o casa) del repositorio correspondiente a obj_pau.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -79,13 +77,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``hay un error, no se ha eliminado``
-- ``hay un error, no se ha guardado``
-- ``no se encuentra el ubi a borrar``
+- `no se encuentra el ubi a borrar`
+- `hay un error, no se ha eliminado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

@@ -8,20 +8,18 @@ pantallas_principales: ["ubis.pantalla.calendario_periodos"]
 fragmentos: []
 acciones: ["eliminar", "guardar"]
 endpoints: ["/src/ubis/calendario_periodos_eliminar", "/src/ubis/calendario_periodos_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Calendario Periodos
-
-Propuesta generada automaticamente desde la capacidad `ubis.calendario_periodos.gestionar` y sus pantallas relacionadas.
+# Flujo - Calendario Periodos
 
 ## Objetivo De Usuario
 
-Gestiona CalendarioPeriodo. Descripcion funcional pendiente de revisar.
+Elimina un periodo de calendario CDC identificado por id_item.
 
 ## Punto De Entrada
 
-- `ubis.pantalla.calendario_periodos`
+Menú Legacy: adl > Nuevo Calendario > Definir periodos. Pills2: ACTIVIDADES > Herramientas de calendario > Definir periodos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -70,14 +68,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``hay un error, no se ha eliminado``
-- ``hay un error, no se ha guardado``
-- ``no se encuentra el periodo a borrar``
-- ``no sé cuál he de borar``
+- `no sé cuál he de borar`
+- `no se encuentra el periodo a borrar`
+- `hay un error, no se ha eliminado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos

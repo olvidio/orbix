@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.info_ubis"
 tipo: "pantalla_frontend"
-subtipo: "pantalla"
+subtipo: "pantalla_principal"
 modulo: "ubis"
 nombre: "Info Ubis"
 controller: "frontend/ubis/controller/info_ubis.php"
@@ -11,16 +11,18 @@ endpoints: []
 capacidades: []
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Info Ubis
 
-Descripcion funcional pendiente de revisar.
+Pantalla informativa estática sobre el módulo de ubis (sin menú directo).
 
 ## Tipo
 
-- Subtipo: `pantalla`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/ubis/controller/info_ubis.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

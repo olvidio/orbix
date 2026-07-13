@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "planning"
-titulo: "Planning Casa Select"
+titulo: "Selección de casas (planning)"
 pantalla: "planning.pantalla.planning_casa_select"
-preguntas: ["Que se puede hacer en Planning Casa Select?", "Que campos tiene Planning Casa Select?", "Que acciones hay en Planning Casa Select?"]
+preguntas: ["Que se puede hacer en Selección de casas (planning)?", "Que campos tiene Selección de casas (planning)?", "Que acciones hay en Selección de casas (planning)?"]
 capacidades: []
 endpoints: []
 source: "docs/catalogo/planning/pantallas/planning_casa_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Planning Casa Select
+# Ayuda IA Pantalla - Selección de casas (planning)
 
 ## Resumen
 
-Pantalla intermedia entre `planning_casa_que` y `planning_casa_ver`.
+Pantalla intermedia: lista las casas del grupo elegido y permite abrir el calendario, crear o modificar actividades de casa (`planning_casa_nueva` / `planning_casa_modificar` en módulo actividades).
 
 ## Uso En Ayuda
 

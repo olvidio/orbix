@@ -17,9 +17,9 @@ paths:
       operationId: "post_procesos_actividad_proceso_data"
       summary: "Actividad Proceso Data"
       description: |
-        Caso de uso: datos para la pantalla `actividad_proceso`.
+        Datos iniciales para la pantalla `actividad_proceso` (nombre de la actividad seleccionada).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/actividad_proceso_data.md`
       tags:
@@ -30,6 +30,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -39,19 +41,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ActividadProcesoDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ActividadProcesoDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/procesos/actividad_proceso_generar":
     post:
       operationId: "post_procesos_actividad_proceso_generar"
       summary: "Actividad Proceso Generar"
       description: |
-        Caso de uso: (re)genera las tareas del proceso asociado a un id_activ.
+        (Re)genera las tareas del proceso asociadas a una actividad.
         
         Operacion: `mutacion`.
         
@@ -64,6 +66,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -85,9 +89,9 @@ paths:
       operationId: "post_procesos_actividad_proceso_get"
       summary: "Actividad Proceso Get"
       description: |
-        Caso de uso: tareas del proceso para un id_activ (estructura + permiso edición).
+        Listado de tareas del proceso de una actividad con permiso de edición por fila.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/actividad_proceso_get.md`
       tags:
@@ -98,6 +102,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -107,19 +113,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ActividadProcesoGetDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ActividadProcesoGetDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/procesos/actividad_proceso_update":
     post:
       operationId: "post_procesos_actividad_proceso_update"
       summary: "Actividad Proceso Update"
       description: |
-        Caso de uso: guarda el estado (completado/observaciones) de una tarea del proceso.
+        Guarda el estado (completado/observaciones) de una tarea del proceso de actividad.
         
         Operacion: `mutacion`.
         
@@ -132,6 +138,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 completado:
                   type: "string"
@@ -157,9 +165,9 @@ paths:
       operationId: "post_procesos_actividad_que_fases_ajax"
       summary: "Actividad Que Fases Ajax"
       description: |
-        Caso de uso: fases aplicables al tipo de actividad para checkboxes fases_on/fases_off.
+        Fases aplicables al tipo de actividad para los checkboxes `fases_on` / `fases_off`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/actividad_que_fases_ajax.md`
       tags:
@@ -170,6 +178,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_activ"
               properties:
                 dl_propia:
                   type: "string"
@@ -183,21 +193,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ActividadQueFasesCuadroDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ActividadQueFasesCuadroDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/procesos/fases_activ_cambio_get":
     post:
       operationId: "post_procesos_fases_activ_cambio_get"
       summary: "Fases Activ Cambio Get"
       description: |
-        Caso de uso: fases posibles para id_tipo_activ y dl_propia (desplegable JSON).
+        Desplegable JSON de fases posibles para cambio masivo de fase.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/fases_activ_cambio_get.md`
       tags:
@@ -208,6 +218,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_activ"
               properties:
                 dl_propia:
                   type: "string"
@@ -221,21 +233,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_FasesActivCambioGetDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_FasesActivCambioGetDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/procesos/fases_activ_cambio_lista":
     post:
       operationId: "post_procesos_fases_activ_cambio_lista"
       summary: "Fases Activ Cambio Lista"
       description: |
-        Caso de uso: datos estructurados para tabla de actividades candidatas a cambiar de fase.
+        Datos estructurados para la tabla de actividades candidatas a cambiar de fase.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/fases_activ_cambio_lista.md`
       tags:
@@ -246,6 +258,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_fase_nueva"
               properties:
                 accion:
                   type: "string"
@@ -281,9 +295,9 @@ paths:
       operationId: "post_procesos_fases_activ_cambio_tipo_html"
       summary: "Fases Activ Cambio Tipo Html"
       description: |
-        Payload para fases_activ_cambio: HTML del selector tipo actividad.
+        Fragmento HTML del selector de tipo de actividad en `fases_activ_cambio`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/fases_activ_cambio_tipo_html.md`
       tags:
@@ -309,19 +323,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_FasesActivCambioTipoActividadHtmlDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_FasesActivCambioTipoActividadHtmlDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/procesos/fases_activ_cambio_update":
     post:
       operationId: "post_procesos_fases_activ_cambio_update"
       summary: "Fases Activ Cambio Update"
       description: |
-        Caso de uso: aplica setCompletado a la fase nueva para actividades seleccionadas.
+        Aplica `setCompletado` a la fase nueva para las actividades seleccionadas.
         
         Operacion: `mutacion`.
         
@@ -334,6 +348,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_fase_nueva"
+                - "sel"
               properties:
                 accion:
                   type: "string"
@@ -361,7 +378,7 @@ paths:
       operationId: "post_procesos_procesos_clonar"
       summary: "Procesos Clonar"
       description: |
-        Caso de uso: clona las tareas de un proceso de referencia al proceso indicado.
+        Clona las tareas de un proceso de referencia al proceso indicado.
         
         Operacion: `mutacion`.
         
@@ -374,6 +391,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_proceso"
+                - "id_tipo_proceso_ref"
               properties:
                 id_tipo_proceso:
                   type: "integer"
@@ -397,9 +417,9 @@ paths:
       operationId: "post_procesos_procesos_depende"
       summary: "Procesos Depende"
       description: |
-        Caso de uso: opciones del desplegable de tareas dependientes de una fase.
+        Opciones del desplegable de tareas dependientes de una fase en `procesos_ver`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/procesos_depende.md`
       tags:
@@ -410,30 +430,32 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "acc"
               properties:
                 acc:
                   type: "string"
                 valor_depende:
-                  type: "integer"
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ProcesosDependeDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ProcesosDependeDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/procesos/procesos_eliminar":
     post:
       operationId: "post_procesos_procesos_eliminar"
       summary: "Procesos Eliminar"
       description: |
-        Caso de uso: elimina una tarea_proceso por su id_item.
+        Elimina una `tarea_proceso` por su `id_item`.
         
         Operacion: `mutacion`.
         
@@ -446,6 +468,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_item:
                   type: "integer"
@@ -467,9 +491,9 @@ paths:
       operationId: "post_procesos_procesos_get"
       summary: "Procesos Get"
       description: |
-        Caso de uso: estructura padres/hijos del árbol de fases del proceso.
+        Estructura padres/hijos del árbol de fases del proceso.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/procesos_get.md`
       tags:
@@ -480,6 +504,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_proceso"
               properties:
                 id_tipo_proceso:
                   type: "integer"
@@ -489,21 +515,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ProcesosGetDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ProcesosGetDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/procesos/procesos_get_listado":
     post:
       operationId: "post_procesos_procesos_get_listado"
       summary: "Procesos Get Listado"
       description: |
-        Caso de uso: listado estructurado de fases/tareas del proceso.
+        Listado estructurado de fases/tareas del proceso tipo.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/procesos_get_listado.md`
       tags:
@@ -514,6 +540,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_proceso"
               properties:
                 id_tipo_proceso:
                   type: "integer"
@@ -523,19 +551,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ProcesosGetListadoDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ProcesosGetListadoDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/procesos/procesos_regenerar":
     post:
       operationId: "post_procesos_procesos_regenerar"
       summary: "Procesos Regenerar"
       description: |
-        Caso de uso: regenera las tareas del proceso a partir de tareas_proceso.
+        Regenera las instancias de tareas de actividad a partir de `tareas_proceso`.
         
         Operacion: `mutacion`.
         
@@ -548,6 +576,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_proceso"
               properties:
                 id_tipo_proceso:
                   type: "integer"
@@ -569,9 +599,9 @@ paths:
       operationId: "post_procesos_procesos_select_data"
       summary: "Procesos Select Data"
       description: |
-        Caso de uso: datos para la pantalla `procesos_select`.
+        Datos iniciales para la pantalla `procesos_select`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/procesos_select_data.md`
       tags:
@@ -592,19 +622,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ProcesosSelectDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_ProcesosSelectDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/procesos/procesos_update":
     post:
       operationId: "post_procesos_procesos_update"
       summary: "Procesos Update"
       description: |
-        Caso de uso: guarda una tarea_proceso del proceso.
+        Guarda una `tarea_proceso` del proceso tipo.
         
         Operacion: `mutacion`.
         
@@ -617,6 +647,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_fase:
                   type: "integer"
@@ -660,9 +692,9 @@ paths:
       operationId: "post_procesos_procesos_ver_data"
       summary: "Procesos Ver Data"
       description: |
-        Caso de uso: datos para la pantalla `procesos_ver`.
+        Datos para el formulario de alta/edición de tarea de proceso (`procesos_ver`).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/procesos_ver_data.md`
       tags:
@@ -673,6 +705,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "mod"
               properties:
                 id_item:
                   type: "integer"
@@ -696,7 +730,7 @@ paths:
       operationId: "post_procesos_tipo_activ_proceso_asignar"
       summary: "Tipo Activ Proceso Asignar"
       description: |
-        Caso de uso: asigna id_tipo_proceso al tipo de actividad (propio / no-propio).
+        Asigna un proceso tipo a un tipo de actividad (propio o no propio).
         
         Operacion: `mutacion`.
         
@@ -709,6 +743,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_activ"
               properties:
                 id_tipo_activ:
                   type: "integer"
@@ -734,9 +770,9 @@ paths:
       operationId: "post_procesos_tipo_activ_proceso_lista"
       summary: "Tipo Activ Proceso Lista"
       description: |
-        Caso de uso: listado de tipos de actividad con proceso propio / no-propio.
+        Listado de tipos de actividad con proceso propio y no propio asignados.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/tipo_activ_proceso_lista.md`
       tags:
@@ -757,21 +793,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_TipoActivProcesoListaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_TipoActivProcesoListaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/procesos/tipo_activ_proceso_lst_posibles":
     post:
       operationId: "post_procesos_tipo_activ_proceso_lst_posibles"
       summary: "Tipo Activ Proceso Lst Posibles"
       description: |
-        Caso de uso: procesos posibles asignables a un id_tipo_activ.
+        Procesos posibles asignables a un tipo de actividad.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/tipo_activ_proceso_lst_posibles.md`
       tags:
@@ -782,6 +818,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_activ"
               properties:
                 id_tipo_activ:
                   type: "integer"
@@ -805,9 +843,9 @@ paths:
       operationId: "post_procesos_usuario_perm_activ_ajax"
       summary: "Usuario Perm Activ Ajax"
       description: |
-        Caso de uso: opciones del desplegable fase_ref[] en usuario_perm_activ.
+        Opciones del desplegable `fase_ref[]` en permisos de usuario por tipo de actividad.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/usuario_perm_activ_ajax.md`
       tags:
@@ -818,6 +856,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_activ"
               properties:
                 dl_propia:
                   type: "string"
@@ -829,21 +869,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_UsuarioPermActivFasesDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/procesos_UsuarioPermActivFasesDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/procesos/usuario_perm_activ_data":
     post:
       operationId: "post_procesos_usuario_perm_activ_data"
       summary: "Usuario Perm Activ Data"
       description: |
-        Caso de uso: datos para la pantalla usuario_perm_activ.
+        Datos para la pantalla de permisos de usuario por tipo de actividad.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/procesos/api/usuario_perm_activ_data.md`
       tags:
@@ -854,6 +894,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_usuario"
               properties:
                 dl_propia:
                   type: "string"
@@ -881,189 +923,6 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
-    OrbixStandardResponseEnvelope:
-      type: object
-      required:
-        - success
-        - data
-      properties:
-        success:
-          type: boolean
-        mensaje:
-          type: string
-        data:
-          description: "Ver schema concreto de cada operacion."
-    procesos_ActividadProcesoDataData:
-      type: object
-      properties:
-        id_activ:
-          type: "string"
-    procesos_ActividadProcesoDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/procesos_ActividadProcesoDataData"
-    procesos_ActividadProcesoGetData:
-      type: object
-      properties:
-        error:
-          type: "string"
-    procesos_ActividadProcesoGetDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/procesos_ActividadProcesoGetData"
-    procesos_ActividadQueFasesCuadroData:
-      type: object
-      properties:
-        a_fases:
-          type: "string"
-    procesos_ActividadQueFasesCuadroDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/procesos_ActividadQueFasesCuadroData"
-    procesos_FasesActivCambioGetData:
-      type: object
-      properties:
-        id:
-          type: "string"
-    procesos_FasesActivCambioGetDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/procesos_FasesActivCambioGetData"
-    procesos_FasesActivCambioTipoActividadHtmlDataData:
-      type: object
-      properties:
-        tipo_actividad_html:
-          type: "string"
-    procesos_FasesActivCambioTipoActividadHtmlDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/procesos_FasesActivCambioTipoActividadHtmlDataData"
-    procesos_ProcesosDependeData:
-      type: object
-      properties:
-        opciones:
-          type: array
-          items: {}
-    procesos_ProcesosDependeDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/procesos_ProcesosDependeData"
-    procesos_ProcesosGetData:
-      type: object
-      properties:
-        aPadres:
-          type: array
-          items: {}
-    procesos_ProcesosGetDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/procesos_ProcesosGetData"
-    procesos_ProcesosGetListadoData:
-      type: object
-      properties:
-        a_rows:
-          type: "string"
-    procesos_ProcesosGetListadoDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/procesos_ProcesosGetListadoData"
-    procesos_ProcesosSelectDataData:
-      type: object
-      properties:
-        a_tipos_proceso:
-          type: array
-          items: {}
-    procesos_ProcesosSelectDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/procesos_ProcesosSelectDataData"
-    procesos_TipoActivProcesoListaData:
-      type: object
-      properties:
-        a_cabeceras:
-          type: "string"
-        a_tipos:
-          type: "string"
-    procesos_TipoActivProcesoListaDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/procesos_TipoActivProcesoListaData"
-    procesos_UsuarioPermActivFasesData:
-      type: object
-      properties:
-        opciones:
-          type: array
-          items: {}
-    procesos_UsuarioPermActivFasesDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/procesos_UsuarioPermActivFasesData"
     OrbixStandardResponseStringData:
       type: object
       required:

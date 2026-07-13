@@ -2,60 +2,38 @@
 id: "cambios.cambio_usuario_eliminar_hasta_fecha.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cambios"
-nombre: "Flujo - Gestionar Cambio Usuario Eliminar Hasta Fecha"
+nombre: "Flujo - Purgar cambios hasta fecha"
 capacidad: "cambios.cambio_usuario_eliminar_hasta_fecha.gestionar"
 pantallas_principales: []
-fragmentos: []
-acciones: ["ejecutar"]
+fragmentos: ["cambios.pantalla.avisos_generar"]
+acciones: ["eliminar_hasta_fecha"]
 endpoints: ["/src/cambios/cambio_usuario_eliminar_hasta_fecha"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Cambio Usuario Eliminar Hasta Fecha
-
-Propuesta generada automaticamente desde la capacidad `cambios.cambio_usuario_eliminar_hasta_fecha.gestionar` y sus pantallas relacionadas.
+# Flujo - Purgar cambios hasta fecha
 
 ## Objetivo De Usuario
 
-Gestiona CambioUsuarioEliminarHastaFecha. Elimina los CambioUsuario con fecha <= f_fin.
+Eliminar en bloque todos los cambios anotados con fecha anterior o igual a la indicada.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `avisos_generar` → `fnjs_borrar_hasta_fecha`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-No se han detectado fragmentos AJAX relacionados.
+### Eliminar hasta fecha
 
-## Escenarios Inferidos
-
-### Ejecutar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- Ninguna detectada.
-
-## Endpoints Del Flujo
-
-- `/src/cambios/cambio_usuario_eliminar_hasta_fecha`
+1. Indicar fecha límite (`f_fin`).
+2. Ejecutar purga.
+3. Refrescar listado.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `debe indicar la fecha`
+- `Hay un error al eliminar los cambios hasta la fecha indicada`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+(vía pantalla lista de cambios)

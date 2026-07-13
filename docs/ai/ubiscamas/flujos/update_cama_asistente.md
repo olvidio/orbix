@@ -42,10 +42,16 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AsistenteActividadService. Servicio de aplicación para operaciones de asistentes que requieren coordinación entre múltiples repositorios.
+Persistir la asignación cama↔asistente en la actividad actual (requiere token HashB).
+
+## Errores Documentados
+
+- `Operación no autorizada`
+- `Asistencia no encontrada para id_nom`
+- `Error al guardar la asignación de la cama`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

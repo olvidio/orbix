@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Subida AJAX del PDF firmado del acta (multipart / FormData).
+Subida de PDF escaneado al acta.
 
 ## Uso En Ayuda
 

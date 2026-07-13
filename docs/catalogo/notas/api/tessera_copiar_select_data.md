@@ -4,19 +4,22 @@ tipo: "endpoint"
 modulo: "notas"
 url: "/src/notas/tessera_copiar_select_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "form_data"
 controller: "src/notas/infrastructure/ui/http/controllers/tessera_copiar_select_data.php"
 entrada: ["post.id_nom:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_nom"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["No existe una persona con id_nom: %s"]
 frontend_referencias: ["frontend/notas/controller/tessera_copiar_select.php"]
 casos_uso: ["src\\notas\\application\\TesseraCopiarSelectData"]
 tags: ["notas", "tessera", "copiar", "select", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tessera Copiar Select Data
+
+Personas destino posibles para copiar tessera (mismo apellido).
 
 Prepara los datos para elegir a que persona (con el mismo primer apellido) se copiara la tessera de otra persona. Devuelve `['nom' => string, 'posibles_personas' => [id_nom => nombre]]`. Lanza `RuntimeException` si no encuentra la persona origen ni como numerario ni como agregado.
 
@@ -26,7 +29,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - URL: `/src/notas/tessera_copiar_select_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/tessera_copiar_select_data.php`
 
 ## Entrada
@@ -41,7 +44,20 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (doble `JSON.parse` salvo excepciones).
+- `nom`, `posibles_personas` (id→nombre).
+
+## Objetivo funcional
+
+Dado `id_nom` origen, lista homónimos por `apellido1`.
+
+## Permisos
+
+- Dossier tessera.
+
+## Errores conocidos
+
+- `No existe una persona con id_nom: %s`
 
 ## Casos De Uso
 
@@ -49,10 +65,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/tessera_copiar_select.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/tessera_copiar_select.php`.

@@ -4,24 +4,24 @@ tipo: "pantalla_frontend"
 subtipo: "fragmento_ajax"
 modulo: "dossiers"
 nombre: "Lista Dossiers"
-controller: "frontend/dossiers/controller/lista_dossiers.php"
+controller: "frontend/dossiers/controller/dossiers_ver.php"
 vistas: ["frontend/dossiers/view/lista_dossiers.phtml"]
 fragmentos_frontend: []
 endpoints: ["/src/dossiers/dossiers_lista_fichas_data"]
 capacidades: ["dossiers.dossiers_lista_fichas.gestionar"]
 campos: []
 acciones: ["fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Lista Dossiers
 
-Include desde 'home_persona.phtml' y 'home_ubis.phtml' (variables $pau, $id_pau, $Qobj_pau).
+Tabla parcial «relación de dossiers» (modo lista de `dossiers_ver`): icono y descripción por tipo; enlaces `href_ver` según permiso (`perm_a` 1 sin acceso, 2 lectura, 3 escritura). Renderizada desde `dossiers_ver.php`, no tiene controller propio.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
-- Controller: `frontend/dossiers/controller/lista_dossiers.php`
+- Controller: `frontend/dossiers/controller/dossiers_ver.php`
 
 ## Vistas Relacionadas
 
@@ -49,11 +49,9 @@ No se han detectado campos de formulario.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/dossiers/` y `src/dossiers/`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

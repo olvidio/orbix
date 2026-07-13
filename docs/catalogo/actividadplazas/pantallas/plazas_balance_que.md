@@ -11,7 +11,7 @@ endpoints: ["/src/actividadplazas/plazas_balance_que_data"]
 capacidades: ["actividadplazas.plazas_balance_que.gestionar"]
 campos: ["form.dl", "form.id_tipo_activ", "post.id_tipo_activ", "post.sactividad", "post.sasistentes"]
 acciones: ["fnjs_comparativa"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Plazas Balance Que
@@ -53,11 +53,12 @@ Pantalla de filtro para el balance de plazas entre dos dl: muestra un desplegabl
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla de filtro para el balance de plazas entre dos delegaciones. Muestra un desplegable con las
+delegaciones disponibles; al seleccionar una (`fnjs_comparativa`) se carga por AJAX el grid
+comparativo (`plazas_balance_dl`) dentro de `#comparativa`. Las opciones del desplegable y el
+`id_tipo_activ` provienen de `plazas_balance_que_data`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** vsm > ca > Balance de plazas (y variantes por perfil/tipo: dagd, vsg…)
+- **Pills2:** ACTIVIDADES > Gestión de plazas y peticiones > Balance plazas ca n entre r/dl (y variantes por tipo/colectivo)

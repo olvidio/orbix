@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de asignatura impartida, cambiar la asignatura del desplegable.
+2. Se dispara `fnjs_mas_profes('asignatura')` o reconstrucción del desplegable.
+3. El sistema consulta `profesores_desplegable_data` con `id_activ`, `id_asignatura` y `salida`.
+4. Se actualiza el desplegable de profesores en pantalla.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/profesores_desplegable_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ProfesoresDesplegable. Devuelve JSON con los datos para construir el desplegable de profesores.
+Al cambiar la asignatura o añadir un profesor en el formulario de asignatura impartida, el usuario obtiene la lista actualizada de profesores candidatos para esa asignatura en la actividad.
 
 ## Limites De La Respuesta
 

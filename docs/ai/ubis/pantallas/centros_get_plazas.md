@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla AJAX de plazas y sede de todos los centros DL activos.
 
 ## Uso En Ayuda
 

@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/lista_ctrs_data"]
 capacidades: ["ubis.lista_ctrs.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Lista Ctrs
 
-Lista con los datos básicos de los cp.
+Tabla AJAX de centros tipo s con recuento de sacerdotes por centro.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/ubis/controller/lista_ctrs.php`
 
 ## Vistas Relacionadas
@@ -47,13 +49,7 @@ No se han detectado campos de formulario.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** vsg > buscar > lista ctr i nº s
+- **Pills2:** vsg > buscar > lista ctr i nº s

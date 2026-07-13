@@ -2,62 +2,37 @@
 id: "dbextern.ver_orbix.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Gestionar Ver Orbix"
+nombre: "Flujo - Revisar Aquinate sin BDU"
 capacidad: "dbextern.ver_orbix.gestionar"
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_orbix"]
-acciones: ["obtener_datos"]
+acciones: ["obtener_datos", "navegar"]
 endpoints: ["/src/dbextern/ver_orbix_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Ver Orbix
+# Flujo - Revisar Aquinate sin BDU
 
-Propuesta generada automaticamente desde la capacidad `dbextern.ver_orbix.gestionar` y sus pantallas relacionadas.
+Exploración del punto 9.
 
 ## Objetivo De Usuario
 
-Gestiona VerOrbix. Obtiene la lista de personas Orbix sin unir a la BDU.
+Revisar personas Aquinate activas sin correspondencia BDU y unir si hay candidato.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+**ver** del punto 9 en `sincro_index` → `ver_orbix.php`.
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `dbextern.pantalla.ver_orbix`
+### Obtener datos
 
-## Escenarios Inferidos
+1. Carga lista en `$_SESSION['DBOrbix']`.
+2. Por persona: candidatos BDU vía `id_nom_orbix`.
 
-### Obtener Datos
+### Navegar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.dl`
-- `form.id`
-- `form.id_nom_listas`
-- `form.id_orbix`
-- `form.region`
-- `form.tipo_persona`
-- `html.mov`
-- `post.dl`
-- `post.id`
-- `post.mov`
-- `post.region`
-- `post.tipo_persona`
-
-Acciones JavaScript:
-- `button:<`
-- `fnjs_enviar_formulario`
-- `fnjs_submit`
-- `fnjs_unir_bdu`
+1. Anterior/siguiente sobre la cola en sesión.
 
 ## Endpoints Del Flujo
 
@@ -65,11 +40,8 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No existe la clase de la persona`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- sin entrada de menú en el índice

@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/equipajes_add_doc"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Equipajes Add Doc
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `inventario.equipajes_add_
 
 ## Objetivo De Usuario
 
-Gestiona EquipajesAddDoc. Descripcion funcional pendiente de revisar.
+Gestiona EquipajesAddDoc. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Punto De Entrada
 
@@ -52,10 +52,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

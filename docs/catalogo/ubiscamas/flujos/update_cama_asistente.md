@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/ubiscamas/update_cama_asistente"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Update Cama Asistente
-
-Propuesta generada automaticamente desde la capacidad `ubiscamas.update_cama_asistente.gestionar` y sus pantallas relacionadas.
+# Flujo - Update Cama Asistente
 
 ## Objetivo De Usuario
 
-Gestiona AsistenteActividadService. Servicio de aplicación para operaciones de asistentes que requieren coordinación entre múltiples repositorios.
+Persistir la asignación cama↔asistente en la actividad actual (requiere token HashB).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Acción AJAX en `lista_habitaciones.phtml` (flechas asignar/desasignar cama). Sin entrada de menú en el índice.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -51,11 +49,11 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Operación no autorizada`
+- `Asistencia no encontrada para id_nom`
+- `Error al guardar la asignación de la cama`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

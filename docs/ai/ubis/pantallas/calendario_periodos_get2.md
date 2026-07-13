@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla AJAX de periodos de calendario de una casa en un año con aviso de solapes.
 
 ## Uso En Ayuda
 

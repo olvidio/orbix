@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Form de alta / edicion de una `ActividadAsignatura` desde el dossier `asignaturas_de_una_actividad` (3005).
+Formulario de alta o edición de una `ActividadAsignatura` desde el dossier `asignaturas_de_una_actividad` (3005). Sucesor de `apps/actividadestudios/controller/form_3005.php`.
 
 ## Uso En Ayuda
 

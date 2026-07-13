@@ -8,20 +8,25 @@ pantallas_principales: []
 fragmentos: ["actividadestudios.pantalla.matricular"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadestudios/matricula_automatica"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Matricula Automatica
 
-Propuesta generada automaticamente desde la capacidad `actividadestudios.matricula_automatica.gestionar` y sus pantallas relacionadas.
+Matriculación masiva según plan de estudios vigente.
 
 ## Objetivo De Usuario
 
-Gestiona MatriculaAutomatica. Matricula masivamente a una o varias personas en las asignaturas del plan de estudios de su actividad vigente.
+El usuario ejecuta la matriculación automática de una o todas las personas activas: el sistema
+determina la actividad de estudios vigente (`ca-n`, `cv-agd`), recalcula asignaturas
+matriculables respetando aprobadas y topes de opcionales, y crea las matrículas. Sustituye
+`apps/actividadestudios/controller/matricular.php`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `matricular` (`frontend/actividadestudios/controller/matricular.php`): al abrirse
+(o al enviar el formulario POST) llama a `matricula_automatica` vía PostRequest y muestra
+el mensaje de resultado.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,16 +36,19 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Abrir **matricular a todos** desde el menú (o desde búsqueda de persona con selección).
+2. El sistema recibe `id_pau`/`sel` (persona concreta) o procesa todas las personas activas.
+3. Para cada persona, borra matrículas previas si el plan no está confirmado y recalcula.
+4. Se muestra el mensaje resumen en `matricular.phtml`.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadestudios/matricula_automatica`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- Ninguno detectado.
+- Ninguno detectado (acepta POST completo del contexto de persona).
 
 Acciones JavaScript:
 - Ninguna detectada.
@@ -53,9 +61,8 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** vest > buscar persona > matricular a todos.
+- **Pills2:** vest > buscar persona > matricular a todos; ESTUDIOS > Preparación planes estudio >
+  Matricular a todos.

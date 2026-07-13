@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "menus"
 titulo: "Menus Burger Layout"
 flujo: "menus.menus_burger_layout.gestionar.flujo"
-preguntas: ["Como obtener datos en Menus Burger Layout?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/menus/menus_burger_layout_data"]
@@ -19,7 +19,6 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Menus Burger Layout?
 
 ## Donde Entrar
 
@@ -29,20 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - Ninguna pantalla relacionada.
 
 ## Objetivo
 
-Gestiona MenusBurgerLayoutDataUseCase. Datos para {.
+Árbol anidado + HTML utilidades para layouts modernos (H-dlpv).
 
 ## Limites De La Respuesta
 

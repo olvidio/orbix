@@ -6,21 +6,26 @@ url: "/src/ubiscamas/habitacion_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubiscamas/infrastructure/ui/http/controllers/habitacion_update.php"
-entrada: ["post.adaptada:string", "post.despacho:string", "post.id_habitacion:string", "post.id_ubi:integer", "post.new_camas_desc:array", "post.new_camas_larga:array", "post.new_camas_vip:array", "post.nombre:string", "post.numero_camas:integer", "post.numero_camas_vip:integer", "post.observaciones:string", "post.orden:integer", "post.planta:string", "post.sel:array", "post.sillon:string", "post.tipoLavabo:integer"]
+entrada: ["post.sel:array", "post.id_habitacion:string", "post.id_ubi:integer", "post.orden:integer", "post.nombre:string", "post.numero_camas:integer", "post.numero_camas_vip:integer", "post.planta:string", "post.tipoLavabo:integer", "post.sillon:string", "post.adaptada:string", "post.observaciones:string", "post.despacho:string", "post.new_camas_desc:array", "post.new_camas_larga:array", "post.new_camas_vip:array"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: []
+frontend_referencias: ["frontend/ubiscamas/view/habitacion_form.phtml", "frontend/ubiscamas/helpers/UbiscamasFormHashCompose.php"]
 casos_uso: []
 tags: ["ubiscamas", "habitacion", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Habitación no válida", "Error al guardar la habitación"]
 ---
 
 # Habitacion Update
 
-Descripcion funcional pendiente de revisar.
+Alta o actualización de habitación CDC y sincronización de camas: guarda datos de habitación, crea camas desde `new_camas_*` y auto-genera camas hasta alcanzar `numero_camas` (marcando VIP hasta `numero_camas_vip`). `sel` puede traer `id_habitacion` como primer token.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Alta o actualización de habitación CDC y sincronización de camas: guarda datos de habitación, crea camas desde `new_camas_*` y auto-genera camas hasta alcanzar `numero_camas` (marcando VIP hasta `numero_camas_vip`). `sel` puede traer `id_habitacion` como primer token.
 
 ## Endpoint
 
@@ -33,41 +38,42 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `adaptada` | `string` | controller | No | controller |
-| `despacho` | `string` | controller | No | controller |
-| `id_habitacion` | `string` | controller | No | controller |
-| `id_ubi` | `integer` | controller | No | controller |
-| `new_camas_desc` | `array` | controller | No | controller |
-| `new_camas_larga` | `array` | controller | No | controller |
-| `new_camas_vip` | `array` | controller | No | controller |
-| `nombre` | `string` | controller | No | controller |
-| `numero_camas` | `integer` | controller | No | controller |
-| `numero_camas_vip` | `integer` | controller | No | controller |
-| `observaciones` | `string` | controller | No | controller |
-| `orden` | `integer` | controller | No | controller |
-| `planta` | `string` | controller | No | controller |
-| `sel` | `array` | controller | No | controller |
-| `sillon` | `string` | controller | No | controller |
-| `tipoLavabo` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `sel` | `array` | application | No | Token `id_habitacion#...` o `id_cama#...` según endpoint |
+| `id_habitacion` | `string` | application | No |  |
+| `id_ubi` | `integer` | application | No |  |
+| `orden` | `integer` | application | No |  |
+| `nombre` | `string` | application | No |  |
+| `numero_camas` | `integer` | application | No |  |
+| `numero_camas_vip` | `integer` | application | No |  |
+| `planta` | `string` | application | No |  |
+| `tipoLavabo` | `integer` | application | No |  |
+| `sillon` | `string` | application | No |  |
+| `adaptada` | `string` | application | No |  |
+| `observaciones` | `string` | application | No |  |
+| `despacho` | `string` | application | No |  |
+| `new_camas_desc` | `array` | application | No |  |
+| `new_camas_larga` | `array` | application | No |  |
+| `new_camas_vip` | `array` | application | No |  |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (data serializada como string JSON; el front hace segundo `JSON.parse`).
+- Forma: `standard_envelope_string_data`.
+- Exito: `success: true`, `data: "ok"` (string vacío serializado en mutaciones).
+
+## Errores conocidos
+- `Habitación no válida`
+- `Error al guardar la habitación`
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía frontend + `$_SESSION['oPerm']` y permisos del dossier/actividad padre.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- Lógica inline en el controller (sin caso de uso en `application/`).
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/ubiscamas/view/habitacion_form.phtml`
+- `frontend/ubiscamas/helpers/UbiscamasFormHashCompose.php`

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Controlador AJAX HTML: formulario modal de modificacion de una `CartaPresentacion`.
+Modal AJAX con el formulario de modificación de una carta de presentación.
 
 ## Uso En Ayuda
 

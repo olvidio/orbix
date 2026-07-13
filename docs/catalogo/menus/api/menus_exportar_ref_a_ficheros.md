@@ -7,52 +7,42 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php"
 entrada: ["post.accion:string"]
-entrada_obligatoria: []
+entrada_obligatoria: ["accion"]
 respuesta: "raw_response"
 requiere_hashb: false
+errores: []
 frontend_referencias: []
 casos_uso: []
-tags: ["menus", "exportar", "ref", "a", "ficheros"]
-estado_revision: "generado"
+tags: ["menus", "exportar", "ficheros", "ref"]
+estado_revision: "revisado"
 ---
 
-# Menus Exportar Ref A Ficheros
+# Exportar/importar ref menús ↔ ficheros SQL
 
-Descripcion funcional pendiente de revisar.
+Operación de mantenimiento: genera ficheros COPY en `log/menus/` o ejecuta `psql` para volcar ref→BD pública.
+**No devuelve JSON**; respuesta vacía o errores en `log/menus/menus.log`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
-## Endpoint
+## Objetivo funcional
 
-- URL: `/src/menus/menus_exportar_ref_a_ficheros`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
-- Controller: `src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php`
+- `accion=exportar`: COPY de `m0_modulos`, `m0_apps`, `aux_metamenus`, `ref_grupmenu`, `ref_grupmenu_rol`, `ref_menus` a SQL en `log/menus/`.
+- `accion=importar`: ejecuta `tot_menus.sql` contra BD pública vía `psql` (requiere sudoers www-data).
 
 ## Entrada
 
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `accion` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| Campo | Valores |
+|-------|---------|
+| `accion` | `exportar` \| `importar` |
 
 ## Salida
 
-- Helper: `echo`
-- Forma: `raw_response`
-- Exito: `success: true`, `data: "ok"`.
+- Sin envelope JSON. Importación: salida en `log/menus/menus.log`.
 
-## Casos De Uso
+## Permisos
 
-No se han detectado imports de `src\...\application\...`.
+- Menú «importar desde ficheros» (operación de servidor).
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Invocado desde menú sistema (legacy `menus_ficheros.php?accion=importar` en referencia).

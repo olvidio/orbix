@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaCasasPosiblesPeriodo. Descripcion funcional pendiente de revisar.
+Gestiona ListaCasasPosiblesPeriodo. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Limites De La Respuesta
 

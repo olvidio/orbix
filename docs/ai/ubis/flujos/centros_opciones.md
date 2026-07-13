@@ -42,10 +42,14 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CentrosOpciones. Devuelve el payload (solo datos) para poblar el <select> de centros en frontend\shared\web\CentrosQue. Sustituye el acceso directo desde CentrosQue al repositorio CentroDlRepositoryInterface (separación frontend ↔ backend, ver refactor.md).
+Devuelve opciones de centros filtradas para desplegables compartidos del frontend.
+
+## Errores Documentados
+
+- `_(ninguno documentado)_`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

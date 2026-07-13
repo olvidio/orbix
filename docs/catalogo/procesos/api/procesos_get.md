@@ -4,48 +4,61 @@ tipo: "endpoint"
 modulo: "procesos"
 url: "/src/procesos/procesos_get"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/procesos/infrastructure/ui/http/controllers/procesos_get.php"
 entrada: ["post.id_tipo_proceso:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_tipo_proceso"]
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "procesos_ProcesosGetData"
-respuesta_data: ["aPadres:array"]
 requiere_hashb: false
+errores: []
 frontend_referencias: ["frontend/procesos/controller/procesos_get.php", "frontend/procesos/controller/procesos_get_listado.php", "frontend/procesos/controller/procesos_select.php"]
 casos_uso: ["src\\procesos\\application\\ProcesosGet"]
 tags: ["procesos", "get"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Procesos Get
 
-Caso de uso: estructura padres/hijos del árbol de fases del proceso.
+Estructura padres/hijos del árbol de fases del proceso.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve el árbol de fases del proceso tipo (`id_tipo_proceso`) agrupado por fase previa.
+Filtra fases según el SFSV del usuario (o SuperAdmin ve todas). Cada nodo incluye `id` y `nom`
+de la fase.
 
 ## Endpoint
 
 - URL: `/src/procesos/procesos_get`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/procesos/infrastructure/ui/http/controllers/procesos_get.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tipo_proceso` | `integer` | application | No | application |
+| `id_tipo_proceso` | `integer` | application | Si | Proceso tipo a visualizar |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+El controller pasa `$_POST` completo al caso de uso.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `procesos_ProcesosGetData`):
-  - `aPadres` (`array`)
+- Claves en `data` (doble `JSON.parse`):
+  - `aPadres` (`array<int, array<int, array{id: int, nom: string}>>`): clave externa =
+    `id_fase_previa` (0 si ninguna), índice interno secuencial, valor con `id` y `nom` de fase
+
+## Errores conocidos
+
+- _(ninguno documentado en el caso de uso)_
+
+## Permisos
+
+- Filtrado implícito por SFSV/rol (SuperAdmin ve SF+SV); no usa `perm_*` de oficina.
 
 ## Casos De Uso
 
@@ -53,12 +66,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/procesos/controller/procesos_get.php`
-- `frontend/procesos/controller/procesos_get_listado.php`
-- `frontend/procesos/controller/procesos_select.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/procesos/controller/procesos_get.php` (renderer HTML del árbol)
+- `frontend/procesos/controller/procesos_select.php` (URL en `url_get`)

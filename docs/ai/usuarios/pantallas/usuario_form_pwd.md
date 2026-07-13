@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Formulario para cambiar el password por parte del usuario.
+Formulario cambio de contraseña con validación de fortaleza.
 
 ## Uso En Ayuda
 

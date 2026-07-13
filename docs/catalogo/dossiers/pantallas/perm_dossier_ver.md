@@ -11,12 +11,12 @@ endpoints: ["/src/dossiers/perm_dossier_ver_data"]
 capacidades: ["dossiers.perm_dossier_ver.gestionar"]
 campos: ["html.app", "html.campo_to", "html.class", "html.codigo", "html.depende_modificar", "html.descripcion", "html.id_tipo_dossier", "html.id_tipo_dossier_rel", "html.que", "html.tabla_from", "html.tabla_to", "post.id_tipo_dossier", "post.tipo"]
 acciones: ["fnjs_eliminar", "fnjs_guardar", "fnjs_update_div"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Perm Dossier Ver
 
-Página de visualización de los permisos de los dossiers.
+Formulario de permisos de acceso a un tipo de dossier: metadatos (descripción, tablas, app/class/código), checkbox `depende_modificar` y máscaras de lectura/escritura por oficina. Guardar/eliminar solo con `admin_sv`/`admin_sf` (`perm_admin`).
 
 ## Tipo
 
@@ -63,11 +63,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/dossiers/` y `src/dossiers/`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > perm_dossiers > ubis · sistema > perm_dossiers > personas · sistema > perm_dossiers > actividades
+- **Pills2:** ADMIN LOCAL > perm_dossiers > ubis · ADMIN LOCAL > perm_dossiers > personas · ADMIN LOCAL > perm_dossiers > actividades

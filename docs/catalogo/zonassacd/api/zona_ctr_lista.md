@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "zonassacd"
 url: "/src/zonassacd/zona_ctr_lista"
 metodos: ["GET", "POST"]
-operacion: "consulta"
+operacion: "lista_data"
 controller: "src/zonassacd/infrastructure/ui/http/controllers/zona_ctr_lista.php"
 entrada: ["post.id_zona:string"]
 entrada_obligatoria: []
@@ -14,47 +14,52 @@ frontend_referencias: ["frontend/zonassacd/controller/zona_ctr_lista_ajax.php"]
 casos_uso: ["src\\zonassacd\\application\\ZonaCtrLista"]
 tags: ["zonassacd", "zona", "ctr", "lista"]
 estado_revision: "revisado"
+errores: []
 ---
 
 # Zona Ctr Lista
 
-Devuelve la estructura de tabla con los **centros activos de una zona** (columnas
-centro y zona).
+Centros activos de una zona (id numérico), sin zona dl (no) o sin zona sf (no_sf). Centros sf solo visibles con perm_des.
 
-- `id_zona` numerico: centros dl + sf de esa zona, ordenados por nombre.
-- `id_zona = 'no'`: centros dl activos sin zona (`id_zona IS NULL`).
-- `id_zona = 'no_sf'`: centros sf/ellas activos sin zona.
-
-Los centros sf (con `id_ubi` que empieza por `2`) solo se incluyen si el usuario
-tiene permiso (`des`/`vcsd`) y se marcan con clase `tono2`.
+Linaje: Case get_lista del legacy zona_ctr_ajax.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Centros activos de una zona (id numérico), sin zona dl (no) o sin zona sf (no_sf). Centros sf solo visibles con perm_des.
 
 ## Endpoint
 
 - URL: `/src/zonassacd/zona_ctr_lista`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/zonassacd/infrastructure/ui/http/controllers/zona_ctr_lista.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_zona` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_zona` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- `data`: estructura de tabla para `Lista`: `tipo: "tabla"`, `id_tabla: "zona_ctr_ajax"`,
-  `a_cabeceras` (centro, zona), `con_sel`, `a_valores`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse` salvo vacío):
+  - `tipo`: tabla
+  - `id_tabla`: zona_ctr_ajax
+  - `a_cabeceras`: centro, zona
+  - `con_sel`: boolean
+  - `a_valores`: filas sel=id_ubi; clase tono2 en sf
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
 
 ## Permisos
 
-- Permiso oficina `des` o `vcsd`: activa `con_sel` y la inclusion de centros sf.
+con_sel y centros sf requieren perm_des.
 
 ## Casos De Uso
 
@@ -62,9 +67,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/zonassacd/controller/zona_ctr_lista_ajax.php`
-
-## Revision Manual
-
-- Revisado jun 2026 (lectura de `ZonaCtrLista::execute`).
-- Pendiente: ejemplos reales de request/response.
+- Ver `frontend_referencias` en front matter (`["frontend/zonassacd/controller/zona_ctr_lista_ajax.php"]`).

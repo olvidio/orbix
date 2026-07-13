@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario modal de edición o eliminación de un periodo de calendario existente.
 
 ## Uso En Ayuda
 

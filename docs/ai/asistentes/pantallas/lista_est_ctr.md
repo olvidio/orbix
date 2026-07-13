@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Resultado del filtro `que_ctr_lista` (`lista=list_est`): estudios/asignaturas por centro.
 
 ## Uso En Ayuda
 

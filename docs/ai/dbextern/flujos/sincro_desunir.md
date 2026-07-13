@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "dbextern"
-titulo: "Sincro Desunir"
+titulo: "Desunir vínculo BDU"
 flujo: "dbextern.sincro_desunir.gestionar.flujo"
-preguntas: ["Como ejecutar en Sincro Desunir?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_desaparecidos_de_orbix"]
 endpoints: ["/src/dbextern/sincro_desunir"]
@@ -12,14 +12,13 @@ source: "docs/catalogo/dbextern/flujos/sincro_desunir.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Sincro Desunir
+# Ayuda IA - Desunir vínculo BDU
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Sincro Desunir`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Desunir vínculo BDU`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Sincro Desunir?
 
 ## Donde Entrar
 
@@ -29,25 +28,18 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `dbextern.pantalla.ver_desaparecidos_de_orbix`
 
 ## Objetivo
 
-Gestiona DesunirPersonaUseCase. Descripcion funcional pendiente de revisar.
+Romper el vínculo incorrecto para poder re-unir o crear la ficha después.
 
 ## Errores Documentados
 
-- `hay un error, no se ha eliminado`
 - `no se encontró el registro a desunir`
+- `hay un error, no se ha eliminado`
 
 ## Limites De La Respuesta
 

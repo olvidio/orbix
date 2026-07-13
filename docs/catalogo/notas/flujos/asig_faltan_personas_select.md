@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.asig_faltan_personas_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/asig_faltan_personas_select_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Asig Faltan Personas Select
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.asig_faltan_persona
 
 ## Objetivo De Usuario
 
-Gestiona AsigFaltanPersonasSelectTabla. Tabla de asig_faltan_personas_select.
+Listar alumnos que deben una asignatura.
 
 ## Punto De Entrada
 
@@ -62,10 +62,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

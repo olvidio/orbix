@@ -6,21 +6,26 @@ url: "/src/ubiscamas/update_solo_vip"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubiscamas/infrastructure/ui/http/controllers/update_solo_vip.php"
-entrada: ["post.ctx:string", "post.id_activ:integer", "post.solo_vip:string"]
-entrada_obligatoria: []
+entrada: ["post.ctx:string", "post.solo_vip:string"]
+entrada_obligatoria: ["ctx"]
 respuesta: "raw_response"
-requiere_hashb: false
-frontend_referencias: []
+requiere_hashb: true
+frontend_referencias: ["frontend/ubiscamas/view/lista_habitaciones.phtml"]
 casos_uso: []
 tags: ["ubiscamas", "update", "solo", "vip"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Operación no autorizada", "Actividad no encontrada", "Error al guardar el estado VIP de la actividad"]
 ---
 
 # Update Solo Vip
 
-Descripcion funcional pendiente de revisar.
+Marca o desmarca el modo «solo camas VIP» de una actividad (`desc_activ=camasVIP` si `solo_vip=true`). `id_activ` viene de la cápsula `ctx` (`HashB::sign('update_solo_vip', {id_activ})`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Marca o desmarca el modo «solo camas VIP» de una actividad (`desc_activ=camasVIP` si `solo_vip=true`). `id_activ` viene de la cápsula `ctx` (`HashB::sign('update_solo_vip', {id_activ})`).
 
 ## Endpoint
 
@@ -33,28 +38,30 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `ctx` | `string` | controller | No | controller |
-| `id_activ` | `integer` | controller | No | controller |
-| `solo_vip` | `string` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `ctx` | `string` | application | Si | Cápsula HashB; `id_activ` se lee del contexto abierto |
+| `solo_vip` | `string` | application | No | String `"true"` activa modo VIP |
 
 ## Salida
 
-- Helper: `echo`
-- Forma: `raw_response`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `echo json_encode` (JSON directo, sin sobre de `ContestarJson`).
+- Forma: `raw_response`.
+- Exito: `success: true`, `mensaje: "ok"`.
+  - `success`: boolean
+  - `mensaje`: ok o texto error
+
+## Errores conocidos
+- `Operación no autorizada`
+- `Actividad no encontrada`
+- `Error al guardar el estado VIP de la actividad`
+
+## Permisos
+
+Autorización vía cápsula HashB `ctx`; sin perm_* en controller.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- Lógica inline en el controller (sin caso de uso en `application/`).
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/ubiscamas/view/lista_habitaciones.phtml`

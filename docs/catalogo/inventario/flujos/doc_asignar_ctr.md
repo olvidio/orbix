@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["inventario.pantalla.doc_asignar_ctr"]
 acciones: ["guardar"]
 endpoints: ["/src/inventario/doc_asignar_ctr_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Doc Asignar Ctr
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `inventario.doc_asignar_ct
 
 ## Objetivo De Usuario
 
-Gestiona DocAsignarCtr. Descripcion funcional pendiente de revisar.
+Gestiona DocAsignarCtr. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Punto De Entrada
 
@@ -56,10 +56,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

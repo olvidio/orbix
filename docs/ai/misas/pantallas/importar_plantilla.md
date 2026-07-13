@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento AJAX que copia asignaciones entre tipos de plantilla (`importar_plantilla_data`).
 
 ## Uso En Ayuda
 

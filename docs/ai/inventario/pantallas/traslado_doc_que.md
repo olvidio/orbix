@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Traslado Doc Que"
+titulo: "Traslado de documentos — filtro"
 pantalla: "inventario.pantalla.traslado_doc_que"
-preguntas: ["Que se puede hacer en Traslado Doc Que?", "Que campos tiene Traslado Doc Que?", "Que acciones hay en Traslado Doc Que?"]
+preguntas: ["Que se puede hacer en Traslado de documentos — filtro?", "Que campos tiene Traslado de documentos — filtro?", "Que acciones hay en Traslado de documentos — filtro?"]
 capacidades: ["inventario.lista_de_ctr.gestionar", "inventario.lista_lugares_de_ubi.gestionar"]
 endpoints: ["/src/inventario/lista_de_ctr", "/src/inventario/lista_lugares_de_ubi"]
 source: "docs/catalogo/inventario/pantallas/traslado_doc_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Traslado Doc Que
+# Ayuda IA Pantalla - Traslado de documentos — filtro
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Selecciona centro origen y lugar; continúa a lista para mover docs.
 
 ## Uso En Ayuda
 

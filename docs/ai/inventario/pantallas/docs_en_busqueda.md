@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Docs En Busqueda"
+titulo: "Documentos pendientes"
 pantalla: "inventario.pantalla.docs_en_busqueda"
-preguntas: ["Que se puede hacer en Docs En Busqueda?", "Que campos tiene Docs En Busqueda?", "Que acciones hay en Docs En Busqueda?"]
+preguntas: ["Que se puede hacer en Documentos pendientes?", "Que campos tiene Documentos pendientes?", "Que acciones hay en Documentos pendientes?"]
 capacidades: ["inventario.lista_docs_en_busqueda.gestionar"]
 endpoints: ["/src/inventario/lista_docs_en_busqueda"]
 source: "docs/catalogo/inventario/pantallas/docs_en_busqueda.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Docs En Busqueda
+# Ayuda IA Pantalla - Documentos pendientes
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado docs en búsqueda.
 
 ## Uso En Ayuda
 

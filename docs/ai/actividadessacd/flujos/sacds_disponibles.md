@@ -31,10 +31,11 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. En una actividad con permiso, pulsar **nuevo**.
+2. El sistema muestra el popup con sacd titulares del centro y globales filtrados.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadessacd/sacds_disponibles_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona SacdsDisponibles. Devuelve los sacd candidatos para asignar a una actividad (sacd del centro encargado + sacd globales segun bitmask seleccion).
+Antes de asignar un sacd, el usuario abre el popup de candidatos: el sistema devuelve los sacd del centro encargado (titulares) y los sacd globales según el bitmask de selección (`sel`) activo en la barra de filtros.
 
 ## Limites De La Respuesta
 

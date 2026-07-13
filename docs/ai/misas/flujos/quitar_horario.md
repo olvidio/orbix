@@ -42,10 +42,16 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona QuitarHorarioPlantilla. Descripcion funcional pendiente de revisar.
+Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
+
+## Errores Documentados
+
+- `Error: falta el id_item`
+- `No se encuentra la plantilla %d`
+- `<repositorio getErrorTxt()>`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.equipajes_form_del"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "fragmento"
 modulo: "inventario"
-nombre: "Equipajes Form Del"
+nombre: "Quitar doc de maleta"
 controller: "frontend/inventario/controller/equipajes_form_del.php"
 vistas: ["frontend/inventario/view/equipajes_form_del.phtml"]
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_docs_de_egm"]
 capacidades: ["inventario.lista_docs_de_egm.gestionar"]
 campos: ["form.sel", "post.id_equipaje", "post.id_grupo", "post.id_item_egm"]
 acciones: ["fnjs_cerrar", "fnjs_del_doc"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Form Del
+# Quitar doc de maleta
 
-Descripcion funcional pendiente de revisar.
+Formulario del doc → `equipajes_del_doc`.
+
 
 ## Tipo
 
@@ -53,11 +54,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Formulario del doc → `equipajes_del_doc`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú
+- **Pills2:** —

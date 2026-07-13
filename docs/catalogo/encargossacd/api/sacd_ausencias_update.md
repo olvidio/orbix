@@ -12,18 +12,21 @@ respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "encargossacd_SacdAusenciasUpdateData"
 respuesta_data: ["error:bool, mensajes: string"]
 requiere_hashb: false
-errores: ["no se ha encontrado el encargo del sacd"]
+errores: ["no se ha encontrado el encargo del sacd", "hay un error, no se ha eliminado", "hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/encargossacd/controller/sacd_ausencias_update.php"]
 casos_uso: ["src\\encargossacd\\application\\SacdAusenciasUpdate"]
 tags: ["encargossacd", "sacd", "ausencias", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
-
 # Sacd Ausencias Update
 
 Guarda/modifica las ausencias de un SACD (`frontend/encargossacd/controller/sacd_ausencias_update.php`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Guarda/modifica/elimina ausencias de un SACD (arrays `inicio[]`, `fin[]`, `id_enc[]`, `id_item[]`). Sucesor de `apps/encargossacd/controller/sacd_ausencias_update.php`.
 
 ## Endpoint
 
@@ -40,15 +43,20 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `encargossacd_SacdAusenciasUpdateData`):
-  - `error` (`bool, mensajes: string`)
+- Éxito: `error: false`, `mensajes: ""`.
+- Error parcial: `error: true`, `mensajes` concatenados.
+
 
 ## Errores conocidos
 
 - `no se ha encontrado el encargo del sacd`
+- `hay un error, no se ha eliminado`
+- `hay un error, no se ha guardado`
+
+
+## Permisos
+
+Sin control propio; menú ausencias.
 
 ## Casos De Uso
 
@@ -58,8 +66,3 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 - `frontend/encargossacd/controller/sacd_ausencias_update.php`
 
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

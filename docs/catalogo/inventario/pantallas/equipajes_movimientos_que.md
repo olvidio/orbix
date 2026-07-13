@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.equipajes_movimientos_que"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "inventario"
-nombre: "Equipajes Movimientos Que"
+nombre: "Movimientos maletas — filtro"
 controller: "frontend/inventario/controller/equipajes_movimientos_que.php"
 vistas: ["frontend/inventario/view/equipajes_movimientos_que.phtml"]
 fragmentos_frontend: ["frontend/inventario/controller/equipajes_movimientos.php"]
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_equipajes_desde_fecha"]
 capacidades: ["inventario.lista_equipajes_desde_fecha.gestionar"]
 campos: ["form.sel"]
 acciones: ["fnjs_lista_docs", "fnjs_ver_movimientos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Movimientos Que
+# Movimientos maletas — filtro
 
-Descripcion funcional pendiente de revisar.
+Elige fecha y equipajes para comparar movimientos.
+
 
 ## Tipo
 
@@ -50,11 +51,9 @@ Descripcion funcional pendiente de revisar.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Elige fecha y equipajes para comparar movimientos.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** scdl > Inventario > equipajes > movimientos maletas
+- **Pills2:** —

@@ -11,12 +11,12 @@ endpoints: ["/src/devel_db_admin/db_lugar", "/src/devel_db_admin/db_propiedades_
 capacidades: ["devel_db_admin.db_lugar.gestionar", "devel_db_admin.db_propiedades.gestionar"]
 campos: ["form.comun", "form.dl", "form.region", "form.sf", "form.sv", "html.beliminar", "html.comun", "html.sf", "html.sv"]
 acciones: ["fnjs_db_eliminar", "fnjs_dl", "fnjs_enviar_formulario"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Db Eliminar Esquema Que
 
-Descripcion funcional pendiente de revisar.
+Formulario para eliminar un esquema DL (trasladar a resto y borrar roles).
 
 ## Tipo
 
@@ -61,11 +61,11 @@ Descripcion funcional pendiente de revisar.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+1. Acceder desde el menú de administración DB o configuración.
+2. Completar el formulario y ejecutar la acción.
+3. Revisar avisos/errores en el panel de respuesta.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sistema > DB > eliminar esquema
+- **Pills2:** sistema > DB > eliminar esquema

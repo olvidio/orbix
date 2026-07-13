@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "planning"
-titulo: "Planning Zones Select"
+titulo: "Planning por zonas SACD (calendario)"
 pantalla: "planning.pantalla.planning_zones_select"
-preguntas: ["Que se puede hacer en Planning Zones Select?", "Que campos tiene Planning Zones Select?", "Que acciones hay en Planning Zones Select?"]
+preguntas: ["Que se puede hacer en Planning por zonas SACD (calendario)?", "Que campos tiene Planning por zonas SACD (calendario)?", "Que acciones hay en Planning por zonas SACD (calendario)?"]
 capacidades: ["planning.planning_zones_select.gestionar"]
 endpoints: ["/src/planning/planning_zones_select_data"]
 source: "docs/catalogo/planning/pantallas/planning_zones_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Planning Zones Select
+# Ayuda IA Pantalla - Planning por zonas SACD (calendario)
 
 ## Resumen
 
-Planning (calendario) por zonas sacd.
+Cuadrícula de actividades por zona SACD en el trimestre elegido. Fragmento AJAX desde `planning_zones_que`.
 
 ## Uso En Ayuda
 

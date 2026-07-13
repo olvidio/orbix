@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "dbextern"
-titulo: "Ver Desaparecidos De Listas"
+titulo: "Aquinate con BDU vacía"
 flujo: "dbextern.ver_desaparecidos_de_listas.gestionar.flujo"
-preguntas: ["Como obtener datos en Ver Desaparecidos De Listas?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_desaparecidos_de_listas"]
 endpoints: ["/src/dbextern/ver_desaparecidos_de_listas_datos"]
@@ -12,14 +12,13 @@ source: "docs/catalogo/dbextern/flujos/ver_desaparecidos_de_listas.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Ver Desaparecidos De Listas
+# Ayuda IA - Aquinate con BDU vacía
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver Desaparecidos De Listas`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Aquinate con BDU vacía`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Ver Desaparecidos De Listas?
 
 ## Donde Entrar
 
@@ -29,20 +28,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `dbextern.pantalla.ver_desaparecidos_de_listas`
 
 ## Objetivo
 
-Gestiona VerDesaparecidosDeListas. Obtiene datos de personas de Orbix desaparecidas de la BDU.
+Revisar fichas Aquinate cuya correspondencia BDU ya no existe.
 
 ## Limites De La Respuesta
 

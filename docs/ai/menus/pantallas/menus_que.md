@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Punto de entrada al gestor: desplegable de grupmenu y carga AJAX del listado/ficha en `#ficha`.
 
 ## Uso En Ayuda
 

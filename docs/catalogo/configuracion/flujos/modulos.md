@@ -2,82 +2,48 @@
 id: "configuracion.modulos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "configuracion"
-nombre: "Flujo - Gestionar Modulos"
+nombre: "Flujo - Gestionar módulo (ficha)"
 capacidad: "configuracion.modulos.gestionar"
-pantallas_principales: ["configuracion.pantalla.modulos_update"]
-fragmentos: ["configuracion.pantalla.modulos_form"]
-acciones: ["crear_actualizar", "ver_formulario"]
+pantallas_principales: []
+fragmentos: ["configuracion.pantalla.modulos_form", "configuracion.pantalla.modulos_update"]
+acciones: ["ver_formulario", "crear_actualizar", "eliminar"]
 endpoints: ["/src/configuracion/modulos_form_data", "/src/configuracion/modulos_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Modulos
-
-Propuesta generada automaticamente desde la capacidad `configuracion.modulos.gestionar` y sus pantallas relacionadas.
+# Flujo - Gestionar módulo (ficha)
 
 ## Objetivo De Usuario
 
-Gestiona Modulos, ModulosUpdateAction. Alta / baja / modificación de módulos (respuesta texto plano para AJAX legacy). JSON para {.
+Dar de alta un módulo nuevo o editar nombre, descripción y dependencias (módulos/apps
+requeridos) de uno existente.
 
 ## Punto De Entrada
 
-- `configuracion.pantalla.modulos_update`
+`frontend/configuracion/controller/modulos_form.php` (desde listado «definir módulos»).
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `configuracion.pantalla.modulos_form`
+### Ver formulario
 
-## Escenarios Inferidos
+1. Desde listado: «añadir módulo» (`mod=nuevo`) o «modificar» (fila seleccionada).
+2. `modulos_form_data` devuelve hashes, catálogo de módulos/apps y valores actuales.
+3. Apps requeridas por módulos dependientes se muestran checked+disabled.
 
-### Crear Actualizar
+### Crear o actualizar
 
-Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Editar campos; cambios en checkboxes guardan al vuelo (`fnjs_cambio`).
+2. «Guardar cambios» → `modulos_update` (alta si `mod=nuevo` y `nom` no vacío; edición por `id_mod`).
+3. Volver al listado con `navAtras`.
 
-Endpoints asociados:
-- `/src/configuracion/modulos_update`
+### Eliminar
 
-### Ver Formulario
-
-Pasos propuestos:
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Endpoints asociados:
-- `/src/configuracion/modulos_form_data`
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `html.descripcion`
-- `html.nom`
-- `html.refresh`
-- `html.sel_apps[]`
-- `html.sel_mods[]`
-- `post.refresh`
-
-Acciones JavaScript:
-- `fnjs_actualizar`
-- `fnjs_cambio`
-- `fnjs_enviar_formulario`
-- `fnjs_guardar`
-
-## Endpoints Del Flujo
-
-- `/src/configuracion/modulos_form_data`
-- `/src/configuracion/modulos_update`
+Gestión desde el listado (`modulos_select`), no desde la ficha.
 
 ## Errores Conocidos
 
-- ``hay un error, no se ha eliminado``
+- `hay un error, no se ha eliminado` (solo en baja desde listado)
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Sin entrada de menú en el índice (subflujo de «definir módulos»).

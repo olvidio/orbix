@@ -2,61 +2,35 @@
 id: "actividades.actividad_ver.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Actividad Ver"
+nombre: "Flujo - Cargar datos de ficha actividad"
 capacidad: "actividades.actividad_ver.gestionar"
-pantallas_principales: []
-fragmentos: ["actividades.pantalla.actividad_ver", "actividades.pantalla.planning_casa_modificar", "actividades.pantalla.planning_casa_nueva"]
+pantallas_principales: ["actividades.pantalla.actividad_ver"]
+fragmentos: ["actividades.pantalla.planning_casa_modificar", "actividades.pantalla.planning_casa_nueva"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividades/actividad_ver_datos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Actividad Ver
+# Flujo - Cargar datos de ficha actividad
 
-Propuesta generada automaticamente desde la capacidad `actividades.actividad_ver.gestionar` y sus pantallas relacionadas.
+Bootstrap del formulario de actividad: entidad, desplegables y HTML auxiliar.
 
 ## Objetivo De Usuario
 
-Gestiona ActividadVerDatos. Devuelve los fragmentos HTML y valores auxiliares que necesita el formulario "ver/editar actividad" para renderizarse sin que el frontend acceda directamente a src/.
+Al abrir ver/editar/nuevo/planning, el sistema carga en servidor los datos necesarios
+para pintar la ficha sin acceder a `src/` desde el navegador.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Controllers `actividad_ver`, `planning_casa_nueva`, `planning_casa_modificar` al renderizar.
 
-## Fragmentos O Pantallas Auxiliares
-
-- `actividades.pantalla.actividad_ver`
-- `actividades.pantalla.planning_casa_modificar`
-- `actividades.pantalla.planning_casa_nueva`
-
-## Escenarios Inferidos
+## Escenarios
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.dl_org`
-- `form.isfsv`
-- `form.ssfsv`
-- `post.id_activ`
-- `post.id_tipo_activ`
-- `post.id_ubi`
-- `post.mod`
-- `post.obj_pau`
-- `post.refresh`
-- `post.sactividad`
-- `post.sasistentes`
-- `post.sel`
-
-Acciones JavaScript:
-- Ninguna detectada.
+1. Controller recibe `id_activ` (0 si nueva), `dl_org`, `isfsv`, `id_ubi`, `id_tipo_activ`.
+2. POST a `actividad_ver_datos`.
+3. Respuesta incluye valores de formulario, opciones de desplegables y flags de permiso.
 
 ## Endpoints Del Flujo
 
@@ -64,11 +38,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+Errores de permiso o actividad inexistente se gestionan en el controller frontend antes/después
+del POST (ver ficha API).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Misma que `actividad_ver` / planning (sin menú propio para el paso AJAX).

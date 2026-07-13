@@ -13,14 +13,19 @@ requiere_hashb: false
 frontend_referencias: []
 casos_uso: []
 tags: ["usuarios", "check", "first", "login", "2fa"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Check First Login 2fa
 
-Descripcion funcional pendiente de revisar.
+Tras login web, redirige a configuración 2FA si el usuario no la tiene activada; si no, continúa al home.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Tras login web, redirige a configuración 2FA si el usuario no la tiene activada; si no, continúa al home.
 
 ## Endpoint
 
@@ -31,22 +36,28 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| _(ninguno)_ | | | | |
 
 ## Salida
 
-No se ha detectado salida estandar. Revisar manualmente.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: redirección HTTP (no JSON); flujo post-login 2FA.
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Usuario autenticado (`ConfigGlobal::MiUsuario()`).
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`[]`).

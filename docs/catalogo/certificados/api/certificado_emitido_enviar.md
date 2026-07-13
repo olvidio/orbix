@@ -6,21 +6,27 @@ url: "/src/certificados/certificado_emitido_enviar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/certificados/infrastructure/ui/http/controllers/certificado_emitido_enviar.php"
-entrada: ["post.id_item:integer", "post.sel:array"]
+entrada: ["post.id_item:integer", "post.sel:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: []
-casos_uso: []
+frontend_referencias: ["frontend/certificados/controller/certificado_emitido_lista.php"]
+casos_uso: ["src\\certificados\\domain\\CertificadoEmitidoEnviar"]
 tags: ["certificados", "certificado", "emitido", "enviar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Certificado Emitido Enviar
 
-Descripcion funcional pendiente de revisar.
+Envía un certificado emitido a la delegación destino del alumno (copia + anuncio).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Marca `f_enviado`, copia el certificado a la DL destino vía `Trasladar::copiar_certificados_a_dl`
+y crea un anuncio en el tablón `vest|Estudios` de la región STGR destino. Rechaza personas de
+paso (`id_nom < 0`) y delegaciones fuera de Orbix.
 
 ## Endpoint
 
@@ -33,27 +39,30 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `integer` | controller | No | controller |
-| `sel` | `array` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `sel` | `string` | controller | No | Lista; usa `id_item` antes del `#` |
+| `id_item` | `integer` | controller | No | Alternativa a `sel` |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `success: true`, `data: "ok"` (puede haber avisos no bloqueantes en `mensaje`)
+
+## Errores conocidos
+
+- `No se encuentra el certificado`
+- `Es una persona de paso. No se puede enviar. Hay que imprimir.`
+- `No se puede determinar la delegación destino`
+- `Hay que enviar manualmente el certificado. Esta persona no está en aquinate`
+- Mensajes de error al resolver región STGR destino o al trasladar
+
+## Permisos
+
+- Botón expuesto solo si `soy_region_stgr()` en el listado; sin check adicional aquí.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- `src\certificados\domain\CertificadoEmitidoEnviar`
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/certificados/controller/certificado_emitido_lista.php`: acción `fnjs_enviar_certificado`.

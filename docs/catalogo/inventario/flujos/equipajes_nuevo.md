@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["guardar"]
 endpoints: ["/src/inventario/equipajes_nuevo_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Equipajes Nuevo
@@ -17,11 +17,13 @@ Propuesta generada automaticamente desde la capacidad `inventario.equipajes_nuev
 
 ## Objetivo De Usuario
 
-Gestiona EquipajesNuevo. Descripcion funcional pendiente de revisar.
+Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuevo_guardar`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- `inventario.pantalla.equipajes_nuevo`
+
+
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -53,9 +55,7 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > Inventario > equipajes > nuevo equipaje
+- **Pills2:** —

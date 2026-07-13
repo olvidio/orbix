@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "profesores"
-titulo: "Congresos"
+titulo: "Asistencia a congresos"
 pantalla: "profesores.pantalla.congresos"
-preguntas: ["Que se puede hacer en Congresos?", "Que campos tiene Congresos?", "Que acciones hay en Congresos?"]
+preguntas: ["Que se puede hacer en Asistencia a congresos?", "Que campos tiene Asistencia a congresos?", "Que acciones hay en Asistencia a congresos?"]
 capacidades: ["profesores.congresos.gestionar"]
 endpoints: ["/src/profesores/congresos"]
 source: "docs/catalogo/profesores/pantallas/congresos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Congresos
+# Ayuda IA Pantalla - Asistencia a congresos
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Tabla global de congresos del claustro: delegación (RSTGR), profesor, tipo, lugar, fechas y organizador.
 
 ## Uso En Ayuda
 

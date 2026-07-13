@@ -6,43 +6,22 @@ url: "/src/menus/menu_mover"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/menus/infrastructure/ui/http/controllers/menu_mover.php"
-entrada: ["post.gm_new:string", "post.id_menu:integer"]
-entrada_obligatoria: []
+entrada: ["post.id_menu:integer", "post.gm_new:string"]
+entrada_obligatoria: ["gm_new"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: []
+errores: ["hay un error. Debe indicar el destino", "No encuentro el menu", "hay un error, no se ha guardado"]
+frontend_referencias: ["frontend/menus/view/menus_get.phtml"]
 casos_uso: ["src\\menus\\application\\MenuMover"]
 tags: ["menus", "menu", "mover"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Menu Mover
+# Mover ítem de menú
 
-Descripcion funcional pendiente de revisar.
+Cambia el `id_grupmenu` de un ítem existente.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
-
-## Endpoint
-
-- URL: `/src/menus/menu_mover`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
-- Controller: `src/menus/infrastructure/ui/http/controllers/menu_mover.php`
-
-## Entrada
-
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `gm_new` | `string` | controller | No | controller |
-| `id_menu` | `integer` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
-
-## Salida
-
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
 
 ## Casos De Uso
 
@@ -50,10 +29,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/menus/view/menus_get.phtml`

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página sirve para la certificado para una persona.
+Generación y previsualización del PDF del certificado (mPDF) a partir de notas y textos legales.
 
 ## Uso En Ayuda
 

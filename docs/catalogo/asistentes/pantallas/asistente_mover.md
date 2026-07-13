@@ -11,12 +11,12 @@ endpoints: ["/src/asistentes/asistente_mover_data"]
 capacidades: ["asistentes.asistente_mover.gestionar"]
 campos: ["html.guardar", "html.observ"]
 acciones: ["fnjs_mover_cerrar", "fnjs_mover_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Asistente Mover
 
-Descripcion funcional pendiente de revisar.
+Modal para mover un asistente a otra actividad del mismo tipo en el curso.
 
 ## Tipo
 
@@ -51,11 +51,7 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/asistentes/`.
+## Ruta de menú
 
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).

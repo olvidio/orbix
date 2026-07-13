@@ -45,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Migraciones. Descripcion funcional pendiente de revisar.
+Revisar y aplicar migraciones SQL del repositorio.
 
 ## Limites De La Respuesta
 

@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.ver_encargos_centros"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/desplegable_encargos"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Desplegable Encargos
-
-Propuesta generada automaticamente desde la capacidad `misas.desplegable_encargos.gestionar` y sus pantallas relacionadas.
+# Flujo - Desplegable encargos
 
 ## Objetivo De Usuario
 
-Gestiona DesplegableEncargos. Payload JSON para el desplegable dinamico de encargos de una zona. Sigue el contrato de desplegables de refactor.md: - id : id del <select> que montara fnjs_construir_desplegable. - opciones : map id_enc => desc_enc de los encargos con id_tipo_enc >= 8100 de la zona. - selected : id_enc preseleccionado ('' si no aplica). - blanco : true si se quiere opcion en blanco. - val_blanco: valor de la opcion en blanco. - action : handler onchange opcional (vacio por defecto).
+Devuelve opciones de encargos 8100+ de una zona para el desplegable dinámico del modal de encargos-centro.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -59,11 +57,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Encargos centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr

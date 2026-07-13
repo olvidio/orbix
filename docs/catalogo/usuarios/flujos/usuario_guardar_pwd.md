@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["usuarios.pantalla.usuario_form_pwd"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_guardar_pwd"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Usuario Guardar Pwd
-
-Propuesta generada automaticamente desde la capacidad `usuarios.usuario_guardar_pwd.gestionar` y sus pantallas relacionadas.
+# Flujo - Usuario Guardar Pwd
 
 ## Objetivo De Usuario
 
-Gestiona UsuarioGuardarPwd. Descripcion funcional pendiente de revisar.
+Cambia contraseña tras validar fortaleza; limpia flag cambio_password.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -58,11 +56,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Usuario no encontrado`
+- `hay un error, no se ha guardado`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

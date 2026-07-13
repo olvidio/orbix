@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Controlador AJAX HTML: form modificar/nuevo de `TarifaUbi`.
+Fragmento AJAX: formulario popup de `TarifaUbi` con cápsulas HashB `ctx_update` / `ctx_eliminar`.
 
 ## Uso En Ayuda
 

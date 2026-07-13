@@ -1,83 +1,45 @@
 ---
 id: "actividades.pantalla.lista_actividades_sg"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "actividades"
-nombre: "Lista Actividades Sg"
+nombre: "Listado actividades San Gabriel (crt/cv)"
 controller: "frontend/actividades/controller/lista_actividades_sg.php"
 vistas: ["frontend/actividades/view/lista_actividades_sg.phtml"]
 fragmentos_frontend: ["frontend/actividades/controller/lista_actividades_sg.php"]
 endpoints: ["/src/actividades/lista_actividades_sg_datos"]
 capacidades: ["actividades.lista_actividades_sg.gestionar"]
 campos: ["form.mod", "form.queSel", "form.sel", "html.b_buscar", "html.mod", "post.Gstack", "post.continuar", "post.dl_org", "post.empiezamax", "post.empiezamin", "post.filtro_lugar", "post.id_ubi", "post.periodo", "post.que", "post.scroll_id", "post.sel", "post.stack", "post.status", "post.tipo_activ_sg", "post.year"]
-acciones: ["button:. _(", "fnjs_borrar", "fnjs_buscar", "fnjs_enviar_formulario", "fnjs_solo_uno", "fnjs_update_div"]
-estado_revision: "generado"
+acciones: ["fnjs_borrar", "fnjs_buscar", "fnjs_enviar_formulario", "fnjs_solo_uno", "fnjs_update_div"]
+estado_revision: "revisado"
 ---
 
-# Lista Actividades Sg
+# Listado actividades San Gabriel (crt/cv)
 
-Pantalla que lista actividades sf/sg (crt, cv) con los filtros de periodo, tipo, lugar y delegacion.
+Listado de actividades **SG** (`tipo_activ_sg=crt|cv`) con filtros de periodo,
+estado, lugar y delegación. Incluye barra de periodo (`PeriodoQue`), formulario de
+selección múltiple y tabla vía `lista_actividades_sg_datos`. Periodo por defecto:
+`curso_crt` o `curso_ca` según el tipo.
+
+Si hay más de 200 resultados, pide confirmación (`continuar`) antes de listar
+(mismo patrón que `actividad_select`).
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
 - Controller: `frontend/actividades/controller/lista_actividades_sg.php`
-
-## Vistas Relacionadas
-
-- `frontend/actividades/view/lista_actividades_sg.phtml`
-
-## Fragmentos Frontend Relacionados
-
-- `frontend/actividades/controller/lista_actividades_sg.php`
+- Vista: `frontend/actividades/view/lista_actividades_sg.phtml`
 
 ## Endpoints Usados
 
 - `/src/actividades/lista_actividades_sg_datos`
 
-## Capacidades Relacionadas
-
-- `actividades.lista_actividades_sg.gestionar`
-
-## Campos Detectados
-
-- `form.mod`
-- `form.queSel`
-- `form.sel`
-- `html.b_buscar`
-- `html.mod`
-- `post.Gstack`
-- `post.continuar`
-- `post.dl_org`
-- `post.empiezamax`
-- `post.empiezamin`
-- `post.filtro_lugar`
-- `post.id_ubi`
-- `post.periodo`
-- `post.que`
-- `post.scroll_id`
-- `post.sel`
-- `post.stack`
-- `post.status`
-- `post.tipo_activ_sg`
-- `post.year`
-
-## Acciones Detectadas
-
-- `button:. _(`
-- `fnjs_borrar`
-- `fnjs_buscar`
-- `fnjs_enviar_formulario`
-- `fnjs_solo_uno`
-- `fnjs_update_div`
-
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Listado *de la r/dl* para crt o cv SG: filtrar periodo/estado, buscar y actuar sobre
+filas (abrir ficha, selección según `que`/`mod` del POST).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** vsg > crt > de la r/dl; vsg > cv > de la r/dl.
+- **Pills2:** sin entrada dedicada en el índice (mismas rutas vsg).

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Posibles Maletas"
+titulo: "Elegir maleta/grupo"
 pantalla: "inventario.pantalla.equipajes_posibles_maletas"
-preguntas: ["Que se puede hacer en Equipajes Posibles Maletas?", "Que campos tiene Equipajes Posibles Maletas?", "Que acciones hay en Equipajes Posibles Maletas?"]
+preguntas: ["Que se puede hacer en Elegir maleta/grupo?", "Que campos tiene Elegir maleta/grupo?", "Que acciones hay en Elegir maleta/grupo?"]
 capacidades: ["inventario.lista_equipajes_posibles_maletas.gestionar"]
 endpoints: ["/src/inventario/lista_equipajes_posibles_maletas"]
 source: "docs/catalogo/inventario/pantallas/equipajes_posibles_maletas.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Posibles Maletas
+# Ayuda IA Pantalla - Elegir maleta/grupo
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Selector maleta; puede crear grupo vía `equipajes_update_grupo`.
 
 ## Uso En Ayuda
 

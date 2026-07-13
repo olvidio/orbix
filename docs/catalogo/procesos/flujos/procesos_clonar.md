@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["procesos.pantalla.procesos_select"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/procesos_clonar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Procesos Clonar
-
-Propuesta generada automaticamente desde la capacidad `procesos.procesos_clonar.gestionar` y sus pantallas relacionadas.
+# Flujo - Clonar proceso
 
 ## Objetivo De Usuario
 
-Gestiona ProcesosClonar. Caso de uso: clona las tareas de un proceso de referencia al proceso indicado (borrando las existentes previamente). Devuelve '' si ha ido bien o un mensaje de error. El frontend se encarga de recargar la vista del proceso tras el clonado.
+Clonar las tareas de un tipo de proceso de referencia sobre el proceso seleccionado, sustituyendo las tareas existentes.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > procesos activ. > procesos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -54,9 +52,7 @@ Acciones JavaScript:
 
 - ``no se ha indicado el proceso a clonar``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > procesos activ. > procesos
+- **Pills2:** ADMIN LOCAL > procesos activ. > procesos

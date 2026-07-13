@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Renderer frontend de la tabla de fases del proceso de una actividad.
+Fragmento AJAX que renderiza la tabla de tareas del proceso de una actividad (fase, tarea, responsable, completado, observaciones y botón guardar).
 
 ## Uso En Ayuda
 

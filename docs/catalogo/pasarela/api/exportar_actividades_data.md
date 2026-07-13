@@ -4,52 +4,75 @@ tipo: "endpoint"
 modulo: "pasarela"
 url: "/src/pasarela/exportar_actividades_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/pasarela/infrastructure/ui/http/controllers/exportar_actividades_data.php"
-entrada: ["post.fin_iso:string", "post.iactividad_val:string", "post.iasistentes_val:string", "post.id_cdc:array", "post.id_tipo_activ:string", "post.inicio_iso:string", "post.isfsv_val:string"]
+entrada:
+  - "post.id_tipo_activ:string"
+  - "post.isfsv_val:string"
+  - "post.iasistentes_val:string"
+  - "post.iactividad_val:string"
+  - "post.inicio_iso:string"
+  - "post.fin_iso:string"
+  - "post.id_cdc:array"
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "pasarela_ExportarActividadesDataData"
-respuesta_data: ["a_cabeceras:list<string>, a_botones: list<mixed>, a_valores: array<int, array<int, mixed>>, errores: string"]
 requiere_hashb: false
-frontend_referencias: ["frontend/pasarela/controller/exportar_select.php"]
-casos_uso: ["src\\pasarela\\application\\ExportarActividadesData"]
-tags: ["pasarela", "exportar", "actividades", "data"]
-estado_revision: "generado"
+errores:
+  - "Periodo no válido"
+frontend_referencias:
+  - "frontend\/pasarela\/controller\/exportar_select.php"
+casos_uso: ["src\pasarela\application\ExportarActividadesData"]
+tags: ["pasarela"]
+estado_revision: "revisado"
 ---
 
 # Exportar Actividades Data
 
-Caso de uso "exportar actividades": dado un filtro (tipo de actividad, periodo y casas), devuelve cabeceras + filas para el listado de exportación.
+Genera cabeceras y filas para exportar actividades al exterior según filtros.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Resuelve tipo (directo o vía sfsv/asistentes/actividad), periodo ISO y casas (`id_cdc`).
+Devuelve tabla con activación calculada, contribuciones, tarifas y centros encargados.
+Errores parciales acumulados en `errores` (HTML `<br>`).
 
 ## Endpoint
 
 - URL: `/src/pasarela/exportar_actividades_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/exportar_actividades_data.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `fin_iso` | `string` | controller+application | No | controller+application |
-| `iactividad_val` | `string` | controller+application | No | controller+application |
-| `iasistentes_val` | `string` | controller+application | No | controller+application |
-| `id_cdc` | `array` | controller+application | No | controller+application |
-| `id_tipo_activ` | `string` | controller+application | No | controller+application |
-| `inicio_iso` | `string` | controller+application | No | controller+application |
-| `isfsv_val` | `string` | controller+application | No | controller+application |
+| `id_tipo_activ` | `string` | controller | No | |
+| `isfsv_val` | `string` | controller | No | |
+| `iasistentes_val` | `string` | controller | No | |
+| `iactividad_val` | `string` | controller | No | |
+| `inicio_iso` | `string` | controller | No | |
+| `fin_iso` | `string` | controller | No | |
+| `id_cdc` | `array` | controller | No | |
+
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `pasarela_ExportarActividadesDataData`):
-  - `a_cabeceras` (`list<string>, a_botones: list<mixed>, a_valores: array<int, array<int, mixed>>, errores: string`)
+- Payload: `{a_cabeceras, a_botones, a_valores, errores}`.
+- `a_valores` indexado por fila/columna (20 columnas).
+- Doble `JSON.parse` en el front.
+
+## Errores conocidos
+
+- `Periodo no válido`
+
+## Permisos
+
+Sin control en el caso de uso; acceso vía pantalla exportar (frontend + permisos menú).
+
+Notas: Si `id_tipo_activ` vacío, compone el id desde `isfsv_val`/`iasistentes_val`/`iactividad_val` (default sfsv según `ConfigGlobal::mi_sfsv()`).
 
 ## Casos De Uso
 
@@ -58,9 +81,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Frontend Relacionado
 
 - `frontend/pasarela/controller/exportar_select.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

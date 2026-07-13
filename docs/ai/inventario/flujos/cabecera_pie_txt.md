@@ -51,7 +51,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CabeceraPieTxt. Descripcion funcional pendiente de revisar.
+Editar textos globales de cabecera/pie para impresión de equipajes.
 
 ## Limites De La Respuesta
 

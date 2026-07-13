@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento que ejecuta el renombre PostgreSQL y sincronización tras el formulario de cambiar nombre.
 
 ## Uso En Ayuda
 

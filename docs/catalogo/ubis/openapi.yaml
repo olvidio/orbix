@@ -17,7 +17,7 @@ paths:
       operationId: "post_ubis_calendario_periodos_eliminar"
       summary: "Calendario Periodos Eliminar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina un periodo de calendario CDC identificado por id_item.
         
         Operacion: `mutacion`.
         
@@ -30,6 +30,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_item:
                   type: "integer"
@@ -51,9 +53,9 @@ paths:
       operationId: "post_ubis_calendario_periodos_form_periodo_data"
       summary: "Calendario Periodos Form Periodo Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Carga los campos del formulario de edición de un periodo de calendario existente.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/calendario_periodos_form_periodo_data.md`
       tags:
@@ -64,6 +66,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_item:
                   type: "integer"
@@ -85,9 +89,9 @@ paths:
       operationId: "post_ubis_calendario_periodos_get2_data"
       summary: "Calendario Periodos Get2 Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista los periodos de una casa en un año con detección de solapes.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/calendario_periodos_get2_data.md`
       tags:
@@ -121,9 +125,9 @@ paths:
       operationId: "post_ubis_calendario_periodos_get_data"
       summary: "Calendario Periodos Get Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve todos los periodos de calendario de una casa ordenados por fecha inicio.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/calendario_periodos_get_data.md`
       tags:
@@ -155,7 +159,7 @@ paths:
       operationId: "post_ubis_calendario_periodos_guardar"
       summary: "Calendario Periodos Guardar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Crea o actualiza un periodo de calendario CDC con fechas y asignación sfsv.
         
         Operacion: `mutacion`.
         
@@ -169,14 +173,14 @@ paths:
             schema:
               type: object
               properties:
-                f_fin:
-                  type: "string"
-                f_ini:
-                  type: "string"
                 id_item:
                   type: "integer"
                 id_ubi:
                   type: "integer"
+                f_ini:
+                  type: "string"
+                f_fin:
+                  type: "string"
                 sfsv:
                   type: "integer"
       responses:
@@ -197,9 +201,9 @@ paths:
       operationId: "post_ubis_calendario_periodos_nuevo_data"
       summary: "Calendario Periodos Nuevo Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Precarga el formulario de alta de periodo con fecha siguiente y sfsv del último periodo del año.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/calendario_periodos_nuevo_data.md`
       tags:
@@ -233,9 +237,9 @@ paths:
       operationId: "post_ubis_casas_opciones_data"
       summary: "Casas Opciones Data"
       description: |
-        Devuelve el payload (solo datos) para poblar el <select> de casas en `frontend\shared\web\CasasQue`.
+        Devuelve opciones de casas filtradas para desplegables compartidos del frontend.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/casas_opciones_data.md`
       tags:
@@ -249,11 +253,11 @@ paths:
               properties:
                 active:
                   type: "string"
-                id_ubi_in:
+                sv:
                   type: "string"
                 sf:
                   type: "string"
-                sv:
+                id_ubi_in:
                   type: "string"
       responses:
         "200":
@@ -273,9 +277,9 @@ paths:
       operationId: "post_ubis_centros_form_labor"
       summary: "Centros Form Labor"
       description: |
-        Datos comunes para los formularios de centro dl (labor / num / plazas). Los tres formularios muestran sobre un mismo centro un subconjunto de campos distinto según el modo indicado.
+        Carga datos del formulario modal de tipo de labor de un centro DL.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/centros_form_labor.md`
       tags:
@@ -286,6 +290,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
               properties:
                 id_ubi:
                   type: "integer"
@@ -307,9 +313,9 @@ paths:
       operationId: "post_ubis_centros_form_num"
       summary: "Centros Form Num"
       description: |
-        Datos comunes para los formularios de centro dl (labor / num / plazas). Los tres formularios muestran sobre un mismo centro un subconjunto de campos distinto según el modo indicado.
+        Carga datos del formulario modal de números (buzón, pi, cartas) de un centro DL.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/centros_form_num.md`
       tags:
@@ -320,6 +326,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
               properties:
                 id_ubi:
                   type: "integer"
@@ -341,9 +349,9 @@ paths:
       operationId: "post_ubis_centros_form_plazas"
       summary: "Centros Form Plazas"
       description: |
-        Datos comunes para los formularios de centro dl (labor / num / plazas). Los tres formularios muestran sobre un mismo centro un subconjunto de campos distinto según el modo indicado.
+        Carga datos del formulario modal de plazas y sede de un centro DL.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/centros_form_plazas.md`
       tags:
@@ -354,6 +362,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
               properties:
                 id_ubi:
                   type: "integer"
@@ -375,9 +385,9 @@ paths:
       operationId: "post_ubis_centros_get_labor"
       summary: "Centros Get Labor"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista todos los centros DL activos con su tipo de centro y tipo de labor.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/centros_get_labor.md`
       tags:
@@ -410,9 +420,9 @@ paths:
       operationId: "post_ubis_centros_get_num"
       summary: "Centros Get Num"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista centros DL activos con sus datos numéricos de buzón, pi y cartas.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/centros_get_num.md`
       tags:
@@ -445,9 +455,9 @@ paths:
       operationId: "post_ubis_centros_get_plazas"
       summary: "Centros Get Plazas"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista centros DL activos con plazas, habitaciones individuales y flag sede.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/centros_get_plazas.md`
       tags:
@@ -480,9 +490,9 @@ paths:
       operationId: "post_ubis_centros_opciones_data"
       summary: "Centros Opciones Data"
       description: |
-        Devuelve el payload (solo datos) para poblar el <select> de centros en `frontend\shared\web\CentrosQue`.
+        Devuelve opciones de centros filtradas para desplegables compartidos del frontend.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/centros_opciones_data.md`
       tags:
@@ -496,11 +506,11 @@ paths:
               properties:
                 active:
                   type: "string"
-                id_ubi_in:
+                sv:
                   type: "string"
                 sf:
                   type: "string"
-                sv:
+                id_ubi_in:
                   type: "string"
                 tipo_ctr:
                   type: "string"
@@ -522,7 +532,7 @@ paths:
       operationId: "post_ubis_centros_update"
       summary: "Centros Update"
       description: |
-        Actualiza datos de centro DL (labor / num / plazas según POST).
+        Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plazas).
         
         Operacion: `mutacion`.
         
@@ -535,26 +545,28 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
               properties:
                 id_ubi:
                   type: "integer"
                 labor:
                   type: "string"
+                tipo_ctr:
+                  type: "string"
+                tipo_labor:
+                  type: "string"
                 n_buzon:
+                  type: "integer"
+                num_pi:
                   type: "integer"
                 num_cartas:
                   type: "integer"
                 num_habit_indiv:
                   type: "integer"
-                num_pi:
-                  type: "integer"
                 plazas:
                   type: "integer"
                 sede:
-                  type: "string"
-                tipo_ctr:
-                  type: "string"
-                tipo_labor:
                   type: "string"
       responses:
         "200":
@@ -574,9 +586,9 @@ paths:
       operationId: "post_ubis_delegacion_que_data"
       summary: "Delegacion Que Data"
       description: |
-        Opciones del formulario delegaciones (traslado de ubis).
+        Devuelve delegaciones destino disponibles para el traslado de ubis.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/delegacion_que_data.md`
       tags:
@@ -609,9 +621,9 @@ paths:
       operationId: "post_ubis_delegaciones_region_stgr_data"
       summary: "Delegaciones Region Stgr Data"
       description: |
-        Delegaciones de una región STGR para desplegables (id_dl => sigla_dl).
+        Lista delegaciones de una región STGR para desplegables dependientes.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/delegaciones_region_stgr_data.md`
       tags:
@@ -622,6 +634,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "region_stgr"
               properties:
                 region_stgr:
                   type: "string"
@@ -643,7 +657,7 @@ paths:
       operationId: "post_ubis_direccion_update"
       summary: "Direccion Update"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Crea o modifica una dirección y su relación con el ubi (principal, propietario).
         
         Operacion: `mutacion`.
         
@@ -656,42 +670,45 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "obj_dir"
+                - "id_ubi"
               properties:
-                a_p:
-                  type: "string"
-                c_p:
-                  type: "string"
-                cp_dcha:
-                  type: "string"
-                direccion:
-                  type: "string"
-                f_direccion:
-                  type: "string"
-                id_direccion:
+                obj_dir:
                   type: "string"
                 id_ubi:
                   type: "integer"
                 idx:
                   type: "string"
+                id_direccion:
+                  type: "string"
+                nom_sede:
+                  type: "string"
+                direccion:
+                  type: "string"
+                a_p:
+                  type: "string"
+                c_p:
+                  type: "string"
+                poblacion:
+                  type: "string"
+                provincia:
+                  type: "string"
+                pais:
+                  type: "string"
+                observ:
+                  type: "string"
+                f_direccion:
+                  type: "string"
                 latitud:
                   type: "string"
                 longitud:
                   type: "string"
-                nom_sede:
-                  type: "string"
-                obj_dir:
-                  type: "string"
-                observ:
-                  type: "string"
-                pais:
-                  type: "string"
-                poblacion:
-                  type: "string"
-                principal:
+                cp_dcha:
                   type: "string"
                 propietario:
                   type: "string"
-                provincia:
+                principal:
                   type: "string"
       responses:
         "200":
@@ -711,7 +728,7 @@ paths:
       operationId: "post_ubis_direcciones_asignar"
       summary: "Direcciones Asignar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Asocia una dirección existente a un ubi sin marcarla como propietaria.
         
         Operacion: `mutacion`.
         
@@ -724,13 +741,17 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
+                - "obj_dir"
+                - "id_direccion"
               properties:
-                id_direccion:
-                  type: "integer"
                 id_ubi:
                   type: "integer"
                 obj_dir:
                   type: "string"
+                id_direccion:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -749,9 +770,9 @@ paths:
       operationId: "post_ubis_direcciones_editar"
       summary: "Direcciones Editar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Carga la ficha de edición de direcciones de un ubi, con navegación entre varias direcciones.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/direcciones_editar.md`
       tags:
@@ -762,18 +783,21 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
+                - "obj_dir"
               properties:
-                id_direccion:
-                  type: "string"
                 id_ubi:
                   type: "integer"
-                idx:
-                  type: "integer"
-                inc:
-                  type: "string"
                 mod:
                   type: "string"
                 obj_dir:
+                  type: "string"
+                id_direccion:
+                  type: "string"
+                idx:
+                  type: "integer"
+                inc:
                   type: "string"
       responses:
         "200":
@@ -793,9 +817,9 @@ paths:
       operationId: "post_ubis_direcciones_que"
       summary: "Direcciones Que"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Prepara el formulario de búsqueda de direcciones existentes para asignar a un ubi.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/direcciones_que.md`
       tags:
@@ -806,6 +830,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
               properties:
                 id_ubi:
                   type: "integer"
@@ -827,7 +853,7 @@ paths:
       operationId: "post_ubis_direcciones_quitar"
       summary: "Direcciones Quitar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Desvincula una dirección del ubi según el índice en la lista CSV de ids.
         
         Operacion: `mutacion`.
         
@@ -840,14 +866,18 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
+                - "obj_dir"
+                - "id_direccion"
               properties:
-                id_direccion:
-                  type: "string"
                 id_ubi:
                   type: "integer"
                 idx:
                   type: "integer"
                 obj_dir:
+                  type: "string"
+                id_direccion:
                   type: "string"
       responses:
         "200":
@@ -867,9 +897,9 @@ paths:
       operationId: "post_ubis_direcciones_tabla"
       summary: "Direcciones Tabla"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Busca direcciones por cp/ciudad/país y muestra tabla para asignar al ubi.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/direcciones_tabla.md`
       tags:
@@ -880,14 +910,17 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
+                - "obj_dir"
               properties:
-                c_p:
-                  type: "string"
-                ciudad:
-                  type: "string"
                 id_ubi:
                   type: "integer"
                 obj_dir:
+                  type: "string"
+                c_p:
+                  type: "string"
+                ciudad:
                   type: "string"
                 pais:
                   type: "string"
@@ -909,9 +942,9 @@ paths:
       operationId: "post_ubis_home_ubis_data"
       summary: "Home Ubis Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Construye la ficha resumen de un ubi con dirección, telecomunicaciones y objetos pau/dir.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/home_ubis_data.md`
       tags:
@@ -922,6 +955,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
               properties:
                 id_ubi:
                   type: "integer"
@@ -943,9 +978,9 @@ paths:
       operationId: "post_ubis_list_ctr_data"
       summary: "List Ctr Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista centros y casas filtrados por delegación/exterior y tipo, con teléfonos y enlaces a ficha.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/list_ctr_data.md`
       tags:
@@ -957,11 +992,11 @@ paths:
             schema:
               type: object
               properties:
-                id_sel:
-                  type: "string"
                 loc:
                   type: "string"
                 que_lista:
+                  type: "string"
+                id_sel:
                   type: "string"
                 scroll_id:
                   type: "string"
@@ -983,22 +1018,23 @@ paths:
       operationId: "post_ubis_lista_ctrs_data"
       summary: "Lista Ctrs Data"
       description: |
-        Listado de centros de tipo 's' (sacerdotes) con el número de personas s asignadas en cada uno, y el total global.
+        Lista centros tipo s de la delegación con el número de sacerdotes asignados en cada uno.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/lista_ctrs_data.md`
       tags:
         - "ubis"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                error:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1017,9 +1053,9 @@ paths:
       operationId: "post_ubis_teleco_desc_lista"
       summary: "Teleco Desc Lista"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Devuelve descripciones de telecomunicación dependientes del tipo seleccionado.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/teleco_desc_lista.md`
       tags:
@@ -1030,6 +1066,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_tipo_teleco"
               properties:
                 id_tipo_teleco:
                   type: "integer"
@@ -1051,9 +1089,9 @@ paths:
       operationId: "post_ubis_teleco_editar"
       summary: "Teleco Editar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Carga el formulario de alta/edición de una telecomunicación de un ubi.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/teleco_editar.md`
       tags:
@@ -1064,16 +1102,19 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "obj_pau"
+                - "id_ubi"
               properties:
-                id_ubi:
-                  type: "integer"
-                mod:
-                  type: "string"
                 obj_pau:
                   type: "string"
-                s_pkey:
+                mod:
                   type: "string"
+                id_ubi:
+                  type: "integer"
                 sel:
+                  type: "string"
+                s_pkey:
                   type: "string"
       responses:
         "200":
@@ -1093,7 +1134,7 @@ paths:
       operationId: "post_ubis_teleco_eliminar"
       summary: "Teleco Eliminar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina una o más telecomunicaciones del ubi por claves primarias codificadas.
         
         Operacion: `mutacion`.
         
@@ -1106,6 +1147,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "obj_pau"
               properties:
                 obj_pau:
                   type: "string"
@@ -1129,7 +1172,7 @@ paths:
       operationId: "post_ubis_teleco_guardar"
       summary: "Teleco Guardar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Crea o actualiza un registro de telecomunicación asociado a un ubi.
         
         Operacion: `mutacion`.
         
@@ -1142,22 +1185,25 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "obj_pau"
+                - "id_ubi"
               properties:
-                id_desc_teleco:
+                obj_pau:
+                  type: "string"
+                id_ubi:
                   type: "integer"
                 id_tipo_teleco:
                   type: "integer"
-                id_ubi:
+                id_desc_teleco:
                   type: "integer"
                 num_teleco:
                   type: "string"
-                obj_pau:
-                  type: "string"
                 observ:
                   type: "string"
-                s_pkey:
-                  type: "string"
                 sel:
+                  type: "string"
+                s_pkey:
                   type: "string"
       responses:
         "200":
@@ -1177,9 +1223,9 @@ paths:
       operationId: "post_ubis_teleco_tabla"
       summary: "Teleco Tabla"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista las telecomunicaciones de un centro o casa con botones según permisos.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/teleco_tabla.md`
       tags:
@@ -1190,11 +1236,14 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "obj_pau"
+                - "id_ubi"
               properties:
-                id_ubi:
-                  type: "integer"
                 obj_pau:
                   type: "string"
+                id_ubi:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1213,7 +1262,7 @@ paths:
       operationId: "post_ubis_trasladar_ubis"
       summary: "Trasladar Ubis"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Traslada centros y casas seleccionados a otra delegación destino.
         
         Operacion: `mutacion`.
         
@@ -1226,6 +1275,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "dl_dst"
+                - "sel"
               properties:
                 dl_dst:
                   type: "string"
@@ -1249,9 +1301,9 @@ paths:
       operationId: "post_ubis_ubis_buscar_data"
       summary: "Ubis Buscar Data"
       description: |
-        Opciones de formulario para frontend/ubis/controller/ubis_buscar.php
+        Devuelve opciones de desplegables para el formulario de búsqueda de ubis.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/ubis_buscar_data.md`
       tags:
@@ -1284,9 +1336,9 @@ paths:
       operationId: "post_ubis_ubis_editar_data"
       summary: "Ubis Editar Data"
       description: |
-        Opciones de desplegables para frontend/ubis/controller/ubis_editar.php
+        Devuelve desplegables dependientes para el formulario de edición de ubi.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/ubis_editar_data.md`
       tags:
@@ -1297,14 +1349,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "obj_pau"
               properties:
-                dl:
-                  type: "string"
                 obj_pau:
                   type: "string"
-                region:
-                  type: "string"
                 tipo_ubi:
+                  type: "string"
+                dl:
+                  type: "string"
+                region:
                   type: "string"
       responses:
         "200":
@@ -1324,9 +1378,9 @@ paths:
       operationId: "post_ubis_ubis_editar_load_data"
       summary: "Ubis Editar Load Data"
       description: |
-        Carga ficha ubis (centro/casa) para `frontend/ubis/controller/ubis_editar.php` sin repositorios en el frontend.
+        Carga la ficha completa de un ubi para edición o alta, normalizando obj_pau de delegación.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/ubis_editar_load_data.md`
       tags:
@@ -1338,19 +1392,19 @@ paths:
             schema:
               type: object
               properties:
-                dl:
-                  type: "string"
                 id_ubi:
                   type: "integer"
-                nombre_ubi:
+                obj_pau:
                   type: "string"
                 nuevo:
                   type: "string"
-                obj_pau:
+                tipo_ubi:
+                  type: "string"
+                dl:
                   type: "string"
                 region:
                   type: "string"
-                tipo_ubi:
+                nombre_ubi:
                   type: "string"
       responses:
         "200":
@@ -1370,9 +1424,9 @@ paths:
       operationId: "post_ubis_ubis_editar_normalize_dl_data"
       summary: "Ubis Editar Normalize Dl Data"
       description: |
-        Ajusta `obj_pau` a CentroDl/CasaDl cuando la ficha es de la delegación actual.
+        Ajusta obj_pau a CentroDl/CasaDl cuando la ficha pertenece a la delegación del usuario.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/ubis_editar_normalize_dl_data.md`
       tags:
@@ -1383,14 +1437,18 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
+                - "tipo_ubi"
+                - "obj_pau"
               properties:
                 id_ubi:
                   type: "integer"
+                tipo_ubi:
+                  type: "string"
                 nombre_ubi:
                   type: "string"
                 obj_pau:
-                  type: "string"
-                tipo_ubi:
                   type: "string"
       responses:
         "200":
@@ -1410,7 +1468,7 @@ paths:
       operationId: "post_ubis_ubis_eliminar"
       summary: "Ubis Eliminar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina un ubi (centro o casa) del repositorio correspondiente a obj_pau.
         
         Operacion: `mutacion`.
         
@@ -1423,11 +1481,14 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "obj_pau"
+                - "id_ubi"
               properties:
-                id_ubi:
-                  type: "integer"
                 obj_pau:
                   type: "string"
+                id_ubi:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1446,7 +1507,7 @@ paths:
       operationId: "post_ubis_ubis_guardar"
       summary: "Ubis Guardar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Crea o actualiza un ubi (casa o centro) según obj_pau y campos del formulario.
         
         Operacion: `mutacion`.
         
@@ -1459,52 +1520,54 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "obj_pau"
               properties:
-                active:
+                obj_pau:
                   type: "string"
-                cdc:
+                id_ubi:
+                  type: "integer"
+                tipo_ubi:
+                  type: "string"
+                nombre_ubi:
                   type: "string"
                 dl:
                   type: "string"
+                region:
+                  type: "string"
+                active:
+                  type: "string"
+                sv:
+                  type: "string"
+                sf:
+                  type: "string"
+                tipo_casa:
+                  type: "string"
+                plazas:
+                  type: "integer"
+                plazas_min:
+                  type: "integer"
+                num_sacd:
+                  type: "integer"
+                tipo_ctr:
+                  type: "string"
+                cdc:
+                  type: "string"
                 id_ctr_padre:
                   type: "integer"
-                id_ubi:
-                  type: "integer"
+                tipo_labor:
+                  type: "string"
                 n_buzon:
                   type: "integer"
-                nombre_ubi:
-                  type: "string"
+                num_pi:
+                  type: "integer"
                 num_cartas:
                   type: "integer"
                 num_cartas_mensuales:
                   type: "integer"
                 num_habit_indiv:
                   type: "integer"
-                num_pi:
-                  type: "integer"
-                num_sacd:
-                  type: "integer"
-                obj_pau:
-                  type: "string"
                 observ:
-                  type: "string"
-                plazas:
-                  type: "integer"
-                plazas_min:
-                  type: "integer"
-                region:
-                  type: "string"
-                sf:
-                  type: "string"
-                sv:
-                  type: "string"
-                tipo_casa:
-                  type: "string"
-                tipo_ctr:
-                  type: "string"
-                tipo_labor:
-                  type: "string"
-                tipo_ubi:
                   type: "string"
       responses:
         "200":
@@ -1524,7 +1587,7 @@ paths:
       operationId: "post_ubis_ubis_lista_data"
       summary: "Ubis Lista Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Busca casas y centros activos por nombre para el autocompletado de lista.
         
         Operacion: `lista_data`.
         
@@ -1538,8 +1601,6 @@ paths:
             schema:
               type: object
               properties:
-                error:
-                  type: "string"
                 nombre_ubi:
                   type: "string"
       responses:
@@ -1560,9 +1621,9 @@ paths:
       operationId: "post_ubis_ubis_tabla_data"
       summary: "Ubis Tabla Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla navegable.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/ubis_tabla_data.md`
       tags:
@@ -1574,7 +1635,45 @@ paths:
             schema:
               type: object
               properties:
-                error:
+                loc:
+                  type: "string"
+                tipo:
+                  type: "string"
+                simple:
+                  type: "integer"
+                sWhere:
+                  type: "string"
+                sOperador:
+                  type: "string"
+                sWhereD:
+                  type: "string"
+                sOperadorD:
+                  type: "string"
+                metodo:
+                  type: "string"
+                titulo:
+                  type: "string"
+                cmb:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                id_sel:
+                  type: "string"
+                scroll_id:
+                  type: "string"
+                nombre_ubi:
+                  type: "string"
+                region:
+                  type: "string"
+                dl:
+                  type: "string"
+                tipo_ctr:
+                  type: "string"
+                tipo_casa:
+                  type: "string"
+                ciudad:
+                  type: "string"
+                pais:
                   type: "string"
       responses:
         "200":

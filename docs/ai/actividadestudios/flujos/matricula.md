@@ -32,17 +32,18 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Crear
 
-1. Revisar manualmente los pasos de esta accion.
+1. En dossier 1303 o 3103, pulsar **nuevo** para abrir el formulario de matrícula.
+2. Elegir nivel, asignatura y opciones de preceptor.
+3. Pulsar **guardar**; el sistema crea la matrícula y actualiza dossiers 1303/3103.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadestudios/matricula_nueva`
 
 ## Eliminar
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. En un listado de matrículas, seleccionar una o varias filas.
+2. Pulsar **borrar matrícula** y confirmar.
+3. El sistema elimina las matrículas y refresca el listado.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/matricula_eliminar`
@@ -55,7 +56,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Matricula. Crea una matricula. Elimina una o varias matriculas.
+El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o elimina una o varias matrículas seleccionadas desde listados o formularios de dossier.
 
 ## Errores Documentados
 

@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.docs_con_observaciones"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "inventario"
-nombre: "Docs Con Observaciones"
+nombre: "Documentos con observaciones"
 controller: "frontend/inventario/controller/docs_con_observaciones.php"
 vistas: ["frontend/inventario/view/docs_con_observaciones.phtml"]
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_docs_con_observaciones"]
 capacidades: ["inventario.lista_docs_con_observaciones.gestionar"]
 campos: []
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Docs Con Observaciones
+# Documentos con observaciones
 
-Descripcion funcional pendiente de revisar.
+Listado con observaciones.
+
 
 ## Tipo
 
@@ -49,11 +50,9 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Listado con observaciones.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** scdl > Inventario > inventarios > lista docs con observ.
+- **Pills2:** —

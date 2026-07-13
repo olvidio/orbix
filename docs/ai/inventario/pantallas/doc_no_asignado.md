@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Doc No Asignado"
+titulo: "Centros sin documento"
 pantalla: "inventario.pantalla.doc_no_asignado"
-preguntas: ["Que se puede hacer en Doc No Asignado?", "Que campos tiene Doc No Asignado?", "Que acciones hay en Doc No Asignado?"]
+preguntas: ["Que se puede hacer en Centros sin documento?", "Que campos tiene Centros sin documento?", "Que acciones hay en Centros sin documento?"]
 capacidades: ["inventario.lista_docs_no_asignados_por_tipo.gestionar"]
 endpoints: ["/src/inventario/lista_docs_no_asignados_por_tipo"]
 source: "docs/catalogo/inventario/pantallas/doc_no_asignado.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Doc No Asignado
+# Ayuda IA Pantalla - Centros sin documento
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Centros pendientes de recibir el tipo doc.
 
 ## Uso En Ayuda
 

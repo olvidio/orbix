@@ -15,14 +15,20 @@ requiere_hashb: false
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa.php", "frontend/actividadtarifas/controller/tarifa_lista.php"]
 casos_uso: ["src\\actividadtarifas\\application\\TipoTarifaListaData"]
 tags: ["actividadtarifas", "tipo", "tarifa", "lista", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tipo Tarifa Lista Data
 
-Endpoint backend: listado del catalogo de tipos de tarifa.
+Listado del catálogo maestro de `TipoTarifa`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve todas las tarifas ordenadas por `sfsv, letra` con columnas id, sección, letra, modo,
+observaciones y enlace modificar (solo si `mi_sfsv` coincide y permiso `adl`). Flags
+`puede_editar` (`adl`) y `puede_anadir` (`adl`|`pr`|`calendario`).
 
 ## Endpoint
 
@@ -33,17 +39,20 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Sin parámetros POST; el caso de uso no lee entrada.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Payload en `data` (schema `actividadtarifas_TipoTarifaListaDataData`):
-  - `a_cabeceras` (`array`)
-  - `a_valores` (`array`)
-  - `puede_editar` (`boolean`)
-  - `puede_anadir` (`boolean`)
+- Helper: `ContestarJson::enviar` → doble `JSON.parse` en cliente.
+- Payload:
+  - `a_cabeceras`, `a_valores` (columna 6 puede ser `{script: fnjs_modificar(id), valor}`)
+  - `puede_editar`, `puede_anadir`
+
+## Permisos
+
+- `puede_editar`: `have_perm_oficina('adl')`.
+- Enlace modificar por fila: además `mi_sfsv === sfsv` de la tarifa.
+- `puede_anadir`: `have_perm_oficina('adl'|'pr'|'calendario')`.
 
 ## Casos De Uso
 
@@ -51,11 +60,4 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/actividadtarifas/controller/tarifa.php`
-- `frontend/actividadtarifas/controller/tarifa_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/actividadtarifas/controller/tarifa_lista.php`: renderiza tabla HTML al cargar `tarifa.phtml`.

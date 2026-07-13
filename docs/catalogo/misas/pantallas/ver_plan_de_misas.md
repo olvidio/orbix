@@ -1,7 +1,7 @@
 ---
 id: "misas.pantalla.ver_plan_de_misas"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "misas"
 nombre: "Ver Plan De Misas"
 controller: "frontend/misas/controller/ver_plan_de_misas.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/misas/plan_de_misas_pantalla_data"]
 capacidades: ["misas.plan_de_misas_pantalla.gestionar"]
 campos: ["form.empiezamax", "form.empiezamin", "form.id_zona", "form.orden", "form.periodo", "form.tipo_plantilla"]
 acciones: ["fnjs_ver_cuadricula_zona"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Ver Plan De Misas
+# Ver plan de misas
 
-Descripcion funcional pendiente de revisar.
+Consulta del plan de misas de una zona en modo solo lectura (cuadrícula sin edición de celdas).
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal`
+
+
 - Controller: `frontend/misas/controller/ver_plan_de_misas.php`
 
 ## Vistas Relacionadas
@@ -53,13 +55,7 @@ Descripcion funcional pendiente de revisar.
 
 - `fnjs_ver_cuadricula_zona`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** dre > Misas > Ver plan zona
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Ver plan zona

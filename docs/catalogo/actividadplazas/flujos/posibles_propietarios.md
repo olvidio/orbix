@@ -8,42 +8,53 @@ pantallas_principales: []
 fragmentos: []
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadplazas/posibles_propietarios_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Posibles Propietarios
 
-Propuesta generada automaticamente desde la capacidad `actividadplazas.posibles_propietarios.gestionar` y sus pantallas relacionadas.
+Carga por AJAX el desplegable de posibles propietarios de plaza para una persona y actividad concretas.
 
 ## Objetivo De Usuario
 
-Gestiona PosiblesPropietarios. Devuelve el payload JSON estandar de desplegable (id, opciones, selected, blanco, val_blanco) con los posibles propietarios de plaza para la persona+actividad indicadas.
+Al editar la asistencia de una persona en una actividad (o viceversa), elegir qué delegación es
+propietaria de la plaza entre las opciones válidas para esa combinación persona+actividad.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+No tiene pantalla propia. Se invoca desde formularios del módulo **asistentes**:
+
+- `FormActividadesDeUnaPersonaRender` (actividades de una persona).
+- `FormAsistentesAUnaActividadRender` (asistentes de una actividad).
+
+La URL llega en el payload del formulario (`paths.posibles_propietarios_data`) y el frontend monta el
+`<select>` con `fnjs_construir_desplegable`.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+No se han detectado fragmentos AJAX relacionados en actividadplazas.
 
 ## Escenarios Inferidos
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el formulario de asistencia (persona↔actividad) desde el módulo asistentes.
+2. Al cargar o cambiar persona/actividad, el frontend solicita `posibles_propietarios_data` con
+   `id_nom` e `id_activ`.
+3. El sistema devuelve el payload estándar de desplegable (`id`, `opciones`, `selected`, `blanco`,
+   `val_blanco`) con las dl propietarias posibles, preseleccionando `mi_delef()>[dl_de_paso]`.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadplazas/posibles_propietarios_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- Ninguno detectado.
+- `post.id_activ`
+- `post.id_nom`
 
 Acciones JavaScript:
-- Ninguna detectada.
+- Ninguna detectada (consumo AJAX desde helpers de asistentes).
 
 ## Endpoints Del Flujo
 
@@ -51,11 +62,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `faltan parametros id_nom / id_activ`
+- `No se encuentra persona con id_nom <id>`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- Sin entrada de menú en el índice: se usa desde formularios de **asistentes**, no desde un menú de plazas.

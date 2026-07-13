@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Guardia de sesion del sistema web.
+Pantalla login web (HTML, no JSON).
 
 ## Uso En Ayuda
 

@@ -31,10 +31,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el formulario de asistencia (persona↔actividad) desde el módulo asistentes.
+2. Al cargar o cambiar persona/actividad, el frontend solicita `posibles_propietarios_data` con
+3. El sistema devuelve el payload estándar de desplegable (`id`, `opciones`, `selected`, `blanco`,
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadplazas/posibles_propietarios_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,10 +44,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona PosiblesPropietarios. Devuelve el payload JSON estandar de desplegable (id, opciones, selected, blanco, val_blanco) con los posibles propietarios de plaza para la persona+actividad indicadas.
+Al editar la asistencia de una persona en una actividad (o viceversa), elegir qué delegación es propietaria de la plaza entre las opciones válidas para esa combinación persona+actividad.
+
+## Errores Documentados
+
+- `faltan parametros id_nom / id_activ`
+- `No se encuentra persona con id_nom <id>`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

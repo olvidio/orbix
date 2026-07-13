@@ -1,82 +1,54 @@
 ---
 id: "shared.pantalla.tablaDB_lista_ver"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla_principal"
 modulo: "shared"
-nombre: "TablaDB Lista Ver"
+nombre: "Mantenimiento genérico de tablas (listado)"
 controller: "frontend/shared/controller/tablaDB_lista_ver.php"
 vistas: ["frontend/shared/view/tablaDB_busqueda.phtml", "frontend/shared/view/tablaDB_lista_ver.phtml"]
-fragmentos_frontend: ["frontend/shared/controller/tablaDB_lista_ver.php"]
-endpoints: ["/src/shared/infrastructure/ui/http/controllers/tablaDB_buscar_datos", "/src/shared/tablaDB_buscar_datos", "/src/shared/tablaDB_lista_datos"]
+fragmentos_frontend: []
+endpoints: ["/src/shared/tablaDB_buscar_datos", "/src/shared/tablaDB_lista_datos"]
 capacidades: ["shared.tablaDB_buscar.gestionar", "shared.tablaDB_lista.gestionar"]
-campos: ["form.sel", "html.btn_new", "html.btn_ok", "html.k_buscar", "html.mod", "post.aSerieBuscar", "post.clase_info", "post.id_pau", "post.id_sel", "post.k_buscar", "post.mod", "post.obj_pau", "post.pau", "post.permiso", "post.refresh", "post.scroll_id", "post.sel", "post.stack"]
+campos: ["form.sel", "html.btn_new", "html.k_buscar", "html.mod", "post.aSerieBuscar", "post.clase_info", "post.id_pau", "post.id_sel", "post.k_buscar", "post.mod", "post.obj_pau", "post.pau", "post.permiso", "post.refresh", "post.scroll_id", "post.sel"]
 acciones: ["fnjs_enviar", "fnjs_enviar_formulario", "fnjs_nuevo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# TablaDB Lista Ver
+# Mantenimiento genérico de tablas (listado)
 
-******************************************************************* ******** mostrar formulario de búsqueda ********************************************************************
+Shell transversal de listado CRUD: formulario de búsqueda (si aplica) + tabla editable con selección,
+botón «nuevo» (solo `permiso === 3`) y acciones de fila definidas por cada `Info*`.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `pantalla_principal` (destino de muchas entradas de menú con distinto `clase_info`)
 - Controller: `frontend/shared/controller/tablaDB_lista_ver.php`
 
-## Vistas Relacionadas
+## Flujo en pantalla
 
-- `frontend/shared/view/tablaDB_busqueda.phtml`
-- `frontend/shared/view/tablaDB_lista_ver.phtml`
+1. Sin `k_buscar`/`aSerieBuscar` → carga `tablaDB_buscar_datos` y muestra `tablaDB_busqueda.phtml`
+   (o vista custom del `Info*`).
+2. Tras buscar → `tablaDB_lista_datos` y `tablaDB_lista_ver.phtml` con `Lista`.
+3. «Nuevo» / editar fila → navega a `tablaDB_formulario_ver.php` con `mod` y `sel`.
 
-## Fragmentos Frontend Relacionados
-
-- `frontend/shared/controller/tablaDB_lista_ver.php`
+Parámetro clave: `clase_info` (clase `Info*` del dominio, URL-encoded).
 
 ## Endpoints Usados
 
-- `/src/shared/infrastructure/ui/http/controllers/tablaDB_buscar_datos`
 - `/src/shared/tablaDB_buscar_datos`
 - `/src/shared/tablaDB_lista_datos`
 
-## Capacidades Relacionadas
-
-- `shared.tablaDB_buscar.gestionar`
-- `shared.tablaDB_lista.gestionar`
-
-## Campos Detectados
-
-- `form.sel`
-- `html.btn_new`
-- `html.btn_ok`
-- `html.k_buscar`
-- `html.mod`
-- `post.aSerieBuscar`
-- `post.clase_info`
-- `post.id_pau`
-- `post.id_sel`
-- `post.k_buscar`
-- `post.mod`
-- `post.obj_pau`
-- `post.pau`
-- `post.permiso`
-- `post.refresh`
-- `post.scroll_id`
-- `post.sel`
-- `post.stack`
-
-## Acciones Detectadas
-
-- `fnjs_enviar`
-- `fnjs_enviar_formulario`
-- `fnjs_nuevo`
-
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Pantalla revisada contra `frontend/shared/`. El título y columnas dependen del `Info*` enlazado desde
+el menú (asignaturas, ubis, inventario, procesos, etc.).
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Sin entrada única: cada mantenimiento de tabla apunta a esta URL con distinto `clase_info`. Índice en
+`docs/guias/_referencia_menus.md` (filas `tablaDB_lista_ver.php`). Ejemplos:
+
+- **Legacy:** `global > estudios > asignaturas` · `sistema > Configuración > aplicaciones` · `scdl > Inventario > colecciones`
+- **Pills2:** `ADMIN GLOBAL > estudios > asignaturas` · `ADMIN GLOBAL > Configuración > aplicaciones` · (inventario scdl sin Pills2 en índice)
+
+Ver ~25 variantes documentadas en la referencia de menús.

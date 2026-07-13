@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Variante PDF del acta (segunda plantilla).
 
 ## Uso En Ayuda
 

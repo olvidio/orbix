@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Vista del plan de estudios de un curso anual (CA): profesores, preceptores y alumnos con las asignaturas matriculadas y créditos.
 
 ## Uso En Ayuda
 

@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadoEmitidoPdfUpload. Subida AJAX del PDF (bootstrap-fileinput / FormData multipart).
+Subir fichero PDF al API de certificados emitidos.
 
 ## Limites De La Respuesta
 

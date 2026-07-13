@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["notas.pantalla.form_notas_de_una_persona"]
 acciones: ["ejecutar"]
 endpoints: ["/src/notas/persona_nota_editar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Persona Nota Editar
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `notas.persona_nota_editar
 
 ## Objetivo De Usuario
 
-Gestiona PersonaNotaEditar. Edita una PersonaNota existente.
+Edición de nota existente.
 
 ## Punto De Entrada
 
@@ -82,10 +82,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

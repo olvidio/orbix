@@ -31,7 +31,9 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Ejecutar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la pantalla de entrada del flujo.
+2. Completar parámetros (región, dl, flags).
+3. Ejecutar y revisar avisos en pantalla.
 
 Referencias tecnicas para verificar la respuesta:
 - Ninguna referencia API inferida.
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AbsorberEsquema. JSON { "lines": string[] } para la absorción de esquema (POST esquema_matriz, esquema_del).
+Unir un esquema DL disuelto en otro esquema matriz.
 
 ## Limites De La Respuesta
 

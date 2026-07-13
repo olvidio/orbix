@@ -53,7 +53,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona Asistente. Crea, edita o mueve un Asistente. Elimina un Asistente y sus matriculas.
+Alta, edición, eliminación y movimiento de asistencia a actividades.
 
 ## Errores Documentados
 

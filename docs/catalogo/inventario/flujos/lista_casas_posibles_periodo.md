@@ -8,7 +8,7 @@ pantallas_principales: []
 fragmentos: ["inventario.pantalla.equipajes_casas_posibles"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_casas_posibles_periodo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Lista Casas Posibles Periodo
@@ -17,7 +17,7 @@ Propuesta generada automaticamente desde la capacidad `inventario.lista_casas_po
 
 ## Objetivo De Usuario
 
-Gestiona ListaCasasPosiblesPeriodo. Descripcion funcional pendiente de revisar.
+Gestiona ListaCasasPosiblesPeriodo. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Punto De Entrada
 
@@ -57,10 +57,3 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.

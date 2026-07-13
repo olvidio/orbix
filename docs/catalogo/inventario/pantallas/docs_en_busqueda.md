@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.docs_en_busqueda"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "inventario"
-nombre: "Docs En Busqueda"
+nombre: "Documentos pendientes"
 controller: "frontend/inventario/controller/docs_en_busqueda.php"
 vistas: ["frontend/inventario/view/docs_en_busqueda.phtml"]
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/lista_docs_en_busqueda"]
 capacidades: ["inventario.lista_docs_en_busqueda.gestionar"]
 campos: []
 acciones: ["fnjs_left_side_hide"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Docs En Busqueda
+# Documentos pendientes
 
-Descripcion funcional pendiente de revisar.
+Listado docs en búsqueda.
+
 
 ## Tipo
 
@@ -49,11 +50,9 @@ No se han detectado campos de formulario.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Listado docs en búsqueda.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** scdl > Inventario > inventarios > lista docs pendientes
+- **Pills2:** —

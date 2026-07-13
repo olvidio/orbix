@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona AsigFaltanSelectTabla. Tabla de asig_faltan_select (asignaturas pendientes por persona).
+Listar alumnos con hasta N asignaturas pendientes.
 
 ## Limites De La Respuesta
 

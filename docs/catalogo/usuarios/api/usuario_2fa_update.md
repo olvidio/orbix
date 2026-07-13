@@ -6,21 +6,26 @@ url: "/src/usuarios/usuario_2fa_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php"
-entrada: ["post.enable_2fa:boolean", "post.id_usuario:integer", "post.secret_2fa:string", "post.verification_code:string"]
-entrada_obligatoria: []
+entrada: ["post.id_usuario:integer", "post.secret_2fa:string", "post.enable_2fa:boolean", "post.verification_code:string"]
+entrada_obligatoria: ["id_usuario"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/usuario_form_2fa.php", "frontend/usuarios/controller/usuario_reset_2fa.php"]
 casos_uso: []
 tags: ["usuarios", "usuario", "2fa", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: ["Usuario no encontrado", "Se requiere un código de verificación para activar 2FA", "Código de verificación inválido", "Hay un error, no se ha guardado"]
 ---
 
 # Usuario 2fa Update
 
-Descripcion funcional pendiente de revisar.
+Activa/desactiva 2FA verificando TOTP al activar.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Activa/desactiva 2FA verificando TOTP al activar.
 
 ## Endpoint
 
@@ -33,28 +38,32 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `enable_2fa` | `boolean` | controller | No | controller |
-| `id_usuario` | `integer` | controller | No | controller |
-| `secret_2fa` | `string` | controller | No | controller |
-| `verification_code` | `string` | controller | No | controller |
+| `id_usuario` | `integer` | application | Si | |
+| `secret_2fa` | `string` | application | No | |
+| `enable_2fa` | `boolean` | application | No | |
+| `verification_code` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` / `ContestarJson::send` (según endpoint).
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `success`: true
+
+## Errores conocidos
+- `Usuario no encontrado`
+- `Se requiere un código de verificación para activar 2FA`
+- `Código de verificación inválido`
+- `Hay un error, no se ha guardado`
+
+## Permisos
+
+Usuario autenticado en formulario 2FA.
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- _(lógica inline en controller)_
 
 ## Frontend Relacionado
 
-- `frontend/usuarios/controller/usuario_form_2fa.php`
-- `frontend/usuarios/controller/usuario_reset_2fa.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/usuarios/controller/usuario_form_2fa.php", "frontend/usuarios/controller/usuario_reset_2fa.php"]`).

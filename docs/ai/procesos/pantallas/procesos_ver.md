@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario modal de alta o edición de una tarea dentro de un tipo de proceso: fase, tarea, status, oficina responsable y dependencias de fases/tareas previas con mensaje de requisito.
 
 ## Uso En Ayuda
 

@@ -31,10 +31,13 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Desde una actividad, abrir la opción de plazas/resumen.
+2. El sistema carga `resumen_plazas_data` con el desglose por delegación y totales.
+3. Muestra avisos si la actividad no está publicada o si solo se ven las ocupadas por la propia dl
+4. Pinta la tabla (calendario, cedidas, conseguidas, disponibles, ocupadas, libres) y el desplegable
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadplazas/resumen_plazas_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ResumenPlazas. Datos del resumen de plazas por actividad (calendario/cedidas/conseguidas/disponibles/ocupadas por dl) + opciones del desplegable para "ceder" y flags publicado/otra_dl.
+Ver el estado completo de plazas de una actividad (por dl y totales), comprobar avisos de publicación o visibilidad, y acceder al formulario para ceder plazas a otra delegación.
 
 ## Limites De La Respuesta
 

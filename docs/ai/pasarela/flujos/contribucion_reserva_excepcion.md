@@ -2,25 +2,23 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "pasarela"
-titulo: "Contribucion Reserva Excepcion"
+titulo: "Excepción contribución reserva"
 flujo: "pasarela.contribucion_reserva_excepcion.gestionar.flujo"
-preguntas: ["Como eliminar en Contribucion Reserva Excepcion?", "Como guardar en Contribucion Reserva Excepcion?"]
+preguntas: []
 pantallas_principales: []
-fragmentos: ["pasarela.pantalla.contribucion_reserva_ajax", "pasarela.pantalla.contribucion_reserva_lista"]
-endpoints: ["/src/pasarela/contribucion_reserva_excepcion_eliminar", "/src/pasarela/contribucion_reserva_excepcion_guardar"]
+fragmentos: [""]
+endpoints: [""]
 source: "docs/catalogo/pasarela/flujos/contribucion_reserva_excepcion.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Contribucion Reserva Excepcion
+# Ayuda IA - Excepción contribución reserva
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Contribucion Reserva Excepcion`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Excepción contribución reserva`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como eliminar en Contribucion Reserva Excepcion?
-- Como guardar en Contribucion Reserva Excepcion?
 
 ## Donde Entrar
 
@@ -30,37 +28,19 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/pasarela/contribucion_reserva_excepcion_eliminar`
-
-## Guardar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
-- `pasarela.pantalla.contribucion_reserva_ajax`
-- `pasarela.pantalla.contribucion_reserva_lista`
+- ``
 
 ## Objetivo
 
-Gestiona ContribucionReservaExcepcion. Elimina una excepción del parámetro contribucion_reserva para un id_tipo_activ concreto. Inserta o actualiza una excepción del parámetro contribucion_reserva para un id_tipo_activ concreto.
+Porcentaje de reserva distinto por tipo.
 
 ## Errores Documentados
 
-- `Debe ser un numero entero del 1 al 100`
 - `Falta id_tipo_activ`
 - `Falta valor de contribución`
+- `Debe ser un numero entero del 1 al 100`
 
 ## Limites De La Respuesta
 

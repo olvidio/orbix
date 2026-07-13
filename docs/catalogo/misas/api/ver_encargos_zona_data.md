@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/ver_encargos_zona_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "lista_data"
 controller: "src/misas/infrastructure/ui/http/controllers/ver_encargos_zona_data.php"
 entrada: ["post.id_zona:integer", "post.orden:string"]
 entrada_obligatoria: []
@@ -13,34 +13,56 @@ requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/ver_encargos_zona.php"]
 casos_uso: ["src\\misas\\application\\VerEncargosZonaData"]
 tags: ["misas", "ver", "encargos", "zona", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
-# Ver Encargos Zona Data
+# Ver encargos zona Data
 
-Devuelve los datos necesarios para pintar el SlickGrid de encargos de una zona + los desplegables del modal de edicion. Replica la consulta de `apps/misas/controller/ver_encargos_zona.php`: encargos con `id_tipo_enc >= 8100` (grupo `8...`) de la zona indicada, ordenados por `$orden` (`orden`, `prioridad` o `desc_enc`).
+Devuelve encargos 8100+ de una zona ordenados para SlickGrid y datos del modal de edición.
+
+Linaje: Slice 4 — migrado desde apps/misas/controller/ver_encargos_zona.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Devuelve encargos 8100+ de una zona ordenados para SlickGrid y datos del modal de edición.
 
 ## Endpoint
 
 - URL: `/src/misas/ver_encargos_zona_data`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `lista_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_encargos_zona_data.php`
 
 ## Entrada
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_zona` | `integer` | controller | No | controller |
-| `orden` | `string` | controller | No | controller |
+| `id_zona` | `integer` | application | No | |
+| `orden` | `string` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse`):
+  - `id_zona`: integer
+  - `orden`: string
+  - `columns`: array
+  - `rows`: array
+  - `tipos_encargo`: array
+  - `centros`: array
+  - `idiomas`: array
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeResolver` (rol p-sacd/jefe calendario), rol ctr/sv/sf en planes y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -48,10 +70,4 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- `frontend/misas/controller/ver_encargos_zona.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`["frontend/misas/controller/ver_encargos_zona.php"]`).

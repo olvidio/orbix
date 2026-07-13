@@ -10,13 +10,16 @@ entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["No encuentro el profesor."]
 frontend_referencias: ["frontend/notas/controller/acta_ver.php"]
 casos_uso: ["src\\notas\\application\\ActaVerFormData"]
 tags: ["notas", "acta", "ver", "form", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Acta Ver Form Data
+
+Estado del formulario de cabecera de acta (`acta_ver`).
 
 Estado del formulario `acta_ver` (sin HashFront ni vistas).
 
@@ -40,16 +43,22 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 
+## Objetivo funcional
+
+Ramas: ver acta existente, alta (`notas=nuevo`/`mod=nueva`), edición con datos POST. Devuelve cabecera, tribunal, URLs de mutación, `permiso`, `has_pdf`, `warn_no_id_activ`.
+
+## Permisos
+
+- `scope_permiso` (default 3); forzado 0 en `rstgr`.
+
+## Errores conocidos
+
+- `No encuentro el profesor.`
+
 ## Casos De Uso
 
 - `src\notas\application\ActaVerFormData`
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/acta_ver.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/notas/controller/acta_ver.php`; también embebido desde `actividadestudios` (`acta_notas`).

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Formulario modal para editar descripción, larga y VIP de una cama.
 
 ## Uso En Ayuda
 

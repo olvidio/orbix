@@ -7,20 +7,27 @@ metodos: ["GET", "POST"]
 operacion: "form_data"
 controller: "src/casas/infrastructure/ui/http/controllers/casa_ingreso_form_data.php"
 entrada: ["post.id_activ:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_activ"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["Falta id_activ", "Actividad no encontrada"]
 frontend_referencias: ["frontend/casas/controller/casa_ingreso_form.php"]
 casos_uso: ["src\\casas\\application\\CasaIngresoFormData"]
 tags: ["casas", "casa", "ingreso", "form", "data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Casa Ingreso Form Data
 
-Endpoint backend: datos para el formulario de ingreso de una actividad (`casa_ingreso_form`).
+Datos del formulario modal de ingreso económico de una actividad.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Carga la actividad, resuelve permiso `id_tarifa` vía `PermisosActividades`, y devuelve tarifa/precio
+actuales más los valores de `Ingreso` (ingresos, asistentes, observaciones). Si no hay `id_activ` o la
+actividad no existe, devuelve `ok: false` con `error`.
 
 ## Endpoint
 
@@ -33,14 +40,25 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `integer` | controller+application | No | controller+application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `id_activ` | `integer` | controller+application | Sí | Actividad a editar |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
+- Helper: `ContestarJson::enviar('', $payload)` (doble `JSON.parse`).
+- Éxito (`ok: true`):
+  - `id_activ`, `nom_activ`, `id_tarifa`, `letra_tarifa`, `puede_modificar_tarifa`, `a_opciones_tarifa`,
+    `precio`, `ingresos`, `num_asistentes`, `observ`.
+- Error (`ok: false`): `error` con mensaje traducido.
+
+## Errores conocidos
+
+- `Falta id_activ`
+- `Actividad no encontrada`
+
+## Permisos
+
+- `puede_modificar_tarifa`: `PermisosActividades` faceta `id_tarifa`, acción `modificar` (requiere
+  `$_SESSION['oPermActividades']`).
 
 ## Casos De Uso
 
@@ -48,10 +66,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/casas/controller/casa_ingreso_form.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/casas/controller/casa_ingreso_form.php`: modal abierto desde `fnjs_modificar` del listado
+  económico (`casa_ingresos_lista`).

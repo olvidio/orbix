@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "pasarela"
-titulo: "Nombre Lista"
+titulo: "Nombres de actividades particulares"
 pantalla: "pasarela.pantalla.nombre_lista"
-preguntas: ["Que se puede hacer en Nombre Lista?", "Que campos tiene Nombre Lista?", "Que acciones hay en Nombre Lista?"]
-capacidades: ["pasarela.nombre_excepcion.gestionar"]
-endpoints: ["/src/", "/src/pasarela/nombre_excepcion_guardar"]
+preguntas: ["Que se puede hacer en Nombres de actividades particulares?", "Que campos tiene Nombres de actividades particulares?", "Que acciones hay en Nombres de actividades particulares?"]
+capacidades: [""]
+endpoints: [""]
 source: "docs/catalogo/pasarela/pantallas/nombre_lista.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Nombre Lista
+# Ayuda IA Pantalla - Nombres de actividades particulares
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Nombres exportados distintos al tipo genérico, solo por excepción (sin valor default).
 
 ## Uso En Ayuda
 
@@ -23,10 +23,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Campos Detectados
 
-- `form.id_tipo_activ`
-- `form.nombre_actividad`
-- `form.que`
-- `form.valor`
+- No hay campos detectados.
 
 ## Acciones Detectadas
 
@@ -34,12 +31,11 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Capacidades Relacionadas
 
-- `pasarela.nombre_excepcion.gestionar`
+- ``
 
 ## Endpoints Relacionados
 
-- `/src/`
-- `/src/pasarela/nombre_excepcion_guardar`
+- ``
 
 ## Precauciones
 

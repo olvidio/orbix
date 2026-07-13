@@ -11,7 +11,7 @@ endpoints: ["/src/casas/casa_ingreso_form_data"]
 capacidades: ["casas.casa_ingreso.gestionar"]
 campos: ["get.id_activ", "html.id_activ", "html.ingresos", "html.num_asistentes", "html.observ", "html.precio", "post.id_activ"]
 acciones: ["fnjs_cerrar", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Casa Ingreso Form
@@ -57,10 +57,8 @@ No se han detectado controladores frontend relacionados.
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+## Ruta de menú
 
-## Revision Manual
+- **Legacy:** exterior > casas > Gestión económica
+- **Pills2:** CASAS Y CTR > Gestión casas > Gestión económica
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

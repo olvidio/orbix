@@ -8,20 +8,18 @@ pantallas_principales: ["procesos.pantalla.tipo_activ_proceso"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/tipo_activ_proceso_asignar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Tipo Activ Proceso Asignar
-
-Propuesta generada automaticamente desde la capacidad `procesos.tipo_activ_proceso_asignar.gestionar` y sus pantallas relacionadas.
+# Flujo - Asignar proceso a tipo de actividad
 
 ## Objetivo De Usuario
 
-Gestiona TipoActivProcesoAsignar. Caso de uso: asigna un id_tipo_proceso al tipo de actividad indicado, distinguiendo entre proceso propio (dl) o no-propio segun propio.
+Asignar un tipo de proceso a un tipo de actividad, distinguiendo entre proceso propio (DL) o no propio.
 
 ## Punto De Entrada
 
-- `procesos.pantalla.tipo_activ_proceso`
+Menú Legacy: sistema > procesos activ. > tipo activ - proceso. Pills2: ADMIN LOCAL > procesos activ. > tipo activ - proceso.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -53,9 +51,7 @@ Acciones JavaScript:
 
 - ``hay un error, no se ha guardado el proceso``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > procesos activ. > tipo activ - proceso
+- **Pills2:** ADMIN LOCAL > procesos activ. > tipo activ - proceso

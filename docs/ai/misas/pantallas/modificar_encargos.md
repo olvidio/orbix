@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Entry point para CRUD de encargos de zona (grupo ZONAS_MISAS). Selectores zona/orden y grid AJAX `ver_encargos_zona`.
 
 ## Uso En Ayuda
 

@@ -5,18 +5,18 @@ subtipo: "fragmento_ajax"
 modulo: "actividadtarifas"
 nombre: "Tarifa Tipo Actividad Form"
 controller: "frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php"
-vistas: []
+vistas: ["frontend/actividadtarifas/view/tarifa_tipo_actividad_form.html.twig", "frontend/actividadtarifas/view/tarifa_tipo_actividad_form_nuevo.html.twig"]
 fragmentos_frontend: []
 endpoints: ["/src/actividades/actividad_que_datos", "/src/actividadtarifas/relacion_tarifa_form_data", "/src/actividadtarifas/relacion_tarifa_update"]
 capacidades: ["actividadtarifas.relacion_tarifa.gestionar"]
 campos: ["form.iactividad_val", "form.iasistentes_val", "form.id_item", "form.id_tarifa", "form.id_tipo_activ", "form.inom_tipo_val", "form.isfsv_val", "post.id_item"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Tarifa Tipo Actividad Form
 
-Controlador AJAX HTML: form modificar/nuevo de `RelacionTarifaTipoActividad`.
+Fragmento AJAX: formulario popup modificar/nuevo de `RelacionTarifaTipoActividad` (twig).
 
 ## Tipo
 
@@ -25,7 +25,8 @@ Controlador AJAX HTML: form modificar/nuevo de `RelacionTarifaTipoActividad`.
 
 ## Vistas Relacionadas
 
-No se han detectado vistas PHTML relacionadas.
+- `frontend/actividadtarifas/view/tarifa_tipo_actividad_form.html.twig` (edición)
+- `frontend/actividadtarifas/view/tarifa_tipo_actividad_form_nuevo.html.twig` (alta)
 
 ## Fragmentos Frontend Relacionados
 
@@ -58,11 +59,9 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Alta: bloque de búsqueda de tipo de actividad (`actividad_que_datos`) + desplegable de tarifa.
+Edición: muestra nombre del tipo y desplegable de tarifa. Submit firmado con `HashFront`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+Sin entrada propia; popup de `tarifa_tipo_actividad.php`.

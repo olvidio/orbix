@@ -6,7 +6,7 @@ titulo: "Centros Disponibles"
 flujo: "actividadescentro.centros_disponibles.gestionar.flujo"
 preguntas: ["Como obtener datos en Centros Disponibles?"]
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 endpoints: ["/src/actividadescentro/centros_disponibles_data"]
 source: "docs/catalogo/actividadescentro/flujos/centros_disponibles.md"
 estado_revision: "generado"
@@ -38,11 +38,11 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Objetivo
 
-Gestiona CentrosDisponibles. Devuelve los centros disponibles (candidatos) para asignar como encargado de una actividad, filtrados por tipo (sg / sr / nagd / sssc / sfsg / sfsr / sfnagd).
+Al pulsar **nuevo** en una actividad, el usuario ve la lista de centros candidatos (filtrada por el colectivo `tipo`) para elegir cuál asignar como encargado. Para el tipo `sg` la lista incluye, por centro, el número de actividades en el periodo y la diferencia de días con su actividad más próxima, para ayudar a repartir la carga.
 
 ## Limites De La Respuesta
 

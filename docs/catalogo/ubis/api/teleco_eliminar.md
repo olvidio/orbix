@@ -6,8 +6,8 @@ url: "/src/ubis/teleco_eliminar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/teleco_eliminar.php"
-entrada: ["post.obj_pau:string", "post.sel:mixed"]
-entrada_obligatoria: []
+entrada: ["post.obj_pau:string", "post.sel:string"]
+entrada_obligatoria: ["obj_pau"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "ubis_TelecoEliminarData"
 respuesta_data: ["ok:true"]
@@ -15,14 +15,19 @@ requiere_hashb: false
 frontend_referencias: []
 casos_uso: ["src\\ubis\\application\\TelecoEliminar"]
 tags: ["ubis", "teleco", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
+errores: []
 ---
 
 # Teleco Eliminar
 
-Descripcion funcional pendiente de revisar.
+Elimina una o más telecomunicaciones del ubi por claves primarias codificadas.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Elimina una o más telecomunicaciones del ubi por claves primarias codificadas.
 
 ## Endpoint
 
@@ -35,18 +40,23 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `obj_pau` | `string` | controller | No | controller |
-| `sel` | `mixed` | controller | No | controller |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| `obj_pau` | `string` | application | Si | |
+| `sel` | `mixed` | application | No | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `ubis_TelecoEliminarData`):
-  - `ok` (`true`)
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Exito: payload en `data`:
+  - `ok`: 1
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
+
+## Permisos
+
+Sin control de permisos propio en casos de uso; autorización vía `UbiPermisos` (`puedeModificarPorObjeto`, `dlPerteneceAMiDelegacion`), `have_perm_oficina(scdl|scl|vcsd|des|admin_sv)` y frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -54,10 +64,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Ver `frontend_referencias` en front matter (`[]`).

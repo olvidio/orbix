@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "actividadessacd"
 titulo: "Texto Comunicacion"
 flujo: "actividadessacd.texto_comunicacion.gestionar.flujo"
-preguntas: ["Como guardar en Texto Comunicacion?", "Como obtener datos en Texto Comunicacion?"]
+preguntas: ["Como obtener datos en Texto Comunicacion?", "Como guardar en Texto Comunicacion?"]
 pantallas_principales: []
 fragmentos: ["actividadessacd.pantalla.com_sacd_txt"]
 endpoints: ["/src/actividadessacd/texto_comunicacion_data", "/src/actividadessacd/texto_comunicacion_guardar"]
@@ -19,8 +19,8 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como guardar en Texto Comunicacion?
 - Como obtener datos en Texto Comunicacion?
+- Como guardar en Texto Comunicacion?
 
 ## Donde Entrar
 
@@ -30,19 +30,22 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Guardar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Obtener datos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir **clave** e **idioma** en los desplegables.
+2. El sistema recarga el textarea con el texto guardado.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadessacd/texto_comunicacion_data`
+
+## Guardar
+
+1. Editar el texto en el textarea.
+2. Pulsar **guardar** (o **cancelar** para volver sin guardar).
+3. El sistema hace upsert o elimina si el texto queda vacío.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividadessacd/texto_comunicacion_guardar`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -50,7 +53,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TextoComunicacion. Devuelve el texto de comunicacion (clave, idioma). Upsert/delete del texto de comunicacion (clave, idioma, texto).
+El usuario edita los textos de la carta de comunicación: elige clave (comunicación general o títulos de columna) e idioma, carga el texto guardado, lo modifica y guarda. Guardar con el textarea vacío elimina el texto de ese `{clave, idioma}`.
 
 ## Errores Documentados
 

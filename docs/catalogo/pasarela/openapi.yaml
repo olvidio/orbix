@@ -17,9 +17,9 @@ paths:
       operationId: "post_pasarela_activacion_default_data"
       summary: "Activacion Default Data"
       description: |
-        Devuelve solo el valor por defecto del parámetro `fecha_activacion`, para alimentar el formulario `form_default` desde el frontend.
+        Devuelve el valor por defecto del parámetro `fecha_activacion` para el formulario `form_default`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/pasarela/api/activacion_default_data.md`
       tags:
@@ -40,13 +40,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ActivacionDefaultDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ActivacionDefaultDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/pasarela/activacion_default_guardar":
     post:
       operationId: "post_pasarela_activacion_default_guardar"
@@ -60,14 +60,15 @@ paths:
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                default:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -86,7 +87,7 @@ paths:
       operationId: "post_pasarela_activacion_excepcion_eliminar"
       summary: "Activacion Excepcion Eliminar"
       description: |
-        Elimina una excepción del parámetro `fecha_activacion` para un `id_tipo_activ` concreto.
+        Elimina una excepción de `fecha_activacion` para un tipo de actividad.
         
         Operacion: `mutacion`.
         
@@ -94,14 +95,15 @@ paths:
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                id_tipo_activ:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -120,7 +122,7 @@ paths:
       operationId: "post_pasarela_activacion_excepcion_guardar"
       summary: "Activacion Excepcion Guardar"
       description: |
-        Inserta o actualiza una excepción del parámetro `fecha_activacion` para un `id_tipo_activ` concreto.
+        Alta o edición de una excepción de `fecha_activacion` para un `id_tipo_activ`.
         
         Operacion: `mutacion`.
         
@@ -128,16 +130,15 @@ paths:
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                id_tipo_activ:
-                  type: "string"
-                valor:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -156,9 +157,9 @@ paths:
       operationId: "post_pasarela_activacion_lista"
       summary: "Activacion Lista"
       description: |
-        Devuelve el listado del parámetro `fecha_activacion` listo para serializar: - `default`: valor por defecto. - `excepciones`: array de filas `{id_tipo_activ, etiqueta, valor}`. El frontend renderiza la tabla a partir de estos datos; este caso de uso no genera HTML.
+        Devuelve el listado del parámetro `fecha_activacion`: valor por defecto y excepciones por tipo de actividad.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/pasarela/api/activacion_lista.md`
       tags:
@@ -179,21 +180,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ActivacionListaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ActivacionListaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/pasarela/contribucion_no_duerme_default_data":
     post:
       operationId: "post_pasarela_contribucion_no_duerme_default_data"
       summary: "Contribucion No Duerme Default Data"
       description: |
-        Devuelve solo el valor por defecto del parámetro `contribucion_no_duerme`, para alimentar el formulario `form_default` desde el frontend.
+        Valor por defecto de `contribucion_no_duerme` para `form_default`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/pasarela/api/contribucion_no_duerme_default_data.md`
       tags:
@@ -214,19 +215,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ContribucionNoDuermeDefaultDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ContribucionNoDuermeDefaultDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/pasarela/contribucion_no_duerme_default_guardar":
     post:
       operationId: "post_pasarela_contribucion_no_duerme_default_guardar"
       summary: "Contribucion No Duerme Default Guardar"
       description: |
-        Actualiza el valor por defecto del parámetro `contribucion_no_duerme`.
+        Actualiza el porcentaje por defecto de contribución «no duerme».
         
         Operacion: `mutacion`.
         
@@ -234,14 +235,15 @@ paths:
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                default:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -260,7 +262,7 @@ paths:
       operationId: "post_pasarela_contribucion_no_duerme_excepcion_eliminar"
       summary: "Contribucion No Duerme Excepcion Eliminar"
       description: |
-        Elimina una excepción del parámetro `contribucion_no_duerme` para un `id_tipo_activ` concreto.
+        Elimina excepción de contribución no duerme.
         
         Operacion: `mutacion`.
         
@@ -268,14 +270,15 @@ paths:
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                id_tipo_activ:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -294,7 +297,7 @@ paths:
       operationId: "post_pasarela_contribucion_no_duerme_excepcion_guardar"
       summary: "Contribucion No Duerme Excepcion Guardar"
       description: |
-        Inserta o actualiza una excepción del parámetro `contribucion_no_duerme` para un `id_tipo_activ` concreto.
+        Alta/edición de excepción de contribución no duerme por tipo.
         
         Operacion: `mutacion`.
         
@@ -302,16 +305,15 @@ paths:
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                id_tipo_activ:
-                  type: "string"
-                valor:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -330,9 +332,9 @@ paths:
       operationId: "post_pasarela_contribucion_no_duerme_lista"
       summary: "Contribucion No Duerme Lista"
       description: |
-        Devuelve el listado del parámetro `contribucion_no_duerme` listo para serializar. Estructura: `{default, excepciones: [{id_tipo_activ, etiqueta, valor}]}`.
+        Listado del parámetro `contribucion_no_duerme` (porcentaje 0–100).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/pasarela/api/contribucion_no_duerme_lista.md`
       tags:
@@ -353,21 +355,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ContribucionNoDuermeListaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ContribucionNoDuermeListaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/pasarela/contribucion_reserva_default_data":
     post:
       operationId: "post_pasarela_contribucion_reserva_default_data"
       summary: "Contribucion Reserva Default Data"
       description: |
-        Devuelve solo el valor por defecto del parámetro `contribucion_reserva`, para alimentar el formulario `form_default` desde el frontend.
+        Valor por defecto de `contribucion_reserva` para `form_default`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/pasarela/api/contribucion_reserva_default_data.md`
       tags:
@@ -388,19 +390,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ContribucionReservaDefaultDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ContribucionReservaDefaultDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/pasarela/contribucion_reserva_default_guardar":
     post:
       operationId: "post_pasarela_contribucion_reserva_default_guardar"
       summary: "Contribucion Reserva Default Guardar"
       description: |
-        Actualiza el valor por defecto del parámetro `contribucion_reserva`.
+        Actualiza el porcentaje por defecto de contribución reserva.
         
         Operacion: `mutacion`.
         
@@ -408,14 +410,15 @@ paths:
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                default:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -434,7 +437,7 @@ paths:
       operationId: "post_pasarela_contribucion_reserva_excepcion_eliminar"
       summary: "Contribucion Reserva Excepcion Eliminar"
       description: |
-        Elimina una excepción del parámetro `contribucion_reserva` para un `id_tipo_activ` concreto.
+        Elimina excepción de contribución reserva.
         
         Operacion: `mutacion`.
         
@@ -442,14 +445,15 @@ paths:
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                id_tipo_activ:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -468,7 +472,7 @@ paths:
       operationId: "post_pasarela_contribucion_reserva_excepcion_guardar"
       summary: "Contribucion Reserva Excepcion Guardar"
       description: |
-        Inserta o actualiza una excepción del parámetro `contribucion_reserva` para un `id_tipo_activ` concreto.
+        Alta/edición de excepción de contribución reserva por tipo.
         
         Operacion: `mutacion`.
         
@@ -476,16 +480,15 @@ paths:
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                id_tipo_activ:
-                  type: "string"
-                valor:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -504,9 +507,9 @@ paths:
       operationId: "post_pasarela_contribucion_reserva_lista"
       summary: "Contribucion Reserva Lista"
       description: |
-        Devuelve el listado del parámetro `contribucion_reserva` listo para serializar. Estructura: `{default, excepciones: [{id_tipo_activ, etiqueta, valor}]}`.
+        Listado del parámetro `contribucion_reserva` (porcentaje reserva).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/pasarela/api/contribucion_reserva_lista.md`
       tags:
@@ -527,107 +530,89 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ContribucionReservaListaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ContribucionReservaListaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/pasarela/exportar_actividades_data":
     post:
       operationId: "post_pasarela_exportar_actividades_data"
       summary: "Exportar Actividades Data"
       description: |
-        Caso de uso "exportar actividades": dado un filtro (tipo de actividad, periodo y casas), devuelve cabeceras + filas para el listado de exportación.
+        Genera cabeceras y filas para exportar actividades al exterior según filtros.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/pasarela/api/exportar_actividades_data.md`
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                fin_iso:
-                  type: "string"
-                iactividad_val:
-                  type: "string"
-                iasistentes_val:
-                  type: "string"
-                id_cdc:
-                  type: "array"
-                  items:
-                    type: string
-                id_tipo_activ:
-                  type: "string"
-                inicio_iso:
-                  type: "string"
-                isfsv_val:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ExportarActividadesDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ExportarActividadesDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/pasarela/exportar_que_actividad_tipo_html":
     post:
       operationId: "post_pasarela_exportar_que_actividad_tipo_html"
       summary: "Exportar Que Actividad Tipo Html"
       description: |
-        HTML del selector de tipo de actividad para la pantalla «exportar qué».
+        HTML del widget selector de tipo de actividad en «exportar actividades».
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/pasarela/api/exportar_que_actividad_tipo_html.md`
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                id_tipo_activ:
-                  type: "string"
-                sactividad:
-                  type: "string"
-                sasistentes:
-                  type: "string"
-                snom_tipo:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ExportarQueActividadTipoHtmlDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_ExportarQueActividadTipoHtmlDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/pasarela/nombre_excepcion_eliminar":
     post:
       operationId: "post_pasarela_nombre_excepcion_eliminar"
       summary: "Nombre Excepcion Eliminar"
       description: |
-        Elimina una excepción del parámetro `nombre` para un `id_tipo_activ` concreto.
+        Elimina el nombre particular de un tipo de actividad.
         
         Operacion: `mutacion`.
         
@@ -635,14 +620,15 @@ paths:
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                id_tipo_activ:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -661,7 +647,7 @@ paths:
       operationId: "post_pasarela_nombre_excepcion_guardar"
       summary: "Nombre Excepcion Guardar"
       description: |
-        Inserta o actualiza una excepción del parámetro `nombre` para un `id_tipo_activ` concreto.
+        Alta/edición del nombre de actividad para un tipo concreto.
         
         Operacion: `mutacion`.
         
@@ -669,16 +655,15 @@ paths:
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                id_tipo_activ:
-                  type: "string"
-                valor:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -697,9 +682,9 @@ paths:
       operationId: "post_pasarela_nombre_lista"
       summary: "Nombre Lista"
       description: |
-        Devuelve el listado del parámetro `nombre` listo para serializar. Estructura: `{excepciones: [{id_tipo_activ, etiqueta, valor}]}`. (El parámetro `nombre` no tiene valor por defecto.)
+        Listado del parámetro `nombre` (nombres particulares por tipo de actividad).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/pasarela/api/nombre_lista.md`
       tags:
@@ -720,47 +705,48 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_NombreListaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_NombreListaDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/pasarela/tipo_activ_txt_data":
     post:
       operationId: "post_pasarela_tipo_activ_txt_data"
       summary: "Tipo Activ Txt Data"
       description: |
-        Devuelve el texto descriptivo (`sfsv asistentes actividad`) para un `id_tipo_activ`. Lo consumen los formularios `form_modificar` desde el frontend para mostrar a qué tipo de actividad corresponde la fila editada.
+        Texto descriptivo del tipo de actividad (sf/sv + asistentes + actividad).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/pasarela/api/tipo_activ_txt_data.md`
       tags:
         - "pasarela"
       requestBody:
-        required: true
+        required: false
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                id_tipo_activ:
-                  type: "string"
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
       responses:
         "200":
           description: "Respuesta generada por Orbix."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_TipoActivTxtDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pasarela_TipoActivTxtDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
 components:
   securitySchemes:
     OrbixSession:
@@ -768,168 +754,6 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
-    OrbixStandardResponseEnvelope:
-      type: object
-      required:
-        - success
-        - data
-      properties:
-        success:
-          type: boolean
-        mensaje:
-          type: string
-        data:
-          description: "Ver schema concreto de cada operacion."
-    pasarela_ActivacionDefaultDataData:
-      type: object
-      properties:
-        default:
-          type: "string"
-    pasarela_ActivacionDefaultDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/pasarela_ActivacionDefaultDataData"
-    pasarela_ActivacionListaData:
-      type: object
-      properties:
-        default:
-          type: "string"
-    pasarela_ActivacionListaDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/pasarela_ActivacionListaData"
-    pasarela_ContribucionNoDuermeDefaultDataData:
-      type: object
-      properties:
-        default:
-          type: "string"
-    pasarela_ContribucionNoDuermeDefaultDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/pasarela_ContribucionNoDuermeDefaultDataData"
-    pasarela_ContribucionNoDuermeListaData:
-      type: object
-      properties:
-        default:
-          type: "string"
-    pasarela_ContribucionNoDuermeListaDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/pasarela_ContribucionNoDuermeListaData"
-    pasarela_ContribucionReservaDefaultDataData:
-      type: object
-      properties:
-        default:
-          type: "string"
-    pasarela_ContribucionReservaDefaultDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/pasarela_ContribucionReservaDefaultDataData"
-    pasarela_ContribucionReservaListaData:
-      type: object
-      properties:
-        default:
-          type: "string"
-    pasarela_ContribucionReservaListaDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/pasarela_ContribucionReservaListaData"
-    pasarela_ExportarActividadesDataData:
-      type: object
-      properties:
-        a_cabeceras:
-          type: "string"
-    pasarela_ExportarActividadesDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/pasarela_ExportarActividadesDataData"
-    pasarela_ExportarQueActividadTipoHtmlData:
-      type: object
-      properties:
-        html:
-          type: "string"
-    pasarela_ExportarQueActividadTipoHtmlDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/pasarela_ExportarQueActividadTipoHtmlData"
-    pasarela_NombreListaData:
-      type: object
-      properties:
-        excepciones:
-          type: "string"
-    pasarela_NombreListaDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/pasarela_NombreListaData"
-    pasarela_TipoActivTxtDataData:
-      type: object
-      properties:
-        tipo_txt:
-          type: "string"
-    pasarela_TipoActivTxtDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/pasarela_TipoActivTxtDataData"
     OrbixStandardResponseStringData:
       type: object
       required:

@@ -11,16 +11,18 @@ endpoints: ["/src/misas/crear_nuevo_periodo_data"]
 capacidades: ["misas.crear_nuevo_periodo.gestionar"]
 campos: ["post.empiezamax", "post.empiezamin", "post.id_zona", "post.orden", "post.periodo", "post.seleccion", "post.tipoplantilla"]
 acciones: []
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Crear Nuevo Periodo
+# Crear nuevo periodo
 
-Descripcion funcional pendiente de revisar.
+Fragmento que ejecuta `crear_nuevo_periodo_data` y renderiza `ver_cuadricula_zona.phtml` con el nuevo periodo.
 
 ## Tipo
 
 - Subtipo: `fragmento_ajax`
+
+
 - Controller: `frontend/misas/controller/crear_nuevo_periodo.php`
 
 ## Vistas Relacionadas
@@ -53,13 +55,7 @@ No se han detectado vistas PHTML relacionadas.
 
 No se han detectado acciones.
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

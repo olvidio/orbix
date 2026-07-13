@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Fragmento que ejecuta `crear_nuevo_periodo_data` y renderiza `ver_cuadricula_zona.phtml` con el nuevo periodo.
 
 ## Uso En Ayuda
 

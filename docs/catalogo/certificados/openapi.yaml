@@ -17,9 +17,9 @@ paths:
       operationId: "post_certificados_certificado_emitido_adjuntar_data"
       summary: "Certificado Emitido Adjuntar Data"
       description: |
-        Datos para el formulario “adjuntar certificado emitido” (solo lectura inicial).
+        Datos iniciales para adjuntar un certificado emitido (PDF) a una persona.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_adjuntar_data.md`
       tags:
@@ -30,6 +30,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom"
               properties:
                 id_nom:
                   type: "integer"
@@ -39,19 +41,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/certificados_CertificadoEmitidoAdjuntarFormDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/certificados_CertificadoEmitidoAdjuntarFormDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/certificados/certificado_emitido_delete":
     post:
       operationId: "post_certificados_certificado_emitido_delete"
       summary: "Certificado Emitido Delete"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina un certificado emitido y su referencia en notas de otras regiones.
         
         Operacion: `mutacion`.
         
@@ -68,9 +70,7 @@ paths:
                 id_item:
                   type: "integer"
                 sel:
-                  type: "array"
-                  items:
-                    type: string
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -89,7 +89,7 @@ paths:
       operationId: "post_certificados_certificado_emitido_enviar"
       summary: "Certificado Emitido Enviar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Envía un certificado emitido a la delegación destino del alumno (copia + anuncio).
         
         Operacion: `mutacion`.
         
@@ -106,9 +106,7 @@ paths:
                 id_item:
                   type: "integer"
                 sel:
-                  type: "array"
-                  items:
-                    type: string
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -127,7 +125,7 @@ paths:
       operationId: "post_certificados_certificado_emitido_guardar"
       summary: "Certificado Emitido Guardar"
       description: |
-        Mensajes legibles al guardar un certificado emitido (errores de BD, etc.).
+        Alta o edición de metadatos de un certificado emitido (sin subir PDF en esta llamada).
         
         Operacion: `mutacion`.
         
@@ -140,6 +138,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom"
               properties:
                 certificado:
                   type: "string"
@@ -181,7 +181,7 @@ paths:
       operationId: "post_certificados_certificado_emitido_guardar_pdf"
       summary: "Certificado Emitido Guardar Pdf"
       description: |
-        Mensajes legibles al guardar un certificado emitido (errores de BD, etc.).
+        Persiste el PDF generado y registra el número de certificado en notas de otras regiones.
         
         Operacion: `mutacion`.
         
@@ -194,6 +194,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
+                - "id_nom"
               properties:
                 certificado:
                   type: "string"
@@ -221,9 +224,9 @@ paths:
       operationId: "post_certificados_certificado_emitido_imprimir_datos"
       summary: "Certificado Emitido Imprimir Datos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Datos de persona y configuración STGR para iniciar la impresión de un certificado nuevo.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_imprimir_datos.md`
       tags:
@@ -234,6 +237,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom"
               properties:
                 id_nom:
                   type: "integer"
@@ -255,9 +260,9 @@ paths:
       operationId: "post_certificados_certificado_emitido_imprimir_mpdf_datos"
       summary: "Certificado Emitido Imprimir Mpdf Datos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Payload completo para renderizar el certificado en PDF (mPDF) con notas y textos traducidos.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_imprimir_mpdf_datos.md`
       tags:
@@ -268,6 +273,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_item:
                   type: "integer"
@@ -289,9 +296,9 @@ paths:
       operationId: "post_certificados_certificado_emitido_lista_datos"
       summary: "Certificado Emitido Lista Datos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Builder de tabla para el listado de certificados emitidos (no enviados o filtrados por número).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_lista_datos.md`
       tags:
@@ -327,9 +334,9 @@ paths:
       operationId: "get_certificados_certificado_emitido_pdf_download"
       summary: "Certificado Emitido Pdf Download"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Descarga del PDF adjunto a un certificado emitido mediante token firmado.
         
-        Operacion: `mutacion`.
+        Operacion: `descarga`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_pdf_download.md`
       tags:
@@ -337,7 +344,7 @@ paths:
       parameters:
         - name: "tk"
           in: query
-          required: false
+          required: true
           schema:
             type: "string"
       responses:
@@ -358,7 +365,7 @@ paths:
       operationId: "post_certificados_certificado_emitido_pdf_upload"
       summary: "Certificado Emitido Pdf Upload"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Subida multipart del PDF de un certificado emitido (nuevo o solo firmado).
         
         Operacion: `mutacion`.
         
@@ -408,9 +415,9 @@ paths:
       operationId: "post_certificados_certificado_emitido_upload_firmado_data"
       summary: "Certificado Emitido Upload Firmado Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Datos del formulario para subir el PDF firmado de un certificado ya emitido.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_upload_firmado_data.md`
       tags:
@@ -421,6 +428,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_item:
                   type: "integer"
@@ -430,21 +439,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/certificados_CertificadoEmitidoUploadFirmadoFormDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/certificados_CertificadoEmitidoUploadFirmadoFormDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/certificados/certificado_emitido_ver_datos":
     post:
       operationId: "post_certificados_certificado_emitido_ver_datos"
       summary: "Certificado Emitido Ver Datos"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Datos de un certificado emitido para la vista de consulta/edición (`certificado_emitido_ver`).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_ver_datos.md`
       tags:
@@ -455,6 +464,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_item:
                   type: "integer"
@@ -476,9 +487,9 @@ paths:
       operationId: "post_certificados_certificado_recibido_adjuntar_data"
       summary: "Certificado Recibido Adjuntar Data"
       description: |
-        Datos para el formulario «adjuntar certificado recibido» (solo lectura inicial).
+        Datos iniciales para adjuntar un certificado recibido (PDF) a una persona.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/certificado_recibido_adjuntar_data.md`
       tags:
@@ -489,6 +500,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom"
               properties:
                 id_nom:
                   type: "integer"
@@ -498,19 +511,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/certificados_CertificadoRecibidoAdjuntarFormDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/certificados_CertificadoRecibidoAdjuntarFormDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/certificados/certificado_recibido_delete":
     post:
       operationId: "post_certificados_certificado_recibido_delete"
       summary: "Certificado Recibido Delete"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina un certificado recibido de la región STGR local.
         
         Operacion: `mutacion`.
         
@@ -527,9 +540,7 @@ paths:
                 id_item:
                   type: "integer"
                 sel:
-                  type: "array"
-                  items:
-                    type: string
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -548,7 +559,7 @@ paths:
       operationId: "post_certificados_certificado_recibido_guardar"
       summary: "Certificado Recibido Guardar"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Alta o edición de metadatos de un certificado recibido en la región STGR local.
         
         Operacion: `mutacion`.
         
@@ -561,6 +572,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom"
               properties:
                 certificado:
                   type: "string"
@@ -602,9 +615,9 @@ paths:
       operationId: "post_certificados_certificado_recibido_modificar_data"
       summary: "Certificado Recibido Modificar Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Datos del formulario para editar un certificado recibido existente.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/certificado_recibido_modificar_data.md`
       tags:
@@ -615,6 +628,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
                 id_item:
                   type: "integer"
@@ -636,9 +651,9 @@ paths:
       operationId: "get_certificados_certificado_recibido_pdf_download"
       summary: "Certificado Recibido Pdf Download"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Descarga del PDF de un certificado recibido mediante token firmado.
         
-        Operacion: `mutacion`.
+        Operacion: `descarga`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/certificado_recibido_pdf_download.md`
       tags:
@@ -646,7 +661,7 @@ paths:
       parameters:
         - name: "tk"
           in: query
-          required: false
+          required: true
           schema:
             type: "string"
       responses:
@@ -667,7 +682,7 @@ paths:
       operationId: "post_certificados_certificado_recibido_pdf_upload"
       summary: "Certificado Recibido Pdf Upload"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Subida multipart del PDF de un certificado recibido (alta o actualización).
         
         Operacion: `mutacion`.
         
@@ -680,6 +695,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_nom"
               properties:
                 certificado:
                   type: "string"
@@ -715,9 +732,9 @@ paths:
       operationId: "post_certificados_certificados_locales_data"
       summary: "Certificados Locales Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Listado de idiomas/locales para desplegables de certificados.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/certificados_locales_data.md`
       tags:
@@ -750,9 +767,9 @@ paths:
       operationId: "post_certificados_textos_certificados"
       summary: "Textos Certificados"
       description: |
-        Textos en latín para certificados.
+        Plantilla PHP de textos legales en latín para certificados STGR.
         
-        Operacion: `mutacion`.
+        Operacion: `include`.
         
         Fuente catalogo: `docs/catalogo/certificados/api/textos_certificados.md`
       tags:
@@ -787,63 +804,6 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
-    OrbixStandardResponseEnvelope:
-      type: object
-      required:
-        - success
-        - data
-      properties:
-        success:
-          type: boolean
-        mensaje:
-          type: string
-        data:
-          description: "Ver schema concreto de cada operacion."
-    certificados_CertificadoEmitidoAdjuntarFormDataData:
-      type: object
-      properties:
-        nom:
-          type: "string"
-    certificados_CertificadoEmitidoAdjuntarFormDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/certificados_CertificadoEmitidoAdjuntarFormDataData"
-    certificados_CertificadoEmitidoUploadFirmadoFormDataData:
-      type: object
-      properties:
-        id_nom:
-          type: "string"
-    certificados_CertificadoEmitidoUploadFirmadoFormDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/certificados_CertificadoEmitidoUploadFirmadoFormDataData"
-    certificados_CertificadoRecibidoAdjuntarFormDataData:
-      type: object
-      properties:
-        nom:
-          type: "string"
-    certificados_CertificadoRecibidoAdjuntarFormDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/certificados_CertificadoRecibidoAdjuntarFormDataData"
     OrbixStandardResponseStringData:
       type: object
       required:

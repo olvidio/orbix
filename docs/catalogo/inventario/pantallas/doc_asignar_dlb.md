@@ -1,9 +1,9 @@
 ---
 id: "inventario.pantalla.doc_asignar_dlb"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "pantalla"
 modulo: "inventario"
-nombre: "Doc Asignar Dlb"
+nombre: "Formulario asignar DLB"
 controller: "frontend/inventario/controller/doc_asignar_dlb.php"
 vistas: ["frontend/inventario/view/doc_asignar_dlb.phtml"]
 fragmentos_frontend: []
@@ -11,12 +11,13 @@ endpoints: ["/src/inventario/doc_asignar_dlb_guardar", "/src/inventario/lista_do
 capacidades: ["inventario.doc_asignar_dlb.gestionar", "inventario.lista_docs_asignar_dlb.gestionar"]
 campos: ["html.f_asignado", "html.f_recibido", "html.okay", "post.id_tipo_doc", "post.sel"]
 acciones: ["fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Doc Asignar Dlb
+# Formulario asignar DLB
 
-Descripcion funcional pendiente de revisar.
+Asignación DLB; guarda con `doc_asignar_dlb_guardar`.
+
 
 ## Tipo
 
@@ -55,11 +56,9 @@ No se han detectado controladores frontend relacionados.
 
 ## Manual De Usuario
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
+Ver [`manual/inventario.md`](../../../manual/inventario.md). Asignación DLB; guarda con `doc_asignar_dlb_guardar`.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada directa
+- **Pills2:** —

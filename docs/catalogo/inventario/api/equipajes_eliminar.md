@@ -10,18 +10,22 @@ entrada: ["post.id_equipaje:integer"]
 entrada_obligatoria: ["id_equipaje"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["falta id_equipaje", "hay un error, no se ha eliminado"]
-frontend_referencias: []
-casos_uso: ["src\\inventario\\application\\EquipajeEliminar"]
+errores: ["falta id_equipaje", "No se encuentra el equipaje %d", "hay un error, no se ha eliminado"]
+frontend_referencias: ["frontend/inventario/controller/equipajes_ver.php"]
+casos_uso: ["src\inventario\application\EquipajeEliminar"]
 tags: ["inventario", "equipajes", "eliminar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Equipajes Eliminar
+# Eliminar equipaje
 
-Borrado de un equipaje (antes solo en `equipajes_eliminar.php`).
+Borra un equipaje por `id_equipaje` vía caso de uso `EquipajeEliminar`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Borra un equipaje por `id_equipaje` vía caso de uso `EquipajeEliminar`.
 
 ## Endpoint
 
@@ -34,35 +38,29 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_equipaje` | `integer` | controller | Si | controller |
+| `id_equipaje` | `integer` | POST | Si | |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-
-## Efectos colaterales
-
-- Borrado de un equipaje (antes solo en `equipajes_eliminar.php`).
+- Éxito: `data: "ok"`.
 
 ## Errores conocidos
 
-- `falta id_equipaje`
-- `hay un error, no se ha eliminado`
+  - `falta id_equipaje`
+  - `No se encuentra el equipaje %d`
+  - `hay un error, no se ha eliminado`
+
+## Permisos
+
+- Sin control de permisos propio en el controller; autorización de oficina vía frontend + `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
-- `src\inventario\application\EquipajeEliminar`
+src\inventario\application\EquipajeEliminar
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/inventario/controller/equipajes_ver.php`

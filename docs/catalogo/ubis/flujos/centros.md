@@ -8,20 +8,18 @@ pantallas_principales: ["ubis.pantalla.centros_que"]
 fragmentos: ["ubis.pantalla.centros_form_labor", "ubis.pantalla.centros_form_num", "ubis.pantalla.centros_form_plazas"]
 acciones: ["crear_actualizar"]
 endpoints: ["/src/ubis/centros_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Centros
-
-Propuesta generada automaticamente desde la capacidad `ubis.centros.gestionar` y sus pantallas relacionadas.
+# Flujo - Centros
 
 ## Objetivo De Usuario
 
-Gestiona Centros. Actualiza datos de centro DL (labor / num / plazas según POST).
+Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plazas).
 
 ## Punto De Entrada
 
-- `ubis.pantalla.centros_que`
+Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones > modificar centros.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -71,11 +69,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-- ``Hay un error, no se ha guardado.``
+- `Hay un error, no se ha guardado.`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros

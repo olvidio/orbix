@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Compatibilidad: despacha por `que` a los controladores finos (mismo patrón que ubis_lista.php).
+Dispatcher que enruta por parámetro que a los fragmentos de calendario de periodos.
 
 ## Uso En Ayuda
 

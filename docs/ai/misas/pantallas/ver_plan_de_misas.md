@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Consulta del plan de misas de una zona en modo solo lectura (cuadrícula sin edición de celdas).
 
 ## Uso En Ayuda
 

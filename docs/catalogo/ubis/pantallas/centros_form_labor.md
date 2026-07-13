@@ -1,7 +1,7 @@
 ---
 id: "ubis.pantalla.centros_form_labor"
 tipo: "pantalla_frontend"
-subtipo: "fragmento_ajax"
+subtipo: "modal"
 modulo: "ubis"
 nombre: "Centros Form Labor"
 controller: "frontend/ubis/controller/centros_form_labor.php"
@@ -11,16 +11,18 @@ endpoints: ["/src/ubis/centros_form_labor", "/src/ubis/centros_update"]
 capacidades: ["ubis.centros.gestionar", "ubis.centros_form_labor.gestionar"]
 campos: ["form.tipo_ctr", "form.tipo_labor", "get.id_ubi", "post.id_ubi"]
 acciones: ["fnjs_cerrar", "fnjs_guardar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Centros Form Labor
 
-Descripcion funcional pendiente de revisar.
+Formulario modal para editar tipo de centro y tipo de labor de un centro DL.
 
 ## Tipo
 
-- Subtipo: `fragmento_ajax`
+- Subtipo: `modal`
+
+
 - Controller: `frontend/ubis/controller/centros_form_labor.php`
 
 ## Vistas Relacionadas
@@ -53,13 +55,7 @@ No se han detectado controladores frontend relacionados.
 - `fnjs_cerrar`
 - `fnjs_guardar`
 
-## Manual De Usuario
+## Ruta de menú
 
-Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

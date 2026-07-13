@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "dbextern"
-titulo: "Ver Desaparecidos De Orbix"
+titulo: "BDU desaparecidas en Aquinate"
 pantalla: "dbextern.pantalla.ver_desaparecidos_de_orbix"
-preguntas: ["Que se puede hacer en Ver Desaparecidos De Orbix?", "Que campos tiene Ver Desaparecidos De Orbix?", "Que acciones hay en Ver Desaparecidos De Orbix?"]
+preguntas: ["Que se puede hacer en BDU desaparecidas en Aquinate?", "Que campos tiene BDU desaparecidas en Aquinate?", "Que acciones hay en BDU desaparecidas en Aquinate?"]
 capacidades: ["dbextern.sincro_desunir.gestionar", "dbextern.ver_desaparecidos_de_orbix.gestionar"]
 endpoints: ["/src/dbextern/sincro_desunir", "/src/dbextern/ver_desaparecidos_de_orbix_datos"]
 source: "docs/catalogo/dbextern/pantallas/ver_desaparecidos_de_orbix.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Ver Desaparecidos De Orbix
+# Ayuda IA Pantalla - BDU desaparecidas en Aquinate
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Subpantalla del punto 3: personas en BDU con vínculo pero sin ficha activa en esta DL.
 
 ## Uso En Ayuda
 

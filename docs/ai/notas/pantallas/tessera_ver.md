@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Tessera de una persona (vista HTML): muestra por cada asignatura del bienio+cuadrienio si esta pendiente, cursada o aprobada, con nota y fecha.
+Visualización de tessera de estudios de una persona.
 
 ## Uso En Ayuda
 

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Form Texto Listado"
+titulo: "Editar texto listado"
 pantalla: "inventario.pantalla.equipajes_form_texto_listado"
-preguntas: ["Que se puede hacer en Equipajes Form Texto Listado?", "Que campos tiene Equipajes Form Texto Listado?", "Que acciones hay en Equipajes Form Texto Listado?"]
+preguntas: ["Que se puede hacer en Editar texto listado?", "Que campos tiene Editar texto listado?", "Que acciones hay en Editar texto listado?"]
 capacidades: ["inventario.texto_de_egm.gestionar"]
 endpoints: ["/src/inventario/texto_de_egm"]
 source: "docs/catalogo/inventario/pantallas/equipajes_form_texto_listado.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Form Texto Listado
+# Ayuda IA Pantalla - Editar texto listado
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Editor texto grupo EGM.
 
 ## Uso En Ayuda
 

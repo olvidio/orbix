@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado principal de usuarios web con filtro por login, alta/edición y borrado.
 
 ## Uso En Ayuda
 

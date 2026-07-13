@@ -42,10 +42,15 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona GuardarEncargoCentro. Inserta o actualiza un EncargoCtr (relacion encargo ↔ centro). - Si id_item esta vacio se crea un nuevo EncargoCtr con uuid v4. - Si id_item es un uuid valido se carga el existente y se modifica. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+Inserta o actualiza un EncargoCtr vinculando un encargo de zona con un centro.
+
+## Errores Documentados
+
+- `No se encuentra el encargo-centro %s`
+- `<repositorio getErrorTxt()>`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

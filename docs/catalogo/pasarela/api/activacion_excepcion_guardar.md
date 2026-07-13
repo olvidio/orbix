@@ -6,22 +6,31 @@ url: "/src/pasarela/activacion_excepcion_guardar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/pasarela/infrastructure/ui/http/controllers/activacion_excepcion_guardar.php"
-entrada: ["post.id_tipo_activ:string", "post.valor:string"]
+entrada:
+  - "post.id_tipo_activ:string"
+  - "post.valor:string"
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["Falta id_tipo_activ", "Falta valor de activación"]
-frontend_referencias: ["frontend/pasarela/controller/activacion_ajax.php", "frontend/pasarela/controller/activacion_lista.php"]
-casos_uso: ["src\\pasarela\\application\\ActivacionExcepcionGuardar"]
-tags: ["pasarela", "activacion", "excepcion", "guardar"]
-estado_revision: "generado"
+errores:
+  - "Falta id_tipo_activ"
+  - "Falta valor de activación"
+frontend_referencias:
+  - "frontend\/pasarela\/controller\/activacion_ajax.php"
+casos_uso: ["src\pasarela\application\ActivacionExcepcionGuardar"]
+tags: ["pasarela"]
+estado_revision: "revisado"
 ---
 
 # Activacion Excepcion Guardar
 
-Inserta o actualiza una excepción del parámetro `fecha_activacion` para un `id_tipo_activ` concreto.
+Alta o edición de una excepción de `fecha_activacion` para un `id_tipo_activ`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+El campo POST `valor` recibe la activación concreta (`activacion` en el formulario frontend).
 
 ## Endpoint
 
@@ -34,19 +43,24 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tipo_activ` | `string` | controller | No | controller |
-| `valor` | `string` | controller | No | controller |
+| `id_tipo_activ` | `string` | controller | No | |
+| `valor` | `string` | controller | No | |
+
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Éxito: `data: "ok"`.
 
 ## Errores conocidos
 
 - `Falta id_tipo_activ`
 - `Falta valor de activación`
+
+## Permisos
+
+Sin control en el caso de uso; autorización en frontend.
+
+Notas: Alias: el formulario envía `activacion` pero el controller mapea a `valor`.
 
 ## Casos De Uso
 
@@ -55,10 +69,3 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Frontend Relacionado
 
 - `frontend/pasarela/controller/activacion_ajax.php`
-- `frontend/pasarela/controller/activacion_lista.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.

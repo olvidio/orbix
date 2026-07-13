@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["ubiscamas.pantalla.habitacion_form"]
 acciones: ["crear_actualizar", "eliminar", "ver_formulario"]
 endpoints: ["/src/ubiscamas/habitacion_delete", "/src/ubiscamas/habitacion_form_data", "/src/ubiscamas/habitacion_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Habitacion
-
-Propuesta generada automaticamente desde la capacidad `ubiscamas.habitacion.gestionar` y sus pantallas relacionadas.
+# Flujo - Habitacion
 
 ## Objetivo De Usuario
 
-Gestiona Habitacion. Datos para frontend/ubiscamas/controller/habitacion_form.php. La composición de HashFront ocurre en {. Descripcion funcional pendiente de revisar.
+Dar de alta, modificar o eliminar habitaciones de un ubi CDC, incluyendo creación automática de camas según número indicado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dossier CDC habitaciones (`select_habitaciones_cdc` en ficha ubi) o navegación desde formulario de habitación. Sin entrada de menú en el índice.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -99,11 +97,13 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `No se encontró la habitación a eliminar`
+- `hay un error, no se ha eliminado la habitación`
+- `Error al eliminar la habitación`
+- `Habitación no válida`
+- `Error al guardar la habitación`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

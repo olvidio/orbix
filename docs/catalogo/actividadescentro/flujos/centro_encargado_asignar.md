@@ -5,37 +5,41 @@ modulo: "actividadescentro"
 nombre: "Flujo - Gestionar Centro Encargado Asignar"
 capacidad: "actividadescentro.centro_encargado_asignar.gestionar"
 pantallas_principales: []
-fragmentos: []
+fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadescentro/centro_encargado_asignar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Centro Encargado Asignar
 
-Propuesta generada automaticamente desde la capacidad `actividadescentro.centro_encargado_asignar.gestionar` y sus pantallas relacionadas.
+Asignación de un centro como encargado de una actividad.
 
 ## Objetivo De Usuario
 
-Gestiona CentroEncargadoAsignar. Asigna un CentroEncargado a una actividad.
+El usuario asigna un centro (elegido en el desplegable de candidatos) como encargado de una actividad.
+El centro queda al final del listado (`num_orden = max + 1`) con `encargo = 'organizador'`.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): la función
+`fnjs_asignar_ctr` llama a este endpoint al elegir un centro candidato.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Escenarios Inferidos
 
 ### Ejecutar
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. En una actividad, pulsar **nuevo** para ver los centros candidatos.
+2. Pulsar el centro deseado.
+3. El sistema lo guarda como encargado y refresca la celda de centros de la actividad.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadescentro/centro_encargado_asignar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -54,9 +58,11 @@ Acciones JavaScript:
 - ``faltan parametros id_activ / id_ubi``
 - ``hay un error, no se ha guardado el centro encargado``
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+  agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+  asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.

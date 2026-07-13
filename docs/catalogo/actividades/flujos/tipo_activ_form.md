@@ -2,60 +2,32 @@
 id: "actividades.tipo_activ_form.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Tipo Activ Form"
+nombre: "Flujo - Formulario alta tipo actividad"
 capacidad: "actividades.tipo_activ_form.gestionar"
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
 acciones: ["crear"]
 endpoints: ["/src/actividades/tipo_activ_form_nuevo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Tipo Activ Form
+# Flujo - Formulario alta tipo actividad
 
-Propuesta generada automaticamente desde la capacidad `actividades.tipo_activ_form.gestionar` y sus pantallas relacionadas.
+Carga del formulario HTML para dar de alta un nuevo tipo (cascada de metadatos).
 
 ## Objetivo De Usuario
 
-Gestiona TipoActivForm. Devuelve el HTML del formulario para crear un nuevo tipo de actividad. Portado del case form_nuevo del dispatcher legacy.
+Pulsar *nuevo* en gestión de tipos y ver el formulario vacío con desplegables.
 
 ## Punto De Entrada
 
-- `actividades.pantalla.tipo_activ`
-
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
-
-### Crear
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- `form.id_tipo_activ`
-
-Acciones JavaScript:
-- Ninguna detectada.
+Pantalla `tipo_activ` → botón nuevo → `tipo_activ_form_nuevo`.
 
 ## Endpoints Del Flujo
 
 - `/src/actividades/tipo_activ_form_nuevo`
 
-## Errores Conocidos
+## Ruta de menú
 
-No se han documentado errores en la capacidad.
-
-## Revision Manual
-
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > Configuración > gestión Tipos actividades.
+- **Pills2:** ADMIN LOCAL > Gestión tipos de actividad.

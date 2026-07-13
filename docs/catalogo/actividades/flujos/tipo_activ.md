@@ -2,98 +2,57 @@
 id: "actividades.tipo_activ.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar Tipo Activ"
+nombre: "Flujo - Gestionar tipos de actividad"
 capacidad: "actividades.tipo_activ.gestionar"
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
 acciones: ["crear", "crear_actualizar", "eliminar", "listar"]
 endpoints: ["/src/actividades/tipo_activ_eliminar", "/src/actividades/tipo_activ_lista", "/src/actividades/tipo_activ_nuevo", "/src/actividades/tipo_activ_update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Tipo Activ
+# Flujo - Gestionar tipos de actividad
 
-Propuesta generada automaticamente desde la capacidad `actividades.tipo_activ.gestionar` y sus pantallas relacionadas.
+CRUD del catálogo local de tipos (id compuesto de 6 caracteres + nombre).
 
 ## Objetivo De Usuario
 
-Gestiona TipoActiv, TipoActivLista. Actualiza el nombre de un tipo de actividad. Portado del case update del dispatcher legacy. Crea un nuevo tipo de actividad. Portado del case nuevo del dispatcher legacy. Devuelve cadena vacia si todo va bien o un texto de error/aviso. Devuelve la tabla HTML con los tipos de actividad existentes. Portado desde el case lista del dispatcher legacy frontend/actividades/controller/tipo_activ_ajax.php. Elimina un tipo de actividad. Portado del case eliminar del dispatcher legacy.
+Listar tipos, crear uno nuevo, renombrar o eliminar desde la pantalla de administración.
 
 ## Punto De Entrada
 
-- `actividades.pantalla.tipo_activ`
+`tipo_activ.php` (menú configuración).
 
-## Fragmentos O Pantallas Auxiliares
-
-No se han detectado fragmentos AJAX relacionados.
-
-## Escenarios Inferidos
-
-### Crear
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-### Crear Actualizar
-
-Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/actividades/tipo_activ_nuevo`
-- `/src/actividades/tipo_activ_update`
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-Endpoints asociados:
-- `/src/actividades/tipo_activ_eliminar`
+## Escenarios
 
 ### Listar
 
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Al cargar, AJAX `tipo_activ_lista` pinta la tabla.
 
-Endpoints asociados:
-- `/src/actividades/tipo_activ_lista`
+### Crear / Actualizar
 
-## Campos Y Acciones Detectadas En Pantalla
+1. Formulario nuevo (`tipo_activ_form_nuevo`) o modificar (`tipo_activ_form_modificar`).
+2. Guardar vía `tipo_activ_nuevo` o `tipo_activ_update`.
 
-Campos:
-- `form.id_tipo_activ`
+### Eliminar
 
-Acciones JavaScript:
-- Ninguna detectada.
+1. Confirmar mensaje; POST `tipo_activ_eliminar` con `id_tipo_activ`.
 
 ## Endpoints Del Flujo
 
-- `/src/actividades/tipo_activ_eliminar`
 - `/src/actividades/tipo_activ_lista`
 - `/src/actividades/tipo_activ_nuevo`
 - `/src/actividades/tipo_activ_update`
+- `/src/actividades/tipo_activ_eliminar`
 
 ## Errores Conocidos
 
-- ``hay un error, no se ha eliminado``
-- ``hay un error, no se ha guardado``
+- `tipo de actividad no encontrado`
+- `Id incorrecto` (alta)
+- `hay un error, no se ha guardado` / `hay un error, no se ha eliminado`
+- Aviso: `IMPORTANTE: Debe añadir un proceso…` (con `procesos` instalado)
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > Configuración > gestión Tipos actividades.
+- **Pills2:** ADMIN LOCAL > Gestión tipos de actividad.

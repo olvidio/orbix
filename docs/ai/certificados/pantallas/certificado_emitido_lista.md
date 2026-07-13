@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página muestra una tabla con los certificados.
+Listado principal de certificados emitidos no enviados (región STGR). Filtro por número o rango de curso académico. Acciones: nuevo, modificar, enviar, subir PDF firmado, descargar y eliminar.
 
 ## Uso En Ayuda
 

@@ -2,66 +2,54 @@
 id: "configuracion.modulos_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "configuracion"
-nombre: "Flujo - Gestionar Modulos Select"
+nombre: "Flujo - Definir módulos (listado)"
 capacidad: "configuracion.modulos_select.gestionar"
-pantallas_principales: []
-fragmentos: ["configuracion.pantalla.modulos_select"]
-acciones: ["obtener_datos"]
-endpoints: ["/src/configuracion/modulos_select_data"]
-estado_revision: "generado"
+pantallas_principales: ["configuracion.pantalla.modulos_select"]
+fragmentos: ["configuracion.pantalla.modulos_form", "configuracion.pantalla.modulos_update"]
+acciones: ["listar", "nuevo", "modificar", "eliminar"]
+endpoints: ["/src/configuracion/modulos_select_data", "/src/configuracion/modulos_update"]
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Modulos Select
-
-Propuesta generada automaticamente desde la capacidad `configuracion.modulos_select.gestionar` y sus pantallas relacionadas.
+# Flujo - Definir módulos (listado)
 
 ## Objetivo De Usuario
 
-Gestiona ModulosSelect. JSON para {.
+Consultar los módulos definidos en el esquema y acceder a alta, edición o baja de cada uno.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+`frontend/configuracion/controller/modulos_select.php`
 
-## Fragmentos O Pantallas Auxiliares
+## Escenarios
 
-- `configuracion.pantalla.modulos_select`
+### Listar módulos
 
-## Escenarios Inferidos
+1. Abrir desde menú Configuración > definir módulos.
+2. La pantalla carga `modulos_select_data` y muestra tabla con dependencias.
+3. Opcional: restaurar selección/scroll vía `ListNavSupport`.
 
-### Obtener Datos
+### Alta
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Pulsar «añadir módulo» → `modulos_form.php` (`mod=nuevo`).
+2. Continuar en flujo «Gestionar módulos (ficha)».
 
-Endpoints asociados:
-- Ninguno inferido para esta accion.
+### Modificar
 
-## Campos Y Acciones Detectadas En Pantalla
+1. Seleccionar exactamente una fila (`fnjs_solo_uno`).
+2. Botón «modificar» → `modulos_form.php` con `sel[]`.
 
-Campos:
-- `html.mod`
-- `html.refresh`
+### Eliminar
 
-Acciones JavaScript:
-- `fnjs_actualizar`
-- `fnjs_eliminar`
-- `fnjs_enviar_formulario`
-- `fnjs_modificar`
-- `fnjs_nuevo`
-- `fnjs_solo_uno`
-
-## Endpoints Del Flujo
-
-- `/src/configuracion/modulos_select_data`
+1. Seleccionar una fila y confirmar eliminación.
+2. POST AJAX a `modulos_update` (`mod=eliminar`).
+3. Refresco del listado; error si el repositorio no puede borrar.
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `hay un error, no se ha eliminado` (+ texto de `getErrorTxt()` del repositorio)
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sistema > Configuración > definir módulos
+- **Pills2:** sistema > Configuración > definir módulos; ADMIN GLOBAL > Configuración > definir módulos

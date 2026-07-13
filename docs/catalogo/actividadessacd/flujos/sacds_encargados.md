@@ -8,64 +8,46 @@ pantallas_principales: ["actividadessacd.pantalla.activ_sacd"]
 fragmentos: []
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadessacd/sacds_encargados_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Sacds Encargados
 
-Propuesta generada automaticamente desde la capacidad `actividadessacd.sacds_encargados.gestionar` y sus pantallas relacionadas.
+Consulta de sacd encargados actuales de una actividad.
 
 ## Objetivo De Usuario
 
-Gestiona SacdsEncargados. Devuelve los sacd encargados actuales de una actividad en un array serializable, junto con los flags de permiso.
+Tras asignar, reordenar o borrar un sacd, el sistema refresca la celda de sacd de la actividad
+consultando los encargados actuales y los flags de permiso que deciden si se muestran como enlaces
+interactivos.
 
 ## Punto De Entrada
 
-- `actividadessacd.pantalla.activ_sacd`
+Pantalla `activ_sacd` (`frontend/actividadessacd/controller/activ_sacd.php`): la función
+`fnjs_actualizar_activ` llama a este endpoint tras cada mutación sobre los sacd de una actividad.
 
 ## Fragmentos O Pantallas Auxiliares
 
-No se han detectado fragmentos AJAX relacionados.
+- `actividadessacd.pantalla.activ_sacd`
 
 ## Escenarios Inferidos
 
 ### Obtener Datos
 
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+Pasos:
+1. Tras una asignación, reordenación o borrado, el sistema actualiza la celda `<id_activ>_sacds`.
+2. Se repintan los sacd encargados con sus enlaces de menú contextual.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadessacd/sacds_encargados_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
 Campos:
-- `form.empiezamax`
-- `form.empiezamin`
-- `form.periodo`
-- `form.tipo`
-- `form.year`
-- `post.periodo`
-- `post.tipo`
-- `post.year`
+- Ninguno detectado.
 
 Acciones JavaScript:
-- `fnjs_actualizar_activ`
-- `fnjs_asignar_sacd`
-- `fnjs_cambiar_sacd`
-- `fnjs_cerrar`
-- `fnjs_construir_celda_sacds`
-- `fnjs_construir_leyenda`
-- `fnjs_construir_tabla_disponibles`
-- `fnjs_construir_tabla_lista`
-- `fnjs_construir_tabla_solapes`
-- `fnjs_enviar`
-- `fnjs_esc`
-- `fnjs_left_side_hide`
-- `fnjs_nuevo_sacd`
-- `fnjs_orden`
-- `fnjs_parse_rta`
-- `fnjs_ver`
+- Ninguna detectada.
 
 ## Endpoints Del Flujo
 
@@ -75,9 +57,9 @@ Acciones JavaScript:
 
 No se han documentado errores en la capacidad.
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
+
+- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).

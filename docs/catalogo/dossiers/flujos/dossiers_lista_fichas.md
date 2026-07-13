@@ -8,42 +8,30 @@ pantallas_principales: []
 fragmentos: ["dossiers.pantalla.lista_dossiers"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/dossiers/dossiers_lista_fichas_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Dossiers Lista Fichas
-
-Propuesta generada automaticamente desde la capacidad `dossiers.dossiers_lista_fichas.gestionar` y sus pantallas relacionadas.
+# Flujo - Dossiers Lista Fichas
 
 ## Objetivo De Usuario
 
-Gestiona DossiersListaFichas. Filas de la tabla de relación de dossiers (modo lista en dossiers_ver). href_ver / href_abrir se firman en el borde HTTP (ver dossiers_lista_fichas_data.php).
+Mostrar la tabla de carpetas de dossiers disponibles para la entidad actual, con iconos de permiso y enlace a cada ficha (`href_ver` firmado en frontend).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú directa; acceso embebido desde home persona/ubi, actividad u otras pantallas que enlazan `dossiers_ver.php`.
+
+## Escenarios
+
+### Listar carpetas disponibles
+
+1. Con `id_dossier` vacío, `dossiers_ver` solicita filas a `dossiers_lista_fichas_data`.
+2. El frontend firma `href_ver`/`href_abrir` con `DossiersListaSupport::signFilas`.
+3. La vista pinta icono, descripción y símbolo de permiso (deny/eye/pencil).
 
 ## Fragmentos O Pantallas Auxiliares
 
 - `dossiers.pantalla.lista_dossiers`
-
-## Escenarios Inferidos
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-## Campos Y Acciones Detectadas En Pantalla
-
-Campos:
-- Ninguno detectado.
-
-Acciones JavaScript:
-- `fnjs_update_div`
 
 ## Endpoints Del Flujo
 
@@ -51,11 +39,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- _(ninguno documentado)_
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice

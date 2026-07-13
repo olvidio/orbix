@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Modal permiso menú DL (bits oficina/grupo).
 
 ## Uso En Ayuda
 

@@ -43,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ListaDocsDeEgm. Descripcion funcional pendiente de revisar.
+Gestiona ListaDocsDeEgm. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
 
 ## Limites De La Respuesta
 

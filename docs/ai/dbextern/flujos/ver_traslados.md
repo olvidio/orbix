@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "dbextern"
-titulo: "Ver Traslados"
+titulo: "Revisar traslados punto 2"
 flujo: "dbextern.ver_traslados.gestionar.flujo"
-preguntas: ["Como obtener datos en Ver Traslados?"]
+preguntas: []
 pantallas_principales: []
 fragmentos: ["dbextern.pantalla.ver_traslados"]
 endpoints: ["/src/dbextern/ver_traslados_datos"]
@@ -12,14 +12,13 @@ source: "docs/catalogo/dbextern/flujos/ver_traslados.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Ver Traslados
+# Ayuda IA - Revisar traslados punto 2
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver Traslados`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Revisar traslados punto 2`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Ver Traslados?
 
 ## Donde Entrar
 
@@ -29,23 +28,20 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
 ## Pantallas Y Fragmentos Relacionados
 
 - `dbextern.pantalla.ver_traslados`
 
 ## Objetivo
 
-Gestiona VerTraslados. Obtiene datos de personas a trasladar desde otras DL.
+Identificar quién debe trasladarse a esta DL desde otra delegación.
+
+## Errores Documentados
+
+- `No existe la clase de la persona`
 
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

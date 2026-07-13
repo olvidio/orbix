@@ -17,9 +17,9 @@ paths:
       operationId: "post_ubiscamas_actividad_habitaciones_lista"
       summary: "Actividad Habitaciones Lista"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Construye el listado de habitaciones/camas de la ubi de una actividad con ocupación por asistente. Filtra solo camas VIP si la actividad tiene `desc_activ=camasVIP`. El controller añade URLs firmadas para asignar cama, toggle VIP y subvistas.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/ubiscamas/api/actividad_habitaciones_lista.md`
       tags:
@@ -30,6 +30,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -51,7 +53,7 @@ paths:
       operationId: "post_ubiscamas_cama_delete"
       summary: "Cama Delete"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina una cama por UUID desde el formulario de habitación.
         
         Operacion: `mutacion`.
         
@@ -64,6 +66,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_cama"
               properties:
                 id_cama:
                   type: "string"
@@ -85,7 +89,7 @@ paths:
       operationId: "post_ubiscamas_cama_form_data"
       summary: "Cama Form Data"
       description: |
-        Datos para `frontend/ubiscamas/controller/cama_form.php`. La composición de `HashFront` ocurre en {
+        Carga el modal de edición de una cama. Si `id_cama` vacío genera UUID nuevo; si existe lee descripción, larga y VIP del repositorio.
         
         Operacion: `form_data`.
         
@@ -125,7 +129,7 @@ paths:
       operationId: "post_ubiscamas_cama_update"
       summary: "Cama Update"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Alta o edición de una cama (descripción, larga, VIP) en una habitación. `sel` puede traer `id_cama` como primer token.
         
         Operacion: `mutacion`.
         
@@ -139,18 +143,18 @@ paths:
             schema:
               type: object
               properties:
-                descripcion:
-                  type: "string"
-                id_cama:
-                  type: "string"
-                id_habitacion:
-                  type: "string"
-                larga:
-                  type: "string"
                 sel:
                   type: "array"
                   items:
                     type: string
+                id_cama:
+                  type: "string"
+                id_habitacion:
+                  type: "string"
+                descripcion:
+                  type: "string"
+                larga:
+                  type: "string"
                 vip:
                   type: "string"
       responses:
@@ -171,7 +175,7 @@ paths:
       operationId: "post_ubiscamas_habitacion_delete"
       summary: "Habitacion Delete"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Elimina una habitación CDC por `id_habitacion` o token `sel` (`id_habitacion#...`).
         
         Operacion: `mutacion`.
         
@@ -185,12 +189,12 @@ paths:
             schema:
               type: object
               properties:
-                id_habitacion:
-                  type: "string"
                 sel:
                   type: "array"
                   items:
                     type: string
+                id_habitacion:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -209,7 +213,7 @@ paths:
       operationId: "post_ubiscamas_habitacion_form_data"
       summary: "Habitacion Form Data"
       description: |
-        Datos para `frontend/ubiscamas/controller/habitacion_form.php`. La composición de `HashFront` ocurre en {
+        Prepara el formulario de alta o edición de una habitación en un ubi CDC. Con `nuevo` vacío y `sel` o `id_habitacion` carga la habitación y sus camas; sin id genera orden siguiente y defaults (1 cama, 1 VIP). `sel` usa token `id_habitacion#...`.
         
         Operacion: `form_data`.
         
@@ -230,7 +234,9 @@ paths:
                 nuevo:
                   type: "string"
                 sel:
-                  type: "string"
+                  type: "array"
+                  items:
+                    type: string
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -249,7 +255,7 @@ paths:
       operationId: "post_ubiscamas_habitacion_update"
       summary: "Habitacion Update"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Alta o actualización de habitación CDC y sincronización de camas: guarda datos de habitación, crea camas desde `new_camas_*` y auto-genera camas hasta alcanzar `numero_camas` (marcando VIP hasta `numero_camas_vip`). `sel` puede traer `id_habitacion` como primer token.
         
         Operacion: `mutacion`.
         
@@ -263,14 +269,34 @@ paths:
             schema:
               type: object
               properties:
-                adaptada:
-                  type: "string"
-                despacho:
-                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
                 id_habitacion:
                   type: "string"
                 id_ubi:
                   type: "integer"
+                orden:
+                  type: "integer"
+                nombre:
+                  type: "string"
+                numero_camas:
+                  type: "integer"
+                numero_camas_vip:
+                  type: "integer"
+                planta:
+                  type: "string"
+                tipoLavabo:
+                  type: "integer"
+                sillon:
+                  type: "string"
+                adaptada:
+                  type: "string"
+                observaciones:
+                  type: "string"
+                despacho:
+                  type: "string"
                 new_camas_desc:
                   type: "array"
                   items:
@@ -283,26 +309,6 @@ paths:
                   type: "array"
                   items:
                     type: string
-                nombre:
-                  type: "string"
-                numero_camas:
-                  type: "integer"
-                numero_camas_vip:
-                  type: "integer"
-                observaciones:
-                  type: "string"
-                orden:
-                  type: "integer"
-                planta:
-                  type: "string"
-                sel:
-                  type: "array"
-                  items:
-                    type: string
-                sillon:
-                  type: "string"
-                tipoLavabo:
-                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -321,7 +327,9 @@ paths:
       operationId: "post_ubiscamas_update_cama_asistente"
       summary: "Update Cama Asistente"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Asigna o reasigna la cama de un asistente en una actividad. `id_activ` se extrae de la cápsula `ctx` firmada (`HashB::sign('update_cama_asistente', {id_activ})`); `id_cama` vacío desasigna.
+        
+        Requiere cápsula HashB en `` (accion ``).
         
         Operacion: `mutacion`.
         
@@ -334,15 +342,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx"
+                - "id_nom"
               properties:
                 ctx:
                   type: "string"
-                id_activ:
+                id_nom:
                   type: "integer"
                 id_cama:
                   type: "string"
-                id_nom:
-                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -361,7 +370,9 @@ paths:
       operationId: "post_ubiscamas_update_solo_vip"
       summary: "Update Solo Vip"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Marca o desmarca el modo «solo camas VIP» de una actividad (`desc_activ=camasVIP` si `solo_vip=true`). `id_activ` viene de la cápsula `ctx` (`HashB::sign('update_solo_vip', {id_activ})`).
+        
+        Requiere cápsula HashB en `` (accion ``).
         
         Operacion: `mutacion`.
         
@@ -374,11 +385,11 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx"
               properties:
                 ctx:
                   type: "string"
-                id_activ:
-                  type: "integer"
                 solo_vip:
                   type: "string"
       responses:

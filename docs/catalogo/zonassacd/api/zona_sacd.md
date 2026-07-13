@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "zonassacd"
 url: "/src/zonassacd/zona_sacd"
 metodos: ["GET", "POST"]
-operacion: "consulta"
+operacion: "form_data"
 controller: "src/zonassacd/infrastructure/ui/http/controllers/zona_sacd.php"
 entrada: []
 entrada_obligatoria: []
@@ -16,40 +16,49 @@ frontend_referencias: ["frontend/zonassacd/controller/zona_sacd.php", "frontend/
 casos_uso: ["src\\zonassacd\\application\\ZonaSacdPage"]
 tags: ["zonassacd", "zona", "sacd"]
 estado_revision: "revisado"
+errores: []
 ---
 
 # Zona Sacd
 
-Datos iniciales de la pantalla **Zonas-sacd**: opciones del desplegable de zonas
-(`a_opciones`) y si el usuario tiene permiso de modificacion (`perm_des`, oficina
-`des` o `vcsd`). No muta nada.
+Datos iniciales de la pantalla Zonas-sacd: opciones del desplegable de zonas y flag perm_des que activa checkboxes, botones de asignación y modal de días.
+
+Linaje: Migrado desde apps/zonassacd/controller/zona_sacd.php.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Datos iniciales de la pantalla Zonas-sacd: opciones del desplegable de zonas y flag perm_des que activa checkboxes, botones de asignación y modal de días.
 
 ## Endpoint
 
 - URL: `/src/zonassacd/zona_sacd`
 - Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Operacion: `form_data`
 - Controller: `src/zonassacd/infrastructure/ui/http/controllers/zona_sacd.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| _(ninguno)_ | | | | |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `zonassacd_ZonaSacdPageData`):
-  - `a_opciones` (`array`) — zonas para el desplegable
-  - `perm_des` (`boolean`) — permiso oficina `des` o `vcsd`
+- Helper: `ContestarJson::enviar`.
+- Forma: `standard_envelope_string_data`.
+- Claves en `data` (doble `JSON.parse` salvo vacío):
+  - `a_opciones`: map id_zona=>nombre para desplegable
+  - `perm_des`: boolean permiso oficina des o vcsd
+
+## Errores conocidos
+
+- _(ninguno documentado en casos de uso)_
 
 ## Permisos
 
-- Responde a cualquier usuario autenticado; `perm_des` informa a la UI de si debe
-  mostrar las acciones de modificacion.
+perm_des vía have_perm_oficina('des'|'vcsd') en sesión; sin validación en caso de uso.
 
 ## Casos De Uso
 
@@ -57,11 +66,4 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-- `frontend/zonassacd/controller/zona_sacd.php`
-- `frontend/zonassacd/controller/zona_sacd_lista_ajax.php`
-- `frontend/zonassacd/controller/zona_sacd_update_ajax.php`
-
-## Revision Manual
-
-- Revisado jun 2026 (lectura de `ZonaSacdPage::getData`).
-- Pendiente: ejemplos reales de request/response.
+- Ver `frontend_referencias` en front matter (`["frontend/zonassacd/controller/zona_sacd.php", "frontend/zonassacd/controller/zona_sacd_lista_ajax.php", "frontend/zonassacd/controller/zona_sacd_update_ajax.php"]`).

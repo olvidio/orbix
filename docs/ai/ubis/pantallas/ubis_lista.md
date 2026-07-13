@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Esta página muestra una tabla con los ubis seleccionados.
+Fragmento HTML de resultados de autocompletado al buscar ubis por nombre.
 
 ## Uso En Ayuda
 

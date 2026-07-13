@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.cambiar_status"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/cambiar_status_data"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Cambiar Status
-
-Propuesta generada automaticamente desde la capacidad `misas.cambiar_status.gestionar` y sus pantallas relacionadas.
+# Flujo - Cambiar status
 
 ## Objetivo De Usuario
 
-Gestiona CambiarStatusPantalla. Formulario "Cambiar estado del plan de misas" (zona, estado, orden).
+Carga los desplegables de la pantalla cambiar estado del plan de misas: zonas permitidas, criterios de orden y estados posibles.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Cambiar estado. Pills2: dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -60,11 +58,10 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Usuario no encontrado`
+- `No tiene permiso para ver esta página`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Cambiar estado
+- **Pills2:** dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado

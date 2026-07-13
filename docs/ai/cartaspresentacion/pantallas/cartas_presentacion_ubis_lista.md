@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Controlador AJAX HTML: listado de centros con el estado de su carta de presentacion (modal de seleccion de la pantalla principal).
+Fragmento AJAX: tabla de centros con estado de carta de presentación (sí/no) y acciones por fila.
 
 ## Uso En Ayuda
 
@@ -28,7 +28,9 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Acciones Detectadas
 
-- No hay acciones detectadas.
+- `fnjs_modificar`
+- `fnjs_ver_ubi`
+- `fnjs_eliminar_cp`
 
 ## Capacidades Relacionadas
 

@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "inventario"
-titulo: "Equipajes Lista Docs"
+titulo: "Lista docs EGM/lugar"
 pantalla: "inventario.pantalla.equipajes_lista_docs"
-preguntas: ["Que se puede hacer en Equipajes Lista Docs?", "Que campos tiene Equipajes Lista Docs?", "Que acciones hay en Equipajes Lista Docs?"]
+preguntas: ["Que se puede hacer en Lista docs EGM/lugar?", "Que campos tiene Lista docs EGM/lugar?", "Que acciones hay en Lista docs EGM/lugar?"]
 capacidades: ["inventario.lista_docs_de_egm.gestionar", "inventario.lista_docs_de_lugar.gestionar"]
 endpoints: ["/src/inventario/lista_docs_de_egm", "/src/inventario/lista_docs_de_lugar"]
 source: "docs/catalogo/inventario/pantallas/equipajes_lista_docs.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Equipajes Lista Docs
+# Ayuda IA Pantalla - Lista docs EGM/lugar
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Docs de maleta o lugar.
 
 ## Uso En Ayuda
 

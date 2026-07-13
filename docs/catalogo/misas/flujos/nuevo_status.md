@@ -8,20 +8,18 @@ pantallas_principales: []
 fragmentos: ["misas.pantalla.cambiar_status"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/nuevo_status"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
-# Flujo - Gestionar Nuevo Status
-
-Propuesta generada automaticamente desde la capacidad `misas.nuevo_status.gestionar` y sus pantallas relacionadas.
+# Flujo - Nuevo status
 
 ## Objetivo De Usuario
 
-Gestiona NuevoStatusPeriodo. Actualiza status de todos los EncargoDia de encargos 8100+ de la zona en el rango.
+Actualiza masivamente el status de todos los EncargoDia de encargos 8100+ de una zona en el rango de fechas indicado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú Legacy: dre > Misas > Cambiar estado. Pills2: dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -60,11 +58,9 @@ Acciones JavaScript:
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `<repositorio getErrorTxt() acumulado>`
 
-## Revision Manual
+## Ruta de menú
 
-- Confirmar si el flujo debe separarse en varios flujos de usuario.
-- Cambiar nombres tecnicos por nombres de usuario.
-- Completar precondiciones, permisos, validaciones y errores comunes.
-- Redactar los pasos definitivos para el manual de usuario.
+- **Legacy:** dre > Misas > Cambiar estado
+- **Pills2:** dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado

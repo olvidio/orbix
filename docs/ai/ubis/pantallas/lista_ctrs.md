@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Lista con los datos básicos de los cp.
+Tabla AJAX de centros tipo s con recuento de sacerdotes por centro.
 
 ## Uso En Ayuda
 

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Asistente para renombrar un esquema DL: origen, región/dl destino y flags comun/sv/sf.
 
 ## Uso En Ayuda
 

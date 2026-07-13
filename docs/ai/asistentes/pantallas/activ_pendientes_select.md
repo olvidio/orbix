@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Descripcion funcional pendiente de revisar.
+Listado de personas de la delegación (y otras DL) sin asistencia propia a ca o crt en el curso elegido.
 
 ## Uso En Ayuda
 

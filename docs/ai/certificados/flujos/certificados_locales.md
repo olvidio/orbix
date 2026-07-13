@@ -43,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CertificadosLocales. Descripcion funcional pendiente de revisar.
+Cargar desplegable de idiomas en formularios de certificados.
 
 ## Limites De La Respuesta
 

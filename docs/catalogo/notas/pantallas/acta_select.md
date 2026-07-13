@@ -11,12 +11,12 @@ endpoints: ["/src/notas/acta_eliminar", "/src/notas/acta_select_data"]
 capacidades: ["notas.acta.gestionar", "notas.acta_select.gestionar"]
 campos: ["form.acta", "form.mod", "form.sel", "html.acta", "html.btn_ok", "html.mod", "html.refresh", "post.acta", "post.refresh", "post.stack", "post.titulo"]
 acciones: ["fnjs_actualizar", "fnjs_descargar_pdf", "fnjs_eliminar", "fnjs_enviar", "fnjs_enviar_formulario", "fnjs_imprimir", "fnjs_left_side_hide", "fnjs_modificar", "fnjs_nuevo", "fnjs_solo_uno"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Acta Select
 
-Esta página muestra una tabla con las actas.
+Listado de actas del curso o búsqueda por número, con acciones ver/modificar/eliminar/imprimir/descargar PDF según permisos de oficina `est`.
 
 ## Tipo
 
@@ -70,13 +70,11 @@ Esta página muestra una tabla con las actas.
 - `fnjs_nuevo`
 - `fnjs_solo_uno`
 
+## Ruta de menú
+
+- **Legacy:** vest > actas... > actas; stgr > actas > actas
+- **Pills2:** ESTUDIOS > Actas y certificados > Actas; vest > actas... > actas; stgr > actas > actas
+
 ## Manual De Usuario
 
 Pendiente de redactar: objetivo de la pantalla, pasos habituales, validaciones y errores comunes.
-
-## Revision Manual
-
-- Confirmar si es pantalla principal o fragmento AJAX.
-- Completar nombre funcional orientado a usuario.
-- Revisar campos obligatorios y significado de cada accion.
-- Confirmar si las capacidades relacionadas son correctas.

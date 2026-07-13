@@ -14,7 +14,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `dbextern.refrescar_bdu`
 - Controller: `src/dbextern/infrastructure/ui/http/controllers/refrescar_bdu.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.que:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/dbextern/sincro_baja`
