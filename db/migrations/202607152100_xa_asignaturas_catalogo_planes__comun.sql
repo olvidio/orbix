@@ -4,7 +4,7 @@
 -- Cambios:
 --   2114 Primeros Cristianos → id_nivel 2312 (plan '{2026}').
 --   2211 Latín III → '{1997}' + fila '{2026}' con id_nivel 2112.
---   2312 Latín IV  → '{1997}' + fila '{2026}' con id_nivel 2211.
+--   2312 Latín IV  → '{1997}' + fila '{2026}' con id_nivel 2212.
 --   Opcionales 1230-1232, 2430-2434 → solo '{1997}'.
 --   2430-2433 nuevas filas '{2026}' (opcionales cuadrienio plan nuevo).
 
@@ -78,7 +78,7 @@ INSERT INTO public.xa_asignaturas (
 )
 SELECT
     id_asignatura,
-    2211,
+    2212,
     nombre_asignatura,
     nombre_corto,
     creditos,
