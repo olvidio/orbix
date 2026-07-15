@@ -8,3 +8,6 @@
 
 ALTER TABLE public.xa_asignaturas DROP CONSTRAINT IF EXISTS xa_asignaturas_una_fila_pkey;
 ALTER TABLE public.xa_asignaturas DROP CONSTRAINT IF EXISTS xa_asignaturas_pkey;
+
+-- Sin PK la publicación lógica exige identidad explícita para UPDATE/DELETE.
+ALTER TABLE public.xa_asignaturas REPLICA IDENTITY FULL;

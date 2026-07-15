@@ -8,6 +8,9 @@
 --   Opcionales 1230-1232, 2430-2434 → solo '{1997}'.
 --   2430-2433 nuevas filas '{2026}' (opcionales cuadrienio plan nuevo).
 
+-- Tras quitar la PK (152000), hace falta identidad explícita para UPDATE en tablas publicadas.
+ALTER TABLE public.xa_asignaturas REPLICA IDENTITY FULL;
+
 -- 2114: nuevo hueco curricular en plan 2026
 UPDATE public.xa_asignaturas
 SET id_nivel = 2312
@@ -149,5 +152,8 @@ BEGIN
             ADD CONSTRAINT xa_asignaturas_pkey PRIMARY KEY (id_asignatura, plan_estudios);
     END IF;
 END $$;
+
+-- Con PK compuesta, la identidad por defecto (PRIMARY KEY) basta para la réplica lógica.
+ALTER TABLE public.xa_asignaturas REPLICA IDENTITY DEFAULT;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.xa_asignaturas TO orbix;
