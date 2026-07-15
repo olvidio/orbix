@@ -49,7 +49,11 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $Qs_pkey = explode('#', is_string($sel0) ? $sel0 : '');
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
-    $a_pkey = json_decode(src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($Qs_pkey));
+    $decoded = json_decode(
+        src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($Qs_pkey),
+        true
+    );
+    $a_pkey = is_array($decoded) ? $decoded : null;
     $aQuery['sel'] = $a_sel;
 } else { // si es nuevo
     $Qs_pkey = '';
@@ -77,7 +81,7 @@ if (!empty($Qobj_pau)) {
 $url_backend = '/src/shared/tablaDB_formulario_datos';
 $a_campos_backend = [
     'clase_info' => $Qclase_info_encoded,
-    'a_pkey' => $a_pkey,
+    'a_pkey' => is_array($a_pkey) ? json_encode($a_pkey, JSON_THROW_ON_ERROR) : '',
     'obj_pau' => $Qobj_pau,
     'mod' => $Qmod,
 ];

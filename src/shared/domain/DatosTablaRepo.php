@@ -166,7 +166,12 @@ class DatosTablaRepo
             $v = 0;
             $primaryKey = $oFila->getPrimary_key();
             if (is_array($primaryKey)) {
-                $val_pks = $primaryKey;
+                $val_pks = [];
+                foreach ($primaryKey as $campo => $nom) {
+                    $field = is_int($campo) ? (string) $nom : (string) $campo;
+                    $getter = 'get' . ucfirst($field);
+                    $val_pks[$field] = $oFila->$getter();
+                }
             } else {
                 $pks1 = 'get' . ucfirst($primaryKey);
                 $val_pks = $oFila->$pks1();
@@ -186,13 +191,14 @@ class DatosTablaRepo
                 } else {
                     $valor_camp = $oFila->$metodo();
                 }
-                if (!$valor_camp) {
+                $var_1 = $oDatosCampo->getArgument();
+                $var_2 = $oDatosCampo->getArgument2();
+                $tipo = $oDatosCampo->getTipo();
+                if ($tipo !== 'checks' && !$valor_camp) {
                     $filaValores[(string) $v] = '';
                     continue;
                 }
-                $var_1 = $oDatosCampo->getArgument();
-                $var_2 = $oDatosCampo->getArgument2();
-                switch ($oDatosCampo->getTipo()) {
+                switch ($tipo) {
                     case "fecha":
                         $filaValores[(string) $v] = $valor_camp->getFromLocal();
                         break;
@@ -230,6 +236,20 @@ class DatosTablaRepo
                         } else {
                             $filaValores[(string) $v] = _("no");
                         }
+                        break;
+                    case "checks":
+                        $lista = $oDatosCampo->getLista() ?? [];
+                        $valores = is_array($valor_camp)
+                            ? $valor_camp
+                            : (is_string($valor_camp)
+                                ? \src\shared\domain\helpers\FuncTablasSupport::arrayPgInteger2php($valor_camp)
+                                : []);
+                        $etiquetas = [];
+                        foreach ($valores as $item) {
+                            $key = is_numeric($item) ? (int) $item : $item;
+                            $etiquetas[] = $lista[$key] ?? (string) $key;
+                        }
+                        $filaValores[(string) $v] = implode(', ', $etiquetas);
                         break;
                     case "hidden":
                         if ($c == 0) {
@@ -423,6 +443,16 @@ class DatosTablaRepo
 
     private function normalizePkeyScalarForEncode(mixed $value): mixed
     {
+        if (is_array($value)) {
+            $normalized = array_values(array_map(
+                fn (mixed $item): int => (int) $item,
+                $value
+            ));
+            sort($normalized);
+
+            return $normalized;
+        }
+
         if (is_object($value) && method_exists($value, 'value')) {
             return $value->value();
         }

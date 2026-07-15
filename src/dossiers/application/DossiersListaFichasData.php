@@ -49,7 +49,7 @@ class DossiersListaFichasData
             if (!$this->suffixResolver->canRenderFichaSegment($oTipoDossier)) {
                 continue;
             }
-            if (ConfigGlobal::mi_ambito() === 'rstgr') {
+            if (!ConfigGlobal::usaTablaDossiersAbierto()) {
                 $status_dossier = 'f';
             } else {
                 $oDossier = $this->dossierRepository->findByPk(

@@ -2,10 +2,13 @@
 
 namespace src\notas\application;
 
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\GlobalPdo;
 use PDO;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\value_objects\CursoStgr;
 
 /**
@@ -30,6 +33,7 @@ final class AsignaturasPendientes
 {
     private PDO $pdo;
     private AsignaturaRepositoryInterface $asignaturaRepository;
+    private ?PlanEstudiosDePersona $planEstudiosDePersona;
     private string $tablaNotas;
     private ?string $tablaPersonas;
     private string $tablaAsignaturasTemp = 'tmp_xa_asignaturas';
@@ -54,10 +58,12 @@ final class AsignaturasPendientes
         AsignaturaRepositoryInterface $asignaturaRepository,
         ?string $tablaPersonas = null,
         ?string $ambito = null,
+        ?PlanEstudiosDePersona $planEstudiosDePersona = null,
     ) {
         $this->pdo = GlobalPdo::get('oDB');
         $this->asignaturaRepository = $asignaturaRepository;
         $this->tablaPersonas = $tablaPersonas;
+        $this->planEstudiosDePersona = $planEstudiosDePersona;
         $ambito ??= ConfigGlobal::mi_ambito();
         $this->tablaNotas = $ambito === 'rstgr' ? 'publicv.e_notas' : 'e_notas_dl';
     }
@@ -72,11 +78,11 @@ final class AsignaturasPendientes
     public function contarFaltantesPorPersona(int $numAsignaturasMaximas, CursoStgr $curso): array
     {
         $filas = $this->fetchFaltantesBrutos($numAsignaturasMaximas, $curso);
-        $numCurso = $this->asignaturasDeRango($curso)['count'];
-
         $result = [];
         foreach ($filas as $row) {
-            $result[(int)$row['id_nom']] = $numCurso - (int)$row['asignaturas'];
+            $idNom = (int) $row['id_nom'];
+            $numCurso = $this->asignaturasDeRango($curso, $this->planDePersona($idNom))['count'];
+            $result[$idNom] = $numCurso - (int) $row['asignaturas'];
         }
         return $result;
     }
@@ -152,7 +158,8 @@ final class AsignaturasPendientes
     public function asignaturasQueFaltanPersona(int $idNom, CursoStgr $curso): array
     {
         $this->createAsignaturasTemp();
-        $niveles = $this->asignaturasDeRango($curso)['niveles'];
+        $plan = $this->planDePersona($idNom);
+        $niveles = $this->asignaturasDeRango($curso, $plan)['niveles'];
         if (empty($niveles)) {
             return [];
         }
@@ -207,18 +214,20 @@ final class AsignaturasPendientes
      *
      * @return array{count: int, niveles: array<int, int>}
      */
-    private function asignaturasDeRango(CursoStgr $curso): array
+    private function asignaturasDeRango(CursoStgr $curso, int $plan): array
     {
         [$desde, $hasta] = $curso->rangoNiveles();
-        $clave = $desde . '-' . $hasta;
+        $clave = $plan . ':' . $desde . '-' . $hasta;
         if (isset($this->asignaturasPorRango[$clave])) {
             return $this->asignaturasPorRango[$clave];
         }
 
-        $asignaturas = $this->asignaturaRepository->getAsignaturas(
-            ['active' => 't', 'id_nivel' => "$desde,$hasta"],
-            ['id_nivel' => 'BETWEEN']
-        );
+        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
+            'active' => 't',
+            'id_nivel' => "$desde,$hasta",
+        ], ['id_nivel' => 'BETWEEN']);
+
+        $asignaturas = $this->asignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
         $niveles = [];
         foreach ($asignaturas as $oAsignatura) {
@@ -238,7 +247,7 @@ final class AsignaturasPendientes
     {
         $this->requireTablaPersonas();
 
-        $rango = $this->asignaturasDeRango($curso);
+        $rango = $this->asignaturasDeRangoUnion($curso);
         $numCurso = $rango['count'];
         $niveles = $rango['niveles'];
         if (empty($niveles)) {
@@ -315,7 +324,13 @@ final class AsignaturasPendientes
         $this->pdo->exec("CREATE INDEX IF NOT EXISTS {$tabla}_nivel ON $tabla (id_nivel)");
         $this->pdo->exec("CREATE INDEX IF NOT EXISTS {$tabla}_id_asignatura ON $tabla (id_asignatura)");
 
-        $cAsignaturas = $this->asignaturaRepository->getAsignaturas(['active' => 'true']);
+        $cAsignaturas = [];
+        foreach ([PlanEstudios::PLAN_1997, PlanEstudios::PLAN_2026] as $plan) {
+            [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, ['active' => 'true']);
+            foreach ($this->asignaturaRepository->getAsignaturas($aWhere, $aOperador) as $oAsignatura) {
+                $cAsignaturas[$oAsignatura->getId_asignatura()] = $oAsignatura;
+            }
+        }
         $prep = $this->pdo->prepare("
             INSERT INTO $tabla VALUES (
                 :id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto,
@@ -345,6 +360,38 @@ final class AsignaturasPendientes
         }
 
         $this->asignaturasTempCreated = true;
+    }
+
+    private function planDePersona(int $idNom): int
+    {
+        if ($this->planEstudiosDePersona !== null) {
+            return $this->planEstudiosDePersona->resolve($idNom);
+        }
+
+        return DependencyResolver::get(PlanEstudiosDePersona::class)->resolve($idNom);
+    }
+
+    /**
+     * Union de niveles de ambos planes para consultas agregadas SQL.
+     *
+     * @return array{count: int, niveles: array<int, int>}
+     */
+    private function asignaturasDeRangoUnion(CursoStgr $curso): array
+    {
+        $niveles = [];
+        $maxCount = 0;
+        foreach ([PlanEstudios::PLAN_1997, PlanEstudios::PLAN_2026] as $plan) {
+            $rango = $this->asignaturasDeRango($curso, $plan);
+            $maxCount = max($maxCount, $rango['count']);
+            foreach ($rango['niveles'] as $nivel) {
+                $niveles[$nivel] = $nivel;
+            }
+        }
+
+        return [
+            'count' => $maxCount,
+            'niveles' => array_values($niveles),
+        ];
     }
 
     private function requireTablaPersonas(): void

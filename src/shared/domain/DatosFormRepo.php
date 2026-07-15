@@ -122,6 +122,10 @@ class DatosFormRepo
                     $field['checked'] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($valor_camp);
                     $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
                     break;
+                case "checks":
+                    $field['opciones'] = self::opcionesDesdeLista($oDatosCampo->getLista());
+                    $field['valores_seleccionados'] = is_array($valor_camp) ? $valor_camp : [];
+                    break;
             }
 
             $formData[] = $field;
@@ -226,6 +230,19 @@ class DatosFormRepo
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $chk = !empty($field['checked']) ? "checked" : "";
                     $formulario .= "<td class=contenido><input type='checkbox' name='$nom_camp' $chk>";
+                    break;
+                case "checks":
+                    $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
+                    $a_opciones = is_array($field['opciones'] ?? null) ? $field['opciones'] : [];
+                    $valores_seleccionados = is_array($field['valores_seleccionados'] ?? null) ? $field['valores_seleccionados'] : [];
+                    $formulario .= "<td class=contenido>";
+                    foreach ($a_opciones as $key => $val) {
+                        $keyStr = self::mixedToString($key);
+                        $valStr = self::mixedToString($val);
+                        $chk = in_array($key, $valores_seleccionados) ? 'checked' : '';
+                        $formulario .= "<input type='checkbox' name='{$nom_camp}[]' value=\"$keyStr\" $chk>$valStr ";
+                    }
+                    $formulario .= "</td></tr>";
                     break;
                 case "hidden":
                     $formulario .= "<input type='hidden' name='$nom_camp' value ='$valorCampStr'>";

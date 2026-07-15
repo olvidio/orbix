@@ -70,6 +70,10 @@ class Condicion
                      */
                     $sCondi = "$campo = ANY (:$campo)";
                     break;
+                case 'IN_ARRAY':
+                    /* Columna integer[]: el valor escalar debe pertenecer al array. */
+                    $sCondi = ":$campo = ANY($campo)";
+                    break;
                 case 'IN':
                 case 'NOT IN':
                     /* no funciona, por lo menos con los integer, lo toma como string. */

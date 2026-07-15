@@ -5,6 +5,8 @@ namespace src\asignaturas\infrastructure\persistence\postgresql;
 use PDO;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
+use src\asignaturas\domain\value_objects\PlanEstudios;
+use src\shared\domain\helpers\FuncTablasSupport;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -32,6 +34,11 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
+        $planEstudios = isset($aWhere['plan_estudios']) && is_numeric($aWhere['plan_estudios'])
+            ? (int) $aWhere['plan_estudios']
+            : null;
+        unset($aWhere['plan_estudios']);
+
         $sCondi = '';
         foreach ($aWhere as $camp => $val) {
             if ($camp === 'nombre_asignatura' && !empty($val) && is_scalar($val)) {
@@ -46,6 +53,9 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
                     $sCondi .= "WHERE id_asignatura = $valStr";
                 }
             }
+        }
+        if ($planEstudios !== null) {
+            $sCondi .= ($sCondi !== '' ? ' AND ' : 'WHERE ') . "$planEstudios = ANY(plan_estudios)";
         }
         $sOrdre = " ORDER BY id_nivel";
         $sLimit = " LIMIT 25";
@@ -113,17 +123,27 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
     /**
      * @return array<int|string, string>
      */
-    public function getArrayAsignaturasConSeparador(bool $op_genericas = true): array
+    public function getArrayAsignaturasConSeparador(
+        bool $op_genericas = true,
+        ?int $planEstudios = PlanEstudios::PLAN_2026,
+    ): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sWhere = "WHERE active = 't' ";
+        if ($planEstudios !== null) {
+            $sWhere .= ' AND :plan = ANY(plan_estudios)';
+        }
         if (!$op_genericas) {
             $genericas = $this->getListaOpGenericas('csv');
             $sWhere .= " AND id_nivel NOT IN ($genericas)";
         }
         $sQuery = "SELECT id_asignatura, nombre_asignatura, CASE WHEN id_nivel < 3000 THEN xa_asignaturas.id_nivel ELSE 3001 END AS op FROM $nom_tabla $sWhere ORDER BY op,nombre_asignatura;";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($planEstudios !== null) {
+            $stmt = $this->prepareAndExecute($oDbl, $sQuery, ['plan' => $planEstudios], __METHOD__, __FILE__, __LINE__);
+        } else {
+            $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        }
         if ($stmt === false) {
             return [];
         }
@@ -344,10 +364,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             if (!is_array($aDatos)) {
                 continue;
             }
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
+            $normalized = $this->normalizeRowFromDb($aDatos);
             $AsignaturaSet->add(Asignatura::fromArray($normalized));
         }
         /** @var list<Asignatura> $items */
@@ -358,18 +375,27 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
     public function Eliminar(Asignatura $Asignatura): bool
     {
         $id_asignatura = $Asignatura->getIdAsignaturaVo()->value();
+        $planPg = FuncTablasSupport::arrayPhp2pg($Asignatura->getPlanEstudiosVo()?->toArray() ?? []);
+        if ($planPg === '' || $planPg === '{}') {
+            return false;
+        }
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE id_asignatura = $id_asignatura";
+        $sql = "DELETE FROM $nom_tabla WHERE id_asignatura = $id_asignatura AND plan_estudios = '$planPg'::integer[]";
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     public function Guardar(Asignatura $Asignatura): bool
     {
         $id_asignatura = $Asignatura->getIdAsignaturaVo()->value();
+        $planArray = $Asignatura->getPlanEstudiosVo()?->toArray() ?? [];
+        $planPg = FuncTablasSupport::arrayPhp2pg($planArray);
+        if ($planPg === '' || $planPg === '{}') {
+            return false;
+        }
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $bInsert = $this->isNew($id_asignatura);
+        $bInsert = $this->isNew($id_asignatura, $planArray);
 
         $aDatos = $Asignatura->toArrayForDatabase();
         if ($bInsert === false) {
@@ -382,12 +408,14 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
 					year                     = :year,
 					id_sector                = :id_sector,
 					active                   = :active,
-					id_tipo                  = :id_tipo";
-            $sql = "UPDATE $nom_tabla SET $update WHERE id_asignatura = $id_asignatura";
+					id_tipo                  = :id_tipo,
+					plan_estudios            = :plan_estudios";
+            $sql = "UPDATE $nom_tabla SET $update
+                WHERE id_asignatura = $id_asignatura AND plan_estudios = '$planPg'::integer[]";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            $campos = "(id_asignatura,id_nivel,nombre_asignatura,nombre_corto,creditos,year,id_sector,active,id_tipo)";
-            $valores = "(:id_asignatura,:id_nivel,:nombre_asignatura,:nombre_corto,:creditos,:year,:id_sector,:active,:id_tipo)";
+            $campos = "(id_asignatura,id_nivel,nombre_asignatura,nombre_corto,creditos,year,id_sector,active,id_tipo,plan_estudios)";
+            $valores = "(:id_asignatura,:id_nivel,:nombre_asignatura,:nombre_corto,:creditos,:year,:id_sector,:active,:id_tipo,:plan_estudios)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -397,11 +425,15 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
-    private function isNew(int $id_asignatura): bool
+    /**
+     * @param list<int> $plan_estudios
+     */
+    private function isNew(int $id_asignatura, array $plan_estudios): bool
     {
+        $planPg = FuncTablasSupport::arrayPhp2pg($plan_estudios);
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE id_asignatura = $id_asignatura";
+        $sql = "SELECT 1 FROM $nom_tabla WHERE id_asignatura = $id_asignatura AND plan_estudios = '$planPg'::integer[]";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
@@ -415,11 +447,24 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
     /**
      * @return array<string, mixed>|false
      */
-    public function datosById(int $id_asignatura): array|false
+    public function datosById(int $id_asignatura, int|array|null $plan_estudios = null): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE id_asignatura = $id_asignatura";
+        if (is_array($plan_estudios)) {
+            $planPg = FuncTablasSupport::arrayPhp2pg($plan_estudios);
+            $sql = "SELECT * FROM $nom_tabla
+                WHERE id_asignatura = $id_asignatura
+                  AND plan_estudios = '$planPg'::integer[]";
+        } elseif ($plan_estudios !== null) {
+            $sql = "SELECT * FROM $nom_tabla
+                WHERE id_asignatura = $id_asignatura
+                  AND $plan_estudios = ANY(plan_estudios)
+                ORDER BY cardinality(plan_estudios) ASC
+                LIMIT 1";
+        } else {
+            $sql = "SELECT * FROM $nom_tabla WHERE id_asignatura = $id_asignatura LIMIT 1";
+        }
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
@@ -428,16 +473,30 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         if (!is_array($aDatos)) {
             return false;
         }
+        return $this->normalizeRowFromDb($aDatos);
+    }
+
+    /**
+     * @param array<string|int, mixed> $aDatos
+     * @return array<string, mixed>
+     */
+    private function normalizeRowFromDb(array $aDatos): array
+    {
+        if (is_string($aDatos['plan_estudios'] ?? null)) {
+            $aDatos['plan_estudios'] = FuncTablasSupport::arrayPgInteger2php($aDatos['plan_estudios']);
+        }
+
         $result = [];
         foreach ($aDatos as $key => $value) {
             $result[(string) $key] = $value;
         }
+
         return $result;
     }
 
-    public function findById(int $id_asignatura): ?Asignatura
+    public function findById(int $id_asignatura, int|array|null $plan_estudios = null): ?Asignatura
     {
-        $aDatos = $this->datosById($id_asignatura);
+        $aDatos = $this->datosById($id_asignatura, $plan_estudios);
         if ($aDatos === false) {
             return null;
         }

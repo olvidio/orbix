@@ -24,7 +24,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 $pkeyJson = src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($Qs_pkey);
-$a_pkey = $pkeyJson !== '' ? json_decode($pkeyJson) : null;
+$a_pkey = $pkeyJson !== '' ? json_decode($pkeyJson, true) : null;
 
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info_encoded);

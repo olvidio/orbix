@@ -189,7 +189,8 @@ class EditarPersonaNota
 
             // si no está abierto, hay que abrir el dossier para esta persona
             // si es una persona de paso, No hace falta
-            if ($id_nom > 0) {
+            // En H-Hv / M-Mv (y ámbito rstgr) no existe d_dossiers_abiertos: no es relevante para la tessera.
+            if ($id_nom > 0 && ConfigGlobal::usaTablaDossiersAbierto()) {
                 $DosierRepository = $this->dossierRepository;
                 $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303]));
                 if ($oDossier === null) {

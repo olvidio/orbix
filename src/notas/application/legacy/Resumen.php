@@ -7,6 +7,8 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use src\notas\application\services\ResumenTempTablesService;
@@ -288,8 +290,14 @@ class Resumen
         $this->tempTablesService->rebuildNotasTable($notas, $tabla, $curs, $notas_vf, $a_superadas);
 
         $AsignaturaRepository = $this->asignaturaRepository;
-        $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('active' => 'true'));
-        $this->tempTablesService->rebuildAsignaturasTable($asignaturas, $cAsignaturas);
+        $cAsignaturasMap = [];
+        foreach ([PlanEstudios::PLAN_1997, PlanEstudios::PLAN_2026] as $plan) {
+            [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, ['active' => 'true']);
+            foreach ($AsignaturaRepository->getAsignaturas($aWhere, $aOperador) as $oAsignatura) {
+                $cAsignaturasMap[$oAsignatura->getId_asignatura()] = $oAsignatura;
+            }
+        }
+        $this->tempTablesService->rebuildAsignaturasTable($asignaturas, array_values($cAsignaturasMap));
     }
 
     public function Lista(string $sql, string $campos, int|string $cabecera): string

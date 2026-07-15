@@ -4,6 +4,8 @@ namespace src\actividadestudios\application;
 
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\notas\application\AsignaturasPendientes;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -75,9 +77,18 @@ final class PosiblesAsignaturasCaData
         }
         sort($aAlumnos);
 
-        $aWhereAsig = ['id_tipo' => 8, '_ordre' => 'id_nivel'];
-        $aOperadorAsig = ['id_tipo' => '!='];
-        $cAsignaturas = $this->asignaturaRepository->getAsignaturas($aWhereAsig, $aOperadorAsig);
+        $aAsignaturasPorId = [];
+        foreach ([PlanEstudios::PLAN_1997, PlanEstudios::PLAN_2026] as $plan) {
+            [$aWhereAsig, $aOperadorAsig] = PlanEstudiosFilter::apply($plan, [
+                'active' => 't',
+                'id_tipo' => 8,
+                '_ordre' => 'id_nivel',
+            ], ['id_tipo' => '!=']);
+            foreach ($this->asignaturaRepository->getAsignaturas($aWhereAsig, $aOperadorAsig) as $oAsignatura) {
+                $aAsignaturasPorId[$oAsignatura->getId_asignatura()] = $oAsignatura;
+            }
+        }
+        $cAsignaturas = array_values($aAsignaturasPorId);
 
         $aAsignaturasAlumnos = [];
         foreach ($cAsignaturas as $oAsignatura) {

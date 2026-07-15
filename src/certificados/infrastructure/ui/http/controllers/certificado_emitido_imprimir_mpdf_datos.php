@@ -3,6 +3,8 @@
 use frontend\shared\config\OrbixRuntime;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\notas\application\PlanEstudiosDePersona;
 use src\certificados\application\support\CertificadosSession;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
@@ -133,8 +135,15 @@ $data['reg_num'] = $reg_num;
 $data['f_certificado'] = $f_certificado;
 $data['chk_firmado'] = $chk_firmado;
 
-$aWhere = ['active' => 't', 'id_nivel' => '1100,2500', '_ordre' => 'id_nivel'];
-$aOperador = ['id_nivel' => 'BETWEEN'];
+/** @var PlanEstudiosDePersona $planEstudiosDePersona */
+$planEstudiosDePersona = DependencyResolver::get(PlanEstudiosDePersona::class);
+$plan = $planEstudiosDePersona->resolve($id_nom);
+
+[$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
+    'active' => 't',
+    'id_nivel' => '1100,2500',
+    '_ordre' => 'id_nivel',
+], ['id_nivel' => 'BETWEEN']);
 $data['cAsignaturas'] = $asignaturaRepository->getAsignaturasAsJson($aWhere, $aOperador);
 
 $mi_dl = ConfigGlobal::mi_dele();

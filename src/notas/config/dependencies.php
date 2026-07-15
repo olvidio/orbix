@@ -43,7 +43,7 @@ use src\notas\application\NotaPersonaFormData;
 use src\notas\application\NotasDeUnaPersonaData;
 use src\notas\application\PersonaNotaEditar;
 use src\notas\application\PersonaNotaEliminar;
-use src\notas\application\PersonaNotaNueva;
+use src\notas\application\PlanEstudiosDePersona;
 use src\notas\application\PosiblesOpcionalesData;
 use src\notas\application\PosiblesPreceptoresData;
 use src\notas\application\Select_notas_de_una_persona;
@@ -112,6 +112,7 @@ return [
     PersonaNotaEditar::class => autowire(PersonaNotaEditar::class),
     PersonaNotaEliminar::class => autowire(PersonaNotaEliminar::class),
     PersonaNotaNueva::class => autowire(PersonaNotaNueva::class),
+    PlanEstudiosDePersona::class => autowire(PlanEstudiosDePersona::class),
     PosiblesOpcionalesData::class => autowire(PosiblesOpcionalesData::class),
     PosiblesPreceptoresData::class => autowire(PosiblesPreceptoresData::class),
     Select_notas_de_una_persona::class => autowire(Select_notas_de_una_persona::class),

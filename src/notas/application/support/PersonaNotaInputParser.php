@@ -3,6 +3,8 @@
 namespace src\notas\application\support;
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\notas\application\PlanEstudiosDePersona;
 use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaEpoca;
@@ -24,6 +26,7 @@ final class PersonaNotaInputParser
 
     public function __construct(
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly PlanEstudiosDePersona $planEstudiosDePersona,
     ) {
     }
     /**
@@ -50,7 +53,9 @@ final class PersonaNotaInputParser
 
         if ($id_asignatura === 1) {
             $AsignaturaRepository = $this->asignaturaRepository;
-            $cAsignaturas = $AsignaturaRepository->getAsignaturas(['id_nivel' => $id_nivel]);
+            $plan = $this->planEstudiosDePersona->resolve($id_pau);
+            [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, ['id_nivel' => $id_nivel]);
+            $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
             if (count($cAsignaturas) === 0) {
                 throw new \RuntimeException(sprintf(_("No se encuentra una asignatura para el nivel: %s"), $id_nivel));
             }

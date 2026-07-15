@@ -4,6 +4,7 @@ namespace src\actividadestudios\application;
 
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\profesores\domain\ProfesorActividad;
 use src\profesores\domain\services\ProfesorAsignaturaService;
@@ -125,7 +126,10 @@ final class FormAsignaturasDeUnaActividadData
             if (empty($idActiv)) {
                 throw new \InvalidArgumentException(_('debería haber un nombre de asignatura'));
             }
-            $oDesplAsignaturasOpciones = $this->asignaturaRepository->getArrayAsignaturasConSeparador(false);
+            $oDesplAsignaturasOpciones = $this->asignaturaRepository->getArrayAsignaturasConSeparador(
+                false,
+                PlanEstudios::PLAN_2026,
+            );
             $camposForm .= '!id_asignatura';
         }
 

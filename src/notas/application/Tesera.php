@@ -5,6 +5,8 @@ namespace src\notas\application;
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\entity\Persona;
@@ -29,8 +31,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
  *     (`ID_NIVEL_ASIG_DESDE/HASTA`, `ID_NIVEL_MAX_CUADRIENIO`,
  *     `ID_ASIG_OPCIONAL_UMBRAL`, `ID_ASIG_OPCIONAL_MAX`,
  *     `ID_ASIG_FIN_CUADRIENIO`, `PLAN_NUEVO`, `PLAN_VIEJO`,
- *     `ID_NIVEL_PLAN97_DESAPARECIDO`, `ID_NIVEL_PLAN97_NUEVOS`,
- *     `FECHA_LIMITE_PLAN97`).
+ *     `FECHA_LIMITE_PLAN_2026`).
  *   - La merge de `cAsignaturas` + `aAprobadas` esta saneada para
  *     no acceder fuera de rango de `cAsignaturas` (bug latente del
  *     modelo legacy cuando la ultima asignatura era pendiente).
@@ -45,6 +46,7 @@ final class Tesera
     public function __construct(
         private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly PlanEstudiosDePersona $planEstudiosDePersona,
     ) {
     }
     /** Rango de `id_nivel` de asignaturas de bienio+cuadrienio. */
@@ -63,20 +65,16 @@ final class Tesera
     /** `id_asignatura` de la marca "cuadrienio completado". */
     private const ID_ASIG_FIN_CUADRIENIO = 9998;
 
-    /** Plan de estudios "nuevo" (por defecto). */
-    public const PLAN_NUEVO = 26;
-    /** Plan de estudios "viejo" (anterior a 2026-03-30). */
-    public const PLAN_VIEJO = 97;
+    /** Plan de estudios vigente (por defecto). */
+    public const PLAN_NUEVO = PlanEstudios::PLAN_2026;
+    /** Plan de estudios anterior (anterior a 2026-03-30). */
+    public const PLAN_VIEJO = PlanEstudios::PLAN_1997;
 
-    /** `id_nivel` del plan viejo que desaparece en el nuevo. */
-    private const ID_NIVEL_PLAN97_DESAPARECIDO = 2114;
-    /** `id_nivel` que reemplazan al anterior en el plan viejo. */
-    private const ID_NIVEL_PLAN97_NUEVOS = '2112,2113';
     /**
      * Fecha limite que separa los planes: las personas con marca
-     * `cuadrienio completado` anterior a esta fecha pertenecen al plan viejo.
+     * `cuadrienio completado` anterior a esta fecha pertenecen al plan 1997.
      */
-    private const FECHA_LIMITE_PLAN97 = '2026-03-30';
+    private const FECHA_LIMITE_PLAN_2026 = '2026-03-30';
 
     /**
      * Devuelve el curso academico actual segun la configuracion (`diaIniStgr`,
@@ -116,71 +114,32 @@ final class Tesera
 
     /**
      * Determina el plan de estudios aplicable a una persona: las personas
-     * con "cuadrienio completado" anterior a {@see FECHA_LIMITE_PLAN97}
-     * se consideran del plan viejo ({@see PLAN_VIEJO}); resto, plan nuevo.
+     * con "cuadrienio completado" anterior a {@see FECHA_LIMITE_PLAN_2026}
+     * se consideran del plan 1997 ({@see PLAN_VIEJO}); resto, plan 2026.
+     *
+     * @return int Año del plan ({@see PlanEstudios::PLAN_1997} o {@see PlanEstudios::PLAN_2026})
      */
     public function getPlan(int $idNom): int
     {
-        $repo = $this->personaNotaRepository;
-        $cNotas = $repo->getPersonaNotas([
-            'id_nom' => $idNom,
-            'id_asignatura' => self::ID_ASIG_FIN_CUADRIENIO,
-        ]);
-        if (count($cNotas) === 0) {
-            return self::PLAN_NUEVO;
-        }
-        $oFActa = $cNotas[0]->getF_acta();
-        $oLimite = new DateTimeLocal(self::FECHA_LIMITE_PLAN97);
-        return ($oFActa < $oLimite) ? self::PLAN_VIEJO : self::PLAN_NUEVO;
+        return $this->planEstudiosDePersona->resolve($idNom);
     }
 
     /**
-     * Asignaturas activas del bienio+cuadrienio, ordenadas por `id_nivel`.
-     * Cuando el plan aplicable es el viejo, se sustituye `id_nivel = 2114`
-     * por las asignaturas `2112, 2113` (desaparecidas en el plan nuevo).
+     * Asignaturas activas del bienio+cuadrienio para el plan indicado,
+     * ordenadas por `id_nivel`.
      *
+     * @param int $plan Año del plan ({@see PlanEstudios::PLAN_1997} o {@see PlanEstudios::PLAN_2026})
      * @return Asignatura[]
      */
     public function getAsignaturasPosibles(int $plan = self::PLAN_NUEVO): array
     {
-        $repo = $this->asignaturaRepository;
-        $cAsignaturas = $repo->getAsignaturas([
+        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
             'active' => 't',
             'id_nivel' => self::ID_NIVEL_ASIG_DESDE . ',' . self::ID_NIVEL_ASIG_HASTA,
             '_ordre' => 'id_nivel',
         ], ['id_nivel' => 'BETWEEN']);
-        if ($plan !== self::PLAN_VIEJO) {
-            return $cAsignaturas;
-        }
 
-        // Plan viejo: se reintroducen 2112/2113 en lugar de 2114.
-        $cPlan97 = $repo->getAsignaturas([
-            'id_nivel' => self::ID_NIVEL_PLAN97_NUEVOS,
-            '_ordre' => 'id_nivel',
-        ], ['id_nivel' => 'IN']);
-        $resultado = [];
-        foreach ($cAsignaturas as $oAsig) {
-            if ((int)$oAsig->getId_nivel() === self::ID_NIVEL_PLAN97_DESAPARECIDO) {
-                $resultado = array_merge($resultado, $cPlan97);
-                continue;
-            }
-            $resultado[] = $oAsig;
-        }
-
-        // también hay que añadir las dos opcionales que se ha quitado: 1232 y 2433
-        $cPlan97op = $repo->getAsignaturas([
-            'id_nivel' => '1232,2433',
-            '_ordre' => 'id_nivel',
-        ], ['id_nivel' => 'IN']);
-
-        $resultado = array_merge($resultado, $cPlan97op);
-
-        //Ordenar por id_nivel
-        usort($resultado, static function (Asignatura $a, Asignatura $b): int {
-            return $a->getId_nivel() <=> $b->getId_nivel();
-        });
-
-        return $resultado;
+        return $this->asignaturaRepository->getAsignaturas($aWhere, $aOperador);
     }
 
     /**
@@ -190,6 +149,7 @@ final class Tesera
      *   `nombre_corto`, `fecha` (`DateTimeLocal`), `id_situacion`,
      *   `bAprobada` (`'t'|'f'`), `nota` (string), `acta` (string|null).
      *
+     * @param int $plan Año del plan ({@see PlanEstudios::PLAN_1997} o {@see PlanEstudios::PLAN_2026})
      * @return array<int, array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_asignatura: string, nombre_corto: string, fecha: \src\shared\domain\value_objects\DateTimeLocal|null, id_situacion: int, bAprobada: bool|string, nota: string|null, acta: string|null}>
      */
     public function getAsignaturasAprobadas(int $idNom, int $plan = self::PLAN_NUEVO): array
@@ -207,29 +167,22 @@ final class Tesera
             $idAsig = (int)$oNota->getId_asignatura();
             $idNivel = (int)$oNota->getIdNivelVo()->value();
 
-            $oAsig = $asignaturaRepo->findById($idAsig);
+            $oAsig = $asignaturaRepo->findById($idAsig, $plan);
             if ($oAsig === null) {
-                throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), $idAsig));
+                continue;
             }
 
             if ($idAsig > self::ID_ASIG_OPCIONAL_UMBRAL) {
                 $idNivelAsig = $idNivel;
-                // para las opcionales hay que ver si están activas por id_nivel, no id_asignatura:
-                $oAsignaturaOpcionalGenerica = $asignaturaRepo->findById($idNivel);
+                $oAsignaturaOpcionalGenerica = $asignaturaRepo->findById($idNivel, $plan);
                 if ($oAsignaturaOpcionalGenerica === null || !$oAsignaturaOpcionalGenerica->isActive()) {
                     continue;
                 }
             } else {
-                if ($plan === self::PLAN_VIEJO) {
-                    if ($idNivel === self::ID_NIVEL_PLAN97_DESAPARECIDO) {
-                        continue;
-                    }
-                } else {
-                    if (!$oAsig->isActive()) {
-                        continue;
-                    }
+                if (!$oAsig->isActive()) {
+                    continue;
                 }
-                $idNivelAsig = (int)$oAsig->getId_nivel();
+                $idNivelAsig = (int) $oAsig->getId_nivel();
             }
 
             $aAprobadas[$idNivelAsig] = [
@@ -256,10 +209,10 @@ final class Tesera
      * (`numasig`, `numcred`, `numasig_year`, `numcred_year`, totales).
      *
      * Las filas de `tabla` son arrays neutros con:
-     *   `id_nivel` (para que la vista decida la cabecera), `asignatura`
-     *   (nombre_corto, con el nombre de la opcional si procede), `nota`
+     *   `id_nivel`, `titulo_seccion` (opcional, cabecera de bloque curricular),
+     *   `asignatura` (nombre_corto, con el nombre de la opcional si procede), `nota`
      *   (`-1` si pendiente), `fecha` (string `'d-m-Y'` o `''`), `bAprobada`
-     *   (`'t'|'f'`).
+     *   (`'t'|'f'`). Solo entran asignaturas del plan vigente.
      *
      * @return array<string, mixed>
      */
@@ -279,53 +232,53 @@ final class Tesera
 
         $numAsigTotal = count($cAsignaturas);
         $numCreditosTotal = 0.0;
+        foreach ($cAsignaturas as $oAsig) {
+            $numCreditosTotal += (float) $oAsig->getCreditos();
+        }
+
+        $aprobadosList = array_values($aAprobadas);
+        $numAprob = count($aprobadosList);
+        $planNiveles = [];
+        foreach ($cAsignaturas as $oAsigPlan) {
+            $planNiveles[(int) $oAsigPlan->getId_nivel()] = true;
+        }
+
+        $j = 0;
+        $tabla = [];
+        $i = 0;
+        $seccionActual = null;
         $numasig = 0;
         $numcred = 0.0;
         $numasigYear = 0;
         $numcredYear = 0.0;
 
-        reset($aAprobadas);
-        $tabla = [];
-        $i = 0;
-        $a = 0;
-        while ($a < $numAsigTotal) {
-            $oAsig = $cAsignaturas[$a++];
-            $numCreditosTotal += (float)$oAsig->getCreditos();
-            $row = current($aAprobadas);
-            next($aAprobadas);
-
-            if ($row === false) {
-                $i++;
-                $tabla[$i] = $this->filaPendiente($oAsig);
-                continue;
-            }
-
-            $rowIdNivelAsig = $row['id_nivel_asig'];
-            $rowIdNivel = $row['id_nivel'];
+        foreach ($cAsignaturas as $oAsig) {
             while (
-                (int)$oAsig->getId_nivel() < $rowIdNivelAsig
-                && $rowIdNivel < self::ID_NIVEL_MAX_CUADRIENIO
-                && $a < $numAsigTotal
+                $j < $numAprob
+                && !isset($planNiveles[(int) $aprobadosList[$j]['id_nivel_asig']])
             ) {
-                $i++;
-                $tabla[$i] = $this->filaPendiente($oAsig);
-                $oAsig = $cAsignaturas[$a++];
-                $numCreditosTotal += (float)$oAsig->getCreditos();
+                $j++;
             }
 
-            if ((int)$oAsig->getId_nivel() === $rowIdNivelAsig) {
+            $idNivelPlan = (int) $oAsig->getId_nivel();
+            if ($j < $numAprob && (int) $aprobadosList[$j]['id_nivel_asig'] === $idNivelPlan) {
+                $row = $aprobadosList[$j++];
                 $i++;
                 $tabla[$i] = $this->filaAprobada($oAsig, $row);
-
-                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($row['bAprobada'])) {
-                    $numasig++;
-                    $numcred += (float)$oAsig->getCreditos();
-                    $oFActa = $row['fecha'];
-                    if ($curso['inicio'] <= $oFActa && $oFActa <= $curso['fin']) {
-                        $numasigYear++;
-                        $numcredYear += (float)$oAsig->getCreditos();
-                    }
-                }
+                $this->anotarTituloSeccion($tabla, $i, $idNivelPlan, $seccionActual);
+                $this->acumularEstadisticasAprobada(
+                    $row,
+                    $curso,
+                    $numasig,
+                    $numcred,
+                    $numasigYear,
+                    $numcredYear,
+                    $oAsig,
+                );
+            } else {
+                $i++;
+                $tabla[$i] = $this->filaPendiente($oAsig);
+                $this->anotarTituloSeccion($tabla, $i, $idNivelPlan, $seccionActual);
             }
         }
 
@@ -341,6 +294,58 @@ final class Tesera
             'curso_txt' => $curso['texto'],
             'numcred_year' => $numcredYear,
         ];
+    }
+
+    private static function seccionTituloDeIdNivel(int $idNivel): ?string
+    {
+        return match (true) {
+            $idNivel >= 1100 && $idNivel < 1200 => 'filosofia_anno_i',
+            $idNivel >= 1200 && $idNivel < 2100 => 'filosofia_anno_ii',
+            $idNivel >= 2100 && $idNivel < 2200 => 'teologia_anno_i',
+            $idNivel >= 2200 && $idNivel < 2300 => 'teologia_anno_ii',
+            $idNivel >= 2300 && $idNivel < 2400 => 'teologia_anno_iii',
+            $idNivel >= 2400 && $idNivel < 2500 => 'teologia_anno_iv',
+            default => null,
+        };
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $tabla
+     */
+    private function anotarTituloSeccion(array &$tabla, int $i, int $idNivel, ?string &$seccionActual): void
+    {
+        $seccion = self::seccionTituloDeIdNivel($idNivel);
+        if ($seccion === null || $seccion === $seccionActual) {
+            return;
+        }
+        $tabla[$i]['titulo_seccion'] = $seccion;
+        $seccionActual = $seccion;
+    }
+
+    /**
+     * @param array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_asignatura: string, nombre_corto: string, fecha: DateTimeLocal|null, bAprobada: bool|string, nota: string|null} $row
+     */
+    private function acumularEstadisticasAprobada(
+        array $row,
+        array $curso,
+        int &$numasig,
+        float &$numcred,
+        int &$numasigYear,
+        float &$numcredYear,
+        Asignatura $oAsig,
+    ): void {
+        if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($row['bAprobada'])) {
+            return;
+        }
+
+        $creditos = (float) ($oAsig->getCreditos() ?? 0);
+        $numasig++;
+        $numcred += $creditos;
+        $oFActa = $row['fecha'];
+        if ($oFActa !== null && $curso['inicio'] <= $oFActa && $oFActa <= $curso['fin']) {
+            $numasigYear++;
+            $numcredYear += $creditos;
+        }
     }
 
     /**

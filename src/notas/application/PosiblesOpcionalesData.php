@@ -2,7 +2,8 @@
 
 namespace src\notas\application;
 
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\notas\application\PlanEstudiosDePersona;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 
@@ -18,6 +19,7 @@ final class PosiblesOpcionalesData
     public function __construct(
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
         private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+        private readonly PlanEstudiosDePersona $planEstudiosDePersona,
     ) {
     }
 
@@ -28,16 +30,16 @@ final class PosiblesOpcionalesData
     public function execute(array $input): array
     {
         $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
+        $plan = $this->planEstudiosDePersona->resolve($id_nom);
 
         $AsignaturaRepository = $this->asignaturaRepository;
-        $cOpcionales = $AsignaturaRepository->getAsignaturas(
-            [
-                'active' => 't',
-                'id_nivel' => '3000,5000',
-                '_ordre' => 'nombre_corto',
-            ],
-            ['id_nivel' => 'BETWEEN']
-        );
+        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
+            'active' => 't',
+            'id_nivel' => '3000,5000',
+            '_ordre' => 'nombre_corto',
+        ], ['id_nivel' => 'BETWEEN']);
+
+        $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
         $aSuperadas = NotaSituacion::getArraySuperadas();
         $PersonaNotaRepository = $this->personaNotaRepository;

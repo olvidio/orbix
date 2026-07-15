@@ -3,6 +3,7 @@
 namespace src\asignaturas\domain\contracts;
 
 use src\asignaturas\domain\entity\Asignatura;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 
 /**
  * Interfaz de la clase Asignatura y su Repositorio
@@ -22,7 +23,10 @@ interface AsignaturaRepositoryInterface
     /**
      * @return array<int|string, string>
      */
-    public function getArrayAsignaturasConSeparador(bool $op_genericas = true): array;
+    public function getArrayAsignaturasConSeparador(
+        bool $op_genericas = true,
+        ?int $planEstudios = PlanEstudios::PLAN_2026,
+    ): array;
 
     public function getListaOpGenericas(string $formato = ''): string;
 
@@ -55,9 +59,9 @@ interface AsignaturaRepositoryInterface
     /**
      * @return array<string, mixed>|false
      */
-    public function datosById(int $id_asignatura): array|false;
+    public function datosById(int $id_asignatura, int|array|null $plan_estudios = null): array|false;
 
-    public function findById(int $id_asignatura): ?Asignatura;
+    public function findById(int $id_asignatura, int|array|null $plan_estudios = null): ?Asignatura;
 
     public function getNewId(): int;
 }

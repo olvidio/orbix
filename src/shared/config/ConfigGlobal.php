@@ -3,6 +3,7 @@
 namespace src\shared\config;
 
 use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\shared\application\RefreshCrStgrMaterializedViews;
 use src\usuarios\domain\entity\Usuario;
 
 class ConfigGlobal extends ServerConf
@@ -322,6 +323,26 @@ class ConfigGlobal extends ServerConf
         $oConfig = $_SESSION['oConfig'] ?? null;
 
         return $oConfig instanceof ConfigSnapshot ? $oConfig->getAmbito() : '';
+    }
+
+    /**
+     * Esquemas agregados de región STGR (p. ej. H-Hv, M-Mv) no tienen `d_dossiers_abiertos`.
+     * En ámbito rstgr tampoco se persiste el estado abierto/cerrado del dossier.
+     */
+    public static function usaTablaDossiersAbierto(): bool
+    {
+        if (self::mi_ambito() === 'rstgr') {
+            return false;
+        }
+
+        $esquema = self::mi_region_dl();
+        if ($esquema === '') {
+            return true;
+        }
+
+        $ubicacion = self::mi_sfsv() === 2 ? 'sf' : 'sv';
+
+        return !RefreshCrStgrMaterializedViews::esquemaRequiereRefreshMv($esquema, $ubicacion);
     }
 
     public static function permisos(): void

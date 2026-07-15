@@ -5,6 +5,8 @@ namespace src\notas\application;
 
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -23,6 +25,8 @@ final class AsignaturasPendientesResumenData
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
         private readonly PersonaDlRepositoryInterface $personaDlRepository,
         private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+        private readonly Tesera $tesera,
+        private readonly PlanEstudiosDePersona $planEstudiosDePersona,
     ) {
     }
     /**
@@ -31,36 +35,36 @@ final class AsignaturasPendientesResumenData
     public function execute(): array
     {
         $AsignaturaRepository = $this->asignaturaRepository;
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['active'] = 't';
-        $aWhere['id_nivel'] = '1100,2500';
-        $aOperador['id_nivel'] = 'BETWEEN';
-        $aWhere['_ordre'] = 'id_nivel';
-        $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
-
         $aPendientes = [];
-        foreach ($cAsignaturas as $oAsignatura) {
-            $id_nivel = $oAsignatura->getId_nivel();
-            $nombre_corto = $oAsignatura->getNombre_corto();
-            $creditos = $oAsignatura->getCreditos();
-            $year = $oAsignatura->getYear();
-            $aPendientes[$id_nivel] = [
-                'def' => [
-                    'nombre' => $nombre_corto,
-                    'creditos' => $creditos,
-                    'year' => $year,
-                ],
-                'nb' => 0,
-                'nc1' => 0,
-                'nc2' => 0,
-                'ntotal' => 0,
-                'ab' => 0,
-                'ac1' => 0,
-                'ac2' => 0,
-                'atotal' => 0,
-            ];
+        foreach ([PlanEstudios::PLAN_1997, PlanEstudios::PLAN_2026] as $plan) {
+            [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
+                'active' => 't',
+                'id_nivel' => '1100,2500',
+                '_ordre' => 'id_nivel',
+            ], ['id_nivel' => 'BETWEEN']);
+            foreach ($AsignaturaRepository->getAsignaturas($aWhere, $aOperador) as $oAsignatura) {
+                $id_nivel = $oAsignatura->getId_nivel();
+                if (isset($aPendientes[$id_nivel])) {
+                    continue;
+                }
+                $aPendientes[$id_nivel] = [
+                    'def' => [
+                        'nombre' => $oAsignatura->getNombre_corto(),
+                        'creditos' => $oAsignatura->getCreditos(),
+                        'year' => $oAsignatura->getYear(),
+                    ],
+                    'nb' => 0,
+                    'nc1' => 0,
+                    'nc2' => 0,
+                    'ntotal' => 0,
+                    'ab' => 0,
+                    'ac1' => 0,
+                    'ac2' => 0,
+                    'atotal' => 0,
+                ];
+            }
         }
+        ksort($aPendientes);
 
         $a_Asig_isActive = [];
         $a_Asig_nivel = [];
@@ -116,7 +120,10 @@ final class AsignaturasPendientesResumenData
                 }
             }
 
-            foreach ($cAsignaturas as $oAsignatura) {
+            $plan = $this->planEstudiosDePersona->resolve($id_nom);
+            $cAsignaturasPersona = $this->tesera->getAsignaturasPosibles($plan);
+
+            foreach ($cAsignaturasPersona as $oAsignatura) {
                 $id_nivel = $oAsignatura->getId_nivel();
                 if (empty($aAprobadas[$id_nivel])) {
                     $aPendientes[$id_nivel][$tipo]++;

@@ -62,6 +62,13 @@ class DatosUpdateRepo
                     $aCampos[$nom_camp] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($aCampos[$nom_camp]);
                 }
             }
+            if ($tipo === 'checks') {
+                $raw = $aCampos[$nom_camp] ?? [];
+                if (!is_array($raw)) {
+                    $raw = ($raw === null || $raw === '') ? [] : [$raw];
+                }
+                $aCampos[$nom_camp] = array_values(array_map('intval', array_filter($raw, fn($v) => $v !== '' && $v !== null)));
+            }
             if ($tipo === 'fecha') {
                 if (empty($aCampos[$nom_camp])) {
                     $aCampos[$nom_camp] = null;
@@ -74,7 +81,7 @@ class DatosUpdateRepo
                 $aCampos[$nom_camp] = str_replace(',', '.', is_scalar($decimalValue) ? (string) $decimalValue : '');
             }
 
-            if (empty($aCampos[$nom_camp])) {
+            if ($tipo !== 'checks' && empty($aCampos[$nom_camp])) {
                 $aCampos[$nom_camp] = null;
             }
 
@@ -165,6 +172,13 @@ class DatosUpdateRepo
                     $aCampos[$nom_camp] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($aCampos[$nom_camp]);
                 }
             }
+            if ($tipo === 'checks') {
+                $raw = $aCampos[$nom_camp] ?? [];
+                if (!is_array($raw)) {
+                    $raw = ($raw === null || $raw === '') ? [] : [$raw];
+                }
+                $aCampos[$nom_camp] = array_values(array_map('intval', array_filter($raw, fn($v) => $v !== '' && $v !== null)));
+            }
             if ($tipo === 'fecha') {
                 if (empty($aCampos[$nom_camp])) {
                     $aCampos[$nom_camp] = null;
@@ -182,7 +196,7 @@ class DatosUpdateRepo
                 $metodo = substr($metodo, 0, -2);
             }
 
-            if ($tipo !== 'check' && empty($aCampos[$nom_camp])) {
+            if ($tipo !== 'check' && $tipo !== 'checks' && empty($aCampos[$nom_camp])) {
                 $aCampos[$nom_camp] = null;
             }
             try {

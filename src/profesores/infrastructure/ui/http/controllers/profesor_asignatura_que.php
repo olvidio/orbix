@@ -6,4 +6,4 @@ use src\shared\web\ContestarJson;
 
 /** @var ProfesorAsignaturaQueData $useCase */
 $useCase = DependencyResolver::get(ProfesorAsignaturaQueData::class);
-ContestarJson::enviar('', $useCase->execute());
+ContestarJson::enviar('', $useCase->execute($_POST));

@@ -243,6 +243,7 @@ abstract class DatosInfoRepo
      */
     private function resolveFindByIdArguments(mixed $a_pkey): array
     {
+        $a_pkey = $this->normalizeA_pkey($a_pkey);
         if ($a_pkey === null || $a_pkey === '' || $a_pkey === []) {
             return [];
         }
@@ -250,6 +251,15 @@ abstract class DatosInfoRepo
             $a_pkey = (array) $a_pkey;
         }
         if (is_array($a_pkey)) {
+            if (array_key_exists('id_asignatura', $a_pkey)) {
+                $args = [$this->normalizePkeyScalar($a_pkey['id_asignatura'])];
+                if (array_key_exists('plan_estudios', $a_pkey)) {
+                    $args[] = $this->normalizePlanEstudiosPkey($a_pkey['plan_estudios']);
+                }
+
+                return $args;
+            }
+
             return array_map(
                 fn (mixed $value): mixed => $this->normalizePkeyScalar($value),
                 array_values($a_pkey)
@@ -257,6 +267,42 @@ abstract class DatosInfoRepo
         }
 
         return [$this->normalizePkeyScalar($a_pkey)];
+    }
+
+    private function normalizeA_pkey(mixed $a_pkey): mixed
+    {
+        if (is_string($a_pkey) && $a_pkey !== '') {
+            $decoded = json_decode($a_pkey, true);
+            if (is_array($decoded)) {
+                return $decoded;
+            }
+        }
+
+        return $a_pkey;
+    }
+
+    /**
+     * @return list<int>|int
+     */
+    private function normalizePlanEstudiosPkey(mixed $plan): array|int
+    {
+        if (is_array($plan)) {
+            $normalized = array_values(array_map(
+                fn (mixed $item): int => (int) $item,
+                $plan
+            ));
+            sort($normalized);
+
+            return $normalized;
+        }
+        if (is_string($plan) && str_starts_with($plan, '{')) {
+            $parsed = \src\shared\domain\helpers\FuncTablasSupport::arrayPgInteger2php($plan);
+            sort($parsed);
+
+            return $parsed;
+        }
+
+        return $this->normalizePkeyScalar($plan);
     }
 
     private function normalizePkeyScalar(mixed $value): mixed

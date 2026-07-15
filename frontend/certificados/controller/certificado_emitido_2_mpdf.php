@@ -1,15 +1,16 @@
 <?php
 
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 use Mpdf\Mpdf;
 use Mpdf\MpdfException;
-use frontend\shared\security\HashFront;
 use frontend\certificados\helpers\CertificadosPayload;
 
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 
-$Qguardar = \frontend\shared\helpers\PayloadCoercion::string($_GET['guardar'] ?? '');
+$Qguardar = PayloadCoercion::string($_GET['guardar'] ?? '');
 
 $footer = '';
 $certificado = '';
@@ -22,8 +23,6 @@ $content = ob_get_clean();
 if ($content === false) {
     $content = '';
 }
-
-require_once OrbixRuntime::dirLibs() . '/vendor/autoload.php';
 
 $nomArchivo = (isset($nom) && is_string($nom) && $nom !== '')
     ? frontend\shared\web\QuitarAcentos::convert($nom)

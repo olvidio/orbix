@@ -7,6 +7,12 @@ use src\shared\domain\helpers\FilterPostGet;
 
 $Qclase_info_encoded = \src\shared\domain\helpers\FilterPostGet::post('clase_info');
 $a_pkey = \src\shared\domain\helpers\FilterPostGet::post('a_pkey');
+if (is_string($a_pkey) && $a_pkey !== '') {
+    $decoded = json_decode($a_pkey, true);
+    if (is_array($decoded)) {
+        $a_pkey = $decoded;
+    }
+}
 $Qobj_pau = \src\shared\domain\helpers\FilterPostGet::post('obj_pau');
 $Qmod = \src\shared\domain\helpers\FilterPostGet::post('mod');
 $mod = is_string($Qmod) ? $Qmod : '';
@@ -26,6 +32,9 @@ foreach ($aCamposDepende as $pKeyRepository => $campoDepende) {
     if ($mod === 'nuevo') {
        $id_pau = '';
        $valor_campo_depende = '';
+    } elseif ($oFicha === null) {
+        $id_pau = '';
+        $valor_campo_depende = '';
     } else {
         $bbb = 'get' . ucfirst($pKeyRepository);
         $id_pau = $oFicha->$bbb();

@@ -139,6 +139,21 @@ use frontend\shared\config\AppUrlConfig;
                         </td>
                     </tr>
                     <?php break;
+                case "checks": ?>
+                    <tr>
+                        <td class="etiqueta"><?= ucfirst($eti) ?></td>
+                        <td class="contenido">
+                            <?php
+                            $a_opciones = $field['opciones'];
+                            $valores_seleccionados = $field['valores_seleccionados'];
+                            foreach ($a_opciones as $key => $val):
+                                $chk = in_array($key, $valores_seleccionados) ? 'checked' : '';
+                                ?>
+                                <input type='checkbox' name='<?= $nom_camp ?>[]' value='<?= $key ?>' <?= $chk ?>><?= $val ?>
+                            <?php endforeach; ?>
+                        </td>
+                    </tr>
+                    <?php break;
             endswitch; ?>
         <?php endforeach; ?>
     </table>

@@ -9,34 +9,34 @@ use function frontend\shared\helpers\is_true;
 include_once(OrbixRuntime::dirEstilos() . '/tessera.css.php');
 
 /**
- * Cabecera HTML para la fila segun el `id_nivel` de la asignatura.
+ * Cabecera HTML para la fila segun la seccion curricular (rango de id_nivel).
  * Acoplada a la estructura en dos columnas (`border semi`) de esta vista:
- * el caso 2201 cierra la tabla anidada de la izquierda y abre la de la
+ * `teologia_anno_ii` cierra la tabla anidada de la izquierda y abre la de la
  * derecha para pintar el cuadrienio.
  */
-$render_titulo = static function (int $id_nivel): string {
-    switch ($id_nivel) {
-        case 1101:
+$render_titulo = static function (string $seccion): string {
+    switch ($seccion) {
+        case 'filosofia_anno_i':
             return '<tr><td colspan="3" style="text-align: center;"><h3>'
                 . ucfirst(_("filosofía")) . '</h3></td></tr>'
                 . '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' I</b></td></tr>';
-        case 1201:
+        case 'filosofia_anno_ii':
             return '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' II</b></td></tr>';
-        case 2101:
+        case 'teologia_anno_i':
             return '<tr><td><br></td></tr>'
                 . '<tr><td colspan="4" style="text-align: center;"><h3>'
                 . ucfirst(_("teología")) . '</h3></td></tr>'
                 . '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' I</b></td></tr>';
-        case 2201:
+        case 'teologia_anno_ii':
             return '</table></td>'
                 . '<td class="border semi">'
                 . '<table style="width: 100%">'
                 . '<tr><td colspan="3" style="text-align: center;"><h3>'
                 . ucfirst(_("teología")) . '</h3></td></tr>'
                 . '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' II</b></td></tr>';
-        case 2301:
+        case 'teologia_anno_iii':
             return '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' III</b></td></tr>';
-        case 2401:
+        case 'teologia_anno_iv':
             return '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' IV</b></td></tr>';
     }
     return '';
@@ -67,9 +67,9 @@ $render_titulo = static function (int $id_nivel): string {
                 <table style="width: 100%">
                     <?php
                     foreach ($tabla as $fila => $row) {
-                        $titulo = $render_titulo((int)$row['id_nivel']);
-                        if ($titulo !== '') {
-                            echo $titulo;
+                        $tituloSeccion = $row['titulo_seccion'] ?? '';
+                        if (is_string($tituloSeccion) && $tituloSeccion !== '') {
+                            echo $render_titulo($tituloSeccion);
                         }
                         echo "<tr><td>{$row['asignatura']}</td>";
 

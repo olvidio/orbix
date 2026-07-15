@@ -6,6 +6,7 @@ namespace src\notas\application;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
@@ -24,6 +25,7 @@ final class NotasDeUnaPersonaData
         private readonly ActividadAllRepositoryInterface $actividadAllRepository,
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
         private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+        private readonly PlanEstudiosDePersona $planEstudiosDePersona,
     ) {
     }
     /**
@@ -99,7 +101,9 @@ final class NotasDeUnaPersonaData
             $nombre_corto = $oAsignatura->getNombre_corto();
 
             if ($id_asignatura > 3000) {
-                $cOpcionales = $AsignaturaRepository->getAsignaturas(['id_nivel' => $id_nivel]);
+                $plan = $this->planEstudiosDePersona->resolve($id_pau);
+                [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, ['id_nivel' => $id_nivel]);
+                $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
                 if (empty($cOpcionales)) {
                     $nombre_corto = _("opcional de sobra");
                 } else {

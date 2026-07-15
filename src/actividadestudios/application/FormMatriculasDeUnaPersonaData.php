@@ -6,6 +6,8 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\notas\application\PlanEstudiosDePersona;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\profesores\domain\services\ProfesorStgrService;
@@ -34,6 +36,7 @@ final class FormMatriculasDeUnaPersonaData
         private ProfesorStgrService $profesorStgrService,
         private PersonaNotaRepositoryInterface $personaNotaRepository,
         private MatriculaDlRepositoryInterface $matriculaDlRepository,
+        private PlanEstudiosDePersona $planEstudiosDePersona,
     ) {
     }
 
@@ -76,6 +79,7 @@ final class FormMatriculasDeUnaPersonaData
             throw new \RuntimeException(sprintf(_('No se ha encontrado actividad con id: %s'), (string) $idActiv));
         }
         $nomActiv = $oActividad->getNom_activ();
+        $plan = $this->planEstudiosDePersona->resolve($idNom);
 
         $chkPreceptor = '';
         $idPreceptor = '';
@@ -112,10 +116,12 @@ final class FormMatriculasDeUnaPersonaData
             $aCamposHidden['mod'] = $mod;
         } else {
             $mod = 'nuevo';
-            $cAsignaturas = $this->asignaturaRepository->getAsignaturas(
-                ['active' => 't', 'id_nivel' => 3000, '_ordre' => 'id_nivel'],
-                ['id_nivel' => '<'],
-            );
+            [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
+                'active' => 't',
+                'id_nivel' => 3000,
+                '_ordre' => 'id_nivel',
+            ], ['id_nivel' => '<']);
+            $cAsignaturas = $this->asignaturaRepository->getAsignaturas($aWhere, $aOperador);
             $aSuperadasIds = NotaSituacion::getArraySuperadas();
             $cond = implode('|', $aSuperadasIds);
             $cAsignaturasSuperadas = $this->personaNotaRepository->getPersonaNotas(
@@ -152,10 +158,13 @@ final class FormMatriculasDeUnaPersonaData
             $camposForm = 'id_asignatura!id_nivel';
         }
 
-        $cOpcionalesGenericas = $this->asignaturaRepository->getAsignaturas(
-            ['active' => 't', 'id_sector' => 1, 'id_nivel' => 3000, '_ordre' => 'nombre_corto'],
-            ['id_nivel' => '<'],
-        );
+        [$aWhereOp, $aOperadorOp] = PlanEstudiosFilter::apply($plan, [
+            'active' => 't',
+            'id_sector' => 1,
+            'id_nivel' => 3000,
+            '_ordre' => 'nombre_corto',
+        ], ['id_nivel' => '<']);
+        $cOpcionalesGenericas = $this->asignaturaRepository->getAsignaturas($aWhereOp, $aOperadorOp);
         $condicion = '';
         foreach ($cOpcionalesGenericas as $oOpcional) {
             $condicion .= 'id==' . $oOpcional->getId_nivel() . ' || ';

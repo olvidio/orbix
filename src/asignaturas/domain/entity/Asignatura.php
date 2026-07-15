@@ -3,6 +3,7 @@
 namespace src\asignaturas\domain\entity;
 
 use src\shared\domain\DatosCampo;
+use src\shared\domain\helpers\FuncTablasSupport;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
@@ -12,6 +13,7 @@ use src\asignaturas\domain\value_objects\{AsignaturaId,
     AsignaturaTipoId,
     Creditos,
     NivelId,
+    PlanEstudios,
     SectorId,
     YearText};
 use src\shared\domain\traits\Hydratable;
@@ -50,6 +52,8 @@ class Asignatura
     private bool $active = false;
 
     private ?AsignaturaTipoId $id_tipo = null;
+
+    private ?PlanEstudios $plan_estudios = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -176,6 +180,27 @@ class Asignatura
             : AsignaturaTipoId::fromNullableInt($valor);
     }
 
+    public function getPlanEstudiosVo(): ?PlanEstudios
+    {
+        return $this->plan_estudios;
+    }
+
+    /**
+     * @param list<int>|array<int, int|string>|string|null $planEstudios
+     */
+    public function setPlanEstudiosVo(PlanEstudios|array|string|null $planEstudios = null): void
+    {
+        if ($planEstudios instanceof PlanEstudios) {
+            $this->plan_estudios = $planEstudios;
+            return;
+        }
+        if (is_string($planEstudios)) {
+            $this->plan_estudios = PlanEstudios::fromPgString($planEstudios);
+            return;
+        }
+        $this->plan_estudios = PlanEstudios::fromNullableArray($planEstudios);
+    }
+
     // ---------------- LEGACY -----------------
 
     public function getId_asignatura(): int
@@ -272,10 +297,32 @@ class Asignatura
         $this->id_tipo = AsignaturaTipoId::fromNullableInt($id_tipo);
     }
 
-    /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key(): string
+    /**
+     * @return list<int>|null
+     */
+    public function getPlan_estudios(): ?array
     {
-        return 'id_asignatura';
+        return $this->plan_estudios?->toArray();
+    }
+
+    /**
+     * @param list<int>|array<int, int|string>|null $plan_estudios
+     */
+    public function setPlan_estudios(?array $plan_estudios = null): void
+    {
+        $this->plan_estudios = PlanEstudios::fromNullableArray($plan_estudios);
+    }
+
+    /* ------------------- PARA el mod_tabla  -------------------------------*/
+    /**
+     * @return array{id_asignatura: string, plan_estudios: string}
+     */
+    public function getPrimary_key(): array
+    {
+        return [
+            'id_asignatura' => 'id_asignatura',
+            'plan_estudios' => 'plan_estudios',
+        ];
     }
 
     /**
@@ -293,6 +340,7 @@ class Asignatura
         $oAsignaturaSet->add($this->getDatosYear());
         $oAsignaturaSet->add($this->getDatosId_sector());
         $oAsignaturaSet->add($this->getDatosStatus());
+        $oAsignaturaSet->add($this->getDatosPlan_estudios());
         $oAsignaturaSet->add($this->getDatosId_tipo());
         /** @var list<DatosCampo> $campos */
         $campos = array_values($oAsignaturaSet->getTot());
@@ -445,6 +493,24 @@ class Asignatura
     }
 
     /**
+     * Recupera las propiedades del atributo plan_estudios de Asignatura
+     * en una clase del tipo DatosCampo
+     *
+     * @return DatosCampo
+     */
+    private function getDatosPlan_estudios(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('plan_estudios');
+        $oDatosCampo->setMetodoGet('getPlan_estudios');
+        $oDatosCampo->setMetodoSet('setPlan_estudios');
+        $oDatosCampo->setEtiqueta(_("plan de estudios"));
+        $oDatosCampo->setTipo('checks');
+        $oDatosCampo->setLista(PlanEstudios::getArrayOpciones());
+        return $oDatosCampo;
+    }
+
+    /**
      * Recupera las propiedades del atributo id_tipo de Asignatura
      * en una clase del tipo DatosCampo
      *
@@ -474,7 +540,9 @@ class Asignatura
      */
     public function toArrayForDatabase(array $converters = []): array
     {
-        $data = $this->hydratableToArrayForDatabase($converters);
+        $data = $this->hydratableToArrayForDatabase(array_merge([
+            'plan_estudios' => fn() => FuncTablasSupport::arrayPhp2pg($this->getPlanEstudiosVo()?->toArray() ?? []),
+        ], $converters));
         $data['nombre_asignatura'] = $this->getNombreAsignaturaVo()->value();
         unset($data['nombre_signatura']);
 

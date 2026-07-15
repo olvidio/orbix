@@ -38,6 +38,7 @@ final class TablaAlumnosAsignaturas
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
         private readonly PersonaDlRepositoryInterface $personaDlRepository,
         private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+        private readonly Tesera $tesera,
     ) {
     }
     /** Valor de celda cuando la asignatura esta pendiente. */
@@ -127,11 +128,7 @@ final class TablaAlumnosAsignaturas
         $personaRepo = $this->personaDlRepository;
         $personaNotaRepo = $this->personaNotaRepository;
 
-        $asignaturas = $asignaturaRepo->getAsignaturas([
-            'active' => 't',
-            'id_nivel' => self::ID_NIVEL_ASIG_DESDE . ',' . self::ID_NIVEL_ASIG_HASTA,
-            '_ordre' => 'id_nivel',
-        ], ['id_nivel' => 'BETWEEN']);
+        $asignaturas = $this->asignaturasCabecera();
 
         // Mapa `id_asignatura => id_nivel` para todas las asignaturas (incluidas
         // inactivas). Necesario para resolver el nivel de una nota cuando la
@@ -243,10 +240,20 @@ final class TablaAlumnosAsignaturas
         [$finBienio, $finCuadrienio] = $this->detectarTramosCompletados($notasPersona);
         $aprobadasPorNivel = $this->mapearAprobadasPorNivel($notasPersona, $mapAsigNivel, $superadas);
 
+        $plan = $this->tesera->getPlan((int) $oPersona->getId_nom());
+        $nivelesPlan = [];
+        foreach ($this->tesera->getAsignaturasPosibles($plan) as $oAsigPlan) {
+            $nivelesPlan[(int) $oAsigPlan->getId_nivel()] = true;
+        }
+
         $col = 4;
         foreach ($asignaturas as $oAsig) {
             $col++;
             $idNivel = (int)$oAsig->getId_nivel();
+            if (!isset($nivelesPlan[$idNivel])) {
+                $fila[$col] = self::CELDA_APROBADA;
+                continue;
+            }
             if (array_key_exists($idNivel, $aprobadasPorNivel)) {
                 $valor = $aprobadasPorNivel[$idNivel];
             } else {
@@ -317,5 +324,23 @@ final class TablaAlumnosAsignaturas
             }
         }
         return $aprobadasPorNivel;
+    }
+
+    /**
+     * Union de asignaturas activas de ambos planes (cabecera de columnas).
+     *
+     * @return list<\src\asignaturas\domain\entity\Asignatura>
+     */
+    private function asignaturasCabecera(): array
+    {
+        $porNivel = [];
+        foreach ([Tesera::PLAN_VIEJO, Tesera::PLAN_NUEVO] as $plan) {
+            foreach ($this->tesera->getAsignaturasPosibles($plan) as $oAsig) {
+                $porNivel[(int) $oAsig->getId_nivel()] = $oAsig;
+            }
+        }
+        ksort($porNivel);
+
+        return array_values($porNivel);
     }
 }

@@ -7,6 +7,7 @@ namespace Tests\unit\asignaturas\application;
 use PHPUnit\Framework\TestCase;
 use src\asignaturas\application\AsignaturasConSeparadorOpcionesData;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 
 final class AsignaturasConSeparadorOpcionesDataTest extends TestCase
 {
@@ -15,7 +16,7 @@ final class AsignaturasConSeparadorOpcionesDataTest extends TestCase
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
         $repo->expects($this->once())
             ->method('getArrayAsignaturasConSeparador')
-            ->with(true)
+            ->with(true, PlanEstudios::PLAN_2026)
             ->willReturn([1001 => 'MAT', 3000 => '----------', 3101 => 'OPC']);
 
         $useCase = new AsignaturasConSeparadorOpcionesData($repo);
@@ -30,7 +31,7 @@ final class AsignaturasConSeparadorOpcionesDataTest extends TestCase
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
         $repo->expects($this->once())
             ->method('getArrayAsignaturasConSeparador')
-            ->with(false)
+            ->with(false, PlanEstudios::PLAN_2026)
             ->willReturn([1001 => 'MAT']);
 
         $useCase = new AsignaturasConSeparadorOpcionesData($repo);

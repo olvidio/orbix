@@ -3,7 +3,8 @@
 namespace src\notas\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\notas\application\PlanEstudiosDePersona;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaSituacion;
@@ -30,6 +31,7 @@ final class NotaPersonaFormData
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
         private readonly ActividadAllRepositoryInterface $actividadAllRepository,
         private readonly ProfesorStgrRepositoryInterface $rofesorStgrRepository,
+        private readonly PlanEstudiosDePersona $planEstudiosDePersona,
     ) {
     }
 
@@ -128,11 +130,15 @@ final class NotaPersonaFormData
     private function prepareNuevo(int $id_pau): array
     {
         $AsignaturaRepository = $this->asignaturaRepository;
+        $plan = $this->planEstudiosDePersona->resolve($id_pau);
 
-        $cAsignaturas = $AsignaturaRepository->getAsignaturas(
-            ['active' => 't', 'id_nivel' => 3000, '_ordre' => 'id_nivel'],
-            ['id_nivel' => '<']
-        );
+        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
+            'active' => 't',
+            'id_nivel' => 3000,
+            '_ordre' => 'id_nivel',
+        ], ['id_nivel' => '<']);
+
+        $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
         $PersonaNotaRepository = $this->personaNotaRepository;
         $aSuperadas = NotaSituacion::getArraySuperadas();
@@ -276,13 +282,21 @@ final class NotaPersonaFormData
      *
      * @return array{condicion_js:string, op_genericas_json:string}
      */
-    public function opcionalesGenericasHelpers(): array
+    public function opcionalesGenericasHelpers(?int $idNom = null): array
     {
         $repo = $this->asignaturaRepository;
-        $cGenericas = $repo->getAsignaturas(
-            ['active' => 't', 'id_sector' => 1, 'id_nivel' => 3000, '_ordre' => 'nombre_corto'],
-            ['id_nivel' => '<']
-        );
+        $plan = $idNom !== null && $idNom > 0
+            ? $this->planEstudiosDePersona->resolve($idNom)
+            : \src\asignaturas\domain\value_objects\PlanEstudios::PLAN_2026;
+
+        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
+            'active' => 't',
+            'id_sector' => 1,
+            'id_nivel' => 3000,
+            '_ordre' => 'nombre_corto',
+        ], ['id_nivel' => '<']);
+
+        $cGenericas = $repo->getAsignaturas($aWhere, $aOperador);
         $condicion = '';
         foreach ($cGenericas as $oOpcional) {
             $condicion .= 'id==' . $oOpcional->getId_nivel() . ' || ';

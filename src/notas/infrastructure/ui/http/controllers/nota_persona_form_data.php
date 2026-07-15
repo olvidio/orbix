@@ -34,7 +34,7 @@ $input = [
 ];
 
 $data = (DependencyResolver::get(NotaPersonaFormData::class))->execute($input);
-$data['helpers'] = (DependencyResolver::get(NotaPersonaFormData::class))->opcionalesGenericasHelpers();
+$data['helpers'] = (DependencyResolver::get(NotaPersonaFormData::class))->opcionalesGenericasHelpers($input['id_pau']);
 $data = array_merge($data, (DependencyResolver::get(NotaPersonaFormData::class))->formNotasVoPack());
 
 ContestarJson::enviar('', $data);
