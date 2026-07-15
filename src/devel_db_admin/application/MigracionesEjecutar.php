@@ -632,6 +632,10 @@ final class MigracionesEjecutar
      */
     private function alterSuscripcionModulo(string $modulo, bool $reactivar): array
     {
+        if ($this->debeOmitirSuscripcionesReplicacion()) {
+            return [];
+        }
+
         $subNombre = $this->nombreSuscripcion($modulo);
         if ($subNombre === null) {
             return [];
@@ -647,9 +651,19 @@ final class MigracionesEjecutar
         }
 
         try {
+            $pdo = $this->connect($databaseSelect);
+            if (!$this->suscripcionExiste($pdo, $subNombre)) {
+                return [
+                    sprintf(
+                        '    suscripcion %s: no existe en %s; omitido',
+                        $subNombre,
+                        $databaseSelect,
+                    ),
+                ];
+            }
+
             if ($reactivar) {
                 $lines = $this->avanzarSlotSuscripcionEnPublicador($modulo, $subNombre);
-                $pdo = $this->connect($databaseSelect);
                 $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' ENABLE');
                 $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' REFRESH PUBLICATION');
                 $lines[] = sprintf('    suscripcion %s reactivada (ENABLE + REFRESH PUBLICATION)', $subNombre);
@@ -657,7 +671,6 @@ final class MigracionesEjecutar
                 return $lines;
             }
 
-            $pdo = $this->connect($databaseSelect);
             $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' DISABLE');
 
             return [sprintf('    suscripcion %s pausada (DISABLE) durante migracion de estructura', $subNombre)];
@@ -732,14 +745,33 @@ final class MigracionesEjecutar
 
     private function nombreSuscripcion(string $modulo): ?string
     {
-        $webdir = getenv('WEBDIR');
-        $entornoPruebas = is_string($webdir) && $webdir === 'pruebas';
+        $entornoPruebas = ConfigGlobal::esEntornoPruebas();
 
         return match ($modulo) {
             'comun' => $entornoPruebas ? 'subpruebascomun' : 'subcomun',
             'sv-e' => $entornoPruebas ? 'subpruebassve' : 'subsve',
             default => null,
         };
+    }
+
+    private function debeOmitirSuscripcionesReplicacion(): bool
+    {
+        return is_readable('/.dockerenv');
+    }
+
+    private function suscripcionExiste(PDO $pdo, string $subNombre): bool
+    {
+        if (!preg_match('/^[a-z_][a-z0-9_]*$/', $subNombre)) {
+            return false;
+        }
+
+        $stmt = $pdo->query(
+            'SELECT 1 FROM pg_subscription WHERE subname = '
+            . $pdo->quote($subNombre)
+            . ' LIMIT 1',
+        );
+
+        return $stmt !== false && $stmt->fetchColumn() !== false;
     }
 
     /**

@@ -11,17 +11,20 @@
 -- 2114: nuevo hueco curricular en plan 2026
 UPDATE public.xa_asignaturas
 SET id_nivel = 2312
-WHERE id_asignatura = 2114;
+WHERE id_asignatura = 2114
+  AND id_nivel IS DISTINCT FROM 2312;
 
--- Latín III / IV: fila base solo plan 1997 (antes de insertar variante 2026)
+-- Latín III / IV: solo la fila bimodal → plan 1997 (no tocar filas '{2026}' ya creadas)
 UPDATE public.xa_asignaturas
 SET plan_estudios = '{1997}'::integer[]
-WHERE id_asignatura IN (2211, 2312);
+WHERE id_asignatura IN (2211, 2312)
+  AND plan_estudios IN ('{1997,2026}'::integer[], '{2026,1997}'::integer[]);
 
--- Opcionales: solo plan 1997
+-- Opcionales: solo filas bimodales → plan 1997
 UPDATE public.xa_asignaturas
 SET plan_estudios = '{1997}'::integer[]
-WHERE id_asignatura IN (1230, 1231, 1232, 2430, 2431, 2432, 2433, 2434);
+WHERE id_asignatura IN (1230, 1231, 1232, 2430, 2431, 2432, 2433, 2434)
+  AND plan_estudios IN ('{1997,2026}'::integer[], '{2026,1997}'::integer[]);
 
 -- Latín III plan 2026 (mismo id_asignatura, distinto id_nivel)
 INSERT INTO public.xa_asignaturas (
@@ -123,6 +126,13 @@ WHERE NOT EXISTS (
 UPDATE public.xa_asignaturas
 SET plan_estudios = '{1997,2026}'::integer[]
 WHERE plan_estudios = '{2026,1997}'::integer[];
+
+-- Recuperación: si una re-ejecución previa dejó filas duplicadas, conservar una por (id, plan)
+DELETE FROM public.xa_asignaturas a
+USING public.xa_asignaturas b
+WHERE a.ctid > b.ctid
+  AND a.id_asignatura = b.id_asignatura
+  AND a.plan_estudios = b.plan_estudios;
 
 -- PK compuesta: permite repetir id_asignatura con arrays distintos
 DO $$
