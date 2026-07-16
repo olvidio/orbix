@@ -3,6 +3,7 @@
 namespace src\notas\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\application\PlanEstudiosDePersona;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
