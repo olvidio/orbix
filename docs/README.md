@@ -20,6 +20,7 @@ Todo el conocimiento del proyecto vive bajo `docs/`. No existe la carpeta `docum
 - [Qué es Orbix](QUE_ES_ORBIX.md) — visión global
 - [Índice de módulos](00_indice_modulos.md) — enlaces por módulo
 - [Índice de refactorización](dev/REFACTOR_INDICE.md) — estado migración DDD
+- [Traducciones gettext](dev/traducciones_gettext.md) — Poedit, plantilla `.pot`, scripts IA
 - [Plan de documentación](PLAN_DOCUMENTACION_MODULOS.md)
 
 ## Regenerar documentación de un módulo

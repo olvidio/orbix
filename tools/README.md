@@ -24,16 +24,21 @@ Guía para agentes: [`agents.md`](../agents.md) (sección «Scripts y herramient
 
 ## Traducciones (`tools/i18n/`)
 
+**Guía completa:** [`docs/dev/traducciones_gettext.md`](../docs/dev/traducciones_gettext.md) (Poedit + plantilla + script + repaso manual).
+
 ```bash
 cd tools/i18n
 python3 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate   # el prompt debe mostrar (.venv), no un venv antiguo de languages/
 pip install -r requirements.txt
 
-export GROQ_API_KEY=...      # traduir_groq.py, auditoria.py
-export GEMINI_API_KEY=...    # traduir_gemini.py
+# Claves en .env (raíz del repo); ver .env.example
+#   GROQ_API_KEY=...
+#   GEMINI_API_KEY=...
 
-python traduir_groq.py
+python3 traduir_groq.py --idioma it_IT.UTF-8 --idioma-nom italiano
 ```
+
+Si ves `ModuleNotFoundError: polib`, el venv activo no es el correcto: `deactivate` y vuelve a `source .venv/bin/activate` desde `tools/i18n/`.
 
 Los scripts leen y escriben en `../../languages/<idioma>/LC_MESSAGES/`.

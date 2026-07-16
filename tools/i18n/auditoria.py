@@ -7,6 +7,10 @@ from http.server import SimpleHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
 from groq import Groq
 
+from orbix_env import load_repo_env
+
+load_repo_env()
+
 # =====================================================================
 # CONFIGURACIÓ DE VARIABLES
 # =====================================================================
@@ -22,7 +26,9 @@ RUTA_HTML = os.path.join(LANG_DIR, IDIOMA_DESTI, "LC_MESSAGES", "auditoria.html"
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 if not GROQ_API_KEY:
-    raise SystemExit("Define GROQ_API_KEY (variable d'entorn) abans d'executar el script.")
+    raise SystemExit(
+        "Define GROQ_API_KEY en .env (raíz del repo) o como variable de entorno."
+    )
 
 client = Groq(api_key=GROQ_API_KEY)
 # =====================================================================
