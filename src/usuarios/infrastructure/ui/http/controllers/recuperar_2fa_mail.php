@@ -90,8 +90,8 @@ if (is_array($row)) {
             $token_bruto = bin2hex(random_bytes(32));
             // 2. Hashearlo para guardarlo en la DB (nunca guardes el token plano)
             $token_hash = hash('sha256', $token_bruto);
-            // 3. Definir expiración (ej: 15 minutos)
-            $expiracion = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+            // 3. Definir expiración (ej: 15 minutos) en UTC — recovery compara con (now() AT TIME ZONE 'utc')
+            $expiracion = gmdate('Y-m-d H:i:s', time() + 15 * 60);
 
             // 4. Update en la DB
             // UPDATE "H-dlbv".aux_usuarios SET token_recuperacion_2fa = '$token_hash', token_expiracion_2fa = '$expiracion' WHERE id_usuario = ...
@@ -110,8 +110,8 @@ if (is_array($row)) {
                 $token_bruto = bin2hex(random_bytes(32));
                 $token_hash = hash('sha256', $token_bruto);
 
-                // PostgreSQL acepta bien el formato Y-m-d H:i:s
-                $expiracion = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+                // UTC, alineado con recovery.php: (now() AT TIME ZONE 'utc')
+                $expiracion = gmdate('Y-m-d H:i:s', time() + 15 * 60);
 
                 // 4. Vinculamos parámetros
                 $oDBSt1->bindParam(':token_hash', $token_hash, PDO::PARAM_STR);

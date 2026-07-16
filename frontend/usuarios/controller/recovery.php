@@ -51,7 +51,8 @@ if ($oDB === null) {
     $oDB = $oConexion->getPDO();
 }
 
-$query = "SELECT * FROM aux_usuarios WHERE id_usuario = $Qid_usuario AND token_recuperacion_2fa = '$hash_recibido' AND token_expiracion_2fa > NOW()";
+// Comparar en UTC: la expiración se guarda con gmdate() en recuperar_2fa_mail.php.
+$query = "SELECT * FROM aux_usuarios WHERE id_usuario = $Qid_usuario AND token_recuperacion_2fa = '$hash_recibido' AND token_expiracion_2fa > (now() AT TIME ZONE 'utc')";
 $oDBSt = $oDB->query($query);
 $usuario_encontrado = $oDBSt !== false ? UsuariosPayload::recoveryRowFromFetch($oDBSt->fetch()) : null;
 
