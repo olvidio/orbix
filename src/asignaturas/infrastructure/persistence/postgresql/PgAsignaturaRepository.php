@@ -287,10 +287,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             if (!is_array($aDatos)) {
                 continue;
             }
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
+            $normalized = $this->normalizeRowFromDb($aDatos);
             $oAsignatura = Asignatura::fromArray($normalized);
             $oMin = new stdClass();
             $oMin->id_asignatura = $oAsignatura->getIdAsignaturaVo()->value();

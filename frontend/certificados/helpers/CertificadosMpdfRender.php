@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace frontend\certificados\helpers;
 
 use frontend\shared\helpers\PayloadCoercion;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 
 final class CertificadosMpdfRender
 {
@@ -35,6 +36,7 @@ final class CertificadosMpdfRender
      *     sello: string,
      *     fidem: string,
      *     reg_num: string,
+     *     plan_estudios: int,
      *     cAsignaturas: list<array{id_asignatura: int, id_nivel: int, nombre_asignatura: string, creditos: float}>,
      *     aAprobadas: array<int, array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_asignatura: string, creditos: string, nota_txt: string}>,
      * }
@@ -66,6 +68,7 @@ final class CertificadosMpdfRender
             'sello' => \frontend\shared\helpers\PayloadCoercion::string($payload['sello'] ?? ''),
             'fidem' => \frontend\shared\helpers\PayloadCoercion::string($payload['fidem'] ?? ''),
             'reg_num' => \frontend\shared\helpers\PayloadCoercion::string($payload['reg_num'] ?? ''),
+            'plan_estudios' => \frontend\shared\helpers\PayloadCoercion::int($payload['plan_estudios'] ?? PlanEstudios::PLAN_2026),
             'cAsignaturas' => CertificadosPayload::asignaturasFromJson($payload['cAsignaturas'] ?? ''),
             'aAprobadas' => CertificadosPayload::aprobadasFromPayload($payload['aAprobadas'] ?? []),
         ];
@@ -106,7 +109,7 @@ final class CertificadosMpdfRender
      *     pie_ects: string,
      * } $labels
      */
-    public static function titulo(int $id_asignatura, array $labels): void
+    public static function titulo(int $id_asignatura, array $labels, int $planEstudios = PlanEstudios::PLAN_1997): void
     {
         switch ($id_asignatura) {
             case 1101:
@@ -163,6 +166,20 @@ final class CertificadosMpdfRender
                 <?php
                 break;
             case 2201:
+                if ($planEstudios === PlanEstudios::PLAN_2026) {
+                    ?>
+    <tr>
+        <td class="space_doble"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="any"><?= $labels['any_II'] ?></td>
+        <td class="cabecera"><?= $labels['ECTS'] ?><sup>1</sup></td>
+        <td class="cabecera"><?= $labels['iudicium'] ?></td>
+    </tr>
+                <?php
+                    break;
+                }
                 ?>
 </table>
 <br>
@@ -185,6 +202,25 @@ final class CertificadosMpdfRender
             <td class="cabecera"><?= $labels['ECTS'] ?><sup>1</sup></td>
             <td class="cabecera"><?= $labels['iudicium'] ?></td>
         </tr>
+                <?php
+                break;
+            case 2205:
+                if ($planEstudios !== PlanEstudios::PLAN_2026) {
+                    break;
+                }
+                ?>
+</table>
+<br>
+</div>
+<div class="ects"><?= $labels['pie_ects'] ?>
+</div>
+<div class="A4">
+    <table>
+        <col style="width: 7%">
+        <col style="width: 45%">
+        <col style="width: 5%">
+        <col style="width: 36%">
+        <col style="width: 7%">
                 <?php
                 break;
             case 2301:

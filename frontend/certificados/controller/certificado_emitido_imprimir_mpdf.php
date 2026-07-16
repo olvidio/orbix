@@ -38,6 +38,7 @@ $replace = $mpdf['replace'];
 $txt_superavit = $mpdf['txt_superavit'];
 $cAsignaturas = $mpdf['cAsignaturas'];
 $aAprobadas = $mpdf['aAprobadas'];
+$planEstudios = $mpdf['plan_estudios'];
 
 $mpdfLabels = [
     'curso_filosofia' => $mpdf['curso_filosofia'],
@@ -94,6 +95,7 @@ $rowEmpty = CertificadosMpdfRender::emptyAprobadaRow();
                     break;
                 }
                 if (next($aAprobadas) === false) {
+                    $row = $rowEmpty;
                     break;
                 }
                 $row = CertificadosMpdfRender::currentAprobadaRow($aAprobadas, $rowEmpty);
@@ -102,7 +104,7 @@ $rowEmpty = CertificadosMpdfRender::emptyAprobadaRow();
             while (($oAsignatura['id_nivel'] < $row['id_nivel_asig']) && ($row['id_nivel'] < 2434)) {
                 $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                 $etcs = number_format(($oAsignatura['creditos'] * 2), 0);
-                CertificadosMpdfRender::titulo($oAsignatura['id_nivel'], $mpdfLabels);
+                CertificadosMpdfRender::titulo($oAsignatura['id_nivel'], $mpdfLabels, $planEstudios);
                 ?>
                 <tr style="vertical-align: text-bottom">
                     <td></td>
@@ -116,7 +118,7 @@ $rowEmpty = CertificadosMpdfRender::emptyAprobadaRow();
             }
 
             if ($oAsignatura['id_nivel'] === $row['id_nivel_asig']) {
-                CertificadosMpdfRender::titulo($oAsignatura['id_nivel'], $mpdfLabels);
+                CertificadosMpdfRender::titulo($oAsignatura['id_nivel'], $mpdfLabels, $planEstudios);
                 if ($row['id_asignatura'] > 3000 && $row['id_asignatura'] < 9000) {
                     $nombre_asignatura = strtr($row['nombre_asignatura'], $replace);
                     $algo = $oAsignatura['nombre_asignatura'] . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $nombre_asignatura;
@@ -142,10 +144,14 @@ $rowEmpty = CertificadosMpdfRender::emptyAprobadaRow();
                     <?php
                 }
                 $num_asig++;
-            } elseif ($row['id_nivel'] === 0 || ($j === $num_asig)) {
+            } elseif (
+                $row['id_nivel'] === 0
+                || ($j === $num_asig)
+                || $oAsignatura['id_nivel'] > $row['id_nivel_asig']
+            ) {
                 $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                 $etcs = number_format(($oAsignatura['creditos'] * 2), 0);
-                CertificadosMpdfRender::titulo($oAsignatura['id_asignatura'], $mpdfLabels);
+                CertificadosMpdfRender::titulo($oAsignatura['id_asignatura'], $mpdfLabels, $planEstudios);
                 ?>
                 <tr>
                     <td></td>

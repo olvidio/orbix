@@ -138,6 +138,7 @@ $data['chk_firmado'] = $chk_firmado;
 /** @var PlanEstudiosDePersona $planEstudiosDePersona */
 $planEstudiosDePersona = DependencyResolver::get(PlanEstudiosDePersona::class);
 $plan = $planEstudiosDePersona->resolve($id_nom);
+$data['plan_estudios'] = $plan;
 
 [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
     'active' => 't',
