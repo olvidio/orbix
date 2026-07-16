@@ -10,4 +10,4 @@ modulo: planning
 | ubis | planning_ctr, planning_casa |
 | zonassacd | planning_zones |
 
-Legacy: `documentacion/planning_migracion_baseline.md`
+Legacy: `docs/dev/planning_migracion_baseline.md`

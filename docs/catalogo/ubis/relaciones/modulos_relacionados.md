@@ -17,4 +17,4 @@ Huérfanos desplegables: `casas_opciones_data`, `centros_opciones_data`, `delega
 
 Huérfanos teleco: `teleco_guardar`, `teleco_eliminar` — forms teleco.
 
-Legacy: `documentacion/ubis_teleco_migracion_baseline.md`
+Legacy: `docs/dev/ubis_teleco_migracion_baseline.md`

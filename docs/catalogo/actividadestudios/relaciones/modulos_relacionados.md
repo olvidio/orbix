@@ -24,4 +24,4 @@ notas, certificados, pasarela (exportaciones).
 ## Documentacion cruzada
 
 - Manual: `docs/manual/actividadestudios.md`
-- Legacy: `documentacion/Documentacion_Obix/actividadestudios/mapa_*.md` (si existen)
+- Legacy: `docs/legacy/obix/actividadestudios/mapa_*.md` (si existen)

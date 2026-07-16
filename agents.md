@@ -3,7 +3,7 @@
 ## Objetivo
 Mantener una estructura consistente basada en DDD para todo nuevo código en `src/`, reduciendo acoplamientos con legacy y evitando mezclar capas.
 
-**Índice de refactorización (estado por módulo, fases, checklists):** [`documentacion/REFACTOR_INDICE.md`](documentacion/REFACTOR_INDICE.md). **Mejoras y migraciones aplazadas (no son reglas vigentes):** [`documentacion/backlog.md`](documentacion/backlog.md). Para trabajo ya acotado a un ámbito existe también convención de ficheros tipo `documentacion/<tema>_pendiente*.md` o `*_migracion_baseline.md`.
+**Índice de refactorización (estado por módulo, fases, checklists):** [`docs/dev/REFACTOR_INDICE.md`](docs/dev/REFACTOR_INDICE.md). **Mejoras y migraciones aplazadas (no son reglas vigentes):** [`docs/dev/backlog.md`](docs/dev/backlog.md). Para trabajo ya acotado a un ámbito existe también convención de ficheros tipo `docs/dev/<tema>_pendiente*.md` o `*_migracion_baseline.md`.
 
 ## Comunicación: referencias sobrenaturales
 
@@ -104,6 +104,48 @@ Reglas:
 - [ ] ¿Ningún archivo nuevo en `src/application/` o `src/domain/` importa `web\Hash` para navegación UI?
 - [ ] ¿Los endpoints AJAX de desplegables devuelven `opciones` como array de pares `[value, label]` (no mapa) y el JS usa el helper compartido `fnjs_construir_desplegable`?
 
+## Scripts y herramientas offline
+
+**Regla para IAs y desarrolladores:** al crear un script nuevo, **no usar `scripts/` por defecto**. Esa carpeta es solo para assets que la aplicación web incluye o sirve (p. ej. `index.js.php`, `layout_*.js.php`, `udm4-php/`).
+
+### Dónde va cada cosa
+
+| Tipo | Carpeta | Ejemplo |
+|------|---------|---------|
+| Script CLI (auditoría, migración, fix, utilidad) | `tools/<subcarpeta>/` | `tools/audit/audit_untranslated_strings.php` |
+| Generación de documentación | `docs/scripts/` | `docs/scripts/generar_api_modulo_md.php` |
+| JS/menús de runtime web | `scripts/` | `scripts/index.js.php` |
+| Catálogos de traducción | `languages/` | `languages/ca_ES.UTF-8/LC_MESSAGES/orbix.po` |
+| Traducción asistida (Python) | `tools/i18n/` | `tools/i18n/traduir_groq.py` |
+
+Subcarpetas de `tools/`: `audit/`, `fix/`, `i18n/`, `phpstan/`, `qa/`; más `tools/phpunit-docker` en la raíz de `tools/`.
+
+### Comprobaciones al añadir un script
+
+- [ ] ¿Es CLI/offline? → `tools/`, **no** `scripts/`.
+- [ ] ¿La raíz del repo se resuelve con `dirname(__DIR__, 2)` desde `tools/<sub>/`?
+- [ ] ¿El docblock documenta `php tools/...` (ruta completa desde la raíz del repo)?
+- [ ] ¿Scripts Python con `requirements.txt` y sin `venv` en git?
+- [ ] ¿Secretos solo por variable de entorno (nunca hardcodeados)?
+
+Detalle y ejemplos: [`tools/README.md`](tools/README.md). Regla Cursor: [`.cursor/rules/tools-vs-scripts.mdc`](.cursor/rules/tools-vs-scripts.mdc).
+
+## Documentación
+
+**Todo bajo `docs/`.** No usar `documentacion/` (eliminada).
+
+| Tipo | Carpeta |
+|------|---------|
+| Catálogo API, OpenAPI, pantallas (generado) | `docs/catalogo/` |
+| Manual de usuario | `docs/manual/` |
+| Ayuda IA / RAG | `docs/ai/` |
+| Baseline migración, arquitectura interna | `docs/dev/` |
+| Informes JSON de herramientas | `docs/dev/reports/` |
+| Legacy Obix (solo consulta) | `docs/legacy/obix/` |
+| Generadores | `docs/scripts/` |
+
+Índice: [`docs/README.md`](docs/README.md). Regla Cursor: [`.cursor/rules/docs-layout.mdc`](.cursor/rules/docs-layout.mdc).
+
 ## Tests: Convenciones y estructura
 
 ### Resumen de cobertura esperada
@@ -111,8 +153,8 @@ Reglas:
 - **Regla de Oro:** Todo código nuevo requiere tests nuevos. Toda modificación requiere la ejecución de los tests existentes para evitar regresiones.
 - Guía amplia para generar pruebas (patrones repos, sesión, `findById`/`null`, etc.): [`tests/agents.md`](tests/agents.md).
 - **Playwright (E2E)** en **`e2e/`**: `npm run test:e2e`; guía **`e2e/README.md`**.
-- Usar el script `shell_scripts/check_test_coverage.sh` para detectar **módulos** sin carpeta de tests/factories según convención (resumen rápido).
-- Usar `shell_scripts/check_test_granular.sh` para listar **ficheros** fuente (`domain/entity/*.php`, `domain/value_objects/*.php`, `infrastructure/persistence/postgresql/Pg*Repository.php`) sin el `*Test.php` esperado; complementa el anterior. Opcionalmente `STRICT=1 bash shell_scripts/check_test_granular.sh` para salida con código 1 si hay faltantes (útil en CI).
+- Usar el script `tools/qa/check_test_coverage.sh` para detectar **módulos** sin carpeta de tests/factories según convención (resumen rápido).
+- Usar `tools/qa/check_test_granular.sh` para listar **ficheros** fuente (`domain/entity/*.php`, `domain/value_objects/*.php`, `infrastructure/persistence/postgresql/Pg*Repository.php`) sin el `*Test.php` esperado; complementa el anterior. Opcionalmente `STRICT=1 bash tools/qa/check_test_granular.sh` para salida con código 1 si hay faltantes (útil en CI).
 - Equivalente Composer: `composer test:report` (ambos informes seguidos), `composer test:report:buckets`, `composer test:report:granular`.
 - Cobertura de **líneas** sobre `src/`: definida en [`phpunit.xml`](phpunit.xml) (`source`/`coverage`); ejecutar por ejemplo `composer test:coverage` o `composer test:coverage:unit` (los scripts configuran `XDEBUG_MODE=coverage` cuando se usa **Xdebug**; con solo **PCOV** no suele hacer falta ese entorno).
 - Módulos excluidos del chequeo automático: `layouts` (código de presentación legacy).
@@ -243,7 +285,7 @@ El hash de presentación (**`web\Hash`**, futuro **`frontend\shared\security\Has
    - `'link_spec' => ['path' => 'frontend/modulo/controller/foo.php', 'query' => ['id' => 123]]`
    El **controlador `frontend/<modulo>/controller/*.php`** (tras `PostRequest` o al montar la vista) convierte cada `link_spec` en URL firmada con `Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/' . ltrim($path, '/') . '?' . http_build_query($query))` y rellena `ira` / `href` como espera `Lista` o la plantilla.
 3. **`src/.../infrastructure/ui/http/controllers/`**: preferible devolver JSON con `link_spec` y firmar en `frontend/`; si un controlador `src` aún emite HTML legacy, documentar excepción y plan de migración.
-4. **Documentación de arquitectura**: `documentacion/hash_arquitectura.md` (§7.4) y pilotos de referencia: `GruposLista` + `grupo_lista.php`, `usuariosLista` + `usuario_lista.php`, `UbisTablaData` + `ubis_tabla.php` (celdas con `link_spec`; además `pagina_link_spec` → `pagina_link` firmado en el controlador), `ListCtrData` + `list_ctr.php`, `ListaActivTabla` + `lista_activ_datos.php` (JSON con `link_spec`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_activ.php`, `ActividadSelectListado` + `actividad_select_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/actividad_select.php`, `ListaActividadesSgListado` + `lista_actividades_sg_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_actividades_sg.php`, `HabitacionesCamaLista` + `actividad_habitaciones_lista.php` (`reload_main_link_spec` / `distribucion_open_link_spec` / `nombres_open_link_spec`; firma con `HashFrontSignedLink` en `frontend/ubiscamas/controller/lista_habitaciones.php`; mutaciones AJAX `update_cama_asistente` y `update_solo_vip` con `HashB::sign` en el endpoint y POST `ctx`), `SelectHabitacionesCdc::getSegmentData()` + tipo `select_habitaciones_cdc` en `DossiersVerPantallaData` → `frontend/ubiscamas/helpers/SelectHabitacionesCdcRender.php` (`HashFront` + `Lista` + `SelectHabitacionesCdcUrlSigning` al pintar desde `dossiers_ver.php`), `Select_certificados_de_una_persona` + `frontend/certificados/helpers/SelectCertificadosDeUnaPersonaUrlSigning.php`, `Select_notas_de_una_persona` + `frontend/notas/helpers/SelectNotasDeUnaPersonaUrlSigning.php`, `ActivPendientesSelectData` + `activ_pendientes_select_data.php` (`link_spec` → `home_persona` en `frontend/personas/...`), `ActividadTipo` (Twig de filtros tipo actividad) + `frontend/shared/helpers/ActividadTipoTwigHashCompose.php` (tokens `h` / `h_act` para AJAX); formularios gestión tipo (`TipoActivFormNuevo` / `TipoActivFormModificar`) + `frontend/shared/helpers/TipoActivGestionFormHashCompose.php` (`getCamposHtml`), `FichaProfesorStgr` + `frontend/profesores/controller/ficha_profesor_stgr.php` (`go_cosas_link_specs` / `ficha_self_link_spec`; los enlaces a `tablaDB_lista_ver.php` reciben `go_to` firmado desde la spec de la ficha), módulo dossiers: `DossiersListaFichasData` (`href_*_link_spec`) + firma en `frontend/dossiers/controller/lista_dossiers.php` (`HashFrontSignedLink::signRowLinkSpecs`); `DossiersVerPantallaData` (datos planos: `top_data`, `ficha_segmentos` con `action_tabla_link_spec` / `ins_traslado_link_spec` / `script_ctx` / `hash`) + firma y render en `frontend/dossiers/controller/dossiers_ver.php` y helper `frontend/dossiers/helpers/DossiersVerFichaDatosTabla.php` (el `<script>` de `DatosTablaRepo` también se compone en frontend); `PermDossiersListaData` (`pagina_link_spec`) + firma en `frontend/dossiers/controller/perm_dossiers.php`; `PermDossierVerFormData` expone `go_to_link_spec` y `hash_config` y el `HashFront` se instancia en `frontend/dossiers/controller/perm_dossier_ver.php`; `DossierTipoPublicUrls::formControllerLinkSpec` en los `Select_*` que enlazan al form dossier + `frontend/dossiers/helpers/DossierTipoFormLinkSpecsSigning.php` (`HashFront::link` al renderizar `getHtml()`); helper genérico reutilizable `frontend/shared/security/HashFrontSignedLink.php` (`fromSpec`, `fromSpecMap`, `signRowLinkSpecs`).
+4. **Documentación de arquitectura**: `docs/dev/hash_arquitectura.md` (§7.4) y pilotos de referencia: `GruposLista` + `grupo_lista.php`, `usuariosLista` + `usuario_lista.php`, `UbisTablaData` + `ubis_tabla.php` (celdas con `link_spec`; además `pagina_link_spec` → `pagina_link` firmado en el controlador), `ListCtrData` + `list_ctr.php`, `ListaActivTabla` + `lista_activ_datos.php` (JSON con `link_spec`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_activ.php`, `ActividadSelectListado` + `actividad_select_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/actividad_select.php`, `ListaActividadesSgListado` + `lista_actividades_sg_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_actividades_sg.php`, `HabitacionesCamaLista` + `actividad_habitaciones_lista.php` (`reload_main_link_spec` / `distribucion_open_link_spec` / `nombres_open_link_spec`; firma con `HashFrontSignedLink` en `frontend/ubiscamas/controller/lista_habitaciones.php`; mutaciones AJAX `update_cama_asistente` y `update_solo_vip` con `HashB::sign` en el endpoint y POST `ctx`), `SelectHabitacionesCdc::getSegmentData()` + tipo `select_habitaciones_cdc` en `DossiersVerPantallaData` → `frontend/ubiscamas/helpers/SelectHabitacionesCdcRender.php` (`HashFront` + `Lista` + `SelectHabitacionesCdcUrlSigning` al pintar desde `dossiers_ver.php`), `Select_certificados_de_una_persona` + `frontend/certificados/helpers/SelectCertificadosDeUnaPersonaUrlSigning.php`, `Select_notas_de_una_persona` + `frontend/notas/helpers/SelectNotasDeUnaPersonaUrlSigning.php`, `ActivPendientesSelectData` + `activ_pendientes_select_data.php` (`link_spec` → `home_persona` en `frontend/personas/...`), `ActividadTipo` (Twig de filtros tipo actividad) + `frontend/shared/helpers/ActividadTipoTwigHashCompose.php` (tokens `h` / `h_act` para AJAX); formularios gestión tipo (`TipoActivFormNuevo` / `TipoActivFormModificar`) + `frontend/shared/helpers/TipoActivGestionFormHashCompose.php` (`getCamposHtml`), `FichaProfesorStgr` + `frontend/profesores/controller/ficha_profesor_stgr.php` (`go_cosas_link_specs` / `ficha_self_link_spec`; los enlaces a `tablaDB_lista_ver.php` reciben `go_to` firmado desde la spec de la ficha), módulo dossiers: `DossiersListaFichasData` (`href_*_link_spec`) + firma en `frontend/dossiers/controller/lista_dossiers.php` (`HashFrontSignedLink::signRowLinkSpecs`); `DossiersVerPantallaData` (datos planos: `top_data`, `ficha_segmentos` con `action_tabla_link_spec` / `ins_traslado_link_spec` / `script_ctx` / `hash`) + firma y render en `frontend/dossiers/controller/dossiers_ver.php` y helper `frontend/dossiers/helpers/DossiersVerFichaDatosTabla.php` (el `<script>` de `DatosTablaRepo` también se compone en frontend); `PermDossiersListaData` (`pagina_link_spec`) + firma en `frontend/dossiers/controller/perm_dossiers.php`; `PermDossierVerFormData` expone `go_to_link_spec` y `hash_config` y el `HashFront` se instancia en `frontend/dossiers/controller/perm_dossier_ver.php`; `DossierTipoPublicUrls::formControllerLinkSpec` en los `Select_*` que enlazan al form dossier + `frontend/dossiers/helpers/DossierTipoFormLinkSpecsSigning.php` (`HashFront::link` al renderizar `getHtml()`); helper genérico reutilizable `frontend/shared/security/HashFrontSignedLink.php` (`fromSpec`, `fromSpecMap`, `signRowLinkSpecs`).
 
 **Inventario — `Hash::link` aún presente en `src/` (pendiente de alinear con esta directiva):**
 
@@ -601,7 +643,7 @@ Las pantallas bajo `frontend/devel_db_admin/` siguen el mismo criterio que el re
 Guía para seguir moviendo pantallas desde `apps/` hacia `frontend/` + `src/` sin mezclar capas ni romper URLs antiguas; convención de proyecto única en este documento.
 
 ### Orden de trabajo
-1. **Baseline breve** antes de tocar código: pantalla, parámetros GET/POST, salida HTML o JSON, casos `rstgr` / permisos si aplican. Anotarlo en `documentacion/` (p. ej. `documentacion/<modulo>_migracion_baseline.md`).
+1. **Baseline breve** antes de tocar código: pantalla, parámetros GET/POST, salida HTML o JSON, casos `rstgr` / permisos si aplican. Anotarlo en `docs/dev/` (p. ej. `docs/dev/<modulo>_migracion_baseline.md`).
 2. **Separar capas primero**; refactors finos (SRP, tests unitarios) después de que la pantalla viva en `frontend` + `src`.
 3. **Un vertical slice por PR o commit lógico** (una pantalla o un flujo filtro+AJAX), sin mezclar varios módulos.
 
@@ -652,7 +694,7 @@ Reglas: no mezclar `*Service` en la raíz de `application/` (mover a `services/`
 
 ### URLs canónicas y menús
 - Enlaces y menús **nuevos**: rutas bajo `frontend/.../controller/....php`.
-- Actualizar plantillas de documentación donde existan (`documentacion/Documentacion_Obix/menus.csv`, `proves/aux_metamenus.csv`, seeds SQL de referencia). Bases en producción con paths en BD: planificar `UPDATE` acorde; el repo documenta el destino deseado.
+- Actualizar plantillas de documentación donde existan (`docs/legacy/obix/menus.csv`, `proves/aux_metamenus.csv`, seeds SQL de referencia). Bases en producción con paths en BD: planificar `UPDATE` acorde; el repo documenta el destino deseado.
 
 ### Migración de vistas y render canónico
 - Al migrar un controlador a `frontend/<modulo>/controller`, migrar también la vista a `frontend/<modulo>/view` (`.phtml`); no dejar la vista canónica solo en `apps/<modulo>/view`.

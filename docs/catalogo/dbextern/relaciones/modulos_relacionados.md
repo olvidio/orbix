@@ -20,4 +20,4 @@ Sincronizacion con bases de datos externas (admin/dev).
 ## Documentacion cruzada
 
 - Manual: `docs/manual/dbextern.md`
-- Legacy: `documentacion/Documentacion_Obix/dbextern/mapa_sincro_index.md`
+- Legacy: `docs/legacy/obix/dbextern/mapa_sincro_index.md`

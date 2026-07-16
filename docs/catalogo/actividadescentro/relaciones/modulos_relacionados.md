@@ -12,4 +12,4 @@ estado_revision: revisado_parcial
 | ubis | Centros encargados (`id_ubi`, desplegables) |
 | encargossacd | Contexto encargos centros/SACD |
 
-Legacy: `documentacion/actividadescentro_migracion_baseline.md`
+Legacy: `docs/dev/actividadescentro_migracion_baseline.md`

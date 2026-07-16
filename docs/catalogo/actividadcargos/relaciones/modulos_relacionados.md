@@ -37,5 +37,5 @@ Invocados por AJAX desde `.phtml`:
 ## Documentacion cruzada
 
 - Manual: `docs/manual/actividadcargos.md`
-- Baseline dossiers: `documentacion/actividadcargos_migracion_baseline.md`
+- Baseline dossiers: `docs/dev/actividadcargos_migracion_baseline.md`
 - Baseline asistentes ↔ cargos: comentarios en `Select3101` / migración asistentes

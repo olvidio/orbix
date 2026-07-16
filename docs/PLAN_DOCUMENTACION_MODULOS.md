@@ -14,10 +14,10 @@ Documento maestro para documentar **todos los modulos** con el pipeline de `docs
 
 ## Reglas de ejecucion
 
-- **Ignorar `db/` y el estado de git** mientras el usuario trabaja en migrations; la documentacion se basa en `src/`, `frontend/` y `documentacion/` (legacy).
+- **Ignorar `db/` y el estado de git** mientras el usuario trabaja en migrations; la documentacion se basa en `src/`, `frontend/` y `docs/dev/` (legacy).
 - **Un modulo = una pasada completa** del pipeline + revision manual + actualizacion de este plan.
 - **Regenerar con `--force --skip-openapi-validation`** si el entorno no tiene Node/OpenAPI CLI; validar OpenAPI cuando el entorno lo permita.
-- **Legacy Obix** (`documentacion/Documentacion_Obix/mapa_*.md`): usar como fuente de nombres visibles, rutas de menu y pasos de usuario; no duplicar, enlazar.
+- **Legacy Obix** (`docs/legacy/obix/mapa_*.md`): usar como fuente de nombres visibles, rutas de menu y pasos de usuario; no duplicar, enlazar.
 - **Widgets dossier** (`Select_*`, forms sin controller propio): documentar a mano en `pantallas/` y `manual/` aunque el generador no los detecte.
 
 ## Que hay que documentar por modulo
@@ -238,7 +238,7 @@ flowchart LR
 | 3101 | asistentes actividad | asistentes | actividad |
 | 1301 | asistentes persona | asistentes | persona |
 
-*(Completar filas desde baselines en `documentacion/*_migracion_baseline.md` durante ola 1–4.)*
+*(Completar filas desde baselines en `docs/dev/*_migracion_baseline.md` durante ola 1–4.)*
 
 ### Hubs de entidad
 
@@ -252,7 +252,7 @@ flowchart LR
 
 - Patron: `PostRequest::getDataFromUrl('/src/<modulo>/<endpoint>')`
 - Convenciones: `docs/catalogo/_convenciones_api.md`
-- HashB: `documentacion/hash_arquitectura.md`
+- HashB: `docs/dev/hash_arquitectura.md`
 
 ---
 
@@ -304,7 +304,7 @@ Ejecutado 2026-05-21 — informe: `docs/REPASSO_FINAL.md`
 Por modulo, al revisar manual, buscar:
 
 ```text
-documentacion/Documentacion_Obix/<modulo>/mapa_*.md
+docs/legacy/obix/<modulo>/mapa_*.md
 ```
 
 Anotar en `docs/legacy_mapping.md` (crear en ola 1):

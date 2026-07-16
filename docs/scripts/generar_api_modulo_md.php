@@ -1070,7 +1070,7 @@ function renderMarkdown(
         $lines[] = '- Campo POST: `' . $hashB['field'] . '`';
         $lines[] = '- Accion: `' . $hashB['action'] . '`';
         $lines[] = '- Cápsula invalida: `success: false`, `mensaje: "Operación no autorizada"`.';
-        $lines[] = '- Ver `documentacion/hash_arquitectura.md`.';
+        $lines[] = '- Ver `docs/dev/hash_arquitectura.md`.';
     }
 
     $lines[] = '';

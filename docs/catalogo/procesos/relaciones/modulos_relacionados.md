@@ -9,4 +9,4 @@ modulo: procesos
 | cambios | objeto_pref fases |
 | usuarios | usuario_perm_activ |
 
-Legacy: `documentacion/procesos_migracion_baseline.md`
+Legacy: `docs/dev/procesos_migracion_baseline.md`

@@ -15,4 +15,4 @@ estado_revision: revisado_parcial
 | zonassacd | Zona geografica SACD |
 | encargossacd | Dominio SACD relacionado |
 
-Legacy: `documentacion/actividadessacd_migracion_baseline.md`
+Legacy: `docs/dev/actividadessacd_migracion_baseline.md`

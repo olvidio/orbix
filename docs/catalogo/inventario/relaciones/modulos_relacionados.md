@@ -21,4 +21,4 @@ Modulos de archivo y logistica que referencian inventario documental.
 ## Documentacion cruzada
 
 - Manual: `docs/manual/inventario.md`
-- Legacy: `documentacion/Documentacion_Obix/inventario/mapa_*.md`
+- Legacy: `docs/legacy/obix/inventario/mapa_*.md`

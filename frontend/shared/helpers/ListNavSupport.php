@@ -10,7 +10,7 @@ use frontend\shared\web\Posicion;
 /**
  * Navegación con {@see Posicion} tras `FrontBootstrap::boot()`.
  *
- * Guía: `documentacion/posicion_nav_post_frontbootstrap.md`
+ * Guía: `docs/dev/posicion_nav_post_frontbootstrap.md`
  */
 final class ListNavSupport
 {

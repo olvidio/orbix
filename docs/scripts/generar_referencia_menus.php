@@ -3,7 +3,7 @@
 /**
  * Genera la referencia de menús de Orbix a partir de la base de datos actual.
  *
- * Fuente de verdad (no el antiguo `documentacion/Documentacion_Obix/menus.csv`):
+ * Fuente de verdad (no el antiguo `docs/legacy/obix/menus.csv`):
  *   - Metamenús (destinos URL, IGUALES para todos): base `comun`, esquema `public`,
  *     tabla `aux_metamenus` + catálogo de módulos `m0_modulos`.
  *   - Árbol de menús POR LAYOUT: base `sv-e`, un esquema por delegación/layout,
@@ -247,7 +247,7 @@ $out[] = '# Referencia de menús de Orbix';
 $out[] = '';
 $out[] = '> Fichero **generado automáticamente** por `docs/scripts/generar_referencia_menus.php`';
 $out[] = '> a partir de la base de datos. No editar a mano: reemplaza al antiguo';
-$out[] = '> `documentacion/Documentacion_Obix/menus.csv` (foto plana anterior a la migración).';
+$out[] = '> `docs/legacy/obix/menus.csv` (foto plana anterior a la migración).';
 $out[] = '';
 $out[] = 'Modelo actual:';
 $out[] = '';

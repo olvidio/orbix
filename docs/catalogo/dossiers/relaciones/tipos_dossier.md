@@ -17,6 +17,6 @@ estado: en_construccion
 | 3001 | actividad_resumen | actividades | actividad |
 | 1001 | persona_resumen | personas | persona |
 
-Ampliar al documentar cada modulo con baseline `Select*` y `documentacion/dossiers_migracion_baseline.md`.
+Ampliar al documentar cada modulo con baseline `Select*` y `docs/dev/dossiers_migracion_baseline.md`.
 
-Referencia: `documentacion/dossiers_migracion_baseline.md`, baselines `*_migracion_baseline.md`.
+Referencia: `docs/dev/dossiers_migracion_baseline.md`, baselines `*_migracion_baseline.md`.

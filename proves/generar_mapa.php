@@ -27,7 +27,7 @@ if (preg_match('#apps/([^/]+)/#', $fitxer_inicial, $matches)) {
     $modul = 'unknown';
 }
 
-$output_file = $root_dir . "documentacion/Documentación Obix/" . $modul . "/mapa_$nom_fitxer.md";
+$output_file = $root_dir . "docs/legacy/obix/" . $modul . "/mapa_$nom_fitxer.md";
 
 $analitzats = [];
 $cua = [$fitxer_inicial];

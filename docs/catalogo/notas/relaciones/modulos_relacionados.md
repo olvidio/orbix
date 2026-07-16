@@ -24,5 +24,5 @@ Ninguno directo; notas es consumidor de datos maestros.
 ## Documentacion cruzada
 
 - Manual: `docs/manual/notas.md`
-- Legacy: `documentacion/Documentacion_Obix/notas/mapa_*.md`
-- Baseline: `documentacion/notas_migracion_baseline.md`
+- Legacy: `docs/legacy/obix/notas/mapa_*.md`
+- Baseline: `docs/dev/notas_migracion_baseline.md`

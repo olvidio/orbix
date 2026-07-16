@@ -17,7 +17,7 @@ use InvalidArgumentException;
  * casos de uso que emiten tokens de acción). El método `open()` solo
  * se usa desde controladores HTTP de `src/` al recibir mutaciones.
  *
- * Ver `documentacion/hash_arquitectura.md` para el modelo completo
+ * Ver `docs/dev/hash_arquitectura.md` para el modelo completo
  * y los flujos de uso.
  *
  * **Formato de la cápsula**:

@@ -1,0 +1,51 @@
+---
+description: Dónde crear scripts nuevos (tools vs scripts vs docs/scripts)
+alwaysApply: true
+---
+
+# Ubicación de scripts nuevos
+
+**Por defecto, un script CLI de desarrollo va en `tools/`, no en `scripts/`.**
+
+## Árbol de decisión
+
+| Pregunta | Carpeta |
+|----------|---------|
+| ¿Se ejecuta en terminal / CI / Composer y no lo sirve la web? | `tools/` |
+| ¿Genera o valida documentación en `docs/`? | `docs/scripts/` |
+| ¿Es JS/menú que la app incluye o expone por URL? | `scripts/` |
+| ¿Son solo ficheros de idioma (.po, .mo, textos_*.php)? | `languages/` |
+
+## Subcarpetas de `tools/`
+
+- `tools/audit/` — auditorías (solo lectura, informes)
+- `tools/fix/` — migraciones y correcciones (`--dry-run` / `--apply`)
+- `tools/i18n/` — traducción asistida de `.po` (Python; datos en `languages/`)
+- `tools/phpstan/` — utilidades PHPStan
+- `tools/qa/` — cobertura de tests, validación VO/DB, enlaces
+- `tools/phpunit-docker` — PHPUnit en Docker
+
+## Prohibido
+
+- No crear scripts CLI en `scripts/` (reservado a runtime web).
+- No poner `venv`/`.venv` ni claves API en el repo; usar `requirements.txt` y variables de entorno.
+- No mezclar scripts Python de traducción dentro de `languages/`.
+
+## Plantilla mínima (PHP CLI en `tools/`)
+
+```php
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+if (PHP_SAPI !== 'cli') {
+    fwrite(STDERR, "Solo CLI.\n");
+    exit(1);
+}
+
+$root = dirname(__DIR__, 2); // tools/<subcarpeta>/script.php → raíz del repo
+```
+
+Documentar uso en el docblock: `php tools/audit/mi_script.php [opciones]`.
+
+Referencia: [`tools/README.md`](../../tools/README.md).

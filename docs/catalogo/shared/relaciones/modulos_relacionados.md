@@ -21,4 +21,4 @@ zonassacd (InfoZona), inventario, encargossacd, multiples pantallas con `tablaDB
 ## Documentacion cruzada
 
 - Manual: `docs/manual/shared.md`
-- Legacy: `documentacion/Documentacion_Obix/shared/mapa_tablaDB_lista_ver.md`
+- Legacy: `docs/legacy/obix/shared/mapa_tablaDB_lista_ver.md`

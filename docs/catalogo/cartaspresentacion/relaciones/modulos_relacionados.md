@@ -12,4 +12,4 @@ estado_revision: revisado_parcial
 | shared / regiones | RegionDropdown, delegaciones |
 | permisos | Solo dl propia o permiso `cr` para editar |
 
-Legacy: `documentacion/cartaspresentacion_migracion_baseline.md`
+Legacy: `docs/dev/cartaspresentacion_migracion_baseline.md`

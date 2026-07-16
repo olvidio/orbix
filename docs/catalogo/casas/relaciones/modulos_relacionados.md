@@ -10,4 +10,4 @@ modulo: casas
 | ubis | casas/centros |
 | procesos | tareas en listados actividad |
 
-Legacy: `documentacion/casas_migracion_baseline.md`
+Legacy: `docs/dev/casas_migracion_baseline.md`

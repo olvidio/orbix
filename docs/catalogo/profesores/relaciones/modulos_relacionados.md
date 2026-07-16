@@ -13,4 +13,4 @@ estado_revision: revisado_parcial
 | shared | `InfoProfesorTipo`, tablaDB |
 | personas | Datos personales profesor |
 
-Legacy: `documentacion/profesores_migracion_baseline.md`, `profesores_lista_por_departamentos_migracion_baseline.md`
+Legacy: `docs/dev/profesores_migracion_baseline.md`, `profesores_lista_por_departamentos_migracion_baseline.md`

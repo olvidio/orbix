@@ -258,7 +258,7 @@ Una actividad puede tener **varias fases completadas a la vez** (no hay una úni
 | **Persistencia** | `src/<modulo>/infrastructure/persistence/` | PostgreSQL |
 
 - **~36 módulos** de negocio en `src/`.
-- Migración en curso desde legacy `apps/` hacia **DDD** (ver [agents.md](../agents.md) y [REFACTOR_INDICE.md](../documentacion/REFACTOR_INDICE.md)).
+- Migración en curso desde legacy `apps/` hacia **DDD** (ver [agents.md](../agents.md) y [REFACTOR_INDICE.md](../docs/dev/REFACTOR_INDICE.md)).
 - Base de datos **PostgreSQL**; histórico documentado en Obix legacy.
 
 ---
@@ -289,7 +289,8 @@ Todo el conocimiento del sistema está organizado en `docs/`:
 | **Capacidades** | `docs/catalogo/<modulo>/capacidades/` | Agrupación funcional |
 | **Flujos** | `docs/catalogo/<modulo>/flujos/` | Recorridos de usuario |
 | **Ayuda IA** | `docs/ai/<modulo>/` | Resúmenes para asistente local |
-| **Legacy Obix** | `documentacion/Documentacion_Obix/` | Mapas históricos de menú |
+| **Ingeniería / refactor** | `docs/dev/` | Baselines, arquitectura, índice de migración |
+| **Legacy Obix** | `docs/legacy/obix/` | Mapas históricos de menú |
 
 Regenerar documentación tras cambios en código:
 
@@ -339,7 +340,7 @@ php docs/scripts/generar_ayuda_ia_modulo.php <modulo> --force
 |----------|----------------|
 | **Usuario nuevo** | Manual de tu rol en `docs/manual/` + mapas Obix de tu menú |
 | **Responsable de oficina** | §5 de este documento + manual de `actividades` y `procesos` |
-| **Desarrollador** | [agents.md](../agents.md), catálogo API del módulo, [REFACTOR_INDICE.md](../documentacion/REFACTOR_INDICE.md) |
+| **Desarrollador** | [agents.md](../agents.md), catálogo API del módulo, [REFACTOR_INDICE.md](../docs/dev/REFACTOR_INDICE.md) |
 | **Integrador / móvil** | [_clientes_nativos.md](catalogo/_clientes_nativos.md), OpenAPI del módulo |
 
 ---

@@ -78,7 +78,7 @@ Flujo típico:
 
 Si la cápsula es inválida o caducada: `success: false`, `mensaje: "Operación no autorizada"`, `data: "none"`.
 
-Referencia arquitectónica: `documentacion/hash_arquitectura.md`.
+Referencia arquitectónica: `docs/dev/hash_arquitectura.md`.
 
 ## Entrada desde controllers legacy
 

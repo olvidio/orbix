@@ -6,7 +6,7 @@ estado: en_construccion
 
 # Legacy Obix → catalogo nuevo
 
-Indice de correspondencia entre `documentacion/Documentacion_Obix/mapa_*.md` y la documentacion generada en `docs/catalogo/`.
+Indice de correspondencia entre `docs/legacy/obix/mapa_*.md` y la documentacion generada en `docs/catalogo/`.
 
 ## actividadtarifas
 
@@ -17,7 +17,7 @@ Indice de correspondencia entre `documentacion/Documentacion_Obix/mapa_*.md` y l
 | `actividadtarifas/mapa_tarifa_ubi.md` | `actividadtarifas.pantalla.tarifa_ubi` | `tarifa_ubi.gestionar.flujo` | Tarifa Ubi |
 | `actividadtarifas/mapa_tarifa_actividad.md` | (duplicado menu activ→tarifa) | `tipo_tarifa.gestionar.flujo` | Tipo Tarifa |
 
-Menu CSV: `documentacion/Documentacion_Obix/menus.csv` (filas `actividadtarifas`).
+Menu CSV: `docs/legacy/obix/menus.csv` (filas `actividadtarifas`).
 
 ## zonassacd
 
@@ -38,7 +38,7 @@ Sin mapas Obix dedicados. Equivalente funcional:
 | form_3102 | `form_cargos_de_actividad` | `form_cargos_de_actividad.gestionar.flujo` |
 | form_1302 | `form_cargos_personas_en_actividad` | `form_cargos_personas_en_actividad.gestionar.flujo` |
 
-Referencia: `documentacion/actividadcargos_migracion_baseline.md`.
+Referencia: `docs/dev/actividadcargos_migracion_baseline.md`.
 
 ## notas
 
@@ -112,4 +112,4 @@ Referencia: `documentacion/actividadcargos_migracion_baseline.md`.
 
 ## Pendiente
 
-Anadir filas al revisar cada modulo: `documentacion/Documentacion_Obix/<modulo>/mapa_*.md` (~120 mapas totales).
+Anadir filas al revisar cada modulo: `docs/legacy/obix/<modulo>/mapa_*.md` (~120 mapas totales).

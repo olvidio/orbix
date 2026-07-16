@@ -29,5 +29,5 @@ estado_revision: revisado
 
 - Manual: `docs/manual/actividadtarifas.md`
 - Convenciones API: `docs/catalogo/_convenciones_api.md`
-- Legacy Obix: `documentacion/Documentacion_Obix/actividadtarifas/mapa_*.md`
-- Menús: `documentacion/Documentacion_Obix/menus.csv` (filas actividadtarifas)
+- Legacy Obix: `docs/legacy/obix/actividadtarifas/mapa_*.md`
+- Menús: `docs/legacy/obix/menus.csv` (filas actividadtarifas)

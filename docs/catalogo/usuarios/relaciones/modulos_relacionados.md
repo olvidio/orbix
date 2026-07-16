@@ -22,5 +22,5 @@ estado_revision: revisado_parcial
 
 - Manual: `docs/manual/usuarios.md`
 - Convenciones: `docs/catalogo/_convenciones_api.md` (HashB, permisos)
-- Legacy: `documentacion/Documentacion_Obix/usuarios/mapa_*.md`
+- Legacy: `docs/legacy/obix/usuarios/mapa_*.md`
 - Excepciones: `docs/excepciones_modulos.md` (permisos)

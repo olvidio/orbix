@@ -19,4 +19,4 @@ Endpoints AJAX del formulario preferencias (sin controller listado en generador)
 
 CLI: `avisos_generar_tabla`, `avisos_generar_mails` (infra admin).
 
-Legacy: `documentacion/cambios_migracion_baseline.md`
+Legacy: `docs/dev/cambios_migracion_baseline.md`

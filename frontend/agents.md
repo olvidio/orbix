@@ -3,6 +3,7 @@
 ## Convenciones de JavaScript
 - **Prefijo de funciones**: Todas las funciones de JavaScript globales deben empezar por el prefijo `fnjs_` (ej. `fnjs_guardar`, `fnjs_actualizar`). Esto ayuda a identificarlas rápidamente como funciones propias del sistema Orbix.
 - **Ubicación**: Las funciones comunes se encuentran en `scripts/index.js.php`. Las funciones específicas de una vista deben integrarse en el bloque `<script>` del archivo `.phtml` correspondiente.
+- **No confundir con `tools/`**: `scripts/` es solo runtime web (JS vía PHP). Scripts CLI de desarrollo van en `tools/` (ver [`agents.md`](../agents.md) y [`tools/README.md`](../tools/README.md)).
 
 ## Llamadas AJAX Modernas (JSON)
 Las nuevas funcionalidades y las recargas parciales de vista deben usar respuestas JSON (`ContestarJson`) para una gestión uniforme de errores.

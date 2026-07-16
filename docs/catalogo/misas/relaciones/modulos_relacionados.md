@@ -9,4 +9,4 @@ modulo: misas
 | actividadessacd | SACD encargados |
 | ubis | centros en planes |
 
-Legacy: `documentacion/misas_migracion_baseline.md`
+Legacy: `docs/dev/misas_migracion_baseline.md`

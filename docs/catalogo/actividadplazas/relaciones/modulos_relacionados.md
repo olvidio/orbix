@@ -17,4 +17,4 @@ Huérfano justificado:
 
 - `/src/actividadplazas/posibles_propietarios_data` → `FormActividadesDeUnaPersonaRender`, `FormAsistentesAUnaActividadRender` (**asistentes**)
 
-Legacy: `documentacion/actividadplazas_migracion_baseline.md`
+Legacy: `docs/dev/actividadplazas_migracion_baseline.md`

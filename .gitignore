@@ -109,3 +109,14 @@ log/*
 
 # Guías de procesos: repositorio Git independiente (ver docs/guias/README.md)
 /docs/guias/
+
+# Herramientas de desarrollo: entornos Python locales
+tools/**/.venv/
+tools/**/venv/
+**/venv/
+**/.venv/
+
+# Copias locales de traducciones
+languages/**/*còpia*
+languages/**/*copia*
+*.py.old

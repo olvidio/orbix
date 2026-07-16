@@ -21,5 +21,5 @@ Administracion de esquemas, migraciones y apptables (**solo dev/admin**).
 ## Documentacion cruzada
 
 - Manual: `docs/manual/devel_db_admin.md`
-- Legacy: `documentacion/Documentacion_Obix/devel/mapa_db_*.md`
+- Legacy: `docs/legacy/obix/devel/mapa_db_*.md`
 - Fix generador 2026-05-21: closures `function (): void` en routes.php

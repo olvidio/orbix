@@ -22,4 +22,4 @@ planning, actividades (encargos en actividad segun baseline).
 ## Documentacion cruzada
 
 - Manual: `docs/manual/encargossacd.md`
-- Legacy: `documentacion/Documentacion_Obix/encargossacd/mapa_*.md`
+- Legacy: `docs/legacy/obix/encargossacd/mapa_*.md`

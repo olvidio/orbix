@@ -15,10 +15,10 @@ estado_revision: revisado_parcial
 
 ## Dependientes
 
-**Todos los modulos con entrada de menu** — ver `documentacion/Documentacion_Obix/menus.csv`.
+**Todos los modulos con entrada de menu** — ver `docs/legacy/obix/menus.csv`.
 
 ## Documentacion cruzada
 
 - Manual: `docs/manual/menus.md`
-- Legacy: `documentacion/Documentacion_Obix/menus/mapa_*.md`
-- Indice menu global: `documentacion/Documentacion_Obix/menus.csv`
+- Legacy: `docs/legacy/obix/menus/mapa_*.md`
+- Indice menu global: `docs/legacy/obix/menus.csv`

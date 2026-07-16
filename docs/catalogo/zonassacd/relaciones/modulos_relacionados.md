@@ -38,5 +38,5 @@ Sustitutos actuales en frontend:
 
 ## Legacy
 
-- `documentacion/zonassacd_migracion_baseline.md`
-- Obix: `documentacion/Documentacion_Obix/zonassacd/mapa_*.md`
+- `docs/dev/zonassacd_migracion_baseline.md`
+- Obix: `docs/legacy/obix/zonassacd/mapa_*.md`

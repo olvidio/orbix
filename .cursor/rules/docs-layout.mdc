@@ -1,0 +1,36 @@
+---
+description: Dónde crear documentación nueva (docs/ único árbol)
+alwaysApply: true
+---
+
+# Documentación: solo bajo `docs/`
+
+No crear la carpeta `documentacion/` ni escribir docs sueltas en la raíz del repo.
+
+## Árbol de decisión
+
+| Pregunta | Carpeta |
+|----------|---------|
+| ¿Catálogo API, OpenAPI, pantallas, flujos (generado desde código)? | `docs/catalogo/<modulo>/` |
+| ¿Manual de usuario? | `docs/manual/<modulo>.md` |
+| ¿Ayuda para asistente IA / RAG? | `docs/ai/<modulo>/` |
+| ¿Baseline de migración, arquitectura, deuda técnica? | `docs/dev/` |
+| ¿Informe JSON de herramienta (`tools/qa/…`)? | `docs/dev/reports/` |
+| ¿Referencia histórica Obix (solo lectura)? | `docs/legacy/obix/` |
+| ¿Guía de proceso de negocio (repo aparte)? | `docs/guias/` |
+| ¿Script que genera docs? | `docs/scripts/` |
+
+## Prohibido
+
+- No crear `documentacion/` ni duplicar contenido fuera de `docs/`.
+- No mezclar baselines de refactor en `docs/catalogo/` ni manuales en `docs/dev/`.
+- No escribir documentación nueva en `docs/legacy/obix/` (congelado).
+
+## Referencias en código y markdown
+
+- Baselines: `docs/dev/<modulo>_migracion_baseline.md`
+- Arquitectura hash: `docs/dev/hash_arquitectura.md`
+- Menús legacy: `docs/legacy/obix/menus.csv`
+- Índice refactor: `docs/dev/REFACTOR_INDICE.md`
+
+Índice: [`docs/README.md`](../../docs/README.md).

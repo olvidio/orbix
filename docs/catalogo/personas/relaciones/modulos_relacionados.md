@@ -13,4 +13,4 @@ modulo: personas
 
 Huérfanos: `persona_update`, `persona_eliminar` ← `persona_form.phtml`, `personas_editar`.
 
-Legacy: `documentacion/personas_migracion_baseline.md`
+Legacy: `docs/dev/personas_migracion_baseline.md`
