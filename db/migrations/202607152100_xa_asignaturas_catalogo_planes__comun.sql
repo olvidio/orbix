@@ -13,8 +13,7 @@ ALTER TABLE public.xa_asignaturas REPLICA IDENTITY FULL;
 
 -- 2114: nuevo hueco curricular en plan 2026
 UPDATE public.xa_asignaturas
-SET id_nivel = 2312,
-SET plan_estudios = '{2026}'::integer[]
+SET id_nivel = 2312, plan_estudios = '{2026}'::integer[]
 WHERE id_asignatura = 2114
   AND id_nivel IS DISTINCT FROM 2312;
 
