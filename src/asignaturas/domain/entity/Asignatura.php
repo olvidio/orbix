@@ -55,7 +55,21 @@ class Asignatura
 
     private ?PlanEstudios $plan_estudios = null;
 
+    /** PK original al cargar desde BD; no se modifica al editar el formulario. */
+    private ?PlanEstudios $plan_estudios_pkey = null;
+
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    /**
+     * @param array<string, mixed> $aDatos
+     */
+    public static function fromArray(array $aDatos): static
+    {
+        $asignatura = (new self())->setAllAttributes($aDatos);
+        $asignatura->capturePlanEstudiosPkey();
+
+        return $asignatura;
+    }
 
 
     // ---------------- VO API -----------------
@@ -313,6 +327,19 @@ class Asignatura
         $this->plan_estudios = PlanEstudios::fromNullableArray($plan_estudios);
     }
 
+    /**
+     * @return list<int>|null
+     */
+    public function getPlanEstudiosPkey(): ?array
+    {
+        return $this->plan_estudios_pkey?->toArray();
+    }
+
+    private function capturePlanEstudiosPkey(): void
+    {
+        $this->plan_estudios_pkey = $this->plan_estudios;
+    }
+
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     /**
      * @return array{id_asignatura: string, plan_estudios: string}
@@ -544,7 +571,7 @@ class Asignatura
             'plan_estudios' => fn() => FuncTablasSupport::arrayPhp2pg($this->getPlanEstudiosVo()?->toArray() ?? []),
         ], $converters));
         $data['nombre_asignatura'] = $this->getNombreAsignaturaVo()->value();
-        unset($data['nombre_signatura']);
+        unset($data['nombre_signatura'], $data['plan_estudios_pkey']);
 
         return $data;
     }

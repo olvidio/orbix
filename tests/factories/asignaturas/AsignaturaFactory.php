@@ -7,6 +7,7 @@ use src\asignaturas\domain\entity\Asignatura;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\asignaturas\domain\value_objects\AsignaturaName;
 use src\asignaturas\domain\value_objects\NivelId;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 
 /**
  * Factory para crear instancias de Asignatura para tests
@@ -31,6 +32,7 @@ class AsignaturaFactory
         $oAsignatura->setId_asignatura($id);
         $oAsignatura->setIdNivelVo(new NivelId(1000));
         $oAsignatura->setNombreAsignaturaVo(new AsignaturaName('test_asignatura_' . $id));
+        $oAsignatura->setPlan_estudios([PlanEstudios::PLAN_1997]);
         $oAsignatura->setActive(false);
 
         return $oAsignatura;

@@ -50,6 +50,29 @@ class PgAsignaturaRepositoryTest extends myTest
         $this->repository->Eliminar($oObtenida);
     }
 
+    public function test_actualizar_plan_estudios_no_crea_fila_duplicada()
+    {
+        $oAsignatura = $this->factory->createSimple();
+        $id = $oAsignatura->getId_asignatura();
+        $this->repository->Guardar($oAsignatura);
+
+        $oCargada = $this->repository->findById($id, [1997]);
+        $this->assertNotNull($oCargada);
+        $oCargada->setPlan_estudios([2026]);
+
+        $result = $this->repository->Guardar($oCargada);
+        $this->assertTrue($result);
+
+        $oPlan1997 = $this->repository->findById($id, [1997]);
+        $this->assertNull($oPlan1997);
+
+        $oPlan2026 = $this->repository->findById($id, [2026]);
+        $this->assertNotNull($oPlan2026);
+        $this->assertEquals([2026], $oPlan2026->getPlan_estudios());
+
+        $this->repository->Eliminar($oPlan2026);
+    }
+
     public function test_find_by_id_existente()
     {
         $oAsignatura = $this->factory->createSimple();

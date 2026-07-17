@@ -386,13 +386,15 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
     {
         $id_asignatura = $Asignatura->getIdAsignaturaVo()->value();
         $planArray = $Asignatura->getPlanEstudiosVo()?->toArray() ?? [];
+        $planPkeyArray = $Asignatura->getPlanEstudiosPkey() ?? $planArray;
         $planPg = FuncTablasSupport::arrayPhp2pg($planArray);
+        $planPkeyPg = FuncTablasSupport::arrayPhp2pg($planPkeyArray);
         if ($planPg === '' || $planPg === '{}') {
             return false;
         }
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $bInsert = $this->isNew($id_asignatura, $planArray);
+        $bInsert = $this->isNew($id_asignatura, $planPkeyArray);
 
         $aDatos = $Asignatura->toArrayForDatabase();
         if ($bInsert === false) {
@@ -408,7 +410,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
 					id_tipo                  = :id_tipo,
 					plan_estudios            = :plan_estudios";
             $sql = "UPDATE $nom_tabla SET $update
-                WHERE id_asignatura = $id_asignatura AND plan_estudios = '$planPg'::integer[]";
+                WHERE id_asignatura = $id_asignatura AND plan_estudios = '$planPkeyPg'::integer[]";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             $campos = "(id_asignatura,id_nivel,nombre_asignatura,nombre_corto,creditos,year,id_sector,active,id_tipo,plan_estudios)";
