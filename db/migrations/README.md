@@ -40,6 +40,7 @@ Hay dos series según la sesión (`sfsv`):
 En producción, los cambios de `sv` y de `sv-e` deben tener su equivalente `__sf.sql`
 (esquemas con sufijo `f`, `publicv` → `publicf`, etc.). En `sf` no hay réplica ni BD
 `sf-e` aparte: todo vive en la BD `sf` (DDL con usuario de mantenimiento `importar`/`publicf`).
+Hay un `__sf.sql` por cada `__sv.sql` / `__sv-e.sql` de la serie actual.
 
 ## Estructura o datos
 
