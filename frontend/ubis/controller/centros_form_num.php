@@ -12,7 +12,7 @@ FrontBootstrap::boot();
 $Qid_ubi = (int)(filter_input(INPUT_POST, 'id_ubi') ?? filter_input(INPUT_GET, 'id_ubi'));
 $form = UbisPayload::centroNumFormFromPayload(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/centros_form_num', ['id_ubi' => $Qid_ubi])));
 
-$url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
+$url_update = AppUrlConfig::srcBrowserUrl('/src/ubis/centros_update');
 
 $oHash = new HashFront();
 $oHash->setUrl($url_update);

@@ -37,14 +37,14 @@ $oHashForm->setCamposForm('id_tarifa');
 $h_form = $oHashForm->linkSinVal();
 
 $oHashUpdate = new HashFront();
-$oHashUpdate->setUrl($api . '/src/actividadtarifas/tipo_tarifa_update');
+$oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tipo_tarifa_update'));
 $oHashUpdate->setCamposForm('id_tarifa!letra!modo!observ');
-$url_update = $api . '/src/actividadtarifas/tipo_tarifa_update' . $oHashUpdate->linkSinVal();
+$url_update = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tipo_tarifa_update') . $oHashUpdate->linkSinVal();
 
 $oHashEliminar = new HashFront();
-$oHashEliminar->setUrl($api . '/src/actividadtarifas/tipo_tarifa_eliminar');
+$oHashEliminar->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tipo_tarifa_eliminar'));
 $oHashEliminar->setCamposForm('id_tarifa');
-$url_eliminar = $api . '/src/actividadtarifas/tipo_tarifa_eliminar' . $oHashEliminar->linkSinVal();
+$url_eliminar = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tipo_tarifa_eliminar') . $oHashEliminar->linkSinVal();
 
 $a_campos = [
     'oPosicion' => $oPosicion,

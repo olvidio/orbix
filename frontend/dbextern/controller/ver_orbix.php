@@ -73,7 +73,7 @@ $a_camposHidden = [
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_sincro_unir = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_unir';
+$url_sincro_unir = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_unir');
 $oHash1 = new HashFront();
 $oHash1->setUrl($url_sincro_unir);
 $oHash1->setCamposForm('region!dl!id_nom_listas!id!id_orbix!tipo_persona');

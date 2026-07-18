@@ -27,7 +27,7 @@ $oHashLista->setCamposForm('que');
 $h_lista = $oHashLista->linkSinValParams();
 
 // Alta (form_nuevo): POST mínimo a /src/... + linkSinValParams (sin hash del formulario con ActividadTipo).
-$url_src_nombre_guardar = $web . '/src/pasarela/nombre_excepcion_guardar';
+$url_src_nombre_guardar = AppUrlConfig::srcBrowserUrl('/src/pasarela/nombre_excepcion_guardar');
 $oHashSrcNombreGuardar = new HashFront();
 $oHashSrcNombreGuardar->setUrl($url_src_nombre_guardar);
 $oHashSrcNombreGuardar->setCamposForm('id_tipo_activ!valor');

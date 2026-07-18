@@ -67,8 +67,7 @@ $url_nuevo = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
 $url_lista = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
     . '/frontend/usuarios/controller/usuario_lista.php'
 );
-$url_eliminar = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
-    . '/src/usuarios/usuario_eliminar'
+$url_eliminar = HashFront::link(AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_eliminar')
 );
 
 $a_campos = [

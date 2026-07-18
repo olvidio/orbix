@@ -5,7 +5,7 @@ use frontend\shared\config\AppUrlConfig;
     fnjs_guardar_stgr = function (formulario) {
         $.ajax({
             data: $(formulario).serialize(),
-            url: '<?= AppUrlConfig::getApiBaseUrl() ?>/src/personas/stgr_update',
+            url: '<?= AppUrlConfig::srcBrowserUrl('/src/personas/stgr_update') ?>',
             method: 'POST',
             dataType: 'json'
         }).done(function (json) {

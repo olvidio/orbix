@@ -6,7 +6,7 @@ use frontend\shared\permisos\MenuPermDlRadiosHtml;
 ?>
 <script>
     fnjs_grabar = function (formulario) {
-        var url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/perm_menu_guardar';
+        var url = '<?= AppUrlConfig::srcBrowserUrl('/src/usuarios/perm_menu_guardar') ?>';
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,

@@ -55,14 +55,14 @@ $api = AppUrlConfig::getApiBaseUrl();
 $oHash = new HashFront();
 $a_camposHidden = [];
 if ($es_nuevo) {
-    $oHash->setUrl($api . '/src/actividadtarifas/relacion_tarifa_update');
+    $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
     $oHash->setCamposForm('id_item!id_tarifa!id_tipo_activ!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
     $a_camposHidden = [
         'id_item' => 'nuevo',
         'id_tipo_activ' => '',
     ];
 } else {
-    $oHash->setUrl($api . '/src/actividadtarifas/relacion_tarifa_update');
+    $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
     $oHash->setCamposForm('id_item!id_tarifa!id_tipo_activ');
     $a_camposHidden = [
         'id_item' => $id_item,

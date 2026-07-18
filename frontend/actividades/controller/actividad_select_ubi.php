@@ -41,14 +41,14 @@ $isfsv = \frontend\shared\helpers\PayloadCoercion::int($isfsv);
 $dl_org = \frontend\shared\helpers\PayloadCoercion::string($_REQUEST['dl_org'] ?? '');
 
 // URL + hash para cargar desplegables (freq/region) via AJAX.
-$url_desplegable = AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_select_ubi_desplegable';
+$url_desplegable = AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_select_ubi_desplegable');
 $oHashDespl = new HashFront();
 $oHashDespl->setUrl($url_desplegable);
 $oHashDespl->setCamposForm('tipo!dl_org!isfsv');
 $h_desplegable = $oHashDespl->linkSinValParams();
 
 $oHash = new HashFront();
-$oHash->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_tipo_get');
+$oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get'));
 $oHash->setCamposForm('extendida!modo!salida!entrada!isfsv');
 $h = $oHash->linkSinValParams();
 

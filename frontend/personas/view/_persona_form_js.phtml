@@ -18,7 +18,7 @@ use frontend\shared\config\AppUrlConfig;
     }
 
     fnjs_guardar = function (formulario) {
-        $(formulario).attr('action', "<?= AppUrlConfig::getApiBaseUrl() ?>/src/personas/persona_update");
+        $(formulario).attr('action', "<?= AppUrlConfig::srcBrowserUrl('/src/personas/persona_update') ?>");
         $(formulario).one("submit", function () {
             $.ajax({
                 type: 'post',
@@ -40,7 +40,7 @@ use frontend\shared\config\AppUrlConfig;
 
     fnjs_eliminar = function (formulario) {
         if (confirm(<?= json_encode(_("¿Está seguro que desea borrar esta persona?")) ?>)) {
-            $(formulario).attr('action', "<?= AppUrlConfig::getApiBaseUrl() ?>/src/personas/persona_eliminar");
+            $(formulario).attr('action', "<?= AppUrlConfig::srcBrowserUrl('/src/personas/persona_eliminar') ?>");
             $(formulario).one("submit", function () {
                 $.ajax({
                     url: $(this).attr('action'),

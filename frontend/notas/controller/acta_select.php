@@ -129,7 +129,7 @@ $oHash1 = new HashFront();
 $oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh!id_sel');
 
-$url_acta_eliminar = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_eliminar';
+$url_acta_eliminar = AppUrlConfig::srcBrowserUrl('/src/notas/acta_eliminar');
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('acta_select');

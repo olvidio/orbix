@@ -163,7 +163,7 @@
     var extendida=$('#extendida').val();
     var isfsv=$('#isfsv_val').val();
     var filtro_lugar=$('#filtro_lugar').val();
-    var url='src/actividades/actividad_tipo_get';
+    var url='{{ url_actividad_tipo_get }}';
     var parametros='extendida=' + extendida + '&modo=buscar&salida=lugar&entrada='+filtro_lugar+'&opcion_sel='+opcion_sel+'&isfsv='+isfsv+'{{ h|raw }}';
     $.ajax({
     url: url,

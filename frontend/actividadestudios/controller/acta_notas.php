@@ -94,8 +94,8 @@ $txt_alert_acta = _('primero debe guadar los datos del acta');
 include_once 'frontend/notas/controller/acta_ver.php';
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
-$url_matricula_guardar = $web . '/src/actividadestudios/acta_notas_matricula_guardar';
-$url_notas_definitivas = $web . '/src/actividadestudios/acta_notas_definitivas_grabar';
+$url_matricula_guardar = AppUrlConfig::srcBrowserUrl('/src/actividadestudios/acta_notas_matricula_guardar');
+$url_notas_definitivas = AppUrlConfig::srcBrowserUrl('/src/actividadestudios/acta_notas_definitivas_grabar');
 
 $a_campos = [
     'oPosicion' => $oPosicion,

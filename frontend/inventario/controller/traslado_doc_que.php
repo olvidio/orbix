@@ -35,7 +35,7 @@ $oHash->setCamposForm('id_ubi!id_ubi_new!sel');
 $oHash->setCamposNo('sel!id_lugar!id_lugar_new!id_sel');
 
 $oHashLugar = new HashFront();
-$oHashLugar->setUrl(rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/src/inventario/lista_lugares_de_ubi');
+$oHashLugar->setUrl(AppUrlConfig::srcBrowserUrl('/src/inventario/lista_lugares_de_ubi'));
 $oHashLugar->setCamposForm('id_ubi');
 $h_lugar = $oHashLugar->linkSinValParams();
 

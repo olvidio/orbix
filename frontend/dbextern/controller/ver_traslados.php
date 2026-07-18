@@ -20,7 +20,7 @@ $data = PostRequest::getDataFromUrl('/src/dbextern/ver_traslados_datos', [
 $a_persona_orbix = $data['personas'] ?? [];
 
 // Hash para AJAX trasladar
-$url_sincro_trasladar = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_trasladar';
+$url_sincro_trasladar = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_trasladar');
 $oHash = new HashFront();
 $oHash->setUrl($url_sincro_trasladar);
 $oHash->setCamposForm('dl!id_nom_orbix!tipo_persona');

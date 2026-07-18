@@ -170,20 +170,20 @@ $oHashActaPdf->setArrayCamposHidden(['acta_num' => $acta_actual]);
 
 $titulo = strtoupper(_('datos del acta'));
 
-$url_examinadores = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/examinadores_search';
+$url_examinadores = AppUrlConfig::srcBrowserUrl('/src/notas/examinadores_search');
 $oHashExaminadores = new HashFront();
 $oHashExaminadores->setUrl($url_examinadores);
 $oHashExaminadores->setCamposForm('search');
 $h_examinadores = $oHashExaminadores->getParamAjaxEnArray();
 
-$url_asignaturas = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/asignaturas_search';
+$url_asignaturas = AppUrlConfig::srcBrowserUrl('/src/notas/asignaturas_search');
 $oHashAsignaturas = new HashFront();
 $oHashAsignaturas->setUrl($url_asignaturas);
 $oHashAsignaturas->setCamposForm('search');
 $h_asignaturas = $oHashAsignaturas->getParamAjaxEnArray();
 
-$url_acta_nueva = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_nueva';
-$url_acta_modificar = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_modificar';
+$url_acta_nueva = AppUrlConfig::srcBrowserUrl('/src/notas/acta_nueva');
+$url_acta_modificar = AppUrlConfig::srcBrowserUrl('/src/notas/acta_modificar');
 
 $base = AppUrlConfig::getPublicAppBaseUrl();
 $url_upload = $base . '/frontend/notas/controller/acta_pdf_upload.php';

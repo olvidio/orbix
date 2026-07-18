@@ -126,7 +126,7 @@ $oHashMod->setUrl($url_modificar);
 $oHashMod->setCamposForm('que!scroll_id!sel');
 $h_modificar = $oHashMod->linkSinValParams();
 
-$url_borrar = AppUrlConfig::getApiBaseUrl() . '/src/encargossacd/encargo_ver_eliminar';
+$url_borrar = AppUrlConfig::srcBrowserUrl('/src/encargossacd/encargo_ver_eliminar');
 $oHashBorrar = new HashFront();
 $oHashBorrar->setUrl($url_borrar);
 $oHashBorrar->setCamposForm('que!sel');

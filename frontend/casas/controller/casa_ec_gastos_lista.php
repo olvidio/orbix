@@ -37,13 +37,13 @@ if (!$form['ok']) {
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 $oHashGuardar = new HashFront();
-$oHashGuardar->setUrl($web . '/src/casas/casa_ec_gastos_guardar');
+$oHashGuardar->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/casa_ec_gastos_guardar'));
 $sCamposForm = 'id_ubi!year';
 for ($m = 1; $m < 13; $m++) {
     $sCamposForm .= "!g$m!ap_sv$m!ap_sf$m";
 }
 $oHashGuardar->setCamposForm($sCamposForm);
-$url_guardar = $web . '/src/casas/casa_ec_gastos_guardar' . $oHashGuardar->linkSinVal();
+$url_guardar = AppUrlConfig::srcBrowserUrl('/src/casas/casa_ec_gastos_guardar') . $oHashGuardar->linkSinVal();
 
 $a_campos = [
     'casas' => $form['casas'],

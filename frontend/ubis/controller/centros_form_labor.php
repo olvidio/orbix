@@ -15,7 +15,7 @@ $form = UbisPayload::centroLaborFormFromPayload(UbisPayload::postData(PostReques
 
 $tipo_labor_check_html = MenuPermisoMenuHtml::cuadrosCheck('tipo_labor', $form['tipo_labor'], $form['tipo_labor_bit_map']);
 
-$url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
+$url_update = AppUrlConfig::srcBrowserUrl('/src/ubis/centros_update');
 
 $oHash = new HashFront();
 $oHash->setUrl($url_update);

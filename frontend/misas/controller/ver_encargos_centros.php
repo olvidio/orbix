@@ -29,25 +29,25 @@ $oDesplZonasCtr->setBlanco(true);
 $oDesplZonasCtr->setNombre('id_zona_enc');
 $oDesplZonasCtr->setAction('fnjs_prepara_select_encargo()');
 
-$url_guardar_encargo_centro = AppUrlConfig::getApiBaseUrl() . '/src/misas/guardar_encargo_centro';
+$url_guardar_encargo_centro = AppUrlConfig::srcBrowserUrl('/src/misas/guardar_encargo_centro');
 $oHashGuardar = new HashFront();
 $oHashGuardar->setUrl($url_guardar_encargo_centro);
 $oHashGuardar->setCamposForm('id_item!id_enc!id_ctr');
 $h_guardar_encargo_centro = $oHashGuardar->linkSinValParams();
 
-$url_eliminar_encargo_centro = AppUrlConfig::getApiBaseUrl() . '/src/misas/eliminar_encargo_centro';
+$url_eliminar_encargo_centro = AppUrlConfig::srcBrowserUrl('/src/misas/eliminar_encargo_centro');
 $oHashEliminar = new HashFront();
 $oHashEliminar->setUrl($url_eliminar_encargo_centro);
 $oHashEliminar->setCamposForm('id_item');
 $h_eliminar_encargo_centro = $oHashEliminar->linkSinValParams();
 
-$url_desplegable_encargos = AppUrlConfig::getApiBaseUrl() . '/src/misas/desplegable_encargos';
+$url_desplegable_encargos = AppUrlConfig::srcBrowserUrl('/src/misas/desplegable_encargos');
 $oHashDespl = new HashFront();
 $oHashDespl->setUrl($url_desplegable_encargos);
 $oHashDespl->setCamposForm('id_zona!id_enc');
 $h_desplegable_encargos = $oHashDespl->linkSinValParams();
 
-$url_desplegable_centros_zona = AppUrlConfig::getApiBaseUrl() . '/src/misas/desplegable_centros_zona';
+$url_desplegable_centros_zona = AppUrlConfig::srcBrowserUrl('/src/misas/desplegable_centros_zona');
 $oHashDesplCtr = new HashFront();
 $oHashDesplCtr->setUrl($url_desplegable_centros_zona);
 $oHashDesplCtr->setCamposForm('id_zona!id_ubi');

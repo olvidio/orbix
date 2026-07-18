@@ -6,7 +6,7 @@ use frontend\shared\security\HashFront;
 ?>
     <script>
     fnjs_del_grupmenu = function (formulario) {
-        let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/role_grupmenu_del';
+        let url = '<?= AppUrlConfig::srcBrowserUrl('/src/usuarios/role_grupmenu_del') ?>';
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,
@@ -29,7 +29,7 @@ use frontend\shared\security\HashFront;
     }
 
     fnjs_guardar = function (formulario) {
-        var url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/role_guardar';
+        var url = '<?= AppUrlConfig::srcBrowserUrl('/src/usuarios/role_guardar') ?>';
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,

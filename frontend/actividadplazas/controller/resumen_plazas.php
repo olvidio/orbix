@@ -71,9 +71,9 @@ $oHashActualizar->setArraycamposHidden($hiddenActualizar);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $oHashCeder = new HashFront();
-$oHashCeder->setUrl($apiBase . '/src/actividadplazas/plazas_ceder');
+$oHashCeder->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadplazas/plazas_ceder'));
 $oHashCeder->setCamposForm('id_activ!num_plazas!region_dl');
-$url_ceder = $apiBase . '/src/actividadplazas/plazas_ceder' . $oHashCeder->linkSinVal();
+$url_ceder = AppUrlConfig::srcBrowserUrl('/src/actividadplazas/plazas_ceder') . $oHashCeder->linkSinVal();
 
 $a_campos = [
     'oPosicion' => $oPosicion,

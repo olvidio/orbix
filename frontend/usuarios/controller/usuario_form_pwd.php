@@ -29,8 +29,8 @@ $oHash = new HashFront();
 $oHash->setCamposForm('password!password1');
 $oHash->setArraycamposHidden(['id_usuario' => $id_usuario]);
 
-$url_usuario_guardar = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_guardar_pwd';
-$url_usuario_chk = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_check_pwd';
+$url_usuario_guardar = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_guardar_pwd');
+$url_usuario_chk = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_check_pwd');
 $oHash2 = new HashFront();
 $oHash2->setUrl($url_usuario_chk);
 $oHash2->setCamposForm('id_usuario!password');

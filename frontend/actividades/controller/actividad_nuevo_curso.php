@@ -23,7 +23,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 
-$url_ejecutar = AppUrlConfig::getApiBaseUrl() . '/src/actividades/actividad_nuevo_curso_ejecutar';
+$url_ejecutar = AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_nuevo_curso_ejecutar');
 
 $oHash = new HashFront();
 $oHash->setUrl($url_ejecutar);

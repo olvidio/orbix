@@ -37,8 +37,8 @@ $api = AppUrlConfig::getApiBaseUrl();
 $url_get2 = $public . '/frontend/ubis/controller/calendario_periodos_get2.php';
 $url_nuevo = $public . '/frontend/ubis/controller/calendario_periodos_nuevo.php';
 $url_form_periodo = $public . '/frontend/ubis/controller/calendario_periodos_form_periodo.php';
-$url_guardar = $api . '/src/ubis/calendario_periodos_guardar';
-$url_eliminar = $api . '/src/ubis/calendario_periodos_eliminar';
+$url_guardar = AppUrlConfig::srcBrowserUrl('/src/ubis/calendario_periodos_guardar');
+$url_eliminar = AppUrlConfig::srcBrowserUrl('/src/ubis/calendario_periodos_eliminar');
 
 $oHash = new HashFront();
 $oHash->setUrl($url_get2);

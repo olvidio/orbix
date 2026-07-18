@@ -60,7 +60,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $a_pkey = '';
 }
 
-$web_depende = AppUrlConfig::getApiBaseUrl() . "/src/shared/tablaDB_depende_datos";
+$web_depende = AppUrlConfig::srcBrowserUrl('/src/shared/tablaDB_depende_datos');
 $oHashDepende = new HashFront();
 $oHashDepende->setUrl($web_depende);
 $oHashDepende->setCamposForm('clase_info!accion!valor_depende');
@@ -75,7 +75,7 @@ if (!empty($Qobj_pau)) {
     $Qgo_to = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . "/frontend/dossiers/controller/dossiers_ver.php?$sQuery");
 } else {
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = HashFront::link(AppUrlConfig::getApiBaseUrl() . "/src/shared/tablaDB_lista_datos?$sQuery");
+    $Qgo_to = HashFront::link(AppUrlConfig::srcBrowserUrl('/src/shared/tablaDB_lista_datos') . '?' . $sQuery);
 }
 
 $url_backend = '/src/shared/tablaDB_formulario_datos';

@@ -32,7 +32,7 @@ if ($Qid_item !== 'nuevo') {
     $isfsv = $oTipoActiv->getSfsvId();
 
     $oHash = new HashFront();
-    $oHash->setUrl($web . '/src/actividadtarifas/relacion_tarifa_update');
+    $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
     $oHash->setCamposForm('id_item!id_tarifa!id_tipo_activ');
     $a_camposHidden = [
         'id_tipo_activ' => $Qid_tipo_activ,
@@ -41,11 +41,11 @@ if ($Qid_item !== 'nuevo') {
     $oHash->setArrayCamposHidden($a_camposHidden);
 
     $oHash1 = new HashFront();
-    $oHash1->setUrl($web . '/src/actividades/actividad_tipo_get');
+    $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get'));
     $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
 
-    $url_ajax = $web . '/src/actividadtarifas/relacion_tarifa_update';
+    $url_ajax = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update');
 
     $a_campos = [
         'oPosicion' => $oPosicion,
@@ -76,7 +76,7 @@ if ($Qid_item !== 'nuevo') {
     $oActividadTipo->setPara('tipoactiv-tarifas');
 
     $oHash = new HashFront();
-    $oHash->setUrl($web . '/src/actividadtarifas/relacion_tarifa_update');
+    $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
     $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!nombre_actividad');
     $oHash->setCamposNo('id_tipo_activ');
     $a_camposHidden = [
@@ -85,7 +85,7 @@ if ($Qid_item !== 'nuevo') {
     $oHash->setArrayCamposHidden($a_camposHidden);
 
     $oHash1 = new HashFront();
-    $oHash1->setUrl($web . '/src/actividades/actividad_tipo_get');
+    $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get'));
     $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
 

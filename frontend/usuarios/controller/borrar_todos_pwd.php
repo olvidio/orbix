@@ -11,7 +11,7 @@ FrontBootstrap::boot();
 
 // Preparar hash para el formulario (necesario para POST al backend)
 $oHash = new HashFront();
-$oHash->setUrl(HashFront::link(AppUrlConfig::getApiBaseUrl() . '/src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php'));
+$oHash->setUrl(HashFront::link(AppUrlConfig::srcBrowserUrl('/src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php')));
 
 $a_campos = [
     'oHash' => $oHash,

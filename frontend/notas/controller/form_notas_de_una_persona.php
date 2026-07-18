@@ -140,13 +140,13 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
-$url_posibles_opcionales = $web . '/src/notas/posibles_opcionales_data';
+$url_posibles_opcionales = AppUrlConfig::srcBrowserUrl('/src/notas/posibles_opcionales_data');
 $oHashOpcionales = new HashFront();
 $oHashOpcionales->setUrl($url_posibles_opcionales);
 $oHashOpcionales->setCamposForm('id_nom');
 $h_posibles_opcionales = $oHashOpcionales->linkSinValParams();
 
-$url_posibles_preceptores = $web . '/src/notas/posibles_preceptores_data';
+$url_posibles_preceptores = AppUrlConfig::srcBrowserUrl('/src/notas/posibles_preceptores_data');
 $oHashPreceptores = new HashFront();
 $oHashPreceptores->setUrl($url_posibles_preceptores);
 $h_posibles_preceptores = $oHashPreceptores->linkSinValParams();
@@ -157,14 +157,14 @@ $oHashActivBuscar->setUrl($url_actividad_buscar);
 $oHashActivBuscar->setCamposForm('dl_org!f_acta_iso');
 $h_actividad_buscar = $oHashActivBuscar->linkSinValParams();
 
-$url_buscar_acta = $web . '/src/notas/buscar_acta';
+$url_buscar_acta = AppUrlConfig::srcBrowserUrl('/src/notas/buscar_acta');
 $oHashBuscarActa = new HashFront();
 $oHashBuscarActa->setUrl($url_buscar_acta);
 $oHashBuscarActa->setCamposForm('acta');
 $h_buscar_acta = $oHashBuscarActa->linkSinValParams();
 
-$url_persona_nota_nueva = $web . '/src/notas/persona_nota_nueva';
-$url_persona_nota_editar = $web . '/src/notas/persona_nota_editar';
+$url_persona_nota_nueva = AppUrlConfig::srcBrowserUrl('/src/notas/persona_nota_nueva');
+$url_persona_nota_editar = AppUrlConfig::srcBrowserUrl('/src/notas/persona_nota_editar');
 
 $oConfig = $_SESSION['oConfig'] ?? null;
 $nota_max_default = $oConfig instanceof ConfigSnapshot ? \frontend\shared\helpers\PayloadCoercion::int($oConfig->getNotaMax()) : 0;

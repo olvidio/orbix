@@ -32,7 +32,7 @@ $oHashLista->setCamposForm('que');
 $h_lista = $oHashLista->linkSinValParams();
 
 // Alta form_nuevo: POST mínimo a /src/... (mismo patrón que nombre/activación).
-$url_src_contrib_guardar = $web . '/src/pasarela/contribucion_no_duerme_excepcion_guardar';
+$url_src_contrib_guardar = AppUrlConfig::srcBrowserUrl('/src/pasarela/contribucion_no_duerme_excepcion_guardar');
 $oHashSrcGuardar = new HashFront();
 $oHashSrcGuardar->setUrl($url_src_contrib_guardar);
 $oHashSrcGuardar->setCamposForm('id_tipo_activ!valor');

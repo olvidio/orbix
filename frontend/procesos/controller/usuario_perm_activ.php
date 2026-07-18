@@ -36,7 +36,7 @@ $Qdl_propia = $sel['dl_propia'];
 $Qquien = ProcesosPostInput::postString('quien');
 $Qque = ProcesosPostInput::postString('que');
 
-$data = PostRequest::getDataFromUrl($apiBase . '/src/procesos/usuario_perm_activ_data', [
+$data = PostRequest::getDataFromUrl(AppUrlConfig::srcBrowserUrl('/src/procesos/usuario_perm_activ_data'), [
     'id_usuario' => $Qid_usuario,
     'id_tipo_activ_txt' => $Qid_tipo_activ_txt,
     'dl_propia' => $Qdl_propia,
@@ -81,7 +81,7 @@ $a_camposHidden = [
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_actualizar = $apiBase . '/src/procesos/usuario_perm_activ_ajax';
+$url_actualizar = AppUrlConfig::srcBrowserUrl('/src/procesos/usuario_perm_activ_ajax');
 $oHash1 = new HashFront();
 $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('dl_propia!id_tipo_activ');
@@ -103,7 +103,7 @@ if ($Qid_item !== '') {
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
-    'url_perm_activ_guardar' => $apiBase . '/src/usuarios/perm_activ_guardar',
+    'url_perm_activ_guardar' => AppUrlConfig::srcBrowserUrl('/src/usuarios/perm_activ_guardar'),
     'url_actualizar' => $url_actualizar,
     'h_actualizar' => $h_actualizar,
     'nombre' => $nombre,

@@ -15,8 +15,7 @@ if ($Qregion === '') {
     $Qregion = (string)(filter_input(INPUT_POST, 'region') ?? '');
 }
 
-$url_lista_backend = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
-    . '/src/usuarios/mails_contactos_region'
+$url_lista_backend = HashFront::cmdSinParametros(AppUrlConfig::srcBrowserUrl('/src/usuarios/mails_contactos_region')
 );
 $oHash = new HashFront();
 $oHash->setUrl($url_lista_backend);

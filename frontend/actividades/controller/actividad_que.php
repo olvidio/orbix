@@ -109,10 +109,9 @@ $Qisfsv = substr($Qid_tipo_activ, 0, 1);
 $mi_dele = OrbixRuntime::miDelef((string)$Qisfsv);
 
 // El bloque de filtros extra (filtro_lugar, dl_org, publicada) se carga en
-// cliente via AJAX al endpoint backend /src/actividades/actividad_que_filtros,
-// que se encarga de comprobar perm_ctr y resolver desplegables de delegaciones
-// y de lugares.
-$url_filtros = AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_que_filtros';
+// cliente via AJAX al proxy frontend (fichero físico; funciona bajo /orbixsf),
+// que reenvía a /src/actividades/actividad_que_filtros.
+$url_filtros = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_que_filtros.php';
 $oHashFiltros = new HashFront();
 $oHashFiltros->setUrl($url_filtros);
 $oHashFiltros->setCamposForm('sfsv!modo!dl_org!filtro_lugar!id_ubi!publicado');
@@ -157,8 +156,9 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
+$url_actividad_tipo_get = AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get');
 $oHash1 = new HashFront();
-$oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_tipo_get');
+$oHash1->setUrl($url_actividad_tipo_get);
 $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
 $h = $oHash1->linkSinValParams();
 
@@ -226,7 +226,7 @@ $fases_on_csv = '';
 $fases_off_csv = '';
 if (AppInstalled::is('procesos')) {
     $proceso_installed = TRUE;
-    $url_actualizar_fases = AppUrlConfig::getPublicAppBaseUrl() . '/src/procesos/actividad_que_fases_ajax';
+    $url_actualizar_fases = AppUrlConfig::srcBrowserUrl('/src/procesos/actividad_que_fases_ajax');
     $oHash1 = new HashFront();
     $oHash1->setUrl($url_actualizar_fases);
     $oHash1->setCamposForm('dl_propia!id_tipo_activ!selected');
@@ -245,6 +245,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'Qid_ubi' => $Qid_ubi,
     'Qnom_activ' => $Qnom_activ,
     'h' => $h,
+    'url_actividad_tipo_get' => $url_actividad_tipo_get,
     'titulo' => $titulo,
     'oFormP' => $oFormP,
     'actividad_tipo_html' => $actividad_tipo_html,

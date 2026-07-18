@@ -76,19 +76,19 @@ $a_camposHidden = [
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_sincro_crear = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_crear';
+$url_sincro_crear = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_crear');
 $oHash1 = new HashFront();
 $oHash1->setUrl($url_sincro_crear);
 $oHash1->setCamposForm('id_nom_listas!id_orbix!region!dl!id!tipo_persona');
 $h_crear = $oHash1->linkSinValParams();
 
-$url_sincro_unir = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_unir';
+$url_sincro_unir = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_unir');
 $oHash2 = new HashFront();
 $oHash2->setUrl($url_sincro_unir);
 $oHash2->setCamposForm('id_nom_listas!id_orbix!region!dl!id!tipo_persona');
 $h_unir = $oHash2->linkSinValParams();
 
-$url_sincro_crear_todos = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_crear_todos';
+$url_sincro_crear_todos = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_crear_todos');
 $oHash3 = new HashFront();
 $oHash3->setUrl($url_sincro_crear_todos);
 $oHash3->setCamposForm('region!dl!tipo_persona');

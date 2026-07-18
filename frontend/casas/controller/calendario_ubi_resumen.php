@@ -65,9 +65,9 @@ $oHashBody->setCamposForm('id_ubi!G!inc_t!seccion');
 $url_body = $web . '/frontend/casas/controller/calendario_ubi_resumen_body.php' . $oHashBody->linkSinVal();
 
 $oHashTarifas = new HashFront();
-$oHashTarifas->setUrl($web . '/src/actividadtarifas/tarifa_ubi_update_inc');
+$oHashTarifas->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_update_inc'));
 $oHashTarifas->setCamposForm('id_ubi!year!inc_cantidad');
-$url_tarifas = $web . '/src/actividadtarifas/tarifa_ubi_update_inc' . $oHashTarifas->linkSinVal();
+$url_tarifas = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_update_inc') . $oHashTarifas->linkSinVal();
 
 $oHashForm = new HashFront();
 $oHashForm->setCamposForm('id_ubi!G!inc_t!seccion');

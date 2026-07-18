@@ -76,7 +76,7 @@ $oHash->setCamposForm($d['camposForm']);
 $oHash->setArraycamposHidden($d['a_camposHidden']);
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
-$url_profesores = $web . '/src/actividadestudios/profesores_desplegable_data';
+$url_profesores = AppUrlConfig::srcBrowserUrl('/src/actividadestudios/profesores_desplegable_data');
 
 $oHashTipo = new HashFront();
 $oHashTipo->setUrl($url_profesores);
@@ -90,8 +90,8 @@ $h1 = $oHashTipo->linkSinValParams();
 $oHashTipo->setCamposForm('salida!id_activ!id_asignatura');
 $h2 = $oHashTipo->linkSinValParams();
 
-$url_actividad_asignatura_nueva = $web . '/src/actividadestudios/actividad_asignatura_nueva';
-$url_actividad_asignatura_editar = $web . '/src/actividadestudios/actividad_asignatura_editar';
+$url_actividad_asignatura_nueva = AppUrlConfig::srcBrowserUrl('/src/actividadestudios/actividad_asignatura_nueva');
+$url_actividad_asignatura_editar = AppUrlConfig::srcBrowserUrl('/src/actividadestudios/actividad_asignatura_editar');
 
 $a_campos = [
     'obj' => $obj,

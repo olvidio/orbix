@@ -73,8 +73,8 @@ foreach ($ver['a_fases_previas'] as $fila) {
 $dep_num = count($aDesplFasesPrevias);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
-$url_update = $apiBase . '/src/procesos/procesos_update';
-$url_depende = $apiBase . '/src/procesos/procesos_depende';
+$url_update = AppUrlConfig::srcBrowserUrl('/src/procesos/procesos_update');
+$url_depende = AppUrlConfig::srcBrowserUrl('/src/procesos/procesos_depende');
 
 $oHash = new HashFront();
 $oHash->setUrl($url_update);

@@ -17,7 +17,7 @@ use frontend\shared\security\HashFront;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             if (confirm(<?= json_encode(_("¿Está seguro que desea borrar este grupmenu?")) ?>)) {
-                let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/menus/grupmenu_eliminar';
+                let url = '<?= AppUrlConfig::srcBrowserUrl('/src/menus/grupmenu_eliminar') ?>';
                 let datos = $(formulario).serialize();
                 let request = $.ajax({
                     data: datos,

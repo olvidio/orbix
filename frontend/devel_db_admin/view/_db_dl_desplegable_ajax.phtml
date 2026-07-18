@@ -1,5 +1,7 @@
 <?php
 
+
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 
 /** @var string $h hash de seguridad para POST a db_lugar */
@@ -9,7 +11,7 @@ use frontend\shared\config\OrbixRuntime;
 
     fnjs_dl = function () {
         var filtro_region = $('#region').val();
-        var url = '<?= OrbixRuntime::getWeb() . '/src/devel_db_admin/db_lugar' ?>';
+        var url = '<?= AppUrlConfig::srcBrowserUrl('/src/devel_db_admin/db_lugar') ?>';
         var parametros = 'region=' + encodeURIComponent(filtro_region) + '<?= $h ?>';
         $.ajax({
             url: url,

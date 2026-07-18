@@ -67,31 +67,31 @@ $buildHashedUrl = static function (string $url, string $campos): string {
 };
 
 $url_lista = $buildHashedUrl(
-    $api . '/src/actividadessacd/lista_actividades_sacd_data',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/lista_actividades_sacd_data'),
     'tipo!year!periodo!empiezamin!empiezamax'
 );
 $url_solapes = $buildHashedUrl(
-    $api . '/src/actividadessacd/solapes_sacd_data',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/solapes_sacd_data'),
     'year!periodo!empiezamin!empiezamax'
 );
 $url_encargados = $buildHashedUrl(
-    $api . '/src/actividadessacd/sacds_encargados_data',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/sacds_encargados_data'),
     'id_activ!id_tipo_activ!dl_org'
 );
 $url_disponibles = $buildHashedUrl(
-    $api . '/src/actividadessacd/sacds_disponibles_data',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/sacds_disponibles_data'),
     'id_activ!seleccion'
 );
 $url_asignar = $buildHashedUrl(
-    $api . '/src/actividadessacd/sacd_asignar',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/sacd_asignar'),
     'id_activ!id_nom'
 );
 $url_reordenar = $buildHashedUrl(
-    $api . '/src/actividadessacd/sacd_reordenar',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/sacd_reordenar'),
     'id_activ!id_nom!num_orden'
 );
 $url_eliminar = $buildHashedUrl(
-    $api . '/src/actividadessacd/sacd_eliminar',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/sacd_eliminar'),
     'id_activ!id_nom!id_cargo'
 );
 

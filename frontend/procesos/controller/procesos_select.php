@@ -48,14 +48,14 @@ $oDespl->setBlanco(true);
 // Endpoints por accion (slice 10: split de procesos_ajax). url_ver apunta
 // al frontend controller migrado en el slice 2.
 $apiBase = AppUrlConfig::getApiBaseUrl();
-$url_regenerar = $apiBase . '/src/procesos/procesos_regenerar';
-$url_clonar = $apiBase . '/src/procesos/procesos_clonar';
+$url_regenerar = AppUrlConfig::srcBrowserUrl('/src/procesos/procesos_regenerar');
+$url_clonar = AppUrlConfig::srcBrowserUrl('/src/procesos/procesos_clonar');
 // url_get / url_get_listado apuntan al renderer frontend que consume
 // los endpoints /src/procesos/procesos_get(_listado) y devuelve HTML.
 $url_get = 'frontend/procesos/controller/procesos_get.php';
 $url_get_listado = 'frontend/procesos/controller/procesos_get_listado.php';
-$url_update = $apiBase . '/src/procesos/procesos_update';
-$url_eliminar = $apiBase . '/src/procesos/procesos_eliminar';
+$url_update = AppUrlConfig::srcBrowserUrl('/src/procesos/procesos_update');
+$url_eliminar = AppUrlConfig::srcBrowserUrl('/src/procesos/procesos_eliminar');
 $url_ver = 'frontend/procesos/controller/procesos_ver.php';
 
 $h_regenerar = ProcesosHashes::formLink($url_regenerar, 'id_tipo_proceso');

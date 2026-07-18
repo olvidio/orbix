@@ -65,7 +65,7 @@ if (!empty($Qsactividad2)) {
     $extendida = true;
 }
 
-$dataTipo = PostRequest::getDataFromUrl($apiBase . '/src/procesos/fases_activ_cambio_tipo_html', [
+$dataTipo = PostRequest::getDataFromUrl(AppUrlConfig::srcBrowserUrl('/src/procesos/fases_activ_cambio_tipo_html'), [
     'id_tipo_activ' => $Qid_tipo_activ,
     'sasistentes' => $Qsasistentes,
     'sactividad' => $Qsactividad,
@@ -90,8 +90,8 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 
 
 $url_lista = 'frontend/procesos/controller/fases_activ_cambio_lista.php';
-$url_update = $apiBase . '/src/procesos/fases_activ_cambio_update';
-$url_get = $apiBase . '/src/procesos/fases_activ_cambio_get';
+$url_update = AppUrlConfig::srcBrowserUrl('/src/procesos/fases_activ_cambio_update');
+$url_get = AppUrlConfig::srcBrowserUrl('/src/procesos/fases_activ_cambio_get');
 
 $oHashLista = new HashFront();
 $oHashLista->setUrl($url_lista);
@@ -103,7 +103,7 @@ $oHashAct->setUrl($url_get);
 $oHashAct->setCamposForm('dl_propia!id_tipo_activ!id_fase_sel');
 $h_actualizar = $oHashAct->linkSinValParams();
 
-$url_tipo = $apiBase . '/src/actividades/actividad_tipo_get';
+$url_tipo = AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get');
 $oHash1 = new HashFront();
 $oHash1->setUrl($url_tipo);
 $oHash1->setCamposForm('extendida!modo!salida!entrada');

@@ -22,9 +22,9 @@ $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $oHash = new HashFront();
-$oHash->setUrl($apiBase . '/src/actividadplazas/peticiones_incorporar');
+$oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadplazas/peticiones_incorporar'));
 $oHash->setCamposForm('sactividad!sasistentes');
-$url_incorporar = $apiBase . '/src/actividadplazas/peticiones_incorporar' . $oHash->linkSinVal();
+$url_incorporar = AppUrlConfig::srcBrowserUrl('/src/actividadplazas/peticiones_incorporar') . $oHash->linkSinVal();
 
 $a_campos = [
     'oPosicion' => $oPosicion,

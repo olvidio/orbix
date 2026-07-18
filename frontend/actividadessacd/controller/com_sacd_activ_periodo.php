@@ -108,11 +108,11 @@ $buildHashedUrl = static function (string $url, string $campos): string {
 
 $camposForm = 'que!id_nom!propuesta!periodo!year!empiezamin!empiezamax!sel';
 $url_data = $buildHashedUrl(
-    $api . '/src/actividadessacd/comunicacion_activ_sacd_data',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/comunicacion_activ_sacd_data'),
     $camposForm
 );
 $url_enviar = $buildHashedUrl(
-    $api . '/src/actividadessacd/comunicacion_activ_sacd_enviar',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/comunicacion_activ_sacd_enviar'),
     $camposForm
 );
 $url_com_txt = HashFront::link('frontend/actividadessacd/controller/com_sacd_txt.php');

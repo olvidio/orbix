@@ -41,9 +41,9 @@ $dos = _("dossiers");
 $permiso_calendario = ProcesosPayload::havePermCalendario();
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
-$url_generar = $apiBase . '/src/procesos/actividad_proceso_generar';
+$url_generar = AppUrlConfig::srcBrowserUrl('/src/procesos/actividad_proceso_generar');
 $url_get = 'frontend/procesos/controller/actividad_proceso_get.php';
-$url_update = $apiBase . '/src/procesos/actividad_proceso_update';
+$url_update = AppUrlConfig::srcBrowserUrl('/src/procesos/actividad_proceso_update');
 
 $oHashGenerar = new HashFront();
 $oHashGenerar->setUrl($url_generar);

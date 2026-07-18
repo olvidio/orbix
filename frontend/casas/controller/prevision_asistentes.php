@@ -107,9 +107,9 @@ $oTabla = new TablaEditable();
 $oTabla->setId_tabla('prevision_asistentes');
 
 $oHashUpdate = new HashFront();
-$oHashUpdate->setUrl($web . '/src/casas/ingreso_plazas_previstas_update');
+$oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/ingreso_plazas_previstas_update'));
 $oHashUpdate->setCamposForm('');
-$oTabla->setUpdateUrl($web . '/src/casas/ingreso_plazas_previstas_update' . $oHashUpdate->linkSinVal());
+$oTabla->setUpdateUrl(AppUrlConfig::srcBrowserUrl('/src/casas/ingreso_plazas_previstas_update') . $oHashUpdate->linkSinVal());
 $oTabla->setCabeceras($view['cabeceras']);
 $oTabla->setDatos($view['valores']);
 

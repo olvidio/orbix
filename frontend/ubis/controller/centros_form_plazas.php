@@ -15,7 +15,7 @@ $form = UbisPayload::centroPlazasFormFromPayload(UbisPayload::postData(PostReque
 
 $chk_sede = \src\shared\domain\helpers\FuncTablasSupport::isTrue($form['sede']) ? 'checked' : '';
 
-$url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
+$url_update = AppUrlConfig::srcBrowserUrl('/src/ubis/centros_update');
 
 $oHash = new HashFront();
 $oHash->setUrl($url_update);

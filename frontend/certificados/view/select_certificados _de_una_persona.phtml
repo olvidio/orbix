@@ -50,7 +50,7 @@ use frontend\shared\config\AppUrlConfig;
             $(formulario + ' input.sel').each(function () {
                 if ($(this).prop('checked') === true) {
                     let key = $(this).prop('value');
-                    let url = <?= json_encode(AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_recibido_pdf_download', JSON_THROW_ON_ERROR) ?>;
+                    let url = <?= json_encode(AppUrlConfig::srcBrowserUrl('/src/certificados/certificado_recibido_pdf_download'), JSON_THROW_ON_ERROR) ?>;
                     let url_download = url + '?key=' + key + '<?= $h_download ?>';
                     window.open(url_download);
                 }

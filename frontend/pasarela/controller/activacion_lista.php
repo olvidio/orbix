@@ -33,13 +33,13 @@ $h_lista = $oHashLista->linkSinValParams();
 
 // Mutaciones modificar/eliminar → /src/... con linkSinValParams (hnov=1), sin hash del formulario
 // completo (evita campos extra del widget ActividadTipo y el redirect a index).
-$url_src_excepcion_guardar = $web . '/src/pasarela/activacion_excepcion_guardar';
+$url_src_excepcion_guardar = AppUrlConfig::srcBrowserUrl('/src/pasarela/activacion_excepcion_guardar');
 $oHashSrcGuardar = new HashFront();
 $oHashSrcGuardar->setUrl($url_src_excepcion_guardar);
 $oHashSrcGuardar->setCamposForm('id_tipo_activ!valor');
 $h_src_excepcion_guardar = $oHashSrcGuardar->linkSinValParams();
 
-$url_src_excepcion_eliminar = $web . '/src/pasarela/activacion_excepcion_eliminar';
+$url_src_excepcion_eliminar = AppUrlConfig::srcBrowserUrl('/src/pasarela/activacion_excepcion_eliminar');
 $oHashSrcEliminar = new HashFront();
 $oHashSrcEliminar->setUrl($url_src_excepcion_eliminar);
 $oHashSrcEliminar->setCamposForm('id_tipo_activ');

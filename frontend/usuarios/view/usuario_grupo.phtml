@@ -17,7 +17,7 @@ use frontend\shared\config\AppUrlConfig;
         fnjs_ajax_json_html({ url: url, data: parametros, target: '#lst_grupos' });
     }
     fnjs_add_grup = function (param) {
-        let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/usuario_grupo_add';
+        let url = '<?= AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_grupo_add') ?>';
         let request = $.ajax({
             data: param,
             url: url,
@@ -33,7 +33,7 @@ use frontend\shared\config\AppUrlConfig;
         });
     }
     fnjs_del_grup = function (param) {
-        let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/usuario_grupo_del';
+        let url = '<?= AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_grupo_del') ?>';
         let request = $.ajax({
             data: param,
             url: url,

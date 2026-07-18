@@ -3,7 +3,7 @@ use frontend\shared\config\AppUrlConfig;
 ?>
 <script>
     fnjs_grabar = function (formulario) {
-        var url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/shared/tablaDB_update';
+        var url = '<?= AppUrlConfig::srcBrowserUrl('/src/shared/tablaDB_update') ?>';
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,

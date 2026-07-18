@@ -70,19 +70,19 @@ $oHashFormNuevo->setCamposForm('id_ubi!year');
 $h_form_nuevo = $oHashFormNuevo->linkSinVal();
 
 $oHashCopiar = new HashFront();
-$oHashCopiar->setUrl($api . '/src/actividadtarifas/tarifa_ubi_copiar');
+$oHashCopiar->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_copiar'));
 $oHashCopiar->setCamposForm('id_ubi!year');
-$url_copiar = $api . '/src/actividadtarifas/tarifa_ubi_copiar' . $oHashCopiar->linkSinVal();
+$url_copiar = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_copiar') . $oHashCopiar->linkSinVal();
 
 $oHashUpdate = new HashFront();
-$oHashUpdate->setUrl($api . '/src/actividadtarifas/tarifa_ubi_update');
+$oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_update'));
 $oHashUpdate->setCamposForm('id_item!id_ubi!year!id_tarifa!id_serie!cantidad');
-$url_update = $api . '/src/actividadtarifas/tarifa_ubi_update' . $oHashUpdate->linkSinVal();
+$url_update = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_update') . $oHashUpdate->linkSinVal();
 
 $oHashEliminar = new HashFront();
-$oHashEliminar->setUrl($api . '/src/actividadtarifas/tarifa_ubi_eliminar');
+$oHashEliminar->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_eliminar'));
 $oHashEliminar->setCamposForm('id_item');
-$url_eliminar = $api . '/src/actividadtarifas/tarifa_ubi_eliminar' . $oHashEliminar->linkSinVal();
+$url_eliminar = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_eliminar') . $oHashEliminar->linkSinVal();
 
 $a_campos = [
     'oPosicion' => $oPosicion,

@@ -31,14 +31,14 @@ $oHashForm->setCamposForm('id_item');
 $h_form = $oHashForm->linkSinVal();
 
 $oHashUpdate = new HashFront();
-$oHashUpdate->setUrl($web . '/src/casas/grupo_update');
+$oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/grupo_update'));
 $oHashUpdate->setCamposForm('id_item!id_ubi_padre!id_ubi_hijo');
-$url_update = $web . '/src/casas/grupo_update' . $oHashUpdate->linkSinVal();
+$url_update = AppUrlConfig::srcBrowserUrl('/src/casas/grupo_update') . $oHashUpdate->linkSinVal();
 
 $oHashEliminar = new HashFront();
-$oHashEliminar->setUrl($web . '/src/casas/grupo_eliminar');
+$oHashEliminar->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/grupo_eliminar'));
 $oHashEliminar->setCamposForm('id_item');
-$url_eliminar = $web . '/src/casas/grupo_eliminar' . $oHashEliminar->linkSinVal();
+$url_eliminar = AppUrlConfig::srcBrowserUrl('/src/casas/grupo_eliminar') . $oHashEliminar->linkSinVal();
 
 $a_campos = [
     'oPosicion' => $oPosicion,

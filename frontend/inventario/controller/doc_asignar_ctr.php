@@ -57,7 +57,7 @@ $oTabla->setId_tabla('doc_num_tabla');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
 
-$url_guardar = AppUrlConfig::getApiBaseUrl() . '/src/inventario/doc_asignar_ctr_guardar?';
+$url_guardar = AppUrlConfig::srcBrowserUrl('/src/inventario/doc_asignar_ctr_guardar') . '?';
 
 $oHash = new HashFront();
 $sCamposForm .= '!f_recibido!f_asignado';

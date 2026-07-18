@@ -37,6 +37,49 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         });
     })
 
+    /**
+     * Reescribe URLs /src/... (o relativas src/...) al proxy físico src_ajax.php,
+     * para que AJAX funcione bajo /orbixsf (donde /src extensionless suele 404).
+     * @see \frontend\shared\config\AppUrlConfig::srcBrowserUrl()
+     */
+    var ORBIX_SRC_AJAX_PROXY = <?= json_encode(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/shared/controller/src_ajax.php') ?>;
+    function orbixSrcBrowserUrl(url) {
+        if (!url || typeof url !== 'string') {
+            return url;
+        }
+        if (url.indexOf('src_ajax.php') !== -1) {
+            return url;
+        }
+        var pathPart = url;
+        var query = '';
+        var qPos = url.indexOf('?');
+        if (qPos !== -1) {
+            pathPart = url.substring(0, qPos);
+            query = url.substring(qPos);
+        }
+        try {
+            if (/^https?:\/\//i.test(pathPart)) {
+                pathPart = new URL(pathPart).pathname;
+            }
+        } catch (e) { /* keep pathPart */ }
+        var m = pathPart.match(/(?:^|\/)src\/([A-Za-z0-9_./-]+)$/);
+        if (!m) {
+            return url;
+        }
+        var leaf = m[1];
+        if (/\.(inc|css|js)$/i.test(leaf)) {
+            return url;
+        }
+        return ORBIX_SRC_AJAX_PROXY + '/src/' + leaf + query;
+    }
+    if (typeof $ !== 'undefined' && $.ajaxPrefilter) {
+        $.ajaxPrefilter(function (options) {
+            if (options && options.url) {
+                options.url = orbixSrcBrowserUrl(options.url);
+            }
+        });
+    }
+
     // Normaliza una URL para usarla como clave consistente.
     function fnjs_normalizar_url(url) {
         if (!url) return url;
@@ -308,7 +351,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         };
         var sPrefs = JSON.stringify(oPrefs);
         // Misma URL base que {@see index.php} al construir HashFront para preferencias_guardar (FastRoute).
-        var url = "<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/preferencias_guardar";
+        var url = "<?= AppUrlConfig::srcBrowserUrl('/src/usuarios/preferencias_guardar') ?>";
         var parametros = 'que=slickGrid&tabla=' + tabla + '&sPrefs=' + encodeURIComponent(sPrefs) + '<?= $h ?>';
         $.ajax({
             url: url,

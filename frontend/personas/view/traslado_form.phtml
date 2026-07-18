@@ -20,7 +20,7 @@ use frontend\shared\config\OrbixRuntime;
         }
 
         if (err === 0) {
-            $(formulario).attr('action', "<?= AppUrlConfig::getApiBaseUrl() ?>/src/personas/traslado_update");
+            $(formulario).attr('action', "<?= AppUrlConfig::srcBrowserUrl('/src/personas/traslado_update') ?>");
             $(formulario).one("submit", function () {
                 $.ajax({
                     url: $(this).attr('action'),

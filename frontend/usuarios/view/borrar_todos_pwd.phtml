@@ -6,7 +6,7 @@ use frontend\shared\config\AppUrlConfig;
 <script>
     fnjs_borrar_todos_pwd = function (formulario) {
         if (confirm(<?= json_encode(_("¿Está seguro que desea poner el login como contraseña para todos los usuarios (excepto superusuario)?")) ?>)) {
-            let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php';
+            let url = '<?= AppUrlConfig::srcBrowserUrl('/src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php') ?>';
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,

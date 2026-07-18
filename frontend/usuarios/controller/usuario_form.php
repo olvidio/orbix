@@ -91,8 +91,7 @@ $a_campos['oHash'] = $oHash;
 $a_campos['oPosicion'] = $oPosicion;
 $a_campos['txt_guardar'] = $txt_guardar;
 $a_campos['txt_eliminar'] = $txt_eliminar;
-$a_campos['url_usuario_guardar'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
-    . '/src/usuarios/usuario_guardar'
+$a_campos['url_usuario_guardar'] = HashFront::link(AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_guardar')
 );
 
 $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_grupo_lst.php';
@@ -109,7 +108,7 @@ $oHash2->setCamposForm('id_usuario');
 $oHash2->setCamposNo('scroll_id');
 $a_campos['h_del_lst'] = $oHash2->linkSinValParams();
 
-$url_usuario_update = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_check_pwd';
+$url_usuario_update = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_check_pwd');
 $oHash3 = new HashFront();
 $oHash3->setUrl($url_usuario_update);
 $oHash3->setCamposForm('id_usuario!usuario!password');

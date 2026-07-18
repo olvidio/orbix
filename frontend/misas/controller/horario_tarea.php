@@ -19,14 +19,14 @@ $data = PostRequest::getDataFromUrl('/src/misas/horario_tarea_data', [
 $t_start = \frontend\shared\helpers\PayloadCoercion::string($data['t_start'] ?? '');
 $t_end = \frontend\shared\helpers\PayloadCoercion::string($data['t_end'] ?? '');
 
-$url_guardar = AppUrlConfig::getApiBaseUrl() . '/src/misas/guardar_horario';
+$url_guardar = AppUrlConfig::srcBrowserUrl('/src/misas/guardar_horario');
 $oHash = new HashFront();
 $oHash->setArrayCamposHidden(['id_item_h' => $Qid_item_h]);
 $oHash->setUrl($url_guardar);
 $oHash->setCamposForm('t_start!t_end');
 $param_guardar = $oHash->getParamAjax();
 
-$url_quitar = AppUrlConfig::getApiBaseUrl() . '/src/misas/quitar_horario';
+$url_quitar = AppUrlConfig::srcBrowserUrl('/src/misas/quitar_horario');
 $oHash->setUrl($url_quitar);
 $oHash->setCamposForm('id_item');
 $param_quitar = $oHash->getParamAjax();

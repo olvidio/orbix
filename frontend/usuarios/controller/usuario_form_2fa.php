@@ -45,7 +45,7 @@ if (preg_match('/(.*?)\.docker/', OrbixRuntime::servidor())) {
 $qr_url = get_qr_code_data($usuario, $secret_2fa, $appName);
 
 $oHashUpdate = new HashFront();
-$url_2fa_update = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_2fa_update';
+$url_2fa_update = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_2fa_update');
 $oHashUpdate->setUrl($url_2fa_update);
 $oHashUpdate->setCamposForm('enable_2fa!verification_code');
 $oHashUpdate->setCamposNo('enable_2fa');
@@ -55,7 +55,7 @@ $oHashUpdate->setArraycamposHidden([
 ]);
 
 $oHashVerify = new HashFront();
-$url_2fa_verify = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_2fa_verify';
+$url_2fa_verify = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_2fa_verify');
 $oHashVerify->setUrl($url_2fa_verify);
 $oHashVerify->setCamposForm('secret_2fa!verification_code');
 $h_2fa_verify = $oHashVerify->linkSinValParams();

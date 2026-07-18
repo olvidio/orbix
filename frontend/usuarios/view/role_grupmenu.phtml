@@ -5,7 +5,7 @@ use frontend\shared\config\AppUrlConfig;
 ?>
 <script>
     fnjs_add_grupmenu = function (formulario) {
-        var url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/role_grupmenu_add';
+        var url = '<?= AppUrlConfig::srcBrowserUrl('/src/usuarios/role_grupmenu_add') ?>';
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,

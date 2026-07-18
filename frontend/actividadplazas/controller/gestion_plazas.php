@@ -79,9 +79,9 @@ ListNavSupport::syncNavStateAt(
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $oHashUpdate = new HashFront();
-$oHashUpdate->setUrl($apiBase . '/src/actividadplazas/gestion_plazas_update');
+$oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadplazas/gestion_plazas_update'));
 $oHashUpdate->setCamposForm('data!colName');
-$UpdateUrl = $apiBase . '/src/actividadplazas/gestion_plazas_update' . $oHashUpdate->linkSinVal();
+$UpdateUrl = AppUrlConfig::srcBrowserUrl('/src/actividadplazas/gestion_plazas_update') . $oHashUpdate->linkSinVal();
 
 $oTabla = new TablaEditable();
 $oTabla->setId_tabla('gestion_plazas');

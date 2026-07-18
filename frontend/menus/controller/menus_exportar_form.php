@@ -10,7 +10,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$url = AppUrlConfig::getApiBaseUrl() . '/src/menus/menus_exportar';
+$url = AppUrlConfig::srcBrowserUrl('/src/menus/menus_exportar');
 $oHash = new HashFront();
 $oHash->setUrl($url);
 $oHash->setArrayCamposHidden(['sobreescribir' => 'false']);

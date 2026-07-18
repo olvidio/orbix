@@ -12,7 +12,7 @@ use frontend\shared\config\AppUrlConfig;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             if (confirm(<?= json_encode(_("¿Está seguro?")) ?>)) {
-                var url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/perm_menu_eliminar';
+                var url = '<?= AppUrlConfig::srcBrowserUrl('/src/usuarios/perm_menu_eliminar') ?>';
                 let datos = $(formulario).serialize();
                 let request = $.ajax({
                     data: datos,

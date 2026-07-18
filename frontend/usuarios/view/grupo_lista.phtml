@@ -27,7 +27,7 @@ use frontend\shared\security\HashFront;
         rta = fnjs_solo_uno('#seleccionados');
         if (rta === 1) {
             if (confirm(<?= json_encode(_("¿Está seguro que desea borrar este grupo?")) ?>)) {
-                var url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/grupo_eliminar';
+                var url = '<?= AppUrlConfig::srcBrowserUrl('/src/usuarios/grupo_eliminar') ?>';
                 let datos = $(formulario).serialize();
                 let request = $.ajax({
                     data: datos,

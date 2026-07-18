@@ -2,6 +2,8 @@
 
 namespace frontend\devel_db_admin\controller;
 
+
+use frontend\shared\config\AppUrlConfig;
 use frontend\devel_db_admin\helpers\DevelDbAdminPayload;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
@@ -31,7 +33,7 @@ $oHash->setCamposForm('esquema_origen!region!dl!comun!sv!sf');
 $oHash->setcamposNo('comun!sv!sf');
 
 $oHash1 = new HashFront();
-$oHash1->setUrl(OrbixRuntime::getWeb() . '/src/devel_db_admin/db_lugar');
+$oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/devel_db_admin/db_lugar'));
 $oHash1->setCamposForm('region');
 $h = $oHash1->linkSinValParams();
 

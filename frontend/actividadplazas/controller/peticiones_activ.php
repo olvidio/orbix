@@ -93,11 +93,11 @@ $buildHashedUrl = static function (string $url, string $campos): string {
     return $url . $oHashLocal->linkSinVal();
 };
 $url_guardar = $buildHashedUrl(
-    $apiBase . '/src/actividadplazas/peticiones_guardar',
+    AppUrlConfig::srcBrowserUrl('/src/actividadplazas/peticiones_guardar'),
     'id_nom!sactividad!actividades!actividades_mas!actividades_num'
 );
 $url_eliminar = $buildHashedUrl(
-    $apiBase . '/src/actividadplazas/peticiones_eliminar',
+    AppUrlConfig::srcBrowserUrl('/src/actividadplazas/peticiones_eliminar'),
     'id_nom!sactividad'
 );
 

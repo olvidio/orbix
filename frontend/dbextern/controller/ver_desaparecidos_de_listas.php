@@ -20,7 +20,7 @@ $data = PostRequest::getDataFromUrl('/src/dbextern/ver_desaparecidos_de_listas_d
 $a_persona_orbix = $data['personas'] ?? [];
 
 // Hash para AJAX baja
-$url_sincro_baja = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_baja';
+$url_sincro_baja = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_baja');
 $oHash = new HashFront();
 $oHash->setUrl($url_sincro_baja);
 $oHash->setCamposForm('id_nom_orbix!tipo_persona');

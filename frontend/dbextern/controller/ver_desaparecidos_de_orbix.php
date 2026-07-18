@@ -20,7 +20,7 @@ $data = PostRequest::getDataFromUrl('/src/dbextern/ver_desaparecidos_de_orbix_da
 $a_persona_listas = $data['personas'] ?? [];
 
 // Hash para AJAX desunir
-$url_sincro_desunir = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_desunir';
+$url_sincro_desunir = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_desunir');
 $oHash = new HashFront();
 $oHash->setUrl($url_sincro_desunir);
 $oHash->setCamposForm('id_nom_listas!tipo_persona');

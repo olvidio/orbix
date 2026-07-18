@@ -32,7 +32,7 @@ $oDesplOpciones->setNombre('que');
 $url_form_labor = 'frontend/ubis/controller/centros_form_labor.php';
 $url_form_num = 'frontend/ubis/controller/centros_form_num.php';
 $url_form_plazas = 'frontend/ubis/controller/centros_form_plazas.php';
-$url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
+$url_update = AppUrlConfig::srcBrowserUrl('/src/ubis/centros_update');
 $url_get_labor = 'frontend/ubis/controller/centros_get_labor.php';
 $url_get_num = 'frontend/ubis/controller/centros_get_num.php';
 $url_get_plazas = 'frontend/ubis/controller/centros_get_plazas.php';

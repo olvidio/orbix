@@ -45,7 +45,7 @@ $buildHashedUrl = static function (string $url, string $campos): string {
 };
 
 $url_asignar_auto = $buildHashedUrl(
-    $api . '/src/actividadessacd/sacd_asignar_auto',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/sacd_asignar_auto'),
     'f_ini_iso'
 );
 

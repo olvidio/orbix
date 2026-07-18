@@ -67,11 +67,11 @@ $buildHashedUrl = static function (string $url, string $campos): string {
 };
 
 $url_data = $buildHashedUrl(
-    $api . '/src/actividadessacd/texto_comunicacion_data',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/texto_comunicacion_data'),
     'clave!idioma'
 );
 $url_guardar = $buildHashedUrl(
-    $api . '/src/actividadessacd/texto_comunicacion_guardar',
+    AppUrlConfig::srcBrowserUrl('/src/actividadessacd/texto_comunicacion_guardar'),
     'clave!idioma!texto'
 );
 

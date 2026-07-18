@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\actividades\helpers;
 
+
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\helpers\ActividadTipoTwigHashCompose;
 use frontend\shared\model\ViewNewTwig;
@@ -195,7 +197,7 @@ class ActividadTipo
             $oDesplNomTipo->setAction('fnjs_act_id_activ()');
         }
 
-        $url = rtrim(OrbixRuntime::getWeb(), '/') . '/src/actividades/actividad_tipo_get';
+        $url = AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get');
         $url_act = OrbixRuntime::getWeb() . '/frontend/actividades/controller/actividad_ver.php';
 
         if ($this->getEvitarProcesos() !== true) {

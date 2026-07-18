@@ -620,7 +620,8 @@ class HashFront
     $url = $this->sUrl;
     $sUrl_full = self::FullPath($url);
     if (!empty($CamposFormSorted)) {
-        $sUrl_full .= '?' . $CamposFormSorted;
+        // Si la URL base ya lleva query (p. ej. proxy con ?_orbix_src=), encadenar con '&'.
+        $sUrl_full .= (str_contains($sUrl_full, '?') ? '&' : '?') . $CamposFormSorted;
     }
 
     $rta = self::md($sUrl_full);

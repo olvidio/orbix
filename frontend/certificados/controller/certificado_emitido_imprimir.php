@@ -66,7 +66,7 @@ $oHash->setUrl($pag_certificado_2_pdf);
 $oHash->setCamposForm('id_item!guardar');
 $h = $oHash->linkSinValParams();
 
-$pag_certificado_eliminar = AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_emitido_delete';
+$pag_certificado_eliminar = AppUrlConfig::srcBrowserUrl('/src/certificados/certificado_emitido_delete');
 $oHash_e = new HashFront();
 $oHash_e->setUrl($pag_certificado_eliminar);
 $oHash_e->setCamposForm('id_item');

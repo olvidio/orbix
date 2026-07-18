@@ -81,7 +81,7 @@ echo $oPosicion->mostrarNavAtras(1);
         let mensaje = "<?= _("¿Está seguro que desea borrar todas las matrículas seleccionadas?");?>";
         if (confirm(mensaje)) {
             $("#mod").val("eliminar");
-            let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/actividadestudios/matricula_eliminar';
+            let url = '<?= AppUrlConfig::srcBrowserUrl('/src/actividadestudios/matricula_eliminar') ?>';
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,

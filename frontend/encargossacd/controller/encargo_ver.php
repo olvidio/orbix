@@ -143,13 +143,13 @@ $oHashAct->setArrayCamposHidden([
     'id_zona' => $Qid_zona,
 ]);
 
-$url_zona = $apiBase . '/src/encargossacd/zonas_get_select_data';
+$url_zona = AppUrlConfig::srcBrowserUrl('/src/encargossacd/zonas_get_select_data');
 $oHashZona = new HashFront();
 $oHashZona->setUrl($url_zona);
 $oHashZona->setCamposForm('id_zona');
 $h_zona = $oHashZona->linkSinValParams();
 
-$url_ctr = $apiBase . '/src/encargossacd/ctr_get_select_data';
+$url_ctr = AppUrlConfig::srcBrowserUrl('/src/encargossacd/ctr_get_select_data');
 $oHashCtr = new HashFront();
 $oHashCtr->setUrl($url_ctr);
 $oHashCtr->setCamposForm('filtro_ctr!id_ubi!action');
@@ -157,19 +157,19 @@ $h_ctr = $oHashCtr->linkSinValParams();
 $oHashCtr->setCamposForm('id_zona!id_ubi!action');
 $h_ctr_zona = $oHashCtr->linkSinValParams();
 
-$url_lst_tipo_data = $apiBase . '/src/encargossacd/encargo_lst_tipo_enc_data';
+$url_lst_tipo_data = AppUrlConfig::srcBrowserUrl('/src/encargossacd/encargo_lst_tipo_enc_data');
 $oHashLstTipo = new HashFront();
 $oHashLstTipo->setUrl($url_lst_tipo_data);
 $oHashLstTipo->setCamposForm('grupo!id_tipo_enc');
 $h_lst_tipo = $oHashLstTipo->linkSinValParams();
 
-$url_encargo_ver_nuevo = $apiBase . '/src/encargossacd/encargo_ver_nuevo';
+$url_encargo_ver_nuevo = AppUrlConfig::srcBrowserUrl('/src/encargossacd/encargo_ver_nuevo');
 $oHashEncNuevo = new HashFront();
 $oHashEncNuevo->setUrl($url_encargo_ver_nuevo);
 $oHashEncNuevo->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!que');
 $h_encargo_ver_nuevo = $oHashEncNuevo->linkSinValParams();
 
-$url_encargo_ver_editar = $apiBase . '/src/encargossacd/encargo_ver_editar';
+$url_encargo_ver_editar = AppUrlConfig::srcBrowserUrl('/src/encargossacd/encargo_ver_editar');
 $oHashEncEditar = new HashFront();
 $oHashEncEditar->setUrl($url_encargo_ver_editar);
 $oHashEncEditar->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!que!id_enc');

@@ -30,13 +30,13 @@ $ver_8 = DbexternPayload::signedLink($data['link_spec_ver_desaparecidos_listas']
 $ver_910 = DbexternPayload::signedLink($data['link_spec_ver_orbix'] ?? null);
 $url_actualizar = DbexternPayload::signedLink($data['link_spec_self'] ?? null);
 
-$url_sincro_syncro =  AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_syncro';
+$url_sincro_syncro =  AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_syncro');
 $oHash1 = new HashFront();
 $oHash1->setUrl($url_sincro_syncro);
 $oHash1->setCamposForm('region!dl_listas!tipo_persona');
 $h1 = $oHash1->linkSinValParams();
 
-$url_refrescar = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/refrescar_bdu';
+$url_refrescar = AppUrlConfig::srcBrowserUrl('/src/dbextern/refrescar_bdu');
 $oHash2 = new HashFront();
 $oHash2->setUrl($url_refrescar);
 $oHash2->setCamposForm('que');

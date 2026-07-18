@@ -52,7 +52,7 @@ $oDesplCtrs = DesplCentros::build($Qfiltro_ctr, $Qid_ubi);
 
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
-$url_ctr = $apiBase . '/src/encargossacd/ctr_get_select_data';
+$url_ctr = AppUrlConfig::srcBrowserUrl('/src/encargossacd/ctr_get_select_data');
 $oHashCtr = new HashFront();
 $oHashCtr->setUrl($url_ctr);
 $oHashCtr->setCamposForm('filtro_ctr!id_ubi');

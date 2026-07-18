@@ -20,7 +20,7 @@ $data = PostRequest::getDataFromUrl($url_backend);
 $a_opciones = NotasFormSupport::desplegableOpciones($data['a_opciones'] ?? []);
 $oDesplTemplates = new Desplegable('id_template_menu', $a_opciones, '', true);
 
-$url = AppUrlConfig::getApiBaseUrl() . '/src/menus/menus_importar';
+$url = AppUrlConfig::srcBrowserUrl('/src/menus/menus_importar');
 $oHash = new HashFront();
 $oHash->setUrl($url);
 $oHash->setCamposForm('id_template_menu');

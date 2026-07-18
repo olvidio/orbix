@@ -107,13 +107,13 @@ class CuadriculaZonaRenderer
         ];
 
         if ($editable) {
-            $url_cuadricula_update = AppUrlConfig::getApiBaseUrl() . '/src/misas/cuadricula_update';
+            $url_cuadricula_update = AppUrlConfig::srcBrowserUrl('/src/misas/cuadricula_update');
             $oHashUpd = new HashFront();
             $oHashUpd->setUrl($url_cuadricula_update);
             $oHashUpd->setCamposForm('dia!id_enc!key!observ!tend!tstart!uuid_item!tipo_plantilla!id_zona');
             $h_cuadricula_update = $oHashUpd->linkSinValParams();
 
-            $url_desplegable_sacd = AppUrlConfig::getApiBaseUrl() . '/src/misas/desplegable_sacd';
+            $url_desplegable_sacd = AppUrlConfig::srcBrowserUrl('/src/misas/desplegable_sacd');
             $oHashDs = new HashFront();
             $oHashDs->setUrl($url_desplegable_sacd);
             $oHashDs->setCamposForm('id_zona!id_sacd!seleccion!dia');

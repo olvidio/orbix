@@ -142,14 +142,14 @@ $oHashForm->setCamposForm('id_activ');
 $url_form = $web . '/frontend/casas/controller/casa_ingreso_form.php' . $oHashForm->linkSinVal();
 
 $oHashUpdate = new HashFront();
-$oHashUpdate->setUrl($web . '/src/casas/casa_ingreso_update');
+$oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_update'));
 $oHashUpdate->setCamposForm('id_activ!id_tarifa!precio!ingresos!num_asistentes!observ');
-$url_update = $web . '/src/casas/casa_ingreso_update' . $oHashUpdate->linkSinVal();
+$url_update = AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_update') . $oHashUpdate->linkSinVal();
 
 $oHashEliminar = new HashFront();
-$oHashEliminar->setUrl($web . '/src/casas/casa_ingreso_eliminar');
+$oHashEliminar->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_eliminar'));
 $oHashEliminar->setCamposForm('id_activ');
-$url_eliminar = $web . '/src/casas/casa_ingreso_eliminar' . $oHashEliminar->linkSinVal();
+$url_eliminar = AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_eliminar') . $oHashEliminar->linkSinVal();
 
 $a_campos = [
     'oPosicion' => $oPosicion,
