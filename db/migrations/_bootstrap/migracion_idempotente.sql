@@ -130,13 +130,30 @@ BEGIN
 END;
 $$;
 
+-- Esquema «público» de la BD sv/sf: publicv en sv/sv-e, publicf en sf.
+CREATE OR REPLACE FUNCTION public.migracion_esquema_public_vf()
+RETURNS text
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_catalog.pg_namespace WHERE nspname = 'publicf') THEN
+        RETURN 'publicf';
+    END IF;
+    IF EXISTS (SELECT 1 FROM pg_catalog.pg_namespace WHERE nspname = 'publicv') THEN
+        RETURN 'publicv';
+    END IF;
+    RAISE EXCEPTION 'Ni publicv ni publicf existen en esta base de datos';
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION public.migracion_omitir_tabla_tipo_teleco(p_schema text, p_table text)
 RETURNS boolean
 LANGUAGE sql
 IMMUTABLE
 AS $$
     SELECT CASE
-        WHEN p_schema = 'publicv' AND p_table = 'xd_tipo_teleco_tmp' THEN true
+        WHEN p_schema IN ('publicv', 'publicf') AND p_table = 'xd_tipo_teleco_tmp' THEN true
         WHEN p_schema = 'public' AND p_table IN ('xd_tipo_teleco', 'xd_teleco_ubis') THEN true
         ELSE false
     END;
@@ -289,6 +306,8 @@ CREATE OR REPLACE FUNCTION public.migracion_migrar_tipo_teleco_tmp(p_schema text
 RETURNS boolean
 LANGUAGE plpgsql
 AS $$
+DECLARE
+    v_pub text := public.migracion_esquema_public_vf();
 BEGIN
     IF public.migracion_omitir_tabla_tipo_teleco(p_schema, p_table) THEN
         PERFORM public.migracion_aviso(format('%s.%s: tabla catalogo tipo_teleco (omitido)', p_schema, p_table));
@@ -306,10 +325,11 @@ BEGIN
 
     EXECUTE format(
         'UPDATE %I.%I d SET tipo_teleco = t.id::text
-         FROM publicv.xd_tipo_teleco_tmp t
+         FROM %I.xd_tipo_teleco_tmp t
          WHERE d.tipo_teleco = t.tipo_teleco',
         p_schema,
-        p_table
+        p_table,
+        v_pub
     );
 
     EXECUTE format(
@@ -399,24 +419,36 @@ CREATE OR REPLACE FUNCTION public.migracion_ensure_xd_tipo_teleco_tmp()
 RETURNS void
 LANGUAGE plpgsql
 AS $$
+DECLARE
+    v_pub text := public.migracion_esquema_public_vf();
+    v_tiene boolean;
 BEGIN
-    IF NOT public.migracion_tabla_existe('publicv', 'xd_tipo_teleco_tmp') THEN
-        CREATE TABLE publicv.xd_tipo_teleco_tmp (
-            tipo_teleco varchar(10),
-            nombre_teleco varchar(20),
-            ubi bool,
-            persona bool,
-            id int
+    IF NOT public.migracion_tabla_existe(v_pub, 'xd_tipo_teleco_tmp') THEN
+        EXECUTE format(
+            'CREATE TABLE %I.xd_tipo_teleco_tmp (
+                tipo_teleco varchar(10),
+                nombre_teleco varchar(20),
+                ubi bool,
+                persona bool,
+                id int
+            )',
+            v_pub
         );
     END IF;
 
-    IF NOT EXISTS (SELECT 1 FROM publicv.xd_tipo_teleco_tmp LIMIT 1) THEN
-        INSERT INTO publicv.xd_tipo_teleco_tmp (tipo_teleco, nombre_teleco, ubi, persona, id) VALUES
-            ('telf', 'teléfono fijo', 't', 't', 1),
-            ('móvil', 'teléfono móvil', 't', 't', 2),
-            ('e-mail', 'correo electrónico', 't', 't', 3),
-            ('fax', 'fax', 't', 't', 4),
-            ('web', 'página web', 't', 't', 5);
+    EXECUTE format('SELECT EXISTS (SELECT 1 FROM %I.xd_tipo_teleco_tmp LIMIT 1)', v_pub)
+        INTO v_tiene;
+
+    IF NOT COALESCE(v_tiene, false) THEN
+        EXECUTE format(
+            'INSERT INTO %I.xd_tipo_teleco_tmp (tipo_teleco, nombre_teleco, ubi, persona, id) VALUES
+                (''telf'', ''teléfono fijo'', true, true, 1),
+                (''móvil'', ''teléfono móvil'', true, true, 2),
+                (''e-mail'', ''correo electrónico'', true, true, 3),
+                (''fax'', ''fax'', true, true, 4),
+                (''web'', ''página web'', true, true, 5)',
+            v_pub
+        );
     END IF;
 END;
 $$;

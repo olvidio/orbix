@@ -121,7 +121,9 @@ Las ejecuciones se registran en `comun.public.migracion_aplicada`.
 
 Antes de cada migracion el runner instala funciones auxiliares desde
 `db/migrations/_bootstrap/migracion_idempotente.sql` (`migracion_rename_columna`,
-`migracion_migrar_tipo_teleco_*`, `migracion_detener_si`, etc.).
+`migracion_migrar_tipo_teleco_*`, `migracion_detener_si`,
+`migracion_esquema_public_vf`, etc.). En BD `sf` el catálogo temporal de teleco
+vive en `publicf` (en `sv`/`sv-e`, en `publicv`); el bootstrap lo detecta solo.
 
 Convenciones en los `.sql`:
 
