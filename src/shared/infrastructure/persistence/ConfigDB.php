@@ -634,9 +634,8 @@ class ConfigDB
                 continue;
             }
             $legacy = self::cargarArrayInc($legacyPath);
-            if ($conn === [] && isset($legacy['default']) && is_array($legacy['default'])) {
-                $conn['default'] = $legacy['default'];
-            } elseif ($conn === [] && isset($legacy['default'])) {
+            // Completar default desde el monolito si falta en .conn.inc (aunque el conn tenga otras claves).
+            if (!isset($conn['default']) && isset($legacy['default']) && is_array($legacy['default'])) {
                 $conn['default'] = $legacy['default'];
             }
         }

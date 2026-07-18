@@ -280,19 +280,17 @@ final class MigracionesEjecutar
 
     private function connect(string $database): PDO
     {
-        $schema = match ($database) {
-            MigracionDatabase::COMUN => 'public',
-            MigracionDatabase::COMUN_SELECT => 'public_select',
-            MigracionDatabase::SV => 'publicv',
-            MigracionDatabase::SV_E => 'publicv-e',
-            MigracionDatabase::SV_E_SELECT => 'publicv-e_select',
-            // Conexión normal a la BD sf (importar/publicf → dbname sf); sin réplica.
-            MigracionDatabase::SF => 'publicf',
+        $config = match ($database) {
+            MigracionDatabase::COMUN => $this->configImportar('public'),
+            MigracionDatabase::COMUN_SELECT => $this->configImportar('public_select'),
+            MigracionDatabase::SV => $this->configImportar('publicv'),
+            MigracionDatabase::SV_E => $this->configImportar('publicv-e'),
+            MigracionDatabase::SV_E_SELECT => $this->configImportar('publicv-e_select'),
+            // Serie sf: conexión normal a BD sf (no depende del bloque default de importar).
+            MigracionDatabase::SF => $this->configSf(),
             default => throw new RuntimeException(sprintf('Database no soportada: %s', $database)),
         };
 
-        $oConfigDB = new ConfigDB('importar');
-        $config = $oConfigDB->getEsquema($schema);
         $oConexion = new DBConnection($config);
 
         $pdo = $oConexion->getPDO();
@@ -301,6 +299,38 @@ final class MigracionesEjecutar
         $pdo->exec('SET search_path TO public');
 
         return $pdo;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function configImportar(string $claveEsquema): array
+    {
+        $oConfigDB = new ConfigDB('importar');
+
+        return $oConfigDB->getEsquema($claveEsquema);
+    }
+
+    /**
+     * BD sf: preferir ConfigDB('sf')/publicf; si falta, importar/publicf (mantenimiento).
+     *
+     * @return array<string, mixed>
+     */
+    private function configSf(): array
+    {
+        try {
+            return (new ConfigDB('sf'))->getEsquema('publicf');
+        } catch (Throwable $eSf) {
+            try {
+                return (new ConfigDB('importar'))->getConexionMantenimiento('publicf');
+            } catch (Throwable $eImportar) {
+                throw new RuntimeException(sprintf(
+                    'No se puede conectar a sf: %s (fallback importar: %s)',
+                    $eSf->getMessage(),
+                    $eImportar->getMessage(),
+                ), 0, $eSf);
+            }
+        }
     }
 
     /**
