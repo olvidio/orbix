@@ -62,7 +62,7 @@ if (isset($_GET['r']) && is_string($_GET['r']) && str_starts_with($_GET['r'], '/
         ? parse_url($requestUriForBootstrap, PHP_URL_PATH)
         : '';
     if (is_string($requestPathForBootstrap)) {
-        $requestRoute = preg_replace('/^\/(pruebas|orbix)/', '', $requestPathForBootstrap);
+        $requestRoute = preg_replace('/^\/(pruebassf|pruebas|orbixsf|orbix)/', '', $requestPathForBootstrap);
         $esquema_bootstrap = getenv('ESQUEMA');
         if (!empty($esquema_bootstrap)) {
             // Insensible a mayúsculas: la URL lleva H-xxx y ESQUEMA en FPM a veces llega distinto.
@@ -204,8 +204,9 @@ if ($legacyR !== null) {
 } else {
     $uri = $_SERVER['REQUEST_URI'] ?? '/';
 
-    // Eliminar el prefix del directori (pruebas o orbix) per al matching
-    $uri = preg_replace('/^\/(pruebas|orbix)/', '', $uri);
+    // Eliminar el prefix del directori (pruebas/pruebassf o orbix/orbixsf) per al matching.
+    // Importante: orbixsf/pruebassf antes que orbix/pruebas (si no, /orbixsf queda como /sf/...).
+    $uri = preg_replace('/^\/(pruebassf|pruebas|orbixsf|orbix)/', '', $uri);
 
     // Eliminar el esquema del path si está configurado (p.ej. /H-dlmEv/src/... → /src/...)
     $esquema_web = getenv('ESQUEMA') ?: ($_SERVER['ESQUEMA'] ?? '');
