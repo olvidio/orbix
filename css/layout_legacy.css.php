@@ -12,7 +12,7 @@
     z-index: var(--legacy-chrome-z);
     box-sizing: border-box;
     padding-top: 3px;
-    background: <?= $fondo_claro ?>;
+    background: <?= $GLOBALS['fondo_claro'] ?>;
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
 }
 
