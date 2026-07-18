@@ -39,6 +39,7 @@ $a_campos = [
     'oTabla' => $oTabla,
     'oHash' => $oHash,
     'warnings' => (array) ($data['warnings'] ?? []),
+    'serie' => (string) ($data['serie'] ?? ''),
     'url_ejecutar' => OrbixRuntime::getWeb() . '/src/devel_db_admin/migraciones_ejecutar',
     'url_quitar_registro' => OrbixRuntime::getWeb() . '/src/devel_db_admin/migraciones_quitar_registro',
     'msg_sin_seleccion' => _('debe seleccionar una migracion'),

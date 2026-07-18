@@ -12,12 +12,13 @@ use src\devel_db_admin\domain\value_objects\MigracionTipo;
 
 final class MigracionesEscanear
 {
-    private const FILE_PATTERN = '/^(\d{12})_([A-Za-z0-9_-]+)__(comun|sv-e|sv)\.sql$/';
+    private const FILE_PATTERN = '/^(\d{12})_([A-Za-z0-9_-]+)__(comun|sv-e|sv|sf)\.sql$/';
 
     public function __construct(
         private readonly MigracionAplicadaRepositoryInterface $repository,
         private readonly ?string $migrationsDir = null,
         private readonly ?MigracionSqlAnalyzer $analyzer = null,
+        private readonly ?string $serie = null,
     ) {
     }
 
@@ -37,6 +38,8 @@ final class MigracionesEscanear
         $migraciones = [];
         $warnings = [];
         $analyzer = $this->analyzer ?? new MigracionSqlAnalyzer();
+        $serie = $this->serie ?? self::serieDesdeSesion();
+        $archivosSerie = array_fill_keys(MigracionDatabase::archivosDeSerie($serie), true);
 
         foreach ($files as $path) {
             $fileName = basename($path);
@@ -48,6 +51,9 @@ final class MigracionesEscanear
             $prefijo = $matches[1];
             $descripcion = $matches[2];
             $dbArchivo = $matches[3];
+            if (!isset($archivosSerie[$dbArchivo])) {
+                continue;
+            }
             $groupId = $prefijo . '_' . $descripcion;
             $sql = file_get_contents($path);
             if ($sql === false) {
@@ -79,6 +85,9 @@ final class MigracionesEscanear
             ];
 
             foreach (self::destinosPara($dbArchivo, $tipo) as $databaseReal) {
+                if (!MigracionDatabase::perteneceASerie($databaseReal, $serie)) {
+                    continue;
+                }
                 $aplicada = $aplicadas[$this->key($prefijo, $descripcion, $databaseReal)] ?? null;
                 $migraciones[$groupId]['aplicaciones'][] = [
                     'id' => $groupId,
@@ -107,7 +116,23 @@ final class MigracionesEscanear
         return [
             'migraciones' => array_values($migraciones),
             'warnings' => $warnings,
+            'serie' => $serie,
         ];
+    }
+
+    /**
+     * Serie de migraciones según sesión: sf (sfsv=2) o sv (resto).
+     */
+    public static function serieDesdeSesion(): string
+    {
+        try {
+            if (\src\shared\config\ConfigGlobal::mi_sfsv() === 2) {
+                return MigracionDatabase::SERIE_SF;
+            }
+        } catch (\Throwable) {
+        }
+
+        return MigracionDatabase::SERIE_SV;
     }
 
     /**
@@ -122,6 +147,8 @@ final class MigracionesEscanear
         return match ($databaseArchivo) {
             MigracionDatabase::COMUN => [MigracionDatabase::COMUN_SELECT, MigracionDatabase::COMUN],
             MigracionDatabase::SV_E => [MigracionDatabase::SV_E_SELECT, MigracionDatabase::SV_E],
+            // sf concentra sv + sv-e; no hay réplica ni BD sf-e aparte.
+            MigracionDatabase::SF => [MigracionDatabase::SF],
             default => [$databaseArchivo],
         };
     }
@@ -136,6 +163,7 @@ final class MigracionesEscanear
             MigracionDatabase::SV_E => 30,
             MigracionDatabase::SV_E_SELECT => 40,
             MigracionDatabase::SV => 50,
+            MigracionDatabase::SF => 60,
             default => 99,
         };
     }

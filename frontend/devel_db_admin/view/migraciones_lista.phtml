@@ -99,6 +99,10 @@
 
 <h1><?= _("migraciones de base de datos") ?></h1>
 
+<?php if (($serie ?? '') === 'sf'): ?>
+    <p><?= _("Serie sf: solo migraciones __sf (sin comun / sv / sv-e). BD sf sin réplica.") ?></p>
+<?php endif; ?>
+
 <?php if (!empty($warnings)): ?>
     <div class="alert">
         <strong><?= _("avisos") ?>:</strong>

@@ -24,8 +24,22 @@ Ejemplos:
 - `comun`
 - `sv-e`
 - `sv`
+- `sf`
 
 Las replicas de lectura no se ponen en el nombre. El runner las deriva cuando toca.
+
+## Series sv y sf
+
+Hay dos series según la sesión (`sfsv`):
+
+| Sesión | Serie | Ficheros visibles |
+|--------|-------|-------------------|
+| sv (`sfsv=1`) | `sv` | `__comun`, `__sv-e`, `__sv` |
+| sf (`sfsv=2`, p. ej. admin sf) | `sf` | solo `__sf` |
+
+En producción, los cambios de `sv` y de `sv-e` deben tener su equivalente `__sf.sql`
+(esquemas con sufijo `f`, `publicv` → `publicf`, etc.). En `sf` no hay réplica ni BD
+`sf-e` aparte: todo vive en la BD `sf` (conexión `importar` / `publicf`).
 
 ## Estructura o datos
 
@@ -42,6 +56,7 @@ Regla de ejecucion:
 - `__sv-e.sql` de estructura: primero `sv-e` (publicador), despues `sv-e_select` (suscriptor).
 - `__sv-e.sql` de datos: solo `sv-e`.
 - `__sv.sql`: solo `sv`.
+- `__sf.sql`: solo `sf` (estructura o datos; sin réplica).
 
 En replicacion logica, el publicador debe migrar el esquema **antes** que la replica. Si la replica
 ya renombro una columna y el publicador aun emite `UPDATE` sobre el nombre viejo, aparece:
@@ -59,6 +74,7 @@ El runner consulta `comun.public.db_idschema`:
 
 - Para `comun` / `comun_select`: esquemas comun activos (`id` entre 3000 y 3999, sin sufijo `v` ni `f`), excepto `H-H` y `M-M` (esquemas raíz de región STGR).
 - Para `sv` / `sv-e` / `sv-e_select`: esquemas con sufijo `v`.
+- Para `sf`: esquemas con sufijo `f`.
 
 Cada `*.` se sustituye por el esquema entre comillas dobles:
 

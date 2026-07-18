@@ -13,6 +13,8 @@ final class MigracionDatabase
     public const SV = 'sv';
     public const SV_E = 'sv-e';
     public const SV_E_SELECT = 'sv-e_select';
+    /** BD única sf: tablas de sv y de sv-e; sin réplica *_select. */
+    public const SF = 'sf';
 
     private const VALID = [
         self::COMUN,
@@ -20,7 +22,14 @@ final class MigracionDatabase
         self::SV,
         self::SV_E,
         self::SV_E_SELECT,
+        self::SF,
     ];
+
+    /** Serie sv (comun + sv + sv-e y réplicas). */
+    public const SERIE_SV = 'sv';
+
+    /** Serie sf (solo BD sf). */
+    public const SERIE_SF = 'sf';
 
     private string $value;
 
@@ -54,5 +63,42 @@ final class MigracionDatabase
     public static function fromString(string $value): self
     {
         return new self($value);
+    }
+
+    /**
+     * Destinos que pertenecen a la serie (listado / ejecución según sfsv).
+     *
+     * @return list<string>
+     */
+    public static function databasesDeSerie(string $serie): array
+    {
+        return match ($serie) {
+            self::SERIE_SF => [self::SF],
+            default => [
+                self::COMUN,
+                self::COMUN_SELECT,
+                self::SV_E,
+                self::SV_E_SELECT,
+                self::SV,
+            ],
+        };
+    }
+
+    /**
+     * Sufijos de fichero `__….sql` visibles en la serie.
+     *
+     * @return list<string>
+     */
+    public static function archivosDeSerie(string $serie): array
+    {
+        return match ($serie) {
+            self::SERIE_SF => [self::SF],
+            default => [self::COMUN, self::SV_E, self::SV],
+        };
+    }
+
+    public static function perteneceASerie(string $database, string $serie): bool
+    {
+        return in_array($database, self::databasesDeSerie($serie), true);
     }
 }

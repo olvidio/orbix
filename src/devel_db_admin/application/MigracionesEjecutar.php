@@ -60,7 +60,12 @@ final class MigracionesEjecutar
             ];
         }
 
-        $lines = [];
+        $serie = is_scalar($scan['serie'] ?? null) ? (string) $scan['serie'] : MigracionesEscanear::serieDesdeSesion();
+        if ($serie === MigracionDatabase::SERIE_SF) {
+            $lines = [sprintf('Serie migraciones: %s (BD sf, sin réplica).', $serie)];
+        } else {
+            $lines = [];
+        }
         $analyzer = $this->analyzer ?? new MigracionSqlAnalyzer();
         foreach ($aEjecutar as $migracion) {
             $migracionAplicaciones = self::normalizeRows($migracion['aplicaciones'] ?? []);
@@ -281,6 +286,8 @@ final class MigracionesEjecutar
             MigracionDatabase::SV => 'publicv',
             MigracionDatabase::SV_E => 'publicv-e',
             MigracionDatabase::SV_E_SELECT => 'publicv-e_select',
+            // Conexión normal a la BD sf (importar/publicf → dbname sf); sin réplica.
+            MigracionDatabase::SF => 'publicf',
             default => throw new RuntimeException(sprintf('Database no soportada: %s', $database)),
         };
 
@@ -466,9 +473,11 @@ final class MigracionesEjecutar
      */
     private function schemasParaDatabase(string $database): array
     {
-        $tipo = in_array($database, [MigracionDatabase::COMUN, MigracionDatabase::COMUN_SELECT], true)
-            ? 'comun'
-            : 'sv';
+        $tipo = match (true) {
+            in_array($database, [MigracionDatabase::COMUN, MigracionDatabase::COMUN_SELECT], true) => 'comun',
+            $database === MigracionDatabase::SF => 'sf',
+            default => 'sv',
+        };
 
         if (isset($this->schemaCache[$tipo])) {
             return $this->schemaCache[$tipo];
@@ -486,6 +495,13 @@ final class MigracionesEjecutar
             }
             if ($tipo === 'comun') {
                 if ($dbSchema->getId() >= 3000 && $dbSchema->getId() < 4000 && !str_ends_with($schema, 'v') && !str_ends_with($schema, 'f')) {
+                    $schemas[] = $schema;
+                }
+                continue;
+            }
+
+            if ($tipo === 'sf') {
+                if (str_ends_with($schema, 'f')) {
                     $schemas[] = $schema;
                 }
                 continue;
