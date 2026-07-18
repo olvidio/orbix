@@ -202,14 +202,18 @@ class ConfigDB
      */
     public function getConexionMantenimiento(string $claveImportar): array
     {
-        if (!isset($this->data['default']) || !is_array($this->data['default'])) {
+        $default = $this->data['default'] ?? null;
+        if (!is_array($default)) {
+            $default = $this->defaultPrestadoParaClaveImportar($claveImportar);
+        }
+        if (!is_array($default)) {
             throw new RuntimeException(sprintf(
                 _('Falta el bloque default en la configuración importar (%s).'),
                 $this->baseLogico,
             ));
         }
 
-        $out = $this->data['default'];
+        $out = $default;
         $plantilla = $this->plantillaConnImportar($claveImportar);
 
         foreach (['host', 'port', 'dbname', 'sslmode', 'sslcert', 'sslkey', 'sslrootcert', 'ssh_user'] as $clave) {
@@ -218,12 +222,13 @@ class ConfigDB
             }
         }
 
+        // Credenciales de mantenimiento: priorizar la plantilla public* (orbix_admindb),
+        // no el user de un default prestado de sf/sv (orbixf / orbixv).
         foreach (['user', 'password'] as $clave) {
-            if (isset($out[$clave]) && $out[$clave] !== '') {
-                continue;
-            }
             if (isset($plantilla[$clave]) && $plantilla[$clave] !== '') {
                 $out[$clave] = $plantilla[$clave];
+            } elseif (!isset($out[$clave]) || $out[$clave] === '') {
+                // sin plantilla: dejar lo que haya en default
             }
         }
 
@@ -243,6 +248,44 @@ class ConfigDB
         }
 
         return $out;
+    }
+
+    /**
+     * Si importar no trae `default`, reutilizar el de la BD destino (comun/sv/sf).
+     *
+     * @return array<string, mixed>|null
+     */
+    private function defaultPrestadoParaClaveImportar(string $claveImportar): ?array
+    {
+        $base = match ($claveImportar) {
+            'public', 'public_select' => 'comun',
+            'publicv', 'publicv-e', 'publicv-e_select' => 'sv',
+            'publicf', 'publicf-e' => 'sf',
+            default => null,
+        };
+        if ($base === null) {
+            return null;
+        }
+
+        $connPath = self::dirPwd() . '/' . self::ficheroConnNombre($base);
+        if (is_readable($connPath)) {
+            $conn = self::cargarArrayInc($connPath);
+            if (isset($conn['default']) && is_array($conn['default'])) {
+                return $conn['default'];
+            }
+        }
+
+        foreach (self::rutasMonoliticoComplementarias($base) as $path) {
+            if (!is_readable($path)) {
+                continue;
+            }
+            $data = self::cargarArrayInc($path);
+            if (isset($data['default']) && is_array($data['default'])) {
+                return $data['default'];
+            }
+        }
+
+        return null;
     }
 
     /**

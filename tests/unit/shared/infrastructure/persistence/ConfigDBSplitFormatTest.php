@@ -180,6 +180,40 @@ final class ConfigDBSplitFormatTest extends TestCase
         $this->assertSame('public', $conn['schema']);
     }
 
+    public function test_getConexionMantenimiento_presta_default_de_sf_si_importar_no_lo_tiene(): void
+    {
+        $dir = $this->pwdDir();
+        // Formato partido importar: roles vacío (activa partido) + conn sin default, con publicf admin.
+        $this->writeInc($dir . '/importar.roles.inc', []);
+        $this->writeInc(
+            $dir . '/' . ConfigDB::ficheroConnNombre('importar'),
+            [
+                'publicf' => [
+                    'dbname' => 'sf',
+                    'user' => 'orbix_admindb',
+                    'password' => 'admin-secret',
+                ],
+            ],
+        );
+        $this->writeInc(
+            $dir . '/' . ConfigDB::ficheroConnNombre('sf'),
+            [
+                'default' => ['host' => 'sf-host', 'port' => 5444],
+                'publicf' => ['user' => 'orbixf', 'password' => 'app-secret'],
+            ],
+        );
+
+        $cfg = new ConfigDB('importar');
+        $conn = $cfg->getConexionMantenimiento('publicf');
+
+        $this->assertSame('sf-host', $conn['host']);
+        $this->assertSame(5444, $conn['port']);
+        $this->assertSame('sf', $conn['dbname']);
+        $this->assertSame('orbix_admindb', $conn['user']);
+        $this->assertSame('admin-secret', $conn['password']);
+        $this->assertSame('public', $conn['schema']);
+    }
+
     public function test_add_esquema_monolitico_sincroniza_par_select(): void
     {
         $dir = $this->pwdDir();

@@ -286,7 +286,7 @@ final class MigracionesEjecutar
             MigracionDatabase::SV => $this->configImportar('publicv'),
             MigracionDatabase::SV_E => $this->configImportar('publicv-e'),
             MigracionDatabase::SV_E_SELECT => $this->configImportar('publicv-e_select'),
-            // Serie sf: conexión normal a BD sf (no depende del bloque default de importar).
+            // Serie sf: mantenimiento (admindb) vía importar/publicf; DDL no puede ir con orbixf.
             MigracionDatabase::SF => $this->configSf(),
             default => throw new RuntimeException(sprintf('Database no soportada: %s', $database)),
         };
@@ -312,24 +312,23 @@ final class MigracionesEjecutar
     }
 
     /**
-     * BD sf: preferir ConfigDB('sf')/publicf; si falta, importar/publicf (mantenimiento).
+     * BD sf: requiere usuario de mantenimiento (ALTER / CREATE FUNCTION en public).
+     * Preferir importar→publicf; si no hay plantilla, avisar (ConfigDB sf/orbixf no basta).
      *
      * @return array<string, mixed>
      */
     private function configSf(): array
     {
+        $importar = new ConfigDB('importar');
         try {
-            return (new ConfigDB('sf'))->getEsquema('publicf');
-        } catch (Throwable $eSf) {
-            try {
-                return (new ConfigDB('importar'))->getConexionMantenimiento('publicf');
-            } catch (Throwable $eImportar) {
-                throw new RuntimeException(sprintf(
-                    'No se puede conectar a sf: %s (fallback importar: %s)',
-                    $eSf->getMessage(),
-                    $eImportar->getMessage(),
-                ), 0, $eSf);
-            }
+            return $importar->getConexionMantenimiento('publicf');
+        } catch (Throwable $eImportar) {
+            throw new RuntimeException(sprintf(
+                'Migraciones sf necesitan usuario de mantenimiento (importar/publicf o default+publicf). %s'
+                . ' Añada en importar.inc (o importar.conn.inc) la clave publicf con user orbix_admindb'
+                . ' (dbname sf) y, si falta, el bloque default (host/port).',
+                $eImportar->getMessage(),
+            ), 0, $eImportar);
         }
     }
 

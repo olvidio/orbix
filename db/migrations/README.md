@@ -39,7 +39,7 @@ Hay dos series según la sesión (`sfsv`):
 
 En producción, los cambios de `sv` y de `sv-e` deben tener su equivalente `__sf.sql`
 (esquemas con sufijo `f`, `publicv` → `publicf`, etc.). En `sf` no hay réplica ni BD
-`sf-e` aparte: todo vive en la BD `sf` (conexión `ConfigDB('sf')` / `publicf`).
+`sf-e` aparte: todo vive en la BD `sf` (DDL con usuario de mantenimiento `importar`/`publicf`).
 
 ## Estructura o datos
 
@@ -57,8 +57,10 @@ Regla de ejecucion:
 - `__sv-e.sql` de datos: solo `sv-e`.
 - `__sv.sql`: solo `sv`.
 - `__sf.sql`: solo `sf` (estructura o datos; sin réplica).
-  Conexión: `ConfigDB('sf')` / `publicf` (conexión normal de la BD sf).
-  Si falta, se intenta `importar` → `getConexionMantenimiento('publicf')`.
+  Conexión de **mantenimiento**: `importar` → `getConexionMantenimiento('publicf')`
+  (usuario tipo `orbix_admindb`). Si importar no tiene `default`, se reutiliza el de
+  `sf.conn.inc` / `sf.inc`; hace falta la clave `publicf` en importar con user/password
+  de administración. `ConfigDB('sf')`/`orbixf` no sirve (permiso denegado en `public`).
 
 En replicacion logica, el publicador debe migrar el esquema **antes** que la replica. Si la replica
 ya renombro una columna y el publicador aun emite `UPDATE` sobre el nombre viejo, aparece:
