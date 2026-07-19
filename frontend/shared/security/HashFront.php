@@ -1066,6 +1066,85 @@ class HashFront
         return $url;
     }
 
+    /**
+     * Reescribe el proxy `src_ajax.php` (+PATH_INFO o `?_orbix_src=`) a la ruta
+     * canónica `/src/...` para que el hash del emisor (URL `/src/...` o
+     * {@see AppUrlConfig::srcBrowserUrl()}) coincida con el del receptor.
+     */
+    private static function normalizarUrlSrcAjaxProxy(string $url): string
+    {
+        // PATH_INFO: …/src_ajax.php/src/modulo/accion[?query]
+        // Delimitador ~ (no #): el patrón de query usa [^#] y choca con #.
+        if (preg_match(
+            '~^(https?://[^/]+)?(/.*?)/frontend/shared/controller/src_ajax\.php(/src/[A-Za-z0-9_./-]+)(\?.*)?$~',
+            $url,
+            $m
+        ) === 1) {
+            return ($m[1] ?? '') . $m[2] . $m[3] . ($m[4] ?? '');
+        }
+
+        // Query: …/src_ajax.php?_orbix_src=/src/…[&resto]
+        if (preg_match(
+            '~^(https?://[^/]+)?(/.*?)/frontend/shared/controller/src_ajax\.php\?([^#]*)$~',
+            $url,
+            $m
+        ) !== 1) {
+            return $url;
+        }
+
+        $query = $m[3];
+        parse_str($query, $params);
+        $raw = $params['_orbix_src'] ?? null;
+        if (!is_string($raw) || $raw === '') {
+            return $url;
+        }
+        $src = '/' . ltrim(rawurldecode($raw), '/');
+        if (preg_match('~^/src/[A-Za-z0-9_./-]+$~', $src) !== 1) {
+            return $url;
+        }
+        unset($params['_orbix_src']);
+        $rest = http_build_query($params);
+
+        return ($m[1] ?? '') . $m[2] . $src . ($rest !== '' ? '?' . $rest : '');
+    }
+
+    /**
+     * Si la petición actual es el proxy src_ajax, sustituye el path por `/src/...`.
+     */
+    private static function resolveSrcAjaxRequestPath(string $requestPath): string
+    {
+        $normalized = self::normalizarUrlSrcAjaxProxy($requestPath);
+        if ($normalized !== $requestPath) {
+            return $normalized;
+        }
+
+        if (preg_match('#/frontend/shared/controller/src_ajax\.php$#', $requestPath) !== 1) {
+            return $requestPath;
+        }
+
+        $candidates = [
+            $_SERVER['PATH_INFO'] ?? null,
+            $_GET['_orbix_src'] ?? null,
+            $_POST['_orbix_src'] ?? null,
+        ];
+        foreach ($candidates as $raw) {
+            if (!is_string($raw) || $raw === '') {
+                continue;
+            }
+            $src = '/' . ltrim(rawurldecode($raw), '/');
+            $src = strtok($src, '?') ?: $src;
+            if (preg_match('#^/src/[A-Za-z0-9_./-]+$#', $src) === 1) {
+                return (string)preg_replace(
+                    '#/frontend/shared/controller/src_ajax\.php$#',
+                    $src,
+                    $requestPath
+                );
+            }
+        }
+
+        return $requestPath;
+    }
+
     private function realFullUrl(): string
 {
     /* Con el cambio de rutas, no coincide el uri de origen y destino.
@@ -1079,6 +1158,7 @@ class HashFront
     $replacement = '$1$2';
     $request_uri_modificada = preg_replace($pattern, $replacement, $request_uri);
     $request_uri_modificada = is_string($request_uri_modificada) ? $request_uri_modificada : $request_uri;
+    $request_uri_modificada = self::resolveSrcAjaxRequestPath($request_uri_modificada);
     $request_uri_modificada = self::normalizarUrlSinSfEsquema($request_uri_modificada);
 
     /*
@@ -1125,7 +1205,8 @@ class HashFront
             }
         }
     }
-    // Normalizar quitando sf/ESQUEMA para que el hash coincida con el receptor
+    // Proxy src_ajax → /src/… y quitar sf/ESQUEMA para que el hash coincida
+    $sPath = self::normalizarUrlSrcAjaxProxy($sPath);
     $sPath = self::normalizarUrlSinSfEsquema($sPath);
     return $sPath;
 }

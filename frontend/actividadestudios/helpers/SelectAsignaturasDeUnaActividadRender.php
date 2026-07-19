@@ -41,11 +41,12 @@ final class SelectAsignaturasDeUnaActividadRender
         $linkSpec = ActividadestudiosRenderSupport::linkSpec($seg['link_insert_spec'] ?? null);
         $linkInsert = $linkSpec !== null ? DossierTipoFormLinkSpecsSigning::fromSpec($linkSpec) : '';
 
-        $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $urlFormRel = \frontend\shared\helpers\PayloadCoercion::string($seg['url_form_relative'] ?? '');
-        $urlForm = $urlFormRel !== '' ? $base . '/' . ltrim($urlFormRel, '/') : '';
-        $elimPath = \frontend\shared\helpers\PayloadCoercion::string($seg['url_actividad_asignatura_eliminar_path'] ?? '');
-        $urlEliminar = $elimPath !== '' ? $base . '/' . ltrim($elimPath, '/') : '';
+        $urlForm = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\PayloadCoercion::string($seg['url_form_relative'] ?? '')
+        );
+        $urlEliminar = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\PayloadCoercion::string($seg['url_actividad_asignatura_eliminar_path'] ?? '')
+        );
 
         $oView = new ViewNewPhtml('frontend\actividadestudios\view');
 

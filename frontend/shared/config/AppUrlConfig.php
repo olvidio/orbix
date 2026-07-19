@@ -70,6 +70,26 @@ class AppUrlConfig
             . $srcPath;
     }
 
+    /**
+     * URL absoluta de navegador desde una ruta relativa de app (`src/…` o `frontend/…`).
+     *
+     * - `src/…` → {@see srcBrowserUrl()} (proxy AJAX).
+     * - resto → `{publicBase}/{rel}` (ficheros PHP de frontend, assets, etc.).
+     * La query va fuera: `browserUrlFromAppRelative($path) . '?' . $q`.
+     */
+    public static function browserUrlFromAppRelative(string $rel): string
+    {
+        $rel = ltrim($rel, '/');
+        if ($rel === '') {
+            return '';
+        }
+        if (str_starts_with($rel, 'src/')) {
+            return self::srcBrowserUrl('/' . $rel);
+        }
+
+        return self::getPublicAppBaseUrl() . '/' . $rel;
+    }
+
     private static function readEnv(string $name): ?string
     {
         $v = getenv($name);

@@ -24,9 +24,9 @@ final class CartaPresentacionFormRender
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
 
         if ($ok && $hu !== []) {
-            $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-            $rel = \frontend\shared\helpers\PayloadCoercion::string($paths['update'] ?? '');
-            $url = $rel !== '' ? $base . '/' . ltrim($rel, '/') : '';
+            $url = AppUrlConfig::browserUrlFromAppRelative(
+                \frontend\shared\helpers\PayloadCoercion::string($paths['update'] ?? '')
+            );
             $oHash = new HashFront();
             $oHash->setUrl($url);
             $hidden = CartaspresentacionPayload::hashCamposHidden($hu['campos_hidden'] ?? []);

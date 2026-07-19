@@ -24,11 +24,12 @@ final class SelectMatriculasDeUnaActividadRender
     public static function render(array $seg): string
     {
         $wrapper = isset($seg['wrapper']) && is_array($seg['wrapper']) ? $seg['wrapper'] : [];
-        $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $relForm = \frontend\shared\helpers\PayloadCoercion::string($wrapper['url_form_relative'] ?? '');
-        $urlForm = $relForm !== '' ? $base . '/' . ltrim($relForm, '/') : '';
-        $elimPath = \frontend\shared\helpers\PayloadCoercion::string($wrapper['url_matricula_eliminar_path'] ?? '');
-        $urlEliminar = $elimPath !== '' ? $base . '/' . ltrim($elimPath, '/') : '';
+        $urlForm = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\PayloadCoercion::string($wrapper['url_form_relative'] ?? '')
+        );
+        $urlEliminar = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\PayloadCoercion::string($wrapper['url_matricula_eliminar_path'] ?? '')
+        );
 
         $hash = isset($seg['hash']) && is_array($seg['hash']) ? $seg['hash'] : [];
         $oHashSelect = new HashFront();

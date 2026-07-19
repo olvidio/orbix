@@ -42,7 +42,7 @@ $signShellEndpoint = static function (array $spec): string {
     if ($path === '') {
         return '';
     }
-    $url = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/' . ltrim($path, '/');
+    $url = AppUrlConfig::browserUrlFromAppRelative($path);
     $oHashEndpoint = new HashFront();
     $oHashEndpoint->setUrl($url);
     $oHashEndpoint->setCamposForm($camposForm);

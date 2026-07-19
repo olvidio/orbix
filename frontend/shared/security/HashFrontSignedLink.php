@@ -31,8 +31,10 @@ final class HashFrontSignedLink
             return '';
         }
         $query = $spec['query'] ?? [];
-        $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $url = $base . '/' . ltrim($path, '/');
+        $url = AppUrlConfig::browserUrlFromAppRelative($path);
+        if ($url === '') {
+            return '';
+        }
         if ($query !== []) {
             $url .= '?' . http_build_query($query);
         }

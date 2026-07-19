@@ -26,11 +26,14 @@ final class FormActividadesDeUnaPersonaRender
             return $payload;
         }
 
-        $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
 
-        $url_guardar = $base . '/' . ltrim(\frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'asistente_guardar'), '/');
-        $url_self = $base . '/' . ltrim(\frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'form_self'), '/');
+        $url_guardar = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'asistente_guardar')
+        );
+        $url_self = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'form_self')
+        );
 
         $plazas_installed = !empty($payload['plazas_installed']);
         $url_ajax = '';
@@ -38,7 +41,7 @@ final class FormActividadesDeUnaPersonaRender
         if ($plazas_installed) {
             $ajaxPath = \frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'posibles_propietarios_data');
             if ($ajaxPath !== '') {
-                $url_ajax = $base . '/' . ltrim($ajaxPath, '/');
+                $url_ajax = AppUrlConfig::browserUrlFromAppRelative($ajaxPath);
                 $ajaxMeta = isset($payload['ajax_propietarios']) && is_array($payload['ajax_propietarios'])
                     ? $payload['ajax_propietarios']
                     : [];

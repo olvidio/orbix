@@ -23,9 +23,9 @@ final class SelectNotasDeUnaPersonaRender
     public static function render(array $seg): string
     {
         $paths = isset($seg['paths']) && is_array($seg['paths']) ? $seg['paths'] : [];
-        $publicBase = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $elimRel = \frontend\shared\helpers\PayloadCoercion::string($paths['persona_nota_eliminar'] ?? '');
-        $urlPersonaNotaEliminar = $elimRel !== '' ? $publicBase . '/' . ltrim($elimRel, '/') : '';
+        $urlPersonaNotaEliminar = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\PayloadCoercion::string($paths['persona_nota_eliminar'] ?? '')
+        );
 
         $hashMain = isset($seg['hash_main']) && is_array($seg['hash_main']) ? $seg['hash_main'] : [];
         $oHashSelect = new HashFront();

@@ -21,10 +21,10 @@ final class AsistenteMoverRender
      */
     public static function enrich(array $payload): array
     {
-        $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $guardarRel = \frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'guardar');
-        $payload['url_guardar'] = $guardarRel !== '' ? $base . '/' . ltrim($guardarRel, '/') : '';
+        $payload['url_guardar'] = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\FuncTablasSupport::payloadString($paths, 'guardar')
+        );
 
         $hm = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         if ($hm !== []) {

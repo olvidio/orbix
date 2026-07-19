@@ -21,11 +21,8 @@ final class UsuarioAvisosPrefFormRender
      */
     public static function enrich(array $result): array
     {
-        $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($result['paths']) && is_array($result['paths']) ? $result['paths'] : [];
-        $abs = static function (string $rel) use ($base): string {
-            return $rel !== '' ? $base . '/' . ltrim($rel, '/') : '';
-        };
+        $abs = static fn (string $rel): string => AppUrlConfig::browserUrlFromAppRelative($rel);
 
         $result['url_guardar_objeto'] = $abs(\frontend\shared\helpers\PayloadCoercion::string($paths['cambio_usuario_objeto_pref_guardar'] ?? ''));
         $result['url_guardar_propiedades'] = $abs(\frontend\shared\helpers\PayloadCoercion::string($paths['cambio_usuario_propiedad_pref_guardar_todas'] ?? ''));

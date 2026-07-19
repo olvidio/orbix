@@ -25,9 +25,9 @@ final class SelectCertificadosDeUnaPersonaRender
     public static function render(array $seg): string
     {
         $paths = isset($seg['paths']) && is_array($seg['paths']) ? $seg['paths'] : [];
-        $publicBase = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $delRel = \frontend\shared\helpers\PayloadCoercion::string($paths['certificado_recibido_delete'] ?? '');
-        $urlCertificadoRecibidoDelete = $delRel !== '' ? $publicBase . '/' . ltrim($delRel, '/') : '';
+        $urlCertificadoRecibidoDelete = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\PayloadCoercion::string($paths['certificado_recibido_delete'] ?? '')
+        );
 
         $tablaSeg = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
         $valoresRaw = ActividadesListaSupport::datos($tablaSeg['valores'] ?? []);

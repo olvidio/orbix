@@ -19,11 +19,8 @@ final class CartasPresentacionShellRender
      */
     public static function enrich(array $payload): array
     {
-        $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $abs = static function (string $rel) use ($base): string {
-            return $rel !== '' ? $base . '/' . ltrim($rel, '/') : '';
-        };
+        $abs = static fn (string $rel): string => AppUrlConfig::browserUrlFromAppRelative($rel);
 
         $url_ctr = $abs(\frontend\shared\helpers\PayloadCoercion::string($paths['ctr'] ?? ''));
         $hc = isset($payload['hash_ctr']) && is_array($payload['hash_ctr']) ? $payload['hash_ctr'] : [];

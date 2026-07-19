@@ -29,7 +29,7 @@ final class SelectAsistentesAUnaActividadRender
         if ($path === '') {
             return '';
         }
-        $url = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/' . ltrim($path, '/');
+        $url = AppUrlConfig::browserUrlFromAppRelative($path);
         $oHash = new HashFront();
         $oHash->setUrl($url);
         $oHash->setCamposForm($campos);
@@ -43,10 +43,7 @@ final class SelectAsistentesAUnaActividadRender
     public static function render(array $seg): string
     {
         $wrapper = isset($seg['wrapper']) && is_array($seg['wrapper']) ? $seg['wrapper'] : [];
-        $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $abs = static function (string $rel) use ($base): string {
-            return $rel !== '' ? $base . '/' . ltrim($rel, '/') : '';
-        };
+        $abs = static fn (string $rel): string => AppUrlConfig::browserUrlFromAppRelative($rel);
 
         $relForm = \frontend\shared\helpers\FuncTablasSupport::payloadString($wrapper, 'url_form_relative');
         $urlForm = $abs($relForm);

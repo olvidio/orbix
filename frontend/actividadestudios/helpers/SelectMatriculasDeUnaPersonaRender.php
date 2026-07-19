@@ -25,13 +25,11 @@ final class SelectMatriculasDeUnaPersonaRender
     public static function render(array $seg): string
     {
         $wrapper = isset($seg['wrapper']) && is_array($seg['wrapper']) ? $seg['wrapper'] : [];
-        $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $relForm = \frontend\shared\helpers\PayloadCoercion::string($wrapper['url_form_relative'] ?? '');
-        $urlForm = $relForm !== '' ? $base . '/' . ltrim($relForm, '/') : '';
+        $urlForm = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\PayloadCoercion::string($wrapper['url_form_relative'] ?? '')
+        );
 
-        $abs = static function (string $path) use ($base): string {
-            return $path !== '' ? $base . '/' . ltrim($path, '/') : '';
-        };
+        $abs = static fn (string $path): string => AppUrlConfig::browserUrlFromAppRelative($path);
 
         $avisoHtml = implode('', ActividadestudiosRenderSupport::avisoLines($seg['aviso_lines'] ?? []));
 

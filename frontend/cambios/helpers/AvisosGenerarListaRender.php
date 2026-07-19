@@ -31,10 +31,13 @@ final class AvisosGenerarListaRender
             return $payload;
         }
 
-        $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $url_eliminar = $base . '/' . ltrim(\frontend\shared\helpers\PayloadCoercion::string($paths['eliminar'] ?? ''), '/');
-        $url_eliminar_fecha = $base . '/' . ltrim(\frontend\shared\helpers\PayloadCoercion::string($paths['eliminar_fecha'] ?? ''), '/');
+        $url_eliminar = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\PayloadCoercion::string($paths['eliminar'] ?? '')
+        );
+        $url_eliminar_fecha = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\PayloadCoercion::string($paths['eliminar_fecha'] ?? '')
+        );
 
         $he = isset($payload['hash_eliminar']) && is_array($payload['hash_eliminar']) ? $payload['hash_eliminar'] : [];
         $oHashElim = new HashFront();

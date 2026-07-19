@@ -21,10 +21,9 @@ final class AsistentesTablaPeticionesSupport
     public static function fromPayload(array $payload): array
     {
         $paths = is_array($payload['paths'] ?? null) ? $payload['paths'] : [];
-        $apiPath = \frontend\shared\helpers\PayloadCoercion::string($paths['asistente_guardar'] ?? '');
-        $apiSaveUrl = $apiPath !== ''
-            ? rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/' . ltrim($apiPath, '/')
-            : '';
+        $apiSaveUrl = AppUrlConfig::browserUrlFromAppRelative(
+            \frontend\shared\helpers\PayloadCoercion::string($paths['asistente_guardar'] ?? '')
+        );
 
         return [
             'api_save_url' => $apiSaveUrl,
