@@ -45,4 +45,9 @@ class PlazaIdTest extends myTest
         $this->assertNull($plazaId);
     }
 
+    public function test_fromNullableInt_returns_null_for_zero()
+    {
+        $this->assertNull(PlazaId::fromNullableInt(0));
+    }
+
 }

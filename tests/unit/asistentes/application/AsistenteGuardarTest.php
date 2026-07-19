@@ -27,6 +27,11 @@ final class AsistenteGuardarTest extends TestCase
             'esquema' => 'H-dlv',
             'sfsv' => 1,
         ];
+        // Tests de plaza/mover asumen el módulo instalado (como en DL con plazas).
+        $_SESSION['config'] = [
+            'a_apps' => ['actividadplazas' => 99],
+            'app_installed' => [99],
+        ];
     }
 
     protected function tearDown(): void
@@ -258,6 +263,38 @@ final class AsistenteGuardarTest extends TestCase
             'id_nom' => 10,
             'id_activ_old' => 5,
             'plaza' => 4,
+        ]));
+    }
+
+    public function test_nuevo_sin_modulo_plazas_no_exige_plaza(): void
+    {
+        $_SESSION['config'] = [
+            'a_apps' => [],
+            'app_installed' => [],
+        ];
+
+        $dossier = $this->createMock(Dossier::class);
+        $dossier->expects($this->once())->method('abrir');
+
+        $dosRepo = $this->createMock(DossierRepositoryInterface::class);
+        $dosRepo->method('findByPk')->willReturn($dossier);
+        $dosRepo->expects($this->once())->method('Guardar')->with($dossier)->willReturn(true);
+
+        $app = $this->createMock(AsistenteApplicationService::class);
+        $app->method('findById')->with(10, 20)->willReturn(null);
+        $app->expects($this->once())->method('guardar')->willReturnCallback(function (Asistente $a) {
+            return $a->getPlazaVo() === null
+                && $a->getId_activ() === 10
+                && $a->getId_nom() === 20;
+        });
+
+        $sut = $this->createSut($app, null, $dosRepo);
+
+        $this->assertSame('', $sut->execute([
+            'mod' => 'nuevo',
+            'id_activ' => 10,
+            'id_nom' => 20,
+            // sin campo plaza (como el form cuando no hay actividadplazas)
         ]));
     }
 }

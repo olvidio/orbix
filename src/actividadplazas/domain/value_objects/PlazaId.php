@@ -53,7 +53,8 @@ final class PlazaId
 
     public static function fromNullableInt(?int $value): ?self
     {
-        if ($value === null) {
+        // 0 = vacío típico de formularios sin campo plaza / DB null→int.
+        if ($value === null || $value === 0) {
             return null;
         }
         return new self($value);

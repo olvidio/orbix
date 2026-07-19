@@ -4,6 +4,7 @@ namespace src\asistentes\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteApplicationService;
 use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
@@ -128,12 +129,17 @@ final class AsistenteGuardar
             $Qpropietario = $this->resolverPropietarioMover($id_activ);
         }
         $oAsistente->setPropietarioVo($Qpropietario);
-        $err_plaza = $oAsistente->setPlazaVoComprobando(
-            \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'plaza'),
-            $this->plazaPropietarioAsignacion,
-        );
-        if ($err_plaza !== '') {
-            return $err_plaza;
+
+        // Sin actividadplazas el formulario no envía `plaza` (inputInt → 0) y PlazaId no admite 0.
+        if (ConfigGlobal::is_app_installed('actividadplazas')) {
+            $plaza = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'plaza');
+            if ($plaza === 0) {
+                $plaza = PlazaId::PEDIDA;
+            }
+            $err_plaza = $oAsistente->setPlazaVoComprobando($plaza, $this->plazaPropietarioAsignacion);
+            if ($err_plaza !== '') {
+                return $err_plaza;
+            }
         }
 
         if ($asistenteAppService->guardar($oAsistente) === false) {
