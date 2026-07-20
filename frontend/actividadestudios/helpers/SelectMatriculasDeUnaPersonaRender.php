@@ -68,7 +68,7 @@ final class SelectMatriculasDeUnaPersonaRender
             foreach ($cas as $ca) {
                 $caRow = ActividadestudiosRenderSupport::stringKeyRow($ca);
                 if ($caRow !== []) {
-                    $html .= self::renderCa($caRow, $wrapper, $base);
+                    $html .= self::renderCa($caRow, $wrapper);
                 }
             }
         }
@@ -84,7 +84,7 @@ final class SelectMatriculasDeUnaPersonaRender
      * @param array<string, mixed>   $ca
      * @param array<string, mixed>   $wrapper
      */
-    private static function renderCa(array $ca, array $wrapper, string $base): string
+    private static function renderCa(array $ca, array $wrapper): string
     {
         $hash = isset($ca['hash']) && is_array($ca['hash']) ? $ca['hash'] : [];
         $oHashCa = new HashFront();
