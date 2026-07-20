@@ -9,6 +9,7 @@ echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >" . _("Descar
 echo "<button class='no_print' onclick=\"window.open('$goLeyenda','leyenda','width=400,height=500,screenX=200,screenY=200,titlebar=yes');\" >" . _("Ver leyenda") . "</button>";
 
 echo "<div id=\"exportar\">";
+echo $css;
 echo "<span id=\"span_exportar\" title=\"$cabecera_title\">";
 uksort($a_actividades2, "strnatcasecmp");
 foreach ($a_actividades2 as $nombre_ubi => $a_actividades) {

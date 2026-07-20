@@ -75,6 +75,7 @@ $oFinPlanning = \DateTimeImmutable::createFromFormat('Y-m-d', $isoFin) ?: new \D
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
 $estilos = PlanningPayload::calendarioEstilos();
+$css = $estilos['css'];
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($estilos['colorColumnaUno']);
@@ -98,6 +99,7 @@ $a_campos = [
     'zonas' => $zonesSelect['zonas'],
     'actividades_por_zona' => $zonesSelect['actividades_por_zona'],
     'cabeceras_por_zona' => $zonesSelect['cabeceras_por_zona'],
+    'css' => $css,
 ];
 
 $oView = new ViewNewPhtml('frontend\planning\controller');

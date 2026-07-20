@@ -105,6 +105,7 @@ $apiData = PostRequest::getDataFromUrl('/src/planning/planning_persona_ver_data'
 $a_actividades = PlanningPayload::actividadesMap($apiData['a_actividades'] ?? null);
 
 $estilos = PlanningPayload::calendarioEstilos();
+$css = $estilos['css'];
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($estilos['colorColumnaUno']);
@@ -124,6 +125,7 @@ $a_campos = [
     'oPlanning' => $oPlanning,
     'goLeyenda' => $goLeyenda,
     'cabecera_title' => $cabecera_title,
+    'css' => $css,
 ];
 
 $oView = new ViewNewPhtml('frontend\planning\controller');

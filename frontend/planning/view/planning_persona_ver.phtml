@@ -6,6 +6,7 @@ echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >" . _("Descar
 echo "<button class='no_print' onclick=\"window.open('$goLeyenda','leyenda','width=400,height=500,screenX=200,screenY=200,titlebar=yes');\" >" . _("Ver leyenda") . "</button>";
 
 echo "<div id=\"exportar\">";
+echo $css;
 echo "<span id=\"span_exportar\" title=\"$cabecera_title\">";
 echo $oPlanning->dibujar();
 echo "</span>";

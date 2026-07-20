@@ -125,6 +125,7 @@ $a_actividades2 = $ctrSelect['a_actividades2'];
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
 $estilos = PlanningPayload::calendarioEstilos();
+$css = $estilos['css'];
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($estilos['colorColumnaUno']);
@@ -145,6 +146,7 @@ $a_campos = [
     'cabecera_title' => $cabecera_title,
     'a_actividades2' => $a_actividades2,
     'goLeyenda' => $goLeyenda,
+    'css' => $css,
 ];
 
 $oView = new ViewNewPhtml('frontend\planning\controller');
