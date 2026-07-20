@@ -840,9 +840,14 @@ class Lista
 				  return \"\";
 				} else {
 				  var array_val=value.split('#');
-				  var chk = array_val[0];
-				  if (chk.length) {
-				  	chk = 'checked=\"checked\"';
+				  var chk = '';
+				  /* La marca visual sigue a getSelectedRows(); el prefijo del dato solo vale en el primer paint. */
+				  if (typeof grid_$id_tabla !== 'undefined' && grid_$id_tabla) {
+					if ((grid_$id_tabla.getSelectedRows() || []).indexOf(row) >= 0) {
+						chk = 'checked=\"checked\"';
+					}
+				  } else if (array_val[0] && array_val[0].length) {
+					chk = 'checked=\"checked\"';
 				  }
 				  var val = '';
 				  $.each(array_val, function(index, value) {
@@ -985,6 +990,27 @@ class Lista
 				
 				grid_$id_tabla.onClick.subscribe(function (e,args) {
 					add_scroll_id(args.row);
+					/* El checkbox debe toglear la selección real (getSelectedRows);
+					   si no, al desmarcar solo cambia el DOM y la fila sigue selected. */
+					if (e.target && e.target.type === 'checkbox' && $(e.target).hasClass('sel')) {
+						var selected = (grid_$id_tabla.getSelectedRows() || []).slice();
+						var idx = selected.indexOf(args.row);
+						if (idx >= 0) {
+							selected.splice(idx, 1);
+						} else if (e.ctrlKey || e.metaKey) {
+							selected.push(args.row);
+						} else {
+							selected = [args.row];
+						}
+						grid_$id_tabla.setSelectedRows(selected);
+						/* El navegador puede togglear el input aparte de preventDefault; forzar estado. */
+						var shouldCheck = selected.indexOf(args.row) >= 0;
+						e.target.checked = shouldCheck;
+						e.stopImmediatePropagation();
+						e.preventDefault();
+						setTimeout(function () { e.target.checked = shouldCheck; }, 0);
+						return;
+					}
 					if (e.ctrlKey || e.metaKey || e.shiftKey) {
 						return;
 					}
@@ -992,11 +1018,13 @@ class Lista
 				});
 				
 				grid_$id_tabla.onSelectedRowsChanged.subscribe(function (e, args) {
-					var \$form = $('#grid_$id_tabla').closest('form');
+					var \$grid = $('#grid_$id_tabla');
+					var \$form = \$grid.closest('form');
 					if (!\$form.length) {
-						\$form = $('#grid_$id_tabla').parent();
+						\$form = \$grid.parent();
 					}
-					\$form.find('input.sel').prop('checked', false);
+					var \$boxes = \$form.find('input.sel').add(\$grid.find('input.sel'));
+					\$boxes.prop('checked', false);
 					if (!args.rows || args.rows.length === 0) {
 						return;
 					}
@@ -1010,7 +1038,7 @@ class Lista
 						if (!val) {
 							return;
 						}
-						\$form.find('input.sel').filter(function () {
+						\$boxes.filter(function () {
 							return $(this).val() === val;
 						}).prop('checked', true);
 					});
