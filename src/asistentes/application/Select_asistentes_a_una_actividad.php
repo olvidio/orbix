@@ -219,7 +219,7 @@ class Select_asistentes_a_una_actividad
     /** @return array<int, string|array{name: string, width: int}> */
     private function getCabeceras(): array
     {
-        return [
+        $cabeceras = [
             ['name' => _("num"), 'width' => 40],
             ['name' => _("nombre y apellidos"), 'width' => 300],
             ['name' => _("dl"), 'width' => 4],
@@ -234,6 +234,11 @@ class Select_asistentes_a_una_actividad
             ['name' => _("apellidos"), 'width' => 30],
             ['name' => _("ctr"), 'width' => 30],
         ];
+        if (ConfigGlobal::is_app_installed('actividadplazas')) {
+            $cabeceras[] = ['name' => _("propiedad de"), 'width' => 80];
+        }
+
+        return $cabeceras;
     }
 
     private function getDatosActividad(): void
@@ -372,6 +377,7 @@ class Select_asistentes_a_una_actividad
             }
 
             $plaza = PlazaId::PEDIDA;
+            $propietario_txt = '';
             $aWhere = ['id_activ' => $this->id_pau, 'id_nom' => $id_nom_int];
             $aOperador = ['id_activ' => '=', 'id_nom' => '='];
             if ($cAsistente = $this->asistenteRepository->getAsistentes($aWhere, $aOperador)) {
@@ -394,6 +400,10 @@ class Select_asistentes_a_una_actividad
 
                 if (ConfigGlobal::is_app_installed('actividadplazas')) {
                     $propietario = $oAsistente->getPropietario() ?? '';
+                    if ($propietario === 'xxx') {
+                        $propietario = '';
+                    }
+                    $propietario_txt = $propietario;
                     $padre = strtok($propietario, '>');
                     $child = strtok('>');
                     $dl = $child;
@@ -460,6 +470,9 @@ class Select_asistentes_a_una_actividad
             $a_valores[$c][11] = "$nombre";
             $a_valores[$c][12] = "$apellidos";
             $a_valores[$c][13] = "$ctr_dl";
+            if (ConfigGlobal::is_app_installed('actividadplazas')) {
+                $a_valores[$c][14] = $propietario_txt;
+            }
         }
 
         $this->num = $num;
@@ -509,6 +522,7 @@ class Select_asistentes_a_una_actividad
             $observ = $oAsistente->getObserv();
             $plaza = 2;
 
+            $propietario_txt = '';
             if (ConfigGlobal::is_app_installed('actividadplazas')) {
                 $plaza = empty($oAsistente->getPlaza()) ? PlazaId::PEDIDA : $oAsistente->getPlaza();
                 $propietario = $oAsistente->getPropietario();
@@ -517,6 +531,7 @@ class Select_asistentes_a_una_actividad
                     $this->msg_err .= "$nom(" . $oPersona->getId_tabla() . ")<br>";
                     $propietario = '';
                 }
+                $propietario_txt = $propietario;
                 $padre = strtok($propietario, '>');
                 $child = strtok('>');
                 $dl = $child;
@@ -571,6 +586,9 @@ class Select_asistentes_a_una_actividad
             $a_val[11] = "$nombre";
             $a_val[12] = "$apellidos";
             $a_val[13] = "$ctr_dl";
+            if (ConfigGlobal::is_app_installed('actividadplazas')) {
+                $a_val[14] = $propietario_txt;
+            }
 
             $this->a_asistentes[$nom] = $a_val;
         }
@@ -663,6 +681,7 @@ class Select_asistentes_a_una_actividad
                                         $a_val[4] = '';
                                         $a_val[5] = '';
                                         $a_val[6] = '';
+                                        $a_val[14] = '';
                                         $this->a_asistentes[$nom] = $a_val;
                                     }
                                 }
