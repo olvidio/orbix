@@ -49,6 +49,7 @@ class DatosFormRepo
         }
         /** @var DatosFichaInterface $typedFicha */
         $typedFicha = $ficha;
+        $primaryKeyFields = self::primaryKeyFieldNames($ficha);
 
         foreach ($typedFicha->getDatosCampos() as $oDatosCampo) {
             $metodo = $oDatosCampo->getMetodoGet() ?? '';
@@ -76,6 +77,7 @@ class DatosFormRepo
                 'etiqueta' => $eti,
                 'valor' => $valor_camp,
                 'argument' => $var_1,
+                'readonly' => false,
             ];
 
             switch ($tipo) {
@@ -108,6 +110,14 @@ class DatosFormRepo
 
                     $field['accion'] = $acc;
                     $field['aOpcion_no'] = $this->aOpcion_no;
+                    // PK (p.ej. id_mod / nombre del módulo): editable al crear, solo lectura al modificar.
+                    if ($this->mod !== 'nuevo' && in_array($nom_camp, $primaryKeyFields, true)) {
+                        $field['readonly'] = true;
+                        $opciones = is_array($field['opciones']) ? $field['opciones'] : [];
+                        $field['valor_txt'] = self::mixedToString(
+                            $opciones[$valor_camp] ?? ($opciones[(string) $valor_camp] ?? $valor_camp)
+                        );
+                    }
                     break;
                 case "depende":
                     $field['opciones_txt'] = $this->aOpciones_txt[$nom_camp] ?? '';
@@ -175,6 +185,12 @@ class DatosFormRepo
                     break;
                 case "opciones":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
+                    if (!empty($field['readonly'])) {
+                        $valorTxt = self::mixedToString($field['valor_txt'] ?? $valorCampStr);
+                        $formulario .= "<td class=contenido>" . htmlspecialchars($valorTxt) . "</td></tr>";
+                        $formulario .= "<input type='hidden' name='$nom_camp' value=\"" . htmlspecialchars($valorCampStr) . "\">";
+                        break;
+                    }
                     $acc = self::mixedToString($field['accion'] ?? null);
                     $a_opciones = is_array($field['opciones'] ?? null) ? $field['opciones'] : [];
                     $aOpcion_no = is_array($field['aOpcion_no'] ?? null) ? $field['aOpcion_no'] : [];
@@ -363,5 +379,32 @@ class DatosFormRepo
     private static function mixedToString(mixed $value): string
     {
         return is_scalar($value) ? (string) $value : '';
+    }
+
+    /**
+     * Nombres de campos de la clave primaria de la ficha.
+     * Duck-typing: muchas entidades cumplen el contrato sin declarar DatosFichaInterface.
+     *
+     * @return list<string>
+     */
+    private static function primaryKeyFieldNames(object $ficha): array
+    {
+        if (!method_exists($ficha, 'getPrimary_key')) {
+            return [];
+        }
+        $primaryKey = $ficha->getPrimary_key();
+        if (is_string($primaryKey) && $primaryKey !== '') {
+            return [$primaryKey];
+        }
+        if (!is_array($primaryKey)) {
+            return [];
+        }
+
+        $fields = [];
+        foreach ($primaryKey as $key => $value) {
+            $fields[] = is_int($key) ? (string) $value : (string) $key;
+        }
+
+        return $fields;
     }
 }

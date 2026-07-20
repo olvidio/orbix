@@ -16,7 +16,7 @@ class InfoModsInstalled extends DatosInfoRepo
         $this->setTxtTitulo(_("módulos instalados"));
         $this->setTxtEliminar(_("¿Está seguro que desea desinstalar este módulo?"));
         $this->setTxtBuscar(_("buscar un módulo"));
-        $this->setTxtExplicacion("Debe salir y volver a entrar en la aplicación parar que los cambios tengan efecto");
+        $this->setTxtExplicacion(_("Debe salir y volver a entrar en la aplicación para que los cambios tengan efecto"));
 
         $this->setClase('src\\configuracion\\domain\\entity\\ModuloInstalado');
         $this->setMetodoGestor('getModulosInstalados');

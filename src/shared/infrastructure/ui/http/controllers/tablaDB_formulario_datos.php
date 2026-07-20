@@ -9,7 +9,8 @@ $Qclase_info_encoded = \src\shared\domain\helpers\FilterPostGet::post('clase_inf
 $a_pkey = \src\shared\domain\helpers\FilterPostGet::post('a_pkey');
 if (is_string($a_pkey) && $a_pkey !== '') {
     $decoded = json_decode($a_pkey, true);
-    if (is_array($decoded)) {
+    // Aceptar PK escalar (p.ej. 5) y PK compuesta (objeto/array).
+    if (json_last_error() === JSON_ERROR_NONE) {
         $a_pkey = $decoded;
     }
 }

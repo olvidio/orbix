@@ -98,7 +98,14 @@ use frontend\shared\config\AppUrlConfig;
                     </tr>
                     <?php break;
                 case "opciones":
-                case "array": ?>
+                case "array":
+                    if (!empty($field['readonly'])): ?>
+                        <tr>
+                            <td class="etiqueta"><?= ucfirst($eti) ?></td>
+                            <td class="contenido"><?= htmlspecialchars((string) ($field['valor_txt'] ?? $valor_camp ?? '')) ?></td>
+                        </tr>
+                        <input type='hidden' name='<?= $nom_camp ?>' value="<?= htmlspecialchars($valor_camp ?? '') ?>">
+                    <?php else: ?>
                     <tr>
                         <td class="etiqueta"><?= ucfirst($eti) ?></td>
                         <td class="contenido">
@@ -120,7 +127,8 @@ use frontend\shared\config\AppUrlConfig;
                             </select>
                         </td>
                     </tr>
-                    <?php break;
+                    <?php endif;
+                    break;
                 case "depende": ?>
                     <tr>
                         <td class="etiqueta"><?= ucfirst($eti) ?></td>
