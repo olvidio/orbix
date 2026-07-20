@@ -20,9 +20,9 @@ final class EscritoNombramiento
         if ($value === '') {
             throw new \InvalidArgumentException('EscritoNombramiento cannot be empty');
         }
-        if (mb_strlen($value) > 30) {
+        if (mb_strlen($value) > 37) {
             throw new \InvalidArgumentException(ValueObjectMessages::withValueContext(
-                'EscritoNombramiento must be at most 30 characters',
+                'EscritoNombramiento must be at most 37 characters',
                 $value
             ));
         }
