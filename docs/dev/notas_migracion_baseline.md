@@ -328,6 +328,7 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
     - N+1 en `profesorEspecialidad()` (1 query + 2 `findById` por profesor).
     - Extraer `comprobar_notas.php` (~500 LOC inline en `frontend/`) a un `ComprobarNotas` use case tambien esta pendiente; no consume `Resumen` pero es el mismo patron.
 2. ~~**`form_notas_de_una_persona.php`, `acta_imprimir.php`, `acta_ver.php`, `acta_select.php`**: frontend controllers que importan `src\\notas\\application\\*Data` directamente en vez de usar `PostRequest::getDataFromUrl()`.~~ Resuelto en Slice 17: `form_notas_de_una_persona.php` ya consume el nuevo endpoint `/src/notas/nota_persona_form_data`. Los otros tres controladores que se señalaban en esta deuda no importan realmente ningun `*Data` (solo `DatosActa`, VOs y repos), asi que la lista original estaba sobreestimada.
+3. **Modelo de dominio notas↔traslado:** decisión confirmada de anclar notas al acta/DL (no moverlas con el alumno; certificado solo a entidad externa). Ver ADR y plan técnico en [`notas_modelo_acta.md`](notas_modelo_acta.md); ítem en [`backlog.md`](backlog.md).
 
 ---
 

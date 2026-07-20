@@ -15,6 +15,7 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 |---------|-----|
 | [`agents.md`](../agents.md) | Reglas DDD, capas, migración por slices, PostRequest, naming, checklist PR |
 | [`docs/dev/backlog.md`](backlog.md) | Mejoras diferidas (ServerConf→`.env`, PostRequest interno sin HTTP) |
+| [`docs/dev/notas_modelo_acta.md`](notas_modelo_acta.md) | ADR: notas ancladas al acta/DL; certificado solo a entidad externa; plan técnico |
 | [`docs/dev/hash_arquitectura.md`](hash_arquitectura.md) | HashF/HashB, patrón `link_spec` |
 | [`tests/agents.md`](../tests/agents.md) | Convenciones de tests; riesgos de `$GLOBALS['container']` en tests |
 | [`docs/dev/*_migracion_baseline.md`](.) | Plan e historial por módulo (slices, inventario, deuda post-refactor) |

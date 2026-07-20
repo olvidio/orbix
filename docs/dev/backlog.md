@@ -10,6 +10,12 @@ Formato sugerido por ítem:
 
 ## Pendientes
 
+### Notas ancladas al acta (dejar de mover notas en traslados Orbix)
+
+- **Qué:** Implementar el modelo B de [`notas_modelo_acta.md`](notas_modelo_acta.md): notas fijas en la DL del acta; expediente agregado; certificado automático solo hacia entidad externa; deprecar uso de `e_notas_otra_region_stgr` / placeholders internos.
+- **Por qué no ahora:** Decisión de dominio ya confirmada; el cambio toca escritura (`EditarPersonaNota`), traslado (`Trasladar::copiarNotas`), lecturas de expediente e informes, y migración de datos existentes. Requiere slices ordenados (§3 del ADR).
+- **Notas:** Criterio de «entidad externa» y criterios de aceptación en el mismo documento. Contrato actual documentado en `tests/unit/notas/trasladosNotasTest.php`.
+
 ### Migración `ServerConf` → `.env` (y bootstrap unificado)
 
 - **Qué:** Cargar configuración por instalación (rutas, host, dmz, `DIR_PWD`, etc.) vía `.env` / variables de entorno en lugar de (o como capa sobre) constantes en `ServerConf`.
