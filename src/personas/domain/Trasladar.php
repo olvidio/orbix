@@ -481,7 +481,7 @@ class Trasladar
                     continue;
                 }
             }
-            //elimino public, publicv, global
+            //elimino public, publicv, global y resto (personas de paso: no aplica a sync BDU)
             if ($esquema === 'global') {
                 continue;
             }
@@ -491,8 +491,8 @@ class Trasladar
             if ($esquema === 'publicv') {
                 continue;
             }
-            if ($esquema === 'restov') {
-                $tabla_personas = 'p_de_paso_ex';
+            if ($esquema === 'restov' || $esquema === 'restof') {
+                continue;
             }
             $esquema_slash = '"' . $esquema . '"';
             $oDBR->exec("SET search_path TO public,$esquema_slash");
