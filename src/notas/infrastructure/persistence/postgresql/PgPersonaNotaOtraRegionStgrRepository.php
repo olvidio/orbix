@@ -2,7 +2,6 @@
 
 namespace src\notas\infrastructure\persistence\postgresql;
 
-use src\notas\domain\value_objects\ActaNumero;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -12,9 +11,7 @@ use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\ConverterJson;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\Set;
-use src\notas\application\EditarPersonaNota;
 use PDO;
-use src\asignaturas\domain\value_objects\NivelId;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
@@ -23,7 +20,6 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
-use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\PersonaNotaPk;
 use src\notas\domain\value_objects\TipoActa;
 use src\shared\traits\HandlesPdoErrors;
@@ -69,9 +65,12 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
 
     public function addCertificado(int $id_nom, string $certificado, DateTimeLocal|null $oF_certificado): void
     {
+        // Modelo acta: el certificado es documental. Solo se anota en json_certificados
+        // de filas legacy en e_notas_otra_region_stgr. No se crean/actualizan filas
+        // FORMATO_CERTIFICADO en e_notas_dl (el expediente se lee vía publicv.e_notas).
+        unset($oF_certificado);
         $cPersonaNotaOtraRegionStgr = $this->getPersonaNotas(['id_nom' => $id_nom]);
         foreach ($cPersonaNotaOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
-            // miro los que hay para añadir este
             $rawCerts = $oPersonaNotaOtraRegionStgr->getJson_certificados(true);
             $a_json_certificados = is_array($rawCerts) ? $rawCerts : [];
             $oCert = new stdClass();
@@ -80,94 +79,21 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             $a_json_certificados[] = $oCert;
             $oPersonaNotaOtraRegionStgr->setJson_certificados($a_json_certificados);
             $this->Guardar($oPersonaNotaOtraRegionStgr);
-
-            // miro de guardarlo en su dl.
-            $PersonaNotaDBRepository = $this->personaNotaRepository;
-            $aWhere = ['id_nom' => $id_nom,
-                'id_nivel' => $oPersonaNotaOtraRegionStgr->getIdNivelVo()->value(),
-                'id_asignatura' => $oPersonaNotaOtraRegionStgr->getIdAsignaturaVo()->value(),
-                'tipo_acta' => TipoActa::FORMATO_CERTIFICADO, // si no habrá 2, una con formato acta y otra certificado
-                //'id_situacion' => NotaSituacion::FALTA_CERTIFICADO,
-            ];
-            $cPersonNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
-            if (empty($cPersonNotas)) {
-                $oPersonaNota = new PersonaNota();
-                $oPersonaNota->setIdNivelVo($oPersonaNotaOtraRegionStgr->getIdNivelVo());
-                $oPersonaNota->setIdAsignaturaVo($oPersonaNotaOtraRegionStgr->getIdAsignaturaVo());
-                $oPersonaNota->setId_nom($id_nom);
-                $oPersonaNota->setTipoActaVo(TipoActa::FORMATO_CERTIFICADO);
-                $oPersonaNota->setIdSituacionVo($oPersonaNotaOtraRegionStgr->getIdSituacionVo());
-                $oPersonaNota->setActaVo($oPersonaNotaOtraRegionStgr->getActaVo() ?? ActaNumero::fromNullableString($certificado));
-                $oPersonaNota->setDetalleVo($oPersonaNotaOtraRegionStgr->getDetalleVo());
-                $oPersonaNota->setF_acta($oF_certificado);
-                $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->isPreceptor());
-                $oPersonaNota->setId_preceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
-                $oPersonaNota->setEpocaVo($oPersonaNotaOtraRegionStgr->getEpocaVo());
-                $oPersonaNota->setIdActivVo($oPersonaNotaOtraRegionStgr->getIdActivVo());
-                $oPersonaNota->setNotaNumVo($oPersonaNotaOtraRegionStgr->getNotaNumVo());
-                $oPersonaNota->setNotaMaxVo($oPersonaNotaOtraRegionStgr->getNotaMaxVo());
-
-                $oEditarPersonaNota = new EditarPersonaNota(
-                    $oPersonaNota,
-                    $this->personaNotaRepository,
-                    $this->delegacionRepository,
-                    $this->dbSchemaRepository,
-                    $this->dossierRepository,
-                    $this->personaNotaDlRepository,
-                );
-                $rta = $oEditarPersonaNota->nuevoSolamenteDl();
-                $notaCertificado = $rta['nota_certificado'] ?? null;
-                if ($notaCertificado instanceof PersonaNota) {
-                    $notaCertificado->setActaVo($certificado);
-                    $notaCertificado->setIdSituacionVo(new NotaSituacion(NotaSituacion::NUMERICA));
-                    $PersonaNotaDBRepository->Guardar($notaCertificado);
-                }
-
-            } else {
-                $oPersonaNota = $cPersonNotas[0];
-                $oPersonaNota->setIdSituacionVo($oPersonaNotaOtraRegionStgr->getIdSituacionVo());
-                $oPersonaNota->setF_acta($oF_certificado);
-                $oPersonaNota->setActaVo($certificado);
-                //$oPersonaNota->setDetalleVo($detalle); // dejo lo que hay
-                $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->isPreceptor());
-                $oPersonaNota->setId_preceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
-                $oPersonaNota->setEpocaVo($oPersonaNotaOtraRegionStgr->getEpocaVo());
-                $oPersonaNota->setIdActivVo($oPersonaNotaOtraRegionStgr->getIdActivVo());
-                $oPersonaNota->setNotaNumVo($oPersonaNotaOtraRegionStgr->getNotaNumVo());
-                $oPersonaNota->setNotaMaxVo($oPersonaNotaOtraRegionStgr->getNotaMaxVo());
-                $PersonaNotaDBRepository->Guardar($oPersonaNota);
-            }
         }
-
     }
 
     public function deleteCertificado(?string $certificado): void
     {
+        // Solo limpia json_certificados en filas legacy; no restaura «falta certificado» en DL.
         $cPersonaNotasOtraRegionStgr = $this->getPersonaNotasConCertificado($certificado);
-        $PersonaNotaDBRepository = $this->personaNotaRepository;
         foreach ($cPersonaNotasOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
             $a_json_certificados = (array)$oPersonaNotaOtraRegionStgr->getJson_certificados();
             foreach ($a_json_certificados as $key => $json_certificado) {
-                if ($json_certificado->certificado === $certificado) {
+                if (is_object($json_certificado) && ($json_certificado->certificado ?? null) === $certificado) {
                     unset($a_json_certificados[$key]);
-                    // miro de guardarlo en su dl (poner que falta certificado).
-                    $aWhere = ['id_nom' => $oPersonaNotaOtraRegionStgr->getId_nom(),
-                        'id_nivel' => $oPersonaNotaOtraRegionStgr->getIdNivelVo()->value(),
-                        'id_asignatura' => $oPersonaNotaOtraRegionStgr->getIdAsignaturaVo()->value(),
-                        'tipo_acta' => TipoActa::FORMATO_CERTIFICADO,
-                        'acta' => $certificado,
-                    ];
-                    $personaNotasDB = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
-                    $oPersonaNotaDB = $personaNotasDB[0] ?? null;
-                    if ($oPersonaNotaDB instanceof PersonaNota) {
-                        $oPersonaNotaDB->setIdSituacionVo(new NotaSituacion(NotaSituacion::FALTA_CERTIFICADO));
-                        $oPersonaNotaDB->setF_acta(null);
-                        $oPersonaNotaDB->setActaVo(_("falta certificado"));
-                        $PersonaNotaDBRepository->Guardar($oPersonaNotaDB);
-                    }
                 }
             }
-            $oPersonaNotaOtraRegionStgr->setJson_certificados($a_json_certificados);
+            $oPersonaNotaOtraRegionStgr->setJson_certificados(array_values($a_json_certificados));
             $this->Guardar($oPersonaNotaOtraRegionStgr);
         }
     }

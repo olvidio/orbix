@@ -249,8 +249,8 @@ if ($Qactualizar == "9998") {
     </html>
 
 <?php
-//0. Asegurar que las notas estan en el esquema correspondiente. Por traslados etc.
-// pueden quedar en otra dl.
+//0. Notas cuyo id_schema difiere del de la ficha: esperado con el modelo acta
+// (docs/dev/notas_modelo_acta.md). Informativo, no hay que «trasladar» notas.
 $sql = "SELECT n.id_schema,n.acta,n.f_acta,p.nom,p.apellido1,p.apellido2
         FROM publicv.e_notas n LEFT JOIN personas_dl p USING (id_nom)
         WHERE p.situacion='A' AND n.id_schema != p.id_schema
@@ -259,9 +259,8 @@ $sql = "SELECT n.id_schema,n.acta,n.f_acta,p.nom,p.apellido1,p.apellido2
 
 $oDBSt_traslados = $dbQuery($oDB, $sql);
 $nf = $oDBSt_traslados->rowCount();
-echo "<p>0. Personas con notas sin trasladar: $nf</p>";
+echo "<p>0. " . _("Notas en esquema distinto al de la ficha (esperado: acta)") . ": $nf</p>";
 if (!empty($nf)) {
-    /* Para sacar una lista*/
     echo "<table>";
     foreach ($oDBSt_traslados->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
@@ -272,13 +271,6 @@ if (!empty($nf)) {
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
-    /* end lista
-    $go=HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9999)));
-    $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
-    echo "<p class=action>";
-    printf (_("para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
-    echo "</p>";
-    */
 }
 echo "<br>";
 

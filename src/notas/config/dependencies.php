@@ -35,6 +35,7 @@ use src\notas\application\ComprobarNotasConstantsData;
 use src\notas\application\DatosActa;
 use src\notas\application\EditarPersonaNota;
 use src\notas\application\ExaminadoresSearchData;
+use src\notas\application\ExpedienteNotasPersona;
 use src\notas\application\InformeStgrAgregados;
 use src\notas\application\InformeStgrNumerarios;
 use src\notas\application\InformeStgrProfesores;
@@ -103,6 +104,7 @@ return [
     ComprobarNotasConstantsData::class => autowire(ComprobarNotasConstantsData::class),
     DatosActa::class => autowire(DatosActa::class),
     ExaminadoresSearchData::class => autowire(ExaminadoresSearchData::class),
+    ExpedienteNotasPersona::class => autowire(ExpedienteNotasPersona::class),
     InformeStgrAgregados::class => autowire(InformeStgrAgregados::class),
     InformeStgrNumerarios::class => autowire(InformeStgrNumerarios::class),
     InformeStgrProfesores::class => autowire(InformeStgrProfesores::class),

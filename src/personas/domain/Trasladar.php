@@ -14,9 +14,6 @@ use src\certificados\domain\entity\CertificadoEmitido;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
-use src\notas\application\EditarPersonaNota;
-use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
@@ -48,9 +45,7 @@ use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
-use src\ubis\application\services\DelegacionUtils;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 
 class Trasladar
@@ -824,90 +819,10 @@ class Trasladar
 
     public function copiarNotas(): bool
     {
-        // Las Notas si o si (Aunque no se tenga el dossier abierto)
-        // No cal fer res. Les notes són visibles per tothom.
-        // -->CAMBIADO: Las notas pertenecen a la dl destino, si se
-        // borraran de la tabla porque no existe la persona, también
-        // se perderían para todos...
-        $error = '';
-        $oDBorg = $this->getConexionOrg();
-        $oDBdst = $this->getConexionDst();
-
-        $PersonaNotaDBRepository = $this->repositoryWithConnection(PersonaNotaDlRepositoryInterface::class, $oDBorg);
-        $collection = $PersonaNotaDBRepository->getPersonaNotas(array('id_nom' => $this->iid_nom));
-        if (!empty($collection)) {
-            $new_dl = DelegacionUtils::getDlFromSchema($this->snew_esquema);
-            // Obtener datos de región STGR de la nueva dl mediante el repositorio
-            $gesDelegacion = $this->delegacionRepository;
-            $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($new_dl);
-            $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'] ?? '';
-            $esquemaRegionStgrStr = $this->mixedToString($esquema_region_stgr);
-            if (($qRs = $oDBdst->query("SELECT id FROM public.db_idschema WHERE schema = " . $oDBdst->quote($this->snew_esquema))) === false) {
-                $sClauError = 'Controller.Traslados';
-                if (isset($_SESSION['oGestorErrores']) && is_object($_SESSION['oGestorErrores']) && method_exists($_SESSION['oGestorErrores'], 'addErrorAppLastError')) {
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($qRs, $sClauError, __LINE__, __FILE__);
-                }
-                return false;
-            }
-            $aSchema = $qRs->fetch(PDO::FETCH_ASSOC);
-            if (!is_array($aSchema) || !isset($aSchema['id']) || !is_numeric($aSchema['id'])) {
-                return false;
-            }
-            $id_schema_persona = (int)$aSchema['id'];
-            $PersonaNotaDstRepository = $this->repositoryWithConnection(PersonaNotaDlRepositoryInterface::class, $oDBdst);
-            $a_region_stgr_org = $gesDelegacion->mi_region_stgr($this->sdl_persona);
-            $mismaRegionStgr = ($a_region_stgr_org['esquema_region_stgr'] ?? '') === ($a_mi_region_stgr['esquema_region_stgr'] ?? '');
-            // Para saber el nuevo id_schema de la dl destino:
-            foreach ($collection as $oPersonaNotaDB) {
-                /*
-                $oPersonaNota = new PersonaNota();
-                $oPersonaNota->setId_nom($oPersonaNotaDB->getId_nom());
-                $oPersonaNota->setId_nivel($oPersonaNotaDB->getIdNivelVo()->value());
-                $oPersonaNota->setIdAsignaturaVo($oPersonaNotaDB->getIdAsignaturaVo()->value());
-                $oPersonaNota->setIdSituacionVo($oPersonaNotaDB->getIdSituacionVo()->value());
-                $oPersonaNota->setActaVo($oPersonaNotaDB->getActaVo()->value());
-                $oPersonaNota->setF_acta($oPersonaNotaDB->getF_acta());
-                $oPersonaNota->setTipoActaVo($oPersonaNotaDB->getTipoActaVo()->value());
-                $oPersonaNota->setPreceptor($oPersonaNotaDB->isPreceptor());
-                $oPersonaNota->setId_preceptor($oPersonaNotaDB->getId_preceptor());
-                $oPersonaNota->setDetalleVo($oPersonaNotaDB->getDetalleVo()->value());
-                $oPersonaNota->setEpocaVo($oPersonaNotaDB->getEpocaVo()->value());
-                $oPersonaNota->setIdActivVo($oPersonaNotaDB->getIdActivVo()->value());
-                $oPersonaNota->setNotaNumVo($oPersonaNotaDB->getNotaNumVo()->value());
-                $oPersonaNota->setNotaMaxVo($oPersonaNotaDB->getNotaMaxVo()->value());
-                */
-
-                if ($mismaRegionStgr) {
-                    $oEditarPersonaNota = new EditarPersonaNota(
-                        $oPersonaNotaDB,
-                        $this->repositoryWithConnection(PersonaNotaRepositoryInterface::class, $oDBdst),
-                        $this->delegacionRepository,
-                        $this->repositoryWithConnection(DbSchemaRepositoryInterface::class, $oDBdst),
-                        $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBdst),
-                        $PersonaNotaDstRepository,
-                    );
-                    $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr($new_dl);
-                } else {
-                    $oEditarPersonaNota = new EditarPersonaNota(
-                        $oPersonaNotaDB,
-                        $this->repositoryWithConnection(PersonaNotaRepositoryInterface::class, $oDBorg),
-                        $this->delegacionRepository,
-                        $this->repositoryWithConnection(DbSchemaRepositoryInterface::class, $oDBorg),
-                        $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBorg),
-                        $PersonaNotaDBRepository,
-                    );
-                    $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr($this->sdl_persona);
-                }
-                $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
-                $aNotasCreadas = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $esquemaRegionStgrStr);
-
-                //borrar la origen solo si se copió correctamente:
-                if (!empty($aNotasCreadas['nota_real']) || !empty($aNotasCreadas['nota_certificado'])) {
-                    $PersonaNotaDBRepository->Eliminar($oPersonaNotaDB);
-                }
-            }
-
-        }
+        // Modelo acta (docs/dev/notas_modelo_acta.md): las notas pertenecen a la DL
+        // del acta y no viajan con el alumno. El expediente se lee vía publicv.e_notas.
+        // Traslado Orbix→Orbix (y externo): no copiar ni borrar filas de notas.
+        // El certificado documental hacia entidad externa es un flujo aparte (módulo certificados).
         return true;
     }
 
@@ -1057,7 +972,7 @@ class Trasladar
                     $collection = $repo->getProfesorTitulosEst(array('id_nom' => $this->iid_nom));
                     break;
                 case 'PersonaNotaDl':
-                    // Lo hago a parte.
+                    // Modelo acta: las notas no se trasladan con la persona (copiarNotas no-op).
                     break;
                 case 'MatriculaDl':
                     $repo = $this->repositoryWithConnection(MatriculaDlRepositoryInterface::class, $oDBorg);

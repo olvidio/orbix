@@ -7,7 +7,6 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
 
@@ -24,7 +23,7 @@ final class NotasDeUnaPersonaData
         private readonly MatriculaRepositoryInterface $matriculaRepository,
         private readonly ActividadAllRepositoryInterface $actividadAllRepository,
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
-        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+        private readonly ExpedienteNotasPersona $expedienteNotasPersona,
         private readonly PlanEstudiosDePersona $planEstudiosDePersona,
     ) {
     }
@@ -74,11 +73,7 @@ final class NotasDeUnaPersonaData
      */
     private function getFilas(int $id_pau, int $permiso): array
     {
-        $PersonaNotaRepository = $this->personaNotaRepository;
-        $cPersonaNotas = $PersonaNotaRepository->getPersonaNotas(
-            ['id_nom' => $id_pau, '_ordre' => 'id_nivel'],
-            ['id_asignatura' => '<']
-        );
+        $cPersonaNotas = $this->expedienteNotasPersona->getNotas($id_pau);
 
         $AsignaturaRepository = $this->asignaturaRepository;
         $ActividadAllRepository = $this->actividadAllRepository;

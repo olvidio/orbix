@@ -15,6 +15,14 @@ use src\tablonanuncios\domain\value_objects\AnuncioId;
 use src\tablonanuncios\domain\value_objects\Categoria;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
+/**
+ * Envía un certificado emitido a la DL del alumno (copia como recibido + anuncio).
+ *
+ * Nota de dominio (docs/dev/notas_modelo_acta.md Slice 5): con el expediente
+ * agregado vía publicv.e_notas, «enviar para rellenar nota» en DLs Orbix deja de
+ * ser necesario para el historial académico. Se mantiene el envío documental
+ * (PDF/recibido) por compatibilidad; valorar deprecación del relleno de notas.
+ */
 class CertificadoEmitidoEnviar
 {
     public function __construct(
