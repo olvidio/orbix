@@ -5,7 +5,7 @@ use frontend\notas\helpers\ActaImprimirPostInput;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 /**
 * Esta página está como include de acta_2_mpdf.php
@@ -27,8 +27,7 @@ include_once(OrbixRuntime::dirEstilos() . '/actas_mpdf.css.php');
 $acta = ActaImprimirPostInput::actaFromRequest();
 
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
-$oConfig = $_SESSION['oConfig'] ?? null;
-$region_latin = $oConfig instanceof ConfigSnapshot ? $oConfig->getNomRegionLatin() : '';
+$region_latin = SessionConfig::getNomRegionLatin();
 $nombre_prelatura = strtr('PRAELATURA SANCTAE CRUCIS ET OPERIS DEI', $replace);
 $reg_stgr = 'Stgr' . OrbixRuntime::miRegion();
 

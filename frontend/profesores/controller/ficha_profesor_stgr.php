@@ -34,8 +34,7 @@ $Qdepende = (string)filter_input(INPUT_POST, 'depende');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qprint = (int)filter_input(INPUT_POST, 'print');
 
-$oPerm = ProfesoresPermSupport::oPerm();
-if ($oPerm !== null && $oPerm->have_perm_oficina('est')) {
+if (ProfesoresPermSupport::havePermOficina('est')) {
     $Qpermiso = '3';
 }
 

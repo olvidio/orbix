@@ -20,7 +20,7 @@ use frontend\shared\web\CasasQue;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
-use src\permisos\domain\XPermisos;
+use frontend\shared\session\SessionPerm;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -29,9 +29,7 @@ $miSfsv = OrbixRuntime::miSfsv();
 
 $oForm = new CasasQue();
 $filtro = ['active' => true];
-$oPerm = $_SESSION['oPerm'] ?? null;
-$oPerm = $oPerm instanceof XPermisos ? $oPerm : null;
-if ($oPerm !== null && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))) {
+if (SessionPerm::havePermOficina('des') || SessionPerm::havePermOficina('vcsd')) {
     $oForm->setCasas('all');
 } elseif ($miSfsv === 1) {
     $oForm->setCasas('sv');

@@ -2,6 +2,7 @@
 
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\certificados\helpers\CertificadosPayload;
+use frontend\shared\session\SessionConfig;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
 
@@ -46,8 +47,7 @@ $oPosicion->nav()->enter(
 
 
 $mes = date('m');
-$oConfig = CertificadosPayload::oConfig();
-$fin_m = $oConfig !== null ? $oConfig->getMesFinStgr() : 12;
+$fin_m = SessionConfig::getMesFinStgr(12);
 if ($mes > $fin_m) {
     $any = (int)date('Y') + 1;
 } else {

@@ -29,7 +29,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -183,8 +183,7 @@ $h_buscar_acta = $oHashBuscarActa->linkSinValParams();
 $url_persona_nota_nueva = AppUrlConfig::srcBrowserUrl('/src/notas/persona_nota_nueva');
 $url_persona_nota_editar = AppUrlConfig::srcBrowserUrl('/src/notas/persona_nota_editar');
 
-$oConfig = $_SESSION['oConfig'] ?? null;
-$nota_max_default = $oConfig instanceof ConfigSnapshot ? \frontend\shared\helpers\PayloadCoercion::int($oConfig->getNotaMax()) : 0;
+$nota_max_default = PayloadCoercion::int(SessionConfig::getNotaMax('0'));
 $nota_max = $datos['nota_max'] === '' || $datos['nota_max'] === 0
     ? $nota_max_default
     : \frontend\shared\helpers\PayloadCoercion::int($datos['nota_max'], $nota_max_default);

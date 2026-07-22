@@ -1,10 +1,9 @@
 <?php
 
 use frontend\shared\web\UrlBaseProject;
+use frontend\usuarios\helpers\UsuariosAuthBridge;
 use frontend\usuarios\helpers\UsuariosPayload;
 use frontend\usuarios\helpers\UsuariosPostInput;
-use src\shared\infrastructure\persistence\ConfigDB;
-use src\shared\infrastructure\persistence\DBConnection;
 
 require __DIR__ . '/../../../libs/vendor/autoload.php';
 
@@ -15,41 +14,13 @@ $Qesquema = (string)filter_input(INPUT_GET, 'esquema');
 $hash_recibido = hash('sha256', $Qtoken);
 
 $esquema = $Qesquema;
-$sfsv = 0;
-$oDB = null;
 $ubicacion = (string)getenv('UBICACION');
 $private = (string)getenv('PRIVATE');
-$useSfDb = ($ubicacion === 'sf' || $private === 'sf');
 
-if (substr($esquema, -1) === 'v') {
-    $sfsv = 1;
-    $oConfigDB = new ConfigDB('sv-e');
-    $config = $oConfigDB->getEsquema($esquema);
-    $oConexion = new DBConnection($config);
-    $oDB = $oConexion->getPDO();
-} elseif (substr($esquema, -1) === 'f') {
-    if ($useSfDb) {
-        try {
-            $sfsv = 2;
-            $oConfigDB = new ConfigDB('sf-e');
-            $config = $oConfigDB->getEsquema($esquema);
-            $oConexion = new DBConnection($config);
-            $oDB = $oConexion->getPDO();
-        } catch (\Throwable $e) {
-            $esquema = substr($esquema, 0, -1);
-            $sfsv = 0;
-        }
-    } else {
-        $esquema = substr($esquema, 0, -1);
-    }
-}
-
-if ($oDB === null) {
-    $oConfigDB = new ConfigDB('comun_select');
-    $config = $oConfigDB->getEsquema($esquema);
-    $oConexion = new DBConnection($config);
-    $oDB = $oConexion->getPDO();
-}
+$recovery = UsuariosAuthBridge::recoveryPdo($esquema, $ubicacion, $private);
+$oDB = $recovery['pdo'];
+$esquema = $recovery['esquema'];
+$sfsv = $recovery['sfsv'];
 
 // Comparar en UTC: la expiración se guarda con gmdate() en recuperar_2fa_mail.php.
 $query = "SELECT * FROM aux_usuarios WHERE id_usuario = $Qid_usuario AND token_recuperacion_2fa = '$hash_recibido' AND token_expiracion_2fa > (now() AT TIME ZONE 'utc')";

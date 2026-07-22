@@ -7,15 +7,13 @@ namespace frontend\casas\helpers;
 use frontend\notas\helpers\NotasFormSupport;
 use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\helpers\PayloadCoercion;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 final class CasasPayload
 {
-public static function oConfig(): ?ConfigSnapshot
+public static function oConfig(): bool
 {
-    $oConfig = $_SESSION['oConfig'] ?? null;
-
-    return $oConfig instanceof ConfigSnapshot ? $oConfig : null;
+    return SessionConfig::isPresent();
 }
 
 public static function miUsuarioCsvIdPau(): string

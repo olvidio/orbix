@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace frontend\shared\helpers;
 
 use frontend\shared\domain\value_objects\DateTimeLocal;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 /**
  * Utilidades frontend; delega en {@see \src\shared\domain\helpers\FuncTablasSupport}
@@ -62,7 +62,6 @@ final class FuncTablasSupport
     public static function cursoEst(string $que, int|string $any, string $tipo = 'est', ?array $calendario = null): DateTimeLocal
     {
         $any = PayloadCoercion::int($any);
-        $oConfig = null;
         if ($calendario !== null) {
             switch ($tipo) {
                 case 'est':
@@ -82,23 +81,22 @@ final class FuncTablasSupport
                     exit($err_switch);
             }
         } else {
-            $oConfig = $_SESSION['oConfig'] ?? null;
-            if (!$oConfig instanceof ConfigSnapshot) {
+            if (!SessionConfig::isPresent()) {
                 $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
                 exit($err_switch);
             }
             switch ($tipo) {
                 case 'est':
-                    $ini_d = $oConfig->getDiaIniStgr();
-                    $ini_m = $oConfig->getMesIniStgr();
-                    $fin_d = $oConfig->getDiaFinStgr();
-                    $fin_m = $oConfig->getMesFinStgr();
+                    $ini_d = SessionConfig::getDiaIniStgr();
+                    $ini_m = SessionConfig::getMesIniStgr();
+                    $fin_d = SessionConfig::getDiaFinStgr();
+                    $fin_m = SessionConfig::getMesFinStgr();
                     break;
                 case 'crt':
-                    $ini_d = $oConfig->getDiaIniCrt();
-                    $ini_m = $oConfig->getMesIniCrt();
-                    $fin_d = $oConfig->getDiaFinCrt();
-                    $fin_m = $oConfig->getMesFinCrt();
+                    $ini_d = SessionConfig::getDiaIniCrt();
+                    $ini_m = SessionConfig::getMesIniCrt();
+                    $fin_d = SessionConfig::getDiaFinCrt();
+                    $fin_m = SessionConfig::getMesFinCrt();
                     break;
                 default:
                     $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
@@ -110,8 +108,8 @@ final class FuncTablasSupport
                 $any = $tipo === 'crt'
                     ? PayloadCoercion::int($calendario['any_final_crt'] ?? 0)
                     : PayloadCoercion::int($calendario['any_final_est'] ?? 0);
-            } elseif ($oConfig instanceof ConfigSnapshot) {
-                $any = $oConfig->any_final_curs($tipo === 'crt' ? 'crt' : 'est');
+            } elseif (SessionConfig::isPresent()) {
+                $any = SessionConfig::anyFinalCurs($tipo === 'crt' ? 'crt' : 'est');
             }
         }
         $any0 = $any - 1;

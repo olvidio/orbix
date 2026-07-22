@@ -2,15 +2,12 @@
 
 namespace frontend\usuarios\controller;
 
+use frontend\usuarios\helpers\UsuariosAuthBridge;
 use frontend\usuarios\helpers\UsuariosPayload;
 use frontend\usuarios\helpers\UsuariosPostInput;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
-use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use frontend\shared\model\ViewNewPhtml;
-use src\shared\application\HydratePermisosActividades;
-use src\shared\web\ContestarJson;
-use src\usuarios\application\LoginProcesar;
 use frontend\shared\helpers\PayloadCoercion;
 
 
@@ -25,12 +22,12 @@ function render_login_form(
     int $error,
     string $esquema_web = ''
 ): void {
-    $oDBPropiedades = new DBPropiedades();
+    $oDBPropiedades = UsuariosAuthBridge::desplegableEsquemas($esquema);
     $a_campos = [
         'error' => $error,
         'ubicacion' => $ubicacion,
         'esquema_web' => $esquema_web,
-        'DesplRegiones' => $oDBPropiedades->posibles_esquemas($esquema),
+        'DesplRegiones' => $oDBPropiedades,
         'idioma' => $idioma,
         'username' => $username,
         'url' => AppUrlConfig::getPublicAppBaseUrl(),
@@ -76,7 +73,7 @@ function orbix_responder_login_api_sin_sesion(): void
 {
     header('Content-Type: application/json; charset=UTF-8');
     orbix_marcar_respuesta_ajax_sin_sesion();
-    ContestarJson::enviar(_('Sesión no autenticada'), ['code' => 'auth_required']);
+    UsuariosAuthBridge::contestarJson(_('Sesión no autenticada'), ['code' => 'auth_required']);
 }
 
 $esquema_web = getenv('ESQUEMA');
@@ -90,9 +87,7 @@ $ubicacion_str = is_string($ubicacion) ? $ubicacion : '';
 $private_str = is_string($private) ? $private : '';
 
 if ($esquema_web_str !== '') {
-    $oDBPropiedades = new DBPropiedades();
-    $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(false, true);
-    if (!is_array($a_posibles_esquemas) || !in_array($esquema_web_str, $a_posibles_esquemas, true)) {
+    if (!in_array($esquema_web_str, UsuariosAuthBridge::posiblesEsquemasWeb(), true)) {
         $msg = sprintf(_('No existe este equema: %s'), $esquema_web_str);
         die($msg);
     }
@@ -106,8 +101,7 @@ if (!isset($_SESSION['session_auth'])) {
         $_SESSION['private'] = $private_str;
 
         $loginInput = UsuariosPostInput::loginInputFromPost();
-        $useCase = new LoginProcesar();
-        $result = $useCase->execute(
+        $result = UsuariosAuthBridge::loginProcesar(
             $loginInput,
             $esquema_web_str,
             $ubicacion_str
@@ -115,6 +109,7 @@ if (!isset($_SESSION['session_auth'])) {
 
         if (!$result['ok'] && isset($result['redirect_ayuda_2fa'])) {
             $url_base = AppUrlConfig::getPublicAppBaseUrl() . '/';
+            /** @var array{username: string, ubicacion: string, esquema: string} $a_params */
             $a_params = $result['redirect_ayuda_2fa'];
             $a_params['url_base'] = $url_base;
             $url_ayuda = $url_base . 'frontend/usuarios/controller/ayuda_2fa_reset.php?'
@@ -142,7 +137,7 @@ if (!isset($_SESSION['session_auth'])) {
             die();
         }
 
-        HydratePermisosActividades::invalidateSessionCache();
+        UsuariosAuthBridge::invalidatePermisosActividadesCache();
         $_SESSION['session_auth'] = $loginSession['session_auth'];
         $_SESSION['config'] = $loginSession['session_config'];
 

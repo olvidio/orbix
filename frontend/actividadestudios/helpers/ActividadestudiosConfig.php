@@ -5,21 +5,17 @@ declare(strict_types=1);
 namespace frontend\actividadestudios\helpers;
 
 use frontend\shared\helpers\PayloadCoercion;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 final class ActividadestudiosConfig
 {
-    public static function oConfig(): ?ConfigSnapshot
+    public static function oConfig(): bool
     {
-        $oConfig = $_SESSION['oConfig'] ?? null;
-
-        return $oConfig instanceof ConfigSnapshot ? $oConfig : null;
+        return SessionConfig::isPresent();
     }
 
     public static function notaMaxDefault(): int
     {
-        $oConfig = self::oConfig();
-
-        return $oConfig !== null ? \frontend\shared\helpers\PayloadCoercion::int($oConfig->getNotaMax()) : 0;
+        return PayloadCoercion::int(SessionConfig::getNotaMax('0'));
     }
 }

@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace frontend\profesores\helpers;
 
-use src\permisos\domain\XPermisos;
+use frontend\shared\session\SessionPerm;
 
 final class ProfesoresPermSupport
 {
-    public static function oPerm(): ?XPermisos
+    public static function oPerm(): bool
     {
-        $oPerm = $_SESSION['oPerm'] ?? null;
+        return SessionPerm::isPresent();
+    }
 
-        return $oPerm instanceof XPermisos ? $oPerm : null;
+    public static function havePermOficina(string $oficina): bool
+    {
+        return SessionPerm::havePermOficina($oficina);
     }
 }

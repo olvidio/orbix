@@ -6,22 +6,18 @@ namespace frontend\personas\helpers;
 
 use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\helpers\PayloadCoercion;
-use src\permisos\domain\XPermisos;
+use frontend\shared\session\SessionPerm;
 
 final class PersonasPayload
 {
-    public static function oPerm(): ?XPermisos
+    public static function oPerm(): bool
     {
-        $oPerm = $_SESSION['oPerm'] ?? null;
-
-        return $oPerm instanceof XPermisos ? $oPerm : null;
+        return SessionPerm::isPresent();
     }
 
     public static function havePermOficina(string $oficina): bool
     {
-        $oPerm = self::oPerm();
-
-        return $oPerm !== null && $oPerm->have_perm_oficina($oficina);
+        return SessionPerm::havePermOficina($oficina);
     }
 
     /**

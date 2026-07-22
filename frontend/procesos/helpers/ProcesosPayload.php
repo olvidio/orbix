@@ -6,27 +6,20 @@ namespace frontend\procesos\helpers;
 
 use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\helpers\PayloadCoercion;
-use src\permisos\domain\XPermisos;
+use frontend\shared\session\SessionPerm;
 
 final class ProcesosPayload
 {
-public static function oPerm(): ?XPermisos
+public static function oPerm(): bool
 {
-    $oPerm = $_SESSION['oPerm'] ?? null;
-
-    return $oPerm instanceof XPermisos ? $oPerm : null;
+    return SessionPerm::isPresent();
 }
 
 public static function havePermCalendario(): bool
 {
-    $oPerm = self::oPerm();
-    if ($oPerm === null) {
-        return false;
-    }
-
-    return $oPerm->have_perm_oficina('calendario')
-        || $oPerm->have_perm_oficina('vcsd')
-        || $oPerm->have_perm_oficina('des');
+    return SessionPerm::havePermOficina('calendario')
+        || SessionPerm::havePermOficina('vcsd')
+        || SessionPerm::havePermOficina('des');
 }
 
 /**

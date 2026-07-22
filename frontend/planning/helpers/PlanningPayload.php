@@ -8,15 +8,13 @@ use frontend\shared\helpers\FuncTablasSupport;
 use frontend\actividades\helpers\ActividadesPostInput;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\helpers\PayloadCoercion;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 final class PlanningPayload
 {
-public static function oConfig(): ?ConfigSnapshot
+public static function oConfig(): bool
 {
-    $oConfig = $_SESSION['oConfig'] ?? null;
-
-    return $oConfig instanceof ConfigSnapshot ? $oConfig : null;
+    return SessionConfig::isPresent();
 }
 
 
@@ -32,16 +30,12 @@ public static function desplegableOpcionSel(int|string $value): string
 
 public static function isJefeCalendario(): bool
 {
-    $oConfig = self::oConfig();
-
-    return $oConfig !== null && $oConfig->is_jefeCalendario();
+    return SessionConfig::isJefeCalendario();
 }
 
 public static function mesFinStgr(): int
 {
-    $oConfig = self::oConfig();
-
-    return $oConfig !== null ? $oConfig->getMesFinStgr() : (int) date('m');
+    return SessionConfig::getMesFinStgr((int) date('m'));
 }
 
 /**

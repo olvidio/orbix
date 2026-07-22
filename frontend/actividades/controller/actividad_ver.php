@@ -35,7 +35,8 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\actividades\helpers\PrefillPermActividadesFases;
 use frontend\shared\FrontBootstrap;
-use src\permisos\domain\PermisosActividades;
+use frontend\shared\session\SessionPerm;
+use frontend\shared\session\SessionPermActividades;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -144,15 +145,17 @@ if (!empty($Qid_activ)) { // caso de modificar
     $plazas = $entidad['plazas'];
     $idioma = $entidad['idioma'];
 
-    $oPermActividades = ActividadesPermSupport::oPermActividades();
-    if (!$oPermActividades instanceof PermisosActividades) {
+    if (!SessionPermActividades::isPresent()) {
         die();
     }
-    $oPermActividades->setActividad($Qid_activ, $id_tipo_activ, $dl_org);
+    SessionPermActividades::setActividad($Qid_activ, $id_tipo_activ, $dl_org);
     PrefillPermActividadesFases::desdeBackend($Qid_activ);
-    $oPermActiv = $oPermActividades->getPermisoActual('datos');
+    $oPermActiv = SessionPermActividades::getPermisoActual('datos');
+    if ($oPermActiv === null) {
+        die();
+    }
 
-    if ($oPermActiv->only_perm('ocupado')) {
+    if ($oPermActiv->onlyPerm('ocupado')) {
         die();
     }
 
@@ -164,7 +167,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $isfsv = $renderEntidad['isfsv'];
 
     if (AppInstalled::is('procesos')) {
-        $Bdl = $oPermActiv->have_perm_activ('ver') ? 't' : 'f';
+        $Bdl = $oPermActiv->havePermActiv('ver') ? 't' : 'f';
     }
 
     // Los fragmentos HTML de los desplegables y nombre_ubi ya vienen en
@@ -233,9 +236,8 @@ if (!empty($Qid_activ)) { // caso de modificar
             die (_("No tiene permiso para crear una actividad de este tipo"));
         }
 
-        $oPerm = ActividadesPermSupport::oPerm();
         $of_responsable_txt = $crearPropia['of_responsable_txt'];
-        if (!empty($of_responsable_txt) && $oPerm !== null && $oPerm->have_perm_oficina($of_responsable_txt)) {
+        if (!empty($of_responsable_txt) && SessionPerm::havePermOficina($of_responsable_txt)) {
             $Bdl = 't';
             $status = $crearPropia['status'];
         } else {
@@ -257,7 +259,7 @@ if (!empty($Qid_activ)) { // caso de modificar
                 }
                 $of_responsable_txt = $crearEx['of_responsable_txt'];
                 $status = $crearEx['status'];
-                if ($oPerm === null || !$oPerm->have_perm_oficina($of_responsable_txt)) {
+                if (!SessionPerm::havePermOficina($of_responsable_txt)) {
                     die (_("No tiene permiso para crear una actividad de este tipo"));
                 }
             }

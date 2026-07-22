@@ -175,6 +175,12 @@ final class OrbixRuntime
         return (string)\src\shared\config\ConfigGlobal::mi_usuario();
     }
 
+    /** Id de usuario en sesión. Equiv. {@see \src\shared\config\ConfigGlobal::mi_id_usuario()}. */
+    public static function miIdUsuario(): int
+    {
+        return \src\shared\config\ConfigGlobal::mi_id_usuario();
+    }
+
     /**
      * Ruta absoluta al directorio de estilos `.css.php` / `colores.php` (filesystem).
      * Mismo valor que {@see \src\shared\config\ConfigGlobal::$dir_estilos}.

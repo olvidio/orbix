@@ -5,25 +5,23 @@ declare(strict_types=1);
 namespace frontend\actividadessacd\helpers;
 
 use frontend\shared\helpers\PayloadCoercion;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 final class ActividadessacdSession
 {
-    public static function oConfig(): ?ConfigSnapshot
+    public static function oConfig(): bool
     {
-        $oConfig = $_SESSION['oConfig'] ?? null;
-
-        return $oConfig instanceof ConfigSnapshot ? $oConfig : null;
+        return SessionConfig::isPresent();
     }
 
     public static function anyFinalCurs(): int
     {
-        $oConfig = self::oConfig();
-        if ($oConfig === null) {
-            return (int) date('Y');
+        $any = SessionConfig::anyFinalCurs();
+        if ($any > 0) {
+            return $any;
         }
 
-        return $oConfig->any_final_curs();
+        return (int) date('Y');
     }
 
     public static function sessionIdioma(): string
@@ -32,11 +30,7 @@ final class ActividadessacdSession
         if (is_array($auth) && isset($auth['idioma']) && is_string($auth['idioma'])) {
             return $auth['idioma'];
         }
-        $oConfig = self::oConfig();
-        if ($oConfig === null) {
-            return '';
-        }
 
-        return PayloadCoercion::string($oConfig->getIdioma_default());
+        return PayloadCoercion::string(SessionConfig::getIdiomaDefault());
     }
 }

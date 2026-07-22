@@ -2,10 +2,9 @@
 
 use frontend\shared\FrontBootstrap;
 use frontend\shared\model\ViewNewTwig;
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
-use src\encargossacd\application\services\EncargoAplicacionService;
-use src\shared\infrastructure\DependencyResolver;
 use frontend\encargossacd\helpers\EncargossacdPostInput;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
@@ -15,9 +14,10 @@ $oPosicion = FrontBootstrap::boot();
 
 $Qfiltro_ctr = EncargossacdPostInput::postString('filtro_ctr');
 
-/** @var EncargoAplicacionService $oService */
-$oService = DependencyResolver::get(EncargoAplicacionService::class);
-$opciones = $oService->getArraySeccion();
+$seccionData = PostRequest::getDataFromUrl('/src/encargossacd/opciones_seccion_data', []);
+$opcionesRaw = $seccionData['opciones'] ?? [];
+/** @var array<string, string> $opciones */
+$opciones = is_array($opcionesRaw) ? $opcionesRaw : [];
 
 $oDesplGrupoCtrs = new Desplegable();
 $oDesplGrupoCtrs->setNombre('filtro_ctr');

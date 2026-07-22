@@ -1,6 +1,7 @@
 <?php
 
 use frontend\casas\helpers\CasasPayload;
+use frontend\shared\session\SessionConfig;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
 use frontend\shared\helpers\PayloadCoercion;
@@ -85,8 +86,7 @@ $oFormP->setEmpiezaMax($Qempiezamax);
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setBoton("<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >");
 
-$oConfig = CasasPayload::oConfig();
-if ($oConfig !== null && $oConfig->getGestionCalendario() === 'central') {
+if (SessionConfig::getGestionCalendario() === 'central') {
     $aOficinas = [
         'sm' => 'sm',
         'nax' => 'nax',

@@ -28,7 +28,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\actividades\helpers\PrefillPermActividadesFases;
 use frontend\shared\FrontBootstrap;
-use src\permisos\domain\PermisosActividades;
+use frontend\shared\session\SessionPermActividades;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -74,22 +74,24 @@ $sasistentes = $render['sasistentes'];
 $sactividad = $render['sactividad'];
 $snom_tipo = $render['snom_tipo'];
 
-$oPermActividades = ActividadesPermSupport::oPermActividades();
-if (!$oPermActividades instanceof PermisosActividades) {
+if (!SessionPermActividades::isPresent()) {
     die();
 }
-$oPermActividades->setActividad($Qid_activ, $id_tipo_activ, $dl_org);
+SessionPermActividades::setActividad($Qid_activ, $id_tipo_activ, $dl_org);
 PrefillPermActividadesFases::desdeBackend($Qid_activ);
-$oPermActiv = $oPermActividades->getPermisoActual('datos');
+$oPermActiv = SessionPermActividades::getPermisoActual('datos');
+if ($oPermActiv === null) {
+    die();
+}
 
-if ($oPermActiv->only_perm('ocupado')) {
+if ($oPermActiv->onlyPerm('ocupado')) {
     die();
 }
 
 $mod = '';
-if ($oPermActiv->have_perm_activ('ver') === true) {
+if ($oPermActiv->havePermActiv('ver') === true) {
     $mod = 'ver';
-    if ($oPermActiv->have_perm_activ('modificar') === true) {
+    if ($oPermActiv->havePermActiv('modificar') === true) {
         $mod = 'editar';
     }
 }

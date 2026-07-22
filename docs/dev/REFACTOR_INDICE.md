@@ -37,7 +37,7 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
   - **Baseline global:** `phpstan-baseline.neon` está **vacío** (`ignoreErrors: []`). El informe A/B/C en `build/phpstan-baseline-priority-summary.md` está **obsoleto**.
   - **Árbol completo** (`composer phpstan` → `src`+`frontend`, nivel 9): **0 errores** (verificado 2026-07-22).
   - **Por módulo aislado** (`composer phpstan:file -- src/<modulo>/`): coherente con árbol limpio.
-- **Pendiente operativo:** regenerar inventario `use src\` en frontend (doc dice 3 controladores; el conteo real es mayor); smoke tests.
+- **Pendiente operativo:** smoke tests (login, menús, permisos). Inventario `use src\` en frontend: solo puentes `FrontBootstrap`/`PostRequest` ([`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md)).
 
 ---
 

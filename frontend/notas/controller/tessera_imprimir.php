@@ -24,7 +24,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 function titulo(int $id_asignatura, string $cara = ''): string
 {
@@ -164,8 +164,7 @@ $payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
 $nom = \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? '');
 $cAsignaturas = TesseraImprimirPayload::asignaturasFromPayload($payload);
 $aAprobadas = TesseraImprimirPayload::aprobadasFromPayload($payload);
-$oConfig = $_SESSION['oConfig'] ?? null;
-$region_latin = $oConfig instanceof ConfigSnapshot ? $oConfig->getNomRegionLatin() : '';
+$region_latin = SessionConfig::getNomRegionLatin();
 
 // conversion
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();

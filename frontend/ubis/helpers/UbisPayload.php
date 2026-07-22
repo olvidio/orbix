@@ -10,12 +10,6 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 use InvalidArgumentException;
-use src\ubis\infrastructure\persistence\postgresql\PgDireccionCasaDlRepository;
-use src\ubis\infrastructure\persistence\postgresql\PgDireccionCasaExRepository;
-use src\ubis\infrastructure\persistence\postgresql\PgDireccionCasaRepository;
-use src\ubis\infrastructure\persistence\postgresql\PgDireccionCentroDlRepository;
-use src\ubis\infrastructure\persistence\postgresql\PgDireccionCentroExRepository;
-use src\ubis\infrastructure\persistence\postgresql\PgDireccionCentroRepository;
 
 final class UbisPayload
 {
@@ -419,12 +413,12 @@ public static function centrosLaborRows(mixed $rows, mixed $bitMap): array
 public static function planoDownload(string $obj_dir, int $id_direccion): array
 {
     $raw = match ($obj_dir) {
-        'DireccionCentro' => (new PgDireccionCentroRepository())->planoDownload($id_direccion),
-        'DireccionCentroDl' => (new PgDireccionCentroDlRepository())->planoDownload($id_direccion),
-        'DireccionCentroEx' => (new PgDireccionCentroExRepository())->planoDownload($id_direccion),
-        'DireccionCdc' => (new PgDireccionCasaRepository())->planoDownload($id_direccion),
-        'DireccionCdcDl' => (new PgDireccionCasaDlRepository())->planoDownload($id_direccion),
-        'DireccionCdcEx' => (new PgDireccionCasaExRepository())->planoDownload($id_direccion),
+        'DireccionCentro' => UbisPlanoBridge::planoDownload('DireccionCentro', $id_direccion),
+        'DireccionCentroDl' => UbisPlanoBridge::planoDownload('DireccionCentroDl', $id_direccion),
+        'DireccionCentroEx' => UbisPlanoBridge::planoDownload('DireccionCentroEx', $id_direccion),
+        'DireccionCdc' => UbisPlanoBridge::planoDownload('DireccionCdc', $id_direccion),
+        'DireccionCdcDl' => UbisPlanoBridge::planoDownload('DireccionCdcDl', $id_direccion),
+        'DireccionCdcEx' => UbisPlanoBridge::planoDownload('DireccionCdcEx', $id_direccion),
         default => throw new InvalidArgumentException("obj_dir desconocido: $obj_dir"),
     };
 
@@ -439,12 +433,12 @@ public static function planoUpload(string $obj_dir, int $id_direccion, string $n
 {
     $payload = is_string($fichero) || is_resource($fichero) ? $fichero : null;
     match ($obj_dir) {
-        'DireccionCentro' => (new PgDireccionCentroRepository())->planoUpload($id_direccion, $nom, $extension, $payload),
-        'DireccionCentroDl' => (new PgDireccionCentroDlRepository())->planoUpload($id_direccion, $nom, $extension, $payload),
-        'DireccionCentroEx' => (new PgDireccionCentroExRepository())->planoUpload($id_direccion, $nom, $extension, $payload),
-        'DireccionCdc' => (new PgDireccionCasaRepository())->planoUpload($id_direccion, $nom, $extension, $payload),
-        'DireccionCdcDl' => (new PgDireccionCasaDlRepository())->planoUpload($id_direccion, $nom, $extension, $payload),
-        'DireccionCdcEx' => (new PgDireccionCasaExRepository())->planoUpload($id_direccion, $nom, $extension, $payload),
+        'DireccionCentro' => UbisPlanoBridge::planoUpload('DireccionCentro', $id_direccion, $nom, $extension, $payload),
+        'DireccionCentroDl' => UbisPlanoBridge::planoUpload('DireccionCentroDl', $id_direccion, $nom, $extension, $payload),
+        'DireccionCentroEx' => UbisPlanoBridge::planoUpload('DireccionCentroEx', $id_direccion, $nom, $extension, $payload),
+        'DireccionCdc' => UbisPlanoBridge::planoUpload('DireccionCdc', $id_direccion, $nom, $extension, $payload),
+        'DireccionCdcDl' => UbisPlanoBridge::planoUpload('DireccionCdcDl', $id_direccion, $nom, $extension, $payload),
+        'DireccionCdcEx' => UbisPlanoBridge::planoUpload('DireccionCdcEx', $id_direccion, $nom, $extension, $payload),
         default => throw new InvalidArgumentException("obj_dir desconocido: $obj_dir"),
     };
 }
@@ -452,12 +446,12 @@ public static function planoUpload(string $obj_dir, int $id_direccion, string $n
 public static function planoBorrar(string $obj_dir, int $id_direccion): void
 {
     match ($obj_dir) {
-        'DireccionCentro' => (new PgDireccionCentroRepository())->planoBorrar($id_direccion),
-        'DireccionCentroDl' => (new PgDireccionCentroDlRepository())->planoBorrar($id_direccion),
-        'DireccionCentroEx' => (new PgDireccionCentroExRepository())->planoBorrar($id_direccion),
-        'DireccionCdc' => (new PgDireccionCasaRepository())->planoBorrar($id_direccion),
-        'DireccionCdcDl' => (new PgDireccionCasaDlRepository())->planoBorrar($id_direccion),
-        'DireccionCdcEx' => (new PgDireccionCasaExRepository())->planoBorrar($id_direccion),
+        'DireccionCentro' => UbisPlanoBridge::planoBorrar('DireccionCentro', $id_direccion),
+        'DireccionCentroDl' => UbisPlanoBridge::planoBorrar('DireccionCentroDl', $id_direccion),
+        'DireccionCentroEx' => UbisPlanoBridge::planoBorrar('DireccionCentroEx', $id_direccion),
+        'DireccionCdc' => UbisPlanoBridge::planoBorrar('DireccionCdc', $id_direccion),
+        'DireccionCdcDl' => UbisPlanoBridge::planoBorrar('DireccionCdcDl', $id_direccion),
+        'DireccionCdcEx' => UbisPlanoBridge::planoBorrar('DireccionCdcEx', $id_direccion),
         default => throw new InvalidArgumentException("obj_dir desconocido: $obj_dir"),
     };
 }

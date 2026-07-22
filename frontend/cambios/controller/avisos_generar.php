@@ -12,13 +12,14 @@ use frontend\cambios\helpers\CambiosPayload;
 use frontend\cambios\helpers\CambiosPermSupport;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\PostRequest;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
 use frontend\shared\web\Lista;
-use src\cambios\domain\value_objects\AvisoTipoId;
-use src\shared\config\ConfigGlobal;
+
+const AVISO_TIPO_LISTA = 1;
 
 if (!defined('ORBIX_INDEX_EMBED')) {
     require_once 'frontend/shared/FrontBootstrap.php';
@@ -50,8 +51,8 @@ if ($is_admin) {
         && $Qid_usuario === 0
         && $Qaviso_tipo === 0
     ) {
-        $Qid_usuario = ConfigGlobal::mi_id_usuario();
-        $Qaviso_tipo = AvisoTipoId::TIPO_LISTA;
+        $Qid_usuario = OrbixRuntime::miIdUsuario();
+        $Qaviso_tipo = AVISO_TIPO_LISTA;
     }
 } else {
     $Qid_usuario = 0;

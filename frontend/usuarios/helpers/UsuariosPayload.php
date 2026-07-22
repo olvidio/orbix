@@ -13,7 +13,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\web\Desplegable;
 use frontend\shared\web\DesplegableArray;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 final class UsuariosPayload
 {
@@ -484,12 +484,8 @@ final class UsuariosPayload
                 }
             }
             if ($idioma === '') {
-                $oConfig = $_SESSION['oConfig'] ?? null;
-                if ($oConfig instanceof ConfigSnapshot) {
-                    $idioma = PayloadCoercion::string($oConfig->getIdioma_default());
-                } else {
-                    $idioma = 'es_ES.UTF-8';
-                }
+                $idiomaDefault = SessionConfig::getIdiomaDefault('');
+                $idioma = $idiomaDefault !== '' ? $idiomaDefault : 'es_ES.UTF-8';
             }
         }
         $domain = 'orbix';

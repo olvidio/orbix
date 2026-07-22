@@ -3,7 +3,7 @@
 namespace frontend\shared\web;
 
 use frontend\actividades\helpers\ActividadStatusId;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 use frontend\shared\helpers\FuncTablasSupport;
 class BotonesCurso
 {
@@ -46,11 +46,7 @@ class BotonesCurso
     public function getDades(): void
     {
         $mes = (int) date('m');
-        $finM = 6;
-        $oConfig = $_SESSION['oConfig'] ?? null;
-        if ($oConfig instanceof ConfigSnapshot) {
-            $finM = $oConfig->getMesFinStgr();
-        }
+        $finM = SessionConfig::getMesFinStgr();
         $any = ($mes > $finM) ? (int) date('Y') + 1 : (int) date('Y');
         $inicurs_ca = \frontend\shared\helpers\FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
         $fincurs_ca = \frontend\shared\helpers\FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');

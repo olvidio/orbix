@@ -4,7 +4,6 @@ namespace frontend\dossiers\helpers;
 
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
-use src\shared\domain\DatosTablaRepo;
 
 /**
  * Compone el bloque HTML (form + hash + tabla dossier) para dossiers_ver a partir de los datos
@@ -69,7 +68,7 @@ class DossiersVerFichaDatosTabla
      */
     private static function buildScript(array $ctx, string $actionTablaUrl): string
     {
-        $repo = new DatosTablaRepo();
+        $repo = new \src\shared\domain\DatosTablaRepo();
         $repo->setBloque($ctx['bloque']);
         $repo->setAction_form($ctx['action_form']);
         $repo->setAction_update($ctx['action_update']);
