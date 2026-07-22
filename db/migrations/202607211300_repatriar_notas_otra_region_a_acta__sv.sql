@@ -3,8 +3,10 @@
 --
 -- Reglas:
 --   - Destino por prefijo del número de acta + fusiones DL.
---   - No toca id_asignatura 9998/9999 (caso especial pendiente).
---   - No toca actas vacías ni «fin …» (sin prefijo mapeable).
+--   - Solo tipo_acta = 1 (acta). Certificados (tipo 2): ver 211250.
+--   - 9998/9999 tipo 1: requiere antes 202607211200_normalizar_actas_fin_9998_9999
+--     (acta ya es sigla DL: dlb, dlmE, …).
+--   - No toca actas vacías ni «fin …» sin prefijo mapeable.
 --   - Idempotente: INSERT si no existe (id_nom, id_asignatura); luego DELETE origen.
 --   - Si el esquema destino no tiene e_notas_dl, omite con NOTICE (reaplicar cuando exista).
 --   - Borra placeholders FALTA_CERTIFICADO (id_situacion=13, tipo_acta=2).
@@ -56,7 +58,13 @@ BEGIN
         ('crl', 'L-crL'),
         ('iers', 'Iers-crIers'),
         ('ch', 'Ch-crCh'),
-        ('crch', 'Ch-crCh');
+        ('crch', 'Ch-crCh'),
+        ('craut', 'Aut-crAut'),
+        ('aut', 'Aut-crAut'),
+        ('nig', 'Nig-crNig'),
+        ('crnig', 'Nig-crNig'),
+        ('eu', 'Eu-crEu'),
+        ('creu', 'Eu-crEu');
 
     FOR origen IN
         SELECT n.nspname
@@ -87,8 +95,8 @@ BEGIN
                 EXECUTE format(
                     $sql$
                     SELECT count(*) FROM %I.e_notas_otra_region_stgr o
-                    WHERE o.id_asignatura NOT IN (9998, 9999)
-                      AND o.id_situacion IS DISTINCT FROM 13
+                    WHERE o.id_situacion IS DISTINCT FROM 13
+                      AND COALESCE(o.tipo_acta, 1) = 1
                       AND lower(trim(split_part(trim(coalesce(o.acta, '')), ' ', 1))) = %L
                     $sql$,
                     origen,
@@ -115,8 +123,8 @@ BEGIN
                     COALESCE(o.preceptor, false), o.id_preceptor, o.epoca, o.id_activ,
                     o.nota_num, o.nota_max, COALESCE(o.tipo_acta, 1)
                 FROM %I.e_notas_otra_region_stgr o
-                WHERE o.id_asignatura NOT IN (9998, 9999)
-                  AND o.id_situacion IS DISTINCT FROM 13
+                WHERE o.id_situacion IS DISTINCT FROM 13
+                  AND COALESCE(o.tipo_acta, 1) = 1
                   AND lower(trim(split_part(trim(coalesce(o.acta, '')), ' ', 1))) = %L
                 ON CONFLICT (id_nom, id_asignatura) DO NOTHING
                 $sql$,
@@ -131,14 +139,15 @@ BEGIN
             EXECUTE format(
                 $sql$
                 DELETE FROM %I.e_notas_otra_region_stgr o
-                WHERE o.id_asignatura NOT IN (9998, 9999)
-                  AND o.id_situacion IS DISTINCT FROM 13
+                WHERE o.id_situacion IS DISTINCT FROM 13
+                  AND COALESCE(o.tipo_acta, 1) = 1
                   AND lower(trim(split_part(trim(coalesce(o.acta, '')), ' ', 1))) = %L
                   AND EXISTS (
                       SELECT 1
                       FROM %I.e_notas_dl d
                       WHERE d.id_nom = o.id_nom
                         AND d.id_asignatura = o.id_asignatura
+                        AND COALESCE(d.tipo_acta, 1) = 1
                   )
                 $sql$,
                 origen,

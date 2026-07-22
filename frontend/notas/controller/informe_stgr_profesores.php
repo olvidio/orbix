@@ -37,6 +37,7 @@ $a_campos = [
     'curso_txt' => $datos['curso_txt'],
     'res' => $datos['res'],
     'textos' => $datos['textos'],
+    'avisos_html' => '',
     'oPosicion' => $oPosicion,
 ];
 

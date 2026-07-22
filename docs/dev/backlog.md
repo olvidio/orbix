@@ -14,8 +14,8 @@ Formato sugerido por ítem:
 
 - **Qué:** Modelo B de [`notas_modelo_acta.md`](notas_modelo_acta.md): notas fijas en la DL del acta; expediente agregado; certificado automático solo hacia entidad externa; deprecar `e_notas_otra_region_stgr` / placeholders internos.
 - **Progreso (2026-07):** Slices 1–3 y 5 hechos (`EditarPersonaNota`, `Trasladar::copiarNotas` no-op, `ExpedienteNotasPersona`, certificados desacoplados). Herramientas audit/fix en `tools/` (Slices 4 y 6). Tests actualizados al contrato B.
-- **Pendiente:** ejecutar migración `202607211300_repatriar_notas_otra_region_a_acta` en local (esquemas DL completos) y producción; casos 9998/9999; flujo certificado destino externo; **resúmenes/informes STGR**.
-- **Notas:** Repatriación BD vía Migraciones web (`db/migrations/202607211300_repatriar_notas_otra_region_a_acta__{sv,sf}.sql`). Auditoría: `php tools/fix/fix_notas_otra_region_a_acta.php --por-prefijo` / `php tools/audit/audit_notas_otra_region.php`.
+- **Pendiente:** ejecutar migraciones repatriación en local/prod; flujo certificado destino externo.
+- **Notas:** Repatriación BD vía Migraciones web (`211200`→`211250`→`211300`). `Resumen` / `AsignaturasPendientes` / `comprobar_notas` leen expediente vía `publicv/f.e_notas`. Auditoría: `php tools/fix/fix_notas_otra_region_a_acta.php --por-prefijo`.
 
 ### Migración `ServerConf` → `.env` (y bootstrap unificado)
 

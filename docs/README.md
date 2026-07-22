@@ -22,6 +22,7 @@ Todo el conocimiento del proyecto vive bajo `docs/`. No existe la carpeta `docum
 - [Índice de refactorización](dev/REFACTOR_INDICE.md) — estado migración DDD
 - [Traducciones gettext](dev/traducciones_gettext.md) — Poedit, plantilla `.pot`, scripts IA
 - [Plan de documentación](PLAN_DOCUMENTACION_MODULOS.md)
+- [Cambios STGR plan 2026](manual/CambiosStgr2026.md) — notas/acta, tessera, convalidaciones (comunicación a usuarios)
 
 ## Regenerar documentación de un módulo
 

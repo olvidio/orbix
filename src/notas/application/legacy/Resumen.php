@@ -55,8 +55,22 @@ class Resumen
     protected string $sNomNotas = '';
     protected string $sNomPersonas = '';
     protected string $sNomAsignaturas = '';
-    // para las cr, se mira directamente en la table de 'e_notas', no 'e_notas_dl'.
+    /**
+     * Notas del expediente del alumno (todas las DL): padre `publicv/f.e_notas`.
+     * La mayoría de indicadores STGR cuentan por persona, da igual dónde se cursó.
+     */
     protected string $tablaNotas = '';
+    /**
+     * Notas solo de la DL de sesión (`e_notas_dl`). Reservado para métricas
+     * «qué se examinó aquí»; hoy el resumen de alumnos no lo usa.
+     */
+    protected string $tablaNotasDl = 'e_notas_dl';
+
+    /**
+     * Avisos HTML de incorporación (1-jun / 1-oct) generados en {@see nuevaTabla()}.
+     * No se hacen echo: el endpoint `_data` debe devolver solo JSON.
+     */
+    protected string $sAvisosHtml = '';
 
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
@@ -97,13 +111,15 @@ class Resumen
         $this->setNomAsignaturas($asignaturas);
         $this->setNomPersonas($personas);
 
-        // En el caso cr-stgr, se consulta la tabla de notas
-        if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $this->tablaNotas = 'publicv.e_notas';
-        } else {
-            $this->tablaNotas = 'e_notas_dl';
-        }
+        $this->tablaNotas = $this->tablaNotasExpediente();
+    }
 
+    /**
+     * Tabla padre de notas (expediente agregado), según sfsv.
+     */
+    protected function tablaNotasExpediente(): string
+    {
+        return ConfigGlobal::mi_sfsv() == 2 ? 'publicf.e_notas' : 'publicv.e_notas';
     }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
@@ -146,6 +162,11 @@ class Resumen
 
     public function setLista(bool $blista): void {
         $this->blista = $blista;
+    }
+
+    public function getAvisosHtml(): string
+    {
+        return $this->sAvisosHtml;
     }
 
     public function getCe_lugar(): string {
@@ -225,6 +246,7 @@ class Resumen
 
         $curs = $this->getCurso();
         $fincurs = $this->getFinCurso();
+        $this->sAvisosHtml = '';
 
         $any = (int)$this->getAnyIniCurs() + 1; //para los incorporados a partir del 1-jun.
         $this->tempTablesService->rebuildMainTable(
@@ -248,10 +270,10 @@ class Resumen
         $statement = $this->tempTablesService->query($ssql);
         $nf = $statement->rowCount();
         if ($this->blista && $nf != 0) {
-            echo "<p>Existen $nf Alumnos que se han incorporado \"recientemente\" (desde el 1-junio) a la dl<br>
+            $this->sAvisosHtml .= "<p>Existen $nf Alumnos que se han incorporado \"recientemente\" (desde el 1-junio) a la dl<br>
 					Sí se cuentan en la estadística.</p>";
             // Para sacar una lista
-            echo $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
+            $this->sAvisosHtml .= $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
         }
 
         // Miro si existe alguna excepción: Alguien incorporado a la dl después del 1 de OCT
@@ -263,10 +285,10 @@ class Resumen
         $nf = $statement->rowCount();
 
         if ($this->blista && $nf != 0) {
-            echo "<p>Existen $nf alumnos que se han incorporado después del 1-OCT a la dl<br>
+            $this->sAvisosHtml .= "<p>Existen $nf alumnos que se han incorporado después del 1-OCT a la dl<br>
 					No se van a contar</p>";
             // Para sacar una lista
-            echo $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
+            $this->sAvisosHtml .= $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
         }
 
         $this->tempTablesService->applyNivelUpdates(
@@ -278,16 +300,8 @@ class Resumen
         );
 
         $a_superadas = NotaSituacion::getArraySuperadas();
-        $notas_vf = 'e_notas_dl';
-        // Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
-        if (ConfigGlobal::mi_sfsv() == 1) {
-            $notas_vf = 'publicv.e_notas';
-        } elseif (ConfigGlobal::mi_sfsv() == 2) {
-            $notas_vf = 'publicf.e_notas';
-        } else {
-            $notas_vf = $this->getNomNotas();
-        }
-        $this->tempTablesService->rebuildNotasTable($notas, $tabla, $curs, $notas_vf, $a_superadas);
+        // Expediente del alumno: todas las notas (padre), no solo la DL local.
+        $this->tempTablesService->rebuildNotasTable($notas, $tabla, $curs, $this->tablaNotas, $a_superadas);
 
         $AsignaturaRepository = $this->asignaturaRepository;
         $cAsignaturasMap = [];
@@ -517,14 +531,7 @@ class Resumen
     {
         //$tabla = $this->getNomTabla();
         $tabla = 'p_numerarios';
-        //$notas = $this->getNomNotas();
-        if (ConfigGlobal::mi_sfsv() == 1) {
-            $notas_vf = 'publicv.e_notas';
-        } elseif (ConfigGlobal::mi_sfsv() == 2) {
-            $notas_vf = 'publicf.e_notas';
-        } else {
-            $notas_vf = $this->getNomNotas();
-        }
+        $notas_vf = $this->tablaNotas;
         $ce_lugar = $this->getCe_lugar();
         $a_lugares = explode(',', $ce_lugar);
         $condiciones = [];

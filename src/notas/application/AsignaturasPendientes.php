@@ -35,6 +35,8 @@ final class AsignaturasPendientes
     private AsignaturaRepositoryInterface $asignaturaRepository;
     private ?PlanEstudiosDePersona $planEstudiosDePersona;
     private string $tablaNotas;
+    /** Reservado: notas solo de la DL local (`e_notas_dl`) si hiciera falta. */
+    private string $tablaNotasDl = 'e_notas_dl';
     private ?string $tablaPersonas;
     private string $tablaAsignaturasTemp = 'tmp_xa_asignaturas';
     private bool $asignaturasTempCreated = false;
@@ -50,9 +52,8 @@ final class AsignaturasPendientes
      *   de personas. Puede ser una tabla real (`p_numerarios`, `p_agregados`,
      *   `personas_dl`) o una `TEMP TABLE` creada por el caller. Si se omite,
      *   los metodos que la necesiten lanzaran `\RuntimeException`.
-     * @param string|null $ambito Valor de `ConfigGlobal::mi_ambito()`.
-     *   Se parametriza para poder tests deterministas; si es `null` se
-     *   resuelve en runtime.
+     * @param string|null $ambito Deprecated (ignorado). Antes elegía `e_notas_dl`
+     *   vs padre; el expediente del alumno usa siempre `publicv/f.e_notas`.
      */
     public function __construct(
         AsignaturaRepositoryInterface $asignaturaRepository,
@@ -64,8 +65,16 @@ final class AsignaturasPendientes
         $this->asignaturaRepository = $asignaturaRepository;
         $this->tablaPersonas = $tablaPersonas;
         $this->planEstudiosDePersona = $planEstudiosDePersona;
-        $ambito ??= ConfigGlobal::mi_ambito();
-        $this->tablaNotas = $ambito === 'rstgr' ? 'publicv.e_notas' : 'e_notas_dl';
+        // $ambito: firma conservada; ignorado (siempre expediente padre).
+        $this->tablaNotas = $this->tablaNotasExpediente();
+    }
+
+    /**
+     * Expediente agregado (todas las DL), según sfsv.
+     */
+    private function tablaNotasExpediente(): string
+    {
+        return ConfigGlobal::mi_sfsv() == 2 ? 'publicf.e_notas' : 'publicv.e_notas';
     }
 
     /**
@@ -298,7 +307,7 @@ final class AsignaturasPendientes
     /**
      * Construye `tmp_xa_asignaturas` con el catalogo completo de asignaturas
      * activas (las asignaturas viven en la BD `comun`, replicamos aqui para
-     * poder hacer `JOIN`/`UNION` con `e_notas_dl`).
+     * poder hacer `JOIN`/`UNION` con el expediente `publicv/f.e_notas`).
      *
      * Se garantiza una unica creacion por instancia de servicio.
      */

@@ -38,6 +38,10 @@ $idAsignatura = $requestPayload['id_asignatura'] ?? '';
 if (is_string($idAsignatura) && $idAsignatura !== '') {
     $forward['id_asignatura'] = $idAsignatura;
 }
+$planEstudios = $requestPayload['plan_estudios'] ?? null;
+if (is_int($planEstudios) || (is_string($planEstudios) && ctype_digit($planEstudios))) {
+    $forward['plan_estudios'] = (int) $planEstudios;
+}
 if (isset($requestPayload['dl']) && is_array($requestPayload['dl'])) {
     $forward['dl'] = $requestPayload['dl'];
 }

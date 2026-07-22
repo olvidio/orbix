@@ -7,7 +7,6 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\asignaturas\domain\value_objects\PlanEstudios;
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -44,7 +43,7 @@ final class Tesera
 {
 
     public function __construct(
-        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+        private readonly ExpedienteNotasPersona $expedienteNotasPersona,
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
         private readonly PlanEstudiosDePersona $planEstudiosDePersona,
     ) {
@@ -154,18 +153,19 @@ final class Tesera
      */
     public function getAsignaturasAprobadas(int $idNom, int $plan = self::PLAN_NUEVO): array
     {
-        $personaNotaRepo = $this->personaNotaRepository;
         $asignaturaRepo = $this->asignaturaRepository;
 
-        $cNotas = $personaNotaRepo->getPersonaNotas([
-            'id_nom' => $idNom,
-            'id_nivel' => self::ID_NIVEL_ASIG_DESDE . ',' . self::ID_NIVEL_ASIG_HASTA,
-        ], ['id_nivel' => 'BETWEEN']);
+        // Expediente agregado (publicv.e_notas: e_notas_dl + otra_region; acta > certificado).
+        $cNotas = $this->expedienteNotasPersona->getNotas($idNom);
 
         $aAprobadas = [];
         foreach ($cNotas as $oNota) {
-            $idAsig = (int)$oNota->getId_asignatura();
             $idNivel = (int)$oNota->getIdNivelVo()->value();
+            if ($idNivel < self::ID_NIVEL_ASIG_DESDE || $idNivel > self::ID_NIVEL_ASIG_HASTA) {
+                continue;
+            }
+
+            $idAsig = (int)$oNota->getId_asignatura();
 
             $oAsig = $asignaturaRepo->findById($idAsig, $plan);
             if ($oAsig === null) {

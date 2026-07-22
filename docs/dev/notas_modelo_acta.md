@@ -23,7 +23,7 @@ PostgreSQL: `publicv.e_notas` es la **tabla padre** de las hijas `{esquema}.e_no
 Implicaciones:
 
 - El expediente del alumno (Slice 3) debe basarse en `publicv.e_notas` (filtrando hijas que no sean nota de acta cuando proceda; p. ej. excluir `e_notas_otra_region_stgr` si sigue heredando).
-- Ya hay precedente: `AsignaturasPendientes` usa `publicv.e_notas` en ámbito `rstgr`.
+- Ya hay precedente: `Resumen` / `AsignaturasPendientes` usan `publicv/f.e_notas` para el expediente del alumno.
 - **Resúmenes / informes STGR:** se revisarán en una pasada posterior (no bloquean Slice 0–2); hoy asumen notas en el esquema de la persona y habrá que alinearlos al padre / expediente.
 
 ### Por qué se descarta el modelo A (persona-céntrico actual)
@@ -104,25 +104,26 @@ Orden de trabajo recomendado. Cada slice debe dejar tests verdes y no mezclar mi
 - [x] Traslado Orbix→Orbix: **no copiar / no borrar** notas (`copiarNotas` no-op). Incluye notas `tipo_acta=acta` y `tipo_acta=certificado` ya existentes.  
 - [x] Quitar dependencia de `mismaRegionStgr` para mover notas.  
 - [ ] Solo si destino externo: disparar/avisar flujo de certificado documental (emitir/adjuntar PDF), **sin** vaciar ni mover notas del origen. Aún no automatizado en `Trasladar` (sigue siendo flujo manual del módulo certificados).  
-- [x] Revisados avisos `comprobarNotas` / “notas sin trasladar” en `comprobar_notas_page_body.inc.php`.
+- [x] Eliminado aviso `comprobar_notas` de «notas en esquema distinto» (esperado con modelo acta).
 
 ### Slice 3 — Expediente agregado (lectura)
 
 - [x] `ExpedienteNotasPersona` agrega por `id_nom` leyendo **`publicv.e_notas`**, con deduplicación acta > certificado.  
-- [x] `NotasDeUnaPersonaData` / dossier 1011 usan expediente agregado (`publicv.e_notas`). Tessera ya leía `PersonaNotaRepository` (padre).  
-- [ ] **Resúmenes / informes STGR:** pasada dedicada pendiente (asumen notas en esquema de la persona).
+- [x] `NotasDeUnaPersonaData` / dossier 1011 / tessera usan expediente agregado (`publicv.e_notas`).  
+- [x] **`Resumen` STGR (alumnos):** indicadores por persona vía padre `publicv/f.e_notas` (no solo `e_notas_dl` local). `$tablaNotasDl` reservado si hiciera falta métrica «examinado en esta DL».  
+- [x] **`AsignaturasPendientes`:** mismo criterio (expediente padre).  
+- [x] **`comprobar_notas`:** lecturas y borrados de cursadas vía `publicv/f.e_notas`; INSERT 9998/9999 vía `ActaFinCicloInsert` (`acta`=sigla DL que inserta, `detalle`=«fin …», `tipo_acta`=1).
 
 ### Slice 4 — Destino de `e_notas_otra_region_stgr` y `tipo_acta=2`
 
 - [x] Inventariar: [`tools/audit/audit_notas_otra_region.php`](../../tools/audit/audit_notas_otra_region.php).  
 - [x] Auditoría dry-run: [`tools/fix/fix_notas_otra_region_a_acta.php`](../../tools/fix/fix_notas_otra_region_a_acta.php) + mapa [`tools/fix/data/esquemas_dl_fusionados.php`](../../tools/fix/data/esquemas_dl_fusionados.php) (`dlz`/`dlv` → `dlal`; `dlva`/`dlst` → `dln`).  
-- [x] **Aplicación BD (local → prod):** migraciones web  
-  [`db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql`](../../db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql) /  
-  [`…__sf.sql`](../../db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sf.sql)  
-  (devel_db_admin → Migraciones). Idempotente; omite destinos sin `e_notas_dl`; deja 9998/9999 y actas sin prefijo.  
-- [ ] Ejecutar migración en local completo (todos los esquemas DL) y después en producción; revisar NOTICE de omitidas.  
+- [x] Normalizar 9998/9999 **tipo 1** (fin cuadrienio/bienio): [`202607211200_…`](../../db/migrations/202607211200_normalizar_actas_fin_9998_9999__sv.sql).  
+- [x] Certificados **tipo 2**: [`202607211250_certificados_otra_region_limpiar`](../../db/migrations/202607211250_certificados_otra_region_limpiar__sv.sql) — borrar si hay acta pareja; si no, dejar en `otra_region` de región (`H-Hv`, `M-Mv`, `Galbel-crGalbelv`, …). No repatriar a `e_notas_dl`.  
+- [x] Repatriar **solo tipo 1**: [`202607211300_…`](../../db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql).  
+- [ ] Ejecutar en local completo y producción; revisar NOTICE; ampliar mapa si el diagnóstico marca `sin_mapa`.  
 - [ ] Migrar `json_certificados` al módulo certificados cuando aporte valor.  
-- [ ] Deprecar `e_notas_otra_region_stgr` tras migración de datos (salvo casos 9998/9999 pendientes).
+- [ ] Deprecar `e_notas_otra_region_stgr` tras migración de datos (salvo certificados sin acta pareja).
 
 ### Slice 5 — Módulo certificados
 

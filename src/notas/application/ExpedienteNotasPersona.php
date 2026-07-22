@@ -9,7 +9,8 @@ use src\notas\domain\value_objects\TipoActa;
 
 /**
  * Expediente de notas de un alumno vía la tabla padre `publicv.e_notas`
- * (herencia de `{esquema}.e_notas_dl`). Ver docs/dev/notas_modelo_acta.md.
+ * (herencia de `{esquema}.e_notas_dl` y, si aplica, `e_notas_otra_region_stgr`).
+ * Ver docs/dev/notas_modelo_acta.md.
  *
  * Si coexisten fila de acta (`tipo_acta=1`) y de certificado (`tipo_acta=2`)
  * para la misma asignatura, prevalece la de acta. Una nota solo-certificado
