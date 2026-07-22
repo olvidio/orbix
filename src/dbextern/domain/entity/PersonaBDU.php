@@ -405,9 +405,9 @@ class PersonaBDU
         return $this->sApenom;
     }
 
-    function setApenom(string $sApenom): void
+    function setApenom(?string $sApenom = null): void
     {
-        $this->sApenom = $sApenom;
+        $this->sApenom = $sApenom ?? '';
     }
 
     function getDl(): string
@@ -415,9 +415,9 @@ class PersonaBDU
         return $this->sdl;
     }
 
-    function setDl(string $sdl): void
+    function setDl(?string $sdl = null): void
     {
-        $this->sdl = $sdl;
+        $this->sdl = $sdl ?? '';
     }
 
     function getCtr(): string
@@ -425,9 +425,9 @@ class PersonaBDU
         return $this->sctr;
     }
 
-    function setCtr(string $sctr): void
+    function setCtr(?string $sctr = null): void
     {
-        $this->sctr = $sctr;
+        $this->sctr = $sctr ?? '';
     }
 
     function getLugar_Naci(): string
@@ -435,9 +435,9 @@ class PersonaBDU
         return $this->sLugar_Naci;
     }
 
-    function setLugar_Naci(string $sLugar_Naci): void
+    function setLugar_Naci(?string $sLugar_Naci = null): void
     {
-        $this->sLugar_Naci = $sLugar_Naci;
+        $this->sLugar_Naci = $sLugar_Naci ?? '';
     }
 
     function getFecha_Naci(): string
@@ -469,9 +469,9 @@ class PersonaBDU
         return $this->sEmail;
     }
 
-    function setEmail(string $sEmail): void
+    function setEmail(?string $sEmail = null): void
     {
-        $this->sEmail = $sEmail;
+        $this->sEmail = $sEmail ?? '';
     }
 
     function getTfno_Movil(): string
@@ -479,9 +479,9 @@ class PersonaBDU
         return $this->sTfno_Movil;
     }
 
-    function setTfno_Movil(string $sTfno_Movil): void
+    function setTfno_Movil(?string $sTfno_Movil = null): void
     {
-        $this->sTfno_Movil = $sTfno_Movil;
+        $this->sTfno_Movil = $sTfno_Movil ?? '';
     }
 
     function getCe(): string
@@ -489,9 +489,9 @@ class PersonaBDU
         return $this->sCe;
     }
 
-    function setCe(string $sCe): void
+    function setCe(?string $sCe = null): void
     {
-        $this->sCe = $sCe;
+        $this->sCe = $sCe ?? '';
     }
 
     public function getProfesion_cargo(): string
@@ -515,24 +515,24 @@ class PersonaBDU
     }
 
 
-    public function setProfesion_cargo(string $sProfesion_cargo): void
+    public function setProfesion_cargo(?string $sProfesion_cargo = null): void
     {
-        $this->sProfesion_cargo = $sProfesion_cargo;
+        $this->sProfesion_cargo = $sProfesion_cargo ?? '';
     }
 
-    public function setTitulo_Estudios(string $sTitulo_Estudios): void
+    public function setTitulo_Estudios(?string $sTitulo_Estudios = null): void
     {
-        $this->sTitulo_Estudios = $sTitulo_Estudios;
+        $this->sTitulo_Estudios = $sTitulo_Estudios ?? '';
     }
 
-    public function setEncargos(string $sEncargos): void
+    public function setEncargos(?string $sEncargos = null): void
     {
-        $this->sEncargos = $sEncargos;
+        $this->sEncargos = $sEncargos ?? '';
     }
 
-    public function setIncorporacion(string $sIncorporacion): void
+    public function setIncorporacion(?string $sIncorporacion = null): void
     {
-        $this->sIncorporacion = $sIncorporacion;
+        $this->sIncorporacion = $sIncorporacion ?? '';
     }
 
 
@@ -551,14 +551,14 @@ class PersonaBDU
         return $this->dfecha_c_fic;
     }
 
-    public function setPertenece_r(string $spertenece_r): void
+    public function setPertenece_r(?string $spertenece_r = null): void
     {
-        $this->spertenece_r = $spertenece_r;
+        $this->spertenece_r = $spertenece_r ?? '';
     }
 
-    public function setCamb_fic(string $scamb_fic): void
+    public function setCamb_fic(?string $scamb_fic = null): void
     {
-        $this->scamb_fic = $scamb_fic;
+        $this->scamb_fic = $scamb_fic ?? '';
     }
 
     public function setFecha_c_fic(mixed $dfecha_c_fic): void
@@ -584,9 +584,9 @@ class PersonaBDU
         return $this->scompartida_con_r;
     }
 
-    public function setCompartida_con_r(string $scompartida_con_r): void
+    public function setCompartida_con_r(?string $scompartida_con_r = null): void
     {
-        $this->scompartida_con_r = $scompartida_con_r;
+        $this->scompartida_con_r = $scompartida_con_r ?? '';
     }
 
 

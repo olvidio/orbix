@@ -24,7 +24,6 @@ use src\dbextern\infrastructure\persistence\postgresql\OdbcDlListasRepository;
 use src\dbextern\infrastructure\persistence\postgresql\PgIdMatchPersonaRepository;
 use src\dbextern\infrastructure\persistence\postgresql\PgPersonaBDURepository;
 use function DI\autowire;
-use function DI\create;
 
 return [
     PersonaBDURepositoryInterface::class => autowire(PgPersonaBDURepository::class),
@@ -32,7 +31,7 @@ return [
 
     OdbcDlListasRepository::class => autowire(OdbcDlListasRepository::class),
     CopiarBDU::class => autowire(CopiarBDU::class),
-    SincroDB::class => create(SincroDB::class),
+    SincroDB::class => autowire(SincroDB::class),
     SincroDBFactory::class => autowire(SincroDBFactory::class),
 
     BajaPersonaUseCase::class => autowire(BajaPersonaUseCase::class),
