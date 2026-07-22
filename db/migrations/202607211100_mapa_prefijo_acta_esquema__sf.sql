@@ -53,6 +53,8 @@ INSERT INTO public.mapa_prefijo_acta_esquema (pref, esquema_base, notas) VALUES
     ('crbel', 'Galbel-crGalbel', NULL),
     ('crl', 'L-crL', NULL),
     ('iers', 'Iers-crIers', NULL),
+    ('cri', 'I-crI', NULL),
+    ('crusca', 'Usca-crUsca', NULL),
     ('ch', 'Ch-crCh', NULL),
     ('crch', 'Ch-crCh', NULL),
     ('craut', 'Aut-crAut', NULL),
