@@ -45,13 +45,18 @@ BEGIN
         ('dls', 'H-dls'),
         ('dlal', 'H-dlal'),
         ('dln', 'H-dln'),
-        -- Fusiones
+        -- Fusiones H
         ('dlz', 'H-dlal'),
         ('dlv', 'H-dlal'),
         ('dlva', 'H-dln'),
         ('dlst', 'H-dln'),
-        -- Otras regiones / CR
+        -- Madrid / M
         ('dly', 'M-dly'),
+        ('dlg', 'M-dlg'),
+        ('dlm', 'M-crM'),
+        ('m', 'M-crM'),
+        ('crm', 'M-crM'),
+        -- CR y regiones (base sin sufijo v/f)
         ('crgalbel', 'Galbel-crGalbel'),
         ('galbel', 'Galbel-crGalbel'),
         ('crbel', 'Galbel-crGalbel'),
@@ -64,7 +69,22 @@ BEGIN
         ('nig', 'Nig-crNig'),
         ('crnig', 'Nig-crNig'),
         ('eu', 'Eu-crEu'),
-        ('creu', 'Eu-crEu');
+        ('creu', 'Eu-crEu'),
+        ('creso', 'Eso-crEso'),
+        ('th', 'Eso-crEso'),
+        ('brit', 'Eso-crEso'),
+        ('craes', 'Aes-crAes'),
+        ('aso', 'Aes-crAes'),
+        ('aes', 'Aes-crAes'),
+        ('ind', 'Aes-crAes'),
+        ('g', 'Euc-crEuc'),
+        ('a', 'Euc-crEuc'),
+        ('crpla', 'Pla-crPla'),
+        ('crecs', 'Ecs-crEcs'),
+        ('crp', 'P-crP'),
+        ('crpl', 'Pl-crPl'),
+        ('pl', 'Pl-crPl'),
+        ('h', 'H-H');
 
     FOR origen IN
         SELECT n.nspname
