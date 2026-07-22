@@ -1,6 +1,8 @@
--- Diagnóstico: actas en e_notas_otra_region_stgr sin destino de repatriación usable.
--- Relacionado (reescribir acta en vez de ampliar mapa): 
---   tools/audit/diag_otra_region_reescribir_acta.sql
+-- Diagnóstico: notas TIPO ACTA (tipo_acta = 1) en e_notas_otra_region_stgr
+-- sin destino de repatriación usable.
+--
+-- Los certificados (tipo_acta = 2) NO entran: no se repatrián a e_notas_dl;
+-- se quedan en otra_region o se borran si ya hay acta pareja (migración 211250).
 --
 -- Uso:
 --   psql -h … -d sv -f tools/audit/diag_notas_otra_region_mapa.sql
@@ -10,7 +12,8 @@
 -- Ampliar el mapa: INSERT en esa tabla (no en este script).
 --
 -- Secciones:
---   1) Resumen por estado
+--   0) Conteo tipo 2 (informativo; fuera del alcance de repatriación)
+--   1) Resumen por estado (solo tipo 1)
 --   2) Prefijos a revisar (sin_mapa o sin e_notas_dl)
 --   3) Sugerencias de esquema para sin_mapa
 --   4) Detalle sin_mapa
@@ -18,7 +21,7 @@
 --
 -- Ver docs/dev/notas_modelo_acta.md
 
-\echo === Diagnóstico repatriación otra_region ===
+\echo === Diagnóstico repatriación otra_region (solo tipo_acta = 1) ===
 
 DROP TABLE IF EXISTS tmp_diag_suffix;
 DROP TABLE IF EXISTS tmp_diag_otra_region;
@@ -36,6 +39,32 @@ END $$;
 
 \echo --- Mapa cargado ---
 SELECT count(*) AS filas_mapa FROM public.mapa_prefijo_acta_esquema;
+
+\echo
+\echo --- 0) Certificados tipo 2 en otra_region (informativo; no se repatrián) ---
+DO $$
+DECLARE
+    origen text;
+    n bigint;
+    n_total bigint := 0;
+BEGIN
+    FOR origen IN
+        SELECT n.nspname
+        FROM pg_class c
+        JOIN pg_namespace n ON n.oid = c.relnamespace
+        WHERE c.relname = 'e_notas_otra_region_stgr'
+          AND n.nspname NOT LIKE 'pg_%'
+    LOOP
+        EXECUTE format(
+            $q$ SELECT count(*) FROM %I.e_notas_otra_region_stgr
+                WHERE id_situacion IS DISTINCT FROM 13
+                  AND COALESCE(tipo_acta, 1) = 2 $q$,
+            origen
+        ) INTO n;
+        n_total := n_total + n;
+    END LOOP;
+    RAISE NOTICE 'tipo_acta=2 (certificados) restantes en otra_region: %', n_total;
+END $$;
 
 CREATE TEMP TABLE tmp_diag_otra_region (
     origen text NOT NULL,
@@ -88,6 +117,7 @@ BEGIN
                 count(*) AS n
             FROM %I.e_notas_otra_region_stgr o
             WHERE o.id_situacion IS DISTINCT FROM 13
+              AND COALESCE(o.tipo_acta, 1) = 1
             GROUP BY 1, o.id_asignatura
             $q$,
             origen
@@ -140,7 +170,7 @@ BEGIN
 END $$;
 
 \echo
-\echo --- 1) Resumen por estado ---
+\echo --- 1) Resumen por estado (solo tipo_acta = 1) ---
 SELECT estado, sum(n)::bigint AS filas, count(DISTINCT pref) AS prefs
 FROM tmp_diag_otra_region
 GROUP BY estado
