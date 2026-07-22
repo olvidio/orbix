@@ -140,25 +140,30 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
     public function getSacdAprobado(int $iid_activ): ?bool
     {
         $oDbl = $this->getoDbl_Select();
-        // Mirar el proceso de la sv
-        $this->setNomTabla('a_actividad_proceso_sv');
-        // La fase ok sacd es la 5. Por definición
-        $id_fase_atn_sacd = FaseId::FASE_OK_SACD;
-        $nom_tabla = $this->getNomTabla();
+        $nomTablaOriginal = $this->getNomTabla();
+        try {
+            // Mirar el proceso de la sv
+            $this->setNomTabla('a_actividad_proceso_sv');
+            // La fase ok sacd es la 5. Por definición
+            $id_fase_atn_sacd = FaseId::FASE_OK_SACD;
+            $nom_tabla = $this->getNomTabla();
 
-        $sQry = "SELECT completado FROM $nom_tabla WHERE id_activ=" . $iid_activ . " AND id_fase=$id_fase_atn_sacd ";
-        $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return null;
-        }
-        if ($stmt->rowCount() === 1) {
-            $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
-            if (!is_array($aDades)) {
+            $sQry = "SELECT completado FROM $nom_tabla WHERE id_activ=" . $iid_activ . " AND id_fase=$id_fase_atn_sacd ";
+            $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) {
                 return null;
             }
-            return \src\shared\domain\helpers\FuncTablasSupport::isTrue($aDades['completado']);
+            if ($stmt->rowCount() === 1) {
+                $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
+                if (!is_array($aDades)) {
+                    return null;
+                }
+                return \src\shared\domain\helpers\FuncTablasSupport::isTrue($aDades['completado']);
+            }
+            return null;
+        } finally {
+            $this->setNomTabla($nomTablaOriginal);
         }
-        return null;
     }
 
     /**

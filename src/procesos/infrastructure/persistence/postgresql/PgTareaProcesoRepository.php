@@ -136,6 +136,9 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
     public function arbolPrevio(int $iid_tipo_proceso): array
     {
         $this->aFases = $this->getArrayFasesDependientes($iid_tipo_proceso);
+        // Reiniciar: el repositorio es compartido y si no se limpia, quedan
+        // claves de otros tipos de proceso de la misma petición.
+        $this->aFasesArbol = [];
         foreach ($this->aFases as $fase_tarea_org => $aaFase_previa) {
             $this->aFasesArbol[$fase_tarea_org] = [];
             $this->ar($fase_tarea_org, $aaFase_previa);
@@ -211,11 +214,11 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
             $fase_tarea = $id_fase . '#' . $id_tarea;
             $status = isset($aDades['status']) && is_numeric($aDades['status']) ? (int) $aDades['status'] : 0;
             if (!array_key_exists($fase_tarea, $aFasesEstado)) {
-                exit (_("Hay que regenerar el proceso de la actividad"));
-            } else {
-                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aFasesEstado[$fase_tarea])) {
-                    $aFasesOn[$id_fase] = $status;
-                }
+                // No usar exit(): abortaría el lote entero de cambio de fase.
+                throw new \RuntimeException(_("Hay que regenerar el proceso de la actividad"));
+            }
+            if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aFasesEstado[$fase_tarea])) {
+                $aFasesOn[$id_fase] = $status;
             }
         }
         // los status de la actividad si son ordenados. 1,2,3,4.
