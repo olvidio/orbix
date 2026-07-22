@@ -122,7 +122,7 @@ Orden de trabajo recomendado. Cada slice debe dejar tests verdes y no mezclar mi
 - [x] Certificados **tipo 2**: [`202607211250_certificados_otra_region_limpiar`](../../db/migrations/202607211250_certificados_otra_region_limpiar__sv.sql) — borrar si hay acta pareja; si no, dejar en `otra_region` de región (`H-Hv`, `M-Mv`, `Galbel-crGalbelv`, …). No repatriar a `e_notas_dl`.  
 - [x] Repatriar **solo tipo 1**: [`202607211300_…`](../../db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql) (lee el mapa BD).  
 - [ ] Ejecutar en producción: **`211100` (mapa)** → `211200` → `211250` → `211300` (sv+sf); ampliar filas del mapa si el diag marca `sin_mapa`.  
-- [ ] Usar `MapaPrefijoActaEsquemaRepository` al grabar notas con acta histórica (routing a esquema destino).  
+- [x] Usar `MapaPrefijoActaEsquemaRepository` al grabar notas con acta histórica (routing a esquema destino).  
 - [x] Buscar/validar actas: `ActaSelectData` / `BuscarActaData` / `ActaDlGuard` leen prefijos absorbidos del mapa; `AbsorberEsquema` registra la fusión en la misma tabla.  
 - [ ] Migrar `json_certificados` al módulo certificados cuando aporte valor.  
 - [ ] Deprecar `e_notas_otra_region_stgr` tras migración de datos (salvo certificados sin acta pareja).

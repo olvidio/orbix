@@ -5,6 +5,7 @@ namespace src\notas\application;
 use RuntimeException;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
+use src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\DestinoNotaExterno;
@@ -12,6 +13,7 @@ use src\notas\domain\entity\Acta;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\PersonaNotaPk;
 use src\notas\domain\value_objects\TipoActa;
+use src\notas\infrastructure\persistence\postgresql\PgPersonaNotaDlRepository;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -20,9 +22,9 @@ use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 /**
  * Alta/edición/baja de notas de persona (modelo acta: docs/dev/notas_modelo_acta.md).
  *
- * La nota se escribe siempre en `e_notas_dl` de la DL examinadora. Personas de paso
- * / resto (`DestinoNotaExterno`): misma regla; la comunicación hacia fuera es
- * certificado documental (módulo certificados / PDF), nunca placeholder en notas.
+ * La nota se escribe en `e_notas_dl` del esquema del acta (mapa prefijo→esquema);
+ * si el prefijo no está en el mapa, en la DL de sesión. Personas de paso / resto:
+ * misma regla; la comunicación hacia fuera es certificado documental (PDF).
  */
 class EditarPersonaNota
 {
@@ -32,6 +34,8 @@ class EditarPersonaNota
     private int $id_nivel;
     private ?int $tipo_acta;
     private PersonaNota $personaNota;
+    /** Esquema físico donde se escribió la última alta/edición (p. ej. H-dlpv). */
+    private string $esquemaEscritura = '';
 
     public function __construct(
         PersonaNota $oPersonaNota,
@@ -40,6 +44,7 @@ class EditarPersonaNota
         private readonly DbSchemaRepositoryInterface $dbSchemaRepository,
         private readonly DossierRepositoryInterface $dossierRepository,
         private readonly PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
+        private readonly ?MapaPrefijoActaEsquemaRepositoryInterface $mapaPrefijoActaEsquemaRepository = null,
     ) {
         $this->personaNota = $oPersonaNota;
         $this->id_nom = $oPersonaNota->getId_nom();
@@ -51,6 +56,13 @@ class EditarPersonaNota
     public function getMsgErr(): string
     {
         return $this->msg_err;
+    }
+
+    public function getEsquemaEscritura(): string
+    {
+        return $this->esquemaEscritura !== ''
+            ? $this->esquemaEscritura
+            : ConfigGlobal::mi_region_dl();
     }
 
     /**
@@ -81,7 +93,7 @@ class EditarPersonaNota
     }
 
     /**
-     * @return array{nota_real?: PersonaNota|null, destino_externo: bool}
+     * @return array{nota_real?: PersonaNota|null, destino_externo: bool, esquema: string}
      */
     public function nuevo(): array
     {
@@ -91,15 +103,19 @@ class EditarPersonaNota
     }
 
     /**
-     * @param array<string, mixed> $a_ReposPersonaNota debe contener `repo_real` (DL examinadora)
+     * @param array{repo_real: PersonaNotaDlRepositoryInterface, esquema: string} $a_ReposPersonaNota
      * @param string $esquema_region_stgr conservado por compatibilidad con callers de traslado (ignorado)
-     * @return array{nota_real?: PersonaNota|null, destino_externo: bool}
+     * @return array{nota_real?: PersonaNota|null, destino_externo: bool, esquema: string}
      */
     public function crear_nueva_personaNota_para_cada_objeto_del_array(array $a_ReposPersonaNota, string $esquema_region_stgr = ''): array
     {
         unset($esquema_region_stgr);
 
-        $rta = ['destino_externo' => $this->esDestinoExterno()];
+        $this->esquemaEscritura = (string) ($a_ReposPersonaNota['esquema'] ?? $this->getEsquemaEscritura());
+        $rta = [
+            'destino_externo' => $this->esDestinoExterno(),
+            'esquema' => $this->esquemaEscritura,
+        ];
 
         $id_nom = $this->personaNota->getId_nom();
         $id_nivel = $this->personaNota->getIdNivelVo()->value();
@@ -182,7 +198,7 @@ class EditarPersonaNota
     }
 
     /**
-     * @return array{nota_real?: PersonaNota|null, destino_externo: bool}
+     * @return array{nota_real?: PersonaNota|null, destino_externo: bool, esquema: string}
      */
     public function editar(int $id_asignatura_real): array
     {
@@ -192,12 +208,16 @@ class EditarPersonaNota
     }
 
     /**
-     * @param array<string, mixed> $a_ObjetosPersonaNota
-     * @return array{nota_real?: PersonaNota|null, destino_externo: bool}
+     * @param array{repo_real: PersonaNotaDlRepositoryInterface, esquema: string} $a_ObjetosPersonaNota
+     * @return array{nota_real?: PersonaNota|null, destino_externo: bool, esquema: string}
      */
     public function editar_personaNota_para_cada_objeto_del_array(array $a_ObjetosPersonaNota, int $id_asignatura_real): array
     {
-        $rta = ['destino_externo' => $this->esDestinoExterno()];
+        $this->esquemaEscritura = (string) ($a_ObjetosPersonaNota['esquema'] ?? $this->getEsquemaEscritura());
+        $rta = [
+            'destino_externo' => $this->esDestinoExterno(),
+            'esquema' => $this->esquemaEscritura,
+        ];
 
         $id_nom = $this->personaNota->getId_nom();
         $id_nivel = $this->personaNota->getIdNivelVo()->value();
@@ -284,17 +304,57 @@ class EditarPersonaNota
     }
 
     /**
-     * Destino de escritura: siempre `e_notas_dl` de la DL examinadora.
-     * Paso/resto incluidos: sin `otra_region` ni placeholders de certificado.
+     * Destino de escritura: esquema del prefijo de acta (mapa) o DL de sesión.
      *
      * @param array<string, mixed> $a_mi_region_stgr
-     * @return array{repo_real: PersonaNotaDlRepositoryInterface}
+     * @return array{repo_real: PersonaNotaDlRepositoryInterface, esquema: string}
      */
     public function getReposPersonaNota(array $a_mi_region_stgr, int $id_schema_persona): array
     {
         unset($a_mi_region_stgr, $id_schema_persona);
 
-        return ['repo_real' => $this->personaNotaDlRepository];
+        $esquemaSesion = ConfigGlobal::mi_region_dl();
+        $esquema = $esquemaSesion;
+        $tipo = $this->personaNota->getTipo_acta();
+        $acta = trim((string) ($this->personaNota->getActa() ?? ''));
+
+        // Solo actas (tipo 1): el certificado documental no cambia de DL vía mapa.
+        if (
+            $this->mapaPrefijoActaEsquemaRepository !== null
+            && $acta !== ''
+            && ($tipo === null || $tipo === TipoActa::FORMATO_ACTA)
+        ) {
+            $suffix = ConfigGlobal::mi_sfsv() === 1 ? 'v' : 'f';
+            $mapped = $this->mapaPrefijoActaEsquemaRepository->esquemaDestinoDesdeActa($acta, $suffix);
+            if ($mapped !== null && $mapped !== '') {
+                $esquema = $mapped;
+            }
+        }
+
+        $this->esquemaEscritura = $esquema;
+
+        if ($esquema === $esquemaSesion) {
+            return [
+                'repo_real' => $this->personaNotaDlRepository,
+                'esquema' => $esquema,
+            ];
+        }
+
+        try {
+            $repo = new PgPersonaNotaDlRepository($esquema);
+        } catch (\Throwable $e) {
+            throw new RuntimeException(sprintf(
+                _("No se puede guardar la nota en el esquema %s (acta «%s»): %s"),
+                $esquema,
+                $acta,
+                $e->getMessage()
+            ));
+        }
+
+        return [
+            'repo_real' => $repo,
+            'esquema' => $esquema,
+        ];
     }
 
     private function getId_schema_persona(): int

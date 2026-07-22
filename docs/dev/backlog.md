@@ -14,8 +14,8 @@ Formato sugerido por ítem:
 
 - **Qué:** Modelo B de [`notas_modelo_acta.md`](notas_modelo_acta.md): notas fijas en la DL del acta; expediente agregado; certificado automático solo hacia entidad externa; deprecar `e_notas_otra_region_stgr` / placeholders internos.
 - **Progreso (2026-07):** Slices 1–3 y 5 hechos (`EditarPersonaNota`, `Trasladar::copiarNotas` no-op, `ExpedienteNotasPersona`, certificados desacoplados). Herramientas audit/fix en `tools/` (Slices 4 y 6). Tests actualizados al contrato B.
-- **Pendiente:** ejecutar migraciones en prod: **`211100` (mapa BD)** → `211200` → `211250` → `211300` (sv+sf); flujo certificado destino externo; cablear `MapaPrefijoActaEsquemaRepository` al grabar notas con acta histórica.
-- **Notas:** Mapa SSOT `public.mapa_prefijo_acta_esquema` (búsqueda actas absorbidas + Absorber + repatriación). Ampliar con `INSERT` (o reaplicar `211100`). Diag: `tools/audit/diag_notas_otra_region_mapa.sql`. Auditoría: `php tools/fix/fix_notas_otra_region_a_acta.php --por-prefijo`.
+- **Pendiente:** flujo certificado destino externo; informes STGR locales.
+- **Notas:** Mapa SSOT + grabar nota en esquema del acta (`EditarPersonaNota`). Diag tipo 1: `tools/audit/diag_notas_otra_region_mapa.sql`.
 
 ### Migración `ServerConf` → `.env` (y bootstrap unificado)
 

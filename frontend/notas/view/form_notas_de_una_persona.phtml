@@ -234,6 +234,19 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
                         if (!json || json.success !== true) {
                             alert(<?= json_encode(_("respuesta") . ": ") ?> + ((json && json.mensaje) ? json.mensaje : ''));
                         } else {
+                            var msgOk = '';
+                            try {
+                                var d = json.data;
+                                if (typeof d === 'string' && d !== '') {
+                                    d = JSON.parse(d);
+                                }
+                                if (d && d.mensaje) {
+                                    msgOk = d.mensaje;
+                                }
+                            } catch (e) {}
+                            if (msgOk) {
+                                alert(msgOk);
+                            }
                             <?= $oPosicion->jsNavAtrasToDossiersParent(); ?>
                         }
                     });

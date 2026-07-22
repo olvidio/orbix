@@ -5,7 +5,11 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 /**
- * Crea una `PersonaNota`. Responde JSON `{success, mensaje, data}`.
+ * Crea una `PersonaNota`. Responde JSON `{success, mensaje?, data}`.
+ * En éxito, `data` incluye mensaje con el esquema de escritura.
  */
-$error_txt = (DependencyResolver::get(PersonaNotaNueva::class))->execute($_POST);
-ContestarJson::enviar($error_txt, 'ok');
+$r = (DependencyResolver::get(PersonaNotaNueva::class))->execute($_POST);
+ContestarJson::enviar($r['error'], [
+    'mensaje' => $r['mensaje'],
+    'esquema' => $r['esquema'],
+]);
