@@ -4,58 +4,36 @@
 --   psql -h … -d sv -f tools/audit/diag_notas_otra_region_mapa.sql
 --   (en sf: editar tmp_diag_suffix → 'f')
 --
+-- REQUIERE: public.mapa_prefijo_acta_esquema (migración 202607221200).
+-- Ampliar el mapa: INSERT en esa tabla (no en este script).
+--
 -- Secciones:
 --   1) Resumen por estado
---   2) Prefijos a revisar (sin_mapa o sin e_notas_dl) ← ampliar mapa aquí
+--   2) Prefijos a revisar (sin_mapa o sin e_notas_dl)
 --   3) Sugerencias de esquema para sin_mapa
 --   4) Detalle sin_mapa
 --   5) Especiales 9998/9999 / sin prefijo
 --
--- Mapa alineado con:
---   db/migrations/202607211300_repatriar_notas_otra_region_a_acta__{sv,sf}.sql
---   tools/fix/data/esquemas_dl_fusionados.php
+-- Ver docs/dev/notas_modelo_acta.md
 
 \echo === Diagnóstico repatriación otra_region ===
 
 DROP TABLE IF EXISTS tmp_diag_suffix;
-DROP TABLE IF EXISTS tmp_map_prefijo_nota_acta;
 DROP TABLE IF EXISTS tmp_diag_otra_region;
 
 -- Cambiar a 'f' al diagnosticar BD sf
 CREATE TEMP TABLE tmp_diag_suffix AS SELECT 'v'::text AS suffix;
 
-CREATE TEMP TABLE tmp_map_prefijo_nota_acta (
-    pref text PRIMARY KEY,
-    base text NOT NULL
-);
+DO $$
+BEGIN
+    IF to_regclass('public.mapa_prefijo_acta_esquema') IS NULL THEN
+        RAISE EXCEPTION
+            'Falta public.mapa_prefijo_acta_esquema. Ejecutar migración 202607221200_mapa_prefijo_acta_esquema';
+    END IF;
+END $$;
 
-INSERT INTO tmp_map_prefijo_nota_acta (pref, base) VALUES
-    ('dlp', 'H-dlp'),
-    ('dlb', 'H-dlb'),
-    ('dlme', 'H-dlmE'),
-    ('dlmo', 'H-dlmO'),
-    ('dlgr', 'H-dlgr'),
-    ('dls', 'H-dls'),
-    ('dlal', 'H-dlal'),
-    ('dln', 'H-dln'),
-    ('dlz', 'H-dlal'),
-    ('dlv', 'H-dlal'),
-    ('dlva', 'H-dln'),
-    ('dlst', 'H-dln'),
-    ('dly', 'M-dly'),
-    ('crgalbel', 'Galbel-crGalbel'),
-    ('galbel', 'Galbel-crGalbel'),
-    ('crbel', 'Galbel-crGalbel'),
-    ('crl', 'L-crL'),
-    ('iers', 'Iers-crIers'),
-    ('ch', 'Ch-crCh'),
-    ('crch', 'Ch-crCh'),
-    ('craut', 'Aut-crAut'),
-    ('aut', 'Aut-crAut'),
-    ('nig', 'Nig-crNig'),
-    ('crnig', 'Nig-crNig'),
-    ('eu', 'Eu-crEu'),
-    ('creu', 'Eu-crEu');
+\echo --- Mapa cargado ---
+SELECT count(*) AS filas_mapa FROM public.mapa_prefijo_acta_esquema;
 
 CREATE TEMP TABLE tmp_diag_otra_region (
     origen text NOT NULL,
@@ -124,8 +102,8 @@ BEGIN
             ELSIF v_pref IN ('(vacío)') OR v_pref LIKE 'fin%' THEN
                 estado := 'sin_prefijo_acta';
             ELSE
-                SELECT m.base INTO base
-                FROM tmp_map_prefijo_nota_acta m
+                SELECT m.esquema_base INTO base
+                FROM public.mapa_prefijo_acta_esquema m
                 WHERE m.pref = v_pref;
 
                 IF base IS NULL THEN
@@ -195,21 +173,13 @@ SELECT
     p.pref,
     p.filas,
     (
-        SELECT string_agg(d.schema, ', ' ORDER BY d.schema)
+        SELECT string_agg(DISTINCT d.schema, ', ' ORDER BY d.schema)
         FROM public.db_idschema d
         WHERE lower(d.schema) LIKE '%' || p.pref || '%'
-           OR lower(regexp_replace(d.schema, '[vf]$', '')) LIKE '%-' || p.pref
-    ) AS candidatos_db_idschema,
-    (
-        SELECT string_agg(n.nspname, ', ' ORDER BY n.nspname)
-        FROM pg_class cl
-        JOIN pg_namespace n ON n.oid = cl.relnamespace
-        WHERE cl.relname = 'e_notas_dl'
-          AND (
-              lower(n.nspname) LIKE '%' || p.pref || '%'
-              OR lower(regexp_replace(n.nspname, '[vf]$', '')) LIKE '%-' || p.pref
-          )
-    ) AS nsp_con_e_notas_dl
+           OR lower(split_part(d.schema, '-', 2)) = p.pref
+           OR lower(regexp_replace(split_part(d.schema, '-', 2), '[vf]$', '')) = p.pref
+        LIMIT 1
+    ) AS esquemas_parecidos
 FROM prefs p
 ORDER BY p.filas DESC, p.pref;
 
@@ -219,11 +189,12 @@ SELECT origen, pref, id_asignatura, n, acta_ej
 FROM tmp_diag_otra_region
 WHERE estado = 'sin_mapa'
 ORDER BY n DESC, origen, pref
-LIMIT 50;
+LIMIT 80;
 
 \echo
-\echo --- 5) Especiales / sin prefijo ---
+\echo --- 5) Especiales / sin prefijo (muestra) ---
 SELECT origen, pref, id_asignatura, n, acta_ej, estado
 FROM tmp_diag_otra_region
 WHERE estado IN ('especial_9998_9999', 'sin_prefijo_acta')
-ORDER BY estado, origen, pref;
+ORDER BY estado, n DESC
+LIMIT 40;

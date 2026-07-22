@@ -8,10 +8,11 @@ declare(strict_types=1);
  * `e_notas_otra_region_stgr` → `e_notas_dl`.
  *
  * La aplicación en BD (local y producción) va por migraciones web:
- *   db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql
- *   db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sf.sql
- * (devel_db_admin → Migraciones). Mantener el mapa alineado con esas migraciones
- * y con `tools/fix/data/esquemas_dl_fusionados.php`.
+ *   db/migrations/202607221200_mapa_prefijo_acta_esquema__{sv,sf}.sql  (tabla mapa = SSOT)
+ *   db/migrations/202607211200_… / 211250 / 211300 (repatriación; 211300 lee el mapa)
+ * (devel_db_admin → Migraciones). Ampliar filas en `public.mapa_prefijo_acta_esquema`.
+ * Fusiones de esquemas: mismas filas del mapa (`notas` con «fusion»); el PHP
+ * `tools/fix/data/esquemas_dl_fusionados.php` es solo fallback vacío.
  *
  * Uso:
  *   php tools/fix/fix_notas_otra_region_a_acta.php
@@ -30,6 +31,7 @@ require $root . '/src/shared/global_header.inc';
 
 use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
+use src\notas\infrastructure\persistence\postgresql\PgMapaPrefijoActaEsquemaRepository;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
@@ -59,13 +61,6 @@ ConfigGlobal::setTest_mode(true);
 $suffix = ($database === 'sf') ? 'f' : 'v';
 putenv('UBICACION=' . ($database === 'sf' ? 'sf' : 'sv'));
 $publicSchema = 'public' . $suffix;
-
-/** @var array<string, string> $fusiones base→base */
-$fusiones = require $root . '/tools/fix/data/esquemas_dl_fusionados.php';
-if (!is_array($fusiones)) {
-    fwrite(STDERR, "Mapa de fusiones inválido.\n");
-    exit(1);
-}
 
 /**
  * Quita sufijo sfsv (`v`/`f`). No altera bases que ya terminan en v/f (p. ej. `H-dlv`).
@@ -185,6 +180,21 @@ try {
     $configDB = new ConfigDB($database);
     $pdoPublic = (new DBConnection($configDB->getEsquema($publicSchema)))->getPDO();
     $pdoPublic->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    /** @var array<string, string> $fusiones base→base (mapa BD; fallback PHP vacío) */
+    $fusiones = [];
+    try {
+        $fusiones = (new PgMapaPrefijoActaEsquemaRepository($pdoPublic))->fusionesEsquemaBase();
+    } catch (Throwable $e) {
+        fwrite(STDERR, 'Aviso: no se pudo leer mapa_prefijo_acta_esquema (' . $e->getMessage() . ").\n");
+    }
+    if ($fusiones === []) {
+        $fallback = require $root . '/tools/fix/data/esquemas_dl_fusionados.php';
+        $fusiones = is_array($fallback) ? $fallback : [];
+    }
+    if ($fusiones === []) {
+        fwrite(STDERR, "Sin fusiones en mapa BD (¿migración 221200 aplicada?). Continuando sin fusiones.\n");
+    }
 
     /** @var array<int, string> $idSchemaToName */
     $idSchemaToName = [];

@@ -1,8 +1,11 @@
 -- Repatriar notas legacy de e_notas_otra_region_stgr → e_notas_dl (modelo acta).
 -- Serie sf (sufijo de esquema `f`). Ejecutar desde devel_db_admin → Migraciones.
 --
+-- REQUIERE antes: 202607221200_mapa_prefijo_acta_esquema (tabla public.mapa_prefijo_acta_esquema).
+-- Orden recomendado: 221200 → 211200 → 211250 → 211300.
+--
 -- Reglas:
---   - Destino por prefijo del número de acta + fusiones DL.
+--   - Destino por prefijo del número de acta (mapa BD) + fusiones ya en el mapa.
 --   - Solo tipo_acta = 1 (acta). Certificados (tipo 2): ver 211250.
 --   - 9998/9999 tipo 1: requiere antes 202607211200_normalizar_actas_fin_9998_9999
 --     (acta ya es sigla DL: dlb, dlmE, …).
@@ -11,8 +14,6 @@
 --   - Si el esquema destino no tiene e_notas_dl, omite con NOTICE (reaplicar cuando exista).
 --   - Borra placeholders FALTA_CERTIFICADO (id_situacion=13, tipo_acta=2).
 --
--- Mapa alineado con tools/fix/data/esquemas_dl_fusionados.php
---   H-dlz, H-dlv → H-dlal ; H-dlva, H-dlst → H-dln
 -- Ver docs/dev/notas_modelo_acta.md
 
 DO $$
@@ -29,62 +30,22 @@ DECLARE
     n_ph bigint := 0;
     n_omit_dest bigint := 0;
     n_restantes bigint := 0;
+    n_mapa bigint := 0;
 BEGIN
+    SELECT count(*) INTO n_mapa FROM public.mapa_prefijo_acta_esquema;
+    IF n_mapa < 1 THEN
+        RAISE EXCEPTION
+            'Falta public.mapa_prefijo_acta_esquema (ejecutar 202607221200_mapa_prefijo_acta_esquema antes)';
+    END IF;
+
     CREATE TEMP TABLE tmp_map_prefijo_nota_acta (
         pref text PRIMARY KEY,
         base text NOT NULL
     ) ON COMMIT DROP;
 
-    INSERT INTO tmp_map_prefijo_nota_acta (pref, base) VALUES
-        -- DL H (1:1)
-        ('dlp', 'H-dlp'),
-        ('dlb', 'H-dlb'),
-        ('dlme', 'H-dlmE'),
-        ('dlmo', 'H-dlmO'),
-        ('dlgr', 'H-dlgr'),
-        ('dls', 'H-dls'),
-        ('dlal', 'H-dlal'),
-        ('dln', 'H-dln'),
-        -- Fusiones H
-        ('dlz', 'H-dlal'),
-        ('dlv', 'H-dlal'),
-        ('dlva', 'H-dln'),
-        ('dlst', 'H-dln'),
-        -- Madrid / M
-        ('dly', 'M-dly'),
-        ('dlg', 'M-dlg'),
-        ('dlm', 'M-crM'),
-        ('m', 'M-crM'),
-        ('crm', 'M-crM'),
-        -- CR y regiones (base sin sufijo v/f)
-        ('crgalbel', 'Galbel-crGalbel'),
-        ('galbel', 'Galbel-crGalbel'),
-        ('crbel', 'Galbel-crGalbel'),
-        ('crl', 'L-crL'),
-        ('iers', 'Iers-crIers'),
-        ('ch', 'Ch-crCh'),
-        ('crch', 'Ch-crCh'),
-        ('craut', 'Aut-crAut'),
-        ('aut', 'Aut-crAut'),
-        ('nig', 'Nig-crNig'),
-        ('crnig', 'Nig-crNig'),
-        ('eu', 'Eu-crEu'),
-        ('creu', 'Eu-crEu'),
-        ('creso', 'Eso-crEso'),
-        ('th', 'Eso-crEso'),
-        ('brit', 'Eso-crEso'),
-        ('craes', 'Aes-crAes'),
-        ('aso', 'Aes-crAes'),
-        ('aes', 'Aes-crAes'),
-        ('ind', 'Aes-crAes'),
-        ('g', 'Euc-crEuc'),
-        ('a', 'Euc-crEuc'),
-        ('crpla', 'Pla-crPla'),
-        ('crecs', 'Ecs-crEcs'),
-        ('crp', 'P-crP'),
-        ('crpl', 'Pl-crPl'),
-        ('pl', 'Pl-crPl'),
-        ('h', 'H-H');
+    INSERT INTO tmp_map_prefijo_nota_acta (pref, base)
+    SELECT pref, esquema_base
+    FROM public.mapa_prefijo_acta_esquema;
 
     FOR origen IN
         SELECT n.nspname

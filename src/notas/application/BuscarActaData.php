@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace src\notas\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\application\support\ActaPrefijosDeEsquema;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\value_objects\NotaEpoca;
 
@@ -24,6 +27,7 @@ final class BuscarActaData
         private readonly ActaRepositoryInterface $actaRepository,
         private readonly ActividadAllRepositoryInterface $actividadAllRepository,
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly ActaPrefijosDeEsquema $actaPrefijosDeEsquema,
     ) {
     }
 
@@ -37,15 +41,25 @@ final class BuscarActaData
 
         $matches = [];
         preg_match("/^(\d*)(\/)?(\d*)/", $acta, $matches);
+        $aWhere = ['acta' => $acta];
+        $aOperador = [];
         if (!empty($matches[1])) {
-            $mi_dele = ConfigGlobal::mi_delef();
-            $acta = empty($matches[3])
-                ? "$mi_dele " . $matches[1] . '/' . date('y')
-                : "$mi_dele $acta";
+            $soloNumero = empty($matches[3]);
+            $patron = $this->actaPrefijosDeEsquema->patronBusquedaPorNumero($acta, $soloNumero);
+            if ($patron !== '') {
+                $aWhere['acta'] = $patron;
+                $aOperador['acta'] = '~';
+            } else {
+                $mi_dele = ConfigGlobal::mi_delef();
+                $acta = $soloNumero
+                    ? "$mi_dele " . $matches[1] . '/' . date('y')
+                    : "$mi_dele $acta";
+                $aWhere['acta'] = $acta;
+            }
         }
 
         $ActaRepository = $this->actaRepository;
-        $cActas = $ActaRepository->getActas(['acta' => $acta]);
+        $cActas = $ActaRepository->getActas($aWhere, $aOperador);
 
         if (count($cActas) !== 1) {
             return ['id_asignatura' => 'no'];
@@ -57,6 +71,7 @@ final class BuscarActaData
             return ['id_asignatura' => 'no'];
         }
         $id_activ = $oActa->getId_activ();
+        $actaEncontrada = (string) $oActa->getActa();
 
         if (!empty($id_activ)) {
             $ActividadAllRepository = $this->actividadAllRepository;
@@ -82,7 +97,7 @@ final class BuscarActaData
             'f_acta' => (string)$oActa->getF_acta()?->getFromLocal(),
             'nom_activ' => (string)$nom_activ,
             'epoca' => (string)$epoca,
-            'acta' => (string)$acta,
+            'acta' => $actaEncontrada,
         ];
     }
 }

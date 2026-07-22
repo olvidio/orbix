@@ -205,6 +205,8 @@ final class AbsorberEsquema
 
         [$region_old, $dl_old] = $this->parseRegionDl($esquemaDel);
 
+        $this->actualizarMapaPrefijoActa($oDevelPC, $esquemaDel, $esquemaMatriz, $dl_old, $dl_new, $errores);
+
         $gesDelegaciones = $this->delegacionRepository;
         $cDelegaciones = $gesDelegaciones->getDelegaciones(['dl' => $dl_old, 'region' => $region_old]);
         $id_dl_old = $cDelegaciones[0]->getIdDlVo()->value();
@@ -346,6 +348,57 @@ final class AbsorberEsquema
         ];
 
         return new AbsorberEsquemaResult($lines, $errores);
+    }
+
+    /**
+     * Fuente única: `public.mapa_prefijo_acta_esquema` (sv/sf).
+     * Registra el prefijo absorbido → matriz y reasigna filas que apuntaban al esquema disuelto.
+     *
+     * @param list<string> $errores
+     */
+    private function actualizarMapaPrefijoActa(
+        \PDO $pdo,
+        string $esquemaDel,
+        string $esquemaMatriz,
+        string $dlOld,
+        string $dlNew,
+        array &$errores,
+    ): void {
+        try {
+            $regclassStmt = $pdo->query("SELECT to_regclass('public.mapa_prefijo_acta_esquema')");
+            $exists = $regclassStmt !== false ? $regclassStmt->fetchColumn() : false;
+            if ($exists === false || $exists === null || $exists === '') {
+                $errores[] = 'mapa_prefijo_acta_esquema no existe; aplicar migración 202607221200 antes de absorber';
+                return;
+            }
+
+            $stmt = $pdo->prepare(
+                'INSERT INTO public.mapa_prefijo_acta_esquema (pref, esquema_base, notas)
+                 VALUES (:pref, :base, :notas)
+                 ON CONFLICT (pref) DO UPDATE
+                 SET esquema_base = EXCLUDED.esquema_base,
+                     notas = COALESCE(EXCLUDED.notas, public.mapa_prefijo_acta_esquema.notas)'
+            );
+            $stmt->execute([
+                'pref' => strtolower($dlOld),
+                'base' => $esquemaMatriz,
+                'notas' => "fusionada en $dlNew",
+            ]);
+            $stmt->execute([
+                'pref' => strtolower($dlNew),
+                'base' => $esquemaMatriz,
+                'notas' => null,
+            ]);
+
+            $upd = $pdo->prepare(
+                'UPDATE public.mapa_prefijo_acta_esquema
+                 SET esquema_base = :nuevo
+                 WHERE esquema_base = :viejo'
+            );
+            $upd->execute(['nuevo' => $esquemaMatriz, 'viejo' => $esquemaDel]);
+        } catch (\Throwable $e) {
+            $errores[] = 'mapa_prefijo_acta_esquema: ' . $e->getMessage();
+        }
     }
 
     /**
