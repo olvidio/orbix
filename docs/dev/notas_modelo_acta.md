@@ -117,11 +117,11 @@ Orden de trabajo recomendado. Cada slice debe dejar tests verdes y no mezclar mi
 ### Slice 4 — Destino de `e_notas_otra_region_stgr` y `tipo_acta=2`
 
 - [x] Inventariar: [`tools/audit/audit_notas_otra_region.php`](../../tools/audit/audit_notas_otra_region.php).  
-- [x] Auditoría dry-run: [`tools/fix/fix_notas_otra_region_a_acta.php`](../../tools/fix/fix_notas_otra_region_a_acta.php); mapa en BD [`public.mapa_prefijo_acta_esquema`](../../db/migrations/202607221200_mapa_prefijo_acta_esquema__sv.sql) (diag: [`tools/audit/diag_notas_otra_region_mapa.sql`](../../tools/audit/diag_notas_otra_region_mapa.sql)) — **fuente única** de prefijo↔esquema (también búsqueda de actas absorbidas y `AbsorberEsquema`).  
+- [x] Auditoría dry-run: [`tools/fix/fix_notas_otra_region_a_acta.php`](../../tools/fix/fix_notas_otra_region_a_acta.php); mapa en BD [`public.mapa_prefijo_acta_esquema`](../../db/migrations/202607211100_mapa_prefijo_acta_esquema__sv.sql) (diag: [`tools/audit/diag_notas_otra_region_mapa.sql`](../../tools/audit/diag_notas_otra_region_mapa.sql)) — **fuente única** de prefijo↔esquema (también búsqueda de actas absorbidas y `AbsorberEsquema`).  
 - [x] Normalizar 9998/9999 **tipo 1** (fin cuadrienio/bienio): [`202607211200_…`](../../db/migrations/202607211200_normalizar_actas_fin_9998_9999__sv.sql).  
 - [x] Certificados **tipo 2**: [`202607211250_certificados_otra_region_limpiar`](../../db/migrations/202607211250_certificados_otra_region_limpiar__sv.sql) — borrar si hay acta pareja; si no, dejar en `otra_region` de región (`H-Hv`, `M-Mv`, `Galbel-crGalbelv`, …). No repatriar a `e_notas_dl`.  
 - [x] Repatriar **solo tipo 1**: [`202607211300_…`](../../db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql) (lee el mapa BD).  
-- [ ] Ejecutar en producción: **`221200` (mapa)** → `211200` → `211250` → `211300` (sv+sf); ampliar filas del mapa si el diag marca `sin_mapa`.  
+- [ ] Ejecutar en producción: **`211100` (mapa)** → `211200` → `211250` → `211300` (sv+sf); ampliar filas del mapa si el diag marca `sin_mapa`.  
 - [ ] Usar `MapaPrefijoActaEsquemaRepository` al grabar notas con acta histórica (routing a esquema destino).  
 - [x] Buscar/validar actas: `ActaSelectData` / `BuscarActaData` / `ActaDlGuard` leen prefijos absorbidos del mapa; `AbsorberEsquema` registra la fusión en la misma tabla.  
 - [ ] Migrar `json_certificados` al módulo certificados cuando aporte valor.  

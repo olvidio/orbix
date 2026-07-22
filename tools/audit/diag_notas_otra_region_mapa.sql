@@ -4,7 +4,7 @@
 --   psql -h … -d sv -f tools/audit/diag_notas_otra_region_mapa.sql
 --   (en sf: editar tmp_diag_suffix → 'f')
 --
--- REQUIERE: public.mapa_prefijo_acta_esquema (migración 202607221200).
+-- REQUIERE: public.mapa_prefijo_acta_esquema (migración 202607211100).
 -- Ampliar el mapa: INSERT en esa tabla (no en este script).
 --
 -- Secciones:
@@ -28,7 +28,7 @@ DO $$
 BEGIN
     IF to_regclass('public.mapa_prefijo_acta_esquema') IS NULL THEN
         RAISE EXCEPTION
-            'Falta public.mapa_prefijo_acta_esquema. Ejecutar migración 202607221200_mapa_prefijo_acta_esquema';
+            'Falta public.mapa_prefijo_acta_esquema. Ejecutar migración 202607211100_mapa_prefijo_acta_esquema';
     END IF;
 END $$;
 

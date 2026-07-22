@@ -368,7 +368,7 @@ final class AbsorberEsquema
             $regclassStmt = $pdo->query("SELECT to_regclass('public.mapa_prefijo_acta_esquema')");
             $exists = $regclassStmt !== false ? $regclassStmt->fetchColumn() : false;
             if ($exists === false || $exists === null || $exists === '') {
-                $errores[] = 'mapa_prefijo_acta_esquema no existe; aplicar migración 202607221200 antes de absorber';
+                $errores[] = 'mapa_prefijo_acta_esquema no existe; aplicar migración 202607211100 antes de absorber';
                 return;
             }
 

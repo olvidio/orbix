@@ -8,7 +8,7 @@ declare(strict_types=1);
  * `e_notas_otra_region_stgr` → `e_notas_dl`.
  *
  * La aplicación en BD (local y producción) va por migraciones web:
- *   db/migrations/202607221200_mapa_prefijo_acta_esquema__{sv,sf}.sql  (tabla mapa = SSOT)
+ *   db/migrations/202607211100_mapa_prefijo_acta_esquema__{sv,sf}.sql  (tabla mapa = SSOT)
  *   db/migrations/202607211200_… / 211250 / 211300 (repatriación; 211300 lee el mapa)
  * (devel_db_admin → Migraciones). Ampliar filas en `public.mapa_prefijo_acta_esquema`.
  * Fusiones de esquemas: mismas filas del mapa (`notas` con «fusion»); el PHP
@@ -193,7 +193,7 @@ try {
         $fusiones = is_array($fallback) ? $fallback : [];
     }
     if ($fusiones === []) {
-        fwrite(STDERR, "Sin fusiones en mapa BD (¿migración 221200 aplicada?). Continuando sin fusiones.\n");
+        fwrite(STDERR, "Sin fusiones en mapa BD (¿migración 211100 aplicada?). Continuando sin fusiones.\n");
     }
 
     /** @var array<int, string> $idSchemaToName */

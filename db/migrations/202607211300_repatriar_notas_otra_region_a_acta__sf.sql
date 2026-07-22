@@ -1,8 +1,8 @@
 -- Repatriar notas legacy de e_notas_otra_region_stgr → e_notas_dl (modelo acta).
 -- Serie sf (sufijo de esquema `f`). Ejecutar desde devel_db_admin → Migraciones.
 --
--- REQUIERE antes: 202607221200_mapa_prefijo_acta_esquema (tabla public.mapa_prefijo_acta_esquema).
--- Orden recomendado: 221200 → 211200 → 211250 → 211300.
+-- REQUIERE antes: 202607211100_mapa_prefijo_acta_esquema (tabla public.mapa_prefijo_acta_esquema).
+-- Orden recomendado: 211100 → 211200 → 211250 → 211300.
 --
 -- Reglas:
 --   - Destino por prefijo del número de acta (mapa BD) + fusiones ya en el mapa.
@@ -35,7 +35,7 @@ BEGIN
     SELECT count(*) INTO n_mapa FROM public.mapa_prefijo_acta_esquema;
     IF n_mapa < 1 THEN
         RAISE EXCEPTION
-            'Falta public.mapa_prefijo_acta_esquema (ejecutar 202607221200_mapa_prefijo_acta_esquema antes)';
+            'Falta public.mapa_prefijo_acta_esquema (ejecutar 202607211100_mapa_prefijo_acta_esquema antes)';
     END IF;
 
     CREATE TEMP TABLE tmp_map_prefijo_nota_acta (
