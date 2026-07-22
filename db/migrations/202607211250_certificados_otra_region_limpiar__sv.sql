@@ -1,6 +1,7 @@
 -- Certificados (tipo_acta = 2) tras modelo acta:
---   · Si existe acta pareja (tipo 1, mismo id_nom + id_asignatura) → eliminar el certificado.
---   · Si no hay pareja → conservar en e_notas_otra_region_stgr de la región:
+--   · Si existe acta (tipo 1) con mismo id_nom + id_asignatura, O mismo id_nom + id_nivel
+--     (UK de la tabla) → eliminar el certificado; prevalece el acta.
+--   · Si no hay conflicto con tipo 1 → conservar en e_notas_otra_region_stgr de la región:
 --       «H …» / esquemas H-* → H-Hv ; «M …» → M-Mv ; CR → p.ej. Galbel-crGalbelv, Nig-crNigv.
 --   No repatriar certificados a e_notas_dl (eso es solo tipo 1).
 --
@@ -18,6 +19,9 @@ DECLARE
     n_ya_ok bigint := 0;
     n_mov bigint := 0;
     n_omit bigint := 0;
+    n_del_uk bigint := 0;
+    tiene_acta boolean;
+    insertado bigint;
 BEGIN
     CREATE TEMP TABLE tmp_cert_omit (
         motivo text,
@@ -25,7 +29,7 @@ BEGIN
         PRIMARY KEY (motivo)
     ) ON COMMIT DROP;
 
-    -- 1) Certificado con acta pareja → borrar
+    -- 1) Certificado subordinado a un acta (misma asignatura o mismo id_nivel/UK) → borrar
     WITH borrables AS (
         SELECT c.tableoid, c.ctid
         FROM publicv.e_notas c
@@ -35,8 +39,11 @@ BEGIN
               SELECT 1
               FROM publicv.e_notas a
               WHERE a.id_nom = c.id_nom
-                AND a.id_asignatura = c.id_asignatura
                 AND COALESCE(a.tipo_acta, 1) = 1
+                AND (
+                    a.id_asignatura = c.id_asignatura
+                    OR a.id_nivel = c.id_nivel
+                )
           )
     )
     DELETE FROM publicv.e_notas n
@@ -121,6 +128,34 @@ BEGIN
             CONTINUE;
         END IF;
 
+        -- UK (id_nivel, id_nom): si ya hay acta tipo 1 en destino, no insertar; borrar el tipo 2 origen
+        EXECUTE format(
+            $sql$
+            SELECT EXISTS (
+                SELECT 1 FROM %I.e_notas_otra_region_stgr x
+                WHERE x.id_nom = $1
+                  AND x.id_nivel = $2
+                  AND COALESCE(x.tipo_acta, 1) = 1
+            )
+            $sql$,
+            dest
+        ) INTO tiene_acta USING r.id_nom, r.id_nivel;
+
+        IF tiene_acta THEN
+            EXECUTE format(
+                $sql$
+                DELETE FROM %I.%I
+                WHERE id_nom = $1
+                  AND id_asignatura = $2
+                  AND COALESCE(tipo_acta, 1) = 2
+                $sql$,
+                r.esquema_fisico, r.tabla
+            ) USING r.id_nom, r.id_asignatura;
+            n_del_uk := n_del_uk + 1;
+            CONTINUE;
+        END IF;
+
+        -- Insertar solo si la UK está libre (cualquier tipo)
         EXECUTE format(
             $sql$
             INSERT INTO %I.e_notas_otra_region_stgr (
@@ -133,15 +168,16 @@ BEGIN
             WHERE NOT EXISTS (
                 SELECT 1 FROM %I.e_notas_otra_region_stgr x
                 WHERE x.id_nom = $1
-                  AND x.id_asignatura = $3
-                  AND COALESCE(x.tipo_acta, 1) = 2
+                  AND x.id_nivel = $2
             )
             $sql$,
             dest, dest
         ) USING
             r.id_nom, r.id_nivel, r.id_asignatura, r.id_situacion, r.acta, r.f_acta, r.detalle,
             r.preceptor, r.id_preceptor, r.epoca, r.id_activ, r.nota_num, r.nota_max;
+        GET DIAGNOSTICS insertado = ROW_COUNT;
 
+        -- Origen: siempre quitar el tipo 2 (movido, o descartado porque UK ya ocupada por otro tipo 2)
         EXECUTE format(
             $sql$
             DELETE FROM %I.%I
@@ -152,12 +188,16 @@ BEGIN
             r.esquema_fisico, r.tabla
         ) USING r.id_nom, r.id_asignatura;
 
-        n_mov := n_mov + 1;
+        IF insertado > 0 THEN
+            n_mov := n_mov + 1;
+        ELSE
+            n_ya_ok := n_ya_ok + 1;
+        END IF;
     END LOOP;
 
     PERFORM public.migracion_aviso(format(
-        'certificados sv: borrados_con_par_acta=%s movidos_a_region=%s ya_ok=%s omitidos=%s',
-        n_del_par, n_mov, n_ya_ok, n_omit
+        'certificados sv: borrados_con_par_acta=%s borrados_uk_tipo1=%s movidos_a_region=%s ya_ok=%s omitidos=%s',
+        n_del_par, n_del_uk, n_mov, n_ya_ok, n_omit
     ));
 
     FOR r IN SELECT motivo, n FROM tmp_cert_omit ORDER BY n DESC LIMIT 15
