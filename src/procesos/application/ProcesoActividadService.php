@@ -82,6 +82,11 @@ class ProcesoActividadService
 
     private function doGuardar(ActividadProcesoTarea $ActividadProcesoTarea): bool
     {
+        // El servicio es compartido en la petición (p. ej. cambio de fase en lote).
+        // Sin reset, aStack acumula fases de actividades anteriores y dispara
+        // falsos "referencias circulares" al marcar la misma fase_tarea otra vez.
+        $this->resetState();
+
         $id_tipo_proceso = $ActividadProcesoTarea->getIdTipoProcesoVo()->value();
         $id_activ = $ActividadProcesoTarea->getId_activ();
         $id_fase = $ActividadProcesoTarea->getId_fase();
@@ -138,14 +143,12 @@ class ProcesoActividadService
                         // además debería marcar como completado la fase correspondiente del proceso de la sf.
                         $this->marcarFaseEnSf($id_activ, $statusProceso, $statusActividad);
                     } else {
-                        echo _("no se puede cambiar el status de la actividad a 'actual', porque debe hacerlo dre");
-                        $permitido = FALSE;
+                        // No echo: corrompe la respuesta JSON del cambio en lote.
+                        $this->abort(_("no se puede cambiar el status de la actividad a 'actual', porque debe hacerlo dre"));
                     }
                 } else { // para el resto.
                     if ($id_tabla === 'dl') {
-                        // No se puede modificar una actividad de otra dl
-                        echo sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"), $dl_org);
-                        $permitido = FALSE;
+                        $this->abort(sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"), $dl_org));
                     } else {
                         $oActividad->setStatusVo($statusProceso);
                         $this->actividadAllRepository->Guardar($oActividad);
@@ -157,9 +160,8 @@ class ProcesoActividadService
                     $this->actividadAllRepository->Guardar($oActividad);
                 } else {
                     if ($id_tabla === 'dl') {
-                        // No se puede modificar una actividad de otra dl
-                        echo sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"), $dl_org);
-                        //$permitido = FALSE;
+                        // La fase ya se marcó/desmarcó; solo no se puede tocar el status.
+                        $this->errorTxt = sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"), $dl_org);
                     } else {
                         $oActividad->setStatusVo($statusProceso);
                         $this->actividadAllRepository->Guardar($oActividad);
@@ -444,47 +446,53 @@ class ProcesoActividadService
      */
     public function marcarFaseEnSf(int $id_activ, int $statusProceso, int $statusActividad): void
     {
-        $nomTablaOriginal = $this->actividadProcesoTareaRepository->getNomTabla();
+        // Tabla de la sección actual (no capturar getNomTabla() tras otros
+        // cambios de tabla en la misma petición).
+        $nomTablaOriginal = ConfigGlobal::mi_sfsv() == 1
+            ? 'a_actividad_proceso_sv'
+            : 'a_actividad_proceso_sf';
 
-        // buscar el id_tipo_proceso para esta actividad de la otra sección
-        if (ConfigGlobal::mi_sfsv() == 1) {
-            $this->actividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sf');
-        } else {
-            $this->actividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sv');
-        }
-
-        $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->getActividadProcesoTareas(['id_activ' => $id_activ]);
-
-        // Puede ser que el proceso no exista (para sfsv=2):
-        if (empty($cActividadProcesoTareas)) {
-            $this->actividadProcesoTareaRepository->generarProceso((string) $id_activ, 2);
-        }
-
-        /* Para no andar buscando que fase corresponde a status, finalmente he decidido
-         * que las id_fase para el cambio de status son fijas, e iguales al status de la actividad.
-         */
-        if ($statusActividad == 1 && $statusProceso == 2) {
-            $id_fase = FaseId::FASE_APROBADA;
-            $aWhere = ['id_activ' => $id_activ, 'id_fase' => $id_fase];
-            $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
-            if (!empty($cActividadProcesoTareas)) {
-                $oActividadProcessorTarea = $cActividadProcesoTareas[0];
-                $oActividadProcessorTarea->setCompletado(true);
-                $this->actividadProcesoTareaRepository->Guardar($oActividadProcessorTarea);
+        try {
+            // buscar el id_tipo_proceso para esta actividad de la otra sección
+            if (ConfigGlobal::mi_sfsv() == 1) {
+                $this->actividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sf');
+            } else {
+                $this->actividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sv');
             }
-        }
-        if ($statusActividad > $statusProceso) {
-            $id_fase = FaseId::FASE_APROBADA;
-            $aWhere = ['id_activ' => $id_activ, 'id_fase' => $id_fase];
-            $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
-            if (!empty($cActividadProcesoTareas)) {
-                $oActividadProcessorTarea = $cActividadProcesoTareas[0];
-                $oActividadProcessorTarea->setCompletado(false);
-                $this->actividadProcesoTareaRepository->Guardar($oActividadProcessorTarea);
-            }
-        }
 
-        $this->actividadProcesoTareaRepository->setNomTabla($nomTablaOriginal);
+            $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->getActividadProcesoTareas(['id_activ' => $id_activ]);
+
+            // Puede ser que el proceso no exista (para sfsv=2):
+            if (empty($cActividadProcesoTareas)) {
+                $this->actividadProcesoTareaRepository->generarProceso((string) $id_activ, 2);
+            }
+
+            /* Para no andar buscando que fase corresponde a status, finalmente he decidido
+             * que las id_fase para el cambio de status son fijas, e iguales al status de la actividad.
+             */
+            if ($statusActividad == 1 && $statusProceso == 2) {
+                $id_fase = FaseId::FASE_APROBADA;
+                $aWhere = ['id_activ' => $id_activ, 'id_fase' => $id_fase];
+                $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
+                if (!empty($cActividadProcesoTareas)) {
+                    $oActividadProcessorTarea = $cActividadProcesoTareas[0];
+                    $oActividadProcessorTarea->setCompletado(true);
+                    $this->actividadProcesoTareaRepository->Guardar($oActividadProcessorTarea);
+                }
+            }
+            if ($statusActividad > $statusProceso) {
+                $id_fase = FaseId::FASE_APROBADA;
+                $aWhere = ['id_activ' => $id_activ, 'id_fase' => $id_fase];
+                $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
+                if (!empty($cActividadProcesoTareas)) {
+                    $oActividadProcessorTarea = $cActividadProcesoTareas[0];
+                    $oActividadProcessorTarea->setCompletado(false);
+                    $this->actividadProcesoTareaRepository->Guardar($oActividadProcessorTarea);
+                }
+            }
+        } finally {
+            $this->actividadProcesoTareaRepository->setNomTabla($nomTablaOriginal);
+        }
     }
 
     /**

@@ -85,10 +85,18 @@ class RegistrarCambio
         if (ConfigGlobal::is_app_installed('cambios')) {
             $CambioRepository = $this->cambioDlRepository;
             if (ConfigGlobal::is_app_installed('procesos') && $id_activ !== null) {
-                $this->actividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sv');
-                $aFases_sv = self::normalizeFasesList($this->actividadProcesoTareaRepository->getFasesCompletadas($id_activ));
-                $this->actividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sf');
-                $aFases_sf = self::normalizeFasesList($this->actividadProcesoTareaRepository->getFasesCompletadas($id_activ));
+                // El repositorio es compartido en la petición: hay que restaurar
+                // la tabla; si no, el siguiente cambio de fase en lote lee/escribe
+                // en sf (o sv) por error y solo actualiza la primera actividad.
+                $nomTablaProcesoOriginal = $this->actividadProcesoTareaRepository->getNomTabla();
+                try {
+                    $this->actividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sv');
+                    $aFases_sv = self::normalizeFasesList($this->actividadProcesoTareaRepository->getFasesCompletadas($id_activ));
+                    $this->actividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sf');
+                    $aFases_sf = self::normalizeFasesList($this->actividadProcesoTareaRepository->getFasesCompletadas($id_activ));
+                } finally {
+                    $this->actividadProcesoTareaRepository->setNomTabla($nomTablaProcesoOriginal);
+                }
             } else {
                 $aFases_sv = [$id_status];
                 $aFases_sf = [$id_status];
