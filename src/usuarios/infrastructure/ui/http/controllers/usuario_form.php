@@ -3,7 +3,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\shared\config\ConfigGlobal;
-use Illuminate\Http\JsonResponse;
+use src\shared\web\ContestarJson;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
@@ -23,7 +23,7 @@ $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 if ($oMiUsuario === null) {
     $jsondata = ['success' => false, 'mensaje' => _('Usuario no encontrado')];
-    (new JsonResponse($jsondata))->send();
+    ContestarJson::send($jsondata);
     return;
 }
 $miRole = $oMiUsuario->getId_role();
@@ -238,5 +238,5 @@ if (!empty($error_txt)) {
     $jsondata['data'] = json_encode(['a_campos' => $a_campos], JSON_FORCE_OBJECT);
 }
 
-(new JsonResponse($jsondata))->send();
+ContestarJson::send($jsondata);
 

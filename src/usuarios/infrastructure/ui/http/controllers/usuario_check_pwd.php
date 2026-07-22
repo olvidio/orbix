@@ -2,7 +2,7 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
-use Illuminate\Http\JsonResponse;
+use src\shared\web\ContestarJson;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Username;
@@ -25,6 +25,6 @@ if (!empty($Qusuario)) { // si es nuevo no tiene id
 if (!empty($Qpassword) && $usuario !== null) {
     $oCrypt = new PasswordHasher();
     $jsondata = $oCrypt->is_valid_password($usuario, $Qpassword);
-    (new JsonResponse($jsondata))->send();
+    ContestarJson::send($jsondata);
     exit();
 }
