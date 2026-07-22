@@ -1,4 +1,6 @@
 -- Diagnóstico: actas en e_notas_otra_region_stgr sin destino de repatriación usable.
+-- Relacionado (reescribir acta en vez de ampliar mapa): 
+--   tools/audit/diag_otra_region_reescribir_acta.sql
 --
 -- Uso:
 --   psql -h … -d sv -f tools/audit/diag_notas_otra_region_mapa.sql
