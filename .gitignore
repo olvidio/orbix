@@ -120,3 +120,4 @@ tools/**/venv/
 languages/**/*còpia*
 languages/**/*copia*
 *.py.old
+__pycache__/
