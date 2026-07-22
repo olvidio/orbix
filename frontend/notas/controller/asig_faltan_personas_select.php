@@ -9,6 +9,7 @@ use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -35,7 +36,7 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros([
 ], $Qid_sel, $Qscroll_id);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['id_asignatura' => $Qid_asignatura],
     $navState,
@@ -71,18 +72,19 @@ $a_cabeceras = [
     ['name' => _("mails"), 'width' => 100],
 ];
 
-$tabla = PostRequest::getDataFromUrl('/src/notas/asig_faltan_personas_select_data', [
+$tabla = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/notas/asig_faltan_personas_select_data', [
     'id_asignatura' => $Qid_asignatura,
     'personas_n' => $Qpersonas_n,
     'personas_agd' => $Qpersonas_agd,
     'b_c' => $Qb_c,
     'c1' => $Qc1,
     'c2' => $Qc2,
-]);
+]));
 $presentacion = NotasPayload::asigFaltanTablaFromPayload($tabla);
 $titulo = $presentacion['titulo'];
 $obj_pau = $presentacion['obj_pau'];
-$rows = $presentacion['rows'];
+$rowsRaw = $presentacion['rows'] ?? [];
+$rows = is_array($rowsRaw) ? $rowsRaw : [];
 
 $i = 0;
 $a_valores = [];
@@ -92,7 +94,8 @@ if (!ListNavSupport::idSelIsEmpty($Qid_sel)) {
 if ($Qscroll_id !== '') {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
-foreach ($rows as $row) {
+foreach ($rows as $rowRaw) {
+    $row = NotasPayload::asigFaltanRow($rowRaw);
     $i++;
     $id_nom = $row['id_nom'];
     $id_tabla = $row['id_tabla'];

@@ -10,6 +10,7 @@ use frontend\shared\web\Desplegable;
 
 final class ActividadesRenderSupport
 {
+/** @param array<string, mixed>|null $raw */
 public static function desplegableHtml(?array $raw): string
 {
     if ($raw === null || $raw === []) {

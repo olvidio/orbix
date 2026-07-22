@@ -8,6 +8,7 @@ use frontend\profesores\helpers\ProfesoresPostInput;
 use frontend\profesores\helpers\ProfesoresUrlSigning;
 use frontend\profesores\helpers\ProfesoresPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -21,7 +22,7 @@ ListNavSupport::restoreSelectionFromStackPost();
 $navIdentity = $id_nom > 0 ? ['id_nom' => $id_nom, 'id_tabla' => $Qid_tabla] : [];
 $navState = ListNavSupport::buildReturnParametrosFromPost();
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $navIdentity,
     $navState,

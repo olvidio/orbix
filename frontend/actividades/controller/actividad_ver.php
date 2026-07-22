@@ -47,7 +47,7 @@ $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qid_activ = ActividadesPostInput::idActivFromPost();
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $Qid_activ > 0 ? ['id_activ' => $Qid_activ] : [],
     ListNavSupport::buildActividadVerReturnParametros([
@@ -114,19 +114,19 @@ if (!empty($Qid_activ)) { // caso de modificar
         $Qmod = 'editar';
     }
 
-    $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
+    $labelsRow = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
         'with_all' => 't',
-    ]);
+    ]));
     $a_status = ActividadesPayload::statusLabelsFromPayload($labelsRow);
 
     // Primera pasada: leemos solo la entidad para resolver permisos e isfsv.
-    $dataEntidad = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
+    $dataEntidad = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
         'id_activ' => $Qid_activ,
-    ]);
+    ]));
     $entidad = ActividadesPayload::entidadFromVerDatos($dataEntidad);
 
-    $id_tipo_activ = $entidad['id_tipo_activ'];
-    $dl_org = $entidad['dl_org'];
+    $id_tipo_activ = PayloadCoercion::string($entidad['id_tipo_activ'] ?? '');
+    $dl_org = PayloadCoercion::string($entidad['dl_org'] ?? '');
     $nom_activ = $entidad['nom_activ'];
     $id_ubi = $entidad['id_ubi'];
     $f_ini = $entidad['f_ini'];
@@ -174,9 +174,9 @@ if (!empty($Qid_activ)) { // caso de modificar
     $Qmod = 'nuevo';
     $isfsv = OrbixRuntime::miSfsv();
 
-    $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
+    $labelsRow = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
         'with_all' => 'f',
-    ]);
+    ]));
     $a_status = ActividadesPayload::statusLabelsFromPayload($labelsRow);
     $dl_org = OrbixRuntime::miDelef();
     $status = ActividadStatusId::PROYECTO;
@@ -220,10 +220,10 @@ if (!empty($Qid_activ)) { // caso de modificar
         // si para dl, incluir la dl org
         // si dl_ex, idem.
         // Resolver vía backend: el frontend no tiene $GLOBALS['container'].
-        $rowPropia = PostRequest::getDataFromUrl('/src/actividades/actividad_permiso_crear_datos', [
+        $rowPropia = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_permiso_crear_datos', [
             'id_tipo_activ' => $id_tipo_activ,
             'dl_propia' => 't',
-        ]);
+        ]));
         $crearPropia = ActividadesPayload::permisoCrearFromRow($rowPropia);
         if (!empty($rowPropia['aviso'])) {
             echo '<br>' . \frontend\shared\helpers\PayloadCoercion::string($rowPropia['aviso']);
@@ -244,10 +244,10 @@ if (!empty($Qid_activ)) { // caso de modificar
                 $status = $crearPropia['status'];
             } else {
                 $Bdl = 'f';
-                $rowEx = PostRequest::getDataFromUrl('/src/actividades/actividad_permiso_crear_datos', [
+                $rowEx = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_permiso_crear_datos', [
                     'id_tipo_activ' => $id_tipo_activ,
                     'dl_propia' => 'f',
-                ]);
+                ]));
                 $crearEx = ActividadesPayload::permisoCrearFromRow($rowEx);
                 if (!empty($rowEx['aviso'])) {
                     echo '<br>' . \frontend\shared\helpers\PayloadCoercion::string($rowEx['aviso']);
@@ -269,14 +269,14 @@ if (!empty($Qid_activ)) { // caso de modificar
     $oPermActiv = [];
 
     if (!empty($id_tipo_activ)) {
-        $dataNivelDef = PostRequest::getDataFromUrl('/src/actividades/actividad_nivel_stgr_default_datos', [
+        $dataNivelDef = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_nivel_stgr_default_datos', [
             'id_tipo_activ' => $id_tipo_activ,
-        ]);
+        ]));
         $nivel_stgr = \frontend\shared\helpers\PayloadCoercion::int($dataNivelDef['nivel_stgr_default'] ?? 9);
     }
 
     // Pedir desplegables + tarifa inicial para el caso 'nuevo'.
-    $dataRender = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
+    $dataRender = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
         'isfsv' => $isfsv,
         'dl_org' => $dl_org,
         'Bdl' => $Bdl,
@@ -288,7 +288,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         'lugar_esp' => $lugar_esp,
         'id_tipo_activ' => $id_tipo_activ,
         'calc_tarifa_inicial' => $calc_tarifa_inicial ? 1 : 0,
-    ]);
+    ]));
     if (!empty($dataRender['tarifa_inicial'])) {
         $tarifa = $dataRender['tarifa_inicial'];
     }
@@ -305,7 +305,7 @@ $nombre_ubi = $renderForm['nombre_ubi'];
 // En el caso 'nuevo' pedimos tarifa_inicial; si vino, hay que regenerar el
 // desplegable de tarifa con la opcion ya seleccionada.
 if (!empty($tarifa) && !empty($calc_tarifa_inicial)) {
-    $dataTarifa = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
+    $dataTarifa = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
         'isfsv' => $isfsv,
         'dl_org' => $dl_org,
         'Bdl' => $Bdl,
@@ -317,7 +317,7 @@ if (!empty($tarifa) && !empty($calc_tarifa_inicial)) {
         'lugar_esp' => $lugar_esp,
         'id_tipo_activ' => $id_tipo_activ,
         'calc_tarifa_inicial' => 0,
-    ]);
+    ]));
     $renderTarifa = ActividadesPayload::verRenderFromPayload($dataTarifa);
     if ($renderTarifa['html_despl_tarifa'] !== '') {
         $html_despl_tarifa = $renderTarifa['html_despl_tarifa'];
@@ -347,10 +347,10 @@ $oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/con
 $oHash1->setCamposForm('dl_org!ssfsv!isfsv');
 $h = $oHash1->linkSinVal();
 
-$extendida = ($Qmod !== 'cambiar_tipo') && (strlen((string)$id_tipo_activ) > 3);
-$dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+$extendida = ($Qmod !== 'cambiar_tipo') && (strlen(PayloadCoercion::string($id_tipo_activ)) > 3);
+$dataTipoBloque = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
     'perm_jefe' => $permiso_des ? 't' : 'f',
-    'id_tipo_activ' => (string)$id_tipo_activ,
+    'id_tipo_activ' => PayloadCoercion::string($id_tipo_activ),
     'que' => 'buscar',
     'sfsv' => $ssfsv,
     'sasistentes' => $sasistentes,
@@ -358,12 +358,12 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'sactividad2' => '',
     'snom_tipo' => $snom_tipo,
     'extendida' => $extendida ? 't' : '',
-]);
-$actividad_tipo_html = \frontend\shared\helpers\PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
+]));
+$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 
-$status_txt = $a_status[$status] ?? '';
+$status_txt = $a_status[PayloadCoercion::int($status)] ?? '';
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,

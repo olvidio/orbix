@@ -404,7 +404,8 @@ final class AppMobileLogin
         return $a_mods_installed;
     }
 
-    /** @return list<string> */
+    /** @param array<int, string> $a_mods_installed
+     * @return list<string> */
     private static function getAppsMods(int|string $id_mod, array $a_mods_installed): array
     {
         $apps = [];

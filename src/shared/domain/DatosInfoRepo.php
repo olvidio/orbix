@@ -288,7 +288,7 @@ abstract class DatosInfoRepo
     {
         if (is_array($plan)) {
             $normalized = array_values(array_map(
-                fn (mixed $item): int => (int) $item,
+                static fn (mixed $item): int => is_numeric($item) ? (int) $item : 0,
                 $plan
             ));
             sort($normalized);
@@ -302,7 +302,16 @@ abstract class DatosInfoRepo
             return $parsed;
         }
 
-        return $this->normalizePkeyScalar($plan);
+        $scalar = $this->normalizePkeyScalar($plan);
+        if (is_int($scalar)) {
+            return $scalar;
+        }
+        if (is_array($scalar)) {
+            /** @var list<int> $scalar */
+            return $scalar;
+        }
+
+        return is_numeric($scalar) ? (int) $scalar : 0;
     }
 
     private function normalizePkeyScalar(mixed $value): mixed

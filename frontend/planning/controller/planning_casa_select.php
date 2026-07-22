@@ -7,6 +7,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Pantalla intermedia entre `planning_casa_que` y `planning_casa_ver`.
@@ -51,7 +52,7 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros([
 ], $Qid_sel, $Qscroll_id);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['cdc_sel' => $Qcdc_sel],
     $navState,

@@ -166,7 +166,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
      * Si se le pasa el parámetro isfsv, sólo genera el proceso correspondiente.
      *
      * @param string $iid_activ
-     * @param integer|string $isfsv
+     * @param int|null $isfsv
      * @param boolean $force para forzar a borrar el proceso y generarlo de nuevo
      * @return boolean|int id_fase.
      */
@@ -387,12 +387,13 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
      *
      * @param int $iid_activ
      * @param int $iid_tipo_proceso
+     * @param int|null $isfsv
      * @return int id_fase.
      */
     private function generar(
         int $iid_activ,
         int $iid_tipo_proceso,
-        int|string $isfsv,
+        int|null $isfsv,
         bool $force = false,
         ?ActividadAll $oActividad = null,
     ): int {

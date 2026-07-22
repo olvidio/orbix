@@ -1,6 +1,7 @@
 <?php
 
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Pantalla: configuracion de avisos por usuario/grupo.
@@ -28,7 +29,7 @@ if (!empty($a_sel)) {
 $navIdentity = $Qid_item_usuario_objeto > 0 ? ['id_item_usuario_objeto' => $Qid_item_usuario_objeto] : [];
 $navState = ListNavSupport::buildReturnParametrosFromPost();
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $navIdentity,
     $navState,

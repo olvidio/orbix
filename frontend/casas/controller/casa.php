@@ -4,6 +4,7 @@ use frontend\actividades\helpers\ActividadesPermSupport;
 use frontend\casas\helpers\CasasPayload;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Pantalla principal del módulo `casas` — filtro casa + periodo y
@@ -36,7 +37,7 @@ $Qyear = (int)filter_input(INPUT_POST, 'year');
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::buildReturnParametrosFromPost(),

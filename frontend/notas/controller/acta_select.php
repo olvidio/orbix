@@ -2,6 +2,7 @@
 
 use frontend\notas\helpers\NotasPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Esta página muestra una tabla con las actas.
@@ -36,7 +37,7 @@ $Qid_sel = ListNavSupport::idSelFromPost();
 $Qscroll_id = ListNavSupport::scrollIdFromPost();
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::buildActaSelectReturnParametros(),
@@ -48,15 +49,17 @@ $Qacta = (string)filter_input(INPUT_POST, 'acta');
 $oConfig = $_SESSION['oConfig'] ?? null;
 $mesFinStgr = $oConfig instanceof ConfigSnapshot ? $oConfig->getMesFinStgr() : 6;
 
-$d = PostRequest::getDataFromUrl('/src/notas/acta_select_data', [
+$d = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/notas/acta_select_data', [
     'titulo' => $Qtitulo,
     'acta' => $Qacta,
     'mes_fin_stgr' => $mesFinStgr,
-]);
+]));
 $presentacion = NotasPayload::actaSelectFromPayload($d);
-$titulo = $presentacion['titulo'];
-$a_asignaturas = $presentacion['a_asignaturas'];
-$cActasData = $presentacion['actas'];
+$titulo = PayloadCoercion::string($presentacion['titulo'] ?? '');
+/** @var array<int|string, string> $a_asignaturas */
+$a_asignaturas = is_array($presentacion['a_asignaturas'] ?? null) ? $presentacion['a_asignaturas'] : [];
+/** @var list<array<string, mixed>> $cActasData */
+$cActasData = is_array($presentacion['actas'] ?? null) ? $presentacion['actas'] : [];
 
 $botones = 0; // para 'añadir acta'
 /** @var list<array{txt: string, click: string}> $a_botones */
@@ -90,10 +93,10 @@ $a_valores = [];
 $pdf_signed_urls = [];
 foreach ($cActasData as $oActa) {
     $i++;
-    $acta = $oActa['acta'];
-    $f_acta = $oActa['f_acta'];
-    $id_asignatura = $oActa['id_asignatura'];
-    $hasPdf = $oActa['has_pdf'] ? _("Sí") : '';
+    $acta = PayloadCoercion::string($oActa['acta'] ?? '');
+    $f_acta = PayloadCoercion::string($oActa['f_acta'] ?? '');
+    $id_asignatura = PayloadCoercion::int($oActa['id_asignatura'] ?? 0);
+    $hasPdf = !empty($oActa['has_pdf']) ? _("Sí") : '';
 
     if (!isset($a_asignaturas[$id_asignatura]) || $a_asignaturas[$id_asignatura] === '') {
         $nombre_corto = sprintf(_("nombre corto no definido para id asignatura: %s"), $id_asignatura);

@@ -14,6 +14,11 @@ interface DatosFichaInterface
     /**
      * @return string|array<string, mixed>
      */
+    /**
+     * Nombre de PK (string) o mapa campo=>valor / lista de campos.
+     *
+     * @return string|array<int|string, mixed>
+     */
     public function getPrimary_key(): string|array;
 
     /**

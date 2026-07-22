@@ -4,6 +4,7 @@ use frontend\actividades\helpers\ActividadesPermSupport;
 use frontend\casas\helpers\CasasPayload;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Pantalla `casa_resumen`: filtro casa + periodo y carga AJAX del
@@ -25,7 +26,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::buildReturnParametrosFromPost(),

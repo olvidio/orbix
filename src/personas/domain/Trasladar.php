@@ -1170,12 +1170,12 @@ class Trasladar
                 $eliminarMethod = new \ReflectionMethod($repo, 'Eliminar');
                 $eliminarMethod->invoke($repo, $ObjetoOrg);
             }
-            if ($class === 'Traslado' && method_exists($repo, 'Eliminar')) {
-                // solamente gurado el último, para saber donde ha ido.
+            if ($class === 'Traslado' && $Objeto instanceof Traslado && method_exists($repo, 'Eliminar')) {
+                // solamente guardo el último, para saber donde ha ido.
                 $oF_traslado = $Objeto->getF_traslado();
                 $hoy = new DateTimeLocal();
                 //solamente comparo el dia, no la hora
-                if ($oF_traslado->format('Y-m-d') < $hoy->format('Y-m-d')) {
+                if ($oF_traslado !== null && $oF_traslado->format('Y-m-d') < $hoy->format('Y-m-d')) {
                     $eliminarMethod = new \ReflectionMethod($repo, 'Eliminar');
                     $eliminarMethod->invoke($repo, $ObjetoOrg);
                 }

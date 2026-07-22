@@ -36,7 +36,7 @@ $Qa_status = (array)filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_RE
 $Qa_id_cdc = (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::buildListaSrCsvQueReturnParametros([

@@ -27,16 +27,18 @@ if ($a_sel === []) {
     exit('no sé de que va');
 }
 
-$firstSel = is_string($a_sel[0] ?? null) ? $a_sel[0] : '';
+$sel0 = $a_sel[0];
+$firstSel = is_string($sel0) ? $sel0 : '';
 $firstParts = explode('#', $firstSel, 2);
-$firstIdNom = is_numeric($firstParts[0] ?? '') ? (int) $firstParts[0] : 0;
+$firstPart = $firstParts[0];
+$firstIdNom = is_numeric($firstPart) ? (int) $firstPart : 0;
 
 $navState = array_merge(
     ListNavSupport::buildTesseraReturnParametros(),
     ListNavSupport::buildSelectionStatePatchFromPost(),
 );
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['id_nom' => $firstIdNom],
     $navState,

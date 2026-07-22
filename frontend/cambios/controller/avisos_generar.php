@@ -42,8 +42,8 @@ if ($is_admin) {
     $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
     $Qaviso_tipo = (int)filter_input(INPUT_POST, 'aviso_tipo');
     if ($Qrefresh && $Qid_usuario === 0 && isset($prevState['id_usuario'])) {
-        $Qid_usuario = (int)$prevState['id_usuario'];
-        $Qaviso_tipo = (int)($prevState['aviso_tipo'] ?? 0);
+        $Qid_usuario = PayloadCoercion::int($prevState['id_usuario']);
+        $Qaviso_tipo = PayloadCoercion::int($prevState['aviso_tipo'] ?? 0);
     } elseif (
         defined('ORBIX_INDEX_EMBED')
         && !$Qrefresh
@@ -67,7 +67,7 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros([
     'aviso_tipo' => $Qaviso_tipo,
 ], $Qid_sel, $Qscroll_id);
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,

@@ -14,6 +14,9 @@ use function strnatcasecmp;
 /** Helpers de tablas, arrays PG, coerción de input y utilidades de texto. */
 final class FuncTablasSupport
 {
+    /**
+     * @param array<int|string, mixed> $phpArray
+     */
     public static function arrayPhp2pg(array $phpArray = []): string
     {
         $phpArray_filtered = [];
@@ -35,6 +38,9 @@ final class FuncTablasSupport
         return '{' . implode(',', $parts) . '}';
     }
 
+    /**
+     * @return list<int>
+     */
     public static function arrayPgInteger2php(string $postgresArray): array
     {
         if (empty($postgresArray)) {
@@ -113,20 +119,52 @@ final class FuncTablasSupport
         return strnatcasecmp($str1, $str2);
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $filas
+     */
     public static function usortProfesoresPorApellidos(array &$filas): void
     {
         usort($filas, static function (array $a, array $b): int {
-            $c = self::strsinacentocmp($a['ap1'], $b['ap1']);
+            $ap1a = is_string($a['ap1'] ?? null) ? $a['ap1'] : '';
+            $ap1b = is_string($b['ap1'] ?? null) ? $b['ap1'] : '';
+            $c = self::strsinacentocmp($ap1a, $ap1b);
             if ($c !== 0) {
                 return $c;
             }
-            $c = self::strsinacentocmp($a['ap2'] ?? '', $b['ap2'] ?? '');
+            $ap2a = is_string($a['ap2'] ?? null) ? $a['ap2'] : '';
+            $ap2b = is_string($b['ap2'] ?? null) ? $b['ap2'] : '';
+            $c = self::strsinacentocmp($ap2a, $ap2b);
             if ($c !== 0) {
                 return $c;
             }
-    
-            return self::strsinacentocmp($a['nom'], $b['nom']);
+            $noma = is_string($a['nom'] ?? null) ? $a['nom'] : '';
+            $nomb = is_string($b['nom'] ?? null) ? $b['nom'] : '';
+
+            return self::strsinacentocmp($noma, $nomb);
         });
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $filas
+     * @return array<int, string>
+     */
+    public static function profesoresOpcionesFromFilas(array $filas): array
+    {
+        $aOpciones = [];
+        foreach ($filas as $fila) {
+            $idNom = $fila['id_nom'] ?? null;
+            if (is_int($idNom)) {
+                $key = $idNom;
+            } elseif (is_numeric($idNom)) {
+                $key = (int) $idNom;
+            } else {
+                continue;
+            }
+            $apNom = $fila['ap_nom'] ?? '';
+            $aOpciones[$key] = is_string($apNom) ? $apNom : (is_scalar($apNom) ? (string) $apNom : '');
+        }
+
+        return $aOpciones;
     }
 
     public static function strtoupperDlb(string $texto): string
@@ -139,6 +177,9 @@ final class FuncTablasSupport
         return str_replace($minusculas, $mayusculas, $texto);
     }
 
+    /**
+     * @param array<string, int|string|null>|null $calendario
+     */
     public static function cursoEst(string $que, int|string $any, string $tipo = 'est', ?array $calendario = null): DateTimeLocal
     {
         $any = (int) $any;
@@ -212,6 +253,9 @@ final class FuncTablasSupport
     
     }
 
+    /**
+     * @param array<string, mixed> $input
+     */
     public static function inputString(array $input, string $key, string $default = ''): string
     {
         if (!array_key_exists($key, $input)) {
@@ -228,6 +272,9 @@ final class FuncTablasSupport
         return $default;
     }
 
+    /**
+     * @param array<string, mixed> $input
+     */
     public static function inputInt(array $input, string $key, int $default = 0): int
     {
         if (!array_key_exists($key, $input)) {
@@ -247,6 +294,10 @@ final class FuncTablasSupport
         return $default;
     }
 
+    /**
+     * @param array<string, mixed> $input
+     * @return list<string>
+     */
     public static function inputStringList(array $input, string $key): array
     {
         if (!isset($input[$key]) || !is_array($input[$key])) {

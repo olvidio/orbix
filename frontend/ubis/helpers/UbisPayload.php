@@ -9,6 +9,7 @@ use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
+use InvalidArgumentException;
 use src\ubis\infrastructure\persistence\postgresql\PgDireccionCasaDlRepository;
 use src\ubis\infrastructure\persistence\postgresql\PgDireccionCasaExRepository;
 use src\ubis\infrastructure\persistence\postgresql\PgDireccionCasaRepository;
@@ -18,6 +19,9 @@ use src\ubis\infrastructure\persistence\postgresql\PgDireccionCentroRepository;
 
 final class UbisPayload
 {
+/**
+ * @return array<string, mixed>
+ */
 public static function postData(mixed $data): array
 {
     if (!is_array($data)) {

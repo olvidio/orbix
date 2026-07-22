@@ -148,7 +148,7 @@ $navState = array_merge(
     ['cara' => $Qcara],
 );
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['id_nom' => $id_nom, 'id_tabla' => $id_tabla],
     $navState,

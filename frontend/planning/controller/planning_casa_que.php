@@ -11,6 +11,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Formulario de filtros para el planning por casas (se selecciona el
@@ -52,7 +53,7 @@ if ($Qyear === 0 && \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpropu
 }
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::mergeSelectionIntoReturnParametros([

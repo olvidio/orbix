@@ -6,7 +6,6 @@ use src\shared\config\ConfigGlobal;
 use src\permisos\domain\PermisosActividades;
 use src\shared\infrastructure\DependencyResolver;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\cambios\application\ActividadParaAvisoLookup;
 use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
@@ -52,7 +51,6 @@ class Avisos
         private CambioUsuarioRepositoryInterface $cambioUsuarioRepository,
         private CambioAnotadoRepositoryInterface $cambioAnotadoRepository,
         private UsuarioRepositoryInterface $usuarioRepository,
-        private ActividadAllRepositoryInterface $actividadAllRepository,
         private ActividadParaAvisoLookup $actividadParaAvisoLookup,
         private ZonaRepositoryInterface $zonaRepository,
         private ZonaSacdRepositoryInterface $zonaSacdRepository,

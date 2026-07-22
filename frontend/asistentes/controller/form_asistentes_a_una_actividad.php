@@ -1,6 +1,7 @@
 <?php
 
 use frontend\asistentes\helpers\AsistentesPayload;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\asistentes\helpers\FormAsistentesAUnaActividadRender;
@@ -41,7 +42,7 @@ if ($Qactualizar === 0) {
     }
 
     $oPosicion->nav()->enter(
-        (string) ($_SERVER['PHP_SELF'] ?? ''),
+        PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
         '#ficha3101',
         $identity,
         $state,

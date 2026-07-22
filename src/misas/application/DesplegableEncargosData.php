@@ -37,10 +37,10 @@ class DesplegableEncargosData
 
         $opciones = [];
 
-        if (!empty($id_enc_sel)) {
+        if ($id_enc_sel !== null && $id_enc_sel > 0) {
             $oEncSel = $this->encargoRepository->findById($id_enc_sel);
             if ($oEncSel !== null) {
-                $opciones[(string)$id_enc_sel] = $oEncSel->getDesc_enc();
+                $opciones[(string)$id_enc_sel] = (string) ($oEncSel->getDesc_enc() ?? '');
             }
         }
 
@@ -54,7 +54,7 @@ class DesplegableEncargosData
                 ['id_tipo_enc' => 'ANY'],
             );
             foreach ($cEncargos as $oEncargo) {
-                $opciones[(string)$oEncargo->getId_enc()] = $oEncargo->getDesc_enc();
+                $opciones[(string)$oEncargo->getId_enc()] = (string) ($oEncargo->getDesc_enc() ?? '');
             }
         }
 

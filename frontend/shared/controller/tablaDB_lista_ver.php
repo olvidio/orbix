@@ -8,6 +8,7 @@ use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * @return array<int|string, mixed>
@@ -118,7 +119,9 @@ $restored = ListNavSupport::restoreSelectionFromStackPost();
 $Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
 $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
 if (!ListNavSupport::idSelIsEmpty($restored['id_sel'])) {
-    $Qid_sel = is_array($restored['id_sel']) ? (string)$restored['id_sel'][0] : (string)$restored['id_sel'];
+    $Qid_sel = is_array($restored['id_sel'])
+        ? PayloadCoercion::string($restored['id_sel'][0] ?? '')
+        : PayloadCoercion::string($restored['id_sel']);
 }
 if ($restored['scroll_id'] !== '') {
     $Qscroll_id = (int)$restored['scroll_id'];
@@ -129,7 +132,7 @@ $navState = ListNavSupport::mergeSelectionForRecordar(
     (string)$Qscroll_id,
 );
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,

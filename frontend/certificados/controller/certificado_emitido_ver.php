@@ -20,7 +20,7 @@ $oPosicion = FrontBootstrap::boot();
 $Qid_item = CertificadosPostInput::idItemFromSelPost();
 $navState = ListNavSupport::buildSelectionStatePatchFromPost();
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['id_item' => $Qid_item],
     $navState,

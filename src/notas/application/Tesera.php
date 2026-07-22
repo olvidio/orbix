@@ -27,10 +27,8 @@ use src\shared\domain\value_objects\DateTimeLocal;
  *     devuelve un array neutro y la PHTML monta el HTML (separacion
  *     datos / UI, `refactor.md`).
  *   - Magic numbers encapsulados como constantes nombradas
- *     (`ID_NIVEL_ASIG_DESDE/HASTA`, `ID_NIVEL_MAX_CUADRIENIO`,
- *     `ID_ASIG_OPCIONAL_UMBRAL`, `ID_ASIG_OPCIONAL_MAX`,
- *     `ID_ASIG_FIN_CUADRIENIO`, `PLAN_NUEVO`, `PLAN_VIEJO`,
- *     `FECHA_LIMITE_PLAN_2026`).
+ *     (`ID_NIVEL_ASIG_DESDE/HASTA`, `ID_ASIG_OPCIONAL_UMBRAL`,
+ *     `ID_ASIG_OPCIONAL_MAX`, `PLAN_NUEVO`, `PLAN_VIEJO`).
  *   - La merge de `cAsignaturas` + `aAprobadas` esta saneada para
  *     no acceder fuera de rango de `cAsignaturas` (bug latente del
  *     modelo legacy cuando la ultima asignatura era pendiente).
@@ -51,29 +49,15 @@ final class Tesera
     /** Rango de `id_nivel` de asignaturas de bienio+cuadrienio. */
     private const ID_NIVEL_ASIG_DESDE = 1100;
     private const ID_NIVEL_ASIG_HASTA = 2500;
-    /**
-     * Limite superior de `id_nivel` usado en el merge. Las notas con
-     * `id_nivel >= 2434` no se cuentan como "pendientes" al intercalar las
-     * aprobadas (marcadores fin-bienio, fin-cuadrienio, ...).
-     */
-    private const ID_NIVEL_MAX_CUADRIENIO = 2434;
     /** `id_asignatura > 3000` = asignatura opcional (se usa `id_nivel` de la nota). */
     private const ID_ASIG_OPCIONAL_UMBRAL = 3000;
     /** Rango de `id_asignatura` que se consideran "opcionales" visibles en la tessera. */
     private const ID_ASIG_OPCIONAL_MAX = 9000;
-    /** `id_asignatura` de la marca "cuadrienio completado". */
-    private const ID_ASIG_FIN_CUADRIENIO = 9998;
 
     /** Plan de estudios vigente (por defecto). */
     public const PLAN_NUEVO = PlanEstudios::PLAN_2026;
     /** Plan de estudios anterior (anterior a 2026-03-30). */
     public const PLAN_VIEJO = PlanEstudios::PLAN_1997;
-
-    /**
-     * Fecha limite que separa los planes: las personas con marca
-     * `cuadrienio completado` anterior a esta fecha pertenecen al plan 1997.
-     */
-    private const FECHA_LIMITE_PLAN_2026 = '2026-03-30';
 
     /**
      * Devuelve el curso academico actual segun la configuracion (`diaIniStgr`,
@@ -112,9 +96,8 @@ final class Tesera
     }
 
     /**
-     * Determina el plan de estudios aplicable a una persona: las personas
-     * con "cuadrienio completado" anterior a {@see FECHA_LIMITE_PLAN_2026}
-     * se consideran del plan 1997 ({@see PLAN_VIEJO}); resto, plan 2026.
+     * Determina el plan de estudios aplicable a una persona via
+     * {@see PlanEstudiosDePersona::resolve()}.
      *
      * @return int Año del plan ({@see PlanEstudios::PLAN_1997} o {@see PlanEstudios::PLAN_2026})
      */
@@ -324,6 +307,7 @@ final class Tesera
 
     /**
      * @param array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_asignatura: string, nombre_corto: string, fecha: DateTimeLocal|null, bAprobada: bool|string, nota: string|null} $row
+     * @param array{inicio: DateTimeLocal, fin: DateTimeLocal, texto?: string} $curso
      */
     private function acumularEstadisticasAprobada(
         array $row,

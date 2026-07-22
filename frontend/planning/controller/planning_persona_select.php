@@ -11,6 +11,7 @@ use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Lista de personas que cumplen los filtros del formulario anterior
@@ -90,7 +91,7 @@ $navState = ListNavSupport::mergeSelectionForRecordar([
 ], $Qid_sel, $Qscroll_id);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['obj_pau' => $Qobj_pau],
     $navState,

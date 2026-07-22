@@ -18,6 +18,7 @@ Todo el conocimiento del proyecto vive bajo `docs/`. No existe la carpeta `docum
 ## Documentos de entrada
 
 - [Qué es Orbix](QUE_ES_ORBIX.md) — visión global
+- [Guía técnica (onboarding)](dev/guia_tecnica_onboarding.md) — PHP, DDD, tests, PostgreSQL/esquemas/réplicas
 - [Índice de módulos](00_indice_modulos.md) — enlaces por módulo
 - [Índice de refactorización](dev/REFACTOR_INDICE.md) — estado migración DDD
 - [Traducciones gettext](dev/traducciones_gettext.md) — Poedit, plantilla `.pot`, scripts IA

@@ -23,7 +23,7 @@ $oDesplGrupoCtrs = new Desplegable();
 $oDesplGrupoCtrs->setNombre('filtro_ctr');
 $oDesplGrupoCtrs->setOpciones($opciones);
 $oDesplGrupoCtrs->setOpcion_sel($Qfiltro_ctr);
-$oDesplGrupoCtrs->setBlanco(1);
+$oDesplGrupoCtrs->setBlanco(true);
 $oDesplGrupoCtrs->setAction('fnjs_lista_propuestas();');
 
 $url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';

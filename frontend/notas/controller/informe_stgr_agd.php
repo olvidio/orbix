@@ -3,6 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\helpers\FuncTablasSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 use frontend\shared\FrontBootstrap;
 
@@ -24,7 +25,7 @@ $Qdl = is_array($QdlRaw) ? $QdlRaw : [];
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ['dl' => $Qdl, 'lista' => $Qlista],

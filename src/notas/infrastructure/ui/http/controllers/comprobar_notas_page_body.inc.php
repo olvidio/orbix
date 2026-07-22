@@ -124,7 +124,7 @@ if ($Qplan === PlanEstudios::PLAN_2026) {
     $niveles = array_values(array_unique(array_merge($tramoC1['niveles'], $opcional2430['niveles'])));
     $idsAsig = [];
     foreach ([$tramoC1['in_asignaturas'], $opcional2430['in_asignaturas']] as $inList) {
-        if ($inList === 'NULL' || $inList === '') {
+        if ($inList === 'NULL') {
             continue;
         }
         foreach (explode(',', $inList) as $id) {

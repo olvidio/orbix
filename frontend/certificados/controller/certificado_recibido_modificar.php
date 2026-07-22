@@ -8,6 +8,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use frontend\certificados\helpers\CertificadosPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -16,10 +17,10 @@ $form = CertificadosPayload::recibidoFormFromPayload(CertificadosPayload::postDa
     PostRequest::getDataFromUrl('/src/certificados/certificado_recibido_modificar_data', $_POST)
 ));
 
-$idItem = (int) ($form['id_item'] ?? 0);
+$idItem = $form['id_item'];
 $navState = ListNavSupport::buildCertificadoImprimirParentReturnParametros();
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['id_item' => $idItem],
     $navState,

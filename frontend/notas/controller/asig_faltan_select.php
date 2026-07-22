@@ -9,6 +9,7 @@ use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -37,7 +38,7 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros([
 ], $Qid_sel, $Qscroll_id);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,
@@ -61,7 +62,7 @@ if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpersonas_n) && !\src
     exit(_("Debe marcar un grupo de personas (n o agd)"));
 }
 
-$tabla = PostRequest::getDataFromUrl('/src/notas/asig_faltan_select_data', [
+$tabla = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/notas/asig_faltan_select_data', [
     'numero' => $Qnumero,
     'b_c' => $Qb_c,
     'c1' => $Qc1,
@@ -69,11 +70,12 @@ $tabla = PostRequest::getDataFromUrl('/src/notas/asig_faltan_select_data', [
     'personas_n' => $Qpersonas_n,
     'personas_agd' => $Qpersonas_agd,
     'lista' => $Qlista,
-]);
+]));
 $presentacion = NotasPayload::asigFaltanTablaFromPayload($tabla);
 $titulo = $presentacion['titulo'];
 $obj_pau = $presentacion['obj_pau'];
-$rows = $presentacion['rows'];
+$rowsRaw = $presentacion['rows'] ?? [];
+$rows = is_array($rowsRaw) ? $rowsRaw : [];
 
 /** @var list<array{txt: string, click: string}> $a_botones */
 $a_botones = NotasPayload::botonesModificarTessera();
@@ -91,7 +93,8 @@ $a_cabeceras = [
 
 $i = 0;
 $a_valores = [];
-foreach ($rows as $row) {
+foreach ($rows as $rowRaw) {
+    $row = NotasPayload::asigFaltanRow($rowRaw);
     $i++;
     $id_nom = $row['id_nom'];
     $id_tabla = $row['id_tabla'];

@@ -7,6 +7,7 @@ use frontend\shared\FrontBootstrap;
 use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\web\Posicion;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Ficha de ausencias de un sacd.
@@ -26,7 +27,7 @@ $oPosicion = FrontBootstrap::boot();
 $Qfiltro_sacd = EncargossacdPostInput::postString('filtro_sacd');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::buildReturnParametrosFromPost(),

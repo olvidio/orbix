@@ -6,6 +6,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use frontend\certificados\helpers\CertificadosPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -14,10 +15,10 @@ $form = CertificadosPayload::uploadFirmadoFromPayload(CertificadosPayload::postD
     PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_upload_firmado_data', $_POST)
 ));
 
-$idItem = (int) ($form['id_item'] ?? 0);
+$idItem = $form['id_item'];
 $navState = ListNavSupport::buildSelectionStatePatchFromPost();
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['id_item' => $idItem],
     $navState,

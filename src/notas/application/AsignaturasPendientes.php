@@ -35,8 +35,6 @@ final class AsignaturasPendientes
     private AsignaturaRepositoryInterface $asignaturaRepository;
     private ?PlanEstudiosDePersona $planEstudiosDePersona;
     private string $tablaNotas;
-    /** Reservado: notas solo de la DL local (`e_notas_dl`) si hiciera falta. */
-    private string $tablaNotasDl = 'e_notas_dl';
     private ?string $tablaPersonas;
     private string $tablaAsignaturasTemp = 'tmp_xa_asignaturas';
     private bool $asignaturasTempCreated = false;
@@ -52,20 +50,16 @@ final class AsignaturasPendientes
      *   de personas. Puede ser una tabla real (`p_numerarios`, `p_agregados`,
      *   `personas_dl`) o una `TEMP TABLE` creada por el caller. Si se omite,
      *   los metodos que la necesiten lanzaran `\RuntimeException`.
-     * @param string|null $ambito Deprecated (ignorado). Antes elegía `e_notas_dl`
-     *   vs padre; el expediente del alumno usa siempre `publicv/f.e_notas`.
      */
     public function __construct(
         AsignaturaRepositoryInterface $asignaturaRepository,
         ?string $tablaPersonas = null,
-        ?string $ambito = null,
         ?PlanEstudiosDePersona $planEstudiosDePersona = null,
     ) {
         $this->pdo = GlobalPdo::get('oDB');
         $this->asignaturaRepository = $asignaturaRepository;
         $this->tablaPersonas = $tablaPersonas;
         $this->planEstudiosDePersona = $planEstudiosDePersona;
-        // $ambito: firma conservada; ignorado (siempre expediente padre).
         $this->tablaNotas = $this->tablaNotasExpediente();
     }
 

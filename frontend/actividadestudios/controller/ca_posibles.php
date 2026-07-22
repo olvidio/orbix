@@ -86,7 +86,7 @@ if (empty($a_sel)) {
 $navState = ListNavSupport::mergeSelectionIntoReturnParametros($navState, $Qid_sel, $Qscroll_id);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,
@@ -104,7 +104,7 @@ foreach ([
     $queState[$key] = $navState[$key];
 }
 $parent = $oPosicion->nav()->peek(1);
-if ($queState !== [] && $parent !== null && str_contains((string) ($parent['url'] ?? ''), 'ca_posibles_que.php')) {
+if ($queState !== [] && $parent !== null && str_contains(PayloadCoercion::string($parent['url'] ?? ''), 'ca_posibles_que.php')) {
     ListNavSupport::syncNavStateAt($oPosicion, 1, $queState);
 }
 

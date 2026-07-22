@@ -91,7 +91,7 @@ interface ActividadProcesoTareaRepositoryInterface
      * Regenera las tareas del proceso para la actividad indicada.
      *
      * @param string $iid_activ
-     * @param int|string $isfsv
+     * @param int|null $isfsv
      * @param bool $force
      * @param ActividadAll|null $oActividad Actividad ya cargada (p. ej. recién guardada en dl)
      * @return bool|int id_fase u otro valor según implementación

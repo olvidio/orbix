@@ -25,7 +25,7 @@ $Qdl = is_array($QdlRaw) ? $QdlRaw : [];
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ['dl' => $Qdl, 'lista' => $Qlista],

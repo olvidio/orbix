@@ -12,12 +12,8 @@ use src\shared\infrastructure\persistence\ConverterJson;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
-use src\dossiers\domain\contracts\DossierRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
-use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
+use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
 use src\notas\domain\value_objects\PersonaNotaPk;
@@ -44,11 +40,6 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
 
     public function __construct(
         string                                            $esquema_region_stgr,
-        private readonly PersonaNotaRepositoryInterface   $personaNotaRepository,
-        private readonly DelegacionRepositoryInterface    $delegacionRepository,
-        private readonly DbSchemaRepositoryInterface      $dbSchemaRepository,
-        private readonly DossierRepositoryInterface       $dossierRepository,
-        private readonly PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
     )
     {
         $this->esquema_region_stgr = $esquema_region_stgr;

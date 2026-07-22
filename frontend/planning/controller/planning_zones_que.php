@@ -11,6 +11,7 @@ use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Formulario de filtros para el planning por zonas (sacd). Calcula el
@@ -40,7 +41,7 @@ $Qactividad = (string)filter_input(INPUT_POST, 'actividad');
 $Qpropuesta = (bool)filter_input(INPUT_POST, 'propuesta');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::mergeSelectionIntoReturnParametros([

@@ -42,7 +42,14 @@ final class PropuestasEncargosUbiHtml
     }
 
     /**
-     * @return list<array{encargo: Encargo, slots: array<string, mixed>}>
+     * @return list<array{
+     *   encargo: Encargo,
+     *   slots: array{
+     *     titular: array{id_sacd: int, id_sacd_new: int, id_item: int},
+     *     suplente: array{id_sacd: int, id_sacd_new: int, id_item: int},
+     *     colaboradores: list<array{id_sacd: int, id_sacd_new: int, id_item: int}>
+     *   }
+     * }>
      */
     private function datosPorUbi(int $id_ubi, string $ordenPropuestas): array
     {
@@ -77,6 +84,7 @@ final class PropuestasEncargosUbiHtml
     {
         $titular = ['id_sacd' => 0, 'id_sacd_new' => 0, 'id_item' => 0];
         $suplente = ['id_sacd' => 0, 'id_sacd_new' => 0, 'id_item' => 0];
+        /** @var list<array{id_sacd: int, id_sacd_new: int, id_item: int}> $colaboradores */
         $colaboradores = [];
 
         foreach ($propuestas as $oPropuesta) {

@@ -40,7 +40,7 @@ $navState = ListNavSupport::mergeSelectionForRecordar(
     ListNavSupport::scrollIdFromPost(),
 );
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $Qid_enc > 0 ? ['id_enc' => $Qid_enc] : [],
     $navState,

@@ -41,15 +41,15 @@ if ($Qid_activ === 0) {
 
 $permiso_des = ActividadesPermSupport::permDes();
 
-$data = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
+$data = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
     'id_activ' => $Qid_activ,
-]);
+]));
 
 $entidad = ActividadesPayload::entidadFromVerDatos($data);
 $render = ActividadesPayload::verRenderFromPayload($data);
 
-$id_tipo_activ = $entidad['id_tipo_activ'];
-$dl_org = $entidad['dl_org'];
+$id_tipo_activ = PayloadCoercion::string($entidad['id_tipo_activ'] ?? '');
+$dl_org = PayloadCoercion::string($entidad['dl_org'] ?? '');
 $nom_activ = $entidad['nom_activ'];
 $id_ubi = $entidad['id_ubi'];
 $f_ini = $entidad['f_ini'];
@@ -94,12 +94,12 @@ if ($oPermActiv->have_perm_activ('ver') === true) {
     }
 }
 
-$labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
+$labelsRow = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
     'with_all' => 'f',
-]);
+]));
 $a_status = ActividadesPayload::statusLabelsFromPayload($labelsRow);
 
-$dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+$dataTipoBloque = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
     'perm_jefe' => ActividadesPermSupport::permJefeTipoActiv() ? 't' : 'f',
     'id_tipo_activ' => $id_tipo_activ,
     'que' => '',
@@ -110,8 +110,8 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'sactividad2' => '',
     'snom_tipo' => $snom_tipo,
     'extendida' => '',
-]);
-$actividad_tipo_html = \frontend\shared\helpers\PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
+]));
+$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $urlMutacionAjax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_mutacion_ajax.php';
 
@@ -135,7 +135,7 @@ $h = $oHash1->linkSinValParams();
 
 $procesos_installed = AppInstalled::is('procesos');
 
-$status_txt = $a_status[$status] ?? '';
+$status_txt = $a_status[PayloadCoercion::int($status)] ?? '';
 
 $titulo = _("modificar actividad");
 $accion = 'editar';

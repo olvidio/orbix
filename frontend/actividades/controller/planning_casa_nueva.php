@@ -40,13 +40,13 @@ $isfsv_input = OrbixRuntime::miSfsv();
 $dl_org = OrbixRuntime::miDelef();
 $status = ActividadStatusId::PROYECTO;
 
-$data = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
+$data = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
     'id_activ' => 0,
     'isfsv' => $isfsv_input,
     'dl_org' => $dl_org,
     'id_ubi' => $Qid_ubi,
     'id_tipo_activ' => $id_tipo_activ,
-]);
+]));
 
 $render = ActividadesPayload::verRenderFromPayload($data);
 $html_despl_dl_org = $render['html_despl_dl_org'];
@@ -92,12 +92,12 @@ $oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/con
 $oHash1->setCamposForm('dl_org!ssfsv!isfsv');
 $h = $oHash1->linkSinValParams();
 
-$labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
+$labelsRow = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
     'with_all' => 'f',
-]);
+]));
 $a_status = ActividadesPayload::statusLabelsFromPayload($labelsRow);
 
-$dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+$dataTipoBloque = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
     'perm_jefe' => ActividadesPermSupport::permJefeTipoActiv() ? 't' : 'f',
     'id_tipo_activ' => $id_tipo_activ,
     'que' => '',
@@ -108,12 +108,12 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'sactividad2' => '',
     'snom_tipo' => $snom_tipo,
     'extendida' => '',
-]);
-$actividad_tipo_html = \frontend\shared\helpers\PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
+]));
+$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 
-$status_txt = $a_status[$status] ?? '';
+$status_txt = $a_status[PayloadCoercion::int($status)] ?? '';
 
 $titulo = _("nueva actividad");
 $accion = 'nuevo';

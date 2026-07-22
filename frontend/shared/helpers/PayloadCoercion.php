@@ -32,4 +32,18 @@ final class PayloadCoercion
 
         return $default;
     }
+
+    /**
+     * @param array<int|string, mixed> $raw
+     * @return array<string, mixed>
+     */
+    public static function stringKeyedArray(array $raw): array
+    {
+        $out = [];
+        foreach ($raw as $key => $value) {
+            $out[(string) $key] = $value;
+        }
+
+        return $out;
+    }
 }

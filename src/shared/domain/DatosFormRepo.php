@@ -402,7 +402,11 @@ class DatosFormRepo
 
         $fields = [];
         foreach ($primaryKey as $key => $value) {
-            $fields[] = is_int($key) ? (string) $value : (string) $key;
+            if (is_int($key)) {
+                $fields[] = is_scalar($value) ? (string) $value : '';
+            } else {
+                $fields[] = $key;
+            }
         }
 
         return $fields;

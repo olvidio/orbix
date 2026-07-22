@@ -446,6 +446,10 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
     /**
      * @return array<string, mixed>|false
      */
+    /**
+     * @param list<int>|int|null $plan_estudios
+     * @return array<string, mixed>|false
+     */
     public function datosById(int $id_asignatura, int|array|null $plan_estudios = null): array|false
     {
         $oDbl = $this->getoDbl_Select();
@@ -493,6 +497,9 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         return $result;
     }
 
+    /**
+     * @param list<int>|int|null $plan_estudios
+     */
     public function findById(int $id_asignatura, int|array|null $plan_estudios = null): ?Asignatura
     {
         $aDatos = $this->datosById($id_asignatura, $plan_estudios);

@@ -12,7 +12,7 @@ class ZonaSacdDatosPut
     ) {
     }
     /**
-     * @param array{dw1?:string,dw2?:string,dw3?:string,dw4?:string,dw5?:string,dw6?:string,dw7?:string} $dw
+     * @param array{dw1?: string, dw2?: string, dw3?: string, dw4?: string, dw5?: string, dw6?: string, dw7?: string, propia?: string|bool|int} $dw
      * @return array{error: string}
      */
     public function execute(int $id_zona, int $id_sacd, array $dw): array

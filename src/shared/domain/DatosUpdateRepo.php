@@ -65,9 +65,12 @@ class DatosUpdateRepo
             if ($tipo === 'checks') {
                 $raw = $aCampos[$nom_camp] ?? [];
                 if (!is_array($raw)) {
-                    $raw = ($raw === null || $raw === '') ? [] : [$raw];
+                    $raw = ($raw === '') ? [] : [$raw];
                 }
-                $aCampos[$nom_camp] = array_values(array_map('intval', array_filter($raw, fn($v) => $v !== '' && $v !== null)));
+                $aCampos[$nom_camp] = array_values(array_map(
+                    static fn (mixed $v): int => is_numeric($v) ? (int) $v : 0,
+                    array_filter($raw, static fn (mixed $v): bool => $v !== '' && $v !== null)
+                ));
             }
             if ($tipo === 'fecha') {
                 if (empty($aCampos[$nom_camp])) {
@@ -175,9 +178,12 @@ class DatosUpdateRepo
             if ($tipo === 'checks') {
                 $raw = $aCampos[$nom_camp] ?? [];
                 if (!is_array($raw)) {
-                    $raw = ($raw === null || $raw === '') ? [] : [$raw];
+                    $raw = ($raw === '') ? [] : [$raw];
                 }
-                $aCampos[$nom_camp] = array_values(array_map('intval', array_filter($raw, fn($v) => $v !== '' && $v !== null)));
+                $aCampos[$nom_camp] = array_values(array_map(
+                    static fn (mixed $v): int => is_numeric($v) ? (int) $v : 0,
+                    array_filter($raw, static fn (mixed $v): bool => $v !== '' && $v !== null)
+                ));
             }
             if ($tipo === 'fecha') {
                 if (empty($aCampos[$nom_camp])) {

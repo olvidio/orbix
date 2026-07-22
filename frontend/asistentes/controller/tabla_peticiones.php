@@ -8,6 +8,7 @@ use frontend\asistentes\helpers\TablaPeticionesRender;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -35,7 +36,7 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros(
 );
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $id_activ_old > 0 ? ['id_activ' => $id_activ_old] : [],
     $navState,

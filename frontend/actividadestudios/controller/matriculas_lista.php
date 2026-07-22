@@ -36,7 +36,7 @@ foreach (['mod', 'year', 'periodo', 'empiezamin', 'empiezamax', 'id_dossier', 'p
 $navState = ListNavSupport::mergeSelectionIntoReturnParametros($navState, $Qid_sel, $Qscroll_id);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,

@@ -60,7 +60,7 @@ final class MigracionesEjecutar
             ];
         }
 
-        $serie = is_scalar($scan['serie'] ?? null) ? (string) $scan['serie'] : MigracionesEscanear::serieDesdeSesion();
+        $serie = $scan['serie'];
         if ($serie === MigracionDatabase::SERIE_SF) {
             $lines = [sprintf('Serie migraciones: %s (BD sf, sin réplica).', $serie)];
         } else {

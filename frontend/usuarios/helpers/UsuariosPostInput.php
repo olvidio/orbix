@@ -71,6 +71,7 @@ public static function requestString(string $key): string
     return \frontend\shared\helpers\PayloadCoercion::string($merged[$key] ?? '');
 }
 
+/** @return array{username: string, password: string, esquema: string, verification_code: string} */
 public static function loginInputFromPost(): array
 {
     $post = UsuariosPayload::postData($_POST);

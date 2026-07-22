@@ -13,6 +13,7 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 
 | Fichero | Rol |
 |---------|-----|
+| [`guia_tecnica_onboarding.md`](guia_tecnica_onboarding.md) | Mapa técnico para nuevos programadores (stack, DDD, BD, tests) |
 | [`agents.md`](../agents.md) | Reglas DDD, capas, migración por slices, PostRequest, naming, checklist PR |
 | [`docs/dev/backlog.md`](backlog.md) | Mejoras diferidas (ServerConf→`.env`, PostRequest interno sin HTTP) |
 | [`docs/dev/notas_modelo_acta.md`](notas_modelo_acta.md) | ADR: notas ancladas al acta/DL; certificado solo a entidad externa; plan técnico |
@@ -32,10 +33,11 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 - **`$GLOBALS['container']` en `src/`:** **0** en módulos de negocio (runtime). Solo bootstrap (`DependencyResolver`, `DiContainerBootstrap`) y comentarios en `configuracion/`.
 - **`$GLOBALS['oDB*']` en `src/`:** **0** lecturas directas en producción; acceso canónico vía [`GlobalPdo`](../src/shared/infrastructure/GlobalPdo.php).
 - **`global_object.inc`:** orquestador ~74 líneas → `ConnectionBootstrap`, `BootstrapPdoGlobals`, `DiContainerBootstrap`, hidratadores en `src/shared/application/`.
-- **PHPStan (dos métricas):**
-  - **Con baseline** (`composer phpstan`): nivel 9; **~12.470** entradas en `phpstan-baseline.neon` (informe A/B/C desactualizado hasta próximo `composer phpstan:baseline-report`).
-  - **Sin baseline** (`composer phpstan:file -- src/<modulo>/`): **36/36 módulos a 0 errores** (PS₀ ✓, verificado 2026-06-09; [§ PHPStan sin baseline](#phpstan-sin-baseline-junio-2026)).
-- **Pendiente operativo:** cambios sin commit de la sesión de refactor; smoke tests (login, menús, permisos actividades, tablaDB) no verificados en esta ronda.
+- **PHPStan (julio 2026):**
+  - **Baseline global:** `phpstan-baseline.neon` está **vacío** (`ignoreErrors: []`). El informe A/B/C en `build/phpstan-baseline-priority-summary.md` está **obsoleto**.
+  - **Árbol completo** (`composer phpstan` → `src`+`frontend`, nivel 9): **0 errores** (verificado 2026-07-22).
+  - **Por módulo aislado** (`composer phpstan:file -- src/<modulo>/`): coherente con árbol limpio.
+- **Pendiente operativo:** regenerar inventario `use src\` en frontend (doc dice 3 controladores; el conteo real es mayor); smoke tests.
 
 ---
 

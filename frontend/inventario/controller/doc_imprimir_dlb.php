@@ -13,7 +13,7 @@ $oPosicion = FrontBootstrap::boot();
 $a_sel = ListNavSupport::selFromPost();
 $navState = ListNavSupport::buildReturnParametrosFromPost();
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $a_sel !== [] ? ['sel' => $a_sel] : [],
     $navState,

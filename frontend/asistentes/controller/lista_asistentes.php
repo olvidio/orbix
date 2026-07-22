@@ -6,6 +6,7 @@ use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -34,7 +35,7 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros(
 );
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $idActiv > 0 ? ['id_activ' => $idActiv] : [],
     $navState,

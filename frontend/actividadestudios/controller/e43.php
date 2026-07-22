@@ -19,7 +19,7 @@ $Qid_nom = ActividadestudiosPostInput::idNom()['id_nom'];
 
 $navState = ListNavSupport::buildE43ParentReturnParametros();
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['id_nom' => $Qid_nom, 'id_activ' => $Qid_activ],
     $navState,

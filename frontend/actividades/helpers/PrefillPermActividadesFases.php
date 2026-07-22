@@ -3,6 +3,7 @@
 namespace frontend\actividades\helpers;
 
 use frontend\shared\AppInstalled;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
@@ -42,7 +43,16 @@ final class PrefillPermActividadesFases
 
             return;
         }
-        $fases = $row['fases_completadas'] ?? [];
-        $oPermActividades->setFasesCompletadas(ActividadesPayload::fasesCompletadasFromPayload($fases));
+        $fasesRaw = $row['fases_completadas'] ?? [];
+        /** @var list<int> $fasesList */
+        $fasesList = [];
+        if (is_array($fasesRaw)) {
+            foreach ($fasesRaw as $id) {
+                if (is_int($id) || is_string($id)) {
+                    $fasesList[] = PayloadCoercion::int($id);
+                }
+            }
+        }
+        $oPermActividades->setFasesCompletadas($fasesList);
     }
 }

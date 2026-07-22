@@ -28,7 +28,7 @@ foreach (['mod', 'id_dossier', 'permiso', 'obj_pau', 'queSel', 'pau'] as $key) {
 $navState = ListNavSupport::mergeSelectionIntoReturnParametros($navState, $Qid_sel, $Qscroll_id);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,

@@ -20,7 +20,7 @@ $id_nom = CertificadosPostInput::idNomFromSelPost();
 
 $navState = ListNavSupport::buildCertificadoImprimirParentReturnParametros();
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['id_nom' => $id_nom],
     $navState,

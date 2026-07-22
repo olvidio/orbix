@@ -128,7 +128,7 @@ $actividadSelectReturn = \frontend\shared\helpers\ListNavSupport::buildActividad
 ]);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $actividadSelectReturn,

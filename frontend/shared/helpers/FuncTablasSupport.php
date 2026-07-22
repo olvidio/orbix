@@ -13,36 +13,39 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
  */
 final class FuncTablasSupport
 {
-    public static function urlsafeB64encode(mixed ...$args): mixed
+    public static function urlsafeB64encode(string $string): string
     {
-        return \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(...$args);
+        return \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode($string);
     }
 
-    public static function urlsafeB64decode(mixed ...$args): mixed
+    public static function urlsafeB64decode(string $string): string
     {
-        return \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode(...$args);
+        return \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($string);
     }
 
-    public static function isTrue(mixed ...$args): mixed
+    public static function isTrue(mixed $val): ?bool
     {
-        return \src\shared\domain\helpers\FuncTablasSupport::isTrue(...$args);
+        return \src\shared\domain\helpers\FuncTablasSupport::isTrue($val);
     }
 
-    public static function isTrueTxt(mixed ...$args): mixed
+    public static function isTrueTxt(mixed $val): string
     {
-        return \src\shared\domain\helpers\FuncTablasSupport::isTrueTxt(...$args);
+        return \src\shared\domain\helpers\FuncTablasSupport::isTrueTxt($val);
     }
 
-    public static function strsinacentocmp(mixed ...$args): mixed
+    public static function strsinacentocmp(string $str1, string $str2): int
     {
-        return \src\shared\domain\helpers\FuncTablasSupport::strsinacentocmp(...$args);
+        return \src\shared\domain\helpers\FuncTablasSupport::strsinacentocmp($str1, $str2);
     }
 
-    public static function strtoupperDlb(mixed ...$args): mixed
+    public static function strtoupperDlb(string $texto): string
     {
-        return \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(...$args);
+        return \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb($texto);
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     public static function payloadString(array $payload, string $key, string $default = ''): string
     {
         return \src\shared\domain\helpers\FuncTablasSupport::inputString($payload, $key, $default);
@@ -53,23 +56,26 @@ final class FuncTablasSupport
         \src\shared\domain\helpers\FuncTablasSupport::ponerEmptyOnNull($valor);
     }
 
-    public static function cursoEst(string $que, int|string $any, string $tipo = 'est', ?array $calendario = null): \frontend\shared\domain\value_objects\DateTimeLocal
+    /**
+     * @param array<string, mixed>|null $calendario
+     */
+    public static function cursoEst(string $que, int|string $any, string $tipo = 'est', ?array $calendario = null): DateTimeLocal
     {
-        $any = (int) $any;
+        $any = PayloadCoercion::int($any);
         $oConfig = null;
         if ($calendario !== null) {
             switch ($tipo) {
                 case 'est':
-                    $ini_d = (int)($calendario['dia_ini_stgr'] ?? 0);
-                    $ini_m = (int)($calendario['mes_ini_stgr'] ?? 0);
-                    $fin_d = (int)($calendario['dia_fin_stgr'] ?? 0);
-                    $fin_m = (int)($calendario['mes_fin_stgr'] ?? 0);
+                    $ini_d = PayloadCoercion::int($calendario['dia_ini_stgr'] ?? 0);
+                    $ini_m = PayloadCoercion::int($calendario['mes_ini_stgr'] ?? 0);
+                    $fin_d = PayloadCoercion::int($calendario['dia_fin_stgr'] ?? 0);
+                    $fin_m = PayloadCoercion::int($calendario['mes_fin_stgr'] ?? 0);
                     break;
                 case 'crt':
-                    $ini_d = (int)($calendario['dia_ini_crt'] ?? 0);
-                    $ini_m = (int)($calendario['mes_ini_crt'] ?? 0);
-                    $fin_d = (int)($calendario['dia_fin_crt'] ?? 0);
-                    $fin_m = (int)($calendario['mes_fin_crt'] ?? 0);
+                    $ini_d = PayloadCoercion::int($calendario['dia_ini_crt'] ?? 0);
+                    $ini_m = PayloadCoercion::int($calendario['mes_ini_crt'] ?? 0);
+                    $fin_d = PayloadCoercion::int($calendario['dia_fin_crt'] ?? 0);
+                    $fin_m = PayloadCoercion::int($calendario['mes_fin_crt'] ?? 0);
                     break;
                 default:
                     $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
@@ -102,8 +108,8 @@ final class FuncTablasSupport
         if ($any === 0) {
             if ($calendario !== null) {
                 $any = $tipo === 'crt'
-                    ? (int)($calendario['any_final_crt'] ?? 0)
-                    : (int)($calendario['any_final_est'] ?? 0);
+                    ? PayloadCoercion::int($calendario['any_final_crt'] ?? 0)
+                    : PayloadCoercion::int($calendario['any_final_est'] ?? 0);
             } elseif ($oConfig instanceof ConfigSnapshot) {
                 $any = $oConfig->any_final_curs($tipo === 'crt' ? 'crt' : 'est');
             }
@@ -111,9 +117,9 @@ final class FuncTablasSupport
         $any0 = $any - 1;
         //ConfigGlobal::mes_actual()=date("m");
         //if (ConfigGlobal::mes_actual()>$fin_m) ConfigGlobal::any_final_curs()++; // debe estar antes de llamar a la función.
-        $inicurs = new \frontend\shared\domain\value_objects\DateTimeLocal("$any0-$ini_m-$ini_d");
-        $fincurs = new \frontend\shared\domain\value_objects\DateTimeLocal("$any-$fin_m-$fin_d");
-    
+        $inicurs = new DateTimeLocal("$any0-$ini_m-$ini_d");
+        $fincurs = new DateTimeLocal("$any-$fin_m-$fin_d");
+
         switch ($que) {
             case "inicio":
                 return $inicurs;
@@ -123,6 +129,6 @@ final class FuncTablasSupport
                 $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
                 exit ($err_switch);
         }
-    
+
     }
 }

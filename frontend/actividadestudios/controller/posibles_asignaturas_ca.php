@@ -49,7 +49,7 @@ if ($id_activ > 0) {
 }
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $id_activ > 0 ? ['id_activ' => $id_activ] : [],
     $navState,

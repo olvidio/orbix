@@ -7,6 +7,7 @@ use frontend\configuracion\helpers\ModulosSelectRender;
 use frontend\shared\FrontBootstrap;
 use frontend\configuracion\helpers\ConfiguracionPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -26,7 +27,7 @@ if (!ListNavSupport::idSelIsEmpty($restored['id_sel'])) {
 
 $navState = ListNavSupport::mergeSelectionForRecordar($aGoBack, $Qid_sel, $Qscroll_id);
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,

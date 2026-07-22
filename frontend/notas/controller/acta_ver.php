@@ -80,7 +80,7 @@ if (!$isIncluded && $notas === '' && $Qnotas === '') {
         ListNavSupport::buildSelectionStatePatchFromPost(),
     );
     $oPosicion->nav()->enter(
-        (string) ($_SERVER['PHP_SELF'] ?? ''),
+        PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
         '#main',
         $identity,
         $navState,
@@ -95,7 +95,7 @@ if (!$isIncluded && $notas === '' && $Qnotas === '') {
     );
 }
 
-$payload = $requestPayload;
+$payload = PayloadCoercion::stringKeyedArray($requestPayload);
 $payload['scope_notas'] = $notas;
 $payload['scope_permiso'] = $permiso;
 if (isset($acta_notas_a_actas) && is_array($acta_notas_a_actas)) {
@@ -105,10 +105,10 @@ if (isset($id_activ)) {
     $payload['id_activ_scope'] = $id_activ;
 }
 if (isset($id_asignatura)) {
-    $payload['id_asignatura_scope'] = \frontend\shared\helpers\PayloadCoercion::string($id_asignatura);
+    $payload['id_asignatura_scope'] = PayloadCoercion::string($id_asignatura);
 }
 
-$d = PostRequest::getDataFromUrl('/src/notas/acta_ver_form_data', $payload);
+$d = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/notas/acta_ver_form_data', $payload));
 $form = NotasPayload::actaVerFormFromPayload($d);
 
 $notas = $form['notas'] !== '' ? $form['notas'] : $notas;
@@ -129,9 +129,13 @@ $observ = $form['observ'];
 $id_activ = $form['id_activ'];
 $id_asignatura_actual = $form['id_asignatura_actual'];
 $nombre_asignatura = $form['nombre_asignatura'];
-$examinadores = $form['examinadores'];
-$a_actas = $form['a_actas'];
-$has_pdf = $form['has_pdf'];
+$examinadoresRaw = $form['examinadores'] ?? [];
+/** @var list<string> $examinadores */
+$examinadores = is_array($examinadoresRaw) ? $examinadoresRaw : [];
+$a_actasRaw = $form['a_actas'] ?? [];
+/** @var list<string> $a_actas */
+$a_actas = is_array($a_actasRaw) ? $a_actasRaw : [];
+$has_pdf = !empty($form['has_pdf']);
 if ($form['warn_no_id_activ']) {
     echo _('no se guardará el ca/cv donde se cursó la asignatura');
 }
@@ -194,7 +198,7 @@ if (!$has_pdf) {
     $url_delete = '';
 } else {
     $readonly = 'readonly';
-    $url_download = SignedDownloadToken::urlNotasActa($acta_actual);
+    $url_download = SignedDownloadToken::urlNotasActa(PayloadCoercion::string($acta_actual));
     $url_delete = $base . '/frontend/notas/controller/acta_pdf_delete.php';
 }
 $oHashActaDelete = new HashFront();

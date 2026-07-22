@@ -1,6 +1,7 @@
 <?php
 
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Pantalla “comprobar notas”: el SQL y mutaciones corren en
@@ -47,7 +48,7 @@ if (isset($requestPayload['dl']) && is_array($requestPayload['dl'])) {
 }
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::buildReturnParametrosFromPost($forward),
