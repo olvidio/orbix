@@ -44,8 +44,8 @@ BEGIN
     ) ON COMMIT DROP;
 
     INSERT INTO tmp_map_prefijo_nota_acta (pref, base)
-    SELECT pref, esquema_base
-    FROM public.mapa_prefijo_acta_esquema;
+    SELECT m.pref, m.esquema_base
+    FROM public.mapa_prefijo_acta_esquema m;
 
     FOR origen IN
         SELECT n.nspname
