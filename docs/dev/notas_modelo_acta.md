@@ -118,10 +118,11 @@ Orden de trabajo recomendado. Cada slice debe dejar tests verdes y no mezclar mi
 
 - [x] Inventariar: [`tools/audit/audit_notas_otra_region.php`](../../tools/audit/audit_notas_otra_region.php).  
 - [x] Auditoría dry-run: [`tools/fix/fix_notas_otra_region_a_acta.php`](../../tools/fix/fix_notas_otra_region_a_acta.php); mapa en BD [`public.mapa_prefijo_acta_esquema`](../../db/migrations/202607211100_mapa_prefijo_acta_esquema__sv.sql) (diag: [`tools/audit/diag_notas_otra_region_mapa.sql`](../../tools/audit/diag_notas_otra_region_mapa.sql)) — **fuente única** de prefijo↔esquema (también búsqueda de actas absorbidas y `AbsorberEsquema`).  
-- [x] Normalizar 9998/9999 **tipo 1** (fin cuadrienio/bienio): [`202607211200_…`](../../db/migrations/202607211200_normalizar_actas_fin_9998_9999__sv.sql).  
+- [x] Reescribir actas libres (`ratio` / `aquinate` / `?`) en `otra_region`: [`202607211150_…`](../../db/migrations/202607211150_reescribir_acta_libre_sigla_esquema__sv.sql) (antes del repatriado).  
 - [x] Certificados **tipo 2**: [`202607211250_certificados_otra_region_limpiar`](../../db/migrations/202607211250_certificados_otra_region_limpiar__sv.sql) — borrar si hay acta pareja; si no, dejar en `otra_region` de región (`H-Hv`, `M-Mv`, `Galbel-crGalbelv`, …). No repatriar a `e_notas_dl`.  
-- [x] Repatriar **solo tipo 1**: [`202607211300_…`](../../db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql) (lee el mapa BD).  
-- [ ] Ejecutar en producción: **`211100` (mapa)** → `211200` → `211250` → `211300` (sv+sf); ampliar filas del mapa si el diag marca `sin_mapa`.  
+- [x] Repatriar **solo tipo 1** (excluye 9998/9999): [`202607211300_…`](../../db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql) (lee el mapa BD).  
+- [x] Mover tipo 1 mal ubicados entre `e_notas_dl` (excluye 9998/9999): [`202607222000_…`](../../db/migrations/202607222000_mover_notas_dl_segun_mapa_acta__sv.sql).  
+- [ ] Ejecutar en producción (sv+sf): **`211100` → `211150` → `211250` → `211300` → `222000`**; ampliar filas del mapa si el diag marca `sin_mapa`. Fin de ciclo histórico (9998/9999): **no migrar**; se dejan donde están. Altas nuevas vía `ActaFinCicloInsert`.  
 - [x] Usar `MapaPrefijoActaEsquemaRepository` al grabar notas con acta histórica (routing a esquema destino).  
 - [x] Buscar/validar actas: `ActaSelectData` / `BuscarActaData` / `ActaDlGuard` leen prefijos absorbidos del mapa; `AbsorberEsquema` registra la fusión en la misma tabla.  
 - [ ] Migrar `json_certificados` al módulo certificados cuando aporte valor.  

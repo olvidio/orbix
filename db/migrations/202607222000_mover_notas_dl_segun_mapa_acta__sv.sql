@@ -6,7 +6,7 @@
 -- (mismo id_nom + id_asignatura o mismo id_nom + id_nivel, tipo 1).
 --
 -- REQUIERE: public.mapa_prefijo_acta_esquema (211100+).
--- Serie sv.
+-- Orden: después de 211300. Serie sv.
 
 DO $$
 DECLARE

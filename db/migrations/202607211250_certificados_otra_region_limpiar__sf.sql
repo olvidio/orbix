@@ -5,7 +5,7 @@
 --       «H …» / esquemas H-* → H-Hf ; «M …» → M-Mf ; CR → p.ej. Galbel-crGalbelf, Nig-crNigf.
 --   No repatriar certificados a e_notas_dl (eso es solo tipo 1).
 --
--- Serie sf. Orden: después de 211200, antes de 211300.
+-- Serie sf. Orden: después de 211150 (reescribir actas libres), antes de 211300.
 -- Idempotente. Ver docs/dev/notas_modelo_acta.md
 
 DO $$

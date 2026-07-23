@@ -1,10 +1,13 @@
--- Prefijo libre «?»: anteponer la sigla del esquema donde está la fila.
--- Ej.: en Aes-crAesv, «?» → «crAes ?».
+-- Prefijos libres en e_notas_otra_region_stgr: anteponer la sigla del esquema
+-- donde está la fila. Tokens: ratio / aquinate / ?
+-- Ej.: en Ch-crChf, «Ratio /97» → «crCh Ratio /97».
 --
--- Solo reescribe texto de `acta` en e_notas_otra_region_stgr.
--- No mueve filas ni toca el mapa. Idempotente (solo si el 1.er token es ?).
+-- Solo reescribe texto de `acta`. No mueve filas ni toca el mapa.
+-- Idempotente (solo si el 1.er token es ratio, aquinate o ?).
+-- No toca id_asignatura 9998/9999.
 --
--- Serie sv. sf: mismo script (no-op si no hay filas).
+-- Orden: después de 211100 (mapa), antes de 211250/211300.
+-- Serie sf.
 
 DO $$
 DECLARE
@@ -25,12 +28,15 @@ BEGIN
         base_esq := regexp_replace(origen, '[vf]$', '');
         sigla := NULL;
 
+        -- Ch-crCh / Usca-crUsca / I-crI → crCh / crUsca / crI
         IF position('-cr' IN lower(base_esq)) > 0 THEN
             sigla := 'cr' || substring(base_esq FROM position('-cr' IN lower(base_esq)) + 3);
         ELSIF split_part(base_esq, '-', 1) = split_part(base_esq, '-', 2)
               AND split_part(base_esq, '-', 1) <> '' THEN
+            -- H-H, M-M → H, M
             sigla := split_part(base_esq, '-', 1);
         ELSIF lower(split_part(base_esq, '-', 2)) LIKE 'dl%' THEN
+            -- H-dlb → dlb
             sigla := split_part(base_esq, '-', 2);
         END IF;
 
@@ -43,8 +49,12 @@ BEGIN
             UPDATE %I.e_notas_otra_region_stgr
             SET acta = %L || ' ' || trim(acta)
             WHERE id_situacion IS DISTINCT FROM 13
+              AND id_asignatura NOT IN (9998, 9999)
               AND trim(coalesce(acta, '')) <> ''
-              AND trim(split_part(trim(acta), ' ', 1)) = '?'
+              AND (
+                    lower(trim(split_part(trim(acta), ' ', 1))) IN ('ratio', 'aquinate')
+                 OR trim(split_part(trim(acta), ' ', 1)) = '?'
+              )
             $sql$,
             origen,
             sigla
@@ -53,10 +63,12 @@ BEGIN
         n_total := n_total + n_upd;
         IF n_upd > 0 THEN
             PERFORM public.migracion_aviso(format(
-                '?→%s en %s: %s filas', sigla, origen, n_upd
+                'acta libre→%s en %s: %s filas', sigla, origen, n_upd
             ));
         END IF;
     END LOOP;
 
-    PERFORM public.migracion_aviso(format('reescribir acta ? sv: total=%s', n_total));
+    PERFORM public.migracion_aviso(format(
+        'reescribir acta libre (ratio/aquinate/?) sf: total=%s', n_total
+    ));
 END $$;

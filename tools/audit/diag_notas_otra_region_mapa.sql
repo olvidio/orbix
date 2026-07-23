@@ -18,6 +18,7 @@
 --   3) Sugerencias de esquema para sin_mapa
 --   4) Detalle sin_mapa
 --   5) Especiales 9998/9999 / sin prefijo
+--       (9998/9999: informativo; las migraciones de repatriación/mover las ignoran)
 --
 -- Ver docs/dev/notas_modelo_acta.md
 
@@ -224,7 +225,7 @@ ORDER BY n DESC, origen, pref
 LIMIT 80;
 
 \echo
-\echo --- 5) Especiales / sin prefijo (muestra) ---
+\echo --- 5) Especiales 9998/9999 (ignorados por repatriar/mover) / sin prefijo ---
 SELECT origen, pref, id_asignatura, n, acta_ej, estado
 FROM tmp_diag_otra_region
 WHERE estado IN ('especial_9998_9999', 'sin_prefijo_acta')

@@ -2,13 +2,12 @@
 -- Serie sf (sufijo de esquema `f`). Ejecutar desde devel_db_admin → Migraciones.
 --
 -- REQUIERE antes: 202607211100_mapa_prefijo_acta_esquema (tabla public.mapa_prefijo_acta_esquema).
--- Orden recomendado: 211100 → 211200 → 211250 → 211300.
+-- Orden recomendado: 211100 → 211150 → 211250 → 211300 → 222000.
 --
 -- Reglas:
 --   - Destino por prefijo del número de acta (mapa BD) + fusiones ya en el mapa.
 --   - Solo tipo_acta = 1 (acta). Certificados (tipo 2): ver 211250.
---   - 9998/9999 tipo 1: requiere antes 202607211200_normalizar_actas_fin_9998_9999
---     (acta ya es sigla DL: dlb, dlmE, …).
+--   - No toca id_asignatura 9998/9999 (fin de ciclo: se dejan donde están).
 --   - No toca actas vacías ni «fin …» sin prefijo mapeable.
 --   - Idempotente: INSERT si no existe (id_nom, id_asignatura); luego DELETE origen.
 --   - Si el esquema destino no tiene e_notas_dl, omite con NOTICE (reaplicar cuando exista).
@@ -78,6 +77,7 @@ BEGIN
                     SELECT count(*) FROM %I.e_notas_otra_region_stgr o
                     WHERE o.id_situacion IS DISTINCT FROM 13
                       AND COALESCE(o.tipo_acta, 1) = 1
+                      AND o.id_asignatura NOT IN (9998, 9999)
                       AND lower(trim(split_part(trim(coalesce(o.acta, '')), ' ', 1))) = %L
                     $sql$,
                     origen,
@@ -106,6 +106,7 @@ BEGIN
                 FROM %I.e_notas_otra_region_stgr o
                 WHERE o.id_situacion IS DISTINCT FROM 13
                   AND COALESCE(o.tipo_acta, 1) = 1
+                  AND o.id_asignatura NOT IN (9998, 9999)
                   AND lower(trim(split_part(trim(coalesce(o.acta, '')), ' ', 1))) = %L
                 ON CONFLICT (id_nom, id_asignatura) DO NOTHING
                 $sql$,
@@ -122,6 +123,7 @@ BEGIN
                 DELETE FROM %I.e_notas_otra_region_stgr o
                 WHERE o.id_situacion IS DISTINCT FROM 13
                   AND COALESCE(o.tipo_acta, 1) = 1
+                  AND o.id_asignatura NOT IN (9998, 9999)
                   AND lower(trim(split_part(trim(coalesce(o.acta, '')), ' ', 1))) = %L
                   AND EXISTS (
                       SELECT 1
