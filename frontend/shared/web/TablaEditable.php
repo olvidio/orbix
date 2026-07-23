@@ -726,7 +726,7 @@ class TablaEditable
                 $name = self::scalarString($Cabecera['name'] ?? '');
                 $name_idx = str_replace(' ', '', $name);
                 $id = self::cabeceraFieldKey($Cabecera, 'id') ?? $name_idx;
-                $field = self::cabeceraFieldKey($Cabecera, 'field') ?? '';
+                $field = self::cabeceraFieldKey($Cabecera, 'field') ?? $name_idx;
                 $title = self::scalarString($Cabecera['title'] ?? $name);
                 $toolTip = ', toolTip: ' . self::jsStringLiteral($title);
                 $class = !empty($Cabecera['class']) ? ', cssClass: ' . self::jsStringLiteral(self::scalarString($Cabecera['class'])) : '';
@@ -745,8 +745,9 @@ class TablaEditable
                     $sDefCol .= ', field: ' . self::jsStringLiteral($field) . ' ';
                 }
 
-                if (isset($aColsWidth[$name_idx])) {
-                    $sDefCol .= ', width: ' . self::scalarString($aColsWidth[$name_idx]);
+                $prefWidth = \src\shared\domain\helpers\FuncTablasSupport::slickPrefValue($aColsWidth, $field, $id, $name_idx);
+                if ($prefWidth !== null && $prefWidth !== '') {
+                    $sDefCol .= ', width: ' . self::scalarString($prefWidth);
                 } elseif ($width !== '') {
                     $sDefCol .= ', width: ' . $width;
                 }
@@ -766,14 +767,20 @@ class TablaEditable
             } else {
                 $name = self::scalarString($Cabecera);
                 $name_idx = str_replace(' ', '', $name);
+                $id = $name_idx;
+                $field = $name_idx;
                 $toolTip = ', toolTip: ' . self::jsStringLiteral($name);
                 $sDefCol = '{id: ' . self::jsStringLiteral($name_idx) . ', name: ' . self::jsStringLiteral($name) . ', field: ' . self::jsStringLiteral($name_idx) . ', sortable: true' . $toolTip;
-                if (isset($aColsWidth[$name_idx])) {
-                    $sDefCol .= ', width: ' . self::scalarString($aColsWidth[$name_idx]);
+                $prefWidth = \src\shared\domain\helpers\FuncTablasSupport::slickPrefValue($aColsWidth, $field, $id, $name_idx);
+                if ($prefWidth !== null && $prefWidth !== '') {
+                    $sDefCol .= ', width: ' . self::scalarString($prefWidth);
                 }
                 $sDefCol .= '}';
             }
-            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && \src\shared\domain\helpers\FuncTablasSupport::isTrue($aColsVisible[$name_idx]))
+            $prefVis = is_array($aColsVisible)
+                ? \src\shared\domain\helpers\FuncTablasSupport::slickPrefValue($aColsVisible, $field, $id, $name_idx)
+                : null;
+            if ((is_array($aColsVisible) && \src\shared\domain\helpers\FuncTablasSupport::isTrue($prefVis) === true)
                 || !is_array($aColsVisible)) {
                 if (!$visible) {
                     continue;
@@ -782,7 +789,7 @@ class TablaEditable
             }
 
             $sColumns .= $sColumns === '' ? $sDefCol : ',' . $sDefCol;
-            $sColFilters .= $sColFilters === '' ? self::jsStringLiteral($name_idx) : ',' . self::jsStringLiteral($name_idx);
+            $sColFilters .= $sColFilters === '' ? self::jsStringLiteral($field) : ',' . self::jsStringLiteral($field);
         }
         $sColumns = '[' . $sColumns . ']';
         $sColumnsVisible = '[' . $sColumnsVisible . ']';

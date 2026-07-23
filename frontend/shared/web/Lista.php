@@ -89,7 +89,7 @@ class Lista
     }
 
     /**
-     * Reordena $a_cabeceras según el array $colOrder (name_idx sin espacios).
+     * Reordena $a_cabeceras según $colOrder (field/id/name_idx).
      * Las columnas no presentes en $colOrder se añaden al final manteniendo su orden original.
      *
      * @param list<array<string, mixed>|string> $a_cabeceras
@@ -98,24 +98,74 @@ class Lista
      */
     private static function reorderCabeceras(array $a_cabeceras, array $colOrder): array
     {
-        $byNameIdx = [];
-        foreach ($a_cabeceras as $cab) {
-            $name = is_array($cab) ? self::scalarString($cab['name'] ?? '') : self::scalarString($cab);
-            $name_idx = str_replace(' ', '', $name);
-            $byNameIdx[$name_idx] = $cab;
-        }
-        $ordered = [];
-        foreach ($colOrder as $name_idx) {
-            if (isset($byNameIdx[$name_idx])) {
-                $ordered[] = $byNameIdx[$name_idx];
-                unset($byNameIdx[$name_idx]);
+        $byKey = [];
+        foreach ($a_cabeceras as $i => $cab) {
+            if (is_array($cab)) {
+                $name = self::scalarString($cab['name'] ?? '');
+                $name_idx = str_replace(' ', '', $name);
+                $keys = array_filter([
+                    self::cabeceraFieldKey($cab, 'field'),
+                    self::cabeceraFieldKey($cab, 'id'),
+                    $name_idx !== '' ? $name_idx : null,
+                ], static fn (?string $k): bool => $k !== null && $k !== '');
+            } else {
+                $name_idx = str_replace(' ', '', self::scalarString($cab));
+                $keys = $name_idx !== '' ? [$name_idx] : [];
+            }
+            foreach ($keys as $k) {
+                if (!isset($byKey[$k])) {
+                    $byKey[$k] = $i;
+                }
             }
         }
-        foreach ($byNameIdx as $cab) {
-            $ordered[] = $cab;
+        $used = [];
+        $ordered = [];
+        foreach ($colOrder as $orderKey) {
+            if (!isset($byKey[$orderKey])) {
+                continue;
+            }
+            $idx = $byKey[$orderKey];
+            if (isset($used[$idx])) {
+                continue;
+            }
+            $ordered[] = $a_cabeceras[$idx];
+            $used[$idx] = true;
+        }
+        foreach ($a_cabeceras as $i => $cab) {
+            if (!isset($used[$i])) {
+                $ordered[] = $cab;
+            }
         }
 
         return $ordered;
+    }
+
+    /**
+     * True si alguna clave de colVisible coincide con alguna cabecera (field/id/name_idx).
+     * Prefs antiguas indexadas por otro idioma no coinciden → se ignoran (mostrar todas).
+     *
+     * @param array<string, mixed> $aColsVisible
+     * @param list<array<string, mixed>|string> $a_cabeceras
+     */
+    private static function slickPrefsMatchAnyColumn(array $aColsVisible, array $a_cabeceras): bool
+    {
+        foreach ($a_cabeceras as $cab) {
+            if (is_array($cab)) {
+                $name = self::scalarString($cab['name'] ?? '');
+                $name_idx = str_replace(' ', '', $name);
+                $field = self::cabeceraFieldKey($cab, 'field');
+                $id = self::cabeceraFieldKey($cab, 'id');
+            } else {
+                $name_idx = str_replace(' ', '', self::scalarString($cab));
+                $field = null;
+                $id = null;
+            }
+            if (\src\shared\domain\helpers\FuncTablasSupport::slickPrefValue($aColsVisible, $field, $id, $name_idx) !== null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /** @param array<string, mixed>|string $cabecera */
@@ -508,6 +558,10 @@ class Lista
         if ($this->aColVisible !== []) {
             $aColsVisible = $this->aColVisible;
         }
+        // Prefs indexadas por labels de otro idioma: ninguna clave encaja → mostrar todas.
+        if ($aColsVisible !== null && !self::slickPrefsMatchAnyColumn($aColsVisible, $a_cabeceras)) {
+            $aColsVisible = null;
+        }
         if (!$this->bFiltro) {
             $bPanelVis = false;
         }
@@ -569,7 +623,9 @@ class Lista
                     . ', field: ' . self::jsQuotedString($field)
                     . ', sortable: ' . $sortable . $class . $toolTip;
 
-                $prefWidth = self::slickgridDimension($aColsWidth[$name_idx] ?? null);
+                $prefWidth = self::slickgridDimension(
+                    \src\shared\domain\helpers\FuncTablasSupport::slickPrefValue($aColsWidth, $field, $id, $name_idx)
+                );
                 if ($prefWidth !== null) {
                     $sDefCol .= ', width: ' . $prefWidth;
                 } elseif ($width !== '') {
@@ -583,18 +639,25 @@ class Lista
             } else {
                 $name = self::scalarString($Cabecera);
                 $name_idx = str_replace(' ', '', $name);
+                $id = $name_idx;
+                $field = $name_idx;
                 $toolTip = ', toolTip: ' . self::jsQuotedString($name);
                 $sDefCol = '{id: ' . self::jsQuotedString($name_idx)
                     . ', name: ' . self::jsQuotedString($name)
                     . ', field: ' . self::jsQuotedString($name_idx)
                     . ', sortable: true' . $toolTip;
-                $prefWidth = self::slickgridDimension($aColsWidth[$name_idx] ?? null);
+                $prefWidth = self::slickgridDimension(
+                    \src\shared\domain\helpers\FuncTablasSupport::slickPrefValue($aColsWidth, $field, $id, $name_idx)
+                );
                 if ($prefWidth !== null) {
                     $sDefCol .= ', width: ' . $prefWidth;
                 }
                 $sDefCol .= '}';
             }
-            if (($aColsVisible !== null && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx] === 'true')) || $aColsVisible === null) {
+            $prefVis = $aColsVisible === null
+                ? null
+                : \src\shared\domain\helpers\FuncTablasSupport::slickPrefValue($aColsVisible, $field, $id, $name_idx);
+            if ($aColsVisible === null || \src\shared\domain\helpers\FuncTablasSupport::isTrue($prefVis) === true) {
                 if (!$visible) continue;
                 if ($cv > 0) {
                     $sColumnsVisible .= ',';
@@ -609,7 +672,7 @@ class Lista
             if ($cf > 0) {
                 $sColFilters .= ',';
             }
-            $sColFilters .= self::jsQuotedString($name_idx);
+            $sColFilters .= self::jsQuotedString($field);
             $cf++;
             $c++;
         }

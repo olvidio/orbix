@@ -85,6 +85,22 @@ final class FuncTablasSupport
         return null;
     }
 
+    /**
+     * Preferencias SlickGrid: busca por field/id estables y, en compatibilidad, por name_idx (texto del header sin espacios).
+     *
+     * @param array<string, mixed> $prefs
+     */
+    public static function slickPrefValue(array $prefs, ?string $field, ?string $id, string $nameIdx): mixed
+    {
+        foreach ([$field, $id, $nameIdx] as $key) {
+            if ($key !== null && $key !== '' && array_key_exists($key, $prefs)) {
+                return $prefs[$key];
+            }
+        }
+
+        return null;
+    }
+
     public static function isTrueTxt(mixed $val): string
     {
         return self::isTrue($val) ? _("si") : _("no");
