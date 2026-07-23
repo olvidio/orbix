@@ -22,7 +22,7 @@ class BurgerLayout implements LayoutInterface
             <button class=\"mobile-toggle\" id=\"mobileToggle\"  onclick=\"toggleSidebar()\">
             ☰
                 <div class=\"sidebar-header\">
-                    <h2 id =\"sidebar-header-h2\">Oficinas</h2>
+                    <h2 id =\"sidebar-header-h2\">" . htmlspecialchars(_('Oficinas'), ENT_QUOTES, 'UTF-8') . "</h2>
                 </div>
             </button>
 

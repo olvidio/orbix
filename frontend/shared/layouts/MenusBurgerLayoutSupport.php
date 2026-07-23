@@ -63,7 +63,7 @@ trait MenusBurgerLayoutSupport
                 continue;
             }
             $items[] = [
-                'grup_menu' => self::layoutScalarString($raw['grup_menu'] ?? ''),
+                'grup_menu' => _(self::layoutScalarString($raw['grup_menu'] ?? '')),
             ];
         }
 
@@ -120,7 +120,7 @@ trait MenusBurgerLayoutSupport
             return '';
         }
 
-        return $this->listaGrupMenu[$idGrupmenu] ?? '';
+        return _($this->listaGrupMenu[$idGrupmenu] ?? '');
     }
 
     protected function menuConfigJson(): string
