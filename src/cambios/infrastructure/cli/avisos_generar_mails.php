@@ -1,10 +1,17 @@
 <?php
 
-use src\cambios\application\AvisosEnviarMails;
+use src\cambios\application\AvisosEncolarMails;
 use src\shared\infrastructure\DependencyResolver;
 
 /**
- * Driver CLI para enviar por e-mail los avisos pendientes a cada usuario.
+ * Driver CLI para encolar los avisos pendientes de cada usuario.
+ *
+ * Debe ejecutarse por crontab en el servidor **interior** (SV y SF),
+ * donde hay acceso a las tablas de personas para resolver nombres.
+ * Inserta en `cola_mails`; el envío lo hace `enviar_mails_en_cola.php`
+ * en el servidor exterior (DMZ).
+ *
+ * No debe correrse en la DMZ: allí no hay nombres de personas no-sacd.
  */
 
 if (!empty($argv[1])) {
@@ -27,16 +34,16 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require_once("src/shared/global_header.inc");
 require_once("src/shared/global_object.inc");
 
-$useCase = DependencyResolver::get(AvisosEnviarMails::class);
+$useCase = DependencyResolver::get(AvisosEncolarMails::class);
 $resumen = $useCase->execute();
 
 if (PHP_SAPI === 'cli') {
     fwrite(
         STDOUT,
         sprintf(
-            "[%s] avisos_generar_mails: enviados=%d sin_email=%d avisos_totales=%d\n",
+            "[%s] avisos_generar_mails: encolados=%d sin_email=%d avisos_totales=%d\n",
             date('c'),
-            $resumen['enviados'],
+            $resumen['encolados'],
             $resumen['usuarios_sin_email'],
             $resumen['total_avisos']
         )

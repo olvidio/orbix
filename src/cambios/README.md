@@ -129,7 +129,12 @@ ambos casos se cojen las filas de GestorCambioUsuario con avisado=FALSE.
 - Para ver por lista, se ejecuta 'avisos_generar.php'. Ni se eliminan ni se marcan como avisados. Se pueden eliminar
   desde el listado, seleccionándolos, o por fecha.
 
-- Para enviar mails se ejecuta 'avisos_generar_mails.php'. Una vez enviados se eliminan.
+- Para enviar mails: el cron **interior** (horario, SV ~`:15` y SF ~`:20`) ejecuta
+  `src/cambios/infrastructure/cli/avisos_generar_mails.php`, que resuelve los textos
+  (nombres de personas) y encola **un** mail por usuario en `cola_mails`
+  (`writed_by = avisos_cambios`). Luego borra los `CambioUsuario` de tipo mail.
+  El cron frecuente de la **DMZ** (`enviar_mails_en_cola.php`) solo envía la cola;
+  no debe ejecutarse `avisos_generar_mails` en el exterior (no hay tablas de personas).
 
 ==>> Parece que el campo de 'avisado' no se utiliza. ?????
 

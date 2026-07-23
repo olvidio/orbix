@@ -9,7 +9,7 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
-use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\application\services\PersonaFinderService;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -24,7 +24,7 @@ final class CambioAvisoTxtBuilder
     public function __construct(
         private ActividadParaAvisoLookup $actividadParaAvisoLookup,
         private CambioRepositoryInterface $cambioRepository,
-        private PersonaSacdRepositoryInterface $personaSacdRepository,
+        private PersonaFinderService $personaFinderService,
         private TipoTarifaRepositoryInterface $tipoTarifaRepository,
         private RepeticionRepositoryInterface $repeticionRepository,
         private ActividadFaseRepositoryInterface $actividadFaseRepository,
@@ -57,13 +57,13 @@ final class CambioAvisoTxtBuilder
 
         if ($sPropiedad === 'id_nom') {
             if ($sValor_old !== '' && is_numeric($sValor_old)) {
-                $oPersona = $this->personaSacdRepository->findById((int) $sValor_old);
+                $oPersona = $this->personaFinderService->findPersonaEnGlobal((int) $sValor_old);
                 if ($oPersona !== null) {
                     $sValor_old = $oPersona->getPrefApellidosNombre();
                 }
             }
             if ($sValor_new !== '' && is_numeric($sValor_new)) {
-                $oPersona = $this->personaSacdRepository->findById((int) $sValor_new);
+                $oPersona = $this->personaFinderService->findPersonaEnGlobal((int) $sValor_new);
                 if ($oPersona !== null) {
                     $sValor_new = $oPersona->getPrefApellidosNombre();
                 }
