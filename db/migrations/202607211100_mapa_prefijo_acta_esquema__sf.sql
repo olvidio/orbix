@@ -85,6 +85,8 @@ ON CONFLICT (pref) DO UPDATE
 SET esquema_base = EXCLUDED.esquema_base,
     notas = COALESCE(EXCLUDED.notas, public.mapa_prefijo_acta_esquema.notas);
 
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.mapa_prefijo_acta_esquema TO orbixf;
+
 SELECT public.migracion_aviso(format(
     'mapa_prefijo_acta_esquema sf: %s filas',
     (SELECT count(*) FROM public.mapa_prefijo_acta_esquema)
