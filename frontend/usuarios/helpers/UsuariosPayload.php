@@ -488,18 +488,19 @@ final class UsuariosPayload
                 $idioma = $idiomaDefault !== '' ? $idiomaDefault : 'es_ES.UTF-8';
             }
         }
+        // GNU gettext prioriza LANGUAGE sobre LC_ALL/LANG. Hay que fijarlo (no solo vaciarlo):
+        // si un worker FPM queda con LANGUAGE de otra petición/proceso, _() alterna idioma.
         $domain = 'orbix';
-        setlocale(LC_ALL, '');
-        putenv("LC_ALL=''");
-        putenv('LANGUAGE=');
-
-        setlocale(LC_ALL, $idioma);
+        putenv("LANGUAGE={$idioma}");
         putenv("LC_ALL={$idioma}");
         putenv("LANG={$idioma}");
+        setlocale(LC_ALL, $idioma);
 
         bindtextdomain($domain, OrbixRuntime::gettextLanguagesDir());
-        textdomain($domain);
         bind_textdomain_codeset($domain, 'UTF-8');
+        // Forzar recarga del catálogo si el worker ya tenía otro idioma cacheado.
+        textdomain('orbix_reset');
+        textdomain($domain);
     }
 
     /**
