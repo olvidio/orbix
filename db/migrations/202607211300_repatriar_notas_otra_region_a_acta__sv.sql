@@ -2,7 +2,7 @@
 -- Serie sv (sufijo de esquema `v`). Ejecutar desde devel_db_admin → Migraciones.
 --
 -- REQUIERE antes: 202607211100_mapa_prefijo_acta_esquema (tabla public.mapa_prefijo_acta_esquema).
--- Orden recomendado: 211100 → 211150 → 211250 → 211300 → 222000.
+-- Orden recomendado: 211100 → 211140 → 211150 → 211250 → 211300 → 222000.
 --
 -- Reglas:
 --   - Destino por prefijo del número de acta (mapa BD) + fusiones ya en el mapa.

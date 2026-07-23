@@ -6,7 +6,7 @@
 -- Idempotente (solo si el 1.er token es ratio, aquinate o ?).
 -- No toca id_asignatura 9998/9999.
 --
--- Orden: después de 211100 (mapa), antes de 211250/211300.
+-- Orden: después de 211100 (mapa) y 211140 (separar prefijo), antes de 211250/211300.
 -- Serie sv.
 
 DO $$
