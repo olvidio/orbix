@@ -12,7 +12,8 @@ use frontend\shared\helpers\AjaxJsonSupport;
 /**
  * Renderiza la cuadrícula de zona a partir de datos del backend.
  *
- * - `modificar_cuadricula_zona.phtml`: SlickGrid (solo lectura o editable con modal SACD).
+ * - `ver_cuadricula_zona.phtml`: tabla HTML de solo lectura.
+ * - `modificar_cuadricula_zona.phtml`: SlickGrid editable con modal SACD.
  */
 class CuadriculaZonaRenderer
 {
@@ -30,7 +31,7 @@ class CuadriculaZonaRenderer
         string $camposSelf,
         array $overrides = []
     ): void {
-        self::render($data, $post, $url_self, $camposSelf, 'modificar_cuadricula_zona.phtml', false, $overrides);
+        self::render($data, $post, $url_self, $camposSelf, 'ver_cuadricula_zona.phtml', false, $overrides);
     }
 
     /**
