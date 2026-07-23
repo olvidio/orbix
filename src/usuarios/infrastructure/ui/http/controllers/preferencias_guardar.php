@@ -146,6 +146,16 @@ if ($Qque === "slickGrid") {
     if (isset($_SESSION['session_auth']) && is_array($_SESSION['session_auth'])) {
         $_SESSION['session_auth']['idioma'] = $Qidioma_nou;
     }
+    if ($Qidioma_nou !== '') {
+        $arr_cookie_options = [
+            'expires' => time() + (86400 * 30),
+            'path' => '/',
+            'secure' => false,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ];
+        setcookie('idioma', $Qidioma_nou, $arr_cookie_options);
+    }
 
     // Guardar zona_horaria:
     $Qzona_horaria_nou = (string)\src\shared\domain\helpers\FilterPostGet::post('zona_horaria_nou');

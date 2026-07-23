@@ -466,6 +466,9 @@ final class UsuariosPayload
             $sessionAuth = $_SESSION['session_auth'] ?? null;
             if (is_array($sessionAuth) && !empty($sessionAuth['idioma'])) {
                 $idioma = PayloadCoercion::string($sessionAuth['idioma']);
+            } elseif (!empty($_COOKIE['idioma']) && is_string($_COOKIE['idioma'])) {
+                // Fallback si la sesión aún no tiene idioma (p. ej. tras guardar prefs sin re-login).
+                $idioma = PayloadCoercion::string($_COOKIE['idioma']);
             } elseif (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) && is_string($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
                 $a_idiomas = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
                 foreach ($a_idiomas as $a_idioma) {
@@ -488,10 +491,10 @@ final class UsuariosPayload
                 $idioma = $idiomaDefault !== '' ? $idiomaDefault : 'es_ES.UTF-8';
             }
         }
-        // GNU gettext prioriza LANGUAGE sobre LC_*. Debe fijarse siempre.
-        // En Docker a menudo no hay locales ca_ES/es_ES instalados: setlocale(idioma)
-        // falla y puede dejar LC_MESSAGES=C, con lo que _() deja de traducir aunque
-        // LANGUAGE sea correcto. Si falla, caer a un locale que sí exista (C/en_US).
+        // GNU gettext prioriza LANGUAGE sobre LC_*. Debe fijarse siempre (putenv + $_ENV):
+        // con varios workers FPM el env residual hace que _() alterne idioma entre peticiones.
+        // En Docker a menudo no hay locales ca_ES/es_ES: setlocale(idioma) falla; si queda
+        // LC_MESSAGES=C, gettext ignora LANGUAGE. Fallback a C/en_US instalados.
         $domain = 'orbix';
         putenv('LANGUAGE');
         putenv('LC_ALL');
@@ -499,6 +502,9 @@ final class UsuariosPayload
         putenv("LANGUAGE={$idioma}");
         putenv("LC_ALL={$idioma}");
         putenv("LANG={$idioma}");
+        $_ENV['LANGUAGE'] = $idioma;
+        $_ENV['LC_ALL'] = $idioma;
+        $_ENV['LANG'] = $idioma;
 
         $localeOk = setlocale(LC_ALL, $idioma);
         if ($localeOk === false) {
