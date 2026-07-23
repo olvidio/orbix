@@ -488,13 +488,25 @@ final class UsuariosPayload
                 $idioma = $idiomaDefault !== '' ? $idiomaDefault : 'es_ES.UTF-8';
             }
         }
-        // GNU gettext prioriza LANGUAGE sobre LC_ALL/LANG. Hay que fijarlo (no solo vaciarlo):
-        // si un worker FPM queda con LANGUAGE de otra petición/proceso, _() alterna idioma.
+        // GNU gettext prioriza LANGUAGE sobre LC_*. Debe fijarse siempre.
+        // En Docker a menudo no hay locales ca_ES/es_ES instalados: setlocale(idioma)
+        // falla y puede dejar LC_MESSAGES=C, con lo que _() deja de traducir aunque
+        // LANGUAGE sea correcto. Si falla, caer a un locale que sí exista (C/en_US).
         $domain = 'orbix';
+        putenv('LANGUAGE');
+        putenv('LC_ALL');
+        putenv('LANG');
         putenv("LANGUAGE={$idioma}");
         putenv("LC_ALL={$idioma}");
         putenv("LANG={$idioma}");
-        setlocale(LC_ALL, $idioma);
+
+        $localeOk = setlocale(LC_ALL, $idioma);
+        if ($localeOk === false) {
+            $localeOk = setlocale(LC_ALL, str_replace('.UTF-8', '.utf8', $idioma));
+        }
+        if ($localeOk === false) {
+            setlocale(LC_ALL, 'C.UTF-8', 'C.utf8', 'en_US.utf8', 'en_US.UTF-8', 'C');
+        }
 
         bindtextdomain($domain, OrbixRuntime::gettextLanguagesDir());
         bind_textdomain_codeset($domain, 'UTF-8');

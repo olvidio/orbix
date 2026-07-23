@@ -143,6 +143,9 @@ if ($Qque === "slickGrid") {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
+    if (isset($_SESSION['session_auth']) && is_array($_SESSION['session_auth'])) {
+        $_SESSION['session_auth']['idioma'] = $Qidioma_nou;
+    }
 
     // Guardar zona_horaria:
     $Qzona_horaria_nou = (string)\src\shared\domain\helpers\FilterPostGet::post('zona_horaria_nou');
