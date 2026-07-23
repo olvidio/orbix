@@ -7,6 +7,7 @@ namespace src\devel_db_admin\application;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\devel_db_admin\infrastructure\DBAlterSchema;
 use src\shared\config\ReplicaSelectPolicy;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBRol;
@@ -205,7 +206,7 @@ final class AbsorberEsquema
 
         [$region_old, $dl_old] = $this->parseRegionDl($esquemaDel);
 
-        $this->actualizarMapaPrefijoActa($oDevelPC, $esquemaDel, $esquemaMatriz, $dl_old, $dl_new, $errores);
+        $this->actualizarMapaPrefijoActa($esquemaDel, $esquemaMatriz, $dl_old, $dl_new, $errores);
 
         $gesDelegaciones = $this->delegacionRepository;
         $cDelegaciones = $gesDelegaciones->getDelegaciones(['dl' => $dl_old, 'region' => $region_old]);
@@ -351,13 +352,12 @@ final class AbsorberEsquema
     }
 
     /**
-     * Fuente única: `public.mapa_prefijo_acta_esquema` (sv/sf).
+     * Fuente única: `public.mapa_prefijo_acta_esquema` (BD comun).
      * Registra el prefijo absorbido → matriz y reasigna filas que apuntaban al esquema disuelto.
      *
      * @param list<string> $errores
      */
     private function actualizarMapaPrefijoActa(
-        \PDO $pdo,
         string $esquemaDel,
         string $esquemaMatriz,
         string $dlOld,
@@ -365,10 +365,11 @@ final class AbsorberEsquema
         array &$errores,
     ): void {
         try {
+            $pdo = GlobalPdo::get('oDBPC');
             $regclassStmt = $pdo->query("SELECT to_regclass('public.mapa_prefijo_acta_esquema')");
             $exists = $regclassStmt !== false ? $regclassStmt->fetchColumn() : false;
             if ($exists === false || $exists === null || $exists === '') {
-                $errores[] = 'mapa_prefijo_acta_esquema no existe; aplicar migración 202607211100 antes de absorber';
+                $errores[] = 'mapa_prefijo_acta_esquema no existe en comun; aplicar migración 202607211100 antes de absorber';
                 return;
             }
 

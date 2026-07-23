@@ -117,25 +117,27 @@ Orden de trabajo recomendado. Cada slice debe dejar tests verdes y no mezclar mi
 ### Slice 4 — Destino de `e_notas_otra_region_stgr` y `tipo_acta=2`
 
 - [x] Inventariar: [`tools/audit/audit_notas_otra_region.php`](../../tools/audit/audit_notas_otra_region.php).  
-- [x] Auditoría dry-run: [`tools/fix/fix_notas_otra_region_a_acta.php`](../../tools/fix/fix_notas_otra_region_a_acta.php); mapa en BD [`public.mapa_prefijo_acta_esquema`](../../db/migrations/202607211100_mapa_prefijo_acta_esquema__sv.sql) (diag: [`tools/audit/diag_notas_otra_region_mapa.sql`](../../tools/audit/diag_notas_otra_region_mapa.sql)) — **fuente única** de prefijo↔esquema (también búsqueda de actas absorbidas y `AbsorberEsquema`).  
+- [x] Auditoría dry-run: [`tools/fix/fix_notas_otra_region_a_acta.php`](../../tools/fix/fix_notas_otra_region_a_acta.php); mapa en BD **comun** [`public.mapa_prefijo_acta_esquema`](../../db/migrations/202607211100_mapa_prefijo_acta_esquema__comun.sql) (diag: [`tools/audit/diag_notas_otra_region_mapa.sql`](../../tools/audit/diag_notas_otra_region_mapa.sql); durante el lote usa snapshot `publicv/f._mig_…` de 211120) — **fuente única** de prefijo↔esquema (también búsqueda de actas absorbidas y `AbsorberEsquema`).  
 - [x] Separar prefijo pegado al nº (`dlb156/93` → `dlb 156/93`; `M1 3/20` → `M 13/20`): [`202607211140_…`](../../db/migrations/202607211140_separar_prefijo_acta_pegado_a_numero__sv.sql) (antes de repatriar/mover).  
 - [x] Reescribir actas libres (`ratio` / `aquinate` / `?`) en `otra_region`: [`202607211150_…`](../../db/migrations/202607211150_reescribir_acta_libre_sigla_esquema__sv.sql) (antes del repatriado).  
 - [x] Certificados **tipo 2**: [`202607211250_certificados_otra_region_limpiar`](../../db/migrations/202607211250_certificados_otra_region_limpiar__sv.sql) — borrar si hay acta pareja; si no, dejar en `otra_region` de región (`H-Hv`, `M-Mv`, `Galbel-crGalbelv`, …). No repatriar a `e_notas_dl`.  
-- [x] Repatriar **solo tipo 1** (excluye 9998/9999): [`202607211300_…`](../../db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql) (lee el mapa BD).  
+- [x] Repatriar **solo tipo 1** (excluye 9998/9999): [`202607211300_…`](../../db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql) (lee snapshot del mapa).  
 - [x] Mover tipo 1 mal ubicados entre `e_notas_dl` (excluye 9998/9999): [`202607222000_…`](../../db/migrations/202607222000_mover_notas_dl_segun_mapa_acta__sv.sql).  
-- [ ] Ejecutar en producción (sv+sf): **`211100` → `211140` → `211150` → `211250` → `211300` → `222000`**; ampliar filas del mapa si el diag marca `sin_mapa`. Fin de ciclo histórico (9998/9999): **no migrar**; se dejan donde están. Altas nuevas vía `ActaFinCicloInsert`.  
+- [ ] Ejecutar: **comun** `211100` → `211110`; luego **sv/sf** `211120` → `211140` → `211150` → `211250` → `211300` → `222000`. Ampliar filas del mapa en comun si el diag marca `sin_mapa`. Fin de ciclo histórico (9998/9999): **no migrar**. Altas nuevas vía `ActaFinCicloInsert`.  
 - [x] Usar `MapaPrefijoActaEsquemaRepository` al grabar notas con acta histórica (routing a esquema destino).  
 - [x] Buscar/validar actas: `ActaSelectData` / `BuscarActaData` / `ActaDlGuard` leen prefijos absorbidos del mapa; `AbsorberEsquema` registra la fusión en la misma tabla.  
 - [ ] Migrar `json_certificados` al módulo certificados cuando aporte valor.  
 - [ ] Deprecar `e_notas_otra_region_stgr` tras migración de datos (salvo certificados sin acta pareja).
 
-#### Fuente única: `public.mapa_prefijo_acta_esquema`
+#### Fuente única: `comun.public.mapa_prefijo_acta_esquema` (owner `orbix`)
 
 | Uso | Dirección |
 |-----|-----------|
+| Runtime (routing notas, búsqueda actas, AbsorberEsquema) | PDO `oDBPC` → comun |
+| Migraciones de datos en sv/sf | snapshot `publicv/f._mig_mapa_prefijo_acta_esquema` (211120; CSV desde 211110) |
 | Repatriar / escribir nota con acta histórica | prefijo → `esquema_base` |
 | Buscar actas desde la DL matriz (p. ej. H-dlal ve `dlz`/`dlv`) | `esquema_base` → lista de prefijos |
-| Absorber esquema | escribe/actualiza filas (`notas` «fusionada en …») |
+| Absorber esquema | escribe/actualiza filas en comun (`notas` «fusionada en …») |
 
 No hay un catálogo aparte en `xu_dl` ni en PHP: al absorber, las filas de `e_actas_dl` pasan al esquema matriz **con el prefijo antiguo** (por eso la búsqueda por texto `dlz` ya las encontraba). El mapa hace explícito y mantenible ese vínculo. Fusiones H: `dlz` → **H-dlal**; `dlv`/`dlva`/`dlst` → **H-dln**.
 

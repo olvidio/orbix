@@ -1,10 +1,11 @@
 -- Mapa permanente: prefijo del nº de acta → esquema base (sin sufijo v/f).
--- Serie sf. Uso en runtime (escritura de notas con acta antigua) y en repatriación.
+-- BD comun (SSOT única para sv y sf). Propietario: orbix (sin GRANT extra).
 --
--- Destino físico = esquema_base || sfsv ('v'|'f').
--- Ampliar con INSERT … ON CONFLICT DO UPDATE (o admin) cuando aparezcan prefijos nuevos.
+-- Destino físico en notas = esquema_base || sfsv ('v'|'f').
+-- Ampliar con INSERT … ON CONFLICT DO UPDATE (o AbsorberEsquema) cuando
+-- aparezcan prefijos nuevos.
 --
--- Ver docs/dev/notas_modelo_acta.md y docs/manual/CambiosStgr2026.md
+-- Ver docs/dev/notas_modelo_acta.md
 
 CREATE TABLE IF NOT EXISTS public.mapa_prefijo_acta_esquema (
     pref          text PRIMARY KEY,
@@ -16,9 +17,11 @@ CREATE TABLE IF NOT EXISTS public.mapa_prefijo_acta_esquema (
         CHECK (length(trim(esquema_base)) >= 2)
 );
 
+ALTER TABLE public.mapa_prefijo_acta_esquema OWNER TO orbix;
+
 COMMENT ON TABLE public.mapa_prefijo_acta_esquema IS
     'Prefijo del campo acta (1ª palabra, minúsculas) → esquema base sin v/f. '
-    'Fuente única: repatriar otra_region, grabar notas con acta histórica, '
+    'Fuente única en BD comun: repatriar otra_region, grabar notas con acta histórica, '
     'buscar/validar actas de DL absorbidas, y registrar fusiones en AbsorberEsquema.';
 
 COMMENT ON COLUMN public.mapa_prefijo_acta_esquema.pref IS
@@ -85,9 +88,7 @@ ON CONFLICT (pref) DO UPDATE
 SET esquema_base = EXCLUDED.esquema_base,
     notas = COALESCE(EXCLUDED.notas, public.mapa_prefijo_acta_esquema.notas);
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.mapa_prefijo_acta_esquema TO orbixf;
-
 SELECT public.migracion_aviso(format(
-    'mapa_prefijo_acta_esquema sf: %s filas',
+    'mapa_prefijo_acta_esquema comun: %s filas (owner orbix)',
     (SELECT count(*) FROM public.mapa_prefijo_acta_esquema)
 ));

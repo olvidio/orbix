@@ -5,8 +5,9 @@
 -- Idempotente: INSERT si no hay conflicto; DELETE origen si ya está en destino
 -- (mismo id_nom + id_asignatura o mismo id_nom + id_nivel, tipo 1).
 --
--- REQUIERE: public.mapa_prefijo_acta_esquema (211100+).
--- Orden: después de 211300. Serie sf.
+-- REQUIERE: snapshot publicf._mig_mapa_prefijo_acta_esquema (211120).
+-- Orden: después de 211300. Al final elimina el snapshot.
+-- Serie sf.
 
 DO $$
 DECLARE
@@ -23,10 +24,15 @@ DECLARE
     n_omit_dest bigint := 0;
     n_mapa bigint := 0;
 BEGIN
-    SELECT count(*) INTO n_mapa FROM public.mapa_prefijo_acta_esquema;
+    IF to_regclass('publicf._mig_mapa_prefijo_acta_esquema') IS NULL THEN
+        RAISE EXCEPTION
+            'Falta publicf._mig_mapa_prefijo_acta_esquema (ejecutar 211120 antes)';
+    END IF;
+
+    SELECT count(*) INTO n_mapa FROM publicf._mig_mapa_prefijo_acta_esquema;
     IF n_mapa < 1 THEN
         RAISE EXCEPTION
-            'Falta public.mapa_prefijo_acta_esquema (ejecutar 202607211100 antes)';
+            'Snapshot mapa vacío (ejecutar 211100+211110 comun y 211120 sf)';
     END IF;
 
     FOR origen IN
@@ -41,7 +47,7 @@ BEGIN
 
         FOR pref, base IN
             SELECT m.pref, m.esquema_base
-            FROM public.mapa_prefijo_acta_esquema m
+            FROM publicf._mig_mapa_prefijo_acta_esquema m
             ORDER BY m.pref
         LOOP
             IF lower(base) = lower(origen_base) THEN
@@ -142,3 +148,7 @@ BEGIN
         n_ins_total, n_del_total, n_omit_dest
     ));
 END $$;
+
+DROP TABLE IF EXISTS publicf._mig_mapa_prefijo_acta_esquema;
+
+SELECT public.migracion_aviso('snapshot _mig_mapa_prefijo_acta_esquema eliminado (sf)');

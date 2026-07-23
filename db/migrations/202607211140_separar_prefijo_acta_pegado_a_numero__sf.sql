@@ -2,13 +2,12 @@
 -- Si el resto tiene espacios espurios («M1 3/20», «Eu4 75/12»), los elimina:
 --   → «M 13/20», «Eu 475/12».
 --
--- Prefijo = el más largo de public.mapa_prefijo_acta_esquema que encaje
---   lower(trim(acta)) ~ '^pref[0-9]'.
+-- Prefijo = el más largo del snapshot publicf._mig_mapa_prefijo_acta_esquema
+--   (SSOT en BD comun; cargado por 211120) que encaje lower(trim(acta)) ~ '^pref[0-9]'.
 -- Idempotente: tras el espacio, deja de coincidir.
 -- No toca placeholders (id_situacion = 13).
 --
--- Orden: después de 211100 (mapa), antes de 211150 / 211250 / 211300 / 222000
--- (para que repatriar/mover usen el prefijo ya separado).
+-- Orden: 211100(comun) → 211110(export) → 211120(snapshot) → 211140 → …
 -- Serie sf.
 
 DO $$
@@ -19,10 +18,15 @@ DECLARE
     n_ok bigint := 0;
     n_mapa bigint := 0;
 BEGIN
-    SELECT count(*) INTO n_mapa FROM public.mapa_prefijo_acta_esquema;
+    IF to_regclass('publicf._mig_mapa_prefijo_acta_esquema') IS NULL THEN
+        RAISE EXCEPTION
+            'Falta publicf._mig_mapa_prefijo_acta_esquema (ejecutar 211120 antes)';
+    END IF;
+
+    SELECT count(*) INTO n_mapa FROM publicf._mig_mapa_prefijo_acta_esquema;
     IF n_mapa < 1 THEN
         RAISE EXCEPTION
-            'Falta public.mapa_prefijo_acta_esquema (ejecutar 202607211100 antes)';
+            'Snapshot mapa vacío (ejecutar 211100+211110 comun y 211120 sf)';
     END IF;
 
     FOR r IN
@@ -32,14 +36,14 @@ BEGIN
           AND nullif(trim(n.acta), '') IS NOT NULL
           AND EXISTS (
               SELECT 1
-              FROM public.mapa_prefijo_acta_esquema m
+              FROM publicf._mig_mapa_prefijo_acta_esquema m
               WHERE lower(trim(n.acta)) ~ ('^' || m.pref || '[0-9]')
           )
         ORDER BY n.acta
     LOOP
         SELECT m.pref
           INTO pref
-        FROM public.mapa_prefijo_acta_esquema m
+        FROM publicf._mig_mapa_prefijo_acta_esquema m
         WHERE lower(trim(r.acta)) ~ ('^' || m.pref || '[0-9]')
         ORDER BY length(m.pref) DESC
         LIMIT 1;

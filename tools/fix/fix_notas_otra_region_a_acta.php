@@ -8,9 +8,9 @@ declare(strict_types=1);
  * `e_notas_otra_region_stgr` → `e_notas_dl`.
  *
  * La aplicación en BD (local y producción) va por migraciones web:
- *   db/migrations/202607211100_mapa_prefijo_acta_esquema__{sv,sf}.sql  (tabla mapa = SSOT)
- *   db/migrations/202607211200_… / 211250 / 211300 (repatriación; 211300 lee el mapa)
- * (devel_db_admin → Migraciones). Ampliar filas en `public.mapa_prefijo_acta_esquema`.
+ *   db/migrations/202607211100_mapa_prefijo_acta_esquema__comun.sql  (SSOT en BD comun)
+ *   211110 export + 211120 snapshot sv/sf; 211140…222000 (notas)
+ * (devel_db_admin → Migraciones). Ampliar filas en `public.mapa_prefijo_acta_esquema` (comun).
  * Fusiones de esquemas: mismas filas del mapa (`notas` con «fusion»); el PHP
  * `tools/fix/data/esquemas_dl_fusionados.php` es solo fallback vacío.
  *
@@ -181,12 +181,16 @@ try {
     $pdoPublic = (new DBConnection($configDB->getEsquema($publicSchema)))->getPDO();
     $pdoPublic->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    /** @var array<string, string> $fusiones base→base (mapa BD; fallback PHP vacío) */
+    $configComun = new ConfigDB('comun');
+    $pdoComun = (new DBConnection($configComun->getEsquema('public')))->getPDO();
+    $pdoComun->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    /** @var array<string, string> $fusiones base→base (mapa BD comun; fallback PHP vacío) */
     $fusiones = [];
     try {
-        $fusiones = (new PgMapaPrefijoActaEsquemaRepository($pdoPublic))->fusionesEsquemaBase();
+        $fusiones = (new PgMapaPrefijoActaEsquemaRepository($pdoComun))->fusionesEsquemaBase();
     } catch (Throwable $e) {
-        fwrite(STDERR, 'Aviso: no se pudo leer mapa_prefijo_acta_esquema (' . $e->getMessage() . ").\n");
+        fwrite(STDERR, 'Aviso: no se pudo leer mapa_prefijo_acta_esquema en comun (' . $e->getMessage() . ").\n");
     }
     if ($fusiones === []) {
         $fallback = require $root . '/tools/fix/data/esquemas_dl_fusionados.php';

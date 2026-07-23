@@ -5,7 +5,7 @@
 --       «H …» / esquemas H-* → H-Hv ; «M …» → M-Mv ; CR → p.ej. Galbel-crGalbelv, Nig-crNigv.
 --   No repatriar certificados a e_notas_dl (eso es solo tipo 1).
 --
--- Serie sv. Orden: después de 211150 (reescribir actas libres), antes de 211300.
+-- Serie sv. Orden: después de 211140/211150, antes de 211300.
 -- Idempotente. Ver docs/dev/notas_modelo_acta.md
 
 DO $$

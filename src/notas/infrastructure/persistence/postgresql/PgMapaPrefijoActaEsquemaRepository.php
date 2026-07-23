@@ -9,7 +9,7 @@ use src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface;
 use src\shared\infrastructure\GlobalPdo;
 
 /**
- * Lectura/escritura de `public.mapa_prefijo_acta_esquema` (BD de delegación / región).
+ * Lectura/escritura de `public.mapa_prefijo_acta_esquema` (BD comun / oDBPC).
  */
 final class PgMapaPrefijoActaEsquemaRepository implements MapaPrefijoActaEsquemaRepositoryInterface
 {
@@ -17,7 +17,7 @@ final class PgMapaPrefijoActaEsquemaRepository implements MapaPrefijoActaEsquema
 
     public function __construct(?PDO $pdo = null)
     {
-        $this->pdo = $pdo ?? GlobalPdo::get('oDB');
+        $this->pdo = $pdo ?? GlobalPdo::get('oDBPC');
     }
 
     public function esquemaBasePorPrefijo(string $prefijo): ?string

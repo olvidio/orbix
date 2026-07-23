@@ -6,10 +6,12 @@
 --
 -- Uso:
 --   psql -h … -d sv -f tools/audit/diag_notas_otra_region_mapa.sql
---   (en sf: editar tmp_diag_suffix → 'f')
+--   (en sf: editar tmp_diag_suffix → 'f' y usar publicf._mig_…)
 --
--- REQUIERE: public.mapa_prefijo_acta_esquema (migración 202607211100).
--- Ampliar el mapa: INSERT en esa tabla (no en este script).
+-- REQUIERE snapshot local publicv._mig_mapa_prefijo_acta_esquema (migración 211120).
+-- El SSOT del mapa está en BD comun (211100). Si el snapshot ya se borró (tras 222000),
+-- re-ejecutar 211110 (comun) + 211120 (sv) o consultar comun directamente.
+-- Ampliar el mapa: INSERT en comun.public.mapa_prefijo_acta_esquema.
 --
 -- Secciones:
 --   0) Conteo tipo 2 (informativo; fuera del alcance de repatriación)
@@ -32,14 +34,16 @@ CREATE TEMP TABLE tmp_diag_suffix AS SELECT 'v'::text AS suffix;
 
 DO $$
 BEGIN
-    IF to_regclass('public.mapa_prefijo_acta_esquema') IS NULL THEN
+    IF to_regclass('publicv._mig_mapa_prefijo_acta_esquema') IS NULL THEN
         RAISE EXCEPTION
-            'Falta public.mapa_prefijo_acta_esquema. Ejecutar migración 202607211100_mapa_prefijo_acta_esquema';
+            'Falta publicv._mig_mapa_prefijo_acta_esquema. '
+            'Ejecutar 211110 (comun export) + 211120 (sv snapshot). '
+            'SSOT del mapa: comun.public.mapa_prefijo_acta_esquema';
     END IF;
 END $$;
 
-\echo --- Mapa cargado ---
-SELECT count(*) AS filas_mapa FROM public.mapa_prefijo_acta_esquema;
+\echo --- Mapa (snapshot local) ---
+SELECT count(*) AS filas_mapa FROM publicv._mig_mapa_prefijo_acta_esquema;
 
 \echo
 \echo --- 0) Certificados tipo 2 en otra_region (informativo; no se repatrián) ---
@@ -136,7 +140,7 @@ BEGIN
                 estado := 'sin_prefijo_acta';
             ELSE
                 SELECT m.esquema_base INTO base
-                FROM public.mapa_prefijo_acta_esquema m
+                FROM publicv._mig_mapa_prefijo_acta_esquema m
                 WHERE m.pref = v_pref;
 
                 IF base IS NULL THEN

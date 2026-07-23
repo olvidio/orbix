@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace src\notas\domain\contracts;
 
 /**
- * Mapa permanente `public.mapa_prefijo_acta_esquema`:
+ * Mapa permanente `public.mapa_prefijo_acta_esquema` (BD comun):
  * prefijo del nº de acta → esquema base sin sufijo v/f.
  *
  * Fuente única de verdad para:

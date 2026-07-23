@@ -1,11 +1,12 @@
 -- Repatriar notas legacy de e_notas_otra_region_stgr → e_notas_dl (modelo acta).
 -- Serie sv (sufijo de esquema `v`). Ejecutar desde devel_db_admin → Migraciones.
 --
--- REQUIERE antes: 202607211100_mapa_prefijo_acta_esquema (tabla public.mapa_prefijo_acta_esquema).
--- Orden recomendado: 211100 → 211140 → 211150 → 211250 → 211300 → 222000.
+-- REQUIERE antes: snapshot publicv._mig_mapa_prefijo_acta_esquema (211120;
+--   SSOT en BD comun vía 211100+211110).
+-- Orden recomendado: 211100 → 211110 → 211120 → 211140 → 211150 → 211250 → 211300 → 222000.
 --
 -- Reglas:
---   - Destino por prefijo del número de acta (mapa BD) + fusiones ya en el mapa.
+--   - Destino por prefijo del número de acta (snapshot del mapa comun) + fusiones.
 --   - Solo tipo_acta = 1 (acta). Certificados (tipo 2): ver 211250.
 --   - No toca id_asignatura 9998/9999 (fin de ciclo: se dejan donde están).
 --   - No toca actas vacías ni «fin …» sin prefijo mapeable.
@@ -31,10 +32,10 @@ DECLARE
     n_restantes bigint := 0;
     n_mapa bigint := 0;
 BEGIN
-    SELECT count(*) INTO n_mapa FROM public.mapa_prefijo_acta_esquema;
+    SELECT count(*) INTO n_mapa FROM publicv._mig_mapa_prefijo_acta_esquema;
     IF n_mapa < 1 THEN
         RAISE EXCEPTION
-            'Falta public.mapa_prefijo_acta_esquema (ejecutar 202607211100_mapa_prefijo_acta_esquema antes)';
+            'Falta snapshot publicv._mig_mapa_prefijo_acta_esquema (ejecutar 211120 antes)';
     END IF;
 
     CREATE TEMP TABLE tmp_map_prefijo_nota_acta (
@@ -44,7 +45,7 @@ BEGIN
 
     INSERT INTO tmp_map_prefijo_nota_acta (pref, base)
     SELECT m.pref, m.esquema_base
-    FROM public.mapa_prefijo_acta_esquema m;
+    FROM publicv._mig_mapa_prefijo_acta_esquema m;
 
     FOR origen IN
         SELECT n.nspname
