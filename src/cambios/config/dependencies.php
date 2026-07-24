@@ -1,6 +1,6 @@
 <?php
 
-use src\cambios\application\AvisosEnviarMails;
+use src\cambios\application\AvisosEncolarMails;
 use src\cambios\application\AvisosGenerarListaData;
 use src\cambios\application\AvisosGenerarTabla;
 use src\cambios\application\CambioAvisoTxtBuilder;
@@ -44,7 +44,7 @@ return [
 
     // Casos de uso / Application classes
     Avisos::class => autowire(Avisos::class),
-    AvisosEnviarMails::class => autowire(AvisosEnviarMails::class),
+    AvisosEncolarMails::class => autowire(AvisosEncolarMails::class),
     AvisosGenerarListaData::class => autowire(AvisosGenerarListaData::class),
     AvisosGenerarTabla::class => autowire(AvisosGenerarTabla::class),
     CambioAvisoTxtBuilder::class => autowire(CambioAvisoTxtBuilder::class),

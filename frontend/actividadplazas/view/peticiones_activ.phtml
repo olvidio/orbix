@@ -24,7 +24,7 @@
             if (json && json.success === true) {
                 fnjs_nav_atras(1);
             } else {
-                alert(json && json.mensaje ? json.mensaje : '<?= _("error al guardar") ?>');
+                alert(json && json.mensaje ? json.mensaje : <?= json_encode(_("error al guardar"), JSON_UNESCAPED_UNICODE) ?>);
             }
         });
     }
@@ -38,7 +38,7 @@
             if (json && json.success === true) {
                 fnjs_actualizar();
             } else {
-                alert(json && json.mensaje ? json.mensaje : '<?= _("error al borrar") ?>');
+                alert(json && json.mensaje ? json.mensaje : <?= json_encode(_("error al borrar"), JSON_UNESCAPED_UNICODE) ?>);
             }
         });
     }

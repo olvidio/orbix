@@ -4,6 +4,8 @@
 	la extension del fichero no es ".js", sino ".js.php"
 */
 header('Content-Type: text/javascript; charset=UTF-8');
+
+$js = static fn (string $msg): string => json_encode($msg, JSON_UNESCAPED_UNICODE);
 ?>
 <!-- Esta funcion comprueba si un número cumple con la notación de moneda: ######.## -->
 <!-- Sólo acepta una coma (o punto) para los valores decimales, no para los miles... -->
@@ -19,10 +21,10 @@ function fnjs_comprobar_dinero(id) {
     }
 
     if (!/^(\d+)[,.]?\d{0,2}$/.test(num) && num.length) {
-        var txt1 = '<?= _('formato no válido') ?>';
-        var txt2 = '<?= _('se adminte un separador para los decimales (máximo 2)') ?>';
-        var txt3 = '<?= _('No se admite separador para los miles') ?>';
-        var txt4 = '<?= _('ejemplo: 1254.56') ?>';
+        var txt1 = <?= $js(_('formato no válido')) ?>;
+        var txt2 = <?= $js(_('se adminte un separador para los decimales (máximo 2)')) ?>;
+        var txt3 = <?= $js(_('No se admite separador para los miles')) ?>;
+        var txt4 = <?= $js(_('ejemplo: 1254.56')) ?>;
         alert(txt1 + '\n' + txt2 + '\n' + txt3 + '\n' + txt4);
     }
 }
@@ -48,19 +50,19 @@ function fnjs_comprobar_fecha(id, locale_usa) {
     if (v_fecha.length === 3) {
         if (locale_usa) {
             if (parseInt(v_fecha[0], 10) > 12 || (parseInt(v_fecha[0], 10) < 1)) {
-                alert(name_fecha + ': <?= _("el mes no es correcto"); ?>');
+                alert(name_fecha + ': ' + <?= $js(_("el mes no es correcto")) ?>);
                 $(id).focus();
                 return false;
             }
             if (parseInt(v_fecha[1], 10) > 31 || (parseInt(v_fecha[1], 10) < 1)) {
-                alert(name_fecha + ': <?= _("el día no es correcto"); ?>');
+                alert(name_fecha + ': ' + <?= $js(_("el día no es correcto")) ?>);
                 $(id).focus();
                 return false;
             }
             // Con esto compruebo que esté correctamente formada y verifico años bisiestos.
             var mi_v_fecha = new Date(parseInt(v_fecha[2], 10), parseInt(v_fecha[0], 10) - parseInt(1, 10), parseInt(v_fecha[1], 10))
             if (parseInt(v_fecha[1], 10) !== parseInt(mi_v_fecha.getDate())) {
-                alert(name_fecha + ': <?= _("La fecha introducida NO es correcta") ?>');
+                alert(name_fecha + ': ' + <?= $js(_("La fecha introducida NO es correcta")) ?>);
                 $(id).focus();
                 return false;
             }
@@ -68,19 +70,19 @@ function fnjs_comprobar_fecha(id, locale_usa) {
             return true;
         } else {
             if (parseInt(v_fecha[0], 10) > 31 || (parseInt(v_fecha[0], 10) < 1)) {
-                alert(name_fecha + ': <?= _("el dia no es correcto") ?>');
+                alert(name_fecha + ': ' + <?= $js(_("el dia no es correcto")) ?>);
                 $(id).focus();
                 return false;
             }
             if (parseInt(v_fecha[1], 10) > 12 || (parseInt(v_fecha[1], 10) < 1)) {
-                alert(name_fecha + ': <?= _("el mes no es correcto") ?>');
+                alert(name_fecha + ': ' + <?= $js(_("el mes no es correcto")) ?>);
                 $(id).focus();
                 return false;
             }
             // Con esto compruebo que esté correctamente formada y verifico años bisiestos.
             var mi_v_fecha = new Date(parseInt(v_fecha[2], 10), parseInt(v_fecha[1], 10) - parseInt(1, 10), parseInt(v_fecha[0], 10))
             if (parseInt(v_fecha[0], 10) !== parseInt(mi_v_fecha.getDate())) {
-                alert(name_fecha + ': <?= _("La fecha introducida NO es correcta") ?>');
+                alert(name_fecha + ': ' + <?= $js(_("La fecha introducida NO es correcta")) ?>);
                 $(id).focus();
                 return false;
             }
@@ -92,7 +94,7 @@ function fnjs_comprobar_fecha(id, locale_usa) {
         if (v_fecha.length === 1 && v_fecha[0]) {
             dia = parseInt(v_fecha[0], 10);
             if (isNaN(dia) || dia > 31 || (dia < 1)) {
-                alert(name_fecha + ': <?= _("El formato debe ser dd/mm/yyyy") ?>');
+                alert(name_fecha + ': ' + <?= $js(_("El formato debe ser dd/mm/yyyy")) ?>);
                 $(id).focus();
                 return false;
             }
@@ -100,7 +102,7 @@ function fnjs_comprobar_fecha(id, locale_usa) {
             $(id).focus();
             return true;
         } else {
-            alert(name_fecha + ': <?= _("El formato debe ser dd/mm/yyyy") ?>');
+            alert(name_fecha + ': ' + <?= $js(_("El formato debe ser dd/mm/yyyy")) ?>);
             $(id).focus();
             return false;
         }
@@ -122,20 +124,20 @@ function fnjs_comprobar_fecha_val(id) {
     var v_fecha = str_fecha.split("/");
     if (v_fecha.length === 3) {
         if (parseInt(v_fecha[0], 10) > 31 || (parseInt(v_fecha[0], 10) < 1)) {
-            alert(name_fecha + ': <?= _("el dia no es correcto"); ?>');
+            alert(name_fecha + ': ' + <?= $js(_("el dia no es correcto")) ?>);
             $(id).focus();
             return false;
         }
 
         if (parseInt(v_fecha[1], 10) > 12 || (parseInt(v_fecha[1], 10) < 1)) {
-            alert(name_fecha + ': <?= _("el mes no es correcto"); ?>');
+            alert(name_fecha + ': ' + <?= $js(_("el mes no es correcto")) ?>);
             $(id).focus();
             return false;
         }
         // Con esto compruebo que esté correctamente formada y verifico años bisiestos.
         var mi_v_fecha = new Date(parseInt(v_fecha[2], 10), parseInt(v_fecha[1], 10) - parseInt(1, 10), parseInt(v_fecha[0], 10))
         if (parseInt(v_fecha[0], 10) !== parseInt(mi_v_fecha.getDate())) {
-            alert(name_fecha + ': <?= _("La fecha introducida NO es correcta") ?>');
+            alert(name_fecha + ': ' + <?= $js(_("La fecha introducida NO es correcta")) ?>);
             $(id).focus();
             return false;
         }
@@ -146,14 +148,14 @@ function fnjs_comprobar_fecha_val(id) {
         if (v_fecha.length === 1 && v_fecha[0]) {
             dia = parseInt(v_fecha[0], 10);
             if (isNaN(dia) || dia > 31 || (dia < 1)) {
-                alert(name_fecha + ': <?= _("El formato debe ser dd/mm/yyyy") ?>');
+                alert(name_fecha + ': ' + <?= $js(_("El formato debe ser dd/mm/yyyy")) ?>);
                 $(id).focus();
                 return false;
             }
             var rta = v_fecha[0] + "/" + month + "/" + year;
             return rta;
         } else {
-            alert(name_fecha + ': <?= _("El formato debe ser dd/mm/yyyy") ?>');
+            alert(name_fecha + ': ' + <?= $js(_("El formato debe ser dd/mm/yyyy")) ?>);
             $(id).focus();
             return false;
         }
@@ -171,14 +173,14 @@ function fnjs_comprobar_hora(id) {
     var v_fecha = $(id).val().split(":");
     if (v_fecha.length === 2 || v_fecha.length === 3) {
         if (parseInt(v_fecha[0], 10) > 24 || (parseInt(v_fecha[0], 10) < 1)) {
-            alert(<?= json_encode(_("la hora no es correcta")) ?>);
+            alert(<?= $js(_("la hora no es correcta")) ?>);
             $(id).focus();
             return false;
         }
 
         var M = parseInt(v_fecha[1], 10);
         if ((M > 60) || (M < 0)) {
-            alert(<?= json_encode(_("los minutos no son correctos")) ?> + M);
+            alert(<?= $js(_("los minutos no son correctos")) ?> + M);
             $(id).focus();
             return false;
         }
@@ -187,7 +189,7 @@ function fnjs_comprobar_hora(id) {
         // pruebo de poner los minutos a 0
         if (v_fecha.length === 1 && v_fecha[0]) {
             if (parseInt(v_fecha[0], 10) > 24 || (parseInt(v_fecha[0], 10) < 1)) {
-                alert(<?= json_encode(_("El formato debe ser hh:mm")) ?>);
+                alert(<?= $js(_("El formato debe ser hh:mm")) ?>);
                 $(id).focus();
                 return false;
             }
@@ -195,7 +197,7 @@ function fnjs_comprobar_hora(id) {
             $(id).val(rta);
             return true;
         } else {
-            alert(<?= json_encode(_("El formato debe ser hh:mm")) ?>);
+            alert(<?= $js(_("El formato debe ser hh:mm")) ?>);
             $(id).focus();
             return false;
         }

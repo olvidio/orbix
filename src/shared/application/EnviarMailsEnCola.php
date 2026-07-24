@@ -17,6 +17,9 @@ use src\shared\domain\value_objects\DateTimeLocal;
  * `src/shared/infrastructure/cli/enviar_mails_en_cola.php`, que a su
  * vez se invoca desde crontab en el servidor exterior (el unico con
  * acceso al MTA).
+ *
+ * Los avisos de cambios se encolan desde el servidor interior
+ * (`AvisosEncolarMails`); este consumidor solo los envia.
  */
 final class EnviarMailsEnCola
 {

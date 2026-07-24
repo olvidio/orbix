@@ -70,9 +70,10 @@ controller/` quedan como wrappers deprecados con `require` al driver.
   progresa. Invocado por cron, `Cambio::generarTabla()` (via `exec`) y el
   menu web.
 - `avisos_generar_mails.php` — parsea `$argv`, arranca el contenedor y
-  llama a `src\cambios\application\AvisosEnviarMails::execute()`. Imprime
-  un resumen con contadores (`enviados`, `sin_email`, `total_avisos`) util
-  para los logs de cron.
+  llama a `src\cambios\application\AvisosEncolarMails::execute()` (solo
+  servidor interior). Imprime un resumen con contadores (`encolados`,
+  `sin_email`, `total_avisos`) util para los logs de cron. El envío lo
+  hace `enviar_mails_en_cola` en la DMZ.
 
 ## Pantallas en apps/cambios/controller
 
@@ -137,17 +138,16 @@ controller/` quedan como wrappers deprecados con `require` al driver.
   `log/avisos.<esquema>.pid`, `exit` en `crear_pid` cuando detecta otro
   proceso). El `apps/cambios/model/Avisos.php` se ha eliminado.
 
-### 5. `avisos_generar_mails.php` (proceso batch / cron, 221 LOC)
+### 5. `avisos_generar_mails.php` (proceso batch / cron interior)
 
 - **Origen**: `apps/cambios/controller/avisos_generar_mails.php`.
-- Itera `CambioUsuario` con `aviso_tipo = TIPO_MAIL` y envia emails.
-- **Migrado**: `src/cambios/application/AvisosEnviarMails::execute()`
-  devuelve `{enviados, usuarios_sin_email, total_avisos}`. Driver CLI en
-  `src/cambios/infrastructure/cli/avisos_generar_mails.php`, wrapper
-  deprecado en `apps/cambios/controller/`.
-- Deuda asumida: sigue usando `mail()` directo y `web\Lista` para montar
-  el body del correo. Candidatos a `MailerInterface` y a una plantilla
-  `.phtml` en una pasada posterior.
+- Itera `CambioUsuario` con `aviso_tipo = TIPO_MAIL`, resuelve textos en el
+  servidor **interior** y encola en `cola_mails` (envío real: DMZ /
+  `EnviarMailsEnCola`).
+- **Migrado**: `src/cambios/application/AvisosEncolarMails::execute()`
+  devuelve `{encolados, usuarios_sin_email, total_avisos}`. Driver CLI en
+  `src/cambios/infrastructure/cli/avisos_generar_mails.php`.
+- Deuda asumida: el body usa `web\Lista`; candidato a plantilla `.phtml`.
 
 ### 6. `usuario_avisos_pref.php` (pantalla de configuracion de preferencia)
 
@@ -256,7 +256,7 @@ controller/` quedan como wrappers deprecados con `require` al driver.
 
 La entidad `Cambio` ya no llama al contenedor: `getAvisoTxt()` se extrajo a
 `src/cambios/application/CambioAvisoTxtBuilder.php` (inyectado en
-`AvisosGenerarListaData` y `AvisosEnviarMails`).
+`AvisosGenerarListaData` y `AvisosEncolarMails`).
 
 ### Application / legacy
 
@@ -273,7 +273,7 @@ La entidad `Cambio` ya no llama al contenedor: `getAvisoTxt()` se extrajo a
 | `CambioUsuarioPropiedadPrefGuardarTodas` / `Preview` / `ItemData` | `CambioUsuarioPropiedadPref` (Preview sin repo) |
 | `RegistrarCambio` | `ActividadAll`, `CambioDl`, `Cambio`, `ActividadProcesoTarea` |
 | `AvisosGenerarTabla` | `Avisos` (legacy), `Cambio`, `ActividadAll`, `Importada`, `TipoDeActividad`, `PersonaSacd`, `TareaProceso`, `CambioUsuario*Pref` |
-| `AvisosEnviarMails` | `CambioUsuario`, `Usuario`, `Preferencia`, `Cambio*`, `CambioAvisoTxtBuilder` |
+| `AvisosEncolarMails` | `CambioUsuario`, `Usuario`, `Preferencia`, `Cambio*`, `CambioAvisoTxtBuilder`, `ColaMail` |
 | `legacy/Avisos` | `CambioUsuario`, `CambioAnotado`, `Usuario`, `ActividadAll`, `Zona`, `ZonaSacd`, `ActividadCargo` |
 
 Sesión: `instanceof ConfigSnapshot` / `XPermisos` en
@@ -299,7 +299,7 @@ Todos en `infrastructure/ui/http/controllers/` usan `DependencyResolver::get()`
 ### CLI (2)
 
 - `avisos_generar_tabla.php` → `DependencyResolver::get(AvisosGenerarTabla::class)`
-- `avisos_generar_mails.php` → `DependencyResolver::get(AvisosEnviarMails::class)`
+- `avisos_generar_mails.php` → `DependencyResolver::get(AvisosEncolarMails::class)`
 
 ### `src/cambios/config/dependencies.php`
 
@@ -348,7 +348,7 @@ factory inyecta el listener (ya no hace `new RegistrarCambioListener()`).
 ### Pendiente
 
 - [ ] `legacy/Avisos`: conserva `echo`/`exit` en `crear_pid` (deuda documentada).
-- [ ] `AvisosEnviarMails`: sigue usando `mail()` y `sleep(60)` (deuda conocida).
+- [ ] `AvisosEncolarMails`: sigue usando `sleep(60)` tras `generarTabla` (deuda conocida).
 - [ ] N+1 y acoplamiento legacy en `AvisosGenerarTabla` (fuera de alcance DI).
 
 ## Checklist de cierre

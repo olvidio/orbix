@@ -78,7 +78,7 @@ echo $oPosicion->mostrarNavAtras(1);
     }
 
     fnjs_borrar = function (formulario) {
-        let mensaje = "<?= _("¿Está seguro que desea borrar todas las matrículas seleccionadas?");?>";
+        let mensaje = <?= json_encode(_("¿Está seguro que desea borrar todas las matrículas seleccionadas?"), JSON_UNESCAPED_UNICODE) ?>;
         if (confirm(mensaje)) {
             $("#mod").val("eliminar");
             let url = '<?= AppUrlConfig::srcBrowserUrl('/src/actividadestudios/matricula_eliminar') ?>';

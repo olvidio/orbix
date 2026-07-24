@@ -9,54 +9,59 @@ use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\contracts\ColaMailRepositoryInterface;
+use src\shared\domain\entity\ColaMail;
+use src\shared\domain\value_objects\ColaMailId;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 
 /**
- * Caso de uso para enviar por e-mail los avisos pendientes de cada usuario.
+ * Caso de uso para encolar por e-mail los avisos pendientes de cada usuario.
  *
- * Llamado desde el driver CLI
- * `src/cambios/infrastructure/cli/avisos_generar_mails.php` (se ejecuta por
- * crontab desde el servidor exterior, que es el que tiene acceso al MTA).
+ * Debe ejecutarse en el servidor **interior** (crontab horario SV/SF), donde
+ * hay acceso a las tablas de personas para resolver nombres en el texto.
+ * Inserta filas en `cola_mails`; el envío real lo hace
+ * `EnviarMailsEnCola` en el servidor exterior (DMZ).
  *
  * El use case:
  *   1. Dispara `Cambio::generarTabla()` para asegurar que no quedan cambios
- *      pendientes de anotar en otras dl, espera 60s.
+ *      pendientes de anotar en otras dl, espera 60s (salvo tests).
  *   2. Itera los `CambioUsuario` con `aviso_tipo = TIPO_MAIL` no avisados.
- *   3. Para cada usuario construye una tabla HTML con sus cambios y envia
- *      un unico mail. Elimina los `CambioUsuario` despues de enviar.
+ *   3. Para cada usuario construye una tabla HTML con sus cambios y encola
+ *      un unico mail. Elimina los `CambioUsuario` despues de encolar.
  *
- * Deuda conocida (fuera de scope de este refactor):
- *   - Sigue usando `mail()` directamente en vez de un `MailerInterface`.
- *   - La construccion del HTML del body usa `frontend\shared\web\Lista` (componente UI);
+ * Deuda conocida:
+ *   - La construccion del HTML del body usa `frontend\shared\web\Lista`;
  *     deberia moverse a una vista/template.
- *   - `sleep(60)` bloquea el proceso en tests; aceptable porque la unica
- *     via de invocacion es cron.
  */
-class AvisosEnviarMails
+class AvisosEncolarMails
 {
+    public const WRITED_BY = 'avisos_cambios';
+
     public function __construct(
         private CambioUsuarioRepositoryInterface $cambioUsuarioRepository,
-        private UsuarioRepositoryInterface       $usuarioRepository,
-        private PreferenciaRepositoryInterface   $preferenciaRepository,
-        private CambioParaAvisoLookup            $cambioParaAvisoLookup,
-        private CambioAvisoTxtBuilder            $cambioAvisoTxtBuilder,
-    )
-    {
+        private UsuarioRepositoryInterface $usuarioRepository,
+        private PreferenciaRepositoryInterface $preferenciaRepository,
+        private CambioParaAvisoLookup $cambioParaAvisoLookup,
+        private CambioAvisoTxtBuilder $cambioAvisoTxtBuilder,
+        private ColaMailRepositoryInterface $colaMailRepository,
+    ) {
     }
 
     /**
-     * @return array{enviados: int, usuarios_sin_email: int, total_avisos: int}
+     * @return array{encolados: int, usuarios_sin_email: int, total_avisos: int}
      */
-    public function execute(): array
+    public function execute(bool $dispararGenerarTabla = true): array
     {
         // Para asegurar que coge los cambios de otras dl que no tengan instalado
         // el modulo de cambios, hay que ejecutar el generarTabla() y esperar a
         // que acabe en background.
-        $oCambio = new Cambio();
-        $oCambio->generarTabla();
-        sleep(60);
+        if ($dispararGenerarTabla) {
+            $oCambio = new Cambio();
+            $oCambio->generarTabla();
+            sleep(60);
+        }
 
         $dele = ConfigGlobal::mi_dele();
         $delef = $dele . 'f';
@@ -74,7 +79,7 @@ class AvisosEnviarMails
         ];
         $cCambiosUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
 
-        $enviados = 0;
+        $encolados = 0;
         $sinEmail = 0;
         $i = 0;
         $id_usuario_anterior = 0;
@@ -90,8 +95,8 @@ class AvisosEnviarMails
             if ($id_usuario !== $id_usuario_anterior) {
                 // Flush del usuario anterior (excepto en la primera iteracion).
                 if ($id_usuario_anterior !== 0) {
-                    if ($this->enviarMail($email, $a_datos, $a_id)) {
-                        $enviados++;
+                    if ($this->encolarMail($email, $a_datos, $a_id)) {
+                        $encolados++;
                     } else {
                         $sinEmail++;
                     }
@@ -103,7 +108,7 @@ class AvisosEnviarMails
                 $id_usuario_anterior = $id_usuario;
 
                 $oPreferencia = $this->preferenciaRepository->findById($id_usuario, 'zona_horaria');
-                $zona_horaria = ($oPreferencia !== null) ? (string)$oPreferencia->getPreferencia() : '';
+                $zona_horaria = ($oPreferencia !== null) ? (string) $oPreferencia->getPreferencia() : '';
                 if ($zona_horaria !== '') {
                     try {
                         $DateTimeZone = new DateTimeZone($zona_horaria);
@@ -157,15 +162,15 @@ class AvisosEnviarMails
         }
         // El ultimo de la lista.
         if ($email !== '') {
-            if ($this->enviarMail($email, $a_datos, $a_id)) {
-                $enviados++;
+            if ($this->encolarMail($email, $a_datos, $a_id)) {
+                $encolados++;
             } else {
                 $sinEmail++;
             }
         }
 
         return [
-            'enviados' => $enviados,
+            'encolados' => $encolados,
             'usuarios_sin_email' => $sinEmail,
             'total_avisos' => $i,
         ];
@@ -173,12 +178,11 @@ class AvisosEnviarMails
 
     /**
      * @param array<int, array{1: string, 2: string, 3: string}> $a_datos filas para la tabla del mail.
-     * @param array<int, string> $a_id identificadores para borrar tras envio.
+     * @param array<int, string> $a_id identificadores para borrar tras encolar.
      */
-    private function enviarMail(string $email, array $a_datos, array $a_id): bool
+    private function encolarMail(string $email, array $a_datos, array $a_id): bool
     {
         if ($a_datos === [] || $email === '') {
-            $this->eliminarEnviado($a_id);
             return false;
         }
 
@@ -202,7 +206,18 @@ class AvisosEnviarMails
         $headers .= "Reply-To: no-Reply@moneders.net\r\n";
         $headers .= "Return-path: no-Reply@moneders.net\r\n";
 
-        mail($email, $asunto, $cuerpo, $headers);
+        $oColaMail = new ColaMail();
+        $oColaMail->setUuid_item(ColaMailId::random());
+        $oColaMail->setMail_to($email);
+        $oColaMail->setSubject((string) $asunto);
+        $oColaMail->setMessage($cuerpo);
+        $oColaMail->setHeaders($headers);
+        $oColaMail->setWrited_by(self::WRITED_BY);
+
+        if ($this->colaMailRepository->Guardar($oColaMail) === false) {
+            return false;
+        }
+
         $this->eliminarEnviado($a_id);
         return true;
     }
@@ -221,10 +236,10 @@ class AvisosEnviarMails
                 continue;
             }
             $aWhere = [
-                'id_item_cambio' => (int)$ids[0],
-                'id_usuario' => (int)$ids[1],
-                'sfsv' => (int)$ids[2],
-                'aviso_tipo' => (int)$ids[3],
+                'id_item_cambio' => (int) $ids[0],
+                'id_usuario' => (int) $ids[1],
+                'sfsv' => (int) $ids[2],
+                'aviso_tipo' => (int) $ids[3],
             ];
 
             $cCambiosUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
