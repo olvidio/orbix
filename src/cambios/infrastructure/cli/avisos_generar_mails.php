@@ -38,11 +38,16 @@ $useCase = DependencyResolver::get(AvisosEncolarMails::class);
 $resumen = $useCase->execute();
 
 if (PHP_SAPI === 'cli') {
+    $esquema = getenv('ESQUEMA');
+    if (!is_string($esquema) || $esquema === '') {
+        $esquema = isset($argv[7]) && is_string($argv[7]) ? $argv[7] : '';
+    }
     fwrite(
         STDOUT,
         sprintf(
-            "[%s] avisos_generar_mails: encolados=%d sin_email=%d avisos_totales=%d\n",
+            "[%s] avisos_generar_mails: esquema=%s encolados=%d sin_email=%d avisos_totales=%d\n",
             date('c'),
+            $esquema !== '' ? $esquema : '-',
             $resumen['encolados'],
             $resumen['usuarios_sin_email'],
             $resumen['total_avisos']
