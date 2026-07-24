@@ -74,7 +74,7 @@ fnjs_grabar_todo = function () {
         data: form_objeto.serializeArray()
     }).done(function (rta) {
         if (!rta || rta.success !== true) {
-            alert(rta && rta.mensaje ? rta.mensaje : '<?= _("Hay un error, no se ha guardado") ?>');
+            alert(rta && rta.mensaje ? rta.mensaje : <?= json_encode(_("Hay un error, no se ha guardado"), JSON_UNESCAPED_UNICODE) ?>);
             return;
         }
         var parsed = {};
@@ -90,7 +90,7 @@ fnjs_grabar_todo = function () {
             data: form_propiedades.serializeArray()
         }).done(function (rta2) {
             if (!rta2 || rta2.success !== true) {
-                alert(rta2 && rta2.mensaje ? rta2.mensaje : '<?= _("Hay un error, no se ha guardado") ?>');
+                alert(rta2 && rta2.mensaje ? rta2.mensaje : <?= json_encode(_("Hay un error, no se ha guardado"), JSON_UNESCAPED_UNICODE) ?>);
                 return;
             }
             <?= $oPosicion->jsNavAtras(1) ?>
