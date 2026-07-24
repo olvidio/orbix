@@ -3,6 +3,7 @@
 namespace src\personas\application;
 
 use src\actividades\domain\value_objects\NivelStgrId;
+use src\personas\domain\PersonaPublicacion;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
@@ -255,7 +256,11 @@ final class PersonasSelectData
                     'nivel_stgr' => '',
                     'situacion' => '',
                     'f_situacion' => '',
+                    'publicado' => '',
                 ];
+                if (method_exists($oPersona, 'getPublicado_para')) {
+                    $fila['publicado'] = PersonaPublicacion::textoVigentes($oPersona->getPublicado_para());
+                }
                 if (($tabla === 'p_numerarios' || $tabla === 'p_agregados') && $tipo !== 'planning') {
                     $fila['nivel_stgr'] = (string)($aNivelStgr[$oPersona->getNivel_stgr()] ?? '');
                 }

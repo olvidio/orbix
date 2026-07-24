@@ -22,6 +22,8 @@ use src\notas\application\ActaNueva;
 use src\notas\application\ActaPdfEliminar;
 use src\notas\application\ActaPdfSubir;
 use src\notas\application\ActaSelectData;
+use src\notas\application\ActaVerAddPersona;
+use src\notas\application\ActaVerAddPersonaFormData;
 use src\notas\application\ActaVerFormData;
 use src\notas\application\ActividadesBuscarData;
 use src\notas\application\AsigFaltanPersonasSelectTablaData;
@@ -97,6 +99,8 @@ return [
     ActaPdfSubir::class => autowire(ActaPdfSubir::class),
     ActaSelectData::class => autowire(ActaSelectData::class),
     ActaVerFormData::class => autowire(ActaVerFormData::class),
+    ActaVerAddPersonaFormData::class => autowire(ActaVerAddPersonaFormData::class),
+    ActaVerAddPersona::class => autowire(ActaVerAddPersona::class),
     ActividadesBuscarData::class => autowire(ActividadesBuscarData::class),
     AsigFaltanPersonasSelectTablaData::class => autowire(AsigFaltanPersonasSelectTablaData::class),
     AsigFaltanSelectTablaData::class => autowire(AsigFaltanSelectTablaData::class),

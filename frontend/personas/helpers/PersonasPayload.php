@@ -168,6 +168,7 @@ final class PersonasPayload
      *         nivel_stgr: string,
      *         situacion: string,
      *         f_situacion: string,
+     *         publicado: string,
      *     }>,
      * }
      */
@@ -201,7 +202,8 @@ final class PersonasPayload
      *     nombre_ubi: string,
      *     nivel_stgr: string,
      *     situacion: string,
-     *     f_situacion: string
+     *     f_situacion: string,
+     *     publicado: string
      * }
      */
     public static function selectFilaRow(mixed $raw): array
@@ -215,6 +217,7 @@ final class PersonasPayload
                 'nivel_stgr' => '',
                 'situacion' => '',
                 'f_situacion' => '',
+                'publicado' => '',
             ];
         }
 
@@ -226,6 +229,7 @@ final class PersonasPayload
             'nivel_stgr' => PayloadCoercion::string($raw['nivel_stgr'] ?? ''),
             'situacion' => PayloadCoercion::string($raw['situacion'] ?? ''),
             'f_situacion' => PayloadCoercion::string($raw['f_situacion'] ?? ''),
+            'publicado' => PayloadCoercion::string($raw['publicado'] ?? ''),
         ];
     }
 
@@ -243,6 +247,25 @@ final class PersonasPayload
             'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
             'nivel_stgr' => PayloadCoercion::string($payload['nivel_stgr'] ?? ''),
             'opciones_nivel_stgr' => NotasFormSupport::desplegableOpciones($payload['opciones_nivel_stgr'] ?? []),
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $payload
+     * @return array{
+     *     error: string,
+     *     nom: string,
+     *     id_schema: int,
+     *     opciones_dl: array<int|string, string>,
+     * }
+     */
+    public static function personaPublicarFromPayload(array $payload): array
+    {
+        return [
+            'error' => PayloadCoercion::string($payload['error'] ?? ''),
+            'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
+            'id_schema' => (int) ($payload['id_schema'] ?? 0),
+            'opciones_dl' => NotasFormSupport::desplegableOpciones($payload['opciones_dl'] ?? []),
         ];
     }
 

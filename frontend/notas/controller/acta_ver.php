@@ -1,5 +1,6 @@
 <?php
 
+use frontend\notas\helpers\NotasFormSupport;
 use frontend\notas\helpers\NotasPayload;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\helpers\ListNavSupport;
@@ -25,6 +26,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\web\Desplegable;
 use frontend\shared\web\Posicion;
 
 $isIncluded = isset($oPosicion) && $oPosicion instanceof Posicion;
@@ -207,6 +209,41 @@ $h_delete = $oHashActaDelete->getParamAjax();
 
 $soy_rstgr = OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r';
 
+$puede_anadir_persona = false;
+$oDesplAddPersona = null;
+$oHashAddPersona = null;
+$nota_max_default = 10;
+$url_add_persona = AppUrlConfig::srcBrowserUrl('/src/notas/acta_ver_add_persona');
+
+if (
+    $permiso === 3
+    && empty($readonly)
+    && $Qmod !== 'nueva'
+    && $notas !== 'nuevo'
+    && $acta_actual !== ''
+    && is_numeric($id_asignatura_actual)
+    && (int) $id_asignatura_actual > 0
+) {
+    $addData = PayloadCoercion::stringKeyedArray(
+        PostRequest::getDataFromUrl('/src/notas/acta_ver_add_persona_form_data', ['acta' => $acta_actual]),
+    );
+    if (!empty($addData['puede_anadir'])) {
+        $puede_anadir_persona = true;
+        $nota_max_default = (int) ($addData['nota_max_default'] ?? 10);
+        $opcionesPersonas = NotasFormSupport::desplegableOpciones($addData['opciones_personas'] ?? []);
+        $oDesplAddPersona = new Desplegable();
+        $oDesplAddPersona->setNombre('id_nom');
+        $oDesplAddPersona->setOpciones($opcionesPersonas);
+        $oDesplAddPersona->setBlanco(true);
+
+        $oHashAddPersona = new HashFront();
+        $oHashAddPersona->setCamposForm('id_nom!nota_num!nota_max');
+        $oHashAddPersona->setArrayCamposHidden([
+            'acta' => $acta_actual,
+        ]);
+    }
+}
+
 $a_campos = ['obj' => $obj,
     'oPosicion' => $oPosicion,
     'notas' => $notas,
@@ -243,6 +280,11 @@ $a_campos = ['obj' => $obj,
     'url_delete' => $url_delete,
     'h_delete' => $h_delete,
     'soy_rstgr' => $soy_rstgr,
+    'puede_anadir_persona' => $puede_anadir_persona,
+    'oDesplAddPersona' => $oDesplAddPersona,
+    'oHashAddPersona' => $oHashAddPersona,
+    'nota_max_default' => $nota_max_default,
+    'url_add_persona' => $url_add_persona,
 ];
 
 $oView = new ViewNewPhtml('frontend\notas\controller');

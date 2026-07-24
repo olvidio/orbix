@@ -2,15 +2,17 @@
 
 namespace src\personas\infrastructure\persistence\postgresql;
 
-use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\ConverterDate;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
+use src\personas\domain\PersonaPublicacion;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\PersonaPub;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalListsTrait;
+use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\GlobalPdo;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\ConverterDate;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
 use src\ubis\domain\RegionStgrConfigException;
@@ -33,7 +35,42 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         private readonly DelegacionRepositoryInterface $delegacionRepository,
     ) {
         $this->setoDbl(GlobalPdo::get('oDBP'));
-        $this->setNomTabla('v_personas_pub');
+        // Fuente real: global.personas (publicado_para) + p_de_paso; no depender de
+        // v_personas_pub por si la migración de la vista aún no se aplicó.
+        $this->setNomTabla($this->sqlFromPersonasPub());
+    }
+
+    /**
+     * Subconsulta equivalente a v_personas_pub con mapa publicado_para e id_schema.
+     */
+    private function sqlFromPersonasPub(): string
+    {
+        return '(
+            SELECT
+                p.id_nom, p.id_tabla, p.dl, p.sacd, p.trato, p.nom, p.nx1, p.apellido1,
+                p.nx2, p.apellido2, p.f_nacimiento, p.idioma_preferido, p.situacion,
+                p.f_situacion, p.apel_fam, p.inc, p.f_inc, p.nivel_stgr, p.profesion,
+                p.eap, p.observ, p.lugar_nacimiento,
+                NULL::smallint AS edad,
+                NULL::boolean AS profesor_stgr,
+                p.publicado_para,
+                p.id_schema
+            FROM global.personas p
+            WHERE p.publicado_para IS NOT NULL
+              AND jsonb_typeof(p.publicado_para) = \'object\'
+              AND p.publicado_para <> \'{}\'::jsonb
+            UNION ALL
+            SELECT
+                pp.id_nom, pp.id_tabla, pp.dl, pp.sacd, pp.trato, pp.nom, pp.nx1, pp.apellido1,
+                pp.nx2, pp.apellido2, pp.f_nacimiento, pp.idioma_preferido, pp.situacion,
+                pp.f_situacion, pp.apel_fam, pp.inc, pp.f_inc, pp.nivel_stgr, pp.profesion,
+                pp.eap, pp.observ, pp.lugar_nacimiento,
+                pp.edad,
+                pp.profesor_stgr,
+                \'{"*": null}\'::jsonb AS publicado_para,
+                NULL::integer AS id_schema
+            FROM p_de_paso pp
+        ) AS v_personas_pub';
     }
 
     /**
@@ -46,7 +83,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
     }
 
     /**
-     * v_personas_pub no incluye id_schema; se obtiene del esquema de la dl de origen.
+     * Si falta id_schema (p.ej. p_de_paso), se obtiene del esquema de la dl de origen.
      */
     /**
      * @param array<string, mixed> $aDatos
@@ -54,20 +91,55 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
      */
     private function withIdSchema(array $aDatos): array
     {
-        if (!empty($aDatos['id_schema'])) {
+        $idSchema = $aDatos['id_schema'] ?? null;
+        if (is_numeric($idSchema) && (int) $idSchema > 0) {
+            $aDatos['id_schema'] = (int) $idSchema;
+
             return $aDatos;
         }
+
         $dl = $aDatos['dl'] ?? '';
-        if (!is_string($dl) || $dl === '' || $dl === 'cg') {
-            return $aDatos;
+        if (is_string($dl) && $dl !== '' && $dl !== 'cg') {
+            try {
+                $resolved = $this->delegacionRepository->mi_region_stgr($dl)['mi_id_schema'] ?? null;
+                if (is_numeric($resolved) && (int) $resolved > 0) {
+                    $aDatos['id_schema'] = (int) $resolved;
+
+                    return $aDatos;
+                }
+            } catch (\Throwable) {
+                // p_de_paso u otras filas sin región stgr resoluble
+            }
         }
-        $id_nom = $aDatos['id_nom'] ?? null;
-        if (!is_numeric($id_nom) || (int) $id_nom < 0) {
-            return $aDatos;
-        }
-        $aDatos['id_schema'] = $this->delegacionRepository->mi_region_stgr((string) $dl)['mi_id_schema'];
+
+        // Nunca pasar null a PersonaPub::setId_schema(int).
+        $aDatos['id_schema'] = 0;
 
         return $aDatos;
+    }
+
+    /**
+     * Filtro listable: publicada vigente para mi DL o para todas (*).
+     */
+    private function sqlFiltroPublicadoParaMiDl(): string
+    {
+        $miDl = ConfigGlobal::mi_dele();
+        $oDbl = $this->getoDbl();
+        $quotedDl = $oDbl->quote($miDl);
+        $quotedAll = $oDbl->quote(PersonaPublicacion::DL_TODAS);
+
+        return PersonaPublicacion::sqlVigenteParaDl($quotedDl, $quotedAll);
+    }
+
+    /**
+     * @param list<string> $aCondicion
+     * @return list<string>
+     */
+    private function conFiltroPublicadoParaMiDl(array $aCondicion): array
+    {
+        $aCondicion[] = $this->sqlFiltroPublicadoParaMiDl();
+
+        return $aCondicion;
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -108,6 +180,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
                 unset($aWhere[$camp]);
             }
         }
+        $aCondicion = $this->conFiltroPublicadoParaMiDl($aCondicion);
         $sCondicion = implode(' AND ', $aCondicion);
         if ($sCondicion !== '') {
             $sCondicion = " WHERE " . $sCondicion;
@@ -144,6 +217,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
             $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+            $aDatos = PersonaPublicacion::hydrateRow($aDatos);
 
             // Cada repositorio hijo crea su tipo específico
             try {
@@ -200,6 +274,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
                 unset($aWhere[$camp]);
             }
         }
+        $aCondicion = $this->conFiltroPublicadoParaMiDl($aCondicion);
         $sCondicion = implode(' AND ', $aCondicion);
         if ($sCondicion !== '') {
             $sCondicion = ' WHERE ' . $sCondicion;
@@ -226,6 +301,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
             $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+            $aDatos = PersonaPublicacion::hydrateRow($aDatos);
             $marcaAviso = false;
             $persona = $this->createEntityParaListado($aDatos, $problemasRegionStgr, $marcaAviso);
             if ($marcaAviso) {
@@ -323,6 +399,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
         $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
         $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+        $aDatos = PersonaPublicacion::hydrateRow($aDatos);
         $result = [];
         foreach ($aDatos as $key => $value) {
             $result[(string) $key] = $value;

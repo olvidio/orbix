@@ -98,7 +98,6 @@ class PersonaAgdFactory
         $oPersonaAgd->setObservVo(new ObservText($faker->realText()));
         $oPersonaAgd->setId_ctr($faker->numberBetween(10011, 50000));
         $oPersonaAgd->setLugarNacimientoVo(new LugarNacimientoText($faker->realText(255)));
-        $oPersonaAgd->setEs_publico($faker->boolean);
         $oPersonaAgd->setCeVo(new CeCurso($faker->numberBetween(1, 10)));
         $oPersonaAgd->setCeIniVo(new CeNumber($faker->numberBetween(1, 10)));
         $oPersonaAgd->setCeFinVo(new CeNumber($faker->numberBetween(1, 10)));

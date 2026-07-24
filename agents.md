@@ -70,6 +70,16 @@ Reglas:
   - Sin lógica de negocio compleja.
 - Cualquier uso de `core\...`, `web\...`, PDO o globals debe quedar aquí.
 
+### Persistencia PG: fechas y JSON/jsonb
+Columnas de BD tipadas como `json` / `jsonb` (y fechas) deben tratarse de forma **uniforme** en todo el código nuevo o tocado:
+
+- **Fechas:** `src\shared\infrastructure\persistence\ConverterDate` al leer/escribir filas.
+- **JSON/jsonb:** `src\shared\infrastructure\persistence\ConverterJson` al leer (`fromPg`) y escribir (`toPg`).
+- **Hidratación en repositorio:** al mapear una fila PDO → entidad/array, convertir fechas y columnas json/jsonb **en el mismo sitio** (mismo bloque que ya usa `ConverterDate`). La entidad debe recibir PHP tipado (array/`stdClass`/null), no el string crudo de PG.
+- **Helpers de dominio** que encapsulan una columna (p. ej. `PersonaPublicacion` para `publicado_para`) pueden wrappear `ConverterJson` en `fromPg`/`toPg`; la lógica de negocio opera sobre el mapa/array ya decodificado.
+- **Prohibido** para persistencia de columnas json/jsonb: `json_encode` / `json_decode` sueltos en repos o helpers de esa columna. Precedente: `cedidas`, `json_certificados`, `json_valor`, `json_fases_*`, `publicado_para`.
+- **No aplica** a otros JSON de la app (envelope `ContestarJson`, payloads UI, `json_encode` en vistas/JS, serialización de sesión/filtros). Ahí el contrato es HTTP/UI, no la columna PG.
+
 ### Config
 - `dependencies.php`: mapear interfaces de dominio a implementaciones de `infrastructure`.
 - `routes.php`: declarar rutas hacia controladores existentes. No dejar rutas huérfanas.
@@ -103,6 +113,7 @@ Reglas:
 - [ ] Si se añaden descargas GET de binarios desde `src/` pensadas para `window.open` o enlaces directos, ¿usan **`SignedDownloadToken`** + `ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET` y no exponen id sin `tk`?
 - [ ] ¿Ningún archivo nuevo en `src/application/` o `src/domain/` importa `web\Hash` para navegación UI?
 - [ ] ¿Los endpoints AJAX de desplegables devuelven `opciones` como array de pares `[value, label]` (no mapa) y el JS usa el helper compartido `fnjs_construir_desplegable`?
+- [ ] Si se leen/escriben columnas `json`/`jsonb` (o fechas) de PG, ¿usan `ConverterJson` / `ConverterDate` (no `json_encode`/`json_decode` sueltos para persistencia)?
 
 ## Scripts y herramientas offline
 

@@ -86,6 +86,9 @@ class PersonaPub
 
     private ?bool $profesor_stgr = false;
 
+    /** Mapa DL → caducidad (hidrato vía ConverterJson en repositorio). */
+    private mixed $publicado_para = null;
+
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
     public function getId_schema(): int
     {
@@ -674,6 +677,16 @@ class PersonaPub
     public function setProfesor_stgr(?bool $profesor_stgr = null): void
     {
         $this->profesor_stgr = $profesor_stgr;
+    }
+
+    public function getPublicado_para(): mixed
+    {
+        return $this->publicado_para;
+    }
+
+    public function setPublicado_para(mixed $publicado_para = null): void
+    {
+        $this->publicado_para = $publicado_para;
     }
 
 

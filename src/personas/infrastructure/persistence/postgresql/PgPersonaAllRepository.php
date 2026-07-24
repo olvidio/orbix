@@ -2,11 +2,15 @@
 
 namespace src\personas\infrastructure\persistence\postgresql;
 
-use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\config\ConfigGlobal;
+use PDO;
+use src\personas\domain\PersonaPublicacion;
 use src\personas\domain\contracts\PersonaAllRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\entity\PersonaPub;
+use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\GlobalPdo;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\ConverterDate;
 
 /**
  * GestorPersonaAll
@@ -38,22 +42,6 @@ class PgPersonaAllRepository extends ClaseRepository implements PersonaAllReposi
             return $this->personaDlRepository->findById($id_nom);
         }
 
-        // sino, los que vienen de otra dl
-        $sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND situacion = 'A' ORDER BY f_situacion";
-        if ($oDblSt = $this->ejecutar($sql)) {
-            $id_schema_persona = null;
-            foreach ($oDblSt->fetchAll(\PDO::FETCH_ASSOC) as $aDades) {
-                if (is_array($aDades) && isset($aDades['id_schema']) && is_numeric($aDades['id_schema'])) {
-                    $id_schema_persona = (int)$aDades['id_schema'];
-                }
-            }
-            // Si hay más de uno, me quedo con el que tiene la fecha de cambio situación más reciente.
-            // Lo marco como publicado
-            if ($id_schema_persona !== null) {
-                $this->marcarEsPublico($id_nom, $id_schema_persona);
-            }
-        }
-
         // que esté en la dl, pero no en situación = 'A'
         // buscar los distintos de 'A' de mi schema
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND situacion != 'A' AND id_schema = $mi_id_schema ";
@@ -63,23 +51,107 @@ class PgPersonaAllRepository extends ClaseRepository implements PersonaAllReposi
         return null;
     }
 
-    public function marcarEsPublico(int $id_nom, int $id_schema): bool
+    public function findByIdNomParaLookup(int $id_nom, ?int $id_schema = null): ?PersonaPub
     {
-        if ($id_nom <= 0 || $id_schema < 1) {
-            return false;
+        if ($id_nom === 0) {
+            return null;
         }
 
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "UPDATE $nom_tabla SET es_publico = TRUE
-                WHERE id_nom = :id_nom AND situacion = 'A' AND id_schema = :id_schema
-                AND es_publico IS DISTINCT FROM TRUE";
+        $vigente = PersonaPublicacion::sqlPublicacionVigente('');
+
+        $sql = "SELECT * FROM $nom_tabla WHERE id_nom = :id_nom";
+        if ($id_schema !== null) {
+            $sql .= ' AND id_schema = :id_schema';
+        }
+        $sql .= " ORDER BY
+                  CASE WHEN situacion = 'A' THEN 0 ELSE 1 END,
+                  CASE WHEN $vigente THEN 0 ELSE 1 END,
+                  f_situacion DESC NULLS LAST,
+                  id_schema ASC
+                LIMIT 1";
+
+        $stmt = $oDbl->prepare($sql);
+        if ($stmt === false) {
+            return null;
+        }
+
+        $params = ['id_nom' => $id_nom];
+        if ($id_schema !== null) {
+            $params['id_schema'] = $id_schema;
+        }
+
+        if ($stmt->execute($params) === false) {
+            return null;
+        }
+
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return null;
+        }
+
+        $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento'] ?? null))->fromPg();
+        $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion'] ?? null))->fromPg();
+        $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc'] ?? null))->fromPg();
+        $aDatos = PersonaPublicacion::hydrateRow($aDatos);
+
+        return PersonaPub::fromArray($aDatos);
+    }
+
+    public function marcarPublicadoPara(
+        int $id_nom,
+        int $id_schema,
+        string $dlOrStar,
+        ?\DateTimeInterface $hasta = null,
+    ): bool {
+        if ($id_nom <= 0 || $id_schema < 1) {
+            return false;
+        }
+
+        $dl = PersonaPublicacion::normalizarDl(trim($dlOrStar));
+        if ($dl === '') {
+            return false;
+        }
+
+        if ($hasta === null && $dl !== PersonaPublicacion::DL_TODAS) {
+            $hasta = PersonaPublicacion::fechaHastaDefault();
+        }
+
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+
+        $sqlSel = "SELECT publicado_para
+                   FROM $nom_tabla
+                   WHERE id_nom = :id_nom AND situacion = 'A' AND id_schema = :id_schema
+                   LIMIT 1";
+        $stmtSel = $oDbl->prepare($sqlSel);
+        if ($stmtSel === false || !$stmtSel->execute(['id_nom' => $id_nom, 'id_schema' => $id_schema])) {
+            return false;
+        }
+        $row = $stmtSel->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($row)) {
+            return false;
+        }
+
+        $mapa = PersonaPublicacion::fromPg($row['publicado_para'] ?? null);
+        $mapa = PersonaPublicacion::mergeDestino($mapa, $dl, $hasta);
+        $publicadoPara = PersonaPublicacion::toPg($mapa);
+
+        $sql = "UPDATE $nom_tabla SET
+                    publicado_para = CAST(:publicado_para AS jsonb)
+                WHERE id_nom = :id_nom AND situacion = 'A' AND id_schema = :id_schema";
+
         $stmt = $oDbl->prepare($sql);
         if ($stmt === false) {
             return false;
         }
 
-        return $stmt->execute(['id_nom' => $id_nom, 'id_schema' => $id_schema]);
+        return $stmt->execute([
+            'publicado_para' => $publicadoPara,
+            'id_nom' => $id_nom,
+            'id_schema' => $id_schema,
+        ]) && $stmt->rowCount() > 0;
     }
 
     /** @return \PDOStatement|false */

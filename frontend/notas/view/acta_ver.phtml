@@ -182,6 +182,63 @@
             ?>
         <?php } ?>
     </form>
+    <?php if (!empty($puede_anadir_persona) && $oDesplAddPersona !== null && $oHashAddPersona !== null) { ?>
+    <br>
+    <div id="acta_add_persona">
+        <script>
+            fnjs_acta_add_persona = function (formulario) {
+                if ($(formulario).find('[name=id_nom]').val() === '') {
+                    alert(<?= json_encode(_("Debe elegir una persona")) ?>);
+                    return;
+                }
+                var num = $(formulario).find('[name=nota_num]').val();
+                if (num) {
+                    $(formulario).find('[name=nota_num]').val(String(num).replace(/,/g, '.'));
+                }
+                var max = $(formulario).find('[name=nota_max]').val();
+                if (!max) {
+                    $(formulario).find('[name=nota_max]').val(<?= (int) $nota_max_default ?>);
+                }
+                $.ajax({
+                    data: $(formulario).serialize(),
+                    url: '<?= $url_add_persona ?>',
+                    method: 'POST',
+                    dataType: 'json'
+                }).done(function (json) {
+                    if (json.success !== true) {
+                        alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+                    } else {
+                        var d = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                        alert((d && d.mensaje) ? d.mensaje : <?= json_encode(_("nota guardada")) ?>);
+                        $(formulario).find('[name=id_nom]').val('');
+                        $(formulario).find('[name=nota_num]').val('');
+                    }
+                });
+            }
+        </script>
+        <h3 class="titulo"><?= ucfirst(_("añadir alumno al acta")) ?></h3>
+        <p class="comentario"><?= _("Personas de la DL y publicadas (sin repaso ni nota previa en esta asignatura). La nota se guarda en el dossier.") ?></p>
+        <form id="frm_add_persona" name="frm_add_persona" action="" method="POST">
+            <?= $oHashAddPersona->getCamposHtml(); ?>
+            <table>
+                <tr>
+                    <td class="etiqueta"><?= ucfirst(_("persona")) ?>:</td>
+                    <td><?= $oDesplAddPersona->desplegable(); ?></td>
+                </tr>
+                <tr>
+                    <td class="etiqueta"><?= ucfirst(_("nota")) ?>:</td>
+                    <td>
+                        <input type="text" name="nota_num" size="5" value="">
+                        /
+                        <input type="text" name="nota_max" size="3" value="<?= (int) $nota_max_default ?>">
+                    </td>
+                </tr>
+            </table>
+            <input type="button" value="<?= ucfirst(_("añadir y guardar nota")) ?>"
+                   onclick="fnjs_acta_add_persona('#frm_add_persona')">
+        </form>
+    </div>
+    <?php } ?>
     <br>
     <?php if (empty($readonly)) { ?>
         <form id='frm_upload' action="" method="post" enctype="multipart/form-data">

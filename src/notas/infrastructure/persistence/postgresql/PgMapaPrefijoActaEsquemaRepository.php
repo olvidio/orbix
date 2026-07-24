@@ -27,10 +27,24 @@ final class PgMapaPrefijoActaEsquemaRepository implements MapaPrefijoActaEsquema
             return null;
         }
 
-        $stmt = $this->pdo->prepare(
-            'SELECT esquema_base FROM public.mapa_prefijo_acta_esquema WHERE pref = :pref'
-        );
-        $stmt->execute(['pref' => $pref]);
+        try {
+            $stmt = $this->pdo->prepare(
+                'SELECT esquema_base FROM public.mapa_prefijo_acta_esquema WHERE pref = :pref'
+            );
+            $stmt->execute(['pref' => $pref]);
+        } catch (\PDOException $e) {
+            if (str_contains($e->getMessage(), 'mapa_prefijo_acta_esquema')) {
+                throw new \RuntimeException(
+                    _('Falta public.mapa_prefijo_acta_esquema en BD comun.')
+                    . ' '
+                    . _('Aplicar la migración 202607211100_mapa_prefijo_acta_esquema__comun.sql (devel_db_admin → Migraciones, destino comun).'),
+                    0,
+                    $e
+                );
+            }
+            throw $e;
+        }
+
         $base = $stmt->fetchColumn();
         if ($base === false || $base === null || $base === '') {
             return null;

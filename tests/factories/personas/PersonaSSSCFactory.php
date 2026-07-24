@@ -95,7 +95,6 @@ class PersonaSSSCFactory
         $oPersonaSSSC->setObservVo(new ObservText($faker->realText()));
         $oPersonaSSSC->setId_ctr($faker->numberBetween(10011, 50000));
         $oPersonaSSSC->setLugarNacimientoVo(new LugarNacimientoText($faker->realText(255)));
-        $oPersonaSSSC->setEs_publico($faker->boolean);
 
         return $oPersonaSSSC;
     }

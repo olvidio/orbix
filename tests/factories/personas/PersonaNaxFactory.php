@@ -98,7 +98,6 @@ class PersonaNaxFactory
         $oPersonaNax->setObservVo(new ObservText($faker->realText()));
         $oPersonaNax->setId_ctr($faker->numberBetween(10011, 50000));
         $oPersonaNax->setLugarNacimientoVo(new LugarNacimientoText($faker->realText(255)));
-        $oPersonaNax->setEs_publico($faker->boolean);
         $oPersonaNax->setCeVo(new CeCurso($faker->numberBetween(1, 10)));
         $oPersonaNax->setCeIniVo(new CeNumber($faker->numberBetween(1, 10)));
         $oPersonaNax->setCeFinVo(new CeNumber($faker->numberBetween(1, 10)));

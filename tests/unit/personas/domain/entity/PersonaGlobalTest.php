@@ -219,12 +219,6 @@ class PersonaGlobalTest extends myTest
         $this->assertEquals('Test', $this->PersonaGlobal->getLugarNacimientoVo()->value());
     }
 
-    public function test_set_and_get_es_publico()
-    {
-        $this->PersonaGlobal->setEs_publico(true);
-        $this->assertTrue($this->PersonaGlobal->isEs_publico());
-    }
-
 
     public function test_set_all_attributes()
     {
@@ -254,7 +248,6 @@ class PersonaGlobalTest extends myTest
             'observ' => new ObservText('Test'),
             'id_ctr' => 1,
             'lugar_nacimiento' => new LugarNacimientoText('Test'),
-            'es_publico' => true,
             'Apellidos' => 'test',
             'ApellidosNombre' => 'test',
             'ApellidosNombreCr1_05' => 'test',
@@ -289,7 +282,6 @@ class PersonaGlobalTest extends myTest
         $this->assertEquals('Test', $personaGlobal->getObservVo()->value());
         $this->assertEquals(1, $personaGlobal->getId_ctr());
         $this->assertEquals('Test', $personaGlobal->getLugarNacimientoVo()->value());
-        $this->assertTrue($personaGlobal->isEs_publico());
         $this->assertEquals('nx1 Test value nx2 Test value', $personaGlobal->getApellidos());
         $this->assertEquals('Test value nx2 Test value, Dr. Test value nx1', $personaGlobal->getApellidosNombre());
         $this->assertEquals('nx1 Test value nx2 Test value, Test value', $personaGlobal->getApellidosNombreCr1_05());
@@ -327,7 +319,6 @@ class PersonaGlobalTest extends myTest
             'observ' => 'Test',
             'id_ctr' => 1,
             'lugar_nacimiento' => 'Test',
-            'es_publico' => true,
             'Apellidos' => 'test',
             'ApellidosNombre' => 'test',
             'ApellidosNombreCr1_05' => 'test',
@@ -362,7 +353,6 @@ class PersonaGlobalTest extends myTest
         $this->assertEquals('Test', $personaGlobal->getObservVo()->value());
         $this->assertEquals(1, $personaGlobal->getId_ctr());
         $this->assertEquals('Test', $personaGlobal->getLugarNacimientoVo()->value());
-        $this->assertTrue($personaGlobal->isEs_publico());
         $this->assertEquals('nx1 Test value nx2 Test value', $personaGlobal->getApellidos());
         $this->assertEquals('Test value nx2 Test value, Dr. Test value nx1', $personaGlobal->getApellidosNombre());
         $this->assertEquals('nx1 Test value nx2 Test value, Test value', $personaGlobal->getApellidosNombreCr1_05());

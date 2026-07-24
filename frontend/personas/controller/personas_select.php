@@ -192,6 +192,11 @@ if (OrbixRuntime::miAmbito() === 'rstgr') {
     ];
 }
 
+if (PersonasPayload::havePermOficina('est') || PersonasPayload::havePermOficina('sm') || PersonasPayload::havePermOficina('agd')) {
+    $a_botones[] = ['txt' => _('publicar'), 'click' => 'fnjs_publicar("#seleccionados")'];
+    $script['fnjs_publicar'] = 1;
+}
+
 if (AppInstalled::is('actividadessacd') && PersonasPayload::havePermOficina('des')) {
     $a_botones[] = ['txt' => _('atención actividades'), 'click' => 'fnjs_lista_activ("#seleccionados")'];
     $script['fnjs_lista_activ'] = 1;
@@ -208,6 +213,7 @@ $a_cabeceras[] = ucfirst(_('centro'));
 if ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex') {
     $a_cabeceras[] = ucfirst(_('stgr'));
 }
+$a_cabeceras[] = ucfirst(_('publicado'));
 if ($Qcmb !== '') {
     $a_cabeceras[] = ucfirst(_('situación'));
     $a_cabeceras[] = ['name' => ucfirst(_('fecha cambio situación')), 'class' => 'fecha'];
@@ -235,12 +241,19 @@ foreach ($a_filas as $fila) {
         $a_val[2] = ['script' => 'fnjs_home("#seleccionados")', 'valor' => $nom];
     }
     $a_val[4] = $nombre_ubi;
-    if (($tabla === 'p_numerarios' || $tabla === 'p_agregados') && $tipo !== 'planning') {
-        $a_val[5] = $fila['nivel_stgr'];
+    $icol = 5;
+    if (
+        (($tabla === 'p_numerarios' || $tabla === 'p_agregados') && $tipo !== 'planning')
+        || $tabla === 'p_de_paso_ex'
+    ) {
+        $a_val[$icol] = $fila['nivel_stgr'] ?? '';
+        $icol++;
     }
+    $a_val[$icol] = $fila['publicado'] ?? '';
+    $icol++;
     if ($Qcmb !== '') {
-        $a_val[6] = $fila['situacion'];
-        $a_val[7] = $fila['f_situacion'];
+        $a_val[$icol] = $fila['situacion'];
+        $a_val[$icol + 1] = $fila['f_situacion'];
     }
     $a_valores[$c] = $a_val;
 }
