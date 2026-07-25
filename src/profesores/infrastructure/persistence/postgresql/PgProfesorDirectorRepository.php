@@ -137,7 +137,7 @@ class PgProfesorDirectorRepository extends ClaseRepository implements ProfesorDi
         $bInsert = $this->isNew($id_item);
 
         $aDatos = $ProfesorDirector->toArrayForDatabase([
-            'f_nommbramiento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_nombramiento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
             'f_cese' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
 

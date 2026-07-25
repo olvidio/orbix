@@ -68,6 +68,8 @@ class PgPropuestaEncargoSacdHorarioRepository extends ClaseRepository implements
             }
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
+            $aDatos['h_ini'] = (new ConverterDate('time', $aDatos['h_ini']))->fromPg();
+            $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
             $normalized = [];
             foreach ($aDatos as $key => $value) {
                 $normalized[(string) $key] = $value;

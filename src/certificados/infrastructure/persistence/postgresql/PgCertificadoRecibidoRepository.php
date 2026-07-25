@@ -111,6 +111,8 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
 
         $aDatos = $Certificado->toArrayForDatabase([
             'documento' => fn ($v) => ($v ? ('\\x' . bin2hex((string) $v)) : null),
+            'f_certificado' => fn ($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_recibido' => fn ($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
         if ($bInsert === false) {
             unset($aDatos['id_item']);

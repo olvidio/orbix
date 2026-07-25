@@ -214,33 +214,68 @@ $oDesplAddPersona = null;
 $oHashAddPersona = null;
 $nota_max_default = 10;
 $url_add_persona = AppUrlConfig::srcBrowserUrl('/src/notas/acta_ver_add_persona');
+$mostrar_notas_listado = false;
+/** @var list<array{id_nom: int, nombre: string, nota: string, situacion: string}> $notas_listado_filas */
+$notas_listado_filas = [];
+/** @var list<string> $notas_listado_avisos */
+$notas_listado_avisos = [];
+
+// Solo fuera del include de actividad (`$notas` vacío): listado + añadir alumno.
+$contexto_acta_standalone = ($notas === '' && $Qnotas === '');
 
 if (
-    $permiso === 3
-    && empty($readonly)
+    $contexto_acta_standalone
     && $Qmod !== 'nueva'
-    && $notas !== 'nuevo'
     && $acta_actual !== ''
     && is_numeric($id_asignatura_actual)
     && (int) $id_asignatura_actual > 0
 ) {
-    $addData = PayloadCoercion::stringKeyedArray(
-        PostRequest::getDataFromUrl('/src/notas/acta_ver_add_persona_form_data', ['acta' => $acta_actual]),
+    $mostrar_notas_listado = true;
+    $listadoData = PayloadCoercion::stringKeyedArray(
+        PostRequest::getDataFromUrl('/src/notas/acta_ver_notas_listado_data', ['acta' => $acta_actual]),
     );
-    if (!empty($addData['puede_anadir'])) {
-        $puede_anadir_persona = true;
-        $nota_max_default = (int) ($addData['nota_max_default'] ?? 10);
-        $opcionesPersonas = NotasFormSupport::desplegableOpciones($addData['opciones_personas'] ?? []);
-        $oDesplAddPersona = new Desplegable();
-        $oDesplAddPersona->setNombre('id_nom');
-        $oDesplAddPersona->setOpciones($opcionesPersonas);
-        $oDesplAddPersona->setBlanco(true);
+    $filasRaw = $listadoData['filas'] ?? [];
+    if (is_array($filasRaw)) {
+        foreach ($filasRaw as $fila) {
+            if (!is_array($fila)) {
+                continue;
+            }
+            $notas_listado_filas[] = [
+                'id_nom' => (int) ($fila['id_nom'] ?? 0),
+                'nombre' => PayloadCoercion::string($fila['nombre'] ?? ''),
+                'nota' => PayloadCoercion::string($fila['nota'] ?? ''),
+                'situacion' => PayloadCoercion::string($fila['situacion'] ?? ''),
+            ];
+        }
+    }
+    $avisosRaw = $listadoData['avisos'] ?? [];
+    if (is_array($avisosRaw)) {
+        foreach ($avisosRaw as $aviso) {
+            if (is_string($aviso) && $aviso !== '') {
+                $notas_listado_avisos[] = $aviso;
+            }
+        }
+    }
 
-        $oHashAddPersona = new HashFront();
-        $oHashAddPersona->setCamposForm('id_nom!nota_num!nota_max');
-        $oHashAddPersona->setArrayCamposHidden([
-            'acta' => $acta_actual,
-        ]);
+    if ($permiso === 3 && empty($readonly)) {
+        $addData = PayloadCoercion::stringKeyedArray(
+            PostRequest::getDataFromUrl('/src/notas/acta_ver_add_persona_form_data', ['acta' => $acta_actual]),
+        );
+        if (!empty($addData['puede_anadir'])) {
+            $puede_anadir_persona = true;
+            $nota_max_default = (int) ($addData['nota_max_default'] ?? 10);
+            $opcionesPersonas = NotasFormSupport::desplegableOpciones($addData['opciones_personas'] ?? []);
+            $oDesplAddPersona = new Desplegable();
+            $oDesplAddPersona->setNombre('id_nom');
+            $oDesplAddPersona->setOpciones($opcionesPersonas);
+            $oDesplAddPersona->setBlanco(true);
+
+            $oHashAddPersona = new HashFront();
+            $oHashAddPersona->setCamposForm('id_nom!nota_num!nota_max');
+            $oHashAddPersona->setArrayCamposHidden([
+                'acta' => $acta_actual,
+            ]);
+        }
     }
 }
 
@@ -285,6 +320,9 @@ $a_campos = ['obj' => $obj,
     'oHashAddPersona' => $oHashAddPersona,
     'nota_max_default' => $nota_max_default,
     'url_add_persona' => $url_add_persona,
+    'mostrar_notas_listado' => $mostrar_notas_listado,
+    'notas_listado_filas' => $notas_listado_filas,
+    'notas_listado_avisos' => $notas_listado_avisos,
 ];
 
 $oView = new ViewNewPhtml('frontend\notas\controller');

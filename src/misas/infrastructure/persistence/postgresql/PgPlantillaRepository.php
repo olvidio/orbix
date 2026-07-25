@@ -142,8 +142,8 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
         $bInsert = $this->isNew($id_item);
 
        $aDatos = $Plantilla->toArrayForDatabase([
-            't_start' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
-            't_end' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
+            't_start' => fn($v) => (new ConverterDate('time', $v))->toPg(),
+            't_end' => fn($v) => (new ConverterDate('time', $v))->toPg(),
         ]);
 
         if ($bInsert === FALSE) {

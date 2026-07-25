@@ -25,6 +25,7 @@ use src\notas\application\ActaSelectData;
 use src\notas\application\ActaVerAddPersona;
 use src\notas\application\ActaVerAddPersonaFormData;
 use src\notas\application\ActaVerFormData;
+use src\notas\application\ActaVerNotasListadoData;
 use src\notas\application\ActividadesBuscarData;
 use src\notas\application\AsigFaltanPersonasSelectTablaData;
 use src\notas\application\AsigFaltanSelectTablaData;
@@ -101,6 +102,7 @@ return [
     ActaVerFormData::class => autowire(ActaVerFormData::class),
     ActaVerAddPersonaFormData::class => autowire(ActaVerAddPersonaFormData::class),
     ActaVerAddPersona::class => autowire(ActaVerAddPersona::class),
+    ActaVerNotasListadoData::class => autowire(ActaVerNotasListadoData::class),
     ActividadesBuscarData::class => autowire(ActividadesBuscarData::class),
     AsigFaltanPersonasSelectTablaData::class => autowire(AsigFaltanPersonasSelectTablaData::class),
     AsigFaltanSelectTablaData::class => autowire(AsigFaltanSelectTablaData::class),
