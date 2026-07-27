@@ -33,4 +33,4 @@ Alta, edición, copia, movimiento y borrado de entradas del árbol (`aux_menus`)
 ## Ruta de menú
 
 - **Legacy:** sistema > menus > seleccionar
-- **Pills2:** ADMIN GLOBAL > menus > seleccionar
+- **Pills2:** sistema > menus > seleccionar · ADMIN GLOBAL > menus > seleccionar

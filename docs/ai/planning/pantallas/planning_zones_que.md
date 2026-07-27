@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Formulario: zona SACD, trimestre, año y filtro de actividad. Carga zonas permitidas vía `planning_zones_que_data`. Al enviar abre `planning_zones_select`.
+Formulario: zona SACD, trimestre/mes, año y si cargar actividades. Carga zonas permitidas vía `planning_zones_que_data`. Al enviar abre `planning_zones_select`.
 
 ## Uso En Ayuda
 
@@ -33,6 +33,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `post.actividad`
 - `post.id_zona`
 - `post.modo`
+- `post.propuesta`
 - `post.stack`
 - `post.trimestre`
 - `post.year`

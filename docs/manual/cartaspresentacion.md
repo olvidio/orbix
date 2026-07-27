@@ -22,7 +22,7 @@ Dar de alta, modificar o quitar los datos de presentación de un centro concreto
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (subflujo de `cartas_presentacion` > modificar).
 
 ### Tareas Habituales
 
@@ -55,7 +55,8 @@ Consultar todas las cartas de presentación organizadas por tipo de labor, deleg
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > cartas presentacion > lista dl / lista todo
+- **Pills2:** scdl > direcciones > cartas presentacion > lista dl / lista todo
 
 ### Tareas Habituales
 
@@ -83,7 +84,8 @@ Encontrar cartas de presentación que cumplan criterios geográficos o de delega
 ### Donde Entrar
 
 - Cartas Presentacion Buscar (frontend/cartaspresentacion/controller/cartas_presentacion_buscar.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > cartas presentacion > buscar
+- **Pills2:** scdl > direcciones > cartas presentacion > buscar
 
 ### Tareas Habituales
 
@@ -112,7 +114,8 @@ Mantener los datos de presentación (director, contacto, zona) de los centros de
 ### Donde Entrar
 
 - Cartas Presentacion (frontend/cartaspresentacion/controller/cartas_presentacion.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > cartas presentacion > modificar
+- **Pills2:** scdl > direcciones > cartas presentacion > modificar
 
 ### Tareas Habituales
 
@@ -146,7 +149,7 @@ Filtrar el listado de centros por población dentro de la delegación (modo `get
 ### Donde Entrar
 
 - Cartas Presentacion (frontend/cartaspresentacion/controller/cartas_presentacion.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (auxiliar de `cartas_presentacion` > modificar).
 
 ### Tareas Habituales
 
@@ -174,7 +177,7 @@ Ver qué centros tienen carta de presentación y acceder a modificar, ver ficha 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (fragmento de `cartas_presentacion` > modificar).
 
 ### Tareas Habituales
 

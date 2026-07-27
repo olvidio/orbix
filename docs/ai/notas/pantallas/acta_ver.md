@@ -6,7 +6,7 @@ titulo: "Acta Ver"
 pantalla: "notas.pantalla.acta_ver"
 preguntas: ["Que se puede hacer en Acta Ver?", "Que campos tiene Acta Ver?", "Que acciones hay en Acta Ver?"]
 capacidades: ["notas.acta.gestionar", "notas.acta_modificar.gestionar", "notas.acta_ver.gestionar", "notas.asignaturas_search.gestionar", "notas.examinadores_search.gestionar"]
-endpoints: ["/src/notas/acta_modificar", "/src/notas/acta_nueva", "/src/notas/acta_ver_form_data", "/src/notas/asignaturas_search", "/src/notas/examinadores_search"]
+endpoints: ["/src/notas/acta_modificar", "/src/notas/acta_nueva", "/src/notas/acta_ver_form_data", "/src/notas/acta_ver_notas_listado_data", "/src/notas/acta_ver_add_persona_form_data", "/src/notas/acta_ver_add_persona", "/src/notas/asignaturas_search", "/src/notas/examinadores_search"]
 source: "docs/catalogo/notas/pantallas/acta_ver.md"
 estado_revision: "generado"
 ---
@@ -30,6 +30,9 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `html.examinadores[]`
 - `html.id_asignatura`
 - `html.refresh`
+- `html.id_nom`
+- `html.nota_num`
+- `html.nota_max`
 
 ## Acciones Detectadas
 
@@ -55,6 +58,9 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `/src/notas/acta_modificar`
 - `/src/notas/acta_nueva`
 - `/src/notas/acta_ver_form_data`
+- `/src/notas/acta_ver_notas_listado_data`
+- `/src/notas/acta_ver_add_persona_form_data`
+- `/src/notas/acta_ver_add_persona`
 - `/src/notas/asignaturas_search`
 - `/src/notas/examinadores_search`
 

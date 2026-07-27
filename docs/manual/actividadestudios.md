@@ -22,7 +22,12 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde dossier 3005 «asignaturas de una actividad»).
+- Acceso habitual: buscar actividad CA (`actividad_select`) → dossier asignaturas → **actas**.
+- Menú de la pantalla padre de búsqueda de actividades:
+- **Legacy:** vsm > ca > buscar ca; vest > actas... > actas (vía módulo notas).
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Actas y certificados > Actas;
+- ESTUDIOS > Buscar actividades.
 
 ### Tareas Habituales
 
@@ -56,7 +61,10 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde pantalla `acta_notas`, accesible desde
+- dossier 3005 o módulo de actas).
+- **Legacy:** vest > actas... > actas (pantalla padre habitual).
+- **Pills2:** ESTUDIOS > Actas y certificados > Actas.
 
 ### Tareas Habituales
 
@@ -69,7 +77,20 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Errores O Avisos Frecuentes
 
-- No hay errores documentados en el catalogo para este flujo.
+- `no encuentro la actividad`
+- `no se puede definir cursada con preceptor`
+- `no encuentro el acta`
+- `debe introducir los datos del acta. No se ha guardado nada.`
+- `falta definir el acta para alguna nota`
+- `no encuentro la asignatura de actividad`
+- `no encuentro la asignatura`
+- `nota no guardada para %s porque la nota (%s) no llega al mínimo: 6`
+- `ha cursado una opcional que no tocaba (id_nom=%s)`
+- `está intentando poner una nota que ya existe para: %s`
+
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
 
 ### Referencias Internas
 
@@ -86,7 +107,9 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde pantalla `acta_notas`).
+- **Legacy:** vest > actas... > actas.
+- **Pills2:** ESTUDIOS > Actas y certificados > Actas.
 
 ### Tareas Habituales
 
@@ -103,6 +126,10 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - `hay un error, no se ha guardado`
 - `no se puede definir cursada con preceptor`
 
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
+
 ### Referencias Internas
 
 - Flujo: `actividadestudios.acta_notas_matricula.gestionar.flujo`
@@ -118,7 +145,10 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde dossier 3005, accesible al buscar una
+- actividad CA y abrir asignaturas).
+- **Legacy:** vsm > ca > buscar ca.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades.
 
 ### Tareas Habituales
 
@@ -142,6 +172,10 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - `no encuentro la asignatura`
 - `sólo se puede eliminar una asignatura desde el dossier de la actividad`
 
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
+
 ### Referencias Internas
 
 - Flujo: `actividadestudios.actividad_asignatura.gestionar.flujo`
@@ -157,7 +191,9 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde dossier 3005).
+- **Legacy:** vsm > ca > buscar ca.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades.
 
 ### Tareas Habituales
 
@@ -172,6 +208,10 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - `faltan claves de la asignatura de actividad`
 - `hay un error, no se ha guardado`
 - `no encuentro la asignatura`
+
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
 
 ### Referencias Internas
 
@@ -188,7 +228,10 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice. Subflujo previsto desde dossier 3103 (matrículas de una
+- actividad), accesible vía búsqueda de actividad CA.
+- **Legacy:** vsm > ca > buscar ca.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n.
 
 ### Tareas Habituales
 
@@ -203,6 +246,10 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - `falta id_activ o id_nom`
 - `hay un error, no se ha guardado`
 - `no encuentro al asistente`
+
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
 
 ### Referencias Internas
 
@@ -219,7 +266,9 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde dossier 1303 «matrículas de una persona»).
+- **Legacy:** vest > buscar persona > n r/dl; stgr > personas > n r/dl.
+- **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl; PERSONAS > Agregados > Buscar agd de la r/dl.
 
 ### Tareas Habituales
 
@@ -234,6 +283,10 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - `falta id_activ o id_nom`
 - `hay un error, no se ha guardado`
 - `no encuentro al asistente`
+
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
 
 ### Referencias Internas
 
@@ -250,7 +303,9 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde dossier 1303).
+- **Legacy:** vest > buscar persona > n r/dl; stgr > personas > n r/dl.
+- **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl.
 
 ### Tareas Habituales
 
@@ -265,6 +320,10 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - `falta id_activ o id_nom`
 - `hay un error, no se ha guardado`
 - `no encuentro al asistente`
+
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
 
 ### Referencias Internas
 
@@ -281,7 +340,9 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `ca_posibles_que` o desde búsqueda de personas:
+- **Legacy:** vest > posibles ca > posibles ca; vest > buscar persona > n r/dl (botón posibles CA).
+- **Pills2:** vest > posibles ca > posibles ca; PERSONAS > Numerarios > Buscar n de la r/dl.
 
 ### Tareas Habituales
 
@@ -317,7 +378,8 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > posibles ca > posibles ca.
+- **Pills2:** vest > posibles ca > posibles ca.
 
 ### Tareas Habituales
 
@@ -350,7 +412,9 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > mantenimiento > actualizar docencia.
+- **Pills2:** ESTUDIOS > Datos e informes > Actualizar docencia; vest > mantenimiento >
+- actualizar docencia.
 
 ### Tareas Habituales
 
@@ -364,6 +428,10 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 ### Errores O Avisos Frecuentes
 
 - No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
 
 ### Referencias Internas
 
@@ -379,7 +447,9 @@ El usuario consulta los datos del certificado E43 de un alumno en una actividad:
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde dossier de asistentes de una actividad).
+- **Legacy:** vsm > ca > buscar ca (pantalla padre de búsqueda de actividad).
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades.
 
 ### Tareas Habituales
 
@@ -412,7 +482,9 @@ El usuario imprime el certificado E43 en formato PDF: el sistema obtiene los mis
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde pantalla `e43`).
+- **Legacy:** vsm > ca > buscar ca (misma cadena que E43).
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n.
 
 ### Tareas Habituales
 
@@ -425,6 +497,10 @@ El usuario imprime el certificado E43 en formato PDF: el sistema obtiene los mis
 ### Errores O Avisos Frecuentes
 
 - No hay errores documentados en el catalogo para este flujo.
+
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
 
 ### Referencias Internas
 
@@ -440,7 +516,9 @@ El usuario abre el formulario para crear o editar una asignatura impartida en un
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde dossier 3005).
+- **Legacy:** vsm > ca > buscar ca.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades.
 
 ### Tareas Habituales
 
@@ -474,7 +552,9 @@ El usuario abre el formulario para matricular o editar la matrícula de una pers
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde dossier 1303 o 3103).
+- **Legacy:** vest > buscar persona > n r/dl (dossier 1303); vsm > ca > buscar ca (dossier 3103).
+- **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl; ACTIVIDADES > Buscar actividad > ca n.
 
 ### Tareas Habituales
 
@@ -508,7 +588,10 @@ El usuario consulta, para una actividad CA seleccionada, el listado de clases: p
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Se accede desde `actividad_select` (sin entrada directa al informe):
+- **Legacy:** vsm > ca > buscar ca; vest > sem inv. > buscar.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades;
+- ESTUDIOS > Semestres de invierno > Buscar.
 
 ### Tareas Habituales
 
@@ -541,7 +624,11 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú directa; las altas se hacen desde dossiers y las bajas también desde
+- listados de menú:
+- **Legacy:** vest > actas... > Matrículas / Matr. Pendientes; vest > buscar persona > n r/dl.
+- **Pills2:** ESTUDIOS > Actas y certificados > Matrículas realizadas / Exam. pendientes de acta;
+- PERSONAS > Numerarios > Buscar n de la r/dl.
 
 ### Tareas Habituales
 
@@ -565,6 +652,10 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 - `no encuentro asignatura para ese nivel`
 - `no encuentro la matricula`
 
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
+
 ### Referencias Internas
 
 - Flujo: `actividadestudios.matricula.gestionar.flujo`
@@ -580,7 +671,9 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > buscar persona > matricular a todos.
+- **Pills2:** vest > buscar persona > matricular a todos; ESTUDIOS > Preparación planes estudio >
+- Matricular a todos.
 
 ### Tareas Habituales
 
@@ -593,7 +686,18 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 
 ### Errores O Avisos Frecuentes
 
-- No hay errores documentados en el catalogo para este flujo.
+- `No se ha encontrado a la persona con id: %s`
+- `está de repaso`
+- `no se ha hecho nada con %s no tiene asignado ca`
+- `no se ha hecho nada com %s. ya tiene el plan de estudios confirmado`
+- `hay un error, no se ha eliminado`
+- `error al guardar la matrícula`
+- `no se ha hecho nada con %s, tiene asignado más de un ca`
+- `no se ha hecho nada`
+
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
 
 ### Referencias Internas
 
@@ -610,7 +714,9 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo desde dossier 1303 o 3103).
+- **Legacy:** vest > buscar persona > n r/dl; vsm > ca > buscar ca.
+- **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl; ACTIVIDADES > Buscar actividad > ca n.
 
 ### Tareas Habituales
 
@@ -626,6 +732,10 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 - `hay un error, no se ha guardado`
 - `no encuentro la matricula`
 
+### Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
+
 ### Referencias Internas
 
 - Flujo: `actividadestudios.matricula_editar.gestionar.flujo`
@@ -640,7 +750,9 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > actas... > Matrículas.
+- **Pills2:** ESTUDIOS > Actas y certificados > Matrículas realizadas; ESTUDIOS > Preparación
+- planes estudio > Matrículas realizadas; vest > actas... > Matrículas.
 
 ### Tareas Habituales
 
@@ -675,7 +787,8 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** — (sin entrada en el índice Legacy).
+- **Pills2:** ESTUDIOS > Actas y certificados > Envío información a otras r.
 
 ### Tareas Habituales
 
@@ -710,7 +823,9 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > actas... > Matr. Pendientes.
+- **Pills2:** ESTUDIOS > Actas y certificados > Exam. pendientes de acta; ESTUDIOS >
+- Preparación planes estudio > Exam. pendientes acta; vest > actas... > Matr. Pendientes.
 
 ### Tareas Habituales
 
@@ -743,7 +858,10 @@ El usuario consulta el plan de estudios de una actividad CA: director de estudio
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Se accede desde `actividad_select`:
+- **Legacy:** vsm > ca > buscar ca; vest > sem inv. > buscar.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades;
+- ESTUDIOS > Semestres de invierno > Buscar.
 
 ### Tareas Habituales
 
@@ -775,7 +893,9 @@ El usuario consulta, para una actividad CA, qué asignaturas podrían matricular
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Se accede desde `actividad_select`:
+- **Legacy:** vsm > ca > buscar ca.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades.
 
 ### Tareas Habituales
 
@@ -808,7 +928,9 @@ Al cambiar la asignatura o añadir un profesor en el formulario de asignatura im
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo AJAX desde formulario dossier 3005).
+- **Legacy:** vsm > ca > buscar ca.
+- **Pills2:** ACTIVIDADES > Buscar actividad > ca n.
 
 ### Tareas Habituales
 

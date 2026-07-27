@@ -22,7 +22,7 @@ Dar de alta un módulo nuevo o editar nombre, descripción y dependencias (módu
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (subflujo de «definir módulos»).
 
 ### Tareas Habituales
 
@@ -50,7 +50,8 @@ Consultar los módulos definidos en el esquema y acceder a alta, edición o baja
 ### Donde Entrar
 
 - Definir módulos (frontend/configuracion/controller/modulos_select.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > Configuración > definir módulos
+- **Pills2:** sistema > Configuración > definir módulos; ADMIN GLOBAL > Configuración > definir módulos
 
 ### Tareas Habituales
 
@@ -78,7 +79,8 @@ Consultar y modificar los parámetros globales del esquema (curso escolar, certi
 ### Donde Entrar
 
 - Configuración del esquema (frontend/configuracion/controller/parametros.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > Configuración > config esquema
+- **Pills2:** ADMIN LOCAL > Esquema; sistema > Configuración > config esquema
 
 ### Tareas Habituales
 
@@ -106,7 +108,7 @@ No hay pantalla de usuario: el frontend obtiene fechas de inicio/fin de curso ST
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice (flujo técnico transversal; configuración en «config esquema»).
 
 ### Tareas Habituales
 

@@ -23,7 +23,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Modificar plantilla
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla
 
 ### Tareas Habituales
 
@@ -52,7 +53,8 @@ Inicializa el formulario de búsqueda del plan CTR: zonas, centros disponibles y
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Plan centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan ctr
 
 ### Tareas Habituales
 
@@ -78,7 +80,8 @@ Devuelve el desplegable de sacerdotes para el buscador del plan SACD, filtrado p
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Plan sacerdote
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan sacerdote
 
 ### Tareas Habituales
 
@@ -104,7 +107,8 @@ Carga los desplegables de la pantalla cambiar estado del plan de misas: zonas pe
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Cambiar estado
+- **Pills2:** dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado
 
 ### Tareas Habituales
 
@@ -131,7 +135,8 @@ Crea asignaciones EncargoDia para un nuevo periodo de plan de misas a partir de 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas >  Nuevo plan
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Nuevo plan
 
 ### Tareas Habituales
 
@@ -158,7 +163,8 @@ Asigna, actualiza o borra un EncargoDia en una celda de la cuadrícula y recalcu
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Modificar plan
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plan
 
 ### Tareas Habituales
 
@@ -194,7 +200,8 @@ Devuelve opciones de encargos 8100+ de una zona para el desplegable dinámico de
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Encargos centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr
 
 ### Tareas Habituales
 
@@ -220,7 +227,8 @@ Construye el desplegable dinámico de SACD en el modal de la cuadrícula, filtra
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -246,7 +254,8 @@ Elimina la relación EncargoCtr (encargo visible en un centro) por uuid.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Encargos centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr
 
 ### Tareas Habituales
 
@@ -274,7 +283,8 @@ Elimina un Encargo de zona (grupo ZONAS_MISAS) por id_enc.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Modificar encargos
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos
 
 ### Tareas Habituales
 
@@ -301,7 +311,8 @@ Inserta o actualiza un EncargoCtr vinculando un encargo de zona con un centro.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Encargos centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr
 
 ### Tareas Habituales
 
@@ -328,7 +339,8 @@ Crea o actualiza un Encargo del grupo ZONAS_MISAS (id_enc=0 → alta) y devuelve
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Modificar encargos
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos
 
 ### Tareas Habituales
 
@@ -355,7 +367,8 @@ Guarda hora inicio/fin (t_start/t_end) de un EncargoHorario en el modal de horar
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -383,7 +396,8 @@ Lee las horas actuales de un EncargoHorario para poblar el modal horario_tarea.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Modificar plantilla
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla
 
 ### Tareas Habituales
 
@@ -409,7 +423,8 @@ Copia asignaciones de plantilla origen a destino para una zona, creando/actualiz
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Modificar plantilla
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla
 
 ### Tareas Habituales
 
@@ -436,7 +451,8 @@ Devuelve zonas permitidas y criterios de orden para la pantalla modificar encarg
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Modificar encargos
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos
 
 ### Tareas Habituales
 
@@ -466,7 +482,8 @@ Devuelve el desplegable de zonas permitidas para la pantalla modificar encargos 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Encargos centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr
 
 ### Tareas Habituales
 
@@ -493,7 +510,8 @@ Devuelve el desplegable de todas las zonas para la pantalla de edición de inici
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Iniciales sacd
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd
 
 ### Tareas Habituales
 
@@ -519,7 +537,8 @@ Carga desplegables de zona, orden y tipos de plantilla (con preferencia ultima_p
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Modificar plantilla
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla
 
 ### Tareas Habituales
 
@@ -546,7 +565,8 @@ Actualiza masivamente el status de todos los EncargoDia de encargos 8100+ de una
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Cambiar estado
+- **Pills2:** dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado
 
 ### Tareas Habituales
 
@@ -572,7 +592,8 @@ Datos comunes para pantallas preparar/modificar/ver plan de misas: zonas, orden 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas >  Nuevo plan
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Nuevo plan
 
 ### Tareas Habituales
 
@@ -599,7 +620,8 @@ Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Modificar plantilla
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla
 
 ### Tareas Habituales
 
@@ -627,7 +649,8 @@ Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Iniciales sacd
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd
 
 ### Tareas Habituales
 
@@ -653,7 +676,8 @@ Construye el SlickGrid de cuadrícula de zona (columnas, filas encargo/sacd, met
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Modificar plan
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plan
 
 ### Tareas Habituales
 
@@ -680,7 +704,8 @@ Devuelve filas del grid EncargoCtr de una zona más desplegables estáticos del 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Encargos centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr
 
 ### Tareas Habituales
 
@@ -706,7 +731,8 @@ Devuelve encargos 8100+ de una zona ordenados para SlickGrid y datos del modal d
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Modificar encargos
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos
 
 ### Tareas Habituales
 
@@ -732,7 +758,8 @@ Lista sacds de una zona con sus iniciales y color para edición inline en SlickG
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Iniciales sacd
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd
 
 ### Tareas Habituales
 
@@ -758,7 +785,8 @@ Construye la cuadrícula de consulta de misas por zona y rango de fechas (solo l
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -784,7 +812,8 @@ Genera la cuadrícula del plan de misas por centro: encargos en filas, días en 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Plan centro
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan ctr
 
 ### Tareas Habituales
 
@@ -810,7 +839,8 @@ Lista cronológica de misas asignadas a un sacerdote en un rango de fechas.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Misas > Plan sacerdote
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan sacerdote
 
 ### Tareas Habituales
 
@@ -836,7 +866,8 @@ Lee datos de disponibilidad semanal (propia, dw1-dw7) de un SACD en una zona par
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -862,7 +893,8 @@ Guarda flags de disponibilidad semanal de un SACD en una zona (ZonaSacd).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 

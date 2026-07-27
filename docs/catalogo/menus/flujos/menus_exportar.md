@@ -28,4 +28,8 @@ Persiste menú actual en tablas ref de BD pública.
 ## Ruta de menú
 
 - **Legacy:** sin entrada de menú en el índice
-- **Pills2:** ADMIN LOCAL > Exportar menús
+- **Pills2:** ADMIN LOCAL > Exportar menús · sistema > menus > Exportar · ADMIN GLOBAL > menus > Exportar
+
+## Casos particulares
+
+- Si la plantilla ya existe, la UI pide confirmación y reenvía con `sobreescribir=true`.

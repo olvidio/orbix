@@ -36,6 +36,18 @@ final class PersonaPublicacionTest extends TestCase
         $this->assertNull(PersonaPublicacion::toPg([]));
     }
 
+    public function test_to_database_value_acepta_mapa_y_json(): void
+    {
+        $mapa = ['dlp' => null, 'crArg' => '2026-08-03 12:00:00+00:00'];
+
+        $desdeMapa = PersonaPublicacion::toDatabaseValue($mapa);
+        $desdeJson = PersonaPublicacion::toDatabaseValue('{"dlpv":null,"crArg":"2026-08-03 12:00:00+00:00"}');
+
+        $this->assertSame('{"crArg":"2026-08-03 12:00:00+00:00","dlp":null}', $desdeMapa);
+        $this->assertSame($desdeMapa, $desdeJson);
+        $this->assertNull(PersonaPublicacion::toDatabaseValue(null));
+    }
+
     public function test_mapa_from_jsonb_objeto_y_array_legado(): void
     {
         $mapa = PersonaPublicacion::mapaFromJsonb([

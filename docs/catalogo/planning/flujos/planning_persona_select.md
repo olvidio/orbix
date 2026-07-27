@@ -27,14 +27,14 @@ Encontrar personas del colectivo del menú y abrir su calendario de actividades.
 
 ### Buscar y listar
 
-1. Abrir entrada de menú (define `obj_pau`, `na`).
+1. Abrir entrada de menú (define `obj_pau`, `na`; `es_sacd` del menú se ignora en código).
 2. Rellenar criterios opcionales y periodo en `planning_persona_que`.
-3. `planning_persona_select_data` devuelve tabla de personas.
-4. Seleccionar fila(s) y pulsar ver planning → `planning_persona_ver`.
+3. `planning_persona_select_data` elige repositorio vía `obj_pau` (`getSafe` cae a `PersonaDl` si inválido); con `PersonaEx`, `na` → `id_tabla=p{na}`.
+4. Seleccionar fila(s) (`sel[]` → `sSeleccionados`) y pulsar ver planning → `planning_persona_ver`.
 
 ### Acciones sobre fila
 
-- Ficha persona, dossier, imprimir planning de una persona.
+- Vista tabla / imprimir (`modelo=2`) / ver actividades (dossier 1301y1302) / ficha persona.
 
 ## Endpoints Del Flujo
 
@@ -42,5 +42,9 @@ Encontrar personas del colectivo del menú y abrir su calendario de actividades.
 
 ## Ruta de menú
 
-- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Plannig por personas` (u otras variantes sacd/de paso)
-- **Legacy:** `dre > planning > persona r/dl` (según `obj_pau`/`na`)
+| Params | Legacy | Pills2 |
+|--------|--------|--------|
+| `obj_pau=PersonaDl` | `… > planning > persona r/dl` · `scdl > persona dl` | `ACTIVIDADES > … > Plannig por personas` |
+| `PersonaEx&na=a|n` | `scdl > planning > agd/num de paso` | igual |
+| `PersonaSacd` | `dre > planning > sacd r/dl` | — |
+| `PersonaSacd&es_sacd=1` | — | `ACTIVIDADES > … > Plannig por personas sacd` |

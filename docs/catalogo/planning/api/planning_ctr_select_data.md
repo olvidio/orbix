@@ -30,7 +30,11 @@ Dos modos según `ctr`:
 - **Centro concreto** (`ctr` no vacío): busca el centro por nombre (sin acentos) y lista personas
   activas de ese ctr. Acumula avisos en `msg_txt` si algún ctr no tiene personas.
 - **Todos los centros** (`ctr` vacío): lista personas según `todos_n` / `todos_agd` / `todos_s`
-  (tabla `n`, `a` o `s`).
+  (tabla `n`, `a` o `s`). Los checkboxes son mutuamente excluyentes en backend (el último no vacío
+  gana); si ninguno → default colectivo `n`.
+
+Filtro `sacd`: solo si `sacd === ''` se añade `sacd=f` (excluye); el radio «no» del form envía `0`
+y **no** excluye. Siempre usa repositorio `PersonaDl` (ignora `obj_pau` del formulario).
 
 Con las personas encontradas, `ActividadesDePersonaService` devuelve `a_actividades2` agrupado por centro.
 El periodo se calcula en el controller con `Periodo::conCalendarioDesdeBackend()`.

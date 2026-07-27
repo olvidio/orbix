@@ -46,6 +46,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `fnjs_copiar_tessera`
 - `fnjs_imp_certificado`
 - `fnjs_upload_certificado`
+- `fnjs_publicar`
 
 ## Capacidades Relacionadas
 

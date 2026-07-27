@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Tabla CRUD de `aux_grupmenu` (nombre, orden); acceso también vía TablaDB InfoGrupMenus.
+Tabla CRUD de `aux_grupmenu` (nombre, orden) vía `grupmenu_lista.php`. El menú vivo de administración «grup menu» **no** apunta aquí: entra por TablaDB `tablaDB_lista_ver.php?clase_info=src\menus\domain\InfoGrupMenus` (módulo shared).
 
 ## Uso En Ayuda
 

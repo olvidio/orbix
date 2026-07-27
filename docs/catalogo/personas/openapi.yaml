@@ -91,6 +91,86 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/personas/persona_publicar":
+    post:
+      operationId: "post_personas_persona_publicar"
+      summary: "Persona Publicar"
+      description: |
+        Marca una persona como publicada para una o varias DL destino (caso B), actualizando el mapa `publicado_para` (jsonb) con caducidad por defecto de un mes (`P1M`), salvo destino `*`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/personas/api/persona_publicar.md`
+      tags:
+        - "personas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "post.id_nom"
+                - "post.id_schema"
+                - "post.dl"
+              properties:
+                id_nom:
+                  type: "integer"
+                id_schema:
+                  type: "integer"
+                dl:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/personas/persona_publicar_form_data":
+    post:
+      operationId: "post_personas_persona_publicar_form_data"
+      summary: "Persona Publicar Form Data"
+      description: |
+        Datos del formulario para publicar una persona hacia otras delegaciones (caso B: visible en desplegables de la DL destino con TTL).
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/personas/api/persona_publicar_form_data.md`
+      tags:
+        - "personas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "integer"
+                id_tabla:
+                  type: "string"
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/personas/persona_update":
     post:
       operationId: "post_personas_persona_update"

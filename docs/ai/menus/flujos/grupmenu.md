@@ -6,8 +6,8 @@ titulo: "Grupmenu"
 flujo: "menus.grupmenu.gestionar.flujo"
 preguntas: []
 pantallas_principales: []
-fragmentos: ["menus.pantalla.grupmenu_lista", "menus.pantalla.menus_get", "menus.pantalla.menus_que"]
-endpoints: ["/src/menus/grupmenu_eliminar", "/src/menus/grupmenu_guardar", "/src/menus/grupmenu_lista"]
+fragmentos: ["menus.pantalla.grupmenu_lista", "menus.pantalla.grupmenu_form"]
+endpoints: ["/src/menus/grupmenu_eliminar", "/src/menus/grupmenu_guardar", "/src/menus/grupmenu_lista", "/src/menus/grupmenu_info"]
 source: "docs/catalogo/menus/flujos/grupmenu.md"
 estado_revision: "generado"
 ---
@@ -31,12 +31,11 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 ## Pantallas Y Fragmentos Relacionados
 
 - `menus.pantalla.grupmenu_lista`
-- `menus.pantalla.menus_get`
-- `menus.pantalla.menus_que`
+- `menus.pantalla.grupmenu_form`
 
 ## Objetivo
 
-CRUD de grupos raíz (`aux_grupmenu`) que organizan el árbol por layout.
+Alta/edición/baja de grupos de menú.
 
 ## Limites De La Respuesta
 

@@ -2,6 +2,7 @@
 
 namespace src\personas\infrastructure\persistence\postgresql;
 
+use src\personas\domain\PersonaPublicacion;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -58,6 +59,7 @@ class PgPersonaNaxRepository extends PgPersonaDlRepositoryBase implements Person
             'f_nacimiento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
             'f_situacion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
             'f_inc' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'publicado_para' => fn($v) => PersonaPublicacion::toDatabaseValue($v),
         ]);
 
         if ($bInsert === false) {
@@ -86,6 +88,7 @@ class PgPersonaNaxRepository extends PgPersonaDlRepositoryBase implements Person
 					observ                   = :observ,
 					id_ctr                   = :id_ctr,
 					lugar_nacimiento         = :lugar_nacimiento,
+                    publicado_para           = CAST(:publicado_para AS jsonb),
                     ce                       = :ce,
                     ce_ini                   = :ce_ini,
                     ce_fin                   = :ce_fin,
@@ -94,8 +97,8 @@ class PgPersonaNaxRepository extends PgPersonaDlRepositoryBase implements Person
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT (p_nax exige id_schema NOT NULL; Hydratable no serializa id_schema)
-            $campos = "(id_schema,id_nom,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,idioma_preferido,situacion,f_situacion,apel_fam,inc,f_inc,nivel_stgr,profesion,eap,observ,id_ctr,lugar_nacimiento,ce,ce_ini,ce_fin,ce_lugar)";
-            $valores = "(:id_schema,:id_nom,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:idioma_preferido,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:nivel_stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento,:ce,:ce_ini,:ce_fin,:ce_lugar)";
+            $campos = "(id_schema,id_nom,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,idioma_preferido,situacion,f_situacion,apel_fam,inc,f_inc,nivel_stgr,profesion,eap,observ,id_ctr,lugar_nacimiento,publicado_para,ce,ce_ini,ce_fin,ce_lugar)";
+            $valores = "(:id_schema,:id_nom,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:idioma_preferido,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:nivel_stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento,CAST(:publicado_para AS jsonb),:ce,:ce_ini,:ce_fin,:ce_lugar)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }

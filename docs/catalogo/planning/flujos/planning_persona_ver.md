@@ -28,8 +28,8 @@ Visualizar y exportar el planning individual o múltiple en el periodo elegido.
 ### Ver calendario
 
 1. Seleccionar persona(s) en el listado (`sel` o `sSeleccionados`).
-2. `planning_persona_ver_data` carga actividades en vista plana.
-3. Exportar o consultar leyenda.
+2. `planning_persona_ver_data` carga actividades en vista plana (no por centro).
+3. Con `modelo=2` se imprime; si no, exportar o consultar leyenda.
 
 ## Endpoints Del Flujo
 

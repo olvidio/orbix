@@ -17,3 +17,8 @@ Publicacion/consulta de anuncios via API (integracion externa o legacy).
 ## Endpoints
 
 Ver `docs/catalogo/tablonanuncios/api/`.
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice (API / portada)
+- **Pills2:** sin entrada de menú en el índice (API / portada)

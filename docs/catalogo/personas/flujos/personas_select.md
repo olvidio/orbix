@@ -36,11 +36,17 @@ Encontrar personas del colectivo indicado por el menú, revisar resultados y lan
 ### Acciones sobre selección
 
 1. Marcar fila(s) en la tabla (`sel=id_nom#id_tabla`).
-2. Pulsar botón contextual (ficha, dossiers, modificar stgr, etc.).
+2. Pulsar botón contextual (ficha, dossiers, modificar stgr, publicar, etc.).
+
+### Publicar hacia otra DL
+
+1. Con permiso `est`/`sm`/`agd`, pulsar «publicar».
+2. Continúa en flujo `persona_publicar` (form + mutación).
 
 ## Endpoints Del Flujo
 
 - `/src/personas/personas_select_data`
+- (derivado publicar) `/src/personas/persona_publicar_form_data`, `/src/personas/persona_publicar`
 
 ## Errores Conocidos
 

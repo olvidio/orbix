@@ -28,4 +28,4 @@ Listado de plantillas ref para importación.
 ## Ruta de menú
 
 - **Legacy:** sistema > menus > importar
-- **Pills2:** ADMIN LOCAL > Importar menús
+- **Pills2:** sistema > menus > importar · ADMIN LOCAL > Importar menús · ADMIN GLOBAL > menus > importar

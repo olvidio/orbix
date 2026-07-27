@@ -2,20 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "pantalla"
 modulo: "menus"
-titulo: "Menus Importar De Ficheros A Ref"
+titulo: "Restaurar menús ref→DL"
 pantalla: "menus.pantalla.menus_importar_de_ficheros_a_ref"
-preguntas: ["Que se puede hacer en Menus Importar De Ficheros A Ref?", "Que campos tiene Menus Importar De Ficheros A Ref?", "Que acciones hay en Menus Importar De Ficheros A Ref?"]
+preguntas: ["Que se puede hacer en Restaurar menús ref→DL?", "Que campos tiene Restaurar menús ref→DL?", "Que acciones hay en Restaurar menús ref→DL?"]
 capacidades: []
-endpoints: []
+endpoints: ["/src/menus/menus_importar_de_ficheros_a_ref"]
 source: "docs/catalogo/menus/pantallas/menus_importar_de_ficheros_a_ref.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA Pantalla - Menus Importar De Ficheros A Ref
+# Ayuda IA Pantalla - Restaurar menús ref→DL
 
 ## Resumen
 
-Confirmación y ejecución masiva ref→aux por esquema(s). Controller HTTP en `src/menus/`.
+Página HTML del endpoint `/src/menus/menus_importar_de_ficheros_a_ref`: confirma y ejecuta la copia masiva de menús de referencia (public) hacia `aux_*` del/los esquema(s). **No lee ficheros SQL** (ese flujo es `menus_exportar_ref_a_ficheros?accion=importar`).
 
 ## Uso En Ayuda
 
@@ -38,7 +38,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Endpoints Relacionados
 
-- No hay endpoints detectados.
+- `/src/menus/menus_importar_de_ficheros_a_ref`
 
 ## Precauciones
 

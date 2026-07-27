@@ -22,7 +22,8 @@ Obtener la lista de idiomas activos para un desplegable en pantallas que lo nece
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (endpoint embebido; las pantallas host sí tienen menú propio en
+- usuarios/certificados).
 
 ### Tareas Habituales
 
@@ -50,7 +51,7 @@ Dar de alta, modificar o eliminar un registro en cualquier tabla mantenida con e
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada directa; mutación desde listado/formulario cuya ruta depende de `clase_info`.
 
 ### Tareas Habituales
 
@@ -79,7 +80,7 @@ Filtrar registros antes de mostrar la tabla en mantenimientos que definen criter
 ### Donde Entrar
 
 - Mantenimiento genérico de tablas (listado) (frontend/shared/controller/tablaDB_lista_ver.php)
-- Ruta de menu: pendiente de documentar.
+- Misma entrada que el listado destino (variante por `clase_info` en `_referencia_menus.md`).
 
 ### Tareas Habituales
 
@@ -109,7 +110,7 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (subflujo del formulario).
 
 ### Tareas Habituales
 
@@ -137,7 +138,7 @@ Crear o modificar un registro en el mantenimiento genérico de tablas.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
@@ -166,7 +167,8 @@ Consultar y mantener registros de tablas de configuración enlazadas desde el me
 ### Donde Entrar
 
 - Mantenimiento genérico de tablas (listado) (frontend/shared/controller/tablaDB_lista_ver.php)
-- Ruta de menu: pendiente de documentar.
+- Variante según `clase_info` — ver `docs/guias/_referencia_menus.md` (entradas `tablaDB_lista_ver.php`).
+- Ejemplos: `global > estudios > asignaturas`, `sistema > menus > meta menus`, `dre > zonas > zonas`.
 
 ### Tareas Habituales
 

@@ -7,7 +7,7 @@ flujo: "cambios.avisos_generar.gestionar.flujo"
 preguntas: []
 pantallas_principales: []
 fragmentos: ["cambios.pantalla.avisos_generar"]
-endpoints: ["/src/cambios/avisos_generar_lista_data", "/src/cambios/cambio_usuario_eliminar", "/src/cambios/cambio_usuario_eliminar_hasta_fecha"]
+endpoints: ["/src/cambios/avisos_generar_lista_data", "/src/cambios/avisos_generar_tabla", "/src/cambios/cambio_usuario_eliminar", "/src/cambios/cambio_usuario_eliminar_hasta_fecha"]
 source: "docs/catalogo/cambios/flujos/avisos_generar.md"
 estado_revision: "generado"
 ---
@@ -34,13 +34,14 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Objetivo
 
-Ver los cambios registrados pendientes de avisar y eliminar los que ya no interesan (por fila o por fecha límite).
+Ver los cambios registrados pendientes de avisar y eliminar los que ya no interesan (por fila o por fecha límite). Opcionalmente regenerar la tabla de avisos desde el menú de administración.
 
 ## Errores Documentados
 
 - `debe indicar la fecha`
 - `Hay un error, no se ha eliminado`
 - `Hay un error al eliminar los cambios hasta la fecha indicada`
+- `Generar tabla: Algo falla; HTML de incidencias por cambio no procesado`
 
 ## Limites De La Respuesta
 

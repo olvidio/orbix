@@ -94,6 +94,22 @@ final class PersonaPublicacion
     }
 
     /**
+     * Valor PHP/PG mixto -> jsonb para base de datos.
+     */
+    public static function toDatabaseValue(mixed $raw): ?string
+    {
+        if ($raw === null || $raw === '') {
+            return null;
+        }
+
+        if (is_array($raw)) {
+            return self::toPg($raw);
+        }
+
+        return self::toPg(self::fromPg($raw));
+    }
+
+    /**
      * Hidrata la columna en una fila de repositorio (mismo sitio que ConverterDate).
      *
      * @param array<string, mixed> $aDatos

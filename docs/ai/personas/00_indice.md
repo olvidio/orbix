@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "indice"
 modulo: "personas"
-flujos: 7
-pantallas: 6
-endpoints: 9
+flujos: 8
+pantallas: 7
+endpoints: 11
 estado_revision: "generado"
 ---
 
@@ -23,6 +23,7 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 - Ver cabecera de persona -> `flujos/home_persona.md`
 - Guardar o eliminar persona -> `flujos/persona.md`
+- Publicar persona hacia otra DL -> `flujos/persona_publicar.md`
 - Abrir ficha de persona -> `flujos/personas_editar.md`
 - Buscar y listar personas -> `flujos/personas_select.md`
 - Guardar nivel STGR -> `flujos/stgr.md`
@@ -32,6 +33,7 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 ## Pantallas Disponibles
 
 - Cabecera de persona -> `pantallas/home_persona.md`
+- Publicar persona -> `pantallas/persona_publicar_form.md`
 - Ficha de persona -> `pantallas/personas_editar.md`
 - Buscar personas -> `pantallas/personas_que.md`
 - Resultado búsqueda personas -> `pantallas/personas_select.md`

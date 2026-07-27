@@ -35,7 +35,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Objetivo
 
-Visualizar y exportar el planning por zonas en el trimestre elegido.
+Visualizar y exportar el planning por zonas en el trimestre/mes elegido (calendario actual o propuesta).
 
 ## Limites De La Respuesta
 

@@ -27,9 +27,9 @@ Consultar el calendario de actividades SACD agrupadas por zona.
 
 ### Preparar filtros
 
-1. Abrir entrada de menú (`propuesta` opcional).
-2. `planning_zones_que_data` devuelve `opciones_zonas` según rol (p-sacd acotado a jefe).
-3. Elegir zona, trimestre, año y filtro de actividad.
+1. Abrir entrada de menú (`propuesta` opcional; distinto de `propuesta_calendario` de casas).
+2. `planning_zones_que_data` devuelve `opciones_zonas` según rol (`p-sacd` acotado; jefe añade `todo`/`todo_propias`).
+3. Elegir zona, trimestre/mes (1–6 / 101–112), año y `actividad=si|no`.
 4. Ver planning → `planning_zones_select`.
 
 ## Endpoints Del Flujo
@@ -43,6 +43,6 @@ Consultar el calendario de actividades SACD agrupadas por zona.
 
 ## Ruta de menú
 
-- **Legacy:** `dre > planning > por zonas`
+- **Legacy:** `dre > planning > por zonas` · `vsr > planning > por zonas` · `exterior > sacd > Misas > Planning zonas`
 - **Pills2:** `ACTIVIDADES > Herramientas de calendario > por zonas`
 - Propuesta: `dre > propuestas > planing zonas`

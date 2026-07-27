@@ -30,18 +30,28 @@ Al enviar abre `planning_persona_select`.
 - Periodo: `year`, `periodo`, `empiezamin`, `empiezamax`
 - Hidden: `obj_pau`, `na` (según menú: `PersonaDl`, `PersonaSacd`, `PersonaEx`, …)
 
+## Casos particulares
+
+- `obj_pau` admitidos en front: `PersonaN|Nax|Agd|S|SSSC|Dl|Ex|Sacd` (otro valor → exit).
+- El menú Pills2 puede pasar `es_sacd=1`; el módulo planning **no lo lee**. El colectivo lo fija `obj_pau` (+ `na` → `id_tabla=p{na}` en `PersonaEx`).
+- Filtros legacy codificados: `saWhere` / `saWhereCtr`.
+
 ## Acciones
 
 - Buscar → `planning_persona_select.php`
 
 ## Manual De Usuario
 
-Revisado contra `frontend/planning/`. Soporta filtros legacy codificados (`saWhere`/`saWhereCtr`).
+Revisado contra `frontend/planning/` y `src/planning/`.
 
 ## Ruta de menú
 
-Variantes según `obj_pau`/`na`/`es_sacd` en `_referencia_menus.md`. Ejemplos Pills2:
+Variantes en `_referencia_menus.md`:
 
-- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Plannig por personas` (`obj_pau=PersonaDl`)
-- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Plannig por personas sacd` (`obj_pau=PersonaSacd&es_sacd=1`)
-- **Legacy:** `dre > planning > persona r/dl` · `scdl > planning > persona dl` · `scdl > planning > agd/num de paso`
+| Params | Legacy | Pills2 |
+|--------|--------|--------|
+| `obj_pau=PersonaDl` | `… > planning > persona r/dl` · `scdl > planning > persona dl` | `ACTIVIDADES > Herramientas de calendario > Plannig por personas` |
+| `obj_pau=PersonaEx&na=a` | `scdl > planning > agd de paso` | `scdl > planning > agd de paso` |
+| `obj_pau=PersonaEx&na=n` | `scdl > planning > num de paso` | `scdl > planning > num de paso` |
+| `obj_pau=PersonaSacd` | `dre > planning > sacd r/dl` | — |
+| `obj_pau=PersonaSacd&es_sacd=1` | — | `ACTIVIDADES > Herramientas de calendario > Plannig por personas sacd` |

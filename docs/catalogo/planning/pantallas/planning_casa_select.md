@@ -30,6 +30,11 @@ modificar actividades de casa (`planning_casa_nueva` / `planning_casa_modificar`
 - Nueva / modificar actividad de casa
 - Cambiar actividad asociada a una ubi
 
+## Casos particulares
+
+- Propaga `propuesta_calendario` (y resto de filtros) hacia `planning_casa_ver` / actividades.
+- `cdc_sel=9` → usa CSV `sSeleccionados` como lista manual de casas.
+
 ## Manual De Usuario
 
 Sin endpoint `/src/` propio; propaga filtros de `planning_casa_que` vía POST.

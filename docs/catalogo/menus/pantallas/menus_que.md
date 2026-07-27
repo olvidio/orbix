@@ -25,8 +25,8 @@ Punto de entrada al gestor: desplegable de grupmenu y carga AJAX del listado/fic
 ## Ruta de menú
 
 - **Legacy:** sistema > menus > seleccionar
-- **Pills2:** ADMIN GLOBAL > menus > seleccionar
+- **Pills2:** sistema > menus > seleccionar · ADMIN GLOBAL > menus > seleccionar
 
 ## Manual De Usuario
 
-1. Abrir desde menú administración. 2. Elegir grupo de menú. 3. Gestionar ítems en el panel inferior.
+1. Abrir desde menú administración. 2. Elegir grupo de menú (`filtro_grupo` vacío = no lista). 3. Gestionar ítems en el panel inferior (`menus_get`).

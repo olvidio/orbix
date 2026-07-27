@@ -17,12 +17,15 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Para Que Sirve
 
-CRUD de grupos raíz (`aux_grupmenu`) que organizan el árbol por layout.
+Alta/edición/baja de grupos de menú.
 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Entrada de menú (TablaDB, no `grupmenu_lista.php`):
+- **Legacy:** sistema > usuarios web > grup menu
+- **Pills2:** sistema > usuarios web > grup menu · ADMIN LOCAL > usuarios web > grup menu
+- Pantallas `grupmenu_*`: sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
@@ -40,6 +43,7 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Sin control propio; autorización vía menú de administración (`frontend/menus/controller/grupmenu_lista.php`).
 - Menú administración usuarios web / grupmenu.
 - Menú administración.
+- Menú administración grupmenu.
 
 ### Referencias Internas
 
@@ -55,7 +59,8 @@ Grupos e ítems autorizados para menú lateral en index.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -83,7 +88,8 @@ Precarga formulario edición grupmenu.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -111,7 +117,8 @@ Opciones de destino URL/módulo al editar un ítem (metamenús globales).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -135,7 +142,8 @@ Listado de plantillas ref para importación.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > menus > importar
+- **Pills2:** sistema > menus > importar · ADMIN LOCAL > Importar menús · ADMIN GLOBAL > menus > importar
 
 ### Tareas Habituales
 
@@ -159,7 +167,8 @@ Alta, edición, copia, movimiento y borrado de entradas del árbol (`aux_menus`)
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > menus > seleccionar
+- **Pills2:** sistema > menus > seleccionar · ADMIN GLOBAL > menus > seleccionar
 
 ### Tareas Habituales
 
@@ -190,7 +199,9 @@ Cambiar grupmenu de un ítem desde ficha.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > menus > seleccionar
+- **Pills2:** sistema > menus > seleccionar · ADMIN GLOBAL > menus > seleccionar
+- (Acción de ficha del gestor; no tiene menú propio.)
 
 ### Tareas Habituales
 
@@ -216,7 +227,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -240,7 +252,8 @@ Persiste menú actual en tablas ref de BD pública.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** ADMIN LOCAL > Exportar menús · sistema > menus > Exportar · ADMIN GLOBAL > menus > Exportar
 
 ### Tareas Habituales
 
@@ -255,16 +268,18 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `menus.menus_exportar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/menus_exportar.md`
 
-## Menus Exportar Ref A Ficheros
+## Menús a/desde ficheros SQL
 
 ### Para Que Sirve
 
-Genera scripts COPY en `log/menus/` (metamenús, ref, módulos).
+Respaldar o restaurar la referencia de menús vía ficheros SQL en disco.
 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > menus > importar desde ficheros
+- **Pills2:** sistema > menus > importar desde ficheros
+- (aviso: URL en BD = `menus_ficheros.php` muerto → usar `/src/menus/menus_exportar_ref_a_ficheros`)
 
 ### Tareas Habituales
 
@@ -292,7 +307,8 @@ Regenera fichero de cadenas traducibles de etiquetas de menú.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > traducciones > menus a texto
+- **Pills2:** sistema > traducciones > menus a texto
 
 ### Tareas Habituales
 
@@ -320,7 +336,8 @@ Builder AJAX lista vs edición en gestor de menús.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -344,7 +361,8 @@ Sustituye menús locales por una plantilla seleccionada.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > menus > importar
+- **Pills2:** sistema > menus > importar · ADMIN LOCAL > Importar menús · ADMIN GLOBAL > menus > importar
 
 ### Tareas Habituales
 
@@ -359,16 +377,16 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `menus.menus_importar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/menus_importar.md`
 
-## Menus Importar De Ficheros A Ref
+## Restaurar menús ref→DL
 
 ### Para Que Sirve
 
-Copia ref pública a aux de DL(s) con confirmación en dos pasos.
+Dejar los menús del esquema (o de todas las DL si dlb) como la referencia por defecto.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Restaurar menús ref→DL (src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -396,7 +414,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 

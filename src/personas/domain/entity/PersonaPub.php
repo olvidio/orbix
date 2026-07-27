@@ -19,7 +19,7 @@ use src\personas\domain\value_objects\{ApelFamText,
     PersonaTratoCode,
     ProfesionText,
     SituacionCode};
-use src\shared\domain\traits\Hydratable;
+use src\personas\domain\traits\SerializesPublicadoParaJson;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\LocaleCode;
 use src\shared\infrastructure\DependencyResolver;
@@ -31,7 +31,7 @@ use src\ubis\domain\value_objects\DelegacionCode;
 
 class PersonaPub
 {
-    use Hydratable;
+    use SerializesPublicadoParaJson;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
     private int $id_schema;

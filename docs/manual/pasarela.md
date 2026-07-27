@@ -22,7 +22,7 @@ Configurar cuándo se publica/activa cada tipo de actividad en la pasarela exter
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
@@ -48,7 +48,7 @@ Cambiar el valor global de días de activación (o `upload`).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
@@ -72,7 +72,7 @@ Definir activación distinta para un tipo de actividad concreto.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
@@ -97,7 +97,7 @@ Porcentaje de contribución para quien no pernocta.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
@@ -124,7 +124,7 @@ Cambiar el porcentaje global.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
@@ -149,7 +149,7 @@ Porcentaje distinto por tipo de actividad.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
@@ -175,7 +175,7 @@ Porcentaje de contribución en reserva de plaza.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
@@ -202,7 +202,7 @@ Cambiar porcentaje global de reserva.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
@@ -227,7 +227,7 @@ Porcentaje de reserva distinto por tipo.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
@@ -253,7 +253,8 @@ Generar listado tabular con datos de actividades filtradas para sistemas externo
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Pasarela > exportar actividades
+- **Pills2:** dre > Pasarela > exportar actividades; ACTIVIDADES > Pasarela > exportar actividades
 
 ### Tareas Habituales
 
@@ -280,7 +281,8 @@ Refrescar widget de tipo de actividad en la pantalla exportar.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Pasarela > exportar actividades
+- **Pills2:** dre > Pasarela > exportar actividades; ACTIVIDADES > Pasarela > exportar actividades
 
 ### Tareas Habituales
 
@@ -304,7 +306,7 @@ Asignar nombre exportado distinto al tipo genérico.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
@@ -329,7 +331,7 @@ Guardar o borrar un nombre concreto.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
@@ -354,7 +356,7 @@ Mostrar etiqueta legible del tipo al editar excepciones.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 

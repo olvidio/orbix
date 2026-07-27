@@ -22,7 +22,8 @@ Editar textos globales de cabecera/pie para impresión de equipajes.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > Inventario > equipajes > tipos de texto
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -119,7 +120,8 @@ Asignación y consulta de documentos por tipo: selector `docs_asignar_que`, list
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > Inventario > documentos > asignar documento
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -150,7 +152,8 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > Inventario > equipajes > hacer equipajes
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -432,7 +435,8 @@ Comparar movimientos de documentos entre equipajes seleccionados.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > Inventario > equipajes > movimientos maletas
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -462,7 +466,8 @@ Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuev
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > Inventario > equipajes > nuevo equipaje
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -585,7 +590,8 @@ Impresión inventario de centros: selección en `doc_de_ctr`, render en `doc_imp
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > Inventario > inventarios > de centros o dlb
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -615,7 +621,8 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > Inventario > inventarios > de centros o dlb
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -1296,7 +1303,8 @@ Trasladar documentos entre centros/lugares: filtro en `traslado_doc_que`, selecc
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > Inventario > inventarios > traslado de doc
+- **Pills2:** —
 
 ### Tareas Habituales
 

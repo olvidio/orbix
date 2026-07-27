@@ -63,6 +63,35 @@ final class PersonaUpdateTest extends TestCase
         $this->assertSame('', $useCase->execute($input));
     }
 
+    public function test_nivel_stgr_en_blanco_guarda_null(): void
+    {
+        $persona = new PersonaN();
+        $persona->setId_nom(50);
+        $persona->setId_tabla('n');
+        $persona->setApellido1('P');
+        $persona->setSituacion('A');
+        $persona->setNivel_stgr(NivelStgrId::N);
+
+        $repo = $this->createMock(PersonaNRepositoryInterface::class);
+        $repo->method('findById')->with(50)->willReturn($persona);
+        $repo->expects($this->once())->method('Guardar')->with($persona)->willReturn(true);
+
+        $useCase = new PersonaUpdate($this->makeResolver([
+            PersonaNRepositoryInterface::class => $repo,
+        ]));
+
+        $result = $useCase->execute([
+            'id_nom' => 50,
+            'obj_pau' => 'PersonaN',
+            'situacion' => 'A',
+            'apellido1' => 'P',
+            'nivel_stgr' => '', // desplegable en blanco
+        ]);
+
+        $this->assertSame('', $result);
+        $this->assertNull($persona->getNivel_stgr());
+    }
+
     public function test_exito_persona_ex_sin_id_ctr_ni_ce(): void
     {
         $persona = new PersonaEx();

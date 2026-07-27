@@ -22,7 +22,8 @@ Ciclo completo de actas: listar en `acta_select`, abrir `acta_ver`, crear (`acta
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/dossier)
 
 ### Tareas Habituales
 
@@ -97,7 +98,8 @@ Consultar actas por rango de fechas en vista anual.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > actas... > listado actas
+- **Pills2:** ESTUDIOS > Actas y certificados > Listado de actas; vest > actas... > listado actas
 
 ### Tareas Habituales
 
@@ -190,7 +192,8 @@ Descargar PDF con token firmado.
 ### Donde Entrar
 
 - Acta Pdf Download (frontend/notas/controller/acta_pdf_download.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -255,7 +258,8 @@ Buscar y seleccionar actas del curso; navegar a ver, modificar, imprimir o desca
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > actas... > actas; stgr > actas > actas
+- **Pills2:** ESTUDIOS > Actas y certificados > Actas; vest > actas... > actas; stgr > actas > actas
 
 ### Tareas Habituales
 
@@ -280,28 +284,50 @@ Buscar y seleccionar actas del curso; navegar a ver, modificar, imprimir o desca
 
 ### Para Que Sirve
 
-Ver y editar cabecera de acta, tribunal, PDF y vínculo a actividad CA.
+Consultar o modificar la cabecera del acta (asignatura, fechas, libro, tribunal, PDF) y, cuando se abre desde el listado de actas, ver las notas ya grabadas y añadir un alumno.
 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice (fragmento desde listado ESTUDIOS > Actas)
+- **Pills2:** sin entrada de menú en el índice (fragmento desde listado ESTUDIOS > Actas)
 
 ### Tareas Habituales
 
-#### Abrir el formulario
+#### Ver / editar cabecera
 
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
+1. Abrir acta desde el listado o desde la actividad.
+2. Cargar cabecera (`acta_ver_form_data`).
+3. Guardar alta (`acta_nueva`) o cambios (`acta_modificar`).
+
+#### Listado de notas (solo standalone)
+
+1. Con acta existente (no modo nueva) y asignatura válida, la UI pide `acta_ver_notas_listado_data`.
+2. Se muestra tabla id/nombre/nota/situación; avisos si hay notas sin acceso al nombre.
+
+#### Añadir alumno (solo standalone + permiso escritura + sin PDF)
+
+1. Pedir `acta_ver_add_persona_form_data` (desplegable de candidatos).
+2. Elegir persona, nota y máximo; enviar `acta_ver_add_persona`.
+3. Recargar listado / mensaje de esquema de escritura.
 
 ### Errores O Avisos Frecuentes
 
-- `No encuentro el profesor.`
+- `Faltan acta o persona`
+- `No se encuentra el acta`
+- `El acta está firmada y no se puede modificar`
+- `El acta no tiene asignatura`
+- `Falta el acta`
+- `Aviso listado: existe una nota de la que no se tiene acceso al nombre (id_nom = %s)`
 
 ### Permisos
 
 - `scope_permiso` (default 3); forzado 0 en `rstgr`.
+- Sin control propio en el caso de uso. El frontend solo llama este endpoint en contexto standalone (`$notas` y `$Qnotas` vacíos), acta existente, no modo nueva, y con asignatura válida. Autorización de pantalla: `have_perm_oficina('est')` / `rstgr` solo lectura.
+- Sin `perm_*` en el caso de uso. Frontend solo pide el form si `$permiso === 3` y el PDF no pone `readonly` (acta no firmada).
+- Sin control en el caso de uso. UI solo muestra el form con `permiso === 3` y sin `readonly` (no firmada). Ámbito `rstgr`/`r` suele ir en solo lectura en `acta_ver`.
+- Frontend `acta_select`/`acta_ver`: `have_perm_oficina('est')` en ámbito DL; en `rstgr` solo lectura.
+- Igual que `acta_nueva` (`est` en DL).
 
 ### Referencias Internas
 
@@ -408,7 +434,8 @@ Consultar matriz de asignaturas pendientes por alumno.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > actas... > tabla alumnos-asignaturas; stgr > actas > tabla alumnos-asignaturas
+- **Pills2:** ESTUDIOS > Preparación planes estudio > Tab. Alumn/asig.; vest > actas... > tabla alumnos-asignaturas; stgr > actas > tabla alumnos-asignaturas
 
 ### Tareas Habituales
 
@@ -438,7 +465,8 @@ Ver resumen de pendientes por asignatura.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > actas... > resumen pendientes
+- **Pills2:** ESTUDIOS > Preparación planes estudio > nº alum. por asignatura; vest > actas... > resumen pendientes
 
 ### Tareas Habituales
 
@@ -528,7 +556,8 @@ Cargar constantes VO antes de ejecutar comprobaciones.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice (variantes id_tabla)
+- **Pills2:** ESTUDIOS > Datos e informes > Comprobar datos n / Comprobar datos agd
 
 ### Tareas Habituales
 
@@ -558,7 +587,8 @@ Ejecutar comprobaciones y mostrar HTML de incidencias.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice (variantes id_tabla)
+- **Pills2:** ESTUDIOS > Datos e informes > Comprobar datos n / Comprobar datos agd
 
 ### Tareas Habituales
 
@@ -618,7 +648,8 @@ Generar informe anual de agregados (números o listados).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** Calendario > Nuevo calendario > Previsión asistentes (sin lista); variantes lista en ESTUDIOS
+- **Pills2:** ACTIVIDADES > Estadísticas económicas > Previsión asistentes; ESTUDIOS > Datos e informes > Informe anual agd > Con números / Con listados
 
 ### Tareas Habituales
 
@@ -648,7 +679,8 @@ Generar informe anual de numerarios.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** ESTUDIOS > Datos e informes > Informe anual n > Con números / Con listados
 
 ### Tareas Habituales
 
@@ -678,7 +710,8 @@ Generar informe anual de profesores.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** ESTUDIOS > Datos e informes > Informe anual profesores > Con números / Con listados
 
 ### Tareas Habituales
 
@@ -741,7 +774,8 @@ Alta de nota en dossier 1011 (`persona_nota_nueva`).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/dossier)
 
 ### Tareas Habituales
 
@@ -874,7 +908,8 @@ Flujo tessera: ver, imprimir y copiar entre personas.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/dossier)
 
 ### Tareas Habituales
 

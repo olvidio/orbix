@@ -17,3 +17,8 @@ Datos de asignaturas consumidos por notas y profesores (sin pantalla propia).
 ## Endpoints
 
 Ver `docs/catalogo/asignaturas/api/`.
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice (API de soporte para notas/profesores)
+- **Pills2:** sin entrada de menú en el índice (API de soporte para notas/profesores)

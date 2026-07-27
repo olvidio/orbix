@@ -22,7 +22,8 @@ Elimina un periodo de calendario CDC identificado por id_item.
 ### Donde Entrar
 
 - Calendario Periodos (frontend/ubis/controller/calendario_periodos.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos
 
 ### Tareas Habituales
 
@@ -57,7 +58,8 @@ Carga los campos del formulario de edición de un periodo de calendario existent
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos
 
 ### Tareas Habituales
 
@@ -83,7 +85,8 @@ Devuelve todos los periodos de calendario de una casa ordenados por fecha inicio
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos
 
 ### Tareas Habituales
 
@@ -109,7 +112,8 @@ Lista los periodos de una casa en un año con detección de solapes.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos
 
 ### Tareas Habituales
 
@@ -135,7 +139,8 @@ Precarga el formulario de alta de periodo con fecha siguiente y sfsv del último
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos
 
 ### Tareas Habituales
 
@@ -161,7 +166,8 @@ Devuelve opciones de casas filtradas para desplegables compartidos del frontend.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -187,7 +193,8 @@ Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plaza
 ### Donde Entrar
 
 - Centros Que (frontend/ubis/controller/centros_que.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -216,7 +223,8 @@ Carga datos del formulario modal de tipo de labor de un centro DL.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -242,7 +250,8 @@ Carga datos del formulario modal de números (buzón, pi, cartas) de un centro D
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -268,7 +277,8 @@ Carga datos del formulario modal de plazas y sede de un centro DL.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -294,7 +304,8 @@ Lista todos los centros DL activos con su tipo de centro y tipo de labor.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -320,7 +331,8 @@ Lista centros DL activos con sus datos numéricos de buzón, pi y cartas.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -346,7 +358,8 @@ Lista centros DL activos con plazas, habitaciones individuales y flag sede.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -372,7 +385,8 @@ Devuelve opciones de centros filtradas para desplegables compartidos del fronten
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -398,7 +412,8 @@ Devuelve delegaciones destino disponibles para el traslado de ubis.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > listados
+- **Pills2:** Calendario > centros y casas > listados
 
 ### Tareas Habituales
 
@@ -424,7 +439,8 @@ Lista delegaciones de una región STGR para desplegables dependientes.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -450,7 +466,8 @@ Crea o modifica una dirección y su relación con el ubi (principal, propietario
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -481,7 +498,8 @@ Asocia una dirección existente a un ubi sin marcarla como propietaria.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -507,7 +525,8 @@ Carga la ficha de edición de direcciones de un ubi, con navegación entre varia
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -533,7 +552,8 @@ Prepara el formulario de búsqueda de direcciones existentes para asignar a un u
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -559,7 +579,8 @@ Desvincula una dirección del ubi según el índice en la lista CSV de ids.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -585,7 +606,8 @@ Busca direcciones por cp/ciudad/país y muestra tabla para asignar al ubi.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -611,7 +633,8 @@ Construye la ficha resumen de un ubi con dirección, telecomunicaciones y objeto
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -637,7 +660,8 @@ Lista centros y casas filtrados por delegación/exterior y tipo, con teléfonos 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > listados
+- **Pills2:** Calendario > centros y casas > listados
 
 ### Tareas Habituales
 
@@ -663,7 +687,8 @@ Lista centros tipo s de la delegación con el número de sacerdotes asignados en
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vsg > buscar > lista ctr i nº s
+- **Pills2:** vsg > buscar > lista ctr i nº s
 
 ### Tareas Habituales
 
@@ -689,7 +714,8 @@ Elimina una o más telecomunicaciones del ubi por claves primarias codificadas.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -722,7 +748,8 @@ Devuelve descripciones de telecomunicación dependientes del tipo seleccionado.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -751,7 +778,8 @@ Carga el formulario de alta/edición de una telecomunicación de un ubi.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -777,7 +805,8 @@ Lista las telecomunicaciones de un centro o casa con botones según permisos.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -803,7 +832,8 @@ Traslada centros y casas seleccionados a otra delegación destino.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > listados
+- **Pills2:** Calendario > centros y casas > listados
 
 ### Tareas Habituales
 
@@ -829,7 +859,8 @@ Elimina un ubi (centro o casa) del repositorio correspondiente a obj_pau.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -870,7 +901,8 @@ Devuelve opciones de desplegables para el formulario de búsqueda de ubis.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > buscar
+- **Pills2:** scdl > direcciones > buscar
 
 ### Tareas Habituales
 
@@ -896,7 +928,8 @@ Devuelve desplegables dependientes para el formulario de edición de ubi.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -922,7 +955,8 @@ Carga la ficha completa de un ubi para edición o alta, normalizando obj_pau de 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -952,7 +986,8 @@ Ajusta obj_pau a CentroDl/CasaDl cuando la ficha pertenece a la delegación del 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -978,7 +1013,8 @@ Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla nave
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > buscar
+- **Pills2:** scdl > direcciones > buscar
 
 ### Tareas Habituales
 

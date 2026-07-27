@@ -2,6 +2,7 @@
 
 namespace src\personas\infrastructure\persistence\postgresql;
 
+use src\personas\domain\PersonaPublicacion;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
@@ -52,6 +53,7 @@ class PgPersonaSRepository extends PgPersonaDlRepositoryBase implements PersonaS
             'f_nacimiento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
             'f_situacion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
             'f_inc' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'publicado_para' => fn($v) => PersonaPublicacion::toDatabaseValue($v),
         ]);
 
         if ($bInsert === false) {
@@ -80,6 +82,7 @@ class PgPersonaSRepository extends PgPersonaDlRepositoryBase implements PersonaS
 					observ                   = :observ,
 					id_ctr                   = :id_ctr,
 					lugar_nacimiento         = :lugar_nacimiento,
+                    publicado_para           = CAST(:publicado_para AS jsonb),
                     ce                       = :ce,
                     ce_ini                   = :ce_ini,
                     ce_fin                   = :ce_fin,
@@ -88,8 +91,8 @@ class PgPersonaSRepository extends PgPersonaDlRepositoryBase implements PersonaS
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $campos = "(id_nom,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,idioma_preferido,situacion,f_situacion,apel_fam,inc,f_inc,nivel_stgr,profesion,eap,observ,id_ctr,lugar_nacimiento,ce,ce_ini,ce_fin,ce_lugar)";
-            $valores = "(:id_nom,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:idioma_preferido,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:nivel_stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento,:ce,:ce_ini,:ce_fin,:ce_lugar)";
+            $campos = "(id_nom,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,idioma_preferido,situacion,f_situacion,apel_fam,inc,f_inc,nivel_stgr,profesion,eap,observ,id_ctr,lugar_nacimiento,publicado_para,ce,ce_ini,ce_fin,ce_lugar)";
+            $valores = "(:id_nom,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:idioma_preferido,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:nivel_stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento,CAST(:publicado_para AS jsonb),:ce,:ce_ini,:ce_fin,:ce_lugar)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }

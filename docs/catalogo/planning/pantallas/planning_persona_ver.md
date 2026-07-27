@@ -32,6 +32,12 @@ Calendario de actividades de las personas seleccionadas en `planning_persona_sel
 - Exportar calendario
 - Leyenda (`leyenda.php`)
 
+## Casos particulares
+
+- Vista plana (no agrupada por centro).
+- `modelo=2` → impresión (`doble=0`).
+- Selección vía `sel[]` / `sSeleccionados` desde el listado.
+
 ## Ruta de menú
 
 sin entrada de menú en el índice (fragmento del flujo por persona)

@@ -22,7 +22,8 @@ Consultar y reasignar centros (dl y sf) a zonas geográficas desde el desplegabl
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > zonas > zonas-ctr
+- **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-ctr
 
 ### Tareas Habituales
 
@@ -46,7 +47,8 @@ Endpoint legacy sin implementación; funcionalidad en zona_ctr_lista y zona_ctr_
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -70,7 +72,8 @@ Consultar y gestionar la asignación de sacerdotes (sacd) a zonas geográficas: 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > zonas > zonas-sacd
+- **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-sacd
 
 ### Tareas Habituales
 
@@ -95,7 +98,8 @@ Endpoint legacy sin implementación; funcionalidad repartida en zona_sacd_lista,
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -120,7 +124,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > zonas > lista sacd-zona
+- **Pills2:** ATENCIÓN SACD > Gestión de zonas > Lista sacd-zona
 
 ### Tareas Habituales
 

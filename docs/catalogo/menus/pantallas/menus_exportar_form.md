@@ -25,8 +25,8 @@ Guarda el menú actual del esquema como plantilla ref en BD pública.
 ## Ruta de menú
 
 - **Legacy:** sin entrada de menú en el índice
-- **Pills2:** ADMIN LOCAL > Exportar menús
+- **Pills2:** ADMIN LOCAL > Exportar menús · sistema > menus > Exportar · ADMIN GLOBAL > menus > Exportar
 
 ## Manual De Usuario
 
-1. Indicar nombre plantilla. 2. Exportar (opción sobreescribir en formulario).
+1. Indicar nombre plantilla. 2. Exportar. Si ya existe, confirmar y reenviar con `sobreescribir=true`.

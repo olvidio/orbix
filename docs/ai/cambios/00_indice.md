@@ -4,7 +4,7 @@ subtipo: "indice"
 modulo: "cambios"
 flujos: 11
 pantallas: 6
-endpoints: 12
+endpoints: 13
 estado_revision: "generado"
 ---
 

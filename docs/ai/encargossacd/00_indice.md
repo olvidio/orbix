@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "indice"
 modulo: "encargossacd"
-flujos: 28
-pantallas: 29
-endpoints: 34
+flujos: 32
+pantallas: 35
+endpoints: 39
 estado_revision: "generado"
 ---
 
@@ -43,6 +43,10 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 - Listas Com Txt -> `flujos/listas_com_txt.md`
 - Listas D -> `flujos/listas_d.md`
 - Listas Exigencia Ctr -> `flujos/listas_exigencia_ctr.md`
+- Propuestas Lista -> `flujos/propuestas_lista.md`
+- Propuestas Lista Enc -> `flujos/propuestas_lista_enc.md`
+- Propuestas Lista Sacd -> `flujos/propuestas_lista_sacd.md`
+- Propuestas Menu -> `flujos/propuestas_menu.md`
 - Sacd Ausencias -> `flujos/sacd_ausencias.md`
 - Sacd Ausencias Get -> `flujos/sacd_ausencias_get.md`
 - Sacd Ausencias Jefe Zona -> `flujos/sacd_ausencias_jefe_zona.md`
@@ -75,6 +79,12 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 - Listas D -> `pantallas/listas_d.md`
 - Listas Exigencia Ctr -> `pantallas/listas_exigencia_ctr.md`
 - Listas Index -> `pantallas/listas_index.md`
+- Propuestas Ajax -> `pantallas/propuestas_ajax.md`
+- Propuestas Aprobar -> `pantallas/propuestas_aprobar.md`
+- Propuestas Lista -> `pantallas/propuestas_lista.md`
+- Propuestas Lista Enc -> `pantallas/propuestas_lista_enc.md`
+- Propuestas Lista Sacd -> `pantallas/propuestas_lista_sacd.md`
+- Propuestas Menu -> `pantallas/propuestas_menu.md`
 - Sacd Ausencias -> `pantallas/sacd_ausencias.md`
 - Sacd Ausencias Get -> `pantallas/sacd_ausencias_get.md`
 - Sacd Ausencias Jefe Zona -> `pantallas/sacd_ausencias_jefe_zona.md`

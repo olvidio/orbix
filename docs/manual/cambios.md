@@ -17,12 +17,16 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Para Que Sirve
 
-Ver los cambios registrados pendientes de avisar y eliminar los que ya no interesan (por fila o por fecha límite).
+- Ver los cambios registrados pendientes de avisar y eliminar los que ya no interesan (por fila o por fecha límite).
+- Opcionalmente regenerar la tabla de avisos desde el menú de administración.
 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** Calendario > actividades > ver lista cambios; sistema > usuarios web > ver lista cambios;
+- Utilidades > Utilidades > lista de cambios
+- **Pills2:** mismas rutas (+ ADMIN LOCAL en usuarios web)
+- Generar tabla: **Legacy/Pills2:** sistema > usuarios web > generar tabla avisos (+ ADMIN LOCAL)
 
 ### Tareas Habituales
 
@@ -33,10 +37,12 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - `debe indicar la fecha`
 - `Hay un error, no se ha eliminado`
 - `Hay un error al eliminar los cambios hasta la fecha indicada`
+- `Generar tabla: Algo falla; HTML de incidencias por cambio no procesado`
 
 ### Permisos
 
 - Sin control propio; `is_admin` lo calcula `CambiosPermSupport::isAdmin()` en el frontend.
+- Sin `perm_*` en el caso de uso. Entrada de menú restringida a perfiles con acceso a
 - Sin control propio; la autorización se resuelve en frontend (`avisos_generar`) + `$_SESSION['oPerm']`.
 - Sin control propio; autorización en frontend (`avisos_generar`) + `$_SESSION['oPerm']`.
 
@@ -54,7 +60,7 @@ Quitar de la cola de avisos un `CambioUsuario` concreto seleccionado en la lista
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- (vía pantalla lista de cambios — ver flujo `avisos_generar`)
 
 ### Tareas Habituales
 
@@ -82,7 +88,7 @@ Eliminar en bloque todos los cambios anotados con fecha anterior o igual a la in
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- (vía pantalla lista de cambios)
 
 ### Tareas Habituales
 
@@ -111,7 +117,7 @@ Persistir la parte «objeto + tipo de actividad + fase + flags de aviso» de una
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -139,7 +145,7 @@ Refrescar el desplegable de fase/estado al cambiar objeto o tipo de actividad en
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -167,7 +173,7 @@ Mostrar la tabla de campos del objeto que pueden vigilarse, con el estado guarda
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -195,7 +201,7 @@ Tras guardar el objeto-pref, crear/actualizar/eliminar las `CambioUsuarioPropied
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -223,7 +229,7 @@ Abrir el modal para definir operador, valor y alcance de un cambio en una propie
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -251,7 +257,7 @@ Ver el texto de la condición y guardar el JSON en la fila de propiedades sin pe
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -279,7 +285,7 @@ Definir qué cambios debe recibir un usuario o grupo: objeto, ámbito (tipo/fase
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -312,7 +318,7 @@ Consultar y mantener las reglas de aviso configuradas para un usuario web.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 

@@ -22,7 +22,7 @@ Imprimir, guardar o eliminar un certificado emitido desde el formulario de impre
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -60,7 +60,7 @@ Adjuntar PDF de certificado emitido a una persona.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -90,7 +90,7 @@ Enviar certificado emitido a la delegación destino del alumno (copia + anuncio)
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -120,7 +120,7 @@ Persistir el PDF generado y el número de certificado en BD.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -150,7 +150,7 @@ Preparar datos e iniciar impresión de certificado nuevo para un alumno.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -180,7 +180,7 @@ Generar el PDF del certificado con notas y textos traducidos.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -210,7 +210,8 @@ Consultar y gestionar certificados emitidos pendientes de envío en la región S
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** —
+- **Pills2:** ESTUDIOS > Actas y certificados > Certificados
 
 ### Tareas Habituales
 
@@ -241,7 +242,7 @@ Descargar PDF adjunto de certificado emitido.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -271,7 +272,7 @@ Subir fichero PDF al API de certificados emitidos.
 ### Donde Entrar
 
 - Certificado Emitido Pdf Upload (frontend/certificados/controller/certificado_emitido_pdf_upload.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -301,7 +302,7 @@ Subir el PDF firmado de un certificado ya emitido.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -331,7 +332,7 @@ Consultar detalle de un certificado emitido seleccionado en el listado.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -361,7 +362,7 @@ Gestionar certificados recibidos de una persona (adjuntar, modificar, eliminar).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -399,7 +400,7 @@ Registrar un certificado recibido nuevo con PDF.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -429,7 +430,7 @@ Modificar metadatos de certificado recibido.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -459,7 +460,7 @@ Descargar PDF de certificado recibido.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -489,7 +490,7 @@ Subir PDF de certificado recibido.
 ### Donde Entrar
 
 - Certificado Recibido Pdf Upload (frontend/certificados/controller/certificado_recibido_pdf_upload.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -519,7 +520,7 @@ Cargar desplegable de idiomas en formularios de certificados.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -549,7 +550,7 @@ Plantilla de textos legales incluida al generar PDF (no flujo de usuario directo
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 

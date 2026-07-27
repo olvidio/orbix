@@ -23,7 +23,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre/Calendario > actividades > nueva activ (crear).
+- **Pills2:** ACTIVIDADES > Buscar actividad > Nueva actividad; ATENCIÓN SACD >
+- Actividades > Nueva actividad. Borrado desde listados de búsqueda (sin menú propio).
 
 ### Tareas Habituales
 
@@ -64,7 +66,7 @@ Seleccionar un nuevo tipo en la cascada, confirmar aviso de vuelta a *proyecto* 
 ### Donde Entrar
 
 - Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acción desde ficha de actividad ya abierta).
 
 ### Tareas Habituales
 
@@ -94,7 +96,7 @@ Seleccionar actividad origen y duplicarla (nueva ficha en proyecto).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acción desde listado de búsqueda).
 
 ### Tareas Habituales
 
@@ -126,7 +128,7 @@ Modificar campos de la actividad (fechas, lugar, plazas, observaciones, etc.) y 
 ### Donde Entrar
 
 - Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (se llega desde ficha abierta vía buscar activ o planning).
 
 ### Tareas Habituales
 
@@ -158,7 +160,7 @@ Validar estado de una fase sin recargar toda la ficha.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
@@ -186,7 +188,7 @@ Ver checkboxes de fases coherentes con el estado real del proceso al editar/crea
 ### Donde Entrar
 
 - Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada propia (requiere módulo procesos; acceso vía ficha actividad).
 
 ### Tareas Habituales
 
@@ -214,7 +216,9 @@ Buscar actividades externas (`modo=importar`), seleccionar una o varias e import
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre/Calendario > actividades > importar activ; variantes dagd/vsm/vest (crt, cv, ca…).
+- **Pills2:** ACTIVIDADES > Buscar actividad > Importar crt/cv/ca n/agd de otras r/dl; ESTUDIOS >
+- Semestres de invierno > Importar.
 
 ### Tareas Habituales
 
@@ -242,7 +246,7 @@ Al concretar tipo de actividad, el desplegable STGR se pre-rellena con el nivel 
 ### Donde Entrar
 
 - Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada propia (AJAX en ficha nueva/editar).
 
 ### Tareas Habituales
 
@@ -266,7 +270,8 @@ Confirmar años en `actividad_nuevo_curso` y lanzar la generación (puede tardar
 ### Donde Entrar
 
 - Generar actividades del nuevo curso (frontend/actividades/controller/actividad_nuevo_curso.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre > Nuevo calendario > nuevo curso.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Generar nuevo curso.
 
 ### Tareas Habituales
 
@@ -294,7 +299,7 @@ Al crear ficha nueva, el sistema bloquea o permite el formulario según permisos
 ### Donde Entrar
 
 - Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy / Pills2:** entradas *nueva activ* (ver `actividad_ver`).
 
 ### Tareas Habituales
 
@@ -322,7 +327,9 @@ Buscar actividades en modo publicar, seleccionar y ejecutar publicación masiva.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre/Calendario > actividades > publicar activ.
+- **Pills2:** dre/Calendario > actividades > publicar activ; ATENCIÓN SACD > Actividades >
+- publicar activ.
 
 ### Tareas Habituales
 
@@ -350,7 +357,7 @@ Al cargar `actividad_que` o el bloque tipo del planning, ver desplegables cohere
 ### Donde Entrar
 
 - Buscar actividad (filtros) (frontend/actividades/controller/actividad_que.php)
-- Ruta de menu: pendiente de documentar.
+- Herencia de `actividad_que` (buscar/importar/publicar activ y entradas por colectivo).
 
 ### Tareas Habituales
 
@@ -378,7 +385,7 @@ Tras abrir buscar actividad, ver filtros adicionales según rol (ocultos para us
 ### Donde Entrar
 
 - Buscar actividad (filtros) (frontend/actividades/controller/actividad_que.php)
-- Ruta de menu: pendiente de documentar.
+- Herencia de `actividad_que` (buscar activ e importar/publicar).
 
 ### Tareas Habituales
 
@@ -406,7 +413,7 @@ Ver listado tras buscar, con enlaces a ficha, importar, publicar o seleccionar s
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Destino de `actividad_que` — ver rutas de buscar actividad en pantalla `actividad_select`.
 
 ### Tareas Habituales
 
@@ -434,7 +441,7 @@ Al elegir modo historial o región, cargar casas/ubis candidatas antes de confir
 ### Donde Entrar
 
 - Seleccionar lugar (popup) (frontend/actividades/controller/actividad_select_ubi.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (popup desde ficha/planning).
 
 ### Tareas Habituales
 
@@ -463,7 +470,7 @@ Ver nombres de estado correctos según sf/sv y permisos al abrir ficha o plannin
 ### Donde Entrar
 
 - Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada propia (paso interno de ficha/planning).
 
 ### Tareas Habituales
 
@@ -487,7 +494,7 @@ Al cambiar un nivel de la cascada, actualizar los desplegables dependientes sin 
 ### Donde Entrar
 
 - Seleccionar lugar (popup) (frontend/actividades/controller/actividad_select_ubi.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada propia (AJAX dentro de buscar actividad, ficha o popup lugar).
 
 ### Tareas Habituales
 
@@ -515,7 +522,7 @@ Al abrir ver/editar/nuevo/planning, el sistema carga en servidor los datos neces
 ### Donde Entrar
 
 - Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
-- Ruta de menu: pendiente de documentar.
+- Misma que `actividad_ver` / planning (sin menú propio para el paso AJAX).
 
 ### Tareas Habituales
 
@@ -543,7 +550,9 @@ Desde menú *Nuevo calendario > listados*, elegir informe y periodo; ver tabla d
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl/dre/Calendario > Nuevo calendario > listados (por oficinas, casas comunes, etc.).
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Activ. nuevo calendario por oficina /
+- casas comunes / oficina propia / casas sv (según `que`).
 
 ### Tareas Habituales
 
@@ -571,7 +580,8 @@ Ver tabla de actividades tras enviar filtros desde `lista_activ_que` o `activida
 ### Donde Entrar
 
 - Filtros listados SR/SG (frontend/actividades/controller/lista_activ_que.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** dre/Calendario > actividades > listas sg (vía `lista_activ_que`).
+- **Pills2:** ACTIVIDADES > Listados > Listas asistentes sg.
 
 ### Tareas Habituales
 
@@ -599,7 +609,8 @@ Consultar actividades SG de la r/dl o del centro, filtrar y abrir fichas desde l
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vsg > crt/cv > de la r/dl.
+- **Pills2:** sin entrada dedicada (vsg).
 
 ### Tareas Habituales
 
@@ -627,7 +638,8 @@ Tras elegir centro y periodo en *de cada ctr*, ver el listado AJAX en la misma p
 ### Donde Entrar
 
 - Seleccionar centro y periodo (listados por ctr) (frontend/actividades/controller/actividades_centro_que.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vsg > crt/cv > de cada ctr.
+- **Pills2:** sin entrada dedicada (vsg).
 
 ### Tareas Habituales
 
@@ -655,7 +667,8 @@ Visualizar listado o descargar CSV para San Rafael.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vsr > listas actividades > listado csv (resultado).
+- **Pills2:** sin entrada dedicada (vsr).
 
 ### Tareas Habituales
 
@@ -683,7 +696,8 @@ Ver el formulario pre-rellenado con la última preferencia guardada del usuario.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vsr > listas actividades > listado csv.
+- **Pills2:** sin entrada dedicada (vsr).
 
 ### Tareas Habituales
 
@@ -711,7 +725,8 @@ Listar tipos, crear uno nuevo, renombrar o eliminar desde la pantalla de adminis
 ### Donde Entrar
 
 - Gestión de tipos de actividad (frontend/actividades/controller/tipo_activ.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > Configuración > gestión Tipos actividades.
+- **Pills2:** ADMIN LOCAL > Gestión tipos de actividad.
 
 ### Tareas Habituales
 
@@ -743,7 +758,8 @@ Pulsar *nuevo* en gestión de tipos y ver el formulario vacío con desplegables.
 ### Donde Entrar
 
 - Gestión de tipos de actividad (frontend/actividades/controller/tipo_activ.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > Configuración > gestión Tipos actividades.
+- **Pills2:** ADMIN LOCAL > Gestión tipos de actividad.
 
 ### Tareas Habituales
 
@@ -771,7 +787,8 @@ Elegir tipo en la lista y abrir formulario con nombre actual para modificar.
 ### Donde Entrar
 
 - Gestión de tipos de actividad (frontend/actividades/controller/tipo_activ.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > Configuración > gestión Tipos actividades.
+- **Pills2:** ADMIN LOCAL > Gestión tipos de actividad.
 
 ### Tareas Habituales
 
@@ -799,7 +816,8 @@ Al cambiar un nivel en el formulario de tipos, actualizar los siguientes despleg
 ### Donde Entrar
 
 - Gestión de tipos de actividad (frontend/actividades/controller/tipo_activ.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > Configuración > gestión Tipos actividades.
+- **Pills2:** ADMIN LOCAL > Gestión tipos de actividad.
 
 ### Tareas Habituales
 

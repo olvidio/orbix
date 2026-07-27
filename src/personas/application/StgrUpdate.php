@@ -64,7 +64,9 @@ final class StgrUpdate
             return _("No se encuentra la persona");
         }
 
-        $oPersona->setNivel_stgr(is_int($nivel_stgr) ? $nivel_stgr : (int)$nivel_stgr);
+        // Desplegable con blanco: ''/0 → null (no hay nivel 0).
+        $nivel = is_int($nivel_stgr) ? $nivel_stgr : (int)$nivel_stgr;
+        $oPersona->setNivel_stgr($nivel ?: null);
         if ($this->guardarPersona($repository, $obj_pau, $oPersona) === false) {
             $err = _("hay un error, no se ha guardado");
             $detalle = $repository->getErrorTxt();

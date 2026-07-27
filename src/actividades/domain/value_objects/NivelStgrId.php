@@ -118,7 +118,8 @@ final class NivelStgrId
 
 public static function fromNullableInt(?int $value): ?self
 {
-    if ($value === null) {
+    // 0 no es un nivel válido (p. ej. desplegable en blanco → inputInt → 0).
+    if ($value === null || $value === 0) {
         return null;
     }
     return new self($value);

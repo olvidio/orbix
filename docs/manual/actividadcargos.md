@@ -23,7 +23,7 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso vía dossiers 3102/1302; actividad: buscador p. ej. **Legacy:** vsm > ca > buscar ca · **Pills2:** ACTIVIDADES > Buscar actividad > ca n; persona: ficha de persona).
 
 ### Tareas Habituales
 
@@ -72,7 +72,7 @@ Guardar cambios en un cargo existente: tipo de cargo, flag AGD, observaciones y,
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (subflujo del formulario de cargo, accesible desde dossiers 3102/1302).
 
 ### Tareas Habituales
 
@@ -111,7 +111,7 @@ Asignar o editar el cargo de una persona en una actividad: el sistema carga desp
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (fragmento AJAX del dossier 3102; entrada habitual vía ficha de actividad).
 
 ### Tareas Habituales
 
@@ -147,7 +147,7 @@ Gestionar los cargos de una persona en distintas actividades: el sistema carga e
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (fragmento AJAX del dossier 1302; entrada habitual vía ficha de persona).
 
 ### Tareas Habituales
 

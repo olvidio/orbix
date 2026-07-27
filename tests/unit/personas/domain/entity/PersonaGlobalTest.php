@@ -361,4 +361,17 @@ class PersonaGlobalTest extends myTest
         $this->assertEquals('Dnus. Dr. Test value nx1 Test value nx2 Test value', $personaGlobal->getTituloNombre());
         $this->assertEquals('?', $personaGlobal->getCentro_o_dl());
     }
+
+    public function test_toArrayForDatabase_incluye_publicado_para_como_json(): void
+    {
+        $this->PersonaGlobal->setId_tabla('n');
+        $this->PersonaGlobal->setApellido1('García');
+        $this->PersonaGlobal->setSituacion('A');
+        $this->PersonaGlobal->setPublicado_para(['dlp' => null]);
+
+        $db = $this->PersonaGlobal->toArrayForDatabase();
+
+        $this->assertArrayHasKey('publicado_para', $db);
+        $this->assertSame('{"dlp":null}', $db['publicado_para']);
+    }
 }

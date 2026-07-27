@@ -469,6 +469,55 @@ function renderScreenList(array $screenIds, array $screens): array
 }
 
 /**
+ * Propaga la seccion «Ruta de menú» del flujo (o de pantallas de entrada).
+ *
+ * @param list<string> $entryScreens
+ * @param array<string, array<string, mixed>> $screens
+ * @return list<string>
+ */
+function renderMenuRouteLines(string $flowBody, array $entryScreens, array $screens): array
+{
+    $section = extractMarkdownSection($flowBody, 'Ruta de menú');
+    if ($section === '') {
+        $section = extractMarkdownSection($flowBody, 'Ruta de menu');
+    }
+
+    if ($section === '') {
+        foreach ($entryScreens as $screenId) {
+            $screenBody = (string)($screens[$screenId]['body'] ?? '');
+            if ($screenBody === '') {
+                continue;
+            }
+            $section = extractMarkdownSection($screenBody, 'Ruta de menú');
+            if ($section === '') {
+                $section = extractMarkdownSection($screenBody, 'Ruta de menu');
+            }
+            if ($section !== '') {
+                break;
+            }
+        }
+    }
+
+    if ($section === '') {
+        return ['- Ruta de menu: pendiente de documentar.'];
+    }
+
+    $lines = [];
+    foreach (preg_split('/\R/', $section) ?: [] as $line) {
+        $line = trim($line);
+        if ($line === '') {
+            continue;
+        }
+        if (!str_starts_with($line, '-')) {
+            $line = '- ' . $line;
+        }
+        $lines[] = $line;
+    }
+
+    return $lines === [] ? ['- Ruta de menu: pendiente de documentar.'] : $lines;
+}
+
+/**
  * @param array<string, array<string, mixed>> $flows
  * @param array<string, array<string, mixed>> $screens
  * @param array<string, array<string, mixed>> $capabilities
@@ -512,7 +561,7 @@ function renderManual(string $module, array $flows, array $screens, array $capab
         $lines[] = '### Donde Entrar';
         $lines[] = '';
         array_push($lines, ...renderScreenList($entryScreens, $screens));
-        $lines[] = '- Ruta de menu: pendiente de documentar.';
+        array_push($lines, ...renderMenuRouteLines($flowBody, $entryScreens, $screens));
         $lines[] = '';
         $lines[] = '### Tareas Habituales';
         $lines[] = '';

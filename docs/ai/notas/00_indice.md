@@ -4,7 +4,7 @@ subtipo: "indice"
 modulo: "notas"
 flujos: 31
 pantallas: 26
-endpoints: 33
+endpoints: 36
 estado_revision: "generado"
 ---
 

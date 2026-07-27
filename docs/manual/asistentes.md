@@ -22,7 +22,8 @@ Identificar personas sin ca/crt en el curso.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vsm/vest/dagd/dre > pendientes según `sactividad` y `tipo_personas`
+- **Pills2:** ACTIVIDADES > Listados > Listado de personas sin ca/crt
 
 ### Tareas Habituales
 
@@ -52,7 +53,7 @@ Alta, edición, eliminación y movimiento de asistencia a actividades.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
 
@@ -96,7 +97,7 @@ Mover asistente de una actividad a otra del mismo tipo.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
 
@@ -126,7 +127,7 @@ Asignar plaza común a varios asistentes seleccionados.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
 
@@ -158,7 +159,7 @@ Gestionar asistencias en dossier 1301 (persona).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
 
@@ -191,7 +192,7 @@ Gestionar asistente en dossier 3101 (actividad).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
 
@@ -223,7 +224,8 @@ Ver actividades asistidas agrupadas por centro.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** Destino del submit de que_ctr_lista (`lista=list_activ`)
+- **Pills2:** ACTIVIDADES > Listados > Listado de asistentes ca/crt por ctr
 
 ### Tareas Habituales
 
@@ -253,7 +255,7 @@ Listado conjunto de plazas en varias actividades.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
 
@@ -283,7 +285,7 @@ Consultar listado de asistentes de una actividad.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
 
@@ -313,7 +315,8 @@ Ver estudios matriculados por centro.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest/dagd > estudios x ctr
+- **Pills2:** ACTIVIDADES > Listados > Mejores ca para n/agd
 
 ### Tareas Habituales
 
@@ -343,7 +346,8 @@ Elegir centro para informe de última asistencia.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vsg > crt/cv > informes de seguimiento
+- **Pills2:** vsg > crt/cv > s que no han ido / corresponde ir
 
 ### Tareas Habituales
 
@@ -373,7 +377,8 @@ Informe de personas s sin asistencia reciente.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** Destino del submit de lista_ultim_que_ctr
+- **Pills2:** vsg > crt/cv > informes de seguimiento
 
 ### Tareas Habituales
 
@@ -403,7 +408,8 @@ Filtrar por centro y periodo antes de listados por centros.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** Varias entradas según `lista`/`sactividad` (vsm/vest/dagd > crt/ca/cv > list por ctr; dre > personas > pendientes)
+- **Pills2:** ACTIVIDADES > Listados > Listado de asistentes ca/crt por ctr, Mejores ca para n/agd, Listado de personas sin ca/crt
 
 ### Tareas Habituales
 
@@ -436,7 +442,7 @@ Ver peticiones de plaza y mover asistente a actividad preferida.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
 

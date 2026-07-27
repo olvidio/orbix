@@ -25,7 +25,7 @@ Selecciona plantilla (`lista_templates`) e importa al esquema activo (destructiv
 ## Ruta de menú
 
 - **Legacy:** sistema > menus > importar
-- **Pills2:** ADMIN LOCAL > Importar menús
+- **Pills2:** sistema > menus > importar · ADMIN LOCAL > Importar menús · ADMIN GLOBAL > menus > importar
 
 ## Manual De Usuario
 

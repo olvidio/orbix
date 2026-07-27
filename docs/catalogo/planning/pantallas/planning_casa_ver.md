@@ -28,6 +28,12 @@ Cuadrícula de actividades por casa en el periodo elegido. Se carga por AJAX des
 
 - `/src/planning/planning_casa_ver_data`
 
+## Casos particulares
+
+- Con `propuesta_calendario` truthy, clics de nueva/cambiar actividad pasan `mod=1`/`nueva=1`; la API de datos no recibe el flag.
+- `modelo≠2` y periodo ≥2 meses → layout a doble columna.
+- Exportar / leyenda de colores.
+
 ## Acciones
 
 - Exportar calendario

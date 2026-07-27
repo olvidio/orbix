@@ -23,7 +23,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Tarifa Tipo Actividad (frontend/actividadtarifas/controller/tarifa_tipo_actividad.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Tarifas > tarifa <-> tipo de actividad; dre/Calendario/exterior > Tarifas > tarifa <-> tipo actividad.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifa-tipo actividad.
 
 ### Tareas Habituales
 
@@ -86,7 +87,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Tarifa Ubi (frontend/actividadtarifas/controller/tarifa_ubi.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Tarifas > tarifas por casa y año; Calendario/dre/exterior > Tarifas > tarifas por casa y año.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifas por casa y año.
 
 ### Tareas Habituales
 
@@ -166,7 +168,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Tarifa (frontend/actividadtarifas/controller/tarifa.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Tarifas > definir tarifa; dre/Calendario/exterior > Tarifas > definir tarifa.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Definir tarifa.
 
 ### Tareas Habituales
 

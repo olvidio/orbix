@@ -1,7 +1,7 @@
 ---
 tipo: "manual_usuario"
 modulo: "personas"
-flujos: 7
+flujos: 8
 estado_revision: "generado"
 ---
 
@@ -22,7 +22,7 @@ Consultar datos básicos y acceder a la ficha completa o dossiers sin pasar por 
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
@@ -51,7 +51,7 @@ Guardar cambios en la ficha o eliminar un registro de la propia delegación.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
@@ -73,6 +73,41 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `personas.persona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/personas/flujos/persona.md`
 
+## Publicar persona hacia otra DL
+
+### Para Que Sirve
+
+Compartir temporalmente una persona con otra delegación sin trasladarla.
+
+### Donde Entrar
+
+- Pendiente de revisar.
+- sin entrada de menú en el índice.
+
+### Tareas Habituales
+
+Pendiente de revisar. No se han inferido tareas desde el flujo.
+
+### Errores O Avisos Frecuentes
+
+- `No se encuentra la persona`
+- `No se puede determinar el esquema de la persona`
+- `Datos de persona no válidos`
+- `Debe indicar al menos una delegación destino`
+- `No se puede publicar hacia la propia delegación`
+- `No se ha podido publicar la persona`
+- `FE: Debe elegir una delegación (alert si dl vacío)`
+
+### Permisos
+
+- Sin control en el caso de uso. El botón «publicar» del listado solo aparece con
+- Sin `perm_*` en el caso de uso. Acceso FE: listado con permiso oficina `est`/`sm`/`agd`.
+
+### Referencias Internas
+
+- Flujo: `personas.persona_publicar.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/personas/flujos/persona_publicar.md`
+
 ## Abrir ficha de persona
 
 ### Para Que Sirve
@@ -82,7 +117,7 @@ Crear una persona nueva o editar la ficha existente con los campos del colectivo
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
@@ -112,7 +147,8 @@ Encontrar personas del colectivo indicado por el menú, revisar resultados y lan
 
 - Buscar personas (frontend/personas/controller/personas_que.php)
 - Resultado búsqueda personas (frontend/personas/controller/personas_select.php)
-- Ruta de menu: pendiente de documentar.
+- Herencia de `personas_que` — ver variantes vsm/PERSONAS en `_referencia_menus.md`
+- (p. ej. `vsm > buscar n > n r/dl` / `PERSONAS > Numerarios > Buscar n de la r/dl`).
 
 ### Tareas Habituales
 
@@ -142,7 +178,7 @@ Actualizar el nivel STGR de una persona del listado.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
@@ -172,7 +208,7 @@ Ver el nivel actual y las opciones disponibles antes de guardar el cambio.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
@@ -201,7 +237,7 @@ Mover una persona a otro centro o delegación, documentando fechas y situación.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice.
 
 ### Tareas Habituales
 

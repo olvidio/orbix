@@ -23,7 +23,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Nuevo Calendario > Previsión económica
+- **Pills2:** ACTIVIDADES > Estadísticas económicas > Previsión económica
 
 ### Tareas Habituales
 
@@ -54,7 +55,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** exterior > casas > lista actividades
+- **Pills2:** exterior > casas > lista actividades
 
 ### Tareas Habituales
 
@@ -92,7 +94,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** exterior > casas > gastos casa
+- **Pills2:** CASAS Y CTR > Gestión casas > gastos casas
 
 ### Tareas Habituales
 
@@ -134,7 +137,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Casa (frontend/casas/controller/casa.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** exterior > casas > Gestión económica
+- **Pills2:** CASAS Y CTR > Gestión casas > Gestión económica
 
 ### Tareas Habituales
 
@@ -189,7 +193,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** exterior > casas > Gestión económica
+- **Pills2:** CASAS Y CTR > Gestión casas > Gestión económica
 
 ### Tareas Habituales
 
@@ -226,7 +231,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Gestión casas > estadística  por casas
+- **Pills2:** CASAS Y CTR > Gestión casas > estadística  por casas
 
 ### Tareas Habituales
 
@@ -260,7 +266,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Grupo (frontend/casas/controller/grupo.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Gestión casas > grupos
+- **Pills2:** CASAS Y CTR > Gestión casas > grupos
 
 ### Tareas Habituales
 
@@ -322,7 +329,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Nuevo Calendario > previsión asistentes
+- **Pills2:** Calendario > Nuevo calendario > previsión asistentes
 
 ### Tareas Habituales
 
@@ -357,7 +365,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Nuevo Calendario > previsión asistentes
+- **Pills2:** Calendario > Nuevo calendario > previsión asistentes
 
 ### Tareas Habituales
 

@@ -22,7 +22,7 @@ Si los datos de listas cambiaron después de la fecha mostrada, refrescar la cop
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acción embebida en `sincro_index`)
 
 ### Tareas Habituales
 
@@ -50,7 +50,7 @@ Cuando no hay coincidencia Orbix, crear una ficha nueva y vincularla automática
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -80,7 +80,7 @@ Cerrar la ficha Aquinate cuando la persona ya no está en la BDU.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -108,7 +108,7 @@ Crear en bloque todas las fichas pendientes del punto 4 sin revisar una a una.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -136,7 +136,7 @@ Romper el vínculo incorrecto para poder re-unir o crear la ficha después.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -165,7 +165,8 @@ Al abrir la pantalla de sincronización, el sistema calcula los contadores de si
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vsm/dagd/vsg/dre > … > Actualizar datos desde BDU (según `tipo`)
+- **Pills2:** PERSONAS > Numerarios / Agregados / Supernumerarios > Actualizar datos desde BDU
 
 ### Tareas Habituales
 
@@ -199,7 +200,7 @@ Actualizar en Aquinate los datos de todas las personas ya vinculadas a la BDU en
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (acción embebida en `sincro_index`)
 
 ### Tareas Habituales
 
@@ -227,7 +228,7 @@ Traer la ficha a la DL actual; la fecha de traslado queda en hoy (aviso en panta
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -255,7 +256,7 @@ Mover la ficha Aquinate a la delegación donde está su correspondencia en lista
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -284,7 +285,7 @@ Confirmar la correspondencia cuando el sistema sugiere candidatos (puntos 4 y 9)
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -312,7 +313,7 @@ Revisar fichas Aquinate cuya correspondencia BDU ya no existe.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -340,7 +341,7 @@ Revisar personas BDU con vínculo pero sin ficha activa en esta DL.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -368,7 +369,7 @@ Revisar una a una las personas de la BDU no unidas, viendo posibles coincidencia
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -396,7 +397,7 @@ Revisar personas Aquinate activas sin correspondencia BDU y unir si hay candidat
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -424,7 +425,7 @@ Ver quién está activo aquí pero su correspondencia BDU pertenece a otra DL.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -452,7 +453,7 @@ Identificar quién debe trasladarse a esta DL desde otra delegación.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 

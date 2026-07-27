@@ -27,10 +27,11 @@ Visualizar y exportar el planning de casas en el periodo elegido.
 
 ### Ver calendario
 
-1. Confirmar casas y periodo en pasos anteriores.
+1. Confirmar casas y periodo en pasos anteriores (`cdc_sel=9` → CSV `sSeleccionados`).
 2. `planning_casa_ver` envía `cdc_sel`, fechas ISO, `sin_activ` y lista manual si aplica.
 3. Renderiza actividades y periodos de ocupación por ubi.
-4. Opcional: exportar o abrir leyenda.
+4. Con `propuesta_calendario` truthy, el renderer habilita nueva/modificar actividad (`mod=1`/`nueva=1`); la API no recibe el flag (solo UI).
+5. Opcional: exportar o abrir leyenda. Periodo ≥2 meses y `modelo≠2` → doble columna.
 
 ## Endpoints Del Flujo
 

@@ -23,7 +23,11 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -53,7 +57,11 @@ El usuario quita un centro de la lista de encargados de una actividad.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -88,7 +96,11 @@ El usuario quita un centro de la lista de encargados de una actividad.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -122,7 +134,11 @@ El usuario quita un centro de la lista de encargados de una actividad.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -156,7 +172,11 @@ El usuario quita un centro de la lista de encargados de una actividad.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -187,7 +207,11 @@ El usuario quita un centro de la lista de encargados de una actividad.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -217,7 +241,11 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de a
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 

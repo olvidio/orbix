@@ -28,4 +28,6 @@ Ficha menú en gestor.
 ## Ruta de menú
 
 - **Legacy:** sistema > menus > seleccionar
-- **Pills2:** ADMIN GLOBAL > menus > seleccionar
+- **Pills2:** sistema > menus > seleccionar · ADMIN GLOBAL > menus > seleccionar
+
+(Acción de ficha del gestor; no tiene menú propio.)

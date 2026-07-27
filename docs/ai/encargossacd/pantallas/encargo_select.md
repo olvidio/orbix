@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Listado de encargos.
+Listado/búsqueda de encargos con acciones ver, modificar, horario y borrar. Los datos vienen de `encargo_select_data`; el controller arma la `Lista` frontend.
 
 ## Uso En Ayuda
 

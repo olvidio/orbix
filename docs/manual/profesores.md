@@ -22,7 +22,8 @@ Revisar congresos registrados por profesor (tipo, lugar, fechas, organizador).
 ### Donde Entrar
 
 - Asistencia a congresos (frontend/profesores/controller/congresos.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > actas... > asitencia a congresos
+- **Pills2:** sin entrada en el índice
 
 ### Tareas Habituales
 
@@ -53,7 +54,8 @@ Revisar qué docencia consta registrada por profesor, curso, asignatura y acta.
 ### Donde Entrar
 
 - Ver docencia (frontend/profesores/controller/docencia.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > actas... > ver docencia
+- **Pills2:** sin entrada en el índice
 
 ### Tareas Habituales
 
@@ -84,7 +86,7 @@ Consultar (e imprimir o modificar con permiso) la ficha STGR de un profesor: nom
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (desde búsqueda de personas / `personas_select`)
 
 ### Tareas Habituales
 
@@ -125,7 +127,8 @@ Ver quiénes integran el claustro vigente, opcionalmente filtrado por delegació
 ### Donde Entrar
 
 - Claustro por departamentos (frontend/profesores/controller/lista_por_departamentos.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > buscar persona > claustro; stgr > personas > claustro
+- **Pills2:** ESTUDIOS > Datos e informes > Claustro
 
 ### Tareas Habituales
 
@@ -157,7 +160,7 @@ Obtener la lista de profesores para la asignatura seleccionada sin recargar la p
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (fragmento AJAX de `profesor_asignatura_que`)
 
 ### Tareas Habituales
 
@@ -189,7 +192,8 @@ Elegir asignatura y ver candidatos (departamento + ampliación) con datos de con
 ### Donde Entrar
 
 - Profesor para asignatura (frontend/profesores/controller/profesor_asignatura_que.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vest > buscar persona > profesor para asignatura; stgr > personas > profesor para asignatura
+- **Pills2:** ESTUDIOS > Preparación planes estudio > Profesor para asignatura
 
 ### Tareas Habituales
 

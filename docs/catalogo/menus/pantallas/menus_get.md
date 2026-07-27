@@ -22,10 +22,15 @@ Fragmento AJAX: tabla de menús del grupo o formulario alta/edición (metamenu, 
 
 - Subtipo: `fragmento_ajax`
 
+## Casos particulares
+
+- `mode=list` (default): listado anidado por profundidad de `orden[]`; placeholder `???BORRADO???` si falta metamenu.
+- `mode=edit` / `id_menu` / `nuevo=1`: ficha; alta sin botones eliminar/mover/copiar.
+- Mutaciones vía forms: `menu_guardar` / `menu_eliminar` / `menu_mover` / `menu_copiar`.
+
 ## Ruta de menú
 
-- **Legacy:** sin entrada de menú en el índice
-- **Pills2:** sin entrada de menú en el índice
+sin entrada de menú en el índice
 
 ## Manual De Usuario
 

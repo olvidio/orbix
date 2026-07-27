@@ -10,17 +10,43 @@ entrada: ["post.id_activ:integer", "post.id_pau:integer", "post.sel:array"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["No se ha encontrado a la persona con id: %s", "está de repaso", "no se ha hecho nada con %s no tiene asignado ca", "no se ha hecho nada com %s. ya tiene el plan de estudios confirmado", "hay un error, no se ha eliminado", "error al guardar la matrícula", "no se ha hecho nada con %s, tiene asignado más de un ca", "no se ha hecho nada"]
 frontend_referencias: ["frontend/actividadestudios/controller/matricular.php"]
 casos_uso: ["src\\actividadestudios\\application\\MatriculaAutomatica"]
 tags: ["actividadestudios", "matricula", "automatica"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Matricula Automatica
 
-Matricula automaticamente a una o varias personas en las asignaturas correspondientes a su plan de estudios vigente del curso actual. - Si se recibe `id_pau`/`sel`, trabaja sobre una persona concreta (y opcionalmente una actividad via `id_activ`). - Si no, recorre a todas las personas en situacion `A` (activos) de la dl. Para cada persona: 1. Determina la actividad de estudios activa (`ca-n`, `cv-agd`). 2. Borra las matriculas previas (si el plan no esta confirmado). 3. Recalcula las asignaturas matriculables, respetando las aprobadas y los topes de las opcionales por bienio/cuadrienio. Sustituye a `apps/actividadestudios/controller/matricular.php`.
+Matricula automáticamente a una o varias personas en las asignaturas de su plan de estudios del
+curso actual. Sustituye a `apps/actividadestudios/controller/matricular.php`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Objetivo funcional
+
+Recorre alumnos (uno o masivo DL), determina el CA de estudios del curso, y si el plan no está
+confirmado borra matrículas previas y recalcula las matriculables (aprobadas + topes de opcionales).
+
+**Casos particulares**
+
+- **Ramas de entrada:**
+  - Con `sel[]`: toma el primer token; `id_nom = strtok(sel, '#')` (no usa `id_activ` del POST).
+  - Sin `sel`, con `id_pau` (+ opcional `id_activ`): persona concreta; si hay `id_activ`, fuerza esa
+    asistencia (Dl o Out).
+  - Sin `sel` ni `id_pau`: masivo DL, `situacion = 'A'`.
+- **Excluye nivel R:** filtro `nivel_stgr != R` (repaso); persona concreta en repaso → mensaje
+  `está de repaso`.
+- **Switch `count(asistencias)`:**
+  - `0`: no hace nada (`no tiene asignado ca`).
+  - `1`: si `est_ok` (plan confirmado) → no toca; si no, borra matrículas del CA, matricula
+    asignaturas del CA (`tipo` null o no `'x'`), salta aprobadas.
+  - `default` (>1): no hace nada (`tiene asignado más de un ca`).
+- **Opcionales `id_asignatura > 3000`:** bloque = 2º dígito del id; topes por notas en niveles del
+  bloque (1→max 3, 2→max 5, 3→max 8); si ya está al tope, skip; bloque desconocido → skip.
+- **Curso:** fechas de curso STGR según mes y `mesFinStgr` de config; actividades status actual,
+  tipos `sfsv(122)|(222)|(332)`.
 
 ## Endpoint
 
@@ -33,17 +59,44 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `integer` | application | No | application |
-| `id_pau` | `integer` | application | No | application |
-| `sel` | `array` | application | No | application |
+| `sel` | `array` | application | No | Primer token → `id_nom` (antes de `#`) |
+| `id_pau` | `integer` | application | No | Persona si no hay `sel` |
+| `id_activ` | `integer` | application | No | Solo sin `sel`; fuerza esa actividad |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+El controller pasa `$_POST` completo al caso de uso.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar` (data serializada como string JSON; el front hace segundo `JSON.parse`).
+- Forma: `standard_envelope_string_data`.
+- El UC devuelve `{success, msg}`. El controller:
+  - **Éxito** (`success` true): `success: true`, `data` = JSON string de `{ "msg": "…" }`
+    (no `"ok"`).
+  - **Error / sin éxito:** `success: false`, `mensaje` = texto acumulado, `data: "ok"`.
+- Si el UC no acumula mensajes: `msg = no se ha hecho nada`.
+
+## Efectos colaterales
+
+- Puede eliminar matrículas previas del CA y crear nuevas (obligatorias y opcionales bajo tope).
+- No modifica dossiers.
+
+## Errores conocidos
+
+- `No se ha encontrado a la persona con id: %s`
+- `está de repaso`
+- `no se ha hecho nada con %s no tiene asignado ca`
+- `no se ha hecho nada com %s. ya tiene el plan de estudios confirmado` (texto literal del UC)
+- `hay un error, no se ha eliminado`
+- `error al guardar la matrícula`
+- `no se ha hecho nada con %s, tiene asignado más de un ca`
+- `no se ha hecho nada`
+
+Mensaje de éxito parcial por persona: `%s se ha matriculado de %s asignaturas`.
+
+## Permisos
+
+- Sin control de permisos propio en el caso de uso; la autorización de oficina se resuelve en el
+  frontend (`matricular.php`) y en `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -51,10 +104,4 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-- `frontend/actividadestudios/controller/matricular.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `frontend/actividadestudios/controller/matricular.php` (PostRequest a esta URL).

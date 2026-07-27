@@ -22,7 +22,8 @@ Unir un esquema DL disuelto en otro esquema matriz.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sistema > DB > DB unir esquemas
 
 ### Tareas Habituales
 
@@ -55,7 +56,8 @@ Cargar apps y ejecutar operaciones de tablas globales/esquema.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > Configuración > Tablas de apps
+- **Pills2:** sistema > Configuración > Tablas de apps
 
 ### Tareas Habituales
 
@@ -87,7 +89,8 @@ Importar datos al nuevo esquema desde referencia (paso 3 nuevo esquema).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -120,7 +123,8 @@ Reparar renombre de esquema a medias.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -152,7 +156,8 @@ Crear estructura PostgreSQL de un nuevo esquema DL (paso 2).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -187,7 +192,8 @@ Crear roles PostgreSQL para nuevo esquema (paso 1).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -219,7 +225,8 @@ Recargar desplegable de delegación al cambiar región en formularios DB.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -251,7 +258,8 @@ Cargar desplegables de esquemas/tablas según operación (`op`).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -283,7 +291,8 @@ Eliminar esquema DL y trasladar datos a resto.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > DB > eliminar esquema
+- **Pills2:** sistema > DB > eliminar esquema
 
 ### Tareas Habituales
 
@@ -317,7 +326,8 @@ Revisar y aplicar migraciones SQL del repositorio.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > DB > actualizar DB
+- **Pills2:** sistema > DB > actualizar DB
 
 ### Tareas Habituales
 
@@ -350,7 +360,8 @@ Ejecutar migraciones seleccionadas o hasta prefijo.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -387,7 +398,8 @@ Quitar registro de migración aplicada para poder re-ejecutar.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -421,7 +433,8 @@ Mover tabla de sv a sv-e en todos los esquemas.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > DB > mover tabla a otra DB
+- **Pills2:** sistema > DB > mover tabla a otra DB
 
 ### Tareas Habituales
 
@@ -454,7 +467,8 @@ Renombrar esquema region-dl (cambiar delegación/región).
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > DB > cambiar nombre esquema
+- **Pills2:** sistema > DB > cambiar nombre esquema
 
 ### Tareas Habituales
 
@@ -486,7 +500,8 @@ Comprobar estado del renombre antes/después.
 ### Donde Entrar
 
 - Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 

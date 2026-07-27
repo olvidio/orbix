@@ -30,8 +30,13 @@ planning de la selección o acceder a ficha/dossier.
 
 ## Acciones
 
-- Ver planning → `planning_persona_ver` (una o varias personas)
-- Imprimir / actividades / ficha persona / dossier
+- Ver planning → `planning_persona_ver` (una o varias personas; `sel[]` → `sSeleccionados`)
+- Imprimir (`modelo=2`) / actividades (dossier 1301y1302) / ficha persona / dossier
+
+## Casos particulares
+
+- Repositorio vía `obj_pau` (`getSafe` → `PersonaDl` si inválido); `na` → `id_tabla=p{na}` con `PersonaEx`.
+- `es_sacd` del menú no se usa en este paso.
 
 ## Ruta de menú
 

@@ -22,7 +22,10 @@ Consultar el calendario de actividades por casas (actual o propuesta de calendar
 ### Donde Entrar
 
 - Planning por casas (filtros) (frontend/planning/controller/planning_casa_que.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy (actual):** `dre/Calendario/… > planning > por casas` · `adl > Gestión casas > Planing Casas`
+- **Pills2 (actual):** `ACTIVIDADES > Herramientas de calendario > Planning calendario actual`
+- **Legacy (propuesta):** `adl|Calendario|dre > Nuevo Calendario > nuevo planing`
+- **Pills2 (propuesta):** `ACTIVIDADES > Herramientas de calendario > Planning calendario en estudio`
 
 ### Tareas Habituales
 
@@ -51,7 +54,7 @@ Visualizar y exportar el planning de casas en el periodo elegido.
 
 - Planning por casas (filtros) (frontend/planning/controller/planning_casa_que.php)
 - Selección de casas (planning) (frontend/planning/controller/planning_casa_select.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (subflujo del planning por casas)
 
 ### Tareas Habituales
 
@@ -79,7 +82,8 @@ Ver el planning de un centro o de todos los centros (por colectivo n/agd/s) en u
 ### Donde Entrar
 
 - Planning por centro (filtros) (frontend/planning/controller/planning_ctr_que.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** `dre/Calendario/… > planning > por centro` · `vsr/scdl > planning > por ctr`
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning por ctr`
 
 ### Tareas Habituales
 
@@ -109,7 +113,12 @@ Encontrar personas del colectivo del menú y abrir su calendario de actividades.
 ### Donde Entrar
 
 - Planning por persona (filtros) (frontend/planning/controller/planning_persona_que.php)
-- Ruta de menu: pendiente de documentar.
+- | Params | Legacy | Pills2 |
+- |--------|--------|--------|
+- | `obj_pau=PersonaDl` | `… > planning > persona r/dl` · `scdl > persona dl` | `ACTIVIDADES > … > Plannig por personas` |
+- | `PersonaEx&na=a|n` | `scdl > planning > agd/num de paso` | igual |
+- | `PersonaSacd` | `dre > planning > sacd r/dl` | — |
+- | `PersonaSacd&es_sacd=1` | — | `ACTIVIDADES > … > Plannig por personas sacd` |
 
 ### Tareas Habituales
 
@@ -138,7 +147,7 @@ Visualizar y exportar el planning individual o múltiple en el periodo elegido.
 
 - Planning por persona (filtros) (frontend/planning/controller/planning_persona_que.php)
 - Listado de personas (planning) (frontend/planning/controller/planning_persona_select.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (subflujo del planning por persona)
 
 ### Tareas Habituales
 
@@ -166,7 +175,9 @@ Consultar el calendario de actividades SACD agrupadas por zona.
 ### Donde Entrar
 
 - Planning por zonas SACD (filtros) (frontend/planning/controller/planning_zones_que.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** `dre > planning > por zonas` · `vsr > planning > por zonas` · `exterior > sacd > Misas > Planning zonas`
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > por zonas`
+- Propuesta: `dre > propuestas > planing zonas`
 
 ### Tareas Habituales
 
@@ -191,12 +202,12 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 
 ### Para Que Sirve
 
-Visualizar y exportar el planning por zonas en el trimestre elegido.
+Visualizar y exportar el planning por zonas en el trimestre/mes elegido (calendario actual o propuesta).
 
 ### Donde Entrar
 
 - Planning por zonas SACD (filtros) (frontend/planning/controller/planning_zones_que.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (subflujo del planning por zonas)
 
 ### Tareas Habituales
 
