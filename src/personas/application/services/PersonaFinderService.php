@@ -92,6 +92,31 @@ class PersonaFinderService
     }
 
     /**
+     * Como {@see findPersonaEnGlobal()}, pero si no hay situación 'A' acepta cualquier
+     * situación (p. ej. tessera histórica de alguien ya no activo).
+     *
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
+     * @param-out array<string, array<int|string, string>> $problemasRegionStgr
+     */
+    public function findPersonaEnGlobalIncluyendoNoActivos(
+        int $id_nom,
+        array &$problemasRegionStgr = [],
+        ?int $id_schema = null,
+    ): PersonaDl|PersonaPub|null {
+        $persona = $this->findPersonaEnGlobal($id_nom, $problemasRegionStgr, $id_schema);
+        if ($persona !== null) {
+            return $persona;
+        }
+
+        $persona = $this->findFirstPersonaDl(['id_nom' => $id_nom]);
+        if ($persona !== null) {
+            return $persona;
+        }
+
+        return $this->personaAllRepository->findByIdNomParaLookup($id_nom, $id_schema);
+    }
+
+    /**
      * Búsqueda de persona para listados: global activa y, si falla por dl sin región stgr, pub.
      *
      * @param array<string, array<int|string, string>> $problemasRegionStgr

@@ -83,6 +83,52 @@ final class PersonaFinderServiceLookupTest extends TestCase
         $this->assertNull($service->findPersonaEnGlobal(10));
     }
 
+    public function test_incluyendo_no_activos_devuelve_local_sin_situacion_a(): void
+    {
+        $local = $this->createMock(PersonaDl::class);
+
+        $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
+        $dlRepo->method('getPersonas')->willReturnCallback(
+            static function (array $aWhere) use ($local): array {
+                if (($aWhere['situacion'] ?? null) === 'A') {
+                    return [];
+                }
+
+                return [$local];
+            }
+        );
+
+        $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
+        $factory->method('create')->willReturn($dlRepo);
+
+        $personaAll = $this->createMock(PersonaAllRepositoryInterface::class);
+        $personaAll->method('findByIdNomParaLookup')->willReturn(null);
+
+        $service = $this->buildService($factory, $personaAll);
+
+        $this->assertSame($local, $service->findPersonaEnGlobalIncluyendoNoActivos(10));
+    }
+
+    public function test_incluyendo_no_activos_acepta_global_no_activo(): void
+    {
+        $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
+        $dlRepo->method('getPersonas')->willReturn([]);
+
+        $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
+        $factory->method('create')->willReturn($dlRepo);
+
+        $pub = $this->createMock(PersonaPub::class);
+        $pub->method('getSituacion')->willReturn('B');
+
+        $personaAll = $this->createMock(PersonaAllRepositoryInterface::class);
+        $personaAll->method('findByIdNomParaLookup')->willReturn($pub);
+
+        $service = $this->buildService($factory, $personaAll);
+
+        $this->assertNull($service->findPersonaEnGlobal(10));
+        $this->assertSame($pub, $service->findPersonaEnGlobalIncluyendoNoActivos(10));
+    }
+
     public function test_find_persona_en_global_pasa_id_schema_si_se_indica(): void
     {
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);

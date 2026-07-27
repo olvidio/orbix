@@ -9,6 +9,8 @@ use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\entity\Persona;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaPub;
 use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
@@ -197,11 +199,13 @@ final class Tesera
      *   (`-1` si pendiente), `fecha` (string `'d-m-Y'` o `''`), `bAprobada`
      *   (`'t'|'f'`). Solo entran asignaturas del plan vigente.
      *
+     * @param PersonaDl|PersonaPub|null $oPersona Persona ya resuelta (p. ej. incluyendo no activos);
+     *        si es null se busca solo situación 'A' vía {@see Persona::findPersonaEnGlobal()}.
      * @return array<string, mixed>
      */
-    public function datosParaVistaTesera(int $idNom): array
+    public function datosParaVistaTesera(int $idNom, PersonaDl|PersonaPub|null $oPersona = null): array
     {
-        $oPersona = Persona::findPersonaEnGlobal($idNom);
+        $oPersona ??= Persona::findPersonaEnGlobal($idNom);
         if ($oPersona === null) {
             throw new \RuntimeException(sprintf('Persona no encontrada: %d', $idNom));
         }
