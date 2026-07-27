@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "shared"
 flujos: 6
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - shared
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Cargar locales/idiomas
 
@@ -21,13 +21,13 @@ Obtener la lista de idiomas activos para un desplegable en pantallas que lo nece
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - sin entrada de menú en el índice (endpoint embebido; las pantallas host sí tienen menú propio en
 - usuarios/certificados).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -50,12 +50,13 @@ Dar de alta, modificar o eliminar un registro en cualquier tabla mantenida con e
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Mantenimiento genérico de tablas (formulario) (frontend/shared/controller/tablaDB_formulario_ver.php)
+- Mantenimiento genérico de tablas (listado) (frontend/shared/controller/tablaDB_lista_ver.php)
 - sin entrada directa; mutación desde listado/formulario cuya ruta depende de `clase_info`.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -84,7 +85,7 @@ Filtrar registros antes de mostrar la tabla en mantenimientos que definen criter
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -109,12 +110,12 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Mantenimiento genérico de tablas (formulario) (frontend/shared/controller/tablaDB_formulario_ver.php)
 - sin entrada de menú en el índice (subflujo del formulario).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -137,12 +138,12 @@ Crear o modificar un registro en el mantenimiento genérico de tablas.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Mantenimiento genérico de tablas (formulario) (frontend/shared/controller/tablaDB_formulario_ver.php)
 - sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -172,7 +173,7 @@ Consultar y mantener registros de tablas de configuración enlazadas desde el me
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -190,9 +191,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `shared.tablaDB_lista.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/shared/flujos/tablaDB_lista.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/shared/flujos/`.

@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "dbextern"
 flujos: 16
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - dbextern
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Refrescar copia BDU
 
@@ -21,12 +21,12 @@ Si los datos de listas cambiaron después de la fecha mostrada, refrescar la cop
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Sincronizar con los datos de Listas (frontend/dbextern/controller/sincro_index.php)
 - sin entrada de menú en el índice (acción embebida en `sincro_index`)
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -49,12 +49,12 @@ Cuando no hay coincidencia Orbix, crear una ficha nueva y vincularla automática
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Personas BDU no unidas (frontend/dbextern/controller/ver_listas.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -79,12 +79,12 @@ Cerrar la ficha Aquinate cuando la persona ya no está en la BDU.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Aquinate con BDU desaparecida (frontend/dbextern/controller/ver_desaparecidos_de_listas.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -107,12 +107,12 @@ Crear en bloque todas las fichas pendientes del punto 4 sin revisar una a una.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Personas BDU no unidas (frontend/dbextern/controller/ver_listas.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -135,12 +135,12 @@ Romper el vínculo incorrecto para poder re-unir o crear la ficha después.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- BDU desaparecidas en Aquinate (frontend/dbextern/controller/ver_desaparecidos_de_orbix.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -164,13 +164,13 @@ Al abrir la pantalla de sincronización, el sistema calcula los contadores de si
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Sincronizar con los datos de Listas (frontend/dbextern/controller/sincro_index.php)
 - **Legacy:** vsm/dagd/vsg/dre > … > Actualizar datos desde BDU (según `tipo`)
 - **Pills2:** PERSONAS > Numerarios / Agregados / Supernumerarios > Actualizar datos desde BDU
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -199,12 +199,12 @@ Actualizar en Aquinate los datos de todas las personas ya vinculadas a la BDU en
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Sincronizar con los datos de Listas (frontend/dbextern/controller/sincro_index.php)
 - sin entrada de menú en el índice (acción embebida en `sincro_index`)
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -227,12 +227,12 @@ Traer la ficha a la DL actual; la fecha de traslado queda en hoy (aviso en panta
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Traslados desde otra DL (frontend/dbextern/controller/ver_traslados.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -255,12 +255,12 @@ Mover la ficha Aquinate a la delegación donde está su correspondencia en lista
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Trasladar a otra DL (frontend/dbextern/controller/ver_orbix_otradl.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -284,12 +284,13 @@ Confirmar la correspondencia cuando el sistema sugiere candidatos (puntos 4 y 9)
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Personas BDU no unidas (frontend/dbextern/controller/ver_listas.php)
+- Personas Aquinate sin BDU (frontend/dbextern/controller/ver_orbix.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -312,12 +313,12 @@ Revisar fichas Aquinate cuya correspondencia BDU ya no existe.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Aquinate con BDU desaparecida (frontend/dbextern/controller/ver_desaparecidos_de_listas.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -340,12 +341,12 @@ Revisar personas BDU con vínculo pero sin ficha activa en esta DL.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- BDU desaparecidas en Aquinate (frontend/dbextern/controller/ver_desaparecidos_de_orbix.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -368,12 +369,12 @@ Revisar una a una las personas de la BDU no unidas, viendo posibles coincidencia
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Personas BDU no unidas (frontend/dbextern/controller/ver_listas.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -396,12 +397,12 @@ Revisar personas Aquinate activas sin correspondencia BDU y unir si hay candidat
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Personas Aquinate sin BDU (frontend/dbextern/controller/ver_orbix.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -424,12 +425,12 @@ Ver quién está activo aquí pero su correspondencia BDU pertenece a otra DL.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Trasladar a otra DL (frontend/dbextern/controller/ver_orbix_otradl.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -452,12 +453,12 @@ Identificar quién debe trasladarse a esta DL desde otra delegación.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Traslados desde otra DL (frontend/dbextern/controller/ver_traslados.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -472,9 +473,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `dbextern.ver_traslados.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/dbextern/flujos/ver_traslados.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/dbextern/flujos/`.

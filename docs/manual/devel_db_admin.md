@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "devel_db_admin"
 flujos: 15
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - devel_db_admin
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Absorber Esquema
 
@@ -21,7 +21,7 @@ Unir un esquema DL disuelto en otro esquema matriz.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Db Absorber Esquema (frontend/devel_db_admin/controller/db_absorber_esquema.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sistema > DB > DB unir esquemas
 
@@ -55,7 +55,7 @@ Cargar apps y ejecutar operaciones de tablas globales/esquema.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Apptables (frontend/devel_db_admin/controller/apptables.php)
 - **Legacy:** sistema > Configuración > Tablas de apps
 - **Pills2:** sistema > Configuración > Tablas de apps
 
@@ -88,7 +88,7 @@ Importar datos al nuevo esquema desde referencia (paso 3 nuevo esquema).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Db Copiar (frontend/devel_db_admin/controller/db_copiar.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -122,7 +122,7 @@ Reparar renombre de esquema a medias.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Db Corregir Renombrar Esquema (frontend/devel_db_admin/controller/db_corregir_renombrar_esquema.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -155,7 +155,7 @@ Crear estructura PostgreSQL de un nuevo esquema DL (paso 2).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Db Crear Esquema (frontend/devel_db_admin/controller/db_crear_esquema.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -191,7 +191,7 @@ Crear roles PostgreSQL para nuevo esquema (paso 1).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Db Crear Usuarios (frontend/devel_db_admin/controller/db_crear_usuarios.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -224,7 +224,9 @@ Recargar desplegable de delegación al cambiar región en formularios DB.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Db Cambiar Nombre Que (frontend/devel_db_admin/controller/db_cambiar_nombre_que.php)
+- Db Crear Esquema Que (frontend/devel_db_admin/controller/db_crear_esquema_que.php)
+- Db Eliminar Esquema Que (frontend/devel_db_admin/controller/db_eliminar_esquema_que.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -257,7 +259,12 @@ Cargar desplegables de esquemas/tablas según operación (`op`).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Apptables (frontend/devel_db_admin/controller/apptables.php)
+- Db Absorber Esquema Que (frontend/devel_db_admin/controller/db_absorber_esquema_que.php)
+- Db Cambiar Nombre Que (frontend/devel_db_admin/controller/db_cambiar_nombre_que.php)
+- Db Crear Esquema Que (frontend/devel_db_admin/controller/db_crear_esquema_que.php)
+- Db Eliminar Esquema Que (frontend/devel_db_admin/controller/db_eliminar_esquema_que.php)
+- Db Mover Que (frontend/devel_db_admin/controller/db_mover_que.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -290,7 +297,7 @@ Eliminar esquema DL y trasladar datos a resto.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Db Eliminar (frontend/devel_db_admin/controller/db_eliminar.php)
 - **Legacy:** sistema > DB > eliminar esquema
 - **Pills2:** sistema > DB > eliminar esquema
 
@@ -325,7 +332,7 @@ Revisar y aplicar migraciones SQL del repositorio.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Migraciones Lista (frontend/devel_db_admin/controller/migraciones_lista.php)
 - **Legacy:** sistema > DB > actualizar DB
 - **Pills2:** sistema > DB > actualizar DB
 
@@ -359,7 +366,8 @@ Ejecutar migraciones seleccionadas o hasta prefijo.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Migraciones Ejecutar (frontend/devel_db_admin/controller/migraciones_ejecutar.php)
+- Migraciones Lista (frontend/devel_db_admin/controller/migraciones_lista.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -397,7 +405,7 @@ Quitar registro de migración aplicada para poder re-ejecutar.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Migraciones Lista (frontend/devel_db_admin/controller/migraciones_lista.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -432,7 +440,7 @@ Mover tabla de sv a sv-e en todos los esquemas.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Db Mover (frontend/devel_db_admin/controller/db_mover.php)
 - **Legacy:** sistema > DB > mover tabla a otra DB
 - **Pills2:** sistema > DB > mover tabla a otra DB
 
@@ -466,7 +474,7 @@ Renombrar esquema region-dl (cambiar delegación/región).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Db Renombrar Esquema (frontend/devel_db_admin/controller/db_renombrar_esquema.php)
 - **Legacy:** sistema > DB > cambiar nombre esquema
 - **Pills2:** sistema > DB > cambiar nombre esquema
 
@@ -499,7 +507,7 @@ Comprobar estado del renombre antes/después.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Db Verificar Renombrar Esquema (frontend/devel_db_admin/controller/db_verificar_renombrar_esquema.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -524,9 +532,8 @@ Comprobar estado del renombre antes/después.
 - Flujo: `devel_db_admin.verificar_renombrar_esquema.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/devel_db_admin/flujos/verificar_renombrar_esquema.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/devel_db_admin/flujos/`.

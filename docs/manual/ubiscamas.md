@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "ubiscamas"
 flujos: 5
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - ubiscamas
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Actividad Habitaciones
 
@@ -21,7 +21,9 @@ Listar camas de la ubi de una actividad, asignar o reasignar asistentes (drag-an
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Lista Habitaciones (frontend/ubiscamas/controller/lista_habitaciones.php)
+- Lista Habitaciones Distribucion (frontend/ubiscamas/controller/lista_habitaciones_distribucion.php)
+- Lista Habitaciones Nombres (frontend/ubiscamas/controller/lista_habitaciones_nombres.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -52,7 +54,7 @@ Crear, editar o eliminar camas individuales asociadas a una habitación.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Cama Form (frontend/ubiscamas/controller/cama_form.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -101,7 +103,7 @@ Dar de alta, modificar o eliminar habitaciones de un ubi CDC, incluyendo creaci�
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Habitacion Form (frontend/ubiscamas/controller/habitacion_form.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -148,7 +150,7 @@ Persistir la asignación cama↔asistente en la actividad actual (requiere token
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -177,7 +179,7 @@ Alternar el filtro de solo camas VIP en la actividad (`desc_activ=camasVIP`).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -198,9 +200,8 @@ Alternar el filtro de solo camas VIP en la actividad (`desc_activ=camasVIP`).
 - Flujo: `ubiscamas.update_solo_vip.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubiscamas/flujos/update_solo_vip.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/ubiscamas/flujos/`.

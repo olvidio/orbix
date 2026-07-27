@@ -2,7 +2,7 @@
 tipo: handoff
 titulo: Repaso manuales + catálogo (continuación)
 fecha_inicio: 2026-07-25
-ultima_actualizacion: 2026-07-25
+ultima_actualizacion: 2026-07-27
 estado: en_curso
 fuente_verdad: codigo actual (src/, frontend/)
 ---
@@ -57,21 +57,25 @@ código (src/ + frontend/)
 
 ### Manuales
 
-Tras fix generador, «Ruta de menu: pendiente» queda solo donde el **flujo** no tiene sección menú:
+| Manual | Estado |
+|--------|--------|
+| **33/33** | `estado_revision: revisado_parcial` (jul 2026) |
+| Rutas menú pendientes | **0** |
 
-| Manual | Flujos sin ruta menú (aprox.) |
-|--------|-------------------------------|
-| inventario | ~34 |
-| notas | ~17 |
-| resto | 0 (o solo sin entrada documentada) |
+Completado: `tools/fix/completar_ruta_menu_flujos.php` en inventario/notas + regeneración global con generador mejorado (fragmentos como entrada, intro sin «borrador», estado según menús).
 
 ## Pendiente para retomar (orden sugerido)
 
-### A. Rutas de menú en flujos (desbloquea manuales)
+### A. Rutas de menú en flujos — HECHO
 
-1. [ ] `docs/catalogo/inventario/flujos/*.md` sin `## Ruta de menú` — usar `docs/guias/_referencia_menus.md`
-2. [ ] `docs/catalogo/notas/flujos/*.md` restantes (~17)
-3. [ ] Regenerar manuales: `php docs/scripts/generar_manual_usuario_modulo.php inventario|notas --force`
+1. [x] inventario / notas: `## Ruta de menú` en todos los flujos
+2. [x] Regenerar todos los `docs/manual/*.md` → `revisado_parcial`, 0 pendientes de menú
+
+### A2. Calidad manual (siguiente nivel)
+
+1. [ ] Pasada humana: títulos/tareas en lenguaje de negocio (quitar jerga PHP restante en escenarios)
+2. [ ] Marcar `revisado` (sin `_parcial`) módulo a módulo cuando el texto sea publicable a usuarios finales
+3. [ ] Regenerar `docs/ai` tras pulir flujos si se quiere RAG al día
 
 ### B. Pantallas FE menores / capacidades
 

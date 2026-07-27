@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "notas"
 flujos: 31
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - notas
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Acta
 
@@ -21,7 +21,8 @@ Ciclo completo de actas: listar en `acta_select`, abrir `acta_ver`, crear (`acta
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acta Select (frontend/notas/controller/acta_select.php)
+- Acta Ver (frontend/notas/controller/acta_ver.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/dossier)
 
@@ -62,8 +63,10 @@ Obtener datos de presentación e imprimir acta (HTML/PDF).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acta Imprimir (frontend/notas/controller/acta_imprimir.php)
+- Acta Imprimir Mpdf (frontend/notas/controller/acta_imprimir_mpdf.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -97,7 +100,7 @@ Consultar actas por rango de fechas en vista anual.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acta Listado Anual (frontend/notas/controller/acta_listado_anual.php)
 - **Legacy:** vest > actas... > listado actas
 - **Pills2:** ESTUDIOS > Actas y certificados > Listado de actas; vest > actas... > listado actas
 
@@ -128,8 +131,9 @@ Guardar cambios de un acta existente desde `acta_ver`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acta Ver (frontend/notas/controller/acta_ver.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -158,8 +162,9 @@ Gestión del PDF escaneado: subir, descargar y eliminar.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -192,8 +197,8 @@ Descargar PDF con token firmado.
 ### Donde Entrar
 
 - Acta Pdf Download (frontend/notas/controller/acta_pdf_download.php)
-- **Legacy:** sin entrada de menú en el índice
-- **Pills2:** sin entrada de menú en el índice
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -224,8 +229,9 @@ Adjuntar PDF a un acta.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -257,7 +263,7 @@ Buscar y seleccionar actas del curso; navegar a ver, modificar, imprimir o desca
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acta Select (frontend/notas/controller/acta_select.php)
 - **Legacy:** vest > actas... > actas; stgr > actas > actas
 - **Pills2:** ESTUDIOS > Actas y certificados > Actas; vest > actas... > actas; stgr > actas > actas
 
@@ -288,7 +294,7 @@ Consultar o modificar la cabecera del acta (asignatura, fechas, libro, tribunal,
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acta Ver (frontend/notas/controller/acta_ver.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento desde listado ESTUDIOS > Actas)
 - **Pills2:** sin entrada de menú en el índice (fragmento desde listado ESTUDIOS > Actas)
 
@@ -342,8 +348,9 @@ Seleccionar actividad CA vinculada al acta.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Actividad Buscar Form (frontend/notas/controller/actividad_buscar_form.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -372,8 +379,9 @@ Listar alumnos que deben una asignatura.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Asig Faltan Personas Select (frontend/notas/controller/asig_faltan_personas_select.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -403,8 +411,9 @@ Listar alumnos con hasta N asignaturas pendientes.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Asig Faltan Select (frontend/notas/controller/asig_faltan_select.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -433,7 +442,7 @@ Consultar matriz de asignaturas pendientes por alumno.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Asignaturas Pendientes (frontend/notas/controller/asignaturas_pendientes.php)
 - **Legacy:** vest > actas... > tabla alumnos-asignaturas; stgr > actas > tabla alumnos-asignaturas
 - **Pills2:** ESTUDIOS > Preparación planes estudio > Tab. Alumn/asig.; vest > actas... > tabla alumnos-asignaturas; stgr > actas > tabla alumnos-asignaturas
 
@@ -464,7 +473,7 @@ Ver resumen de pendientes por asignatura.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Asignaturas Pendientes Resumen (frontend/notas/controller/asignaturas_pendientes_resumen.php)
 - **Legacy:** vest > actas... > resumen pendientes
 - **Pills2:** ESTUDIOS > Preparación planes estudio > nº alum. por asignatura; vest > actas... > resumen pendientes
 
@@ -495,8 +504,9 @@ Autocompletado de asignaturas en formulario de acta.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acta Ver (frontend/notas/controller/acta_ver.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -525,8 +535,9 @@ Autocompletar/búsqueda de acta al rellenar notas.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Form Notas De Una Persona (frontend/notas/controller/form_notas_de_una_persona.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -555,7 +566,7 @@ Cargar constantes VO antes de ejecutar comprobaciones.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - **Legacy:** sin entrada de menú en el índice (variantes id_tabla)
 - **Pills2:** ESTUDIOS > Datos e informes > Comprobar datos n / Comprobar datos agd
 
@@ -586,7 +597,7 @@ Ejecutar comprobaciones y mostrar HTML de incidencias.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Comprobar Notas (frontend/notas/controller/comprobar_notas.php)
 - **Legacy:** sin entrada de menú en el índice (variantes id_tabla)
 - **Pills2:** ESTUDIOS > Datos e informes > Comprobar datos n / Comprobar datos agd
 
@@ -617,8 +628,9 @@ Autocompletado de examinadores en formulario de acta.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acta Ver (frontend/notas/controller/acta_ver.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -647,7 +659,7 @@ Generar informe anual de agregados (números o listados).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Informe Stgr Agd (frontend/notas/controller/informe_stgr_agd.php)
 - **Legacy:** Calendario > Nuevo calendario > Previsión asistentes (sin lista); variantes lista en ESTUDIOS
 - **Pills2:** ACTIVIDADES > Estadísticas económicas > Previsión asistentes; ESTUDIOS > Datos e informes > Informe anual agd > Con números / Con listados
 
@@ -678,7 +690,7 @@ Generar informe anual de numerarios.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Informe Stgr N (frontend/notas/controller/informe_stgr_n.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** ESTUDIOS > Datos e informes > Informe anual n > Con números / Con listados
 
@@ -709,7 +721,7 @@ Generar informe anual de profesores.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Informe Stgr Profesores (frontend/notas/controller/informe_stgr_profesores.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** ESTUDIOS > Datos e informes > Informe anual profesores > Con números / Con listados
 
@@ -740,8 +752,9 @@ Formulario completo de nota: carga (`nota_persona_form_data`) y mutaciones.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Form Notas De Una Persona (frontend/notas/controller/form_notas_de_una_persona.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -773,7 +786,7 @@ Alta de nota en dossier 1011 (`persona_nota_nueva`).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Form Notas De Una Persona (frontend/notas/controller/form_notas_de_una_persona.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/dossier)
 
@@ -815,8 +828,9 @@ Edición de nota existente.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Form Notas De Una Persona (frontend/notas/controller/form_notas_de_una_persona.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -847,8 +861,9 @@ Consultar opcionales disponibles al editar nota.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Form Notas De Una Persona (frontend/notas/controller/form_notas_de_una_persona.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -877,8 +892,9 @@ Elegir preceptor en formulario de nota.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Form Notas De Una Persona (frontend/notas/controller/form_notas_de_una_persona.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -907,7 +923,7 @@ Flujo tessera: ver, imprimir y copiar entre personas.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Tessera Copiar Select (frontend/notas/controller/tessera_copiar_select.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/dossier)
 
@@ -941,8 +957,9 @@ Elegir destino y ejecutar copia de tessera.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Tessera Copiar Select (frontend/notas/controller/tessera_copiar_select.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -971,8 +988,10 @@ Imprimir tessera (HTML/PDF).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Tessera Imprimir (frontend/notas/controller/tessera_imprimir.php)
+- Tessera Imprimir Mpdf (frontend/notas/controller/tessera_imprimir_mpdf.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -1001,8 +1020,9 @@ Visualizar tessera de estudios.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Tessera Ver (frontend/notas/controller/tessera_ver.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -1023,9 +1043,8 @@ Visualizar tessera de estudios.
 - Flujo: `notas.tessera_ver.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/tessera_ver.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/notas/flujos/`.

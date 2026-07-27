@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "casas"
 flujos: 9
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - casas
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Calendario Ubi Resumen
 
@@ -22,7 +22,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Calendario Ubi Resumen (frontend/casas/controller/calendario_ubi_resumen.php)
+- Calendario Ubi Resumen Body (frontend/casas/controller/calendario_ubi_resumen_body.php)
 - **Legacy:** adl > Nuevo Calendario > Previsión económica
 - **Pills2:** ACTIVIDADES > Estadísticas económicas > Previsión económica
 
@@ -54,7 +55,7 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Casa Actividades Lista (frontend/casas/controller/casa_actividades_lista.php)
 - **Legacy:** exterior > casas > lista actividades
 - **Pills2:** exterior > casas > lista actividades
 
@@ -93,7 +94,7 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Casa Ec Gastos Lista (frontend/casas/controller/casa_ec_gastos_lista.php)
 - **Legacy:** exterior > casas > gastos casa
 - **Pills2:** CASAS Y CTR > Gestión casas > gastos casas
 
@@ -192,7 +193,7 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Casa Ingresos Lista (frontend/casas/controller/casa_ingresos_lista.php)
 - **Legacy:** exterior > casas > Gestión económica
 - **Pills2:** CASAS Y CTR > Gestión casas > Gestión económica
 
@@ -230,7 +231,7 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Casas Resumen Lista (frontend/casas/controller/casas_resumen_lista.php)
 - **Legacy:** adl > Gestión casas > estadística  por casas
 - **Pills2:** CASAS Y CTR > Gestión casas > estadística  por casas
 
@@ -328,7 +329,7 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Prevision Asistentes (frontend/casas/controller/prevision_asistentes.php)
 - **Legacy:** adl > Nuevo Calendario > previsión asistentes
 - **Pills2:** Calendario > Nuevo calendario > previsión asistentes
 
@@ -364,7 +365,7 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Prevision Asistentes (frontend/casas/controller/prevision_asistentes.php)
 - **Legacy:** adl > Nuevo Calendario > previsión asistentes
 - **Pills2:** Calendario > Nuevo calendario > previsión asistentes
 
@@ -388,9 +389,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 - Flujo: `casas.prevision_asistentes.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/casas/flujos/prevision_asistentes.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/casas/flujos/`.

@@ -457,7 +457,7 @@ function screenLabel(string $screenId, array $screens): string
 function renderScreenList(array $screenIds, array $screens): array
 {
     if ($screenIds === []) {
-        return ['- Pendiente de revisar.'];
+        return ['- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).'];
     }
 
     $lines = [];
@@ -525,94 +525,120 @@ function renderMenuRouteLines(string $flowBody, array $entryScreens, array $scre
  */
 function renderManual(string $module, array $flows, array $screens, array $capabilities, array $apiByUrl): string
 {
-    $lines = [
-        '---',
-        'tipo: "manual_usuario"',
-        'modulo: "' . $module . '"',
-        'flujos: ' . count($flows),
-        'estado_revision: "generado"',
-        '---',
-        '',
-        '# Manual De Usuario - ' . $module,
-        '',
-        'Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.',
-        '',
-        '## Como Usar Este Manual',
-        '',
-        'Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.',
-        '',
-    ];
+    $menuPending = 0;
+    $flowBlocks = [];
 
     foreach ($flows as $flowId => $flow) {
         $title = userFlowTitle((string)($flow['nombre'] ?? $flowId));
         $entryScreens = asStringList($flow['pantallas_principales'] ?? []);
+        if ($entryScreens === []) {
+            $entryScreens = asStringList($flow['fragmentos'] ?? []);
+        }
         $flowBody = (string)($flow['body'] ?? '');
         $endpointUrls = asStringList($flow['endpoints'] ?? []);
         $scenarios = extractScenarios($flowBody);
         $errors = collectFlowErrors($endpointUrls, $apiByUrl, $flowBody);
         $permissions = collectFlowPermissions($endpointUrls, $apiByUrl);
+        $menuLines = renderMenuRouteLines($flowBody, $entryScreens, $screens);
+        foreach ($menuLines as $ml) {
+            if (str_contains($ml, 'pendiente de documentar')) {
+                $menuPending++;
+            }
+        }
 
-        $lines[] = '## ' . $title;
-        $lines[] = '';
-        $lines[] = '### Para Que Sirve';
-        $lines[] = '';
-        $lines[] = formatPurposeForUser(buildFlowPurpose($flow, $capabilities));
-        $lines[] = '';
-        $lines[] = '### Donde Entrar';
-        $lines[] = '';
-        array_push($lines, ...renderScreenList($entryScreens, $screens));
-        array_push($lines, ...renderMenuRouteLines($flowBody, $entryScreens, $screens));
-        $lines[] = '';
-        $lines[] = '### Tareas Habituales';
-        $lines[] = '';
+        $block = [];
+        $block[] = '## ' . $title;
+        $block[] = '';
+        $block[] = '### Para Que Sirve';
+        $block[] = '';
+        $block[] = formatPurposeForUser(buildFlowPurpose($flow, $capabilities));
+        $block[] = '';
+        $block[] = '### Donde Entrar';
+        $block[] = '';
+        array_push($block, ...renderScreenList($entryScreens, $screens));
+        array_push($block, ...$menuLines);
+        $block[] = '';
+        $block[] = '### Tareas Habituales';
+        $block[] = '';
 
         if ($scenarios === []) {
-            $lines[] = 'Pendiente de revisar. No se han inferido tareas desde el flujo.';
-            $lines[] = '';
+            $block[] = 'Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.';
+            $block[] = '';
         } else {
             foreach ($scenarios as $scenario) {
-                $lines[] = '#### ' . $scenario['titulo'];
-                $lines[] = '';
+                $block[] = '#### ' . $scenario['titulo'];
+                $block[] = '';
                 foreach ($scenario['pasos'] as $index => $step) {
-                    $lines[] = ((string)($index + 1)) . '. ' . $step;
+                    $block[] = ((string)($index + 1)) . '. ' . $step;
                 }
-                $lines[] = '';
+                $block[] = '';
             }
         }
 
-        $lines[] = '### Errores O Avisos Frecuentes';
-        $lines[] = '';
+        $block[] = '### Errores O Avisos Frecuentes';
+        $block[] = '';
         if ($errors === []) {
-            $lines[] = '- No hay errores documentados en el catalogo para este flujo.';
+            $block[] = '- No hay errores documentados en el catalogo para este flujo.';
         } else {
             foreach ($errors as $error) {
-                $lines[] = '- `' . str_replace('`', '', $error) . '`';
+                $block[] = '- `' . str_replace('`', '', $error) . '`';
             }
         }
-        $lines[] = '';
+        $block[] = '';
 
         if ($permissions !== []) {
-            $lines[] = '### Permisos';
-            $lines[] = '';
+            $block[] = '### Permisos';
+            $block[] = '';
             foreach ($permissions as $permission) {
-                $lines[] = '- ' . $permission;
+                $block[] = '- ' . $permission;
             }
-            $lines[] = '';
+            $block[] = '';
         }
 
-        $lines[] = '### Referencias Internas';
-        $lines[] = '';
-        $lines[] = '- Flujo: `' . $flowId . '`';
-        $lines[] = '- Fichero catalogo: `' . (string)($flow['source'] ?? '') . '`';
-        $lines[] = '';
+        $block[] = '### Referencias Internas';
+        $block[] = '';
+        $block[] = '- Flujo: `' . $flowId . '`';
+        $block[] = '- Fichero catalogo: `' . (string)($flow['source'] ?? '') . '`';
+        $block[] = '';
+        $flowBlocks[] = $block;
     }
 
-    $lines[] = '## Revision Pendiente';
+    $estado = $menuPending === 0 ? 'revisado_parcial' : 'generado';
+    $intro = $menuPending === 0
+        ? 'Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.'
+        : 'Manual generado desde `docs/catalogo`. Algunas rutas de menú siguen pendientes en el catálogo.';
+
+    $lines = [
+        '---',
+        'tipo: "manual_usuario"',
+        'modulo: "' . $module . '"',
+        'flujos: ' . count($flows),
+        'estado_revision: "' . $estado . '"',
+        '---',
+        '',
+        '# Manual De Usuario - ' . $module,
+        '',
+        $intro,
+        '',
+        '## Como Usar Este Manual',
+        '',
+        'Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).',
+        '',
+    ];
+
+    foreach ($flowBlocks as $block) {
+        array_push($lines, ...$block);
+    }
+
+    $lines[] = '## Notas';
     $lines[] = '';
-    $lines[] = '- Sustituir nombres tecnicos por nombres visibles en la aplicacion.';
-    $lines[] = '- Completar rutas de menu.';
-    $lines[] = '- Confirmar permisos necesarios.';
-    $lines[] = '- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.';
+    if ($menuPending > 0) {
+        $lines[] = '- Quedan ' . $menuPending . ' flujos sin ruta de menú documentada en el catálogo.';
+    } else {
+        $lines[] = '- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.';
+    }
+    $lines[] = '- Permisos y errores se toman de las fichas API relacionadas.';
+    $lines[] = '- Fuente: `docs/catalogo/' . $module . '/flujos/`.';
     $lines[] = '';
 
     return implode(PHP_EOL, $lines);

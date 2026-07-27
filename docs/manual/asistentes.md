@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "asistentes"
 flujos: 14
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - asistentes
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Activ Pendientes Select
 
@@ -21,7 +21,7 @@ Identificar personas sin ca/crt en el curso.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Activ Pendientes Select (frontend/asistentes/controller/activ_pendientes_select.php)
 - **Legacy:** vsm/vest/dagd/dre > pendientes según `sactividad` y `tipo_personas`
 - **Pills2:** ACTIVIDADES > Listados > Listado de personas sin ca/crt
 
@@ -52,7 +52,7 @@ Alta, edición, eliminación y movimiento de asistencia a actividades.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
@@ -96,7 +96,7 @@ Mover asistente de una actividad a otra del mismo tipo.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Asistente Mover (frontend/asistentes/controller/asistente_mover.php)
 - sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
@@ -126,7 +126,7 @@ Asignar plaza común a varios asistentes seleccionados.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
@@ -158,7 +158,7 @@ Gestionar asistencias en dossier 1301 (persona).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Form Actividades De Una Persona (frontend/asistentes/controller/form_actividades_de_una_persona.php)
 - sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
@@ -191,7 +191,7 @@ Gestionar asistente en dossier 3101 (actividad).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Form Asistentes A Una Actividad (frontend/asistentes/controller/form_asistentes_a_una_actividad.php)
 - sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
@@ -223,7 +223,7 @@ Ver actividades asistidas agrupadas por centro.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Lista Activ Ctr (frontend/asistentes/controller/lista_activ_ctr.php)
 - **Legacy:** Destino del submit de que_ctr_lista (`lista=list_activ`)
 - **Pills2:** ACTIVIDADES > Listados > Listado de asistentes ca/crt por ctr
 
@@ -254,7 +254,7 @@ Listado conjunto de plazas en varias actividades.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Lista Asis Conjunto Activ (frontend/asistentes/controller/lista_asis_conjunto_activ.php)
 - sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
@@ -284,7 +284,7 @@ Consultar listado de asistentes de una actividad.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Lista Asistentes (frontend/asistentes/controller/lista_asistentes.php)
 - sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
@@ -314,7 +314,7 @@ Ver estudios matriculados por centro.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Lista Est Ctr (frontend/asistentes/controller/lista_est_ctr.php)
 - **Legacy:** vest/dagd > estudios x ctr
 - **Pills2:** ACTIVIDADES > Listados > Mejores ca para n/agd
 
@@ -345,7 +345,7 @@ Elegir centro para informe de última asistencia.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Lista Ultim Que Ctr (frontend/asistentes/controller/lista_ultim_que_ctr.php)
 - **Legacy:** vsg > crt/cv > informes de seguimiento
 - **Pills2:** vsg > crt/cv > s que no han ido / corresponde ir
 
@@ -376,7 +376,7 @@ Informe de personas s sin asistencia reciente.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Lista Ultima Activ (frontend/asistentes/controller/lista_ultima_activ.php)
 - **Legacy:** Destino del submit de lista_ultim_que_ctr
 - **Pills2:** vsg > crt/cv > informes de seguimiento
 
@@ -407,7 +407,7 @@ Filtrar por centro y periodo antes de listados por centros.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Que Ctr Lista (frontend/asistentes/controller/que_ctr_lista.php)
 - **Legacy:** Varias entradas según `lista`/`sactividad` (vsm/vest/dagd > crt/ca/cv > list por ctr; dre > personas > pendientes)
 - **Pills2:** ACTIVIDADES > Listados > Listado de asistentes ca/crt por ctr, Mejores ca para n/agd, Listado de personas sin ca/crt
 
@@ -441,7 +441,7 @@ Ver peticiones de plaza y mover asistente a actividad preferida.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Tabla Peticiones (frontend/asistentes/controller/tabla_peticiones.php)
 - sin entrada de menú en el índice (acceso desde dossier actividad/persona, `actividad_que` o navegación embebida).
 
 ### Tareas Habituales
@@ -463,9 +463,8 @@ Ver peticiones de plaza y mover asistente a actividad preferida.
 - Flujo: `asistentes.tabla_peticiones.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/tabla_peticiones.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/asistentes/flujos/`.

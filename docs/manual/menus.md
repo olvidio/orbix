@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "menus"
 flujos: 15
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - menus
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Grupmenu
 
@@ -21,7 +21,8 @@ Alta/edición/baja de grupos de menú.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Grupmenu Lista (frontend/menus/controller/grupmenu_lista.php)
+- Grupmenu Form (frontend/menus/controller/grupmenu_form.php)
 - Entrada de menú (TablaDB, no `grupmenu_lista.php`):
 - **Legacy:** sistema > usuarios web > grup menu
 - **Pills2:** sistema > usuarios web > grup menu · ADMIN LOCAL > usuarios web > grup menu
@@ -29,7 +30,7 @@ Alta/edición/baja de grupos de menú.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -58,13 +59,13 @@ Grupos e ítems autorizados para menú lateral en index.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -87,13 +88,13 @@ Precarga formulario edición grupmenu.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Grupmenu Form (frontend/menus/controller/grupmenu_form.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -116,13 +117,13 @@ Opciones de destino URL/módulo al editar un ítem (metamenús globales).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Menus Get (frontend/menus/controller/menus_get.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -141,13 +142,13 @@ Listado de plantillas ref para importación.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Menus Importar Form (frontend/menus/controller/menus_importar_form.php)
 - **Legacy:** sistema > menus > importar
 - **Pills2:** sistema > menus > importar · ADMIN LOCAL > Importar menús · ADMIN GLOBAL > menus > importar
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -166,13 +167,13 @@ Alta, edición, copia, movimiento y borrado de entradas del árbol (`aux_menus`)
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - **Legacy:** sistema > menus > seleccionar
 - **Pills2:** sistema > menus > seleccionar · ADMIN GLOBAL > menus > seleccionar
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -198,14 +199,14 @@ Cambiar grupmenu de un ítem desde ficha.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - **Legacy:** sistema > menus > seleccionar
 - **Pills2:** sistema > menus > seleccionar · ADMIN GLOBAL > menus > seleccionar
 - (Acción de ficha del gestor; no tiene menú propio.)
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -226,13 +227,13 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -251,13 +252,13 @@ Persiste menú actual en tablas ref de BD pública.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Menus Exportar Form (frontend/menus/controller/menus_exportar_form.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** ADMIN LOCAL > Exportar menús · sistema > menus > Exportar · ADMIN GLOBAL > menus > Exportar
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -276,14 +277,14 @@ Respaldar o restaurar la referencia de menús vía ficheros SQL en disco.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - **Legacy:** sistema > menus > importar desde ficheros
 - **Pills2:** sistema > menus > importar desde ficheros
 - (aviso: URL en BD = `menus_ficheros.php` muerto → usar `/src/menus/menus_exportar_ref_a_ficheros`)
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -306,13 +307,13 @@ Regenera fichero de cadenas traducibles de etiquetas de menú.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - **Legacy:** sistema > traducciones > menus a texto
 - **Pills2:** sistema > traducciones > menus a texto
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -335,13 +336,13 @@ Builder AJAX lista vs edición en gestor de menús.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Menus Get (frontend/menus/controller/menus_get.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -360,13 +361,13 @@ Sustituye menús locales por una plantilla seleccionada.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Menus Importar Form (frontend/menus/controller/menus_importar_form.php)
 - **Legacy:** sistema > menus > importar
 - **Pills2:** sistema > menus > importar · ADMIN LOCAL > Importar menús · ADMIN GLOBAL > menus > importar
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -390,7 +391,7 @@ Dejar los menús del esquema (o de todas las DL si dlb) como la referencia por d
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -413,13 +414,13 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -430,9 +431,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `menus.menus_legacy_layout_items.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/menus_legacy_layout_items.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/menus/flujos/`.

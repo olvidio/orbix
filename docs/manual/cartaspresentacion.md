@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "cartaspresentacion"
 flujos: 6
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - cartaspresentacion
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Carta Presentacion
 
@@ -21,12 +21,12 @@ Dar de alta, modificar o quitar los datos de presentación de un centro concreto
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Cartas Presentacion Form (frontend/cartaspresentacion/controller/cartas_presentacion_form.php)
 - sin entrada de menú en el índice (subflujo de `cartas_presentacion` > modificar).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -54,13 +54,13 @@ Consultar todas las cartas de presentación organizadas por tipo de labor, deleg
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Cartas Presentacion Lista (frontend/cartaspresentacion/controller/cartas_presentacion_lista.php)
 - **Legacy:** scdl > direcciones > cartas presentacion > lista dl / lista todo
 - **Pills2:** scdl > direcciones > cartas presentacion > lista dl / lista todo
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -89,7 +89,7 @@ Encontrar cartas de presentación que cumplan criterios geográficos o de delega
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -119,7 +119,7 @@ Mantener los datos de presentación (director, contacto, zona) de los centros de
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -153,7 +153,7 @@ Filtrar el listado de centros por población dentro de la delegación (modo `get
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -176,12 +176,12 @@ Ver qué centros tienen carta de presentación y acceder a modificar, ver ficha 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Cartas Presentacion Ubis Lista (frontend/cartaspresentacion/controller/cartas_presentacion_ubis_lista.php)
 - sin entrada de menú en el índice (fragmento de `cartas_presentacion` > modificar).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -196,9 +196,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `cartaspresentacion.ubis.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cartaspresentacion/flujos/ubis.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/cartaspresentacion/flujos/`.

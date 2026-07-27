@@ -68,3 +68,8 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
+
+## Ruta de menú
+
+- **Legacy:** scdl > Inventario > documentos > asignar documento
+- **Pills2:** sin entrada de menú en el índice

@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "profesores"
 flujos: 6
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - profesores
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Consultar congresos
 
@@ -85,7 +85,7 @@ Consultar (e imprimir o modificar con permiso) la ficha STGR de un profesor: nom
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Ficha profesor STGR (frontend/profesores/controller/ficha_profesor_stgr.php)
 - sin entrada de menú en el índice (desde búsqueda de personas / `personas_select`)
 
 ### Tareas Habituales
@@ -159,7 +159,7 @@ Obtener la lista de profesores para la asignatura seleccionada sin recargar la p
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Tabla profesores por asignatura (frontend/profesores/controller/profesor_asignatura_ajax.php)
 - sin entrada de menú en el índice (fragmento AJAX de `profesor_asignatura_que`)
 
 ### Tareas Habituales
@@ -216,9 +216,8 @@ Elegir asignatura y ver candidatos (departamento + ampliación) con datos de con
 - Flujo: `profesores.profesor_asignatura_que.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/profesores/flujos/profesor_asignatura_que.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/profesores/flujos/`.

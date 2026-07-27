@@ -24,6 +24,7 @@ $pruebas = OrbixRuntime::isPruebasWebPath() ? 1 : 0;
 $webPublic = OrbixRuntime::getWebPublic();
 
 $enlaceManual = ayudaEnlace('/frontend/shared/controller/manual.php');
+$enlacePreguntar = ayudaEnlace('/frontend/shared/controller/ayuda_preguntar.php');
 $enlaceTraducciones = ayudaEnlace('/public/ayuda/traducciones.php');
 
 $urlContactos = HashFront::cmdSinParametros(
@@ -39,6 +40,7 @@ $a_campos = [
     'pruebas' => $pruebas,
     'webPublic' => $webPublic,
     'enlaceManual' => $enlaceManual,
+    'enlacePreguntar' => $enlacePreguntar,
     'enlaceTraducciones' => $enlaceTraducciones,
     'hashParamsRegiones' => $hashParamsRegiones,
 ];

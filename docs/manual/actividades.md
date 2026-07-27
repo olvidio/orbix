@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "actividades"
 flujos: 28
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - actividades
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Crear y eliminar actividad
 
@@ -29,7 +29,7 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -70,7 +70,7 @@ Seleccionar un nuevo tipo en la cascada, confirmar aviso de vuelta a *proyecto* 
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -95,12 +95,12 @@ Seleccionar actividad origen y duplicarla (nueva ficha en proyecto).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Resultados buscar actividad (frontend/actividades/controller/actividad_select.php)
 - sin entrada de menú en el índice (acción desde listado de búsqueda).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -132,7 +132,7 @@ Modificar campos de la actividad (fechas, lugar, plazas, observaciones, etc.) y 
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -159,12 +159,12 @@ Validar estado de una fase sin recargar toda la ficha.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -192,7 +192,7 @@ Ver checkboxes de fases coherentes con el estado real del proceso al editar/crea
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -215,14 +215,15 @@ Buscar actividades externas (`modo=importar`), seleccionar una o varias e import
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Buscar actividad (filtros) (frontend/actividades/controller/actividad_que.php)
+- Resultados buscar actividad (frontend/actividades/controller/actividad_select.php)
 - **Legacy:** dre/Calendario > actividades > importar activ; variantes dagd/vsm/vest (crt, cv, ca…).
 - **Pills2:** ACTIVIDADES > Buscar actividad > Importar crt/cv/ca n/agd de otras r/dl; ESTUDIOS >
 - Semestres de invierno > Importar.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -250,7 +251,7 @@ Al concretar tipo de actividad, el desplegable STGR se pre-rellena con el nivel 
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -275,7 +276,7 @@ Confirmar años en `actividad_nuevo_curso` y lanzar la generación (puede tardar
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -303,7 +304,7 @@ Al crear ficha nueva, el sistema bloquea o permite el formulario según permisos
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -326,14 +327,15 @@ Buscar actividades en modo publicar, seleccionar y ejecutar publicación masiva.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Buscar actividad (filtros) (frontend/actividades/controller/actividad_que.php)
+- Resultados buscar actividad (frontend/actividades/controller/actividad_select.php)
 - **Legacy:** dre/Calendario > actividades > publicar activ.
 - **Pills2:** dre/Calendario > actividades > publicar activ; ATENCIÓN SACD > Actividades >
 - publicar activ.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -361,7 +363,7 @@ Al cargar `actividad_que` o el bloque tipo del planning, ver desplegables cohere
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -389,7 +391,7 @@ Tras abrir buscar actividad, ver filtros adicionales según rol (ocultos para us
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -412,12 +414,12 @@ Ver listado tras buscar, con enlaces a ficha, importar, publicar o seleccionar s
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Resultados buscar actividad (frontend/actividades/controller/actividad_select.php)
 - Destino de `actividad_que` — ver rutas de buscar actividad en pantalla `actividad_select`.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -445,7 +447,7 @@ Al elegir modo historial o región, cargar casas/ubis candidatas antes de confir
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -474,7 +476,7 @@ Ver nombres de estado correctos según sf/sv y permisos al abrir ficha o plannin
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -498,7 +500,7 @@ Al cambiar un nivel de la cascada, actualizar los desplegables dependientes sin 
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -526,7 +528,7 @@ Al abrir ver/editar/nuevo/planning, el sistema carga en servidor los datos neces
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -549,14 +551,14 @@ Desde menú *Nuevo calendario > listados*, elegir informe y periodo; ver tabla d
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Listados calendario (casas/oficinas) (frontend/actividades/controller/calendario_listas.php)
 - **Legacy:** adl/dre/Calendario > Nuevo calendario > listados (por oficinas, casas comunes, etc.).
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Activ. nuevo calendario por oficina /
 - casas comunes / oficina propia / casas sv (según `que`).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -585,7 +587,7 @@ Ver tabla de actividades tras enviar filtros desde `lista_activ_que` o `activida
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -608,13 +610,13 @@ Consultar actividades SG de la r/dl o del centro, filtrar y abrir fichas desde l
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Listado actividades San Gabriel (crt/cv) (frontend/actividades/controller/lista_actividades_sg.php)
 - **Legacy:** vsg > crt/cv > de la r/dl.
 - **Pills2:** sin entrada dedicada (vsg).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -643,7 +645,7 @@ Tras elegir centro y periodo en *de cada ctr*, ver el listado AJAX en la misma p
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -666,13 +668,13 @@ Visualizar listado o descargar CSV para San Rafael.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Listado SR (tabla/CSV) (frontend/actividades/controller/lista_sr_csv.php)
 - **Legacy:** vsr > listas actividades > listado csv (resultado).
 - **Pills2:** sin entrada dedicada (vsr).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -695,13 +697,13 @@ Ver el formulario pre-rellenado con la última preferencia guardada del usuario.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Filtros listado CSV San Rafael (frontend/actividades/controller/lista_sr_csv_que.php)
 - **Legacy:** vsr > listas actividades > listado csv.
 - **Pills2:** sin entrada dedicada (vsr).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -730,7 +732,7 @@ Listar tipos, crear uno nuevo, renombrar o eliminar desde la pantalla de adminis
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -763,7 +765,7 @@ Pulsar *nuevo* en gestión de tipos y ver el formulario vacío con desplegables.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -792,7 +794,7 @@ Elegir tipo en la lista y abrir formulario con nombre actual para modificar.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -821,7 +823,7 @@ Al cambiar un nivel en el formulario de tipos, actualizar los siguientes despleg
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -836,9 +838,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `actividades.tipo_activ_metadata.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/tipo_activ_metadata.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/actividades/flujos/`.

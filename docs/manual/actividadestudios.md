@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "actividadestudios"
 flujos: 25
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - actividadestudios
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Acta Notas
 
@@ -21,7 +21,7 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acta Notas (frontend/actividadestudios/controller/acta_notas.php)
 - Sin entrada de menú en el índice (subflujo desde dossier 3005 «asignaturas de una actividad»).
 - Acceso habitual: buscar actividad CA (`actividad_select`) → dossier asignaturas → **actas**.
 - Menú de la pantalla padre de búsqueda de actividades:
@@ -60,7 +60,7 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acta Notas (frontend/actividadestudios/controller/acta_notas.php)
 - Sin entrada de menú en el índice (subflujo desde pantalla `acta_notas`, accesible desde
 - dossier 3005 o módulo de actas).
 - **Legacy:** vest > actas... > actas (pantalla padre habitual).
@@ -106,7 +106,7 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acta Notas (frontend/actividadestudios/controller/acta_notas.php)
 - Sin entrada de menú en el índice (subflujo desde pantalla `acta_notas`).
 - **Legacy:** vest > actas... > actas.
 - **Pills2:** ESTUDIOS > Actas y certificados > Actas.
@@ -144,7 +144,7 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Form Asignaturas De Una Actividad (frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php)
 - Sin entrada de menú en el índice (subflujo desde dossier 3005, accesible al buscar una
 - actividad CA y abrir asignaturas).
 - **Legacy:** vsm > ca > buscar ca.
@@ -190,7 +190,7 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Form Asignaturas De Una Actividad (frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php)
 - Sin entrada de menú en el índice (subflujo desde dossier 3005).
 - **Legacy:** vsm > ca > buscar ca.
 - **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades.
@@ -227,7 +227,7 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - Sin entrada de menú en el índice. Subflujo previsto desde dossier 3103 (matrículas de una
 - actividad), accesible vía búsqueda de actividad CA.
 - **Legacy:** vsm > ca > buscar ca.
@@ -265,7 +265,7 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - Sin entrada de menú en el índice (subflujo desde dossier 1303 «matrículas de una persona»).
 - **Legacy:** vest > buscar persona > n r/dl; stgr > personas > n r/dl.
 - **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl; PERSONAS > Agregados > Buscar agd de la r/dl.
@@ -302,7 +302,7 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - Sin entrada de menú en el índice (subflujo desde dossier 1303).
 - **Legacy:** vest > buscar persona > n r/dl; stgr > personas > n r/dl.
 - **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl.
@@ -339,7 +339,7 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Ca Posibles (frontend/actividadestudios/controller/ca_posibles.php)
 - Se accede desde la pantalla `ca_posibles_que` o desde búsqueda de personas:
 - **Legacy:** vest > posibles ca > posibles ca; vest > buscar persona > n r/dl (botón posibles CA).
 - **Pills2:** vest > posibles ca > posibles ca; PERSONAS > Numerarios > Buscar n de la r/dl.
@@ -377,7 +377,7 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Ca Posibles Que (frontend/actividadestudios/controller/ca_posibles_que.php)
 - **Legacy:** vest > posibles ca > posibles ca.
 - **Pills2:** vest > posibles ca > posibles ca.
 
@@ -411,7 +411,7 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Actualizar Docencia (frontend/actividadestudios/controller/actualizar_docencia.php)
 - **Legacy:** vest > mantenimiento > actualizar docencia.
 - **Pills2:** ESTUDIOS > Datos e informes > Actualizar docencia; vest > mantenimiento >
 - actualizar docencia.
@@ -446,7 +446,7 @@ El usuario consulta los datos del certificado E43 de un alumno en una actividad:
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- E43 (frontend/actividadestudios/controller/e43.php)
 - Sin entrada de menú en el índice (subflujo desde dossier de asistentes de una actividad).
 - **Legacy:** vsm > ca > buscar ca (pantalla padre de búsqueda de actividad).
 - **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades.
@@ -481,7 +481,7 @@ El usuario imprime el certificado E43 en formato PDF: el sistema obtiene los mis
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- E43 Imprimir Mpdf (frontend/actividadestudios/controller/e43_imprimir_mpdf.php)
 - Sin entrada de menú en el índice (subflujo desde pantalla `e43`).
 - **Legacy:** vsm > ca > buscar ca (misma cadena que E43).
 - **Pills2:** ACTIVIDADES > Buscar actividad > ca n.
@@ -515,7 +515,7 @@ El usuario abre el formulario para crear o editar una asignatura impartida en un
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Form Asignaturas De Una Actividad (frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php)
 - Sin entrada de menú en el índice (subflujo desde dossier 3005).
 - **Legacy:** vsm > ca > buscar ca.
 - **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades.
@@ -551,7 +551,7 @@ El usuario abre el formulario para matricular o editar la matrícula de una pers
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Form Matriculas De Una Persona (frontend/actividadestudios/controller/form_matriculas_de_una_persona.php)
 - Sin entrada de menú en el índice (subflujo desde dossier 1303 o 3103).
 - **Legacy:** vest > buscar persona > n r/dl (dossier 1303); vsm > ca > buscar ca (dossier 3103).
 - **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl; ACTIVIDADES > Buscar actividad > ca n.
@@ -587,7 +587,7 @@ El usuario consulta, para una actividad CA seleccionada, el listado de clases: p
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Lista Clases Ca (frontend/actividadestudios/controller/lista_clases_ca.php)
 - Se accede desde `actividad_select` (sin entrada directa al informe):
 - **Legacy:** vsm > ca > buscar ca; vest > sem inv. > buscar.
 - **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades;
@@ -623,7 +623,9 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Form Matriculas De Una Persona (frontend/actividadestudios/controller/form_matriculas_de_una_persona.php)
+- Matriculas Lista (frontend/actividadestudios/controller/matriculas_lista.php)
+- Matriculas Pendientes (frontend/actividadestudios/controller/matriculas_pendientes.php)
 - Sin entrada de menú directa; las altas se hacen desde dossiers y las bajas también desde
 - listados de menú:
 - **Legacy:** vest > actas... > Matrículas / Matr. Pendientes; vest > buscar persona > n r/dl.
@@ -670,7 +672,7 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Matricular (frontend/actividadestudios/controller/matricular.php)
 - **Legacy:** vest > buscar persona > matricular a todos.
 - **Pills2:** vest > buscar persona > matricular a todos; ESTUDIOS > Preparación planes estudio >
 - Matricular a todos.
@@ -713,7 +715,7 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Form Matriculas De Una Persona (frontend/actividadestudios/controller/form_matriculas_de_una_persona.php)
 - Sin entrada de menú en el índice (subflujo desde dossier 1303 o 3103).
 - **Legacy:** vest > buscar persona > n r/dl; vsm > ca > buscar ca.
 - **Pills2:** PERSONAS > Numerarios > Buscar n de la r/dl; ACTIVIDADES > Buscar actividad > ca n.
@@ -749,7 +751,7 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Matriculas Lista (frontend/actividadestudios/controller/matriculas_lista.php)
 - **Legacy:** vest > actas... > Matrículas.
 - **Pills2:** ESTUDIOS > Actas y certificados > Matrículas realizadas; ESTUDIOS > Preparación
 - planes estudio > Matrículas realizadas; vest > actas... > Matrículas.
@@ -786,7 +788,7 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Matriculas Lista Otras R (frontend/actividadestudios/controller/matriculas_lista_otras_r.php)
 - **Legacy:** — (sin entrada en el índice Legacy).
 - **Pills2:** ESTUDIOS > Actas y certificados > Envío información a otras r.
 
@@ -822,7 +824,7 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Matriculas Pendientes (frontend/actividadestudios/controller/matriculas_pendientes.php)
 - **Legacy:** vest > actas... > Matr. Pendientes.
 - **Pills2:** ESTUDIOS > Actas y certificados > Exam. pendientes de acta; ESTUDIOS >
 - Preparación planes estudio > Exam. pendientes acta; vest > actas... > Matr. Pendientes.
@@ -857,7 +859,7 @@ El usuario consulta el plan de estudios de una actividad CA: director de estudio
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Plan Estudios Ca (frontend/actividadestudios/controller/plan_estudios_ca.php)
 - Se accede desde `actividad_select`:
 - **Legacy:** vsm > ca > buscar ca; vest > sem inv. > buscar.
 - **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades;
@@ -892,7 +894,7 @@ El usuario consulta, para una actividad CA, qué asignaturas podrían matricular
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Posibles Asignaturas Ca (frontend/actividadestudios/controller/posibles_asignaturas_ca.php)
 - Se accede desde `actividad_select`:
 - **Legacy:** vsm > ca > buscar ca.
 - **Pills2:** ACTIVIDADES > Buscar actividad > ca n; ESTUDIOS > Buscar actividades.
@@ -927,7 +929,7 @@ Al cambiar la asignatura o añadir un profesor en el formulario de asignatura im
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Form Asignaturas De Una Actividad (frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php)
 - Sin entrada de menú en el índice (subflujo AJAX desde formulario dossier 3005).
 - **Legacy:** vsm > ca > buscar ca.
 - **Pills2:** ACTIVIDADES > Buscar actividad > ca n.
@@ -954,9 +956,8 @@ Al cambiar la asignatura o añadir un profesor en el formulario de asignatura im
 - Flujo: `actividadestudios.profesores_desplegable.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/profesores_desplegable.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/actividadestudios/flujos/`.

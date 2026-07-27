@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "procesos"
 flujos: 17
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - procesos
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Actividad Proceso
 
@@ -21,7 +21,8 @@ Consulta y edición del proceso de una actividad: ver tareas por fase, marcar co
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Actividad Proceso (frontend/procesos/controller/actividad_proceso.php)
+- Actividad Proceso Get (frontend/procesos/controller/actividad_proceso_get.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -65,7 +66,7 @@ Regenerar las tareas del proceso asociado a una actividad, conservando o no el e
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Actividad Proceso (frontend/procesos/controller/actividad_proceso.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -96,7 +97,7 @@ Devolver las fases aplicables a un tipo de actividad para construir los checkbox
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -127,7 +128,8 @@ Cambio masivo de fase en actividades: filtrar por tipo, periodo y fase destino; 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Fases Activ Cambio (frontend/procesos/controller/fases_activ_cambio.php)
+- Fases Activ Cambio Lista (frontend/procesos/controller/fases_activ_cambio_lista.php)
 - **Legacy:** Calendario > actividades > cambiar de fase; dre > actividades > cambiar de fase
 - **Pills2:** ATENCIÓN SACD > Actividades > cambiar de fase; dre > actividades > cambiar de fase; Calendario > actividades > cambiar de fase; ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades
 
@@ -174,7 +176,7 @@ Generar el HTML del selector de tipo de actividad usado en la pantalla de cambio
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Fases Activ Cambio (frontend/procesos/controller/fases_activ_cambio.php)
 - **Legacy:** Calendario > actividades > cambiar de fase; dre > actividades > cambiar de fase
 - **Pills2:** ATENCIÓN SACD > Actividades > cambiar de fase; dre > actividades > cambiar de fase; Calendario > actividades > cambiar de fase; ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades
 
@@ -205,7 +207,9 @@ Administración del árbol de fases/tareas de un tipo de proceso: visualizar est
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Procesos Get (frontend/procesos/controller/procesos_get.php)
+- Procesos Select (frontend/procesos/controller/procesos_select.php)
+- Procesos Ver (frontend/procesos/controller/procesos_ver.php)
 - **Legacy:** sistema > procesos activ. > procesos
 - **Pills2:** ADMIN LOCAL > procesos activ. > procesos
 
@@ -255,7 +259,7 @@ Clonar las tareas de un tipo de proceso de referencia sobre el proceso seleccion
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Procesos Select (frontend/procesos/controller/procesos_select.php)
 - **Legacy:** sistema > procesos activ. > procesos
 - **Pills2:** ADMIN LOCAL > procesos activ. > procesos
 
@@ -286,7 +290,7 @@ Actualización dinámica del desplegable de tareas dependientes al cambiar la fa
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Procesos Ver (frontend/procesos/controller/procesos_ver.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -317,7 +321,7 @@ Visualización en formato tabla de las fases/tareas de un tipo de proceso, con a
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Procesos Get Listado (frontend/procesos/controller/procesos_get_listado.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -348,7 +352,7 @@ Regenerar masivamente las tareas de proceso de las actividades asociadas a un ti
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Procesos Select (frontend/procesos/controller/procesos_select.php)
 - **Legacy:** sistema > procesos activ. > procesos
 - **Pills2:** ADMIN LOCAL > procesos activ. > procesos
 
@@ -379,7 +383,7 @@ Carga inicial de la pantalla de administración de procesos: opciones del desple
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Procesos Select (frontend/procesos/controller/procesos_select.php)
 - **Legacy:** sistema > procesos activ. > procesos
 - **Pills2:** ADMIN LOCAL > procesos activ. > procesos
 
@@ -410,7 +414,7 @@ Carga del formulario modal de alta o edición de una tarea dentro de un tipo de 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Procesos Ver (frontend/procesos/controller/procesos_ver.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -441,7 +445,7 @@ Listado de tipos de actividad con el proceso asignado (propio y no propio) para 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Tipo Activ Proceso Lista (frontend/procesos/controller/tipo_activ_proceso_lista.php)
 - **Legacy:** sistema > procesos activ. > tipo activ - proceso
 - **Pills2:** ADMIN LOCAL > procesos activ. > tipo activ - proceso
 
@@ -537,7 +541,7 @@ Carga de la pantalla de alta o edición de permisos de actividad para un usuario
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Usuario Perm Activ (frontend/procesos/controller/usuario_perm_activ.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -568,7 +572,7 @@ Actualizar dinámicamente las opciones del desplegable `fase_ref[]` al cambiar e
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Usuario Perm Activ (frontend/procesos/controller/usuario_perm_activ.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
@@ -591,9 +595,8 @@ Actualizar dinámicamente las opciones del desplegable `fase_ref[]` al cambiar e
 - Flujo: `procesos.usuario_perm_activ_ajax.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/usuario_perm_activ_ajax.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/procesos/flujos/`.

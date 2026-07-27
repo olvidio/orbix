@@ -65,3 +65,8 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 - ``No se encuentra el acta``
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)

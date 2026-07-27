@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "personas"
 flujos: 8
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - personas
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Ver cabecera de persona
 
@@ -21,12 +21,12 @@ Consultar datos básicos y acceder a la ficha completa o dossiers sin pasar por 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Cabecera de persona (frontend/personas/controller/home_persona.php)
 - sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -50,12 +50,12 @@ Guardar cambios en la ficha o eliminar un registro de la propia delegación.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Ficha de persona (frontend/personas/controller/personas_editar.php)
 - sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -81,12 +81,12 @@ Compartir temporalmente una persona con otra delegación sin trasladarla.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Publicar persona (frontend/personas/controller/persona_publicar_form.php)
 - sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -116,12 +116,12 @@ Crear una persona nueva o editar la ficha existente con los campos del colectivo
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Ficha de persona (frontend/personas/controller/personas_editar.php)
 - sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -152,7 +152,7 @@ Encontrar personas del colectivo indicado por el menú, revisar resultados y lan
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -177,12 +177,12 @@ Actualizar el nivel STGR de una persona del listado.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Cambio nivel STGR (frontend/personas/controller/stgr_cambio.php)
 - sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -207,12 +207,12 @@ Ver el nivel actual y las opciones disponibles antes de guardar el cambio.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Cambio nivel STGR (frontend/personas/controller/stgr_cambio.php)
 - sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -236,12 +236,12 @@ Mover una persona a otro centro o delegación, documentando fechas y situación.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
+- Traslado de persona (frontend/personas/controller/traslado_form.php)
 - sin entrada de menú en el índice.
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -259,9 +259,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `personas.traslado.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/personas/flujos/traslado.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/personas/flujos/`.

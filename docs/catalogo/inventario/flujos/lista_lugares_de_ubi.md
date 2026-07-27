@@ -61,3 +61,8 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
+
+## Ruta de menú
+
+- **Legacy:** scdl > Inventario > inventarios > traslado de doc
+- **Pills2:** sin entrada de menú en el índice
