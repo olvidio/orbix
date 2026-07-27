@@ -44,9 +44,15 @@ final class TesseraCopiarSelectData
 
         $posibles = [];
         foreach ($repoN->getPersonas(['apellido1' => $apellido1]) as $oPer) {
+            if ($oPer->getId_nom() === $id_nom) {
+                continue;
+            }
             $posibles[$oPer->getId_nom()] = $oPer->getNombreApellidos() . ' (n)';
         }
         foreach ($repoAgd->getPersonas(['apellido1' => $apellido1]) as $oPer) {
+            if ($oPer->getId_nom() === $id_nom) {
+                continue;
+            }
             $posibles[$oPer->getId_nom()] = $oPer->getNombreApellidos() . ' (agd)';
         }
         asort($posibles, SORT_STRING | SORT_FLAG_CASE);
