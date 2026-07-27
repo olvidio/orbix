@@ -1,6 +1,7 @@
 <?php
 
 use function DI\autowire;
+use function DI\get;
 
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaExRepositoryInterface;
@@ -141,4 +142,6 @@ return [
     ActaPrefijosDeEsquema::class => autowire(ActaPrefijosDeEsquema::class),
     ActaTribunalSync::class => autowire(ActaTribunalSync::class),
     PersonaNotaInputParser::class => autowire(PersonaNotaInputParser::class),
+    \src\notas\application\support\SiglaActaPermitida::class
+        => get(\src\notas\application\support\ActaPersonaFormListas::class),
 ];

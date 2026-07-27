@@ -23,7 +23,7 @@ final class PersonaNotaInputParser
     public function __construct(
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
         private readonly PlanEstudiosDePersona $planEstudiosDePersona,
-        private readonly ActaPersonaFormListas $actaPersonaFormListas,
+        private readonly SiglaActaPermitida $actaPersonaFormListas,
     ) {
     }
     /**

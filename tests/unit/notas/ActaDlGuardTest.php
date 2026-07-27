@@ -10,6 +10,28 @@ use src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface;
 
 final class ActaDlGuardTest extends TestCase
 {
+    /** Valor previo de `$_SESSION['session_auth']`, para no contaminar a otros tests del proceso. */
+    private mixed $sessionAuthOrg = null;
+
+    private bool $sessionAuthHabia = false;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->sessionAuthHabia = isset($_SESSION['session_auth']);
+        $this->sessionAuthOrg = $_SESSION['session_auth'] ?? null;
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->sessionAuthHabia) {
+            $_SESSION['session_auth'] = $this->sessionAuthOrg;
+        } else {
+            unset($_SESSION['session_auth']);
+        }
+        parent::tearDown();
+    }
+
     private function mapa(array $prefToBase): MapaPrefijoActaEsquemaRepositoryInterface
     {
         return new class ($prefToBase) implements MapaPrefijoActaEsquemaRepositoryInterface {

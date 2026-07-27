@@ -6,33 +6,48 @@ namespace Tests\unit\notas\application;
 
 use PHPUnit\Framework\TestCase;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\application\support\ActaPersonaFormListas;
+use src\asignaturas\domain\value_objects\PlanEstudios;
+use src\notas\application\PlanEstudiosDePersona;
 use src\notas\application\support\PersonaNotaInputParser;
+use src\notas\application\support\SiglaActaPermitida;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\TipoActa;
 
 final class PersonaNotaInputParserTest extends TestCase
 {
-    private function parser(?ActaPersonaFormListas $listas = null): PersonaNotaInputParser
+    private function parser(?SiglaActaPermitida $listas = null): PersonaNotaInputParser
     {
         $listas ??= $this->listasMock(['dlp', 'dlpf']);
 
         return new PersonaNotaInputParser(
             $this->createMock(AsignaturaRepositoryInterface::class),
-            $this->createMock(\src\notas\application\PlanEstudiosDePersona::class),
+            $this->planEstudiosDePersona(),
             $listas,
         );
     }
 
     /** @param list<string> $siglas */
-    private function listasMock(array $siglas): ActaPersonaFormListas
+    private function listasMock(array $siglas): SiglaActaPermitida
     {
-        $mock = $this->createMock(ActaPersonaFormListas::class);
+        $mock = $this->createMock(SiglaActaPermitida::class);
         $mock->method('siglaPermitidaEnActa')->willReturnCallback(
             static fn (string $sigla): bool => in_array($sigla, $siglas, true)
         );
 
         return $mock;
+    }
+
+    /**
+     * `PlanEstudiosDePersona` es `final` (no doblable): instancia real con repo mockeado,
+     * que sin marca 9998 resuelve plan 2026.
+     */
+    private function planEstudiosDePersona(): PlanEstudiosDePersona
+    {
+        $repoPlan = $this->createMock(PersonaNotaRepositoryInterface::class);
+        $repoPlan->method('getPersonaNotas')->willReturn([]);
+
+        return new PlanEstudiosDePersona($repoPlan);
     }
 
     public function test_eliminar_no_pide_asignatura_repository(): void
@@ -58,11 +73,14 @@ final class PersonaNotaInputParserTest extends TestCase
     public function test_id_asignatura_1_sin_filas_lanza(): void
     {
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
-        $repo->method('getAsignaturas')->with(['id_nivel' => 3100])->willReturn([]);
+        // Plan resuelto por `PlanEstudiosDePersona` (sin marca 9998 → 2026): entra en el filtro.
+        $repo->method('getAsignaturas')
+            ->with(['id_nivel' => 3100, 'plan_estudios' => PlanEstudios::PLAN_2026])
+            ->willReturn([]);
 
         $parser = new PersonaNotaInputParser(
             $repo,
-            $this->createMock(\src\notas\application\PlanEstudiosDePersona::class),
+            $this->planEstudiosDePersona(),
             $this->listasMock(['dlp']),
         );
 
@@ -85,7 +103,7 @@ final class PersonaNotaInputParserTest extends TestCase
 
         $parser = new PersonaNotaInputParser(
             $repo,
-            $this->createMock(\src\notas\application\PlanEstudiosDePersona::class),
+            $this->planEstudiosDePersona(),
             $this->listasMock(['dlp']),
         );
 

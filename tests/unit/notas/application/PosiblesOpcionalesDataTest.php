@@ -6,12 +6,25 @@ namespace Tests\unit\notas\application;
 
 use PHPUnit\Framework\TestCase;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\application\PlanEstudiosDePersona;
 use src\notas\application\PosiblesOpcionalesData;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
 
 final class PosiblesOpcionalesDataTest extends TestCase
 {
+    /**
+     * `PlanEstudiosDePersona` es `final` (no doblable): se construye con su propio repo
+     * mockeado, que sin marca 9998 resuelve plan 2026.
+     */
+    private function planEstudiosDePersona(): PlanEstudiosDePersona
+    {
+        $repoPlan = $this->createMock(PersonaNotaRepositoryInterface::class);
+        $repoPlan->method('getPersonaNotas')->willReturn([]);
+
+        return new PlanEstudiosDePersona($repoPlan);
+    }
+
     public function test_excluye_opcionales_ya_superadas(): void
     {
         $a1 = $this->createMock(\src\asignaturas\domain\entity\Asignatura::class);
@@ -35,7 +48,7 @@ final class PosiblesOpcionalesDataTest extends TestCase
             ->method('getPersonaNotas')
             ->willReturn([$pnSuperada]);
 
-        $useCase = new PosiblesOpcionalesData($asigRepo, $pnRepo);
+        $useCase = new PosiblesOpcionalesData($asigRepo, $pnRepo, $this->planEstudiosDePersona());
         $out = $useCase->execute(['id_nom' => 77]);
         $this->assertSame([3200 => 'Opt B'], $out);
     }
@@ -52,7 +65,7 @@ final class PosiblesOpcionalesDataTest extends TestCase
         $pnRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
         $pnRepo->method('getPersonaNotas')->willReturn([]);
 
-        $useCase = new PosiblesOpcionalesData($asigRepo, $pnRepo);
+        $useCase = new PosiblesOpcionalesData($asigRepo, $pnRepo, $this->planEstudiosDePersona());
         $this->assertSame([4001 => 'X'], $useCase->execute(['id_nom' => 1]));
     }
 }

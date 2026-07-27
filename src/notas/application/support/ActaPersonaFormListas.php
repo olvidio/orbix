@@ -14,7 +14,7 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 /**
  * Opciones de sigla DL para el formulario notas de persona (acta / certificado).
  */
-final class ActaPersonaFormListas
+final class ActaPersonaFormListas implements SiglaActaPermitida
 {
     public function __construct(
         private readonly DelegacionRepositoryInterface $delegacionRepository,

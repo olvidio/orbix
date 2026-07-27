@@ -510,7 +510,10 @@ class trasladosNotasTest extends myTest
         $this->sreg_dl_org = $reg_dl_org;
         $this->sreg_dl_dst = $Qnew_dl;
 
+        // Limpio destino y origen; lo segundo deja además el repo apuntando a la DL del acta.
         $this->borrar_antes_de_crear_notas($this->id_nom, 'H-' . $dlB);
+        $this->borrar_antes_de_crear_notas($this->id_nom, 'H-' . $dlA);
+        $this->apuntarRepoNotasDl($reg_dl_org);
 
         foreach ($this->cPersonaNotas as $oPersonaNota) {
             $oEditarPersonaNota = $this->nuevoEditarPersonaNota($oPersonaNota);
@@ -568,6 +571,11 @@ class trasladosNotasTest extends myTest
         $_SESSION['session_auth']['esquema'] = $reg_dl_org;
         $_SESSION['session_auth']['mi_id_schema'] = $id_esquemaA;
         $this->id_schema_persona = $id_esquemaA;
+
+        // El repo de `e_notas_dl` del contenedor es singleton y `$GLOBALS['oDB']` quedó fijado
+        // al esquema del bootstrap; hay que apuntarlo a la DL del acta antes de escribir (en
+        // producción `oDB` ya es la conexión de la DL de la sesión, aquí la sesión se mueve).
+        $this->apuntarRepoNotasDl($reg_dl_org);
 
         // 1.- guardar notas del dlA
         foreach ($this->cPersonaNotas as $oPersonaNota) {
@@ -682,7 +690,41 @@ class trasladosNotasTest extends myTest
         $dl = DelegacionUtils::getDlFromSchema($esquema);
 
         $this->borrar_antes_de_crear_notas($this->id_nom, $esquema);
+        $this->borrar_notas_otra_region($this->id_nom, $esquema);
         $this->cPersonaNotas = $NotasFactory->create($this->id_nom, $dl);
+    }
+
+    /**
+     * Restos de `e_notas_otra_region_stgr` (modelo antiguo o corridas anteriores) para este
+     * `id_nom`: si no se limpian, los asserts de «no debe haber nada en otra_region» fallan
+     * de forma intermitente según qué asignaturas aleatorias genere la factory.
+     */
+    private function borrar_notas_otra_region(int $id_nom, string $esquema): void
+    {
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        $esquema_region_stgr = (string) ($DelegacionRepository->mi_region_stgr($dl)['esquema_region_stgr'] ?? '');
+        if ($esquema_region_stgr === '') {
+            return;
+        }
+
+        $repo = $GLOBALS['container']->make(
+            PersonaNotaOtraRegionStgrRepositoryInterface::class,
+            ['esquema_region_stgr' => $esquema_region_stgr]
+        );
+        $repo->setoDbl($this->setConexion($esquema_region_stgr));
+        foreach ($repo->getPersonaNotas(['id_nom' => $id_nom]) as $oNota) {
+            $repo->Eliminar($oNota);
+        }
+    }
+
+    /**
+     * Apunta el repo (singleton) de `e_notas_dl` al esquema indicado.
+     */
+    private function apuntarRepoNotasDl(string $esquema): void
+    {
+        $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
+        $PersonaNotaDlRepository->setoDbl($this->setConexion($esquema));
     }
 
     private function borrar_antes_de_crear_notas($id_nom, $esquema)

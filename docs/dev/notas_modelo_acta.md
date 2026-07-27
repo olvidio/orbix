@@ -112,7 +112,8 @@ Orden de trabajo recomendado. Cada slice debe dejar tests verdes y no mezclar mi
 - [x] `NotasDeUnaPersonaData` / dossier 1011 / tessera usan expediente agregado (`publicv.e_notas`).  
 - [x] **`Resumen` STGR (alumnos):** indicadores por persona vía padre `publicv/f.e_notas` (no solo `e_notas_dl` local). `$tablaNotasDl` reservado si hiciera falta métrica «examinado en esta DL».  
 - [x] **`AsignaturasPendientes`:** mismo criterio (expediente padre).  
-- [x] **`comprobar_notas`:** lecturas y borrados de cursadas vía `publicv/f.e_notas`; INSERT 9998/9999 vía `ActaFinCicloInsert` (`acta`=sigla DL que inserta, `detalle`=«fin …», `tipo_acta`=1).
+- [x] **`comprobar_notas`:** diagnóstico **de la persona** (bienio/cuadrienio terminado, `c1`/`c2`/`r` mal puesto: secciones 1, 2, 5, 6, 7) vía `publicv/f.e_notas`, contando `count(DISTINCT id_asignatura)` para que acta y certificado de la misma asignatura no sumen dos veces. Mantenimiento **de filas de esta DL** (secciones 4 «sin fecha de acta» y 8 «cursadas sin examinar») y **todos los borrados** vía `e_notas_dl` local: el padre solo concede `SELECT` (borrar en él da `permission denied for table e_notas`) y una DL no debe borrar notas de actas ajenas. INSERT 9998/9999 vía `ActaFinCicloInsert` (`acta`=sigla DL que inserta, `detalle`=«fin …», `tipo_acta`=1).
+  - Pendiente: las listas de mantenimiento siguen uniendo con `p_numerarios`/`p_agregados` locales, así que no muestran filas del `e_notas_dl` propio cuyo alumno ya está en otra DL (requiere resolver el nombre cross-esquema).
 
 ### Slice 4 — Destino de `e_notas_otra_region_stgr` y `tipo_acta=2`
 

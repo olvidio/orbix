@@ -42,6 +42,11 @@ $nivel_stgr_C1 = NivelStgrId::C1;
 $nivel_stgr_C2 = NivelStgrId::C2;
 $nivel_stgr_R = NivelStgrId::R;
 $nivel_stgr_N = NivelStgrId::N;
+$aNivelStgrTxt = NivelStgrId::getArrayNivelStgr();
+$txtNivelStgr = static function (int|string|null $id) use ($aNivelStgrTxt): string {
+    $key = (int) $id;
+    return $aNivelStgrTxt[$key] ?? (string) $id;
+};
 $nota_situ_numerica = NotaSituacion::NUMERICA;
 $nota_situ_cursada = NotaSituacion::CURSADA;
 
@@ -57,7 +62,11 @@ $Qid_tabla = \src\shared\domain\helpers\FuncTablasSupport::inputString($requestI
     ),
 };
 
-// Expediente agregado (todas las DL). Marcadores 9998/9999: acta=sigla DL local.
+// Dos tablas, dos usos (ver docs/dev/notas_modelo_acta.md):
+// - `$tablaNotas` (padre, todas las DL): diagnóstico de la persona (bienio/cuadrienio, c1/c2/r).
+// - `$tablaNotasDl` (hija local): filas de las actas de esta DL; único destino de listas de
+//   mantenimiento y de cualquier borrado (el padre solo concede SELECT y borrar en él tocaría
+//   notas de otras DL). Marcadores 9998/9999: acta=sigla DL local.
 $tablaNotas = ConfigGlobal::mi_sfsv() == 2 ? 'publicf.e_notas' : 'publicv.e_notas';
 $tablaNotasDl = 'e_notas_dl';
 $actaFinCiclo = new ActaFinCicloInsert($oDB, $tablaNotas);
@@ -154,6 +163,19 @@ $comprobarNotasUrl = static function (array $params) use ($Qid_tabla, $Qplan): s
 };
 
 /**
+ * Cabecera de columnas para los listados HTML (misma convención que Resumen::Lista).
+ *
+ * @param list<string> $titulos
+ */
+$echoCabeceraLista = static function (array $titulos): void {
+    echo '<tr><td width=20></td>';
+    foreach ($titulos as $titulo) {
+        echo '<th>' . $titulo . '</th>';
+    }
+    echo '</tr>';
+};
+
+/**
  * SQL de candidatos a c1 o c2 según el plan seleccionado.
  *
  * @param 'c1'|'c2' $destino
@@ -182,11 +204,11 @@ $sqlCandidatosC1C2 = static function (
 
     $excluir = $destino === 'c1' ? $nivel_stgr_C1 : $nivel_stgr_C2;
     $havingCmp = $destino === 'c1'
-        ? "count(n.id_asignatura) < {$tramoC1C2['count']}"
-        : "count(n.id_asignatura) >= {$tramoC1C2['count']}";
+        ? "count(DISTINCT n.id_asignatura) < {$tramoC1C2['count']}"
+        : "count(DISTINCT n.id_asignatura) >= {$tramoC1C2['count']}";
     $select = $soloIdNom
         ? 'p.id_nom'
-        : 'p.nivel_stgr, p.nom, p.apellido1, p.apellido2, count(n.id_asignatura) AS NumAsig';
+        : 'p.nivel_stgr, p.nom, p.apellido1, p.apellido2, count(DISTINCT n.id_asignatura) AS NumAsig';
     $groupBy = $soloIdNom
         ? 'p.id_nom'
         : 'p.id_nom, p.nivel_stgr, p.nom, p.apellido1, p.apellido2';
@@ -265,7 +287,7 @@ if ($Qactualizar === 'borrar_cursada') {
     $Qid_nom = (string)\src\shared\domain\helpers\FuncTablasSupport::inputInt($requestInput, 'id_nom');
     $Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputString($requestInput, 'id_asignatura');
 
-    $ssql = "DELETE FROM {$tablaNotas} n 
+    $ssql = "DELETE FROM {$tablaNotasDl} n
 		WHERE n.id_situacion = " . $nota_situ_cursada . "
             AND id_nom = $Qid_nom
             AND id_asignatura = $Qid_asignatura
@@ -281,7 +303,7 @@ if ($Qactualizar === 'caduca_cursada') {
         ->format('Y-m-d');
 
     $ssql = "SELECT p.id_nom, n.id_asignatura
-		FROM $tabla p LEFT JOIN {$tablaNotas} n USING (id_nom)
+		FROM $tabla p LEFT JOIN {$tablaNotasDl} n USING (id_nom)
 		WHERE n.id_situacion = " . $nota_situ_cursada . "
             AND f_acta < '$f_caduca_iso'
 		";
@@ -294,19 +316,19 @@ if ($Qactualizar === 'caduca_cursada') {
         $i++;
         $id_nom = $row["id_nom"];
         $id_asignatura = $row["id_asignatura"];
-        $ssql_1 = "DELETE FROM {$tablaNotas}
+        $ssql_1 = "DELETE FROM {$tablaNotasDl}
 			WHERE id_nom=$id_nom AND id_asignatura = $id_asignatura
 			";
         $dbQuery($oDB, $ssql_1);
     }
 }
 if ($Qactualizar == "9999" && $tramoBienio['count'] > 0) {
-    $ssql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*),nivel_stgr
+    $ssql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(DISTINCT n.id_asignatura),nivel_stgr
 		FROM $tabla p,{$tablaNotas} n
 		WHERE p.id_nom=n.id_nom AND $superada
 			AND (n.id_nivel IN ({$tramoBienio['in_niveles']}) OR n.id_nivel=9999)
 		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,nivel_stgr
-		HAVING count(*) >= {$tramoBienio['count']} AND Max(n.id_nivel)<>9999
+		HAVING count(DISTINCT n.id_asignatura) >= {$tramoBienio['count']} AND Max(n.id_nivel)<>9999
 		ORDER BY p.apellido1 ASC,p.apellido2 ";
 
     $oDBSt_sql = $dbQuery($oDB, $ssql);
@@ -326,12 +348,12 @@ if ($Qactualizar == "9999" && $tramoBienio['count'] > 0) {
     }
 }
 if ($Qactualizar == "9998" && $tramoCuadrienio['count'] > 0) {
-    $ssql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*),nivel_stgr
+    $ssql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(DISTINCT n.id_asignatura),nivel_stgr
 		FROM $tabla p LEFT JOIN {$tablaNotas} n USING (id_nom)
 		WHERE $superada
 			AND (n.id_nivel IN ({$tramoCuadrienio['in_niveles']}) OR n.id_nivel=9998)
 		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,nivel_stgr
-		HAVING count(*) >= {$tramoCuadrienio['count']} AND Max(n.id_nivel)<>9998
+		HAVING count(DISTINCT n.id_asignatura) >= {$tramoCuadrienio['count']} AND Max(n.id_nivel)<>9998
 		ORDER BY p.apellido1,p.apellido2,nom ";
 
     $oDBSt_sql = $dbQuery($oDB, $ssql);
@@ -388,12 +410,12 @@ echo '<p>' . sprintf(
 $nf = 0;
 $oDBSt_bienio = null;
 if ($tramoBienio['count'] > 0) {
-    $sql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*) as num_asig,nivel_stgr
+    $sql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(DISTINCT n.id_asignatura) as num_asig,nivel_stgr
 FROM $tabla p,{$tablaNotas} n
 WHERE p.id_nom=n.id_nom AND $superada
 	AND (n.id_nivel IN ({$tramoBienio['in_niveles']}) OR n.id_nivel=9999)
 GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,nivel_stgr
-HAVING count(*) >= {$tramoBienio['count']} AND Max(n.id_nivel)<>9999
+HAVING count(DISTINCT n.id_asignatura) >= {$tramoBienio['count']} AND Max(n.id_nivel)<>9999
 ORDER BY p.apellido1 ASC,p.apellido2 ";
 
     $oDBSt_bienio = $dbQuery($oDB, $sql);
@@ -404,10 +426,11 @@ echo "<p>"._("Es importante poner bien la fecha en que lo ha terminado")."</p>";
 if (!empty($nf) && $oDBSt_bienio instanceof PDOStatement) {
     /* Para sacar una lista*/
     echo "<table>";
+    $echoCabeceraLista([_("apellidos, nombre"), _("asignaturas"), _("nivel stgr")]);
     foreach ($oDBSt_bienio->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
         $numasig = $algo['num_asig'];
-        $nivel_stgr = $algo['nivel_stgr'];
+        $nivel_stgr = $txtNivelStgr($algo['nivel_stgr']);
         echo "<tr><td width=20></td>";
         echo "<td>$nom</td><td>$numasig</td><td>$nivel_stgr</td></tr>";
     }
@@ -425,12 +448,12 @@ if (!empty($nf) && $oDBSt_bienio instanceof PDOStatement) {
 $nf = 0;
 $oDBSt_cuadrienio = null;
 if ($tramoCuadrienio['count'] > 0) {
-    $sql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*) as num_asig,nivel_stgr
+    $sql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(DISTINCT n.id_asignatura) as num_asig,nivel_stgr
 		FROM $tabla p LEFT JOIN {$tablaNotas} n USING (id_nom)
 		WHERE $superada
 			AND (n.id_nivel IN ({$tramoCuadrienio['in_niveles']}) OR n.id_nivel=9998)
 		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,nivel_stgr
-		HAVING count(*) >= {$tramoCuadrienio['count']} AND Max(n.id_nivel)<>9998
+		HAVING count(DISTINCT n.id_asignatura) >= {$tramoCuadrienio['count']} AND Max(n.id_nivel)<>9998
 		ORDER BY p.apellido1,p.apellido2,nom ";
 
     $oDBSt_cuadrienio = $dbQuery($oDB, $sql);
@@ -441,10 +464,11 @@ echo "<br><p>" . sprintf(_("2. %s con el cuadrienio terminado (plan %d) y sin po
 if (!empty($nf) && $oDBSt_cuadrienio instanceof PDOStatement) {
     /* Para sacar una lista*/
     echo "<table>";
+    $echoCabeceraLista([_("apellidos, nombre"), _("asignaturas"), _("nivel stgr")]);
     foreach ($oDBSt_cuadrienio->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
         $numasig = $algo['num_asig'];
-        $nivel_stgr = $algo['nivel_stgr'];
+        $nivel_stgr = $txtNivelStgr($algo['nivel_stgr']);
         echo "<tr><td width=20></td>";
         echo "<td>$nom</td><td>$numasig</td><td>$nivel_stgr</td></tr>";
     }
@@ -467,8 +491,21 @@ $asignaturasMapData = DependencyResolver::get(AsignaturasMapData::class);
 $dAsigMap = $asignaturasMapData->execute();
 $a_asignaturas_map = $dAsigMap['a_asignaturas'];
 
+/**
+ * Nombre corto de la asignatura; una fila con id fuera del catálogo no debe tumbar la pantalla.
+ */
+$nombreAsignatura = static function (int|string $idAsignatura) use ($a_asignaturas_map): string {
+    $nombre = $a_asignaturas_map[$idAsignatura] ?? null;
+    if ($nombre === null || $nombre === '') {
+        return sprintf(_('(asignatura %s desconocida)'), (string) $idAsignatura);
+    }
+
+    return $nombre;
+};
+
+// Filas a corregir en las actas de esta DL: tabla hija, no el expediente agregado.
 $sqlF = "SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura
-FROM $tabla p,{$tablaNotas} n
+FROM $tabla p,{$tablaNotasDl} n
 WHERE p.id_nom=n.id_nom AND (n.f_acta) IS NULL AND (n.id_situacion = " . $nota_situ_numerica . " OR n.id_situacion::text ~ '[34]')
 ORDER BY p.apellido1,p.apellido2 ";
 
@@ -478,14 +515,12 @@ echo "<br><p>4. $tabla_txt con asignaturas sin fecha de acta: $nf</p>";
 
 /* Para sacar una lista*/
 echo "<table>";
+$echoCabeceraLista([_("apellidos, nombre"), _("fecha acta"), _("asignatura")]);
 foreach ($oDBSt_sql->fetchAll() as $algo) {
     $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
     $fecha = $algo['f_acta'];
     $id_asignatura = $algo['id_asignatura'];
-    if (empty($a_asignaturas_map[$id_asignatura])) {
-        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
-    }
-    $asig = $a_asignaturas_map[$id_asignatura];
+    $asig = $nombreAsignatura($id_asignatura);
     echo "<tr><td width=20></td>";
     echo "<td>$nom</td><td>$fecha</td><td>$asig</td></tr>";
 }
@@ -502,6 +537,8 @@ $renderListaC1C2 = static function (
     $oDB,
     $sqlCandidatosC1C2,
     $comprobarNotasUrl,
+    $echoCabeceraLista,
+    $txtNivelStgr,
     $tabla_txt,
     $Qplan,
     $tramoC1C2,
@@ -517,9 +554,10 @@ $renderListaC1C2 = static function (
     }
     echo '<br><p>' . sprintf($tituloFmt, $tabla_txt, $Qplan, $nf, $tramoC1C2['count']) . '</p>';
     echo '<table>';
+    $echoCabeceraLista([_("apellidos, nombre"), _("nivel stgr"), _("asignaturas")]);
     foreach ($oDBSt_sql->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . ' ' . $algo['apellido2'] . ', ' . $algo['nom'];
-        $nivel_stgr = $algo['nivel_stgr'];
+        $nivel_stgr = $txtNivelStgr($algo['nivel_stgr']);
         $asig = $algo['numasig'];
         echo '<tr><td width=20></td>';
         echo "<td>$nom</td><td>$nivel_stgr</td><td>$asig</td></tr>";
@@ -555,11 +593,11 @@ $nf = $oDBSt_sql->rowCount();
 if (!empty($nf)) {
     echo "<br><p>7. $tabla_txt con \"r\" sin poner: $nf</p>";
     // Para sacar una lista
-    // Para sacar una lista
     echo "<table>";
+    $echoCabeceraLista([_("apellidos, nombre"), _("nivel stgr")]);
     foreach ($oDBSt_sql->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
-        $nivel_stgr = $algo['nivel_stgr'];
+        $nivel_stgr = $txtNivelStgr($algo['nivel_stgr']);
         echo "<tr><td width=20></td>";
         echo "<td>$nom</td><td>$nivel_stgr</td></tr>";
     }
@@ -576,7 +614,7 @@ if (!empty($nf)) {
 
 /*8. Gente con asignaturas cursadas sin aprobar*/
 $sqlF = "SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura
-FROM $tabla p,{$tablaNotas} n
+FROM $tabla p,{$tablaNotasDl} n
 WHERE p.situacion != 'B' AND p.id_nom = n.id_nom AND n.id_situacion = " . $nota_situ_cursada . "
 ORDER BY p.apellido1,p.apellido2 ";
 
@@ -590,14 +628,12 @@ $oConfig = $_SESSION['oConfig'] ?? null;
 $caduca_cursada = $oConfig instanceof ConfigSnapshot ? $oConfig->getCaducaCursada() : '';
 
 echo "<table>";
+$echoCabeceraLista([_("apellidos, nombre"), _("fecha acta"), _("asignatura"), _("borrar")]);
 foreach ($oDBSt_sql->fetchAll() as $algo) {
     $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
     $fecha = $algo['f_acta'];
     $id_asignatura = $algo['id_asignatura'];
-    if (empty($a_asignaturas_map[$id_asignatura])) {
-        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
-    }
-    $asig = $a_asignaturas_map[$id_asignatura];
+    $asig = $nombreAsignatura($id_asignatura);
     $id_nom = $algo['id_nom'];
 
     $aParam = [

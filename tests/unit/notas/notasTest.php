@@ -118,8 +118,14 @@ class notasTest extends myTest
         }
     }
 
-    private function nuevoEditarPersonaNota(\src\notas\domain\entity\PersonaNota $oPersonaNota): EditarPersonaNota
-    {
+    /**
+     * @param bool $conMapaActa true para activar el enrutado por prefijo de acta
+     *                          (`mapa_prefijo_acta_esquema`), como en producción.
+     */
+    private function nuevoEditarPersonaNota(
+        \src\notas\domain\entity\PersonaNota $oPersonaNota,
+        bool $conMapaActa = false,
+    ): EditarPersonaNota {
         $container = $GLOBALS['container'];
         return new EditarPersonaNota(
             $oPersonaNota,
@@ -128,6 +134,9 @@ class notasTest extends myTest
             $container->get(\src\utils_database\domain\contracts\DbSchemaRepositoryInterface::class),
             $container->get(\src\dossiers\domain\contracts\DossierRepositoryInterface::class),
             $container->get(\src\notas\domain\contracts\PersonaNotaDlRepositoryInterface::class),
+            $conMapaActa
+                ? $container->get(\src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface::class)
+                : null,
         );
     }
 
@@ -139,29 +148,45 @@ class notasTest extends myTest
      * debe dar error
      * @return void
      */
-    public function test_guardar_nota_sin_region_p_de_paso(): void
+    /**
+     * Acta de una DL cuyo esquema no se puede abrir (no está en la configuración de conexiones):
+     * el enrutado por `mapa_prefijo_acta_esquema` debe fallar de forma explícita, no escribir la
+     * nota en la DL de la sesión.
+     *
+     * Antes este test guardaba desde `Pla-crPlav` y solo «pasaba» cuando la asignatura aleatoria
+     * chocaba con restos de otra corrida («Ya existe esta nota»), así que era indeterminista.
+     */
+    public function test_guardar_nota_acta_de_esquema_no_configurado_lanza(): void
     {
-        $this->expectException(RuntimeException::class);
+        // Prefijo «crusca» → `Usca-crUsca` en mapa_prefijo_acta_esquema, sin conexión configurada.
+        $esquemaSinConfig = 'Usca-crUscav';
+        if ((new ConfigDB('sv'))->tieneEsquema($esquemaSinConfig)) {
+            $this->markTestSkipped(sprintf(
+                'El esquema %s ya tiene conexión configurada: este test necesita uno que no la tenga.',
+                $esquemaSinConfig
+            ));
+        }
 
-        // dlB desde la que se ejecuta la operación de guardar nota.
-        $esquema = 'Pla-crPlav';
+        // DL desde la que se ejecuta la operación de guardar nota.
+        $esquema = 'H-dlbv';
         $_SESSION['session_auth']['esquema'] = $esquema;
 
         // persona de paso: id_nom negativo; esquema = -1001;
         $id_nom = -1001123;
-        $id_schema_persona = '-1001'; // restov
+        $id_schema_persona = -1001; // restov
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
         $dl = DelegacionUtils::getDlFromSchema($esquema);
         $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
+        $personaNota->setActa('crusca 12/24');
+        $personaNota->setTipo_acta(TipoActa::FORMATO_ACTA);
 
-        $oEditarPersonaNota = $this->nuevoEditarPersonaNota($personaNota);
+        $oEditarPersonaNota = $this->nuevoEditarPersonaNota($personaNota, conMapaActa: true);
         $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
 
-        $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
-
-        $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+        $this->expectException(RuntimeException::class);
+        $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
     }
 
     ///////////////  Una region ella misma region del stgr ////////////
@@ -527,7 +552,9 @@ class notasTest extends myTest
      */
     public function test_save_PersonaNotaDl(): void
     {
-        $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
+        // Explícito: el repo del contenedor es singleton y un test anterior puede haberlo dejado
+        // apuntando a otro esquema (la fila nacería con otro `id_schema`).
+        $PersonaNotaDlRepository = $this->personaNotaDlRepositoryForSchema('H-dlbv');
         $oPersonaNota = $this->crear_PersonaNota();
         $PersonaNotaDlRepository->Guardar($oPersonaNota);
 
