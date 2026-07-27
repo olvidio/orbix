@@ -21,8 +21,8 @@ use src\shared\config\ConfigGlobal;
  * - `f_acta` = última fecha de acta tipo 1 de la persona en el tramo
  *   (9999: `id_nivel < 2000`; 9998: resto salvo 9998/9999); fallback: hoy
  *
- * La migración 211200 normaliza filas históricas; los inserts nuevos ya nacen
- * con acta=sigla de la DL examinadora.
+ * La migración `202607271800_mover_fin_ciclo_a_dl_ultima_acta` recoloca filas
+ * históricas; los inserts nuevos ya nacen con acta=sigla de la DL examinadora.
  */
 final class ActaFinCicloInsert
 {
