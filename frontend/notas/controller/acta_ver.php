@@ -118,6 +118,8 @@ $permiso = $form['permiso'];
 $Qmod = $form['mod'] !== '' ? $form['mod'] : $Qmod;
 $acta_actual = $form['acta_actual'];
 $acta_new = $form['acta_new'];
+$acta_sigla = $form['acta_sigla'];
+$acta_new_num = $form['acta_new_num'];
 $ult_acta = $form['ult_acta'];
 $f_acta = $form['f_acta'];
 $libro = $form['libro'];
@@ -145,10 +147,11 @@ if ($form['warn_no_id_activ']) {
 $obj = 'notas\\model\\entity\\ActaDl';
 
 $oHashActa = new HashFront();
-$sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta!acta!name_asignatura';
+$sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta!name_asignatura';
 if ($Qmod === 'nueva' || $notas === 'nuevo') {
+    $sCamposForm .= '!acta_num';
+} else {
     $sCamposForm .= '!acta';
-    $sCamposForm .= '!f_acta';
 }
 if ($examinadores !== [] && $examinadores[0] !== '') {
     $sCamposForm .= '!examinadores';
@@ -288,6 +291,8 @@ $a_campos = ['obj' => $obj,
     'titulo' => $titulo,
     'acta_actual' => $acta_actual,
     'acta_new' => $acta_new,
+    'acta_sigla' => $acta_sigla,
+    'acta_new_num' => $acta_new_num,
     'ult_acta' => $ult_acta,
     'f_acta' => $f_acta,
     'libro' => $libro,

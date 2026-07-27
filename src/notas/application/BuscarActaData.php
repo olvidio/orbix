@@ -7,27 +7,21 @@ namespace src\notas\application;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\application\support\ActaPrefijosDeEsquema;
-use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\notas\domain\contracts\ActaDlRepositoryInterface;
+use src\notas\domain\contracts\ActaExRepositoryInterface;
 use src\notas\domain\value_objects\NotaEpoca;
 
 /**
- * Busca un acta por su numero abreviado (tal como lo teclea el usuario)
- * y devuelve los datos asociados (asignatura, nivel, actividad, fecha,
- * epoca).
- *
- * Si no encuentra ninguna coincidencia unica, devuelve
- * `['id_asignatura' => 'no']` para preservar el contrato historico
- * consumido por `form_notas_de_una_persona.phtml`.
+ * Busca un acta por sigla + num/aa y devuelve los datos asociados.
  */
 final class BuscarActaData
 {
 
     public function __construct(
-        private readonly ActaRepositoryInterface $actaRepository,
+        private readonly ActaDlRepositoryInterface $actaDlRepository,
+        private readonly ActaExRepositoryInterface $actaExRepository,
         private readonly ActividadAllRepositoryInterface $actividadAllRepository,
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
-        private readonly ActaPrefijosDeEsquema $actaPrefijosDeEsquema,
     ) {
     }
 
@@ -37,29 +31,21 @@ final class BuscarActaData
      */
     public function execute(array $input): array
     {
-        $acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta');
-
-        $matches = [];
-        preg_match("/^(\d*)(\/)?(\d*)/", $acta, $matches);
-        $aWhere = ['acta' => $acta];
-        $aOperador = [];
-        if (!empty($matches[1])) {
-            $soloNumero = empty($matches[3]);
-            $patron = $this->actaPrefijosDeEsquema->patronBusquedaPorNumero($acta, $soloNumero);
-            if ($patron !== '') {
-                $aWhere['acta'] = $patron;
-                $aOperador['acta'] = '~';
-            } else {
-                $mi_dele = ConfigGlobal::mi_delef();
-                $acta = $soloNumero
-                    ? "$mi_dele " . $matches[1] . '/' . date('y')
-                    : "$mi_dele $acta";
-                $aWhere['acta'] = $acta;
-            }
+        $sigla = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta_sigla');
+        if ($sigla === '') {
+            $sigla = ConfigGlobal::mi_delef();
         }
 
-        $ActaRepository = $this->actaRepository;
-        $cActas = $ActaRepository->getActas($aWhere, $aOperador);
+        $numPart = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta');
+        $actaBuscar = $this->componerActa($sigla, $numPart);
+        if ($actaBuscar === '') {
+            return ['id_asignatura' => 'no'];
+        }
+
+        $cActas = $this->actaDlRepository->getActas(['acta' => $actaBuscar]);
+        if (count($cActas) !== 1) {
+            $cActas = $this->actaExRepository->getActas(['acta' => $actaBuscar]);
+        }
 
         if (count($cActas) !== 1) {
             return ['id_asignatura' => 'no'];
@@ -99,5 +85,25 @@ final class BuscarActaData
             'epoca' => (string)$epoca,
             'acta' => $actaEncontrada,
         ];
+    }
+
+    private function componerActa(string $sigla, string $numPart): string
+    {
+        $numPart = trim($numPart);
+        if ($numPart === '') {
+            return '';
+        }
+
+        $matches = [];
+        preg_match('/^(\d+)(?:\/(\d{2}))?$/', $numPart, $matches);
+        if ($matches === []) {
+            return '';
+        }
+
+        $soloNumero = ($matches[2] ?? '') === '';
+        $any = $soloNumero ? date('y') : $matches[2];
+        $num = $matches[1] . '/' . $any;
+
+        return $sigla . ' ' . $num;
     }
 }

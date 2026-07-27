@@ -25,6 +25,10 @@ final class ActaNueva
     public function execute(array $input): string
     {
         $acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta');
+        $actaNum = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta_num');
+        if ($actaNum !== '' && preg_match('/^\d+\/\d{2}$/', $actaNum) === 1) {
+            $acta = ConfigGlobal::mi_delef() . ' ' . $actaNum;
+        }
         $aSel = (array)($input['sel'] ?? []);
         if ($aSel !== []) {
             $sel0 = $aSel[0];

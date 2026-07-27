@@ -6,15 +6,38 @@ namespace Tests\unit\notas\application;
 
 use PHPUnit\Framework\TestCase;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\application\support\ActaPersonaFormListas;
 use src\notas\application\support\PersonaNotaInputParser;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\TipoActa;
 
 final class PersonaNotaInputParserTest extends TestCase
 {
+    private function parser(?ActaPersonaFormListas $listas = null): PersonaNotaInputParser
+    {
+        $listas ??= $this->listasMock(['dlp', 'dlpf']);
+
+        return new PersonaNotaInputParser(
+            $this->createMock(AsignaturaRepositoryInterface::class),
+            $this->createMock(\src\notas\application\PlanEstudiosDePersona::class),
+            $listas,
+        );
+    }
+
+    /** @param list<string> $siglas */
+    private function listasMock(array $siglas): ActaPersonaFormListas
+    {
+        $mock = $this->createMock(ActaPersonaFormListas::class);
+        $mock->method('siglaPermitidaEnActa')->willReturnCallback(
+            static fn (string $sigla): bool => in_array($sigla, $siglas, true)
+        );
+
+        return $mock;
+    }
+
     public function test_eliminar_no_pide_asignatura_repository(): void
     {
-        $parser = new PersonaNotaInputParser($this->createMock(AsignaturaRepositoryInterface::class));
+        $parser = $this->parser();
 
         $pn = $parser->parse(
             [
@@ -37,7 +60,11 @@ final class PersonaNotaInputParserTest extends TestCase
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
         $repo->method('getAsignaturas')->with(['id_nivel' => 3100])->willReturn([]);
 
-        $parser = new PersonaNotaInputParser($repo);
+        $parser = new PersonaNotaInputParser(
+            $repo,
+            $this->createMock(\src\notas\application\PlanEstudiosDePersona::class),
+            $this->listasMock(['dlp']),
+        );
 
         $this->expectException(\RuntimeException::class);
         $parser->parse([
@@ -56,7 +83,11 @@ final class PersonaNotaInputParserTest extends TestCase
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
         $repo->method('getAsignaturas')->willReturn([$asig]);
 
-        $parser = new PersonaNotaInputParser($repo);
+        $parser = new PersonaNotaInputParser(
+            $repo,
+            $this->createMock(\src\notas\application\PlanEstudiosDePersona::class),
+            $this->listasMock(['dlp']),
+        );
 
         $pn = $parser->parse([
             'id_pau' => 3,
@@ -70,7 +101,7 @@ final class PersonaNotaInputParserTest extends TestCase
 
     public function test_tipo_acta_cero_se_normaliza_a_formato_acta(): void
     {
-        $parser = new PersonaNotaInputParser($this->createMock(AsignaturaRepositoryInterface::class));
+        $parser = $this->parser();
 
         $pn = $parser->parse([
             'id_pau' => 1,

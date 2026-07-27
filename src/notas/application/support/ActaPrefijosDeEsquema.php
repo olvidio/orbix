@@ -57,6 +57,52 @@ final class ActaPrefijosDeEsquema
     }
 
     /**
+     * Prefijo (sigla) de un acta con formato «sigla num/aa».
+     */
+    public static function prefijoDeActa(string $acta): string
+    {
+        $acta = trim($acta);
+        if ($acta === '' || $acta === '?') {
+            return '';
+        }
+        $pref = strtok($acta, ' ');
+
+        return is_string($pref) ? $pref : '';
+    }
+
+    /**
+     * Parte num/aa de un acta «sigla num/aa» (sin «?» final).
+     */
+    public static function numeroDeActa(string $acta): string
+    {
+        if (preg_match('/^\S+\s+(\d+\/\d{2})/', trim($acta), $m) === 1) {
+            return $m[1];
+        }
+
+        return '';
+    }
+
+    /**
+     * Actas en formato acta (tipo 1): prefijo propio de sesión (mapa + dl actual).
+     */
+    public function actaPermitidaEnFormatoActa(string $acta): bool
+    {
+        $acta = trim($acta);
+        if ($acta === '') {
+            return true;
+        }
+        if ($acta === '?' || str_starts_with($acta, '? ')) {
+            return true;
+        }
+        $pref = self::prefijoDeActa($acta);
+        if ($pref === '') {
+            return false;
+        }
+
+        return in_array($pref, $this->prefijosSesion(), true);
+    }
+
+    /**
      * Patrón regex OR para buscar un nº de acta con todos los prefijos propios.
      *
      * @param string $numeroParte Parte numérica (p. ej. `12` o `12/24`)

@@ -132,7 +132,7 @@ $helpers = is_array($helpersRaw) ? $helpersRaw : ['op_genericas_json' => '', 'co
 
 $oHash = new HashFront();
 $campos_chk = '!preceptor!epoca!tipo_acta';
-$camposForm = 'preceptor!nota_num!nota_max!id_situacion!acta!tipo_acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
+$camposForm = 'preceptor!nota_num!nota_max!id_situacion!acta!acta_sigla!acta_num!acta_cert_dl!acta_cert_num!tipo_acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
 $camposNo = 'refresh!id_preceptor!id_activ' . $campos_chk;
 $a_camposHidden = [
     'campos_chk' => $campos_chk,
@@ -177,8 +177,20 @@ $h_actividad_buscar = $oHashActivBuscar->linkSinValParams();
 $url_buscar_acta = AppUrlConfig::srcBrowserUrl('/src/notas/buscar_acta');
 $oHashBuscarActa = new HashFront();
 $oHashBuscarActa->setUrl($url_buscar_acta);
-$oHashBuscarActa->setCamposForm('acta');
+$oHashBuscarActa->setCamposForm('acta!acta_sigla');
 $h_buscar_acta = $oHashBuscarActa->linkSinValParams();
+
+$opcionesCertDl = is_array($datos['opciones_certificado_dl'] ?? null) ? $datos['opciones_certificado_dl'] : [];
+$certSel = PayloadCoercion::string($datos['acta_cert_dl_sel'] ?? '');
+if ($certSel !== '' && !array_key_exists($certSel, $opcionesCertDl)) {
+    $opcionesCertDl = [$certSel => $certSel] + $opcionesCertDl;
+}
+$oDesplCertDl = Desplegable::desdeOpciones($opcionesCertDl, 'acta_cert_dl', false);
+$oDesplCertDl->setOpcion_sel($certSel);
+
+$dlSinEsquema = is_array($datos['dl_sin_esquema'] ?? null) ? $datos['dl_sin_esquema'] : [];
+$actaSiglaSel = PayloadCoercion::string($datos['acta_sigla_sel'] ?? $datos['mi_sigla'] ?? '');
+$miSigla = PayloadCoercion::string($datos['mi_sigla'] ?? '');
 
 $url_persona_nota_nueva = AppUrlConfig::srcBrowserUrl('/src/notas/persona_nota_nueva');
 $url_persona_nota_editar = AppUrlConfig::srcBrowserUrl('/src/notas/persona_nota_editar');
@@ -215,6 +227,12 @@ $a_campos = [
     'chk_acta' => $chk_acta,
     'chk_certificado' => $chk_certificado,
     'acta' => $datos['acta'],
+    'acta_sigla_sel' => $actaSiglaSel,
+    'acta_num' => $datos['acta_num'],
+    'acta_cert_num' => $datos['acta_cert_num'],
+    'mi_sigla' => $miSigla,
+    'dl_sin_esquema' => $dlSinEsquema,
+    'oDesplCertDl' => $oDesplCertDl,
     'f_acta' => $datos['f_acta'],
     'f_acta_iso' => $datos['f_acta_iso'],
     'chk_preceptor' => $chk_preceptor,
