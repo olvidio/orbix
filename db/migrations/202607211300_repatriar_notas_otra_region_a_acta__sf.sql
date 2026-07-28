@@ -3,7 +3,7 @@
 --
 -- REQUIERE antes: snapshot publicf._mig_mapa_prefijo_acta_esquema (211120;
 --   SSOT en BD comun vía 211100+211110).
--- Orden recomendado: 211100 → 211110 → 211120 → 211140 → 211150 → 211250 → 211300 → 222000.
+-- Orden recomendado: 211100 → 211110 → 211120 → 211140 → 211150 → 211240 → 211250 → 211300 → 222000.
 --
 -- Reglas:
 --   - Destino por prefijo del número de acta (snapshot del mapa comun) + fusiones.
