@@ -1,8 +1,8 @@
 -- Repatriar notas legacy de e_notas_otra_region_stgr → e_notas_dl (modelo acta).
 -- Serie sv (sufijo de esquema `v`). Ejecutar desde devel_db_admin → Migraciones.
 --
--- REQUIERE antes: snapshot publicv._mig_mapa_prefijo_acta_esquema (211120;
---   SSOT en BD comun vía 211100+211110).
+-- Carga el snapshot del mapa desde CSV (idempotente; 222000 lo elimina al final).
+-- REQUIERE: CSV log/db/mapa_prefijo_acta_esquema.csv (211100+211110 comun).
 -- Orden recomendado: 211100 → 211110 → 211120 → 211140 → 211150 → 211240 → 211250 → 211300 → 222000.
 --
 -- Reglas:
@@ -15,6 +15,25 @@
 --   - Borra placeholders FALTA_CERTIFICADO (id_situacion=13, tipo_acta=2).
 --
 -- Ver docs/dev/notas_modelo_acta.md
+
+CREATE TABLE IF NOT EXISTS publicv._mig_mapa_prefijo_acta_esquema (
+    pref          text PRIMARY KEY,
+    esquema_base  text NOT NULL
+);
+
+TRUNCATE publicv._mig_mapa_prefijo_acta_esquema;
+
+-- @orbix_import_csv: log/db/mapa_prefijo_acta_esquema.csv
+-- @orbix_import_into: publicv._mig_mapa_prefijo_acta_esquema(pref, esquema_base)
+-- @orbix_import_here
+
+DO $$
+BEGIN
+    IF (SELECT count(*) FROM publicv._mig_mapa_prefijo_acta_esquema) < 1 THEN
+        RAISE EXCEPTION
+            'Snapshot vacío: ejecutar 211100+211110 en comun (CSV mapa) antes de 211300';
+    END IF;
+END $$;
 
 DO $$
 DECLARE
@@ -35,7 +54,7 @@ BEGIN
     SELECT count(*) INTO n_mapa FROM publicv._mig_mapa_prefijo_acta_esquema;
     IF n_mapa < 1 THEN
         RAISE EXCEPTION
-            'Falta snapshot publicv._mig_mapa_prefijo_acta_esquema (ejecutar 211120 antes)';
+            'Falta snapshot publicv._mig_mapa_prefijo_acta_esquema';
     END IF;
 
     CREATE TEMP TABLE tmp_map_prefijo_nota_acta (

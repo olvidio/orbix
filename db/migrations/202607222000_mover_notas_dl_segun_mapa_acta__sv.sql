@@ -5,9 +5,21 @@
 -- Idempotente: INSERT si no hay conflicto; DELETE origen si ya está en destino
 -- (mismo id_nom + id_asignatura o mismo id_nom + id_nivel, tipo 1).
 --
--- REQUIERE: snapshot publicv._mig_mapa_prefijo_acta_esquema (211120).
+-- Carga el snapshot del mapa desde CSV si falta (p. ej. reaplicar tras DROP).
+-- REQUIERE: CSV log/db/mapa_prefijo_acta_esquema.csv (211100+211110 comun).
 -- Orden: después de 211300. Al final elimina el snapshot.
 -- Serie sv.
+
+CREATE TABLE IF NOT EXISTS publicv._mig_mapa_prefijo_acta_esquema (
+    pref          text PRIMARY KEY,
+    esquema_base  text NOT NULL
+);
+
+TRUNCATE publicv._mig_mapa_prefijo_acta_esquema;
+
+-- @orbix_import_csv: log/db/mapa_prefijo_acta_esquema.csv
+-- @orbix_import_into: publicv._mig_mapa_prefijo_acta_esquema(pref, esquema_base)
+-- @orbix_import_here
 
 DO $$
 DECLARE
@@ -24,15 +36,10 @@ DECLARE
     n_omit_dest bigint := 0;
     n_mapa bigint := 0;
 BEGIN
-    IF to_regclass('publicv._mig_mapa_prefijo_acta_esquema') IS NULL THEN
-        RAISE EXCEPTION
-            'Falta publicv._mig_mapa_prefijo_acta_esquema (ejecutar 211120 antes)';
-    END IF;
-
     SELECT count(*) INTO n_mapa FROM publicv._mig_mapa_prefijo_acta_esquema;
     IF n_mapa < 1 THEN
         RAISE EXCEPTION
-            'Snapshot mapa vacío (ejecutar 211100+211110 comun y 211120 sv)';
+            'Snapshot mapa vacío (ejecutar 211100+211110 comun; CSV mapa)';
     END IF;
 
     FOR origen IN
