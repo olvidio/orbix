@@ -318,6 +318,7 @@ class Resumen
     {
         // $campos es un string con los campos que se quiere listar, separados por comas
         $camp = explode(',', $campos);
+        $aNivelStgrTxt = NivelStgrId::getArrayNivelStgr();
         $html = "<table>";
         if (!empty($cabecera)) {
             $html .= "<tr><td width=20></td>";
@@ -334,7 +335,16 @@ class Resumen
             $html .= "<tr><td width=20></td>";
             foreach ($camp as $key => $val) {
                 $cell = $valor[$val] ?? '';
-                $html .= '<td>' . (is_scalar($cell) ? (string) $cell : '') . '</td>';
+                if ($val === 'preceptor') {
+                    $asBool = \src\shared\domain\helpers\FuncTablasSupport::isTrue($cell);
+                    if ($asBool === null && (is_int($cell) || is_float($cell) || (is_string($cell) && is_numeric($cell)))) {
+                        $asBool = ((int) $cell) !== 0;
+                    }
+                    $cell = ($asBool === true) ? _("sí") : _("no");
+                } elseif ($val === 'nivel_stgr' && $cell !== '' && $cell !== null) {
+                    $cell = $aNivelStgrTxt[(int) $cell] ?? $cell;
+                }
+                $html .= '<td>' . (is_scalar($cell) ? htmlspecialchars((string) $cell, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : '') . '</td>';
             }
             $html .= "</tr>";
             $p = reset($camp);

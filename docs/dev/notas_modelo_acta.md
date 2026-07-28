@@ -125,7 +125,9 @@ Orden de trabajo recomendado. Cada slice debe dejar tests verdes y no mezclar mi
 - [x] Repatriar **solo tipo 1** (excluye 9998/9999): [`202607211300_…`](../../db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql) (lee snapshot del mapa).  
 - [x] Mover tipo 1 mal ubicados entre `e_notas_dl` (excluye 9998/9999): [`202607222000_…`](../../db/migrations/202607222000_mover_notas_dl_segun_mapa_acta__sv.sql).  
 - [x] Mover fin de ciclo histórico (9998/9999) a la DL de la última acta: [`202607271800_…`](../../db/migrations/202607271800_mover_fin_ciclo_a_dl_ultima_acta__sv.sql) (fallback: mapa del campo `acta`). Diagnóstico: [`tools/audit/audit_fin_ciclo_ubicacion.php`](../../tools/audit/audit_fin_ciclo_ubicacion.php).  
-- [ ] Ejecutar: **comun** `211100` → `211110`; luego **sv/sf** `211120` → `211140` → `211150` → `211250` → `211300` → `222000` → **`271800`**. Ampliar filas del mapa en comun si el diag marca `sin_mapa`. Altas nuevas de 9998/9999 vía `ActaFinCicloInsert`.  
+- [x] Insertar 9998 (cuadrienio plan 1997) global n/agd: [`202607271900_…`](../../db/migrations/202607271900_insertar_fin_cuadrienio_plan1997_n_agd__sv.sql) (antes de deshacer convalidaciones).  
+- [x] Deshacer convalidaciones hebreo/griego→PC y remap 152200 si 9998 &lt; 2026-09-30: [`202607272000_…`](../../db/migrations/202607272000_deshacer_remap_nivel_plan2026_si_9998_antiguo__sv.sql).  
+- [ ] Ejecutar: **comun** `211100` → `211110`; luego **sv/sf** `211120` → … → `222000` → **`271800`** → **`271900`** → **`272000`**. Ampliar filas del mapa en comun si el diag marca `sin_mapa`. Altas nuevas de 9998/9999 vía `ActaFinCicloInsert`.  
 - [x] Usar `MapaPrefijoActaEsquemaRepository` al grabar notas con acta histórica (routing a esquema destino).  
 - [x] Buscar/validar actas: `ActaSelectData` / `BuscarActaData` / `ActaDlGuard` leen prefijos absorbidos del mapa; `AbsorberEsquema` registra la fusión en la misma tabla.  
 - [ ] Migrar `json_certificados` al módulo certificados cuando aporte valor.  

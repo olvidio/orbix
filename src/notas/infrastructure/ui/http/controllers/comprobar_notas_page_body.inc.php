@@ -32,6 +32,7 @@ $dbQuery = static function (PDO $db, string $sql): PDOStatement {
     if ($stmt === false) {
         throw new RuntimeException('comprobar_notas: query failed');
     }
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
     return $stmt;
 };
@@ -43,9 +44,29 @@ $nivel_stgr_C2 = NivelStgrId::C2;
 $nivel_stgr_R = NivelStgrId::R;
 $nivel_stgr_N = NivelStgrId::N;
 $aNivelStgrTxt = NivelStgrId::getArrayNivelStgr();
-$txtNivelStgr = static function (int|string|null $id) use ($aNivelStgrTxt): string {
+/**
+ * Texto de nivel_stgr para listados (nunca el id numérico).
+ */
+$txtNivelStgr = static function (mixed $id) use ($aNivelStgrTxt): string {
+    if ($id === null || $id === '') {
+        return '';
+    }
     $key = (int) $id;
-    return $aNivelStgrTxt[$key] ?? (string) $id;
+    if (isset($aNivelStgrTxt[$key])) {
+        return $aNivelStgrTxt[$key];
+    }
+
+    return (string) $id;
+};
+
+/** Valor de columna de un fetch assoc, sin importar mayúsculas. */
+$rowCol = static function (array $row, string $name): mixed {
+    if (array_key_exists($name, $row)) {
+        return $row[$name];
+    }
+    $lower = array_change_key_case($row, CASE_LOWER);
+
+    return $lower[strtolower($name)] ?? null;
 };
 $nota_situ_numerica = NotaSituacion::NUMERICA;
 $nota_situ_cursada = NotaSituacion::CURSADA;
@@ -208,7 +229,7 @@ $sqlCandidatosC1C2 = static function (
         : "count(DISTINCT n.id_asignatura) >= {$tramoC1C2['count']}";
     $select = $soloIdNom
         ? 'p.id_nom'
-        : 'p.nivel_stgr, p.nom, p.apellido1, p.apellido2, count(DISTINCT n.id_asignatura) AS NumAsig';
+        : 'p.nivel_stgr, p.nom, p.apellido1, p.apellido2, count(DISTINCT n.id_asignatura) AS num_asig';
     $groupBy = $soloIdNom
         ? 'p.id_nom'
         : 'p.id_nom, p.nivel_stgr, p.nom, p.apellido1, p.apellido2';
@@ -429,8 +450,8 @@ if (!empty($nf) && $oDBSt_bienio instanceof PDOStatement) {
     $echoCabeceraLista([_("apellidos, nombre"), _("asignaturas"), _("nivel stgr")]);
     foreach ($oDBSt_bienio->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
-        $numasig = $algo['num_asig'];
-        $nivel_stgr = $txtNivelStgr($algo['nivel_stgr']);
+        $numasig = $rowCol($algo, 'num_asig');
+        $nivel_stgr = htmlspecialchars($txtNivelStgr($rowCol($algo, 'nivel_stgr')), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         echo "<tr><td width=20></td>";
         echo "<td>$nom</td><td>$numasig</td><td>$nivel_stgr</td></tr>";
     }
@@ -467,8 +488,8 @@ if (!empty($nf) && $oDBSt_cuadrienio instanceof PDOStatement) {
     $echoCabeceraLista([_("apellidos, nombre"), _("asignaturas"), _("nivel stgr")]);
     foreach ($oDBSt_cuadrienio->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
-        $numasig = $algo['num_asig'];
-        $nivel_stgr = $txtNivelStgr($algo['nivel_stgr']);
+        $numasig = $rowCol($algo, 'num_asig');
+        $nivel_stgr = htmlspecialchars($txtNivelStgr($rowCol($algo, 'nivel_stgr')), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         echo "<tr><td width=20></td>";
         echo "<td>$nom</td><td>$numasig</td><td>$nivel_stgr</td></tr>";
     }
@@ -539,6 +560,7 @@ $renderListaC1C2 = static function (
     $comprobarNotasUrl,
     $echoCabeceraLista,
     $txtNivelStgr,
+    $rowCol,
     $tabla_txt,
     $Qplan,
     $tramoC1C2,
@@ -557,8 +579,8 @@ $renderListaC1C2 = static function (
     $echoCabeceraLista([_("apellidos, nombre"), _("nivel stgr"), _("asignaturas")]);
     foreach ($oDBSt_sql->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . ' ' . $algo['apellido2'] . ', ' . $algo['nom'];
-        $nivel_stgr = $txtNivelStgr($algo['nivel_stgr']);
-        $asig = $algo['numasig'];
+        $nivel_stgr = htmlspecialchars($txtNivelStgr($rowCol($algo, 'nivel_stgr')), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $asig = $rowCol($algo, 'num_asig');
         echo '<tr><td width=20></td>';
         echo "<td>$nom</td><td>$nivel_stgr</td><td>$asig</td></tr>";
     }
@@ -597,7 +619,7 @@ if (!empty($nf)) {
     $echoCabeceraLista([_("apellidos, nombre"), _("nivel stgr")]);
     foreach ($oDBSt_sql->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
-        $nivel_stgr = $txtNivelStgr($algo['nivel_stgr']);
+        $nivel_stgr = htmlspecialchars($txtNivelStgr($rowCol($algo, 'nivel_stgr')), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         echo "<tr><td width=20></td>";
         echo "<td>$nom</td><td>$nivel_stgr</td></tr>";
     }
