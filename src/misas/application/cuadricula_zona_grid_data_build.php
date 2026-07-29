@@ -325,7 +325,7 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
             $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
     }
 
-    $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $self->getEncargoHorarioRepository(), $self->getEncargoRepository());
+    $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $self->getEncargoHorarioRepository(), $self->getEncargoRepository(), $Qorden);
     $EncargosZona->setATipoEnc($a_tipo_enc);
     $cEncargosZona = $EncargosZona->getEncargos();
     foreach ($cEncargosZona as $oEncargo) {

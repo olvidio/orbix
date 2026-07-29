@@ -133,7 +133,7 @@ function misas_importar_plantilla_build(array $in, \src\misas\application\Import
     $sFin_iso = $oFinDestino->getIso();
     $orden = 'prioridad';
 
-    $EncargosZona = new EncargosZona($Qid_zona, $oDiaDestino, $oFinDestino, $self->getEncargoHorarioRepository(), $self->getEncargoRepository());
+    $EncargosZona = new EncargosZona($Qid_zona, $oDiaDestino, $oFinDestino, $self->getEncargoHorarioRepository(), $self->getEncargoRepository(), $orden);
     $EncargosZona->setATipoEnc($a_tipo_enc);
     $cEncargosZona = $EncargosZona->getEncargos();
     $EncargoDiaRepository = $self->getEncargoDiaRepository();

@@ -413,7 +413,7 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
         $hay_bendicion[$dia_completo] = $bendicion;
     }
 
-    $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $self->getEncargoHorarioRepository(), $self->getEncargoRepository());
+    $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $self->getEncargoHorarioRepository(), $self->getEncargoRepository(), $Qorden);
     $EncargosZona->setATipoEnc($a_tipo_enc);
     $cEncargosZona = $EncargosZona->getEncargos();
     foreach ($cEncargosZona as $oEncargo) {
