@@ -3,6 +3,7 @@
 namespace src\ubis\application;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\DependencyResolver;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -19,17 +20,14 @@ use src\ubis\domain\entity\CentroEx;
 final class UbiFactory
 {
     public function __construct(
-        private CentroRepositoryInterface $centroRepository,
-        private CentroDlRepositoryInterface $centroDlRepository,
-        private CentroExRepositoryInterface $centroExRepository,
         private CentroEllasRepositoryInterface $centroEllasRepository,
         private CentroEllosRepositoryInterface $centroEllosRepository,
-        private CasaRepositoryInterface $casaRepository,
     ) {
     }
 
     public function newUbi(int|string $id_ubi): Casa|Centro|CentroDl|CentroEx|CentroEllas|CentroEllos|null
     {
+        // En DMZ (SV) no hay oDB/oDBP/oDBR: centros solo vía comun (ellos/ellas).
         if (ConfigGlobal::is_dmz()) {
             $centroRepository = $this->centroEllosRepository;
             if ((int)substr((string)$id_ubi, 0, 1) === 2) {
@@ -42,13 +40,13 @@ final class UbiFactory
             if (ConfigGlobal::mi_sfsv() === 1) {
                 $centroRepository = $this->centroEllasRepository;
             } else {
-                $centroRepository = $this->centroRepository;
+                $centroRepository = DependencyResolver::get(CentroRepositoryInterface::class);
             }
         } else {
             if (ConfigGlobal::mi_sfsv() === 2) {
                 $centroRepository = $this->centroEllosRepository;
             } else {
-                $centroRepository = $this->centroRepository;
+                $centroRepository = DependencyResolver::get(CentroRepositoryInterface::class);
             }
         }
 
@@ -59,11 +57,11 @@ final class UbiFactory
                 case 'ctrdl':
                 case 'ctrsf':
                     if ($oCentro->getDl() === ConfigGlobal::mi_delef()) {
-                        $oCentro = $this->centroDlRepository->findById((int)$id_ubi);
+                        $oCentro = DependencyResolver::get(CentroDlRepositoryInterface::class)->findById((int)$id_ubi);
                     }
                     break;
                 case 'ctrex':
-                    $oCentro = $this->centroExRepository->findById((int)$id_ubi);
+                    $oCentro = DependencyResolver::get(CentroExRepositoryInterface::class)->findById((int)$id_ubi);
                     break;
                 default:
                     $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
@@ -73,6 +71,6 @@ final class UbiFactory
             return $oCentro;
         }
 
-        return $this->casaRepository->findById((int)$id_ubi);
+        return DependencyResolver::get(CasaRepositoryInterface::class)->findById((int)$id_ubi);
     }
 }

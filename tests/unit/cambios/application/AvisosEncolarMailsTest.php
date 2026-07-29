@@ -14,14 +14,13 @@ use src\cambios\application\ActividadParaAvisoLookup;
 use src\cambios\application\AvisosEncolarMails;
 use src\cambios\application\CambioAvisoTxtBuilder;
 use src\cambios\application\CambioParaAvisoLookup;
+use src\cambios\application\PersonaNombreParaAvisoInterface;
 use src\cambios\domain\contracts\CambioDlRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
 use src\cambios\domain\entity\CambioUsuario;
 use src\cambios\domain\value_objects\AvisoTipoId;
-use src\personas\application\services\PersonaFinderService;
-use src\personas\domain\entity\PersonaDl;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
 use src\shared\domain\entity\ColaMail;
@@ -97,10 +96,8 @@ final class AvisosEncolarMailsTest extends TestCase
         $publicRepo->method('getCambios')->willReturn([]);
         $cambioLookup = new CambioParaAvisoLookup($publicRepo, $dlRepo);
 
-        $persona = $this->createMock(PersonaDl::class);
-        $persona->method('getPrefApellidosNombre')->willReturn('García López, Juan');
-        $finder = $this->createMock(PersonaFinderService::class);
-        $finder->method('findPersonaEnGlobal')->with(10012845)->willReturn($persona);
+        $personaNombre = $this->createMock(PersonaNombreParaAvisoInterface::class);
+        $personaNombre->method('resolve')->with(10012845)->willReturn('García López, Juan');
 
         $actividad = $this->createMock(ActividadAll::class);
         $actividad->method('getNom_activ')->willReturn('cv agd Castelldaura');
@@ -112,7 +109,7 @@ final class AvisosEncolarMailsTest extends TestCase
         $txtBuilder = new CambioAvisoTxtBuilder(
             new ActividadParaAvisoLookup($allRepo, $exRepo),
             $this->createMock(CambioRepositoryInterface::class),
-            $finder,
+            $personaNombre,
             $this->createMock(TipoTarifaRepositoryInterface::class),
             $this->createMock(RepeticionRepositoryInterface::class),
             $this->createMock(ActividadFaseRepositoryInterface::class),
@@ -187,7 +184,7 @@ final class AvisosEncolarMailsTest extends TestCase
                     $this->createMock(ActividadExRepositoryInterface::class),
                 ),
                 $this->createMock(CambioRepositoryInterface::class),
-                $this->createMock(PersonaFinderService::class),
+                $this->createMock(PersonaNombreParaAvisoInterface::class),
                 $this->createMock(TipoTarifaRepositoryInterface::class),
                 $this->createMock(RepeticionRepositoryInterface::class),
                 $this->createMock(ActividadFaseRepositoryInterface::class),

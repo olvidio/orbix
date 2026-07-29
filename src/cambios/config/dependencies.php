@@ -4,6 +4,8 @@ use src\cambios\application\AvisosEncolarMails;
 use src\cambios\application\AvisosGenerarListaData;
 use src\cambios\application\AvisosGenerarTabla;
 use src\cambios\application\CambioAvisoTxtBuilder;
+use src\cambios\application\PersonaNombreParaAviso;
+use src\cambios\application\PersonaNombreParaAvisoInterface;
 use src\cambios\application\CambioUsuarioEliminar;
 use src\cambios\application\CambioUsuarioEliminarHastaFecha;
 use src\cambios\application\CambioUsuarioObjetoPrefEliminar;
@@ -48,6 +50,7 @@ return [
     AvisosGenerarListaData::class => autowire(AvisosGenerarListaData::class),
     AvisosGenerarTabla::class => autowire(AvisosGenerarTabla::class),
     CambioAvisoTxtBuilder::class => autowire(CambioAvisoTxtBuilder::class),
+    PersonaNombreParaAvisoInterface::class => autowire(PersonaNombreParaAviso::class),
     CambioParaAvisoLookup::class => autowire(CambioParaAvisoLookup::class),
     ActividadParaAvisoLookup::class => autowire(ActividadParaAvisoLookup::class),
     CambioUsuarioEliminar::class => autowire(CambioUsuarioEliminar::class),

@@ -12,17 +12,16 @@ use src\actividades\domain\entity\ActividadAll;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\cambios\application\ActividadParaAvisoLookup;
 use src\cambios\application\CambioAvisoTxtBuilder;
+use src\cambios\application\PersonaNombreParaAvisoInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
-use src\personas\application\services\PersonaFinderService;
-use src\personas\domain\entity\PersonaDl;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 
 final class CambioAvisoTxtBuilderTest extends TestCase
 {
     private function createBuilder(
         ActividadAll $actividad,
-        PersonaFinderService $finder,
+        PersonaNombreParaAvisoInterface $nombreParaAviso,
     ): CambioAvisoTxtBuilder {
         $allRepository = $this->createMock(ActividadAllRepositoryInterface::class);
         $allRepository->method('findById')->willReturn($actividad);
@@ -33,7 +32,7 @@ final class CambioAvisoTxtBuilderTest extends TestCase
         return new CambioAvisoTxtBuilder(
             new ActividadParaAvisoLookup($allRepository, $exRepository),
             $this->createMock(CambioRepositoryInterface::class),
-            $finder,
+            $nombreParaAviso,
             $this->createMock(TipoTarifaRepositoryInterface::class),
             $this->createMock(RepeticionRepositoryInterface::class),
             $this->createMock(ActividadFaseRepositoryInterface::class),
@@ -42,19 +41,16 @@ final class CambioAvisoTxtBuilderTest extends TestCase
 
     public function test_delete_asistente_muestra_nombre_no_id_nom(): void
     {
-        $persona = $this->createMock(PersonaDl::class);
-        $persona->method('getPrefApellidosNombre')->willReturn('García López, Juan');
-
-        $finder = $this->createMock(PersonaFinderService::class);
-        $finder->expects($this->once())
-            ->method('findPersonaEnGlobal')
+        $nombreParaAviso = $this->createMock(PersonaNombreParaAvisoInterface::class);
+        $nombreParaAviso->expects($this->once())
+            ->method('resolve')
             ->with(10012845)
-            ->willReturn($persona);
+            ->willReturn('García López, Juan');
 
         $actividad = $this->createMock(ActividadAll::class);
         $actividad->method('getNom_activ')->willReturn('cv agd Castelldaura');
 
-        $builder = $this->createBuilder($actividad, $finder);
+        $builder = $this->createBuilder($actividad, $nombreParaAviso);
 
         $cambio = new Cambio();
         $cambio->setId_tipo_cambio(Cambio::TIPO_CMB_DELETE);
@@ -74,19 +70,16 @@ final class CambioAvisoTxtBuilderTest extends TestCase
 
     public function test_insert_asistente_muestra_nombre_no_id_nom(): void
     {
-        $persona = $this->createMock(PersonaDl::class);
-        $persona->method('getPrefApellidosNombre')->willReturn('Pérez, Ana');
-
-        $finder = $this->createMock(PersonaFinderService::class);
-        $finder->expects($this->once())
-            ->method('findPersonaEnGlobal')
+        $nombreParaAviso = $this->createMock(PersonaNombreParaAvisoInterface::class);
+        $nombreParaAviso->expects($this->once())
+            ->method('resolve')
             ->with(55)
-            ->willReturn($persona);
+            ->willReturn('Pérez, Ana');
 
         $actividad = $this->createMock(ActividadAll::class);
         $actividad->method('getNom_activ')->willReturn('cv n prueba');
 
-        $builder = $this->createBuilder($actividad, $finder);
+        $builder = $this->createBuilder($actividad, $nombreParaAviso);
 
         $cambio = new Cambio();
         $cambio->setId_tipo_cambio(Cambio::TIPO_CMB_INSERT);
