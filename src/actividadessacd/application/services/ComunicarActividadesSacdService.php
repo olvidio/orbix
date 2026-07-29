@@ -327,8 +327,11 @@ final class ComunicarActividadesSacdService
             $id_ctr = $oPersona?->getId_ctr();
             $e_mail_ctr = '';
             if (!empty($id_ctr)) {
-                $oCentroDl = $CentroDlRepository->findById($id_ctr);
-                $e_mail_ctr = $oCentroDl?->emailPrincipalOPrimero() ?? '';
+                // En DMZ no hay u_centros_dl; Ubi::NewUbi usa comun (ellos/ellas).
+                $oCentro = ConfigGlobal::is_dmz()
+                    ? \src\ubis\domain\entity\Ubi::NewUbi((int) $id_ctr)
+                    : $CentroDlRepository->findById((int) $id_ctr);
+                $e_mail_ctr = $oCentro?->emailPrincipalOPrimero() ?? '';
             }
 
             $email = $e_mail_jefe;

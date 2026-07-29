@@ -7,6 +7,7 @@ use src\actividadescentro\domain\entity\CentroEncargado;
 use src\actividadescentro\domain\value_objects\CentroEncargadoPk;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
+use src\ubis\domain\entity\CentroEllos;
 
 interface CentroEncargadoRepositoryInterface
 {
@@ -18,7 +19,7 @@ interface CentroEncargadoRepositoryInterface
     public function getActividadesDeCentros(int $iid_ubi, string $scondicion = ''): array;
 
     /**
-     * @return list<CentroDl|CentroEllas>
+     * @return list<CentroDl|CentroEllas|CentroEllos>
      */
     public function getCentrosEncargadosActividad(int $iid_activ): array;
 

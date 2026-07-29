@@ -16,8 +16,10 @@ use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
+use src\ubis\domain\entity\CentroEllos;
 
 /**
  * Clase que adapta la tabla da_ctr_encargados a la interfaz del repositorio
@@ -30,6 +32,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
         private ActividadDlRepositoryInterface $actividadDlRepository,
         private CentroDlRepositoryInterface $centroDlRepository,
         private CentroEllasRepositoryInterface $centroEllasRepository,
+        private CentroEllosRepositoryInterface $centroEllosRepository,
     ) {
         $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
@@ -102,7 +105,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
     }
 
     /**
-     * @return list<CentroDl|CentroEllas>
+     * @return list<CentroDl|CentroEllas|CentroEllos>
      */
     public function getCentrosEncargadosActividad(int $iid_activ): array
     {
@@ -123,7 +126,10 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
             $id_ubi = (int) $aDatos['id_ubi'];
             $sfsv = (int) substr((string) $id_ubi, 0, 1);
             if (ConfigGlobal::mi_sfsv() === $sfsv) {
-                $oUbi = $this->centroDlRepository->findById($id_ubi);
+                // En DMZ no existe u_centros_dl (sv); centros vía comun.
+                $oUbi = ConfigGlobal::is_dmz()
+                    ? $this->centroEllosRepository->findById($id_ubi)
+                    : $this->centroDlRepository->findById($id_ubi);
             } else {
                 $oUbi = $this->centroEllasRepository->findById($id_ubi);
             }
@@ -131,7 +137,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
                 $oUbiSet->add($oUbi);
             }
         }
-        /** @var list<CentroDl|CentroEllas> $result */
+        /** @var list<CentroDl|CentroEllas|CentroEllos> $result */
         $result = array_values($oUbiSet->getTot());
 
         return $result;
