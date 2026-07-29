@@ -27,12 +27,16 @@ declare(strict_types=1);
  *
  * Otras opciones:
  *   --curso-ini=2025-10-01
- *   --fase=resumen|buckets|duplicados|vs-global|vacios|todo
+ *   --fase=resumen|buckets|duplicados|vs-global|vacios|historial|todo
  *   --schema-paso=restov
  *   --json  --limit=30
  *   --pg  (explícito; es el default)
- *   --dry-run  con --fase=vacios: muestra DELETE del bucket D (no escribe)
- *   --apply    con --fase=vacios: ejecuta DELETE del bucket D (exige asis_verificado)
+ *   --dry-run  con --fase=vacios|historial
+ *   --apply    con --fase=vacios|historial
+ *
+ * historial: borra asistencias con f_ini < curso_ini (no toca curso ni bucket A).
+ *   Si hay gemelo en global.personas, copia antes a d_asistentes_dl del esquema orbix.
+ *   No borra la persona; tras historial, los C suelen pasar a D → --fase=vacios.
  *
  * SQL de referencia: tools/audit/sql/personas_paso_limpieza.sql
  */
@@ -102,7 +106,7 @@ if ($dryRun && $apply) {
     exit(1);
 }
 
-$fasesOk = ['resumen', 'buckets', 'duplicados', 'vs-global', 'vacios', 'todo'];
+$fasesOk = ['resumen', 'buckets', 'duplicados', 'vs-global', 'vacios', 'historial', 'todo'];
 if (!in_array($fase, $fasesOk, true)) {
     fwrite(STDERR, 'fase inválida: ' . implode('|', $fasesOk) . "\n");
     exit(1);
@@ -394,7 +398,9 @@ try {
         $pasoById[$id]['n_asis'] = count($pasoById[$id]['id_activs']);
     }
 
-    // --- Actividades del curso (comun) ---
+    // --- Actividades: f_ini (comun) ---
+    /** @var array<int, string> $fIniByActiv */
+    $fIniByActiv = [];
     /** @var array<int, true> $activCurso */
     $activCurso = [];
     $allActivIds = [];
@@ -415,6 +421,7 @@ try {
             foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) ?: [] as $r) {
                 $idActiv = (int) $r['id_activ'];
                 $fIni = (string) ($r['f_ini'] ?? '');
+                $fIniByActiv[$idActiv] = $fIni;
                 if ($fIni !== '' && $fIni >= $cursoIni) {
                     $activCurso[$idActiv] = true;
                 }
@@ -509,23 +516,23 @@ try {
         }
     }
 
-    // --- vs global.personas (todos los de paso; el repaso filtrará canónicos) ---
+    // --- vs global.personas ---
     $vsGlobal = [];
+    /** @var array<int, array{id_orbix: int, dl_orbix: mixed, id_schema: int|null, misma_dl: bool, misma_fn: bool}> $mejorMatch */
+    $mejorMatch = [];
     $stmt = $pdoSv->query(
-        "SELECT id_nom, dl, id_tabla, apellido1, apellido2, nom, f_nacimiento::text AS f_nacimiento, situacion
+        "SELECT id_nom, id_schema, dl, id_tabla, apellido1, apellido2, nom,
+                f_nacimiento::text AS f_nacimiento, situacion
          FROM global.personas"
     );
     /** @var array<string, list<array<string, mixed>>> $globalByKey */
     $globalByKey = [];
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) ?: [] as $g) {
-        $k = normKey($g['apellido1'] ?? '') . '|' . normKey($g['apellido2'] ?? '')
-            . '|' . normKey($g['nom'] ?? '');
-        if (str_starts_with($k, '||') || str_ends_with($k, '||') || str_contains($k, '|||')) {
-            // vacíos raros
-        }
         if (normKey($g['apellido1'] ?? '') === '' || normKey($g['nom'] ?? '') === '') {
             continue;
         }
+        $k = normKey($g['apellido1'] ?? '') . '|' . normKey($g['apellido2'] ?? '')
+            . '|' . normKey($g['nom'] ?? '');
         $globalByKey[$k][] = $g;
     }
     foreach ($pasoById as $p) {
@@ -537,25 +544,40 @@ try {
             continue;
         }
         foreach ($globalByKey[$k] as $g) {
-            $vsGlobal[] = [
+            $mismaDl = normKey($p['dl'] ?? '') === normKey($g['dl'] ?? '');
+            $mismaFn = $p['f_nacimiento'] !== null && $p['f_nacimiento'] !== ''
+                && $g['f_nacimiento'] !== null && $g['f_nacimiento'] !== ''
+                && $p['f_nacimiento'] === $g['f_nacimiento'];
+            $cand = [
                 'id_paso' => (int) $p['id_nom'],
                 'dl_paso' => $p['dl'],
                 'bucket' => $p['bucket'],
                 'id_orbix' => (int) $g['id_nom'],
                 'dl_orbix' => $g['dl'],
+                'id_schema' => isset($g['id_schema']) ? (int) $g['id_schema'] : null,
                 'id_tabla_orbix' => $g['id_tabla'],
                 'apellido1' => $p['apellido1'],
                 'apellido2' => $p['apellido2'],
                 'nom' => $p['nom'],
                 'fn_paso' => $p['f_nacimiento'],
                 'fn_orbix' => $g['f_nacimiento'],
-                'misma_dl' => normKey($p['dl'] ?? '') === normKey($g['dl'] ?? ''),
-                'misma_fn' => $p['f_nacimiento'] !== null && $p['f_nacimiento'] !== ''
-                    && $g['f_nacimiento'] !== null && $g['f_nacimiento'] !== ''
-                    && $p['f_nacimiento'] === $g['f_nacimiento'],
+                'misma_dl' => $mismaDl,
+                'misma_fn' => $mismaFn,
                 'n_notas' => $p['n_notas'],
                 'n_asis' => $p['n_asis'],
             ];
+            $vsGlobal[] = $cand;
+            $idPaso = (int) $p['id_nom'];
+            if (!isset($mejorMatch[$idPaso])) {
+                $mejorMatch[$idPaso] = $cand;
+            } else {
+                $cur = $mejorMatch[$idPaso];
+                $scoreNew = [(int) $mismaDl, (int) $mismaFn];
+                $scoreCur = [(int) $cur['misma_dl'], (int) $cur['misma_fn']];
+                if ($scoreNew > $scoreCur) {
+                    $mejorMatch[$idPaso] = $cand;
+                }
+            }
         }
     }
     usort(
@@ -565,6 +587,12 @@ try {
                 <=> [$a['misma_dl'], $a['misma_fn'], $b['apellido1'], $b['nom'], $b['id_paso']];
         }
     );
+
+    /** @var array<int, string> $schemaById */
+    $schemaById = [];
+    foreach ($pdoSv->query('SELECT id, schema FROM public.db_idschema')->fetchAll(PDO::FETCH_ASSOC) ?: [] as $r) {
+        $schemaById[(int) $r['id']] = (string) $r['schema'];
+    }
 
     $vacios = array_values(array_filter(
         $buckets['D'],
@@ -576,7 +604,32 @@ try {
             <=> [$b['apellido1'], $b['apellido2'], $b['nom'], $b['id_nom']]
     );
 
-    // --- Borrado bucket D (--dry-run / --apply; solo con --fase=vacios) ---
+    // Inventario historial (asis no-curso, fuera de bucket A)
+    $historialPlan = [
+        'filas_borrar_sin_match' => 0,
+        'filas_copiar_y_borrar' => 0,
+        'filas_omitidas_sin_destino' => 0,
+        'personas_sin_match' => 0,
+        'personas_con_match' => 0,
+        'muestra' => [],
+    ];
+    $idsConHistorial = [];
+    foreach ($pasoById as $id => $row) {
+        if ($row['bucket'] === 'A' || $row['n_asis'] <= 0) {
+            continue;
+        }
+        $idsConHistorial[] = $id;
+    }
+    $historialPlan['personas_sin_match'] = count(array_filter(
+        $idsConHistorial,
+        static fn(int $id): bool => !isset($mejorMatch[$id])
+    ));
+    $historialPlan['personas_con_match'] = count(array_filter(
+        $idsConHistorial,
+        static fn(int $id): bool => isset($mejorMatch[$id])
+    ));
+
+    // --- Mutaciones (--dry-run / --apply) ---
     $borrado = [
         'modo' => 'ninguno',
         'candidatos' => 0,
@@ -585,68 +638,275 @@ try {
         'omitidos_recheck' => 0,
         'ids' => [],
     ];
+    $historialResult = [
+        'modo' => 'ninguno',
+        'copiadas' => 0,
+        'borradas' => 0,
+        'omitidas' => 0,
+        'ya_existian_en_orbix' => 0,
+    ];
 
     if ($dryRun || $apply) {
-        if ($fase !== 'vacios') {
+        if (!in_array($fase, ['vacios', 'historial'], true)) {
             throw new RuntimeException(
-                '--dry-run / --apply solo con --fase=vacios (borran únicamente el bucket D).'
+                '--dry-run / --apply solo con --fase=vacios|historial.'
             );
         }
         if (!$asisVerificado) {
             throw new RuntimeException(
-                'No se puede borrar: asis_verificado=false. Revise --db-sv-e.'
+                'No se puede mutar: asis_verificado=false. Revise --db-sv-e.'
             );
         }
 
-        $borrado['modo'] = $apply ? 'apply' : 'dry-run';
+        if ($fase === 'vacios') {
+            $borrado['modo'] = $apply ? 'apply' : 'dry-run';
 
-        /** @var list<int> $idsD */
-        $idsD = array_map(static fn(array $r): int => (int) $r['id_nom'], $vacios);
-        if ($limit > 0) {
-            $idsD = array_slice($idsD, 0, $limit);
-        }
-
-        // Recheck duro: seguir sin notas y sin asis
-        $idsOk = [];
-        foreach ($idsD as $id) {
-            $row = $pasoById[$id] ?? null;
-            if ($row === null) {
-                $borrado['omitidos_recheck']++;
-                continue;
+            /** @var list<int> $idsD */
+            $idsD = array_map(static fn(array $r): int => (int) $r['id_nom'], $vacios);
+            if ($limit > 0) {
+                $idsD = array_slice($idsD, 0, $limit);
             }
-            if ($row['n_notas'] > 0 || $row['n_asis'] > 0 || $row['tiene_curso'] || $row['bucket'] !== 'D') {
-                $borrado['omitidos_recheck']++;
-                continue;
-            }
-            $idsOk[] = $id;
-        }
-        $borrado['ids'] = $idsOk;
-        $borrado['candidatos'] = count($idsOk);
 
-        $tieneTeleco = $pdoSv->query(
-            'SELECT to_regclass(' . $pdoSv->quote("{$pasoSchema}.d_teleco_personas_ex") . ')'
-        )->fetchColumn();
-
-        if ($apply && $idsOk !== []) {
-            $pdoSv->beginTransaction();
-            try {
-                foreach (array_chunk($idsOk, 500) as $chunk) {
-                    $in = implode(',', array_map('intval', $chunk));
-                    if ($tieneTeleco) {
-                        $nTel = $pdoSv->exec(
-                            "DELETE FROM {$qPaso}.d_teleco_personas_ex WHERE id_nom IN ({$in})"
-                        );
-                        $borrado['telecos_borrados'] += $nTel !== false ? (int) $nTel : 0;
-                    }
-                    $n = $pdoSv->exec(
-                        "DELETE FROM {$qPaso}.p_de_paso_ex WHERE id_nom IN ({$in})"
-                    );
-                    $borrado['borrados'] += $n !== false ? (int) $n : 0;
+            $idsOk = [];
+            foreach ($idsD as $id) {
+                $row = $pasoById[$id] ?? null;
+                if ($row === null) {
+                    $borrado['omitidos_recheck']++;
+                    continue;
                 }
-                $pdoSv->commit();
-            } catch (Throwable $e) {
-                $pdoSv->rollBack();
-                throw $e;
+                if ($row['n_notas'] > 0 || $row['n_asis'] > 0 || $row['tiene_curso'] || $row['bucket'] !== 'D') {
+                    $borrado['omitidos_recheck']++;
+                    continue;
+                }
+                $idsOk[] = $id;
+            }
+            $borrado['ids'] = $idsOk;
+            $borrado['candidatos'] = count($idsOk);
+
+            $tieneTeleco = $pdoSv->query(
+                'SELECT to_regclass(' . $pdoSv->quote("{$pasoSchema}.d_teleco_personas_ex") . ')'
+            )->fetchColumn();
+
+            if ($apply && $idsOk !== []) {
+                $pdoSv->beginTransaction();
+                try {
+                    foreach (array_chunk($idsOk, 500) as $chunk) {
+                        $in = implode(',', array_map('intval', $chunk));
+                        if ($tieneTeleco) {
+                            $nTel = $pdoSv->exec(
+                                "DELETE FROM {$qPaso}.d_teleco_personas_ex WHERE id_nom IN ({$in})"
+                            );
+                            $borrado['telecos_borrados'] += $nTel !== false ? (int) $nTel : 0;
+                        }
+                        $n = $pdoSv->exec(
+                            "DELETE FROM {$qPaso}.p_de_paso_ex WHERE id_nom IN ({$in})"
+                        );
+                        $borrado['borrados'] += $n !== false ? (int) $n : 0;
+                    }
+                    $pdoSv->commit();
+                } catch (Throwable $e) {
+                    $pdoSv->rollBack();
+                    throw $e;
+                }
+            }
+        }
+
+        if ($fase === 'historial') {
+            $historialResult['modo'] = $apply ? 'apply' : 'dry-run';
+            if (!$pdoSvE instanceof PDO) {
+                throw new RuntimeException('historial requiere conexión a db-sv-e.');
+            }
+
+            // Tablas asis solo en sv-e (fuente de verdad de asistencias de paso)
+            $asisSvE = discoverAsisTables($pdoSvE, $publicSchema, $pasoSchema);
+            if ($database !== 'sf') {
+                foreach (discoverAsisTables($pdoSvE, 'publicv-e', $pasoSchema) as $t) {
+                    if (!in_array($t, $asisSvE, true)) {
+                        $asisSvE[] = $t;
+                    }
+                }
+            }
+            // No operar en d_asistentes_all (padre). Usar ONLY para no ver hijos 2 veces.
+            $asisSvE = array_values(array_filter(
+                $asisSvE,
+                static fn(string $t): bool => !str_ends_with($t, '.d_asistentes_all')
+            ));
+
+            $idsTarget = $idsConHistorial;
+            if ($limit > 0) {
+                $idsTarget = array_slice($idsTarget, 0, $limit);
+            }
+            $idSet = array_fill_keys($idsTarget, true);
+
+            $acciones = [];
+            $visto = []; // id_nom|id_activ para deduplicar
+            foreach ($asisSvE as $from) {
+                if ($idsTarget === []) {
+                    break;
+                }
+                $fromOnly = 'ONLY ' . $from;
+                foreach (array_chunk($idsTarget, 800) as $chunk) {
+                    $in = implode(',', array_map('intval', $chunk));
+                    $stmt = $pdoSvE->query("SELECT * FROM {$fromOnly} WHERE id_nom IN ({$in})");
+                    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) ?: [] as $asisRow) {
+                        $idNom = (int) $asisRow['id_nom'];
+                        $idActiv = (int) $asisRow['id_activ'];
+                        $dedupKey = $idNom . '|' . $idActiv;
+                        if (isset($visto[$dedupKey])) {
+                            continue;
+                        }
+                        if (!isset($idSet[$idNom])) {
+                            continue;
+                        }
+                        $p = $pasoById[$idNom] ?? null;
+                        if ($p === null || $p['bucket'] === 'A') {
+                            continue;
+                        }
+                        if (isset($activCurso[$idActiv])) {
+                            continue;
+                        }
+                        $fIni = $fIniByActiv[$idActiv] ?? '';
+                        if ($fIni === '') {
+                            $historialResult['omitidas']++;
+                            continue;
+                        }
+                        if ($fIni >= $cursoIni) {
+                            continue;
+                        }
+
+                        $visto[$dedupKey] = true;
+                        $match = $mejorMatch[$idNom] ?? null;
+                        $accion = [
+                            'from' => $from,
+                            'id_paso' => $idNom,
+                            'id_activ' => $idActiv,
+                            'f_ini' => $fIni,
+                            'bucket' => $p['bucket'],
+                            'id_orbix' => $match['id_orbix'] ?? null,
+                            'schema_orbix' => null,
+                            'tipo' => 'borrar',
+                        ];
+                        if ($match !== null) {
+                            $schId = $match['id_schema'] ?? null;
+                            $schName = ($schId !== null && isset($schemaById[$schId]))
+                                ? $schemaById[$schId]
+                                : null;
+                            $accion['schema_orbix'] = $schName;
+                            $destExists = $schName !== null && $pdoSvE->query(
+                                'SELECT to_regclass(' . $pdoSvE->quote($schName . '.d_asistentes_dl') . ')'
+                            )->fetchColumn();
+                            if ($destExists) {
+                                $accion['tipo'] = 'copiar_borrar';
+                                $accion['dest'] = qIdent($schName) . '.d_asistentes_dl';
+                                $historialPlan['filas_copiar_y_borrar']++;
+                            } else {
+                                $accion['tipo'] = 'omitir_sin_destino';
+                                $historialPlan['filas_omitidas_sin_destino']++;
+                            }
+                        } else {
+                            $historialPlan['filas_borrar_sin_match']++;
+                        }
+                        $acciones[] = $accion;
+                        if (count($historialPlan['muestra']) < 30) {
+                            $historialPlan['muestra'][] = $accion;
+                        }
+                    }
+                }
+            }
+
+            if ($dryRun) {
+                // plan ya en historialPlan / acciones
+                $historialResult['borradas'] = count(array_filter(
+                    $acciones,
+                    static fn(array $a): bool => in_array($a['tipo'], ['borrar', 'copiar_borrar'], true)
+                ));
+                $historialResult['copiadas'] = count(array_filter(
+                    $acciones,
+                    static fn(array $a): bool => $a['tipo'] === 'copiar_borrar'
+                ));
+                $historialResult['omitidas'] += count(array_filter(
+                    $acciones,
+                    static fn(array $a): bool => $a['tipo'] === 'omitir_sin_destino'
+                ));
+            }
+
+            if ($apply) {
+                $pdoSvE->beginTransaction();
+                try {
+                    foreach ($acciones as $accion) {
+                        if ($accion['tipo'] === 'omitir_sin_destino') {
+                            $historialResult['omitidas']++;
+                            continue;
+                        }
+                        $from = $accion['from'];
+                        $idPaso = (int) $accion['id_paso'];
+                        $idActiv = (int) $accion['id_activ'];
+
+                        if ($accion['tipo'] === 'copiar_borrar') {
+                            $idOrbix = (int) $accion['id_orbix'];
+                            $dest = $accion['dest'];
+                            // ¿ya existe?
+                            $exists = $pdoSvE->query(
+                                "SELECT 1 FROM {$dest} WHERE id_activ = {$idActiv} AND id_nom = {$idOrbix} LIMIT 1"
+                            )->fetchColumn();
+                            if ($exists) {
+                                $historialResult['ya_existian_en_orbix']++;
+                            } else {
+                                // copiar columnas comunes
+                                $src = $pdoSvE->query(
+                                    "SELECT * FROM {$from} WHERE id_activ = {$idActiv} AND id_nom = {$idPaso} LIMIT 1"
+                                )->fetch(PDO::FETCH_ASSOC);
+                                if ($src === false) {
+                                    $historialResult['omitidas']++;
+                                    continue;
+                                }
+                                $src['id_nom'] = $idOrbix;
+                                // id_schema del destino si la columna existe
+                                $destCols = $pdoSvE->query(
+                                    "SELECT column_name FROM information_schema.columns
+                                     WHERE table_schema = " . $pdoSvE->quote(
+                                         trim(explode('.', str_replace('"', '', $dest))[0])
+                                     ) . "
+                                       AND table_name = 'd_asistentes_dl'"
+                                )->fetchAll(PDO::FETCH_COLUMN) ?: [];
+                                $destCols = array_map('strval', $destCols);
+                                $vals = [];
+                                $cols = [];
+                                foreach ($destCols as $col) {
+                                    if (!array_key_exists($col, $src)) {
+                                        continue;
+                                    }
+                                    $cols[] = $col;
+                                    $vals[] = $src[$col];
+                                }
+                                if ($cols === []) {
+                                    $historialResult['omitidas']++;
+                                    continue;
+                                }
+                                $ph = [];
+                                $bind = [];
+                                foreach ($cols as $i => $col) {
+                                    $ph[] = ':c' . $i;
+                                    $bind[':c' . $i] = $vals[$i];
+                                }
+                                $sqlIns = 'INSERT INTO ' . $dest . ' (' . implode(',', $cols) . ')
+                                           VALUES (' . implode(',', $ph) . ')';
+                                $ins = $pdoSvE->prepare($sqlIns);
+                                $ins->execute($bind);
+                                $historialResult['copiadas']++;
+                            }
+                        }
+
+                        $n = $pdoSvE->exec(
+                            "DELETE FROM ONLY {$from} WHERE id_activ = {$idActiv} AND id_nom = {$idPaso}"
+                        );
+                        $historialResult['borradas'] += $n !== false ? (int) $n : 0;
+                    }
+                    $pdoSvE->commit();
+                } catch (Throwable $e) {
+                    $pdoSvE->rollBack();
+                    throw $e;
+                }
             }
         }
     }
@@ -664,7 +924,9 @@ try {
         'vs_global' => applyLimit($vsGlobal, $limit),
         'vs_global_filas' => count($vsGlobal),
         'vacios' => applyLimit($vacios, $limit),
+        'historial_plan' => $historialPlan,
         'borrado' => $borrado,
+        'historial' => $historialResult,
     ];
 } catch (Throwable $e) {
     fwrite(STDERR, "ERROR: " . $e->getMessage() . "\n");
@@ -689,6 +951,10 @@ if ($jsonOutput) {
             'muestra' => $report['vs_global'],
         ],
         'vacios' => ['total' => $report['resumen']['D_vacio_borrable'], 'muestra' => $report['vacios']],
+        'historial' => [
+            'plan' => $report['historial_plan'],
+            'resultado' => $report['historial'],
+        ],
         default => $report,
     };
     echo json_encode($out, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "\n";
@@ -807,7 +1073,7 @@ if ($fase === 'vacios' || $fase === 'todo') {
     echo "\n";
 }
 
-if (($dryRun || $apply) && isset($report['borrado'])) {
+if (($dryRun || $apply) && isset($report['borrado']) && $fase === 'vacios') {
     $b = $report['borrado'];
     echo "=== Borrado bucket D (modo={$b['modo']}) ===\n";
     echo "  candidatos OK: {$b['candidatos']}\n";
@@ -824,6 +1090,37 @@ if (($dryRun || $apply) && isset($report['borrado'])) {
     } else {
         echo "  borrados p_de_paso_ex: {$b['borrados']}\n";
         echo "  borrados telecos_ex:   {$b['telecos_borrados']}\n";
+    }
+}
+
+if ($fase === 'historial' || (($dryRun || $apply) && $fase === 'historial')) {
+    $hp = $report['historial_plan'];
+    $hr = $report['historial'];
+    echo "=== Historial asistencias (f_ini < {$r['curso_ini']}; no toca bucket A ni curso) ===\n";
+    echo "  personas B/C con asis sin match orbix: {$hp['personas_sin_match']}\n";
+    echo "  personas B/C con asis con match orbix: {$hp['personas_con_match']}\n";
+    if ($hr['modo'] !== 'ninguno') {
+        echo "  modo={$hr['modo']} copiadas={$hr['copiadas']} borradas={$hr['borradas']}"
+            . " omitidas={$hr['omitidas']} ya_en_orbix={$hr['ya_existian_en_orbix']}\n";
+        echo "  plan filas: borrar_sin_match≈{$hp['filas_borrar_sin_match']}"
+            . " copiar_y_borrar≈{$hp['filas_copiar_y_borrar']}"
+            . " omitir_sin_destino≈{$hp['filas_omitidas_sin_destino']}\n";
+        if ($dryRun) {
+            echo "  (dry-run: no se ha escrito nada)\n";
+            foreach (array_slice($hp['muestra'], 0, 20) as $a) {
+                echo sprintf(
+                    "  %s paso=%s activ=%s → orbix=%s dest=%s f_ini=%s\n",
+                    $a['tipo'],
+                    $a['id_paso'],
+                    $a['id_activ'],
+                    $a['id_orbix'] ?? '-',
+                    $a['dest'] ?? ($a['schema_orbix'] ?? '-'),
+                    $a['f_ini']
+                );
+            }
+        }
+    } else {
+        echo "  (use --dry-run o --apply para planificar/ejecutar el borrado de historial)\n";
     }
 }
 
