@@ -22,8 +22,8 @@ class CentroEllos
     // Esto inyecta los métodos getDirecciones, emailPrincipalOPrimero y getTeleco aquí
     use UbiContactsTrait;
 
-    protected RelacionCentroDlDireccionRepositoryInterface $repoCasaDireccion;
-    protected DireccionCentroDlRepositoryInterface $repoDireccion;
+    protected ?RelacionCentroDlDireccionRepositoryInterface $repoCasaDireccion = null;
+    protected ?DireccionCentroDlRepositoryInterface $repoDireccion = null;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -59,16 +59,20 @@ class CentroEllos
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Constructor para inyectar los repositorios necesarios.
-     *
-     * $repoCasaDireccion Repositorio de relación Casa-Dirección
-     * $repoDireccion Repositorio de Direcciones
-     */
     public function __construct()
     {
-        $this->repoCasaDireccion = DependencyResolver::get(RelacionCentroDlDireccionRepositoryInterface::class);
-        $this->repoDireccion = DependencyResolver::get(DireccionCentroDlRepositoryInterface::class);
+        // Repos de dirección (oDB) solo al usar direcciones: en DMZ no hay oDB
+        // y listados/NewUbi solo necesitan nombre_ubi.
+    }
+
+    private function relacionRepo(): RelacionCentroDlDireccionRepositoryInterface
+    {
+        return $this->repoCasaDireccion ??= DependencyResolver::get(RelacionCentroDlDireccionRepositoryInterface::class);
+    }
+
+    private function direccionRepo(): DireccionCentroDlRepositoryInterface
+    {
+        return $this->repoDireccion ??= DependencyResolver::get(DireccionCentroDlRepositoryInterface::class);
     }
 
     /**
@@ -392,7 +396,7 @@ class CentroEllos
      */
     public function getUnaDireccionDetallada(int $id_direccion): ?DireccionDetalle
     {
-        $relaciones = $this->repoCasaDireccion->getRelacionesPorUbi($this->getId_ubi());
+        $relaciones = $this->relacionRepo()->getRelacionesPorUbi($this->getId_ubi());
         $direccionDetallada = null;
 
         foreach ($relaciones as $row) {
@@ -407,7 +411,7 @@ class CentroEllos
             if ($id_direccion !== $idDireccion) {
                 continue;
             }
-            $direccion = $this->repoDireccion->findById($idDireccion);
+            $direccion = $this->direccionRepo()->findById($idDireccion);
             if ($direccion !== null) {
                 // Creamos el objeto intermedio con los booleanos de la DB
                 // Aseguramos conversión a bool explícita
@@ -433,7 +437,7 @@ class CentroEllos
     public function getDireccionesDetalladas(): array
     {
 
-        $relaciones = $this->repoCasaDireccion->getRelacionesPorUbi($this->getId_ubi());
+        $relaciones = $this->relacionRepo()->getRelacionesPorUbi($this->getId_ubi());
         $direccionesDetalladas = [];
 
         foreach ($relaciones as $row) {
@@ -444,7 +448,7 @@ class CentroEllos
             if (!is_int($idDireccionRaw) && !is_string($idDireccionRaw)) {
                 continue;
             }
-            $direccion = $this->repoDireccion->findById((int) $idDireccionRaw);
+            $direccion = $this->direccionRepo()->findById((int) $idDireccionRaw);
             if ($direccion !== null) {
                 // Creamos el objeto intermedio con los booleanos de la DB
                 // Aseguramos conversión a bool explícita
@@ -478,13 +482,13 @@ class CentroEllos
      */
     public function addDireccion(int $id_direccion, bool $principal = false, bool $propietario = false): void
     {
-        $this->repoCasaDireccion->asociarDireccion(
+        $this->relacionRepo()->asociarDireccion(
             $this->getId_ubi(),
             $id_direccion,
             $principal
         );
         if ($propietario) {
-            $this->repoCasaDireccion->updatePropietario($this->getId_ubi(), $id_direccion, true);
+            $this->relacionRepo()->updatePropietario($this->getId_ubi(), $id_direccion, true);
         }
     }
 
@@ -493,7 +497,7 @@ class CentroEllos
      */
     public function removeDireccion(int $id_direccion): void
     {
-        $this->repoCasaDireccion->desasociarDireccion($this->getId_ubi(), $id_direccion);
+        $this->relacionRepo()->desasociarDireccion($this->getId_ubi(), $id_direccion);
     }
 
     /**
@@ -501,13 +505,13 @@ class CentroEllos
      */
     public function getDireccionPrincipal(): ?Direccion
     {
-        $id_direccion_principal = $this->repoCasaDireccion->getDireccionPrincipal($this->getId_ubi());
+        $id_direccion_principal = $this->relacionRepo()->getDireccionPrincipal($this->getId_ubi());
 
         if ($id_direccion_principal === null) {
             return null;
         }
 
-        return $this->repoDireccion->findById($id_direccion_principal);
+        return $this->direccionRepo()->findById($id_direccion_principal);
     }
 
     /**
@@ -515,7 +519,7 @@ class CentroEllos
      */
     public function establecerDireccionPrincipal(int $id_direccion): void
     {
-        $this->repoCasaDireccion->establecerDireccionPrincipal($this->getId_ubi(), $id_direccion);
+        $this->relacionRepo()->establecerDireccionPrincipal($this->getId_ubi(), $id_direccion);
     }
 
     /**
@@ -524,7 +528,7 @@ class CentroEllos
     public function cambiarEstadoPropietario(int $id_direccion, bool $esPropietario): void
     {
         // Llamamos a un método en el repositorio para actualizar solo este campo
-        $this->repoCasaDireccion->updatePropietario($this->getId_ubi(), $id_direccion, $esPropietario);
+        $this->relacionRepo()->updatePropietario($this->getId_ubi(), $id_direccion, $esPropietario);
     }
 
 }
