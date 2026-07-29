@@ -31,8 +31,8 @@ declare(strict_types=1);
  *   --schema-paso=restov
  *   --json  --limit=30
  *   --pg  (explícito; es el default)
- *   --dry-run  muestra DELETE del bucket D (no escribe)
- *   --apply    ejecuta DELETE del bucket D (exige asis_verificado)
+ *   --dry-run  con --fase=vacios: muestra DELETE del bucket D (no escribe)
+ *   --apply    con --fase=vacios: ejecuta DELETE del bucket D (exige asis_verificado)
  *
  * SQL de referencia: tools/audit/sql/personas_paso_limpieza.sql
  */
@@ -576,6 +576,81 @@ try {
             <=> [$b['apellido1'], $b['apellido2'], $b['nom'], $b['id_nom']]
     );
 
+    // --- Borrado bucket D (--dry-run / --apply; solo con --fase=vacios) ---
+    $borrado = [
+        'modo' => 'ninguno',
+        'candidatos' => 0,
+        'borrados' => 0,
+        'telecos_borrados' => 0,
+        'omitidos_recheck' => 0,
+        'ids' => [],
+    ];
+
+    if ($dryRun || $apply) {
+        if ($fase !== 'vacios') {
+            throw new RuntimeException(
+                '--dry-run / --apply solo con --fase=vacios (borran únicamente el bucket D).'
+            );
+        }
+        if (!$asisVerificado) {
+            throw new RuntimeException(
+                'No se puede borrar: asis_verificado=false. Revise --db-sv-e.'
+            );
+        }
+
+        $borrado['modo'] = $apply ? 'apply' : 'dry-run';
+
+        /** @var list<int> $idsD */
+        $idsD = array_map(static fn(array $r): int => (int) $r['id_nom'], $vacios);
+        if ($limit > 0) {
+            $idsD = array_slice($idsD, 0, $limit);
+        }
+
+        // Recheck duro: seguir sin notas y sin asis
+        $idsOk = [];
+        foreach ($idsD as $id) {
+            $row = $pasoById[$id] ?? null;
+            if ($row === null) {
+                $borrado['omitidos_recheck']++;
+                continue;
+            }
+            if ($row['n_notas'] > 0 || $row['n_asis'] > 0 || $row['tiene_curso'] || $row['bucket'] !== 'D') {
+                $borrado['omitidos_recheck']++;
+                continue;
+            }
+            $idsOk[] = $id;
+        }
+        $borrado['ids'] = $idsOk;
+        $borrado['candidatos'] = count($idsOk);
+
+        $tieneTeleco = $pdoSv->query(
+            'SELECT to_regclass(' . $pdoSv->quote("{$pasoSchema}.d_teleco_personas_ex") . ')'
+        )->fetchColumn();
+
+        if ($apply && $idsOk !== []) {
+            $pdoSv->beginTransaction();
+            try {
+                foreach (array_chunk($idsOk, 500) as $chunk) {
+                    $in = implode(',', array_map('intval', $chunk));
+                    if ($tieneTeleco) {
+                        $nTel = $pdoSv->exec(
+                            "DELETE FROM {$qPaso}.d_teleco_personas_ex WHERE id_nom IN ({$in})"
+                        );
+                        $borrado['telecos_borrados'] += $nTel !== false ? (int) $nTel : 0;
+                    }
+                    $n = $pdoSv->exec(
+                        "DELETE FROM {$qPaso}.p_de_paso_ex WHERE id_nom IN ({$in})"
+                    );
+                    $borrado['borrados'] += $n !== false ? (int) $n : 0;
+                }
+                $pdoSv->commit();
+            } catch (Throwable $e) {
+                $pdoSv->rollBack();
+                throw $e;
+            }
+        }
+    }
+
     $report = [
         'resumen' => $resumen,
         'buckets' => [
@@ -589,14 +664,14 @@ try {
         'vs_global' => applyLimit($vsGlobal, $limit),
         'vs_global_filas' => count($vsGlobal),
         'vacios' => applyLimit($vacios, $limit),
+        'borrado' => $borrado,
     ];
 } catch (Throwable $e) {
-    fwrite(STDERR, "ERROR conectando a PostgreSQL.\n");
-    fwrite(STDERR, $e->getMessage() . "\n");
+    fwrite(STDERR, "ERROR: " . $e->getMessage() . "\n");
     if (!$usePg) {
-        fwrite(STDERR, "Hint: en producción use el modo por defecto (PDO) o --pg; ConfigDB solo con --configdb.\n");
+        fwrite(STDERR, "Hint: en producción use PDO (default) o --pg; ConfigDB solo con --configdb.\n");
     } else {
-        fwrite(STDERR, "Hint: revise --db-sv / --db-comun y PGHOST/PGPORT (peer como usuario postgres).\n");
+        fwrite(STDERR, "Hint: revise --db-sv / --db-comun / --db-sv-e y PGHOST/PGPORT.\n");
     }
     exit(1);
 }
@@ -728,6 +803,27 @@ if ($fase === 'vacios' || $fase === 'todo') {
             $row['nom'] ?? '',
             $row['f_nacimiento'] ?? ''
         );
+    }
+    echo "\n";
+}
+
+if (($dryRun || $apply) && isset($report['borrado'])) {
+    $b = $report['borrado'];
+    echo "=== Borrado bucket D (modo={$b['modo']}) ===\n";
+    echo "  candidatos OK: {$b['candidatos']}\n";
+    echo "  omitidos recheck: {$b['omitidos_recheck']}\n";
+    if ($dryRun) {
+        echo "  (dry-run: no se ha borrado nada)\n";
+        $muestra = array_slice($b['ids'], 0, $limit > 0 ? $limit : 20);
+        foreach ($muestra as $id) {
+            echo "  DELETE id_nom={$id}\n";
+        }
+        if (count($b['ids']) > count($muestra)) {
+            echo '  ... y ' . (count($b['ids']) - count($muestra)) . " más\n";
+        }
+    } else {
+        echo "  borrados p_de_paso_ex: {$b['borrados']}\n";
+        echo "  borrados telecos_ex:   {$b['telecos_borrados']}\n";
     }
 }
 
