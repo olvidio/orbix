@@ -182,6 +182,80 @@ final class PlazasCederTest extends TestCase
         $this->assertSame('', $msg);
     }
 
+    public function test_cede_usando_calendario_del_resumen_si_getPlazasCalendario_falla(): void
+    {
+        $deleg = new Delegacion();
+        $deleg->setIdDlVo(new DelegacionId(5));
+        $deleg->setDl('dl');
+
+        $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
+        $delegRepo->method('getDelegaciones')->willReturn([$deleg]);
+
+        $oPlazas = $this->createMock(ActividadPlazas::class);
+        $oPlazas->method('getArrayCedidas')->willReturn([]);
+        $oPlazas->method('getPlazasVo')->willReturn(null);
+
+        $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
+        $plazasDlRepo->method('getActividadesPlazas')->willReturn([$oPlazas]);
+        $oPlazas->expects($this->once())->method('setCedidas')->with(['dlx' => 1]);
+        $plazasDlRepo->expects($this->once())->method('Guardar')->with($oPlazas)->willReturn(true);
+
+        $resumenSvc = $this->createMock(ResumenPlazasService::class);
+        $resumenSvc->method('getPlazasCalendario')->willReturn(0);
+        $resumenSvc->method('getResumen')->willReturn([
+            'dl' => ['calendario' => 2],
+            'total' => [],
+        ]);
+
+        $calRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
+
+        $msg = $this->makeUseCase($delegRepo, $plazasDlRepo, $calRepo, $resumenSvc)->execute([
+            'id_activ' => 1,
+            'region_dl' => 'X-dlx',
+            'num_plazas' => 1,
+        ]);
+        $this->assertSame('', $msg);
+    }
+
+    public function test_cede_plazas_conseguidas_sin_calendario_propio(): void
+    {
+        $deleg = new Delegacion();
+        $deleg->setIdDlVo(new DelegacionId(5));
+        $deleg->setDl('dl');
+
+        $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
+        $delegRepo->method('getDelegaciones')->willReturn([$deleg]);
+
+        $oPlazas = $this->createMock(ActividadPlazas::class);
+        $oPlazas->method('getArrayCedidas')->willReturn([]);
+        $oPlazas->method('getPlazasVo')->willReturn(null);
+
+        $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
+        $plazasDlRepo->method('getActividadesPlazas')->willReturn([$oPlazas]);
+        $oPlazas->expects($this->once())->method('setCedidas')->with(['dlx' => 1]);
+        $plazasDlRepo->expects($this->once())->method('Guardar')->with($oPlazas)->willReturn(true);
+
+        $resumenSvc = $this->createMock(ResumenPlazasService::class);
+        $resumenSvc->method('getPlazasCalendario')->willReturn(0);
+        $resumenSvc->method('getResumen')->willReturn([
+            'dl' => [
+                'calendario' => 0,
+                'total_conseguidas' => 1,
+                'total_disponibles' => 1,
+            ],
+            'total' => [],
+        ]);
+
+        $calRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
+
+        $msg = $this->makeUseCase($delegRepo, $plazasDlRepo, $calRepo, $resumenSvc)->execute([
+            'id_activ' => 1,
+            'region_dl' => 'X-dlx',
+            'num_plazas' => 1,
+        ]);
+        $this->assertSame('', $msg);
+    }
+
     private function makeUseCase(
         DelegacionRepositoryInterface $delegRepo,
         ActividadPlazasDlRepositoryInterface $plazasDlRepo,

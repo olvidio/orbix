@@ -163,22 +163,54 @@ class ResumenPlazasService
     }
 
     /**
-     * Devuelve las plazas diponibles para una dl de una actividad
+     * Devuelve las plazas de calendario para una dl de una actividad.
+     * Preferencia: filas con dl_tabla = dl_org (calendario publicado).
+     * Si no hay, misma tolerancia que {@see \src\actividadplazas\application\PlazasDlEdicion}:
+     * cualquier fila de esa dl/actividad, priorizando dl_tabla = $dl.
      */
     public function getPlazasCalendario(string $dl): int
     {
         $id_activ = $this->getId_activ();
-        $mi_dl = $dl;
-        $id_mi_dl = $this->getDlId($mi_dl);
+        $id_mi_dl = $this->getDlId($dl);
+        if ($id_mi_dl <= 0) {
+            return 0;
+        }
         $dl_org = $this->getDl_org();
 
-        // plazas de calendario de cada dl
-        $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(array('id_activ' => $id_activ, 'id_dl' => $id_mi_dl, 'dl_tabla' => $dl_org));
-        $plazas_calendario = 0;
-        foreach ($cActividadPlazas as $oActividadPlazas) {
-            $plazas_calendario += $oActividadPlazas->getPlazasVo()?->value()?? 0;
+        $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas([
+            'id_activ' => $id_activ,
+            'id_dl' => $id_mi_dl,
+            'dl_tabla' => $dl_org,
+        ]);
+        if ($cActividadPlazas === []) {
+            $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas([
+                'id_activ' => $id_activ,
+                'id_dl' => $id_mi_dl,
+            ]);
         }
-        return $plazas_calendario;
+
+        $plazas_calendario = 0;
+        $plazas_propias_tabla = 0;
+        $plazas_cualquieras = 0;
+        foreach ($cActividadPlazas as $oActividadPlazas) {
+            $num = $oActividadPlazas->getPlazasVo()?->value() ?? 0;
+            $plazas_cualquieras += $num;
+            $dl_tabla = $oActividadPlazas->getDlTablaVo()->value();
+            if ($dl_org !== '' && $dl_tabla === $dl_org) {
+                $plazas_calendario += $num;
+            }
+            if ($dl_tabla === $dl) {
+                $plazas_propias_tabla += $num;
+            }
+        }
+        if ($plazas_calendario > 0) {
+            return $plazas_calendario;
+        }
+        if ($plazas_propias_tabla > 0) {
+            return $plazas_propias_tabla;
+        }
+
+        return $plazas_cualquieras;
     }
 
     /**

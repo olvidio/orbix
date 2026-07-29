@@ -5,6 +5,7 @@ namespace src\actividadplazas\application;
 use src\shared\config\ConfigGlobal;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
+use src\actividadplazas\domain\entity\ActividadPlazas;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
@@ -56,7 +57,14 @@ final class PlazasCeder
         $aCedidas = $oActividadPlazasDl->getArrayCedidas() ?? [];
 
         if ($num_plazas > 0) {
-            $msg = $this->validarPlazasParaCeder($id_activ, $mi_dele, $aCedidas, $dl, $num_plazas);
+            $msg = $this->validarPlazasParaCeder(
+                $id_activ,
+                $mi_dele,
+                $oActividadPlazasDl,
+                $aCedidas,
+                $dl,
+                $num_plazas
+            );
             if ($msg !== '') {
                 return $msg;
             }
@@ -79,23 +87,22 @@ final class PlazasCeder
     }
 
     /**
-     * Comprueba que mi_dele dispone de plazas de calendario para ceder.
+     * Comprueba que mi_dele dispone de plazas para ceder (calendario + conseguidas).
      *
      * @param array<string, int> $aCedidas
      */
     private function validarPlazasParaCeder(
         int $id_activ,
         string $mi_dele,
+        ActividadPlazas $oActividadPlazasDl,
         array $aCedidas,
         string $dl_destino,
         int $num_plazas
     ): string {
-        $this->resumenPlazasService->setId_activ($id_activ);
-
-        $calendario = (int)$this->resumenPlazasService->getPlazasCalendario($mi_dele);
+        $cupo = $this->cupoParaCeder($id_activ, $mi_dele, $oActividadPlazasDl);
         $cedidas_totales = array_sum($aCedidas);
         $cedidas_a_destino = (int)($aCedidas[$dl_destino] ?? 0);
-        $max_cedible = $calendario - $cedidas_totales + $cedidas_a_destino;
+        $max_cedible = $cupo - $cedidas_totales + $cedidas_a_destino;
 
         if ($max_cedible <= 0) {
             return (string)_("No tiene plazas para ceder");
@@ -108,5 +115,40 @@ final class PlazasCeder
         }
 
         return '';
+    }
+
+    /**
+     * Cupo cedible de mi_dele: plazas de calendario + conseguidas de otras dl
+     * (mismo criterio que «disponibles» del resumen: calendario + conseguidas).
+     */
+    private function cupoParaCeder(
+        int $id_activ,
+        string $mi_dele,
+        ActividadPlazas $oActividadPlazasDl
+    ): int {
+        $calendario = (int)($oActividadPlazasDl->getPlazasVo()?->value() ?? 0);
+        $conseguidas = 0;
+
+        $this->resumenPlazasService->setId_activ($id_activ);
+        $calendario = max($calendario, (int)$this->resumenPlazasService->getPlazasCalendario($mi_dele));
+
+        $a_plazas = $this->resumenPlazasService->getResumen();
+        if (is_array($a_plazas)) {
+            $miData = $a_plazas[$mi_dele] ?? null;
+            if (is_array($miData)) {
+                if (is_numeric($miData['calendario'] ?? null)) {
+                    $calendario = max($calendario, (int)$miData['calendario']);
+                }
+                if (is_numeric($miData['total_conseguidas'] ?? null)) {
+                    $conseguidas = (int)$miData['total_conseguidas'];
+                }
+            }
+        }
+
+        if ($conseguidas <= 0) {
+            $conseguidas = (int)$this->resumenPlazasService->getPlazasConseguidas($mi_dele);
+        }
+
+        return $calendario + $conseguidas;
     }
 }

@@ -29,8 +29,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Extrae la dl destino de `region_dl` (formato `region-dl`, se toma la parte tras el `-`).
 - Obtiene/crea el `ActividadPlazasDl` de mi dl desde el calendario común
   (`PlazasDlEdicion::obtenerOCrearDesdeCalendario`); si falta el registro devuelve el aviso de calendario.
-- Si `num_plazas > 0`, valida que mi dl dispone de suficientes plazas de calendario libres para ceder
-  (`calendario - cedidas_totales + cedidas_a_ese_destino`).
+- Si `num_plazas > 0`, valida que mi dl dispone de suficientes plazas para ceder
+  (`calendario + conseguidas - cedidas_totales + cedidas_a_ese_destino`).
 - Si `num_plazas === 0`, elimina la cesión a esa dl; en otro caso fija `cedidas[dl] = num_plazas`.
 - Guarda el `ActividadPlazasDl`.
 
