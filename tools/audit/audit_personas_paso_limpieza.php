@@ -31,6 +31,8 @@ declare(strict_types=1);
  *   --schema-paso=restov
  *   --json  --limit=30
  *   --pg  (explícito; es el default)
+ *   --dry-run  muestra DELETE del bucket D (no escribe)
+ *   --apply    ejecuta DELETE del bucket D (exige asis_verificado)
  *
  * SQL de referencia: tools/audit/sql/personas_paso_limpieza.sql
  */
@@ -50,6 +52,8 @@ $jsonOutput = false;
 $limit = 0;
 $pasoSchema = null; // restov / restof por defecto según database
 $usePg = true; // default: PDO directo (prod como postgres, sin ConfigDB)
+$dryRun = false;
+$apply = false;
 
 foreach ($argv as $arg) {
     if ($arg === '--pg') {
@@ -57,6 +61,12 @@ foreach ($argv as $arg) {
     }
     if ($arg === '--configdb') {
         $usePg = false;
+    }
+    if ($arg === '--dry-run') {
+        $dryRun = true;
+    }
+    if ($arg === '--apply') {
+        $apply = true;
     }
     if (str_starts_with($arg, '--database=')) {
         $database = substr($arg, strlen('--database='));
@@ -85,6 +95,11 @@ foreach ($argv as $arg) {
     if ($arg === '--json') {
         $jsonOutput = true;
     }
+}
+
+if ($dryRun && $apply) {
+    fwrite(STDERR, "No combine --dry-run y --apply.\n");
+    exit(1);
 }
 
 $fasesOk = ['resumen', 'buckets', 'duplicados', 'vs-global', 'vacios', 'todo'];
