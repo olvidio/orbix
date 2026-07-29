@@ -148,6 +148,14 @@ final class ConnectionBootstrap
         $connections['oDBEP_Select'] = self::openPdo($oConfigDB, 'sv-e_select', 'publicv');
         $connections['oDBER_Select'] = self::openPdo($oConfigDB, 'sv-e_select', 'restov');
 
+        // En DMZ no hay BD interior (sv): el código que pide oDB/oDBP/oDBR
+        // (PersonaEx, CentroDl, etc.) debe usar las conexiones sv-e equivalentes.
+        if (ConfigGlobal::is_dmz()) {
+            $connections['oDB'] = $connections['oDBE'];
+            $connections['oDBP'] = $connections['oDBEP'];
+            $connections['oDBR'] = $connections['oDBER'];
+        }
+
         if (!$isDocker) {
             try {
                 $oConfigSf = new ConfigDB('sf');
