@@ -143,19 +143,11 @@ final class ComunicacionActividadesSacdData
         $oPeriodo->setEmpiezaMin($empiezamin);
         $oPeriodo->setEmpiezaMax($empiezamax);
         $oPeriodo->setPeriodo($periodo);
-        $inicioIso = (string)$oPeriodo->getF_ini_iso();
-        $finIso = (string)$oPeriodo->getF_fin_iso();
-        $periodo_txt = sprintf(_("atención actividades para el periodo %s"), $oPeriodo->getTxt_cusro());
 
-        if ($que === 'un_sacd') {
-            $y = (int)$year;
-            if ($y === 0) {
-                $y = (int)date('Y');
-            }
-            $inicioIso = ($y - 1) . '-07-01';
-            $finIso = ($y + 1) . '-06-30';
-            $periodo_txt = sprintf(_("atención actividades para el periodo %s"), "$inicioIso / $finIso");
-        }
+        // Normalizar a Y-m-d (Periodo a veces guarda Y/m/d).
+        $inicioIso = $oPeriodo->getF_ini()->getIso();
+        $finIso = $oPeriodo->getF_fin()->getIso();
+        $periodo_txt = sprintf(_("atención actividades para el periodo %s"), $oPeriodo->getTxt_cusro());
 
         return [
             'que' => $que,

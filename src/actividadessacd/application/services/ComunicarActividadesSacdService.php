@@ -107,9 +107,11 @@ final class ComunicarActividadesSacdService
         $oHelper = $this->actividadesSacdHelper;
         $array_actividades = [];
 
+        // Solape con el periodo: f_ini <= fin AND f_fin >= inicio.
+        // Sin comillas extras: Condicion usa placeholders PDO para <= / >=.
         $aWhereAct = [
-            'f_ini' => "'" . $this->finIso . "'",
-            'f_fin' => "'" . $this->inicioIso . "'",
+            'f_ini' => $this->finIso,
+            'f_fin' => $this->inicioIso,
             'status' => '2',
         ];
         $aOperadorAct = [

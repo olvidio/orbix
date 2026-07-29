@@ -68,7 +68,7 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
             'que' => '',
             'id_nom' => 0,
             'propuesta' => '',
-            'periodo' => '',
+            'periodo' => 'tot_any',
             'year' => '2030',
             'empiezamin' => '',
             'empiezamax' => '',
@@ -76,8 +76,8 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
 
         $this->assertSame('un_sacd', $ctx['que']);
         $this->assertSame(9988, $ctx['id_nom']);
-        $this->assertSame('2029-07-01', $ctx['inicioIso']);
-        $this->assertSame('2031-06-30', $ctx['finIso']);
+        $this->assertSame('2030-01-01', $ctx['inicioIso']);
+        $this->assertSame('2030-12-31', $ctx['finIso']);
     }
 
     public function test_resolver_contexto_rol_distinto_de_p_sacd_no_fuerza_un_sacd(): void
@@ -125,6 +125,23 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
         ]);
 
         $this->assertSame('sssc', $ctx['que']);
+    }
+
+    public function test_resolver_contexto_respeta_trimestre_seleccionado(): void
+    {
+        $usuarioRepo = $this->createMock(UsuarioRepositoryInterface::class);
+        $usuarioRepo->method('findById')->willReturn(null);
+
+        $roleRepo = $this->createMock(RoleRepositoryInterface::class);
+
+        $ctx = $this->makeUseCase($usuarioRepo, $roleRepo)->resolverContexto([
+            'que' => 'nagd',
+            'periodo' => 'trimestre_2',
+            'year' => '2026',
+        ]);
+
+        $this->assertSame('2026-04-01', $ctx['inicioIso']);
+        $this->assertSame('2026-06-30', $ctx['finIso']);
     }
 
     private function makeUseCase(
