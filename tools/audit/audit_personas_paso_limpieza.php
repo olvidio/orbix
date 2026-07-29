@@ -27,16 +27,20 @@ declare(strict_types=1);
  *
  * Otras opciones:
  *   --curso-ini=2025-10-01
- *   --fase=resumen|buckets|duplicados|vs-global|vacios|historial|todo
+ *   --fase=resumen|buckets|duplicados|vs-global|vacios|historial|notas|todo
  *   --schema-paso=restov
  *   --json  --limit=30
  *   --pg  (explícito; es el default)
- *   --dry-run  con --fase=vacios|historial
- *   --apply    con --fase=vacios|historial
+ *   --dry-run  con --fase=vacios|historial|notas
+ *   --apply    con --fase=vacios|historial|notas
  *
  * historial: borra asistencias con f_ini < curso_ini (no toca curso ni bucket A).
  *   Si hay gemelo en global.personas, copia antes a d_asistentes_dl del esquema orbix.
  *   No borra la persona; tras historial, los C suelen pasar a D → --fase=vacios.
+ *
+ * notas: solo personas con pareja en global.personas. Copia/reasigna notas al id_orbix
+ *   (no duplica si ya existe id_orbix+id_asignatura). Solo entonces borra la fila de paso.
+ *   Sin pareja → no se toca ninguna nota.
  *
  * SQL de referencia: tools/audit/sql/personas_paso_limpieza.sql
  */
@@ -106,7 +110,7 @@ if ($dryRun && $apply) {
     exit(1);
 }
 
-$fasesOk = ['resumen', 'buckets', 'duplicados', 'vs-global', 'vacios', 'historial', 'todo'];
+$fasesOk = ['resumen', 'buckets', 'duplicados', 'vs-global', 'vacios', 'historial', 'notas', 'todo'];
 if (!in_array($fase, $fasesOk, true)) {
     fwrite(STDERR, 'fase inválida: ' . implode('|', $fasesOk) . "\n");
     exit(1);
@@ -645,14 +649,46 @@ try {
         'omitidas' => 0,
         'ya_existian_en_orbix' => 0,
     ];
+    $notasPlan = [
+        'personas_con_notas_y_match' => 0,
+        'personas_con_notas_sin_match' => 0,
+        'filas_update' => 0,
+        'filas_insert_borrar' => 0,
+        'filas_borrar_ya_existe' => 0,
+        'filas_omitidas' => 0,
+        'muestra' => [],
+    ];
+    $notasResult = [
+        'modo' => 'ninguno',
+        'actualizadas' => 0,
+        'insertadas' => 0,
+        'borradas' => 0,
+        'ya_existian' => 0,
+        'omitidas' => 0,
+    ];
+
+    $idsConNotas = [];
+    foreach ($pasoById as $id => $row) {
+        if ($row['n_notas'] > 0) {
+            $idsConNotas[] = $id;
+        }
+    }
+    $notasPlan['personas_con_notas_y_match'] = count(array_filter(
+        $idsConNotas,
+        static fn(int $id): bool => isset($mejorMatch[$id])
+    ));
+    $notasPlan['personas_con_notas_sin_match'] = count(array_filter(
+        $idsConNotas,
+        static fn(int $id): bool => !isset($mejorMatch[$id])
+    ));
 
     if ($dryRun || $apply) {
-        if (!in_array($fase, ['vacios', 'historial'], true)) {
+        if (!in_array($fase, ['vacios', 'historial', 'notas'], true)) {
             throw new RuntimeException(
-                '--dry-run / --apply solo con --fase=vacios|historial.'
+                '--dry-run / --apply solo con --fase=vacios|historial|notas.'
             );
         }
-        if (!$asisVerificado) {
+        if (in_array($fase, ['vacios', 'historial'], true) && !$asisVerificado) {
             throw new RuntimeException(
                 'No se puede mutar: asis_verificado=false. Revise --db-sv-e.'
             );
@@ -909,6 +945,227 @@ try {
                 }
             }
         }
+
+        if ($fase === 'notas') {
+            $notasResult['modo'] = $apply ? 'apply' : 'dry-run';
+
+            // Hijas de public*.e_notas
+            $hijas = $pdoSv->query(
+                "SELECT n.nspname AS schema, c.relname AS tabla
+                 FROM pg_inherits i
+                 JOIN pg_class c ON c.oid = i.inhrelid
+                 JOIN pg_namespace n ON n.oid = c.relnamespace
+                 JOIN pg_class p ON p.oid = i.inhparent
+                 JOIN pg_namespace pn ON pn.oid = p.relnamespace
+                 WHERE pn.nspname = " . $pdoSv->quote($publicSchema) . "
+                   AND p.relname = 'e_notas'
+                 ORDER BY 1, 2"
+            )->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+            $idsTarget = array_values(array_filter(
+                $idsConNotas,
+                static fn(int $id): bool => isset($mejorMatch[$id])
+            ));
+            if ($limit > 0) {
+                $idsTarget = array_slice($idsTarget, 0, $limit);
+            }
+
+            /** @var list<array<string, mixed>> $accionesNotas */
+            $accionesNotas = [];
+            if ($idsTarget !== []) {
+                foreach ($hijas as $hija) {
+                    $sch = (string) $hija['schema'];
+                    $tab = (string) $hija['tabla'];
+                    $from = qIdent($sch) . '.' . $tab;
+                    foreach (array_chunk($idsTarget, 500) as $chunk) {
+                        $in = implode(',', array_map('intval', $chunk));
+                        $stmt = $pdoSv->query(
+                            "SELECT * FROM ONLY {$from} WHERE id_nom IN ({$in})"
+                        );
+                        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) ?: [] as $nota) {
+                            $idPaso = (int) $nota['id_nom'];
+                            $idAsig = (int) $nota['id_asignatura'];
+                            $match = $mejorMatch[$idPaso] ?? null;
+                            if ($match === null) {
+                                continue; // no tocar sin pareja
+                            }
+                            $idOrbix = (int) $match['id_orbix'];
+                            $ya = $pdoSv->query(
+                                "SELECT 1 FROM {$qPublic}.e_notas
+                                 WHERE id_nom = {$idOrbix} AND id_asignatura = {$idAsig}
+                                 LIMIT 1"
+                            )->fetchColumn();
+
+                            $accion = [
+                                'from' => $from,
+                                'tabla' => $tab,
+                                'schema' => $sch,
+                                'id_paso' => $idPaso,
+                                'id_orbix' => $idOrbix,
+                                'id_asignatura' => $idAsig,
+                                'id_nivel' => $nota['id_nivel'] ?? null,
+                                'tipo' => 'omitir',
+                                'dest' => null,
+                            ];
+
+                            if ($ya) {
+                                $accion['tipo'] = 'borrar_ya_existe';
+                                $notasPlan['filas_borrar_ya_existe']++;
+                            } elseif ($tab === 'e_notas_dl' || $tab === 'e_notas_otra_region_stgr') {
+                                // Ya está en tabla de DL/región: reasignar id_nom
+                                $accion['tipo'] = 'update_id_nom';
+                                $notasPlan['filas_update']++;
+                            } elseif ($tab === 'e_notas_ex') {
+                                $schId = $match['id_schema'] ?? null;
+                                $schName = ($schId !== null && isset($schemaById[$schId]))
+                                    ? $schemaById[$schId]
+                                    : null;
+                                $destOk = $schName !== null && $pdoSv->query(
+                                    'SELECT to_regclass(' . $pdoSv->quote($schName . '.e_notas_dl') . ')'
+                                )->fetchColumn();
+                                if ($destOk) {
+                                    $accion['tipo'] = 'insert_dl_borrar';
+                                    $accion['dest'] = qIdent($schName) . '.e_notas_dl';
+                                    $accion['dest_schema'] = $schName;
+                                    $accion['dest_id_schema'] = $schId;
+                                    $notasPlan['filas_insert_borrar']++;
+                                } else {
+                                    $accion['tipo'] = 'omitir';
+                                    $notasPlan['filas_omitidas']++;
+                                }
+                            } else {
+                                $accion['tipo'] = 'omitir';
+                                $notasPlan['filas_omitidas']++;
+                            }
+
+                            $accion['_row'] = $nota;
+                            $accionesNotas[] = $accion;
+                            if (count($notasPlan['muestra']) < 30) {
+                                $m = $accion;
+                                unset($m['_row']);
+                                $notasPlan['muestra'][] = $m;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($dryRun) {
+                foreach ($accionesNotas as $a) {
+                    match ($a['tipo']) {
+                        'update_id_nom' => $notasResult['actualizadas']++,
+                        'insert_dl_borrar' => $notasResult['insertadas']++,
+                        'borrar_ya_existe' => $notasResult['ya_existian']++,
+                        default => $notasResult['omitidas']++,
+                    };
+                    if (in_array($a['tipo'], ['update_id_nom', 'insert_dl_borrar', 'borrar_ya_existe'], true)) {
+                        $notasResult['borradas']++; // update cuenta como “mover”; insert+borrar también
+                    }
+                }
+                // En dry-run, para update no hay borrado aparte; ajustar mensaje:
+                // borradas = filas que dejan de estar bajo id_paso
+                $notasResult['borradas'] = $notasResult['actualizadas']
+                    + $notasResult['insertadas']
+                    + $notasResult['ya_existian'];
+            }
+
+            if ($apply) {
+                $pdoSv->beginTransaction();
+                try {
+                    foreach ($accionesNotas as $accion) {
+                        $from = $accion['from'];
+                        $idPaso = (int) $accion['id_paso'];
+                        $idOrbix = (int) $accion['id_orbix'];
+                        $idAsig = (int) $accion['id_asignatura'];
+                        $nota = $accion['_row'];
+
+                        if ($accion['tipo'] === 'omitir') {
+                            $notasResult['omitidas']++;
+                            continue;
+                        }
+
+                        if ($accion['tipo'] === 'borrar_ya_existe') {
+                            $n = $pdoSv->exec(
+                                "DELETE FROM ONLY {$from}
+                                 WHERE id_nom = {$idPaso} AND id_asignatura = {$idAsig}"
+                            );
+                            $notasResult['ya_existian']++;
+                            $notasResult['borradas'] += $n !== false ? (int) $n : 0;
+                            continue;
+                        }
+
+                        if ($accion['tipo'] === 'update_id_nom') {
+                            $n = $pdoSv->exec(
+                                "UPDATE ONLY {$from}
+                                 SET id_nom = {$idOrbix}
+                                 WHERE id_nom = {$idPaso} AND id_asignatura = {$idAsig}"
+                            );
+                            $notasResult['actualizadas'] += $n !== false ? (int) $n : 0;
+                            continue;
+                        }
+
+                        if ($accion['tipo'] === 'insert_dl_borrar') {
+                            $dest = (string) $accion['dest'];
+                            $yaDest = $pdoSv->query(
+                                "SELECT 1 FROM {$dest}
+                                 WHERE id_nom = {$idOrbix} AND id_asignatura = {$idAsig}
+                                 LIMIT 1"
+                            )->fetchColumn();
+                            if (!$yaDest) {
+                                $src = $nota;
+                                $src['id_nom'] = $idOrbix;
+                                if (isset($accion['dest_id_schema']) && $accion['dest_id_schema'] !== null) {
+                                    $src['id_schema'] = (int) $accion['dest_id_schema'];
+                                }
+                                $destSchema = (string) $accion['dest_schema'];
+                                $destCols = $pdoSv->query(
+                                    "SELECT column_name FROM information_schema.columns
+                                     WHERE table_schema = " . $pdoSv->quote($destSchema) . "
+                                       AND table_name = 'e_notas_dl'
+                                     ORDER BY ordinal_position"
+                                )->fetchAll(PDO::FETCH_COLUMN) ?: [];
+                                $cols = [];
+                                $bind = [];
+                                $ph = [];
+                                $i = 0;
+                                foreach ($destCols as $col) {
+                                    $col = (string) $col;
+                                    if (!array_key_exists($col, $src)) {
+                                        continue;
+                                    }
+                                    $cols[] = $col;
+                                    $key = ':c' . $i;
+                                    $ph[] = $key;
+                                    $bind[$key] = $src[$col];
+                                    $i++;
+                                }
+                                if ($cols === []) {
+                                    $notasResult['omitidas']++;
+                                    continue;
+                                }
+                                $ins = $pdoSv->prepare(
+                                    'INSERT INTO ' . $dest . ' (' . implode(',', $cols) . ')
+                                     VALUES (' . implode(',', $ph) . ')'
+                                );
+                                $ins->execute($bind);
+                                $notasResult['insertadas']++;
+                            } else {
+                                $notasResult['ya_existian']++;
+                            }
+                            $n = $pdoSv->exec(
+                                "DELETE FROM ONLY {$from}
+                                 WHERE id_nom = {$idPaso} AND id_asignatura = {$idAsig}"
+                            );
+                            $notasResult['borradas'] += $n !== false ? (int) $n : 0;
+                        }
+                    }
+                    $pdoSv->commit();
+                } catch (Throwable $e) {
+                    $pdoSv->rollBack();
+                    throw $e;
+                }
+            }
+        }
     }
 
     $report = [
@@ -925,8 +1182,10 @@ try {
         'vs_global_filas' => count($vsGlobal),
         'vacios' => applyLimit($vacios, $limit),
         'historial_plan' => $historialPlan,
+        'notas_plan' => $notasPlan,
         'borrado' => $borrado,
         'historial' => $historialResult,
+        'notas' => $notasResult,
     ];
 } catch (Throwable $e) {
     fwrite(STDERR, "ERROR: " . $e->getMessage() . "\n");
@@ -954,6 +1213,10 @@ if ($jsonOutput) {
         'historial' => [
             'plan' => $report['historial_plan'],
             'resultado' => $report['historial'],
+        ],
+        'notas' => [
+            'plan' => $report['notas_plan'],
+            'resultado' => $report['notas'],
         ],
         default => $report,
     };
@@ -1121,6 +1384,36 @@ if ($fase === 'historial' || (($dryRun || $apply) && $fase === 'historial')) {
         }
     } else {
         echo "  (use --dry-run o --apply para planificar/ejecutar el borrado de historial)\n";
+    }
+}
+
+if ($fase === 'notas') {
+    $np = $report['notas_plan'];
+    $nr = $report['notas'];
+    echo "=== Notas → pareja global.personas (sin perder filas) ===\n";
+    echo "  personas con notas + match: {$np['personas_con_notas_y_match']}\n";
+    echo "  personas con notas SIN match (no se tocan): {$np['personas_con_notas_sin_match']}\n";
+    if ($nr['modo'] !== 'ninguno') {
+        echo "  modo={$nr['modo']} update={$nr['actualizadas']} insert={$nr['insertadas']}"
+            . " borradas={$nr['borradas']} ya_existian={$nr['ya_existian']} omitidas={$nr['omitidas']}\n";
+        echo "  plan: update≈{$np['filas_update']} insert_dl≈{$np['filas_insert_borrar']}"
+            . " borrar_ya_existe≈{$np['filas_borrar_ya_existe']} omitir≈{$np['filas_omitidas']}\n";
+        if ($dryRun) {
+            echo "  (dry-run: no se ha escrito nada)\n";
+            foreach (array_slice($np['muestra'], 0, 20) as $a) {
+                echo sprintf(
+                    "  %s paso=%s asig=%s → orbix=%s from=%s dest=%s\n",
+                    $a['tipo'],
+                    $a['id_paso'],
+                    $a['id_asignatura'],
+                    $a['id_orbix'],
+                    $a['from'],
+                    $a['dest'] ?? '-'
+                );
+            }
+        }
+    } else {
+        echo "  (use --dry-run o --apply; solo actúa con pareja en global.personas)\n";
     }
 }
 
