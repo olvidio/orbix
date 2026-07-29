@@ -17,8 +17,10 @@ declare(strict_types=1);
  *
  * Producción (usuario SO postgres, sin ConfigDB / .inc) — modo por defecto:
  *   sudo -u postgres php tools/audit/audit_personas_paso_limpieza.php --fase=resumen
- *   sudo -u postgres php tools/audit/audit_personas_paso_limpieza.php --db-sv=sv --db-comun=comun
- *   # Opcional: PGHOST / PGPORT / PGUSER (libpq). Sin host → peer/socket local.
+ *   sudo -u postgres php tools/audit/audit_personas_paso_limpieza.php \
+ *     --db-sv=pruebas-sv --db-sv-e=pruebas-sv-e --db-comun=pruebas-comun
+ *   # Asistencias se leen de sv-e (d_asistentes_de_paso / d_asistentes_ex).
+ *   # --db-sv-e se deduce de --db-sv si no se pasa (sv→sv-e, pruebas-sv→pruebas-sv-e).
  *
  * Desarrollo (ConfigDB del repo):
  *   php tools/audit/audit_personas_paso_limpieza.php --configdb --fase=resumen
@@ -40,6 +42,7 @@ if (PHP_SAPI !== 'cli') {
 
 $database = 'sv';
 $dbSvName = null;
+$dbSvEName = null;
 $dbComunName = 'comun';
 $cursoIni = '2025-10-01';
 $fase = 'resumen'; // resumen|buckets|duplicados|vs-global|vacios|todo
@@ -60,6 +63,9 @@ foreach ($argv as $arg) {
     }
     if (str_starts_with($arg, '--db-sv=')) {
         $dbSvName = substr($arg, strlen('--db-sv='));
+    }
+    if (str_starts_with($arg, '--db-sv-e=')) {
+        $dbSvEName = substr($arg, strlen('--db-sv-e='));
     }
     if (str_starts_with($arg, '--db-comun=')) {
         $dbComunName = substr($arg, strlen('--db-comun='));
@@ -88,8 +94,21 @@ if (!in_array($fase, $fasesOk, true)) {
 }
 
 $dbSvName ??= $database;
+$dbSvEName ??= deriveSvEName($dbSvName);
 $publicSchema = $database === 'sf' ? 'publicf' : 'publicv';
 $pasoSchema ??= ($database === 'sf' ? 'restof' : 'restov');
+
+/**
+ * sv → sv-e ; pruebas-sv → pruebas-sv-e
+ */
+function deriveSvEName(string $dbSv): string
+{
+    if (str_ends_with($dbSv, '-e')) {
+        return $dbSv;
+    }
+
+    return $dbSv . '-e';
+}
 
 /**
  * PDO pgsql vía libpq (peer/socket si no hay PGHOST). No usa ConfigDB.
@@ -109,7 +128,6 @@ function pdoPg(string $dbname): PDO
     if (is_string($user) && $user !== '') {
         $parts[] = 'user=' . $user;
     }
-    // Sin password: peer/trust como usuario SO (p.ej. postgres).
     $dsn = 'pgsql:' . implode(';', $parts);
     $pdo = new PDO($dsn);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -141,10 +159,96 @@ function applyLimit(array $rows, int $limit): array
     return array_slice($rows, 0, $limit);
 }
 
+/**
+ * Localiza tablas de asistencias relevantes en una BD.
+ *
+ * @return list<string> identificadores "schema.tabla" ya entrecomillados
+ */
+function discoverAsisTables(PDO $pdo, string $publicSchema, string $pasoSchema): array
+{
+    $found = [];
+    $candidates = [
+        [$publicSchema, 'd_asistentes_de_paso'],
+        [$publicSchema, 'd_asistentes_all'],
+        [$pasoSchema, 'd_asistentes_ex'],
+    ];
+    foreach ($candidates as [$schema, $tabla]) {
+        $reg = $pdo->query('SELECT to_regclass(' . $pdo->quote("{$schema}.{$tabla}") . ')')->fetchColumn();
+        if ($reg !== false && $reg !== null && $reg !== '') {
+            $found[] = qIdent($schema) . '.' . $tabla;
+        }
+    }
+
+    // d_asistentes_ex en cualquier esquema (DL / resto)
+    $stmt = $pdo->query(
+        "SELECT n.nspname
+         FROM pg_class c
+         JOIN pg_namespace n ON n.oid = c.relnamespace
+         WHERE c.relname = 'd_asistentes_ex'
+           AND c.relkind IN ('r', 'p')
+           AND n.nspname NOT LIKE 'pg_%'
+           AND n.nspname <> 'information_schema'
+         ORDER BY n.nspname"
+    );
+    foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) ?: [] as $schema) {
+        $schema = (string) $schema;
+        $ref = qIdent($schema) . '.d_asistentes_ex';
+        if (!in_array($ref, $found, true)) {
+            $found[] = $ref;
+        }
+    }
+
+    return $found;
+}
+
+/**
+ * @param list<int> $idsPaso
+ * @param array<int, list<int>> $activsByNom
+ * @param array<int, array<string, mixed>> $pasoById
+ * @param list<string> $asisTables
+ * @return array{0: array<int, list<int>>, 1: array<int, array<string, mixed>>}
+ */
+function loadAsistencias(
+    PDO $pdo,
+    array $asisTables,
+    array $idsPaso,
+    array $activsByNom,
+    array $pasoById,
+): array {
+    if ($asisTables === [] || $idsPaso === []) {
+        return [$activsByNom, $pasoById];
+    }
+
+    foreach ($asisTables as $from) {
+        foreach (array_chunk($idsPaso, 800) as $chunk) {
+            $in = implode(',', array_map('intval', $chunk));
+            $stmt = $pdo->query("SELECT id_nom, id_activ FROM {$from} WHERE id_nom IN ({$in})");
+            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) ?: [] as $r) {
+                $id = (int) $r['id_nom'];
+                $idActiv = (int) $r['id_activ'];
+                if (!isset($pasoById[$id])) {
+                    continue;
+                }
+                $activsByNom[$id][] = $idActiv;
+                $pasoById[$id]['n_asis']++;
+            }
+        }
+    }
+
+    return [$activsByNom, $pasoById];
+}
+
 try {
+    $pdoSvE = null;
     if ($usePg) {
         $pdoSv = pdoPg($dbSvName);
         $pdoComun = pdoPg($dbComunName);
+        try {
+            $pdoSvE = pdoPg($dbSvEName);
+        } catch (Throwable $e) {
+            fwrite(STDERR, "AVISO: no se pudo abrir db-sv-e={$dbSvEName}: " . $e->getMessage() . "\n");
+            fwrite(STDERR, "        Las asistencias pueden quedar sin inventariar.\n");
+        }
         $connMode = 'pg';
     } else {
         require dirname(__DIR__, 2) . '/src/shared/global_header.inc';
@@ -156,12 +260,32 @@ try {
         $pdoComun = (new \src\shared\infrastructure\persistence\DBConnection(
             (new \src\shared\infrastructure\persistence\ConfigDB('comun'))->getEsquema('public')
         ))->getPDO();
+        try {
+            $pdoSvE = (new \src\shared\infrastructure\persistence\DBConnection(
+                (new \src\shared\infrastructure\persistence\ConfigDB('sv-e'))->getEsquema(
+                    $database === 'sf' ? 'publicf' : 'publicv-e'
+                )
+            ))->getPDO();
+        } catch (Throwable $e) {
+            // sf no usa publicv-e; reintentar publicv / publicf
+            try {
+                $pdoSvE = (new \src\shared\infrastructure\persistence\DBConnection(
+                    (new \src\shared\infrastructure\persistence\ConfigDB('sv-e'))->getEsquema($publicSchema)
+                ))->getPDO();
+            } catch (Throwable $e2) {
+                fwrite(STDERR, "AVISO: ConfigDB sv-e no disponible: " . $e2->getMessage() . "\n");
+            }
+        }
         $connMode = 'configdb';
         $dbSvName = $database;
         $dbComunName = 'comun';
+        $dbSvEName = 'sv-e';
     }
     $pdoSv->exec("SET statement_timeout = '300s'");
     $pdoComun->exec("SET statement_timeout = '120s'");
+    if ($pdoSvE instanceof PDO) {
+        $pdoSvE->exec("SET statement_timeout = '300s'");
+    }
 
     $qPaso = qIdent($pasoSchema);
     $qPublic = qIdent($publicSchema);
@@ -213,33 +337,46 @@ try {
         }
     }
 
-    // --- Asistencias ---
+    // --- Asistencias (sv interior + sv-e exterior) ---
     /** @var array<int, list<int>> $activsByNom */
     $activsByNom = [];
-    $asisTables = [];
-    if ($pdoSv->query('SELECT to_regclass(' . $pdoSv->quote("{$publicSchema}.d_asistentes_de_paso") . ')')->fetchColumn()) {
-        $asisTables[] = "{$qPublic}.d_asistentes_de_paso";
+    /** @var list<string> $asisTablesLabeled */
+    $asisTablesLabeled = [];
+
+    $asisOnSv = discoverAsisTables($pdoSv, $publicSchema, $pasoSchema);
+    foreach ($asisOnSv as $t) {
+        $asisTablesLabeled[] = "{$dbSvName}:{$t}";
     }
-    if ($pdoSv->query('SELECT to_regclass(' . $pdoSv->quote("{$pasoSchema}.d_asistentes_ex") . ')')->fetchColumn()) {
-        $asisTables[] = "{$qPaso}.d_asistentes_ex";
-    }
-    foreach ($asisTables as $from) {
-        $stmt = $pdoSv->query(
-            "SELECT id_nom, id_activ FROM {$from}
-             WHERE id_nom IN (SELECT id_nom FROM {$qPaso}.p_de_paso_ex WHERE situacion = 'A')"
-        );
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) ?: [] as $r) {
-            $id = (int) $r['id_nom'];
-            $idActiv = (int) $r['id_activ'];
-            if (!isset($pasoById[$id])) {
-                continue;
+    [$activsByNom, $pasoById] = loadAsistencias($pdoSv, $asisOnSv, $idsPaso, $activsByNom, $pasoById);
+
+    $asisOnSvE = [];
+    if ($pdoSvE instanceof PDO) {
+        $asisOnSvE = discoverAsisTables($pdoSvE, $publicSchema, $pasoSchema);
+        // En sv-e el público a veces es publicv-e
+        if ($database !== 'sf') {
+            $extra = discoverAsisTables($pdoSvE, 'publicv-e', $pasoSchema);
+            foreach ($extra as $t) {
+                if (!in_array($t, $asisOnSvE, true)) {
+                    $asisOnSvE[] = $t;
+                }
             }
-            $activsByNom[$id][] = $idActiv;
-            $pasoById[$id]['n_asis']++;
         }
+        foreach ($asisOnSvE as $t) {
+            $asisTablesLabeled[] = "{$dbSvEName}:{$t}";
+        }
+        [$activsByNom, $pasoById] = loadAsistencias($pdoSvE, $asisOnSvE, $idsPaso, $activsByNom, $pasoById);
     }
+
+    $asisVerificado = $asisTablesLabeled !== [];
+    if (!$asisVerificado) {
+        fwrite(STDERR, "AVISO: no se encontró ninguna tabla d_asistentes_* en {$dbSvName} ni {$dbSvEName}.\n");
+        fwrite(STDERR, "       El bucket D NO es fiable para borrar (solo = sin notas).\n");
+    }
+
     foreach ($activsByNom as $id => $acts) {
         $pasoById[$id]['id_activs'] = array_values(array_unique($acts));
+        // n_asis se incrementó por fila; recalcular como nº de actividades distintas
+        $pasoById[$id]['n_asis'] = count($pasoById[$id]['id_activs']);
     }
 
     // --- Actividades del curso (comun) ---
@@ -252,7 +389,6 @@ try {
         }
     }
     if ($allActivIds !== []) {
-        // Cargar f_ini de las actividades referenciadas (y marcar curso)
         $ids = array_keys($allActivIds);
         foreach (array_chunk($ids, 500) as $chunk) {
             $in = implode(',', array_map('intval', $chunk));
@@ -299,6 +435,7 @@ try {
     $resumen = [
         'conn' => $connMode,
         'db_sv' => $dbSvName,
+        'db_sv_e' => $dbSvEName,
         'db_comun' => $dbComunName,
         'database' => $database,
         'public_schema' => $publicSchema,
@@ -309,7 +446,8 @@ try {
         'B_con_notas' => count($buckets['B']),
         'C_solo_historial' => count($buckets['C']),
         'D_vacio_borrable' => count($buckets['D']),
-        'asis_tablas' => $asisTables,
+        'asis_verificado' => $asisVerificado,
+        'asis_tablas' => $asisTablesLabeled,
         'actividades_curso_tocadas' => count($activCurso),
     ];
 
@@ -469,7 +607,7 @@ if ($jsonOutput) {
 
 $r = $report['resumen'];
 echo "Personas de paso — limpieza (solo lectura)\n";
-echo "conn={$r['conn']} db_sv={$r['db_sv']} db_comun={$r['db_comun']} paso={$r['paso_schema']} curso_ini={$r['curso_ini']}\n\n";
+echo "conn={$r['conn']} db_sv={$r['db_sv']} db_sv_e={$r['db_sv_e']} db_comun={$r['db_comun']} paso={$r['paso_schema']} curso_ini={$r['curso_ini']}\n\n";
 
 if ($fase === 'resumen' || $fase === 'todo' || $fase === 'buckets') {
     echo "=== Resumen buckets ===\n";
@@ -478,7 +616,12 @@ if ($fase === 'resumen' || $fase === 'todo' || $fase === 'buckets') {
     echo "  B con_notas:           {$r['B_con_notas']}\n";
     echo "  C solo_historial:      {$r['C_solo_historial']}\n";
     echo "  D vacio_borrable:      {$r['D_vacio_borrable']}\n";
-    echo '  tablas asis: ' . (empty($r['asis_tablas']) ? '(ninguna)' : implode(', ', $r['asis_tablas'])) . "\n\n";
+    echo '  asis_verificado:       ' . (!empty($r['asis_verificado']) ? 'sí' : 'NO') . "\n";
+    echo '  tablas asis: ' . (empty($r['asis_tablas']) ? '(ninguna)' : implode(', ', $r['asis_tablas'])) . "\n";
+    if (empty($r['asis_verificado'])) {
+        echo "  !! Sin asistencias inventariadas: NO borres el bucket D todavía.\n";
+    }
+    echo "\n";
 }
 
 if ($fase === 'buckets' || $fase === 'todo') {
