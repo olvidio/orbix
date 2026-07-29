@@ -15,20 +15,20 @@ declare(strict_types=1);
  * También: duplicados internos (ape1+ape2+nom+dl) y cruce con global.personas.
  * Canónico: más notas → más asis → id_nom más reciente = más negativo (MIN).
  *
- * Producción (usuario SO postgres, sin ConfigDB / .inc):
- *   sudo -u postgres php tools/audit/audit_personas_paso_limpieza.php --pg --fase=resumen
- *   sudo -u postgres php tools/audit/audit_personas_paso_limpieza.php --pg --database=sv
- *   sudo -u postgres php tools/audit/audit_personas_paso_limpieza.php --pg --db-sv=sv --db-comun=comun
+ * Producción (usuario SO postgres, sin ConfigDB / .inc) — modo por defecto:
+ *   sudo -u postgres php tools/audit/audit_personas_paso_limpieza.php --fase=resumen
+ *   sudo -u postgres php tools/audit/audit_personas_paso_limpieza.php --db-sv=sv --db-comun=comun
  *   # Opcional: PGHOST / PGPORT / PGUSER (libpq). Sin host → peer/socket local.
  *
  * Desarrollo (ConfigDB del repo):
- *   php tools/audit/audit_personas_paso_limpieza.php --fase=resumen
+ *   php tools/audit/audit_personas_paso_limpieza.php --configdb --fase=resumen
  *
  * Otras opciones:
  *   --curso-ini=2025-10-01
  *   --fase=resumen|buckets|duplicados|vs-global|vacios|todo
  *   --schema-paso=restov
  *   --json  --limit=30
+ *   --pg  (explícito; es el default)
  *
  * SQL de referencia: tools/audit/sql/personas_paso_limpieza.sql
  */
@@ -46,11 +46,14 @@ $fase = 'resumen'; // resumen|buckets|duplicados|vs-global|vacios|todo
 $jsonOutput = false;
 $limit = 0;
 $pasoSchema = null; // restov / restof por defecto según database
-$usePg = false; // conexión directa PDO (prod como postgres)
+$usePg = true; // default: PDO directo (prod como postgres, sin ConfigDB)
 
 foreach ($argv as $arg) {
     if ($arg === '--pg') {
         $usePg = true;
+    }
+    if ($arg === '--configdb') {
+        $usePg = false;
     }
     if (str_starts_with($arg, '--database=')) {
         $database = substr($arg, strlen('--database='));
@@ -435,8 +438,13 @@ try {
         'vacios' => applyLimit($vacios, $limit),
     ];
 } catch (Throwable $e) {
-    fwrite(STDERR, "ERROR: BD vía ConfigDB (sv/comun).\n");
+    fwrite(STDERR, "ERROR conectando a PostgreSQL.\n");
     fwrite(STDERR, $e->getMessage() . "\n");
+    if (!$usePg) {
+        fwrite(STDERR, "Hint: en producción use el modo por defecto (PDO) o --pg; ConfigDB solo con --configdb.\n");
+    } else {
+        fwrite(STDERR, "Hint: revise --db-sv / --db-comun y PGHOST/PGPORT (peer como usuario postgres).\n");
+    }
     exit(1);
 }
 
