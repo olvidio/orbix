@@ -39,8 +39,8 @@ declare(strict_types=1);
  *   No borra la persona; tras historial, los C suelen pasar a D → --fase=vacios.
  *
  * notas: solo personas con pareja en global.personas. Copia/reasigna notas al id_orbix
- *   (no duplica si ya existe id_orbix+id_asignatura). Solo entonces borra la fila de paso.
- *   Sin pareja → no se toca ninguna nota.
+ *   (no duplica si ya existe id_orbix+id_asignatura o id_orbix+id_nivel).
+ *   Solo entonces borra la fila de paso. Sin pareja → no se toca ninguna nota.
  *
  * SQL de referencia: tools/audit/sql/personas_paso_limpieza.sql
  */
@@ -985,16 +985,29 @@ try {
                         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) ?: [] as $nota) {
                             $idPaso = (int) $nota['id_nom'];
                             $idAsig = (int) $nota['id_asignatura'];
+                            $idNivel = isset($nota['id_nivel']) && $nota['id_nivel'] !== null && $nota['id_nivel'] !== ''
+                                ? (int) $nota['id_nivel']
+                                : null;
                             $match = $mejorMatch[$idPaso] ?? null;
                             if ($match === null) {
                                 continue; // no tocar sin pareja
                             }
                             $idOrbix = (int) $match['id_orbix'];
-                            $ya = $pdoSv->query(
+
+                            // Uniques reales en prod: (id_nom, id_asignatura) y a veces (id_nivel, id_nom)
+                            $yaAsig = $pdoSv->query(
                                 "SELECT 1 FROM {$qPublic}.e_notas
                                  WHERE id_nom = {$idOrbix} AND id_asignatura = {$idAsig}
                                  LIMIT 1"
                             )->fetchColumn();
+                            $yaNivel = false;
+                            if ($idNivel !== null) {
+                                $yaNivel = (bool) $pdoSv->query(
+                                    "SELECT 1 FROM {$qPublic}.e_notas
+                                     WHERE id_nom = {$idOrbix} AND id_nivel = {$idNivel}
+                                     LIMIT 1"
+                                )->fetchColumn();
+                            }
 
                             $accion = [
                                 'from' => $from,
@@ -1003,16 +1016,24 @@ try {
                                 'id_paso' => $idPaso,
                                 'id_orbix' => $idOrbix,
                                 'id_asignatura' => $idAsig,
-                                'id_nivel' => $nota['id_nivel'] ?? null,
+                                'id_nivel' => $idNivel,
                                 'tipo' => 'omitir',
                                 'dest' => null,
+                                'motivo' => null,
                             ];
 
-                            if ($ya) {
+                            if ($yaAsig) {
+                                // Misma asignatura ya en orbix → no duplicar; se puede borrar la de paso
                                 $accion['tipo'] = 'borrar_ya_existe';
+                                $accion['motivo'] = 'misma_asignatura';
                                 $notasPlan['filas_borrar_ya_existe']++;
+                            } elseif ($yaNivel) {
+                                // Mismo id_nivel en orbix pero distinta asignatura → no se puede
+                                // reasignar sin violar UNIQUE (id_nivel, id_nom); conservar la de paso
+                                $accion['tipo'] = 'omitir';
+                                $accion['motivo'] = 'conflicto_id_nivel';
+                                $notasPlan['filas_omitidas']++;
                             } elseif ($tab === 'e_notas_dl' || $tab === 'e_notas_otra_region_stgr') {
-                                // Ya está en tabla de DL/región: reasignar id_nom
                                 $accion['tipo'] = 'update_id_nom';
                                 $notasPlan['filas_update']++;
                             } elseif ($tab === 'e_notas_ex') {
@@ -1031,10 +1052,12 @@ try {
                                     $notasPlan['filas_insert_borrar']++;
                                 } else {
                                     $accion['tipo'] = 'omitir';
+                                    $accion['motivo'] = 'sin_e_notas_dl_destino';
                                     $notasPlan['filas_omitidas']++;
                                 }
                             } else {
                                 $accion['tipo'] = 'omitir';
+                                $accion['motivo'] = 'tabla_no_soportada';
                                 $notasPlan['filas_omitidas']++;
                             }
 
@@ -1072,91 +1095,128 @@ try {
             if ($apply) {
                 $pdoSv->beginTransaction();
                 try {
+                    $sp = 0;
                     foreach ($accionesNotas as $accion) {
                         $from = $accion['from'];
                         $idPaso = (int) $accion['id_paso'];
                         $idOrbix = (int) $accion['id_orbix'];
                         $idAsig = (int) $accion['id_asignatura'];
+                        $idNivel = $accion['id_nivel'];
                         $nota = $accion['_row'];
+                        $spName = 'n' . (++$sp);
 
                         if ($accion['tipo'] === 'omitir') {
                             $notasResult['omitidas']++;
                             continue;
                         }
 
-                        if ($accion['tipo'] === 'borrar_ya_existe') {
-                            $n = $pdoSv->exec(
-                                "DELETE FROM ONLY {$from}
-                                 WHERE id_nom = {$idPaso} AND id_asignatura = {$idAsig}"
-                            );
-                            $notasResult['ya_existian']++;
-                            $notasResult['borradas'] += $n !== false ? (int) $n : 0;
-                            continue;
-                        }
+                        try {
+                            $pdoSv->exec('SAVEPOINT ' . $spName);
 
-                        if ($accion['tipo'] === 'update_id_nom') {
-                            $n = $pdoSv->exec(
-                                "UPDATE ONLY {$from}
-                                 SET id_nom = {$idOrbix}
-                                 WHERE id_nom = {$idPaso} AND id_asignatura = {$idAsig}"
-                            );
-                            $notasResult['actualizadas'] += $n !== false ? (int) $n : 0;
-                            continue;
-                        }
-
-                        if ($accion['tipo'] === 'insert_dl_borrar') {
-                            $dest = (string) $accion['dest'];
-                            $yaDest = $pdoSv->query(
-                                "SELECT 1 FROM {$dest}
-                                 WHERE id_nom = {$idOrbix} AND id_asignatura = {$idAsig}
-                                 LIMIT 1"
-                            )->fetchColumn();
-                            if (!$yaDest) {
-                                $src = $nota;
-                                $src['id_nom'] = $idOrbix;
-                                if (isset($accion['dest_id_schema']) && $accion['dest_id_schema'] !== null) {
-                                    $src['id_schema'] = (int) $accion['dest_id_schema'];
-                                }
-                                $destSchema = (string) $accion['dest_schema'];
-                                $destCols = $pdoSv->query(
-                                    "SELECT column_name FROM information_schema.columns
-                                     WHERE table_schema = " . $pdoSv->quote($destSchema) . "
-                                       AND table_name = 'e_notas_dl'
-                                     ORDER BY ordinal_position"
-                                )->fetchAll(PDO::FETCH_COLUMN) ?: [];
-                                $cols = [];
-                                $bind = [];
-                                $ph = [];
-                                $i = 0;
-                                foreach ($destCols as $col) {
-                                    $col = (string) $col;
-                                    if (!array_key_exists($col, $src)) {
+                            if ($accion['tipo'] === 'borrar_ya_existe') {
+                                $n = $pdoSv->exec(
+                                    "DELETE FROM ONLY {$from}
+                                     WHERE id_nom = {$idPaso} AND id_asignatura = {$idAsig}"
+                                );
+                                $notasResult['ya_existian']++;
+                                $notasResult['borradas'] += $n !== false ? (int) $n : 0;
+                            } elseif ($accion['tipo'] === 'update_id_nom') {
+                                // Recheck por si hay UNIQUE (id_nivel, id_nom) en ese esquema
+                                if ($idNivel !== null) {
+                                    $conflictNivel = $pdoSv->query(
+                                        "SELECT 1 FROM ONLY {$from}
+                                         WHERE id_nom = {$idOrbix} AND id_nivel = " . (int) $idNivel . "
+                                         LIMIT 1"
+                                    )->fetchColumn();
+                                    if ($conflictNivel) {
+                                        $pdoSv->exec('ROLLBACK TO SAVEPOINT ' . $spName);
+                                        $notasResult['omitidas']++;
                                         continue;
                                     }
-                                    $cols[] = $col;
-                                    $key = ':c' . $i;
-                                    $ph[] = $key;
-                                    $bind[$key] = $src[$col];
-                                    $i++;
                                 }
-                                if ($cols === []) {
+                                $n = $pdoSv->exec(
+                                    "UPDATE ONLY {$from}
+                                     SET id_nom = {$idOrbix}
+                                     WHERE id_nom = {$idPaso} AND id_asignatura = {$idAsig}"
+                                );
+                                $notasResult['actualizadas'] += $n !== false ? (int) $n : 0;
+                            } elseif ($accion['tipo'] === 'insert_dl_borrar') {
+                                $dest = (string) $accion['dest'];
+                                $yaDestAsig = $pdoSv->query(
+                                    "SELECT 1 FROM {$dest}
+                                     WHERE id_nom = {$idOrbix} AND id_asignatura = {$idAsig}
+                                     LIMIT 1"
+                                )->fetchColumn();
+                                $yaDestNivel = false;
+                                if ($idNivel !== null) {
+                                    $yaDestNivel = (bool) $pdoSv->query(
+                                        "SELECT 1 FROM {$dest}
+                                         WHERE id_nom = {$idOrbix} AND id_nivel = " . (int) $idNivel . "
+                                         LIMIT 1"
+                                    )->fetchColumn();
+                                }
+                                if ($yaDestAsig) {
+                                    $notasResult['ya_existian']++;
+                                } elseif ($yaDestNivel) {
+                                    $pdoSv->exec('ROLLBACK TO SAVEPOINT ' . $spName);
                                     $notasResult['omitidas']++;
                                     continue;
+                                } else {
+                                    $src = $nota;
+                                    $src['id_nom'] = $idOrbix;
+                                    if (isset($accion['dest_id_schema']) && $accion['dest_id_schema'] !== null) {
+                                        $src['id_schema'] = (int) $accion['dest_id_schema'];
+                                    }
+                                    $destSchema = (string) $accion['dest_schema'];
+                                    $destCols = $pdoSv->query(
+                                        "SELECT column_name FROM information_schema.columns
+                                         WHERE table_schema = " . $pdoSv->quote($destSchema) . "
+                                           AND table_name = 'e_notas_dl'
+                                         ORDER BY ordinal_position"
+                                    )->fetchAll(PDO::FETCH_COLUMN) ?: [];
+                                    $cols = [];
+                                    $bind = [];
+                                    $ph = [];
+                                    $i = 0;
+                                    foreach ($destCols as $col) {
+                                        $col = (string) $col;
+                                        if (!array_key_exists($col, $src)) {
+                                            continue;
+                                        }
+                                        $cols[] = $col;
+                                        $key = ':c' . $i;
+                                        $ph[] = $key;
+                                        $bind[$key] = $src[$col];
+                                        $i++;
+                                    }
+                                    if ($cols === []) {
+                                        $pdoSv->exec('ROLLBACK TO SAVEPOINT ' . $spName);
+                                        $notasResult['omitidas']++;
+                                        continue;
+                                    }
+                                    $ins = $pdoSv->prepare(
+                                        'INSERT INTO ' . $dest . ' (' . implode(',', $cols) . ')
+                                         VALUES (' . implode(',', $ph) . ')'
+                                    );
+                                    $ins->execute($bind);
+                                    $notasResult['insertadas']++;
                                 }
-                                $ins = $pdoSv->prepare(
-                                    'INSERT INTO ' . $dest . ' (' . implode(',', $cols) . ')
-                                     VALUES (' . implode(',', $ph) . ')'
+                                $n = $pdoSv->exec(
+                                    "DELETE FROM ONLY {$from}
+                                     WHERE id_nom = {$idPaso} AND id_asignatura = {$idAsig}"
                                 );
-                                $ins->execute($bind);
-                                $notasResult['insertadas']++;
-                            } else {
-                                $notasResult['ya_existian']++;
+                                $notasResult['borradas'] += $n !== false ? (int) $n : 0;
                             }
-                            $n = $pdoSv->exec(
-                                "DELETE FROM ONLY {$from}
-                                 WHERE id_nom = {$idPaso} AND id_asignatura = {$idAsig}"
+
+                            $pdoSv->exec('RELEASE SAVEPOINT ' . $spName);
+                        } catch (Throwable $rowErr) {
+                            $pdoSv->exec('ROLLBACK TO SAVEPOINT ' . $spName);
+                            $notasResult['omitidas']++;
+                            fwrite(
+                                STDERR,
+                                "AVISO notas omitida paso={$idPaso} asig={$idAsig}: "
+                                . $rowErr->getMessage() . "\n"
                             );
-                            $notasResult['borradas'] += $n !== false ? (int) $n : 0;
                         }
                     }
                     $pdoSv->commit();
@@ -1402,13 +1462,15 @@ if ($fase === 'notas') {
             echo "  (dry-run: no se ha escrito nada)\n";
             foreach (array_slice($np['muestra'], 0, 20) as $a) {
                 echo sprintf(
-                    "  %s paso=%s asig=%s → orbix=%s from=%s dest=%s\n",
+                    "  %s paso=%s asig=%s nivel=%s → orbix=%s from=%s dest=%s%s\n",
                     $a['tipo'],
                     $a['id_paso'],
                     $a['id_asignatura'],
+                    $a['id_nivel'] ?? '-',
                     $a['id_orbix'],
                     $a['from'],
-                    $a['dest'] ?? '-'
+                    $a['dest'] ?? '-',
+                    isset($a['motivo']) && $a['motivo'] ? ' (' . $a['motivo'] . ')' : ''
                 );
             }
         }
