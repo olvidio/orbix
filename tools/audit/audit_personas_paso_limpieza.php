@@ -15,17 +15,20 @@ declare(strict_types=1);
  * También: duplicados internos (ape1+ape2+nom+dl) y cruce con global.personas.
  * Canónico: más notas → más asis → id_nom más reciente = más negativo (MIN).
  *
- * Uso:
- *   php tools/audit/audit_personas_paso_limpieza.php
- *   php tools/audit/audit_personas_paso_limpieza.php --database=sv
- *   php tools/audit/audit_personas_paso_limpieza.php --curso-ini=2025-10-01
+ * Producción (usuario SO postgres, sin ConfigDB / .inc):
+ *   sudo -u postgres php tools/audit/audit_personas_paso_limpieza.php --pg --fase=resumen
+ *   sudo -u postgres php tools/audit/audit_personas_paso_limpieza.php --pg --database=sv
+ *   sudo -u postgres php tools/audit/audit_personas_paso_limpieza.php --pg --db-sv=sv --db-comun=comun
+ *   # Opcional: PGHOST / PGPORT / PGUSER (libpq). Sin host → peer/socket local.
+ *
+ * Desarrollo (ConfigDB del repo):
  *   php tools/audit/audit_personas_paso_limpieza.php --fase=resumen
- *   php tools/audit/audit_personas_paso_limpieza.php --fase=buckets
- *   php tools/audit/audit_personas_paso_limpieza.php --fase=duplicados
- *   php tools/audit/audit_personas_paso_limpieza.php --fase=vs-global
- *   php tools/audit/audit_personas_paso_limpieza.php --fase=vacios
- *   php tools/audit/audit_personas_paso_limpieza.php --json
- *   php tools/audit/audit_personas_paso_limpieza.php --limit=30
+ *
+ * Otras opciones:
+ *   --curso-ini=2025-10-01
+ *   --fase=resumen|buckets|duplicados|vs-global|vacios|todo
+ *   --schema-paso=restov
+ *   --json  --limit=30
  *
  * SQL de referencia: tools/audit/sql/personas_paso_limpieza.sql
  */
@@ -35,22 +38,28 @@ if (PHP_SAPI !== 'cli') {
     exit(1);
 }
 
-require dirname(__DIR__, 2) . '/src/shared/global_header.inc';
-
-use src\shared\config\ConfigGlobal;
-use src\shared\infrastructure\persistence\ConfigDB;
-use src\shared\infrastructure\persistence\DBConnection;
-
 $database = 'sv';
+$dbSvName = null;
+$dbComunName = 'comun';
 $cursoIni = '2025-10-01';
 $fase = 'resumen'; // resumen|buckets|duplicados|vs-global|vacios|todo
 $jsonOutput = false;
 $limit = 0;
 $pasoSchema = null; // restov / restof por defecto según database
+$usePg = false; // conexión directa PDO (prod como postgres)
 
 foreach ($argv as $arg) {
+    if ($arg === '--pg') {
+        $usePg = true;
+    }
     if (str_starts_with($arg, '--database=')) {
         $database = substr($arg, strlen('--database='));
+    }
+    if (str_starts_with($arg, '--db-sv=')) {
+        $dbSvName = substr($arg, strlen('--db-sv='));
+    }
+    if (str_starts_with($arg, '--db-comun=')) {
+        $dbComunName = substr($arg, strlen('--db-comun='));
     }
     if (str_starts_with($arg, '--curso-ini=')) {
         $cursoIni = substr($arg, strlen('--curso-ini='));
@@ -75,11 +84,36 @@ if (!in_array($fase, $fasesOk, true)) {
     exit(1);
 }
 
-ConfigGlobal::setTest_mode(true);
-putenv('UBICACION=' . ($database === 'sf' ? 'sf' : 'sv'));
-
+$dbSvName ??= $database;
 $publicSchema = $database === 'sf' ? 'publicf' : 'publicv';
 $pasoSchema ??= ($database === 'sf' ? 'restof' : 'restov');
+
+/**
+ * PDO pgsql vía libpq (peer/socket si no hay PGHOST). No usa ConfigDB.
+ */
+function pdoPg(string $dbname): PDO
+{
+    $parts = ['dbname=' . $dbname];
+    $host = getenv('PGHOST');
+    if (is_string($host) && $host !== '') {
+        $parts[] = 'host=' . $host;
+    }
+    $port = getenv('PGPORT');
+    if (is_string($port) && $port !== '') {
+        $parts[] = 'port=' . $port;
+    }
+    $user = getenv('PGUSER');
+    if (is_string($user) && $user !== '') {
+        $parts[] = 'user=' . $user;
+    }
+    // Sin password: peer/trust como usuario SO (p.ej. postgres).
+    $dsn = 'pgsql:' . implode(';', $parts);
+    $pdo = new PDO($dsn);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+    return $pdo;
+}
 
 function qIdent(string $s): string
 {
@@ -105,9 +139,25 @@ function applyLimit(array $rows, int $limit): array
 }
 
 try {
-    $pdoSv = (new DBConnection((new ConfigDB($database))->getEsquema($publicSchema)))->getPDO();
+    if ($usePg) {
+        $pdoSv = pdoPg($dbSvName);
+        $pdoComun = pdoPg($dbComunName);
+        $connMode = 'pg';
+    } else {
+        require dirname(__DIR__, 2) . '/src/shared/global_header.inc';
+        \src\shared\config\ConfigGlobal::setTest_mode(true);
+        putenv('UBICACION=' . ($database === 'sf' ? 'sf' : 'sv'));
+        $pdoSv = (new \src\shared\infrastructure\persistence\DBConnection(
+            (new \src\shared\infrastructure\persistence\ConfigDB($database))->getEsquema($publicSchema)
+        ))->getPDO();
+        $pdoComun = (new \src\shared\infrastructure\persistence\DBConnection(
+            (new \src\shared\infrastructure\persistence\ConfigDB('comun'))->getEsquema('public')
+        ))->getPDO();
+        $connMode = 'configdb';
+        $dbSvName = $database;
+        $dbComunName = 'comun';
+    }
     $pdoSv->exec("SET statement_timeout = '300s'");
-    $pdoComun = (new DBConnection((new ConfigDB('comun'))->getEsquema('public')))->getPDO();
     $pdoComun->exec("SET statement_timeout = '120s'");
 
     $qPaso = qIdent($pasoSchema);
@@ -244,6 +294,9 @@ try {
     unset($row);
 
     $resumen = [
+        'conn' => $connMode,
+        'db_sv' => $dbSvName,
+        'db_comun' => $dbComunName,
         'database' => $database,
         'public_schema' => $publicSchema,
         'paso_schema' => $pasoSchema,
@@ -408,7 +461,7 @@ if ($jsonOutput) {
 
 $r = $report['resumen'];
 echo "Personas de paso — limpieza (solo lectura)\n";
-echo "database={$r['database']} paso={$r['paso_schema']} curso_ini={$r['curso_ini']}\n\n";
+echo "conn={$r['conn']} db_sv={$r['db_sv']} db_comun={$r['db_comun']} paso={$r['paso_schema']} curso_ini={$r['curso_ini']}\n\n";
 
 if ($fase === 'resumen' || $fase === 'todo' || $fase === 'buckets') {
     echo "=== Resumen buckets ===\n";
