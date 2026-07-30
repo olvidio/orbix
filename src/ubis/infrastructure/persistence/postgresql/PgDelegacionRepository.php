@@ -383,6 +383,8 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $bInsert = $this->isNew($id_dl);
 
         $aDatos = $Delegacion->toArrayForDatabase();
+        // id_dl es PK de xu_dl; Hydratable::toArrayForDatabase() la omite.
+        $aDatos['id_dl'] = $id_dl;
         if ($bInsert === false) {
             //UPDATE
             unset($aDatos['id_dl']);
