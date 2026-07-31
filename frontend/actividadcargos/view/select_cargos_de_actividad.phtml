@@ -1,3 +1,11 @@
+<?php if (!empty($msg_err)): ?>
+<?php
+    $msg_err_alert = trim(str_replace(["\r\n", "\r"], "\n", strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", (string) $msg_err))));
+?>
+<script>
+    alert(<?= json_encode($msg_err_alert, JSON_UNESCAPED_UNICODE) ?>);
+</script>
+<?php endif; ?>
 <script>
     fnjs_mod_cargo = function (formulario) {
         var rta = fnjs_solo_uno(formulario);

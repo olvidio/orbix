@@ -4,7 +4,9 @@ namespace src\actividadcargos\application;
 
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\ActividadCargo;
+use src\personas\application\services\PersonaListadoLookup;
 use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
 
 /**
@@ -15,7 +17,7 @@ final class SelectCargosDeActividadTableData
 {
     /**
      * @param iterable<ActividadCargo> $cCargosEnActividad
-     * @param callable(?int): (PersonaDl|PersonaPub|null) $findPersona
+     * @param callable(?int): (PersonaDl|PersonaPub|PersonaEx|null) $findPersona
      * @param array<string, array{perm?: mixed, obj?: mixed, nom?: mixed}> $aRefPerm
      * @return array{a_valores: array<int|string, mixed>, msg_err: string}
      */
@@ -51,7 +53,7 @@ final class SelectCargosDeActividadTableData
 
             $oPersona = $findPersona($id_nom);
             if ($oPersona === null) {
-                $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ': line ' . __LINE__;
+                $msg_err .= '<br>' . PersonaListadoLookup::mensajeNoEncontrada((int) $id_nom);
                 continue;
             }
 

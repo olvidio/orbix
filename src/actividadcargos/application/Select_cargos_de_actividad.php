@@ -10,8 +10,10 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
 use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 use frontend\shared\web\Lista;
@@ -35,6 +37,7 @@ class Select_cargos_de_actividad
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private CargoRepositoryInterface $cargoRepository,
+        private PersonaExRepositoryInterface $personaExRepository,
     ) {
     }
 
@@ -145,18 +148,29 @@ class Select_cargos_de_actividad
             $mi_sfsv,
             $cCargosEnActividad,
             $this->cargoRepository,
-            static fn (?int $id_nom): PersonaDl|PersonaPub|null => $id_nom !== null
-                ? Persona::findPersonaEnGlobal($id_nom)
-                : null,
+            fn (?int $id_nom): PersonaDl|PersonaPub|PersonaEx|null => $this->resolvePersona($id_nom),
             $this->a_ref_perm ?? [],
             $this->Qid_sel,
             $this->Qscroll_id,
         );
         $this->a_valores = $result['a_valores'];
         $this->msg_err .= $result['msg_err'];
-        if ($this->msg_err !== '') {
-            echo $this->msg_err;
+    }
+
+    /**
+     * Personas de paso (id negativo) viven en `p_de_paso_ex`.
+     */
+    private function resolvePersona(?int $id_nom): PersonaDl|PersonaPub|PersonaEx|null
+    {
+        if ($id_nom === null) {
+            return null;
         }
+        $persona = Persona::findPersonaEnGlobal($id_nom);
+        if ($persona !== null) {
+            return $persona;
+        }
+
+        return $this->personaExRepository->findById($id_nom);
     }
 
     public function getHtml(): string
@@ -195,6 +209,7 @@ class Select_cargos_de_actividad
             'url_form' => DossierTipoPublicUrls::relativeFormController((int) $this->id_dossier),
             'url_cargo_eliminar' => $url_cargo_eliminar,
             'id_sel_value' => (string) ($this->Qid_sel ?? ''),
+            'msg_err' => $this->msg_err,
         ];
 
         return (new ViewNewPhtml('frontend\\actividadcargos\\controller'))

@@ -110,7 +110,7 @@ final class SelectCargosDeActividadTableDataTest extends TestCase
             null,
         );
 
-        $this->assertStringContainsString('No encuentro a nadie con id_nom: 203', $out['msg_err']);
+        $this->assertStringContainsString('id_nom: 203', $out['msg_err']);
         $this->assertSame([], $out['a_valores']);
     }
 
