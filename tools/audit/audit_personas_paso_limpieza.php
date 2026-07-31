@@ -8,6 +8,7 @@ declare(strict_types=1);
  *
  * Buckets:
  *   A protegido_curso — asistencia a actividad con f_ini >= curso_ini (no tocar)
+ *   P protegido_sin_esquema — dl sin esquema Orbix (no tocar: no hay dónde ponerlos)
  *   B con_notas       — tiene notas en publicv.e_notas
  *   C solo_historial  — asistencias solo a actividades anteriores al curso
  *   D vacio_borrable  — sin notas ni asistencias
@@ -34,11 +35,12 @@ declare(strict_types=1);
  *   --dry-run  con --fase=vacios|historial|notas
  *   --apply    con --fase=vacios|historial|notas
  *
- * historial: borra asistencias con f_ini < curso_ini (no toca curso ni bucket A).
+ * historial: borra asistencias con f_ini < curso_ini (no toca curso ni protegidos A/P).
  *   Si hay gemelo en global.personas, copia antes a d_asistentes_dl del esquema orbix.
  *   No borra la persona; tras historial, los C suelen pasar a D → --fase=vacios.
  *
- * notas: solo personas con pareja en global.personas. Copia/reasigna notas al id_orbix
+ * notas: solo personas con pareja en global.personas (y no protegidas A/P).
+ *   Copia/reasigna notas al id_orbix
  *   (no duplica si ya existe id_orbix+id_asignatura o id_orbix+id_nivel).
  *   Solo entonces borra la fila de paso. Sin pareja → no se toca ninguna nota.
  *
@@ -167,6 +169,60 @@ function qIdent(string $s): string
 function normKey(?string $s): string
 {
     return mb_strtolower(trim((string) $s), 'UTF-8');
+}
+
+/** Código DL sin sufijo v/f (alineado con PersonaPublicacion::normalizarDl). */
+function normalizarDl(string $dl): string
+{
+    $dl = trim($dl);
+    if ($dl === '' || $dl === '*') {
+        return $dl;
+    }
+    $last = substr($dl, -1);
+
+    return ($last === 'v' || $last === 'f') ? substr($dl, 0, -1) : $dl;
+}
+
+/**
+ * Extrae la sigla DL de un nombre de esquema Orbix (`H-dlbv` → `dlb`, `Aut-crAutv` → `crAut`).
+ */
+function dlDesdeEsquema(string $schema): string
+{
+    if (!str_contains($schema, '-')) {
+        return '';
+    }
+    $parts = explode('-', $schema, 2);
+    $dlPart = $parts[1] ?? '';
+
+    return normalizarDl($dlPart);
+}
+
+/**
+ * DLs con esquema Orbix real (db_idschema), excluyendo resto/public/global/zz*.
+ *
+ * @param array<int, string> $schemaById
+ * @return array<string, true> dl normalizada => true
+ */
+function dlsConEsquemaOrbix(array $schemaById): array
+{
+    $skip = [
+        'resto' => true, 'restov' => true, 'restof' => true,
+        'public' => true, 'publicv' => true, 'publicf' => true, 'publicv-e' => true,
+        'global' => true, 'bucardo' => true,
+    ];
+    $out = [];
+    foreach ($schemaById as $schema) {
+        $schema = (string) $schema;
+        if (isset($skip[$schema]) || str_starts_with($schema, 'zz')) {
+            continue;
+        }
+        $dl = dlDesdeEsquema($schema);
+        if ($dl !== '') {
+            $out[$dl] = true;
+        }
+    }
+
+    return $out;
 }
 
 /**
@@ -337,6 +393,7 @@ try {
             'n_asis' => 0,
             'id_activs' => [],
             'tiene_curso' => false,
+            'sin_esquema_dl' => false,
             'bucket' => 'D',
         ];
     }
@@ -442,11 +499,28 @@ try {
         unset($row);
     }
 
+    // --- DLs con esquema Orbix (proteger si la dl de paso no está aquí) ---
+    /** @var array<int, string> $schemaById */
+    $schemaById = [];
+    foreach ($pdoSv->query('SELECT id, schema FROM public.db_idschema')->fetchAll(PDO::FETCH_ASSOC) ?: [] as $r) {
+        $schemaById[(int) $r['id']] = (string) $r['schema'];
+    }
+    $dlsConEsquema = dlsConEsquemaOrbix($schemaById);
+    foreach ($pasoById as $id => &$row) {
+        $dlNorm = normalizarDl((string) ($row['dl'] ?? ''));
+        // Sin dl, o dl que no corresponde a ningún esquema → protegido
+        $row['sin_esquema_dl'] = ($dlNorm === '' || !isset($dlsConEsquema[$dlNorm]));
+    }
+    unset($row);
+
     // --- Buckets ---
-    $buckets = ['A' => [], 'B' => [], 'C' => [], 'D' => []];
+    // Prioridad: A (curso) > P (dl sin esquema) > B (notas) > C (historial) > D (vacío)
+    $buckets = ['A' => [], 'P' => [], 'B' => [], 'C' => [], 'D' => []];
     foreach ($pasoById as $id => &$row) {
         if ($row['tiene_curso']) {
             $row['bucket'] = 'A';
+        } elseif ($row['sin_esquema_dl']) {
+            $row['bucket'] = 'P';
         } elseif ($row['n_notas'] > 0) {
             $row['bucket'] = 'B';
         } elseif ($row['n_asis'] > 0) {
@@ -469,9 +543,11 @@ try {
         'curso_ini' => $cursoIni,
         'total_paso_A' => count($pasoById),
         'A_protegido_curso' => count($buckets['A']),
+        'P_protegido_sin_esquema' => count($buckets['P']),
         'B_con_notas' => count($buckets['B']),
         'C_solo_historial' => count($buckets['C']),
         'D_vacio_borrable' => count($buckets['D']),
+        'dls_con_esquema' => count($dlsConEsquema),
         'asis_verificado' => $asisVerificado,
         'asis_tablas' => $asisTablesLabeled,
         'actividades_curso_tocadas' => count($activCurso),
@@ -592,12 +668,6 @@ try {
         }
     );
 
-    /** @var array<int, string> $schemaById */
-    $schemaById = [];
-    foreach ($pdoSv->query('SELECT id, schema FROM public.db_idschema')->fetchAll(PDO::FETCH_ASSOC) ?: [] as $r) {
-        $schemaById[(int) $r['id']] = (string) $r['schema'];
-    }
-
     $vacios = array_values(array_filter(
         $buckets['D'],
         static fn(array $r): bool => true
@@ -608,7 +678,7 @@ try {
             <=> [$b['apellido1'], $b['apellido2'], $b['nom'], $b['id_nom']]
     );
 
-    // Inventario historial (asis no-curso, fuera de bucket A)
+    // Inventario historial (asis no-curso, fuera de protegidos A/P)
     $historialPlan = [
         'filas_borrar_sin_match' => 0,
         'filas_copiar_y_borrar' => 0,
@@ -619,7 +689,7 @@ try {
     ];
     $idsConHistorial = [];
     foreach ($pasoById as $id => $row) {
-        if ($row['bucket'] === 'A' || $row['n_asis'] <= 0) {
+        if (in_array($row['bucket'], ['A', 'P'], true) || $row['n_asis'] <= 0) {
             continue;
         }
         $idsConHistorial[] = $id;
@@ -669,6 +739,10 @@ try {
 
     $idsConNotas = [];
     foreach ($pasoById as $id => $row) {
+        // Protegidos A/P: no se tocan notas
+        if (in_array($row['bucket'], ['A', 'P'], true)) {
+            continue;
+        }
         if ($row['n_notas'] > 0) {
             $idsConNotas[] = $id;
         }
@@ -710,7 +784,8 @@ try {
                     $borrado['omitidos_recheck']++;
                     continue;
                 }
-                if ($row['n_notas'] > 0 || $row['n_asis'] > 0 || $row['tiene_curso'] || $row['bucket'] !== 'D') {
+                if ($row['n_notas'] > 0 || $row['n_asis'] > 0 || $row['tiene_curso']
+                    || !empty($row['sin_esquema_dl']) || $row['bucket'] !== 'D') {
                     $borrado['omitidos_recheck']++;
                     continue;
                 }
@@ -795,7 +870,7 @@ try {
                             continue;
                         }
                         $p = $pasoById[$idNom] ?? null;
-                        if ($p === null || $p['bucket'] === 'A') {
+                        if ($p === null || in_array($p['bucket'], ['A', 'P'], true)) {
                             continue;
                         }
                         if (isset($activCurso[$idActiv])) {
@@ -1232,6 +1307,7 @@ try {
         'resumen' => $resumen,
         'buckets' => [
             'A' => applyLimit($buckets['A'], $limit),
+            'P' => applyLimit($buckets['P'], $limit),
             'B' => applyLimit($buckets['B'], $limit),
             'C' => applyLimit($buckets['C'], $limit),
             'D' => applyLimit($buckets['D'], $limit),
@@ -1292,10 +1368,12 @@ if ($fase === 'resumen' || $fase === 'todo' || $fase === 'buckets') {
     echo "=== Resumen buckets ===\n";
     echo "  total situacion=A:     {$r['total_paso_A']}\n";
     echo "  A protegido_curso:     {$r['A_protegido_curso']}\n";
+    echo "  P protegido_sin_esquema: {$r['P_protegido_sin_esquema']}\n";
     echo "  B con_notas:           {$r['B_con_notas']}\n";
     echo "  C solo_historial:      {$r['C_solo_historial']}\n";
     echo "  D vacio_borrable:      {$r['D_vacio_borrable']}\n";
     echo '  asis_verificado:       ' . (!empty($r['asis_verificado']) ? 'sí' : 'NO') . "\n";
+    echo '  dls_con_esquema:       ' . ($r['dls_con_esquema'] ?? '?') . "\n";
     echo '  tablas asis: ' . (empty($r['asis_tablas']) ? '(ninguna)' : implode(', ', $r['asis_tablas'])) . "\n";
     if (empty($r['asis_verificado'])) {
         echo "  !! Sin asistencias inventariadas: NO borres el bucket D todavía.\n";
@@ -1304,7 +1382,13 @@ if ($fase === 'resumen' || $fase === 'todo' || $fase === 'buckets') {
 }
 
 if ($fase === 'buckets' || $fase === 'todo') {
-    foreach (['A' => 'protegido_curso', 'B' => 'con_notas', 'C' => 'solo_historial', 'D' => 'vacio_borrable'] as $code => $label) {
+    foreach ([
+        'A' => 'protegido_curso',
+        'P' => 'protegido_sin_esquema',
+        'B' => 'con_notas',
+        'C' => 'solo_historial',
+        'D' => 'vacio_borrable',
+    ] as $code => $label) {
         $rows = $report['buckets'][$code];
         echo "=== Bucket {$code} ({$label}) muestra ===\n";
         if ($rows === []) {
@@ -1419,7 +1503,7 @@ if (($dryRun || $apply) && isset($report['borrado']) && $fase === 'vacios') {
 if ($fase === 'historial' || (($dryRun || $apply) && $fase === 'historial')) {
     $hp = $report['historial_plan'];
     $hr = $report['historial'];
-    echo "=== Historial asistencias (f_ini < {$r['curso_ini']}; no toca bucket A ni curso) ===\n";
+    echo "=== Historial asistencias (f_ini < {$r['curso_ini']}; no toca A/P ni curso) ===\n";
     echo "  personas B/C con asis sin match orbix: {$hp['personas_sin_match']}\n";
     echo "  personas B/C con asis con match orbix: {$hp['personas_con_match']}\n";
     if ($hr['modo'] !== 'ninguno') {
