@@ -152,39 +152,33 @@ class AsistenteActividadService
     }
 
     /**
-     * Obtiene el número de plazas ocupadas por delegación
+     * Obtiene el número de plazas ocupadas por delegación.
      *
      * @param int $iid_activ ID de la actividad
-     * @param string $sdl Sigla de la delegación
-     * @param string $dl_hub Sigla de la delegación propietaria de las plazas
-     * @return int Número de plazas ocupadas
+     * @param string $sdl Sigla de la dl que usa la plaza (derecha de "hub>sdl")
+     * @param string $dl_hub Sigla propietaria de las plazas (izquierda de "hub>sdl")
+     * @return int Número de plazas ocupadas (asignadas/confirmadas)
      */
     public function getPlazasOcupadasPorDl(int $iid_activ, string $sdl = '', string $dl_hub = ''): int
     {
         $mi_dele = ConfigGlobal::mi_delef();
 
-        /* Mirar si la actividad es mia o no */
         $oActividad = $this->actividadAllRepository->findById($iid_activ);
         if ($oActividad === null) {
             return 0;
         }
-        $dl_org = $oActividad->getDl_org();
-        $id_tabla = $oActividad->getIdTablaVo()?->value() ?? '';
+        $dl_org = $oActividad->getDl_org() ?? '';
 
-        $aWhere['id_activ'] = $iid_activ;
+        $aWhere = ['id_activ' => $iid_activ];
         $aOperators = [];
         $namespace = 'src\asistentes\infrastructure\persistence\postgresql';
-        $msg_err = '';
 
-        if ($sdl == $mi_dele) {
-            if ($dl_org == $sdl) {
-                // Incluye Ex: los de paso (PersonaEx) no están en Dl/Pub.
-                $a_Clases = [
-                    ['repo' => AsistenteDlRepositoryInterface::class, 'get' => 'getAsistentes'],
-                    ['repo' => AsistentePubRepositoryInterface::class, 'get' => 'getAsistentes'],
-                    ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
-                ];
-                $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
+        if ($sdl === $mi_dele) {
+            if ($dl_org === $sdl) {
+                // Organizadora: d_asistentes_all evita duplicar filas entre Dl/Pub/Ex.
+                /** @var AsistenteRepositoryInterface $repoAll */
+                $repoAll = $this->container->get(AsistenteRepositoryInterface::class);
+                $cAsistentes = $repoAll->getAsistentes($aWhere, $aOperators);
             } else {
                 $a_Clases = [
                     ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
@@ -192,78 +186,68 @@ class AsistenteActividadService
                 ];
                 $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
             }
+        } elseif ($dl_org === $sdl) {
+            $cAsistentes = [];
+        } elseif ($dl_org === $mi_dele) {
+            // Organizadora contando uso de plazas por otra dl (cedidas / de paso).
+            /** @var AsistenteRepositoryInterface $repoAll */
+            $repoAll = $this->container->get(AsistenteRepositoryInterface::class);
+            $cAsistentes = $repoAll->getAsistentes($aWhere, $aOperators);
         } else {
-            if ($dl_org == $sdl) {
-                $cAsistentes = [];
-            } else {
-                if ($dl_org == $mi_dele) {
-                    // Organizadora contando plazas de otra dl (p. ej. de paso en mi_dl>dl_paso).
-                    $a_Clases = [
-                        ['repo' => AsistenteDlRepositoryInterface::class, 'get' => 'getAsistentes'],
-                        ['repo' => AsistentePubRepositoryInterface::class, 'get' => 'getAsistentes'],
-                        ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
-                    ];
-                    $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
-                } else {
-                    $a_Clases = [
-                        ['repo' => AsistenteOutRepositoryInterface::class, 'get' => 'getAsistentes'],
-                        ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
-                    ];
-                    $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
-                }
-            }
+            $a_Clases = [
+                ['repo' => AsistenteOutRepositoryInterface::class, 'get' => 'getAsistentes'],
+                ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
+            ];
+            $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
         }
 
         $numAsis = 0;
+        $vistos = [];
         foreach ($cAsistentes as $oAsistente) {
             $id_nom = $oAsistente->getId_nom();
-            $propietario = $oAsistente->getPropietarioVo()?->value() ?? '';
-            $padre = strtok($propietario, '>');
-            $child = strtok('>');
-
-            if (!empty($dl_hub) && $dl_hub != $padre) {
-                continue;
-            }
-            if ($sdl != $child) {
+            if (isset($vistos[$id_nom])) {
                 continue;
             }
 
-            // PersonaEx no está en el directorio global: sin esto se descartaba (y a veces borraba) la plaza.
+            [$padre, $child] = $this->parsePropietarioPlaza($oAsistente->getPropietarioVo()?->value() ?? '');
+
+            // "dlp>dlal" (cedida) solo cuenta para sdl=dlal con hub=dlp, nunca como plaza propia dlp>dlp.
+            if ($dl_hub !== '' && $padre !== $dl_hub) {
+                continue;
+            }
+            if ($sdl !== '' && $child !== $sdl) {
+                continue;
+            }
+
             if (!$this->existePersonaParaContarPlazas($id_nom)) {
-                $msg_err .= "<br>No encuentro a nadie con id_nom $id_nom en  " . __FILE__ . ": line " . __LINE__;
-                $msg_err .= "<br>" . _("borro la asistencia");
-                $id_tabla = $oAsistente->getIdTablaVo()?->value() ?? '';
-                if ($id_tabla === 'dl') {
-                    /** @var AsistenteDlRepositoryInterface $repo */
-                    $repo = $this->container->get(AsistenteDlRepositoryInterface::class);
-                    $repo->Eliminar($oAsistente);
-                } elseif ($id_tabla === 'ex') {
-                    /** @var AsistenteExRepositoryInterface $repo */
-                    $repo = $this->container->get(AsistenteExRepositoryInterface::class);
-                    $repo->Eliminar($oAsistente);
-                } elseif ($id_tabla === 'out') {
-                    /** @var AsistenteOutRepositoryInterface $repo */
-                    $repo = $this->container->get(AsistenteOutRepositoryInterface::class);
-                    $repo->Eliminar($oAsistente);
-                }
                 continue;
             }
 
             $plazaVo = $oAsistente->getPlazaVo()?->value();
             $plaza = empty($plazaVo) ? PlazaId::PEDIDA : $plazaVo;
-            // Sólo cuento las asignadas
             if ($plaza < PlazaId::ASIGNADA) {
                 continue;
             }
 
+            $vistos[$id_nom] = true;
             $numAsis++;
         }
 
-        if (!empty($msg_err)) {
-            error_log($msg_err);
-        }
-
         return $numAsis;
+    }
+
+    /**
+     * @return array{0: string, 1: string} [padre, child] de "padre>child"
+     */
+    private function parsePropietarioPlaza(string $propietario): array
+    {
+        $propietario = trim($propietario);
+        if ($propietario === '' || $propietario === 'xxx') {
+            return ['', ''];
+        }
+        $parts = explode('>', $propietario, 2);
+
+        return [trim($parts[0]), trim($parts[1] ?? '')];
     }
 
     /**
