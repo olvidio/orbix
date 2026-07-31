@@ -13,8 +13,12 @@ use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
+use src\personas\application\services\PersonaListadoLookup;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaEx;
+use src\personas\domain\entity\PersonaPub;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 
@@ -347,30 +351,24 @@ class AsistenteActividadService
      * para saber el nombre del repositorio que toca según mi dl, y la dl de la
      * actividad a la que asisto
      *
+     * @throws \RuntimeException si no se encuentra la persona o la actividad
      */
     public function getRepoAsistente(int $id_nom, int $id_activ): string
     {
-        // Los asistentes "de paso" usan ids negativos y no estan en el directorio
-        // global (PersonaDl/PersonaPub), por lo que findPersonaEnGlobal no los
-        // encuentra. Se guardan en d_asistentes_ex.
+        // Los asistentes "de paso" con id negativo viven en d_asistentes_ex.
+        // También hay PersonaEx con id positivo (GenerateIdGlobal / p_de_paso_ex).
         if ($id_nom < 0 || $id_activ < 0) {
             return AsistenteExRepositoryInterface::class;
         }
 
-        $msg_err = '';
-        // Buscar la dl del asistente
-        $oPersona = Persona::findPersonaEnGlobal($id_nom);
-        if ($oPersona === null) {
-            $msg_err = "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
-            exit($msg_err);
-        }
+        $oPersona = $this->resolvePersonaParaAsistente($id_nom);
         $dl_persona = $oPersona->getDlVo()?->value() ?? '';
         $clasePersona = $oPersona->getClassName();
         // hay que averiguar si la actividad es de la dl o de fuera.
         $ActividadAllRepository = $this->actividadAllRepository;
         $oActividad = $ActividadAllRepository->findById($id_activ);
         if ($oActividad === null) {
-            exit(sprintf(_('No se ha encontrado la actividad con id: %s'), $id_activ));
+            throw new \RuntimeException(sprintf(_('No se ha encontrado la actividad con id: %s'), $id_activ));
         }
         // si es de la sf quito la 'f'
         $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');
@@ -408,10 +406,31 @@ class AsistenteActividadService
 
             // comprobar que es una actividad de mi dl, si no no tiene permiso
             if ($dl_org !== ConfigGlobal::mi_dele() && $claseActividad !== 'ActividadEx') {
-                exit (_("No puede modificar los datos de asistencia de una persona de otra dl"));
+                throw new \RuntimeException(_("No puede modificar los datos de asistencia de una persona de otra dl"));
             }
 
         }
         return $repo;
+    }
+
+    /**
+     * @return PersonaDl|PersonaPub|PersonaEx
+     * @throws \RuntimeException
+     */
+    private function resolvePersonaParaAsistente(int $id_nom): PersonaDl|PersonaPub|PersonaEx
+    {
+        $persona = Persona::findPersonaEnGlobal($id_nom);
+        if ($persona !== null) {
+            return $persona;
+        }
+
+        /** @var PersonaExRepositoryInterface $personaExRepository */
+        $personaExRepository = $this->container->get(PersonaExRepositoryInterface::class);
+        $personaEx = $personaExRepository->findById($id_nom);
+        if ($personaEx !== null) {
+            return $personaEx;
+        }
+
+        throw new \RuntimeException(PersonaListadoLookup::mensajeNoEncontrada($id_nom));
     }
 }

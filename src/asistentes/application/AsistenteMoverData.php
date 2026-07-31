@@ -55,7 +55,17 @@ final class AsistenteMoverData
         $Qid_activ_old = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         $Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau', $Qid_nom);
 
-        $AsistenteRepositoryInterface = $this->asistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ_old);
+        try {
+            $AsistenteRepositoryInterface = $this->asistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ_old);
+        } catch (\RuntimeException $e) {
+            return [
+                'aviso_txt' => $e->getMessage(),
+                'observ' => '',
+                'paths' => [
+                    'guardar' => 'src/asistentes/asistente_guardar',
+                ],
+            ];
+        }
         /** @var AsistenteRepositoryInterface $AsistenteRepository */
         $AsistenteRepository = $this->container->get($AsistenteRepositoryInterface);
         $oAsistente = $AsistenteRepository->findById($Qid_activ_old, $Qid_nom);

@@ -56,7 +56,11 @@ final class FormActividadesDeUnaPersonaData
             }
             $nom_activ = $oActividad->getNom_activ();
 
-            $AsistenteRepositoryInterface = $this->asistenteActividadService->getRepoAsistente($Qid_nom, $id_activ_edit);
+            try {
+                $AsistenteRepositoryInterface = $this->asistenteActividadService->getRepoAsistente($Qid_nom, $id_activ_edit);
+            } catch (\RuntimeException $e) {
+                return ['error' => $e->getMessage()];
+            }
             /** @var AsistenteRepositoryInterface $AsistenteRepository */
             $AsistenteRepository = $this->container->get($AsistenteRepositoryInterface);
             $oAsistente = $AsistenteRepository->findById($id_activ_edit, $Qid_nom);

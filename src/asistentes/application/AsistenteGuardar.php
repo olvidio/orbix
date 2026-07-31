@@ -38,6 +38,18 @@ final class AsistenteGuardar
      */
     public function execute(array $input): string
     {
+        try {
+            return $this->executeInner($input);
+        } catch (\RuntimeException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    private function executeInner(array $input): string
+    {
         $mod = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'mod');
         if (!in_array($mod, ['nuevo', 'editar', 'mover'], true)) {
             return sprintf(_("mod no soportado: %s"), $mod);
@@ -52,6 +64,9 @@ final class AsistenteGuardar
             if ($Qpau === 'p') {
                 $id_activ = (int) strtok($selKey, '#');
                 $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
+                if ($id_nom === 0) {
+                    $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
+                }
             } elseif ($Qpau === 'a') {
                 $id_nom = (int) strtok($selKey, '#');
                 $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
@@ -59,6 +74,9 @@ final class AsistenteGuardar
         } else {
             $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
             $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
+            if ($id_nom === 0) {
+                $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
+            }
         }
         $id_activ_old = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ_old');
 
