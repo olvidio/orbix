@@ -935,11 +935,20 @@ class PermDossier
                 break;
         }
 
-        if ($dl_propia === false){
-            $ref_perm['pn'] = 0;
-            $ref_perm['pa'] = 0;
-            $ref_perm['px'] = 0;
-            $ref_perm['psssc'] = 0;
+        if ($dl_propia === false) {
+            // Solo se anula el flag de permiso; no sustituir la entrada entera.
+            if (isset($ref_perm['pn']) && is_array($ref_perm['pn'])) {
+                $ref_perm['pn']['perm'] = 0;
+            }
+            if (isset($ref_perm['pa']) && is_array($ref_perm['pa'])) {
+                $ref_perm['pa']['perm'] = 0;
+            }
+            if (isset($ref_perm['px']) && is_array($ref_perm['px'])) {
+                $ref_perm['px']['perm'] = 0;
+            }
+            if (isset($ref_perm['psssc']) && is_array($ref_perm['psssc'])) {
+                $ref_perm['psssc']['perm'] = 0;
+            }
         }
         return $ref_perm;
     }

@@ -172,7 +172,12 @@ class Select_asistentes_a_una_actividad
     private function buscarPersona(int $idNom): PersonaDl|PersonaPub|PersonaEx|null
     {
         if ($this->dl_org !== $this->mi_dele) {
-            return $this->personaFinderService->findPersonaEnDl($idNom);
+            $persona = $this->personaFinderService->findPersonaEnDl($idNom);
+            if ($persona !== null) {
+                return $persona;
+            }
+            // De paso: visibles si son nuestros o ocupan plaza nuestra (ver esAsistenteVisibleParaMiDl).
+            return $this->personaExRepository->findById($idNom);
         }
 
         $problemasRegionStgr = [];
@@ -187,6 +192,32 @@ class Select_asistentes_a_una_actividad
         }
 
         return $this->personaExRepository->findById($idNom);
+    }
+
+    /**
+     * Una dl ve a sus asistentes y, además, a quien ocupa una plaza suya.
+     * La organizadora ve a todos los de paso; el resto solo los suyos / de su plaza.
+     *
+     * @param string|false|null $padre primera parte de propietario ("dlA>dlB")
+     * @param string|false|null $child segunda parte de propietario
+     */
+    private function esAsistenteVisibleParaMiDl(
+        string $obj_pau,
+        ?string $dl_responsable,
+        string|false|null $padre = null,
+        string|false|null $child = null,
+    ): bool {
+        if ($obj_pau !== 'PersonaEx' || $this->mi_dele === $this->dl_org) {
+            return true;
+        }
+        if ($dl_responsable === $this->mi_dele) {
+            return true;
+        }
+        if ($padre === $this->mi_dele || $child === $this->mi_dele) {
+            return true;
+        }
+
+        return false;
     }
 
     private function reportarPersonaNoEncontrada(int $idNom): void
@@ -398,6 +429,9 @@ class Select_asistentes_a_una_actividad
                 $observ = $oAsistente->getObserv();
                 $plaza = empty($oAsistente->getPlaza()) ? PlazaId::PEDIDA : $oAsistente->getPlaza();
 
+                $obj_pau_cargo = $oPersona->getClassName();
+                $padre = null;
+                $child = null;
                 if (ConfigGlobal::is_app_installed('actividadplazas')) {
                     $propietario = $oAsistente->getPropietario() ?? '';
                     if ($propietario === 'xxx') {
@@ -407,6 +441,16 @@ class Select_asistentes_a_una_actividad
                     $padre = strtok($propietario, '>');
                     $child = strtok('>');
                     $dl = $child;
+                }
+                if (!$this->esAsistenteVisibleParaMiDl(
+                    $obj_pau_cargo,
+                    $oAsistente->getDl_responsable(),
+                    $padre,
+                    $child,
+                )) {
+                    continue;
+                }
+                if (ConfigGlobal::is_app_installed('actividadplazas')) {
                     if ($padre != $this->mi_dele) {
                         if ($plaza > PlazaId::DENEGADA) {
                             $this->bumpPlazaResumen($padre, $dl, $plaza);
@@ -453,6 +497,9 @@ class Select_asistentes_a_una_actividad
                 $a_valores[$c][5] = $chk_est_ok;
                 $a_valores[$c][6] = $chk_falta;
             } else {
+                if (!$this->esAsistenteVisibleParaMiDl($oPersona->getClassName(), null)) {
+                    continue;
+                }
                 $a_valores[$c][4] = ['span' => 3, 'valor' => _("no asiste")];
                 $observ = '';
                 $num--;
@@ -523,6 +570,8 @@ class Select_asistentes_a_una_actividad
             $plaza = 2;
 
             $propietario_txt = '';
+            $padre = null;
+            $child = null;
             if (ConfigGlobal::is_app_installed('actividadplazas')) {
                 $plaza = empty($oAsistente->getPlaza()) ? PlazaId::PEDIDA : $oAsistente->getPlaza();
                 $propietario = $oAsistente->getPropietario();
@@ -535,11 +584,17 @@ class Select_asistentes_a_una_actividad
                 $padre = strtok($propietario, '>');
                 $child = strtok('>');
                 $dl = $child;
-                if ($obj_pau === 'PersonaEx' && $this->mi_dele != $this->dl_org) {
-                    if ($oAsistente->getDl_responsable() != $this->mi_dele) {
-                        continue;
-                    }
-                }
+            }
+            if (!$this->esAsistenteVisibleParaMiDl(
+                $obj_pau,
+                $oAsistente->getDl_responsable(),
+                $padre,
+                $child,
+            )) {
+                $this->num--;
+                continue;
+            }
+            if (ConfigGlobal::is_app_installed('actividadplazas')) {
                 if ($padre != $this->mi_dele) {
                     if ($plaza > PlazaId::DENEGADA) {
                         $this->bumpPlazaResumen($padre, $dl, $plaza);
