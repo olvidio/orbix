@@ -28,12 +28,19 @@ declare(strict_types=1);
  *
  * Otras opciones:
  *   --curso-ini=2025-10-01
- *   --fase=resumen|buckets|duplicados|vs-global|vacios|historial|notas|candidatos-b|todo
+ *   --fase=...|candidatos-b|pares|todo
+ *   --pares=/ruta/marcados.tsv   (con --fase=pares): filas con coincidente=x|si|1
+ *   --dry-run / --apply también con --fase=pares (copia notas+historial de los marcados)
+ *
+ * candidatos-b: TSV para marcar a mano (nombres visibles + ids). Luego:
+ *   1) exportar --fase=candidatos-b > candidatos.tsv
+ *   2) poner x en columna coincidente
+ *   3) --fase=pares --pares=candidatos.tsv --dry-run|--apply
  *   --schema-paso=restov
  *   --json  --limit=30
  *   --pg  (explícito; es el default)
- *   --dry-run  con --fase=vacios|historial|notas
- *   --apply    con --fase=vacios|historial|notas
+ *   --dry-run  con --fase=vacios|historial|notas|pares
+ *   --apply    con --fase=vacios|historial|notas|pares
  *
  * historial: borra asistencias con f_ini < curso_ini (no toca curso ni protegidos A/P).
  *   Si hay gemelo en global.personas, copia antes a d_asistentes_dl del esquema orbix.
@@ -43,6 +50,8 @@ declare(strict_types=1);
  *   Copia/reasigna notas al id_orbix
  *   (no duplica si ya existe id_orbix+id_asignatura o id_orbix+id_nivel).
  *   Solo entonces borra la fila de paso. Sin pareja → no se toca ninguna nota.
+ *
+ * pares: igual que notas+historial, pero solo para (id_paso,id_orbix) marcados en --pares=.
  *
  * SQL de referencia: tools/audit/sql/personas_paso_limpieza.sql
  */
@@ -64,6 +73,7 @@ $pasoSchema = null; // restov / restof por defecto según database
 $usePg = true; // default: PDO directo (prod como postgres, sin ConfigDB)
 $dryRun = false;
 $apply = false;
+$paresFile = null;
 
 foreach ($argv as $arg) {
     if ($arg === '--pg') {
@@ -99,6 +109,9 @@ foreach ($argv as $arg) {
     if (str_starts_with($arg, '--schema-paso=')) {
         $pasoSchema = substr($arg, strlen('--schema-paso='));
     }
+    if (str_starts_with($arg, '--pares=')) {
+        $paresFile = substr($arg, strlen('--pares='));
+    }
     if (str_starts_with($arg, '--limit=')) {
         $limit = (int) substr($arg, strlen('--limit='));
     }
@@ -112,9 +125,13 @@ if ($dryRun && $apply) {
     exit(1);
 }
 
-$fasesOk = ['resumen', 'buckets', 'duplicados', 'vs-global', 'vacios', 'historial', 'notas', 'candidatos-b', 'todo'];
+$fasesOk = ['resumen', 'buckets', 'duplicados', 'vs-global', 'vacios', 'historial', 'notas', 'candidatos-b', 'pares', 'todo'];
 if (!in_array($fase, $fasesOk, true)) {
     fwrite(STDERR, 'fase inválida: ' . implode('|', $fasesOk) . "\n");
+    exit(1);
+}
+if ($fase === 'pares' && ($paresFile === null || $paresFile === '')) {
+    fwrite(STDERR, "--fase=pares requiere --pares=/ruta/archivo.tsv\n");
     exit(1);
 }
 
@@ -248,6 +265,80 @@ function applyLimit(array $rows, int $limit): array
     }
 
     return array_slice($rows, 0, $limit);
+}
+
+function formatoNombrePaso(array $row): string
+{
+    $ape = trim((string) ($row['apellido1'] ?? '') . ' ' . (string) ($row['apellido2'] ?? ''));
+    $nom = trim((string) ($row['nom'] ?? ''));
+
+    return $ape === '' ? $nom : ($ape . ', ' . $nom);
+}
+
+/**
+ * Lee TSV de candidatos marcados. Columna coincidente = x|si|sí|1|ok|true.
+ * Requiere columnas id_paso e id_orbix (por nombre de cabecera o posiciones fijas).
+ *
+ * @return list<array{id_paso: int, id_orbix: int}>
+ */
+function leerParesMarcados(string $path): array
+{
+    if (!is_readable($path)) {
+        throw new RuntimeException("No se puede leer --pares={$path}");
+    }
+    $raw = file($path, FILE_IGNORE_NEW_LINES);
+    if ($raw === false) {
+        throw new RuntimeException("Error leyendo --pares={$path}");
+    }
+
+    $pares = [];
+    $idxCoin = 0;
+    $idxPaso = 1;
+    $idxOrbix = 6;
+    $headerDone = false;
+    $seenPaso = [];
+
+    foreach ($raw as $lineNum => $line) {
+        $line = rtrim($line, "\r");
+        if ($line === '' || str_starts_with(ltrim($line), '#')) {
+            continue;
+        }
+        $cols = str_getcsv($line, "\t");
+        if (!$headerDone) {
+            $headerDone = true;
+            $lower = array_map(static fn($c) => mb_strtolower(trim((string) $c)), $cols);
+            if (in_array('id_paso', $lower, true) && in_array('id_orbix', $lower, true)) {
+                $idxCoin = array_search('coincidente', $lower, true);
+                if ($idxCoin === false) {
+                    $idxCoin = 0;
+                }
+                $idxPaso = (int) array_search('id_paso', $lower, true);
+                $idxOrbix = (int) array_search('id_orbix', $lower, true);
+                continue;
+            }
+            // sin cabecera: primera fila de datos
+        }
+
+        $coin = mb_strtolower(trim((string) ($cols[$idxCoin] ?? '')));
+        if (!in_array($coin, ['x', 'si', 'sí', '1', 'ok', 'true', 'yes', 'y'], true)) {
+            continue;
+        }
+        $idPaso = (int) trim((string) ($cols[$idxPaso] ?? '0'));
+        $idOrbix = (int) trim((string) ($cols[$idxOrbix] ?? '0'));
+        if ($idPaso === 0 || $idOrbix === 0) {
+            fwrite(STDERR, "AVISO pares L" . ($lineNum + 1) . ": id_paso/id_orbix inválidos, omitida.\n");
+            continue;
+        }
+        if (isset($seenPaso[$idPaso])) {
+            throw new RuntimeException(
+                "id_paso={$idPaso} marcado más de una vez en --pares (líneas distintas)."
+            );
+        }
+        $seenPaso[$idPaso] = true;
+        $pares[] = ['id_paso' => $idPaso, 'id_orbix' => $idOrbix];
+    }
+
+    return $pares;
 }
 
 /**
@@ -616,6 +707,8 @@ try {
     $mejorMatch = [];
     /** @var list<array<string, mixed>> $globalRows */
     $globalRows = [];
+    /** @var array<int, array<string, mixed>> $globalById */
+    $globalById = [];
     /** @var array<string, list<int>> $globalIdxApe1 index k_ape1 → offsets in $globalRows */
     $globalIdxApe1 = [];
     $stmt = $pdoSv->query(
@@ -627,6 +720,7 @@ try {
     $globalByKey = [];
     $gi = 0;
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) ?: [] as $g) {
+        $globalById[(int) $g['id_nom']] = $g;
         if (normKey($g['apellido1'] ?? '') === '' || normKey($g['nom'] ?? '') === '') {
             continue;
         }
@@ -922,13 +1016,96 @@ try {
             <=> [$b['apellido1'] ?? '', $b['nom'] ?? '', $b['id_paso']]
     );
 
-    if ($dryRun || $apply) {
-        if (!in_array($fase, ['vacios', 'historial', 'notas'], true)) {
+    /** @var list<array<string, mixed>> $paresPlan */
+    $paresPlan = [];
+    if ($fase === 'pares') {
+        $marcados = leerParesMarcados((string) $paresFile);
+        if ($marcados === []) {
             throw new RuntimeException(
-                '--dry-run / --apply solo con --fase=vacios|historial|notas.'
+                'Ningún par marcado en --pares (columna coincidente=x|si|1).'
             );
         }
-        if (in_array($fase, ['vacios', 'historial'], true) && !$asisVerificado) {
+        $mejorMatch = [];
+        foreach ($marcados as $par) {
+            $idPaso = $par['id_paso'];
+            $idOrbix = $par['id_orbix'];
+            $p = $pasoById[$idPaso] ?? null;
+            $g = $globalById[$idOrbix] ?? null;
+            $entry = [
+                'id_paso' => $idPaso,
+                'id_orbix' => $idOrbix,
+                'nombre_paso' => $p !== null ? formatoNombrePaso($p) : '',
+                'nombre_orbix' => $g !== null ? formatoNombrePaso($g) : '',
+                'ok' => true,
+                'motivo' => null,
+            ];
+            if ($p === null) {
+                $entry['ok'] = false;
+                $entry['motivo'] = 'id_paso no está en p_de_paso_ex activo';
+                $paresPlan[] = $entry;
+                continue;
+            }
+            if (in_array($p['bucket'], ['A', 'P'], true)) {
+                $entry['ok'] = false;
+                $entry['motivo'] = 'protegido bucket ' . $p['bucket'];
+                $paresPlan[] = $entry;
+                continue;
+            }
+            if ($g === null) {
+                $entry['ok'] = false;
+                $entry['motivo'] = 'id_orbix no está en global.personas';
+                $paresPlan[] = $entry;
+                continue;
+            }
+            $mismaDl = normKey($p['dl'] ?? '') === normKey($g['dl'] ?? '');
+            $mismaFn = $p['f_nacimiento'] !== null && $p['f_nacimiento'] !== ''
+                && $g['f_nacimiento'] !== null && $g['f_nacimiento'] !== ''
+                && $p['f_nacimiento'] === $g['f_nacimiento'];
+            $mejorMatch[$idPaso] = [
+                'id_paso' => $idPaso,
+                'dl_paso' => $p['dl'],
+                'bucket' => $p['bucket'],
+                'id_orbix' => $idOrbix,
+                'dl_orbix' => $g['dl'],
+                'id_schema' => isset($g['id_schema']) ? (int) $g['id_schema'] : null,
+                'id_tabla_orbix' => $g['id_tabla'],
+                'apellido1' => $p['apellido1'],
+                'apellido2' => $p['apellido2'],
+                'nom' => $p['nom'],
+                'fn_paso' => $p['f_nacimiento'],
+                'fn_orbix' => $g['f_nacimiento'],
+                'misma_dl' => $mismaDl,
+                'misma_fn' => $mismaFn,
+                'n_notas' => $p['n_notas'],
+                'n_asis' => $p['n_asis'],
+            ];
+            $paresPlan[] = $entry;
+        }
+        $idsOkPares = array_keys($mejorMatch);
+        $idsConHistorial = array_values(array_filter(
+            $idsConHistorial,
+            static fn(int $id): bool => isset($mejorMatch[$id])
+        ));
+        $idsConNotas = array_values(array_filter(
+            $idsConNotas,
+            static fn(int $id): bool => isset($mejorMatch[$id])
+        ));
+        $historialPlan['personas_sin_match'] = 0;
+        $historialPlan['personas_con_match'] = count($idsConHistorial);
+        $notasPlan['personas_con_notas_y_match'] = count($idsConNotas);
+        $notasPlan['personas_con_notas_sin_match'] = count($idsOkPares) - count($idsConNotas);
+        if ($mejorMatch === []) {
+            throw new RuntimeException('Ningún par marcado es válido para copiar (todos omitidos).');
+        }
+    }
+
+    if ($dryRun || $apply) {
+        if (!in_array($fase, ['vacios', 'historial', 'notas', 'pares'], true)) {
+            throw new RuntimeException(
+                '--dry-run / --apply solo con --fase=vacios|historial|notas|pares.'
+            );
+        }
+        if (in_array($fase, ['vacios', 'historial', 'pares'], true) && !$asisVerificado) {
             throw new RuntimeException(
                 'No se puede mutar: asis_verificado=false. Revise --db-sv-e.'
             );
@@ -988,7 +1165,7 @@ try {
             }
         }
 
-        if ($fase === 'historial') {
+        if ($fase === 'historial' || $fase === 'pares') {
             $historialResult['modo'] = $apply ? 'apply' : 'dry-run';
             if (!$pdoSvE instanceof PDO) {
                 throw new RuntimeException('historial requiere conexión a db-sv-e.');
@@ -1187,7 +1364,7 @@ try {
             }
         }
 
-        if ($fase === 'notas') {
+        if ($fase === 'notas' || $fase === 'pares') {
             $notasResult['modo'] = $apply ? 'apply' : 'dry-run';
 
             // Hijas de public*.e_notas
@@ -1494,6 +1671,8 @@ try {
             $candidatosB,
             static fn(array $r): bool => ($r['n_candidatos'] ?? 0) === 0
         )),
+        'pares_plan' => $paresPlan,
+        'pares_ok' => count(array_filter($paresPlan, static fn(array $r): bool => !empty($r['ok']))),
     ];
 } catch (Throwable $e) {
     fwrite(STDERR, "ERROR: " . $e->getMessage() . "\n");
@@ -1530,6 +1709,14 @@ if ($jsonOutput) {
             'total' => $report['candidatos_b_total'],
             'sin_ningun_candidato' => $report['candidatos_b_sin_ninguno'],
             'filas' => $report['candidatos_b'],
+        ],
+        'pares' => [
+            'marcados_ok' => $report['pares_ok'],
+            'plan' => $report['pares_plan'],
+            'historial' => $report['historial'],
+            'notas' => $report['notas'],
+            'historial_plan' => $report['historial_plan'],
+            'notas_plan' => $report['notas_plan'],
         ],
         default => $report,
     };
@@ -1677,7 +1864,7 @@ if (($dryRun || $apply) && isset($report['borrado']) && $fase === 'vacios') {
     }
 }
 
-if ($fase === 'historial' || (($dryRun || $apply) && $fase === 'historial')) {
+if ($fase === 'historial' || (($dryRun || $apply) && ($fase === 'historial' || $fase === 'pares'))) {
     $hp = $report['historial_plan'];
     $hr = $report['historial'];
     echo "=== Historial asistencias (f_ini < {$r['curso_ini']}; no toca A/P ni curso) ===\n";
@@ -1703,12 +1890,12 @@ if ($fase === 'historial' || (($dryRun || $apply) && $fase === 'historial')) {
                 );
             }
         }
-    } else {
+    } elseif ($fase === 'historial') {
         echo "  (use --dry-run o --apply para planificar/ejecutar el borrado de historial)\n";
     }
 }
 
-if ($fase === 'notas') {
+if ($fase === 'notas' || (($dryRun || $apply) && ($fase === 'notas' || $fase === 'pares'))) {
     $np = $report['notas_plan'];
     $nr = $report['notas'];
     echo "=== Notas → pareja global.personas (sin perder filas) ===\n";
@@ -1735,52 +1922,68 @@ if ($fase === 'notas') {
                 );
             }
         }
-    } else {
+    } elseif ($fase === 'notas') {
         echo "  (use --dry-run o --apply; solo actúa con pareja en global.personas)\n";
     }
 }
 
+if ($fase === 'pares') {
+    echo "=== Pares marcados (copia notas + historial) ===\n";
+    echo "  archivo={$paresFile}\n";
+    echo "  válidos={$report['pares_ok']} / total_filas=" . count($report['pares_plan']) . "\n";
+    foreach ($report['pares_plan'] as $p) {
+        $flag = !empty($p['ok']) ? 'OK' : 'OMIT';
+        echo sprintf(
+            "  [%s] id_paso=%s (%s) → id_orbix=%s (%s)%s\n",
+            $flag,
+            $p['id_paso'],
+            $p['nombre_paso'] ?? '',
+            $p['id_orbix'],
+            $p['nombre_orbix'] ?? '',
+            !empty($p['motivo']) ? ' — ' . $p['motivo'] : ''
+        );
+    }
+    if (!$dryRun && !$apply) {
+        echo "  (use --dry-run o --apply para copiar notas/asistencias de los OK)\n";
+    }
+}
+
 if ($fase === 'candidatos-b' || $fase === 'todo') {
-    echo "=== Bucket B sin match exacto → candidatos en global.personas ===\n";
-    echo "  total paso B sin match exacto: {$report['candidatos_b_total']}\n";
-    echo "  sin ningún candidato por apellido1: {$report['candidatos_b_sin_ninguno']}\n";
-    echo "  (score: ape1=10 ape2=8 nom=8 dl=6 fn=7 lugar=5; ~ = parcial)\n\n";
-    // Cabecera tipo tabla TSV para pegar en hoja de cálculo
-    echo "id_paso\tdl_paso\tnombre_paso\tnac_paso\tlugar_paso\tnotas\tscore\trazones\tid_orbix\tdl_orbix\tid_tabla\tnombre_orbix\tnac_orbix\tlugar_orbix\tsituacion\n";
+    echo "# Marcar coincidente=x en UNA fila por persona de paso. Conservar id_paso e id_orbix.\n";
+    echo "# Luego: --fase=pares --pares=este_archivo.tsv --dry-run|--apply\n";
+    echo "# total B sin match exacto: {$report['candidatos_b_total']}";
+    echo " | sin candidatos: {$report['candidatos_b_sin_ninguno']}\n";
+    echo "coincidente\tid_paso\tnombre_paso\tdl_paso\tnac_paso\tlugar_paso\tid_orbix\tnombre_orbix\tdl_orbix\tnac_orbix\tlugar_orbix\tpistas\n";
     foreach ($report['candidatos_b'] as $row) {
-        $nombrePaso = trim(($row['apellido1'] ?? '') . ' ' . ($row['apellido2'] ?? '') . ', ' . ($row['nom'] ?? ''));
+        $nombrePaso = formatoNombrePaso($row);
         $cands = $row['candidatos'] ?? [];
         if ($cands === []) {
             echo sprintf(
-                "%s\t%s\t%s\t%s\t%s\t%s\t\t\t\t\t\t(sin candidatos)\t\t\t\n",
+                "\t%s\t%s\t%s\t%s\t%s\t\t(sin candidatos)\t\t\t\t%s\n",
                 $row['id_paso'],
-                $row['dl_paso'] ?? '',
                 $nombrePaso,
+                $row['dl_paso'] ?? '',
                 $row['f_nacimiento'] ?? '',
                 $row['lugar_nacimiento'] ?? '',
-                $row['n_notas'] ?? 0
+                $row['nota'] ?? ''
             );
             continue;
         }
         foreach ($cands as $c) {
-            $nombreOrbix = trim(($c['apellido1'] ?? '') . ' ' . ($c['apellido2'] ?? '') . ', ' . ($c['nom'] ?? ''));
+            $nombreOrbix = formatoNombrePaso($c);
             echo sprintf(
-                "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+                "\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
                 $row['id_paso'],
-                $row['dl_paso'] ?? '',
                 $nombrePaso,
+                $row['dl_paso'] ?? '',
                 $row['f_nacimiento'] ?? '',
                 $row['lugar_nacimiento'] ?? '',
-                $row['n_notas'] ?? 0,
-                $c['score'],
-                $c['razones'],
                 $c['id_orbix'],
-                $c['dl_orbix'] ?? '',
-                $c['id_tabla'] ?? '',
                 $nombreOrbix,
+                $c['dl_orbix'] ?? '',
                 $c['f_nacimiento'] ?? '',
                 $c['lugar_nacimiento'] ?? '',
-                $c['situacion'] ?? ''
+                $c['razones'] ?? ''
             );
         }
     }
