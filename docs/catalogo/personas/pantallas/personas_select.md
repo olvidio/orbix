@@ -10,7 +10,7 @@ fragmentos_frontend: []
 endpoints: ["/src/personas/personas_select_data"]
 capacidades: ["personas.personas_select.gestionar"]
 campos: ["form.sel", "form.que", "form.id_dossier"]
-acciones: ["fnjs_home", "fnjs_ficha", "fnjs_dossiers", "fnjs_modificar", "fnjs_modificar_ctr", "fnjs_actividades", "fnjs_tessera", "fnjs_notas", "fnjs_matriculas", "fnjs_posibles_ca", "fnjs_peticion_activ", "fnjs_lista_activ", "fnjs_ficha_profe", "fnjs_imp_tessera", "fnjs_copiar_tessera", "fnjs_imp_certificado", "fnjs_upload_certificado"]
+acciones: ["fnjs_home", "fnjs_ficha", "fnjs_dossiers", "fnjs_modificar", "fnjs_modificar_ctr", "fnjs_actividades", "fnjs_tessera", "fnjs_notas", "fnjs_matriculas", "fnjs_posibles_ca", "fnjs_peticion_activ", "fnjs_lista_activ", "fnjs_ficha_profe", "fnjs_imp_tessera", "fnjs_copiar_tessera", "fnjs_imp_certificado", "fnjs_upload_certificado", "fnjs_publicar"]
 estado_revision: "revisado"
 ---
 
@@ -28,6 +28,8 @@ y ámbito (`rstgr` simplifica botones).
 ## Endpoints Usados
 
 - `/src/personas/personas_select_data`
+- (vía botón) abre `persona_publicar_form` → `/src/personas/persona_publicar_form_data` /
+  `/src/personas/persona_publicar`
 
 ## Acciones principales
 
@@ -36,6 +38,7 @@ y ámbito (`rstgr` simplifica botones).
 - `fnjs_dossiers`, `fnjs_actividades`, tessera/notas/certificados (según permisos)
 - `fnjs_modificar` → cambio STGR (`est`)
 - `fnjs_modificar_ctr` → traslado centro (`sm`)
+- `fnjs_publicar` → publicar hacia otra DL (`est`/`sm`/`agd`) → pantalla `persona_publicar_form`
 
 Token fila: `sel = id_nom#id_tabla`.
 

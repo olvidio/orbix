@@ -8,6 +8,7 @@ use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\encargossacd\helpers\EncargossacdPayload;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\web\Posicion;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Muestra las ausencias de un SACD.
@@ -31,7 +32,7 @@ $Qid_nom = EncargossacdPostInput::postInt('id_nom');
 $Qfiltro_sacd = EncargossacdPostInput::postInt('filtro_sacd');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#ficha',
     $Qid_nom > 0 ? ['id_nom' => $Qid_nom] : [],
     ListNavSupport::buildReturnParametrosFromPost(),

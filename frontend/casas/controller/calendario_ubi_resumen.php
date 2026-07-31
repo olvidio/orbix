@@ -3,6 +3,7 @@
 use frontend\actividades\helpers\ActividadesPermSupport;
 use frontend\casas\helpers\CasasPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Pantalla `calendario_ubi_resumen`: estudio económico y de ocupación
@@ -35,7 +36,7 @@ $Qinc_t = (int)filter_input(INPUT_POST, 'inc_t');
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $Qid_ubi > 0 ? ['id_ubi' => $Qid_ubi] : [],
     ListNavSupport::buildReturnParametrosFromPost(),

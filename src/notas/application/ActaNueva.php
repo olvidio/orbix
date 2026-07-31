@@ -15,6 +15,7 @@ final class ActaNueva
     public function __construct(
         private readonly ActaDlRepositoryInterface $actaDlRepository,
         private readonly ActaTribunalSync $actaTribunalSync,
+        private readonly ActaDlGuard $actaDlGuard,
     ) {
     }
 
@@ -24,6 +25,10 @@ final class ActaNueva
     public function execute(array $input): string
     {
         $acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta');
+        $actaNum = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta_num');
+        if ($actaNum !== '' && preg_match('/^\d+\/\d{2}$/', $actaNum) === 1) {
+            $acta = ConfigGlobal::mi_delef() . ' ' . $actaNum;
+        }
         $aSel = (array)($input['sel'] ?? []);
         if ($aSel !== []) {
             $sel0 = $aSel[0];
@@ -34,7 +39,7 @@ final class ActaNueva
         }
 
         $miDele = ConfigGlobal::mi_delef();
-        $err = ActaDlGuard::ensureOwnership($acta, $miDele, 'nueva');
+        $err = $this->actaDlGuard->ensureOwnership($acta, $miDele, 'nueva');
         if ($err !== '') {
             return $err;
         }

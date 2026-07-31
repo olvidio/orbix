@@ -6,6 +6,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Formulario de busqueda de personas.
@@ -35,7 +36,7 @@ $Qapellido2 = (string)filter_input(INPUT_POST, 'apellido2');
 $Qcentro = (string)filter_input(INPUT_POST, 'centro');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::buildPersonasQueReturnParametros([

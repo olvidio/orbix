@@ -12,13 +12,14 @@ use frontend\cambios\helpers\CambiosPayload;
 use frontend\cambios\helpers\CambiosPermSupport;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\PostRequest;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
 use frontend\shared\web\Lista;
-use src\cambios\domain\value_objects\AvisoTipoId;
-use src\shared\config\ConfigGlobal;
+
+const AVISO_TIPO_LISTA = 1;
 
 if (!defined('ORBIX_INDEX_EMBED')) {
     require_once 'frontend/shared/FrontBootstrap.php';
@@ -42,16 +43,16 @@ if ($is_admin) {
     $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
     $Qaviso_tipo = (int)filter_input(INPUT_POST, 'aviso_tipo');
     if ($Qrefresh && $Qid_usuario === 0 && isset($prevState['id_usuario'])) {
-        $Qid_usuario = (int)$prevState['id_usuario'];
-        $Qaviso_tipo = (int)($prevState['aviso_tipo'] ?? 0);
+        $Qid_usuario = PayloadCoercion::int($prevState['id_usuario']);
+        $Qaviso_tipo = PayloadCoercion::int($prevState['aviso_tipo'] ?? 0);
     } elseif (
         defined('ORBIX_INDEX_EMBED')
         && !$Qrefresh
         && $Qid_usuario === 0
         && $Qaviso_tipo === 0
     ) {
-        $Qid_usuario = ConfigGlobal::mi_id_usuario();
-        $Qaviso_tipo = AvisoTipoId::TIPO_LISTA;
+        $Qid_usuario = OrbixRuntime::miIdUsuario();
+        $Qaviso_tipo = AVISO_TIPO_LISTA;
     }
 } else {
     $Qid_usuario = 0;
@@ -67,7 +68,7 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros([
     'aviso_tipo' => $Qaviso_tipo,
 ], $Qid_sel, $Qscroll_id);
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,

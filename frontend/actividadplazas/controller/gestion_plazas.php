@@ -2,6 +2,7 @@
 
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Pantalla principal del modulo `actividadplazas`.
@@ -34,7 +35,7 @@ ListNavSupport::restoreSelectionFromStackPost();
 
 $navState = ListNavSupport::buildReturnParametrosFromPost();
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,

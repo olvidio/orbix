@@ -22,7 +22,7 @@ $Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSu
 
 $navState = ListNavSupport::mergeSelectionIntoReturnParametros([], $Qid_sel, $Qscroll_id);
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,
@@ -30,10 +30,11 @@ $oPosicion->nav()->enter(
 ListNavSupport::syncNavStateAt($oPosicion, 1, []);
 
 
-$data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/role_lista'));
+$data = UsuariosPayload::postData(PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/usuarios/role_lista')));
 $lista = UsuariosPayload::listaFromPayload($data);
-$a_valores = UsuariosPayload::listaApplyNav($lista['valores'], $Qid_sel, $Qscroll_id);
-$permiso = \frontend\shared\helpers\PayloadCoercion::string($data['permiso'] ?? '');
+$idSelStr = is_array($Qid_sel) ? PayloadCoercion::string($Qid_sel[0] ?? '') : PayloadCoercion::string($Qid_sel);
+$a_valores = UsuariosPayload::listaApplyNav($lista['valores'], $idSelStr, PayloadCoercion::string($Qscroll_id));
+$permiso = PayloadCoercion::string($data['permiso'] ?? '');
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('roles_lista');

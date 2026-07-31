@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "ubis"
 flujos: 36
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - ubis
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Calendario Periodos
 
@@ -22,7 +22,8 @@ Elimina un periodo de calendario CDC identificado por id_item.
 ### Donde Entrar
 
 - Calendario Periodos (frontend/ubis/controller/calendario_periodos.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos
 
 ### Tareas Habituales
 
@@ -56,8 +57,9 @@ Carga los campos del formulario de edición de un periodo de calendario existent
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Calendario Periodos Form Periodo (frontend/ubis/controller/calendario_periodos_form_periodo.php)
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos
 
 ### Tareas Habituales
 
@@ -82,8 +84,9 @@ Devuelve todos los periodos de calendario de una casa ordenados por fecha inicio
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Calendario Periodos Get (frontend/ubis/controller/calendario_periodos_get.php)
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos
 
 ### Tareas Habituales
 
@@ -108,8 +111,9 @@ Lista los periodos de una casa en un año con detección de solapes.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Calendario Periodos Get2 (frontend/ubis/controller/calendario_periodos_get2.php)
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos
 
 ### Tareas Habituales
 
@@ -134,8 +138,9 @@ Precarga el formulario de alta de periodo con fecha siguiente y sfsv del último
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Calendario Periodos Nuevo (frontend/ubis/controller/calendario_periodos_nuevo.php)
+- **Legacy:** adl > Nuevo Calendario > Definir periodos
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Definir periodos
 
 ### Tareas Habituales
 
@@ -160,8 +165,9 @@ Devuelve opciones de casas filtradas para desplegables compartidos del frontend.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -187,7 +193,8 @@ Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plaza
 ### Donde Entrar
 
 - Centros Que (frontend/ubis/controller/centros_que.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -215,8 +222,9 @@ Carga datos del formulario modal de tipo de labor de un centro DL.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Centros Form Labor (frontend/ubis/controller/centros_form_labor.php)
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -241,8 +249,9 @@ Carga datos del formulario modal de números (buzón, pi, cartas) de un centro D
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Centros Form Num (frontend/ubis/controller/centros_form_num.php)
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -267,8 +276,9 @@ Carga datos del formulario modal de plazas y sede de un centro DL.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Centros Form Plazas (frontend/ubis/controller/centros_form_plazas.php)
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -293,8 +303,9 @@ Lista todos los centros DL activos con su tipo de centro y tipo de labor.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Centros Get Labor (frontend/ubis/controller/centros_get_labor.php)
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -319,8 +330,9 @@ Lista centros DL activos con sus datos numéricos de buzón, pi y cartas.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Centros Get Num (frontend/ubis/controller/centros_get_num.php)
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -345,8 +357,9 @@ Lista centros DL activos con plazas, habitaciones individuales y flag sede.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Centros Get Plazas (frontend/ubis/controller/centros_get_plazas.php)
+- **Legacy:** scdl > direcciones > modificar centros
+- **Pills2:** scdl > direcciones > modificar centros
 
 ### Tareas Habituales
 
@@ -371,8 +384,9 @@ Devuelve opciones de centros filtradas para desplegables compartidos del fronten
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -397,8 +411,9 @@ Devuelve delegaciones destino disponibles para el traslado de ubis.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Delegacion Que (frontend/ubis/controller/delegacion_que.php)
+- **Legacy:** scdl > direcciones > listados
+- **Pills2:** Calendario > centros y casas > listados
 
 ### Tareas Habituales
 
@@ -423,8 +438,9 @@ Lista delegaciones de una región STGR para desplegables dependientes.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -449,8 +465,9 @@ Crea o modifica una dirección y su relación con el ubi (principal, propietario
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Direccion Update (frontend/ubis/controller/direccion_update.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -480,8 +497,9 @@ Asocia una dirección existente a un ubi sin marcarla como propietaria.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Direcciones Asignar (frontend/ubis/controller/direcciones_asignar.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -506,8 +524,9 @@ Carga la ficha de edición de direcciones de un ubi, con navegación entre varia
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Direcciones Editar (frontend/ubis/controller/direcciones_editar.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -532,8 +551,9 @@ Prepara el formulario de búsqueda de direcciones existentes para asignar a un u
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Direcciones Que (frontend/ubis/controller/direcciones_que.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -558,8 +578,9 @@ Desvincula una dirección del ubi según el índice en la lista CSV de ids.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Direcciones Quitar (frontend/ubis/controller/direcciones_quitar.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -584,8 +605,9 @@ Busca direcciones por cp/ciudad/país y muestra tabla para asignar al ubi.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Direcciones Tabla (frontend/ubis/controller/direcciones_tabla.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -610,8 +632,9 @@ Construye la ficha resumen de un ubi con dirección, telecomunicaciones y objeto
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Home Ubis (frontend/ubis/controller/home_ubis.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -636,8 +659,9 @@ Lista centros y casas filtrados por delegación/exterior y tipo, con teléfonos 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- List Ctr (frontend/ubis/controller/list_ctr.php)
+- **Legacy:** scdl > direcciones > listados
+- **Pills2:** Calendario > centros y casas > listados
 
 ### Tareas Habituales
 
@@ -662,8 +686,9 @@ Lista centros tipo s de la delegación con el número de sacerdotes asignados en
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Lista Ctrs (frontend/ubis/controller/lista_ctrs.php)
+- **Legacy:** vsg > buscar > lista ctr i nº s
+- **Pills2:** vsg > buscar > lista ctr i nº s
 
 ### Tareas Habituales
 
@@ -688,8 +713,9 @@ Elimina una o más telecomunicaciones del ubi por claves primarias codificadas.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -721,8 +747,9 @@ Devuelve descripciones de telecomunicación dependientes del tipo seleccionado.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Teleco Desc Lista Ajax (frontend/ubis/controller/teleco_desc_lista_ajax.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -750,8 +777,9 @@ Carga el formulario de alta/edición de una telecomunicación de un ubi.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Teleco Editar (frontend/ubis/controller/teleco_editar.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -776,8 +804,9 @@ Lista las telecomunicaciones de un centro o casa con botones según permisos.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Teleco Tabla (frontend/ubis/controller/teleco_tabla.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -802,8 +831,9 @@ Traslada centros y casas seleccionados a otra delegación destino.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Trasladar Ubis (frontend/ubis/controller/trasladar_ubis.php)
+- **Legacy:** scdl > direcciones > listados
+- **Pills2:** Calendario > centros y casas > listados
 
 ### Tareas Habituales
 
@@ -828,8 +858,11 @@ Elimina un ubi (centro o casa) del repositorio correspondiente a obj_pau.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Ubis Eliminar (frontend/ubis/controller/ubis_eliminar.php)
+- Ubis Lista (frontend/ubis/controller/ubis_lista.php)
+- Ubis Update (frontend/ubis/controller/ubis_update.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -869,8 +902,9 @@ Devuelve opciones de desplegables para el formulario de búsqueda de ubis.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Ubis Buscar (frontend/ubis/controller/ubis_buscar.php)
+- **Legacy:** scdl > direcciones > buscar
+- **Pills2:** scdl > direcciones > buscar
 
 ### Tareas Habituales
 
@@ -895,8 +929,9 @@ Devuelve desplegables dependientes para el formulario de edición de ubi.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Ubis Editar (frontend/ubis/controller/ubis_editar.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -921,8 +956,9 @@ Carga la ficha completa de un ubi para edición o alta, normalizando obj_pau de 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Ubis Editar (frontend/ubis/controller/ubis_editar.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -951,8 +987,9 @@ Ajusta obj_pau a CentroDl/CasaDl cuando la ficha pertenece a la delegación del 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -977,8 +1014,9 @@ Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla nave
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Ubis Tabla (frontend/ubis/controller/ubis_tabla.php)
+- **Legacy:** scdl > direcciones > buscar
+- **Pills2:** scdl > direcciones > buscar
 
 ### Tareas Habituales
 
@@ -995,9 +1033,8 @@ Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla nave
 - Flujo: `ubis.ubis_tabla.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/ubis_tabla.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/ubis/flujos/`.

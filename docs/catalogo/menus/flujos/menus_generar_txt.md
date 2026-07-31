@@ -21,6 +21,12 @@ Regenera fichero de cadenas traducibles de etiquetas de menú.
 
 Menú traducciones.
 
+## Escenarios
+
+1. Ejecutar `/src/menus/menus_generar_txt`.
+2. Escribe `frontend/menus/view/traducir_menu.phtml` (incluye repeticiones de actividades).
+3. Si el destino no es escribible, falla con aviso.
+
 ## Endpoints Del Flujo
 
 - `/src/menus/menus_generar_txt`

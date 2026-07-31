@@ -13,6 +13,7 @@ final class ActaEliminar
     public function __construct(
         private readonly ActaDlRepositoryInterface $actaDlRepository,
         private readonly ActaTribunalSync $actaTribunalSync,
+        private readonly ActaDlGuard $actaDlGuard,
     ) {
     }
 
@@ -32,7 +33,7 @@ final class ActaEliminar
         }
 
         $miDele = ConfigGlobal::mi_delef();
-        $err = ActaDlGuard::ensureOwnership($acta, $miDele, 'eliminar');
+        $err = $this->actaDlGuard->ensureOwnership($acta, $miDele, 'eliminar');
         if ($err !== '') {
             return $err;
         }

@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "encargossacd"
-endpoints: 34
+endpoints: 39
 estado_revision: "generado"
 ---
 
@@ -197,6 +197,41 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `encargossacd.listas_exigencia_ctr_data`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/listas_exigencia_ctr_data.php`
 - Entrada: `post.ctr_igl:mixed`, `post.sf:mixed`
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/encargossacd/opciones_seccion_data`
+
+- Id: `encargossacd.opciones_seccion_data`
+- Controller: `src/encargossacd/infrastructure/ui/http/controllers/opciones_seccion_data.php`
+- Entrada: ninguna detectada.
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/encargossacd/propuestas_ajax`
+
+- Id: `encargossacd.propuestas_ajax`
+- Controller: `src/encargossacd/infrastructure/ui/http/controllers/propuestas_ajax.php`
+- Entrada: `post.que:string`, `post.filtro_ctr:integer`, `post.tipo:string`, `post.id_item:integer`, `post.id_enc:integer`, `post.id_sacd:integer`, `post.dedic_m:integer`, `post.dedic_t:integer`, `post.dedic_v:integer`
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/encargossacd/propuestas_aprobar`
+
+- Id: `encargossacd.propuestas_aprobar`
+- Controller: `src/encargossacd/infrastructure/ui/http/controllers/propuestas_aprobar.php`
+- Entrada: ninguna detectada.
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/encargossacd/propuestas_lista_enc_data`
+
+- Id: `encargossacd.propuestas_lista_enc_data`
+- Controller: `src/encargossacd/infrastructure/ui/http/controllers/propuestas_lista_enc_data.php`
+- Entrada: `post.filtro_ctr:integer`
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/encargossacd/propuestas_lista_sacd_data`
+
+- Id: `encargossacd.propuestas_lista_sacd_data`
+- Controller: `src/encargossacd/infrastructure/ui/http/controllers/propuestas_lista_sacd_data.php`
+- Entrada: `post.sel:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/encargossacd/sacd_ausencias_get_data`

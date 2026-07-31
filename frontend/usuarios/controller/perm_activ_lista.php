@@ -7,6 +7,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -18,7 +19,7 @@ $Qolvidar = (string)filter_input(INPUT_POST, 'olvidar');
 if (empty($Qolvidar)) {
     $navIdentity = $Qid_usuario > 0 ? ['id_usuario' => $Qid_usuario] : [];
     $oPosicion->nav()->enter(
-        (string) ($_SERVER['PHP_SELF'] ?? ''),
+        PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
         '#main',
         $navIdentity,
         ListNavSupport::buildReturnParametrosFromPost(),

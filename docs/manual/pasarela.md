@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "pasarela"
 flujos: 14
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - pasarela
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## fecha de activación
 
@@ -21,12 +21,12 @@ Configurar cuándo se publica/activa cada tipo de actividad en la pasarela exter
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -47,12 +47,12 @@ Cambiar el valor global de días de activación (o `upload`).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -71,12 +71,12 @@ Definir activación distinta para un tipo de actividad concreto.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -96,12 +96,12 @@ Porcentaje de contribución para quien no pernocta.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -123,12 +123,12 @@ Cambiar el porcentaje global.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -148,12 +148,12 @@ Porcentaje distinto por tipo de actividad.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -174,12 +174,12 @@ Porcentaje de contribución en reserva de plaza.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -201,12 +201,12 @@ Cambiar porcentaje global de reserva.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -226,12 +226,12 @@ Porcentaje de reserva distinto por tipo.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -252,12 +252,13 @@ Generar listado tabular con datos de actividades filtradas para sistemas externo
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- **Legacy:** dre > Pasarela > exportar actividades
+- **Pills2:** dre > Pasarela > exportar actividades; ACTIVIDADES > Pasarela > exportar actividades
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -279,12 +280,13 @@ Refrescar widget de tipo de actividad en la pantalla exportar.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- **Legacy:** dre > Pasarela > exportar actividades
+- **Pills2:** dre > Pasarela > exportar actividades; ACTIVIDADES > Pasarela > exportar actividades
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -303,12 +305,12 @@ Asignar nombre exportado distinto al tipo genérico.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -328,12 +330,12 @@ Guardar o borrar un nombre concreto.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -353,12 +355,12 @@ Mostrar etiqueta legible del tipo al editar excepciones.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- 
+- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -369,9 +371,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `pasarela.tipo_activ_txt.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/pasarela/flujos/tipo_activ_txt.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/pasarela/flujos/`.

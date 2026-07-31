@@ -30,11 +30,11 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 - Menu Mover -> `flujos/menu_mover.md`
 - Menus Burger Layout -> `flujos/menus_burger_layout.md`
 - Menus Exportar -> `flujos/menus_exportar.md`
-- Menus Exportar Ref A Ficheros -> `flujos/menus_exportar_ref_a_ficheros.md`
+- Menús a/desde ficheros SQL -> `flujos/menus_exportar_ref_a_ficheros.md`
 - Menus Generar Txt -> `flujos/menus_generar_txt.md`
 - Menus Get Page -> `flujos/menus_get_page.md`
 - Menus Importar -> `flujos/menus_importar.md`
-- Menus Importar De Ficheros A Ref -> `flujos/menus_importar_de_ficheros_a_ref.md`
+- Restaurar menús ref→DL -> `flujos/menus_importar_de_ficheros_a_ref.md`
 - Menus Legacy Layout Items -> `flujos/menus_legacy_layout_items.md`
 
 ## Pantallas Disponibles
@@ -43,6 +43,6 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 - Grupmenu Lista -> `pantallas/grupmenu_lista.md`
 - Menus Exportar Form -> `pantallas/menus_exportar_form.md`
 - Menus Get -> `pantallas/menus_get.md`
-- Menus Importar De Ficheros A Ref -> `pantallas/menus_importar_de_ficheros_a_ref.md`
+- Restaurar menús ref→DL -> `pantallas/menus_importar_de_ficheros_a_ref.md`
 - Menus Importar Form -> `pantallas/menus_importar_form.md`
 - Menus Que -> `pantallas/menus_que.md`

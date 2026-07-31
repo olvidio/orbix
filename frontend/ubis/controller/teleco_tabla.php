@@ -8,6 +8,7 @@ use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -24,7 +25,7 @@ $navState = ListNavSupport::mergeSelectionForRecordar(
     ListNavSupport::scrollIdFromPost(),
 );
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#ficha',
     $Qid_ubi > 0 ? ['id_ubi' => $Qid_ubi] : [],
     $navState,

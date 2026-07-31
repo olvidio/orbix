@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "actividadplazas"
 flujos: 9
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - actividadplazas
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Gestion Plazas
 
@@ -21,8 +21,10 @@ Ver, para un periodo y tipo de actividad, cuántas plazas tiene cada actividad y
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Gestion Plazas (frontend/actividadplazas/controller/gestion_plazas.php)
+- Plazas Balance Dl (frontend/actividadplazas/controller/plazas_balance_dl.php)
+- **Legacy:** vsm > ca > Gestión de plazas (y variantes por perfil/tipo: dagd, vsg, vest…)
+- **Pills2:** ACTIVIDADES > Gestión de plazas y peticiones > Distribución plazas ca n entre r/dl (y variantes por tipo/colectivo)
 
 ### Tareas Habituales
 
@@ -62,8 +64,9 @@ Definir (o borrar) la lista priorizada de actividades que una persona solicita c
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Peticiones Activ (frontend/actividadplazas/controller/peticiones_activ.php)
+- Sin entrada de menú en el índice: se abre desde la selección de una persona (colectivos n / a / agd),
+- no directamente desde un menú.
 
 ### Tareas Habituales
 
@@ -103,8 +106,9 @@ Consultar y preparar la edición de las peticiones de plaza de una persona: ver 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Peticiones Activ (frontend/actividadplazas/controller/peticiones_activ.php)
+- Sin entrada de menú en el índice: se abre desde la selección de una persona (colectivos n / a / agd),
+- no directamente desde un menú.
 
 ### Tareas Habituales
 
@@ -137,7 +141,8 @@ Ejecutar el proceso masivo que convierte las primeras peticiones de plaza (orden
 ### Donde Entrar
 
 - Incorporar Peticion (frontend/actividadplazas/controller/incorporar_peticion.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** vsm > ca > Incorporar 1ª petición (y variantes por perfil/tipo: dagd, crt…)
+- **Pills2:** ACTIVIDADES > Gestión de plazas y peticiones > Incorporar 1ª petición > ca n (y variantes por tipo/colectivo)
 
 ### Tareas Habituales
 
@@ -169,8 +174,10 @@ Comparar, para un tipo de actividad, cuántas plazas concedidas y libres tiene c
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Plazas Balance Dl (frontend/actividadplazas/controller/plazas_balance_dl.php)
+- Sin entrada de menú en el índice: fragmento invocado desde **Balance de plazas** (`plazas_balance_que`):
+- **Legacy:** vsm > ca > Balance de plazas (y variantes por perfil/tipo: dagd, vsg…)
+- **Pills2:** ACTIVIDADES > Gestión de plazas y peticiones > Balance plazas ca n entre r/dl (y variantes por tipo/colectivo)
 
 ### Tareas Habituales
 
@@ -203,8 +210,9 @@ Acceder al balance de plazas entre delegaciones, elegir con qué dl comparar la 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Plazas Balance Que (frontend/actividadplazas/controller/plazas_balance_que.php)
+- **Legacy:** vsm > ca > Balance de plazas (y variantes por perfil/tipo: dagd, vsg…)
+- **Pills2:** ACTIVIDADES > Gestión de plazas y peticiones > Balance plazas ca n entre r/dl (y variantes por tipo/colectivo)
 
 ### Tareas Habituales
 
@@ -235,8 +243,9 @@ Desde el resumen de plazas de una actividad, indicar cuántas plazas ceder a otr
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Resumen Plazas (frontend/actividadplazas/controller/resumen_plazas.php)
+- Sin entrada de menú en el índice: se ejecuta desde el resumen de plazas de una actividad (menú
+- «Plazas» de la actividad), no directamente desde un menú.
 
 ### Tareas Habituales
 
@@ -269,8 +278,8 @@ Al editar la asistencia de una persona en una actividad (o viceversa), elegir qu
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Sin entrada de menú en el índice: se usa desde formularios de **asistentes**, no desde un menú de plazas.
 
 ### Tareas Habituales
 
@@ -302,8 +311,9 @@ Ver el estado completo de plazas de una actividad (por dl y totales), comprobar 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Resumen Plazas (frontend/actividadplazas/controller/resumen_plazas.php)
+- Sin entrada de menú en el índice: se abre desde una actividad concreta (menú «Plazas» de la
+- actividad), no directamente desde un menú.
 
 ### Tareas Habituales
 
@@ -327,9 +337,8 @@ Ver el estado completo de plazas de una actividad (por dl y totales), comprobar 
 - Flujo: `actividadplazas.resumen_plazas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadplazas/flujos/resumen_plazas.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/actividadplazas/flujos/`.

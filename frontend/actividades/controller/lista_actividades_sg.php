@@ -80,7 +80,7 @@ $listaSgReturn = ListNavSupport::buildListaActividadesSgReturnParametros([
 ]);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $listaSgReturn,

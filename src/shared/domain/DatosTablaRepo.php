@@ -168,7 +168,9 @@ class DatosTablaRepo
             if (is_array($primaryKey)) {
                 $val_pks = [];
                 foreach ($primaryKey as $campo => $nom) {
-                    $field = is_int($campo) ? (string) $nom : (string) $campo;
+                    $field = is_int($campo)
+                        ? (is_scalar($nom) ? (string) $nom : '')
+                        : $campo;
                     $getter = 'get' . ucfirst($field);
                     $val_pks[$field] = $oFila->$getter();
                 }
@@ -246,8 +248,15 @@ class DatosTablaRepo
                                 : []);
                         $etiquetas = [];
                         foreach ($valores as $item) {
-                            $key = is_numeric($item) ? (int) $item : $item;
-                            $etiquetas[] = $lista[$key] ?? (string) $key;
+                            if (is_int($item) || is_string($item)) {
+                                $key = $item;
+                            } elseif (is_numeric($item)) {
+                                $key = (int) $item;
+                            } else {
+                                continue;
+                            }
+                            $label = $lista[$key] ?? $key;
+                            $etiquetas[] = is_scalar($label) ? (string) $label : '';
                         }
                         $filaValores[(string) $v] = implode(', ', $etiquetas);
                         break;
@@ -445,7 +454,7 @@ class DatosTablaRepo
     {
         if (is_array($value)) {
             $normalized = array_values(array_map(
-                fn (mixed $item): int => (int) $item,
+                static fn (mixed $item): int => is_numeric($item) ? (int) $item : 0,
                 $value
             ));
             sort($normalized);

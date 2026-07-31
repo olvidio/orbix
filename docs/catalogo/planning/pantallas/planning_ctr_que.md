@@ -26,9 +26,16 @@ Al enviar carga `planning_ctr_select` por AJAX.
 
 ## Campos
 
-- `ctr`: nombre de centro (vacío = todos con checkboxes de colectivo)
+- `ctr`: nombre de centro (vacío = todos con checkboxes de colectivo; UI: por defecto todos los n)
 - `sacd`, `todos_n`, `todos_agd`, `todos_s`
 - Periodo: `year`, `periodo`, `empiezamin`, `empiezamax`
+- Hidden: `obj_pau`/`tipo` (el API `PlanningCtrSelectData` siempre usa `PersonaDl`; no los consume)
+
+## Casos particulares
+
+- Checkboxes `todos_n` / `todos_agd` / `todos_s`: en backend el último no vacío gana (mutuamente excluyentes).
+- Si `ctr` vacío y ningún checkbox → default colectivo `n`.
+- Filtro `sacd`: la API excluye sacd solo si `sacd === ''`; el radio «no» del form envía `0` (no excluye).
 
 ## Acciones
 
@@ -36,9 +43,9 @@ Al enviar carga `planning_ctr_select` por AJAX.
 
 ## Manual De Usuario
 
-Revisado contra `frontend/planning/`. Linaje `apps/planning/controller/planning_ctr_que.php`.
+Revisado contra `frontend/planning/` y `src/planning/`. Linaje `apps/planning/controller/planning_ctr_que.php`.
 
 ## Ruta de menú
 
-- **Legacy:** `dre > planning > por centro` (y equivalentes: `Calendario`, `vest`, `vsm`, …)
+- **Legacy:** `dre/Calendario/vest/vsm/… > planning > por centro` · `vsr/scdl > planning > por ctr`
 - **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning por ctr`

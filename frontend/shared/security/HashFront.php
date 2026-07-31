@@ -1080,7 +1080,7 @@ class HashFront
             $url,
             $m
         ) === 1) {
-            return ($m[1] ?? '') . $m[2] . $m[3] . ($m[4] ?? '');
+            return $m[1] . $m[2] . $m[3] . ($m[4] ?? '');
         }
 
         // Query: …/src_ajax.php?_orbix_src=/src/…[&resto]
@@ -1105,7 +1105,7 @@ class HashFront
         unset($params['_orbix_src']);
         $rest = http_build_query($params);
 
-        return ($m[1] ?? '') . $m[2] . $src . ($rest !== '' ? '?' . $rest : '');
+        return $m[1] . $m[2] . $src . ($rest !== '' ? '?' . $rest : '');
     }
 
     /**

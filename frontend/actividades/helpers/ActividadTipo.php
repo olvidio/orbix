@@ -103,24 +103,23 @@ class ActividadTipo
             $val_blanco_nom = '...';
         }
 
-        $oPerm = ActividadesPermSupport::oPerm();
         $array2 = [];
-        if ($oPerm !== null && $oPerm->have_perm_oficina('est')) {
+        if (ActividadesPermSupport::havePermOficina('est')) {
             $array2 = array_merge($array2, [1 => 'n', 3 => 'agd']);
         }
-        if ($oPerm !== null && $oPerm->have_perm_oficina('sm')) {
+        if (ActividadesPermSupport::havePermOficina('sm')) {
             $array2 = array_merge($array2, [1 => 'n']);
         }
-        if ($oPerm !== null && $oPerm->have_perm_oficina('nax')) {
+        if (ActividadesPermSupport::havePermOficina('nax')) {
             $array2 = array_merge($array2, [1 => 'nax']);
         }
-        if ($oPerm !== null && $oPerm->have_perm_oficina('agd')) {
+        if (ActividadesPermSupport::havePermOficina('agd')) {
             $array2 = array_merge($array2, [3 => 'agd']);
         }
-        if ($oPerm !== null && $oPerm->have_perm_oficina('sg')) {
+        if (ActividadesPermSupport::havePermOficina('sg')) {
             $array2 = array_merge($array2, [4 => 's', 5 => 'sg']);
         }
-        if ($oPerm !== null && $oPerm->have_perm_oficina('des')) {
+        if (ActividadesPermSupport::havePermOficina('des')) {
             if ($this->status === ActividadStatusId::ACTUAL) {
                 $array_des = $oTipoActiv->getAsistentesPosibles();
             } else {
@@ -128,10 +127,10 @@ class ActividadTipo
             }
             $array2 = array_merge($array2, $array_des);
         }
-        if ($oPerm !== null && $oPerm->have_perm_oficina('sr')) {
+        if (ActividadesPermSupport::havePermOficina('sr')) {
             $array2 = array_merge($array2, [7 => 'sr']);
         }
-        if ($oPerm !== null && $oPerm->have_perm_oficina('calendario')) { // desde la sf
+        if (ActividadesPermSupport::havePermOficina('calendario')) { // desde la sf
             $array2 = array_merge($array2, $oTipoActiv->getAsistentesPosibles());
         }
 

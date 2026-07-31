@@ -59,6 +59,10 @@ return static function ($r) {
         require $base . '/horario_sacd_update_data.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/encargossacd/opciones_seccion_data', function () use ($base) {
+        require $base . '/opciones_seccion_data.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/encargossacd/ctr_ficha_data', function () use ($base) {
         require $base . '/ctr_ficha_data.php';
     });

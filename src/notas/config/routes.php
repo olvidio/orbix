@@ -80,6 +80,18 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/acta_ver_form_data.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/notas/acta_ver_add_persona_form_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/acta_ver_add_persona_form_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/acta_ver_add_persona', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/acta_ver_add_persona.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/acta_ver_notas_listado_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/acta_ver_notas_listado_data.php';
+    });
+
     // Slice 5: Seleccion destino para copiar tessera.
     $r->addRoute(['GET', 'POST'], '/src/notas/tessera_copiar_select_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/tessera_copiar_select_data.php';

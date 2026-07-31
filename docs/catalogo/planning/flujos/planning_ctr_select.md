@@ -27,10 +27,10 @@ Ver el planning de un centro o de todos los centros (por colectivo n/agd/s) en u
 
 ### Ver calendario
 
-1. Elegir centro o checkboxes de colectivo, periodo y filtro sacd.
-2. `planning_ctr_select_data` resuelve personas y actividades agrupadas.
-3. Revisar avisos (`msg_txt`) si algún ctr no tiene personas.
-4. Exportar o consultar leyenda.
+1. Elegir centro o checkboxes de colectivo (`todos_n`/`todos_agd`/`todos_s`; último gana; default `n` si ctr vacío), periodo y filtro sacd (`sacd===''` excluye; `0` no).
+2. `planning_ctr_select_data` resuelve personas (`PersonaDl`) y actividades agrupadas; `obj_pau` del form no afecta al API.
+3. Revisar avisos (`msg_txt`) si algún ctr no tiene personas (`No encuentro este ctr` / `No encuentro personas para %s`).
+4. Exportar (`modelo=2`) o consultar leyenda.
 
 ## Endpoints Del Flujo
 
@@ -44,5 +44,5 @@ Ver el planning de un centro o de todos los centros (por colectivo n/agd/s) en u
 
 ## Ruta de menú
 
-- **Legacy:** `dre > planning > por centro`
+- **Legacy:** `dre/Calendario/… > planning > por centro` · `vsr/scdl > planning > por ctr`
 - **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning por ctr`

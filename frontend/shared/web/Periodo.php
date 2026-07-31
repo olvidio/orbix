@@ -5,7 +5,7 @@ namespace frontend\shared\web;
 use frontend\shared\helpers\FuncTablasSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\domain\value_objects\DateTimeLocal;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 /**
  * Classe que passa el periode amb texte a data inici i data fi.
@@ -41,7 +41,7 @@ class Periodo
      */
     public static function conCalendarioDesdeBackend(bool $throwOnError = false): self
     {
-        if (($_SESSION['oConfig'] ?? null) instanceof ConfigSnapshot) {
+        if (SessionConfig::isPresent()) {
             return new self();
         }
 
@@ -109,9 +109,8 @@ class Periodo
         if ($this->calendarioEscolar !== null) {
             return (int)($this->calendarioEscolar['mes_fin_stgr'] ?? 0);
         }
-        $oConfig = $_SESSION['oConfig'] ?? null;
-        if ($oConfig instanceof ConfigSnapshot) {
-            return $oConfig->getMesFinStgr();
+        if (SessionConfig::isPresent()) {
+            return SessionConfig::getMesFinStgr();
         }
         throw new \RuntimeException(_('Falta calendario escolar: use Periodo::conCalendarioDesdeBackend() o sesión oConfig.'));
     }
@@ -121,9 +120,8 @@ class Periodo
         if ($this->calendarioEscolar !== null) {
             return (int)($this->calendarioEscolar['mes_fin_crt'] ?? 0);
         }
-        $oConfig = $_SESSION['oConfig'] ?? null;
-        if ($oConfig instanceof ConfigSnapshot) {
-            return $oConfig->getMesFinCrt();
+        if (SessionConfig::isPresent()) {
+            return SessionConfig::getMesFinCrt();
         }
         throw new \RuntimeException(_('Falta calendario escolar: use Periodo::conCalendarioDesdeBackend() o sesión oConfig.'));
     }

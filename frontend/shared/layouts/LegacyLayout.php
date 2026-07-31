@@ -4,8 +4,6 @@ namespace frontend\shared\layouts;
 
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
-use src\menus\domain\PermisoMenu;
-use src\usuarios\domain\entity\Usuario;
 
 /**
  * Layout clásico (árbol UDM + barra de grupos).
@@ -40,7 +38,7 @@ class LegacyLayout implements LayoutInterface
             $parametros = $menuItem['parametros'];
             $menu_perm = $menuItem['menu_perm'];
 
-            if (!$oPermisoMenu instanceof PermisoMenu || !$oPermisoMenu->visible($menu_perm)) {
+            if (!is_object($oPermisoMenu) || !method_exists($oPermisoMenu, 'visible') || !$oPermisoMenu->visible($menu_perm)) {
                 continue;
             }
 
@@ -79,7 +77,9 @@ class LegacyLayout implements LayoutInterface
         }
         $li_submenus .= '</li>';
 
-        $usuarioLabel = $oUsuario instanceof Usuario ? $oUsuario->getUsuarioAsString() : '';
+        $usuarioLabel = (is_object($oUsuario) && method_exists($oUsuario, 'getUsuarioAsString'))
+            ? $oUsuario->getUsuarioAsString()
+            : '';
 
         if ($gm < 2) {
             $html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| " . ucfirst(_('salir')) . '</a></li>';

@@ -6,6 +6,8 @@ use src\personas\application\PersonaUpdate;
 use src\personas\application\PersonasEditarData;
 use src\personas\application\PersonasSelectData;
 use src\personas\application\services\PersonaFinderService;
+use src\personas\application\PersonaPublicar;
+use src\personas\application\PersonaPublicarFormData;
 use src\personas\application\StgrCambioData;
 use src\personas\application\StgrUpdate;
 use src\personas\application\support\PersonaRepositoryResolver;
@@ -90,6 +92,7 @@ return [
             get(PersonaDlRepositoryFactoryInterface::class),
             get(PersonaPubRepositoryInterface::class),
             get(PersonaExRepositoryInterface::class),
+            get(PersonaAllRepositoryInterface::class),
         ),
     PersonaRepositoryResolver::class => autowire(PersonaRepositoryResolver::class),
 
@@ -101,6 +104,8 @@ return [
     PersonasSelectData::class => autowire(PersonasSelectData::class),
     StgrCambioData::class => autowire(StgrCambioData::class),
     StgrUpdate::class => autowire(StgrUpdate::class),
+    PersonaPublicarFormData::class => autowire(PersonaPublicarFormData::class),
+    PersonaPublicar::class => autowire(PersonaPublicar::class),
     TrasladoFormData::class => autowire(TrasladoFormData::class),
     TrasladoUpdate::class => autowire(TrasladoUpdate::class),
 ];

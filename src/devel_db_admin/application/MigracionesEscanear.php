@@ -23,7 +23,7 @@ final class MigracionesEscanear
     }
 
     /**
-     * @return array{migraciones: array<int, array<string, mixed>>, warnings: list<string>}
+     * @return array{migraciones: array<int, array<string, mixed>>, warnings: list<string>, serie: string}
      */
     public function escanear(): array
     {

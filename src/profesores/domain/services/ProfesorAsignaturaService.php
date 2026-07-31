@@ -95,11 +95,6 @@ class ProfesorAsignaturaService
         }
         \src\shared\domain\helpers\FuncTablasSupport::usortProfesoresPorApellidos($aProfesores);
 
-        $aOpciones = [];
-        foreach ($aProfesores as $aClave) {
-            $aOpciones[$aClave['id_nom']] = $aClave['ap_nom'];
-        }
-
-        return $aOpciones;
+        return \src\shared\domain\helpers\FuncTablasSupport::profesoresOpcionesFromFilas($aProfesores);
     }
 }

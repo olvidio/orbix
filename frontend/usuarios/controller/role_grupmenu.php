@@ -22,7 +22,7 @@ if (!empty($a_sel)) {
 
 $navIdentity = $Qid_role !== '' && $Qid_role !== '0' ? ['id_role' => $Qid_role] : [];
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $navIdentity,
     ListNavSupport::buildReturnParametrosFromPost(),

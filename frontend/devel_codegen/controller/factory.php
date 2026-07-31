@@ -4,11 +4,8 @@ namespace frontend\devel_codegen\controller;
 
 use frontend\devel_codegen\helpers\DevelCodegenSupport;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\config\OrbixRuntime;
 use RuntimeException;
-use src\shared\config\ConfigGlobal;
-use src\shared\config\ServerConf;
-use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\infrastructure\GlobalPdo;
 use frontend\shared\helpers\FuncTablasSupport;
 
 /**
@@ -45,17 +42,17 @@ if ($Q_db === '') {
 }
 switch ($Q_db) {
         case "tramity":
-            $oDbl = GlobalPdo::get('oDBT');
+            $oDbl = \src\shared\infrastructure\GlobalPdo::get('oDBT');
             $oDB_txt = 'oDBT';
             $prefix = '';
             break;
         case "davical":
-            $oDbl = GlobalPdo::get('oDBDavical');
+            $oDbl = \src\shared\infrastructure\GlobalPdo::get('oDBDavical');
             $oDB_txt = 'oDBDavical';
             $prefix = '';
             break;
         case "comun":
-            $oDbl = GlobalPdo::get('oDBC');
+            $oDbl = \src\shared\infrastructure\GlobalPdo::get('oDBC');
             $oDB_txt = 'oDBC';
             $prefix = '';
             switch ($schema) {
@@ -72,7 +69,7 @@ switch ($Q_db) {
             break;
         case "sv":
         case "sf":
-            $oDbl = GlobalPdo::get('oDB');
+            $oDbl = \src\shared\infrastructure\GlobalPdo::get('oDB');
             $oDB_txt = 'oDB';
             $prefix = '';
             switch ($schema) {
@@ -91,7 +88,7 @@ switch ($Q_db) {
             }
             break;
         case "sv-e":
-            $oDbl = GlobalPdo::get('oDBE');
+            $oDbl = \src\shared\infrastructure\GlobalPdo::get('oDBE');
             $oDB_txt = 'oDBE';
             $prefix = '';
             switch ($schema) {
@@ -130,15 +127,15 @@ $grupo = !empty($Q_grupo) ? $Q_grupo : "actividades";
 $aplicacion = !empty($Q_aplicacion) ? $Q_aplicacion : "delegación";
 
 // crear el directorio legacy si no existe
-$dir_legacy = ServerConf::DIR . '/apps/' . $grupo . '/legacy';
+$dir_legacy = OrbixRuntime::dir() . '/apps/' . $grupo . '/legacy';
 if (!is_dir($dir_legacy) && !mkdir($dir_legacy, 0777, true) && !is_dir($dir_legacy)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_legacy));
 }
 
 /* rename file of class to old if exists */
 $grupo = !empty($Q_grupo) ? $Q_grupo : "actividades";
-$filename = ServerConf::DIR . '/apps/' . $grupo . '/model/entity/' . $Q_clase . '.php';
-$filenameOld = ServerConf::DIR . '/apps/' . $grupo . '/legacy/zz' . $Q_clase . 'Old.php';
+$filename = OrbixRuntime::dir() . '/apps/' . $grupo . '/model/entity/' . $Q_clase . '.php';
+$filenameOld = OrbixRuntime::dir() . '/apps/' . $grupo . '/legacy/zz' . $Q_clase . 'Old.php';
 if (file_exists($filename)) {
     rename($filename, $filenameOld);
     /* rename class if exists */
@@ -162,8 +159,8 @@ if (file_exists($filename)) {
 }
 /* rename file of gestor to old if exists */
 $gestor = "Gestor" . ucfirst($Q_clase);
-$filename = ServerConf::DIR . '/apps/' . $grupo . '/model/entity/Gestor' . $Q_clase . '.php';
-$filenameOld = ServerConf::DIR . '/apps/' . $grupo . '/legacy/zzzGestor' . $Q_clase . 'Old.php';
+$filename = OrbixRuntime::dir() . '/apps/' . $grupo . '/model/entity/Gestor' . $Q_clase . '.php';
+$filenameOld = OrbixRuntime::dir() . '/apps/' . $grupo . '/legacy/zzzGestor' . $Q_clase . 'Old.php';
 if (file_exists($filename)) {
     rename($filename, $filenameOld);
     /* rename class if exists */
@@ -706,7 +703,7 @@ foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
     $valores .= ':' . $nomcamp;
     $c++;
 }
-$oHoy = new DateTimeLocal();
+$oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
 $hoy = $oHoy->getFromLocal();
 
 //------------------------------------ CLASE ENTIDAD -----------------------------------------------
@@ -762,13 +759,13 @@ $txt_entidad .= "\n" . '}';
 // ESCRIBIR LA CLASE ---------  ENTIDAD
 
 // crear el directorio domain/entity si no existe
-$dir_entity = ServerConf::DIR . '/src/' . $grupo . '/domain/entity';
+$dir_entity = OrbixRuntime::dir() . '/src/' . $grupo . '/domain/entity';
 if (!is_dir($dir_entity)) {
     if (!mkdir($dir_entity, 0777, TRUE) && !is_dir($dir_entity)) {
         throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_entity));
     }
 }
-$filename = ServerConf::DIR . '/src/' . $grupo . '/domain/entity/' . $Q_clase . '.php';
+$filename = OrbixRuntime::dir() . '/src/' . $grupo . '/domain/entity/' . $Q_clase . '.php';
 if (!$handle = fopen($filename, 'w')) {
     echo "Cannot open file ($filename)";
     die();
@@ -1397,7 +1394,7 @@ $txt_pgRepositorio .= "\n}";
 
 /* ESCRIURE LA CLASSSE  PG REPOSITORY  --------------------------------- */
 // crear el directorio infrastructure si no existe
-$dir_infra = ServerConf::DIR . '/src/' . $grupo . '/infrastructure/persistence/postgresql';
+$dir_infra = OrbixRuntime::dir() . '/src/' . $grupo . '/infrastructure/persistence/postgresql';
 if ( !is_dir($dir_infra) && !mkdir($dir_infra, 0777, true) && !is_dir($dir_infra)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_infra));
 }
@@ -1415,13 +1412,13 @@ echo "<br>Success, wrote (somecontent) to file ($filename)";
 fclose($handle);
 /* ESCRIURE EL DIRECTORI CONTROLLERS  --------------------------------- */
 // crear el directorio infrastructure si no existe
-$dir_infra = ServerConf::DIR . '/src/' . $grupo . '/infrastructure/ui/http/controllers';
+$dir_infra = OrbixRuntime::dir() . '/src/' . $grupo . '/infrastructure/ui/http/controllers';
 if ( !is_dir($dir_infra) && !mkdir($dir_infra, 0777, true) && !is_dir($dir_infra)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_infra));
 }
 
 /* ESCRIURE LA CLASSE  REPOSITORYINTERFACE  --------------------------------- */
-$dir_contracts = ServerConf::DIR . '/src/' . $grupo . '/domain/contracts';
+$dir_contracts = OrbixRuntime::dir() . '/src/' . $grupo . '/domain/contracts';
 if (!is_dir($dir_contracts) && !mkdir($dir_contracts, 0777, true) && !is_dir($dir_contracts)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_contracts));
 }
@@ -1438,13 +1435,13 @@ if (fwrite($handle, $txt_interface) === false) {
 echo "<br>Success, wrote (somecontent) to file ($filename)";
 fclose($handle);
 /* ESCRIURE VALUE OBJECTS  --------------------------------- */
-$dir_value = ServerConf::DIR . '/src/' . $grupo . '/domain/value_objects';
+$dir_value = OrbixRuntime::dir() . '/src/' . $grupo . '/domain/value_objects';
 if (!is_dir($dir_value) && !mkdir($dir_value, 0777, true) && !is_dir($dir_value)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_value));
 }
 echo "<br>Success, create directory ($dir_value)";
 /* ESCRIURE UN FITXER D'EXEMPLE  --------------------------------- */
-$dir_domain = ServerConf::DIR . '/src/' . $grupo . '/domain';
+$dir_domain = OrbixRuntime::dir() . '/src/' . $grupo . '/domain';
 if (!is_dir($dir_domain)) {
     if (!mkdir($dir_domain, 0777, true) && !is_dir($dir_domain)) {
         throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_domain));
@@ -1464,7 +1461,7 @@ echo "<br>Success, wrote (somecontent) to file ($filename)";
 fclose($handle);
 
 /* ESCRIURE LA CLASSE  REPOSITORY  --------------------------------- */
-$dir_repositories = ServerConf::DIR . '/src/' . $grupo . '/application/repositories';
+$dir_repositories = OrbixRuntime::dir() . '/src/' . $grupo . '/application/repositories';
 if (!is_dir($dir_repositories)) {
     if (!mkdir($dir_repositories, 0777, true) && !is_dir($dir_repositories)) {
         throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_repositories));
@@ -1487,7 +1484,7 @@ fclose($handle);
 
 /* ESCRIURE UN FITXER D'EXEMPLE  --------------------------------- */
 /*
-$dir_application = ServerConf::DIR . '/src/' . $grupo . '/application';
+$dir_application = OrbixRuntime::dir() . '/src/' . $grupo . '/application';
 if (!is_dir($dir_application)) {
     if (!mkdir($dir_application, 0777, true) && !is_dir($dir_application)) {
         throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_application));
@@ -1509,7 +1506,7 @@ fclose($handle);
 
 /*AFEGIR DEPENDENCIA  --------------------------------- */
 
-$dir_config = ServerConf::DIR . '/src/' . $grupo . '/config';
+$dir_config = OrbixRuntime::dir() . '/src/' . $grupo . '/config';
 if (!is_dir($dir_config)) {
     if (!mkdir($dir_config, 0777, true) && !is_dir($dir_config)) {
         throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_config));

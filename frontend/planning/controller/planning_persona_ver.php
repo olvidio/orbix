@@ -12,6 +12,7 @@ use frontend\shared\web\Periodo;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Planning (calendario) de las actividades asignadas a un conjunto
@@ -51,7 +52,7 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros([
 ], $Qid_sel, $Qscroll_id);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['sSeleccionados' => $sSeleccionados],
     $navState,

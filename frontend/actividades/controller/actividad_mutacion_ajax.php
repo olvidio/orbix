@@ -15,6 +15,7 @@ declare(strict_types=1);
 use frontend\actividades\helpers\ActividadesMutacionSupport;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -41,7 +42,7 @@ $campos = $_POST;
 
 $data = PostRequest::getDataFromUrl($endpoints[$mod], $campos, false);
 if (!empty($data['error'])) {
-    $msg = PostRequest::stripInternalCallProvenance($data['error']);
+    $msg = PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error']));
     $msg = html_entity_decode(strip_tags($msg), ENT_QUOTES | ENT_HTML5, 'UTF-8');
     $msg = trim(preg_replace('/\s+/', ' ', $msg) ?? '');
 

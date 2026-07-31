@@ -159,7 +159,8 @@ final class PersonaUpdate
         $oPersona->setDl(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl'));
         $oPersona->setSituacion(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'situacion'));
         $oPersona->setIdioma_preferido(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'idioma_preferido'));
-        $oPersona->setNivel_stgr(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'nivel_stgr'));
+        // Desplegable con blanco: vacío → inputInt=0 → null (no hay nivel 0).
+        $oPersona->setNivel_stgr(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'nivel_stgr') ?: null);
         $oPersona->setTrato(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'trato'));
         $oPersona->setNom(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nom'));
         $oPersona->setApel_fam(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apel_fam'));

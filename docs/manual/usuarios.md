@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "usuarios"
 flujos: 33
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - usuarios
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## App Login
 
@@ -21,8 +21,9 @@ Autenticación app móvil con credenciales y 2FA opcional.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -50,8 +51,9 @@ Comprueba si hay sesión autenticada al arrancar la app móvil (sin credenciales
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -77,8 +79,9 @@ Comprueba si hay sesión autenticada al arrancar la app móvil (sin credenciales
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -105,8 +108,9 @@ Tras login web, redirige a configuración 2FA si el usuario no la tiene activada
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -131,8 +135,9 @@ Administración de grupos de permisos: listar, alta/edición y borrado.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Grupo Lista (frontend/usuarios/controller/grupo_lista.php)
+- **Legacy:** sistema > usuarios web > grupos
+- **Pills2:** ADMIN LOCAL > usuarios web > grupos
 
 ### Tareas Habituales
 
@@ -172,8 +177,9 @@ Devuelve el nombre de un grupo para el formulario de edición.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Grupo Form (frontend/usuarios/controller/grupo_form.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -199,7 +205,8 @@ Devuelve contactos email de usuarios regionales con permisos de oficina relevant
 ### Donde Entrar
 
 - Mails Contactos Region (frontend/usuarios/controller/mails_contactos_region.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -224,8 +231,9 @@ Gestión permisos actividad-proceso de un usuario (módulo procesos).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Perm Activ Lista (frontend/usuarios/controller/perm_activ_lista.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -265,8 +273,10 @@ Gestión permisos menú DL de un usuario desde su ficha.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Grupo Form (frontend/usuarios/controller/grupo_form.php)
+- Perm Menu Form (frontend/usuarios/controller/perm_menu_form.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -306,8 +316,9 @@ Carga formulario modal de permiso menú (nuevo o edición).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Perm Menu Form (frontend/usuarios/controller/perm_menu_form.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -332,8 +343,9 @@ Devuelve preferencias de presentación de tablas (global y SlickGrid por id_tabl
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** menú usuario > preferencias
+- **Pills2:** menú usuario > preferencias
 
 ### Tareas Habituales
 
@@ -358,8 +370,9 @@ Ajuste preferencias personales: layout, inicio, idioma, tablas y estilo.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** menú usuario > preferencias
+- **Pills2:** menú usuario > preferencias
 
 ### Tareas Habituales
 
@@ -384,8 +397,9 @@ Recuperación 2FA: genera código/link y envía mail al usuario.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -413,8 +427,9 @@ Recuperación contraseña: genera pwd temporal, marca cambio obligatorio y enví
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -445,8 +460,10 @@ Administración de roles: listar, crear/editar flags sf/sv/pau/dmz y asignar gru
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Role Form (frontend/usuarios/controller/role_form.php)
+- Role Lista (frontend/usuarios/controller/role_lista.php)
+- **Legacy:** sistema > usuarios web > lista de roles
+- **Pills2:** ADMIN LOCAL > usuarios web > lista de roles
 
 ### Tareas Habituales
 
@@ -486,8 +503,9 @@ Asocia grupmenu a rol (tokens sel `id_role#id_grupmenu`).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Role Grupmenu (frontend/usuarios/controller/role_grupmenu.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -513,8 +531,9 @@ Quita asociación grupmenu↔rol por id_item.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Role Form (frontend/usuarios/controller/role_form.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -541,8 +560,9 @@ Lista grupmenus disponibles para añadir a un rol.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Role Grupmenu (frontend/usuarios/controller/role_grupmenu.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -567,8 +587,9 @@ Carga ficha rol: datos, permiso de edición y tabla grupmenus ya asignados.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Role Form (frontend/usuarios/controller/role_form.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -594,8 +615,10 @@ Administración de usuarios web: listar, alta/edición en ficha, borrado y asign
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Usuario Form (frontend/usuarios/controller/usuario_form.php)
+- Usuario Lista (frontend/usuarios/controller/usuario_lista.php)
+- **Legacy:** sistema > usuarios web > lista usuarios
+- **Pills2:** ADMIN LOCAL > usuarios web > lista usuarios
 
 ### Tareas Habituales
 
@@ -641,8 +664,10 @@ Configuración autenticación dos factores del usuario.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Usuario Form 2fa (frontend/usuarios/controller/usuario_form_2fa.php)
+- Usuario Reset 2fa (frontend/usuarios/controller/usuario_reset_2fa.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -673,8 +698,9 @@ Estado 2FA del usuario para formulario configuración.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Usuario Form 2fa (frontend/usuarios/controller/usuario_form_2fa.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -700,8 +726,9 @@ Valida código TOTP contra secret provisional (paso previo a activar 2FA).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Usuario Form 2fa (frontend/usuarios/controller/usuario_form_2fa.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -727,8 +754,9 @@ Ayuda acceso login: email ofuscado del usuario y contacto admin regional.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -755,8 +783,10 @@ Valida fortaleza de contraseña (JsonResponse directo, no envelope ContestarJson
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Usuario Form (frontend/usuarios/controller/usuario_form.php)
+- Usuario Form Pwd (frontend/usuarios/controller/usuario_form_pwd.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -781,8 +811,9 @@ Asocia grupo permisos a usuario (ctx HashB `usuario_grupo_add`).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Usuario Form (frontend/usuarios/controller/usuario_form.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -808,8 +839,9 @@ Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Usuario Form (frontend/usuarios/controller/usuario_form.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -835,8 +867,9 @@ Lista grupos ya asignados al usuario con acción quitar.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Usuario Grupo Del Lst (frontend/usuarios/controller/usuario_grupo_del_lst.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -861,8 +894,9 @@ Lista grupos disponibles para asignar al usuario (id ~ ^5, excluye ya asignados)
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Usuario Grupo Lst (frontend/usuarios/controller/usuario_grupo_lst.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -887,8 +921,9 @@ Actualiza email del usuario (preferencias o admin).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** menú usuario > preferencias
+- **Pills2:** menú usuario > preferencias
 
 ### Tareas Habituales
 
@@ -914,8 +949,9 @@ Cambia contraseña tras validar fortaleza; limpia flag cambio_password.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Usuario Form Pwd (frontend/usuarios/controller/usuario_form_pwd.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -941,8 +977,12 @@ Resumen usuario para cabecera ficha (grupos, login, email).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Usuario Form (frontend/usuarios/controller/usuario_form.php)
+- Usuario Form 2fa (frontend/usuarios/controller/usuario_form_2fa.php)
+- Usuario Form Mail (frontend/usuarios/controller/usuario_form_mail.php)
+- Usuario Form Pwd (frontend/usuarios/controller/usuario_form_pwd.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -968,8 +1008,9 @@ Carga datos iniciales de la pantalla preferencias.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Preferencias (frontend/usuarios/controller/preferencias.php)
+- **Legacy:** menú usuario > preferencias
+- **Pills2:** menú usuario > preferencias
 
 ### Tareas Habituales
 
@@ -986,9 +1027,8 @@ Carga datos iniciales de la pantalla preferencias.
 - Flujo: `usuarios.usuario_preferencias.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_preferencias.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/usuarios/flujos/`.

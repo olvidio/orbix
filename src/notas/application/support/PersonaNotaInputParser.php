@@ -4,22 +4,18 @@ namespace src\notas\application\support;
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
-use src\notas\application\PlanEstudiosDePersona;
 use src\asignaturas\domain\value_objects\NivelId;
+use src\notas\application\PlanEstudiosDePersona;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\TipoActa;
+use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
  * Convierte un array de entrada (`$_POST`) en un objeto `PersonaNota`
  * listo para alimentar los use cases `PersonaNotaNueva`, `PersonaNotaEditar`
  * y `PersonaNotaEliminar`.
- *
- * Encapsula la logica historica del antiguo `update_1011.php`: inputs
- * via checkbox con formato `id_nivel#id_asignatura#tipo_acta`,
- * normalizacion de `tipo_acta` y `epoca`, resolucion de asignatura si
- * `id_asignatura === 1`, etc.
  */
 final class PersonaNotaInputParser
 {
@@ -27,6 +23,7 @@ final class PersonaNotaInputParser
     public function __construct(
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
         private readonly PlanEstudiosDePersona $planEstudiosDePersona,
+        private readonly SiglaActaPermitida $actaPersonaFormListas,
     ) {
     }
     /**
@@ -77,7 +74,7 @@ final class PersonaNotaInputParser
         }
 
         $id_situacion = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_situacion');
-        $acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta');
+        $acta = $this->resolveActa($input, $tipo_acta);
         $f_acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_acta');
         $preceptor = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'preceptor');
         $id_preceptor = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_preceptor');
@@ -107,5 +104,49 @@ final class PersonaNotaInputParser
         $oPersonaNota->setNotaMaxVo($nota_max);
 
         return $oPersonaNota;
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    private function resolveActa(array $input, int $tipoActa): string
+    {
+        $acta = trim(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta'));
+        $actaNum = trim(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta_num'));
+        $actaSigla = trim(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta_sigla'));
+        $certDl = trim(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta_cert_dl'));
+        $certNum = trim(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta_cert_num'));
+
+        if ($tipoActa === TipoActa::FORMATO_CERTIFICADO) {
+            if ($acta !== '') {
+                return $acta;
+            }
+            if ($certDl === '') {
+                return $certNum;
+            }
+
+            return $certNum !== '' ? $certDl . ' ' . $certNum : $certDl;
+        }
+
+        $sigla = $actaSigla !== '' ? $actaSigla : ConfigGlobal::mi_delef();
+
+        if ($acta === '' && $actaNum !== '') {
+            if (preg_match('/^\d+\/\d{2}$/', $actaNum) !== 1) {
+                throw new \RuntimeException(
+                    _('El número de acta debe tener el formato num/aa (ej. 12/26).')
+                );
+            }
+            $acta = $sigla . ' ' . $actaNum;
+        }
+
+        if ($acta !== '' && !$this->actaPersonaFormListas->siglaPermitidaEnActa(
+            ActaPrefijosDeEsquema::prefijoDeActa($acta)
+        )) {
+            throw new \RuntimeException(
+                _('Para actas de otra delegación o región use el formato certificado.')
+            );
+        }
+
+        return $acta;
     }
 }

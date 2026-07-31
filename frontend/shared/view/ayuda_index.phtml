@@ -4,6 +4,7 @@
  * @var int $pruebas
  * @var string $webPublic
  * @var array{href: string, full_url: string, parametros: string} $enlaceManual
+ * @var array{href: string, full_url: string, parametros: string} $enlacePreguntar
  * @var array{href: string, full_url: string, parametros: string} $enlaceTraducciones
  * @var string $hashParamsRegiones
  */
@@ -36,18 +37,30 @@ require __DIR__ . '/regiones_en_orbix.phtml';
 ?>
 
 <br>
+<h1 class="titulo"><?= _('Documentación') ?></h1>
+<br>
+<h2 class="subtitulo">
+    <a class="link nohref" href="<?= htmlspecialchars($enlaceManual['href'], ENT_QUOTES, 'UTF-8') ?>"
+       onclick="return fnjs_ayuda_ir(<?= json_encode($enlaceManual['full_url']) ?>, <?= json_encode($enlaceManual['parametros']) ?>, <?= json_encode($enlaceManual['href']) ?>);">
+        <?= _('Manual de usuario (índice por módulo)') ?>
+    </a>
+</h2>
+<p class="comentario"><?= _('Listado de manuales instalados en el servidor (`docs/manual`).') ?></p>
+<h2 class="subtitulo">
+    <a class="link nohref" href="<?= htmlspecialchars($enlacePreguntar['href'], ENT_QUOTES, 'UTF-8') ?>"
+       onclick="return fnjs_ayuda_ir(<?= json_encode($enlacePreguntar['full_url']) ?>, <?= json_encode($enlacePreguntar['parametros']) ?>, <?= json_encode($enlacePreguntar['href']) ?>);">
+        <?= _('Preguntar a la documentación') ?>
+    </a>
+</h2>
+<p class="comentario"><?= _('Busca en manuales y fichas de ayuda locales. No requiere internet ni Ollama.') ?></p>
+
+<br>
 <h1 class="titulo"><?= _('Tutoriales') ?></h1>
 <br>
 <h2 class="subtitulo"><a href="#uso_general">1. <?= _('Uso en general') ?></a></h2>
 <h2 class="subtitulo"><a href="#gestion_de_ca">2. <?= _('Gestión de ca') ?></a></h2>
 <h2 class="subtitulo"><a href="#gestion_de_personas">3. <?= _('Gestión de personas') ?></a></h2>
 <h2 class="subtitulo"><a href="#gestion_de_ctr">4. <?= _('Gestión de centros') ?></a></h2>
-<h2 class="subtitulo">
-    <a class="link nohref" href="<?= htmlspecialchars($enlaceManual['href'], ENT_QUOTES, 'UTF-8') ?>"
-       onclick="return fnjs_ayuda_ir(<?= json_encode($enlaceManual['full_url']) ?>, <?= json_encode($enlaceManual['parametros']) ?>, <?= json_encode($enlaceManual['href']) ?>);">
-        <?= _('Manual de usuario (por módulo)') ?>
-    </a>
-</h2>
 <h2 class="subtitulo">
     <a class="link nohref" href="<?= htmlspecialchars($enlaceTraducciones['href'], ENT_QUOTES, 'UTF-8') ?>"
        onclick="return fnjs_ayuda_ir(<?= json_encode($enlaceTraducciones['full_url']) ?>, <?= json_encode($enlaceTraducciones['parametros']) ?>, <?= json_encode($enlaceTraducciones['href']) ?>);">

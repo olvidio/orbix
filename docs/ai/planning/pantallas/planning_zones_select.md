@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Cuadrícula de actividades por zona SACD en el trimestre elegido. Fragmento AJAX desde `planning_zones_que`.
+Cuadrícula de actividades por zona SACD en el trimestre/mes elegido. Fragmento AJAX desde `planning_zones_que`.
 
 ## Uso En Ayuda
 

@@ -70,6 +70,37 @@ Reglas:
   - Sin lógica de negocio compleja.
 - Cualquier uso de `core\...`, `web\...`, PDO o globals debe quedar aquí.
 
+### Persistencia PG: fechas y JSON/jsonb
+Columnas de BD tipadas como `date` / `time` / `timestamp` / `timestamptz` / `json` / `jsonb` deben tratarse de forma **uniforme** en repos `Pg*` (código nuevo o tocado).
+
+#### Fechas / time / timestamp — `ConverterDate`
+Clase: `src\shared\infrastructure\persistence\ConverterDate` (delega en `PgTimestamp`).
+
+- **Lectura:** `(new ConverterDate($type, $valor))->fromPg()` en **todos** los caminos que hidratan fila → entidad (`get*`, `datosById`, etc.).
+- **Escritura:** pasar converters en `toArrayForDatabase([...])` con `(new ConverterDate($type, $v))->toPg()`; **no** confiar en el fallback de `Hydratable` (`DateTimeInterface` → `Y-m-d H:i:s`), que es incorrecto para columnas `date` / `time`.
+- **Mismo `$type` en lectura y escritura**, alineado con la columna:
+
+  | Columna PG | `$type` | `fromPg` → | `toPg` → |
+  |---|---|---|---|
+  | `date` | `'date'` | `DateTimeLocal` | `Y-m-d` |
+  | `time` | `'time'` | `TimeLocal` | `H:i:s` |
+  | `timestamp` / `timestamptz` | `'timestamp'` | `DateTimeLocal` | `Y-m-d H:i:s.uP` |
+
+- **Evitar** `'datetime'` y `'timestamptz'` como `$type`: `fromPg` los acepta en parte, pero `toPg` solo implementa `timestamp` / `date` / `time` (los demás dejan `null`). Usar `'timestamp'` para ambas direcciones.
+- **Claves del array de converters = nombre exacto de la propiedad** (un typo como `f_nommbramiento` hace que el converter no se aplique y caiga el fallback).
+- **Prohibido** al mapear filas o bind de INSERT/UPDATE de esas columnas: `new DateTime` / `strtotime` / `date()` / `format(...)` manual. Preferir `ConverterDate`.
+- **OK fuera de hidratar/persistir columna:** formato local de UI, `to_char` / intervalos en SQL, filtros WHERE que ya usan `ConverterDate` o `DateTimeLocal::getIso()` para comparar `date`.
+- Precedente: `f_nacimiento` / `f_situacion` / `f_inc` (personas), `f_ini` / `h_ini` (actividades / encargos), `timestamp_cambio`, `t_anotado`, `sended`.
+
+#### JSON/jsonb — `ConverterJson`
+- Leer (`fromPg`) y escribir (`toPg`) con `src\shared\infrastructure\persistence\ConverterJson`.
+- Helpers de dominio que encapsulan una columna (p. ej. `PersonaPublicacion` para `publicado_para`) pueden wrappear `ConverterJson`; la lógica de negocio opera sobre el mapa/array ya decodificado.
+- **Prohibido** para persistencia de columnas json/jsonb: `json_encode` / `json_decode` sueltos. Precedente: `cedidas`, `json_certificados`, `json_valor`, `json_fases_*`, `publicado_para`.
+- **No aplica** a JSON de HTTP/UI (`ContestarJson`, vistas, sesión/filtros).
+
+#### Hidratación en repositorio
+Al mapear PDO → entidad/array, convertir fechas y json/jsonb **en el mismo bloque**. La entidad recibe tipos PHP (`DateTimeLocal` / `TimeLocal` / array / `null`), no el string crudo de PG.
+
 ### Config
 - `dependencies.php`: mapear interfaces de dominio a implementaciones de `infrastructure`.
 - `routes.php`: declarar rutas hacia controladores existentes. No dejar rutas huérfanas.
@@ -103,6 +134,8 @@ Reglas:
 - [ ] Si se añaden descargas GET de binarios desde `src/` pensadas para `window.open` o enlaces directos, ¿usan **`SignedDownloadToken`** + `ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET` y no exponen id sin `tk`?
 - [ ] ¿Ningún archivo nuevo en `src/application/` o `src/domain/` importa `web\Hash` para navegación UI?
 - [ ] ¿Los endpoints AJAX de desplegables devuelven `opciones` como array de pares `[value, label]` (no mapa) y el JS usa el helper compartido `fnjs_construir_desplegable`?
+- [ ] ¿Columnas `date`/`time`/`timestamp` leídas con `ConverterDate::fromPg` y escritas con `toPg` (mismo `$type`; converters en `toArrayForDatabase`; sin fallback Hydratable ni `format` manual)?
+- [ ] ¿Columnas `json`/`jsonb` vía `ConverterJson` (no `json_encode`/`json_decode` sueltos para persistencia)?
 
 ## Scripts y herramientas offline
 

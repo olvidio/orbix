@@ -139,9 +139,10 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
     }
 
     /**
-     * En la tabla padre `e_notas`, PostgreSQL devuelve por herencia también
-     * `e_notas_otra_region_stgr`. Esas filas se consultan con su repositorio
-     * dedicado; aquí solo interesan las hijas `e_notas_dl`.
+     * En la tabla padre `e_notas` PostgreSQL agrega por herencia `e_notas_dl` y
+     * `e_notas_otra_region_stgr`. Modelo B: ambas cuentan para el expediente
+     * (actas en DL + certificados sin acta pareja / pendientes de repatriar).
+     * Solo se omiten placeholders «falta certificado».
      */
     protected function filtroExcluirOtraRegionStgr(string $nomTabla): string
     {
@@ -149,7 +150,7 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
             return '';
         }
 
-        return "(tableoid::regclass::text NOT LIKE '%e_notas_otra_region_stgr')";
+        return '(NOT (id_situacion = 13 AND COALESCE(tipo_acta, 1) = 2))';
     }
 
     /**

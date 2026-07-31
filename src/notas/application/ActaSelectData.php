@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace src\notas\application;
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\application\support\ActaPrefijosDeEsquema;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaExRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
@@ -23,6 +24,7 @@ final class ActaSelectData
         private readonly ActaDlRepositoryInterface $actaDlRepository,
         private readonly ActaExRepositoryInterface $actaExRepository,
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly ActaPrefijosDeEsquema $actaPrefijosDeEsquema,
     ) {
     }
     /**
@@ -64,7 +66,11 @@ final class ActaSelectData
                     $aWhere['acta'] = $Qacta_dl;
                     $repoActas = $this->actaRepository;
                 } else {
-                    $aWhere['acta'] = empty($matches[3]) ? "$mi_dele " . $matches[1] . '/' . date('y') : "$mi_dele $Qacta";
+                    $soloNumero = empty($matches[3]);
+                    $patron = $this->actaPrefijosDeEsquema->patronBusquedaPorNumero($Qacta, $soloNumero);
+                    $aWhere['acta'] = $patron !== ''
+                        ? $patron
+                        : (empty($matches[3]) ? "$mi_dele " . $matches[1] . '/' . date('y') : "$mi_dele $Qacta");
                     $repoActas = $this->actaDlRepository;
                 }
                 $cActas = $repoActas->getActas($aWhere, $aOperador);

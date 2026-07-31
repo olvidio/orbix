@@ -7,21 +7,22 @@ capacidad: "notas.acta_ver.gestionar"
 pantallas_principales: []
 fragmentos: ["notas.pantalla.acta_ver"]
 acciones: ["ver_formulario"]
-endpoints: ["/src/notas/acta_ver_form_data"]
+endpoints: ["/src/notas/acta_ver_form_data", "/src/notas/acta_ver_notas_listado_data", "/src/notas/acta_ver_add_persona_form_data", "/src/notas/acta_ver_add_persona", "/src/notas/acta_nueva", "/src/notas/acta_modificar"]
 estado_revision: "revisado"
 ---
 
 # Flujo - Gestionar Acta Ver
 
-Propuesta generada automaticamente desde la capacidad `notas.acta_ver.gestionar` y sus pantallas relacionadas.
+Ver/editar cabecera de acta; en apertura desde listado, ver alumnos del acta y (si hay permiso) añadir nota.
 
 ## Objetivo De Usuario
 
-Ver y editar cabecera de acta, tribunal, PDF y vínculo a actividad CA.
+Consultar o modificar la cabecera del acta (asignatura, fechas, libro, tribunal, PDF) y, cuando se abre desde el listado de actas, ver las notas ya grabadas y añadir un alumno.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+- Desde `acta_select` (listado) → fragmento `acta_ver` **standalone**.
+- Desde actividad de estudios (`actividadestudios/acta_notas`) → mismo fragmento **embebido** (sin listado/alta de alumno en esta pantalla).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,46 +30,49 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ver Formulario
+### Ver / editar cabecera
 
-Pasos propuestos:
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
+1. Abrir acta desde el listado o desde la actividad.
+2. Cargar cabecera (`acta_ver_form_data`).
+3. Guardar alta (`acta_nueva`) o cambios (`acta_modificar`).
 
-Endpoints asociados:
-- `/src/notas/acta_ver_form_data`
+### Listado de notas (solo standalone)
 
-## Campos Y Acciones Detectadas En Pantalla
+1. Con acta existente (no modo nueva) y asignatura válida, la UI pide `acta_ver_notas_listado_data`.
+2. Se muestra tabla id/nombre/nota/situación; avisos si hay notas sin acceso al nombre.
 
-Campos:
-- `form.acta_pdf`
-- `form.search`
-- `html.acta`
-- `html.acta_pdf`
-- `html.examinadores[]`
-- `html.id_asignatura`
-- `html.refresh`
+### Añadir alumno (solo standalone + permiso escritura + sin PDF)
 
-Acciones JavaScript:
-- `fnjs_add_examinador`
-- `fnjs_autocomplete_exam`
-- `fnjs_cmb_acta`
-- `fnjs_eliminar_pdf`
-- `fnjs_enviar_formulario`
-- `fnjs_guardar_acta`
-- `fnjs_nueva_convocatoria`
-- `fnjs_upload_pdf`
+1. Pedir `acta_ver_add_persona_form_data` (desplegable de candidatos).
+2. Elegir persona, nota y máximo; enviar `acta_ver_add_persona`.
+3. Recargar listado / mensaje de esquema de escritura.
+
+## Casos particulares
+
+- Embebido en actividad (`notas`/`Qnotas` no vacío): no listado ni alta.
+- Acta firmada (PDF): cabecera readonly; no alta.
+- `permiso !== 3` o ámbito rstgr: no formulario de alta.
+- Candidatos: DL + publicados para mi DL; excluye Repaso y quien ya tiene nota en la asignatura.
 
 ## Endpoints Del Flujo
 
 - `/src/notas/acta_ver_form_data`
+- `/src/notas/acta_ver_notas_listado_data`
+- `/src/notas/acta_ver_add_persona_form_data`
+- `/src/notas/acta_ver_add_persona`
+- `/src/notas/acta_nueva`
+- `/src/notas/acta_modificar`
 
 ## Errores Conocidos
 
-No se han documentado errores en la capacidad.
+- `Faltan acta o persona`
+- `No se encuentra el acta`
+- `El acta está firmada y no se puede modificar`
+- `El acta no tiene asignatura`
+- `Falta el acta`
+- Aviso listado: `existe una nota de la que no se tiene acceso al nombre (id_nom = %s)`
 
 ## Ruta de menú
 
-- **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
-- **Pills2:** sin entrada de menú en el índice (fragmento/dossier)
+- **Legacy:** sin entrada de menú en el índice (fragmento desde listado ESTUDIOS > Actas)
+- **Pills2:** sin entrada de menú en el índice (fragmento desde listado ESTUDIOS > Actas)

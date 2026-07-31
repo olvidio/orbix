@@ -97,7 +97,7 @@ final class MenusBurgerLayoutDataUseCase
             }
 
             $indexedNodes[$pathKey] = [
-                'name' => $itemObject->getMenu(),
+                'name' => _((string) ($itemObject->getMenu() ?? '')),
                 'submenu' => [],
                 'onClick' => $onClick,
             ];
@@ -135,7 +135,8 @@ final class MenusBurgerLayoutDataUseCase
         $finalMenuConfig = [];
         foreach ($groupedRootNodes as $groupKey => $rootNodesForGroup) {
             if (!empty($listaGrupMenu[$groupKey])) {
-                $groupName = $listaGrupMenu[$groupKey];
+                // Misma traducción que en el HTML de grupos (data-grupo / setActiveGroup).
+                $groupName = _((string) $listaGrupMenu[$groupKey]);
                 $finalMenuConfig[$groupName] = $rootNodesForGroup;
             }
         }
@@ -187,7 +188,7 @@ final class MenusBurgerLayoutDataUseCase
             }
 
             $indexedNodes[$pathKey] = [
-                'name' => $itemObject->getMenu(),
+                'name' => _((string) ($itemObject->getMenu() ?? '')),
                 'submenu' => [],
                 'onClick' => $onClick,
             ];
@@ -226,13 +227,14 @@ final class MenusBurgerLayoutDataUseCase
         $indice_old = 0;
         foreach ($indexedNodes as $key => $node) {
             $indice = substr_count((string)$key, '_');
+            $nameEsc = htmlspecialchars((string) ($node['name'] ?? ''), ENT_QUOTES, 'UTF-8');
             if (empty($node['submenu'])) {
                 if ($indice_old > $indice) {
                     $li_submenus .= '</ul></div></li>';
                 }
-                $li_submenus .= "<li><a href='#' onclick=\"" . $node['onClick'] . '"  >' . $node['name'] . '</a></li>';
+                $li_submenus .= "<li><a href='#' onclick=\"" . $node['onClick'] . '"  >' . $nameEsc . '</a></li>';
             } else {
-                $li_submenus .= "<li><a href='#'  class=\"has-submenu\" onclick=\"\"  >" . $node['name'] . '</a>';
+                $li_submenus .= "<li><a href='#'  class=\"has-submenu\" onclick=\"\"  >" . $nameEsc . '</a>';
                 $li_submenus .= '<div class="user-dropdown"> <ul>';
             }
             $indice_old = $indice;

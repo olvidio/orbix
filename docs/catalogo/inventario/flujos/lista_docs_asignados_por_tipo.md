@@ -54,3 +54,8 @@ Acciones JavaScript:
 ## Errores Conocidos
 
 No se han documentado errores en la capacidad.
+
+## Ruta de menú
+
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)

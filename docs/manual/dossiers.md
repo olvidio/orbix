@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "dossiers"
 flujos: 5
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - dossiers
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Dossiers Lista Fichas
 
@@ -21,12 +21,13 @@ Mostrar la tabla de carpetas de dossiers disponibles para la entidad actual, con
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Lista Dossiers (frontend/dossiers/controller/dossiers_ver.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -50,12 +51,13 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Dossiers Ver (frontend/dossiers/controller/dossiers_ver.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -83,12 +85,13 @@ Consultar o modificar la definición y máscaras de permiso de un `TipoDossier` 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Perm Dossier Ver (frontend/dossiers/controller/perm_dossier_ver.php)
+- **Legacy:** sistema > perm_dossiers > ubis · sistema > perm_dossiers > personas · sistema > perm_dossiers > actividades
+- **Pills2:** ADMIN LOCAL > perm_dossiers > ubis · ADMIN LOCAL > perm_dossiers > personas · ADMIN LOCAL > perm_dossiers > actividades
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -111,12 +114,13 @@ Elegir el ámbito de tipos de dossier (personas/ubis/actividades) y abrir la edi
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Perm Dossiers (frontend/dossiers/controller/perm_dossiers.php)
+- **Legacy:** sistema > perm_dossiers > ubis · sistema > perm_dossiers > personas · sistema > perm_dossiers > actividades
+- **Pills2:** ADMIN LOCAL > perm_dossiers > ubis · ADMIN LOCAL > perm_dossiers > personas · ADMIN LOCAL > perm_dossiers > actividades
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -139,12 +143,13 @@ Persistir cambios (`tipo_dossier_guardar`) o eliminar (`tipo_dossier_eliminar`) 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sistema > perm_dossiers > ubis · sistema > perm_dossiers > personas · sistema > perm_dossiers > actividades
+- **Pills2:** ADMIN LOCAL > perm_dossiers > ubis · ADMIN LOCAL > perm_dossiers > personas · ADMIN LOCAL > perm_dossiers > actividades
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -162,9 +167,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `dossiers.tipo_dossier.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/dossiers/flujos/tipo_dossier.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/dossiers/flujos/`.

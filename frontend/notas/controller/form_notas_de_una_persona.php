@@ -29,7 +29,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -47,24 +47,31 @@ $selRaw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $a_sel = is_array($selRaw) ? $selRaw : [];
 $sel = $a_sel;
 
-$payload = PostRequest::getDataFromUrl('/src/notas/nota_persona_form_data', [
+$payload = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/notas/nota_persona_form_data', [
     'id_pau' => $Qid_pau,
     'id_asignatura_real' => (string)filter_input(INPUT_POST, 'id_asignatura_real'),
     'sel' => $sel,
     'pau' => $Qpau,
     'mod' => (string)filter_input(INPUT_POST, 'mod'),
-]);
+]));
 $datos = NotasPayload::personaFormFromPayload($payload);
-$mod = $datos['mod'];
-$id_asignatura_real = $datos['id_asignatura_real'];
+$mod = PayloadCoercion::string($datos['mod'] ?? '');
+$id_asignatura_real = PayloadCoercion::string($datos['id_asignatura_real'] ?? '');
 
 $oDesplNotas = new Desplegable();
-$oDesplNotas->setOpciones($datos['aOpcionesSituacion']);
+/** @var array<int|string, string> $aOpcionesSituacion */
+$aOpcionesSituacion = is_array($datos['aOpcionesSituacion'] ?? null) ? $datos['aOpcionesSituacion'] : [];
+$oDesplNotas->setOpciones($aOpcionesSituacion);
 $oDesplNotas->setNombre('id_situacion');
-$ns = $datos['vo']['NotaSituacion'];
-$id_situacion = $datos['id_situacion'] === '' || $datos['id_situacion'] === 0
-    ? (string)($ns['NUMERICA'] ?? 10)
-    : (string)$datos['id_situacion'];
+$voRaw = $datos['vo'] ?? [];
+$vo = is_array($voRaw) ? $voRaw : [];
+$nsRaw = $vo['NotaSituacion'] ?? [];
+/** @var array<string, int> $ns */
+$ns = is_array($nsRaw) ? $nsRaw : [];
+$id_situacion_val = $datos['id_situacion'] ?? '';
+$id_situacion = $id_situacion_val === '' || $id_situacion_val === 0
+    ? PayloadCoercion::string($ns['NUMERICA'] ?? 10)
+    : PayloadCoercion::string($id_situacion_val);
 $oDesplNotas->setOpcion_sel($id_situacion);
 
 $lista_situacion_no_acta = $datos['lista_situacion_no_acta'];
@@ -74,13 +81,17 @@ $oDesplNiveles = [];
 if ($mod === 'editar') {
     $oDesplProfesores = new Desplegable();
     $oDesplProfesores->setNombre('id_preceptor');
-    $oDesplProfesores->setOpciones($datos['profesores']);
-    $oDesplProfesores->setOpcion_sel((string)$datos['id_preceptor']);
+    /** @var array<int|string, string> $profesores */
+    $profesores = is_array($datos['profesores'] ?? null) ? $datos['profesores'] : [];
+    $oDesplProfesores->setOpciones($profesores);
+    $oDesplProfesores->setOpcion_sel(PayloadCoercion::string($datos['id_preceptor'] ?? ''));
     $oDesplProfesores->setBlanco(true);
 } else {
     $oDesplNiveles = new Desplegable();
     $oDesplNiveles->setNombre('id_nivel');
-    $oDesplNiveles->setOpciones($datos['asignaturas_faltan']);
+    /** @var array<int|string, string> $asignaturas_faltan */
+    $asignaturas_faltan = is_array($datos['asignaturas_faltan'] ?? null) ? $datos['asignaturas_faltan'] : [];
+    $oDesplNiveles->setOpciones($asignaturas_faltan);
     $oDesplNiveles->setBlanco(true);
     $oDesplNiveles->setAction('fnjs_cmb_opcional()');
 }
@@ -88,7 +99,9 @@ if ($mod === 'editar') {
 $chk_preceptor = !empty($datos['preceptor']) ? 'checked' : '';
 
 $tipo_acta = $datos['tipo_acta'];
-$ta = $datos['vo']['TipoActa'];
+$taRaw = $vo['TipoActa'] ?? [];
+/** @var array<string, int> $ta */
+$ta = is_array($taRaw) ? $taRaw : [];
 if ($tipo_acta !== '' && $tipo_acta !== 0) {
     $tipoActaInt = \frontend\shared\helpers\PayloadCoercion::int($tipo_acta);
     $chk_acta = $tipoActaInt === ($ta['FORMATO_ACTA'] ?? 0) ? 'checked' : '';
@@ -99,7 +112,9 @@ if ($tipo_acta !== '' && $tipo_acta !== 0) {
 }
 
 $epoca = $datos['epoca'];
-$ne = $datos['vo']['NotaEpoca'];
+$neRaw = $vo['NotaEpoca'] ?? [];
+/** @var array<string, int> $ne */
+$ne = is_array($neRaw) ? $neRaw : [];
 if ($epoca !== '' && $epoca !== 0) {
     $epocaInt = \frontend\shared\helpers\PayloadCoercion::int($epoca);
     $chk_epoca_ca = $epocaInt === ($ne['EPOCA_CA'] ?? 0) ? 'checked' : '';
@@ -111,11 +126,13 @@ if ($epoca !== '' && $epoca !== 0) {
     $chk_epoca_otro = '';
 }
 
-$helpers = $datos['helpers'];
+$helpersRaw = $datos['helpers'] ?? [];
+/** @var array{op_genericas_json: string, condicion_js: string} $helpers */
+$helpers = is_array($helpersRaw) ? $helpersRaw : ['op_genericas_json' => '', 'condicion_js' => ''];
 
 $oHash = new HashFront();
 $campos_chk = '!preceptor!epoca!tipo_acta';
-$camposForm = 'preceptor!nota_num!nota_max!id_situacion!acta!tipo_acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
+$camposForm = 'preceptor!nota_num!nota_max!id_situacion!acta!acta_sigla!acta_num!acta_cert_dl!acta_cert_num!tipo_acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
 $camposNo = 'refresh!id_preceptor!id_activ' . $campos_chk;
 $a_camposHidden = [
     'campos_chk' => $campos_chk,
@@ -160,14 +177,25 @@ $h_actividad_buscar = $oHashActivBuscar->linkSinValParams();
 $url_buscar_acta = AppUrlConfig::srcBrowserUrl('/src/notas/buscar_acta');
 $oHashBuscarActa = new HashFront();
 $oHashBuscarActa->setUrl($url_buscar_acta);
-$oHashBuscarActa->setCamposForm('acta');
+$oHashBuscarActa->setCamposForm('acta!acta_sigla');
 $h_buscar_acta = $oHashBuscarActa->linkSinValParams();
+
+$opcionesCertDl = is_array($datos['opciones_certificado_dl'] ?? null) ? $datos['opciones_certificado_dl'] : [];
+$certSel = PayloadCoercion::string($datos['acta_cert_dl_sel'] ?? '');
+if ($certSel !== '' && !array_key_exists($certSel, $opcionesCertDl)) {
+    $opcionesCertDl = [$certSel => $certSel] + $opcionesCertDl;
+}
+$oDesplCertDl = Desplegable::desdeOpciones($opcionesCertDl, 'acta_cert_dl', false);
+$oDesplCertDl->setOpcion_sel($certSel);
+
+$dlSinEsquema = is_array($datos['dl_sin_esquema'] ?? null) ? $datos['dl_sin_esquema'] : [];
+$actaSiglaSel = PayloadCoercion::string($datos['acta_sigla_sel'] ?? $datos['mi_sigla'] ?? '');
+$miSigla = PayloadCoercion::string($datos['mi_sigla'] ?? '');
 
 $url_persona_nota_nueva = AppUrlConfig::srcBrowserUrl('/src/notas/persona_nota_nueva');
 $url_persona_nota_editar = AppUrlConfig::srcBrowserUrl('/src/notas/persona_nota_editar');
 
-$oConfig = $_SESSION['oConfig'] ?? null;
-$nota_max_default = $oConfig instanceof ConfigSnapshot ? \frontend\shared\helpers\PayloadCoercion::int($oConfig->getNotaMax()) : 0;
+$nota_max_default = PayloadCoercion::int(SessionConfig::getNotaMax('0'));
 $nota_max = $datos['nota_max'] === '' || $datos['nota_max'] === 0
     ? $nota_max_default
     : \frontend\shared\helpers\PayloadCoercion::int($datos['nota_max'], $nota_max_default);
@@ -199,6 +227,12 @@ $a_campos = [
     'chk_acta' => $chk_acta,
     'chk_certificado' => $chk_certificado,
     'acta' => $datos['acta'],
+    'acta_sigla_sel' => $actaSiglaSel,
+    'acta_num' => $datos['acta_num'],
+    'acta_cert_num' => $datos['acta_cert_num'],
+    'mi_sigla' => $miSigla,
+    'dl_sin_esquema' => $dlSinEsquema,
+    'oDesplCertDl' => $oDesplCertDl,
     'f_acta' => $datos['f_acta'],
     'f_acta_iso' => $datos['f_acta_iso'],
     'chk_preceptor' => $chk_preceptor,

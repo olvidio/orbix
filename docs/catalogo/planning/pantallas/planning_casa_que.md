@@ -30,12 +30,23 @@ Al enviar navega a `planning_casa_select.php`.
 
 ## Campos
 
-- `cdc_sel` + selección manual de casas (`id_cdc_mas`, `id_cdc_num`, `sSeleccionados`)
+- `cdc_sel` + selección manual de casas (`id_cdc_mas`, `id_cdc_num`, `sSeleccionados`; `cdc_sel=9` exige casa)
 - Periodo: `year`, `periodo`, `empiezamin`, `empiezamax`
 - `sin_activ`: incluir casas sin actividad en el intervalo
 - Hidden: `propuesta_calendario` (modo calendario en estudio)
 
 Al cargar llama a `planning_casa_que_data` para filtrar el selector de casas según rol/permiso.
+
+## Casos particulares
+
+Alcance del selector vía `planning_casa_que_data`:
+
+- Rol `PAU_CDC` → `modo_casas=casa` y `filtro.id_ubi_in`
+- Permiso `des`/`vcsd` → `modo_casas=all`
+- `mi_sfsv` 1 → `sv`; 2 → `sf`
+- Resto → `all`
+
+Con `propuesta_calendario` truthy y `year=0`, el front fuerza `year = año_actual+1`.
 
 ## Acciones
 
@@ -44,12 +55,13 @@ Al cargar llama a `planning_casa_que_data` para filtrar el selector de casas seg
 
 ## Manual De Usuario
 
-Pantalla revisada contra `frontend/planning/`. Linaje `apps/planning/controller/planning_casa_que.php`.
+Pantalla revisada contra `frontend/planning/` y `src/planning/`. Linaje `apps/planning/controller/planning_casa_que.php`.
 
 ## Ruta de menú
 
 Variantes según `propuesta_calendario` en `_referencia_menus.md`:
 
-- **Legacy:** `dre > planning > por casas` (y equivalentes por oficina: `Calendario`, `adl`, `vest`, …)
-- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning calendario actual`
-- Con `propuesta_calendario=1`: `ACTIVIDADES > Herramientas de calendario > Planning calendario en estudio`
+- **Legacy (actual):** `dre/Calendario/scdl/… > planning > por casas` · `adl > Gestión casas > Planing Casas`
+- **Pills2 (actual):** `ACTIVIDADES > Herramientas de calendario > Planning calendario actual` · `CASAS Y CTR > Gestión casas > Planing Casas`
+- **Legacy (propuesta `propuesta_calendario=1`):** `adl|Calendario|dre > Nuevo Calendario > nuevo planing`
+- **Pills2 (propuesta):** `ACTIVIDADES > Herramientas de calendario > Planning calendario en estudio`

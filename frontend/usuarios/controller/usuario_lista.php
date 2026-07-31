@@ -8,6 +8,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -27,20 +28,21 @@ $filterState = [
 ];
 $navState = ListNavSupport::mergeSelectionIntoReturnParametros($filterState, $Qid_sel, $Qscroll_id);
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,
 );
 ListNavSupport::syncNavStateAt($oPosicion, 1, $filterState);
 
-$data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_lista', ['username' => $Qusername]));
+$data = UsuariosPayload::postData(PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/usuarios/usuario_lista', ['username' => $Qusername])));
 if (!empty($data['error'])) {
-   exit($data['error']);
+   exit(PayloadCoercion::string($data['error']));
 }
 
 $lista = UsuariosPayload::listaFromPayload($data);
-$a_valores = UsuariosPayload::listaApplyNav($lista['valores'], $Qid_sel, $Qscroll_id);
+$idSelStr = is_array($Qid_sel) ? PayloadCoercion::string($Qid_sel[0] ?? '') : PayloadCoercion::string($Qid_sel);
+$a_valores = UsuariosPayload::listaApplyNav($lista['valores'], $idSelStr, PayloadCoercion::string($Qscroll_id));
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('usuario_lista');

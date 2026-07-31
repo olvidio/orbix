@@ -34,6 +34,9 @@ public static function scrollIdFromPost(): string
     return is_scalar($raw) ? (string) $raw : '';
 }
 
+/**
+ * @return list<string>
+ */
 public static function selFromPost(): array
 {
     if (array_key_exists('sel', $_POST)) {
@@ -74,7 +77,7 @@ private static function selArrayFromRaw(mixed $raw): array
 
     $out = [];
     foreach ($raw as $item) {
-        if ($item === false) {
+        if ($item === false || !is_scalar($item)) {
             continue;
         }
         $s = (string) $item;
@@ -86,6 +89,9 @@ private static function selArrayFromRaw(mixed $raw): array
     return $out;
 }
 
+/**
+ * @return string|list<string>
+ */
 public static function idSelForLista(mixed $raw): string|array
 {
     if (is_array($raw)) {
@@ -115,11 +121,17 @@ public static function idSelForLista(mixed $raw): string|array
     return '';
 }
 
+/**
+ * @param string|list<string> $sel
+ */
 public static function idSelIsEmpty(string|array $sel): bool
 {
     return $sel === '' || $sel === [];
 }
 
+/**
+ * @return array<int|string, array<string, mixed>>|null
+ */
 public static function sessionPosition(): ?array
 {
     $stack = self::navStackSessionEntries();
@@ -139,6 +151,9 @@ public static function sessionPosition(): ?array
     return $position;
 }
 
+/**
+ * @return array<string, mixed>|null
+ */
 public static function sessionStackEntry(int|string $index): ?array
 {
     $position = self::sessionPosition();
@@ -149,6 +164,9 @@ public static function sessionStackEntry(int|string $index): ?array
     return $position[$index];
 }
 
+/**
+ * @return string|list<string>
+ */
 public static function normalizeIdSel(mixed $raw): string|array
 {
     $normalized = self::idSelForLista($raw);
@@ -156,6 +174,9 @@ public static function normalizeIdSel(mixed $raw): string|array
     return self::idSelIsEmpty($normalized) ? '' : $normalized;
 }
 
+/**
+ * @return string|list<string>
+ */
 public static function idSelFromPost(): string|array
 {
     // sel[] (checkbox/grid) manda sobre id_sel oculto, que puede quedar desactualizado tras cambiar fila.
@@ -204,6 +225,9 @@ public static function syncNavStateAt(Posicion $oPosicion, int $n, array $state)
     }
 }
 
+/**
+ * @param string|list<string> $idSel
+ */
 public static function persistSelectionOnListPage(Posicion $oPosicion, string|array $idSel, string $scrollId = '', bool $returningViaStack = false): void
 {
     if (self::idSelIsEmpty($idSel) && $scrollId === '') {
@@ -222,6 +246,9 @@ public static function persistSelectionOnListPage(Posicion $oPosicion, string|ar
     self::syncNavStateAt($oPosicion, $returningViaStack ? 1 : 0, $persist);
 }
 
+/**
+ * @return array<string, mixed>
+ */
 public static function buildDossierReturnParametros(): array
 {
     $parametros = [];
@@ -268,6 +295,9 @@ public static function buildDossierReturnParametros(): array
     return $parametros;
 }
 
+/**
+ * @return array<string, mixed>
+ */
 public static function buildDossiersVerStackParametros(): array
 {
     $parametros = self::buildDossierReturnParametros();
@@ -431,14 +461,12 @@ public static function stackParentIsDossiersVer(int $n = 1): bool
     return $url !== '' && str_contains($url, 'dossiers_ver.php');
 }
 
+/**
+ * @return array<string, mixed>
+ */
 public static function stackTopParametros(): array
 {
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    /** @var list<array<string, mixed>> $stack */
-    $stack = is_array($_SESSION['nav']['stack'] ?? null) ? $_SESSION['nav']['stack'] : [];
-    session_write_close();
+    $stack = self::navStackSessionEntries();
     if ($stack === []) {
         return [];
     }
@@ -448,6 +476,9 @@ public static function stackTopParametros(): array
     return is_array($state) ? $state : [];
 }
 
+/**
+ * @param array<string, mixed> $parametros
+ */
 public static function dossiersSegmentKeyFromParametros(array $parametros): string
 {
     $parts = [];
@@ -483,10 +514,13 @@ public static function dossiersSegmentChangedVsStackTop(): bool
         !== self::dossiersSegmentKeyFromParametros($stored);
 }
 
+/**
+ * @param array<string, mixed> $parametros
+ */
 public static function dossiersParametrosIsAsistentesSegment(array $parametros): bool
 {
     $queSel = isset($parametros['queSel']) && is_scalar($parametros['queSel']) ? (string) $parametros['queSel'] : '';
-    $idDossier = isset($parametros['id_dossier']) ? (int) $parametros['id_dossier'] : 0;
+    $idDossier = PayloadCoercion::int($parametros['id_dossier'] ?? 0);
 
     return $queSel === 'asis' || $idDossier === 3101;
 }
@@ -513,7 +547,7 @@ public static function persistAsistentesDossierSnapshot(Posicion $oPosicion): vo
         return;
     }
     $queSel = isset($parametros['queSel']) && is_scalar($parametros['queSel']) ? (string) $parametros['queSel'] : '';
-    $idDossier = isset($parametros['id_dossier']) ? (int) $parametros['id_dossier'] : 0;
+    $idDossier = PayloadCoercion::int($parametros['id_dossier'] ?? 0);
     if ($queSel !== 'asis' && $idDossier !== 3101) {
         return;
     }
@@ -539,8 +573,8 @@ public static function stackHasAsistentesDossierForActiv(int $idActiv): bool
         }
         $parametros = is_array($entry['state'] ?? null) ? $entry['state'] : [];
         $queSel = isset($parametros['queSel']) && is_scalar($parametros['queSel']) ? (string) $parametros['queSel'] : '';
-        $idDossier = isset($parametros['id_dossier']) ? (int) $parametros['id_dossier'] : 0;
-        $idPau = isset($parametros['id_pau']) ? (int) $parametros['id_pau'] : 0;
+        $idDossier = PayloadCoercion::int($parametros['id_dossier'] ?? 0);
+        $idPau = PayloadCoercion::int($parametros['id_pau'] ?? 0);
         if (($queSel === 'asis' || $idDossier === 3101) && $idPau === $idActiv) {
             return true;
         }
@@ -571,6 +605,9 @@ public static function stackTopIsDossiersVer(): bool
     return self::stackParentIsDossiersVer(0);
 }
 
+/**
+ * @return array{url: string, bloque: mixed, parametros: array<string, mixed>}|null
+ */
 public static function findBestDossiersStackEntry(): ?array
 {
     $best = null;
@@ -602,6 +639,9 @@ public static function findBestDossiersStackKey(): int
     return -1;
 }
 
+/**
+ * @return list<string>
+ */
 public static function dossierChildFormUrlFragments(): array
 {
     return [
@@ -633,6 +673,9 @@ public static function isDossierShellOrChildUrl(string $url): bool
     return str_contains($url, 'dossiers_ver.php') || self::isDossierChildFormUrl($url);
 }
 
+/**
+ * @return list<string>
+ */
 public static function actividadSelectChildUrlFragments(): array
 {
     return [
@@ -816,21 +859,35 @@ public static function persistDossierReturnToPosicion(Posicion $oPosicion, int $
     // recordar() en dossiers_ver ya guardó el POST completo; no reemplazar por un subconjunto.
 }
 
+/**
+ * @param array<string, mixed> $extra
+ * @return array<string, mixed>
+ */
 public static function mergeDossierReturn(array $extra): array
 {
     return array_merge(self::buildDossierReturnParametros(), $extra);
 }
 
+/**
+ * @return list<string>
+ */
 public static function metaHashPostKeys(): array
 {
     return ['h', 'hh', 'hhc', 'horig', 'hhorig', 'hc', 'hchk', 'hno', 'hnov'];
 }
 
+/**
+ * @return list<string>
+ */
 public static function stackEphemeralPostKeys(): array
 {
     return ['stack', 'Gstack'];
 }
 
+/**
+ * @param array<string, mixed>|null $override
+ * @return array<string, mixed>
+ */
 public static function buildReturnParametrosFromPost(?array $override = null): array
 {
     $parametros = $_POST;
@@ -844,6 +901,11 @@ public static function buildReturnParametrosFromPost(?array $override = null): a
     return $parametros;
 }
 
+/**
+ * @param array<string, mixed> $parametros
+ * @param string|list<string>|null $idSel
+ * @return array<string, mixed>
+ */
 public static function mergeSelectionIntoReturnParametros(array $parametros, string|array|null $idSel = '', string $scrollId = ''): array
 {
     $idSel = $idSel ?? '';
@@ -857,6 +919,10 @@ public static function mergeSelectionIntoReturnParametros(array $parametros, str
     return $parametros;
 }
 
+/**
+ * @param array<string, mixed> $parametros
+ * @return array<string, mixed>
+ */
 public static function mergeSelectionForRecordar(array $parametros, mixed $idSel = null, mixed $scrollId = ''): array
 {
     $normalizedIdSel = $idSel === null ? '' : self::normalizeIdSel($idSel);
@@ -868,6 +934,9 @@ public static function mergeSelectionForRecordar(array $parametros, mixed $idSel
     );
 }
 
+/**
+ * @param array<string, mixed> $parametros
+ */
 public static function persistRecordarEntry(Posicion $oPosicion, array $parametros): void
 {
     self::persistCleanReturnToPosicion($oPosicion, $parametros, 0);
@@ -893,6 +962,9 @@ public static function bootActividadSelectChildRecordar(Posicion $oPosicion, int
     unset($oPosicion, $parar);
 }
 
+/**
+ * @param array<string, mixed> $extra
+ */
 public static function persistActividadSelectChildEntry(Posicion $oPosicion, array $extra = []): void
 {
     self::enterActividadSelectChildNav($oPosicion, '#main', $extra);
@@ -941,7 +1013,7 @@ public static function enterActividadSelectChildNav(Posicion $oPosicion, string 
     }
 
     $oPosicion->nav()->enter(
-        (string) ($_SERVER['PHP_SELF'] ?? ''),
+        PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
         $bloque,
         $idActiv > 0 ? ['id_activ' => $idActiv] : [],
         $navState,
@@ -965,6 +1037,9 @@ public static function bootChildFromListRecordar(Posicion $oPosicion, int $parar
     unset($oPosicion, $parar);
 }
 
+/**
+ * @param array<string, mixed> $parametros
+ */
 public static function persistParentIfUrl(Posicion $oPosicion, array $parametros, string $urlMustContain): void
 {
     if ($parametros === []) {
@@ -977,6 +1052,10 @@ public static function persistParentIfUrl(Posicion $oPosicion, array $parametros
     self::syncNavStateAt($oPosicion, 1, $parametros);
 }
 
+/**
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
 public static function buildActividadQueReturnParametros(array $state): array
 {
     $parametros = [];
@@ -1003,6 +1082,10 @@ public static function buildActividadQueReturnParametros(array $state): array
     return self::mergeSelectionIntoReturnParametros($parametros, $idSel === '' ? null : $idSel, $scrollId);
 }
 
+/**
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
 public static function buildActividadSelectReturnParametros(array $state): array
 {
     $parametros = self::buildActividadQueReturnParametros($state);
@@ -1020,6 +1103,10 @@ public static function buildActividadSelectReturnParametros(array $state): array
     return $parametros;
 }
 
+/**
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
 public static function buildListaActivQueReturnParametros(array $state): array
 {
     $parametros = [];
@@ -1039,6 +1126,10 @@ public static function buildListaActivQueReturnParametros(array $state): array
     return $parametros;
 }
 
+/**
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
 public static function buildListaActivReturnParametros(array $state): array
 {
     $parametros = [];
@@ -1064,6 +1155,10 @@ public static function buildListaActivReturnParametros(array $state): array
     return self::mergeSelectionIntoReturnParametros($parametros, $idSel === '' ? null : $idSel, $scrollId);
 }
 
+/**
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
 public static function buildListaActividadesSgReturnParametros(array $state): array
 {
     $parametros = [];
@@ -1088,6 +1183,10 @@ public static function buildListaActividadesSgReturnParametros(array $state): ar
     return self::mergeSelectionIntoReturnParametros($parametros, $idSel === '' ? null : $idSel, $scrollId);
 }
 
+/**
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
 public static function buildListaSrCsvQueReturnParametros(array $state): array
 {
     $parametros = [];
@@ -1107,6 +1206,10 @@ public static function buildListaSrCsvQueReturnParametros(array $state): array
     return $parametros;
 }
 
+/**
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
 public static function buildListaSrCsvReturnParametros(array $state): array
 {
     $parametros = self::buildListaSrCsvQueReturnParametros($state);
@@ -1121,6 +1224,10 @@ public static function buildListaSrCsvReturnParametros(array $state): array
     return $parametros;
 }
 
+/**
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
 public static function buildActividadesCentroQueReturnParametros(array $state): array
 {
     $parametros = [];
@@ -1140,6 +1247,10 @@ public static function buildActividadesCentroQueReturnParametros(array $state): 
     return $parametros;
 }
 
+/**
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
 public static function buildActividadVerReturnParametros(array $state): array
 {
     $parametros = [];
@@ -1156,10 +1267,12 @@ public static function buildActividadVerReturnParametros(array $state): array
         $parametros[$key] = $val;
     }
 
+    $scrollIdRaw = $state['scroll_id'] ?? null;
+
     return self::mergeSelectionIntoReturnParametros(
         $parametros,
         self::normalizeIdSel($state['id_sel'] ?? null) ?: null,
-        is_scalar($state['scroll_id'] ?? null) ? (string) ($state['scroll_id'] ?? '') : '',
+        is_scalar($scrollIdRaw) ? (string) $scrollIdRaw : '',
     );
 }
 
@@ -1182,6 +1295,9 @@ public static function syncListaActivParent(Posicion $oPosicion, array $state): 
     }
 }
 
+/**
+ * @param list<string> $paramKeys
+ */
 public static function repersistStackEntryFromGstack(?int $gstackOverride = null, array $paramKeys = []): void
 {
     unset($gstackOverride, $paramKeys);
@@ -1197,6 +1313,9 @@ public static function rewriteStackEntryUrl(int $gstack, string $requiredSuffix)
     unset($gstack, $requiredSuffix);
 }
 
+/**
+ * @param array<string, mixed> $parametros
+ */
 public static function persistActividadQueParent(Posicion $oPosicion, array $parametros): void
 {
     self::persistParentIfUrl($oPosicion, $parametros, 'actividad_que.php');
@@ -1204,12 +1323,7 @@ public static function persistActividadQueParent(Posicion $oPosicion, array $par
 
 public static function stackEntryUrl(int $n = 0): string
 {
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    /** @var list<array<string, mixed>> $stack */
-    $stack = is_array($_SESSION['nav']['stack'] ?? null) ? $_SESSION['nav']['stack'] : [];
-    session_write_close();
+    $stack = self::navStackSessionEntries();
     $idx = count($stack) - 1 - $n;
     if ($idx < 0 || !isset($stack[$idx])) {
         return '';
@@ -1219,6 +1333,9 @@ public static function stackEntryUrl(int $n = 0): string
     return is_string($url) ? $url : '';
 }
 
+/**
+ * @return array<string, mixed>
+ */
 public static function buildDossiersVerFromActividadSelectPost(): array
 {
     $parametros = [];
@@ -1256,11 +1373,17 @@ public static function bootDossiersFromActividadSelect(Posicion $oPosicion, int 
     unset($oPosicion, $parar);
 }
 
+/**
+ * @param array<string, mixed> $parametros
+ */
 public static function persistCleanReturnToPosicion(Posicion $oPosicion, array $parametros, int $n = 0): void
 {
     self::syncNavStateAt($oPosicion, $n, $parametros);
 }
 
+/**
+ * @return array{id_sel: string|list<string>, scroll_id: string}
+ */
 public static function restoreSelectionFromStackPost(): array
 {
     $idSel = self::idSelFromPost();
@@ -1271,6 +1394,10 @@ public static function restoreSelectionFromStackPost(): array
     ];
 }
 
+/**
+ * @param array<string, mixed> $state
+ * @return array<string, mixed>
+ */
 public static function buildPersonasQueReturnParametros(array $state): array
 {
     $parametros = [];
@@ -1300,6 +1427,9 @@ public static function buildPersonasQueReturnParametros(array $state): array
     return self::mergeSelectionIntoReturnParametros($parametros, $idSel === '' ? null : $idSel, $scrollId);
 }
 
+/**
+ * @return array<string, mixed>
+ */
 public static function buildPersonasSelectReturnParametros(): array
 {
     $parametros = [];
@@ -1325,6 +1455,9 @@ public static function buildPersonasSelectReturnParametros(): array
     return $parametros;
 }
 
+/**
+ * @return array<string, mixed>
+ */
 public static function buildActaSelectReturnParametros(): array
 {
     $parametros = [];
@@ -1346,6 +1479,9 @@ public static function buildActaSelectReturnParametros(): array
     return $parametros;
 }
 
+/**
+ * @return array<string, mixed>
+ */
 public static function buildTesseraReturnParametros(): array
 {
     $parametros = self::buildPersonasSelectReturnParametros();
@@ -1366,6 +1502,9 @@ public static function buildTesseraReturnParametros(): array
     return $parametros;
 }
 
+/**
+ * @return array<string, mixed>
+ */
 public static function buildCertificadoImprimirParentReturnParametros(): array
 {
     $parametros = array_merge(
@@ -1384,6 +1523,9 @@ public static function buildCertificadoImprimirParentReturnParametros(): array
     return $parametros;
 }
 
+/**
+ * @return array<string, mixed>
+ */
 public static function buildE43ParentReturnParametros(): array
 {
     $parametros = self::buildDossierReturnParametros();
@@ -1399,6 +1541,9 @@ public static function buildE43ParentReturnParametros(): array
     return $parametros;
 }
 
+/**
+ * @return array<string, mixed>
+ */
 public static function buildActaNotasReturnParametros(): array
 {
     $parametros = self::buildDossierReturnParametros();
@@ -1442,6 +1587,9 @@ public static function persistActaNotasReturnToPosicion(Posicion $oPosicion, int
     self::persistCleanReturnToPosicion($oPosicion, $parametros, $n);
 }
 
+/**
+ * @return array<string, mixed>
+ */
 public static function buildActaImprimirParentReturnParametros(): array
 {
     $actaNotas = self::buildActaNotasReturnParametros();
@@ -1515,6 +1663,9 @@ public static function persistPersonasSelectReturnToPosicion(Posicion $oPosicion
     );
 }
 
+/**
+ * @param array<string, mixed> $apiPayload
+ */
 public static function applyRestoredSelectionToApiPayload(
     array &$apiPayload,
     mixed $restoredIdSelFromStack = null,
@@ -1621,7 +1772,7 @@ public static function enterDossierChildNav(Posicion $oPosicion): void
     }
 
     $oPosicion->nav()->enter(
-        (string) ($_SERVER['PHP_SELF'] ?? ''),
+        PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
         $bloque,
         self::buildDossierChildNavIdentity($state),
         $state,
@@ -1708,8 +1859,9 @@ private static function navStackSessionEntries(): array
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
     }
+    $nav = $_SESSION['nav'] ?? null;
     /** @var list<array<string, mixed>> $stack */
-    $stack = is_array($_SESSION['nav']['stack'] ?? null) ? $_SESSION['nav']['stack'] : [];
+    $stack = (is_array($nav) && is_array($nav['stack'] ?? null)) ? $nav['stack'] : [];
     session_write_close();
 
     return $stack;

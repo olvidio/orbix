@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "actividadescentro"
 flujos: 7
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - actividadescentro
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Activ Ctr Shell
 
@@ -22,8 +22,12 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -52,8 +56,12 @@ El usuario quita un centro de la lista de encargados de una actividad.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -87,8 +95,12 @@ El usuario quita un centro de la lista de encargados de una actividad.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -121,8 +133,12 @@ El usuario quita un centro de la lista de encargados de una actividad.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -155,8 +171,12 @@ El usuario quita un centro de la lista de encargados de una actividad.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -186,8 +206,12 @@ El usuario quita un centro de la lista de encargados de una actividad.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -216,8 +240,12 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de a
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
+- Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
+- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
+- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
 
@@ -239,9 +267,8 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de a
 - Flujo: `actividadescentro.lista_actividades_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadescentro/flujos/lista_actividades_ctr.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/actividadescentro/flujos/`.

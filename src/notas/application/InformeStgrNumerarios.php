@@ -31,7 +31,8 @@ final class InformeStgrNumerarios
      *
      * @return array{res: array<int|string, array{num: int|float|string, lista?: string}>,
      *               textos: array<int|string, string>,
-     *               curso_txt: string}
+     *               curso_txt: string,
+     *               avisos_html: string}
      */
     public function calcular(array $a_dl, bool $lista, string $ce_lugar): array
     {
@@ -117,6 +118,7 @@ final class InformeStgrNumerarios
             'res' => $res,
             'textos' => $textos,
             'curso_txt' => $curso_txt,
+            'avisos_html' => $Resumen->getAvisosHtml(),
         ];
     }
 

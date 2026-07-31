@@ -8,6 +8,7 @@ use frontend\profesores\helpers\ProfesoresPostInput;
 use frontend\profesores\helpers\ProfesoresUrlSigning;
 use frontend\profesores\helpers\ProfesoresPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -21,7 +22,7 @@ ListNavSupport::restoreSelectionFromStackPost();
 $navIdentity = $id_nom > 0 ? ['id_nom' => $id_nom, 'id_tabla' => $Qid_tabla] : [];
 $navState = ListNavSupport::buildReturnParametrosFromPost();
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $navIdentity,
     $navState,
@@ -33,8 +34,7 @@ $Qdepende = (string)filter_input(INPUT_POST, 'depende');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qprint = (int)filter_input(INPUT_POST, 'print');
 
-$oPerm = ProfesoresPermSupport::oPerm();
-if ($oPerm !== null && $oPerm->have_perm_oficina('est')) {
+if (ProfesoresPermSupport::havePermOficina('est')) {
     $Qpermiso = '3';
 }
 

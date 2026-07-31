@@ -1,17 +1,17 @@
 ---
 tipo: "manual_usuario"
 modulo: "encargossacd"
-flujos: 28
-estado_revision: "generado"
+flujos: 32
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - encargossacd
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Comprobaciones Ctr
 
@@ -22,8 +22,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Comprobaciones (frontend/encargossacd/controller/comprobaciones.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -54,8 +55,10 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Ctr Ficha (frontend/encargossacd/controller/ctr_ficha.php)
+- Ctr Ficha Update (frontend/encargossacd/controller/ctr_ficha_update.php)
+- **Legacy:** dre > Encargos > ficha ctr
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
 
 ### Tareas Habituales
 
@@ -95,8 +98,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Ctr Get Ficha (frontend/encargossacd/controller/ctr_get_ficha.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -129,8 +133,10 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Ctr Ficha (frontend/encargossacd/controller/ctr_ficha.php)
+- Encargo Ver (frontend/encargossacd/controller/encargo_ver.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -157,8 +163,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Encargo Horario Select (frontend/encargossacd/controller/encargo_horario_select.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -184,8 +191,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Encargo Ver (frontend/encargossacd/controller/encargo_ver.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -212,8 +220,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Encargo Select (frontend/encargossacd/controller/encargo_select.php)
+- **Legacy:** dre > Encargos > ver encargo
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
 
 ### Tareas Habituales
 
@@ -242,8 +251,10 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Encargo Select (frontend/encargossacd/controller/encargo_select.php)
+- Encargo Ver (frontend/encargossacd/controller/encargo_ver.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -285,8 +296,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Encargo Ver (frontend/encargossacd/controller/encargo_ver.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -314,8 +326,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Horario Sacd Update (frontend/encargossacd/controller/horario_sacd_update.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -344,8 +357,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Horario Sacd Ver (frontend/encargossacd/controller/horario_sacd_ver.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -371,8 +385,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Horario Update (frontend/encargossacd/controller/horario_update.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -401,8 +416,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Horario Ver (frontend/encargossacd/controller/horario_ver.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -430,8 +446,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Listas A (frontend/encargossacd/controller/listas_a.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -458,8 +475,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Listas B (frontend/encargossacd/controller/listas_b.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -486,8 +504,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Listas C (frontend/encargossacd/controller/listas_c.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -520,8 +539,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Listas Cl (frontend/encargossacd/controller/listas_cl.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -550,8 +570,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Listas Com Ctr (frontend/encargossacd/controller/listas_com_ctr.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -578,8 +599,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Listas Com Sacd (frontend/encargossacd/controller/listas_com_sacd.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -611,8 +633,11 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Listas Com Txt (frontend/encargossacd/controller/listas_com_txt.php)
+- Listas Com Txt Get (frontend/encargossacd/controller/listas_com_txt_get.php)
+- Listas Com Txt Update (frontend/encargossacd/controller/listas_com_txt_update.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -651,8 +676,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Listas D (frontend/encargossacd/controller/listas_d.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -684,8 +710,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Listas Exigencia Ctr (frontend/encargossacd/controller/listas_exigencia_ctr.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -702,6 +729,145 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 - Flujo: `encargossacd.listas_exigencia_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_exigencia_ctr.md`
 
+## Propuestas Lista
+
+### Para Que Sirve
+
+Filtrar centros, ver encargos propuestos y cambiar SACD titular/suplente/colaborador o dedicación m/t/v antes de aprobar.
+
+### Donde Entrar
+
+- Propuestas Lista (frontend/encargossacd/controller/propuestas_lista.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+### Tareas Habituales
+
+#### Obtener lista
+
+1. Carga opciones de sección (`opciones_seccion_data`).
+2. Al cambiar `filtro_ctr` o al recargar: `que=get_lista` vía FE ajax.
+3. Inyecta HTML en `#lista` o alert del mensaje de error.
+
+#### Asignar / cambiar SACD
+
+1. Click en nombre → `lista_sacd` (desplegable).
+2. Cambio en desplegable → `cmb_sacd` (alta/update/borrar colaborador vacío).
+3. Actualiza fila o cierra popup.
+
+#### Info / dedicación
+
+1. `info` o `dedicacion` abren popup HTML.
+2. Guardar horario: `dedicacion_update` y refresca lista.
+
+### Errores O Avisos Frecuentes
+
+- `Debe crear la tabla de propuestas`
+- `No se puede guardar. Vuelva a cargar la vista`
+- `Registro no encontrado`
+- `Alert cliente: «Primero debe introducir un sacd» (id_sacd == 1)`
+
+### Referencias Internas
+
+- Flujo: `encargossacd.propuestas_lista.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/encargossacd/flujos/propuestas_lista.md`
+
+## Propuestas Lista Enc
+
+### Para Que Sirve
+
+Ver el estado de las propuestas por encargos tras (o durante) la edición staging.
+
+### Donde Entrar
+
+- Propuestas Lista Enc (frontend/encargossacd/controller/propuestas_lista_enc.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+### Tareas Habituales
+
+#### Obtener datos
+
+1. FE llama `propuestas_lista_enc_data` con `filtro_ctr` (opcional).
+2. Si `error` → echo del mensaje; si no → echo de `html`.
+
+### Errores O Avisos Frecuentes
+
+- `Debe crear la tabla de propuestas`
+
+### Referencias Internas
+
+- Flujo: `encargossacd.propuestas_lista_enc.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/encargossacd/flujos/propuestas_lista_enc.md`
+
+## Propuestas Lista Sacd
+
+### Para Que Sirve
+
+Revisar/imprimir encargos propuestos de cada SACD (`sel=nagd` desde menú; API también `sssc`).
+
+### Donde Entrar
+
+- Propuestas Lista Sacd (frontend/encargossacd/controller/propuestas_lista_sacd.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
+
+### Tareas Habituales
+
+#### Obtener datos
+
+1. FE pasa `sel` a `propuestas_lista_sacd_data`.
+2. Renderiza `propuestas_lista_sacd.phtml` con `array_modo`.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Referencias Internas
+
+- Flujo: `encargossacd.propuestas_lista_sacd.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/encargossacd/flujos/propuestas_lista_sacd.md`
+
+## Propuestas Menu
+
+### Para Que Sirve
+
+Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la edición / listados de propuestas.
+
+### Donde Entrar
+
+- Propuestas Menu (frontend/encargossacd/controller/propuestas_menu.php)
+- **Legacy:** dre > Encargos > propuestas
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > propuestas
+
+### Tareas Habituales
+
+#### Crear tabla staging
+
+1. Confirm JS («Elimina la tabla…»).
+2. POST a FE `propuestas_ajax.php?que=crear_tabla` → API `propuestas_ajax`.
+3. Alert si `success !== true`.
+
+#### Aprobar propuestas
+
+1. Confirm JS (aviso de ~30 s e irreversibilidad).
+2. Carga FE `propuestas_aprobar.php` → API `propuestas_aprobar`.
+3. Muestra texto «Hecho!» en `#main`.
+
+#### Navegar a modificar / listados
+
+1. `fnjs_update_div` hacia `propuestas_lista`, `propuestas_lista_sacd` o `propuestas_lista_enc`.
+
+### Errores O Avisos Frecuentes
+
+- `No se puede crear la tabla (crear_tabla)`
+- `Fallos de aprobar: sin mensaje _() explícito en el caso de uso (pendiente)`
+
+### Referencias Internas
+
+- Flujo: `encargossacd.propuestas_menu.gestionar.flujo`
+- Fichero catalogo: `docs/catalogo/encargossacd/flujos/propuestas_menu.md`
+
 ## Sacd Ausencias
 
 ### Para Que Sirve
@@ -712,8 +878,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sacd Ausencias Update (frontend/encargossacd/controller/sacd_ausencias_update.php)
+- **Legacy:** dre > ausencias > sacd
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -744,8 +911,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sacd Ausencias Get (frontend/encargossacd/controller/sacd_ausencias_get.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -773,8 +941,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sacd Ausencias Jefe Zona (frontend/encargossacd/controller/sacd_ausencias_jefe_zona.php)
+- **Legacy:** exterior > sacd > Misas > Ausencias
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -803,8 +972,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sacd Ficha Ajax (frontend/encargossacd/controller/sacd_ficha_ajax.php)
+- **Legacy:** dre > Encargos > ficha sacd
+- **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
 
 ### Tareas Habituales
 
@@ -845,8 +1015,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Sacd Ficha Ajax (frontend/encargossacd/controller/sacd_ficha_ajax.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -873,8 +1044,9 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Encargo Ver (frontend/encargossacd/controller/encargo_ver.php)
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -891,9 +1063,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 - Flujo: `encargossacd.zonas_get_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/zonas_get_select.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/encargossacd/flujos/`.

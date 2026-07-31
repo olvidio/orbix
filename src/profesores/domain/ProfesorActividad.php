@@ -61,10 +61,7 @@ class ProfesorActividad
         }
         \src\shared\domain\helpers\FuncTablasSupport::usortProfesoresPorApellidos($aProfesoresEx);
 
-        $aOpciones = [];
-        foreach ($aProfesoresEx as $aClave) {
-            $aOpciones[$aClave['id_nom']] = $aClave['ap_nom'];
-        }
+        $aOpciones = \src\shared\domain\helpers\FuncTablasSupport::profesoresOpcionesFromFilas($aProfesoresEx);
 
         $AllOpciones = $aOpciones + ["----------"] + $aProfesoresDl;
 

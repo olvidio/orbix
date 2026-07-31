@@ -1,6 +1,7 @@
 <?php
 
 use function DI\autowire;
+use function DI\get;
 
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaExRepositoryInterface;
@@ -9,6 +10,7 @@ use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalExRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaCertificadoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
@@ -21,7 +23,10 @@ use src\notas\application\ActaNueva;
 use src\notas\application\ActaPdfEliminar;
 use src\notas\application\ActaPdfSubir;
 use src\notas\application\ActaSelectData;
+use src\notas\application\ActaVerAddPersona;
+use src\notas\application\ActaVerAddPersonaFormData;
 use src\notas\application\ActaVerFormData;
+use src\notas\application\ActaVerNotasListadoData;
 use src\notas\application\ActividadesBuscarData;
 use src\notas\application\AsigFaltanPersonasSelectTablaData;
 use src\notas\application\AsigFaltanSelectTablaData;
@@ -35,6 +40,7 @@ use src\notas\application\ComprobarNotasConstantsData;
 use src\notas\application\DatosActa;
 use src\notas\application\EditarPersonaNota;
 use src\notas\application\ExaminadoresSearchData;
+use src\notas\application\ExpedienteNotasPersona;
 use src\notas\application\InformeStgrAgregados;
 use src\notas\application\InformeStgrNumerarios;
 use src\notas\application\InformeStgrProfesores;
@@ -43,6 +49,7 @@ use src\notas\application\NotaPersonaFormData;
 use src\notas\application\NotasDeUnaPersonaData;
 use src\notas\application\PersonaNotaEditar;
 use src\notas\application\PersonaNotaEliminar;
+use src\notas\application\PersonaNotaNueva;
 use src\notas\application\PlanEstudiosDePersona;
 use src\notas\application\PosiblesOpcionalesData;
 use src\notas\application\PosiblesPreceptoresData;
@@ -56,6 +63,7 @@ use src\notas\application\TesseraVerData;
 use src\notas\application\support\ResumenFactory;
 use src\notas\application\services\ResumenTempTablesService;
 use src\notas\application\support\ActaDlGuard;
+use src\notas\application\support\ActaPrefijosDeEsquema;
 use src\notas\application\support\ActaTribunalSync;
 use src\notas\application\support\PersonaNotaInputParser;
 use src\notas\infrastructure\persistence\postgresql\PgActaDlRepository;
@@ -65,6 +73,7 @@ use src\notas\infrastructure\persistence\postgresql\PgActaTribunalDlRepository;
 use src\notas\infrastructure\persistence\postgresql\PgActaTribunalExRepository;
 use src\notas\infrastructure\persistence\postgresql\PgActaTribunalRepository;
 use src\notas\infrastructure\persistence\postgresql\PgNotaRepository;
+use src\notas\infrastructure\persistence\postgresql\PgMapaPrefijoActaEsquemaRepository;
 use src\notas\infrastructure\persistence\postgresql\PgPersonaNotaCertificadoRepository;
 use src\notas\infrastructure\persistence\postgresql\PgPersonaNotaDlRepository;
 use src\notas\infrastructure\persistence\postgresql\PgPersonaNotaOtraRegionStgrRepository;
@@ -83,6 +92,7 @@ return [
     PersonaNotaCertificadoRepositoryInterface::class => autowire(PgPersonaNotaCertificadoRepository::class),
     PersonaNotaRepositoryInterface::class => autowire(PgPersonaNotaRepository::class),
     PersonaNotaOtraRegionStgrRepositoryInterface::class => autowire(PgPersonaNotaOtraRegionStgrRepository::class),
+    MapaPrefijoActaEsquemaRepositoryInterface::class => autowire(PgMapaPrefijoActaEsquemaRepository::class),
     ActaEliminar::class => autowire(ActaEliminar::class),
     ActaImprimirPresentacionData::class => autowire(ActaImprimirPresentacionData::class),
     ActaModificar::class => autowire(ActaModificar::class),
@@ -91,6 +101,9 @@ return [
     ActaPdfSubir::class => autowire(ActaPdfSubir::class),
     ActaSelectData::class => autowire(ActaSelectData::class),
     ActaVerFormData::class => autowire(ActaVerFormData::class),
+    ActaVerAddPersonaFormData::class => autowire(ActaVerAddPersonaFormData::class),
+    ActaVerAddPersona::class => autowire(ActaVerAddPersona::class),
+    ActaVerNotasListadoData::class => autowire(ActaVerNotasListadoData::class),
     ActividadesBuscarData::class => autowire(ActividadesBuscarData::class),
     AsigFaltanPersonasSelectTablaData::class => autowire(AsigFaltanPersonasSelectTablaData::class),
     AsigFaltanSelectTablaData::class => autowire(AsigFaltanSelectTablaData::class),
@@ -103,6 +116,7 @@ return [
     ComprobarNotasConstantsData::class => autowire(ComprobarNotasConstantsData::class),
     DatosActa::class => autowire(DatosActa::class),
     ExaminadoresSearchData::class => autowire(ExaminadoresSearchData::class),
+    ExpedienteNotasPersona::class => autowire(ExpedienteNotasPersona::class),
     InformeStgrAgregados::class => autowire(InformeStgrAgregados::class),
     InformeStgrNumerarios::class => autowire(InformeStgrNumerarios::class),
     InformeStgrProfesores::class => autowire(InformeStgrProfesores::class),
@@ -125,6 +139,9 @@ return [
     ResumenTempTablesService::class => autowire(ResumenTempTablesService::class),
     ResumenFactory::class => autowire(ResumenFactory::class),
     ActaDlGuard::class => autowire(ActaDlGuard::class),
+    ActaPrefijosDeEsquema::class => autowire(ActaPrefijosDeEsquema::class),
     ActaTribunalSync::class => autowire(ActaTribunalSync::class),
     PersonaNotaInputParser::class => autowire(PersonaNotaInputParser::class),
+    \src\notas\application\support\SiglaActaPermitida::class
+        => get(\src\notas\application\support\ActaPersonaFormListas::class),
 ];

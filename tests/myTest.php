@@ -51,8 +51,15 @@ class myTest extends TestCase
         $idioma = '';
         $ordenApellidos = '';
         $id_schema = '';
-        //si existe, registro la sesión con los permisos
-        if (!isset($_SESSION['session_auth'])) {
+        // Registro la sesión con los permisos. La reconstruyo también si otro test dejó
+        // `session_auth` a medias o apuntando a otra DL: el esquema de aquí decide a qué
+        // esquema se conectan todas las PDO, y una sesión ajena hace fallar el proceso entero
+        // con errores sin relación (p. ej. «relation x_config_schema does not exist»).
+        $sessionAuthActual = $_SESSION['session_auth'] ?? null;
+        $sessionAuthDelTest = is_array($sessionAuthActual)
+            && ($sessionAuthActual['esquema'] ?? null) === $esquema
+            && isset($sessionAuthActual['username'], $sessionAuthActual['id_usuario']);
+        if (!$sessionAuthDelTest) {
             $session_auth = ['id_usuario' => $id_usuario,
                 'sfsv' => $sfsv,
                 'id_role' => $id_role,
@@ -116,6 +123,7 @@ class myTest extends TestCase
         $esquemaf = $esquema . 'f';
 
         $this->bootstrapConexionesBdTestUnaVezPorProceso($esquemav, $esquema, $esquemaf);
+        $this->asegurarMiIdSchema();
 
         // 2) Contenedor DI (si no existe ya) y exponerlo globalmente
         if (!isset($GLOBALS['container'])) {
@@ -282,6 +290,33 @@ class myTest extends TestCase
     }
 
     /**
+     * Varias tablas (p. ej. `publicv.d_asistentes_de_paso`) requieren `id_schema` NOT NULL
+     * coherente con la DL. Se rellena en cada `setUp()` porque la sesión puede haberse
+     * reconstruido después de abrir las conexiones (una vez por proceso).
+     */
+    private function asegurarMiIdSchema(): void
+    {
+        $esqSession = (string) ($_SESSION['session_auth']['esquema'] ?? '');
+        $mis = $_SESSION['session_auth']['mi_id_schema'] ?? null;
+        if ($esqSession === '' || ($mis !== '' && $mis !== null)) {
+            return;
+        }
+        $pdo = $GLOBALS['oDBPC'] ?? null;
+        if (!$pdo instanceof \PDO) {
+            return;
+        }
+        try {
+            $st = $pdo->prepare('SELECT id FROM public.db_idschema WHERE schema = :schema LIMIT 1');
+            $st->execute(['schema' => $esqSession]);
+            $idSchemaRow = $st->fetchColumn();
+            if ($idSchemaRow !== false) {
+                $_SESSION['session_auth']['mi_id_schema'] = (int) $idSchemaRow;
+            }
+        } catch (\Throwable) {
+        }
+    }
+
+    /**
      * Abre todas las PDO de integración una sola vez por proceso PHPUnit.
      */
     private function bootstrapConexionesBdTestUnaVezPorProceso(string $esquemav, string $esquema, string $esquemaf): void
@@ -297,20 +332,7 @@ class myTest extends TestCase
         $oConexion = new DBConnection($config);
         $GLOBALS['oDBPC'] = $oConexion->getPDO();
 
-        // Varias tablas (p. ej. publicv.d_asistentes_de_paso) requieren id_schema NOT NULL coherente con la DL.
-        $esqSession = (string) ($_SESSION['session_auth']['esquema'] ?? '');
-        $mis = $_SESSION['session_auth']['mi_id_schema'] ?? null;
-        if ($esqSession !== '' && ($mis === '' || $mis === null)) {
-            try {
-                $st = $GLOBALS['oDBPC']->prepare('SELECT id FROM public.db_idschema WHERE schema = :schema LIMIT 1');
-                $st->execute(['schema' => $esqSession]);
-                $idSchemaRow = $st->fetchColumn();
-                if ($idSchemaRow !== false) {
-                    $_SESSION['session_auth']['mi_id_schema'] = (int) $idSchemaRow;
-                }
-            } catch (\Throwable) {
-            }
-        }
+        $this->asegurarMiIdSchema();
 
         $config = $oConfigDB->getEsquema('resto');
         $oConexion = new DBConnection($config);

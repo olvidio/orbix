@@ -39,12 +39,7 @@ class ProfesorStgrService
         }
         \src\shared\domain\helpers\FuncTablasSupport::usortProfesoresPorApellidos($aProfesores);
 
-        $aOpciones = [];
-        foreach ($aProfesores as $aClave) {
-            $aOpciones[$aClave['id_nom']] = $aClave['ap_nom'];
-        }
-
-        return $aOpciones;
+        return \src\shared\domain\helpers\FuncTablasSupport::profesoresOpcionesFromFilas($aProfesores);
     }
 
     /**
@@ -122,11 +117,6 @@ class ProfesorStgrService
         }
         \src\shared\domain\helpers\FuncTablasSupport::usortProfesoresPorApellidos($aFilas);
 
-        $aProfesores = [];
-        foreach ($aFilas as $fila) {
-            $aProfesores[$fila['id_nom']] = $fila['ap_nom'];
-        }
-
-        return $aProfesores;
+        return \src\shared\domain\helpers\FuncTablasSupport::profesoresOpcionesFromFilas($aFilas);
     }
 }

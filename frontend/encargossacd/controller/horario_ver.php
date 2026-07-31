@@ -9,6 +9,7 @@ use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\encargossacd\helpers\EncargossacdPayload;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\web\Posicion;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Formulario horario de encargo. Datos: `/src/encargossacd/horario_ver_data`
@@ -39,7 +40,7 @@ $navState = ListNavSupport::mergeSelectionForRecordar(
     ListNavSupport::scrollIdFromPost(),
 );
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $navIdentity,
     $navState,

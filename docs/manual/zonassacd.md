@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "zonassacd"
 flujos: 5
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - zonassacd
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Zona Ctr
 
@@ -21,12 +21,15 @@ Consultar y reasignar centros (dl y sf) a zonas geográficas desde el desplegabl
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Zona Ctr (frontend/zonassacd/controller/zona_ctr.php)
+- Zona Ctr Lista Ajax (frontend/zonassacd/controller/zona_ctr_lista_ajax.php)
+- Zona Ctr Update Ajax (frontend/zonassacd/controller/zona_ctr_update_ajax.php)
+- **Legacy:** dre > zonas > zonas-ctr
+- **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-ctr
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -45,12 +48,13 @@ Endpoint legacy sin implementación; funcionalidad en zona_ctr_lista y zona_ctr_
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -69,12 +73,15 @@ Consultar y gestionar la asignación de sacerdotes (sacd) a zonas geográficas: 
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Zona Sacd (frontend/zonassacd/controller/zona_sacd.php)
+- Zona Sacd Lista Ajax (frontend/zonassacd/controller/zona_sacd_lista_ajax.php)
+- Zona Sacd Update Ajax (frontend/zonassacd/controller/zona_sacd_update_ajax.php)
+- **Legacy:** dre > zonas > zonas-sacd
+- **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-sacd
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -94,12 +101,13 @@ Endpoint legacy sin implementación; funcionalidad repartida en zona_sacd_lista,
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -119,12 +127,13 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** dre > zonas > lista sacd-zona
+- **Pills2:** ATENCIÓN SACD > Gestión de zonas > Lista sacd-zona
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -135,9 +144,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `zonassacd.zona_sacd_lista_tot.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/zonassacd/flujos/zona_sacd_lista_tot.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/zonassacd/flujos/`.

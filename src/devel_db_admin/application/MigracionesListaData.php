@@ -53,7 +53,7 @@ final class MigracionesListaData
             ],
             'a_valores' => $rows,
             'warnings' => $scan['warnings'],
-            'serie' => $scan['serie'] ?? MigracionesEscanear::serieDesdeSesion(),
+            'serie' => $scan['serie'],
         ];
     }
 

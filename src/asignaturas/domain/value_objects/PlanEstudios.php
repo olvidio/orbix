@@ -24,26 +24,22 @@ final class PlanEstudios
         foreach ($planes as $plan) {
             if (is_string($plan)) {
                 $plan = trim($plan);
-                if ($plan === '') {
+                if ($plan === '' || !ctype_digit($plan)) {
                     continue;
                 }
-                if (!ctype_digit($plan)) {
-                    continue;
-                }
-                $plan = (int) $plan;
+                $year = (int) $plan;
+            } else {
+                $year = $plan;
             }
-            if (!is_int($plan)) {
-                continue;
-            }
-            $this->validate($plan);
-            $normalized[] = $plan;
+            $this->validate($year);
+            $normalized[] = $year;
         }
         $this->values = array_values(array_unique($normalized));
     }
 
     private function validate(int $year): void
     {
-        if ($year < 1928 || $year > 2200 || $year < 1000 || $year > 9999) {
+        if ($year < 1928 || $year > 2200) {
             throw new \InvalidArgumentException('Plan de estudios inválido');
         }
         if (!in_array($year, self::VALORES_POSIBLES, true)) {

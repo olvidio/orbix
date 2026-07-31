@@ -1,5 +1,6 @@
 <?php
 
+use frontend\notas\helpers\NotasFormSupport;
 use frontend\notas\helpers\NotasPayload;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\helpers\ListNavSupport;
@@ -25,6 +26,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\web\Desplegable;
 use frontend\shared\web\Posicion;
 
 $isIncluded = isset($oPosicion) && $oPosicion instanceof Posicion;
@@ -80,7 +82,7 @@ if (!$isIncluded && $notas === '' && $Qnotas === '') {
         ListNavSupport::buildSelectionStatePatchFromPost(),
     );
     $oPosicion->nav()->enter(
-        (string) ($_SERVER['PHP_SELF'] ?? ''),
+        PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
         '#main',
         $identity,
         $navState,
@@ -95,7 +97,7 @@ if (!$isIncluded && $notas === '' && $Qnotas === '') {
     );
 }
 
-$payload = $requestPayload;
+$payload = PayloadCoercion::stringKeyedArray($requestPayload);
 $payload['scope_notas'] = $notas;
 $payload['scope_permiso'] = $permiso;
 if (isset($acta_notas_a_actas) && is_array($acta_notas_a_actas)) {
@@ -105,10 +107,10 @@ if (isset($id_activ)) {
     $payload['id_activ_scope'] = $id_activ;
 }
 if (isset($id_asignatura)) {
-    $payload['id_asignatura_scope'] = \frontend\shared\helpers\PayloadCoercion::string($id_asignatura);
+    $payload['id_asignatura_scope'] = PayloadCoercion::string($id_asignatura);
 }
 
-$d = PostRequest::getDataFromUrl('/src/notas/acta_ver_form_data', $payload);
+$d = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/notas/acta_ver_form_data', $payload));
 $form = NotasPayload::actaVerFormFromPayload($d);
 
 $notas = $form['notas'] !== '' ? $form['notas'] : $notas;
@@ -116,6 +118,8 @@ $permiso = $form['permiso'];
 $Qmod = $form['mod'] !== '' ? $form['mod'] : $Qmod;
 $acta_actual = $form['acta_actual'];
 $acta_new = $form['acta_new'];
+$acta_sigla = $form['acta_sigla'];
+$acta_new_num = $form['acta_new_num'];
 $ult_acta = $form['ult_acta'];
 $f_acta = $form['f_acta'];
 $libro = $form['libro'];
@@ -129,9 +133,13 @@ $observ = $form['observ'];
 $id_activ = $form['id_activ'];
 $id_asignatura_actual = $form['id_asignatura_actual'];
 $nombre_asignatura = $form['nombre_asignatura'];
-$examinadores = $form['examinadores'];
-$a_actas = $form['a_actas'];
-$has_pdf = $form['has_pdf'];
+$examinadoresRaw = $form['examinadores'] ?? [];
+/** @var list<string> $examinadores */
+$examinadores = is_array($examinadoresRaw) ? $examinadoresRaw : [];
+$a_actasRaw = $form['a_actas'] ?? [];
+/** @var list<string> $a_actas */
+$a_actas = is_array($a_actasRaw) ? $a_actasRaw : [];
+$has_pdf = !empty($form['has_pdf']);
 if ($form['warn_no_id_activ']) {
     echo _('no se guardará el ca/cv donde se cursó la asignatura');
 }
@@ -139,10 +147,11 @@ if ($form['warn_no_id_activ']) {
 $obj = 'notas\\model\\entity\\ActaDl';
 
 $oHashActa = new HashFront();
-$sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta!acta!name_asignatura';
+$sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta!name_asignatura';
 if ($Qmod === 'nueva' || $notas === 'nuevo') {
+    $sCamposForm .= '!acta_num';
+} else {
     $sCamposForm .= '!acta';
-    $sCamposForm .= '!f_acta';
 }
 if ($examinadores !== [] && $examinadores[0] !== '') {
     $sCamposForm .= '!examinadores';
@@ -194,7 +203,7 @@ if (!$has_pdf) {
     $url_delete = '';
 } else {
     $readonly = 'readonly';
-    $url_download = SignedDownloadToken::urlNotasActa($acta_actual);
+    $url_download = SignedDownloadToken::urlNotasActa(PayloadCoercion::string($acta_actual));
     $url_delete = $base . '/frontend/notas/controller/acta_pdf_delete.php';
 }
 $oHashActaDelete = new HashFront();
@@ -202,6 +211,76 @@ $oHashActaDelete->setArrayCamposHidden(['acta_num' => $acta_actual]);
 $h_delete = $oHashActaDelete->getParamAjax();
 
 $soy_rstgr = OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r';
+
+$puede_anadir_persona = false;
+$oDesplAddPersona = null;
+$oHashAddPersona = null;
+$nota_max_default = 10;
+$url_add_persona = AppUrlConfig::srcBrowserUrl('/src/notas/acta_ver_add_persona');
+$mostrar_notas_listado = false;
+/** @var list<array{id_nom: int, nombre: string, nota: string, situacion: string}> $notas_listado_filas */
+$notas_listado_filas = [];
+/** @var list<string> $notas_listado_avisos */
+$notas_listado_avisos = [];
+
+// Solo fuera del include de actividad (`$notas` vacío): listado + añadir alumno.
+$contexto_acta_standalone = ($notas === '' && $Qnotas === '');
+
+if (
+    $contexto_acta_standalone
+    && $Qmod !== 'nueva'
+    && $acta_actual !== ''
+    && is_numeric($id_asignatura_actual)
+    && (int) $id_asignatura_actual > 0
+) {
+    $mostrar_notas_listado = true;
+    $listadoData = PayloadCoercion::stringKeyedArray(
+        PostRequest::getDataFromUrl('/src/notas/acta_ver_notas_listado_data', ['acta' => $acta_actual]),
+    );
+    $filasRaw = $listadoData['filas'] ?? [];
+    if (is_array($filasRaw)) {
+        foreach ($filasRaw as $fila) {
+            if (!is_array($fila)) {
+                continue;
+            }
+            $notas_listado_filas[] = [
+                'id_nom' => (int) ($fila['id_nom'] ?? 0),
+                'nombre' => PayloadCoercion::string($fila['nombre'] ?? ''),
+                'nota' => PayloadCoercion::string($fila['nota'] ?? ''),
+                'situacion' => PayloadCoercion::string($fila['situacion'] ?? ''),
+            ];
+        }
+    }
+    $avisosRaw = $listadoData['avisos'] ?? [];
+    if (is_array($avisosRaw)) {
+        foreach ($avisosRaw as $aviso) {
+            if (is_string($aviso) && $aviso !== '') {
+                $notas_listado_avisos[] = $aviso;
+            }
+        }
+    }
+
+    if ($permiso === 3 && empty($readonly)) {
+        $addData = PayloadCoercion::stringKeyedArray(
+            PostRequest::getDataFromUrl('/src/notas/acta_ver_add_persona_form_data', ['acta' => $acta_actual]),
+        );
+        if (!empty($addData['puede_anadir'])) {
+            $puede_anadir_persona = true;
+            $nota_max_default = (int) ($addData['nota_max_default'] ?? 10);
+            $opcionesPersonas = NotasFormSupport::desplegableOpciones($addData['opciones_personas'] ?? []);
+            $oDesplAddPersona = new Desplegable();
+            $oDesplAddPersona->setNombre('id_nom');
+            $oDesplAddPersona->setOpciones($opcionesPersonas);
+            $oDesplAddPersona->setBlanco(true);
+
+            $oHashAddPersona = new HashFront();
+            $oHashAddPersona->setCamposForm('id_nom!nota_num!nota_max');
+            $oHashAddPersona->setArrayCamposHidden([
+                'acta' => $acta_actual,
+            ]);
+        }
+    }
+}
 
 $a_campos = ['obj' => $obj,
     'oPosicion' => $oPosicion,
@@ -212,6 +291,8 @@ $a_campos = ['obj' => $obj,
     'titulo' => $titulo,
     'acta_actual' => $acta_actual,
     'acta_new' => $acta_new,
+    'acta_sigla' => $acta_sigla,
+    'acta_new_num' => $acta_new_num,
     'ult_acta' => $ult_acta,
     'f_acta' => $f_acta,
     'libro' => $libro,
@@ -239,6 +320,14 @@ $a_campos = ['obj' => $obj,
     'url_delete' => $url_delete,
     'h_delete' => $h_delete,
     'soy_rstgr' => $soy_rstgr,
+    'puede_anadir_persona' => $puede_anadir_persona,
+    'oDesplAddPersona' => $oDesplAddPersona,
+    'oHashAddPersona' => $oHashAddPersona,
+    'nota_max_default' => $nota_max_default,
+    'url_add_persona' => $url_add_persona,
+    'mostrar_notas_listado' => $mostrar_notas_listado,
+    'notas_listado_filas' => $notas_listado_filas,
+    'notas_listado_avisos' => $notas_listado_avisos,
 ];
 
 $oView = new ViewNewPhtml('frontend\notas\controller');

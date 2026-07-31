@@ -2,15 +2,16 @@
 
 namespace src\personas\infrastructure\persistence\postgresql;
 
-use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\ConverterDate;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
+use src\personas\domain\PersonaPublicacion;
 use src\personas\domain\entity\PersonaAgd;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaN;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalListsTrait;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\ConverterDate;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\postgresql\Set;
 
 /**
  * Clase base abstracta para repositorios de PersonaDl y subtipos
@@ -106,6 +107,7 @@ abstract class PgPersonaDlRepositoryBase extends ClaseRepository
             $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
             $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+            $aDatos = PersonaPublicacion::hydrateRow($aDatos);
 
             // Cada repositorio hijo crea su tipo específico
             $Persona = $this->createEntityFromArray($aDatos);
@@ -157,6 +159,7 @@ abstract class PgPersonaDlRepositoryBase extends ClaseRepository
         $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
             $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+        $aDatos = PersonaPublicacion::hydrateRow($aDatos);
         $result = [];
         foreach ($aDatos as $key => $value) {
             $result[(string) $key] = $value;

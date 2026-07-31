@@ -1,7 +1,7 @@
 # Notas: modelo anclado al acta (decisión y plan técnico)
 
-**Estado:** decisión de dominio confirmada (2026-07-20). Sin cambios de código en esta fase.  
-**Relacionado:** [`notas_migracion_baseline.md`](notas_migracion_baseline.md), módulo certificados, [`Trasladar::copiarNotas`](../../src/personas/domain/Trasladar.php), [`EditarPersonaNota`](../../src/notas/application/EditarPersonaNota.php).
+**Estado:** núcleo del modelo acta implementado (slices 0–7). Pendientes operativos: repatriación apply de `otra_region`, resúmenes/informes STGR, fixture certificado externo, deprecación de `CertificadoEmitidoEnviar` como relleno de notas.  
+**Relacionado:** [`notas_migracion_baseline.md`](notas_migracion_baseline.md), módulo certificados, [`Trasladar::copiarNotas`](../../src/personas/domain/Trasladar.php), [`EditarPersonaNota`](../../src/notas/application/EditarPersonaNota.php), [`ExpedienteNotasPersona`](../../src/notas/application/ExpedienteNotasPersona.php).
 
 ---
 
@@ -14,7 +14,17 @@
 | ¿Dónde se conserva el hecho académico? | En la DL del acta (`e_notas_dl` del esquema que examina). |
 | ¿Qué hace el traslado de persona con las notas? | Nada: no mueve ni borra notas de actas. |
 | ¿Cuándo hay certificado ligado a notas? | Solo hacia **entidad externa** (definición §2). |
-| ¿Cómo ve la DL del alumno el historial? | Expediente agregado (consulta) + certificados recibidos cuando apliquen. |
+| ¿Cómo ve la DL del alumno el historial? | Expediente agregado vía `publicv.e_notas` (+ certificados recibidos cuando apliquen). |
+
+### Lectura agregada: `publicv.e_notas`
+
+PostgreSQL: `publicv.e_notas` es la **tabla padre** de las hijas `{esquema}.e_notas_dl`. Consultar el padre por `id_nom` ya agrega las notas de todas las DLs sin recorrer esquemas uno a uno.
+
+Implicaciones:
+
+- El expediente del alumno (Slice 3) debe basarse en `publicv.e_notas` (filtrando hijas que no sean nota de acta cuando proceda; p. ej. excluir `e_notas_otra_region_stgr` si sigue heredando).
+- Ya hay precedente: `Resumen` / `AsignaturasPendientes` usan `publicv/f.e_notas` para el expediente del alumno.
+- **Resúmenes / informes STGR:** se revisarán en una pasada posterior (no bloquean Slice 0–2); hoy asumen notas en el esquema de la persona y habrá que alinearlos al padre / expediente.
 
 ### Por qué se descarta el modelo A (persona-céntrico actual)
 
@@ -76,63 +86,87 @@ Orden de trabajo recomendado. Cada slice debe dejar tests verdes y no mezclar mi
 
 ### Slice 0 — Contrato de dominio (doc + tests de intención)
 
-- Fijar este documento como ADR.  
-- Reescribir expectativas de [`tests/unit/notas/trasladosNotasTest.php`](../../tests/unit/notas/trasladosNotasTest.php) como **tests fallidos/pendientes** o nuevos tests que describan:
+- [x] Fijar este documento como ADR (incl. § lectura `publicv.e_notas`).  
+- [x] Tests de intención del nuevo contrato ([`tests/unit/notas/trasladosNotasModeloActaTest.php`](../../tests/unit/notas/trasladosNotasModeloActaTest.php); [`trasladosNotasTest.php`](../../tests/unit/notas/trasladosNotasTest.php) actualizado al modelo B):
   - traslado interno/inter-región Orbix → notas intactas en esquema del acta;  
   - sin filas nuevas `tipo_acta=2` / `FALTA_CERTIFICADO` por traslado;  
-  - externo → certificado (documento), no copia de nota como acta en destino.
+  - externo → certificado (documento), no copia de nota como acta en destino;  
+  - expediente visible vía `publicv.e_notas` por `id_nom`.
 
 ### Slice 1 — Escritura de notas (`EditarPersonaNota`)
 
-- `getReposPersonaNota`: la nota real **siempre** en `e_notas_dl` (o tabla de actas) de la **DL que introduce/examina**, no en función del esquema del alumno.  
-- Eliminar (o acotar a externo) la rama que crea `repo_certificado` + placeholder en la DL del alumno.  
-- Personas de paso / resto: nota en la DL examinadora; certificado documental si hace falta comunicar fuera (sin inventar fila “certificado” en un esquema resto inexistente).
+- [x] `getReposPersonaNota`: la nota real **siempre** en `e_notas_dl` de la **DL que introduce/examina**.  
+- [x] Eliminada la rama `repo_certificado` / placeholder `FALTA_CERTIFICADO` (también de `crear_*` / `editar_*`).  
+- [x] Personas de paso / resto: nota en la DL examinadora; `DestinoNotaExterno` + flag `destino_externo` en el alta; certificado hacia fuera = documental (módulo certificados / PDF), sin fila placeholder ni escritura en `resto`.
 
 ### Slice 2 — Traslado (`Trasladar::copiarNotas`)
 
-- Traslado Orbix→Orbix: **no copiar / no borrar** notas de actas.  
-- Quitar dependencia de `mismaRegionStgr` para mover notas.  
-- Solo si destino externo: flujo de certificado (emitir/adjuntar), sin vaciar el acta origen.  
-- Revisar avisos `comprobarNotas` / “notas sin trasladar” en `comprobar_notas_page_body.inc.php`.
+- [x] Traslado Orbix→Orbix: **no copiar / no borrar** notas (`copiarNotas` no-op). Incluye notas `tipo_acta=acta` y `tipo_acta=certificado` ya existentes.  
+- [x] Quitar dependencia de `mismaRegionStgr` para mover notas.  
+- [ ] Solo si destino externo: disparar/avisar flujo de certificado documental (emitir/adjuntar PDF), **sin** vaciar ni mover notas del origen. Aún no automatizado en `Trasladar` (sigue siendo flujo manual del módulo certificados).  
+- [x] Eliminado aviso `comprobar_notas` de «notas en esquema distinto» (esperado con modelo acta).
 
 ### Slice 3 — Expediente agregado (lectura)
 
-Punto crítico de producto: la DL del alumno debe ver el historial sin tener las filas localmente.
-
-- Nuevo servicio de aplicación (p. ej. `ExpedienteNotasPersona`) que agregue por `id_nom`:
-  - notas en esquemas Orbix donde existan filas (DL de cada acta);  
-  - certificados recibidos del módulo certificados (frontera externa).  
-- Sustituir lecturas “solo esquema actual” en:
-  - notas de una persona / tessera;  
-  - asignaturas pendientes / resumen;  
-  - comprobaciones e informes STGR que asumen notas en el schema de la persona.  
-- Definir reglas de deduplicación si coexisten nota de acta y certificado sobre la misma asignatura (prioridad: acta Orbix > certificado).
+- [x] `ExpedienteNotasPersona` agrega por `id_nom` leyendo **`publicv.e_notas`**, con deduplicación acta > certificado.  
+- [x] `NotasDeUnaPersonaData` / dossier 1011 / tessera usan expediente agregado (`publicv.e_notas`).  
+- [x] **`Resumen` STGR (alumnos):** indicadores por persona vía padre `publicv/f.e_notas` (no solo `e_notas_dl` local). `$tablaNotasDl` reservado si hiciera falta métrica «examinado en esta DL».  
+- [x] **`AsignaturasPendientes`:** mismo criterio (expediente padre).  
+- [x] **`comprobar_notas`:** diagnóstico **de la persona** (bienio/cuadrienio terminado, `c1`/`c2`/`r` mal puesto: secciones 1, 2, 5, 6, 7) vía `publicv/f.e_notas`, contando `count(DISTINCT id_asignatura)` para que acta y certificado de la misma asignatura no sumen dos veces. Mantenimiento **de filas de esta DL** (secciones 4 «sin fecha de acta» y 8 «cursadas sin examinar») y **todos los borrados** vía `e_notas_dl` local: el padre solo concede `SELECT` (borrar en él da `permission denied for table e_notas`) y una DL no debe borrar notas de actas ajenas. INSERT 9998/9999 vía `ActaFinCicloInsert` (`acta`=sigla DL que inserta, `detalle`=«fin …», `tipo_acta`=1).
+  - Pendiente: las listas de mantenimiento siguen uniendo con `p_numerarios`/`p_agregados` locales, así que no muestran filas del `e_notas_dl` propio cuyo alumno ya está en otra DL (requiere resolver el nombre cross-esquema).
 
 ### Slice 4 — Destino de `e_notas_otra_region_stgr` y `tipo_acta=2`
 
-- Inventariar filas actuales (herramienta en `tools/audit/` o `tools/fix/` con `--dry-run`).  
-- Estrategia de consolidación:
-  - notas “reales” en `otra_region` → repatriar a `e_notas_dl` de la DL/región que las examinó (según acta/`id_schema` histórico);  
-  - placeholders `falta certificado` / filas solo certificado internas → eliminar o convertir en `CertificadoRecibido` cuando haya PDF/número real;  
-  - `json_certificados` → migrar al módulo certificados cuando aporte valor.  
-- Decidir si `e_notas_otra_region_stgr` se depreca o queda solo para casos residuales de paso (preferencia: **deprecar** tras migración).
+- [x] Inventariar: [`tools/audit/audit_notas_otra_region.php`](../../tools/audit/audit_notas_otra_region.php).  
+- [x] Auditoría dry-run: [`tools/fix/fix_notas_otra_region_a_acta.php`](../../tools/fix/fix_notas_otra_region_a_acta.php); mapa en BD **comun** [`public.mapa_prefijo_acta_esquema`](../../db/migrations/202607211100_mapa_prefijo_acta_esquema__comun.sql) (diag: [`tools/audit/diag_notas_otra_region_mapa.sql`](../../tools/audit/diag_notas_otra_region_mapa.sql); durante el lote usa snapshot `publicv/f._mig_…` de 211120) — **fuente única** de prefijo↔esquema (también búsqueda de actas absorbidas y `AbsorberEsquema`).  
+- [x] Separar prefijo pegado al nº (`dlb156/93` → `dlb 156/93`; `M1 3/20` → `M 13/20`): [`202607211140_…`](../../db/migrations/202607211140_separar_prefijo_acta_pegado_a_numero__sv.sql) (antes de repatriar/mover).  
+- [x] Reescribir actas libres (`ratio` / `aquinate` / `?`) en `otra_region`: [`202607211150_…`](../../db/migrations/202607211150_reescribir_acta_libre_sigla_esquema__sv.sql) (antes del repatriado).  
+- [x] Corregir `tipo_acta` 2→1 si el acta empieza por `dl…`/`cr…` (mal marcadas como certificado): [`202607211240_…`](../../db/migrations/202607211240_corregir_tipo_acta_certificado_a_acta_dl_cr__sv.sql) (antes de 211250/211300).  
+- [x] Certificados **tipo 2**: [`202607211250_certificados_otra_region_limpiar`](../../db/migrations/202607211250_certificados_otra_region_limpiar__sv.sql) — borrar si hay acta pareja; si no, dejar en `otra_region` de región (`H-Hv`, `M-Mv`, `Galbel-crGalbelv`, …). No repatriar a `e_notas_dl`.  
+- [x] Repatriar **solo tipo 1** (excluye 9998/9999): [`202607211300_…`](../../db/migrations/202607211300_repatriar_notas_otra_region_a_acta__sv.sql) (lee snapshot del mapa).  
+- [x] Mover tipo 1 mal ubicados entre `e_notas_dl` (excluye 9998/9999): [`202607222000_…`](../../db/migrations/202607222000_mover_notas_dl_segun_mapa_acta__sv.sql).  
+- [x] Mover fin de ciclo histórico (9998/9999) a la DL de la última acta: [`202607271800_…`](../../db/migrations/202607271800_mover_fin_ciclo_a_dl_ultima_acta__sv.sql) (fallback: mapa del campo `acta`). Diagnóstico: [`tools/audit/audit_fin_ciclo_ubicacion.php`](../../tools/audit/audit_fin_ciclo_ubicacion.php).  
+- [x] Insertar 9998 (cuadrienio plan 1997) global n/agd: [`202607271900_…`](../../db/migrations/202607271900_insertar_fin_cuadrienio_plan1997_n_agd__sv.sql) (antes de deshacer convalidaciones).  
+- [x] Deshacer convalidaciones hebreo/griego→PC y remap 152200 si 9998 &lt; 2026-09-30: [`202607272000_…`](../../db/migrations/202607272000_deshacer_remap_nivel_plan2026_si_9998_antiguo__sv.sql).  
+- [x] Mover convalidaciones (`id_situacion=5`) de `e_notas_otra_region_stgr` (p. ej. H-Hv) a `e_notas_dl` del esquema del 9998 (fallback: última acta): [`202607281100_…`](../../db/migrations/202607281100_mover_convalidaciones_otra_region_a_dl_9998__sv.sql).  
+- [x] Corregir actas erróneas en `otra_region` (reescribir + traslado por CSV): [`202607301400_…`](../../db/migrations/202607301400_corregir_actas_erroneas_otra_region__sv.sql) + [`db/migrations/data/actas_erroneas.csv`](../../db/migrations/data/actas_erroneas.csv).  
+- [x] Mover 9998/9999 restantes en `otra_region` al esquema de la ficha (`situacion=A`, si no `f_situacion` más reciente): [`202607302000_…`](../../db/migrations/202607302000_mover_fin_ciclo_otra_region_a_dl_persona__sv.sql).  
+- [x] Mover `acta = Ratio /89` restantes en `otra_region` al esquema de la ficha (reescribe sigla DL): [`202607302100_…`](../../db/migrations/202607302100_mover_ratio_89_otra_region_a_dl_persona__sv.sql).  
+- [ ] Ejecutar: **comun** `211100` → `211110`; luego **sv/sf** `211120` → … → **`211240`** → `211250` → `211300` → … → `222000` → **`271800`** → **`271900`** → **`272000`** → **`281100`** → **`301400`** → **`302000`** → **`302100`**. Ampliar filas del mapa en comun si el diag marca `sin_mapa`. Altas nuevas de 9998/9999 vía `ActaFinCicloInsert`.  
+- [x] Usar `MapaPrefijoActaEsquemaRepository` al grabar notas con acta histórica (routing a esquema destino).  
+- [x] Buscar/validar actas: `ActaSelectData` / `BuscarActaData` / `ActaDlGuard` leen prefijos absorbidos del mapa; `AbsorberEsquema` registra la fusión en la misma tabla.  
+- [ ] Migrar `json_certificados` al módulo certificados cuando aporte valor.  
+- [ ] Deprecar `e_notas_otra_region_stgr` tras migración de datos (salvo certificados sin acta pareja).
+
+#### Fuente única: `comun.public.mapa_prefijo_acta_esquema` (owner `orbix`)
+
+| Uso | Dirección |
+|-----|-----------|
+| Runtime (routing notas, búsqueda actas, AbsorberEsquema) | PDO `oDBPC` → comun |
+| Migraciones de datos en sv/sf | snapshot `publicv/f._mig_mapa_prefijo_acta_esquema` (211120; CSV desde 211110) |
+| Repatriar / escribir nota con acta histórica | prefijo → `esquema_base` |
+| Buscar actas desde la DL matriz (p. ej. H-dlal ve `dlz`/`dlv`) | `esquema_base` → lista de prefijos |
+| Absorber esquema | escribe/actualiza filas en comun (`notas` «fusionada en …») |
+
+No hay un catálogo aparte en `xu_dl` ni en PHP: al absorber, las filas de `e_actas_dl` pasan al esquema matriz **con el prefijo antiguo** (por eso la búsqueda por texto `dlz` ya las encontraba). El mapa hace explícito y mantenible ese vínculo. Fusiones H: `dlz` → **H-dlal**; `dlv`/`dlva`/`dlst` → **H-dln**.
 
 ### Slice 5 — Módulo certificados
 
-- Desacoplar `addCertificado` / `deleteCertificado` en `PgPersonaNotaOtraRegionStgrRepository` del alta automática de notas `FORMATO_CERTIFICADO` en traslados internos.  
-- Mantener emitir/guardar/enviar PDF para **externo** y uso manual.  
-- `CertificadoEmitidoEnviar` hacia DL Orbix: reevaluar si sigue siendo necesario cuando el expediente es agregado (posible deprecación del “enviar para rellenar nota”).
+- [x] Desacoplado `addCertificado` / `deleteCertificado` en `PgPersonaNotaOtraRegionStgrRepository` del alta automática de notas `FORMATO_CERTIFICADO` en traslados internos.  
+- [x] Mantener emitir/guardar/enviar PDF para **externo** y uso manual.  
+- [x] `CertificadoEmitidoEnviar`: documentada la reevaluación (sigue enviando PDF/recibido; ya no es el mecanismo para «rellenar nota» del expediente).
 
 ### Slice 6 — Migración de datos y limpieza
 
-- Script `tools/fix/` con `--dry-run` / `--apply`.  
-- Informe en `docs/dev/reports/` si el volumen lo requiere.  
-- Actualizar tests de integración y factories (`PersonaNotaOtraRegionStgrFactory`, etc.).
+- [x] Migraciones SQL repatriación + limpieza placeholders (ver Slice 4). CLI dry-run de apoyo; `--apply` CLI deprecado.  
+- [ ] Informe en `docs/dev/reports/` tras migración en staging/producción.  
+- [ ] Actualizar factories cuando `otra_region` esté vacía / deprecada.
 
 ### Slice 7 — Documentación de usuario / catálogo
 
-- Manual notas + certificados: traslado ya no “lleva” notas; certificado solo externo.  
-- Regenerar fragmentos AI/catálogo afectados tras cambiar flujos.
+- [x] Nota operativa en §7 (este documento) y actualización de [`backlog.md`](backlog.md).  
+- [ ] Manual notas + certificados: revisión editorial completa en [`docs/manual/notas.md`](../manual/notas.md).  
+- [ ] Regenerar fragmentos AI/catálogo afectados (no bloqueante; párrafo en ADR suficiente por ahora).
 
 ---
 
@@ -140,7 +174,7 @@ Punto crítico de producto: la DL del alumno debe ver el historial sin tener las
 
 | Riesgo | Mitigación |
 |--------|------------|
-| Expediente lento (N esquemas) | Cache por persona / vista materializada / búsqueda acotada por regiones STGR conocidas |
+| Expediente lento (N esquemas) | Preferir `publicv.e_notas` (herencia PG) antes que N conexiones; cache solo si hace falta |
 | Datos huérfanos en `otra_region` | Slice 4 obligatorio antes de borrar tabla |
 | Doble conteo acta+certificado | Regla de prioridad en § Slice 3 |
 | Permisos cross-schema | Reutilizar patrones de `Persona::buscarEnTodasRegiones` y repos con `setoDbl` |
@@ -161,6 +195,20 @@ Punto crítico de producto: la DL del alumno debe ver el historial sin tener las
 
 ## 6. Fuera de alcance de este documento
 
-- Implementación de código (otra entrega).  
 - Cambio de PK `(id_nom, id_nivel, tipo_acta)` ni FK fuerte acta↔nota (mejora posterior posible).  
 - Rediseño visual de pantallas más allá de lo necesario para leer el expediente agregado.
+
+---
+
+## 7. Nota operativa para usuarios y soporte
+
+Desde la adopción del **modelo B** (2026-07):
+
+1. **Traslado de persona** entre DLs o regiones STGR Orbix **no mueve ni borra** las notas del acta. La fila permanece en la DL que examinó.  
+2. **Expediente del alumno** en la DL de destino: se consulta vía agregación (`publicv.e_notas` / servicio `ExpedienteNotasPersona`), no porque las notas se hayan copiado localmente.  
+3. **Dos sentidos de «certificado» (no confundir):**
+   - **Nota con `tipo_acta = certificado`**: calificación que llega de una entidad externa; en Orbix **no** existe el acta origen. Es una fila legítima del expediente (se escribe/edita como cualquier nota; el traslado no la mueve).  
+   - **Placeholder «falta certificado»** (`FALTA_CERTIFICADO`): inventado en traslados internos — **eliminado** del modelo B.  
+   - **PDF del módulo certificados**: documento formal hacia fuera / recibido; distinto de la fila de nota.
+
+**Pendiente explícito:** informes y resúmenes STGR que aún lean solo el esquema local de la persona — alinear en pasada posterior (Slice 3). Flujo automático de PDF al trasladar a externo — Slice 2 (checkbox abierto).

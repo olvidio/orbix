@@ -1,68 +1,45 @@
-# Frontends pendientes de refactor (uso directo de `src/`)
+# Frontends: uso directo de `src/`
 
-Criterio (alineado con [`agents.md`](../agents.md)): en `frontend/**/controller/*.php`
-no debería haber `use src\...` de application, domain, repositorios o entidades de
-negocio; los datos vienen vía `PostRequest` a `/src/<módulo>/...` y el front solo
-monta UI (`Lista`, `Hash`, vistas).
+Criterio (alineado con [`agents.md`](../agents.md)): en `frontend/` **no** debe haber
+`use src\...` de application, domain, repositorios ni entidades de negocio. Los datos
+llegan vía `PostRequest` a `/src/<módulo>/...`; config/permisos de sesión vía facades
+`SessionConfig` / `SessionPerm` / `SessionPermActividades`.
 
 **Índice general:** [`docs/dev/REFACTOR_INDICE.md`](REFACTOR_INDICE.md)
 
-**Inventario regenerado:** 2026-06-07 (Fase 1 completada)
+**Inventario regenerado:** 2026-07-22
 
 ## Resumen
 
 | Métrica | Valor |
 |---------|------:|
-| Controladores afectados | **3** |
-| Módulos `frontend/...` afectados | **2** |
-| (Abr 2026) controladores afectados | 205 |
+| Controladores de negocio con `use src\` | **0** |
+| `use src\` reales en `frontend/` | **2 ficheros puente** (`FrontBootstrap`, `PostRequest`) |
+| Cadenas `use src\...` en plantillas codegen | `devel_codegen/factory.php` (strings generados; OK) |
 
-## Resumen por módulo
-
-| Archivos | Módulo `frontend/...` |
-|--------:|------------------------|
-| 2 | `usuarios` |
-| 1 | `devel_codegen` |
-
-## Excepciones permanentes documentadas
+## Puentes permitidos (únicos con `use src\`)
 
 | Fichero | Motivo |
 |---------|--------|
-| `frontend/usuarios/controller/login.php` | Bootstrap de sesión: `LoginProcesar`, `DBPropiedades`, validación de esquema web |
-| `frontend/usuarios/controller/recovery.php` | Recuperación 2FA standalone: acceso directo a `ConfigDB` / `DBConnection` |
-| `frontend/devel_codegen/controller/factory.php` | Generador de código interno; emite plantillas con `use src\...` |
+| `frontend/shared/FrontBootstrap.php` | Arranque de sesión, PDO, DI |
+| `frontend/shared/PostRequest.php` | Cliente interno frontend → `/src/...` |
 
-## Módulos limpios (Fase 1 — jun 2026)
+Facades / bridges que concentran FQCN `\src\...` **sin** `use` (callers frontend no importan `src`):
 
-- **`shared`:** `ayuda_index.php`, `manual.php` → `OrbixRuntime`
-- **`ubis`:** `plano_bytea.php` → `MultipartUploadHelper`
-- **`menus`:** `menus_importar_de_ficheros_a_ref` movido a `src/menus/infrastructure/ui/http/controllers/`
-- **`devel_codegen`:** `factory_mvc.php` → `OrbixRuntime` (sin `use src\`)
+| Fichero | Rol |
+|---------|-----|
+| `frontend/shared/session/SessionConfig.php` | `$_SESSION['oConfig']` |
+| `frontend/shared/session/SessionPerm.php` | `$_SESSION['oPerm']` |
+| `frontend/shared/session/SessionPermActividades.php` | permisos de actividad |
+| `frontend/usuarios/helpers/UsuariosAuthBridge.php` | login / recovery |
+| `frontend/ubis/helpers/UbisPlanoBridge.php` | planos (repos Pg*) |
+| `frontend/shared/config/OrbixRuntime.php` | flags/rutas `ConfigGlobal` |
 
-Entre otros ya limpios: **`asistentes`**, **`actividadescentro`**, **`actividadessacd`**, **`actividadplazas`**,
-**`actividadestudios`**, **`actividades`**, **`notas`**, **`dossiers`**, **`procesos`**, **`planning`**,
-**`personas`**, **`profesores`**, **`encargossacd`**, **`misas`**, **`cambios`**, **`inventario`**, **`casas`**.
-
-## `require_once("apps/core/global_object.inc")` en el front
-
-Regenerar con:
+## Cómo regenerar el conteo
 
 ```bash
-rg -l 'global_object' frontend/*/controller/
-```
+# Imports reales (excluye strings de factory)
+rg -n '^use src\\' frontend --glob '*.php' | rg -v 'factory\.php:'
 
-Tras la migracion masiva, la mayoria de modulos ya no incluyen `global_object`
-de forma explicita en sus controladores. Revisar caso a caso al tocar un
-controlador; `FrontBootstrap::boot()` carga el bootstrap vía `login.php`.
-
-## Como regenerar el conteo
-
-```bash
-# Por modulo
-find frontend -path '*/controller/*.php' -print0 | xargs -0 -I{} sh -c \
-  'grep -q "^use src\\\\" "{}" 2>/dev/null && echo "{}"' \
-  | sed "s|frontend/\\([^/]*\\)/.*|\\1|" | sort | uniq -c | sort -rn
-
-# Listado completo
-find frontend -path '*/controller/*.php' -print0 | xargs -0 grep -l '^use src\\' | sort
+# Debe listar solo FrontBootstrap.php y PostRequest.php
 ```

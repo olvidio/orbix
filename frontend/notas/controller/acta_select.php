@@ -2,6 +2,7 @@
 
 use frontend\notas\helpers\NotasPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Esta página muestra una tabla con las actas.
@@ -22,8 +23,8 @@ use frontend\shared\security\HashFront;
 use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
-use src\permisos\domain\XPermisos;
+use frontend\shared\session\SessionConfig;
+use frontend\shared\session\SessionPerm;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -36,7 +37,7 @@ $Qid_sel = ListNavSupport::idSelFromPost();
 $Qscroll_id = ListNavSupport::scrollIdFromPost();
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::buildActaSelectReturnParametros(),
@@ -45,18 +46,19 @@ $oPosicion->nav()->enter(
 $Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
 $Qacta = (string)filter_input(INPUT_POST, 'acta');
 
-$oConfig = $_SESSION['oConfig'] ?? null;
-$mesFinStgr = $oConfig instanceof ConfigSnapshot ? $oConfig->getMesFinStgr() : 6;
+$mesFinStgr = SessionConfig::getMesFinStgr();
 
-$d = PostRequest::getDataFromUrl('/src/notas/acta_select_data', [
+$d = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/notas/acta_select_data', [
     'titulo' => $Qtitulo,
     'acta' => $Qacta,
     'mes_fin_stgr' => $mesFinStgr,
-]);
+]));
 $presentacion = NotasPayload::actaSelectFromPayload($d);
-$titulo = $presentacion['titulo'];
-$a_asignaturas = $presentacion['a_asignaturas'];
-$cActasData = $presentacion['actas'];
+$titulo = PayloadCoercion::string($presentacion['titulo'] ?? '');
+/** @var array<int|string, string> $a_asignaturas */
+$a_asignaturas = is_array($presentacion['a_asignaturas'] ?? null) ? $presentacion['a_asignaturas'] : [];
+/** @var list<array<string, mixed>> $cActasData */
+$cActasData = is_array($presentacion['actas'] ?? null) ? $presentacion['actas'] : [];
 
 $botones = 0; // para 'añadir acta'
 /** @var list<array{txt: string, click: string}> $a_botones */
@@ -66,8 +68,7 @@ if (OrbixRuntime::miAmbito() === 'rstgr') {
     $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
     $botones = 0;
 } else {
-    $oPerm = $_SESSION['oPerm'] ?? null;
-    if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('est')) {
+    if (SessionPerm::havePermOficina('est')) {
         $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#seleccionados\")");
         $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
         $botones = 1; // para 'añadir acta'
@@ -90,10 +91,10 @@ $a_valores = [];
 $pdf_signed_urls = [];
 foreach ($cActasData as $oActa) {
     $i++;
-    $acta = $oActa['acta'];
-    $f_acta = $oActa['f_acta'];
-    $id_asignatura = $oActa['id_asignatura'];
-    $hasPdf = $oActa['has_pdf'] ? _("Sí") : '';
+    $acta = PayloadCoercion::string($oActa['acta'] ?? '');
+    $f_acta = PayloadCoercion::string($oActa['f_acta'] ?? '');
+    $id_asignatura = PayloadCoercion::int($oActa['id_asignatura'] ?? 0);
+    $hasPdf = !empty($oActa['has_pdf']) ? _("Sí") : '';
 
     if (!isset($a_asignaturas[$id_asignatura]) || $a_asignaturas[$id_asignatura] === '') {
         $nombre_corto = sprintf(_("nombre corto no definido para id asignatura: %s"), $id_asignatura);
@@ -105,8 +106,7 @@ foreach ($cActasData as $oActa) {
     $pdf_signed_urls[$acta_2] = SignedDownloadToken::urlNotasActa($acta);
     $pagina = HashFront::link('frontend/notas/controller/acta_ver.php?' . http_build_query(array('acta' => $acta)));
     $a_valores[$i]['sel'] = $acta_2;
-    $oPerm = $_SESSION['oPerm'] ?? null;
-    if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('est')) {
+    if (SessionPerm::havePermOficina('est')) {
         $a_valores[$i][1] = array('ira' => $pagina, 'valor' => $acta);
     } else {
         $a_valores[$i][1] = $acta;

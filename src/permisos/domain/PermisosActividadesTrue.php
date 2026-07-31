@@ -36,7 +36,8 @@ class PermisosActividadesTrue extends PermisosActividades
     public function __unserialize(array $data): void
     {
         // Formato propio (nuevo) o heredado del padre.
-        $this->idUsuario = (int) ($data['idUsuario'] ?? 0);
+        $idUsuario = $data['idUsuario'] ?? 0;
+        $this->idUsuario = is_int($idUsuario) ? $idUsuario : (is_numeric($idUsuario) ? (int) $idUsuario : 0);
     }
 
     public function setActividad(int $id_activ, ?string $id_tipo_activ = null, ?string $dl_org = null): void

@@ -32,16 +32,23 @@ final class OpcionesDesplegable
     {
         $ordenadas = [];
         foreach ($rows as $row) {
-            if (!is_array($row)) {
-                continue;
-            }
             if (array_key_exists('value', $row) && array_key_exists('label', $row)) {
-                $ordenadas[] = [(string) $row['value'], (string) $row['label']];
+                $value = $row['value'];
+                $label = $row['label'];
+                $ordenadas[] = [
+                    is_scalar($value) ? (string) $value : '',
+                    is_scalar($label) ? (string) $label : '',
+                ];
                 continue;
             }
-            if (count($row) >= 2) {
-                $ordenadas[] = [(string) $row[0], (string) $row[1]];
+            $vals = array_values($row);
+            if (count($vals) < 2) {
+                continue;
             }
+            $ordenadas[] = [
+                is_scalar($vals[0]) ? (string) $vals[0] : '',
+                is_scalar($vals[1]) ? (string) $vals[1] : '',
+            ];
         }
 
         return $ordenadas;

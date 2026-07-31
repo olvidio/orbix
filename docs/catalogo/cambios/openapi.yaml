@@ -50,6 +50,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/cambios/avisos_generar_tabla":
+    post:
+      operationId: "post_cambios_avisos_generar_tabla"
+      summary: "Avisos Generar Tabla"
+      description: |
+        Proceso batch que recorre los `Cambio` pendientes, aplica preferencias de aviso del usuario (`CambioUsuarioObjetoPref` / `CambioUsuarioPropiedadPref`) y permisos de actividad, y anota filas en `CambioUsuario` (avisos pendientes de consultar/purgar en `avisos_generar`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/cambios/api/avisos_generar_tabla.md`
+      tags:
+        - "cambios"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/cambios/cambio_usuario_eliminar":
     post:
       operationId: "post_cambios_cambio_usuario_eliminar"

@@ -77,15 +77,18 @@ final class EncargoCtrSelectData
      */
     private function opcionesConCentroSeleccionado(array $opciones_raw, int $id_ubi): array
     {
-        if ($id_ubi === 0 || array_key_exists((string)$id_ubi, $opciones_raw)) {
-            return $opciones_raw;
+        if ($id_ubi !== 0 && !array_key_exists((string)$id_ubi, $opciones_raw)) {
+            $oUbi = Ubi::NewUbi($id_ubi);
+            if ($oUbi !== null) {
+                $opciones_raw[(string)$id_ubi] = $oUbi->getNombre_ubi();
+            }
         }
 
-        $oUbi = Ubi::NewUbi($id_ubi);
-        if ($oUbi !== null) {
-            $opciones_raw[(string)$id_ubi] = (string)$oUbi->getNombre_ubi();
+        $normalizadas = [];
+        foreach ($opciones_raw as $id => $nombre) {
+            $normalizadas[(string) $id] = $nombre;
         }
 
-        return $opciones_raw;
+        return $normalizadas;
     }
 }

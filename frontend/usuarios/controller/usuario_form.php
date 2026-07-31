@@ -41,7 +41,7 @@ $navState = ListNavSupport::mergeSelectionForRecordar(
     $Qscroll_id,
 );
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $navIdentity,
     $navState,

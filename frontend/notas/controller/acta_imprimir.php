@@ -8,8 +8,9 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Esta página sirve para las actas.
@@ -34,7 +35,7 @@ $navState = array_merge(
     ListNavSupport::buildSelectionStatePatchFromPost(),
 );
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['acta' => $acta],
     $navState,
@@ -49,8 +50,7 @@ ListNavSupport::syncNavStateAt(
 );
 
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
-$oConfig = $_SESSION['oConfig'] ?? null;
-$region_latin = $oConfig instanceof ConfigSnapshot ? $oConfig->getNomRegionLatin() : '';
+$region_latin = SessionConfig::getNomRegionLatin();
 $nombre_prelatura = strtr('PRAELATURA SANCTAE CRUCIS ET OPERIS DEI', $replace);
 $reg_stgr = 'Stgr' . OrbixRuntime::miRegion();
 

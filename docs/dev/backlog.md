@@ -12,9 +12,10 @@ Formato sugerido por ítem:
 
 ### Notas ancladas al acta (dejar de mover notas en traslados Orbix)
 
-- **Qué:** Implementar el modelo B de [`notas_modelo_acta.md`](notas_modelo_acta.md): notas fijas en la DL del acta; expediente agregado; certificado automático solo hacia entidad externa; deprecar uso de `e_notas_otra_region_stgr` / placeholders internos.
-- **Por qué no ahora:** Decisión de dominio ya confirmada; el cambio toca escritura (`EditarPersonaNota`), traslado (`Trasladar::copiarNotas`), lecturas de expediente e informes, y migración de datos existentes. Requiere slices ordenados (§3 del ADR).
-- **Notas:** Criterio de «entidad externa» y criterios de aceptación en el mismo documento. Contrato actual documentado en `tests/unit/notas/trasladosNotasTest.php`.
+- **Qué:** Modelo B de [`notas_modelo_acta.md`](notas_modelo_acta.md): notas fijas en la DL del acta; expediente agregado; certificado automático solo hacia entidad externa; deprecar `e_notas_otra_region_stgr` / placeholders internos.
+- **Progreso (2026-07):** Slices 1–3 y 5 hechos (`EditarPersonaNota`, `Trasladar::copiarNotas` no-op, `ExpedienteNotasPersona`, certificados desacoplados). Herramientas audit/fix en `tools/` (Slices 4 y 6). Tests actualizados al contrato B.
+- **Pendiente:** flujo certificado destino externo; informes STGR locales.
+- **Notas:** Mapa SSOT + grabar nota en esquema del acta (`EditarPersonaNota`). Diag tipo 1: `tools/audit/diag_notas_otra_region_mapa.sql`.
 
 ### Migración `ServerConf` → `.env` (y bootstrap unificado)
 

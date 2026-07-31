@@ -2,6 +2,7 @@
 
 use frontend\notas\helpers\NotasPostInput;
 use frontend\notas\helpers\NotasPayload;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
@@ -26,20 +27,25 @@ FrontBootstrap::boot();
 $QdlRaw = filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qdl = is_array($QdlRaw) ? $QdlRaw : [];
 
-$data = PostRequest::getDataFromUrl('/src/notas/asignaturas_pendientes_data', [
+$data = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/notas/asignaturas_pendientes_data', [
     'dl' => $Qdl,
-]);
+]));
 $presentacion = NotasPayload::asignaturasPendientesFromPayload($data);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('pendientes');
-$oTabla->setCabeceras($presentacion['cabeceras']);
-$oTabla->setDatos($presentacion['filas']);
+/** @var list<array<string, mixed>|string> $cabeceras */
+$cabeceras = is_array($presentacion['cabeceras'] ?? null) ? $presentacion['cabeceras'] : [];
+/** @var array<int|string, mixed> $filas */
+$filas = is_array($presentacion['filas'] ?? null) ? $presentacion['filas'] : [];
+$oTabla->setCabeceras($cabeceras);
+$oTabla->setDatos($filas);
 
 
 if ($presentacion['ambito_rstgr']) {
     $aChecked = NotasPostInput::checkedIdsFromPost($Qdl);
-    $a_delegacionesStgr = $presentacion['delegaciones'];
+    /** @var array<int|string, string> $a_delegacionesStgr */
+    $a_delegacionesStgr = is_array($presentacion['delegaciones'] ?? null) ? $presentacion['delegaciones'] : [];
 
     $oCuadros = new Desplegable();
     $oCuadros->setNombre('dl');

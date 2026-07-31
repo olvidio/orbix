@@ -1,22 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace src\notas\application\support;
 
+use src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface;
+
 /**
- * Validacion compartida para mutaciones de actas: la dl de cabecera del acta
- * ($Qacta empieza por "<dl> ") debe coincidir con la dl del usuario o ser "?"
- * (placeholder para actas inventadas).
+ * Validación compartida para mutaciones de actas: la dl de cabecera del acta
+ * ($Qacta empieza por "<dl> ") debe coincidir con la dl del usuario, ser "?"
+ * (placeholder), o (salvo alta nueva) un prefijo absorbido mapeado a la misma DL.
  */
 final class ActaDlGuard
 {
-    public static function ensureOwnership(string $acta, string $miDele, string $accion): string
+    public function __construct(
+        private readonly MapaPrefijoActaEsquemaRepositoryInterface $mapaPrefijoActaEsquemaRepository,
+    ) {
+    }
+
+    public function ensureOwnership(string $acta, string $miDele, string $accion): string
     {
         $dlActa = strtok($acta, ' ');
         if ($dlActa === false) {
             return '';
         }
-        if ($dlActa === $miDele || $dlActa === '?') {
+        $miDeleSinF = ($miDele !== '' && str_ends_with($miDele, 'f'))
+            ? substr($miDele, 0, -1)
+            : $miDele;
+        if ($dlActa === $miDele || $dlActa === $miDeleSinF || $dlActa === '?') {
             return '';
+        }
+        // Prefijo absorbido: permitir modificar/eliminar actas históricas de la matriz.
+        if ($accion !== 'nueva') {
+            $base = ActaPrefijosDeEsquema::esquemaBaseSesion();
+            if ($base !== ''
+                && $this->mapaPrefijoActaEsquemaRepository->prefijoPerteneceAEsquema((string) $dlActa, $base)
+            ) {
+                return '';
+            }
         }
         switch ($accion) {
             case 'nueva':

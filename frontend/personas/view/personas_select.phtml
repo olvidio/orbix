@@ -159,6 +159,15 @@ use frontend\shared\config\AppUrlConfig;
         }
     }
     <?php endif; ?>
+    <?php if (!empty($script['fnjs_publicar'])) : ?>
+    fnjs_publicar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/personas/controller/persona_publicar_form.php");
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    <?php endif; ?>
     <?php if (!empty($script['fnjs_copiar_tessera'])) : ?>
     fnjs_copiar_tessera = function (formulario) {
         rta = fnjs_solo_uno(formulario);

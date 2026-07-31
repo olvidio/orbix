@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "inventario"
 flujos: 42
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - inventario
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Cabecera Pie Txt
 
@@ -21,8 +21,10 @@ Editar textos globales de cabecera/pie para impresión de equipajes.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Textos cabecera/pie equipajes (frontend/inventario/controller/cabecera_pie_txt.php)
+- Imprimir equipaje (frontend/inventario/controller/equipajes_imprimir.php)
+- **Legacy:** scdl > Inventario > equipajes > tipos de texto
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -56,8 +58,9 @@ Editar textos globales de cabecera/pie para impresión de equipajes.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Formulario asignar a centros (frontend/inventario/controller/doc_asignar_ctr.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -87,8 +90,9 @@ Editar textos globales de cabecera/pie para impresión de equipajes.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Formulario asignar DLB (frontend/inventario/controller/doc_asignar_dlb.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -118,8 +122,9 @@ Asignación y consulta de documentos por tipo: selector `docs_asignar_que`, list
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** scdl > Inventario > documentos > asignar documento
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -149,8 +154,9 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** scdl > Inventario > equipajes > hacer equipajes
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -184,8 +190,9 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -215,8 +222,9 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -246,8 +254,10 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Docs por casa (equipaje) (frontend/inventario/controller/equipajes_doc_casa.php)
+- Imprimir equipaje (frontend/inventario/controller/equipajes_imprimir.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -277,8 +287,10 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Docs por casa (equipaje) (frontend/inventario/controller/equipajes_doc_casa.php)
+- Imprimir equipaje (frontend/inventario/controller/equipajes_imprimir.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -308,8 +320,9 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -339,8 +352,9 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Imprimir equipaje (frontend/inventario/controller/equipajes_imprimir.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -370,8 +384,9 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Actividades por periodo (frontend/inventario/controller/equipajes_lista_activ_periodo.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -401,8 +416,9 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Fragmento selección actividades (frontend/inventario/controller/equipajes_form_nuevo.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -431,8 +447,9 @@ Comparar movimientos de documentos entre equipajes seleccionados.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Movimientos maletas — resultado (frontend/inventario/controller/equipajes_movimientos.php)
+- **Legacy:** scdl > Inventario > equipajes > movimientos maletas
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -461,8 +478,9 @@ Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuev
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** scdl > Inventario > equipajes > nuevo equipaje
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -492,8 +510,9 @@ Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuev
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -523,8 +542,9 @@ Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuev
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -554,8 +574,10 @@ Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuev
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Imprimir inventario centros (frontend/inventario/controller/doc_imprimir_ctr.php)
+- Imprimir inventario DLB (frontend/inventario/controller/doc_imprimir_dlb.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -584,8 +606,9 @@ Impresión inventario de centros: selección en `doc_de_ctr`, render en `doc_imp
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Imprimir inventario centros (frontend/inventario/controller/doc_imprimir_ctr.php)
+- **Legacy:** scdl > Inventario > inventarios > de centros o dlb
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -614,8 +637,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Imprimir inventario DLB (frontend/inventario/controller/doc_imprimir_dlb.php)
+- **Legacy:** scdl > Inventario > inventarios > de centros o dlb
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -645,8 +669,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Casas posibles (frontend/inventario/controller/equipajes_casas_posibles.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -676,8 +701,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -707,8 +733,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Traslado de documentos — filtro (frontend/inventario/controller/traslado_doc_que.php)
+- **Legacy:** scdl > Inventario > inventarios > traslado de doc
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -738,8 +765,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Inventario por centros (frontend/inventario/controller/doc_de_ctr.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -769,8 +797,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Documentos ya asignados (frontend/inventario/controller/doc_asignado.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -800,8 +829,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Formulario asignar a centros (frontend/inventario/controller/doc_asignar_ctr.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -831,8 +861,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Formulario asignar DLB (frontend/inventario/controller/doc_asignar_dlb.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -862,8 +893,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Documentos con observaciones (frontend/inventario/controller/docs_con_observaciones.php)
+- **Legacy:** scdl > Inventario > inventarios > lista docs con observ.
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -893,8 +925,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Traslado — lista y guardar (frontend/inventario/controller/traslado_doc_lista.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -924,8 +957,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Inventario DLB/casa (frontend/inventario/controller/doc_de_dlb.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -955,8 +989,10 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Quitar doc de maleta (frontend/inventario/controller/equipajes_form_del.php)
+- Lista docs EGM/lugar (frontend/inventario/controller/equipajes_lista_docs.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -986,8 +1022,10 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Lista docs EGM/lugar (frontend/inventario/controller/equipajes_lista_docs.php)
+- Ver docs de lugar (frontend/inventario/controller/equipajes_ver_docs.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -1017,8 +1055,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Documentos pendientes (frontend/inventario/controller/docs_en_busqueda.php)
+- **Legacy:** scdl > Inventario > inventarios > lista docs pendientes
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -1048,8 +1087,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Docs libres (frontend/inventario/controller/equipajes_docs_libres.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -1079,8 +1119,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Centros sin documento (frontend/inventario/controller/doc_no_asignado.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -1110,8 +1151,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Documentos perdidos (frontend/inventario/controller/docs_perdidos.php)
+- **Legacy:** scdl > Inventario > inventarios > lista docs perdidos
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -1141,8 +1183,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Desplegable equipajes (frontend/inventario/controller/equipajes_desplegable.php)
+- Movimientos maletas — filtro (frontend/inventario/controller/equipajes_movimientos_que.php)
+- Gestionar equipajes (frontend/inventario/controller/equipajes_ver.php)
+- **Legacy:** scdl > Inventario > equipajes > movimientos maletas
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -1172,8 +1217,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Elegir maleta/grupo (frontend/inventario/controller/equipajes_posibles_maletas.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -1203,8 +1249,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Traslado de documentos — filtro (frontend/inventario/controller/traslado_doc_que.php)
+- **Legacy:** scdl > Inventario > inventarios > traslado de doc
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -1234,8 +1281,10 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Asignar documentos — selector (frontend/inventario/controller/docs_asignar_que.php)
+- Añadir doc a maleta (frontend/inventario/controller/equipajes_form_add.php)
+- **Legacy:** scdl > Inventario > documentos > asignar documento
+- **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -1265,8 +1314,9 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Editar texto listado (frontend/inventario/controller/equipajes_form_texto_listado.php)
+- **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
+- **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
@@ -1295,8 +1345,9 @@ Trasladar documentos entre centros/lugares: filtro en `traslado_doc_que`, selecc
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** scdl > Inventario > inventarios > traslado de doc
+- **Pills2:** —
 
 ### Tareas Habituales
 
@@ -1317,9 +1368,8 @@ Trasladar documentos entre centros/lugares: filtro en `traslado_doc_que`, selecc
 - Flujo: `inventario.traslado_doc.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/traslado_doc.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/inventario/flujos/`.

@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "configuracion"
 flujos: 4
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - configuracion
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## módulo (ficha)
 
@@ -21,12 +21,13 @@ Dar de alta un módulo nuevo o editar nombre, descripción y dependencias (módu
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Ficha de módulo (frontend/configuracion/controller/modulos_form.php)
+- Proxy AJAX modulos_update (frontend/configuracion/controller/modulos_update.php)
+- Sin entrada de menú en el índice (subflujo de «definir módulos»).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -50,11 +51,12 @@ Consultar los módulos definidos en el esquema y acceder a alta, edición o baja
 ### Donde Entrar
 
 - Definir módulos (frontend/configuracion/controller/modulos_select.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > Configuración > definir módulos
+- **Pills2:** sistema > Configuración > definir módulos; ADMIN GLOBAL > Configuración > definir módulos
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -78,11 +80,12 @@ Consultar y modificar los parámetros globales del esquema (curso escolar, certi
 ### Donde Entrar
 
 - Configuración del esquema (frontend/configuracion/controller/parametros.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** sistema > Configuración > config esquema
+- **Pills2:** ADMIN LOCAL > Esquema; sistema > Configuración > config esquema
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -105,12 +108,12 @@ No hay pantalla de usuario: el frontend obtiene fechas de inicio/fin de curso ST
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Sin entrada de menú en el índice (flujo técnico transversal; configuración en «config esquema»).
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -125,9 +128,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `configuracion.periodo_calendario_escolar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/configuracion/flujos/periodo_calendario_escolar.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/configuracion/flujos/`.

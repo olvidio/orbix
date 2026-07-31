@@ -684,10 +684,18 @@ class PostRequest
     private static function internalGuzzleOptions(array $cookies, array $extra = []): array
     {
         $options = $extra;
+        $extraHeaders = [];
         if ($cookies !== []) {
-            $options = self::mergeGuzzleHeaders($options, [
-                'Cookie' => self::buildCookieHeader($cookies),
-            ]);
+            $extraHeaders['Cookie'] = self::buildCookieHeader($cookies);
+        }
+        // El POST interno no lleva Accept-Language del navegador; sin él, si la sesión
+        // no tiene idioma, el backend cae a español y el listado alterna con el front.
+        $acceptLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
+        if (is_string($acceptLanguage) && $acceptLanguage !== '') {
+            $extraHeaders['Accept-Language'] = $acceptLanguage;
+        }
+        if ($extraHeaders !== []) {
+            $options = self::mergeGuzzleHeaders($options, $extraHeaders);
         }
 
         return $options;

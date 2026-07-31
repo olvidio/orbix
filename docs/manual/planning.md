@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "planning"
 flujos: 7
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - planning
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Planning por casas (filtros)
 
@@ -22,11 +22,14 @@ Consultar el calendario de actividades por casas (actual o propuesta de calendar
 ### Donde Entrar
 
 - Planning por casas (filtros) (frontend/planning/controller/planning_casa_que.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy (actual):** `dre/Calendario/… > planning > por casas` · `adl > Gestión casas > Planing Casas`
+- **Pills2 (actual):** `ACTIVIDADES > Herramientas de calendario > Planning calendario actual`
+- **Legacy (propuesta):** `adl|Calendario|dre > Nuevo Calendario > nuevo planing`
+- **Pills2 (propuesta):** `ACTIVIDADES > Herramientas de calendario > Planning calendario en estudio`
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -51,11 +54,11 @@ Visualizar y exportar el planning de casas en el periodo elegido.
 
 - Planning por casas (filtros) (frontend/planning/controller/planning_casa_que.php)
 - Selección de casas (planning) (frontend/planning/controller/planning_casa_select.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (subflujo del planning por casas)
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -79,11 +82,12 @@ Ver el planning de un centro o de todos los centros (por colectivo n/agd/s) en u
 ### Donde Entrar
 
 - Planning por centro (filtros) (frontend/planning/controller/planning_ctr_que.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** `dre/Calendario/… > planning > por centro` · `vsr/scdl > planning > por ctr`
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning por ctr`
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -109,11 +113,16 @@ Encontrar personas del colectivo del menú y abrir su calendario de actividades.
 ### Donde Entrar
 
 - Planning por persona (filtros) (frontend/planning/controller/planning_persona_que.php)
-- Ruta de menu: pendiente de documentar.
+- | Params | Legacy | Pills2 |
+- |--------|--------|--------|
+- | `obj_pau=PersonaDl` | `… > planning > persona r/dl` · `scdl > persona dl` | `ACTIVIDADES > … > Plannig por personas` |
+- | `PersonaEx&na=a|n` | `scdl > planning > agd/num de paso` | igual |
+- | `PersonaSacd` | `dre > planning > sacd r/dl` | — |
+- | `PersonaSacd&es_sacd=1` | — | `ACTIVIDADES > … > Plannig por personas sacd` |
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -138,11 +147,11 @@ Visualizar y exportar el planning individual o múltiple en el periodo elegido.
 
 - Planning por persona (filtros) (frontend/planning/controller/planning_persona_que.php)
 - Listado de personas (planning) (frontend/planning/controller/planning_persona_select.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (subflujo del planning por persona)
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -166,11 +175,13 @@ Consultar el calendario de actividades SACD agrupadas por zona.
 ### Donde Entrar
 
 - Planning por zonas SACD (filtros) (frontend/planning/controller/planning_zones_que.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** `dre > planning > por zonas` · `vsr > planning > por zonas` · `exterior > sacd > Misas > Planning zonas`
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > por zonas`
+- Propuesta: `dre > propuestas > planing zonas`
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -191,16 +202,16 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 
 ### Para Que Sirve
 
-Visualizar y exportar el planning por zonas en el trimestre elegido.
+Visualizar y exportar el planning por zonas en el trimestre/mes elegido (calendario actual o propuesta).
 
 ### Donde Entrar
 
 - Planning por zonas SACD (filtros) (frontend/planning/controller/planning_zones_que.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice (subflujo del planning por zonas)
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -215,9 +226,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `planning.planning_zones_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/planning/flujos/planning_zones_select.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/planning/flujos/`.

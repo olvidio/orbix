@@ -19,7 +19,7 @@ use src\personas\domain\value_objects\{ApelFamText,
     PersonaTratoCode,
     ProfesionText,
     SituacionCode};
-use src\shared\domain\traits\Hydratable;
+use src\personas\domain\traits\SerializesPublicadoParaJson;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\LocaleCode;
 use src\shared\infrastructure\DependencyResolver;
@@ -31,7 +31,7 @@ use src\ubis\domain\value_objects\DelegacionCode;
 
 class PersonaSacd
 {
-    use Hydratable;
+    use SerializesPublicadoParaJson;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
     private int $id_schema;
@@ -85,6 +85,9 @@ class PersonaSacd
     private ?int $id_ctr = null;
 
     private ?LugarNacimientoText $lugar_nacimiento = null;
+
+    /** Mapa DL → caducidad (hidrato vía ConverterJson en repositorio). */
+    private mixed $publicado_para = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
     public function getId_schema(): int
@@ -654,6 +657,16 @@ class PersonaSacd
         $this->lugar_nacimiento = $lugar instanceof LugarNacimientoText
             ? $lugar
             : LugarNacimientoText::fromNullableString($lugar);
+    }
+
+    public function getPublicado_para(): mixed
+    {
+        return $this->publicado_para;
+    }
+
+    public function setPublicado_para(mixed $publicado_para = null): void
+    {
+        $this->publicado_para = $publicado_para;
     }
 
     public function getEdad(): ?int

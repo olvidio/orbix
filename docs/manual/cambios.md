@@ -2,41 +2,47 @@
 tipo: "manual_usuario"
 modulo: "cambios"
 flujos: 11
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - cambios
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Consultar y purgar cambios
 
 ### Para Que Sirve
 
-Ver los cambios registrados pendientes de avisar y eliminar los que ya no interesan (por fila o por fecha límite).
+- Ver los cambios registrados pendientes de avisar y eliminar los que ya no interesan (por fila o por fecha límite).
+- Opcionalmente regenerar la tabla de avisos desde el menú de administración.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Lista de cambios (frontend/cambios/controller/avisos_generar.php)
+- **Legacy:** Calendario > actividades > ver lista cambios; sistema > usuarios web > ver lista cambios;
+- Utilidades > Utilidades > lista de cambios
+- **Pills2:** mismas rutas (+ ADMIN LOCAL en usuarios web)
+- Generar tabla: **Legacy/Pills2:** sistema > usuarios web > generar tabla avisos (+ ADMIN LOCAL)
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
 - `debe indicar la fecha`
 - `Hay un error, no se ha eliminado`
 - `Hay un error al eliminar los cambios hasta la fecha indicada`
+- `Generar tabla: Algo falla; HTML de incidencias por cambio no procesado`
 
 ### Permisos
 
 - Sin control propio; `is_admin` lo calcula `CambiosPermSupport::isAdmin()` en el frontend.
+- Sin `perm_*` en el caso de uso. Entrada de menú restringida a perfiles con acceso a
 - Sin control propio; la autorización se resuelve en frontend (`avisos_generar`) + `$_SESSION['oPerm']`.
 - Sin control propio; autorización en frontend (`avisos_generar`) + `$_SESSION['oPerm']`.
 
@@ -53,12 +59,12 @@ Quitar de la cola de avisos un `CambioUsuario` concreto seleccionado en la lista
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Lista de cambios (frontend/cambios/controller/avisos_generar.php)
+- (vía pantalla lista de cambios — ver flujo `avisos_generar`)
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -81,12 +87,12 @@ Eliminar en bloque todos los cambios anotados con fecha anterior o igual a la in
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Lista de cambios (frontend/cambios/controller/avisos_generar.php)
+- (vía pantalla lista de cambios)
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -110,12 +116,12 @@ Persistir la parte «objeto + tipo de actividad + fase + flags de aviso» de una
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Configurar aviso (frontend/cambios/controller/usuario_avisos_pref.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -138,12 +144,12 @@ Refrescar el desplegable de fase/estado al cambiar objeto o tipo de actividad en
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Desplegable de fases (frontend/cambios/controller/usuario_avisos_pref_fases.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -166,12 +172,12 @@ Mostrar la tabla de campos del objeto que pueden vigilarse, con el estado guarda
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Tabla de propiedades (frontend/cambios/controller/usuario_avisos_pref_propiedades.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -194,12 +200,12 @@ Tras guardar el objeto-pref, crear/actualizar/eliminar las `CambioUsuarioPropied
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Configurar aviso (frontend/cambios/controller/usuario_avisos_pref.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -222,12 +228,12 @@ Abrir el modal para definir operador, valor y alcance de un cambio en una propie
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Modal de condición (frontend/cambios/controller/usuario_avisos_pref_condicion.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -250,12 +256,12 @@ Ver el texto de la condición y guardar el JSON en la fila de propiedades sin pe
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Configurar aviso (frontend/cambios/controller/usuario_avisos_pref.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -278,12 +284,15 @@ Definir qué cambios debe recibir un usuario o grupo: objeto, ámbito (tipo/fase
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Configurar aviso (frontend/cambios/controller/usuario_avisos_pref.php)
+- Desplegable de fases (frontend/cambios/controller/usuario_avisos_pref_fases.php)
+- Tabla de propiedades (frontend/cambios/controller/usuario_avisos_pref_propiedades.php)
+- Modal de condición (frontend/cambios/controller/usuario_avisos_pref_condicion.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -311,12 +320,12 @@ Consultar y mantener las reglas de aviso configuradas para un usuario web.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Avisos del usuario (frontend/cambios/controller/usuario_form_avisos.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Pendiente de revisar. No se han inferido tareas desde el flujo.
+Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
 
 ### Errores O Avisos Frecuentes
 
@@ -332,9 +341,8 @@ Pendiente de revisar. No se han inferido tareas desde el flujo.
 - Flujo: `cambios.usuario_form_avisos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cambios/flujos/usuario_form_avisos.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/cambios/flujos/`.

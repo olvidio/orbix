@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "actividadessacd"
 flujos: 13
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - actividadessacd
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Com Sacd Activ Periodo Page
 
@@ -22,8 +22,11 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Com Sacd Activ Periodo (frontend/actividadessacd/controller/com_sacd_activ_periodo.php)
+- Se accede desde la pantalla `com_sacd_activ_periodo`:
+- **Legacy:** dre > actividades > comunic. sacd · exterior > sacd > atención actividades
+- **Pills2:** ATENCIÓN SACD > Actividades > Comunicación a los sacd
+- Con `propuesta=true`: dre > propuestas > lista activ. sacd.
 
 ### Tareas Habituales
 
@@ -54,8 +57,11 @@ El usuario selecciona un periodo y pulsa **buscar**: el sistema construye, por c
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Com Sacd Activ Periodo (frontend/actividadessacd/controller/com_sacd_activ_periodo.php)
+- Se accede desde la pantalla `com_sacd_activ_periodo`:
+- **Legacy:** dre > actividades > comunic. sacd · exterior > sacd > atención actividades
+- **Pills2:** ATENCIÓN SACD > Actividades > Comunicación a los sacd
+- Con `propuesta=true`: dre > propuestas > lista activ. sacd.
 
 ### Tareas Habituales
 
@@ -87,8 +93,11 @@ El usuario selecciona un periodo y pulsa **buscar**: el sistema construye, por c
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Com Sacd Activ Periodo (frontend/actividadessacd/controller/com_sacd_activ_periodo.php)
+- Se accede desde la pantalla `com_sacd_activ_periodo`:
+- **Legacy:** dre > actividades > comunic. sacd · exterior > sacd > atención actividades
+- **Pills2:** ATENCIÓN SACD > Actividades > Comunicación a los sacd
+- Con `propuesta=true`: dre > propuestas > lista activ. sacd.
 
 ### Tareas Habituales
 
@@ -120,7 +129,10 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de a
 ### Donde Entrar
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
+- **Legacy:** dre > propuestas > asignar sacd (variantes: activ sv sg, activ sv sr, activ sv n y
+- agd, activ sf sg, activ sf sr, activ sf n,nax y agd, activ sss+, sf).
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
 ### Tareas Habituales
 
@@ -151,8 +163,9 @@ Al abrir el fragmento de edición de textos, el sistema carga la lista de idioma
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Com Sacd Txt (frontend/actividadessacd/controller/com_sacd_txt.php)
+- Sin entrada de menú en el índice: fragmento invocado desde "Comunicación a los sacd"
+- (`com_sacd_activ_periodo`) cuando el usuario tiene permiso de edición (`perm_mod_txt`).
 
 ### Tareas Habituales
 
@@ -184,7 +197,9 @@ Al abrir el fragmento de edición de textos, el sistema carga la lista de idioma
 ### Donde Entrar
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
+- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
 ### Tareas Habituales
 
@@ -220,7 +235,9 @@ Al abrir el fragmento de edición de textos, el sistema carga la lista de idioma
 ### Donde Entrar
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
+- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
 ### Tareas Habituales
 
@@ -256,7 +273,8 @@ Al abrir el fragmento de edición de textos, el sistema carga la lista de idioma
 ### Donde Entrar
 
 - Asignar Sacd Auto (frontend/actividadessacd/controller/asignar_sacd_auto.php)
-- Ruta de menu: pendiente de documentar.
+- Sin entrada de menú en el índice: pantalla auxiliar invocada desde "Asignar sacd a actividades"
+- (`activ_sacd`).
 
 ### Tareas Habituales
 
@@ -288,7 +306,9 @@ El usuario sube o baja la prioridad de un sacd ya asignado intercambiando su pos
 ### Donde Entrar
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
+- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
 ### Tareas Habituales
 
@@ -322,7 +342,9 @@ Antes de asignar un sacd, el usuario abre el popup de candidatos: el sistema dev
 ### Donde Entrar
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
+- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
 ### Tareas Habituales
 
@@ -353,7 +375,9 @@ Tras asignar, reordenar o borrar un sacd, el sistema refresca la celda de sacd d
 ### Donde Entrar
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
+- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
 ### Tareas Habituales
 
@@ -384,7 +408,10 @@ Con el tipo de menú `solape`, el usuario elige un periodo y pulsa **buscar**: e
 ### Donde Entrar
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
-- Ruta de menu: pendiente de documentar.
+- Se accede desde la pantalla `activ_sacd` con `tipo=solape` (sin entrada dedicada en el índice; se
+- abre desde la misma entrada "Asignar sacd" con el tipo correspondiente):
+- **Legacy:** dre > propuestas > asignar sacd
+- **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades
 
 ### Tareas Habituales
 
@@ -416,8 +443,9 @@ Con el tipo de menú `solape`, el usuario elige un periodo y pulsa **buscar**: e
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Com Sacd Txt (frontend/actividadessacd/controller/com_sacd_txt.php)
+- Sin entrada de menú en el índice: fragmento invocado desde "Comunicación a los sacd"
+- (`com_sacd_activ_periodo`) cuando el usuario tiene permiso de edición (`perm_mod_txt`).
 
 ### Tareas Habituales
 
@@ -448,9 +476,8 @@ Con el tipo de menú `solape`, el usuario elige un periodo y pulsa **buscar**: e
 - Flujo: `actividadessacd.texto_comunicacion.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadessacd/flujos/texto_comunicacion.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/actividadessacd/flujos/`.

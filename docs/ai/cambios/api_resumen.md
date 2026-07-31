@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "cambios"
-endpoints: 12
+endpoints: 13
 estado_revision: "generado"
 ---
 
@@ -15,6 +15,13 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `cambios.avisos_generar_lista_data`
 - Controller: `src/cambios/infrastructure/ui/http/controllers/avisos_generar_lista_data.php`
 - Entrada: `post.aviso_tipo:integer`, `post.id_usuario:integer`, `post.is_admin:integer`
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/cambios/avisos_generar_tabla`
+
+- Id: `cambios.avisos_generar_tabla`
+- Controller: `src/cambios/infrastructure/ui/http/controllers/avisos_generar_tabla.php`
+- Entrada: ninguna detectada.
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/cambios/cambio_usuario_eliminar`

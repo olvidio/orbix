@@ -10,6 +10,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\actividades\helpers\ActividadesListaSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -39,7 +40,7 @@ $a_campos = [
     'oTabla' => $oTabla,
     'oHash' => $oHash,
     'warnings' => (array) ($data['warnings'] ?? []),
-    'serie' => (string) ($data['serie'] ?? ''),
+    'serie' => PayloadCoercion::string($data['serie'] ?? ''),
     'url_ejecutar' => OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/migraciones_ejecutar.php',
     'url_quitar_registro' => OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/migraciones_quitar_registro.php',
     'msg_sin_seleccion' => _('debe seleccionar una migracion'),

@@ -235,21 +235,51 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         }
     }
 
-    function fnjs_slick_col_visible() {
-        // columnas visibles
+    /**
+     * Clave estable de columna SlickGrid (field/id). Evita indexar por el texto
+     * traducido del header, que rompe prefs al cambiar de idioma.
+     */
+    function fnjs_slick_col_key(col) {
+        if (!col) {
+            return '';
+        }
+        if (col.field !== undefined && col.field !== null && String(col.field) !== '') {
+            return String(col.field);
+        }
+        if (col.id !== undefined && col.id !== null && String(col.id) !== '') {
+            return String(col.id);
+        }
+        var name = (col.name !== undefined && col.name !== null) ? String(col.name) : '';
+        return name.replace(/ /g, '');
+    }
+
+    function fnjs_slick_grid(tabla) {
+        return (typeof window['grid_' + tabla] !== 'undefined') ? window['grid_' + tabla] : null;
+    }
+
+    function fnjs_slick_col_visible(tabla) {
+        // columnas visibles (solo las del grid indicado)
         var colsVisible = {};
         var ci = 0;
-        var v = "true";
-        $(".slick-header-columns .slick-column-name").each(function (i) {
-            ci++;
-            // para saber el nombre
-            var name = $(this).text();
-            // quito posibles espacios en el índice
-            var name_idx = name.replace(/ /g, '');
-            colsVisible[name_idx] = v;
-        });
+        var grid = fnjs_slick_grid(tabla);
+        if (grid && typeof grid.getColumns === 'function') {
+            grid.getColumns().forEach(function (col) {
+                var key = fnjs_slick_col_key(col);
+                if (key === '') {
+                    return;
+                }
+                ci++;
+                colsVisible[key] = 'true';
+            });
+        } else {
+            $("#grid_" + tabla + " .slick-header-columns .slick-column-name").each(function () {
+                ci++;
+                var name_idx = $(this).text().replace(/ /g, '');
+                colsVisible[name_idx] = 'true';
+            });
+        }
         if (ci === 0) {
-            colsVisible = 'noCambia';
+            return 'noCambia';
         }
         return colsVisible;
     }
@@ -266,7 +296,22 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
     function fnjs_slick_cols_width(tabla) {
         // anchura de las columnas
         var colsWidth = {};
-        $("#grid_" + tabla + " .slick-header-column").each(function (i) {
+        var grid = fnjs_slick_grid(tabla);
+        if (grid && typeof grid.getColumns === 'function') {
+            grid.getColumns().forEach(function (col) {
+                var key = fnjs_slick_col_key(col);
+                if (key === '') {
+                    return;
+                }
+                var w = col.width;
+                if (w === undefined || w === null) {
+                    w = 0;
+                }
+                colsWidth[key] = String(w);
+            });
+            return colsWidth;
+        }
+        $("#grid_" + tabla + " .slick-header-column").each(function () {
             var wid = $(this).css('width');
             var regExp = /(\d*)(px)*/;
             var match = regExp.exec(wid);
@@ -277,9 +322,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
                     w = 0;
                 }
             }
-            // para saber el nombre
             var name = $(this).children(".slick-column-name").text();
-            // quito posibles espacios en el índice
             var name_idx = name.replace(/ /g, '');
             colsWidth[name_idx] = w;
         });
@@ -317,6 +360,16 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
     function fnjs_slick_col_order(tabla) {
         // orden actual de las columnas visibles
         var colOrder = [];
+        var grid = fnjs_slick_grid(tabla);
+        if (grid && typeof grid.getColumns === 'function') {
+            grid.getColumns().forEach(function (col) {
+                var key = fnjs_slick_col_key(col);
+                if (key !== '') {
+                    colOrder.push(key);
+                }
+            });
+            return colOrder;
+        }
         $("#grid_" + tabla + " .slick-header-column").each(function () {
             var name = $(this).children(".slick-column-name").text();
             var name_idx = name.replace(/ /g, '');
@@ -335,7 +388,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         }
 
         var panelVis = fnjs_slick_search_panel(tabla);
-        var colsVisible = fnjs_slick_col_visible();
+        var colsVisible = fnjs_slick_col_visible(tabla);
         var colsWidth = fnjs_slick_cols_width(tabla);
         var colsOrder = fnjs_slick_col_order(tabla);
         var widthGrid = fnjs_slick_grid_width(tabla);

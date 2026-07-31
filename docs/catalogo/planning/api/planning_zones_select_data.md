@@ -25,9 +25,17 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Invoca `ActividadesPorZonasService` con zona, trimestre, año, filtro de actividad y flag
-`propuesta` (calendario en estudio). Serializa fechas del periodo como `planning_ini_iso` /
-`planning_fin_iso` y devuelve la cuadrícula por zonas.
+Invoca `ActividadesPorZonasService` con zona, trimestre/mes, año, flag de carga de
+actividades y flag `propuesta` (calendario en estudio). Serializa fechas del periodo como
+`planning_ini_iso` / `planning_fin_iso` y devuelve la cuadrícula por zonas.
+
+Ramas relevantes del servicio:
+
+- `actividad === 'si'` → carga actividades + ausencias por sacd; otro valor → slots vacíos.
+- `propuesta` truthy → status ≠ borrable; sin propuesta → solo `StatusId::ACTUAL`.
+- `id_zona` = `todo` | `todo_propias` | id concreto.
+
+No confundir `propuesta` (zonas) con `propuesta_calendario` (planning por casas).
 
 ## Endpoint
 
@@ -40,11 +48,11 @@ Invoca `ActividadesPorZonasService` con zona, trimestre, año, filtro de activid
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_zona` | `string` | application | No | Zona SACD; vacío puede significar todas según servicio |
-| `trimestre` | `integer` | application | No | Trimestre del periodo |
+| `id_zona` | `string` | application | No | Id zona, `todo` o `todo_propias` |
+| `trimestre` | `integer` | application | No | 1–6 (trim/sem) o 101–112 (mes) |
 | `year` | `integer` | application | No | Año |
-| `actividad` | `string` | application | No | Filtro por tipo/nombre de actividad |
-| `propuesta` | `string` | application | No | `true` → calendario propuesta (`propuesta_calendario`) |
+| `actividad` | `string` | application | No | `si` carga datos; otro valor → cuadrícula vacía |
+| `propuesta` | `string` | application | No | Truthy → calendario propuesta (no es `propuesta_calendario`) |
 
 ## Salida
 

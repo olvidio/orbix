@@ -8,6 +8,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -19,12 +20,12 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros(
     array_filter([
         'inventario' => $Qinventario,
         'id_tipo_doc' => $Qid_tipo_doc,
-    ], static fn ($v) => $v !== 0 && $v !== ''),
+    ], static fn ($v) => $v !== 0),
     ListNavSupport::idSelFromPost(),
     ListNavSupport::scrollIdFromPost(),
 );
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $Qid_tipo_doc > 0 ? ['id_tipo_doc' => $Qid_tipo_doc] : [],
     $navState,
@@ -35,7 +36,7 @@ ListNavSupport::syncNavStateAt(
     array_filter([
         'inventario' => $Qinventario,
         'id_tipo_doc' => $Qid_tipo_doc,
-    ], static fn ($v) => $v !== 0 && $v !== ''),
+    ], static fn ($v) => $v !== 0),
 );
 
 

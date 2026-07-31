@@ -2,6 +2,7 @@
 
 use frontend\actividades\helpers\ActividadesPermSupport;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Pantalla de filtros para listados particulares de sr/sg. La accion real
@@ -24,7 +25,7 @@ $oPosicion = FrontBootstrap::boot();
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::buildListaActivQueReturnParametros(['que' => $Qque]),

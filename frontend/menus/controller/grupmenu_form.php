@@ -6,6 +6,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use frontend\menus\helpers\MenusPostInput;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -36,7 +37,7 @@ $navState = ListNavSupport::mergeSelectionForRecordar(
     $Qscroll_id,
 );
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $navIdentity,
     $navState,

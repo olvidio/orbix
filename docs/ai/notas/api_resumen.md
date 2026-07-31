@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "notas"
-endpoints: 33
+endpoints: 36
 estado_revision: "generado"
 ---
 
@@ -73,11 +73,32 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Entrada: `post.acta:string`, `post.mes_fin_stgr:integer`, `post.titulo:string`
 - Respuesta: `standard_envelope_string_data`
 
+## `/src/notas/acta_ver_add_persona`
+
+- Id: `notas.acta_ver_add_persona`
+- Controller: `src/notas/infrastructure/ui/http/controllers/acta_ver_add_persona.php`
+- Entrada: `post.acta:string`, `post.id_nom:integer`, `post.nota_num:number`, `post.nota_max:integer`
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/notas/acta_ver_add_persona_form_data`
+
+- Id: `notas.acta_ver_add_persona_form_data`
+- Controller: `src/notas/infrastructure/ui/http/controllers/acta_ver_add_persona_form_data.php`
+- Entrada: `post.acta:string`
+- Respuesta: `standard_envelope_string_data`
+
 ## `/src/notas/acta_ver_form_data`
 
 - Id: `notas.acta_ver_form_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/acta_ver_form_data.php`
 - Entrada: ninguna detectada.
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/notas/acta_ver_notas_listado_data`
+
+- Id: `notas.acta_ver_notas_listado_data`
+- Controller: `src/notas/infrastructure/ui/http/controllers/acta_ver_notas_listado_data.php`
+- Entrada: `post.acta:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/actividades_buscar_data`

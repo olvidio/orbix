@@ -131,6 +131,7 @@ class PasswordHasher
         $PWSCORE = shell_exec(sprintf("command -v pwscore")) . ' ' . $username;
 
         // prevent UTF-8 characters being stripped by escapeshellarg
+        $localePrev = setlocale(LC_ALL, '0');
         setlocale(LC_ALL, 'en_US.utf-8');
 
         $out = [];
@@ -154,6 +155,10 @@ class PasswordHasher
                 default:
                     $txt_err = $msg;
             }
+        }
+
+        if (is_string($localePrev) && $localePrev !== '') {
+            setlocale(LC_ALL, $localePrev);
         }
 
         if (empty($txt_err)) {

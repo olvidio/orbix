@@ -4,6 +4,7 @@ namespace src\personas\application\services;
 
 use src\shared\config\ConfigGlobal;
 use PDO;
+use src\personas\domain\contracts\PersonaAllRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
@@ -21,19 +22,30 @@ class PersonaFinderService
     private PersonaDlRepositoryFactoryInterface $personaDlRepositoryFactory;
     private PersonaPubRepositoryInterface $personaPubRepository;
     private PersonaExRepositoryInterface $personaExRepository;
-    private PDO $oDB;
-    private PDO $oDBR;
+    private PersonaAllRepositoryInterface $personaAllRepository;
+    private ?PDO $oDB = null;
+    private ?PDO $oDBR = null;
 
     public function __construct(
         PersonaDlRepositoryFactoryInterface $personaDlRepositoryFactory,
         PersonaPubRepositoryInterface $personaPubRepository,
         PersonaExRepositoryInterface $personaExRepository,
+        PersonaAllRepositoryInterface $personaAllRepository,
     ) {
         $this->personaDlRepositoryFactory = $personaDlRepositoryFactory;
         $this->personaPubRepository = $personaPubRepository;
         $this->personaExRepository = $personaExRepository;
-        $this->oDB = GlobalPdo::get('oDB');
-        $this->oDBR = GlobalPdo::get('oDBR');
+        $this->personaAllRepository = $personaAllRepository;
+    }
+
+    private function oDB(): PDO
+    {
+        return $this->oDB ??= GlobalPdo::get('oDB');
+    }
+
+    private function oDBR(): PDO
+    {
+        return $this->oDBR ??= GlobalPdo::get('oDBR');
     }
 
     /**
@@ -56,20 +68,19 @@ class PersonaFinderService
     }
 
     /**
-     * Busca una persona por id_nom en el esquema global (local).
+     * Busca una persona por id_nom: local y, si no, global.personas (caso A, sin exigir publicación).
      *
      * @param array<string, array<int|string, string>> $problemasRegionStgr
      * @param-out array<string, array<int|string, string>> $problemasRegionStgr
      */
-    public function findPersonaEnGlobal(int $id_nom, array &$problemasRegionStgr = []): PersonaDl|PersonaPub|null
+    public function findPersonaEnGlobal(int $id_nom, array &$problemasRegionStgr = [], ?int $id_schema = null): PersonaDl|PersonaPub|null
     {
         $persona = $this->findFirstPersonaDl(['id_nom' => $id_nom, 'situacion' => 'A']);
         if ($persona !== null) {
             return $persona;
         }
 
-        $marcaAvisoRegionStgr = false;
-        $persona = $this->personaPubRepository->findByIdParaListado($id_nom, $problemasRegionStgr, $marcaAvisoRegionStgr);
+        $persona = $this->personaAllRepository->findByIdNomParaLookup($id_nom, $id_schema);
         if ($persona === null) {
             return null;
         }
@@ -78,6 +89,31 @@ class PersonaFinderService
         }
 
         return $persona;
+    }
+
+    /**
+     * Como {@see findPersonaEnGlobal()}, pero si no hay situación 'A' acepta cualquier
+     * situación (p. ej. tessera histórica de alguien ya no activo).
+     *
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
+     * @param-out array<string, array<int|string, string>> $problemasRegionStgr
+     */
+    public function findPersonaEnGlobalIncluyendoNoActivos(
+        int $id_nom,
+        array &$problemasRegionStgr = [],
+        ?int $id_schema = null,
+    ): PersonaDl|PersonaPub|null {
+        $persona = $this->findPersonaEnGlobal($id_nom, $problemasRegionStgr, $id_schema);
+        if ($persona !== null) {
+            return $persona;
+        }
+
+        $persona = $this->findFirstPersonaDl(['id_nom' => $id_nom]);
+        if ($persona !== null) {
+            return $persona;
+        }
+
+        return $this->personaAllRepository->findByIdNomParaLookup($id_nom, $id_schema);
     }
 
     /**
@@ -120,7 +156,7 @@ class PersonaFinderService
         $aResultados = [];
 
         foreach ($this->getPosiblesEsquemas() as $esquema) {
-            $oDB = $this->oDB;
+            $oDB = $this->oDB();
             $path_ini = $this->cambiarEsquema($esquema, $oDB);
 
             try {
@@ -150,7 +186,7 @@ class PersonaFinderService
      */
     private function getPosiblesEsquemas(): array
     {
-        $qRs = $this->oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
+        $qRs = $this->oDBR()->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
         if ($qRs === false) {
             return [];
         }
@@ -186,9 +222,9 @@ class PersonaFinderService
     private function cambiarEsquema(string $esquema, PDO &$oDB): string
     {
         if (ConfigGlobal::mi_region_dl() === $esquema) {
-            $oDB = $this->oDB;
+            $oDB = $this->oDB();
         } else {
-            $oDB = $this->oDBR;
+            $oDB = $this->oDBR();
         }
 
         $qRs = $oDB->query('SHOW search_path');

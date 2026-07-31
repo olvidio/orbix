@@ -5,7 +5,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 /**
  * Esta página sirve para la tessera de una persona.
@@ -177,8 +177,7 @@ $nom_lat = $oGesNomLatin->getVernaculaLatin($nom_vernacula);
 $nom=$trato.$nom_vernacula.$apellidos;
 */
 
-$oConfig = $_SESSION['oConfig'] ?? null;
-$region_latin = $oConfig instanceof ConfigSnapshot ? $oConfig->getNomRegionLatin() : '';
+$region_latin = SessionConfig::getNomRegionLatin();
 
 // conversion
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();

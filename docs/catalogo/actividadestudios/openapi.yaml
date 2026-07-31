@@ -17,9 +17,9 @@ paths:
       operationId: "post_actividadestudios_acta_notas_data"
       summary: "Acta Notas Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Prepara el acta de notas de una asignatura de una actividad: matriculados con sus notas, actas existentes y permiso de edición según la DL propietaria. Respalda `acta_notas`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/acta_notas_data.md`
       tags:
@@ -30,6 +30,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
+                - "id_asignatura"
               properties:
                 id_activ:
                   type: "integer"
@@ -53,7 +56,7 @@ paths:
       operationId: "post_actividadestudios_acta_notas_definitivas_grabar"
       summary: "Acta Notas Definitivas Grabar"
       description: |
-        Convierte las matriculas/notas borrador en `PersonaNota` definitivas (rama `que=3` del legacy `apps/actividadestudios/controller/acta_notas_update.php`).
+        Convierte las matrículas/notas borrador en `PersonaNota` definitivas (rama `que=3` del legacy `apps/actividadestudios/controller/acta_notas_update.php`). Se invoca desde `acta_notas` al grabar definitivas.
         
         Operacion: `mutacion`.
         
@@ -66,6 +69,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
+                - "id_asignatura"
               properties:
                 id_activ:
                   type: "integer"
@@ -89,7 +95,7 @@ paths:
       operationId: "post_actividadestudios_acta_notas_matricula_guardar"
       summary: "Acta Notas Matricula Guardar"
       description: |
-        Guarda las notas de cada matricula (borrador del acta de notas). Se invoca desde la pantalla `acta_notas` cuando el usuario pulsa "Grabar". Sustituye a la rama `que=1` del legacy `apps/actividadestudios/controller/acta_notas_update.php`.
+        Guarda las notas de cada matrícula (borrador del acta de notas). Se invoca desde `acta_notas` al pulsar "Grabar". Sustituye a la rama `que=1` del legacy `apps/actividadestudios/controller/acta_notas_update.php`.
         
         Operacion: `mutacion`.
         
@@ -102,6 +108,10 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
+                - "id_asignatura"
+                - "id_nom"
               properties:
                 acta_nota:
                   type: "array"
@@ -145,7 +155,7 @@ paths:
       operationId: "post_actividadestudios_actividad_asignatura_editar"
       summary: "Actividad Asignatura Editar"
       description: |
-        Edita una `ActividadAsignatura` existente. Sustituye al case `editar` del antiguo `update_3005.php` dispatcher.
+        Edita una `ActividadAsignatura` existente (profesor, aviso, tipo y fechas). Sustituye al case `editar` del antiguo `update_3005.php` dispatcher.
         
         Operacion: `mutacion`.
         
@@ -158,6 +168,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
+                - "id_asignatura"
               properties:
                 avis_profesor:
                   type: "string"
@@ -204,6 +217,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "pau"
               properties:
                 id_activ:
                   type: "integer"
@@ -246,6 +261,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
+                - "id_asignatura"
               properties:
                 avis_profesor:
                   type: "string"
@@ -292,6 +310,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -332,6 +352,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -372,6 +394,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 est_ok:
                   type: "string"
@@ -399,9 +423,9 @@ paths:
       operationId: "post_actividadestudios_ca_posibles_data"
       summary: "Ca Posibles Data"
       description: |
-        Misma lógica que `frontend/.../ca_posibles.php`; respuesta serializable. En modo `lista`, `pagina_link_spec` lo firma el front ({
+        Cuadro de "posibles CA" (centros de estudios) para las personas de un centro/grupo: para cada alumno y cada CA candidato, calcula los créditos posibles. Misma lógica que `frontend/.../ca_posibles.php`, en versión serializable. En modo `lista`, la especificación del enlace de página (`pagina_link_spec`) la firma el front.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/ca_posibles_data.md`
       tags:
@@ -413,38 +437,40 @@ paths:
             schema:
               type: object
               properties:
+                na:
+                  type: "string"
+                id_ctr_n:
+                  type: "integer"
+                id_ctr_agd:
+                  type: "integer"
                 ca_estudios:
                   type: "string"
                 ca_repaso:
                   type: "string"
                 ca_todos:
                   type: "string"
-                empiezamax:
-                  type: "string"
-                empiezamin:
-                  type: "string"
                 grupo_estudios:
-                  type: "string"
-                id_ctr_agd:
-                  type: "integer"
-                id_ctr_n:
-                  type: "integer"
-                idca:
-                  type: "string"
-                na:
-                  type: "string"
-                obj_pau:
                   type: "string"
                 periodo:
                   type: "string"
-                ref:
+                year:
+                  type: "integer"
+                empiezamin:
                   type: "string"
-                sel:
+                empiezamax:
+                  type: "string"
+                idca:
                   type: "string"
                 texto:
                   type: "string"
-                year:
-                  type: "integer"
+                ref:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -463,9 +489,9 @@ paths:
       operationId: "post_actividadestudios_ca_posibles_que_data"
       summary: "Ca Posibles Que Data"
       description: |
-        Desplegables y texto de grupo para `ca_posibles_que.php`.
+        Desplegables de centros (numerarios / agregados) y texto del grupo de estudios de la DL, para el formulario de selección de `ca_posibles_que.php`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/ca_posibles_que_data.md`
       tags:
@@ -498,7 +524,7 @@ paths:
       operationId: "post_actividadestudios_docencia_actualizar"
       summary: "Docencia Actualizar"
       description: |
-        Actualiza el dossier `d_docencia_stgr` con la informacion docente derivada de las actividades terminadas del periodo indicado. Para cada actividad terminada recorre sus asignaturas (con profesor asignado) y graba/actualiza la docencia correspondiente (`ProfesorDocenciaStgr`). Sustituye a la rama "continuar" del legacy `apps/actividadestudios/controller/actualizar_docencia.php`.
+        Actualiza el dossier `d_docencia_stgr` con la información docente derivada de las actividades terminadas del periodo indicado. Sustituye a la rama "continuar" del legacy `apps/actividadestudios/controller/actualizar_docencia.php`.
         
         Operacion: `mutacion`.
         
@@ -538,9 +564,9 @@ paths:
       operationId: "post_actividadestudios_e43_data"
       summary: "E43 Data"
       description: |
-        Datos certificado E43 (pantalla e imprimible).
+        Datos del certificado E43 de una persona en una actividad (pantalla e imprimible): datos personales, DL origen/destino, descripción de la actividad y asignaturas matriculadas con su nota/acta.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/e43_data.md`
       tags:
@@ -552,12 +578,12 @@ paths:
             schema:
               type: object
               properties:
-                append_blank_footer:
-                  type: "string"
-                id_activ:
-                  type: "integer"
                 id_nom:
                   type: "integer"
+                id_activ:
+                  type: "integer"
+                append_blank_footer:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -576,9 +602,9 @@ paths:
       operationId: "post_actividadestudios_e43_imprimir_mpdf_data"
       summary: "E43 Imprimir Mpdf Data"
       description: |
-        Datos certificado E43 (pantalla e imprimible).
+        Datos del certificado E43 orientados a la impresión mPDF: mismos datos que `e43_data`, con `append_blank_footer` forzado a `true` en el controller (fila en blanco para el pie del PDF).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/e43_imprimir_mpdf_data.md`
       tags:
@@ -590,8 +616,6 @@ paths:
             schema:
               type: object
               properties:
-                append_blank_footer:
-                  type: "string"
                 id_activ:
                   type: "integer"
                 id_nom:
@@ -614,9 +638,9 @@ paths:
       operationId: "post_actividadestudios_form_asignaturas_de_una_actividad_data"
       summary: "Form Asignaturas De Una Actividad Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Prepara el formulario de alta/edición de una asignatura dentro de una actividad (`ActividadAsignatura`): desplegables de profesor y asignatura, checks de aviso/confirmación y preceptor, fechas y campos ocultos. Respalda `form_asignaturas_de_una_actividad`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/form_asignaturas_de_una_actividad_data.md`
       tags:
@@ -628,16 +652,18 @@ paths:
             schema:
               type: object
               properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+                pau:
+                  type: "string"
+                id_pau:
+                  type: "integer"
                 id_activ:
                   type: "integer"
                 id_asignatura:
                   type: "integer"
-                id_pau:
-                  type: "integer"
-                pau:
-                  type: "string"
-                sel:
-                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -656,9 +682,9 @@ paths:
       operationId: "post_actividadestudios_form_matriculas_de_una_persona_data"
       summary: "Form Matriculas De Una Persona Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Prepara el formulario de alta/edición de la matrícula de una persona en una asignatura de una actividad. Respalda `form_matriculas_de_una_persona`.
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/form_matriculas_de_una_persona_data.md`
       tags:
@@ -670,14 +696,18 @@ paths:
             schema:
               type: object
               properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
                 id_activ:
                   type: "integer"
                 id_asignatura:
                   type: "integer"
-                id_nom:
-                  type: "integer"
-                sel:
-                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -696,9 +726,9 @@ paths:
       operationId: "post_actividadestudios_lista_clases_ca_data"
       summary: "Lista Clases Ca Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista de clases de un CA: por cada asignatura, su profesor/preceptor y los alumnos matriculados. Respalda `lista_clases_ca` (vista imprimible).
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/lista_clases_ca_data.md`
       tags:
@@ -709,6 +739,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -730,7 +762,7 @@ paths:
       operationId: "post_actividadestudios_matricula_automatica"
       summary: "Matricula Automatica"
       description: |
-        Matricula automaticamente a una o varias personas en las asignaturas correspondientes a su plan de estudios vigente del curso actual. - Si se recibe `id_pau`/`sel`, trabaja sobre una persona concreta (y opcionalmente una actividad via `id_activ`). - Si no, recorre a todas las personas en situacion `A` (activos) de la dl. Para cada persona: 1. Determina la actividad de estudios activa (`ca-n`, `cv-agd`). 2. Borra las matriculas previas (si el plan no esta confirmado). 3. Recalcula las asignaturas matriculables, respetando las aprobadas y los topes de las opcionales por bienio/cuadrienio. Sustituye a `apps/actividadestudios/controller/matricular.php`.
+        Matricula automáticamente a una o varias personas en las asignaturas de su plan de estudios del curso actual. Sustituye a `apps/actividadestudios/controller/matricular.php`.
         
         Operacion: `mutacion`.
         
@@ -770,7 +802,7 @@ paths:
       operationId: "post_actividadestudios_matricula_editar"
       summary: "Matricula Editar"
       description: |
-        Edita una matricula existente (id_asignatura, id_nivel, id_situacion, preceptor, id_preceptor). Sustituye al case `editar` de `update_3103.php`.
+        Edita una matrícula existente (`id_asignatura`, `id_nivel`, `id_situacion`, `preceptor`, `id_preceptor`). Sustituye al case `editar` de `update_3103.php`.
         
         Operacion: `mutacion`.
         
@@ -783,6 +815,10 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
+                - "id_asignatura"
+                - "id_nom"
               properties:
                 id_activ:
                   type: "integer"
@@ -818,7 +854,7 @@ paths:
       operationId: "post_actividadestudios_matricula_eliminar"
       summary: "Matricula Eliminar"
       description: |
-        Elimina una o varias matriculas y reajusta los dossiers 1303 / 3103 y las asignaturas impartidas (`ActividadAsignatura`). Sustituye al case `eliminar` del antiguo `update_3103.php` dispatcher.
+        Elimina una o varias matrículas y reajusta dossiers 1303 / 3103 y asignaturas impartidas (`ActividadAsignatura`). Sustituye al case `eliminar` del antiguo `update_3103.php`.
         
         Operacion: `mutacion`.
         
@@ -831,6 +867,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "pau"
               properties:
                 id_activ:
                   type: "integer"
@@ -864,7 +902,7 @@ paths:
       operationId: "post_actividadestudios_matricula_nueva"
       summary: "Matricula Nueva"
       description: |
-        Crea una matricula (asignatura de una persona en una actividad) y ajusta los dossiers 1303 (persona) y 3103 (actividad) + la asignatura impartida (`ActividadAsignatura`). Sustituye al case `nuevo` de `update_3103.php`.
+        Crea una matrícula (asignatura de una persona en una actividad) y ajusta los dossiers 1303 (persona) y 3103 (actividad) más la asignatura impartida (`ActividadAsignatura`). Sustituye al case `nuevo` de `update_3103.php`.
         
         Operacion: `mutacion`.
         
@@ -877,6 +915,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
+                - "id_nom"
               properties:
                 id_activ:
                   type: "integer"
@@ -912,7 +953,7 @@ paths:
       operationId: "post_actividadestudios_matriculas_lista_data"
       summary: "Matriculas Lista Data"
       description: |
-        Listado de matrículas en un intervalo de fechas (actividades cuyo `f_ini` cae en el periodo). Usado por `matriculas_lista` vía PostRequest.
+        Listado de matrículas en un intervalo de fechas (una fila por matrícula de actividades cuyo `f_ini` cae en el periodo). Usado por `matriculas_lista` vía PostRequest.
         
         Operacion: `lista_data`.
         
@@ -925,14 +966,13 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "inicioIso"
+                - "finIso"
               properties:
-                finIso:
-                  type: "string"
-                fin_iso:
-                  type: "string"
                 inicioIso:
                   type: "string"
-                inicio_iso:
+                finIso:
                   type: "string"
       responses:
         "200":
@@ -952,9 +992,9 @@ paths:
       operationId: "post_actividadestudios_matriculas_lista_otras_r_data"
       summary: "Matriculas Lista Otras R Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Lista de alumnos de otras regiones STGR pendientes de generar certificado (o búsqueda por apellido). Respalda `matriculas_lista_otras_r`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/matriculas_lista_otras_r_data.md`
       tags:
@@ -967,8 +1007,6 @@ paths:
               type: object
               properties:
                 apellido1:
-                  type: "string"
-                esquema:
                   type: "string"
                 esquema_region_stgr:
                   type: "string"
@@ -990,9 +1028,9 @@ paths:
       operationId: "post_actividadestudios_matriculas_pendientes_data"
       summary: "Matriculas Pendientes Data"
       description: |
-        Filas para `frontend/actividadestudios/controller/matriculas_pendientes.php`.
+        Filas de matrículas pendientes de nota (asignaturas sin acta) para `frontend/actividadestudios/controller/matriculas_pendientes.php`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/matriculas_pendientes_data.md`
       tags:
@@ -1025,9 +1063,9 @@ paths:
       operationId: "post_actividadestudios_plan_estudios_ca_data"
       summary: "Plan Estudios Ca Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Datos del plan de estudios de un CA (centro de estudios): director de estudios, profesores, preceptores y alumnos con sus asignaturas. Respalda `plan_estudios_ca`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/plan_estudios_ca_data.md`
       tags:
@@ -1038,6 +1076,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -1059,9 +1099,9 @@ paths:
       operationId: "post_actividadestudios_posibles_asignaturas_ca_data"
       summary: "Posibles Asignaturas Ca Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Para un CA, calcula qué asignaturas podrían darse (cuántos asistentes las tienen aún pendientes) y qué alumnos están cerca de terminar el cuadrienio. Respalda `posibles_asignaturas_ca`.
         
-        Operacion: `mutacion`.
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/posibles_asignaturas_ca_data.md`
       tags:
@@ -1072,6 +1112,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
               properties:
                 id_activ:
                   type: "integer"
@@ -1095,9 +1137,9 @@ paths:
       operationId: "post_actividadestudios_profesores_desplegable_data"
       summary: "Profesores Desplegable Data"
       description: |
-        Devuelve los datos (`id`, `opciones`, `selected`, `blanco`) para construir un `<select>` de profesores en el form de `ActividadAsignatura`.
+        Devuelve los datos (`id`, `opciones`, `selected`, `blanco`) para (re)construir el `<select>` de profesores en el form de `ActividadAsignatura` (llamada AJAX al cambiar el ámbito).
         
-        Operacion: `mutacion`.
+        Operacion: `form_data`.
         
         Fuente catalogo: `docs/catalogo/actividadestudios/api/profesores_desplegable_data.md`
       tags:
@@ -1109,14 +1151,14 @@ paths:
             schema:
               type: object
               properties:
-                id_activ:
-                  type: "integer"
+                salida:
+                  type: "string"
                 id_asignatura:
+                  type: "integer"
+                id_activ:
                   type: "integer"
                 id_profesor:
                   type: "integer"
-                salida:
-                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1187,6 +1229,8 @@ components:
       type: object
       properties:
         success:
+          type: "boolean"
+        mensaje:
           type: "string"
     actividadestudios_ActaNotasDefinitivasGrabarDataResponse:
       allOf:
@@ -1405,6 +1449,11 @@ components:
       properties:
         msg_err:
           type: "string"
+        aviso:
+          type: "string"
+        a_valores:
+          type: array
+          items: {}
     actividadestudios_MatriculasPendientesDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
@@ -1467,6 +1516,15 @@ components:
       properties:
         id:
           type: "string"
+        opciones:
+          type: array
+          items: {}
+        blanco:
+          type: "boolean"
+        val_blanco:
+          type: "string"
+        selected:
+          type: "integer"
     actividadestudios_ProfesoresDesplegableDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"

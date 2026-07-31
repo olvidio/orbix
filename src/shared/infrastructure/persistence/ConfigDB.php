@@ -271,7 +271,10 @@ class ConfigDB
         if (is_readable($connPath)) {
             $conn = self::cargarArrayInc($connPath);
             if (isset($conn['default']) && is_array($conn['default'])) {
-                return $conn['default'];
+                /** @var array<string, mixed> $default */
+                $default = $conn['default'];
+
+                return $default;
             }
         }
 
@@ -281,7 +284,10 @@ class ConfigDB
             }
             $data = self::cargarArrayInc($path);
             if (isset($data['default']) && is_array($data['default'])) {
-                return $data['default'];
+                /** @var array<string, mixed> $default */
+                $default = $data['default'];
+
+                return $default;
             }
         }
 

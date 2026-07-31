@@ -8,7 +8,7 @@ use frontend\notas\helpers\NotasFormSupport;
 use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\security\HashFrontSignedLink;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\session\SessionConfig;
 
 final class CertificadosPayload
 {
@@ -48,11 +48,9 @@ final class CertificadosPayload
         return $out;
     }
 
-    public static function oConfig(): ?ConfigSnapshot
+    public static function oConfig(): bool
     {
-        $oConfig = $_SESSION['oConfig'] ?? null;
-
-        return $oConfig instanceof ConfigSnapshot ? $oConfig : null;
+        return SessionConfig::isPresent();
     }
 
     /**

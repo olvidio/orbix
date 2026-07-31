@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
-use src\personas\domain\entity\Persona;
+use src\personas\application\services\PersonaFinderService;
 use src\ubis\domain\RegionStgrAviso;
 
 /**
@@ -14,6 +14,7 @@ final class TesseraVerData
 {
     public function __construct(
         private readonly Tesera $tesera,
+        private readonly PersonaFinderService $personaFinderService,
     ) {
     }
     /**
@@ -26,7 +27,10 @@ final class TesseraVerData
         }
 
         $problemasRegionStgr = [];
-        $oPersona = Persona::findPersonaEnGlobal($id_nom, $problemasRegionStgr);
+        $oPersona = $this->personaFinderService->findPersonaEnGlobalIncluyendoNoActivos(
+            $id_nom,
+            $problemasRegionStgr,
+        );
         if ($oPersona === null) {
             return $this->respuestaConAviso(sprintf(
                 _('No encuentro persona con id_nom: %s'),
@@ -44,7 +48,7 @@ final class TesseraVerData
             return $this->respuestaConAviso(RegionStgrAviso::formatear($problemasRegionStgr));
         }
 
-        return $this->tesera->datosParaVistaTesera($id_nom);
+        return $this->tesera->datosParaVistaTesera($id_nom, $oPersona);
     }
 
     /**

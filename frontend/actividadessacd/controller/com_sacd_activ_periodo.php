@@ -1,6 +1,7 @@
 <?php
 
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Pantalla unificada para la comunicacion de actividades a los sacd.
@@ -59,7 +60,7 @@ if ($Qque === 'un_sacd') {
 $navIdentity = $Qid_nom > 0 ? ['id_nom' => $Qid_nom] : [];
 $navState = ListNavSupport::buildReturnParametrosFromPost();
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     $navIdentity,
     $navState,

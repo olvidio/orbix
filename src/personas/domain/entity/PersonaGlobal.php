@@ -19,7 +19,7 @@ use src\personas\domain\value_objects\{ApelFamText,
     PersonaTratoCode,
     ProfesionText,
     SituacionCode};
-use src\shared\domain\traits\Hydratable;
+use src\personas\domain\traits\SerializesPublicadoParaJson;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\LocaleCode;
 use src\shared\infrastructure\DependencyResolver;
@@ -30,7 +30,7 @@ use src\ubis\domain\value_objects\DelegacionCode;
 
 class PersonaGlobal
 {
-    use Hydratable;
+    use SerializesPublicadoParaJson;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -82,7 +82,8 @@ class PersonaGlobal
 
     private ?LugarNacimientoText $lugar_nacimiento = null;
 
-    private ?bool $es_publico = false;
+    /** Mapa DL → caducidad (hidrato vía ConverterJson en repositorio). */
+    private mixed $publicado_para = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -655,14 +656,14 @@ class PersonaGlobal
             : LugarNacimientoText::fromNullableString($lugar);
     }
 
-    public function isEs_publico(): ?bool
+    public function getPublicado_para(): mixed
     {
-        return $this->es_publico;
+        return $this->publicado_para;
     }
 
-    public function setEs_publico(?bool $es_publico = null): void
+    public function setPublicado_para(mixed $publicado_para = null): void
     {
-        $this->es_publico = $es_publico;
+        $this->publicado_para = $publicado_para;
     }
 
 

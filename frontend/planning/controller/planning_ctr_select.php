@@ -11,6 +11,7 @@ use frontend\shared\web\Periodo;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Planning (calendario) de las personas de un centro (o grupo de
@@ -57,7 +58,7 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros([
 ], $Qid_sel, $Qscroll_id);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     ['ctr' => $Qctr, 'tipo' => $Qtipo],
     $navState,

@@ -144,6 +144,9 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
             'f_situacion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
             'f_inc' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
+        // p_de_paso_ex no hereda de global.personas: no tiene publicado_para
+        // (en v_personas_pub se proyecta como {"*": null}).
+        unset($aDatos['publicado_para']);
 
         if ($bInsert === false) {
             //UPDATE

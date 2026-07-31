@@ -10,6 +10,7 @@ use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\encargossacd\helpers\EncargossacdPayload;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\web\Posicion;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Listado de encargos. Los datos de cada fila vienen del backend
@@ -41,7 +42,7 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros([
 ], $Qid_sel, $Qscroll_id);
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,

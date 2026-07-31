@@ -444,7 +444,7 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
     /**
      * Normaliza una fila PostgreSQL de `av_cambios*` antes de {@see Cambio::fromArray()}.
      *
-     * @param array<string, mixed> $aDatos
+     * @param array<mixed, mixed> $aDatos
      * @return array<string, mixed>
      */
     private function hydrateCambioRowFromPg(array $aDatos): array

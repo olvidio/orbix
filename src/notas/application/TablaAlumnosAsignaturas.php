@@ -48,9 +48,6 @@ final class TablaAlumnosAsignaturas
     /** Valor de celda cuando la asignatura esta aprobada / no procede. */
     public const CELDA_APROBADA = '';
 
-    /** Rango de `id_nivel` del bienio+cuadrienio (asignaturas "regulares"). */
-    private const ID_NIVEL_ASIG_DESDE = 1100;
-    private const ID_NIVEL_ASIG_HASTA = 2500;
     /** Por debajo de `2000` se considera bienio; a partir de `2000`, cuadrienio. */
     private const ID_NIVEL_BIENIO_MAX = 2000;
     /** Umbral de `id_nivel` que marca las asignaturas "sintel" fin_bienio / fin_cuadrienio. */

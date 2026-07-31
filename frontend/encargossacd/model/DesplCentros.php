@@ -39,7 +39,7 @@ final class DesplCentros
 
         $oDesplCtr = new Desplegable();
         $oDesplCtr->setNombre(\frontend\shared\helpers\PayloadCoercion::string($data['id'] ?? 'lst_ctrs'));
-        $oDesplCtr->setOpciones(\EncargossacdPayload::desplegableOpciones($data['opciones'] ?? []));
+        $oDesplCtr->setOpciones(EncargossacdPayload::desplegableOpciones($data['opciones'] ?? []));
         if (!empty($data['blanco'])) {
             $oDesplCtr->setBlanco(true);
         }

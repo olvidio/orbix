@@ -216,7 +216,7 @@ class AvisosGenerarTabla
                     ) {
                         $statusActual = $this->statusActividadParaMatching(
                             $id_activ,
-                            $id_status_cmb,
+                            $id_status_cmb ?? 0,
                         );
                         if ($statusActual === null) {
                             continue;
@@ -274,24 +274,22 @@ class AvisosGenerarTabla
                         // fase on
                         if (in_array($id_fase_ref, $aFases_cmb)) {
                             if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_on)) {
-                                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)) {
-                                    $oPermActiv = $this->permisoActualActividad(
-                                        $id_usuario,
-                                        $id_activ,
-                                        (string) $id_tipo_activ,
-                                        (string) ($dl_org ?? ''),
-                                        $aFases_cmb,
-                                        $afecta,
-                                        $oCambio,
-                                        $err_fila,
-                                        $cambiosOmitidos,
-                                    );
-                                    if ($oPermActiv === null) {
-                                        continue 2;
-                                    }
-                                    if (!$oPermActiv->have_perm_activ('ocupado')) {
-                                        continue;
-                                    }
+                                $oPermActiv = $this->permisoActualActividad(
+                                    $id_usuario,
+                                    $id_activ,
+                                    (string) $id_tipo_activ,
+                                    (string) ($dl_org ?? ''),
+                                    $aFases_cmb,
+                                    $afecta,
+                                    $oCambio,
+                                    $err_fila,
+                                    $cambiosOmitidos,
+                                );
+                                if ($oPermActiv === null) {
+                                    continue 2;
+                                }
+                                if (!$oPermActiv->have_perm_activ('ocupado')) {
+                                    continue;
                                 }
 
                                 $fase_correcta = 1;
@@ -299,24 +297,22 @@ class AvisosGenerarTabla
                         } else {
                             // fase off
                             if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aviso_off)) {
-                                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)) {
-                                    $oPermActiv = $this->permisoActualActividad(
-                                        $id_usuario,
-                                        $id_activ,
-                                        (string) $id_tipo_activ,
-                                        (string) ($dl_org ?? ''),
-                                        $aFases_cmb,
-                                        $afecta,
-                                        $oCambio,
-                                        $err_fila,
-                                        $cambiosOmitidos,
-                                    );
-                                    if ($oPermActiv === null) {
-                                        continue 2;
-                                    }
-                                    if (!$oPermActiv->have_perm_activ('ocupado')) {
-                                        continue;
-                                    }
+                                $oPermActiv = $this->permisoActualActividad(
+                                    $id_usuario,
+                                    $id_activ,
+                                    (string) $id_tipo_activ,
+                                    (string) ($dl_org ?? ''),
+                                    $aFases_cmb,
+                                    $afecta,
+                                    $oCambio,
+                                    $err_fila,
+                                    $cambiosOmitidos,
+                                );
+                                if ($oPermActiv === null) {
+                                    continue 2;
+                                }
+                                if (!$oPermActiv->have_perm_activ('ocupado')) {
+                                    continue;
                                 }
 
                                 $fase_correcta = 1;
@@ -327,7 +323,7 @@ class AvisosGenerarTabla
                     if ($fase_correcta === 1) {
                         $cListaPropiedades = $CambiosUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadPrefs(['id_item_usuario_objeto' => $id_item_usuario_objeto]);
                         if ($cListaPropiedades === []) {
-                            if ($oAvisos->me_afecta($propiedad_cmb, $id_activ, $valor_old_cmb, $valor_new_cmb, $id_pau, (string) $sObjeto)) {
+                            if ($oAvisos->me_afecta($propiedad_cmb ?? '', $id_activ, $valor_old_cmb, $valor_new_cmb, $id_pau, (string) $sObjeto)) {
                                 $apuntar = true;
                             }
                         } else {
@@ -502,6 +498,7 @@ class AvisosGenerarTabla
      * (evita lookup en BD si la actividad ya no existe).
      *
      * @param list<int> $aFases_cmb
+     * @param array<string, true> &$cambiosOmitidos
      */
     private function permisoActualActividad(
         int $id_usuario,

@@ -3,13 +3,12 @@
 namespace frontend\actividades\helpers;
 
 use frontend\shared\AppInstalled;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
-use src\permisos\domain\PermisosActividades;
-use src\permisos\domain\PermisosActividadesTrue;
+use frontend\shared\session\SessionPermActividades;
 
 /**
- * Rellena {@see \src\permisos\domain\PermisosActividades::setFasesCompletadas}
- * vía backend antes de {@see \src\permisos\domain\PermisosActividades::getPermisoActual}
+ * Rellena fases completadas vía backend antes de {@see SessionPermActividades::getPermisoActual}
  * en controladores frontend sin contenedor DI completo en la misma petición.
  */
 final class PrefillPermActividadesFases
@@ -19,17 +18,15 @@ final class PrefillPermActividadesFases
         if (!AppInstalled::is('procesos')) {
             return;
         }
-        $oPermActividades = ActividadesPermSupport::oPermActividades();
-        if (!$oPermActividades instanceof PermisosActividades) {
+        if (!SessionPermActividades::isPresent()) {
             return;
         }
-        // PermisosActividadesTrue no usa fases; sus métodos devuelven permiso total.
-        if ($oPermActividades instanceof PermisosActividadesTrue) {
+        if (SessionPermActividades::isTrueEngine()) {
             return;
         }
 
         if ($idActiv <= 0) {
-            $oPermActividades->setFasesCompletadas([]);
+            SessionPermActividades::setFasesCompletadas([]);
 
             return;
         }
@@ -38,11 +35,20 @@ final class PrefillPermActividadesFases
             'id_activ' => $idActiv,
         ], false);
         if (!empty($row['error'])) {
-            $oPermActividades->setFasesCompletadas([]);
+            SessionPermActividades::setFasesCompletadas([]);
 
             return;
         }
-        $fases = $row['fases_completadas'] ?? [];
-        $oPermActividades->setFasesCompletadas(ActividadesPayload::fasesCompletadasFromPayload($fases));
+        $fasesRaw = $row['fases_completadas'] ?? [];
+        /** @var list<int> $fasesList */
+        $fasesList = [];
+        if (is_array($fasesRaw)) {
+            foreach ($fasesRaw as $id) {
+                if (is_int($id) || is_string($id)) {
+                    $fasesList[] = PayloadCoercion::int($id);
+                }
+            }
+        }
+        SessionPermActividades::setFasesCompletadas($fasesList);
     }
 }

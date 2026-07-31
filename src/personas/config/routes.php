@@ -27,6 +27,12 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/personas/stgr_cambio_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/stgr_cambio_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/personas/persona_publicar_form_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/persona_publicar_form_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/personas/persona_publicar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/persona_publicar.php';
+    });
     $r->addRoute(['GET', 'POST'], '/src/personas/traslado_form_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/traslado_form_data.php';
     });

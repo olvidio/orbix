@@ -6,6 +6,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\application\PlanEstudiosDePersona;
+use src\notas\application\support\ActaPersonaFormListas;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaSituacion;
@@ -33,6 +34,7 @@ final class NotaPersonaFormData
         private readonly ActividadAllRepositoryInterface $actividadAllRepository,
         private readonly ProfesorStgrRepositoryInterface $rofesorStgrRepository,
         private readonly PlanEstudiosDePersona $planEstudiosDePersona,
+        private readonly ActaPersonaFormListas $actaPersonaFormListas,
     ) {
     }
 
@@ -101,6 +103,12 @@ final class NotaPersonaFormData
 
         $oF_acta = $oPersonaNota->getF_acta();
         $id_activ = $oPersonaNota->getId_activ();
+        $tipoActa = (int) ($oPersonaNota->getTipo_acta() ?? TipoActa::FORMATO_ACTA);
+        $actaCampos = $this->actaPersonaFormListas->valoresDesdeActa(
+            $oPersonaNota->getActa() ?? '',
+            $tipoActa,
+        );
+        $listasActa = $this->actaPersonaFormListas->listas();
 
         return [
             'mod' => 'editar',
@@ -111,6 +119,13 @@ final class NotaPersonaFormData
             'nota_num' => $oPersonaNota->getNota_num(),
             'nota_max' => $oPersonaNota->getNota_max(),
             'acta' => $oPersonaNota->getActa(),
+            'acta_sigla_sel' => $actaCampos['acta_sigla_sel'],
+            'acta_num' => $actaCampos['acta_num'],
+            'acta_cert_dl_sel' => $actaCampos['acta_cert_dl_sel'],
+            'acta_cert_num' => $actaCampos['acta_cert_num'],
+            'mi_sigla' => $listasActa['mi_sigla'],
+            'dl_sin_esquema' => $listasActa['dl_sin_esquema'],
+            'opciones_certificado_dl' => $listasActa['opciones_certificado_dl'],
             'tipo_acta' => $oPersonaNota->getTipo_acta(),
             'f_acta' => $oF_acta instanceof DateTimeLocal ? $oF_acta->getFromLocal() : '',
             'f_acta_iso' => $oF_acta instanceof DateTimeLocal ? $oF_acta->format('Y-m-d') : '',
@@ -170,6 +185,8 @@ final class NotaPersonaFormData
         $aFaltan[9998] = _("fin cuadrienio");
         $aFaltan[9999] = _("fin bienio");
 
+        $listasActa = $this->actaPersonaFormListas->listas();
+
         return [
             'mod' => 'nuevo',
             'id_asignatura_real' => '',
@@ -179,6 +196,13 @@ final class NotaPersonaFormData
             'nota_num' => '',
             'nota_max' => '',
             'acta' => '',
+            'acta_sigla_sel' => $listasActa['mi_sigla'],
+            'acta_num' => '',
+            'acta_cert_dl_sel' => '',
+            'acta_cert_num' => '',
+            'mi_sigla' => $listasActa['mi_sigla'],
+            'dl_sin_esquema' => $listasActa['dl_sin_esquema'],
+            'opciones_certificado_dl' => $listasActa['opciones_certificado_dl'],
             'tipo_acta' => '',
             'f_acta' => '',
             'f_acta_iso' => '',

@@ -20,7 +20,7 @@ use src\personas\domain\value_objects\{ApelFamText,
     PersonaTratoCode,
     ProfesionText,
     SituacionCode};
-use src\shared\domain\traits\Hydratable;
+use src\personas\domain\traits\SerializesPublicadoParaJson;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\LocaleCode;
 use src\shared\infrastructure\DependencyResolver;
@@ -32,7 +32,7 @@ use src\ubis\domain\value_objects\DelegacionCode;
 
 class PersonaEx
 {
-    use Hydratable;
+    use SerializesPublicadoParaJson;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
     private int $id_schema;
@@ -86,6 +86,9 @@ class PersonaEx
     private ?int $edad = null;
 
     private ?bool $profesor_stgr = false;
+
+    /** Mapa DL → caducidad (hidrato vía ConverterJson en repositorio). */
+    private mixed $publicado_para = null;
 
     public function getId_ctr(): ?int
     {
@@ -682,6 +685,16 @@ class PersonaEx
     public function setProfesor_stgr(?bool $profesor_stgr = null): void
     {
         $this->profesor_stgr = $profesor_stgr;
+    }
+
+    public function getPublicado_para(): mixed
+    {
+        return $this->publicado_para;
+    }
+
+    public function setPublicado_para(mixed $publicado_para = null): void
+    {
+        $this->publicado_para = $publicado_para;
     }
 
 

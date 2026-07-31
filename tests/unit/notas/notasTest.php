@@ -13,6 +13,8 @@ use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
+use src\notas\domain\value_objects\NotaSituacion;
+use src\notas\domain\value_objects\TipoActa;
 use src\ubis\application\services\DelegacionUtils;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use Tests\factories\notas\NotasFactory;
@@ -71,8 +73,59 @@ class notasTest extends myTest
         return $PersonaNotaDBRepository;
     }
 
-    private function nuevoEditarPersonaNota(\src\notas\domain\entity\PersonaNota $oPersonaNota): EditarPersonaNota
+    private function personaNotaOtraRegionStgrRepositoryForSession(): PersonaNotaOtraRegionStgrRepositoryInterface
     {
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        $esquema_region_stgr = $DelegacionRepository->mi_region_stgr()['esquema_region_stgr'] ?? '';
+
+        return $GLOBALS['container']->make(
+            PersonaNotaOtraRegionStgrRepositoryInterface::class,
+            ['esquema_region_stgr' => $esquema_region_stgr]
+        );
+    }
+
+    private function assertSinNotasOtraRegion(int $id_nom, int $id_asignatura): void
+    {
+        $PersonaNotaOtraRegionStgrRepository = $this->personaNotaOtraRegionStgrRepositoryForSession();
+        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas([
+            'id_nom' => $id_nom,
+            'id_asignatura' => $id_asignatura,
+        ]);
+        $this->assertEmpty(
+            $cPersonaNota,
+            'Modelo B: la nota no debe escribirse en e_notas_otra_region_stgr'
+        );
+    }
+
+    private function assertSinPlaceholderCertificadoEnDlAlumno(string $esquemaAlumno, int $id_nom, int $id_asignatura): void
+    {
+        $PersonaNotaRepository = $this->personaNotaDlRepositoryForSchema($esquemaAlumno);
+        $cPersonaNotaDB = $PersonaNotaRepository->getPersonaNotas([
+            'id_nom' => $id_nom,
+            'id_asignatura' => $id_asignatura,
+        ]);
+        foreach ($cPersonaNotaDB as $oPersonaNotaDB) {
+            $this->assertNotEquals(
+                TipoActa::FORMATO_CERTIFICADO,
+                $oPersonaNotaDB->getTipo_acta(),
+                'Modelo B: sin placeholder tipo_acta certificado en DL del alumno'
+            );
+            $this->assertNotEquals(
+                NotaSituacion::FALTA_CERTIFICADO,
+                $oPersonaNotaDB->getId_situacion(),
+                'Modelo B: sin placeholder FALTA_CERTIFICADO en DL del alumno'
+            );
+        }
+    }
+
+    /**
+     * @param bool $conMapaActa true para activar el enrutado por prefijo de acta
+     *                          (`mapa_prefijo_acta_esquema`), como en producción.
+     */
+    private function nuevoEditarPersonaNota(
+        \src\notas\domain\entity\PersonaNota $oPersonaNota,
+        bool $conMapaActa = false,
+    ): EditarPersonaNota {
         $container = $GLOBALS['container'];
         return new EditarPersonaNota(
             $oPersonaNota,
@@ -81,6 +134,9 @@ class notasTest extends myTest
             $container->get(\src\utils_database\domain\contracts\DbSchemaRepositoryInterface::class),
             $container->get(\src\dossiers\domain\contracts\DossierRepositoryInterface::class),
             $container->get(\src\notas\domain\contracts\PersonaNotaDlRepositoryInterface::class),
+            $conMapaActa
+                ? $container->get(\src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface::class)
+                : null,
         );
     }
 
@@ -92,37 +148,52 @@ class notasTest extends myTest
      * debe dar error
      * @return void
      */
-    public function test_guardar_nota_sin_region_p_de_paso(): void
+    /**
+     * Acta de una DL cuyo esquema no se puede abrir (no está en la configuración de conexiones):
+     * el enrutado por `mapa_prefijo_acta_esquema` debe fallar de forma explícita, no escribir la
+     * nota en la DL de la sesión.
+     *
+     * Antes este test guardaba desde `Pla-crPlav` y solo «pasaba» cuando la asignatura aleatoria
+     * chocaba con restos de otra corrida («Ya existe esta nota»), así que era indeterminista.
+     */
+    public function test_guardar_nota_acta_de_esquema_no_configurado_lanza(): void
     {
-        $this->expectException(RuntimeException::class);
+        // Prefijo «crusca» → `Usca-crUsca` en mapa_prefijo_acta_esquema, sin conexión configurada.
+        $esquemaSinConfig = 'Usca-crUscav';
+        if ((new ConfigDB('sv'))->tieneEsquema($esquemaSinConfig)) {
+            $this->markTestSkipped(sprintf(
+                'El esquema %s ya tiene conexión configurada: este test necesita uno que no la tenga.',
+                $esquemaSinConfig
+            ));
+        }
 
-        // dlB desde la que se ejecuta la operación de guardar nota.
-        $esquema = 'Pla-crPlav';
+        // DL desde la que se ejecuta la operación de guardar nota.
+        $esquema = 'H-dlbv';
         $_SESSION['session_auth']['esquema'] = $esquema;
 
         // persona de paso: id_nom negativo; esquema = -1001;
         $id_nom = -1001123;
-        $id_schema_persona = '-1001'; // restov
+        $id_schema_persona = -1001; // restov
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
         $dl = DelegacionUtils::getDlFromSchema($esquema);
         $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
+        $personaNota->setActa('crusca 12/24');
+        $personaNota->setTipo_acta(TipoActa::FORMATO_ACTA);
 
-        $oEditarPersonaNota = $this->nuevoEditarPersonaNota($personaNota);
+        $oEditarPersonaNota = $this->nuevoEditarPersonaNota($personaNota, conMapaActa: true);
         $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
 
-        $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
-
-        $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+        $this->expectException(RuntimeException::class);
+        $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
     }
 
     ///////////////  Una region ella misma region del stgr ////////////
-    //// La única diferencia con la dl del stgr es que la tabla e_notas_otra_region
-    /// está en el propio esquema, no existe una instancia superior.
     /**
-     * Guardar nota de una persona de paso desde una region del stgr (crB).
-     *      nota en la tabla crB.e_notas_otras_region_stgr
+     * Guardar nota de una persona de paso desde una región del stgr (crB).
+     * Modelo B: la nota queda en e_notas_dl de la DL/sesión examinadora (Galbel-crGalbelv);
+     * no en e_notas_otra_region_stgr ni placeholder certificado.
      * @return void
      * @throws Exception
      */
@@ -147,32 +218,35 @@ class notasTest extends myTest
         $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
+        $this->assertArrayHasKey('repo_real', $a_ObjetosPersonaNota);
+        $this->assertArrayNotHasKey('repo_certificado', $a_ObjetosPersonaNota);
 
         $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota_real'];
 
-        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
-        $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
-
-        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
-        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
+        $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
+        $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas([
+            'id_nom' => $id_nom,
+            'id_asignatura' => $personaNota->getId_asignatura(),
+        ]);
         $oPersonaNota2 = $cPersonaNota[0];
 
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
-        $PersonaNotaOtraRegionStgrRepository->Eliminar($oPersonaNota2);
+        $PersonaNotaDlRepository->Eliminar($oPersonaNota2);
 
-        // nota certificado (No debe existir)
-        $oPersonaNotaCertificadoDB = $rta['certificado'] ?? '';
-        $this->assertEquals('', $oPersonaNotaCertificadoDB);
+        $this->assertSinNotasOtraRegion($id_nom, $personaNota->getId_asignatura());
+
+        $this->assertArrayNotHasKey('nota_certificado', $rta);
+        $this->assertTrue($rta['destino_externo'], 'Persona de paso (crB) debe marcarse destino_externo');
 
     }
 
     ///////////////  Desde una dl/r que pertenece a una region stgr ////////////
     ///
     /**
-     * Guardar nota de una persona de paso desde la dlB (que organiza la actividad)
-     *      nota en la tabla dlB.e_notas_otras_region_stgr
+     * Guardar nota de una persona de paso desde la dlB (que organiza la actividad).
+     * Modelo B: la nota queda en e_notas_dl de la DL/sesión examinadora (H-dlbv);
+     * no en e_notas_otra_region_stgr ni placeholder certificado.
      * @return void
      * @throws Exception
      */
@@ -195,32 +269,34 @@ class notasTest extends myTest
         $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
+        $this->assertArrayHasKey('repo_real', $a_ObjetosPersonaNota);
+        $this->assertArrayNotHasKey('repo_certificado', $a_ObjetosPersonaNota);
 
         $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota_real'];
 
-        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
-        $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
-
-        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
-        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
+        $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
+        $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas([
+            'id_nom' => $id_nom,
+            'id_asignatura' => $personaNota->getId_asignatura(),
+        ]);
         $oPersonaNota2 = $cPersonaNota[0];
 
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
-        $PersonaNotaOtraRegionStgrRepository->Eliminar($oPersonaNota2);
+        $PersonaNotaDlRepository->Eliminar($oPersonaNota2);
 
-        // nota certificado (No debe existir)
-        $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
-        $this->assertEquals('', $oPersonaNotaCertificadoDB);
+        $this->assertSinNotasOtraRegion($id_nom, $personaNota->getId_asignatura());
+
+        $this->assertArrayNotHasKey('nota_certificado', $rta);
+        $this->assertTrue($rta['destino_externo'], 'Persona de paso (dl stgr) debe marcarse destino_externo');
 
     }
 
     /**
      * Guardar nota de una persona dlA (presente en Aquinate) desde la dlB (que organiza la actividad)
-     * que pertenecen a distintas regiones del stgr
-     *      nota en la tabla dlB.e_notas_otras_region_stgr
-     *      nota "falta certificado" en dlA.e_notas_dl.
+     * que pertenecen a distintas regiones del stgr.
+     * Modelo B: la nota queda en e_notas_dl de la DL examinadora (H-dlbv);
+     * sin fila en e_notas_otra_region_stgr ni placeholder FALTA_CERTIFICADO en dlA.
      * @return void
      * @throws Exception
      */
@@ -244,46 +320,39 @@ class notasTest extends myTest
         $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
+        $this->assertArrayHasKey('repo_real', $a_ObjetosPersonaNota);
+        $this->assertArrayNotHasKey('repo_certificado', $a_ObjetosPersonaNota);
 
         $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota_real'];
 
-        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
-        $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
+        $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
+        $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas([
+            'id_nom' => $id_nom,
+            'id_asignatura' => $personaNota->getId_asignatura(),
+        ]);
+        $oPersonaNota2 = $cPersonaNota[0] ?? null;
 
-        // Estoy en H-dlbv. La nota debe estar en Galbel-crGalbelv.
-        // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
-        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
-        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
-        if ($cPersonaNota !== null) {
-            $oPersonaNota2 = $cPersonaNota[0];
-        } else {
-            $oPersonaNota2 = null;
-        }
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
-        $PersonaNotaOtraRegionStgrRepository->Eliminar($oPersonaNota2);
+        $PersonaNotaDlRepository->Eliminar($oPersonaNota2);
 
-        // guardar certificado
-        $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
-        $this->assertNotEquals('', $oPersonaNotaCertificadoDB);
+        $this->assertSinNotasOtraRegion($id_nom, $personaNota->getId_asignatura());
 
-        // Estoy en H-dlbv. La nota certificado debe estar en Galbel-crGalbelv.
-        $PersonaNotaRepository = $this->personaNotaDlRepositoryForSchema('Galbel-crGalbelv');
-        $cPersonaNotaDB = $PersonaNotaRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
-        $this->assertNotEmpty($cPersonaNotaDB);
-        $oPersonaNotaDB = $cPersonaNotaDB[0];
+        $this->assertArrayNotHasKey('nota_certificado', $rta);
+        $this->assertFalse($rta['destino_externo'], 'Alumno Orbix de otra región STGR no es entidad externa');
 
-        $this->assertEquals($oPersonaNotaCertificadoDB, $oPersonaNotaDB);
-
-        $PersonaNotaRepository->Eliminar($oPersonaNotaDB);
+        $this->assertSinPlaceholderCertificadoEnDlAlumno(
+            'Galbel-crGalbelv',
+            $id_nom,
+            $personaNota->getId_asignatura()
+        );
     }
 
     /**
      * Modificar nota de una persona dlA (presente en Aquinate) desde la dlB (que organiza la actividad)
-     * que pertenecen a distintas regiones del stgr
-     *      nota en la tabla dlB.e_notas_otras_region_stgr
-     *      nota "falta certificado" en dlA.e_notas_dl.
+     * que pertenecen a distintas regiones del stgr.
+     * Modelo B: la nota modificada permanece en e_notas_dl de la DL examinadora (H-dlbv);
+     * sin fila en e_notas_otra_region_stgr ni placeholder FALTA_CERTIFICADO en dlA.
      * @return void
      * @throws Exception
      */
@@ -318,41 +387,32 @@ class notasTest extends myTest
 
         $oPersonaNota = $rta['nota_real'];
 
-        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
-        $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
+        $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
+        $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas([
+            'id_nom' => $id_nom,
+            'id_asignatura' => $personaNota->getId_asignatura(),
+        ]);
+        $oPersonaNota2 = $cPersonaNota[0] ?? null;
 
-        // Estoy en H-dlbv. La nota debe estar en Galbel-crGalbelv.
-        // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
-        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
-        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
-        if ($cPersonaNota !== null) {
-            $oPersonaNota2 = $cPersonaNota[0];
-        } else {
-            $oPersonaNota2 = null;
-        }
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
-        $PersonaNotaOtraRegionStgrRepository->Eliminar($oPersonaNota2);
+        $PersonaNotaDlRepository->Eliminar($oPersonaNota2);
 
-        // guardar certificado
-        $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
-        $this->assertNotEquals('', $oPersonaNotaCertificadoDB);
+        $this->assertSinNotasOtraRegion($id_nom, $personaNota->getId_asignatura());
 
-        // Estoy en H-dlbv. La nota certificado debe estar en Galbel-crGalbelv.
-        $PersonaNotaRepository = $this->personaNotaDlRepositoryForSchema('Galbel-crGalbelv');
-        $cPersonaNotaDB = $PersonaNotaRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
-        $this->assertNotEmpty($cPersonaNotaDB);
-        $oPersonaNotaDB = $cPersonaNotaDB[0];
+        $this->assertArrayNotHasKey('nota_certificado', $rta);
+        $this->assertFalse($rta['destino_externo'], 'Alumno Orbix de otra región STGR no es entidad externa');
 
-        $this->assertEquals($oPersonaNotaCertificadoDB, $oPersonaNotaDB);
-
-        $PersonaNotaRepository->Eliminar($oPersonaNotaDB);
+        $this->assertSinPlaceholderCertificadoEnDlAlumno(
+            'Galbel-crGalbelv',
+            $id_nom,
+            $personaNota->getId_asignatura()
+        );
     }
 
     /**
      * Guardar nota de una persona dlA desde la dlB (que organiza la actividad)
-     * Si las dos pertenecen a la misma región del stgr
-     *      nota en dlA.e_notas_dl.
+     * si las dos pertenecen a la misma región del stgr.
+     * Modelo B: la nota queda en e_notas_dl de la DL examinadora (H-dlbv), no en la DL del alumno.
      * @return void
      * @throws Exception
      */
@@ -380,21 +440,17 @@ class notasTest extends myTest
         $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota_real'];
 
-        // Estoy en H-dlbv. La nota debe estar en H-dlsv.
-        // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
+        // Estoy en H-dlbv. La nota debe estar en H-dlbv.e_notas_dl (DL examinadora).
         $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
         $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
-        if ($cPersonaNota !== null) {
-            $oPersonaNota2 = $cPersonaNota[0];
-        } else {
-            $oPersonaNota2 = null;
-        }
+        $oPersonaNota2 = $cPersonaNota[0] ?? null;
 
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
 
         $PersonaNotaDlRepository->Eliminar($oPersonaNota2);
 
-        // guardar certificado
+        $this->assertSinNotasOtraRegion($id_nom, $personaNota->getId_asignatura());
+
         $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
         $this->assertEquals('', $oPersonaNotaCertificadoDB);
     }
@@ -496,7 +552,9 @@ class notasTest extends myTest
      */
     public function test_save_PersonaNotaDl(): void
     {
-        $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
+        // Explícito: el repo del contenedor es singleton y un test anterior puede haberlo dejado
+        // apuntando a otro esquema (la fila nacería con otro `id_schema`).
+        $PersonaNotaDlRepository = $this->personaNotaDlRepositoryForSchema('H-dlbv');
         $oPersonaNota = $this->crear_PersonaNota();
         $PersonaNotaDlRepository->Guardar($oPersonaNota);
 

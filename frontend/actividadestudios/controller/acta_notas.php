@@ -39,7 +39,7 @@ $bloqueRaw = filter_input(INPUT_POST, 'bloque');
 $bloque = is_string($bloqueRaw) && $bloqueRaw !== '' ? $bloqueRaw : '#main';
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     $bloque,
     ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura],
     $navState,

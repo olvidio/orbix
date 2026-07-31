@@ -105,7 +105,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.e43_imprimir_mpdf_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/e43_imprimir_mpdf_data.php`
-- Entrada: `post.append_blank_footer:mixed`, `post.id_activ:integer`, `post.id_nom:integer`
+- Entrada: `post.id_activ:integer`, `post.id_nom:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/form_asignaturas_de_una_actividad_data`

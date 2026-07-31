@@ -17,7 +17,7 @@ Cuadrícula de actividades por zona SACD tras enviar filtros en `planning_zones_
 
 ## Objetivo De Usuario
 
-Visualizar y exportar el planning por zonas en el trimestre elegido.
+Visualizar y exportar el planning por zonas en el trimestre/mes elegido (calendario actual o propuesta).
 
 ## Punto De Entrada
 
@@ -25,11 +25,22 @@ Visualizar y exportar el planning por zonas en el trimestre elegido.
 
 ## Escenarios
 
-### Ver calendario
+### Ver calendario actual
 
-1. Confirmar zona, trimestre, año y actividad.
-2. `planning_zones_select_data` devuelve `actividades_por_zona` y cabeceras.
-3. Exportar o consultar leyenda.
+1. Confirmar zona (`todo`/`todo_propias` si jefe), trimestre/mes, año y `actividad=si|no`.
+2. Sin `propuesta`: el servicio filtra actividades en status ACTUAL.
+3. `planning_zones_select_data` devuelve `actividades_por_zona` y cabeceras.
+4. Exportar o consultar leyenda.
+
+### Ver propuesta de calendario
+
+1. Entrada de menú con `propuesta=true` (o hidden propagado).
+2. Status ≠ borrable; UI muestra banner de propuesta.
+3. Resto igual que el calendario actual.
+
+### Cuadrícula limpia
+
+1. Elegir `actividad=no` → slots vacíos por persona (útil para imprimir plantilla).
 
 ## Endpoints Del Flujo
 

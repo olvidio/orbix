@@ -10,6 +10,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Formulario de filtros para el planning por persona (numerarios, agd,
@@ -55,7 +56,7 @@ if (PlanningPostInput::postString('saWhere') !== '' || PlanningPostInput::postSt
 }
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::mergeSelectionIntoReturnParametros([

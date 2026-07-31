@@ -8,6 +8,7 @@ use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\menus\helpers\MenusPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 
 // Crea los objetos de uso global **********************************************
@@ -21,7 +22,7 @@ $Qscroll_id = ListNavSupport::scrollIdFromPost();
 
 $navState = ListNavSupport::mergeSelectionIntoReturnParametros([], $Qid_sel, $Qscroll_id);
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     $navState,
@@ -41,10 +42,10 @@ $a_botones[] = ['txt' => _("modificar"), 'click' => "fnjs_modificar(this.form)"]
 $a_botones[] = ['txt' => _("borrar"), 'click' => "fnjs_eliminar(this.form)"];
 
 
-if (isset($Qid_sel) && !empty($Qid_sel)) {
+if (!empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
-if (isset($Qscroll_id) && !empty($Qscroll_id)) {
+if ($Qscroll_id !== '') {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 

@@ -22,10 +22,15 @@ Alta/edición nombre y orden de un grupmenu.
 
 - Subtipo: `fragmento_ajax`
 
+## Casos particulares
+
+- Alta (`id_grupmenu` vacío / `nuevo`): no llama `grupmenu_info`.
+- Edición: carga `grupmenu_info` y guarda con `grupmenu_guardar`.
+- Si `que=del_grupmenu`, ignora `sel` de selección múltiple en favor del flujo de eliminar.
+
 ## Ruta de menú
 
-- **Legacy:** sin entrada de menú en el índice
-- **Pills2:** sin entrada de menú en el índice
+sin entrada de menú en el índice
 
 ## Manual De Usuario
 

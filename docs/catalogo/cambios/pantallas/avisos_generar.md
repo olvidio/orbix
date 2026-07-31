@@ -20,6 +20,9 @@ Pantalla de consulta y mantenimiento de cambios anotados pendientes de avisar (`
 `avisado=false`). Los administradores pueden filtrar por usuario y tipo de aviso; el resto ve solo sus
 propios cambios.
 
+La generación de la tabla de avisos (relleno de `CambioUsuario` desde `Cambio`) es un proceso aparte:
+menú «generar tabla avisos» → `/src/cambios/avisos_generar_tabla` (sin pantalla FE propia).
+
 ## Tipo
 
 - Subtipo: `fragmento_ajax`

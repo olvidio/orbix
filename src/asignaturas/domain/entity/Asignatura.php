@@ -63,9 +63,10 @@ class Asignatura
     /**
      * @param array<string, mixed> $aDatos
      */
-    public static function fromArray(array $aDatos): static
+    public static function fromArray(array $aDatos): self
     {
-        $asignatura = (new self())->setAllAttributes($aDatos);
+        $asignatura = new self();
+        $asignatura->setAllAttributes($aDatos);
         $asignatura->capturePlanEstudiosPkey();
 
         return $asignatura;

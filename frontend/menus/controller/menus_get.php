@@ -9,6 +9,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 use frontend\menus\helpers\MenusPayload;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -30,7 +31,7 @@ $navState = ListNavSupport::mergeSelectionIntoReturnParametros(
     ListNavSupport::scrollIdFromPost(),
 );
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#ficha',
     $navIdentity,
     $navState,

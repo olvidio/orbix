@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "certificados"
 flujos: 18
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - certificados
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Certificado Emitido
 
@@ -21,8 +21,8 @@ Imprimir, guardar o eliminar un certificado emitido desde el formulario de impre
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Emitido Imprimir (frontend/certificados/controller/certificado_emitido_imprimir.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -59,8 +59,8 @@ Adjuntar PDF de certificado emitido a una persona.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Emitido Adjuntar (frontend/certificados/controller/certificado_emitido_adjuntar.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -89,8 +89,8 @@ Enviar certificado emitido a la delegación destino del alumno (copia + anuncio)
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -119,8 +119,8 @@ Persistir el PDF generado y el número de certificado en BD.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Emitido 2 Mpdf (frontend/certificados/controller/certificado_emitido_2_mpdf.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -149,8 +149,8 @@ Preparar datos e iniciar impresión de certificado nuevo para un alumno.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Emitido Imprimir (frontend/certificados/controller/certificado_emitido_imprimir.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -179,8 +179,8 @@ Generar el PDF del certificado con notas y textos traducidos.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Emitido Imprimir Mpdf (frontend/certificados/controller/certificado_emitido_imprimir_mpdf.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -209,8 +209,9 @@ Consultar y gestionar certificados emitidos pendientes de envío en la región S
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Emitido Lista (frontend/certificados/controller/certificado_emitido_lista.php)
+- **Legacy:** —
+- **Pills2:** ESTUDIOS > Actas y certificados > Certificados
 
 ### Tareas Habituales
 
@@ -240,8 +241,8 @@ Descargar PDF adjunto de certificado emitido.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -271,7 +272,7 @@ Subir fichero PDF al API de certificados emitidos.
 ### Donde Entrar
 
 - Certificado Emitido Pdf Upload (frontend/certificados/controller/certificado_emitido_pdf_upload.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -300,8 +301,8 @@ Subir el PDF firmado de un certificado ya emitido.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Emitido Upload Firmado (frontend/certificados/controller/certificado_emitido_upload_firmado.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -330,8 +331,8 @@ Consultar detalle de un certificado emitido seleccionado en el listado.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Emitido Ver (frontend/certificados/controller/certificado_emitido_ver.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -360,8 +361,9 @@ Gestionar certificados recibidos de una persona (adjuntar, modificar, eliminar).
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Recibido Adjuntar (frontend/certificados/controller/certificado_recibido_adjuntar.php)
+- Certificado Recibido Modificar (frontend/certificados/controller/certificado_recibido_modificar.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -398,8 +400,8 @@ Registrar un certificado recibido nuevo con PDF.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Recibido Adjuntar (frontend/certificados/controller/certificado_recibido_adjuntar.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -428,8 +430,8 @@ Modificar metadatos de certificado recibido.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Recibido Modificar (frontend/certificados/controller/certificado_recibido_modificar.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -458,8 +460,8 @@ Descargar PDF de certificado recibido.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -489,7 +491,7 @@ Subir PDF de certificado recibido.
 ### Donde Entrar
 
 - Certificado Recibido Pdf Upload (frontend/certificados/controller/certificado_recibido_pdf_upload.php)
-- Ruta de menu: pendiente de documentar.
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -518,8 +520,9 @@ Cargar desplegable de idiomas en formularios de certificados.
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Certificado Emitido Adjuntar (frontend/certificados/controller/certificado_emitido_adjuntar.php)
+- Certificado Recibido Adjuntar (frontend/certificados/controller/certificado_recibido_adjuntar.php)
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -548,8 +551,8 @@ Plantilla de textos legales incluida al generar PDF (no flujo de usuario directo
 
 ### Donde Entrar
 
-- Pendiente de revisar.
-- Ruta de menu: pendiente de documentar.
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- sin entrada de menú en el índice
 
 ### Tareas Habituales
 
@@ -570,9 +573,8 @@ Plantilla de textos legales incluida al generar PDF (no flujo de usuario directo
 - Flujo: `certificados.textos_certificados.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/textos_certificados.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/certificados/flujos/`.

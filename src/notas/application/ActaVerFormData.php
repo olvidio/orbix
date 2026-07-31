@@ -59,6 +59,8 @@ final class ActaVerFormData
         $ult_lin = '';
         $ult_acta = $ActaRepository->getUltimaActa($any, $dl);
         $acta_new = '';
+        $acta_sigla = $dl;
+        $acta_new_num = '';
         $pdf = null;
 
         $acta_actual = '';
@@ -128,7 +130,8 @@ final class ActaVerFormData
         } else {
             $num_acta = $ult_acta + 1;
             $ult_acta = "$dl {$ult_acta}/{$any}";
-            $acta_new = "$dl {$num_acta}/{$any}";
+            $acta_new_num = "{$num_acta}/{$any}";
+            $acta_new = "$dl {$acta_new_num}";
 
             if ($notas === 'nuevo') {
                 $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_activ');
@@ -214,6 +217,8 @@ final class ActaVerFormData
             'mod' => $Qmod,
             'acta_actual' => $acta_actual,
             'acta_new' => $acta_new,
+            'acta_sigla' => $acta_sigla,
+            'acta_new_num' => $acta_new_num,
             'ult_acta' => $ult_acta,
             'f_acta' => $f_acta,
             'libro' => $libro,

@@ -390,6 +390,85 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/notas_ActaSelectDataDataResponse"
+  "/src/notas/acta_ver_add_persona":
+    post:
+      operationId: "post_notas_acta_ver_add_persona"
+      summary: "Acta Ver Add Persona"
+      description: |
+        Añade (o actualiza) la nota de un alumno en un acta, escribiendo directamente en el dossier (`e_notas_dl` vía `EditarPersonaNota`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_ver_add_persona.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "acta"
+                - "id_nom"
+              properties:
+                acta:
+                  type: "string"
+                id_nom:
+                  type: "integer"
+                nota_num:
+                  type: "number"
+                nota_max:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/acta_ver_add_persona_form_data":
+    post:
+      operationId: "post_notas_acta_ver_add_persona_form_data"
+      summary: "Acta Ver Add Persona Form Data"
+      description: |
+        Datos del formulario «añadir alumno + nota» en `acta_ver` (caso B: acta abierta desde listado, no embebida en actividad).
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_ver_add_persona_form_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "acta"
+              properties:
+                acta:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/notas/acta_ver_form_data":
     post:
       operationId: "post_notas_acta_ver_form_data"
@@ -412,6 +491,40 @@ paths:
                 _sin_parametros_detectados:
                   type: string
                   description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/acta_ver_notas_listado_data":
+    post:
+      operationId: "post_notas_acta_ver_notas_listado_data"
+      summary: "Acta Ver Notas Listado Data"
+      description: |
+        Listado solo lectura de alumnos y notas de un acta en la pantalla `acta_ver` (contexto standalone, no embebido en actividad).
+        
+        Operacion: `lista_data`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_ver_notas_listado_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                acta:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."

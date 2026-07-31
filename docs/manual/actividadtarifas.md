@@ -2,16 +2,16 @@
 tipo: "manual_usuario"
 modulo: "actividadtarifas"
 flujos: 3
-estado_revision: "generado"
+estado_revision: "revisado_parcial"
 ---
 
 # Manual De Usuario - actividadtarifas
 
-Este manual es un borrador generado desde `docs/catalogo`. Debe revisarse para ajustar nombres de menu, permisos, validaciones y lenguaje final de usuario.
+Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.
 
 ## Como Usar Este Manual
 
-Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visibles pueden necesitar revision manual.
+Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
 ## Relacion Tarifa
 
@@ -23,7 +23,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Tarifa Tipo Actividad (frontend/actividadtarifas/controller/tarifa_tipo_actividad.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Tarifas > tarifa <-> tipo de actividad; dre/Calendario/exterior > Tarifas > tarifa <-> tipo actividad.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifa-tipo actividad.
 
 ### Tareas Habituales
 
@@ -86,7 +87,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Tarifa Ubi (frontend/actividadtarifas/controller/tarifa_ubi.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Tarifas > tarifas por casa y año; Calendario/dre/exterior > Tarifas > tarifas por casa y año.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifas por casa y año.
 
 ### Tareas Habituales
 
@@ -166,7 +168,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 ### Donde Entrar
 
 - Tarifa (frontend/actividadtarifas/controller/tarifa.php)
-- Ruta de menu: pendiente de documentar.
+- **Legacy:** adl > Tarifas > definir tarifa; dre/Calendario/exterior > Tarifas > definir tarifa.
+- **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Definir tarifa.
 
 ### Tareas Habituales
 
@@ -218,9 +221,8 @@ Cada apartado describe una tarea de usuario. Las rutas de menu y nombres visible
 - Flujo: `actividadtarifas.tipo_tarifa.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadtarifas/flujos/tipo_tarifa.md`
 
-## Revision Pendiente
+## Notas
 
-- Sustituir nombres tecnicos por nombres visibles en la aplicacion.
-- Completar rutas de menu.
-- Confirmar permisos necesarios.
-- Anadir capturas o ejemplos si se quiere publicar para usuarios finales.
+- Rutas de menú propagadas desde el catálogo; revisar en UI si alguna etiqueta de menú cambió.
+- Permisos y errores se toman de las fichas API relacionadas.
+- Fuente: `docs/catalogo/actividadtarifas/flujos/`.

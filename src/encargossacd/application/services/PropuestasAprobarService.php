@@ -44,7 +44,7 @@ final class PropuestasAprobarService
                 $this->newEncargo($oPropuesta, $f_fin);
                 continue;
             }
-            if ($id_nom > 0 && $id_nom_new > 0) {
+            if ($id_nom_new > 0) {
                 if ($id_nom === $id_nom_new) {
                     $this->comprobarHorario($id_item, $f_fin);
                 } else {

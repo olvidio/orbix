@@ -58,9 +58,13 @@ interface AsignaturaRepositoryInterface
 
     /**
      * @return array<string, mixed>|false
+     * @param list<int>|int|null $plan_estudios
      */
     public function datosById(int $id_asignatura, int|array|null $plan_estudios = null): array|false;
 
+    /**
+     * @param list<int>|int|null $plan_estudios
+     */
     public function findById(int $id_asignatura, int|array|null $plan_estudios = null): ?Asignatura;
 
     public function getNewId(): int;

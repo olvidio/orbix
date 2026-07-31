@@ -27,9 +27,9 @@ Consultar el calendario de actividades por casas (actual o propuesta de calendar
 
 ### Preparar filtros
 
-1. Abrir entrada de menú (`propuesta_calendario` opcional).
-2. El front llama a `planning_casa_que_data` para acotar `CasasQue` según rol/permiso.
-3. Elegir grupo de casas, periodo y si incluir casas sin actividad.
+1. Abrir entrada de menú (`propuesta_calendario` opcional; si truthy y year=0 → año+1).
+2. El front llama a `planning_casa_que_data` para acotar `CasasQue` según rol/permiso (`PAU_CDC`/`des`/`vcsd`/`mi_sfsv` → `modo_casas`).
+3. Elegir grupo de casas (`cdc_sel=9` exige selección manual), periodo y si incluir casas sin actividad.
 4. Pulsar ver planning → `planning_casa_select.php`.
 
 ## Endpoints Del Flujo
@@ -42,6 +42,7 @@ Consultar el calendario de actividades por casas (actual o propuesta de calendar
 
 ## Ruta de menú
 
-- **Legacy:** `dre > planning > por casas` (y variantes por oficina)
-- **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning calendario actual`
-- Propuesta: `ACTIVIDADES > Herramientas de calendario > Planning calendario en estudio`
+- **Legacy (actual):** `dre/Calendario/… > planning > por casas` · `adl > Gestión casas > Planing Casas`
+- **Pills2 (actual):** `ACTIVIDADES > Herramientas de calendario > Planning calendario actual`
+- **Legacy (propuesta):** `adl|Calendario|dre > Nuevo Calendario > nuevo planing`
+- **Pills2 (propuesta):** `ACTIVIDADES > Herramientas de calendario > Planning calendario en estudio`

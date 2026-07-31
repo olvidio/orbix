@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "personas"
-endpoints: 9
+endpoints: 11
 estado_revision: "generado"
 ---
 
@@ -22,6 +22,20 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `personas.persona_eliminar`
 - Controller: `src/personas/infrastructure/ui/http/controllers/persona_eliminar.php`
 - Entrada: `post.id_nom:integer`, `post.obj_pau:string`
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/personas/persona_publicar`
+
+- Id: `personas.persona_publicar`
+- Controller: `src/personas/infrastructure/ui/http/controllers/persona_publicar.php`
+- Entrada: `post.id_nom:integer`, `post.id_schema:integer`, `post.dl:string|array`
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/personas/persona_publicar_form_data`
+
+- Id: `personas.persona_publicar_form_data`
+- Controller: `src/personas/infrastructure/ui/http/controllers/persona_publicar_form_data.php`
+- Entrada: `post.id_nom:integer`, `post.id_tabla:string`, `post.sel:mixed`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/personas/persona_update`

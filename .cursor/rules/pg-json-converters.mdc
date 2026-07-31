@@ -1,0 +1,37 @@
+---
+description: Columnas PG date/time/timestamp y json/jsonb vía ConverterDate / ConverterJson
+globs: src/**/infrastructure/persistence/**/*.php,src/**/domain/**/*.php
+alwaysApply: false
+---
+
+# Persistencia PG: ConverterDate / ConverterJson
+
+Al tocar columnas temporales o `json`/`jsonb` en repositorios `Pg*` (o helpers de dominio de esa columna):
+
+## Fechas / time / timestamp — `ConverterDate`
+
+- Leer con `(new ConverterDate($type, $v))->fromPg()` en **todos** los caminos de hidratación.
+- Escribir con converters en `toArrayForDatabase([...])` → `->toPg()`. **No** confiar en el fallback de `Hydratable` (`Y-m-d H:i:s`).
+- Mismo `$type` en lectura y escritura:
+
+  | Columna PG | `$type` |
+  |---|---|
+  | `date` | `'date'` |
+  | `time` | `'time'` |
+  | `timestamp` / `timestamptz` | `'timestamp'` |
+
+- No usar `'datetime'` / `'timestamptz'` como `$type` (`toPg` no los implementa).
+- Claves del converter = nombre exacto de la propiedad (typos silenciosos → sin conversión).
+- Prohibido para persistir columna: `format` / `strtotime` / `new DateTime` manual.
+
+## JSON/jsonb — `ConverterJson`
+
+- `fromPg` / `toPg`; no `json_encode`/`json_decode` sueltos.
+- Helpers de dominio pueden wrappear `ConverterJson`; la lógica opera sobre el valor ya decodificado.
+- No aplica a JSON HTTP/UI (`ContestarJson`, vistas, sesión).
+
+## Hidratación
+
+Convertir fechas y json **en el mismo bloque** del repo. La entidad recibe `DateTimeLocal` / `TimeLocal` / array / `null`, no el string crudo de PG.
+
+Referencia: [`agents.md`](../../agents.md) § «Persistencia PG: fechas y JSON/jsonb».

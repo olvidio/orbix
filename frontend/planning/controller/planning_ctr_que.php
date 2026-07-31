@@ -9,6 +9,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Formulario de filtros para el planning por centros (personas de un
@@ -42,7 +43,7 @@ $Qtodos_agd = (string)filter_input(INPUT_POST, 'todos_agd');
 $Qtodos_s = (string)filter_input(INPUT_POST, 'todos_s');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::mergeSelectionIntoReturnParametros([

@@ -1,8 +1,10 @@
 <?php
 
 use frontend\casas\helpers\CasasPayload;
+use frontend\shared\session\SessionConfig;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Pantalla `prevision_asistentes`: tabla editable con las plazas
@@ -36,7 +38,7 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ListNavSupport::buildReturnParametrosFromPost(),
@@ -84,8 +86,7 @@ $oFormP->setEmpiezaMax($Qempiezamax);
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setBoton("<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >");
 
-$oConfig = CasasPayload::oConfig();
-if ($oConfig !== null && $oConfig->getGestionCalendario() === 'central') {
+if (SessionConfig::getGestionCalendario() === 'central') {
     $aOficinas = [
         'sm' => 'sm',
         'nax' => 'nax',

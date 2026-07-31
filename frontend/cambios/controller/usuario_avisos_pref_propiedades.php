@@ -12,13 +12,12 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
-use src\shared\domain\helpers\FilterPostGet;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$Qobjeto = PayloadCoercion::string(FilterPostGet::post('objeto'));
-$Qid_item_usuario_objeto = PayloadCoercion::int(FilterPostGet::post('id_item_usuario_objeto'));
+$Qobjeto = PayloadCoercion::string(filter_input(INPUT_POST, 'objeto'));
+$Qid_item_usuario_objeto = PayloadCoercion::int(filter_input(INPUT_POST, 'id_item_usuario_objeto'));
 
 $data = CambiosPayload::postData(PostRequest::getDataFromUrl('/src/cambios/cambio_usuario_objeto_pref_propiedades_data', [
     'objeto' => $Qobjeto,

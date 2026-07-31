@@ -29,8 +29,13 @@ Calendario de personas y actividades agrupadas por centro. Fragmento AJAX cargad
 
 ## Acciones
 
-- Exportar calendario
+- Exportar calendario (`modelo=2` impresión)
 - Leyenda (`leyenda.php`)
+
+## Casos particulares
+
+- Muestra `msg_txt` del API (`No encuentro este ctr` / `No encuentro personas para %s`).
+- Agrupación por centro (`a_actividades2`).
 
 ## Ruta de menú
 

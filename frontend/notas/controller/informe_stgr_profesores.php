@@ -3,6 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\helpers\FuncTablasSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 use frontend\shared\FrontBootstrap;
 
@@ -22,7 +23,7 @@ $oPosicion = FrontBootstrap::boot();
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 
 $oPosicion->nav()->enter(
-    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
     ['lista' => $Qlista],
@@ -37,6 +38,7 @@ $a_campos = [
     'curso_txt' => $datos['curso_txt'],
     'res' => $datos['res'],
     'textos' => $datos['textos'],
+    'avisos_html' => '',
     'oPosicion' => $oPosicion,
 ];
 

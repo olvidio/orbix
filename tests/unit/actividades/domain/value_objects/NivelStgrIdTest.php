@@ -39,4 +39,10 @@ class NivelStgrIdTest extends myTest
         $this->assertNull($nivelStgrId);
     }
 
+    public function test_fromNullableInt_returns_null_for_zero()
+    {
+        // Desplegable en blanco → inputInt → 0; 0 no es un nivel válido.
+        $this->assertNull(NivelStgrId::fromNullableInt(0));
+    }
+
 }

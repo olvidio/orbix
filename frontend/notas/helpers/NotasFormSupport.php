@@ -35,6 +35,7 @@ public static function formBoolOrString(mixed $value): bool|string
     return \frontend\shared\helpers\PayloadCoercion::string($value);
 }
 
+/** @return array<int|string, string> */
 public static function desplegableOpciones(mixed $raw): array
 {
     if (!is_array($raw) || $raw === []) {

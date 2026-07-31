@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace frontend\certificados\helpers;
 
 use frontend\shared\helpers\PayloadCoercion;
-use src\asignaturas\domain\value_objects\PlanEstudios;
 
 final class CertificadosMpdfRender
 {
+    private const PLAN_1997 = 1997;
+    private const PLAN_2026 = 2026;
+
     /**
      * @param array<string, mixed> $payload
      * @return array{
@@ -68,7 +70,7 @@ final class CertificadosMpdfRender
             'sello' => \frontend\shared\helpers\PayloadCoercion::string($payload['sello'] ?? ''),
             'fidem' => \frontend\shared\helpers\PayloadCoercion::string($payload['fidem'] ?? ''),
             'reg_num' => \frontend\shared\helpers\PayloadCoercion::string($payload['reg_num'] ?? ''),
-            'plan_estudios' => \frontend\shared\helpers\PayloadCoercion::int($payload['plan_estudios'] ?? PlanEstudios::PLAN_2026),
+            'plan_estudios' => \frontend\shared\helpers\PayloadCoercion::int($payload['plan_estudios'] ?? self::PLAN_2026),
             'cAsignaturas' => CertificadosPayload::asignaturasFromJson($payload['cAsignaturas'] ?? ''),
             'aAprobadas' => CertificadosPayload::aprobadasFromPayload($payload['aAprobadas'] ?? []),
         ];
@@ -109,7 +111,7 @@ final class CertificadosMpdfRender
      *     pie_ects: string,
      * } $labels
      */
-    public static function titulo(int $id_asignatura, array $labels, int $planEstudios = PlanEstudios::PLAN_1997): void
+    public static function titulo(int $id_asignatura, array $labels, int $planEstudios = self::PLAN_1997): void
     {
         switch ($id_asignatura) {
             case 1101:
@@ -166,7 +168,7 @@ final class CertificadosMpdfRender
                 <?php
                 break;
             case 2201:
-                if ($planEstudios === PlanEstudios::PLAN_2026) {
+                if ($planEstudios === self::PLAN_2026) {
                     ?>
     <tr>
         <td class="space_doble"></td>
@@ -205,7 +207,7 @@ final class CertificadosMpdfRender
                 <?php
                 break;
             case 2205:
-                if ($planEstudios !== PlanEstudios::PLAN_2026) {
+                if ($planEstudios !== self::PLAN_2026) {
                     break;
                 }
                 ?>

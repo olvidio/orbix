@@ -6,7 +6,6 @@ namespace frontend\shared\helpers;
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\web\ContestarJson;
 
 /**
  * Respuestas AJAX JSON ({success, mensaje?, data}) desde controladores frontend.
@@ -21,14 +20,14 @@ final class AjaxJsonSupport
      */
     public static function response(string $error = '', string|array $data = 'ok'): never
     {
-        ContestarJson::enviar($error, $data);
+        \src\shared\web\ContestarJson::enviar($error, $data);
         exit;
     }
 
     public static function html(string $html, string $error = ''): never
     {
         // `data` anidado (una sola codificación JSON); el cliente usa `fnjs_extract_html_from_ajax_body`.
-        ContestarJson::enviarDataAnidado($error, ['html' => $html]);
+        \src\shared\web\ContestarJson::enviarDataAnidado($error, ['html' => $html]);
         exit;
     }
 

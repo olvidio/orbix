@@ -93,7 +93,7 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 
 - Un use case en `application/` que solo consulta 2–4 repos + `ConfigGlobal::mi_id_usuario()` / `mi_delef()` **sigue siendo unitariable** sin arrancar `myTest` (BD real, DI completo). Patrón:
   - Extender **`PHPUnit\Framework\TestCase`** directamente.
-  - En `setUp`, guardar `$GLOBALS['container']` y `$_SESSION` previos; en `tearDown`, restaurarlos (`unset` si eran `null`).
+  - En `setUp`, guardar `$GLOBALS['container']` y `$_SESSION` previos; en `tearDown`, restaurarlos (`unset` si eran `null`). **No es opcional:** `backupGlobals` está desactivado, así que un `$_SESSION['session_auth']['esquema']` que se quede sucio hace que el siguiente test de `myTest` abra **todas** las PDO del proceso contra ese esquema (se abren una sola vez por proceso PHPUnit) y el resto de la suite cae con errores sin relación aparente, tipo `relation "x_config_schema" does not exist`.
   - Montar **`$_SESSION['session_auth']`** mínimo con las claves que realmente lee el código bajo prueba (p. ej. `id_usuario`, `esquema`, `sfsv`, `idioma`). No copiar el setup completo de `myTest`.
   - Para `DateTimeLocal::getFormat()` basta con **`$_SESSION['session_auth']['idioma'] = 'ca'`** (o similar): evita tener que construir `$_SESSION['oConfig']`.
   - Usar un **contenedor anónimo** con `get(string $id)` que lance `RuntimeException` si se pide una clase no mapeada: así cualquier dependencia olvidada se ve al instante.
