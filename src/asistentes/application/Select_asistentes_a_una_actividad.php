@@ -81,6 +81,9 @@ class Select_asistentes_a_una_actividad
     /** @var array<string, array{path: string, query: array<string, mixed>}> */
     private array $aLinks_dl = [];
 
+    /** @var array<string, array{path: string, query: array<string, mixed>}> */
+    private array $aLinks_otros = [];
+
     /** @var array<int|string, mixed> */
     private array $a_plazas_resumen = [];
 
@@ -956,34 +959,41 @@ class Select_asistentes_a_una_actividad
                 'valores' => $this->getValores(),
             ],
             'links_dl_specs' => $this->aLinks_dl,
+            'links_otros_specs' => $this->aLinks_otros,
         ];
     }
 
     public function setLinksInsert(): void
     {
         $this->aLinks_dl = [];
+        $this->aLinks_otros = [];
         $ref_perm = $this->a_ref_perm;
         if (empty($ref_perm) || $this->permiso < 2 || ConfigGlobal::mi_ambito() === 'rstgr') {
             return;
         }
         $mi_dele = ConfigGlobal::mi_delef();
-        reset($ref_perm);
         foreach ($ref_perm as $val) {
             if (empty($val["perm"])) {
                 continue;
             }
             $obj_pau = $val['obj'] ?? '';
+            $obj_pau_str = is_scalar($obj_pau) ? (string) $obj_pau : '';
             $nomTxt = $val['nom'] ?? '';
             $nom = is_scalar($nomTxt) ? (string) $nomTxt : '';
             $aQuery = [
                 'mod' => 'nuevo',
-                'que_dl' => $mi_dele,
                 'pau' => $this->pau,
-                'obj_pau' => is_scalar($obj_pau) ? (string) $obj_pau : '',
+                'obj_pau' => $obj_pau_str,
                 'id_dossier' => $this->id_dossier,
                 'id_pau' => $this->id_pau,
             ];
-            $this->aLinks_dl[$nom] = DossierTipoPublicUrls::formControllerLinkSpec(self::ID_TIPO_DOSSIER, $aQuery);
+            // Personas de la dl: con que_dl. De paso (PersonaEx): línea "otra dl", sin que_dl.
+            if (str_starts_with($obj_pau_str, 'PersonaEx')) {
+                $this->aLinks_otros[$nom] = DossierTipoPublicUrls::formControllerLinkSpec(self::ID_TIPO_DOSSIER, $aQuery);
+            } else {
+                $aQuery['que_dl'] = $mi_dele;
+                $this->aLinks_dl[$nom] = DossierTipoPublicUrls::formControllerLinkSpec(self::ID_TIPO_DOSSIER, $aQuery);
+            }
         }
     }
 

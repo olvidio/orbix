@@ -89,6 +89,7 @@ final class SelectAsistentesAUnaActividadRender
         $oTabla->setDatos(ActividadesListaSupport::datos($tabla['valores'] ?? []));
 
         $aLinks_dl = AsistentesRenderSupport::signLinkMap($seg['links_dl_specs'] ?? []);
+        $aLinks_otros = AsistentesRenderSupport::signLinkMap($seg['links_otros_specs'] ?? []);
 
         $oView = new ViewNewPhtml('frontend\asistentes\view');
 
@@ -105,6 +106,7 @@ final class SelectAsistentesAUnaActividadRender
             'resumen_plazas2' => \frontend\shared\helpers\FuncTablasSupport::payloadString($seg, 'resumen_plazas2'),
             'leyenda_html' => \frontend\shared\helpers\FuncTablasSupport::payloadString($seg, 'leyenda_html'),
             'aLinks_dl' => $aLinks_dl,
+            'aLinks_otros' => $aLinks_otros,
             'msg_err' => \frontend\shared\helpers\FuncTablasSupport::payloadString($seg, 'msg_err'),
             'txt_eliminar' => \frontend\shared\helpers\FuncTablasSupport::payloadString($wrapper, 'txt_eliminar'),
             'bloque' => \frontend\shared\helpers\FuncTablasSupport::payloadString($wrapper, 'bloque'),

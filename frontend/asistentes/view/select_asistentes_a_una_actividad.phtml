@@ -214,3 +214,10 @@ if (!empty($aLinks_dl)) {
     $links_insert_bar_tooltip = _("añadir asistente: %s");
     include dirname(__DIR__, 2) . '/shared/view/_links_insert_bar.phtml';
 }
+if (!empty($aLinks_otros)) {
+    $links_insert_bar_links = $aLinks_otros;
+    $links_insert_bar_bloque = $bloque;
+    $links_insert_bar_label = ucfirst(_("añadir asistente de otra dl"));
+    $links_insert_bar_tooltip = _("añadir asistente: %s");
+    include dirname(__DIR__, 2) . '/shared/view/_links_insert_bar.phtml';
+}
