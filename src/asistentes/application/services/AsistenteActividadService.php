@@ -13,6 +13,7 @@ use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
@@ -177,9 +178,11 @@ class AsistenteActividadService
 
         if ($sdl == $mi_dele) {
             if ($dl_org == $sdl) {
+                // Incluye Ex: los de paso (PersonaEx) no están en Dl/Pub.
                 $a_Clases = [
                     ['repo' => AsistenteDlRepositoryInterface::class, 'get' => 'getAsistentes'],
-                    ['repo' => AsistentePubRepositoryInterface::class, 'get' => 'getAsistentes'], //Quitar los de mi dl?
+                    ['repo' => AsistentePubRepositoryInterface::class, 'get' => 'getAsistentes'],
+                    ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
                 ];
                 $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
             } else {
@@ -194,13 +197,17 @@ class AsistenteActividadService
                 $cAsistentes = [];
             } else {
                 if ($dl_org == $mi_dele) {
+                    // Organizadora contando plazas de otra dl (p. ej. de paso en mi_dl>dl_paso).
                     $a_Clases = [
+                        ['repo' => AsistenteDlRepositoryInterface::class, 'get' => 'getAsistentes'],
                         ['repo' => AsistentePubRepositoryInterface::class, 'get' => 'getAsistentes'],
+                        ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
                     ];
                     $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
                 } else {
                     $a_Clases = [
                         ['repo' => AsistenteOutRepositoryInterface::class, 'get' => 'getAsistentes'],
+                        ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
                     ];
                     $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
                 }
@@ -214,11 +221,15 @@ class AsistenteActividadService
             $padre = strtok($propietario, '>');
             $child = strtok('>');
 
-            if (!empty($dl_hub) && $dl_hub != $padre) continue;
-            if ($sdl != $child) continue;
+            if (!empty($dl_hub) && $dl_hub != $padre) {
+                continue;
+            }
+            if ($sdl != $child) {
+                continue;
+            }
 
-            $oPersona = Persona::findPersonaEnGlobal($id_nom);
-            if ($oPersona === null) {
+            // PersonaEx no está en el directorio global: sin esto se descartaba (y a veces borraba) la plaza.
+            if (!$this->existePersonaParaContarPlazas($id_nom)) {
                 $msg_err .= "<br>No encuentro a nadie con id_nom $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 $msg_err .= "<br>" . _("borro la asistencia");
                 $id_tabla = $oAsistente->getIdTablaVo()?->value() ?? '';
@@ -241,7 +252,9 @@ class AsistenteActividadService
             $plazaVo = $oAsistente->getPlazaVo()?->value();
             $plaza = empty($plazaVo) ? PlazaId::PEDIDA : $plazaVo;
             // Sólo cuento las asignadas
-            if ($plaza < PlazaId::ASIGNADA) continue;
+            if ($plaza < PlazaId::ASIGNADA) {
+                continue;
+            }
 
             $numAsis++;
         }
@@ -251,6 +264,21 @@ class AsistenteActividadService
         }
 
         return $numAsis;
+    }
+
+    /**
+     * True si la persona existe en directorio global o como PersonaEx (de paso).
+     */
+    private function existePersonaParaContarPlazas(int $id_nom): bool
+    {
+        if (Persona::findPersonaEnGlobal($id_nom) !== null) {
+            return true;
+        }
+
+        /** @var PersonaExRepositoryInterface $personaExRepository */
+        $personaExRepository = $this->container->get(PersonaExRepositoryInterface::class);
+
+        return $personaExRepository->findById($id_nom) !== null;
     }
 
     /**
