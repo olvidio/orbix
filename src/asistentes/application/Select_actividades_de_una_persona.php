@@ -10,7 +10,11 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\dossiers\application\DossierTipoPublicUrls;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaEx;
+use src\personas\domain\entity\PersonaPub;
 use src\actividades\domain\entity\TiposActividades;
 
 /**
@@ -30,6 +34,7 @@ class Select_actividades_de_una_persona
     public function __construct(
         private AsistenteActividadService $asistenteActividadService,
         private ActividadAllRepositoryInterface $actividadAllRepository,
+        private PersonaExRepositoryInterface $personaExRepository,
     ) {
     }
 
@@ -145,8 +150,8 @@ class Select_actividades_de_una_persona
 
         [$aWhere, $aOperator] = $this->cursoWhereFromModo($this->modo_curso);
 
-        $oPersona = Persona::findPersonaEnGlobal($this->id_pau);
-        if (!is_object($oPersona)) {
+        $oPersona = $this->resolvePersona();
+        if ($oPersona === null) {
             $this->msg_err = "<br>No encuentro a ninguna persona con id_nom: {$this->id_pau} en  " . __FILE__ . ": line " . __LINE__;
             $this->a_valores = [];
             $this->ref_perm = [];
@@ -314,6 +319,26 @@ class Select_actividades_de_una_persona
             ];
             $this->aLinks_otros[$nom] = DossierTipoPublicUrls::formControllerLinkSpec(self::ID_TIPO_DOSSIER, $aQuery);
         }
+    }
+
+    /**
+     * Personas de paso (`obj_pau=PersonaEx`, id negativo) viven en `p_de_paso_ex`,
+     * no en el directorio global que consulta {@see Persona::findPersonaEnGlobal()}.
+     */
+    private function resolvePersona(): PersonaDl|PersonaPub|PersonaEx|null
+    {
+        $objBase = (string) (strtok(urldecode($this->obj_pau), '&') ?: '');
+        if ($objBase === 'PersonaEx' || $this->id_pau < 0) {
+            $personaEx = $this->personaExRepository->findById($this->id_pau);
+            if ($personaEx !== null) {
+                return $personaEx;
+            }
+            if ($objBase === 'PersonaEx') {
+                return null;
+            }
+        }
+
+        return Persona::findPersonaEnGlobal($this->id_pau);
     }
 
     public function setModo_curso(string|int|float|bool|null $modo_curso = null): void

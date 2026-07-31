@@ -10,7 +10,11 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaEx;
+use src\personas\domain\entity\PersonaPub;
 use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 use frontend\shared\web\BotonesCurso;
 use frontend\shared\web\Lista;
@@ -31,6 +35,7 @@ class Select_cargos_personas_en_actividad
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
         private CargoRepositoryInterface $cargoRepository,
         private ActividadAllRepositoryInterface $actividadAllRepository,
+        private PersonaExRepositoryInterface $personaExRepository,
     ) {
     }
 
@@ -107,8 +112,8 @@ class Select_cargos_personas_en_actividad
         $aWhere = $this->oBotonesCurso->getWhere();
         $aOperator = $this->oBotonesCurso->getOperator();
 
-        $oPersona = Persona::findPersonaEnGlobal($this->id_pau);
-        if (!is_object($oPersona)) {
+        $oPersona = $this->resolvePersona();
+        if ($oPersona === null) {
             $this->msg_err = "<br>No encuentro a ninguna persona con id_nom: {$this->id_pau} en  " . __FILE__ . ": line " . __LINE__;
             exit($this->msg_err);
         }
@@ -195,6 +200,26 @@ class Select_cargos_personas_en_actividad
 
         return (new ViewNewPhtml('frontend\\actividadcargos\\controller'))
             ->renderizar('select_cargos_personas_en_actividad.phtml', $a_campos, false);
+    }
+
+    /**
+     * Personas de paso (`obj_pau=PersonaEx`, id negativo) viven en `p_de_paso_ex`,
+     * no en el directorio global que consulta {@see Persona::findPersonaEnGlobal()}.
+     */
+    private function resolvePersona(): PersonaDl|PersonaPub|PersonaEx|null
+    {
+        $objBase = (string) (strtok(urldecode($this->obj_pau), '&') ?: '');
+        if ($objBase === 'PersonaEx' || $this->id_pau < 0) {
+            $personaEx = $this->personaExRepository->findById($this->id_pau);
+            if ($personaEx !== null) {
+                return $personaEx;
+            }
+            if ($objBase === 'PersonaEx') {
+                return null;
+            }
+        }
+
+        return Persona::findPersonaEnGlobal($this->id_pau);
     }
 
     private function setLinksInsert(): void
