@@ -28,7 +28,7 @@ declare(strict_types=1);
  *
  * Otras opciones:
  *   --curso-ini=2025-10-01
- *   --fase=resumen|buckets|duplicados|vs-global|vacios|historial|notas|todo
+ *   --fase=resumen|buckets|duplicados|vs-global|vacios|historial|notas|candidatos-b|todo
  *   --schema-paso=restov
  *   --json  --limit=30
  *   --pg  (explícito; es el default)
@@ -112,7 +112,7 @@ if ($dryRun && $apply) {
     exit(1);
 }
 
-$fasesOk = ['resumen', 'buckets', 'duplicados', 'vs-global', 'vacios', 'historial', 'notas', 'todo'];
+$fasesOk = ['resumen', 'buckets', 'duplicados', 'vs-global', 'vacios', 'historial', 'notas', 'candidatos-b', 'todo'];
 if (!in_array($fase, $fasesOk, true)) {
     fwrite(STDERR, 'fase inválida: ' . implode('|', $fasesOk) . "\n");
     exit(1);
@@ -169,6 +169,18 @@ function qIdent(string $s): string
 function normKey(?string $s): string
 {
     return mb_strtolower(trim((string) $s), 'UTF-8');
+}
+
+/** Quita acentos para matching flexible de apellidos. */
+function sinAcentos(string $s): string
+{
+    $s = normKey($s);
+    $trans = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $s);
+    if (!is_string($trans) || $trans === '') {
+        return $s;
+    }
+
+    return strtolower(preg_replace('/[^a-z0-9\s]/', '', $trans) ?? $trans);
 }
 
 /** Código DL sin sufijo v/f (alineado con PersonaPublicacion::normalizarDl). */
@@ -375,7 +387,9 @@ try {
 
     // --- Personas de paso activas ---
     $pasoRows = $pdoSv->query(
-        "SELECT id_nom, id_tabla, dl, apellido1, apellido2, nom, f_nacimiento::text AS f_nacimiento
+        "SELECT id_nom, id_tabla, dl, apellido1, apellido2, nom,
+                f_nacimiento::text AS f_nacimiento,
+                lugar_nacimiento
          FROM {$qPaso}.p_de_paso_ex
          WHERE situacion = 'A'"
     )->fetchAll(PDO::FETCH_ASSOC) ?: [];
@@ -600,20 +614,39 @@ try {
     $vsGlobal = [];
     /** @var array<int, array{id_orbix: int, dl_orbix: mixed, id_schema: int|null, misma_dl: bool, misma_fn: bool}> $mejorMatch */
     $mejorMatch = [];
+    /** @var list<array<string, mixed>> $globalRows */
+    $globalRows = [];
+    /** @var array<string, list<int>> $globalIdxApe1 index k_ape1 → offsets in $globalRows */
+    $globalIdxApe1 = [];
     $stmt = $pdoSv->query(
         "SELECT id_nom, id_schema, dl, id_tabla, apellido1, apellido2, nom,
-                f_nacimiento::text AS f_nacimiento, situacion
+                f_nacimiento::text AS f_nacimiento, lugar_nacimiento, situacion
          FROM global.personas"
     );
     /** @var array<string, list<array<string, mixed>>> $globalByKey */
     $globalByKey = [];
+    $gi = 0;
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) ?: [] as $g) {
         if (normKey($g['apellido1'] ?? '') === '' || normKey($g['nom'] ?? '') === '') {
             continue;
         }
-        $k = normKey($g['apellido1'] ?? '') . '|' . normKey($g['apellido2'] ?? '')
-            . '|' . normKey($g['nom'] ?? '');
+        $kApe1 = normKey($g['apellido1'] ?? '');
+        $kApe2 = normKey($g['apellido2'] ?? '');
+        $kNom = normKey($g['nom'] ?? '');
+        $k = $kApe1 . '|' . $kApe2 . '|' . $kNom;
         $globalByKey[$k][] = $g;
+        $g['_k_ape1'] = $kApe1;
+        $g['_k_ape2'] = $kApe2;
+        $g['_k_nom'] = $kNom;
+        $g['_ape1_sa'] = sinAcentos((string) ($g['apellido1'] ?? ''));
+        $g['_dl_norm'] = normalizarDl((string) ($g['dl'] ?? ''));
+        $g['_lugar'] = normKey($g['lugar_nacimiento'] ?? '');
+        $globalRows[$gi] = $g;
+        $globalIdxApe1[$kApe1][] = $gi;
+        if ($g['_ape1_sa'] !== '' && $g['_ape1_sa'] !== $kApe1) {
+            $globalIdxApe1[$g['_ape1_sa']][] = $gi;
+        }
+        $gi++;
     }
     foreach ($pasoById as $p) {
         if ($p['k_ape1'] === '' || $p['k_nom'] === '') {
@@ -755,6 +788,139 @@ try {
         $idsConNotas,
         static fn(int $id): bool => !isset($mejorMatch[$id])
     ));
+
+    // --- Candidatos parciales para bucket B sin match exacto ---
+    /** @var list<array<string, mixed>> $candidatosB */
+    $candidatosB = [];
+    $maxCandPorPaso = $limit > 0 ? min(15, max(5, $limit)) : 10;
+    foreach ($buckets['B'] as $p) {
+        $idPaso = (int) $p['id_nom'];
+        if (isset($mejorMatch[$idPaso])) {
+            continue; // ya tiene match exacto ape1+ape2+nom
+        }
+        $kApe1 = $p['k_ape1'];
+        $ape1Sa = sinAcentos((string) ($p['apellido1'] ?? ''));
+        if ($kApe1 === '') {
+            $candidatosB[] = [
+                'id_paso' => $idPaso,
+                'dl_paso' => $p['dl'],
+                'apellido1' => $p['apellido1'],
+                'apellido2' => $p['apellido2'],
+                'nom' => $p['nom'],
+                'f_nacimiento' => $p['f_nacimiento'],
+                'lugar_nacimiento' => $p['lugar_nacimiento'] ?? '',
+                'n_notas' => $p['n_notas'],
+                'n_candidatos' => 0,
+                'candidatos' => [],
+                'nota' => 'sin apellido1',
+            ];
+            continue;
+        }
+        $dlPaso = normalizarDl((string) ($p['dl'] ?? ''));
+        $lugarPaso = normKey($p['lugar_nacimiento'] ?? '');
+        $fnPaso = (string) ($p['f_nacimiento'] ?? '');
+        $kApe2 = $p['k_ape2'];
+        $kNom = $p['k_nom'];
+
+        $idxCands = array_values(array_unique(array_merge(
+            $globalIdxApe1[$kApe1] ?? [],
+            $ape1Sa !== '' ? ($globalIdxApe1[$ape1Sa] ?? []) : []
+        )));
+
+        /** @var list<array<string, mixed>> $cands */
+        $cands = [];
+        $seenOrbix = [];
+        foreach ($idxCands as $idx) {
+            $g = $globalRows[$idx];
+            $idOrbix = (int) $g['id_nom'];
+            if (isset($seenOrbix[$idOrbix])) {
+                continue;
+            }
+            $seenOrbix[$idOrbix] = true;
+            $score = 10; // apellido1
+            $razones = ['ape1'];
+            if ($g['_k_ape1'] !== $kApe1 && ($g['_ape1_sa'] ?? '') === $ape1Sa) {
+                $razones = ['ape1_sa'];
+            }
+            if ($kApe2 !== '' && $g['_k_ape2'] === $kApe2) {
+                $score += 8;
+                $razones[] = 'ape2';
+            } elseif ($kApe2 !== '' && $g['_k_ape2'] !== '' && (
+                str_contains($g['_k_ape2'], $kApe2) || str_contains($kApe2, $g['_k_ape2'])
+            )) {
+                $score += 3;
+                $razones[] = 'ape2~';
+            }
+            if ($kNom !== '' && $g['_k_nom'] === $kNom) {
+                $score += 8;
+                $razones[] = 'nom';
+            } elseif ($kNom !== '' && $g['_k_nom'] !== '') {
+                if (str_starts_with($g['_k_nom'], $kNom) || str_starts_with($kNom, $g['_k_nom'])) {
+                    $score += 5;
+                    $razones[] = 'nom_prefijo';
+                } elseif (str_contains($g['_k_nom'], $kNom) || str_contains($kNom, $g['_k_nom'])) {
+                    $score += 2;
+                    $razones[] = 'nom~';
+                }
+            }
+            if ($dlPaso !== '' && $g['_dl_norm'] === $dlPaso) {
+                $score += 6;
+                $razones[] = 'dl';
+            }
+            if ($fnPaso !== '' && ($g['f_nacimiento'] ?? '') === $fnPaso) {
+                $score += 7;
+                $razones[] = 'fn';
+            } elseif ($fnPaso !== '' && ($g['f_nacimiento'] ?? '') !== ''
+                && substr($fnPaso, 0, 4) === substr((string) $g['f_nacimiento'], 0, 4)) {
+                $score += 2;
+                $razones[] = 'anio';
+            }
+            if ($lugarPaso !== '' && $g['_lugar'] !== '') {
+                if ($lugarPaso === $g['_lugar']) {
+                    $score += 5;
+                    $razones[] = 'lugar';
+                } elseif (str_contains($g['_lugar'], $lugarPaso) || str_contains($lugarPaso, $g['_lugar'])) {
+                    $score += 2;
+                    $razones[] = 'lugar~';
+                }
+            }
+            $cands[] = [
+                'score' => $score,
+                'razones' => implode(',', $razones),
+                'id_orbix' => $idOrbix,
+                'dl_orbix' => $g['dl'],
+                'id_tabla' => $g['id_tabla'],
+                'apellido1' => $g['apellido1'],
+                'apellido2' => $g['apellido2'],
+                'nom' => $g['nom'],
+                'f_nacimiento' => $g['f_nacimiento'],
+                'lugar_nacimiento' => $g['lugar_nacimiento'] ?? '',
+                'situacion' => $g['situacion'] ?? '',
+            ];
+        }
+        usort(
+            $cands,
+            static fn(array $a, array $b): int => $b['score'] <=> $a['score']
+        );
+        $cands = array_slice($cands, 0, $maxCandPorPaso);
+        $candidatosB[] = [
+            'id_paso' => $idPaso,
+            'dl_paso' => $p['dl'],
+            'apellido1' => $p['apellido1'],
+            'apellido2' => $p['apellido2'],
+            'nom' => $p['nom'],
+            'f_nacimiento' => $p['f_nacimiento'],
+            'lugar_nacimiento' => $p['lugar_nacimiento'] ?? '',
+            'n_notas' => $p['n_notas'],
+            'n_candidatos' => count($cands),
+            'candidatos' => $cands,
+        ];
+    }
+    usort(
+        $candidatosB,
+        static fn(array $a, array $b): int => [$a['apellido1'] ?? '', $a['nom'] ?? '', $a['id_paso']]
+            <=> [$b['apellido1'] ?? '', $b['nom'] ?? '', $b['id_paso']]
+    );
 
     if ($dryRun || $apply) {
         if (!in_array($fase, ['vacios', 'historial', 'notas'], true)) {
@@ -1322,6 +1488,12 @@ try {
         'borrado' => $borrado,
         'historial' => $historialResult,
         'notas' => $notasResult,
+        'candidatos_b' => applyLimit($candidatosB, $limit > 0 ? $limit : 0),
+        'candidatos_b_total' => count($candidatosB),
+        'candidatos_b_sin_ninguno' => count(array_filter(
+            $candidatosB,
+            static fn(array $r): bool => ($r['n_candidatos'] ?? 0) === 0
+        )),
     ];
 } catch (Throwable $e) {
     fwrite(STDERR, "ERROR: " . $e->getMessage() . "\n");
@@ -1353,6 +1525,11 @@ if ($jsonOutput) {
         'notas' => [
             'plan' => $report['notas_plan'],
             'resultado' => $report['notas'],
+        ],
+        'candidatos-b' => [
+            'total' => $report['candidatos_b_total'],
+            'sin_ningun_candidato' => $report['candidatos_b_sin_ninguno'],
+            'filas' => $report['candidatos_b'],
         ],
         default => $report,
     };
@@ -1560,6 +1737,52 @@ if ($fase === 'notas') {
         }
     } else {
         echo "  (use --dry-run o --apply; solo actúa con pareja en global.personas)\n";
+    }
+}
+
+if ($fase === 'candidatos-b' || $fase === 'todo') {
+    echo "=== Bucket B sin match exacto → candidatos en global.personas ===\n";
+    echo "  total paso B sin match exacto: {$report['candidatos_b_total']}\n";
+    echo "  sin ningún candidato por apellido1: {$report['candidatos_b_sin_ninguno']}\n";
+    echo "  (score: ape1=10 ape2=8 nom=8 dl=6 fn=7 lugar=5; ~ = parcial)\n\n";
+    // Cabecera tipo tabla TSV para pegar en hoja de cálculo
+    echo "id_paso\tdl_paso\tnombre_paso\tnac_paso\tlugar_paso\tnotas\tscore\trazones\tid_orbix\tdl_orbix\tid_tabla\tnombre_orbix\tnac_orbix\tlugar_orbix\tsituacion\n";
+    foreach ($report['candidatos_b'] as $row) {
+        $nombrePaso = trim(($row['apellido1'] ?? '') . ' ' . ($row['apellido2'] ?? '') . ', ' . ($row['nom'] ?? ''));
+        $cands = $row['candidatos'] ?? [];
+        if ($cands === []) {
+            echo sprintf(
+                "%s\t%s\t%s\t%s\t%s\t%s\t\t\t\t\t\t(sin candidatos)\t\t\t\n",
+                $row['id_paso'],
+                $row['dl_paso'] ?? '',
+                $nombrePaso,
+                $row['f_nacimiento'] ?? '',
+                $row['lugar_nacimiento'] ?? '',
+                $row['n_notas'] ?? 0
+            );
+            continue;
+        }
+        foreach ($cands as $c) {
+            $nombreOrbix = trim(($c['apellido1'] ?? '') . ' ' . ($c['apellido2'] ?? '') . ', ' . ($c['nom'] ?? ''));
+            echo sprintf(
+                "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+                $row['id_paso'],
+                $row['dl_paso'] ?? '',
+                $nombrePaso,
+                $row['f_nacimiento'] ?? '',
+                $row['lugar_nacimiento'] ?? '',
+                $row['n_notas'] ?? 0,
+                $c['score'],
+                $c['razones'],
+                $c['id_orbix'],
+                $c['dl_orbix'] ?? '',
+                $c['id_tabla'] ?? '',
+                $nombreOrbix,
+                $c['f_nacimiento'] ?? '',
+                $c['lugar_nacimiento'] ?? '',
+                $c['situacion'] ?? ''
+            );
+        }
     }
 }
 
