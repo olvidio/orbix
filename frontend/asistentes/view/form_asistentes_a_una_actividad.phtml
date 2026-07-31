@@ -7,7 +7,7 @@
     fnjs_cmb_propietario = function () {
         var id_nom = $('#id_nom').val();
         var url = '<?= $url_ajax ?>';
-        var parametros = 'id_nom=' + id_nom + '&id_activ=<?= $id_activ ?><?= $h1 ?>';
+        var parametros = 'id_nom=' + encodeURIComponent(id_nom) + '&id_activ=<?= (int) $id_activ ?><?= $h1 ?>';
 
         $.ajax({
             url: url,
@@ -15,11 +15,19 @@
             data: parametros,
             dataType: 'json'
         }).done(function (json) {
-            if (!json || json.success !== true) { return; }
+            if (!json || json.success !== true) {
+                var msg = (json && json.mensaje) ? json.mensaje : <?= json_encode(_("error desconocido")) ?>;
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + msg);
+                return;
+            }
             try {
                 var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
                 $('#lst_propietarios').html(fnjs_construir_desplegable_propietario(data));
-            } catch (e) {}
+            } catch (e) {
+                alert(<?= json_encode(_("error de comunicación con el servidor")) ?>);
+            }
+        }).fail(function () {
+            alert(<?= json_encode(_("error de comunicación con el servidor")) ?>);
         });
     }
 

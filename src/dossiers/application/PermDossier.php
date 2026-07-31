@@ -509,7 +509,7 @@ class PermDossier
         // Esta función devuelve un array con los permisos (si o no) para añadir las
         // personas (agd, n...) según el tipo de actividad de que se trate y
         // quién seamos nosotros.
-        // Al final añadimos que si no es dl_propia, no tiene permiso para añadir personas de paso
+        // (Comentado al final: si no es dl_propia, anular permiso para personas de paso.)
 
         //para inicializar la matriz:
         $ref_perm = array(
@@ -935,21 +935,23 @@ class PermDossier
                 break;
         }
 
-        if ($dl_propia === false) {
-            // Solo se anula el flag de permiso; no sustituir la entrada entera.
-            if (isset($ref_perm['pn']) && is_array($ref_perm['pn'])) {
-                $ref_perm['pn']['perm'] = 0;
-            }
-            if (isset($ref_perm['pa']) && is_array($ref_perm['pa'])) {
-                $ref_perm['pa']['perm'] = 0;
-            }
-            if (isset($ref_perm['px']) && is_array($ref_perm['px'])) {
-                $ref_perm['px']['perm'] = 0;
-            }
-            if (isset($ref_perm['psssc']) && is_array($ref_perm['psssc'])) {
-                $ref_perm['psssc']['perm'] = 0;
-            }
-        }
+        // Temporalmente desactivado: permitir añadir personas de paso también
+        // en actividades de otra dl. Reactivar cuando vuelva la restricción.
+        // if ($dl_propia === false) {
+        //     // Solo se anula el flag de permiso; no sustituir la entrada entera.
+        //     if (isset($ref_perm['pn']) && is_array($ref_perm['pn'])) {
+        //         $ref_perm['pn']['perm'] = 0;
+        //     }
+        //     if (isset($ref_perm['pa']) && is_array($ref_perm['pa'])) {
+        //         $ref_perm['pa']['perm'] = 0;
+        //     }
+        //     if (isset($ref_perm['px']) && is_array($ref_perm['px'])) {
+        //         $ref_perm['px']['perm'] = 0;
+        //     }
+        //     if (isset($ref_perm['psssc']) && is_array($ref_perm['psssc'])) {
+        //         $ref_perm['psssc']['perm'] = 0;
+        //     }
+        // }
         return $ref_perm;
     }
 

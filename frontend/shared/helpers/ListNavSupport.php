@@ -266,20 +266,24 @@ public static function buildDossierReturnParametros(): array
     if (isset($_POST['id_pau']) && is_scalar($_POST['id_pau'])) {
         $idPau = (int) $_POST['id_pau'];
     }
-    if ($idPau <= 0) {
+    // Personas de paso usan id_pau negativo: 0 = ausente, no "inválido".
+    if ($idPau === 0) {
         $idPauRaw = filter_input(INPUT_POST, 'id_pau', FILTER_VALIDATE_INT);
         $idPau = is_int($idPauRaw) ? $idPauRaw : 0;
     }
-    if ($idPau <= 0) {
+    if ($idPau === 0 && isset($_POST['id_nom']) && is_scalar($_POST['id_nom'])) {
+        $idPau = (int) $_POST['id_nom'];
+    }
+    if ($idPau === 0) {
         $aSel = self::selFromPost();
         if ($aSel !== []) {
             $idPau = (int) strtok((string) $aSel[0], '#');
         }
     }
-    if ($idPau > 0) {
+    if ($idPau !== 0) {
         $parametros['id_pau'] = $idPau;
     }
-    if (!isset($parametros['pau']) && $idPau > 0) {
+    if (!isset($parametros['pau']) && $idPau !== 0) {
         $parametros['pau'] = 'a';
     }
 
@@ -1356,7 +1360,7 @@ public static function buildDossiersVerFromActividadSelectPost(): array
         $parametros['sel'] = $aSel;
         $first = $aSel[0];
         $idPau = (int) strtok((string) $first, '#');
-        if ($idPau > 0) {
+        if ($idPau !== 0) {
             $parametros['id_pau'] = $idPau;
         }
     }
@@ -1530,7 +1534,7 @@ public static function buildE43ParentReturnParametros(): array
 {
     $parametros = self::buildDossierReturnParametros();
     $idPau = filter_input(INPUT_POST, 'id_pau', FILTER_VALIDATE_INT);
-    if (is_int($idPau) && $idPau > 0) {
+    if (is_int($idPau) && $idPau !== 0) {
         $parametros['id_pau'] = $idPau;
     }
     $aSel = self::selFromPost();

@@ -7,6 +7,7 @@ use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
 
@@ -14,6 +15,7 @@ final class PlazaPropietarioAsignacion implements PlazaPropietarioAsignacionInte
 {
     public function __construct(
         private ResumenPlazasService $resumenPlazasService,
+        private PersonaExRepositoryInterface $personaExRepository,
     ) {
     }
 
@@ -57,6 +59,9 @@ final class PlazaPropietarioAsignacion implements PlazaPropietarioAsignacionInte
     private function resolverDlDePaso(int $id_nom): false|string
     {
         $oPersona = Persona::findPersonaEnGlobal($id_nom);
+        if (!is_object($oPersona)) {
+            $oPersona = $this->personaExRepository->findById($id_nom);
+        }
         if (!is_object($oPersona)) {
             return false;
         }

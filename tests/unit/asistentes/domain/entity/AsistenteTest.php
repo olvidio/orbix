@@ -11,6 +11,7 @@ use src\asistentes\domain\value_objects\AsistenteEncargo;
 use src\asistentes\domain\value_objects\AsistenteObserv;
 use src\asistentes\domain\value_objects\AsistenteObservEst;
 use src\asistentes\domain\value_objects\AsistentePropietario;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\value_objects\PersonaTablaCode;
 use src\ubis\domain\value_objects\DelegacionCode;
 use Tests\myTest;
@@ -118,7 +119,7 @@ class AsistenteTest extends myTest
             ->method('getPrimeraPropiedadLibre')
             ->with(false)
             ->willReturn('dlv>dlv');
-        $asignacion = new PlazaPropietarioAsignacion($resumenSvc);
+        $asignacion = new PlazaPropietarioAsignacion($resumenSvc, $this->createStub(PersonaExRepositoryInterface::class));
 
         try {
             $this->Asistente->setId_activ(10);
@@ -138,7 +139,7 @@ class AsistenteTest extends myTest
 
         $resumenSvc = $this->createMock(ResumenPlazasService::class);
         $resumenSvc->method('getPrimeraPropiedadLibre')->willReturn(null);
-        $asignacion = new PlazaPropietarioAsignacion($resumenSvc);
+        $asignacion = new PlazaPropietarioAsignacion($resumenSvc, $this->createStub(PersonaExRepositoryInterface::class));
 
         try {
             $this->Asistente->setId_activ(10);
@@ -161,7 +162,7 @@ class AsistenteTest extends myTest
             ->with('dlA>dlB', false)
             ->willReturn(true);
         $resumenSvc->expects($this->never())->method('getPrimeraPropiedadLibre');
-        $asignacion = new PlazaPropietarioAsignacion($resumenSvc);
+        $asignacion = new PlazaPropietarioAsignacion($resumenSvc, $this->createStub(PersonaExRepositoryInterface::class));
 
         try {
             $this->Asistente->setId_activ(10);
@@ -186,7 +187,7 @@ class AsistenteTest extends myTest
             ->with('dlA>dlB', false)
             ->willReturn(false);
         $resumenSvc->expects($this->never())->method('getPrimeraPropiedadLibre');
-        $asignacion = new PlazaPropietarioAsignacion($resumenSvc);
+        $asignacion = new PlazaPropietarioAsignacion($resumenSvc, $this->createStub(PersonaExRepositoryInterface::class));
 
         try {
             $this->Asistente->setId_activ(10);
@@ -207,7 +208,7 @@ class AsistenteTest extends myTest
         $resumenSvc = $this->createMock(ResumenPlazasService::class);
         $resumenSvc->expects($this->never())->method('esPropiedadClaveDisponible');
         $resumenSvc->expects($this->never())->method('getPrimeraPropiedadLibre');
-        $asignacion = new PlazaPropietarioAsignacion($resumenSvc);
+        $asignacion = new PlazaPropietarioAsignacion($resumenSvc, $this->createStub(PersonaExRepositoryInterface::class));
 
         try {
             $this->Asistente->setId_activ(10);

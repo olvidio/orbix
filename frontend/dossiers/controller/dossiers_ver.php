@@ -44,7 +44,7 @@ if ($idDossierReq === '' && $claseInfoReq === '') {
         unset($apiPayload[$extraKey]);
     }
     $idPauReq = PayloadCoercion::int($apiPayload['id_pau'] ?? 0);
-    if ($idPauReq > 0) {
+    if ($idPauReq !== 0) {
         unset($apiPayload['sel']);
     }
 }

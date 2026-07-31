@@ -155,6 +155,7 @@ final class FormActividadesDeUnaPersonaData
         $a_camposHidden = [
             'pau' => 'p',
             'id_nom' => $Qid_nom,
+            'id_pau' => $Qid_nom,
             'obj_pau' => $obj_pau,
             'mod' => $mod,
         ];
