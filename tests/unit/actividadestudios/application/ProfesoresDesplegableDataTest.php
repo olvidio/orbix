@@ -19,11 +19,16 @@ final class ProfesoresDesplegableDataTest extends TestCase
         ?PersonaDlRepositoryInterface $personaRepo = null,
         ?ProfesorActividad $profesorActividad = null,
     ): ProfesoresDesplegableData {
+        if ($profesorActividad === null) {
+            $profesorActividad = $this->createMock(ProfesorActividad::class);
+            $profesorActividad->method('getLastAvisos')->willReturn([]);
+        }
+
         return new ProfesoresDesplegableData(
             $asigSvc ?? $this->createMock(ProfesorAsignaturaService::class),
             $stgrSvc ?? $this->createMock(ProfesorStgrService::class),
             $personaRepo ?? $this->createMock(PersonaDlRepositoryInterface::class),
-            $profesorActividad ?? $this->createMock(ProfesorActividad::class),
+            $profesorActividad,
         );
     }
 
@@ -36,6 +41,7 @@ final class ProfesoresDesplegableDataTest extends TestCase
             'blanco' => true,
             'val_blanco' => '',
             'selected' => -1,
+            'aviso' => '',
         ], $out);
     }
 

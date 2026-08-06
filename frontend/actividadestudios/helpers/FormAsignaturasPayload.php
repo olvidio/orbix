@@ -26,6 +26,7 @@ final class FormAsignaturasPayload
      *     id_profesor_sel: int|string,
      *     camposForm: string,
      *     a_camposHidden: array<string, mixed>,
+     *     aviso: string,
      * }
      */
     public static function fromPayload(array $payload): array
@@ -45,6 +46,7 @@ final class FormAsignaturasPayload
             'id_profesor_sel' => NotasFormSupport::formScalar($payload['id_profesor_sel'] ?? -1),
             'camposForm' => \frontend\shared\helpers\PayloadCoercion::string($payload['camposForm'] ?? ''),
             'a_camposHidden' => ActividadestudiosRenderSupport::stringKeyRow($payload['a_camposHidden'] ?? []),
+            'aviso' => \frontend\shared\helpers\PayloadCoercion::string($payload['aviso'] ?? ''),
         ];
     }
 }

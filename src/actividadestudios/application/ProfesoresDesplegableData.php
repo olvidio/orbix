@@ -26,7 +26,7 @@ final class ProfesoresDesplegableData
 
     /**
      * @param array<string, mixed> $input
-     * @return array{id: string, opciones: list<array{0: int|string, 1: string}>, blanco: bool, val_blanco: string, selected: int}
+     * @return array{id: string, opciones: list<array{0: int|string, 1: string}>, blanco: bool, val_blanco: string, selected: int, aviso: string}
      */
     public function execute(array $input): array
     {
@@ -34,6 +34,7 @@ final class ProfesoresDesplegableData
         $id_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
         $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         $id_profesor = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_profesor');
+        $avisoTxt = '';
 
         switch ($salida) {
             case 'asignatura':
@@ -41,6 +42,7 @@ final class ProfesoresDesplegableData
                 break;
             case 'dl':
                 $aOpciones = $this->profesorActividad->getArrayProfesoresActividad([$id_activ]);
+                $avisoTxt = implode("\n", $this->profesorActividad->getLastAvisos());
                 break;
             case 'todos':
                 $aOpciones = $this->profesorStgrService->getArrayProfesoresPub();
@@ -59,6 +61,7 @@ final class ProfesoresDesplegableData
             'blanco' => true,
             'val_blanco' => '',
             'selected' => $id_profesor !== 0 ? $id_profesor : -1,
+            'aviso' => $avisoTxt,
         ];
     }
 

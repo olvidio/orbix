@@ -46,6 +46,7 @@ if (!empty($raw['error'])) {
     exit(\frontend\shared\helpers\PayloadCoercion::string($raw['error']));
 }
 $d = FormAsignaturasPayload::fromPayload($raw);
+$avisoProfesores = $d['aviso'];
 
 $mod = $d['mod'];
 $Qid_activ = $d['id_activ'];
@@ -116,6 +117,7 @@ $a_campos = [
     'locale_us' => OrbixRuntime::isLocaleUs(),
     'url_actividad_asignatura_nueva' => $url_actividad_asignatura_nueva,
     'url_actividad_asignatura_editar' => $url_actividad_asignatura_editar,
+    'aviso_profesores' => $avisoProfesores,
 ];
 
 (new ViewNewPhtml('frontend\\actividadestudios\\controller'))

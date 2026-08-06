@@ -12,10 +12,23 @@ use src\profesores\domain\services\ProfesorStgrService;
  */
 class ProfesorActividad
 {
+    /** @var list<string> */
+    private array $lastAvisos = [];
+
     public function __construct(
         private ProfesorStgrService $profesorStgrService,
         private AsistentePubRepositoryInterface $asistentePubRepository,
     ) {
+    }
+
+    /**
+     * Avisos de la última llamada a {@see getArrayProfesoresActividad()} (p. ej. id_nom huérfano).
+     *
+     * @return list<string>
+     */
+    public function getLastAvisos(): array
+    {
+        return $this->lastAvisos;
     }
 
     /**
@@ -24,9 +37,9 @@ class ProfesorActividad
      */
     public function getArrayProfesoresActividad(array $aId_activ = []): array
     {
+        $this->lastAvisos = [];
         $aProfesoresDl = $this->profesorStgrService->getArrayProfesoresDl();
         $aProfesoresEx = [];
-        $msg_err = '';
         $lista = $this->asistentePubRepository->getListaAsistentesDistintos($aId_activ);
         if ($lista === false) {
             $lista = [];
@@ -34,7 +47,10 @@ class ProfesorActividad
         foreach ($lista as $id_nom) {
             $oPersona = Persona::findPersonaEnGlobal($id_nom);
             if ($oPersona === null) {
-                $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+                $this->lastAvisos[] = sprintf(
+                    _("No encuentro a nadie con id_nom: %s"),
+                    (string) $id_nom,
+                );
                 continue;
             }
             $obj_persona = PersonaRepositoryResolver::objPauFromInstance($oPersona);
@@ -63,12 +79,6 @@ class ProfesorActividad
 
         $aOpciones = \src\shared\domain\helpers\FuncTablasSupport::profesoresOpcionesFromFilas($aProfesoresEx);
 
-        $AllOpciones = $aOpciones + ["----------"] + $aProfesoresDl;
-
-        if (!empty($msg_err)) {
-            echo $msg_err;
-        }
-
-        return $AllOpciones;
+        return $aOpciones + ["----------"] + $aProfesoresDl;
     }
 }

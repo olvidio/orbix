@@ -25,7 +25,8 @@ use src\profesores\domain\services\ProfesorAsignaturaService;
  *   oDesplAsignaturas_opciones: array<int|string, string>,
  *   primary_key_s: string,
  *   camposForm: string,
- *   a_camposHidden: array<string, int|string>
+ *   a_camposHidden: array<string, int|string>,
+ *   aviso: string
  * }
  */
 final class FormAsignaturasDeUnaActividadData
@@ -56,7 +57,8 @@ final class FormAsignaturasDeUnaActividadData
      *   oDesplAsignaturas_opciones: array<int|string, string>,
      *   primary_key_s: string,
      *   camposForm: string,
-     *   a_camposHidden: array<string, int|string>
+     *   a_camposHidden: array<string, int|string>,
+     *   aviso: string
      * }
      */
     public function execute(array $input): array
@@ -84,6 +86,7 @@ final class FormAsignaturasDeUnaActividadData
         $primaryKeyS = '';
         $camposForm = 'f_ini!f_fin!tipo!id_profesor';
         $aCamposHidden = ['id_activ' => $idActiv];
+        $avisoTxt = '';
 
         if ($idAsignatura > 0) {
             $mod = 'editar';
@@ -121,6 +124,7 @@ final class FormAsignaturasDeUnaActividadData
             $nombreCorto = '';
             $idProfesorSel = -1;
             $aOpciones = $this->profesorActividad->getArrayProfesoresActividad([$idActiv]);
+            $avisoTxt = implode("\n", $this->profesorActividad->getLastAvisos());
             $fIni = '';
             $fFin = '';
             if (empty($idActiv)) {
@@ -149,6 +153,7 @@ final class FormAsignaturasDeUnaActividadData
             'primary_key_s' => $primaryKeyS,
             'camposForm' => $camposForm,
             'a_camposHidden' => $aCamposHidden,
+            'aviso' => $avisoTxt,
         ];
     }
 }
