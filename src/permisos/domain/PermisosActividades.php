@@ -24,7 +24,7 @@ use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
  * (solo `aPermDl` / `aPermOtras` y lectura sin I/O) de (2) la resolución que use
  * contenedor/repositorios (actividad por id, fases completadas, procesos para crear),
  * que debe vivir en `src/` y exponerse al `frontend/` vía `PostRequest` o DTOs.
- * Ver `agents.md` § «Permisos de actividad en sesión».
+ * Ver `AGENTS.md` § «Permisos de actividad en sesión».
  *
  * Instanciación (sesión):
  *

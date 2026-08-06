@@ -1,0 +1,35 @@
+---
+description: Capas DDD Orbix — domain/application/infra y separación frontend↔src
+alwaysApply: true
+---
+
+# Capas DDD y separación frontend/src
+
+## Árbol mínimo (`src/<modulo>/`)
+
+```text
+application/   domain/{contracts,entity,value_objects}/
+infrastructure/{controllers|ui/http/controllers,repositories}/
+config/{dependencies.php,routes.php}
+```
+
+- No crear `db/` ni `view/` en `src/` para código nuevo.
+- No placeholders vacíos. Sin casos de uso → igual mantener `config/` y `domain/`.
+
+## Capas
+
+| Capa | Debe | Prohibido |
+|------|------|-----------|
+| **Domain** | Independiente de UI/infra | `web\`, `frontend\`, `$GLOBALS`/`$_SESSION`/`$_POST`, HTML/URLs; contracts sin PDO/`setoDbl` |
+| **Application** | Orquestar + DI por constructor | `$GLOBALS['container']`, `ContestarJson`/`Desplegable`/`Lista`, SQL directo |
+| **Infrastructure** | Repos, controllers HTTP, adaptadores legacy | Lógica de negocio compleja en el controller |
+
+Controller HTTP: leer request → un caso de uso → JSON (preferible). Legacy (`core\`, `web\`, globals) solo aquí.
+
+## Frontend vs backend
+
+- **`frontend/`**: vistas, controllers de presentación, `PostRequest` a `/src/...`. No instanciar use cases/repos de `src/`.
+- **`src/.../controllers`**: lógica + `ContestarJson`. Prohibido HTML de app, `frontend\`, `web\Lista`/`Desplegable` en application o controllers HTTP nuevos.
+- Enlaces a UI: `src` devuelve `link_spec`; firma `Hash::link` / `HashF` solo en `frontend/` (o `apps/` legacy).
+
+Referencia: [`AGENTS.md`](../../AGENTS.md) §§ «Estructura mínima», «Reglas de capas», «Arquitectura Frontend/Backend».

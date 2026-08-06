@@ -1,8 +1,8 @@
 # Arquitectura de tokens de seguridad: `HashF` y `HashB`
 
-Este documento fija la visión arquitectónica hacia la que queremos llevar el repo en lo relativo al token anti-tamper / anti-CSRF que hoy proporciona la clase única `web\Hash` (`apps/web/Hash.php`). **Es el *north star*, no el estado actual.** La migración real se hará por pasos, por módulos, y siguiendo los criterios de `agents.md` (sección *Migración `apps/` → `frontend/` + `src/`* y subsección *Hash al mover endpoints AJAX*).
+Este documento fija la visión arquitectónica hacia la que queremos llevar el repo en lo relativo al token anti-tamper / anti-CSRF que hoy proporciona la clase única `web\Hash` (`apps/web/Hash.php`). **Es el *north star*, no el estado actual.** La migración real se hará por pasos, por módulos, y siguiendo los criterios de `AGENTS.md` (sección *Migración `apps/` → `frontend/` + `src/`* y subsección *Hash al mover endpoints AJAX*).
 
-Referencia cruzada: `agents.md` — *Hash al mover endpoints AJAX (`Hash::getCamposHtml` vs `Hash::linkSinVal`)*.
+Referencia cruzada: `AGENTS.md` — *Hash al mover endpoints AJAX (`Hash::getCamposHtml` vs `Hash::linkSinVal`)*.
 
 ## 1. Problema a resolver
 
@@ -193,7 +193,7 @@ Para acciones "crear nuevo" donde aún no hay recurso, la cápsula contiene solo
 - Al **recibir** mutación: `HashB::open($_POST['ctx'], 'accion_concreta')` → obtiene contexto verificado → llama al caso de uso.
 - Al **responder** lectura: genera los tokens necesarios con `HashB::sign(...)` y los incluye en el payload bajo `tokens` o `tokens_globales`.
 - No vuelve a emitir `HashF` (no es capa UI).
-- Sigue haciendo `ContestarJson::enviar(...)` como dice `agents.md` (*Comunicación Frontend-Backend*).
+- Sigue haciendo `ContestarJson::enviar(...)` como dice `AGENTS.md` (*Comunicación Frontend-Backend*).
 
 ### 6.4 `src/<modulo>/application/*.php`
 
@@ -225,7 +225,7 @@ Son **capa UI**:
 
 - `apps/web/Hash.php` → se divide en `frontend/shared/security/HashF.php` + `src/shared/security/HashB.php`. Queda una fase transicional con *shim* en `apps/web/Hash.php` delegando a `HashF` para no romper nada hasta que esté todo migrado.
 - `apps/web/Posicion.php` → se mueve a `frontend/shared/` y usa solo `HashF`.
-- `src/layouts/BurgerLayout.php`, `src/layouts/LegacyLayout.php` → se mueven a `frontend/shared/layouts/`. `src/` deja de producir HTML de UI (coherente con `agents.md` — *Qué evitar al migrar pantallas*).
+- `src/layouts/BurgerLayout.php`, `src/layouts/LegacyLayout.php` → se mueven a `frontend/shared/layouts/`. `src/` deja de producir HTML de UI (coherente con `AGENTS.md` — *Qué evitar al migrar pantallas*).
 
 ### 7.3 `apps/core/global_object.inc`
 

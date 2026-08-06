@@ -40,13 +40,25 @@ Crea asignaciones EncargoDia para un nuevo periodo de plan de misas a partir de 
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_zona` | `integer` | application | Si | |
-| `tipo_plantilla` | `string` | application | Si | |
-| `seleccion` | `integer` | application | No | |
-| `periodo` | `string` | application | Si | |
-| `empiezamin` | `string` | application | No | |
-| `empiezamax` | `string` | application | No | |
-| `orden` | `string` | application | No | |
+| `id_zona` | `integer` | application | Si | Zona. |
+| `tipo_plantilla` | `string` | application | Si | Plantilla origen: `s1`/`s3`/`d1`/`d3`/`m1`/`m3`. En el form web el campo se llama `tipoplantilla` y el controller lo mapea. |
+| `seleccion` | `integer` | application | No | Filtro sacd (bitmask); suele ir 0. |
+| `periodo` | `string` | application | Si | `proxima_semana` \| `proximo_mes` \| `otro`. |
+| `empiezamin` | `string` | application | No | Inicio si `otro` (web: `dd/mm/yyyy`; se convierte a ISO). |
+| `empiezamax` | `string` | application | No | Fin si `otro`. |
+| `orden` | `string` | application | No | Default `desc_enc`. |
+
+### Flujo web (botón preparar)
+
+`preparar_plan_de_misas.phtml` → `fnjs_nuevo_periodo()` → `crear_nuevo_periodo.php` → este endpoint. **Borra** los `EncargoDia` del periodo en la zona y los recrea desde la plantilla. Luego el front recarga la cuadrícula con `tipo_plantilla=p`.
+
+Ejemplo POST:
+
+```
+id_zona=3&tipo_plantilla=s1&periodo=proxima_semana&orden=desc_enc&empiezamin=&empiezamax=&seleccion=0
+```
+
+Flujo narrativo: [`flujos/cuadricula.md`](../flujos/cuadricula.md).
 
 ## Salida
 

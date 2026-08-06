@@ -11,7 +11,7 @@ use frontend\shared\PostRequest;
  * Respuestas AJAX JSON ({success, mensaje?, data}) desde controladores frontend.
  *
  * @see \src\shared\web\ContestarJson
- * @see frontend/agents.md
+ * @see frontend/AGENTS.md
  */
 final class AjaxJsonSupport
 {

@@ -1,12 +1,12 @@
 # Guía técnica de Orbix (onboarding)
 
-Documento para programadores que entran al proyecto y necesitan el mapa técnico sin leer todo el repo. No sustituye las normas canónicas: si hay conflicto, mandan [`agents.md`](../../agents.md) y el baseline del módulo.
+Documento para programadores que entran al proyecto y necesitan el mapa técnico sin leer todo el repo. No sustituye las normas canónicas: si hay conflicto, mandan [`AGENTS.md`](../../AGENTS.md) y el baseline del módulo.
 
 | Documento | Rol |
 |-----------|-----|
-| [`agents.md`](../../agents.md) | Reglas DDD, capas, checklist PR |
+| [`AGENTS.md`](../../AGENTS.md) | Reglas DDD, capas, checklist PR |
 | [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md) | Estado de migración por módulo |
-| [`tests/agents.md`](../../tests/agents.md) | Cómo escribir tests |
+| [`tests/AGENTS.md`](../../tests/AGENTS.md) | Cómo escribir tests |
 | [`db/migrations/README.md`](../../db/migrations/README.md) | Cómo evolucionar el esquema SQL |
 | [`QUE_ES_ORBIX.md`](../QUE_ES_ORBIX.md) | Qué hace el producto (visión funcional) |
 
@@ -140,7 +140,7 @@ flowchart LR
 | Hash anti-tamper | `HashB` piloto en algunos módulos; UI sigue en `HashFront` ([`hash_arquitectura.md`](hash_arquitectura.md)) |
 | Tests / smoke | Cobertura desigual; scripts `test:report:*` pueden faltar en `tools/qa/` |
 
-**Conclusión práctica:** escribe código **nuevo** como manda `agents.md`. Al tocar legacy, mejora un paso (tests, DI, PHPStan sin baseline del módulo) sin reescribir el mundo.
+**Conclusión práctica:** escribe código **nuevo** como manda `AGENTS.md`. Al tocar legacy, mejora un paso (tests, DI, PHPStan sin baseline del módulo) sin reescribir el mundo.
 
 Estado vivo por módulo: [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md).
 
@@ -262,7 +262,7 @@ Regla: código nuevo → tests nuevos; cambio → pasar los existentes.
 | `Pg*Repository` | Integration + factory + cleanup (`Eliminar`) |
 | Pantalla crítica | E2E Playwright si aplica |
 
-Checklist largo: [`agents.md`](../../agents.md) (sección tests) y [`tests/agents.md`](../../tests/agents.md).
+Checklist largo: [`AGENTS.md`](../../AGENTS.md) (sección tests) y [`tests/AGENTS.md`](../../tests/AGENTS.md).
 
 ### 5.4 PHPStan
 
@@ -286,7 +286,7 @@ orbix/
 ├── tools/               # CLI de desarrollo (qa, phpstan, i18n…)
 ├── scripts/             # JS servido por la web (runtime)
 ├── languages/           # gettext .po/.mo
-├── agents.md            # normas canónicas
+├── AGENTS.md            # normas canónicas
 └── composer.json
 ```
 
@@ -297,7 +297,7 @@ Scripts CLI nuevos van en `tools/`, no en `scripts/` (reservado a runtime web).
 ## 7. Primer día: orden sugerido
 
 1. Leer [`QUE_ES_ORBIX.md`](../QUE_ES_ORBIX.md) (qué es el producto).
-2. Leer esta guía + la sección de capas de [`agents.md`](../../agents.md).
+2. Leer esta guía + la sección de capas de [`AGENTS.md`](../../AGENTS.md).
 3. Seguir un flujo real en el piloto **asistentes** (controller frontend → PostRequest → caso de uso → `PgAsistenteRepository`).
 4. Abrir [`ConnectionBootstrap.php`](../../src/shared/infrastructure/ConnectionBootstrap.php) y un `Pg*Repository` para ver las claves `oDB*`.
 5. Correr `composer test:docker` sobre un módulo pequeño y `composer phpstan:file -- src/asistentes/`.

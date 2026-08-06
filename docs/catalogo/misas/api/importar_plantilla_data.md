@@ -40,9 +40,21 @@ Copia asignaciones de plantilla origen a destino para una zona, creando/actualiz
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_zona` | `integer` | application | Si | |
-| `tipo_plantilla_origen` | `string` | application | Si | |
-| `tipo_plantilla_destino` | `string` | application | Si | |
+| `id_zona` | `integer` | application | Si | Zona. |
+| `tipo_plantilla_origen` | `string` | application | Si | Select «Importar de la plantilla» (`#importar_de_plantilla`), p. ej. `s1`. |
+| `tipo_plantilla_destino` | `string` | application | Si | Plantilla que se está editando (`#tipo_plantilla`), p. ej. `d1`. |
+
+### Flujo web (botón importar)
+
+`modificar_plantilla.phtml` → `fnjs_importar_de_plantilla_zona()` → `importar_plantilla.php` → este endpoint. Copia asignaciones origen→destino (borra destino en su rango de fechas de plantilla). La UI deshabilita orígenes con la misma letra inicial (`s`/`d`/`m`) que el destino.
+
+Ejemplo POST:
+
+```
+id_zona=3&tipo_plantilla_origen=s1&tipo_plantilla_destino=d1
+```
+
+Flujo narrativo: [`flujos/cuadricula.md`](../flujos/cuadricula.md).
 
 ## Salida
 

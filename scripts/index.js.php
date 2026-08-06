@@ -1140,7 +1140,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
     /**
      * Parsea el envelope `{success, mensaje?, data}` de ContestarJson.
      * Semántica de `data` alineada con PostRequest::envelopeDataFieldToArray
-     * (ver frontend/shared/PostRequest.php y frontend/agents.md).
+     * (ver frontend/shared/PostRequest.php y frontend/AGENTS.md).
      * Para mutaciones con ack `"ok"`, preferir comprobar solo `rta.success`.
      * @returns {object|null}
      */

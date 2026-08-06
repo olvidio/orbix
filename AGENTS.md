@@ -184,7 +184,7 @@ Detalle y ejemplos: [`tools/README.md`](tools/README.md). Regla Cursor: [`.curso
 ### Resumen de cobertura esperada
 - Cada módulo en `src/` debe tener su carpeta en `tests/unit/<modulo>` y `tests/integration/<modulo>`.
 - **Regla de Oro:** Todo código nuevo requiere tests nuevos. Toda modificación requiere la ejecución de los tests existentes para evitar regresiones.
-- Guía amplia para generar pruebas (patrones repos, sesión, `findById`/`null`, etc.): [`tests/agents.md`](tests/agents.md).
+- Guía amplia para generar pruebas (patrones repos, sesión, `findById`/`null`, etc.): [`tests/AGENTS.md`](tests/AGENTS.md).
 - **Playwright (E2E)** en **`e2e/`**: `npm run test:e2e`; guía **`e2e/README.md`**.
 - Usar el script `tools/qa/check_test_coverage.sh` para detectar **módulos** sin carpeta de tests/factories según convención (resumen rápido).
 - Usar `tools/qa/check_test_granular.sh` para listar **ficheros** fuente (`domain/entity/*.php`, `domain/value_objects/*.php`, `infrastructure/persistence/postgresql/Pg*Repository.php`) sin el `*Test.php` esperado; complementa el anterior. Opcionalmente `STRICT=1 bash tools/qa/check_test_granular.sh` para salida con código 1 si hay faltantes (útil en CI).
@@ -504,7 +504,7 @@ $data = PostRequest::getDataFromUrl('/src/<modulo>/<endpoint>', $campos);
 Para una experiencia de usuario fluida, combinamos el estado del backend con el estado del frontend:
 
 1.  **Estado de navegación ($oPosicion en frontend)**: Gestiona la jerarquía de páginas, IDs principales (como `id_activ`) y la lógica de "volver". Vive sólo en `frontend/`.
-2.  **Estado Frontend (SessionStorage)**: Gestiona el estado volátil de la UI (scroll, selección). **Ver detalles en** `frontend/agents.md`.
+2.  **Estado Frontend (SessionStorage)**: Gestiona el estado volátil de la UI (scroll, selección). **Ver detalles en** `frontend/AGENTS.md`.
 
 ### Permisos de actividad en sesión (`PermisosActividades`) — caché vs. backend
 

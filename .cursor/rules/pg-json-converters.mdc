@@ -34,4 +34,4 @@ Al tocar columnas temporales o `json`/`jsonb` en repositorios `Pg*` (o helpers d
 
 Convertir fechas y json **en el mismo bloque** del repo. La entidad recibe `DateTimeLocal` / `TimeLocal` / array / `null`, no el string crudo de PG.
 
-Referencia: [`agents.md`](../../agents.md) § «Persistencia PG: fechas y JSON/jsonb».
+Referencia: [`AGENTS.md`](../../AGENTS.md) § «Persistencia PG: fechas y JSON/jsonb».

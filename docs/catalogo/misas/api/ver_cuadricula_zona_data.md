@@ -56,8 +56,8 @@ Construye el SlickGrid de cuadrícula de zona (columnas, filas encargo/sacd, met
 - Forma: `standard_envelope_string_data`.
 - Claves en `data` (doble `JSON.parse`):
   - `preference_warning`: string
-  - `columns_cuadricula`: string|array
-  - `data_cuadricula`: array
+  - `columns_cuadricula`: string|array — columnas SlickGrid (`id`/`name`/`field`; días = `Y-m-d`)
+  - `data_cuadricula`: array — filas (encargos + bloque sacd)
   - `id_zona`: integer
   - `tipo_plantilla`: string
   - `orden`: string
@@ -67,6 +67,39 @@ Construye el SlickGrid de cuadrícula de zona (columnas, filas encargo/sacd, met
   - `empieza_max`: string
   - `fila`: mixed
   - `columna`: mixed
+
+### Estructura de fila / celda (útil para editar en Android)
+
+Cada elemento de `data_cuadricula` incluye:
+
+- `encargo` (string): etiqueta de fila.
+- `id_nom` (string|int|vacío): solo en filas de sacerdote.
+- `color_encargo` (string): clase CSS de la 1ª columna.
+- Campos `YYYY-MM-DD`: valor mostrado (p. ej. `"JP 08:00*"` o `" -- "`).
+- `meta`: objeto indexado por el mismo field de día.
+
+**Celda editable** (`meta[dia].tipo === "misas"`):
+
+```json
+{
+  "uuid_item": "a1b2c3d4-…",
+  "key": "1234#JP",
+  "tstart": "08:00",
+  "tend": "08:30",
+  "observ": "",
+  "id_enc": 42,
+  "dia": "2026-08-10",
+  "tipo": "misas",
+  "color": "rojoclaro",
+  "texto": ""
+}
+```
+
+- Vacío: `uuid_item`/`key`/`tstart`/`tend`/`observ` vacíos; `id_enc` y `dia` sí vienen.
+- Al POST a `cuadricula_update`, normalizar `key` a `iniciales#id_nom` (la carga puede traer `id_nom#iniciales`).
+- Filas `tipo: "sacd"` / `"titulo"`: no se editan con el modal (solo color/texto de disponibilidad).
+
+Flujo narrativo: [`flujos/cuadricula.md`](../flujos/cuadricula.md).
 
 ## Errores conocidos
 - `hay un error, no se ha guardado`

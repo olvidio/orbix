@@ -3,7 +3,7 @@
 ## Convenciones de JavaScript
 - **Prefijo de funciones**: Todas las funciones de JavaScript globales deben empezar por el prefijo `fnjs_` (ej. `fnjs_guardar`, `fnjs_actualizar`). Esto ayuda a identificarlas rápidamente como funciones propias del sistema Orbix.
 - **Ubicación**: Las funciones comunes se encuentran en `scripts/index.js.php`. Las funciones específicas de una vista deben integrarse en el bloque `<script>` del archivo `.phtml` correspondiente.
-- **No confundir con `tools/`**: `scripts/` es solo runtime web (JS vía PHP). Scripts CLI de desarrollo van en `tools/` (ver [`agents.md`](../agents.md) y [`tools/README.md`](../tools/README.md)).
+- **No confundir con `tools/`**: `scripts/` es solo runtime web (JS vía PHP). Scripts CLI de desarrollo van en `tools/` (ver [`AGENTS.md`](../AGENTS.md) y [`tools/README.md`](../tools/README.md)).
 
 ## Llamadas AJAX Modernas (JSON)
 Las nuevas funcionalidades y las recargas parciales de vista deben usar respuestas JSON (`ContestarJson`) para una gestión uniforme de errores.
@@ -21,7 +21,7 @@ Las nuevas funcionalidades y las recargas parciales de vista deben usar respuest
 
 #### Semántica de `data` (`fnjs_parse_rta` ↔ `PostRequest`)
 
-`fnjs_parse_rta` replica la lógica de `PostRequest::envelopeDataFieldToArray` (ver `frontend/shared/PostRequest.php` y `agents.md` raíz, sección *Endpoints JSON para PostRequest*). Tras comprobar `success === true`:
+`fnjs_parse_rta` replica la lógica de `PostRequest::envelopeDataFieldToArray` (ver `frontend/shared/PostRequest.php` y `AGENTS.md` raíz, sección *Endpoints JSON para PostRequest*). Tras comprobar `success === true`:
 
 | Valor de `data` en el envelope HTTP | `fnjs_parse_rta` devuelve | `PostRequest::getDataFromUrl()` devuelve |
 |-------------------------------------|---------------------------|------------------------------------------|
@@ -72,7 +72,7 @@ fnjs_guardar = function (formulario) {
 - **Mutaciones** (guardar, eliminar, editar): comprobar `respuesta.success`; ignorar `data` si es el ack `"ok"`. No usar `fnjs_parse_rta` salvo que el endpoint devuelva payload útil tras guardar.
 - Fragmentos HTML parciales: `ajax_json_html()` / `data.html` en cliente con `fnjs_ajax_json_html`.
 - Datos estructurados (tablas construidas en cliente): `/src/...` + `fnjs_parse_rta` (ver `activ_sacd.phtml`).
-- **Desplegables AJAX:** incluir `@shared/_fnjs_construir_desplegable.inc.html.twig` dentro de un `<script>` existente, o `@shared/fnjs_construir_desplegable.html.twig` si el bloque script es autónomo; en PHTML, `_fnjs_construir_desplegable.inc.phtml` (ver `agents.md` raíz). No duplicar `fnjs_construir_desplegable` inline. El backend debe enviar `opciones` como **array de pares** `[value, label]` (ver `agents.md` raíz, sección *Desplegables devueltos por endpoints AJAX*).
+- **Desplegables AJAX:** incluir `@shared/_fnjs_construir_desplegable.inc.html.twig` dentro de un `<script>` existente, o `@shared/fnjs_construir_desplegable.html.twig` si el bloque script es autónomo; en PHTML, `_fnjs_construir_desplegable.inc.phtml` (ver `AGENTS.md` raíz). No duplicar `fnjs_construir_desplegable` inline. El backend debe enviar `opciones` como **array de pares** `[value, label]` (ver `AGENTS.md` raíz, sección *Desplegables devueltos por endpoints AJAX*).
 - No usar `dataType: 'html'` ni respuestas texto plano en nuevos endpoints.
 - No usar el patrón antiguo de `$(formulario).one("submit", ...)`.
 

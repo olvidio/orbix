@@ -20,7 +20,7 @@ Scripts que **no** sirve la aplicación web. Se ejecutan en local o en CI.
 
 Al crear un script nuevo, elegir subcarpeta según propósito (ver tabla arriba). Documentar en el propio fichero: `php tools/<subcarpeta>/nombre.php`. Raíz del repo desde `tools/<sub>/`: `dirname(__DIR__, 2)`.
 
-Guía para agentes: [`agents.md`](../agents.md) (sección «Scripts y herramientas offline») y [`.cursor/rules/tools-vs-scripts.mdc`](../.cursor/rules/tools-vs-scripts.mdc).
+Guía para agentes: [`AGENTS.md`](../AGENTS.md) (sección «Scripts y herramientas offline») y [`.cursor/rules/tools-vs-scripts.mdc`](../.cursor/rules/tools-vs-scripts.mdc).
 
 ## Traducciones (`tools/i18n/`)
 

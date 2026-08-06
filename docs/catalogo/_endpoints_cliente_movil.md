@@ -22,13 +22,21 @@ Fichas API con ejemplos verificados contra `orbix-android` (mayo 2026). Estado `
 
 ### Cuadrícula zona (ver, modificar, preparar, plantilla, cambiar estado)
 
+Flujo típico: `plan_de_misas_pantalla_data` → `ver_cuadricula_zona_data` al pulsar «Ver cuadrícula».
+Mutaciones nativas: `cuadricula_update` (celdas), `crear_nuevo_periodo_data` (preparar), `importar_plantilla_data`, `nuevo_status`, `desplegable_sacd` (selector en modal).
+
 | Endpoint | Ficha | Uso en app |
 |----------|-------|------------|
 | `/src/misas/plan_de_misas_pantalla_data` | [misas/api/plan_de_misas_pantalla_data.md](misas/api/plan_de_misas_pantalla_data.md) | Filtros zona / orden / plantilla (`pantalla=ver\|modificar\|preparar\|modificar_plantilla`) |
-| `/src/misas/ver_cuadricula_zona_data` | [misas/api/ver_cuadricula_zona_data.md](misas/api/ver_cuadricula_zona_data.md) | Cuadrícula encargo × días |
+| `/src/misas/ver_cuadricula_zona_data` | [misas/api/ver_cuadricula_zona_data.md](misas/api/ver_cuadricula_zona_data.md) | Cuadrícula encargo × días (+ `meta` por celda) |
 | `/src/misas/cambiar_status_data` | [misas/api/cambiar_status_data.md](misas/api/cambiar_status_data.md) | Filtros extra estado (pantalla cambiar status; cuadrícula igual que arriba) |
+| `/src/misas/desplegable_sacd` | [misas/api/desplegable_sacd.md](misas/api/desplegable_sacd.md) | Opciones sacerdote al editar celda |
+| `/src/misas/cuadricula_update` | [misas/api/cuadricula_update.md](misas/api/cuadricula_update.md) | Guardar/borrar celda |
+| `/src/misas/crear_nuevo_periodo_data` | [misas/api/crear_nuevo_periodo_data.md](misas/api/crear_nuevo_periodo_data.md) | Preparar periodo desde plantilla |
+| `/src/misas/importar_plantilla_data` | [misas/api/importar_plantilla_data.md](misas/api/importar_plantilla_data.md) | Copiar plantilla origen→destino |
+| `/src/misas/nuevo_status` | [misas/api/nuevo_status.md](misas/api/nuevo_status.md) | Aplicar estado masivo |
 
-Flujo típico: `plan_de_misas_pantalla_data` → `ver_cuadricula_zona_data` al pulsar «Ver cuadrícula». Mutaciones (preparar periodo, cambiar estado, editar celdas) **no** están en móvil.
+Referencia de cómo la web edita celdas / preparar / importar plantilla (campos POST, `meta` de celda, `key` = `iniciales#id_nom`): [misas/flujos/cuadricula.md](misas/flujos/cuadricula.md). Endpoints de mutación: `cuadricula_update`, `desplegable_sacd`, `crear_nuevo_periodo_data`, `importar_plantilla_data`.
 
 ### Plan de un sacerdote
 
@@ -44,16 +52,26 @@ Flujo típico: `plan_de_misas_pantalla_data` → `ver_cuadricula_zona_data` al p
 | `/src/misas/buscar_plan_ctr_data` | [misas/api/buscar_plan_ctr_data.md](misas/api/buscar_plan_ctr_data.md) | Zonas y centros |
 | `/src/misas/ver_plan_ctr_data` | [misas/api/ver_plan_ctr_data.md](misas/api/ver_plan_ctr_data.md) | Cuadrícula centro × días |
 
-### Encargos e iniciales (consulta)
+### Encargos e iniciales
 
 | Endpoint | Ficha | Uso en app |
 |----------|-------|------------|
 | `/src/misas/modificar_encargos_data` | [misas/api/modificar_encargos_data.md](misas/api/modificar_encargos_data.md) | Zonas encargos zona |
-| `/src/misas/ver_encargos_zona_data` | [misas/api/ver_encargos_zona_data.md](misas/api/ver_encargos_zona_data.md) | Tabla encargos zona |
+| `/src/misas/ver_encargos_zona_data` | [misas/api/ver_encargos_zona_data.md](misas/api/ver_encargos_zona_data.md) | Tabla + tipos/centros/idiomas |
+| `/src/misas/guardar_encargo_zona` | [misas/api/guardar_encargo_zona.md](misas/api/guardar_encargo_zona.md) | Crear/editar encargo zona |
+| `/src/misas/eliminar_encargo_zona` | [misas/api/eliminar_encargo_zona.md](misas/api/eliminar_encargo_zona.md) | Borrar encargo zona |
 | `/src/misas/modificar_encargos_centros_data` | [misas/api/modificar_encargos_centros_data.md](misas/api/modificar_encargos_centros_data.md) | Zonas encargos centros |
 | `/src/misas/ver_encargos_centros_data` | [misas/api/ver_encargos_centros_data.md](misas/api/ver_encargos_centros_data.md) | Tabla encargo ↔ centro |
+| `/src/misas/desplegable_encargos` | [misas/api/desplegable_encargos.md](misas/api/desplegable_encargos.md) | Opciones encargo (modal centros) |
+| `/src/misas/guardar_encargo_centro` | [misas/api/guardar_encargo_centro.md](misas/api/guardar_encargo_centro.md) | Crear/editar vínculo |
+| `/src/misas/eliminar_encargo_centro` | [misas/api/eliminar_encargo_centro.md](misas/api/eliminar_encargo_centro.md) | Borrar vínculo |
 | `/src/misas/modificar_iniciales_sacd_zona_data` | [misas/api/modificar_iniciales_sacd_zona_data.md](misas/api/modificar_iniciales_sacd_zona_data.md) | Desplegable zonas iniciales |
 | `/src/misas/ver_iniciales_zona_data` | [misas/api/ver_iniciales_zona_data.md](misas/api/ver_iniciales_zona_data.md) | Tabla iniciales SACD |
+| `/src/misas/update_iniciales` | [misas/api/update_iniciales.md](misas/api/update_iniciales.md) | Guardar iniciales/color (tap en fila) |
+| `/src/misas/nuevo_status` | [misas/api/nuevo_status.md](misas/api/nuevo_status.md) | Aplicar estado masivo (pantalla cambiar status) |
+
+Flujo tipico cambiar status: `cambiar_status_data` → (opcional ver cuadrícula) → `nuevo_status` al pulsar «Aplicar estado».
+Flujo iniciales: `modificar_iniciales_sacd_zona_data` → `ver_iniciales_zona_data` → `update_iniciales`.
 
 ## Actividades SACD — atención actividades
 
@@ -93,8 +111,9 @@ Pantalla nativa: `AusenciasScreen` (`sacd_ausencias.php` o `sacd_ausencias_jefe_
 | `/src/encargossacd/sacd_ausencias_jefe_zona_data` | [encargossacd/api/sacd_ausencias_jefe_zona_data.md](encargossacd/api/sacd_ausencias_jefe_zona_data.md) | Desplegable sacerdotes (jefe de zona) |
 | `/src/encargossacd/sacd_select_data` | [encargossacd/api/sacd_select_data.md](encargossacd/api/sacd_select_data.md) | Tipo SACD + lista (menú «Ausencias sacd») |
 | `/src/encargossacd/sacd_ausencias_get_data` | [encargossacd/api/sacd_ausencias_get_data.md](encargossacd/api/sacd_ausencias_get_data.md) | Filas de ausencias / permisos |
+| `/src/encargossacd/sacd_ausencias_update` | [encargossacd/api/sacd_ausencias_update.md](encargossacd/api/sacd_ausencias_update.md) | Guardar / alta / borrar (fechas en blanco) |
 
-Flujo jefe: `sacd_ausencias_jefe_zona_data` → `sacd_ausencias_get_data`. Flujo SACD: `sacd_select_data` → `sacd_ausencias_get_data`. Edición (`sacd_ausencias_update`) solo web.
+Flujo jefe: `sacd_ausencias_jefe_zona_data` → `sacd_ausencias_get_data` → `sacd_ausencias_update`. Flujo SACD: `sacd_select_data` → `sacd_ausencias_get_data` → `sacd_ausencias_update`.
 
 ## Guía transversal
 

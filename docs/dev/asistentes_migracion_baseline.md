@@ -371,7 +371,7 @@ es el **piloto de cierre** descrito en
 
 #### 4. Documentacion y referencias
 
-- Sustituir menciones a `refactor.md` por `agents.md` en comentarios del modulo
+- Sustituir menciones a `refactor.md` por `AGENTS.md` en comentarios del modulo
   (si quedan).
 - Mantener alineados menus (`menus.csv`, `aux_metamenus.csv`, `comun.sql`) tras
   cambios de URL.

@@ -42,15 +42,31 @@ Asigna, actualiza o borra un EncargoDia en una celda de la cuadrícula y recalcu
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `uuid_item` | `string` | application | Si | |
-| `key` | `string` | application | No | |
-| `tstart` | `string` | application | No | |
-| `tend` | `string` | application | No | |
-| `observ` | `string` | application | No | |
-| `id_enc` | `integer` | application | No | |
-| `dia` | `string` | application | No | |
-| `tipo_plantilla` | `string` | application | No | |
-| `id_zona` | `integer` | application | No | |
+| `uuid_item` | `string` | application | Si | UUID del `EncargoDia`. Si la celda estaba vacía, el front genera uno nuevo. |
+| `key` | `string` | application | No | `iniciales#id_nom` (p. ej. `JP#1234`). Vacío → elimina la asignación. El backend usa la 2ª parte como `id_nom`. |
+| `tstart` | `string` | application | No | Hora inicio, p. ej. `08:00` (puede vacío). |
+| `tend` | `string` | application | No | Hora fin, p. ej. `08:30`. |
+| `observ` | `string` | application | No | Observaciones; la UI marca `*` en iniciales si no vacío. |
+| `id_enc` | `integer` | application | No | Id del encargo (fila de misa). |
+| `dia` | `string` | application | No | Día ISO `Y-m-d` (p. ej. `2026-08-10`). |
+| `tipo_plantilla` | `string` | application | No | `p` (plan) o plantilla `s1`/`s3`/`d1`/`d3`/`m1`/`m3`. Condiciona colores de estado. |
+| `id_zona` | `integer` | application | No | Zona de la cuadrícula. |
+
+### Ejemplo POST (form-urlencoded, como la web)
+
+```
+uuid_item=a1b2c3d4-e5f6-7890-abcd-ef1234567890
+&key=JP%231234
+&id_enc=42
+&dia=2026-08-10
+&tstart=08%3A00
+&tend=08%3A30
+&observ=con%20organista
+&tipo_plantilla=p
+&id_zona=3
+```
+
+Origen web: `modificar_cuadricula_zona.phtml` → `commitCurrentEdit`. Flujo narrativo: [`flujos/cuadricula.md`](../flujos/cuadricula.md).
 
 ## Salida
 

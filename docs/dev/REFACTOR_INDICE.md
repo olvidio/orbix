@@ -3,7 +3,7 @@
 Punto de entrada único para el estado de la migración `apps/` → `frontend/` + `src/`,
 la deuda arquitectónica residual y el trabajo con PHPStan.
 
-**Normas canónicas (no duplicar aquí):** [`agents.md`](../agents.md)
+**Normas canónicas (no duplicar aquí):** [`AGENTS.md`](../AGENTS.md)
 
 **Última actualización de inventarios:** 2026-06-09
 
@@ -14,15 +14,15 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 | Fichero | Rol |
 |---------|-----|
 | [`guia_tecnica_onboarding.md`](guia_tecnica_onboarding.md) | Mapa técnico para nuevos programadores (stack, DDD, BD, tests) |
-| [`agents.md`](../agents.md) | Reglas DDD, capas, migración por slices, PostRequest, naming, checklist PR |
+| [`AGENTS.md`](../AGENTS.md) | Reglas DDD, capas, migración por slices, PostRequest, naming, checklist PR |
 | [`docs/dev/backlog.md`](backlog.md) | Mejoras diferidas (ServerConf→`.env`, PostRequest interno sin HTTP) |
 | [`docs/dev/notas_modelo_acta.md`](notas_modelo_acta.md) | ADR: notas ancladas al acta/DL; certificado solo a entidad externa; plan técnico |
 | [`docs/dev/hash_arquitectura.md`](hash_arquitectura.md) | HashF/HashB, patrón `link_spec` |
-| [`tests/agents.md`](../tests/agents.md) | Convenciones de tests; riesgos de `$GLOBALS['container']` en tests |
+| [`tests/AGENTS.md`](../tests/AGENTS.md) | Convenciones de tests; riesgos de `$GLOBALS['container']` en tests |
 | [`docs/dev/*_migracion_baseline.md`](.) | Plan e historial por módulo (slices, inventario, deuda post-refactor) |
 | [`docs/dev/frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md) | Controladores frontend con `use src\...` (regenerable; ver abajo) |
 | [`build/phpstan-baseline-priority-summary.md`](../build/phpstan-baseline-priority-summary.md) | Resumen baseline PHPStan por prioridad A/B/C |
-| [`refactor.md`](../refactor.md) | **Obsoleto** — redirige a `agents.md`; eliminar cuando no queden referencias |
+| [`refactor.md`](../refactor.md) | **Obsoleto** — redirige a `AGENTS.md`; eliminar cuando no queden referencias |
 
 ---
 

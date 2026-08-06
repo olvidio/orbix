@@ -5,7 +5,7 @@ Documento de cierre DI del módulo **herramienta interna de administración de B
 apptables, etc. Entrada vía menú sistema (`frontend/devel_db_admin/`); no es módulo de
 negocio expuesto a usuarios finales.
 
-Patrón de referencia en [`agents.md`](../agents.md) (migración por slices, PostRequest,
+Patrón de referencia en [`AGENTS.md`](../AGENTS.md) (migración por slices, PostRequest,
 `DependencyResolver` en controllers, constructor DI en application).
 
 ---

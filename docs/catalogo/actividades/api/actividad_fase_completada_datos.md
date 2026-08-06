@@ -59,7 +59,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
   Es la version unitaria de
   [`actividad_fases_completadas_datos`](actividad_fases_completadas_datos.md),
   reservada para flujos solo-frontend que necesiten una fase concreta
-  (documentado en `agents.md`).
+  (documentado en `AGENTS.md`).
 
 ## Revision Manual
 

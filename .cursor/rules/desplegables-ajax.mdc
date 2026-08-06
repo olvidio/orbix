@@ -1,0 +1,47 @@
+---
+description: Desplegables AJAX — opciones como pares ordenados + helper JS compartido
+globs: src/**/application/**/*.php,src/**/infrastructure/ui/http/controllers/**/*.php,frontend/**/*.phtml,frontend/**/*.html.twig,frontend/**/view/**/*
+alwaysApply: false
+---
+
+# Desplegables AJAX
+
+## Contrato
+
+`src/` **no** devuelve HTML de `<select>`; `application` **no** instancia `web\Desplegable`. Payload JSON (campo `data`) con p. ej.:
+
+```json
+{ "id": "campo", "name": "campo", "opciones": [["1003", "Z"], ["501", "A"]], "selected": "501", "blanco": true }
+```
+
+## `opciones`: array de pares, no mapa
+
+Un objeto `{ "501": "A", "1003": "Z" }` se reordena en JS (claves numéricas) y **rompe** el orden del backend.
+
+- Backend: `OpcionesDesplegable::enOrden($mapa)` o `::desdeFilas($rows)` → `list<[value, label]>`.
+- Misma regla para `opciones_sf` / `opciones_sv` (misas).
+- Tests: si el orden importa, asertar el array de pares completo.
+
+```php
+use src\shared\domain\helpers\OpcionesDesplegable;
+
+'opciones' => OpcionesDesplegable::enOrden($mapa),
+```
+
+## Helper JS (no duplicar inline)
+
+| Vista | Inclusión |
+|-------|-----------|
+| Twig, dentro de `<script>` abierto | `{% include "@shared/_fnjs_construir_desplegable.inc.html.twig" %}` |
+| Twig, bloque autónomo | `{% include "@shared/fnjs_construir_desplegable.html.twig" %}` |
+| PHTML | `require …/_fnjs_construir_desplegable.inc.phtml` **dentro** de `<script>` |
+
+- Namespace Twig: `@shared` (= `frontend/shared/view`). No rutas relativas `../../shared/view/...`.
+- No meter el `.html.twig` completo dentro de otro `<script>` (anida `</script>`).
+- Inyectar en contenedor con `.html(...)`; si el ancla es el `<select>`, `.replaceWith(...)` — no `$(select).html(innerSelect)`.
+
+## Al migrar
+
+Localizar consumidores → pares con `OpcionesDesplegable` → `ContestarJson` → JS al helper → quitar HTML del backend.
+
+Referencia: [`AGENTS.md`](../../AGENTS.md) § «Desplegables devueltos por endpoints AJAX»; [`frontend/AGENTS.md`](../../frontend/AGENTS.md).

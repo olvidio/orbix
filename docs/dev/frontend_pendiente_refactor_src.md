@@ -1,6 +1,6 @@
 # Frontends: uso directo de `src/`
 
-Criterio (alineado con [`agents.md`](../agents.md)): en `frontend/` **no** debe haber
+Criterio (alineado con [`AGENTS.md`](../AGENTS.md)): en `frontend/` **no** debe haber
 `use src\...` de application, domain, repositorios ni entidades de negocio. Los datos
 llegan vía `PostRequest` a `/src/<módulo>/...`; config/permisos de sesión vía facades
 `SessionConfig` / `SessionPerm` / `SessionPermActividades`.

@@ -1,0 +1,40 @@
+---
+description: Envelope ContestarJson y contrato data para PostRequest / AJAX
+globs: src/**/infrastructure/ui/http/controllers/**/*.php,src/**/infrastructure/controllers/**/*.php,frontend/**/*.php,frontend/**/*.phtml,scripts/**/*.js.php
+alwaysApply: false
+---
+
+# ContestarJson + PostRequest
+
+## Backend (`ContestarJson::enviar`)
+
+- Usar `ContestarJson::enviar($error, $data)` (no `echo json_encode`, no `send` + `respuestaPhp` en código nuevo).
+- Envelope: `{ success, mensaje?, data }`.
+- **Mutaciones** (update/delete/…): siempre JSON; ack típico `enviar('', 'ok')`. Nunca cuerpo vacío sin contrato.
+- Prohibido en controllers HTTP de `src/`: `echo` HTML, `die("msg")`, texto plano (salvo excepción documentada en el fichero).
+
+## Contrato `data` (consumidores `PostRequest`)
+
+Tras `success === true`, `PostRequest` normaliza `data` a **array**:
+
+| `$data` en `enviar` | Caller recibe |
+|---------------------|---------------|
+| array (objeto JSON) | ese array |
+| `'ok'` / `'none'` / `''` | `[]` |
+| error con mensaje | `exit` con mensaje (no array de éxito) |
+
+- Listas/tablas: claves/tipos que espera el componente (`a_botones` = `array`, no `'ninguno'`).
+- No usar `enviarDataAnidado` con endpoints consumidos por `PostRequest`.
+
+## Frontend (JS)
+
+- `dataType: 'json'`; comprobar `success`; mostrar `mensaje` si falla.
+- Preferir `$.ajax` + `serialize()`; no `form.one("submit")` + `trigger`.
+- Helpers: `fnjs_parse_rta` / `fnjs_ajax_json*` (detalle en `frontend/AGENTS.md`).
+- Datos desde PHP: `PostRequest::getDataFromUrl('/src/<modulo>/...', $params)`.
+
+## Al cambiar un endpoint
+
+Mismo PR: backend + **todos** los consumidores (`rg` en `frontend/`, `apps/`, JS). Actualizar `docs/ai/<modulo>/api_resumen.md` si hay ruta nueva/cambio de firma.
+
+Referencia: [`AGENTS.md`](../../AGENTS.md) § «Comunicación Frontend-Backend (AJAX y JSON)».

@@ -40,10 +40,14 @@ Construye el desplegable dinámico de SACD en el modal de la cuadrícula, filtra
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_zona` | `integer` | application | Si | |
-| `id_sacd` | `integer` | application | No | |
-| `seleccion` | `integer` | application | No | |
-| `dia` | `string` | application | Si | |
+| `id_zona` | `integer` | application | Si | Zona. |
+| `id_sacd` | `integer` | application | No | `id_nom` actual (0 si vacío); se muestra primero en el select. |
+| `seleccion` | `integer` | application | No | Bitmask radios del modal: `1` libre 1ª hora, `2` zona, `4` dl, `8` de paso. Default web: `2`. |
+| `dia` | `string` | application | Si | Día ISO `Y-m-d`. |
+
+Cada opción: `value` = `iniciales#id_nom` (p. ej. `JP#1234`), `label` = nombre con iniciales. Ese `value` es el `key` que se envía a `cuadricula_update`.
+
+Flujo narrativo: [`flujos/cuadricula.md`](../flujos/cuadricula.md).
 
 ## Salida
 
