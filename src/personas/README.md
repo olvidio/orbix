@@ -111,6 +111,15 @@ document_root, ubicación, esquema, private, DB_SERVER) y además dos opciones:
 - `--aplicar`: escribe los cambios (sin ella, sólo informa).
 - `--esquema=H-dlb`: limita la ejecución a un esquema de comun concreto.
 
+Los ocho parámetros posicionales son obligatorios en CLI: desde cron no hay sesión,
+así que el login se hace con el usuario y la contraseña que se pasan por línea de
+comandos (los recoge `frontend/usuarios/controller/login.php`, incluido desde
+`global_object.inc`). Sigue haciendo falta aunque la reconciliación abra sus propias
+conexiones de mantenimiento, porque el catálogo de esquemas (`public.db_idschema`) se
+lee con la conexión de sesión `oDBPC`.
+
+Códigos de salida: `0` correcto, `1` error o abortado, `2` uso incorrecto.
+
 Línea de crontab de ejemplo (interior sv, cada noche):
 
 ```
@@ -136,6 +145,11 @@ imprimirlo por `STDOUT`.
   `UBICACION=sv` y que la instalación no sea DMZ (`ConfigGlobal::is_dmz()`) antes de
   hacer nada; si no se cumple, aborta con un mensaje y no llega a tocar la base de
   datos.
+- **Sin fallos silenciosos.** Si faltan parámetros, el driver sale con código `2` y un
+  mensaje de uso. Si las credenciales no valen, `login.php` pinta el formulario de
+  login y hace `die()` con código `0`; para que eso no parezca una ejecución correcta
+  en el cron, el driver registra un `shutdown function` que detecta que nunca llegó a
+  ejecutarse la reconciliación, avisa por `STDERR` y sale con código `1`.
 - **Sin solapes.** Antes de aplicar cambios se toma un fichero de bloqueo
   (`log/cp_sacd_resync.pid`); si ya hay una ejecución en marcha de menos de 15
   minutos, la nueva se aborta con un aviso. El fichero se libera al terminar (o al

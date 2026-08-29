@@ -30,11 +30,25 @@ use src\shared\web\ContestarJson;
  *   --aplicar          escribe los cambios (sin ella, sólo informe)
  *   --esquema=H-dlb    limita la reconciliación a un esquema de comun
  *
+ * Los ocho parámetros son obligatorios en CLI: no hay sesión, y el login se
+ * hace con ellos en `frontend/usuarios/controller/login.php` (incluido desde
+ * `global_object.inc`). Hace falta aunque la reconciliación abra sus propias
+ * conexiones de mantenimiento, porque el catálogo de esquemas se lee con la
+ * conexión de sesión `oDBPC`.
+ *
+ * Códigos de salida: 0 correcto, 1 error o abortado, 2 uso incorrecto.
+ *
  * Ejemplo de crontab (interior sv, cada noche):
  *   17 3 * * * /usr/bin/php /var/www/orbix/src/personas/infrastructure/cli/sacd_resincronizar.php \
  *       usuario clave orbix /var/www sv H-dlbv sv 1 --aplicar \
  *       >> /var/www/orbix/log/cp_sacd.out 2>> /var/www/orbix/log/cp_sacd.err
  */
+
+if (PHP_SAPI === 'cli' && count(array_slice($argv ?? [], 1, 8)) < 8) {
+    fwrite(STDERR, "uso: sacd_resincronizar.php <username> <password> <dirweb> <document_root>"
+        . " <ubicacion> <esquema> <private> <db_server> [--aplicar] [--esquema=H-dlb]\n");
+    exit(2);
+}
 
 if (!empty($argv[1])) {
     $_POST['username'] = $argv[1];
@@ -46,6 +60,25 @@ if (!empty($argv[1])) {
     putenv("PRIVATE=$argv[7]");
     putenv("DB_SERVER=$argv[8]");
 }
+
+/**
+ * Si las credenciales no valen, `login.php` pinta el formulario de login y hace
+ * `die()`: sin esto, el cron acabaría con código 0 y sin nada en STDERR, o sea
+ * un fallo silencioso indistinguible de una ejecución correcta.
+ */
+register_shutdown_function(static function (): void {
+    if (PHP_SAPI !== 'cli' || defined('SACD_RESYNC_ATENDIDO')) {
+        return;
+    }
+    fwrite(
+        STDERR,
+        sprintf(
+            "[%s] cp_sacd resync: abortado antes de ejecutarse; revise usuario, contraseña y esquema\n",
+            date('c'),
+        ),
+    );
+    exit(1);
+});
 $document_root = isset($_SERVER['DOCUMENT_ROOT']) && is_string($_SERVER['DOCUMENT_ROOT'])
     ? $_SERVER['DOCUMENT_ROOT']
     : '';
@@ -68,9 +101,6 @@ if ($isWeb) {
     $soloEsquema = is_scalar($esquemaRaw) ? trim((string) $esquemaRaw) : '';
 } else {
     foreach (array_slice($argv ?? [], 9) as $arg) {
-        if (!is_string($arg)) {
-            continue;
-        }
         if ($arg === '--aplicar') {
             $aplicar = true;
         }
@@ -129,6 +159,7 @@ if ($motivo === '' && $aplicar) {
     $motivo = sacd_resincronizar_tomar_pid();
 }
 if ($motivo !== '') {
+    define('SACD_RESYNC_ATENDIDO', true);
     if ($isWeb) {
         ContestarJson::enviar($motivo, '');
 
@@ -143,7 +174,9 @@ if ($motivo !== '') {
 try {
     $useCase = DependencyResolver::get(ResincronizarCpSacd::class);
     $resultado = $useCase->execute($aplicar, $soloEsquema);
+    define('SACD_RESYNC_ATENDIDO', true);
 } catch (\Throwable $e) {
+    define('SACD_RESYNC_ATENDIDO', true);
     if ($aplicar) {
         sacd_resincronizar_soltar_pid();
     }
