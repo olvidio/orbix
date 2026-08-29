@@ -101,7 +101,7 @@ final class CpSacdFila
     }
 
     /**
-     * id_nom de una fila, 0 si no es utilizable.
+     * id_nom de una fila, 0 si no es utilizable (negativos son válidos: personas de paso).
      *
      * @param array<string, mixed> $fila
      */

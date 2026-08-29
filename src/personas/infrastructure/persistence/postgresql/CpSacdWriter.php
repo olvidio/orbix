@@ -43,7 +43,7 @@ class CpSacdWriter
         // PDO bindea los bool como '1'/'' y '' no es un boolean válido en Postgres.
         $fila['sacd'] = CpSacdFila::esVerdadero($fila['sacd']) ? 't' : 'f';
         $id_nom = CpSacdFila::idNom($fila);
-        if ($id_nom <= 0) {
+        if ($id_nom === 0) {
             $this->setErrorTxt('cp_sacd: id_nom no válido');
 
             return false;
@@ -91,7 +91,7 @@ class CpSacdWriter
 
     public function eliminar(CpSacdContexto $contexto, int $id_nom): bool
     {
-        if ($id_nom <= 0) {
+        if ($id_nom === 0) {
             return false;
         }
 
@@ -104,7 +104,7 @@ class CpSacdWriter
      */
     public function eliminarVarios(CpSacdContexto $contexto, array $ids): int|false
     {
-        $ids = array_values(array_filter(array_map('intval', $ids), static fn(int $id): bool => $id > 0));
+        $ids = array_values(array_filter(array_map('intval', $ids), static fn(int $id): bool => $id !== 0));
         if ($ids === []) {
             return 0;
         }
@@ -151,7 +151,7 @@ class CpSacdWriter
             }
             $fila = CpSacdFila::desdeRegistro(self::clavesTexto($registro));
             $id_nom = CpSacdFila::idNom($fila);
-            if ($id_nom > 0) {
+            if ($id_nom !== 0) {
                 $filas[$id_nom] = $fila;
             }
         }

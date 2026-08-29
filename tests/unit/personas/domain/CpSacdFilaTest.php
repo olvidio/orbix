@@ -59,6 +59,12 @@ final class CpSacdFilaTest extends TestCase
         $this->assertSame(2001, CpSacdFila::idNom(['id_nom' => '2001']));
     }
 
+    public function test_id_nom_negativo_es_valido_en_de_paso(): void
+    {
+        $this->assertSame(-100161351, CpSacdFila::idNom(['id_nom' => -100161351]));
+        $this->assertSame(-100161351, CpSacdFila::idNom(['id_nom' => '-100161351']));
+    }
+
     public function test_id_nom_con_null_da_cero(): void
     {
         $this->assertSame(0, CpSacdFila::idNom(['id_nom' => null]));
