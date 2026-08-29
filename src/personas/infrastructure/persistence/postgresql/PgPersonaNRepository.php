@@ -8,6 +8,7 @@ use src\shared\infrastructure\persistence\ConverterDate;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\entity\PersonaN;
 use src\shared\infrastructure\GlobalPdo;
+use src\personas\infrastructure\persistence\postgresql\traits\SincronizaCpSacdTrait;
 use src\utils_database\domain\GenerateIdGlobal;
 
 
@@ -22,6 +23,8 @@ use src\utils_database\domain\GenerateIdGlobal;
  */
 class PgPersonaNRepository extends PgPersonaDlRepositoryBase implements PersonaNRepositoryInterface
 {
+    use SincronizaCpSacdTrait;
+
     public function __construct()
     {
         $this->setoDbl(GlobalPdo::get('oDB'));
@@ -96,7 +99,11 @@ class PgPersonaNRepository extends PgPersonaDlRepositoryBase implements PersonaN
         if ($stmt === false) {
             return false;
         }
-        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        $ok = $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        if ($ok) {
+            $this->sincronizarCpSacd($PersonaN);
+        }
+        return $ok;
     }
 
     public function Eliminar(PersonaN $PersonaN): bool
@@ -105,7 +112,11 @@ class PgPersonaNRepository extends PgPersonaDlRepositoryBase implements PersonaN
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_nom = $id_nom";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $ok = $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($ok) {
+            $this->eliminarDeCpSacd($PersonaN);
+        }
+        return $ok;
     }
 
 

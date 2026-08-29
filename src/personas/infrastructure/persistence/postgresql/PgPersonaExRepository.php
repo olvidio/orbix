@@ -12,6 +12,7 @@ use PDO;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalListsTrait;
+use src\personas\infrastructure\persistence\postgresql\traits\SincronizaCpSacdTrait;
 use src\shared\infrastructure\GlobalPdo;
 use src\utils_database\domain\GenerateIdGlobal;
 
@@ -28,6 +29,7 @@ use src\utils_database\domain\GenerateIdGlobal;
 class PgPersonaExRepository extends ClaseRepository implements PersonaExRepositoryInterface
 {
     use PersonaGlobalListsTrait;
+    use SincronizaCpSacdTrait;
 
     public function __construct()
     {
@@ -125,7 +127,11 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_nom = $id_nom";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $ok = $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($ok) {
+            $this->eliminarDeCpSacd($PersonaEx);
+        }
+        return $ok;
     }
 
 
@@ -187,7 +193,11 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
         if ($stmt === false) {
             return false;
         }
-        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        $ok = $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        if ($ok) {
+            $this->sincronizarCpSacd($PersonaEx);
+        }
+        return $ok;
     }
 
     private function isNew(int $id_nom): bool

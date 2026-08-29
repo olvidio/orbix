@@ -5,7 +5,10 @@ use src\personas\application\PersonaEliminar;
 use src\personas\application\PersonaUpdate;
 use src\personas\application\PersonasEditarData;
 use src\personas\application\PersonasSelectData;
+use src\personas\application\ResincronizarCpSacd;
 use src\personas\application\services\PersonaFinderService;
+use src\personas\application\services\SincronizarCpSacd;
+use src\personas\infrastructure\persistence\postgresql\CpSacdWriter;
 use src\personas\application\PersonaPublicar;
 use src\personas\application\PersonaPublicarFormData;
 use src\personas\application\StgrCambioData;
@@ -95,6 +98,8 @@ return [
             get(PersonaAllRepositoryInterface::class),
         ),
     PersonaRepositoryResolver::class => autowire(PersonaRepositoryResolver::class),
+    CpSacdWriter::class => autowire(CpSacdWriter::class),
+    SincronizarCpSacd::class => autowire(SincronizarCpSacd::class),
 
     // Casos de uso / Application classes
     HomePersonaData::class => autowire(HomePersonaData::class),
@@ -106,6 +111,7 @@ return [
     StgrUpdate::class => autowire(StgrUpdate::class),
     PersonaPublicarFormData::class => autowire(PersonaPublicarFormData::class),
     PersonaPublicar::class => autowire(PersonaPublicar::class),
+    ResincronizarCpSacd::class => autowire(ResincronizarCpSacd::class),
     TrasladoFormData::class => autowire(TrasladoFormData::class),
     TrasladoUpdate::class => autowire(TrasladoUpdate::class),
 ];

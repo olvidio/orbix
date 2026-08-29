@@ -42,4 +42,7 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/personas/personas_editar_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/personas_editar_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/personas/sacd_resincronizar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/sacd_resincronizar.php';
+    });
 };
