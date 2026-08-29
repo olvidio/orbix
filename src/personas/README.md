@@ -62,11 +62,6 @@ El trait resuelve `SincronizarCpSacd` por el contenedor (`DependencyResolver`) e
 de recibirlo por constructor, porque estos repositorios se instancian sin argumentos
 en varios sitios del código; así el enganche no obliga a tocar esas firmas.
 
-Un caso aparte es `publicado_para`: se escribe con un `UPDATE` directo sobre
-`global.personas`, sin pasar por el `Guardar()` de ningún repositorio, así que la
-sincronización incremental normal no se entera. `PersonaPublicar` lo propaga a mano
-después de publicar, llamando a `SincronizarCpSacd::sincronizarPublicadoPara()`.
-
 **No hay transacción entre la BD interior y la BD comun** (son bases de datos
 distintas). Si la copia incremental falla, el guardado de la ficha **no se
 revierte**: la ficha ya está guardada y el error de `cp_sacd` sólo se registra en

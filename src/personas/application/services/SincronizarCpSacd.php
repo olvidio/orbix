@@ -55,15 +55,4 @@ final class SincronizarCpSacd
 
         return $this->writer->eliminar($contexto, CpSacdFila::idNom($fila)) !== false;
     }
-
-    /**
-     * Propaga `publicado_para`, que se escribe con un UPDATE directo sobre
-     * `global.personas` y no pasa por el `Guardar()` de ningún repositorio.
-     */
-    public function sincronizarPublicadoPara(int $id_nom, ?string $json, ?CpSacdContexto $contexto = null): bool
-    {
-        $contexto ??= CpSacdContexto::desdeSesion();
-
-        return $this->writer->actualizarPublicadoPara($contexto, $id_nom, $json);
-    }
 }

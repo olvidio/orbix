@@ -13,7 +13,7 @@ final class CpSacdFilaTest extends TestCase
 
     public function test_desde_registro_rellena_a_null_las_columnas_ausentes(): void
     {
-        // Un registro de p_de_paso_ex no tiene id_ctr ni publicado_para.
+        // Un registro de p_de_paso_ex no tiene id_ctr.
         $registro = [
             'id_nom' => 10021,
             'id_tabla' => 'pn',
@@ -25,7 +25,6 @@ final class CpSacdFilaTest extends TestCase
         $fila = CpSacdFila::desdeRegistro($registro);
 
         $this->assertNull($fila['id_ctr']);
-        $this->assertNull($fila['publicado_para']);
         $this->assertSame(10021, $fila['id_nom']);
         $this->assertSame('Perez', $fila['apellido1']);
     }

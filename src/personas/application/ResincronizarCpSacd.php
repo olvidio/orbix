@@ -47,7 +47,7 @@ final class ResincronizarCpSacd
     private const TABLA_DE_PASO = 'p_de_paso_ex';
 
     /** Columnas que no existen en `p_de_paso_ex` (se copian como null). */
-    private const COLUMNAS_SIN_DE_PASO = ['id_ctr', 'publicado_para'];
+    private const COLUMNAS_SIN_DE_PASO = ['id_ctr'];
 
     /** Tope de personas detalladas por esquema en el informe. */
     private const MAX_DETALLE = 20;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace src\personas\application;
 
-use src\personas\application\services\SincronizarCpSacd;
 use src\personas\domain\PersonaPublicacion;
 use src\personas\domain\contracts\PersonaAllRepositoryInterface;
 
@@ -15,7 +14,6 @@ final class PersonaPublicar
 {
     public function __construct(
         private PersonaAllRepositoryInterface $personaAllRepository,
-        private SincronizarCpSacd $sincronizarCpSacd,
     ) {
     }
 
@@ -57,28 +55,6 @@ final class PersonaPublicar
             }
         }
 
-        $this->propagarACpSacd($id_nom);
-
         return '';
-    }
-
-    /**
-     * `publicado_para` se escribe con un UPDATE directo sobre `global.personas`,
-     * sin pasar por el `Guardar()` de ningún repositorio, así que la copia
-     * `cp_sacd` no se entera. Se propaga aquí; si la persona no está en la copia
-     * (no es sacd) el UPDATE no toca ninguna fila.
-     */
-    private function propagarACpSacd(int $id_nom): void
-    {
-        try {
-            $persona = $this->personaAllRepository->getPersonaByIdNom($id_nom);
-            if ($persona === null) {
-                return;
-            }
-            $json = PersonaPublicacion::toDatabaseValue($persona->getPublicado_para());
-            $this->sincronizarCpSacd->sincronizarPublicadoPara($id_nom, $json);
-        } catch (\Throwable) {
-            // La publicación ya está hecha; la reconciliación periódica arregla la copia.
-        }
     }
 }

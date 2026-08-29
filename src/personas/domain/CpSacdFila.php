@@ -50,7 +50,6 @@ final class CpSacdFila
         'observ',
         'id_ctr',
         'lugar_nacimiento',
-        'publicado_para',
     ];
 
     /** id_tabla que alimentan la copia. */
@@ -79,7 +78,6 @@ final class CpSacdFila
             'f_nacimiento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
             'f_situacion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
             'f_inc' => fn($v) => (new ConverterDate('date', $v))->toPg(),
-            'publicado_para' => fn($v) => PersonaPublicacion::toDatabaseValue($v),
         ]);
 
         return self::desdeRegistro($aDatos);

@@ -57,7 +57,7 @@ class CpSacdWriter
             if ($columna === 'id_nom') {
                 continue;
             }
-            $asignaciones[] = $columna . ' = ' . self::marcador($columna);
+            $asignaciones[] = $columna . ' = :' . $columna;
         }
         $sql = "UPDATE $tabla SET " . implode(', ', $asignaciones) . ' WHERE id_nom = :id_nom';
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
@@ -73,7 +73,7 @@ class CpSacdWriter
 
         // No existía: INSERT.
         $columnas = CpSacdFila::COLUMNAS;
-        $valores = array_map(static fn(string $c): string => self::marcador($c), $columnas);
+        $valores = array_map(static fn(string $c): string => ':' . $c, $columnas);
         $datos = $fila;
         if ($contexto->id_schema > 0) {
             array_unshift($columnas, 'id_schema');
@@ -127,29 +127,6 @@ class CpSacdWriter
         }
 
         return $borradas;
-    }
-
-    /**
-     * Actualiza sólo `publicado_para` si la persona está en la copia.
-     * No inserta: si no es sacd, no tiene por qué estar.
-     */
-    public function actualizarPublicadoPara(CpSacdContexto $contexto, int $id_nom, ?string $json): bool
-    {
-        if ($id_nom <= 0) {
-            return false;
-        }
-        $tabla = $contexto->tabla();
-        $sql = "UPDATE $tabla SET publicado_para = CAST(:publicado_para AS jsonb) WHERE id_nom = :id_nom";
-        $stmt = $this->prepareAndExecute(
-            $contexto->pdoComun,
-            $sql,
-            ['publicado_para' => $json, 'id_nom' => $id_nom],
-            __METHOD__,
-            __FILE__,
-            __LINE__,
-        );
-
-        return $stmt !== false;
     }
 
     /**
@@ -236,15 +213,5 @@ class CpSacdWriter
         }
 
         return $ids;
-    }
-
-    /** `publicado_para` es jsonb: el marcador necesita CAST explícito. */
-    private static function marcador(string $columna): string
-    {
-        if ($columna === 'publicado_para') {
-            return 'CAST(:publicado_para AS jsonb)';
-        }
-
-        return ':' . $columna;
     }
 }
