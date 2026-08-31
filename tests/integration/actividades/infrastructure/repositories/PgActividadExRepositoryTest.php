@@ -40,4 +40,17 @@ class PgActividadExRepositoryTest extends myTest
     {
         $this->assertFalse($this->repository->datosById(999999981));
     }
+
+    public function test_get_new_id_actividad_usa_prefijo_resto_3001(): void
+    {
+        $idAuto = $this->repository->getNewId();
+        $idActiv = $this->repository->getNewIdActividad($idAuto);
+
+        $this->assertLessThan(0, $idActiv);
+        $this->assertStringStartsWith(
+            '-3001',
+            (string) $idActiv,
+            'Actividades ex en resto: id_activ = -3001 + id_auto',
+        );
+    }
 }

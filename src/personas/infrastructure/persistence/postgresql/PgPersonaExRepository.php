@@ -272,11 +272,15 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
     }
 
     /**
+     * id_nom de persona de paso: secuencia de `p_de_paso_ex` + prefijo restov (-1001)
+     * o restof (-2001). Las actividades de resto usan -3001.
+     *
      * @throws Exception
      */
     public function getNewIdNom(int $id): int
     {
-        $miRegionDl = ConfigGlobal::mi_region_dl();
-        return GenerateIdGlobal::generateIdGlobal($miRegionDl, $this->getNomTabla(), $id);
+        $schemaResto = (int) ConfigGlobal::mi_sfsv() === 2 ? 'restof' : 'restov';
+
+        return GenerateIdGlobal::generateIdGlobal($schemaResto, $this->getNomTabla(), $id);
     }
 }

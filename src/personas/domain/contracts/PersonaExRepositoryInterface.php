@@ -73,5 +73,9 @@ interface PersonaExRepositoryInterface
 
     public function getNewId(): int;
 
+    /**
+     * id_nom compuesto con la secuencia de `p_de_paso_ex` y el esquema restov
+     * (prefijo -1001), no con la dl de sesión.
+     */
     public function getNewIdNom(int $id): int;
 }

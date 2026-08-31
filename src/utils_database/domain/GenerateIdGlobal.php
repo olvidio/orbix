@@ -17,9 +17,71 @@ class GenerateIdGlobal
      */
     public static function generateIdGlobal(string $r_dl, string $tabla, int $id_auto): int
     {
-        // 1. Configuración de tablas, secuencias e índices (idx)
-        // Si 'schema_fijo' no está definido, se usará la variable $r_dl
-        $config = [
+        $config = self::tableConfig();
+        if (!isset($config[$tabla])) {
+            throw new \Exception("Tabla no reconocida para generar ID: $tabla");
+        }
+
+        $idx = $config[$tabla]['idx'];
+        $schema = self::schemaForLookup($tabla, $r_dl);
+
+        $oDbl = GlobalPdo::get('oDBPC');
+
+        $stmt = $oDbl->prepare('SELECT id FROM public.db_idschema WHERE schema = :schema');
+        if ($stmt === false) {
+            throw new \Exception("Error consultando ID para el esquema: $schema");
+        }
+        $stmt->execute(['schema' => $schema]);
+        $n = $stmt->fetchColumn();
+
+        if ($n === false) {
+            throw new \Exception("No se encontró ID para el esquema: $schema");
+        }
+
+        return self::composeId($n, $idx, $id_auto);
+    }
+
+    /**
+     * Esquema cuyo id de `db_idschema` se usa como prefijo.
+     * `p_de_paso_ex` → restov (-1001) / restof (-2001);
+     * `a_actividades_ex` → resto (-3001).
+     */
+    public static function schemaForLookup(string $tabla, string $r_dl): string
+    {
+        $config = self::tableConfig();
+        if (!isset($config[$tabla])) {
+            throw new \Exception("Tabla no reconocida para generar ID: $tabla");
+        }
+        $fijo = $config[$tabla]['schema_fijo'] ?? '';
+        if ($fijo === '') {
+            return $r_dl;
+        }
+        // Personas de paso: restov (-1001) o restof (-2001) según sv/sf.
+        if ($fijo === 'restov' && ($r_dl === 'restov' || $r_dl === 'restof')) {
+            return $r_dl;
+        }
+
+        return $fijo;
+    }
+
+    /**
+     * Concatena id de esquema + índice de tabla + id_auto (p. ej. -1001, 6, 1351 → -100161351).
+     */
+    public static function composeId(int|string $schemaId, int $idx, int $idAuto): int
+    {
+        if ($idx === 0) {
+            return (int)((string) $schemaId . $idAuto);
+        }
+
+        return (int)((string) $schemaId . $idx . $idAuto);
+    }
+
+    /**
+     * @return array<string, array{db: string, seq: string, idx: int, schema_fijo?: string}>
+     */
+    private static function tableConfig(): array
+    {
+        return [
             'a_actividades_dl' => ['db' => 'comun', 'seq' => 'a_actividades_dl_id_auto_seq', 'idx' => 0],
             'a_actividades_ex' => ['db' => 'comun', 'seq' => 'a_actividades_ex_id_auto_seq', 'idx' => 0, 'schema_fijo' => 'resto'],
 
@@ -28,7 +90,7 @@ class GenerateIdGlobal
             'p_supernumerarios' => ['db' => 'svf', 'seq' => 'p_supernumerarios_id_auto_seq', 'idx' => 3],
             'p_sssc' => ['db' => 'svf', 'seq' => 'p_sssc_id_auto_seq', 'idx' => 4],
             'p_nax' => ['db' => 'svf', 'seq' => 'p_nax_id_auto_seq', 'idx' => 5],
-            'p_de_paso_ex' => ['db' => 'svf', 'seq' => 'p_de_paso_ex_id_auto_seq', 'idx' => 6],
+            'p_de_paso_ex' => ['db' => 'svf', 'seq' => 'p_de_paso_ex_id_auto_seq', 'idx' => 6, 'schema_fijo' => 'restov'],
 
             'u_centros_dl' => ['db' => 'svf', 'seq' => 'u_centros_dl_id_auto_seq', 'idx' => 8],
             'u_centros_ex' => ['db' => 'svf', 'seq' => 'u_centros_ex_id_auto_seq', 'idx' => 8],
@@ -40,34 +102,6 @@ class GenerateIdGlobal
             'u_dir_cdc_ex' => ['db' => 'comun', 'seq' => 'u_dir_cdc_ex_id_auto_seq', 'idx' => 9],
             'u_dir_cdc_dl' => ['db' => 'comun', 'seq' => 'u_dir_cdc_dl_id_auto_seq', 'idx' => 9],
         ];
-
-        if (!isset($config[$tabla])) {
-            throw new \Exception("Tabla no reconocida para generar ID: $tabla");
-        }
-
-        // 2. Preparar datos de la secuencia
-        $info = $config[$tabla];
-        $idx = $info['idx'];
-
-        $oDbl = GlobalPdo::get('oDBPC');
-
-        // 4. Obtener el ID del esquema (variable 'n' en el SQL original)
-        $sqlSchema = "SELECT id FROM public.db_idschema WHERE schema = '$r_dl'";
-        $stmt = $oDbl->query($sqlSchema);
-        if ($stmt === false) {
-            throw new \Exception("Error consultando ID para el esquema: $r_dl");
-        }
-        $n = $stmt->fetchColumn();
-
-        if ($n === false) {
-            throw new \Exception("No se encontró ID para el esquema: $r_dl");
-        }
-
-        // 5. Retornar el ID formateado
-        if ($idx === 0) {
-            return (int)($n . $id_auto);
-        }
-        return (int)($n . $idx . $id_auto);
     }
 
 }

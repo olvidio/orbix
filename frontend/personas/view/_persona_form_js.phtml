@@ -18,46 +18,59 @@ use frontend\shared\config\AppUrlConfig;
     }
 
     fnjs_guardar = function (formulario) {
-        $(formulario).attr('action', "<?= AppUrlConfig::srcBrowserUrl('/src/personas/persona_update') ?>");
-        $(formulario).one("submit", function () {
-            $.ajax({
-                type: 'post',
-                url: $(this).attr('action'),
-                data: $(this).serialize(),
-                dataType: 'json'
-            }).done(function (json) {
-                if (json.success !== true) {
-                    alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje);
-                } else {
-                    <?= $oPosicion->jsNavAtras(1); ?>
+        var $form = $(formulario);
+        var apellido1 = ($form.find('[name="apellido1"]').val() || '').toString().trim();
+        if (apellido1 === '') {
+            alert(<?= json_encode(_("debe indicar el apellido")) ?>);
+            $form.find('[name="apellido1"]').trigger('focus');
+            return;
+        }
+        $.ajax({
+            type: 'post',
+            url: <?= json_encode(AppUrlConfig::srcBrowserUrl('/src/personas/persona_update')) ?>,
+            data: $form.serialize(),
+            dataType: 'json'
+        }).done(function (json) {
+            if (json.success !== true) {
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + (json.mensaje || ''));
+            } else {
+                <?= $oPosicion->jsNavAtras(1); ?>
+            }
+        }).fail(function (xhr, status, error) {
+            var mensaje = '';
+            try {
+                var parsed = xhr.responseJSON || JSON.parse(xhr.responseText);
+                if (parsed && parsed.mensaje) {
+                    mensaje = parsed.mensaje;
                 }
-            });
-            return false;
+            } catch (e) {}
+            alert(<?= json_encode(_("Error en la conexión con el servidor")) ?> + ': ' + (mensaje || error));
         });
-        $(formulario).trigger("submit");
-        $(formulario).off();
     }
 
     fnjs_eliminar = function (formulario) {
         if (confirm(<?= json_encode(_("¿Está seguro que desea borrar esta persona?")) ?>)) {
-            $(formulario).attr('action', "<?= AppUrlConfig::srcBrowserUrl('/src/personas/persona_eliminar') ?>");
-            $(formulario).one("submit", function () {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'post',
-                    data: $(this).serialize(),
-                    dataType: 'json'
-                }).done(function (json) {
-                    if (json.success !== true) {
-                        alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje);
-                    } else {
-                        <?= $oPosicion->jsNavAtras(1); ?>
+            $.ajax({
+                url: <?= json_encode(AppUrlConfig::srcBrowserUrl('/src/personas/persona_eliminar')) ?>,
+                type: 'post',
+                data: $(formulario).serialize(),
+                dataType: 'json'
+            }).done(function (json) {
+                if (json.success !== true) {
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + (json.mensaje || ''));
+                } else {
+                    <?= $oPosicion->jsNavAtras(1); ?>
+                }
+            }).fail(function (xhr, status, error) {
+                var mensaje = '';
+                try {
+                    var parsed = xhr.responseJSON || JSON.parse(xhr.responseText);
+                    if (parsed && parsed.mensaje) {
+                        mensaje = parsed.mensaje;
                     }
-                });
-                return false;
+                } catch (e) {}
+                alert(<?= json_encode(_("Error en la conexión con el servidor")) ?> + ': ' + (mensaje || error));
             });
-            $(formulario).trigger("submit");
-            $(formulario).off();
         }
     }
 </script>

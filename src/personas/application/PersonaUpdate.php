@@ -42,51 +42,75 @@ final class PersonaUpdate
             return _("No se ha pasado el id_nom");
         }
 
+        $apellido1 = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apellido1');
+        if ($apellido1 === '') {
+            return _("debe indicar el apellido");
+        }
+
         try {
             $id_tabla = PersonaRepositoryResolver::idTablaFor($obj_pau);
         } catch (\InvalidArgumentException) {
             return _("No existe la clase de la persona");
         }
 
-        return match ($obj_pau) {
-            'PersonaN' => $this->guardarPersonaDl(
-                $this->personaRepositoryResolver->personaNRepository(),
-                PersonaN::class,
-                $id_nom,
-                $id_tabla,
-                $input,
-            ),
-            'PersonaAgd' => $this->guardarPersonaDl(
-                $this->personaRepositoryResolver->personaAgdRepository(),
-                PersonaAgd::class,
-                $id_nom,
-                $id_tabla,
-                $input,
-            ),
-            'PersonaNax' => $this->guardarPersonaDl(
-                $this->personaRepositoryResolver->personaNaxRepository(),
-                PersonaNax::class,
-                $id_nom,
-                $id_tabla,
-                $input,
-            ),
-            'PersonaS' => $this->guardarPersonaDl(
-                $this->personaRepositoryResolver->personaSRepository(),
-                PersonaS::class,
-                $id_nom,
-                $id_tabla,
-                $input,
-            ),
-            'PersonaSSSC' => $this->guardarPersonaDl(
-                $this->personaRepositoryResolver->personaSSSCRepository(),
-                PersonaSSSC::class,
-                $id_nom,
-                $id_tabla,
-                $input,
-            ),
-            'PersonaEx' => $this->guardarPersonaEx($id_nom, $id_tabla, $input),
-            default => _("No existe la clase de la persona"),
-        };
+        try {
+            return match ($obj_pau) {
+                'PersonaN' => $this->guardarPersonaDl(
+                    $this->personaRepositoryResolver->personaNRepository(),
+                    PersonaN::class,
+                    $id_nom,
+                    $id_tabla,
+                    $input,
+                ),
+                'PersonaAgd' => $this->guardarPersonaDl(
+                    $this->personaRepositoryResolver->personaAgdRepository(),
+                    PersonaAgd::class,
+                    $id_nom,
+                    $id_tabla,
+                    $input,
+                ),
+                'PersonaNax' => $this->guardarPersonaDl(
+                    $this->personaRepositoryResolver->personaNaxRepository(),
+                    PersonaNax::class,
+                    $id_nom,
+                    $id_tabla,
+                    $input,
+                ),
+                'PersonaS' => $this->guardarPersonaDl(
+                    $this->personaRepositoryResolver->personaSRepository(),
+                    PersonaS::class,
+                    $id_nom,
+                    $id_tabla,
+                    $input,
+                ),
+                'PersonaSSSC' => $this->guardarPersonaDl(
+                    $this->personaRepositoryResolver->personaSSSCRepository(),
+                    PersonaSSSC::class,
+                    $id_nom,
+                    $id_tabla,
+                    $input,
+                ),
+                'PersonaEx' => $this->guardarPersonaEx($id_nom, $id_tabla, $input),
+                default => _("No existe la clase de la persona"),
+            };
+        } catch (\InvalidArgumentException|\Error $e) {
+            return $this->mensajeDeValidacion($e);
+        }
+    }
+
+    private function mensajeDeValidacion(\Throwable $e): string
+    {
+        $msg = $e->getMessage();
+        if (
+            str_contains($msg, 'PersonaApellido1Text cannot be empty')
+            || str_contains($msg, '::$apellido1 must not be accessed before initialization')
+        ) {
+            return _("debe indicar el apellido");
+        }
+
+        $err = _("hay un error, no se ha guardado");
+
+        return $msg !== '' ? $err . "\n" . $msg : $err;
     }
 
     /**

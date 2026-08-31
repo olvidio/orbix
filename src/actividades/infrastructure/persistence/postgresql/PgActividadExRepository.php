@@ -2,7 +2,6 @@
 
 namespace src\actividades\infrastructure\persistence\postgresql;
 
-use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadExRepositoryInterface;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
@@ -50,8 +49,7 @@ class PgActividadExRepository extends PgActividadAllRepository implements Activi
      */
     public function getNewIdActividad(int $id): int
     {
-        $miRegionDl = ConfigGlobal::mi_region_dl();
-        return GenerateIdGlobal::generateIdGlobal($miRegionDl, $this->getNomTabla(), $id);
+        return GenerateIdGlobal::generateIdGlobal('resto', $this->getNomTabla(), $id);
     }
 
 }

@@ -150,6 +150,47 @@ final class PersonaUpdateTest extends TestCase
         $this->assertStringContainsString('db', $msg);
     }
 
+    public function test_alta_sin_apellido_devuelve_mensaje_y_no_guarda(): void
+    {
+        $repo = $this->createMock(PersonaExRepositoryInterface::class);
+        $repo->expects($this->never())->method('Guardar');
+
+        $msg = (new PersonaUpdate($this->makeResolver([
+            PersonaExRepositoryInterface::class => $repo,
+        ])))->execute([
+            'id_nom' => 99,
+            'obj_pau' => 'PersonaEx',
+            'situacion' => 'A',
+            'apellido1' => '',
+        ]);
+
+        $this->assertSame(_("debe indicar el apellido"), $msg);
+    }
+
+    public function test_apellido_invalido_devuelve_error_sin_lanzar(): void
+    {
+        $persona = new PersonaN();
+        $persona->setId_nom(1);
+        $persona->setId_tabla('n');
+        $persona->setApellido1('Perez');
+        $persona->setSituacion('A');
+
+        $repo = $this->createMock(PersonaNRepositoryInterface::class);
+        $repo->method('findById')->willReturn($persona);
+        $repo->expects($this->never())->method('Guardar');
+
+        $msg = (new PersonaUpdate($this->makeResolver([
+            PersonaNRepositoryInterface::class => $repo,
+        ])))->execute([
+            'id_nom' => 1,
+            'obj_pau' => 'PersonaN',
+            'situacion' => 'A',
+            'apellido1' => 'Perez_bad',
+        ]);
+
+        $this->assertNotSame('', $msg);
+    }
+
     /**
      * @param array<class-string, object> $overrides
      */

@@ -52,4 +52,17 @@ class PgPersonaExRepositoryTest extends myTest
         $this->assertIsNumeric($newId);
     }
 
+    public function test_get_new_id_nom_usa_prefijo_restov_1001(): void
+    {
+        $idAuto = $this->repository->getNewId();
+        $idNom = $this->repository->getNewIdNom($idAuto);
+
+        $this->assertLessThan(0, $idNom);
+        $this->assertStringStartsWith(
+            '-10016',
+            (string) $idNom,
+            'Personas de paso en restov: id_nom = -1001 + idx 6 + id_auto',
+        );
+    }
+
 }
