@@ -87,6 +87,20 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
     }
 
     /**
+     * En certificados, las regiones se listan sin el prefijo «cr» (p. ej. crGalbel → Galbel).
+     * En actas (tipo 1) el prefijo «cr» sí forma parte de la sigla.
+     */
+    public static function siglaCertificadoSinPrefijoCr(string $sigla): string
+    {
+        $sigla = trim($sigla);
+        if (strlen($sigla) > 2 && strncasecmp($sigla, 'cr', 2) === 0) {
+            return substr($sigla, 2);
+        }
+
+        return $sigla;
+    }
+
+    /**
      * @param array<string, string> $opcionesCertDl
      * @param array{acta_sigla_sel: string, acta_num: string, acta_cert_dl_sel: string, acta_cert_num: string} $vacios
      * @return array{acta_sigla_sel: string, acta_num: string, acta_cert_dl_sel: string, acta_cert_num: string}
@@ -95,7 +109,7 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
     {
         $pref = ActaPrefijosDeEsquema::prefijoDeActa($acta);
         if ($pref !== '') {
-            $prefNorm = PersonaPublicacion::normalizarDl($pref);
+            $prefNorm = self::siglaCertificadoSinPrefijoCr(PersonaPublicacion::normalizarDl($pref));
             if ($prefNorm !== '' && isset($opcionesCertDl[$prefNorm])) {
                 $vacios['acta_cert_dl_sel'] = $prefNorm;
                 $resto = trim(substr($acta, strlen($pref)));
@@ -120,7 +134,7 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
         }
 
         if ($pref !== '') {
-            $prefNorm = PersonaPublicacion::normalizarDl($pref);
+            $prefNorm = self::siglaCertificadoSinPrefijoCr(PersonaPublicacion::normalizarDl($pref));
             $vacios['acta_cert_dl_sel'] = $prefNorm !== '' ? $prefNorm : $pref;
             $num = ActaPrefijosDeEsquema::numeroDeActa($acta);
             $vacios['acta_cert_num'] = $num !== '' ? $num : ltrim(trim(substr($acta, strlen($pref))));
@@ -152,6 +166,10 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
         foreach ($aDl as $dl => $_label) {
             $sigla = PersonaPublicacion::normalizarDl((string) $dl);
             if ($sigla === '' || $this->esSiglaPropia($sigla, $miDelef, $miDele)) {
+                continue;
+            }
+            $sigla = self::siglaCertificadoSinPrefijoCr($sigla);
+            if ($sigla === '') {
                 continue;
             }
             $out[$sigla] = $sigla;
