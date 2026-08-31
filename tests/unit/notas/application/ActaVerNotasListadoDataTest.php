@@ -12,6 +12,7 @@ use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaEx;
 
 final class ActaVerNotasListadoDataTest extends TestCase
 {
@@ -54,7 +55,7 @@ final class ActaVerNotasListadoDataTest extends TestCase
         $personaB->method('getApellidosUpperNombre')->willReturn('ALFA, Juan');
 
         $finder = $this->createMock(PersonaFinderService::class);
-        $finder->method('findPersonaEnGlobal')->willReturnCallback(
+        $finder->method('findPersonaEnGlobalODePaso')->willReturnCallback(
             static function (int $id) use ($personaA, $personaB) {
                 return match ($id) {
                     2 => $personaA,
@@ -85,12 +86,42 @@ final class ActaVerNotasListadoDataTest extends TestCase
         $repo->method('getPersonaNotas')->willReturn([$nota]);
 
         $finder = $this->createMock(PersonaFinderService::class);
-        $finder->method('findPersonaEnGlobal')->with(99)->willReturn(null);
+        $finder->method('findPersonaEnGlobalODePaso')->with(99)->willReturn(null);
 
         $uc = new ActaVerNotasListadoData($repo, $finder);
         $r = $uc->execute(['acta' => 'x']);
 
         $this->assertSame([], $r['filas']);
         $this->assertCount(1, $r['avisos']);
+    }
+
+    public function test_incluye_persona_de_paso_con_id_negativo(): void
+    {
+        $idDePaso = -100162859;
+        $nota = $this->createMock(PersonaNota::class);
+        $nota->method('getId_nom')->willReturn($idDePaso);
+        $nota->method('getNota_txt')->willReturn('9/10');
+        $nota->method('getId_situacion')->willReturn(NotaSituacion::NUMERICA);
+
+        $repo = $this->createMock(PersonaNotaRepositoryInterface::class);
+        $repo->method('getPersonaNotas')->willReturn([$nota]);
+
+        $personaEx = $this->createMock(PersonaEx::class);
+        $personaEx->method('getApellidosUpperNombre')->willReturn('PASO, Luis');
+
+        $finder = $this->createMock(PersonaFinderService::class);
+        $finder->expects($this->once())
+            ->method('findPersonaEnGlobalODePaso')
+            ->with($idDePaso)
+            ->willReturn($personaEx);
+
+        $uc = new ActaVerNotasListadoData($repo, $finder);
+        $r = $uc->execute(['acta' => 'dlb 1/26']);
+
+        $this->assertCount(1, $r['filas']);
+        $this->assertSame($idDePaso, $r['filas'][0]['id_nom']);
+        $this->assertSame('PASO, Luis', $r['filas'][0]['nombre']);
+        $this->assertSame('9/10', $r['filas'][0]['nota']);
+        $this->assertSame([], $r['avisos']);
     }
 }

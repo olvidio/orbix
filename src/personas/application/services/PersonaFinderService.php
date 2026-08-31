@@ -92,6 +92,28 @@ class PersonaFinderService
     }
 
     /**
+     * Lookup canónico por `id_nom` cuando puede ser de paso (id negativo).
+     * {@see Persona::findPersonaEnGlobal()} y los listados delegan aquí.
+     *
+     * `p_de_paso_ex` no hereda de `global.personas`, así que
+     * {@see findPersonaEnGlobal()} no encuentra a las personas de paso.
+     *
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
+     * @param-out array<string, array<int|string, string>> $problemasRegionStgr
+     */
+    public function findPersonaEnGlobalODePaso(
+        int $id_nom,
+        array &$problemasRegionStgr = [],
+        ?int $id_schema = null,
+    ): PersonaDl|PersonaPub|PersonaEx|null {
+        if ($id_nom < 0) {
+            return $this->personaExRepository->findById($id_nom);
+        }
+
+        return $this->findPersonaEnGlobal($id_nom, $problemasRegionStgr, $id_schema);
+    }
+
+    /**
      * Como {@see findPersonaEnGlobal()}, pero si no hay situación 'A' acepta cualquier
      * situación (p. ej. tessera histórica de alguien ya no activo).
      *
@@ -102,7 +124,11 @@ class PersonaFinderService
         int $id_nom,
         array &$problemasRegionStgr = [],
         ?int $id_schema = null,
-    ): PersonaDl|PersonaPub|null {
+    ): PersonaDl|PersonaPub|PersonaEx|null {
+        if ($id_nom < 0) {
+            return $this->findPersonaEnGlobalODePaso($id_nom, $problemasRegionStgr, $id_schema);
+        }
+
         $persona = $this->findPersonaEnGlobal($id_nom, $problemasRegionStgr, $id_schema);
         if ($persona !== null) {
             return $persona;
@@ -126,8 +152,12 @@ class PersonaFinderService
         int $id_nom,
         array &$problemasRegionStgr = [],
         bool &$marcaRegionStgr = false,
-    ): PersonaDl|PersonaPub|null {
+    ): PersonaDl|PersonaPub|PersonaEx|null {
         $marcaRegionStgr = false;
+        if ($id_nom < 0) {
+            return $this->findPersonaEnGlobalODePaso($id_nom, $problemasRegionStgr);
+        }
+
         try {
             $persona = $this->findPersonaEnGlobal($id_nom, $problemasRegionStgr);
             if ($persona !== null) {

@@ -15,7 +15,6 @@ use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\application\services\PersonaListadoLookup;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
@@ -46,7 +45,6 @@ class Select_asistentes_a_una_actividad
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
         private CargoRepositoryInterface $cargoRepository,
         private PersonaFinderService $personaFinderService,
-        private PersonaExRepositoryInterface $personaExRepository,
         private TelecoPersonaService $telecoPersonaService,
     ) {
     }
@@ -180,21 +178,19 @@ class Select_asistentes_a_una_actividad
                 return $persona;
             }
             // De paso: visibles si son nuestros o ocupan plaza nuestra (ver esAsistenteVisibleParaMiDl).
-            return $this->personaExRepository->findById($idNom);
+            return $idNom < 0
+                ? $this->personaFinderService->findPersonaEnGlobalODePaso($idNom)
+                : null;
         }
 
         $problemasRegionStgr = [];
         $marcaRegionStgr = false;
-        $persona = $this->personaFinderService->findPersonaParaListado(
+
+        return $this->personaFinderService->findPersonaParaListado(
             $idNom,
             $problemasRegionStgr,
             $marcaRegionStgr,
         );
-        if ($persona !== null) {
-            return $persona;
-        }
-
-        return $this->personaExRepository->findById($idNom);
     }
 
     /**

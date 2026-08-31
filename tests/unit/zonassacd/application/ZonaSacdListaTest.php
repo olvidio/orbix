@@ -27,7 +27,7 @@ use src\zonassacd\domain\entity\ZonaSacd;
  *                con indicadores L..D (`Dw1..Dw7`) en `x`/`-`.
  *
  * El servicio resuelve `PersonaFinderService` via contenedor (a traves
- * de `Persona::findPersonaEnGlobal`), `ZonaRepositoryInterface::findById`
+ * de `Persona::findPersonaEnGlobal` → `findPersonaEnGlobalODePaso`), `ZonaRepositoryInterface::findById`
  * y `ZonaSacdRepositoryInterface::getZonasSacds`; el test fija los
  * nombres reales de esos metodos para detectar typos.
  */
@@ -133,7 +133,7 @@ final class ZonaSacdListaTest extends TestCase
         $oPersonaB->method('getPrefApellidosNombre')->willReturn('Aaaa, Primero');
 
         $finder = $this->createMock(PersonaFinderService::class);
-        $finder->method('findPersonaEnGlobal')->willReturnMap([
+        $finder->method('findPersonaEnGlobalODePaso')->willReturnMap([
             [501, $oPersonaA],
             [502, $oPersonaB],
         ]);
@@ -178,7 +178,7 @@ final class ZonaSacdListaTest extends TestCase
         $zonaSacdRepo->method('getZonasSacds')->willReturn([$oZonaSacd]);
 
         $finder = $this->createMock(PersonaFinderService::class);
-        $finder->method('findPersonaEnGlobal')->willReturn(null);
+        $finder->method('findPersonaEnGlobalODePaso')->willReturn(null);
 
         $GLOBALS['container'] = $this->containerFromMap([
             PersonaFinderService::class => $finder,

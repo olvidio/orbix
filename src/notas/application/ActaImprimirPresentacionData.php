@@ -11,7 +11,7 @@ use frontend\shared\config\OrbixRuntime;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
-use src\personas\domain\entity\Persona;
+use src\personas\application\services\PersonaFinderService;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 
@@ -28,6 +28,7 @@ final class ActaImprimirPresentacionData
         private readonly ActaTribunalRepositoryInterface $actaTribunalRepository,
         private readonly ActaTribunalDlRepositoryInterface $actaTribunalDlRepository,
         private readonly DatosActa $datosActa,
+        private readonly PersonaFinderService $personaFinderService,
     ) {
     }
     /**
@@ -97,7 +98,7 @@ final class ActaImprimirPresentacionData
         $aPersonasNotas = [];
         foreach ($cPersonaNotas as $oPersonaNota) {
             $id_nom = $oPersonaNota->getId_nom();
-            $oPersona = Persona::findPersonaEnGlobal($id_nom);
+            $oPersona = $this->personaFinderService->findPersonaEnGlobalODePaso($id_nom);
             if ($oPersona === null) {
                 $errores .= '<br>' . sprintf(_('existe una nota de la que no se tiene acceso al nombre (id_nom = %s): es de otra dl o \'de paso\' borrado.'), $id_nom);
                 $errores .= ' ' . _('no aparece en la lista');

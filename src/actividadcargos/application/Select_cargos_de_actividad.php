@@ -10,8 +10,7 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\entity\Persona;
+use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
@@ -37,7 +36,7 @@ class Select_cargos_de_actividad
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private CargoRepositoryInterface $cargoRepository,
-        private PersonaExRepositoryInterface $personaExRepository,
+        private PersonaFinderService $personaFinderService,
     ) {
     }
 
@@ -165,12 +164,8 @@ class Select_cargos_de_actividad
         if ($id_nom === null) {
             return null;
         }
-        $persona = Persona::findPersonaEnGlobal($id_nom);
-        if ($persona !== null) {
-            return $persona;
-        }
 
-        return $this->personaExRepository->findById($id_nom);
+        return $this->personaFinderService->findPersonaEnGlobalODePaso($id_nom);
     }
 
     public function getHtml(): string

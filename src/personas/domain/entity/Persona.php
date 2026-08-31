@@ -15,19 +15,18 @@ use src\shared\infrastructure\DependencyResolver;
 class Persona
 {
     /**
-     * @deprecated Use PersonaFinderService::findPersonaEnGlobal() en su lugar
+     * @deprecated Use PersonaFinderService::findPersonaEnGlobalODePaso() en su lugar
      *
-     * Busca una persona por id_nom en el esquema global (local).
-     * Este método es un wrapper temporal para mantener compatibilidad.
+     * Busca una persona por id_nom (DL, global.personas o de paso).
      *
      * @param int $id_nom ID de la persona a buscar
      * @param array<string, array<int|string, string>> $problemasRegionStgr
-     * @return PersonaDl|PersonaPub|null
+     * @return PersonaDl|PersonaPub|PersonaEx|null
      */
-    public static function findPersonaEnGlobal(int $id_nom, array &$problemasRegionStgr = []): PersonaDl|PersonaPub|null
+    public static function findPersonaEnGlobal(int $id_nom, array &$problemasRegionStgr = []): PersonaDl|PersonaPub|PersonaEx|null
     {
         $service = DependencyResolver::get(PersonaFinderService::class);
-        return $service->findPersonaEnGlobal((int)$id_nom, $problemasRegionStgr);
+        return $service->findPersonaEnGlobalODePaso((int)$id_nom, $problemasRegionStgr);
     }
 
     /**

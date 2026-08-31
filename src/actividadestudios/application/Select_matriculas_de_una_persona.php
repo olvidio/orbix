@@ -11,10 +11,9 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\application\DossierTipoPublicUrls;
+use src\personas\application\services\PersonaFinderService;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
@@ -38,7 +37,7 @@ class Select_matriculas_de_una_persona
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private MatriculaRepositoryInterface $matriculaRepository,
         private AsignaturaRepositoryInterface $asignaturaRepository,
-        private PersonaExRepositoryInterface $personaExRepository,
+        private PersonaFinderService $personaFinderService,
         private PersonaDlRepositoryInterface $personaDlRepository,
     ) {
     }
@@ -122,7 +121,7 @@ class Select_matriculas_de_una_persona
         }
         $nom_activ = $oActividad->getNom_activ();
 
-        $oAlumno = Persona::findPersonaEnGlobal($this->id_pau);
+        $oAlumno = $this->personaFinderService->findPersonaEnGlobalODePaso($this->id_pau);
         if ($oAlumno === null) {
             throw new \Exception(sprintf(_("No se ha encontrado alumno con id_nom: %s"), $this->id_pau));
         }
@@ -160,7 +159,7 @@ class Select_matriculas_de_una_persona
             $id_preceptor = $oMatricula->getId_preceptor();
             if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($preceptor)) {
                 if (!empty($id_preceptor)) {
-                    $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
+                    $oPersona = $this->personaFinderService->findPersonaEnGlobalODePaso($id_preceptor);
                     if (!is_object($oPersona)) {
                         $msg_err .= "<br>No encuentro a nadie con id_nom: $id_preceptor (profesor) en  " . __FILE__ . ": line " . __LINE__;
                         $preceptor = 'x';
@@ -380,7 +379,7 @@ class Select_matriculas_de_una_persona
     private function resolvePersonaParaPlan(): PersonaDl|PersonaEx|PersonaPub|null
     {
         if ($this->id_pau < 0) {
-            return $this->personaExRepository->findById($this->id_pau);
+            return $this->personaFinderService->findPersonaEnGlobalODePaso($this->id_pau);
         }
 
         $oPersona = $this->personaDlRepository->findById($this->id_pau);
@@ -388,7 +387,7 @@ class Select_matriculas_de_una_persona
             return $oPersona;
         }
 
-        $oPersonaGlobal = Persona::findPersonaEnGlobal($this->id_pau);
+        $oPersonaGlobal = $this->personaFinderService->findPersonaEnGlobalODePaso($this->id_pau);
         if ($oPersonaGlobal === null) {
             return null;
         }

@@ -12,6 +12,7 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
 use src\personas\domain\value_objects\SituacionCode;
 
@@ -152,15 +153,109 @@ final class PersonaFinderServiceLookupTest extends TestCase
         $this->assertSame($pub, $service->findPersonaEnGlobal(10, $problemas, 5));
     }
 
+    public function test_de_paso_busca_en_p_de_paso_ex_sin_pasar_por_global(): void
+    {
+        $idDePaso = -100162859;
+        $personaEx = $this->createMock(PersonaEx::class);
+
+        $personaExRepo = $this->createMock(PersonaExRepositoryInterface::class);
+        $personaExRepo->expects($this->once())
+            ->method('findById')
+            ->with($idDePaso)
+            ->willReturn($personaEx);
+
+        $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
+        $dlRepo->expects($this->never())->method('getPersonas');
+
+        $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
+        $factory->expects($this->never())->method('create');
+
+        $personaAll = $this->createMock(PersonaAllRepositoryInterface::class);
+        $personaAll->expects($this->never())->method('findByIdNomParaLookup');
+
+        $service = $this->buildService($factory, $personaAll, null, $personaExRepo);
+
+        $this->assertSame($personaEx, $service->findPersonaEnGlobalODePaso($idDePaso));
+    }
+
+    public function test_de_paso_id_positivo_no_consulta_ex(): void
+    {
+        $local = $this->createMock(PersonaDl::class);
+
+        $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
+        $dlRepo->method('getPersonas')->willReturn([$local]);
+
+        $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
+        $factory->method('create')->willReturn($dlRepo);
+
+        $personaExRepo = $this->createMock(PersonaExRepositoryInterface::class);
+        $personaExRepo->expects($this->never())->method('findById');
+
+        $service = $this->buildService(
+            $factory,
+            $this->createMock(PersonaAllRepositoryInterface::class),
+            null,
+            $personaExRepo,
+        );
+
+        $this->assertSame($local, $service->findPersonaEnGlobalODePaso(10));
+    }
+
+    public function test_para_listado_de_paso_usa_p_de_paso_ex(): void
+    {
+        $idDePaso = -100162859;
+        $personaEx = $this->createMock(PersonaEx::class);
+
+        $personaExRepo = $this->createMock(PersonaExRepositoryInterface::class);
+        $personaExRepo->expects($this->once())
+            ->method('findById')
+            ->with($idDePaso)
+            ->willReturn($personaEx);
+
+        $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
+        $factory->expects($this->never())->method('create');
+
+        $personaAll = $this->createMock(PersonaAllRepositoryInterface::class);
+        $personaAll->expects($this->never())->method('findByIdNomParaLookup');
+
+        $service = $this->buildService($factory, $personaAll, null, $personaExRepo);
+
+        $problemas = [];
+        $marca = false;
+        $this->assertSame($personaEx, $service->findPersonaParaListado($idDePaso, $problemas, $marca));
+    }
+
+    public function test_incluyendo_no_activos_de_paso_usa_p_de_paso_ex(): void
+    {
+        $idDePaso = -100162859;
+        $personaEx = $this->createMock(PersonaEx::class);
+
+        $personaExRepo = $this->createMock(PersonaExRepositoryInterface::class);
+        $personaExRepo->expects($this->once())
+            ->method('findById')
+            ->with($idDePaso)
+            ->willReturn($personaEx);
+
+        $service = $this->buildService(
+            $this->createMock(PersonaDlRepositoryFactoryInterface::class),
+            $this->createMock(PersonaAllRepositoryInterface::class),
+            null,
+            $personaExRepo,
+        );
+
+        $this->assertSame($personaEx, $service->findPersonaEnGlobalIncluyendoNoActivos($idDePaso));
+    }
+
     private function buildService(
         PersonaDlRepositoryFactoryInterface $factory,
         PersonaAllRepositoryInterface $personaAll,
         ?PersonaPubRepositoryInterface $personaPub = null,
+        ?PersonaExRepositoryInterface $personaEx = null,
     ): PersonaFinderService {
         return new PersonaFinderService(
             $factory,
             $personaPub ?? $this->createMock(PersonaPubRepositoryInterface::class),
-            $this->createMock(PersonaExRepositoryInterface::class),
+            $personaEx ?? $this->createMock(PersonaExRepositoryInterface::class),
             $personaAll,
         );
     }

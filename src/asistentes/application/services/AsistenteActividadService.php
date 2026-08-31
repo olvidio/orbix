@@ -13,9 +13,8 @@ use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
+use src\personas\application\services\PersonaFinderService;
 use src\personas\application\services\PersonaListadoLookup;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
@@ -43,6 +42,7 @@ class AsistenteActividadService
         ActividadAllRepositoryInterface $actividadAllRepository,
         ConnectionRepositoryFactoryInterface $connectionRepositoryFactory,
         private ContainerInterface $container,
+        private PersonaFinderService $personaFinderService,
     ) {
         $this->actividadRepository = $actividadRepository;
         $this->actividadAllRepository = $actividadAllRepository;
@@ -259,14 +259,7 @@ class AsistenteActividadService
      */
     private function existePersonaParaContarPlazas(int $id_nom): bool
     {
-        if (Persona::findPersonaEnGlobal($id_nom) !== null) {
-            return true;
-        }
-
-        /** @var PersonaExRepositoryInterface $personaExRepository */
-        $personaExRepository = $this->container->get(PersonaExRepositoryInterface::class);
-
-        return $personaExRepository->findById($id_nom) !== null;
+        return $this->personaFinderService->findPersonaEnGlobalODePaso($id_nom) !== null;
     }
 
     /**
@@ -317,7 +310,7 @@ class AsistenteActividadService
         $cAsistentesOk = [];
         foreach ($cAsistentes as $oAsistente) {
             $id_nom = $oAsistente->getId_nom();
-            $oPersona = Persona::findPersonaEnGlobal($id_nom);
+            $oPersona = $this->personaFinderService->findPersonaEnGlobalODePaso($id_nom);
             if ($oPersona === null) {
                 $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 continue;
@@ -419,16 +412,9 @@ class AsistenteActividadService
      */
     private function resolvePersonaParaAsistente(int $id_nom): PersonaDl|PersonaPub|PersonaEx
     {
-        $persona = Persona::findPersonaEnGlobal($id_nom);
+        $persona = $this->personaFinderService->findPersonaEnGlobalODePaso($id_nom);
         if ($persona !== null) {
             return $persona;
-        }
-
-        /** @var PersonaExRepositoryInterface $personaExRepository */
-        $personaExRepository = $this->container->get(PersonaExRepositoryInterface::class);
-        $personaEx = $personaExRepository->findById($id_nom);
-        if ($personaEx !== null) {
-            return $personaEx;
         }
 
         throw new \RuntimeException(PersonaListadoLookup::mensajeNoEncontrada($id_nom));

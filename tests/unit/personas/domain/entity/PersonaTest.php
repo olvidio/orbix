@@ -33,7 +33,7 @@ final class PersonaTest extends myTest
 
         $finder = $this->createMock(PersonaFinderService::class);
         $finder->expects($this->once())
-            ->method('findPersonaEnGlobal')
+            ->method('findPersonaEnGlobalODePaso')
             ->with(42, $this->isArray())
             ->willReturn($persona);
 

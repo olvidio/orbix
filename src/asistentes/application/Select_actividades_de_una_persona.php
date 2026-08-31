@@ -10,8 +10,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\dossiers\application\DossierTipoPublicUrls;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\entity\Persona;
+use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
@@ -34,7 +33,7 @@ class Select_actividades_de_una_persona
     public function __construct(
         private AsistenteActividadService $asistenteActividadService,
         private ActividadAllRepositoryInterface $actividadAllRepository,
-        private PersonaExRepositoryInterface $personaExRepository,
+        private PersonaFinderService $personaFinderService,
     ) {
     }
 
@@ -322,23 +321,11 @@ class Select_actividades_de_una_persona
     }
 
     /**
-     * Personas de paso (`obj_pau=PersonaEx`, id negativo) viven en `p_de_paso_ex`,
-     * no en el directorio global que consulta {@see Persona::findPersonaEnGlobal()}.
+     * Personas de paso (`obj_pau=PersonaEx`, id negativo) viven en `p_de_paso_ex`.
      */
     private function resolvePersona(): PersonaDl|PersonaPub|PersonaEx|null
     {
-        $objBase = (string) (strtok(urldecode($this->obj_pau), '&') ?: '');
-        if ($objBase === 'PersonaEx' || $this->id_pau < 0) {
-            $personaEx = $this->personaExRepository->findById($this->id_pau);
-            if ($personaEx !== null) {
-                return $personaEx;
-            }
-            if ($objBase === 'PersonaEx') {
-                return null;
-            }
-        }
-
-        return Persona::findPersonaEnGlobal($this->id_pau);
+        return $this->personaFinderService->findPersonaEnGlobalODePaso($this->id_pau);
     }
 
     public function setModo_curso(string|int|float|bool|null $modo_curso = null): void

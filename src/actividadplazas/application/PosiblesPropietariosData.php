@@ -4,9 +4,8 @@ namespace src\actividadplazas\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividadplazas\application\services\ResumenPlazasService;
+use src\personas\application\services\PersonaFinderService;
 use src\personas\application\support\PersonaRepositoryResolver;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
@@ -28,7 +27,7 @@ final class PosiblesPropietariosData
 {
     public function __construct(
         private ResumenPlazasService $resumenPlazasService,
-        private PersonaExRepositoryInterface $personaExRepository,
+        private PersonaFinderService $personaFinderService,
     ) {
     }
 
@@ -81,11 +80,6 @@ final class PosiblesPropietariosData
 
     private function resolvePersona(int $id_nom): PersonaDl|PersonaPub|PersonaEx|null
     {
-        $persona = Persona::findPersonaEnGlobal($id_nom);
-        if ($persona !== null) {
-            return $persona;
-        }
-
-        return $this->personaExRepository->findById($id_nom);
+        return $this->personaFinderService->findPersonaEnGlobalODePaso($id_nom);
     }
 }

@@ -3,6 +3,7 @@
 namespace src\personas\application\services;
 
 use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
 
 /**
@@ -17,7 +18,7 @@ final class PersonaListadoLookup
     ) {
     }
 
-    /** @var array<int, PersonaDl|PersonaPub|null> */
+    /** @var array<int, PersonaDl|PersonaPub|PersonaEx|null> */
     private array $cache = [];
 
     /** @var array<int, true> */
@@ -31,7 +32,7 @@ final class PersonaListadoLookup
         string &$msgErr,
         array &$problemasRegionStgr = [],
         string $etiqueta = '',
-    ): PersonaDl|PersonaPub|null {
+    ): PersonaDl|PersonaPub|PersonaEx|null {
         if (!array_key_exists($idNom, $this->cache)) {
             $this->cache[$idNom] = $this->buscarPersona($idNom, $problemasRegionStgr);
         }
@@ -73,7 +74,7 @@ final class PersonaListadoLookup
     /**
      * @param array<string, array<int|string, string>> $problemasRegionStgr
      */
-    private function buscarPersona(int $idNom, array &$problemasRegionStgr): PersonaDl|PersonaPub|null
+    private function buscarPersona(int $idNom, array &$problemasRegionStgr): PersonaDl|PersonaPub|PersonaEx|null
     {
         try {
             $marcaRegionStgr = false;
