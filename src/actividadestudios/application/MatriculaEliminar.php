@@ -4,13 +4,15 @@ namespace src\actividadestudios\application;
 
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
 use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
- * Elimina una o varias matriculas y reajusta los dossiers 1303 / 3103 y
- * las asignaturas impartidas (`ActividadAsignatura`).
+ * Elimina una o varias matriculas y reajusta los dossiers 1303 / 3103.
+ * Si la asignatura impartida es con preceptor y queda sin matriculas,
+ * tambien se quita de la actividad (`ActividadAsignatura`).
  *
  * Sustituye al case `eliminar` del antiguo `update_3103.php` dispatcher.
  */
@@ -132,21 +134,38 @@ final class MatriculaEliminar
         }
 
         $this->cerrarDossier('p', $id_nom, 1303);
+        $this->quitarAsignaturaHuerfanaSiEsPreceptor($id_activ, $id_asignatura);
 
+        return '';
+    }
+
+    /**
+     * Las asignaturas de CA / semestre de invierno pertenecen a la actividad
+     * con independencia de las matriculas. Las de preceptor se crean al
+     * matricular y se limpian si ya no queda nadie matriculado.
+     */
+    private function quitarAsignaturaHuerfanaSiEsPreceptor(int $id_activ, int $id_asignatura): void
+    {
         $cActividadAsignaturas = $this->actividadAsignaturaDlRepository->getActividadAsignaturas(
             ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura],
         );
-        if (count($cActividadAsignaturas) === 1) {
-            $cMatriculas = $this->matriculaDlRepository->getMatriculas(
-                ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura],
-            );
-            if (count($cMatriculas) === 0) {
-                $oActividadAsignatura = $cActividadAsignaturas[0];
-                $this->actividadAsignaturaDlRepository->Eliminar($oActividadAsignatura);
-            }
+        if (count($cActividadAsignaturas) !== 1) {
+            return;
         }
 
-        return '';
+        $oActividadAsignatura = $cActividadAsignaturas[0];
+        if ($oActividadAsignatura->getTipo() !== TipoActividadAsignatura::TIPO_PRECEPTOR) {
+            return;
+        }
+
+        $cMatriculas = $this->matriculaDlRepository->getMatriculas(
+            ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura],
+        );
+        if (count($cMatriculas) !== 0) {
+            return;
+        }
+
+        $this->actividadAsignaturaDlRepository->Eliminar($oActividadAsignatura);
     }
 
     private static function concatErr(string $actual, string $nuevo): string

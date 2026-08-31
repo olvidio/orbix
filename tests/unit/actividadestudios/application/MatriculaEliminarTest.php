@@ -8,6 +8,7 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterf
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\actividadestudios\domain\entity\ActividadAsignatura;
 use src\actividadestudios\domain\entity\Matricula;
+use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 
 final class MatriculaEliminarTest extends TestCase
@@ -125,10 +126,11 @@ final class MatriculaEliminarTest extends TestCase
         $this->assertSame('', $msg);
     }
 
-    public function test_p_p_borra_asignatura_impartida_si_queda_huerfana(): void
+    public function test_p_p_borra_asignatura_impartida_si_queda_huerfana_y_es_preceptor(): void
     {
         $oMat = $this->createMock(Matricula::class);
         $oAa = $this->createMock(ActividadAsignatura::class);
+        $oAa->method('getTipo')->willReturn(TipoActividadAsignatura::TIPO_PRECEPTOR);
 
         $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
         $matRepo->method('findById')->with(10, 20, 30)->willReturn($oMat);
@@ -144,6 +146,33 @@ final class MatriculaEliminarTest extends TestCase
             'id_asignatura' => 20,
         ])->willReturn([$oAa]);
         $aaRepo->expects($this->once())->method('Eliminar')->with($oAa)->willReturn(true);
+
+        $useCase = new MatriculaEliminar($aaRepo, $matRepo, $this->createMock(DossierRepositoryInterface::class));
+
+        $msg = $useCase->execute([
+            'pau' => 'p',
+            'sel' => ['10#20#30'],
+        ]);
+        $this->assertSame('', $msg);
+    }
+
+    public function test_p_p_no_borra_asignatura_impartida_si_no_es_preceptor(): void
+    {
+        $oMat = $this->createMock(Matricula::class);
+        $oAa = $this->createMock(ActividadAsignatura::class);
+        $oAa->method('getTipo')->willReturn(TipoActividadAsignatura::TIPO_CA);
+
+        $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
+        $matRepo->method('findById')->with(10, 20, 30)->willReturn($oMat);
+        $matRepo->method('Eliminar')->with($oMat)->willReturn(true);
+        $matRepo->expects($this->never())->method('getMatriculas');
+
+        $aaRepo = $this->createMock(ActividadAsignaturaDlRepositoryInterface::class);
+        $aaRepo->method('getActividadAsignaturas')->with([
+            'id_activ' => 10,
+            'id_asignatura' => 20,
+        ])->willReturn([$oAa]);
+        $aaRepo->expects($this->never())->method('Eliminar');
 
         $useCase = new MatriculaEliminar($aaRepo, $matRepo, $this->createMock(DossierRepositoryInterface::class));
 

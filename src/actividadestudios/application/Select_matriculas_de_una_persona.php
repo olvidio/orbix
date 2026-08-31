@@ -356,7 +356,7 @@ class Select_matriculas_de_una_persona
         return [
             'segment_tipo' => 'select_matriculas_de_una_persona',
             'wrapper' => [
-                'txt_eliminar' => _("¿Está seguro que desea quitar esta asignatura de esta actividad?"),
+                'txt_eliminar' => _("¿Está seguro que desea quitar esta matrícula para este alumno?"),
                 'bloque' => $this->bloque,
                 'url_form_relative' => DossierTipoPublicUrls::relativeFormController($this->id_dossier),
                 'url_matricular_path' => 'src/actividadestudios/matricula_automatica',
