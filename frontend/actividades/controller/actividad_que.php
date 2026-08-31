@@ -199,6 +199,9 @@ switch ($Qque) {
 $data_que = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
     'perm_jefe' => ActividadesPermSupport::permJefeTipoActiv() ? 't' : 'f',
     'id_tipo_activ' => $Qid_tipo_activ,
+    // Widget de tipo en modo búsqueda: onchange final = fnjs_id_activ (fases),
+    // no fnjs_act_id_activ (ficha de alta). Distinto de $Qque (destino del listado).
+    'que' => 'buscar',
     'sfsv' => $ssfsv,
     'sasistentes' => $Qsasistentes,
     'sactividad' => $Qsactividad,

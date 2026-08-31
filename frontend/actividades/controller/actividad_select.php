@@ -202,6 +202,7 @@ $oHash = new HashFront();
 $oHash->setUrl('frontend/actividades/controller/actividad_que.php');
 $a_camposHidden = [
     'modo' => $Qmodo,
+    'que' => $Qque,
     'id_tipo_activ' => $id_tipo_activ_efectivo,
     'extendida' => $extendida,
     'id_ubi' => $Qid_ubi,
@@ -217,7 +218,7 @@ $a_camposHidden = [
     'fases_off' => $Qfases_off,
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
-$oHash->setCamposNo('extendida!modo!id_tipo_activ!id_ubi!nom_activ!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar!fases_on!fases_off');
+$oHash->setCamposNo('extendida!modo!que!id_tipo_activ!id_ubi!nom_activ!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar!fases_on!fases_off');
 
 $oHashSel = new HashFront();
 $oHashSel->setCamposForm('!mod!queSel!id_dossier');

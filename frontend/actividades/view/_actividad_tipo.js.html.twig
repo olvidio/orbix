@@ -210,8 +210,13 @@
             });
         // buscar el desplegable dl_org segun permisos en procesos
         // Como también afecta al status de la actividad, mejor rehacer toda la página.
+        // En el formulario de búsqueda (actividad_que) no saltar a la ficha de alta:
+        // solo actualizar las fases del filtro.
         {% if procesos_installed %}
-        if ($('#modifica').closest('#div_modificar').length === 0) {
+        if ($('#td_fases_on').length) {
+            fnjs_actualizar_fases();
+            fnjs_actualizar_nivel_stgr();
+        } else if ($('#modifica').closest('#div_modificar').length === 0) {
             url = '{{ url_act }}';
             var parametros = 'refresh=1&id_tipo_activ=' + id_tipo_activ + '{{ h_act|raw }}';
             fnjs_ajax_json_html({ url: url, data: parametros, target: '#main' });

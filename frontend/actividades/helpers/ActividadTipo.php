@@ -190,11 +190,7 @@ class ActividadTipo
         $oDesplNomTipo->setOpcion_sel((string) $inom_tipo);
         $oDesplNomTipo->setBlanco('t');
         $oDesplNomTipo->setValBlanco($val_blanco_nom);
-        if ($this->que === 'buscar') {
-            $oDesplNomTipo->setAction('fnjs_id_activ()');
-        } else {
-            $oDesplNomTipo->setAction('fnjs_act_id_activ()');
-        }
+        $oDesplNomTipo->setAction(self::nomTipoChangeAction($this->que));
 
         $url = AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get');
         $url_act = OrbixRuntime::getWeb() . '/frontend/actividades/controller/actividad_ver.php';
@@ -300,6 +296,15 @@ class ActividadTipo
     public function setStatus(mixed $status): void
     {
         $this->status = $status === null ? null : \frontend\shared\helpers\PayloadCoercion::int($status);
+    }
+
+    /**
+     * Acción JS del último desplegable (nom_tipo).
+     * En búsqueda no se debe recargar la ficha de alta (`fnjs_act_id_activ`).
+     */
+    public static function nomTipoChangeAction(?string $que): string
+    {
+        return $que === 'buscar' ? 'fnjs_id_activ()' : 'fnjs_act_id_activ()';
     }
 
     public function setQue(mixed $que): void
