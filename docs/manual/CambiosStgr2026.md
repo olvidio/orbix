@@ -53,7 +53,7 @@ La tessera muestra solo las asignaturas del **plan de la persona**, ordenadas po
 
 En el plan **1997**, en el año I del cuadrienio figuraban como obligatorias **Lingua hebraica** y **Lingua graeca neotestamentaria**. En el plan **2026** esas dos dejan de ser obligatorias en ese hueco; el hueco curricular lo ocupa **Primeros Cristianos** (más adelante en el plan).
 
-Las notas ya grabadas de alumnos que **aún no** habían cerrado el cuadrienio antiguo se **remapean** al nuevo orden del plan 2026 en lo que toca a Latín III/IV y Primeros Cristianos (migración de datos). Quien ya tenía el cuadrienio cerrado con el plan viejo sigue viendo el layout **1997**.
+Las notas ya grabadas de alumnos que **aún no** habían cerrado el cuadrienio antiguo se **remapean** al nuevo orden del plan 2026 en lo que toca a Latín III/IV y Primeros Cristianos (migración de datos). Quien ya tenía el cuadrienio cerrado con el plan viejo sigue viendo el layout **1997**. Quien tenía **hebreo en el hueco 2112** no pudo remapearse en el primer paso (ese hueco es Latín III en 2026); lo completa la migración `202609011500` (aparca el hebreo en 2114 y reordena Latín III/IV).
 
 ### Hebreo / griego → Primeros Cristianos (y opcional)
 
