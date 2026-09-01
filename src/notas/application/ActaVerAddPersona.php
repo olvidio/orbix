@@ -8,6 +8,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\NivelId;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\notas\application\support\LiberarHuecoNivelNota;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
@@ -34,6 +35,7 @@ final class ActaVerAddPersona
         private readonly DossierRepositoryInterface $dossierRepository,
         private readonly PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
         private readonly MapaPrefijoActaEsquemaRepositoryInterface $mapaPrefijoActaEsquemaRepository,
+        private readonly LiberarHuecoNivelNota $liberarHuecoNivelNota,
     ) {
     }
 
@@ -117,6 +119,7 @@ final class ActaVerAddPersona
             $this->dossierRepository,
             $this->personaNotaDlRepository,
             $this->mapaPrefijoActaEsquemaRepository,
+            $this->liberarHuecoNivelNota,
         );
 
         try {

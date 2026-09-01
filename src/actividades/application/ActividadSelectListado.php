@@ -22,6 +22,7 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
+use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 
 /**
  * Construye el listado de actividades que cumplen los filtros fijados por
@@ -133,6 +134,11 @@ final class ActividadSelectListado
             $Qid_tipo_activ = $oTipoActiv->getId_tipo_activ();
         } else {
             $oTipoActiv = new TiposActividades($Qid_tipo_activ);
+            $Qid_tipo_activ = $oTipoActiv->getId_tipo_activ();
+        }
+        $canonTipo = ActividadTipoIdTxt::canonicalize($Qid_tipo_activ);
+        if ($canonTipo !== '') {
+            $Qid_tipo_activ = $canonTipo;
         }
         if ($Qid_tipo_activ !== '......') {
             $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
@@ -328,7 +334,7 @@ final class ActividadSelectListado
         foreach ($cActividades as $oActividad) {
             $id_activ = $oActividad->getId_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
-            $id_tipo_activ_txt = (string) $id_tipo_activ;
+            $id_tipo_activ_txt = ActividadTipoIdTxt::canonicalize((string) $id_tipo_activ);
             $nom_activ = $oActividad->getNom_activ();
             $id_ubi_actividad = $oActividad->getId_ubi();
             $dl_org = $oActividad->getDl_org();
@@ -422,13 +428,22 @@ final class ActividadSelectListado
                         $aprobado = $ActividadProcesoTareaRepository->getSacdAprobado($id_activ);
                     }
                     if (!ConfigGlobal::is_app_installed('procesos')
-                        || ($oPermSacd->have_perm_activ('ver') === true && $aprobado)) {
+                        || $aprobado) {
+                        $puedeVerSacd = !ConfigGlobal::is_app_installed('procesos')
+                            || $oPermSacd->have_perm_activ('ver') === true;
                         $ActividadCargoRepository = $this->actividadCargoRepository;
+                        $nombresSacd = [];
                         foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
                             $nom = method_exists($oPersona, 'getPrefApellidosNombre') ? $oPersona->getPrefApellidosNombre() : '';
-                            $sacds .= $nom . "# ";
+                            if ($nom !== '') {
+                                $nombresSacd[] = $nom;
+                            }
                         }
-                        $sacds = substr($sacds, 0, -2);
+                        // Si hay SACD asignado, se muestra; el permiso 'ver' de sacd
+                        // solo oculta nombres cuando aún no hay cargo.
+                        if ($puedeVerSacd || $nombresSacd !== []) {
+                            $sacds = implode('# ', $nombresSacd);
+                        }
                     }
                 }
 

@@ -4,7 +4,7 @@ subtipo: "indice"
 modulo: "actividadcargos"
 flujos: 4
 pantallas: 2
-endpoints: 5
+endpoints: 6
 estado_revision: "generado"
 ---
 

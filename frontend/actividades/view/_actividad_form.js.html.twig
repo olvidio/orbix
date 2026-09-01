@@ -116,12 +116,13 @@ fnjs_guardar=function(tipo='') {
         // En 'datos' (editar) el tipo se muestra como texto y el hidden id_tipo_activ ya trae el valor;
         // sobrescribirlo con '' rompería el hash de campos hidden (hh).
         if ($('#isfsv_val').length) {
-            $('#id_tipo_activ').val(
-                String($('#isfsv_val').val() || '') +
-                String($('#iasistentes_val').val() || '') +
-                String($('#iactividad_val').val() || '') +
-                String($('#inom_tipo_val').val() || '')
-            );
+            $('#id_tipo_activ').val(fnjs_id_tipo_activ_from_parts(
+                $('#isfsv_val').val(),
+                $('#iasistentes_val').val(),
+                $('#iactividad_val').val(),
+                $('#inom_tipo_val').val(),
+                $('#extendida').val()
+            ));
         }
         $('#mod').val(tipo);
         var urlUpdate = '{{ web }}/frontend/actividades/controller/actividad_mutacion_ajax.php';

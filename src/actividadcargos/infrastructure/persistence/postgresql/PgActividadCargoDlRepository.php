@@ -11,6 +11,7 @@ use PDO;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\ActividadCargo;
+use src\actividadcargos\infrastructure\persistence\postgresql\traits\SincronizaCdCargosActivTrait;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
@@ -34,6 +35,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
 {
     use HandlesPdoErrors;
     use DispatchesDomainEvents;
+    use SincronizaCdCargosActivTrait;
 
     protected UnitOfWorkInterface $unitOfWork;
 
@@ -408,6 +410,9 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
             // Marcar como eliminada y despachar eventos
             $this->markAsDeleted($ActividadCargo, $datosActuales);
         }
+        if ($success) {
+            $this->eliminarDeCdCargosActiv($ActividadCargo);
+        }
 
         return $success;
     }
@@ -460,6 +465,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
             else {
                 $this->markAsModified($ActividadCargo, $datosActuales);
             }
+            $this->sincronizarCdCargosActiv($ActividadCargo);
         }
 
         return $success;

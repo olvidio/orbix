@@ -23,4 +23,7 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/actividadcargos/form_cargos_personas_en_actividad_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/form_cargos_personas_en_actividad_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/actividadcargos/cargos_activ_resincronizar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/cargos_activ_resincronizar.php';
+    });
 };

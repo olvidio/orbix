@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "actividadcargos"
-endpoints: 5
+endpoints: 6
 estado_revision: "generado"
 ---
 
@@ -43,4 +43,11 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `actividadcargos.form_cargos_personas_en_actividad_data`
 - Controller: `src/actividadcargos/infrastructure/ui/http/controllers/form_cargos_personas_en_actividad_data.php`
 - Entrada: `post.id_dossier:integer`, `post.id_pau:integer`, `post.id_tipo:integer`, `post.mod:string`, `post.permiso:integer`, `post.que_dl:string`, `post.sel:array`
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/actividadcargos/cargos_activ_resincronizar`
+
+- Id: `actividadcargos.cargos_activ_resincronizar`
+- Controller: `src/actividadcargos/infrastructure/ui/http/controllers/cargos_activ_resincronizar.php`
+- Entrada: `post.aplicar:string`, `post.esquema:string`
 - Respuesta: `standard_envelope_string_data`

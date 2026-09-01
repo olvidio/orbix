@@ -10,6 +10,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\NivelId;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\notas\application\EditarPersonaNota;
+use src\notas\application\support\LiberarHuecoNivelNota;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -45,6 +46,7 @@ final class ActaNotasDefinitivasGrabar
         private DbSchemaRepositoryInterface $dbSchemaRepository,
         private DossierRepositoryInterface $dossierRepository,
         private PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
+        private LiberarHuecoNivelNota $liberarHuecoNivelNota,
     ) {
     }
 
@@ -285,6 +287,8 @@ final class ActaNotasDefinitivasGrabar
             $this->dbSchemaRepository,
             $this->dossierRepository,
             $this->personaNotaDlRepository,
+            null,
+            $this->liberarHuecoNivelNota,
         );
     }
 }

@@ -92,6 +92,12 @@ final class TiposActividadesTest extends myTest
         $this->assertSame('111001', $t->getId_tipo_activ());
     }
 
+    public function test_getId_tipo_activ_pads_sv_sr_prefix(): void
+    {
+        $t = new TiposActividades('17', false, $this->makeStub());
+        $this->assertSame('17....', $t->getId_tipo_activ());
+    }
+
     public function test_set_and_get_extendida(): void
     {
         $t = new TiposActividades('', false, $this->makeStub());

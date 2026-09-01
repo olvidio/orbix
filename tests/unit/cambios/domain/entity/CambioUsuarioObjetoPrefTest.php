@@ -47,6 +47,12 @@ class CambioUsuarioObjetoPrefTest extends myTest
         $this->assertEquals('test', $this->CambioUsuarioObjetoPref->getId_tipo_activ_txt());
     }
 
+    public function test_set_id_tipo_activ_txt_canonicalizes_sv_sr(): void
+    {
+        $this->CambioUsuarioObjetoPref->setId_tipo_activ_txt('17');
+        $this->assertSame('17....', $this->CambioUsuarioObjetoPref->getId_tipo_activ_txt());
+    }
+
     public function test_set_and_get_id_fase_ref()
     {
         $this->CambioUsuarioObjetoPref->setId_fase_ref(1);

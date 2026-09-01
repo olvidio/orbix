@@ -44,7 +44,7 @@ fnjs_lista=function(){
 	var iactividad=$('#iactividad_val').val();
 	var inom_tipo=$('#inom_tipo_val').val();
 	
-	id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+	id_tipo_activ=fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, $('#extendida').val());
 
 	var periodo=$('#periodo').val();
 	var year=$('#year').val();
@@ -66,7 +66,7 @@ fnjs_actualizar_fases=function(id_fase_sel=''){
 	var iactividad=$('#iactividad_val').val();
 	var inom_tipo=$('#inom_tipo_val').val();
 	
-	id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+	id_tipo_activ=fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, $('#extendida').val());
 
 	/* obtener el listado de fases */
 	var url='{{ url_get }}';

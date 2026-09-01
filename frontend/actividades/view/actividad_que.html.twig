@@ -40,16 +40,7 @@
     var iactividad=$('#iactividad_val').val();
     var inom_tipo=$('#inom_tipo_val').val();
 
-    if (!iasistentes) iasistentes='.';
-    if(!extendida) {
-    if (!iactividad) iactividad = '.';
-    if (!inom_tipo) inom_tipo = '...';
-} else {
-    if (!iactividad || iactividad === '.') iactividad = '..';
-    if (!inom_tipo || inom_tipo === '...') inom_tipo = '..';
-}
-
-    id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+    id_tipo_activ=fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, extendida);
 
     // Si no se pasa el estado a preservar explicito, lo recuperamos de los checkboxes actuales.
     if (typeof selected_on === 'undefined') {
@@ -123,7 +114,7 @@
     if (!iactividad || iactividad === '.') iactividad = '..';
     if (!inom_tipo || inom_tipo === '...') inom_tipo = '..';
 }
-    var id=isfsv+iasistentes+iactividad+inom_tipo;
+    var id=fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, extendida);
 
     $('#id_tipo_activ').val(id);
     $('#modifica').attr('action',act);

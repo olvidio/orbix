@@ -38,6 +38,34 @@ class XResto
         $this->aDades[$iAfecta][$fase_ref]['off'] = $perm_off;
     }
 
+    /**
+     * Incorpora permisos de otra entrada del mismo tipo (p. ej. claves '17' y '17....').
+     */
+    public function mergeFrom(self $other): void
+    {
+        foreach ($other->aDades as $iAfecta => $byFase) {
+            if (!is_array($byFase)) {
+                continue;
+            }
+            foreach ($byFase as $fase_ref => $onOff) {
+                if (!is_array($onOff)) {
+                    continue;
+                }
+                if (isset($onOff['on'])) {
+                    $incoming = (int) $onOff['on'];
+                    $current = $this->aDades[(int) $iAfecta][$fase_ref]['on'] ?? 0;
+                    $this->aDades[(int) $iAfecta][$fase_ref]['on'] = max($current, $incoming);
+                }
+                if (isset($onOff['off'])) {
+                    $incoming = (int) $onOff['off'];
+                    $current = $this->aDades[(int) $iAfecta][$fase_ref]['off'] ?? 0;
+                    $this->aDades[(int) $iAfecta][$fase_ref]['off'] = max($current, $incoming);
+                }
+            }
+        }
+        $this->setOrdenar();
+    }
+
     public function hasAfecta(int $iAfecta): bool
     {
         foreach ($this->aDades as $sumaAfecta => $arr) {

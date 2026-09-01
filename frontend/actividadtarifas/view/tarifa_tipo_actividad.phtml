@@ -74,9 +74,9 @@
                 err = 1;
             }
             if (!inom_tipo && !err) {
-                id_tipo_activ = isfsv + iasistentes + iactividad + "000";
+                id_tipo_activ = fnjs_canonicalize_id_tipo_activ_txt(isfsv + iasistentes + iactividad + "000");
             } else {
-                id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
+                id_tipo_activ = fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, $('#extendida').val());
             }
         }
         if (!tar) {
@@ -117,7 +117,7 @@
         var iasistentes = $('#iasistentes_val').val();
         var iactividad = $('#iactividad_val').val();
         var inom_tipo = $('#inom_tipo_val').val();
-        $('#id_tipo_activ').val(isfsv + iasistentes + iactividad + inom_tipo);
+        $('#id_tipo_activ').val(fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, $('#extendida').val()));
     };
 
     $(document).ready(function () { fnjs_ver(); });

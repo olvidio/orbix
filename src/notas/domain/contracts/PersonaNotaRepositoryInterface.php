@@ -58,4 +58,9 @@ interface PersonaNotaRepositoryInterface
     public function findById(int $id_nom, int $id_nivel, int $tipo_acta): ?PersonaNota;
 
     public function findByPk(PersonaNotaPk $pk): ?PersonaNota;
+
+    /**
+     * Cambia el `id_nivel` (parte de la PK) de una nota existente.
+     */
+    public function actualizarIdNivel(int $idNom, int $idNivelActual, int $tipoActa, int $idNivelNuevo): bool;
 }

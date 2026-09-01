@@ -308,4 +308,27 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
         return $this->findById($pk->idNom(), $pk->idNivel(), $pk->tipoActa());
     }
 
+    public function actualizarIdNivel(int $idNom, int $idNivelActual, int $tipoActa, int $idNivelNuevo): bool
+    {
+        if ($idNivelActual === $idNivelNuevo) {
+            return true;
+        }
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "UPDATE $nom_tabla SET id_nivel = :id_nivel_nuevo
+                WHERE id_nom = :id_nom AND id_nivel = :id_nivel_actual AND tipo_acta = :tipo_acta"
+            . $this->sufijoAndExcluirOtraRegionStgr($nom_tabla);
+        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
+
+        return $this->PdoExecute($stmt, [
+            'id_nivel_nuevo' => $idNivelNuevo,
+            'id_nom' => $idNom,
+            'id_nivel_actual' => $idNivelActual,
+            'tipo_acta' => $tipoActa,
+        ], __METHOD__, __FILE__, __LINE__);
+    }
+
 }

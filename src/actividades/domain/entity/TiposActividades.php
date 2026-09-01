@@ -3,6 +3,7 @@
 namespace src\actividades\domain\entity;
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 
 /**
  * Entidad que implementa la lógica de los tipos de actividades.
@@ -256,6 +257,13 @@ class TiposActividades
         $txt .= $this->sasistentes;
         $txt .= $this->sactividad;
         $txt .= $this->snom_tipo;
+        if (strlen($txt) <= 6) {
+            $canon = ActividadTipoIdTxt::canonicalize($txt);
+            if ($canon !== '') {
+                return $canon;
+            }
+        }
+
         return $txt;
     }
 

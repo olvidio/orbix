@@ -6,11 +6,8 @@
         var iactividad = $('#iactividad_val').val();
         var inom_tipo = $('#inom_tipo_val').val();
 
-        if (!iasistentes) iasistentes = '.';
-        if (!iactividad) iactividad = '.';
-        if (!inom_tipo) inom_tipo = '...';
-
-        id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
+        var id_tipo_activ = fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, $('#extendida').val());
+        $('#id_tipo_activ').val(id_tipo_activ);
 
         // desplegable 'desde'
         var url = '{{ url_actualizar }}';
@@ -51,6 +48,14 @@
         }
 
         if (err === 0) {
+            var id_tipo_activ = fnjs_id_tipo_activ_from_parts(
+                $('#isfsv_val').val(),
+                $('#iasistentes_val').val(),
+                $('#iactividad_val').val(),
+                $('#inom_tipo_val').val(),
+                $('#extendida').val()
+            );
+            $('#id_tipo_activ').val(id_tipo_activ);
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,

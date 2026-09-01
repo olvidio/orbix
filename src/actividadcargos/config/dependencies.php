@@ -5,12 +5,15 @@ use src\actividadcargos\application\ActividadCargoEliminar;
 use src\actividadcargos\application\ActividadCargoNuevo;
 use src\actividadcargos\application\FormCargosDeActividadData;
 use src\actividadcargos\application\FormCargosPersonasEnActividadData;
+use src\actividadcargos\application\ResincronizarCdCargosActiv;
 use src\actividadcargos\application\Select_cargos_de_actividad;
 use src\actividadcargos\application\Select_cargos_personas_en_actividad;
+use src\actividadcargos\application\services\SincronizarCdCargosActiv;
 use src\actividadcargos\domain\InfoCargo;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\infrastructure\persistence\postgresql\CdCargosActivWriter;
 use src\actividadcargos\infrastructure\persistence\postgresql\PgActividadCargoDlRepository;
 use src\actividadcargos\infrastructure\persistence\postgresql\PgCargoOAsistente;
 use src\actividadcargos\infrastructure\persistence\postgresql\PgCargoRepository;
@@ -21,6 +24,10 @@ return [
     CargoRepositoryInterface::class => autowire(PgCargoRepository::class),
     CargoOAsistenteInterface::class => autowire(PgCargoOAsistente::class),
     ActividadCargoRepositoryInterface::class => autowire(PgActividadCargoDlRepository::class),
+
+    CdCargosActivWriter::class => autowire(CdCargosActivWriter::class),
+    SincronizarCdCargosActiv::class => autowire(SincronizarCdCargosActiv::class),
+    ResincronizarCdCargosActiv::class => autowire(ResincronizarCdCargosActiv::class),
 
     // Casos de uso / Application classes
     ActividadCargoNuevo::class => autowire(ActividadCargoNuevo::class),

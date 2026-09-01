@@ -3,6 +3,7 @@
 namespace src\procesos\application;
 
 use frontend\actividades\helpers\ActividadTipo;
+use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\XPermisos;
 use src\actividades\domain\entity\TiposActividades;
@@ -32,7 +33,9 @@ class UsuarioPermActivData
     public function execute(array $input): array
     {
         $Qid_usuario = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_usuario');
-        $Qid_tipo_activ_txt = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ_txt');
+        $Qid_tipo_activ_txt = ActividadTipoIdTxt::canonicalize(
+            \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ_txt')
+        );
         $Qdl_propia = \src\shared\domain\helpers\FuncTablasSupport::isTrue($input['dl_propia'] ?? '') ? 't' : 'f';
         if ($Qid_tipo_activ_txt === '') {
             $Qdl_propia = 't';
@@ -73,14 +76,19 @@ class UsuarioPermActivData
             $aWhere = [
                 'id_usuario' => $Qid_usuario,
                 'dl_propia' => $Qdl_propia,
-                'id_tipo_activ_txt' => $Qid_tipo_activ_txt,
                 'afecta_a' => $num,
             ];
+            $aOperador = [];
+            [$aWhere, $aOperador] = ActividadTipoIdTxt::applyToRepositoryWhere(
+                $aWhere,
+                $aOperador,
+                $Qid_tipo_activ_txt,
+            );
             $fase_ref = '';
             $perm_on = '';
             $perm_off = '';
             $afecta_a_match = '';
-            $cPermUsuarioActividad = $this->permUsuarioActividadRepository->getPermUsuarioActividades($aWhere);
+            $cPermUsuarioActividad = $this->permUsuarioActividadRepository->getPermUsuarioActividades($aWhere, $aOperador);
             foreach ($cPermUsuarioActividad as $oPermiso) {
                 $fase_ref = (string)$oPermiso->getFase_ref();
                 $afecta_a_match = (string)$oPermiso->getAfecta_a();

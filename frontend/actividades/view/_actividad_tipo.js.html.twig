@@ -164,7 +164,7 @@
         var iasistentes = $('#iasistentes_val').val();
         var iactividad = $('#iactividad_val').val();
         var inom_tipo = $('#inom_tipo_val').val();
-        var id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
+        var id_tipo_activ = fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, extendida);
 
         $('#id_tipo_activ').val(id_tipo_activ);
         // buscar la id_tarifa para este tipo de actividad
@@ -191,7 +191,7 @@
         var iasistentes = $('#iasistentes_val').val();
         var iactividad = $('#iactividad_val').val();
         var inom_tipo = $('#inom_tipo_val').val();
-        var id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
+        var id_tipo_activ = fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, extendida);
 
         $('#id_tipo_activ').val(id_tipo_activ);
         // buscar la id_tarifa para este tipo de actividad

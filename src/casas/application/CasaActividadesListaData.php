@@ -173,11 +173,18 @@ final class CasaActividadesListaData
                     if (ConfigGlobal::mi_sfsv() === 2) {
                         $aprobado = (bool)$this->actividadProcesoTareaRepository->getSacdAprobado($id_activ);
                     }
-                    if (!ConfigGlobal::is_app_installed('procesos')
-                        || ($oPermSacd->have_perm_activ('ver') === true && $aprobado)) {
+                    if (!ConfigGlobal::is_app_installed('procesos') || $aprobado) {
+                        $puedeVerSacd = !ConfigGlobal::is_app_installed('procesos')
+                            || $oPermSacd->have_perm_activ('ver') === true;
+                        $nombresSacd = [];
                         foreach ($this->actividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
                             $nom_sacd = self::personaPrefApellidosNombre($oPersona);
-                            $txt_sacds .= $txt_sacds === '' ? $nom_sacd : "# $nom_sacd";
+                            if ($nom_sacd !== '') {
+                                $nombresSacd[] = $nom_sacd;
+                            }
+                        }
+                        if ($puedeVerSacd || $nombresSacd !== []) {
+                            $txt_sacds = implode('# ', $nombresSacd);
                         }
                     }
                 }

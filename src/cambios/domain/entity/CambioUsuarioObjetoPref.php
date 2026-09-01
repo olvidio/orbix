@@ -2,6 +2,7 @@
 
 namespace src\cambios\domain\entity;
 
+use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\cambios\domain\value_objects\ObjetoNombre;
 use src\cambios\domain\value_objects\CsvPauId;
@@ -107,7 +108,8 @@ class CambioUsuarioObjetoPref
 
     public function setId_tipo_activ_txt(string $id_tipo_activ_txt): void
     {
-        $this->id_tipo_activ_txt = $id_tipo_activ_txt;
+        $canon = ActividadTipoIdTxt::canonicalize($id_tipo_activ_txt);
+        $this->id_tipo_activ_txt = $canon !== '' ? $canon : $id_tipo_activ_txt;
     }
 
 

@@ -173,7 +173,7 @@
         let iasistentes = $('#iasistentes_val').val();
         let iactividad = $('#iactividad_val').val();
         let inom_tipo = $('#inom_tipo_val').val();
-        let id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
+        let id_tipo_activ = fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, $('#extendida').val());
 
         $('#id_tipo_activ').val(id_tipo_activ);
     }

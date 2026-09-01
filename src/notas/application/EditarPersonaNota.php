@@ -5,6 +5,7 @@ namespace src\notas\application;
 use RuntimeException;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
+use src\notas\application\support\LiberarHuecoNivelNota;
 use src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -45,6 +46,7 @@ class EditarPersonaNota
         private readonly DossierRepositoryInterface $dossierRepository,
         private readonly PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
         private readonly ?MapaPrefijoActaEsquemaRepositoryInterface $mapaPrefijoActaEsquemaRepository = null,
+        private readonly ?LiberarHuecoNivelNota $liberarHuecoNivelNota = null,
     ) {
         $this->personaNota = $oPersonaNota;
         $this->id_nom = $oPersonaNota->getId_nom();
@@ -138,9 +140,13 @@ class EditarPersonaNota
         /** @var PersonaNotaDlRepositoryInterface $PersonaNotaRepository */
         $PersonaNotaRepository = $a_ReposPersonaNota['repo_real'];
 
-        $cPersonaNota = $PersonaNotaRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_nivel' => $id_nivel]);
-        if (!empty($cPersonaNota)) {
-            $oPersonaNota2 = $cPersonaNota[0];
+        $cMismaAsignatura = $PersonaNotaRepository->getPersonaNotas([
+            'id_nom' => $id_nom,
+            'id_asignatura' => $id_asignatura,
+            'tipo_acta' => $tipo_acta ?? TipoActa::FORMATO_ACTA,
+        ]);
+        if ($cMismaAsignatura !== []) {
+            $oPersonaNota2 = $cMismaAsignatura[0];
             $err = sprintf(
                 _("Ya existe esta nota. id_nom: %s, id_asignatura: %s, acta: %s, tipo_acta: %s"),
                 $oPersonaNota2->getId_nom(),
@@ -149,6 +155,15 @@ class EditarPersonaNota
                 $oPersonaNota2->getTipo_acta()
             );
             throw new RuntimeException($err);
+        }
+
+        if ($this->liberarHuecoNivelNota !== null) {
+            $this->liberarHuecoNivelNota->asegurarLibre(
+                $PersonaNotaRepository,
+                $id_nom,
+                $id_nivel,
+                $id_asignatura,
+            );
         }
 
         $oPersonaNotaDB = new PersonaNota();

@@ -67,6 +67,22 @@ class PermUsuarioActividadTest extends myTest
         $this->assertSame('2.....', $perm->toArrayForDatabase()['id_tipo_activ_txt']);
     }
 
+    public function test_from_array_canonicalizes_unpadded_sr_tipo(): void
+    {
+        $perm = PermUsuarioActividad::fromArray([
+            'id_item' => 1,
+            'id_usuario' => 2,
+            'dl_propia' => true,
+            'id_tipo_activ_txt' => '17',
+            'fase_ref' => 10,
+            'afecta_a' => 4,
+            'perm_on' => 3,
+            'perm_off' => 3,
+        ]);
+        $this->assertSame('17....', $perm->getId_tipo_activ_txt());
+        $this->assertSame('17....', $perm->toArrayForDatabase()['id_tipo_activ_txt']);
+    }
+
     public function test_set_and_get_fase_ref()
     {
         $fase_refVo = new FaseId(1);

@@ -80,6 +80,45 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         });
     }
 
+    /**
+     * Id de tipo de actividad (permisos/filtros): '17' y '000017' → '17....'.
+     * Un id de 6 dígitos (171001) se deja igual.
+     */
+    function fnjs_canonicalize_id_tipo_activ_txt(id) {
+        if (id == null) {
+            return '';
+        }
+        id = String(id).trim();
+        if (id === '') {
+            return '';
+        }
+        if (/^0+\d+$/.test(id) && id.length === 6) {
+            id = id.replace(/^0+/, '') || '0';
+        }
+        while (id.length < 6 && /^[\d.]+$/.test(id)) {
+            id += '.';
+        }
+        return id;
+    }
+
+    /**
+     * Compone el id desde los desplegables (sfsv, asistentes, actividad, nom_tipo).
+     * SV+SR ('17') queda '17....', nunca el entero 17.
+     */
+    function fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, extendida) {
+        var ext = extendida === true || extendida === 1 || extendida === '1';
+        isfsv = (isfsv === undefined || isfsv === null || isfsv === '') ? '.' : String(isfsv);
+        iasistentes = (iasistentes === undefined || iasistentes === null || iasistentes === '') ? '.' : String(iasistentes);
+        if (ext) {
+            iactividad = (iactividad === undefined || iactividad === null || iactividad === '') ? '..' : String(iactividad);
+            inom_tipo = (inom_tipo === undefined || inom_tipo === null || inom_tipo === '') ? '..' : String(inom_tipo);
+        } else {
+            iactividad = (iactividad === undefined || iactividad === null || iactividad === '') ? '.' : String(iactividad);
+            inom_tipo = (inom_tipo === undefined || inom_tipo === null || inom_tipo === '') ? '...' : String(inom_tipo);
+        }
+        return fnjs_canonicalize_id_tipo_activ_txt(isfsv + iasistentes + iactividad + inom_tipo);
+    }
+
     // Normaliza una URL para usarla como clave consistente.
     function fnjs_normalizar_url(url) {
         if (!url) return url;

@@ -7,6 +7,7 @@ use PDOStatement;
 use RuntimeException;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\procesos\domain\PermAccion;
@@ -273,7 +274,9 @@ class PermisosActividades
             if (!is_array($row)) {
                 continue;
             }
-            $id_tipo_activ_txt = self::dbRowString($row['id_tipo_activ_txt'] ?? '');
+            $rawTipo = self::dbRowString($row['id_tipo_activ_txt'] ?? '');
+            $id_tipo_activ_txt = ActividadTipoIdTxt::canonicalize($rawTipo);
+            $aliasTruncado = $rawTipo !== '' && $rawTipo !== $id_tipo_activ_txt;
             $fase_refRaw = $row['fase_ref'] ?? 0;
             $fase_ref = is_int($fase_refRaw) || is_string($fase_refRaw)
                 ? $fase_refRaw
@@ -294,6 +297,17 @@ class PermisosActividades
                 } else { //nuevo
                     $this->aPermOtras[$id_tipo_activ_txt] = new XResto($id_tipo_activ_txt);
                 }
+            }
+            // '17' y '17....' colisionan al canonicalizar: no dejar que el alias
+            // truncado pise un permiso ya cargado para el mismo afecta_a.
+            $mapDestino = \src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)
+                ? $this->aPermDl
+                : $this->aPermOtras;
+            if ($aliasTruncado
+                && isset($mapDestino[$id_tipo_activ_txt])
+                && $mapDestino[$id_tipo_activ_txt]->hasAfecta($iAfecta)
+            ) {
+                continue;
             }
             if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)) {
                 $this->aPermDl[$id_tipo_activ_txt]->setOmplir($iAfecta, $fase_ref, $perm_on, $perm_off);
@@ -372,7 +386,8 @@ class PermisosActividades
     {
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
 
-        $this->sid_tipo_activ = $id_tipo_activ;
+        $canon = ActividadTipoIdTxt::canonicalize($id_tipo_activ);
+        $this->sid_tipo_activ = $canon !== '' ? $canon : $id_tipo_activ;
 
         if ($dl_org === ConfigGlobal::mi_delef() || $dl_org_no_f === ConfigGlobal::mi_dele()) {
             $this->bpropia = true;
@@ -511,11 +526,16 @@ class PermisosActividades
         if ($this->btop || $id_fase_ref === false) {
             return new PermAccion(0);
         }
+        // getFaseRef muta sid_tipo_activ al subir el árbol; hay que restaurar
+        // el tipo de la actividad para que getPermisos recorra el mismo camino.
+        if (!empty($this->iid_activ)) {
+            $this->setActividad($this->iid_activ);
+        }
         $completada = $this->isCompletada($id_fase_ref);
         $on_off = \src\shared\domain\helpers\FuncTablasSupport::isTrue($completada) ? 'on' : 'off';
 
-        $oPerm = $this->resolveXRestoForTipoActividad();
-        if ($oPerm === null) {
+        $oPerm = $this->getPermisos($iAfecta);
+        if ($oPerm === false) {
             return new PermAccion(0);
         }
         $perm = $oPerm->getPerm($iAfecta, $id_fase_ref, $on_off);
@@ -548,28 +568,22 @@ class PermisosActividades
         if ($this->btop || $id_fase_ref === false) {
             return new PermAccion(0);
         }
+        if (!empty($this->iid_activ)) {
+            $this->setActividad($this->iid_activ);
+        }
         $completada = $this->isCompletada($id_fase_ref);
         if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($completada)) {
             return new PermAccion(0);
         }
 
-        $oPerm = $this->resolveXRestoForTipoActividad();
-        if ($oPerm === null) {
+        $oPerm = $this->getPermisos($iAfecta);
+        if ($oPerm === false) {
             return new PermAccion(0);
         }
 
         $perm = $oPerm->getPerm($iAfecta, $id_fase_ref, 'on');
 
         return new PermAccion($perm !== 0 ? $perm : 0);
-    }
-
-    private function resolveXRestoForTipoActividad(): ?XResto
-    {
-        if ($this->bpropia) {
-            return $this->aPermDl[$this->sid_tipo_activ] ?? null;
-        }
-
-        return $this->aPermOtras[$this->sid_tipo_activ] ?? null;
     }
 
     /**
@@ -579,31 +593,16 @@ class PermisosActividades
     {
         if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->sid_tipo_activ;
         $id_tipo_activ_txt = $this->completarId($id_tipo_activ_txt);
-        if ($this->bpropia === true) {
-            if (array_key_exists($id_tipo_activ_txt, $this->aPermDl)) {
-                $PermIdTipo = $this->aPermDl[$id_tipo_activ_txt];
-                // a ver si existe el iAfecta para este id_tipo_activ:
-                if ($PermIdTipo->hasAfecta($iAfecta)) {
-                    return $PermIdTipo->getFaseRef($iAfecta) ?? false;
-                } else {
-                    return $this->getFaseRefPrev($iAfecta, $id_tipo_activ_txt);
-                }
-            } else {
-                return $this->getFaseRefPrev($iAfecta, $id_tipo_activ_txt);
+        $PermIdTipo = $this->findXResto($id_tipo_activ_txt);
+        if ($PermIdTipo !== null) {
+            if ($PermIdTipo->hasAfecta($iAfecta)) {
+                return $PermIdTipo->getFaseRef($iAfecta) ?? false;
             }
-        } else {
-            if (array_key_exists($id_tipo_activ_txt, $this->aPermOtras)) {
-                $PermIdTipo = $this->aPermOtras[$id_tipo_activ_txt];
-                // a ver si existe el iAfecta para este id_tipo_activ:
-                if ($PermIdTipo->hasAfecta($iAfecta)) {
-                    return $PermIdTipo->getFaseRef($iAfecta) ?? false;
-                } else {
-                    return $this->getFaseRefPrev($iAfecta, $id_tipo_activ_txt);
-                }
-            } else {
-                return $this->getFaseRefPrev($iAfecta, $id_tipo_activ_txt);
-            }
+
+            return $this->getFaseRefPrev($iAfecta, $id_tipo_activ_txt);
         }
+
+        return $this->getFaseRefPrev($iAfecta, $id_tipo_activ_txt);
     }
 
     /**
@@ -664,25 +663,16 @@ class PermisosActividades
     {
         if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->sid_tipo_activ;
         $id_tipo_activ_txt = $this->completarId($id_tipo_activ_txt);
-        if ($this->bpropia === true) {
-            if (array_key_exists($id_tipo_activ_txt, $this->aPermDl)) {
-                $PermIdTipo = $this->aPermDl[$id_tipo_activ_txt];
-                // a ver si existe el iAfecta para este id_tipo_activ:
-                if ($PermIdTipo->hasAfecta($iAfecta)) {
-                    return $this->aPermDl[$id_tipo_activ_txt];
-                } else {
-                    return $this->getPermisosPrev($iAfecta, $id_tipo_activ_txt);
-                }
-            } else {
-                return $this->getPermisosPrev($iAfecta, $id_tipo_activ_txt);
+        $PermIdTipo = $this->findXResto($id_tipo_activ_txt);
+        if ($PermIdTipo !== null) {
+            if ($this->bpropia !== true || $PermIdTipo->hasAfecta($iAfecta)) {
+                return $PermIdTipo;
             }
-        } else {
-            if (array_key_exists($id_tipo_activ_txt, $this->aPermOtras)) {
-                return $this->aPermOtras[$id_tipo_activ_txt];
-            } else {
-                return $this->getPermisosPrev($iAfecta, $id_tipo_activ_txt);
-            }
+
+            return $this->getPermisosPrev($iAfecta, $id_tipo_activ_txt);
         }
+
+        return $this->getPermisosPrev($iAfecta, $id_tipo_activ_txt);
     }
 
     public function getPermisosPrev(int $iAfecta, string $id_tipo_activ_txt = ''): XResto|false
@@ -704,12 +694,15 @@ class PermisosActividades
 
     public function setId_tipo_activ(string $id_tipo_activ_txt): void
     {
+        $canon = ActividadTipoIdTxt::canonicalize($id_tipo_activ_txt);
+        if ($canon !== '') {
+            $id_tipo_activ_txt = $canon;
+        }
         if ($id_tipo_activ_txt === '......') {
             $this->btop = true;
         } else {
             $this->btop = false;
         }
-        // actualizar el id_tipo_activ
         $this->sid_tipo_activ = $id_tipo_activ_txt;
     }
 
@@ -762,23 +755,29 @@ class PermisosActividades
         $num = $match[2];
         $pto = $match[3];
 
-        $prev_id_tipo = $num_prev . "." . $pto;
-        //echo "<br>$num, $num_prev, $prev_id_tipo <br>";
-        //print_r($this);
+        $prev_id_tipo = ActividadTipoIdTxt::canonicalize($num_prev . "." . $pto);
         $this->sid_tipo_activ = $prev_id_tipo;
         return $prev_id_tipo;
     }
 
-    private function completarId(string $id_tipo_activ_txt): string
+    /**
+     * Localiza el XResto del tipo, incluyendo alias '17' / '000017' ↔ '17....'.
+     */
+    private function findXResto(string $id_tipo_activ_txt): ?XResto
     {
-        $len = strlen($id_tipo_activ_txt);
-        if ($len < 6) {
-            $relleno = 6 - $len;
-            for ($i = 0; $i < $relleno; $i++) {
-                $id_tipo_activ_txt .= '.';
+        $map = $this->bpropia ? $this->aPermDl : $this->aPermOtras;
+        foreach (ActividadTipoIdTxt::lookupKeys($id_tipo_activ_txt) as $key) {
+            if (isset($map[$key])) {
+                return $map[$key];
             }
         }
-        return $id_tipo_activ_txt;
+
+        return null;
+    }
+
+    private function completarId(string $id_tipo_activ_txt): string
+    {
+        return ActividadTipoIdTxt::canonicalize($id_tipo_activ_txt);
     }
 
     private static function dbRowString(mixed $value): string
@@ -815,8 +814,20 @@ class PermisosActividades
         }
         $out = [];
         foreach ($value as $key => $item) {
-            if (is_string($key) && $item instanceof XResto) {
-                $out[$key] = $item;
+            if (!$item instanceof XResto) {
+                continue;
+            }
+            if (!is_string($key) && !is_int($key)) {
+                continue;
+            }
+            $canon = ActividadTipoIdTxt::canonicalize((string) $key);
+            if ($canon === '') {
+                continue;
+            }
+            if (isset($out[$canon])) {
+                $out[$canon]->mergeFrom($item);
+            } else {
+                $out[$canon] = $item;
             }
         }
 
