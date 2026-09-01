@@ -9,6 +9,7 @@ use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\application\support\PersonaNotaPkPorAsignatura;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
 use src\notas\domain\value_objects\PersonaNotaPk;
@@ -198,17 +199,33 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
     {
         $id_nom = $PersonaNota->getId_nom();
         $id_nivel = $PersonaNota->getIdNivelVo()->value();
-        $tipo_acta = $PersonaNota->getTipoActaVo()?->value();
+        $tipo_acta = $PersonaNota->getTipoActaVo()?->value() ?? TipoActa::FORMATO_ACTA;
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $bInsert = $this->isNew($id_nom, $id_nivel, $tipo_acta ?? TipoActa::FORMATO_ACTA);
+        $bInsert = $this->isNew($id_nom, $id_nivel, $tipo_acta);
+
+        // Unique (id_nom, id_asignatura): el id_nivel del formulario puede ser el del
+        // catálogo (Latín IV 1997 → 2312) distinto del almacenado (plan 2026 → 2212).
+        if ($bInsert) {
+            $pkAsig = PersonaNotaPkPorAsignatura::pkParaUpdate($this->getPersonaNotas([
+                'id_nom' => $id_nom,
+                'id_asignatura' => $PersonaNota->getId_asignatura(),
+            ]));
+            if ($pkAsig !== null) {
+                $id_nivel = $pkAsig['id_nivel'];
+                $tipo_acta = $pkAsig['tipo_acta'];
+                $bInsert = false;
+            }
+        }
 
         $aDatos = $PersonaNota->toArrayForDatabase([
             'f_acta' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
 
         if ($bInsert === false) {
-            //UPDATE
+            //UPDATE: no mover de hueco; solo datos de acta/nota.
+            $aDatos['id_nivel'] = $id_nivel;
+            $aDatos['tipo_acta'] = $tipo_acta;
             unset($aDatos['id_nom']);
             $update = "
            	        id_nivel	             = :id_nivel,

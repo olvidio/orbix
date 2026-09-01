@@ -94,13 +94,16 @@ final class NotaPersonaFormData
         $oPersonaNota = $cPersonaNotas[0];
 
         $AsignaturaRepository = $this->asignaturaRepository;
-        $oAsignatura = $AsignaturaRepository->findById($id_asignatura_real);
+        $plan = $this->planEstudiosDePersona->resolve($id_pau);
+        $oAsignatura = $AsignaturaRepository->findById($id_asignatura_real, $plan);
+        if ($oAsignatura === null) {
+            $oAsignatura = $AsignaturaRepository->findById($id_asignatura_real);
+        }
         if ($oAsignatura === null) {
             throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura_real));
         }
-        $id_nivel = $oPersonaNota->getId_asignatura() > 3000
-            ? $oPersonaNota->getIdNivelVo()->value()
-            : $oAsignatura->getId_nivel();
+        // PK de e_notas: el hueco almacenado, no el id_nivel del catálogo (plan 1997 vs 2026).
+        $id_nivel = $oPersonaNota->getIdNivelVo()->value();
 
         $oF_acta = $oPersonaNota->getF_acta();
         $id_activ = $oPersonaNota->getId_activ();
