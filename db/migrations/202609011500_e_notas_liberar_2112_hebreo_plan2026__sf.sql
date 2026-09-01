@@ -6,30 +6,36 @@
 -- grabar Latín IV (2312 → hueco 2212): LiberarHuecoNivelNota no puede mover
 -- Latín III 2212 → 2112.
 --
--- No crea convalidaciones Hebreo/Griego → Primeros Cristianos (eso ya se
--- hizo a mano en la mayoría). Solo reordena huecos físicos:
---   1) Primeros Cristianos (2114) aún en 2114 → 2312 (si el PK lo permite)
---   2) Hebreo 2112 → 2114 (hueco 1997 que dejó libre PC)
---   3) Latín III 2212 → 2112
---   4) Latín IV en 2312 o 2211 → 2212
+-- Unique real en e_notas_dl: (id_nivel, id_nom) — sin tipo_acta. No pueden
+-- convivir PC tipo 2 y Latín IV tipo 1 en el mismo hueco. Por eso no se
+-- mueve PC a 2312 si ese nivel ya está ocupado (p. ej. Latín IV).
 --
--- Corte de plan: el de runtime (PlanEstudiosDePersona / tessera),
--- 9998 con f_acta < 2026-03-30 → se deja en layout 1997. Distinto del
--- 2026-09-30 de 152200/272000; aquí hay que alinear con lo que ve la app
--- al grabar Latín IV.
+-- Orden (por alumno):
+--   1) Aparcar hebreo 2112 → primer hueco libre (2114, si no 2501–2510)
+--   2) Latín III 2212 → 2112
+--   3) Latín IV 2312/2211 → 2212
+--   4) PC 2114 → 2312
+--   5) Si el hebreo quedó en 2501–2510 y 2114 quedó libre, compactar a 2114
 --
--- Idempotente. Tabla padre publicf.e_notas (UPDATE cae en la hija).
--- Serie sf.
+-- No crea convalidaciones Hebreo/Griego → Primeros Cristianos.
+-- Corte de plan: 9998 con f_acta < 2026-03-30 → layout 1997 (runtime tessera).
+-- Idempotente. Tabla padre publicf.e_notas. Serie sf.
 
 DO $$
 DECLARE
+    r RECORD;
+    dest INTEGER;
+    i INTEGER;
     n_cand bigint := 0;
-    n_pc bigint := 0;
     n_heb bigint := 0;
     n_l3 bigint := 0;
     n_l4 bigint := 0;
+    n_pc bigint := 0;
+    n_heb_compact bigint := 0;
     n_heb_queda bigint := 0;
     n_l3_queda bigint := 0;
+    n_upd bigint;
+    park INTEGER[] := ARRAY[2114, 2501, 2502, 2503, 2504, 2505, 2506, 2507, 2508, 2509, 2510];
 BEGIN
     CREATE TEMP TABLE tmp_atasco_latin3 (
         id_nom integer PRIMARY KEY
@@ -54,71 +60,89 @@ BEGIN
       );
     GET DIAGNOSTICS n_cand = ROW_COUNT;
 
-    -- 1) PC que siga en el hueco 1997 (2114) → 2312 (plan 2026).
-    --    PK (id_nom, id_nivel, tipo_acta): puede convivir con Latín IV tipo 1
-    --    en 2312 si esta fila es tipo 2.
-    UPDATE publicf.e_notas AS n
-    SET id_nivel = 2312
-    WHERE n.id_asignatura = 2114
-      AND n.id_nivel = 2114
-      AND n.id_nom IN (SELECT id_nom FROM tmp_atasco_latin3)
-      AND NOT EXISTS (
-          SELECT 1
-          FROM publicf.e_notas AS x
-          WHERE x.id_nom = n.id_nom
-            AND x.id_asignatura = 2114
-            AND x.id_nivel = 2312
-      )
-      AND NOT EXISTS (
-          SELECT 1
-          FROM publicf.e_notas AS x
-          WHERE x.id_nom = n.id_nom
-            AND x.id_nivel = 2312
-            AND COALESCE(x.tipo_acta, 1) = COALESCE(n.tipo_acta, 1)
-      );
-    GET DIAGNOSTICS n_pc = ROW_COUNT;
+    FOR r IN
+        SELECT id_nom FROM tmp_atasco_latin3 ORDER BY id_nom
+    LOOP
+        -- 1) Hebreo fuera de 2112
+        dest := NULL;
+        FOREACH i IN ARRAY park LOOP
+            IF NOT EXISTS (
+                SELECT 1
+                FROM publicf.e_notas x
+                WHERE x.id_nom = r.id_nom
+                  AND x.id_nivel = i
+            ) THEN
+                dest := i;
+                EXIT;
+            END IF;
+        END LOOP;
 
-    -- 2) Aparcar hebreo en 2114 (fuera del hueco 2026 de Latín III)
-    UPDATE publicf.e_notas AS n
-    SET id_nivel = 2114
-    WHERE n.id_asignatura = 2112
-      AND n.id_nivel = 2112
-      AND n.id_nom IN (SELECT id_nom FROM tmp_atasco_latin3)
-      AND NOT EXISTS (
-          SELECT 1
-          FROM publicf.e_notas AS x
-          WHERE x.id_nom = n.id_nom
-            AND x.id_nivel = 2114
-      );
-    GET DIAGNOSTICS n_heb = ROW_COUNT;
+        IF dest IS NOT NULL THEN
+            UPDATE publicf.e_notas
+            SET id_nivel = dest
+            WHERE id_nom = r.id_nom
+              AND id_asignatura = 2112
+              AND id_nivel = 2112;
+            GET DIAGNOSTICS n_upd = ROW_COUNT;
+            n_heb := n_heb + n_upd;
+        END IF;
 
-    -- 3) Completar remap 152200: Latín III → 2112
-    UPDATE publicf.e_notas AS n
-    SET id_nivel = 2112
-    WHERE n.id_asignatura = 2211
-      AND n.id_nivel = 2212
-      AND n.id_nom IN (SELECT id_nom FROM tmp_atasco_latin3)
-      AND NOT EXISTS (
-          SELECT 1
-          FROM publicf.e_notas AS x
-          WHERE x.id_nom = n.id_nom
-            AND x.id_nivel = 2112
-      );
-    GET DIAGNOSTICS n_l3 = ROW_COUNT;
+        -- 2) Latín III → 2112
+        IF NOT EXISTS (
+            SELECT 1 FROM publicf.e_notas x
+            WHERE x.id_nom = r.id_nom AND x.id_nivel = 2112
+        ) THEN
+            UPDATE publicf.e_notas
+            SET id_nivel = 2112
+            WHERE id_nom = r.id_nom
+              AND id_asignatura = 2211
+              AND id_nivel = 2212;
+            GET DIAGNOSTICS n_upd = ROW_COUNT;
+            n_l3 := n_l3 + n_upd;
+        END IF;
 
-    -- 4) Latín IV al hueco 2026 (2212), ahora libre
-    UPDATE publicf.e_notas AS n
-    SET id_nivel = 2212
-    WHERE n.id_asignatura = 2312
-      AND n.id_nivel IN (2312, 2211)
-      AND n.id_nom IN (SELECT id_nom FROM tmp_atasco_latin3)
-      AND NOT EXISTS (
-          SELECT 1
-          FROM publicf.e_notas AS x
-          WHERE x.id_nom = n.id_nom
-            AND x.id_nivel = 2212
-      );
-    GET DIAGNOSTICS n_l4 = ROW_COUNT;
+        -- 3) Latín IV → 2212
+        IF NOT EXISTS (
+            SELECT 1 FROM publicf.e_notas x
+            WHERE x.id_nom = r.id_nom AND x.id_nivel = 2212
+        ) THEN
+            UPDATE publicf.e_notas
+            SET id_nivel = 2212
+            WHERE id_nom = r.id_nom
+              AND id_asignatura = 2312
+              AND id_nivel IN (2312, 2211);
+            GET DIAGNOSTICS n_upd = ROW_COUNT;
+            n_l4 := n_l4 + n_upd;
+        END IF;
+
+        -- 4) PC 2114 → 2312 (solo si 2312 está del todo libre)
+        IF NOT EXISTS (
+            SELECT 1 FROM publicf.e_notas x
+            WHERE x.id_nom = r.id_nom AND x.id_nivel = 2312
+        ) THEN
+            UPDATE publicf.e_notas
+            SET id_nivel = 2312
+            WHERE id_nom = r.id_nom
+              AND id_asignatura = 2114
+              AND id_nivel = 2114;
+            GET DIAGNOSTICS n_upd = ROW_COUNT;
+            n_pc := n_pc + n_upd;
+        END IF;
+
+        -- 5) Compactar hebreo aparcado en 2501–2510 hacia 2114
+        IF NOT EXISTS (
+            SELECT 1 FROM publicf.e_notas x
+            WHERE x.id_nom = r.id_nom AND x.id_nivel = 2114
+        ) THEN
+            UPDATE publicf.e_notas
+            SET id_nivel = 2114
+            WHERE id_nom = r.id_nom
+              AND id_asignatura = 2112
+              AND id_nivel BETWEEN 2501 AND 2510;
+            GET DIAGNOSTICS n_upd = ROW_COUNT;
+            n_heb_compact := n_heb_compact + n_upd;
+        END IF;
+    END LOOP;
 
     SELECT count(*)
     INTO n_heb_queda
@@ -137,7 +161,7 @@ BEGIN
      AND l3.id_nivel = 2212;
 
     PERFORM public.migracion_aviso(format(
-        'liberar 2112 hebreo plan2026 sf: candidatos=%s pc_2114_a_2312=%s hebreo_a_2114=%s latin3_a_2112=%s latin4_a_2212=%s hebreo_sigue_2112=%s latin3_sigue_2212=%s',
-        n_cand, n_pc, n_heb, n_l3, n_l4, n_heb_queda, n_l3_queda
+        'liberar 2112 hebreo plan2026 sf: candidatos=%s hebreo_aparcado=%s latin3_a_2112=%s latin4_a_2212=%s pc_a_2312=%s hebreo_a_2114=%s hebreo_sigue_2112=%s latin3_sigue_2212=%s',
+        n_cand, n_heb, n_l3, n_l4, n_pc, n_heb_compact, n_heb_queda, n_l3_queda
     ));
 END $$;
