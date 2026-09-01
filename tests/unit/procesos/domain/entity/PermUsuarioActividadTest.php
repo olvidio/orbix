@@ -2,7 +2,6 @@
 
 namespace Tests\unit\procesos\domain\entity;
 
-use src\actividades\domain\value_objects\ActividadTipoId;
 use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 use src\procesos\domain\entity\PermUsuarioActividad;
 use src\procesos\domain\value_objects\FaseId;
@@ -39,10 +38,33 @@ class PermUsuarioActividadTest extends myTest
 
     public function test_set_and_get_id_tipo_activ_txt()
     {
-        $id_tipo_activ_txtVo = new ActividadTipoIdTxt(234567);
+        $id_tipo_activ_txtVo = new ActividadTipoIdTxt('234567');
         $this->PermUsuarioActividad->setIdTipoActivTxtVo($id_tipo_activ_txtVo);
         $this->assertInstanceOf(ActividadTipoIdTxt::class, $this->PermUsuarioActividad->getIdTipoActivTxtVo());
-        $this->assertEquals(234567, $this->PermUsuarioActividad->getIdTipoActivTxtVo()->value());
+        $this->assertSame('234567', $this->PermUsuarioActividad->getIdTipoActivTxtVo()->value());
+        $this->assertSame('234567', $this->PermUsuarioActividad->getId_tipo_activ_txt());
+    }
+
+    public function test_get_id_tipo_activ_txt_preserves_wildcard_pattern(): void
+    {
+        $this->PermUsuarioActividad->setId_tipo_activ_txt('1.....');
+        $this->assertSame('1.....', $this->PermUsuarioActividad->getId_tipo_activ_txt());
+    }
+
+    public function test_from_array_preserves_wildcard_id_tipo_activ_txt(): void
+    {
+        $perm = PermUsuarioActividad::fromArray([
+            'id_item' => 1,
+            'id_usuario' => 2,
+            'dl_propia' => true,
+            'id_tipo_activ_txt' => '2.....',
+            'fase_ref' => 10,
+            'afecta_a' => 1,
+            'perm_on' => 2,
+            'perm_off' => 4,
+        ]);
+        $this->assertSame('2.....', $perm->getId_tipo_activ_txt());
+        $this->assertSame('2.....', $perm->toArrayForDatabase()['id_tipo_activ_txt']);
     }
 
     public function test_set_and_get_fase_ref()
@@ -78,7 +100,7 @@ class PermUsuarioActividadTest extends myTest
             'id_item' => 1,
             'id_usuario' => 1,
             'dl_propia' => true,
-            'id_tipo_activ_txt' => new ActividadTipoIdTxt(234567),
+            'id_tipo_activ_txt' => new ActividadTipoIdTxt('234567'),
             'fase_ref' => new FaseId(1),
             'afecta_a' => 1,
             'perm_on' => 1,
@@ -89,7 +111,7 @@ class PermUsuarioActividadTest extends myTest
         $this->assertEquals(1, $permUsuarioActividad->getId_item());
         $this->assertEquals(1, $permUsuarioActividad->getId_usuario());
         $this->assertTrue($permUsuarioActividad->isDl_propia());
-        $this->assertEquals(234567, $permUsuarioActividad->getIdTipoActivTxtVo()->value());
+        $this->assertEquals('234567', $permUsuarioActividad->getIdTipoActivTxtVo()->value());
         $this->assertEquals(1, $permUsuarioActividad->getFaseRefVo()->value());
         $this->assertEquals(1, $permUsuarioActividad->getAfecta_a());
         $this->assertEquals(1, $permUsuarioActividad->getPerm_on());
@@ -103,7 +125,7 @@ class PermUsuarioActividadTest extends myTest
             'id_item' => 1,
             'id_usuario' => 1,
             'dl_propia' => true,
-            'id_tipo_activ_txt' => new ActividadTipoIdTxt(234567),
+            'id_tipo_activ_txt' => new ActividadTipoIdTxt('234567'),
             'fase_ref' => 1,
             'afecta_a' => 1,
             'perm_on' => 1,
@@ -114,7 +136,7 @@ class PermUsuarioActividadTest extends myTest
         $this->assertEquals(1, $permUsuarioActividad->getId_item());
         $this->assertEquals(1, $permUsuarioActividad->getId_usuario());
         $this->assertTrue($permUsuarioActividad->isDl_propia());
-        $this->assertEquals(234567, $permUsuarioActividad->getIdTipoActivTxtVo()->value());
+        $this->assertEquals('234567', $permUsuarioActividad->getIdTipoActivTxtVo()->value());
         $this->assertEquals(1, $permUsuarioActividad->getFaseRefVo()->value());
         $this->assertEquals(1, $permUsuarioActividad->getAfecta_a());
         $this->assertEquals(1, $permUsuarioActividad->getPerm_on());

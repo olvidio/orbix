@@ -11,7 +11,7 @@ use src\shared\web\ContestarJson;
 $error_txt = '';
 
 $Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
-$Qid_tipo_activ = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ');
+$Qid_tipo_activ = (string)(\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ') ?? '');
 $Qid_item = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_item');
 $Qdl_propia = (string)\src\shared\domain\helpers\FilterPostGet::post('dl_propia');
 $QaFase_ref = (array)\src\shared\domain\helpers\FilterPostGet::post('fase_ref', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -19,7 +19,7 @@ $QaPerm_on = (array)\src\shared\domain\helpers\FilterPostGet::post('perm_on', FI
 $QaPerm_off = (array)\src\shared\domain\helpers\FilterPostGet::post('perm_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $QaAfecta_a = (array)\src\shared\domain\helpers\FilterPostGet::post('afecta_a', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-if (empty($Qid_tipo_activ)) {
+if ($Qid_tipo_activ === '' || $Qid_tipo_activ === '0') {
     $Qisfsv_val = (string)\src\shared\domain\helpers\FilterPostGet::post('isfsv_val');
     $Qiasistentes_val = (string)\src\shared\domain\helpers\FilterPostGet::post('iasistentes_val');
     $Qiactividad_val = (string)\src\shared\domain\helpers\FilterPostGet::post('iactividad_val');

@@ -70,11 +70,7 @@ class PermUsuarioActividad
 
     public function getId_tipo_activ_txt(): ?string
     {
-        if ($this->id_tipo_activ_txt === null) {
-            return null;
-        }
-
-        return sprintf('%06d', $this->id_tipo_activ_txt->value());
+        return $this->id_tipo_activ_txt?->value();
     }
 
     public function getIdTipoActivTxtVo(): ?ActividadTipoIdTxt

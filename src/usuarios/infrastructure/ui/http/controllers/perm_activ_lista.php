@@ -61,7 +61,7 @@ $ActividadFaseRepository = DependencyResolver::get(ActividadFaseRepositoryInterf
 foreach ($cUsuarioPermArray as $aUsuarioPerm) {
     $i++;
     $id_item = $aUsuarioPerm['id_item'];
-    $id_tipo_activ_txt = $aUsuarioPerm['id_tipo_activ_txt'];
+    $id_tipo_activ_txt = (string) ($aUsuarioPerm['id_tipo_activ_txt'] ?? '');
     $dl_propia = $aUsuarioPerm['dl_propia'];
     $fase_ref = $aUsuarioPerm['fase_ref'];
     $afecta_a = $aUsuarioPerm['afecta_a'];
@@ -95,7 +95,8 @@ foreach ($cUsuarioPermArray as $aUsuarioPerm) {
         $a_valores[$i][1] = '';
         $a_valores[$i][2] = '';
     } else {
-        $a_valores[$i]['sel'] = "$Qid_usuario#$id_item#$id_tipo_activ_txt#$dl_propia";
+        $dl_propia_flag = \src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia) ? 't' : 'f';
+        $a_valores[$i]['sel'] = "$Qid_usuario#$id_item#$id_tipo_activ_txt#$dl_propia_flag";
         $a_valores[$i][1] = $dl_propia_txt;
         $a_valores[$i][2] = $oTipoActividad->getNom();
     }

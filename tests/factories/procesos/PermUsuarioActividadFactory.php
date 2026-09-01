@@ -5,7 +5,6 @@ namespace Tests\factories\procesos;
 use Faker\Factory;
 use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 use src\procesos\domain\entity\PermUsuarioActividad;
-use src\actividades\domain\value_objects\ActividadTipoId;
 use src\procesos\domain\value_objects\FaseId;
 
 /**
@@ -37,7 +36,7 @@ class PermUsuarioActividadFactory
         $oPermUsuarioActividad->setId_item($id);
 
         $oPermUsuarioActividad->setDl_propia(false);
-        $oPermUsuarioActividad->setIdTipoActivTxtVo(new ActividadTipoIdTxt(123456));
+        $oPermUsuarioActividad->setIdTipoActivTxtVo(new ActividadTipoIdTxt('123456'));
 
         return $oPermUsuarioActividad;
     }
@@ -57,8 +56,7 @@ class PermUsuarioActividadFactory
 
         $oPermUsuarioActividad->setId_usuario($faker->numberBetween(1, 1000));
         $oPermUsuarioActividad->setDl_propia($faker->boolean);
-        $oPermUsuarioActividad->setId_tipo_activ_txt($faker->word);
-        $oPermUsuarioActividad->setIdTipoActivTxtVo(new ActividadTipoIdTxt($faker->numberBetween(100000, 299999)));
+        $oPermUsuarioActividad->setIdTipoActivTxtVo(new ActividadTipoIdTxt((string) $faker->numberBetween(100000, 299999)));
         $oPermUsuarioActividad->setFaseRefVo(new FaseId($faker->numberBetween(1, 10)));
         $oPermUsuarioActividad->setAfecta_a($faker->numberBetween(1, 1000));
         $oPermUsuarioActividad->setPerm_on($faker->numberBetween(1, 1000));
