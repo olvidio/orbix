@@ -7,7 +7,6 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
-use src\notas\domain\entity\Acta;
 use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
@@ -19,7 +18,7 @@ use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
  *   permiso: int,
  *   nom_activ: string,
  *   matriculados: int,
- *   matriculas_rows: list<array{nom: string, id_nom: int, nota_num: string|null, nota_max: string|null, preceptor: bool, acta: string|null}>,
+ *   matriculas_rows: list<array{nom: string, id_nom: int, nota_num: string|null, nota_max: string|null, preceptor: bool, acta: string|null, editable: bool}>,
  *   notas: string,
  *   despl_actas_opciones: array<int|string, string>,
  *   acta_principal: string,
@@ -45,7 +44,7 @@ final class ActaNotasData
      *   permiso: int,
      *   nom_activ: string,
      *   matriculados: int,
-     *   matriculas_rows: list<array{nom: string, id_nom: int, nota_num: string|null, nota_max: string|null, preceptor: bool, acta: string|null}>,
+     *   matriculas_rows: list<array{nom: string, id_nom: int, nota_num: string|null, nota_max: string|null, preceptor: bool, acta: string|null, editable: bool}>,
      *   notas: string,
      *   despl_actas_opciones: array<int|string, string>,
      *   acta_principal: string,
@@ -119,12 +118,16 @@ final class ActaNotasData
         $desplActasOpciones = [];
         $notas = 'nuevo';
         $aActasList = [];
+        $actasFirmadas = [];
         if ($cActas !== []) {
             $desplActasOpciones = [0 => '', NotaSituacion::CURSADA => Nota::getStatusTxt(NotaSituacion::CURSADA)];
             foreach ($cActas as $oActa) {
                 $nomActa = $oActa->getActa();
                 $desplActasOpciones[$nomActa] = $oActa->getActa();
                 $aActasList[] = $nomActa;
+                if ($oActa->tienePdfFirmado()) {
+                    $actasFirmadas[$nomActa] = true;
+                }
             }
             $notas = 'acta';
             if (count($cActas) === 1) {
@@ -143,6 +146,7 @@ final class ActaNotasData
                 'nota_max' => $oMatricula->getNota_max(),
                 'preceptor' => (bool) \src\shared\domain\helpers\FuncTablasSupport::isTrue($oMatricula->isPreceptor()),
                 'acta' => $oMatricula->getActa(),
+                'editable' => !isset($actasFirmadas[(string) $oMatricula->getActa()]),
             ];
         }
 

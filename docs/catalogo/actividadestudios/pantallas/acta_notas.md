@@ -87,11 +87,13 @@ Flujo habitual:
 1. Si el acta está en modo `nueva`, las acciones de notas avisan de que primero hay que guardar el
    acta.
 2. Con permiso de edición (`permiso == 3`), cada fila permite editar preceptor, nota numérica/máxima
-   y desplegable de acta; los cambios se guardan al vuelo con `fnjs_guardar_nota` (borrador en
-   matrícula).
+   y desplegable de acta **salvo que esa fila pertenezca a un acta ya firmada (PDF)**; los cambios se
+   guardan al vuelo con `fnjs_guardar_nota` (borrador en matrícula).
 3. **Grabar notas en tessera** convierte las notas en definitivas vía
-   `acta_notas_definitivas_grabar`.
+   `acta_notas_definitivas_grabar` (omite filas de actas firmadas).
 4. **Imprimir** envía el form del acta a `acta_imprimir.php` (solo si el acta ya no es `nueva`).
+   Imprimir deja constancia del contenido; hace falta haber impreso después del último cambio para
+   poder **subir el PDF firmado**. El bloqueo de edición de notas es al firmar (PDF), no al imprimir.
 
 Sin permiso de edición la tabla es de solo lectura.
 

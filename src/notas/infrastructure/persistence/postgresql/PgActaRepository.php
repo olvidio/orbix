@@ -271,13 +271,14 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
 					linea                    = :linea,
 					lugar                    = :lugar,
 					observ                   = :observ,
-					pdf                      = :pdf";
+					pdf                      = :pdf,
+					hash_impreso             = :hash_impreso";
             $sql = "UPDATE $nom_tabla SET $update WHERE acta = '$acta'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $campos = "(acta,id_asignatura,id_activ,f_acta,libro,pagina,linea,lugar,observ,pdf)";
-            $valores = "(:acta,:id_asignatura,:id_activ,:f_acta,:libro,:pagina,:linea,:lugar,:observ,:pdf)";
+            $campos = "(acta,id_asignatura,id_activ,f_acta,libro,pagina,linea,lugar,observ,pdf,hash_impreso)";
+            $valores = "(:acta,:id_asignatura,:id_activ,:f_acta,:libro,:pagina,:linea,:lugar,:observ,:pdf,:hash_impreso)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }

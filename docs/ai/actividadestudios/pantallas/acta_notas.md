@@ -65,4 +65,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Precauciones
 
+- Las notas se pueden corregir hasta que hay PDF firmado. Imprimir no cierra el acta.
+- Para subir el PDF firmado hay que haber impreso después del último cambio.
 - Esta ficha puede contener nombres tecnicos. Para respuesta final, convertirlos a lenguaje de usuario cuando sea posible.

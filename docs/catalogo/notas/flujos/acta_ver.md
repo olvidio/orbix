@@ -50,7 +50,8 @@ Consultar o modificar la cabecera del acta (asignatura, fechas, libro, tribunal,
 ## Casos particulares
 
 - Embebido en actividad (`notas`/`Qnotas` no vacío): no listado ni alta.
-- Acta firmada (PDF): cabecera readonly; no alta.
+- Acta firmada (PDF): cabecera readonly; no alta; las notas de esa acta no se pueden modificar.
+- Sin PDF: se puede corregir e imprimir de nuevo. Subir el PDF firmado exige haber impreso después del último cambio (si no, mensaje de reimpresión).
 - `permiso !== 3` o ámbito rstgr: no formulario de alta.
 - Candidatos: DL + publicados para mi DL; excluye Repaso y quien ya tiene nota en la asignatura.
 

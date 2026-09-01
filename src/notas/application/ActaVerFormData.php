@@ -7,6 +7,7 @@ namespace src\notas\application;
 
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\application\support\ActaContenidoImpreso;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
@@ -27,6 +28,7 @@ final class ActaVerFormData
         private readonly ActaTribunalRepositoryInterface $actaTribunalRepository,
         private readonly ActaTribunalDlRepositoryInterface $actaTribunalDlRepository,
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly ActaContenidoImpreso $contenidoImpreso,
     ) {
     }
     /**
@@ -61,7 +63,6 @@ final class ActaVerFormData
         $acta_new = '';
         $acta_sigla = $dl;
         $acta_new_num = '';
-        $pdf = null;
 
         $acta_actual = '';
         $a_actas = [];
@@ -124,7 +125,6 @@ final class ActaVerFormData
                     $lugar = $oActa->getLugar();
                     $observ = $oActa->getObserv();
                     $id_asignatura_actual = $id_asignatura;
-                    $pdf = $oActa->getpdf();
                 }
             }
         } else {
@@ -211,6 +211,16 @@ final class ActaVerFormData
 
         $warn_no_id_activ = ($Qmod === 'nueva' || $notas === 'nuevo') && empty($id_activ);
 
+        $has_pdf = false;
+        $pendiente_imprimir = false;
+        if ($notas !== 'nuevo' && $Qmod !== 'nueva' && $acta_actual !== '') {
+            $oActaFlags = $ActaRepository->findById($acta_actual);
+            if ($oActaFlags instanceof Acta) {
+                $has_pdf = $oActaFlags->tienePdfFirmado();
+                $pendiente_imprimir = !$has_pdf && !$this->contenidoImpreso->coincideConImpreso($oActaFlags);
+            }
+        }
+
         return [
             'notas' => $notas,
             'permiso' => $permiso,
@@ -234,7 +244,8 @@ final class ActaVerFormData
             'nombre_asignatura' => $nombre_asignatura,
             'examinadores' => $examinadores,
             'a_actas' => $a_actas,
-            'has_pdf' => $pdf !== null,
+            'has_pdf' => $has_pdf,
+            'pendiente_imprimir' => $pendiente_imprimir,
             'warn_no_id_activ' => $warn_no_id_activ,
         ];
     }

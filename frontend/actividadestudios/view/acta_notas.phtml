@@ -105,6 +105,7 @@ use function frontend\shared\helpers\is_true;
                 $tipo_txt = '';
             }
             $acta = $row['acta'];
+            $editable = $permiso == 3 && ($row['editable'] ?? true);
             if (empty($acta)) {
                 $acta_txt = '-';
                 if (empty($nota_num)) {
@@ -125,7 +126,7 @@ use function frontend\shared\helpers\is_true;
             <tr>
                 <td><?= $nom ?></td>
                 <td>
-                    <?php if ($permiso == 3) { ?>
+                    <?php if ($editable) { ?>
                     <select id="form_preceptor[]" name="form_preceptor[]" onchange="javascript:fnjs_guardar_nota()">
                         <option></option>
                         <option value="p" <?= $chk_tipo ?> ><?= _("preceptor") ?></option>

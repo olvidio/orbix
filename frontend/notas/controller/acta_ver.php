@@ -140,6 +140,7 @@ $a_actasRaw = $form['a_actas'] ?? [];
 /** @var list<string> $a_actas */
 $a_actas = is_array($a_actasRaw) ? $a_actasRaw : [];
 $has_pdf = !empty($form['has_pdf']);
+$pendiente_imprimir = !empty($form['pendiente_imprimir']);
 if ($form['warn_no_id_activ']) {
     echo _('no se guardará el ca/cv donde se cursó la asignatura');
 }
@@ -315,6 +316,8 @@ $a_campos = ['obj' => $obj,
     'a_actas' => $a_actas,
     'permiso' => $permiso,
     'readonly' => $readonly,
+    'has_pdf' => $has_pdf,
+    'pendiente_imprimir' => $pendiente_imprimir,
     'url_upload' => $url_upload,
     'url_download' => $url_download,
     'url_delete' => $url_delete,

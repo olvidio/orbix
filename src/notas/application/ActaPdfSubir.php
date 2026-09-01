@@ -3,6 +3,7 @@
 namespace src\notas\application;
 
 
+use src\notas\application\support\ActaContenidoImpreso;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\shared\infrastructure\ui\http\MultipartUploadGuard;
 
@@ -15,6 +16,7 @@ final class ActaPdfSubir
 
     public function __construct(
         private readonly ActaRepositoryInterface $actaRepository,
+        private readonly ActaContenidoImpreso $contenidoImpreso,
     ) {
     }
     /**
@@ -27,6 +29,17 @@ final class ActaPdfSubir
         $acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta_num');
         if ($acta === '') {
             return ['error' => _('No se encuentra el acta'), 'http_status' => 200];
+        }
+
+        $oActa = $this->actaRepository->findById($acta);
+        if ($oActa === null) {
+            return ['error' => _('No se encuentra el acta'), 'http_status' => 200];
+        }
+        if (!$this->contenidoImpreso->coincideConImpreso($oActa)) {
+            return [
+                'error' => _('Debe imprimir el acta después del último cambio antes de subir el PDF firmado'),
+                'http_status' => 200,
+            ];
         }
 
         $fileKey = 'acta_pdf';
@@ -83,14 +96,9 @@ final class ActaPdfSubir
             ];
         }
 
-        $ActaRepository = $this->actaRepository;
-        $oActa = $ActaRepository->findById($acta);
-        if ($oActa === null) {
-            return ['error' => _('No se encuentra el acta'), 'http_status' => 200];
-        }
         $oActa->setPdf($contenido_doc);
-        if ($ActaRepository->Guardar($oActa) === false) {
-            return ['error' => $ActaRepository->getErrorTxt(), 'http_status' => 200];
+        if ($this->actaRepository->Guardar($oActa) === false) {
+            return ['error' => $this->actaRepository->getErrorTxt(), 'http_status' => 200];
         }
 
         return ['error' => '', 'http_status' => 200];

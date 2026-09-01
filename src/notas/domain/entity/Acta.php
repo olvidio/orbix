@@ -46,6 +46,12 @@ class Acta
 
     private ?Pdf $pdf = null;
 
+    /**
+     * SHA-256 del contenido académico en la última impresión (cabecera + tribunal + notas).
+     * Vacío = nunca impreso (o impreso antes de existir esta columna).
+     */
+    private ?string $hash_impreso = null;
+
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     public function getActaVo(): ActaNumero
@@ -313,6 +319,23 @@ class Acta
     public function setPdf(?string $pdf = null): void
     {
         $this->pdf = Pdf::fromNullableString($pdf);
+    }
+
+    public function tienePdfFirmado(): bool
+    {
+        $pdf = $this->getPdf();
+        return $pdf !== null && $pdf !== '';
+    }
+
+    public function getHash_impreso(): ?string
+    {
+        return $this->hash_impreso;
+    }
+
+    public function setHash_impreso(?string $hash_impreso = null): void
+    {
+        $hash = $hash_impreso !== null ? trim($hash_impreso) : '';
+        $this->hash_impreso = $hash === '' ? null : $hash;
     }
 
     /**

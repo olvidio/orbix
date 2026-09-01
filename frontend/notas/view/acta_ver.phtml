@@ -277,13 +277,17 @@
     <?php } ?>
     <br>
     <?php if (empty($readonly)) { ?>
+        <?php if (!empty($pendiente_imprimir)) { ?>
+            <p class="comentario"><?= _("Debe imprimir el acta después del último cambio antes de subir el PDF firmado.") ?></p>
+        <?php } ?>
         <form id='frm_upload' action="" method="post" enctype="multipart/form-data">
             <?= $oHashActaPdf->getCamposHtml(); ?>
             <?= ucfirst(_("buscar el acta firmada")); ?>:
             <br>
-            <input type="file" name="acta_pdf" id="fileToUpload">
+            <input type="file" name="acta_pdf" id="fileToUpload" <?= !empty($pendiente_imprimir) ? 'disabled' : '' ?>>
             <br>
-            <input type="button" onclick="fnjs_upload_pdf();" value="<?= ucfirst(_("subir pdf")); ?>">
+            <input type="button" onclick="fnjs_upload_pdf();" value="<?= ucfirst(_("subir pdf")); ?>"
+                <?= !empty($pendiente_imprimir) ? 'disabled' : '' ?>>
         </form>
     <?php } else { ?>
         <input type="button" onclick="window.open('<?= $url_download ?>');" value="<?= ucfirst(_("descargar pdf")); ?>">
@@ -299,6 +303,10 @@
             if (typeof event !== 'undefined') {
                 event.preventDefault();
             }
+            <?php if (!empty($pendiente_imprimir)) { ?>
+            alert(<?= json_encode(_("Debe imprimir el acta después del último cambio antes de subir el PDF firmado.")) ?>);
+            return;
+            <?php } ?>
             //datos = $('#frm_upload').serialize();
             var datos = new FormData(document.getElementById("frm_upload"));
 

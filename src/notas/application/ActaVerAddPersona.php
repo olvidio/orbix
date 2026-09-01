@@ -59,7 +59,7 @@ final class ActaVerAddPersona
         if (!$oActa instanceof Acta) {
             return ['success' => false, 'mensaje' => _('No se encuentra el acta')];
         }
-        if ($oActa->getpdf() !== null) {
+        if ($oActa->tienePdfFirmado()) {
             return ['success' => false, 'mensaje' => _('El acta está firmada y no se puede modificar')];
         }
 

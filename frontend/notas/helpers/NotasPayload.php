@@ -130,6 +130,7 @@ final class NotasPayload
             'examinadores' => $examinadores,
             'a_actas' => $aActas,
             'has_pdf' => !empty($payload['has_pdf']),
+            'pendiente_imprimir' => !empty($payload['pendiente_imprimir']),
             'warn_no_id_activ' => !empty($payload['warn_no_id_activ']),
         ];
     }

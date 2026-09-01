@@ -45,7 +45,7 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Objetivo funcional
 
-Ramas: ver acta existente, alta (`notas=nuevo`/`mod=nueva`), edición con datos POST. Devuelve cabecera, tribunal, URLs de mutación, `permiso`, `has_pdf`, `warn_no_id_activ`.
+Ramas: ver acta existente, alta (`notas=nuevo`/`mod=nueva`), edición con datos POST. Devuelve cabecera, tribunal, URLs de mutación, `permiso`, `has_pdf`, `pendiente_imprimir`, `warn_no_id_activ`.
 
 ## Permisos
 

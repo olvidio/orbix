@@ -4,6 +4,7 @@ namespace src\notas\application;
 
 use src\shared\config\ConfigGlobal;
 use src\notas\application\support\ActaDlGuard;
+use src\notas\application\support\ActaFirmadaPolicy;
 use src\notas\application\support\ActaTribunalSync;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -15,6 +16,7 @@ final class ActaModificar
         private readonly ActaDlRepositoryInterface $actaDlRepository,
         private readonly ActaTribunalSync $actaTribunalSync,
         private readonly ActaDlGuard $actaDlGuard,
+        private readonly ActaFirmadaPolicy $firmadaPolicy,
     ) {
     }
 
@@ -47,6 +49,10 @@ final class ActaModificar
         $oActa = $repo->findById($acta);
         if ($oActa === null) {
             return _("No se encuentra el acta");
+        }
+        $firmada = $this->firmadaPolicy->mensajeSiFirmada($acta);
+        if ($firmada !== '') {
+            return $firmada;
         }
 
         $oActa->setId_asignatura(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura'));

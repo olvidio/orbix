@@ -18,6 +18,7 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 
 use src\notas\application\ActaEliminar;
 use src\notas\application\ActaImprimirPresentacionData;
+use src\notas\application\ActaMarcarImpresa;
 use src\notas\application\ActaModificar;
 use src\notas\application\ActaNueva;
 use src\notas\application\ActaPdfEliminar;
@@ -63,6 +64,8 @@ use src\notas\application\TesseraVerData;
 use src\notas\application\support\ResumenFactory;
 use src\notas\application\services\ResumenTempTablesService;
 use src\notas\application\support\ActaDlGuard;
+use src\notas\application\support\ActaFirmadaPolicy;
+use src\notas\application\support\ActaContenidoImpreso;
 use src\notas\application\support\ActaPrefijosDeEsquema;
 use src\notas\application\support\ActaTribunalSync;
 use src\notas\application\support\PersonaNotaInputParser;
@@ -95,6 +98,7 @@ return [
     MapaPrefijoActaEsquemaRepositoryInterface::class => autowire(PgMapaPrefijoActaEsquemaRepository::class),
     ActaEliminar::class => autowire(ActaEliminar::class),
     ActaImprimirPresentacionData::class => autowire(ActaImprimirPresentacionData::class),
+    ActaMarcarImpresa::class => autowire(ActaMarcarImpresa::class),
     ActaModificar::class => autowire(ActaModificar::class),
     ActaNueva::class => autowire(ActaNueva::class),
     ActaPdfEliminar::class => autowire(ActaPdfEliminar::class),
@@ -139,6 +143,8 @@ return [
     ResumenTempTablesService::class => autowire(ResumenTempTablesService::class),
     ResumenFactory::class => autowire(ResumenFactory::class),
     ActaDlGuard::class => autowire(ActaDlGuard::class),
+    ActaFirmadaPolicy::class => autowire(ActaFirmadaPolicy::class),
+    ActaContenidoImpreso::class => autowire(ActaContenidoImpreso::class),
     ActaPrefijosDeEsquema::class => autowire(ActaPrefijosDeEsquema::class),
     ActaTribunalSync::class => autowire(ActaTribunalSync::class),
     PersonaNotaInputParser::class => autowire(PersonaNotaInputParser::class),

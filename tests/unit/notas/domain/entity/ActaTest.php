@@ -102,6 +102,23 @@ class ActaTest extends myTest
         $this->Acta->setPdfVo($pdfVo);
         $this->assertInstanceOf(Pdf::class, $this->Acta->getPdfVo());
         $this->assertEquals('test', $this->Acta->getPdfVo()->value());
+        $this->assertTrue($this->Acta->tienePdfFirmado());
+    }
+
+    public function test_tiene_pdf_firmado_false_sin_pdf()
+    {
+        $this->assertFalse($this->Acta->tienePdfFirmado());
+        $this->Acta->setPdf('');
+        $this->assertFalse($this->Acta->tienePdfFirmado());
+    }
+
+    public function test_set_and_get_hash_impreso()
+    {
+        $this->assertNull($this->Acta->getHash_impreso());
+        $this->Acta->setHash_impreso('abc123');
+        $this->assertSame('abc123', $this->Acta->getHash_impreso());
+        $this->Acta->setHash_impreso('');
+        $this->assertNull($this->Acta->getHash_impreso());
     }
 
     public function test_set_all_attributes()

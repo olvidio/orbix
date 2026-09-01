@@ -3,6 +3,7 @@
 namespace src\notas\application;
 
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\notas\application\support\ActaFirmadaPolicy;
 use src\notas\application\support\LiberarHuecoNivelNota;
 use src\notas\application\support\PersonaNotaInputParser;
 use src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface;
@@ -27,6 +28,7 @@ final class PersonaNotaNueva
         private readonly PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
         private readonly MapaPrefijoActaEsquemaRepositoryInterface $mapaPrefijoActaEsquemaRepository,
         private readonly LiberarHuecoNivelNota $liberarHuecoNivelNota,
+        private readonly ActaFirmadaPolicy $firmadaPolicy,
     ) {
     }
 
@@ -38,6 +40,10 @@ final class PersonaNotaNueva
     {
         try {
             $oPersonaNota = $this->personaNotaInputParser->parse($input);
+            $firmada = $this->firmadaPolicy->mensajeSiFirmada($oPersonaNota->getActa());
+            if ($firmada !== '') {
+                return ['error' => $firmada, 'mensaje' => '', 'esquema' => ''];
+            }
             $oEditar = new EditarPersonaNota(
                 $oPersonaNota,
                 $this->personaNotaRepository,

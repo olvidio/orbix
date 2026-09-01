@@ -10,6 +10,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\NivelId;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\notas\application\EditarPersonaNota;
+use src\notas\application\support\ActaFirmadaPolicy;
 use src\notas\application\support\LiberarHuecoNivelNota;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
@@ -47,6 +48,7 @@ final class ActaNotasDefinitivasGrabar
         private DossierRepositoryInterface $dossierRepository,
         private PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
         private LiberarHuecoNivelNota $liberarHuecoNivelNota,
+        private ActaFirmadaPolicy $firmadaPolicy,
     ) {
     }
 
@@ -92,6 +94,10 @@ final class ActaNotasDefinitivasGrabar
             $nota_num = $oMatricula->getNota_num();
             $nota_max = $oMatricula->getNota_max();
             $acta = $oMatricula->getActa();
+            $firmada = $this->firmadaPolicy->mensajeSiFirmada((string) $acta);
+            if ($firmada !== '') {
+                continue;
+            }
 
             if (empty($nota_max)) {
                 $nota_max = (string) $nota_max_default;

@@ -22,7 +22,8 @@ Formulario de cabecera de acta (asignatura, actividad, fechas, libro, tribunal, 
 
 - **Standalone** (`$notas` y `$Qnotas` vacíos, no modo nueva, acta con asignatura): muestra listado solo lectura (`acta_ver_notas_listado_data`) y, si `permiso===3` y sin PDF firmado, formulario añadir alumno (`acta_ver_add_persona_*`).
 - **Embebido en actividad** (`$notas` / `$Qnotas` no vacío): no listado ni alta de alumno aquí (las notas van por el flujo de actividad/estudios).
-- **Ámbito rstgr/r**: cabecera en solo lectura; no alta de alumno.
+- **Acta firmada (PDF):** cabecera en solo lectura; no alta de alumno.
+- **Pendiente de reimprimir:** si hubo cambios desde la última impresión, se informa y se deshabilita la subida del PDF hasta volver a imprimir.
 
 ## Tipo
 

@@ -12,7 +12,7 @@ respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "notas_ActaPdfSubirData"
 respuesta_data: ["error:string, http_status: int"]
 requiere_hashb: false
-errores: ["No se encuentra el acta", "No se puede subir el archivo %s", "No se puede leer el archivo %s", "No se puede abrir el archivo %s"]
+errores: ["No se encuentra el acta", "No se puede subir el archivo %s", "No se puede leer el archivo %s", "No se puede abrir el archivo %s", "Debe imprimir el acta después del último cambio antes de subir el PDF firmado"]
 frontend_referencias: []
 casos_uso: ["src\\notas\\application\\ActaPdfSubir"]
 tags: ["notas", "acta", "pdf", "subir"]
@@ -54,6 +54,8 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 Upload multipart con `acta_num` y fichero; valida lectura del archivo y persiste en el acta.
 
+No se admite la subida si el contenido académico (cabecera, tribunal y notas de tessera) no coincide con la última impresión: hay que imprimir el acta después del último cambio.
+
 ## Permisos
 
 - Desde `acta_ver` (`fnjs_upload_pdf`).
@@ -64,6 +66,7 @@ Upload multipart con `acta_num` y fichero; valida lectura del archivo y persiste
 - `No se puede subir el archivo %s`
 - `No se puede leer el archivo %s`
 - `No se puede abrir el archivo %s`
+- `Debe imprimir el acta después del último cambio antes de subir el PDF firmado`
 
 ## Casos De Uso
 

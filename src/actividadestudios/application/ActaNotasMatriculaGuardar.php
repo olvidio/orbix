@@ -4,6 +4,7 @@ namespace src\actividadestudios\application;
 
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\notas\application\support\ActaFirmadaPolicy;
 use src\notas\domain\value_objects\NotaSituacion;
 
 /**
@@ -17,6 +18,7 @@ final class ActaNotasMatriculaGuardar
 {
     public function __construct(
         private MatriculaRepositoryInterface $matriculaRepository,
+        private ActaFirmadaPolicy $firmadaPolicy,
     ) {
     }
 
@@ -50,6 +52,14 @@ final class ActaNotasMatriculaGuardar
             $oMatricula = $this->matriculaRepository->findById($Qid_activ, $Qid_asignatura, $idNom);
             if ($oMatricula === null) {
                 continue;
+            }
+            $firmadaActual = $this->firmadaPolicy->mensajeSiFirmada((string) $oMatricula->getActa());
+            if ($firmadaActual !== '') {
+                continue;
+            }
+            $firmadaNueva = $this->firmadaPolicy->mensajeSiFirmada(self::scalarString($Qacta[$n] ?? ''));
+            if ($firmadaNueva !== '') {
+                return $firmadaNueva . "\n";
             }
             $oMatricula->setPreceptor($preceptor);
             $notaNumRaw = self::scalarString($Qnota_num[$n] ?? '');
