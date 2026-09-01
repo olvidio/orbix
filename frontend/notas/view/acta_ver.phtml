@@ -85,8 +85,8 @@
             </tr>
             <?php } elseif ($permiso != 3 && $mod != 'nueva' && $notas != 'nuevo') { ?>
             <tr>
-                <td colspan="9" class="comentario">
-                    <?= _("No tiene permiso para modificar actas.") ?>
+                <td colspan="9">
+                    <span class="alert"><?= _("No tiene permiso para modificar actas.") ?></span>
                 </td>
             </tr>
             <?php } ?>
