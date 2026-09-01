@@ -214,4 +214,20 @@ class PersonaNotaTest extends myTest
         $this->assertEquals(10, $personaNota->getNotaMaxVo()->value());
         $this->assertEquals(1, $personaNota->getTipoActaVo()->value());
     }
+
+    public function test_constructor_con_tipo_acta_cero_no_lanza(): void
+    {
+        $personaNota = new PersonaNota([
+            'id_nom' => 10,
+            'id_nivel' => 1100,
+            'tipo_acta' => 0,
+        ]);
+        $this->assertSame(TipoActa::FORMATO_ACTA, $personaNota->getTipoActaVo()?->value());
+    }
+
+    public function test_set_tipo_acta_cero_se_normaliza_a_formato_acta(): void
+    {
+        $this->PersonaNota->setTipo_acta(0);
+        $this->assertSame(TipoActa::FORMATO_ACTA, $this->PersonaNota->getTipoActaVo()?->value());
+    }
 }

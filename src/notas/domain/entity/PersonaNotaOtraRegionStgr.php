@@ -31,6 +31,10 @@ class PersonaNotaOtraRegionStgr
     {
         if ($a_id !== null) {
             foreach ($a_id as $nom_id => $val_id) {
+                if ($nom_id === 'tipo_acta') {
+                    $this->tipo_acta = TipoActa::fromPg($val_id);
+                    continue;
+                }
                 if (!is_scalar($val_id) || (string) $val_id === '') {
                     continue;
                 }
@@ -42,9 +46,6 @@ class PersonaNotaOtraRegionStgr
                 }
                 if ($nom_id === 'id_nivel') {
                     $this->id_nivel = new NivelId((int) $val_id);
-                }
-                if ($nom_id === 'tipo_acta') {
-                    $this->tipo_acta = TipoActa::fromNullableInt((int) $val_id);
                 }
             }
         }

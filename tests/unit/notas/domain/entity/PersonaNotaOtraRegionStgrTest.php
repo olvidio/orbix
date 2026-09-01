@@ -233,4 +233,14 @@ class PersonaNotaOtraRegionStgrTest extends myTest
             json_encode($personaNotaOtraRegionStgr->getJson_certificados())
         );
     }
+
+    public function test_constructor_con_tipo_acta_cero_no_lanza(): void
+    {
+        $nota = new PersonaNotaOtraRegionStgr([
+            'id_nom' => 10,
+            'id_nivel' => 1100,
+            'tipo_acta' => 0,
+        ]);
+        $this->assertSame(TipoActa::FORMATO_ACTA, $nota->getTipoActaVo()?->value());
+    }
 }

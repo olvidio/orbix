@@ -113,6 +113,7 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
             }
             // para las fechas del postgres (texto iso)
             $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta']))->fromPg();
+            $normalized['tipo_acta'] = TipoActa::fromPg($normalized['tipo_acta'] ?? null)->value();
             $a_pkey = array('id_nom' => $normalized['id_nom'],
                 'id_nivel' => $normalized['id_nivel'],
                 'tipo_acta' => $normalized['tipo_acta']);
@@ -275,7 +276,8 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
         if (!is_array($aDatos)) {
             return false;
         }
-            $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
+        $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
+        $aDatos['tipo_acta'] = TipoActa::fromPg($aDatos['tipo_acta'] ?? null)->value();
         $result = [];
         foreach ($aDatos as $key => $value) {
             $result[(string) $key] = $value;

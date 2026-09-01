@@ -133,6 +133,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
                 $jsonCertificados = null;
             }
             $normalized['json_certificados'] = (new ConverterJson($jsonCertificados, false))->fromPg();
+            $normalized['tipo_acta'] = TipoActa::fromPg($normalized['tipo_acta'] ?? null)->value();
             $oPersonaNotaOtraRegionStgr = PersonaNotaOtraRegionStgr::fromArray($normalized);
             $oPersonaNotaOtraRegionStgrSet->add($oPersonaNotaOtraRegionStgr);
         }
@@ -229,6 +230,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
                 $jsonCertificados = null;
             }
             $normalized['json_certificados'] = (new ConverterJson($jsonCertificados, false))->fromPg();
+            $normalized['tipo_acta'] = TipoActa::fromPg($normalized['tipo_acta'] ?? null)->value();
 
             $idNivelRaw = $normalized['id_nivel'] ?? null;
             $idNivel = is_numeric($idNivelRaw) ? (int)$idNivelRaw : null;
@@ -358,6 +360,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             return false;
         }
         $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
+        $aDatos['tipo_acta'] = TipoActa::fromPg($aDatos['tipo_acta'] ?? null)->value();
         $result = [];
         foreach ($aDatos as $key => $value) {
             $result[(string)$key] = $value;

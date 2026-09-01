@@ -31,4 +31,26 @@ class TipoActaTest extends myTest
         $this->assertNull($tipoActa);
     }
 
+    public function test_fromNullableInt_normaliza_cero_a_formato_acta(): void
+    {
+        $tipoActa = TipoActa::fromNullableInt(0);
+        $this->assertInstanceOf(TipoActa::class, $tipoActa);
+        $this->assertSame(TipoActa::FORMATO_ACTA, $tipoActa->value());
+    }
+
+    public function test_fromPg_trata_vacio_como_formato_acta(): void
+    {
+        $this->assertSame(TipoActa::FORMATO_ACTA, TipoActa::fromPg(null)->value());
+        $this->assertSame(TipoActa::FORMATO_ACTA, TipoActa::fromPg(0)->value());
+        $this->assertSame(TipoActa::FORMATO_ACTA, TipoActa::fromPg('')->value());
+        $this->assertSame(TipoActa::FORMATO_ACTA, TipoActa::fromPg(false)->value());
+        $this->assertSame(TipoActa::FORMATO_CERTIFICADO, TipoActa::fromPg(2)->value());
+        $this->assertSame(TipoActa::FORMATO_CERTIFICADO, TipoActa::fromPg('2')->value());
+    }
+
+    public function test_constructor_rechaza_cero(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new TipoActa(0);
+    }
 }

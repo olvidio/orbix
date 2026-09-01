@@ -37,6 +37,25 @@ final class TipoActa
         if ($value === null) {
             return null;
         }
+        // 0 = vacío (POST, PDO, datos legacy). En SQL se usa COALESCE(tipo_acta, 1).
+        if ($value === 0) {
+            return new self(self::FORMATO_ACTA);
+        }
         return new self($value);
+    }
+
+    /**
+     * Hidratación desde PostgreSQL: NULL, 0 y vacío equivalen a acta.
+     */
+    public static function fromPg(mixed $value): self
+    {
+        if ($value === null || $value === '' || $value === false) {
+            return new self(self::FORMATO_ACTA);
+        }
+        if (!is_numeric($value)) {
+            return new self(self::FORMATO_ACTA);
+        }
+
+        return self::fromNullableInt((int) $value) ?? new self(self::FORMATO_ACTA);
     }
 }
