@@ -47,10 +47,13 @@
         });
     }
 
-    fnjs_guardar = function (formulario) {
+    fnjs_guardar = function (formulario, confirmarDuplicado) {
         var mod = $(formulario).find('[name=mod]').val();
         var url = (mod === 'editar') ? '<?= $url_actividad_asignatura_editar ?>' : '<?= $url_actividad_asignatura_nueva ?>';
         var datos = $(formulario).serialize();
+        if (confirmarDuplicado) {
+            datos += (datos ? '&' : '') + 'confirmar_duplicado=1';
+        }
         $.ajax({
             data: datos,
             url: url,
@@ -59,9 +62,18 @@
         }).done(function (json) {
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
-            } else {
-                <?= $oPosicion->jsNavAtrasToDossiersParent(); ?>
+                return;
             }
+            var data = fnjs_parse_rta(json);
+            if (data && data.requiere_confirmacion) {
+                if (confirm(data.mensaje)) {
+                    fnjs_guardar(formulario, true);
+                } else {
+                    <?= $oPosicion->jsNavAtrasToDossiersParent(); ?>
+                }
+                return;
+            }
+            <?= $oPosicion->jsNavAtrasToDossiersParent(); ?>
         });
     }
 </script>

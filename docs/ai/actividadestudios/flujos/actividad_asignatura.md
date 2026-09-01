@@ -34,7 +34,9 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 1. En el dossier 3005 de una actividad, pulsar **nuevo** para abrir el formulario de alta.
 2. Elegir asignatura, profesor, fechas y tipo; pulsar **guardar**.
-3. El sistema crea la `ActividadAsignatura` y abre el dossier 3005 de la actividad.
+3. Si esa asignatura ya está en la actividad (incluida otra dl), aparece un aviso:
+   «Ya existe esta asignatura en esta actividad. Solamente debería continuar si quiere hacerla con preceptor u otro profesor». Cancelar vuelve al listado; aceptar guarda.
+4. Si no hay duplicado (o se confirmó), el sistema crea la `ActividadAsignatura` y abre el dossier 3005.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/actividad_asignatura_nueva`
@@ -63,6 +65,7 @@ El usuario crea una nueva asignatura impartida en la actividad (profesor, fechas
 - `hay un error, no se ha creado`
 - `no encuentro la asignatura`
 - `sólo se puede eliminar una asignatura desde el dossier de la actividad`
+- `Ya existe esta asignatura en esta actividad. Solamente debería continuar si quiere hacerla con preceptor u otro profesor`
 
 ## Limites De La Respuesta
 

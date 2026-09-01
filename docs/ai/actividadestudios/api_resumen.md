@@ -14,21 +14,21 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.acta_notas_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/acta_notas_data.php`
-- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`
+- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_schema:integer` (esquema de la fila del dossier 3005; distingue la misma asignatura de la dl organizadora y de otra dl)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/acta_notas_definitivas_grabar`
 
 - Id: `actividadestudios.acta_notas_definitivas_grabar`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/acta_notas_definitivas_grabar.php`
-- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`
+- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_schema:integer`
 - Respuesta: `raw_response`
 
 ## `/src/actividadestudios/acta_notas_matricula_guardar`
 
 - Id: `actividadestudios.acta_notas_matricula_guardar`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/acta_notas_matricula_guardar.php`
-- Entrada: `post.acta_nota:array`, `post.form_preceptor:array`, `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_nom:array`, `post.nota_max:array`, `post.nota_num:array`
+- Entrada: `post.acta_nota:array`, `post.form_preceptor:array`, `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_schema:integer`, `post.id_nom:array`, `post.nota_max:array`, `post.nota_num:array`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/actividad_asignatura_editar`
@@ -49,8 +49,8 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.actividad_asignatura_nueva`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/actividad_asignatura_nueva.php`
-- Entrada: `post.avis_profesor:string`, `post.f_fin:string`, `post.f_ini:string`, `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_profesor:integer`, `post.tipo:string`
-- Respuesta: `standard_envelope_string_data`
+- Entrada: `post.avis_profesor:string`, `post.f_fin:string`, `post.f_ini:string`, `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_profesor:integer`, `post.tipo:string`, `post.confirmar_duplicado:integer` (1 si el usuario confirma el alta de una asignatura que ya existe en la actividad)
+- Respuesta: `standard_envelope_string_data` (`ok` al guardar; `{requiere_confirmacion, mensaje}` si ya existe y aún no se ha confirmado)
 
 ## `/src/actividadestudios/asistente_observ`
 

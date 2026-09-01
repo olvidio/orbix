@@ -34,6 +34,7 @@ $navState = ListNavSupport::buildActaNotasReturnParametros();
 $ids = ActividadestudiosPostInput::idActivAsignatura();
 $id_activ = $ids['id_activ'];
 $id_asignatura = $ids['id_asignatura'];
+$id_schema = $ids['id_schema'];
 
 $bloqueRaw = filter_input(INPUT_POST, 'bloque');
 $bloque = is_string($bloqueRaw) && $bloqueRaw !== '' ? $bloqueRaw : '#main';
@@ -41,13 +42,14 @@ $bloque = is_string($bloqueRaw) && $bloqueRaw !== '' ? $bloqueRaw : '#main';
 $oPosicion->nav()->enter(
     PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     $bloque,
-    ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura],
+    ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura, 'id_schema' => $id_schema],
     $navState,
 );
 
 $d = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/acta_notas_data', [
     'id_activ' => $id_activ,
     'id_asignatura' => $id_asignatura,
+    'id_schema' => $id_schema,
 ]));
 $datos = ActaNotasPayload::fromPayload($d);
 
@@ -76,6 +78,7 @@ $oHashNotas->setArraycamposHidden([
     'opcional' => \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'opcional')),
     'primary_key_s' => \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'primary_key_s')),
     'id_asignatura' => $id_asignatura,
+    'id_schema' => $id_schema,
     'id_nivel' => (int)filter_input(INPUT_POST, 'id_nivel'),
     'matriculados' => $matriculados,
 ]);

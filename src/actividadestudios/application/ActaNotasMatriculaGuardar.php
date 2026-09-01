@@ -2,10 +2,11 @@
 
 namespace src\actividadestudios\application;
 
-use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\notas\application\support\ActaFirmadaPolicy;
 use src\notas\domain\value_objects\NotaSituacion;
+use src\shared\config\ConfigGlobal;
 
 /**
  * Guarda las notas de cada matricula (borrador del acta de notas). Se invoca
@@ -17,7 +18,7 @@ use src\notas\domain\value_objects\NotaSituacion;
 final class ActaNotasMatriculaGuardar
 {
     public function __construct(
-        private MatriculaRepositoryInterface $matriculaRepository,
+        private MatriculaDlRepositoryInterface $matriculaRepository,
         private ActaFirmadaPolicy $firmadaPolicy,
     ) {
     }
@@ -29,6 +30,10 @@ final class ActaNotasMatriculaGuardar
     {
         $Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
         $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $idSchema = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_schema');
+        if ($idSchema > 0 && $idSchema !== ConfigGlobal::mi_id_schema()) {
+            return _("No puede modificar un acta de otra dl") . "\n";
+        }
         /** @var ConfigSnapshot $oConfig */
         $oConfig = $_SESSION['oConfig'];
         $nota_corte = $oConfig->getNotaCorte();

@@ -6,7 +6,7 @@ namespace Tests\unit\actividadestudios\application;
 
 use PHPUnit\Framework\TestCase;
 use src\actividadestudios\application\ActaNotasMatriculaGuardar;
-use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\actividadestudios\domain\entity\Matricula;
 use src\notas\application\support\ActaFirmadaPolicy;
 use src\notas\domain\contracts\ActaRepositoryInterface;
@@ -20,7 +20,7 @@ final class ActaNotasMatriculaGuardarTest extends TestCase
         $matricula->method('getActa')->willReturn('dlb 1/26');
         $matricula->expects($this->never())->method('setNota_num');
 
-        $repo = $this->createMock(MatriculaRepositoryInterface::class);
+        $repo = $this->createMock(MatriculaDlRepositoryInterface::class);
         $repo->method('findById')->willReturn($matricula);
         $repo->expects($this->never())->method('Guardar');
 
@@ -49,7 +49,7 @@ final class ActaNotasMatriculaGuardarTest extends TestCase
         $matricula = $this->createMock(Matricula::class);
         $matricula->method('getActa')->willReturn('');
 
-        $repo = $this->createMock(MatriculaRepositoryInterface::class);
+        $repo = $this->createMock(MatriculaDlRepositoryInterface::class);
         $repo->method('findById')->willReturn($matricula);
 
         $_SESSION['oConfig'] = new class {
@@ -70,6 +70,46 @@ final class ActaNotasMatriculaGuardarTest extends TestCase
             'acta_nota' => ['dlb 9/26'],
         ]);
         $this->assertNotSame('', $err);
+    }
+
+    public function test_rechaza_id_schema_de_otra_dl(): void
+    {
+        $prev = $_SESSION['session_auth'] ?? null;
+        $_SESSION['session_auth'] = [
+            'mi_id_schema' => 1001,
+            'esquema' => 'H-dlbvv',
+            'sfsv' => 1,
+        ];
+        $_SESSION['oConfig'] = new class {
+            public function getNotaCorte(): float
+            {
+                return 0.6;
+            }
+        };
+
+        $repo = $this->createMock(MatriculaDlRepositoryInterface::class);
+        $repo->expects($this->never())->method('findById');
+
+        try {
+            $uc = new ActaNotasMatriculaGuardar($repo, $this->policyConActaFirmada('dlb 1/26'));
+            $err = $uc->execute([
+                'id_activ' => 1,
+                'id_asignatura' => 1101,
+                'id_schema' => 2002,
+                'id_nom' => [7],
+                'nota_num' => ['9'],
+                'nota_max' => ['10'],
+                'form_preceptor' => [''],
+                'acta_nota' => [''],
+            ]);
+            $this->assertNotSame('', $err);
+        } finally {
+            if ($prev === null) {
+                unset($_SESSION['session_auth']);
+            } else {
+                $_SESSION['session_auth'] = $prev;
+            }
+        }
     }
 
     private function policyConActaFirmada(string $actaFirmada): ActaFirmadaPolicy

@@ -6,6 +6,7 @@ namespace src\notas\application;
 
 
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\application\support\ActaContenidoImpreso;
 use src\notas\domain\contracts\ActaRepositoryInterface;
@@ -24,6 +25,7 @@ final class ActaVerFormData
     public function __construct(
         private readonly ActaRepositoryInterface $actaRepository,
         private readonly ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
+        private readonly ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
         private readonly PersonaDlRepositoryInterface $personaDlRepository,
         private readonly ActaTribunalRepositoryInterface $actaTribunalRepository,
         private readonly ActaTribunalDlRepositoryInterface $actaTribunalDlRepository,
@@ -142,7 +144,17 @@ final class ActaVerFormData
                 $id_asignatura_actual = $id_asig_scope !== 0 ? $id_asig_scope : ($Qid_asignatura !== 0 ? $Qid_asignatura : null);
 
                 if ($id_activ > 0 && $id_asignatura_actual !== null) {
-                    $oActividadAsignatura = $this->actividadAsignaturaDlRepository->findById($id_activ, $id_asignatura_actual);
+                    $idSchemaScope = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_schema_scope');
+                    if ($idSchemaScope > 0) {
+                        $cAa = $this->actividadAsignaturaRepository->getActividadAsignaturas([
+                            'id_activ' => $id_activ,
+                            'id_asignatura' => $id_asignatura_actual,
+                            'id_schema' => $idSchemaScope,
+                        ]);
+                        $oActividadAsignatura = $cAa[0] ?? null;
+                    } else {
+                        $oActividadAsignatura = $this->actividadAsignaturaDlRepository->findById($id_activ, $id_asignatura_actual);
+                    }
                     if ($oActividadAsignatura !== null) {
                         $id_profesor = $oActividadAsignatura->getId_profesor();
                         if ($id_profesor !== null) {
@@ -155,10 +167,17 @@ final class ActaVerFormData
                 }
             } else {
                 if ($a_sel !== [] && $notas !== '' && is_string($a_sel[0])) {
-                    $parts = explode('#', $a_sel[0], 2);
+                    $parts = explode('#', $a_sel[0]);
                     $id_activ = is_numeric($parts[0]) ? (int) $parts[0] : 0;
                     $id_asignatura = isset($parts[1]) && is_numeric($parts[1]) ? (int) $parts[1] : 0;
-                    $cActas = $ActaRepository->getActas(['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura]);
+                    $idSchemaSel = isset($parts[3]) && is_numeric($parts[3])
+                        ? (int) $parts[3]
+                        : \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_schema_scope');
+                    $whereActa = ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura];
+                    if ($idSchemaSel > 0) {
+                        $whereActa['id_schema'] = $idSchemaSel;
+                    }
+                    $cActas = $ActaRepository->getActas($whereActa);
                     $oActa = $cActas[0] ?? null;
                     if ($oActa instanceof Acta) {
                         $id_asignatura = $oActa->getId_asignatura();

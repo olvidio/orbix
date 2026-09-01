@@ -109,6 +109,9 @@ if (isset($id_activ)) {
 if (isset($id_asignatura)) {
     $payload['id_asignatura_scope'] = PayloadCoercion::string($id_asignatura);
 }
+if (isset($id_schema) && is_numeric($id_schema) && (int) $id_schema > 0) {
+    $payload['id_schema_scope'] = (int) $id_schema;
+}
 
 $d = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/notas/acta_ver_form_data', $payload));
 $form = NotasPayload::actaVerFormFromPayload($d);

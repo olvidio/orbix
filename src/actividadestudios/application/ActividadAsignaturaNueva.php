@@ -3,6 +3,7 @@
 namespace src\actividadestudios\application;
 
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\entity\ActividadAsignatura;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
@@ -12,20 +13,30 @@ use src\shared\domain\value_objects\DateTimeLocal;
  * Crea una `ActividadAsignatura` (asignatura impartida en un ca) y abre el
  * dossier 3005 de la actividad.
  *
+ * Si ya hay la misma asignatura en la actividad (propia dl u otra), pide
+ * confirmación antes de guardar: puede ser deliberado (preceptor u otro profesor).
+ *
  * Sustituye al case `nuevo` del antiguo `update_3005.php` dispatcher.
  */
 final class ActividadAsignaturaNueva
 {
     public function __construct(
         private ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
+        private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
         private DossierRepositoryInterface $dossierRepository,
     ) {
     }
 
+    public static function mensajeDuplicado(): string
+    {
+        return _("Ya existe esta asignatura en esta actividad. Solamente debería continuar si quiere hacerla con preceptor u otro profesor");
+    }
+
     /**
      * @param array<string, mixed> $input
+     * @return array{error: string, requiere_confirmacion: bool, mensaje: string}
      */
-    public function execute(array $input): string
+    public function execute(array $input): array
     {
         $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         $Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
@@ -34,9 +45,24 @@ final class ActividadAsignaturaNueva
         $Qtipo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo');
         $Qf_ini = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_ini');
         $Qf_fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_fin');
+        $confirmar = \src\shared\domain\helpers\FuncTablasSupport::isTrue($input['confirmar_duplicado'] ?? false) === true;
 
         if ($Qid_activ <= 0 || $Qid_asignatura <= 0) {
-            return _("faltan claves de la asignatura de actividad");
+            return self::resultado(_("faltan claves de la asignatura de actividad"));
+        }
+
+        if (!$confirmar) {
+            $existentes = $this->actividadAsignaturaRepository->getActividadAsignaturas([
+                'id_activ' => $Qid_activ,
+                'id_asignatura' => $Qid_asignatura,
+            ]);
+            if ($existentes !== []) {
+                return [
+                    'error' => '',
+                    'requiere_confirmacion' => true,
+                    'mensaje' => self::mensajeDuplicado(),
+                ];
+            }
         }
 
         $oActividadAsignatura = new ActividadAsignatura();
@@ -50,7 +76,7 @@ final class ActividadAsignaturaNueva
         $oActividadAsignatura->setF_ini($rawF_ini instanceof DateTimeLocal ? $rawF_ini : null);
         $oActividadAsignatura->setF_fin($rawF_fin instanceof DateTimeLocal ? $rawF_fin : null);
         if ($this->actividadAsignaturaDlRepository->Guardar($oActividadAsignatura) === false) {
-            return _("hay un error, no se ha creado");
+            return self::resultado(_("hay un error, no se ha creado"));
         }
 
         $oDossier = $this->dossierRepository->findByPk(DossierPk::fromArray([
@@ -63,6 +89,19 @@ final class ActividadAsignaturaNueva
         }
         $oDossier->abrir();
         $this->dossierRepository->Guardar($oDossier);
-        return '';
+
+        return self::resultado('');
+    }
+
+    /**
+     * @return array{error: string, requiere_confirmacion: bool, mensaje: string}
+     */
+    private static function resultado(string $error): array
+    {
+        return [
+            'error' => $error,
+            'requiere_confirmacion' => false,
+            'mensaje' => '',
+        ];
     }
 }

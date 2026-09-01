@@ -2,15 +2,15 @@
 
 namespace src\actividadestudios\application;
 
-use frontend\shared\config\OrbixRuntime;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
+use src\actividadestudios\domain\entity\ActividadAsignatura;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
-use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
+use src\shared\config\ConfigGlobal;
 
 /**
  * @return array{
@@ -30,7 +30,6 @@ final class ActaNotasData
 {
     public function __construct(
         private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
-        private DbSchemaRepositoryInterface $dbSchemaRepository,
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private MatriculaRepositoryInterface $matriculaRepository,
         private ActaRepositoryInterface $actaRepository,
@@ -56,34 +55,28 @@ final class ActaNotasData
     {
         $idActiv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         $idAsignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
+        $idSchema = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_schema');
 
         $msgErr = '';
-        $miDele = OrbixRuntime::miDelef();
+        $empty = [
+            'msg_err' => _('no encuentro la asignatura en la actividad'),
+            'permiso' => 1,
+            'nom_activ' => '',
+            'matriculados' => 0,
+            'matriculas_rows' => [],
+            'notas' => 'nuevo',
+            'despl_actas_opciones' => [],
+            'acta_principal' => '',
+            'acta_notas_a_actas' => [],
+            'acta_txt_cursada' => Nota::getStatusTxt(NotaSituacion::CURSADA),
+        ];
 
-        $cActivAsignaturas = $this->actividadAsignaturaRepository->getActividadAsignaturas([
-            'id_activ' => $idActiv,
-            'id_asignatura' => $idAsignatura,
-        ]);
-        if ($cActivAsignaturas === []) {
-            return [
-                'msg_err' => _('no encuentro la asignatura en la actividad'),
-                'permiso' => 1,
-                'nom_activ' => '',
-                'matriculados' => 0,
-                'matriculas_rows' => [],
-                'notas' => 'nuevo',
-                'despl_actas_opciones' => [],
-                'acta_principal' => '',
-                'acta_notas_a_actas' => [],
-                'acta_txt_cursada' => Nota::getStatusTxt(NotaSituacion::CURSADA),
-            ];
+        $oActividadAsignatura = $this->resolverActividadAsignatura($idActiv, $idAsignatura, $idSchema);
+        if ($oActividadAsignatura === null) {
+            return $empty;
         }
-        $oActividadAsignatura = $cActivAsignaturas[0];
         $idSchema = $oActividadAsignatura->getId_schema();
-        $cDbSchemas = $this->dbSchemaRepository->getDbSchemas(['id' => $idSchema]);
-        $aReg = explode('-', $cDbSchemas[0]->getSchema());
-        $dlMatricula = substr($aReg[1], 0, -1);
-        $permiso = ($miDele === $dlMatricula) ? 3 : 1;
+        $permiso = ($idSchema === ConfigGlobal::mi_id_schema()) ? 3 : 1;
 
         $oActividad = $this->actividadAllRepository->findById($idActiv);
         $nomActiv = $oActividad !== null ? $oActividad->getNom_activ() : '';
@@ -91,6 +84,7 @@ final class ActaNotasData
         $cMatriculados = $this->matriculaRepository->getMatriculas([
             'id_asignatura' => $idAsignatura,
             'id_activ' => $idActiv,
+            'id_schema' => $idSchema,
         ]);
         $matriculados = count($cMatriculados);
         $aPersonasMatriculadas = [];
@@ -111,6 +105,7 @@ final class ActaNotasData
         $cActas = $this->actaRepository->getActas([
             'id_activ' => $idActiv,
             'id_asignatura' => $idAsignatura,
+            'id_schema' => $idSchema,
             '_ordre' => 'f_acta',
         ]);
         $actaPrincipal = '';
@@ -162,5 +157,31 @@ final class ActaNotasData
             'acta_notas_a_actas' => $aActasList,
             'acta_txt_cursada' => Nota::getStatusTxt(NotaSituacion::CURSADA),
         ];
+    }
+
+    private function resolverActividadAsignatura(int $idActiv, int $idAsignatura, int $idSchema): ?ActividadAsignatura
+    {
+        $where = [
+            'id_activ' => $idActiv,
+            'id_asignatura' => $idAsignatura,
+        ];
+        if ($idSchema > 0) {
+            $where['id_schema'] = $idSchema;
+        }
+        $filas = $this->actividadAsignaturaRepository->getActividadAsignaturas($where);
+        if ($filas === []) {
+            return null;
+        }
+        if ($idSchema > 0) {
+            return $filas[0];
+        }
+        $mio = ConfigGlobal::mi_id_schema();
+        foreach ($filas as $fila) {
+            if ($fila->getId_schema() === $mio) {
+                return $fila;
+            }
+        }
+
+        return $filas[0];
     }
 }

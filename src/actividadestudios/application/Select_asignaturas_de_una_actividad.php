@@ -4,6 +4,7 @@ namespace src\actividadestudios\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\application\support\ActividadAsignaturaSelToken;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
@@ -98,7 +99,6 @@ class Select_asignaturas_de_una_actividad
             'id_activ' => $this->id_pau, '_ordre' => 'id_asignatura',
         ]);
 
-        $mi_dele = ConfigGlobal::mi_delef();
         $c = 0;
         $a_valores = [];
         foreach ($cActivAsignaturas as $oActividadAsignatura) {
@@ -118,7 +118,7 @@ class Select_asignaturas_de_una_actividad
             if ($dl_matricula !== $this->dl_org) {
                 $nombre_corto = "($dl_matricula) $nombre_corto";
             }
-            $permiso = ($dl_matricula !== $mi_dele) ? 'false' : 'true';
+            $editable = $id_schema === ConfigGlobal::mi_id_schema();
 
             $id_profesor = $oActividadAsignatura->getId_profesor();
             if (!empty($id_profesor)) {
@@ -141,7 +141,12 @@ class Select_asignaturas_de_una_actividad
             $f_ini = $oActividadAsignatura->getF_ini()?->getFromLocal();
             $f_fin = $oActividadAsignatura->getF_fin()?->getFromLocal();
 
-            $a_valores[$c]['sel'] = "$id_activ#$id_asignatura#$permiso";
+            $a_valores[$c]['sel'] = ActividadAsignaturaSelToken::encode(
+                $id_activ,
+                $id_asignatura,
+                $editable,
+                $id_schema,
+            );
             $a_valores[$c][1] = $nombre_corto;
             $a_valores[$c][2] = $creditos;
             $a_valores[$c][3] = $tipo;

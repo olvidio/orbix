@@ -72,7 +72,7 @@ if ($d['oDesplAsignaturas_opciones'] !== []) {
 }
 
 $oHash = new HashFront();
-$oHash->setCamposNo('mod!avis_profesor');
+$oHash->setCamposNo('mod!avis_profesor!confirmar_duplicado');
 $oHash->setCamposForm($d['camposForm']);
 $oHash->setArraycamposHidden($d['a_camposHidden']);
 

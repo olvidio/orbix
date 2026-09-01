@@ -21,6 +21,7 @@ use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
@@ -60,6 +61,13 @@ final class ActaNotasDefinitivasGrabar
     {
         $Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
         $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        $idSchema = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_schema');
+        if ($idSchema < 1) {
+            $idSchema = ConfigGlobal::mi_id_schema();
+        }
+        if ($idSchema !== ConfigGlobal::mi_id_schema()) {
+            return ['success' => false, 'mensaje' => _('No puede modificar un acta de otra dl')];
+        }
 
         /** @var ConfigSnapshot $oConfig */
         $oConfig = $_SESSION['oConfig'];
@@ -73,7 +81,11 @@ final class ActaNotasDefinitivasGrabar
         $error = '';
         $msg_err = '';
 
-        $cActas = $this->actaRepository->getActas(['id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura]);
+        $cActas = $this->actaRepository->getActas([
+            'id_activ' => $Qid_activ,
+            'id_asignatura' => $Qid_asignatura,
+            'id_schema' => $idSchema,
+        ]);
         $oActividad = $this->actividadAllRepository->findById($Qid_activ);
         if ($oActividad === null) {
             return ['success' => false, 'mensaje' => _('no encuentro la actividad')];
@@ -85,7 +97,11 @@ final class ActaNotasDefinitivasGrabar
             $iepoca = NotaEpoca::EPOCA_INVIERNO;
         }
 
-        $cMatriculados = $this->matriculaRepository->getMatriculas(['id_asignatura' => $Qid_asignatura, 'id_activ' => $Qid_activ]);
+        $cMatriculados = $this->matriculaRepository->getMatriculas([
+            'id_asignatura' => $Qid_asignatura,
+            'id_activ' => $Qid_activ,
+            'id_schema' => $idSchema,
+        ]);
 
         foreach ($cMatriculados as $oMatricula) {
             $id_nom = $oMatricula->getId_nom();

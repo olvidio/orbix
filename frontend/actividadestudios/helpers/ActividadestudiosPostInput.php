@@ -28,7 +28,7 @@ final class ActividadestudiosPostInput
     }
 
     /**
-     * @return array{id_activ: int, id_asignatura: int}
+     * @return array{id_activ: int, id_asignatura: int, id_schema: int}
      */
     public static function idActivAsignatura(): array
     {
@@ -39,15 +39,18 @@ final class ActividadestudiosPostInput
             return [
                 'id_activ' => self::intFromNumericString($parts[0]),
                 'id_asignatura' => self::intFromNumericString($parts[1] ?? ''),
+                'id_schema' => self::intFromNumericString($parts[3] ?? ''),
             ];
         }
 
         $idActivRaw = filter_input(INPUT_POST, 'id_activ', FILTER_VALIDATE_INT);
         $idAsigRaw = filter_input(INPUT_POST, 'id_asignatura', FILTER_VALIDATE_INT);
+        $idSchemaRaw = filter_input(INPUT_POST, 'id_schema', FILTER_VALIDATE_INT);
 
         return [
             'id_activ' => is_int($idActivRaw) ? $idActivRaw : 0,
             'id_asignatura' => is_int($idAsigRaw) ? $idAsigRaw : 0,
+            'id_schema' => is_int($idSchemaRaw) ? $idSchemaRaw : 0,
         ];
     }
 
