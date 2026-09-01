@@ -37,7 +37,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `html.plazas_min`
 - `html.que`
 - `html.sf`
-- `html.status`
 - `html.sv`
 - `html.tipo_ubi`
 - `post.dl`

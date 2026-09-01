@@ -274,6 +274,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.ubis_guardar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/ubis_guardar.php`
 - Entrada: `post.obj_pau:string`, `post.id_ubi:integer`, `post.tipo_ubi:string`, `post.nombre_ubi:string`, `post.dl:string`, `post.region:string`, `post.active:string`, `post.sv:string`, `post.sf:string`, `post.tipo_casa:string`, `post.plazas:integer`, `post.plazas_min:integer`, `post.num_sacd:integer`, `post.tipo_ctr:string`, `post.cdc:string`, `post.id_ctr_padre:integer`, `post.tipo_labor:string`, `post.n_buzon:integer`, `post.num_pi:integer`, `post.num_cartas:integer`, `post.num_cartas_mensuales:integer`, `post.num_habit_indiv:integer`, `post.observ:string`
+- Notas: checkbox legado `status` se trata como `active`. CasaEx: si `region`+`dl` (o un valor tipo `H-dlmE`) corresponde a un esquema con `u_cdc_dl`, se mueve de `resto.u_cdc_ex` a ese esquema.
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/ubis_lista_data`

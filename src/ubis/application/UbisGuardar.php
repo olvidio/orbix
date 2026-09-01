@@ -3,6 +3,7 @@
 namespace src\ubis\application;
 
 use src\shared\config\ConfigGlobal;
+use src\ubis\application\services\UbiEsquemaDestino;
 use src\ubis\application\services\UbiRepositoryResolver;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
@@ -10,6 +11,8 @@ use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\contracts\TrasladoUbiRepositoryInterface;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\Centro;
 use src\ubis\domain\entity\CentroDl;
@@ -18,6 +21,8 @@ final class UbisGuardar
 {
     public function __construct(
         private UbiRepositoryResolver $ubiRepositoryResolver,
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private TrasladoUbiRepositoryInterface $trasladoUbiRepository,
     ) {
     }
 
@@ -26,17 +31,68 @@ final class UbisGuardar
      */
     public function execute(array $input): string
     {
-        $objPau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'obj_pau');
+        try {
+            $input = $this->normalizarInput($input);
+            $objPau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'obj_pau');
 
-        return match ($objPau) {
-            'CasaDl' => $this->guardarCasaDl($input),
-            'CasaEx' => $this->guardarCasaEx($input),
-            'CentroDl' => $this->guardarCentroDl($input),
-            'CentroEx' => $this->guardarCentroEx($input),
-            'Casa' => $this->guardarCasa($input),
-            'Centro' => $this->guardarCentro($input),
-            default => throw new \InvalidArgumentException("obj_pau desconocido: $objPau"),
-        };
+            return match ($objPau) {
+                'CasaDl' => $this->guardarCasaDl($input),
+                'CasaEx' => $this->guardarCasaEx($input),
+                'CentroDl' => $this->guardarCentroDl($input),
+                'CentroEx' => $this->guardarCentroEx($input),
+                'Casa' => $this->guardarCasa($input),
+                'Centro' => $this->guardarCentro($input),
+                default => sprintf(_("obj_pau desconocido: %s"), $objPau),
+            };
+        } catch (\Throwable $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
+     */
+    private function normalizarInput(array $input): array
+    {
+        if (\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'active') === ''
+            && array_key_exists('status', $input)
+        ) {
+            $input['active'] = $input['status'];
+        }
+
+        $norm = UbiEsquemaDestino::normalizar(
+            \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'region'),
+            \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl'),
+        );
+        if ($norm['dl'] !== '') {
+            $input['dl'] = $norm['dl'];
+        }
+        $region = $norm['region'];
+        if ($region === '' && $norm['dl'] !== '') {
+            $region = $this->regionDeDelegacion($norm['dl']);
+        } elseif ($norm['dl'] !== '') {
+            $regionDl = $this->regionDeDelegacion($norm['dl']);
+            if ($regionDl !== '' && $region !== $regionDl) {
+                $region = $regionDl;
+            }
+        }
+        if ($region !== '') {
+            $input['region'] = $region;
+        }
+
+        return $input;
+    }
+
+    private function regionDeDelegacion(string $dl): string
+    {
+        $delegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dl]);
+        $oDl = $delegaciones[0] ?? null;
+        if ($oDl === null) {
+            return '';
+        }
+
+        return (string) $oDl->getRegion();
     }
 
     /**
@@ -111,6 +167,31 @@ final class UbisGuardar
 
         if ($repo->Guardar($oUbi) === false) {
             return _("hay un error, no se ha guardado") . "\n" . $repo->getErrorTxt();
+        }
+
+        if ($repo instanceof CasaExRepositoryInterface) {
+            $trasladoError = $this->trasladarCasaExSiCorresponde($oUbi);
+            if ($trasladoError !== '') {
+                return $trasladoError;
+            }
+        }
+
+        return '';
+    }
+
+    private function trasladarCasaExSiCorresponde(Casa $oUbi): string
+    {
+        $norm = UbiEsquemaDestino::normalizar((string) ($oUbi->getRegion() ?? ''), (string) ($oUbi->getDl() ?? ''));
+        $esquema = $norm['esquema'];
+        if ($esquema === '' || !UbiEsquemaDestino::pareceEsquema($esquema) || !UbiEsquemaDestino::esIdentificadorValido($esquema)) {
+            return '';
+        }
+        if (!$this->trasladoUbiRepository->existeCdcDl($esquema)) {
+            return '';
+        }
+
+        if (!$this->trasladoUbiRepository->trasladoCdcDesdeResto($oUbi->getId_ubi(), $esquema)) {
+            return sprintf(_("No se ha podido trasladar la casa al esquema %s."), $esquema);
         }
 
         return '';

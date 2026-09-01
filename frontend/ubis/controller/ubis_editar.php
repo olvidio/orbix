@@ -51,7 +51,8 @@ if ($tipo_ubi === "cdcdl" || $tipo_ubi === "cdcex") {
     $camposForm .= '!tipo_casa!plazas!plazas_min!num_sacd!sf!sv';
 }
 $oHash = new HashFront();
-$oHash->setcamposNo('que!' . $campos_chk);
+// `status` es el nombre legado del checkbox «en uso»; si llega no debe romper el hash.
+$oHash->setcamposNo('que!status!' . $campos_chk);
 $oHash->setCamposForm($camposForm);
 $a_camposHidden = [
     'campos_chk' => $campos_chk,

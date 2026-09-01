@@ -157,6 +157,138 @@ class PgTrasladoUbiRepository extends ClaseRepository implements TrasladoUbiRepo
         return $this->pdoExec($db, $sql_del, __METHOD__, __FILE__, __LINE__);
     }
 
+    public function existeCdcDl(string $esquema): bool
+    {
+        if (!$this->esIdentificadorEsquemaValido($esquema)) {
+            return false;
+        }
+        $db = $this->importConnection('public');
+
+        return $this->existeTabla($db, '"' . $esquema . '".u_cdc_dl');
+    }
+
+    public function trasladoCdcDesdeResto(int $id_ubi, string $esquema_dst): bool
+    {
+        if (!$this->esIdentificadorEsquemaValido($esquema_dst)) {
+            return false;
+        }
+
+        $db = $this->importConnection('public');
+        $dst = '"' . $esquema_dst . '"';
+        if (!$this->existeTabla($db, $dst . '.u_cdc_dl')) {
+            return false;
+        }
+
+        $db->beginTransaction();
+        try {
+            $campos_ubi = 'tipo_ubi, id_ubi, nombre_ubi, dl, pais, region, active, f_active, sv, sf, tipo_casa, plazas, plazas_min, num_sacd, biblioteca, observ';
+            $insert_ubi = "INSERT INTO $dst.u_cdc_dl ($campos_ubi)
+                SELECT 'cdcdl', id_ubi, nombre_ubi, dl, pais, region, active, f_active, sv, sf, tipo_casa, plazas, plazas_min, num_sacd, biblioteca, observ
+                FROM resto.u_cdc_ex WHERE id_ubi = $id_ubi
+                ON CONFLICT (id_ubi) DO UPDATE SET
+                    tipo_ubi = EXCLUDED.tipo_ubi,
+                    nombre_ubi = EXCLUDED.nombre_ubi,
+                    dl = EXCLUDED.dl,
+                    pais = EXCLUDED.pais,
+                    region = EXCLUDED.region,
+                    active = EXCLUDED.active,
+                    f_active = EXCLUDED.f_active,
+                    sv = EXCLUDED.sv,
+                    sf = EXCLUDED.sf,
+                    tipo_casa = EXCLUDED.tipo_casa,
+                    plazas = EXCLUDED.plazas,
+                    plazas_min = EXCLUDED.plazas_min,
+                    num_sacd = EXCLUDED.num_sacd,
+                    biblioteca = EXCLUDED.biblioteca,
+                    observ = EXCLUDED.observ";
+            if (!$this->pdoExec($db, $insert_ubi, __METHOD__, __FILE__, __LINE__)) {
+                $db->rollBack();
+                return false;
+            }
+
+            $puedeCopiarDirs = $this->existeTabla($db, 'resto.u_dir_cdc_ex')
+                && $this->existeTabla($db, 'resto.u_cross_cdc_ex_dir')
+                && $this->existeTabla($db, $dst . '.u_dir_cdc_dl')
+                && $this->existeTabla($db, $dst . '.u_cross_cdc_dl_dir');
+            if ($puedeCopiarDirs) {
+                $sql = "SELECT id_direccion FROM resto.u_cross_cdc_ex_dir WHERE id_ubi = $id_ubi";
+                $stmt = $this->pdoQuery($db, $sql, __METHOD__, __FILE__, __LINE__);
+                if ($stmt === false) {
+                    $db->rollBack();
+                    return false;
+                }
+                $campos_dir = 'id_direccion, direccion, c_p, poblacion, provincia, a_p, pais, f_direccion, observ, cp_dcha, latitud, longitud, plano_doc, plano_extension, plano_nom, nom_sede';
+                foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $row) {
+                    $id_direccion = (int) $row[0];
+                    $insert_dir = "INSERT INTO $dst.u_dir_cdc_dl ($campos_dir)
+                        SELECT $campos_dir FROM resto.u_dir_cdc_ex WHERE id_direccion = $id_direccion
+                        ON CONFLICT (id_direccion) DO NOTHING";
+                    if (!$this->pdoExec($db, $insert_dir, __METHOD__, __FILE__, __LINE__)) {
+                        $db->rollBack();
+                        return false;
+                    }
+                    $insert_cross = "INSERT INTO $dst.u_cross_cdc_dl_dir (id_ubi, id_direccion, propietario, principal)
+                        SELECT id_ubi, id_direccion, propietario, principal
+                        FROM resto.u_cross_cdc_ex_dir
+                        WHERE id_ubi = $id_ubi AND id_direccion = $id_direccion
+                        ON CONFLICT (id_ubi, id_direccion) DO NOTHING";
+                    if (!$this->pdoExec($db, $insert_cross, __METHOD__, __FILE__, __LINE__)) {
+                        $db->rollBack();
+                        return false;
+                    }
+                    if (!$this->pdoExec($db, "DELETE FROM resto.u_cross_cdc_ex_dir WHERE id_ubi = $id_ubi AND id_direccion = $id_direccion", __METHOD__, __FILE__, __LINE__)) {
+                        $db->rollBack();
+                        return false;
+                    }
+                    if (!$this->pdoExec($db, "DELETE FROM resto.u_dir_cdc_ex WHERE id_direccion = $id_direccion", __METHOD__, __FILE__, __LINE__)) {
+                        $db->rollBack();
+                        return false;
+                    }
+                }
+            }
+
+            if ($this->existeTabla($db, 'resto.u_cross_cdc_ex_dir')) {
+                if (!$this->pdoExec($db, "DELETE FROM resto.u_cross_cdc_ex_dir WHERE id_ubi = $id_ubi", __METHOD__, __FILE__, __LINE__)) {
+                    $db->rollBack();
+                    return false;
+                }
+            }
+
+            if ($this->existeTabla($db, 'resto.d_teleco_cdc_ex') && $this->existeTabla($db, $dst . '.d_teleco_cdc_dl')) {
+                $insert_teleco = "INSERT INTO $dst.d_teleco_cdc_dl (id_ubi, id_tipo_teleco, id_desc_teleco, num_teleco, observ)
+                    SELECT id_ubi, id_tipo_teleco, id_desc_teleco, num_teleco, observ
+                    FROM resto.d_teleco_cdc_ex WHERE id_ubi = $id_ubi";
+                if (!$this->pdoExec($db, $insert_teleco, __METHOD__, __FILE__, __LINE__)) {
+                    $db->rollBack();
+                    return false;
+                }
+                if (!$this->pdoExec($db, "DELETE FROM resto.d_teleco_cdc_ex WHERE id_ubi = $id_ubi", __METHOD__, __FILE__, __LINE__)) {
+                    $db->rollBack();
+                    return false;
+                }
+            }
+
+            if (!$this->pdoExec($db, "DELETE FROM resto.u_cdc_ex WHERE id_ubi = $id_ubi", __METHOD__, __FILE__, __LINE__)) {
+                $db->rollBack();
+                return false;
+            }
+
+            $db->commit();
+            return true;
+        } catch (\Throwable $e) {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+            throw $e;
+        }
+    }
+
+    private function esIdentificadorEsquemaValido(string $esquema): bool
+    {
+        return (bool) preg_match('/^[A-Za-z0-9][A-Za-z0-9_-]{0,31}$/', $esquema)
+            && str_contains($esquema, '-');
+    }
+
     private function existeTabla(PDO $db, string $full_name): bool
     {
         $sql = "SELECT to_regclass('$full_name')";

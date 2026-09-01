@@ -41,7 +41,7 @@ class UbisGuardarTest extends myTest
         $this->repository->Guardar($oCentro);
         $this->idsParaLimpiar[] = $id;
 
-        $guardar = new UbisGuardar();
+        $guardar = $GLOBALS['container']->get(UbisGuardar::class);
         $msg = $guardar->execute([
             'obj_pau' => 'CentroDl',
             'id_ubi' => $id,
@@ -69,15 +69,14 @@ class UbisGuardarTest extends myTest
         $this->assertTrue($oActualizado->isActive());
     }
 
-    public function test_obj_pau_desconocido_lanza_excepcion(): void
+    public function test_obj_pau_desconocido_devuelve_mensaje(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-
-        $guardar = new UbisGuardar();
-        $guardar->execute([
+        $guardar = $GLOBALS['container']->get(UbisGuardar::class);
+        $msg = $guardar->execute([
             'obj_pau' => 'NoExiste',
             'id_ubi' => 1,
             'nombre_ubi' => 'x',
         ]);
+        $this->assertStringContainsString('NoExiste', $msg);
     }
 }
