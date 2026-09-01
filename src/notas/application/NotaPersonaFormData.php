@@ -7,6 +7,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\application\PlanEstudiosDePersona;
 use src\notas\application\support\ActaPersonaFormListas;
+use src\notas\application\support\NivelesOcupadosEnPlan;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaSituacion;
@@ -168,15 +169,16 @@ final class NotaPersonaFormData
             ['id_situacion' => 'IN', 'id_nivel' => '<']
         );
 
-        $aSuperadasMap = [];
-        foreach ($cSuperadas as $oPN) {
-            $aSuperadasMap[$oPN->getId_nivel()] = $oPN->getId_asignatura();
-        }
+        $aSuperadasSlots = NivelesOcupadosEnPlan::ocupados(
+            $cSuperadas,
+            $plan,
+            $AsignaturaRepository,
+        );
 
         $aFaltan = [];
         foreach ($cAsignaturas as $oAsig) {
             $id_nivel = $oAsig->getId_nivel();
-            if (array_key_exists($id_nivel, $aSuperadasMap)) {
+            if (isset($aSuperadasSlots[$id_nivel])) {
                 continue;
             }
             $aFaltan[$id_nivel] = $oAsig->getNombre_corto();

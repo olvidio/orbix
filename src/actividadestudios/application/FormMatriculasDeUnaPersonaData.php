@@ -8,6 +8,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\application\PlanEstudiosDePersona;
+use src\notas\application\support\NivelesOcupadosEnPlan;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\profesores\domain\services\ProfesorStgrService;
@@ -133,10 +134,11 @@ final class FormMatriculasDeUnaPersonaData
                 ],
                 ['id_situacion' => '~', 'id_nivel' => '<'],
             );
-            $aSuperadas = [];
-            foreach ($cAsignaturasSuperadas as $oAsignaturaRow) {
-                $aSuperadas[$oAsignaturaRow->getId_nivel()] = $oAsignaturaRow->getId_asignatura();
-            }
+            $aSuperadas = NivelesOcupadosEnPlan::ocupados(
+                $cAsignaturasSuperadas,
+                $plan,
+                $this->asignaturaRepository,
+            );
             $cMatriculas = $this->matriculaDlRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]);
             $aMatriculadas = [];
             foreach ($cMatriculas as $oMatricula) {
@@ -145,7 +147,7 @@ final class FormMatriculasDeUnaPersonaData
             $aFaltan = [];
             foreach ($cAsignaturas as $oAsignatura) {
                 $idNivel = $oAsignatura->getId_nivel();
-                if (array_key_exists($idNivel, $aSuperadas)) {
+                if (isset($aSuperadas[$idNivel])) {
                     continue;
                 }
                 if (array_key_exists($idNivel, $aMatriculadas)) {
