@@ -19,10 +19,13 @@ final class ActaNotasPayload
      *     matriculas_rows: array<int|string, mixed>,
      *     notas: string,
      *     acta_principal: string,
+     *     acta_asignable: string,
      *     acta_notas_a_actas: array<int|string, mixed>,
      *     acta_txt_cursada: string,
      *     despl_actas_opciones: array<int|string, string>,
      *     msg_err: string,
+     *     hay_alumnos_sin_nota: bool,
+     *     puede_nueva_convocatoria: bool,
      * }
      */
     public static function fromPayload(array $payload): array
@@ -34,10 +37,13 @@ final class ActaNotasPayload
             'matriculas_rows' => ActividadesListaSupport::datos($payload['matriculas_rows'] ?? []),
             'notas' => \frontend\shared\helpers\PayloadCoercion::string($payload['notas'] ?? 'nuevo'),
             'acta_principal' => \frontend\shared\helpers\PayloadCoercion::string($payload['acta_principal'] ?? ''),
+            'acta_asignable' => \frontend\shared\helpers\PayloadCoercion::string($payload['acta_asignable'] ?? ''),
             'acta_notas_a_actas' => ActividadesListaSupport::datos($payload['acta_notas_a_actas'] ?? []),
             'acta_txt_cursada' => \frontend\shared\helpers\PayloadCoercion::string($payload['acta_txt_cursada'] ?? ''),
             'despl_actas_opciones' => NotasFormSupport::desplegableOpciones($payload['despl_actas_opciones'] ?? []),
             'msg_err' => \frontend\shared\helpers\PayloadCoercion::string($payload['msg_err'] ?? ''),
+            'hay_alumnos_sin_nota' => !empty($payload['hay_alumnos_sin_nota']),
+            'puede_nueva_convocatoria' => !empty($payload['puede_nueva_convocatoria']),
         ];
     }
 }

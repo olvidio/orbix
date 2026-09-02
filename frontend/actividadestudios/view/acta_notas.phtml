@@ -88,6 +88,7 @@ use function frontend\shared\helpers\is_true;
         <tbody>
         <?php
         $i = 0;
+        $acta_asignable = $acta_asignable ?? '';
         foreach ($matriculas_rows as $row) {
             $i++;
             $nom = $row['nom'];
@@ -106,9 +107,15 @@ use function frontend\shared\helpers\is_true;
             }
             $acta = $row['acta'];
             $editable = $permiso == 3 && ($row['editable'] ?? true);
+            $opcionesActa = $oDesplActas->getOpciones();
+            if (!is_array($opcionesActa)) {
+                $opcionesActa = [];
+            }
             if (empty($acta)) {
                 $acta_txt = '-';
-                if (empty($nota_num)) {
+                if ($editable && empty($nota_num)) {
+                    $oDesplActas->setOpcion_sel($acta_asignable !== '' ? $acta_asignable : 0);
+                } elseif (empty($nota_num)) {
                     $oDesplActas->setOpcion_sel($acta_principal);
                 } else {
                     $oDesplActas->setOpcion_sel(0);
@@ -118,15 +125,19 @@ use function frontend\shared\helpers\is_true;
                 $oDesplActas->setOpcion_sel((int)$acta);
             } else {
                 $acta_txt = $acta;
-                $oDesplActas->setOpcion_sel($acta);
+                if ($editable && empty($nota_num) && !array_key_exists((string) $acta, $opcionesActa)) {
+                    $oDesplActas->setOpcion_sel($acta_asignable !== '' ? $acta_asignable : 0);
+                } else {
+                    $oDesplActas->setOpcion_sel($acta);
+                }
             }
             $oDesplActas->setAction("fnjs_nota($i)");
             ?>
-            <input type="Hidden" id="id_nom[]" name="id_nom[]" value="<?= $id_nom ?>">
             <tr>
                 <td><?= $nom ?></td>
                 <td>
                     <?php if ($editable) { ?>
+                    <input type="Hidden" id="id_nom[]" name="id_nom[]" value="<?= $id_nom ?>">
                     <select id="form_preceptor[]" name="form_preceptor[]" onchange="javascript:fnjs_guardar_nota()">
                         <option></option>
                         <option value="p" <?= $chk_tipo ?> ><?= _("preceptor") ?></option>

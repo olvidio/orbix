@@ -12,6 +12,7 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\Acta;
 use src\notas\domain\entity\ActaTribunal;
 use src\notas\domain\entity\PersonaNota;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\shared\domain\value_objects\DateTimeLocal;
 
 final class ActaContenidoImpresoTest extends TestCase
@@ -83,6 +84,8 @@ final class ActaContenidoImpresoTest extends TestCase
         $nota = $this->createMock(PersonaNota::class);
         $nota->method('getId_nom')->willReturn($idNom);
         $nota->method('getNota_txt')->willReturn($txt);
+        $nota->method('getNota_num')->willReturn($txt);
+        $nota->method('getId_situacion')->willReturn(NotaSituacion::NUMERICA);
 
         return $nota;
     }

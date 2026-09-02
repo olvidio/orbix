@@ -134,6 +134,7 @@ $ult_lin = $form['ult_lin'];
 $lugar = $form['lugar'];
 $observ = $form['observ'];
 $id_activ = $form['id_activ'];
+$id_schema_acta = $form['id_schema'];
 $id_asignatura_actual = $form['id_asignatura_actual'];
 $nombre_asignatura = $form['nombre_asignatura'];
 $examinadoresRaw = $form['examinadores'] ?? [];
@@ -161,7 +162,7 @@ if ($examinadores !== [] && $examinadores[0] !== '') {
     $sCamposForm .= '!examinadores';
 }
 $oHashActa->setCamposForm($sCamposForm);
-$oHashActa->setCamposNo('go_to!examinadores!notas!refresh');
+$oHashActa->setCamposNo('go_to!examinadores!notas!refresh!bloque');
 $a_camposHidden = [];
 if ($Qmod === 'nueva' || $notas === 'nuevo') {
     $a_camposHidden['mod'] = 'nueva';
@@ -172,7 +173,17 @@ if ($Qmod === 'nueva' || $notas === 'nuevo') {
     $a_camposHidden['mod'] = '';
     $a_camposHidden['id_activ'] = $id_activ;
     $a_camposHidden['sa_actas'] = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($a_actas, JSON_THROW_ON_ERROR));
+}
+if ($notas !== '') {
     $a_camposHidden['notas'] = $notas;
+}
+if ($id_schema_acta > 0) {
+    $a_camposHidden['id_schema'] = $id_schema_acta;
+}
+$bloqueActaNotas = isset($bloque_acta_notas) && is_string($bloque_acta_notas) ? $bloque_acta_notas : '';
+$urlActaNotas = isset($url_acta_notas) && is_string($url_acta_notas) ? $url_acta_notas : '';
+if ($bloqueActaNotas !== '') {
+    $a_camposHidden['bloque'] = $bloqueActaNotas;
 }
 $oHashActa->setArrayCamposHidden($a_camposHidden);
 
@@ -334,6 +345,9 @@ $a_campos = ['obj' => $obj,
     'mostrar_notas_listado' => $mostrar_notas_listado,
     'notas_listado_filas' => $notas_listado_filas,
     'notas_listado_avisos' => $notas_listado_avisos,
+    'puede_nueva_convocatoria' => !empty($puede_nueva_convocatoria),
+    'url_acta_notas' => $urlActaNotas,
+    'bloque_acta_notas' => $bloqueActaNotas,
 ];
 
 $oView = new ViewNewPhtml('frontend\notas\controller');

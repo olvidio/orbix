@@ -58,9 +58,16 @@ $nom_activ = $datos['nom_activ'];
 $matriculados = $datos['matriculados'];
 $matriculas_rows = $datos['matriculas_rows'];
 $notas = $datos['notas'];
+if (PayloadCoercion::string(filter_input(INPUT_POST, 'notas')) === 'nuevo') {
+    $notas = 'nuevo';
+}
 $acta_principal = $datos['acta_principal'];
+$acta_asignable = $datos['acta_asignable'];
 $acta_notas_a_actas = $datos['acta_notas_a_actas'];
 $acta_txt_cursada = $datos['acta_txt_cursada'];
+$puede_nueva_convocatoria = $datos['puede_nueva_convocatoria'];
+$url_acta_notas = 'frontend/actividadestudios/controller/acta_notas.php';
+$bloque_acta_notas = $bloque;
 
 $oDesplActas = new Desplegable();
 $oDesplActas->setNombre('acta_nota[]');
@@ -69,8 +76,20 @@ $oDesplActas->setOpciones($datos['despl_actas_opciones']);
 $msg_err = $datos['msg_err'];
 $nota_max_default = ActividadestudiosConfig::notaMaxDefault();
 
+$hayFilasEditables = false;
+if ($permiso === 3) {
+    foreach ($matriculas_rows as $row) {
+        if (is_array($row) && !empty($row['editable'])) {
+            $hayFilasEditables = true;
+            break;
+        }
+    }
+}
+
 $oHashNotas = new HashFront();
-$oHashNotas->setCamposForm('id_nom!nota_num!nota_max!form_preceptor!acta_nota');
+// Solo los alumnos editables (sin nota en acta firmada) viajan en el POST;
+// si se firman todos los campos, el hash no coincide al omitir filas bloqueadas.
+$oHashNotas->setCamposForm($hayFilasEditables ? 'id_nom!nota_num!nota_max!form_preceptor!acta_nota' : '');
 $oHashNotas->setCamposNo('que');
 $oHashNotas->setArraycamposHidden([
     'id_pau' => (int)filter_input(INPUT_POST, 'id_pau'),
@@ -108,6 +127,7 @@ $a_campos = [
     'matriculas_rows' => $matriculas_rows,
     'oDesplActas' => $oDesplActas,
     'acta_principal' => $acta_principal,
+    'acta_asignable' => $acta_asignable,
     'txt_alert_acta' => $txt_alert_acta,
     'nota_max_default' => $nota_max_default,
     'url_matricula_guardar' => $url_matricula_guardar,

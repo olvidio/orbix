@@ -15,7 +15,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `actividadestudios.acta_notas_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/acta_notas_data.php`
 - Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_schema:integer` (esquema de la fila del dossier 3005; distingue la misma asignatura de la dl organizadora y de otra dl). El acta se filtra por `id_schema`; los matriculados de todos los esquemas si la sesión es la dl organizadora (`dl_org`).
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (`editable` por alumno, `acta_asignable`, `hay_alumnos_sin_nota`, `puede_nueva_convocatoria`; el desplegable de notas omite actas ya firmadas)
 
 ## `/src/actividadestudios/acta_notas_definitivas_grabar`
 

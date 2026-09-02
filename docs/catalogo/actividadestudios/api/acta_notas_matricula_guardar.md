@@ -34,6 +34,8 @@ y preceptor. Usa el corte de nota de `$_SESSION['oConfig']`.
 **Casos particulares**
 
 - **`id_nom` inválido o matrícula inexistente:** salta ese índice (`continue`).
+- **Acta firmada con nota ya puesta:** omite la fila (no se modifica).
+- **Acta firmada sin nota:** permite mover al alumno a otra convocatoria (no se puede asignar un acta firmada como destino).
 - **Nota > máximo:** aborta con error (no guarda el resto).
 - **No preceptor:** si `acta_nota == 2` (cursada) pone situación 2, o 12 si hay nota > 1; si hay nota
   numérica, pone 12 (por debajo del corte) o 10 (aprobada).

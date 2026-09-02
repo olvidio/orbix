@@ -19,8 +19,13 @@
 
         fnjs_nueva_convocatoria = function (formulario) {
             $('#notas').val("nuevo");
+            <?php if (!empty($url_acta_notas)) { ?>
+            $(formulario).attr('action', <?= json_encode($url_acta_notas) ?>);
+            fnjs_enviar_formulario(formulario, <?= json_encode(!empty($bloque_acta_notas) ? $bloque_acta_notas : '#main') ?>);
+            <?php } else { ?>
             $(formulario).attr('action', 'frontend/notas/controller/acta_ver.php');
             fnjs_enviar_formulario(formulario, '#acta');
+            <?php } ?>
         }
 
         fnjs_cmb_acta = function (formulario) {
@@ -56,7 +61,15 @@
                 if (json.success !== true) {
                     alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                 } else {
-                    <?php if (!empty($notas) && $notas != 'nuevo') { ?>
+                    <?php if (!empty($url_acta_notas)) { ?>
+                        if (mod === 'nueva' || $('#notas').val() === 'nuevo') {
+                            $('#notas').val("acta");
+                            $(formulario).attr('action', <?= json_encode($url_acta_notas) ?>);
+                            fnjs_enviar_formulario(formulario, <?= json_encode(!empty($bloque_acta_notas) ? $bloque_acta_notas : '#main') ?>);
+                        } else {
+                            alert(<?= json_encode(_("guardado")) ?>);
+                        }
+                    <?php } elseif (!empty($notas) && $notas != 'nuevo') { ?>
                         alert(<?= json_encode(_("guardado")) ?>);
                     <?php } else { ?>
                         <?= $oPosicion->jsNavAtras(1); ?>
@@ -179,15 +192,20 @@
             </tr>
         </table>
         <br>
-        <?php if (empty($readonly) && $permiso == 3) { ?>
+        <?php if ($permiso == 3) { ?>
+            <?php if (empty($readonly)) { ?>
             <input id="g1" TYPE="button" VALUE="<?= ucfirst(_("guardar cambios acta")); ?>"
                    onclick="fnjs_guardar_acta(this.form)">
+            <?php } ?>
             <?php
-            if (!empty($notas)) {
+            if (!empty($notas) && (empty($readonly) || !empty($puede_nueva_convocatoria))) {
                 ?>
                 <input id="g2" TYPE="button" VALUE="<?= ucfirst(_("nueva acta convocatoria")); ?>"
                        onclick="fnjs_nueva_convocatoria(this.form)">
                 <?php
+                if (!empty($readonly) && !empty($puede_nueva_convocatoria)) {
+                    echo '<p class="comentario">' . _("Hay alumnos sin nota. Puede crear una segunda convocatoria; no se modificarán los del acta ya firmada.") . '</p>';
+                }
             }
             ?>
         <?php } ?>

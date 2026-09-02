@@ -9,6 +9,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\NivelId;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\actividadestudios\application\support\MatriculaNotaEstado;
 use src\notas\application\EditarPersonaNota;
 use src\notas\application\support\ActaFirmadaPolicy;
 use src\notas\application\support\LiberarHuecoNivelNota;
@@ -115,7 +116,7 @@ final class ActaNotasDefinitivasGrabar
             $nota_max = $oMatricula->getNota_max();
             $acta = $oMatricula->getActa();
             $firmada = $this->firmadaPolicy->mensajeSiFirmada((string) $acta);
-            if ($firmada !== '') {
+            if ($firmada !== '' && MatriculaNotaEstado::tieneNota($nota_num)) {
                 continue;
             }
 

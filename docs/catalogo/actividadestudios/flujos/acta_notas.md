@@ -45,6 +45,8 @@ Pasos:
 3. El sistema carga `acta_notas` y consulta `acta_notas_data` con las claves de actividad
    y asignatura.
 4. Se muestra el acta con matriculados, desplegable de situaciones y permiso de edición.
+   Los alumnos con nota en un acta firmada quedan en solo lectura; si quedan alumnos sin nota,
+   se puede crear una segunda convocatoria.
 
 Endpoints asociados:
 - `/src/actividadestudios/acta_notas_data`

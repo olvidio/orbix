@@ -87,13 +87,18 @@ Flujo habitual:
 1. Si el acta está en modo `nueva`, las acciones de notas avisan de que primero hay que guardar el
    acta.
 2. Con permiso de edición (`permiso == 3`), cada fila permite editar preceptor, nota numérica/máxima
-   y desplegable de acta **salvo que esa fila pertenezca a un acta ya firmada (PDF)**; los cambios se
-   guardan al vuelo con `fnjs_guardar_nota` (borrador en matrícula).
-3. **Grabar notas en tessera** convierte las notas en definitivas vía
-   `acta_notas_definitivas_grabar` (omite filas de actas firmadas).
-4. **Imprimir** envía el form del acta a `acta_imprimir.php` (solo si el acta ya no es `nueva`).
+   y desplegable de acta **salvo que esa fila ya tenga nota en un acta firmada (PDF)**; los alumnos
+   sin nota siguen editables (para una segunda convocatoria). Los cambios se guardan al vuelo con
+   `fnjs_guardar_nota` (borrador en matrícula). El POST y el hash del formulario de notas solo
+   incluyen las filas editables.
+3. Si hay PDF firmado y quedan alumnos sin nota, **nueva acta convocatoria** sigue disponible en la
+   cabecera (`acta_ver`). No se pueden modificar los alumnos del acta ya firmada.
+4. **Grabar notas en tessera** convierte las notas en definitivas vía
+   `acta_notas_definitivas_grabar` (omite filas con nota en actas firmadas).
+5. **Imprimir** envía el form del acta a `acta_imprimir.php` (solo si el acta ya no es `nueva`).
    Imprimir deja constancia del contenido; hace falta haber impreso después del último cambio para
-   poder **subir el PDF firmado**. El bloqueo de edición de notas es al firmar (PDF), no al imprimir.
+   poder **subir el PDF firmado**. El hash de contenido impreso solo tiene en cuenta alumnos con
+   nota. El bloqueo de edición de notas con nota es al firmar (PDF), no al imprimir.
 
 Sin permiso de edición la tabla es de solo lectura.
 

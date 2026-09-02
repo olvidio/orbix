@@ -125,6 +125,7 @@ final class NotasPayload
             'lugar' => PayloadCoercion::string($payload['lugar'] ?? ''),
             'observ' => PayloadCoercion::string($payload['observ'] ?? ''),
             'id_activ' => PayloadCoercion::int($payload['id_activ'] ?? 0),
+            'id_schema' => PayloadCoercion::int($payload['id_schema'] ?? 0),
             'id_asignatura_actual' => PayloadCoercion::string($payload['id_asignatura_actual'] ?? ''),
             'nombre_asignatura' => PayloadCoercion::string($payload['nombre_asignatura'] ?? ''),
             'examinadores' => $examinadores,

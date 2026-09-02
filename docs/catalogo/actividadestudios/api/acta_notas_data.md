@@ -10,7 +10,7 @@ entrada: ["post.id_activ:integer", "post.id_asignatura:integer"]
 entrada_obligatoria: ["id_activ", "id_asignatura"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadestudios_ActaNotasDataData"
-respuesta_data: ["msg_err:string", "permiso:integer", "nom_activ:string", "matriculados:integer", "matriculas_rows:list<array{nom: string, id_nom: int, nota_num: mixed, nota_max: mixed, preceptor: bool, acta: mixed}>", "notas:string", "despl_actas_opciones:array", "acta_principal:string", "acta_notas_a_actas:list<string>", "acta_txt_cursada:string"]
+respuesta_data: ["msg_err:string", "permiso:integer", "nom_activ:string", "matriculados:integer", "matriculas_rows:list<array{nom: string, id_nom: int, nota_num: mixed, nota_max: mixed, preceptor: bool, acta: mixed, editable: bool}>", "notas:string", "despl_actas_opciones:array", "acta_principal:string", "acta_asignable:string", "acta_notas_a_actas:list<string>", "acta_txt_cursada:string", "hay_alumnos_sin_nota:boolean", "puede_nueva_convocatoria:boolean"]
 requiere_hashb: false
 frontend_referencias: ["frontend/actividadestudios/controller/acta_notas.php"]
 casos_uso: ["src\\actividadestudios\\application\\ActaNotasData"]
@@ -61,10 +61,13 @@ El controller pasa `$_POST` completo al caso de uso.
   - `msg_err` (`string`): avisos (asignatura no encontrada, personas no encontradas).
   - `permiso` (`integer`): `3` (editar) / `1` (solo lectura) según DL propietaria.
   - `nom_activ` (`string`), `matriculados` (`integer`).
-  - `matriculas_rows` (`list`): `{nom, id_nom, nota_num, nota_max, preceptor, acta}`.
+  - `matriculas_rows` (`list`): `{nom, id_nom, nota_num, nota_max, preceptor, acta, editable}`.
+    `editable` es `false` si el alumno ya tiene nota en un acta firmada.
   - `notas` (`string`): `nuevo` o `acta`.
-  - `despl_actas_opciones` (`array`), `acta_principal` (`string`), `acta_notas_a_actas` (`list`).
+  - `despl_actas_opciones` (`array`): vacía + cursada + actas **sin** PDF firmado (para el desplegable de alumnos editables).
+  - `acta_principal` (`string`), `acta_asignable` (`string`: la única acta aún no firmada, si hay una), `acta_notas_a_actas` (`list`: todas las actas, también las firmadas).
   - `acta_txt_cursada` (`string`): etiqueta de la situación *cursada*.
+  - `hay_alumnos_sin_nota` (`boolean`), `puede_nueva_convocatoria` (`boolean`: permiso 3, hay alumnos sin nota y hay al menos un acta firmada).
 
 ## Errores conocidos
 

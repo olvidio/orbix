@@ -40,6 +40,8 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
    de sesión es la que organiza la actividad (`dl_org`), se listan los de todos
    los esquemas; si no, solo los del esquema de la fila.
 5. Se muestra el acta con matriculados, desplegable de situaciones y permiso de edición.
+   Los alumnos con nota en un acta firmada quedan en solo lectura; si quedan alumnos sin nota,
+   se puede crear una segunda convocatoria.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/acta_notas_data`

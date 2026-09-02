@@ -18,6 +18,7 @@ final class ActaNotasMatriculaGuardarTest extends TestCase
     {
         $matricula = $this->createMock(Matricula::class);
         $matricula->method('getActa')->willReturn('dlb 1/26');
+        $matricula->method('getNota_num')->willReturn('9');
         $matricula->expects($this->never())->method('setNota_num');
 
         $repo = $this->createMock(MatriculaRepositoryInterface::class);
@@ -70,6 +71,39 @@ final class ActaNotasMatriculaGuardarTest extends TestCase
             'acta_nota' => ['dlb 9/26'],
         ]);
         $this->assertNotSame('', $err);
+    }
+
+    public function test_permite_mover_alumno_sin_nota_a_segunda_convocatoria(): void
+    {
+        $matricula = $this->createMock(Matricula::class);
+        $matricula->method('getActa')->willReturn('dlb 1/26');
+        $matricula->method('getNota_num')->willReturn(null);
+        $matricula->expects($this->once())->method('setActa')->with('dlb 2/26');
+        $matricula->expects($this->once())->method('setNota_num');
+        $matricula->method('isPreceptor')->willReturn(false);
+
+        $repo = $this->createMock(MatriculaRepositoryInterface::class);
+        $repo->method('findById')->willReturn($matricula);
+        $repo->expects($this->once())->method('Guardar')->willReturn(true);
+
+        $_SESSION['oConfig'] = new class {
+            public function getNotaCorte(): float
+            {
+                return 0.6;
+            }
+        };
+
+        $uc = new ActaNotasMatriculaGuardar($repo, $this->policyConActaFirmada('dlb 1/26'));
+        $err = $uc->execute([
+            'id_activ' => 1,
+            'id_asignatura' => 1101,
+            'id_nom' => [7],
+            'nota_num' => ['6'],
+            'nota_max' => ['10'],
+            'form_preceptor' => [''],
+            'acta_nota' => ['dlb 2/26'],
+        ]);
+        $this->assertSame('', $err);
     }
 
     public function test_rechaza_id_schema_de_otra_dl(): void

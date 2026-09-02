@@ -2,6 +2,7 @@
 
 namespace src\actividadestudios\application;
 
+use src\actividadestudios\application\support\MatriculaNotaEstado;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\notas\application\support\ActaFirmadaPolicy;
@@ -59,7 +60,7 @@ final class ActaNotasMatriculaGuardar
                 continue;
             }
             $firmadaActual = $this->firmadaPolicy->mensajeSiFirmada((string) $oMatricula->getActa());
-            if ($firmadaActual !== '') {
+            if ($firmadaActual !== '' && MatriculaNotaEstado::tieneNota($oMatricula->getNota_num())) {
                 continue;
             }
             $firmadaNueva = $this->firmadaPolicy->mensajeSiFirmada(self::scalarString($Qacta[$n] ?? ''));

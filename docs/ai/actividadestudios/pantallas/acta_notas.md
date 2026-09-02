@@ -65,6 +65,8 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Precauciones
 
-- Las notas se pueden corregir hasta que hay PDF firmado. Imprimir no cierra el acta.
+- Las notas se pueden corregir hasta que hay PDF firmado, **excepto** que si quedan alumnos sin
+  nota se puede abrir una segunda convocatoria (solo esos alumnos). Imprimir no cierra el acta.
 - Para subir el PDF firmado hay que haber impreso después del último cambio.
+- El hash del contenido impreso solo incluye alumnos con nota.
 - Esta ficha puede contener nombres tecnicos. Para respuesta final, convertirlos a lenguaje de usuario cuando sea posible.

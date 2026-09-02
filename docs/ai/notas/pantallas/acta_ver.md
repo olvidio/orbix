@@ -67,5 +67,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 ## Precauciones
 
 - Las notas y la cabecera se pueden modificar hasta que hay PDF firmado. Imprimir no cierra el acta.
+- Si el acta está embebida en una actividad y hay alumnos sin nota, se puede crear una segunda convocatoria sin tocar a los ya calificados en el acta firmada.
 - Subir el PDF firmado exige haber impreso después del último cambio.
 - Esta ficha puede contener nombres tecnicos. Para respuesta final, convertirlos a lenguaje de usuario cuando sea posible.

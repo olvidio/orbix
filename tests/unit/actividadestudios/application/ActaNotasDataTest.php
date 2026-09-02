@@ -92,6 +92,8 @@ final class ActaNotasDataTest extends TestCase
         $this->assertSame(['dlbv 1/26'], $out['acta_notas_a_actas']);
         $this->assertSame('dlbv 1/26', $out['acta_principal']);
         $this->assertSame('acta', $out['notas']);
+        $this->assertArrayHasKey('dlbv 1/26', $out['despl_actas_opciones']);
+        $this->assertFalse($out['puede_nueva_convocatoria']);
     }
 
     public function test_otra_dl_no_mezcla_acta_ni_deja_modificar(): void
@@ -201,6 +203,39 @@ final class ActaNotasDataTest extends TestCase
 
         $this->assertSame(3, $out['permiso']);
         $this->assertSame(0, $out['matriculados']);
+    }
+
+    public function test_acta_firmada_no_sale_en_desplegable_de_edicion(): void
+    {
+        $aaRepo = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
+        $aaRepo->method('getActividadAsignaturas')->willReturn([$this->actividadAsignatura(1001)]);
+
+        $actaFirmada = new Acta();
+        $actaFirmada->setActa('dlbv 1/26');
+        $actaFirmada->setPdf('%PDF-fake');
+        $actaRepo = $this->createMock(ActaRepositoryInterface::class);
+        $actaRepo->method('getActas')->willReturn([$actaFirmada]);
+
+        $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
+        $matRepo->method('getMatriculas')->willReturn([]);
+
+        $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
+        $oActiv = $this->createMock(ActividadAll::class);
+        $oActiv->method('getNom_activ')->willReturn('CA prueba');
+        $oActiv->method('getDl_org')->willReturn('dlbv');
+        $actRepo->method('findById')->with(10)->willReturn($oActiv);
+
+        $out = (new ActaNotasData($aaRepo, $actRepo, $matRepo, $actaRepo))->execute([
+            'id_activ' => 10,
+            'id_asignatura' => 1101,
+            'id_schema' => 1001,
+        ]);
+
+        $this->assertSame(['dlbv 1/26'], $out['acta_notas_a_actas']);
+        $this->assertArrayNotHasKey('dlbv 1/26', $out['despl_actas_opciones']);
+        $this->assertSame('', $out['acta_asignable']);
+        $this->assertFalse($out['hay_alumnos_sin_nota']);
+        $this->assertFalse($out['puede_nueva_convocatoria']);
     }
 
     private function actividadAsignatura(int $idSchema): ActividadAsignatura

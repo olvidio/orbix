@@ -240,6 +240,8 @@ final class ActaVerFormData
             }
         }
 
+        $id_schema = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_schema_scope');
+
         return [
             'notas' => $notas,
             'permiso' => $permiso,
@@ -259,6 +261,7 @@ final class ActaVerFormData
             'lugar' => $lugar,
             'observ' => $observ,
             'id_activ' => $id_activ,
+            'id_schema' => $id_schema,
             'id_asignatura_actual' => $id_asignatura_actual,
             'nombre_asignatura' => $nombre_asignatura,
             'examinadores' => $examinadores,

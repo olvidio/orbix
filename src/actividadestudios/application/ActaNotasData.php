@@ -4,6 +4,7 @@ namespace src\actividadestudios\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
+use src\actividadestudios\application\support\MatriculaNotaEstado;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\ActividadAsignatura;
@@ -23,8 +24,11 @@ use src\shared\config\ConfigGlobal;
  *   notas: string,
  *   despl_actas_opciones: array<int|string, string>,
  *   acta_principal: string,
+ *   acta_asignable: string,
  *   acta_notas_a_actas: list<string>,
  *   acta_txt_cursada: string,
+ *   hay_alumnos_sin_nota: bool,
+ *   puede_nueva_convocatoria: bool,
  * }
  */
 final class ActaNotasData
@@ -48,8 +52,11 @@ final class ActaNotasData
      *   notas: string,
      *   despl_actas_opciones: array<int|string, string>,
      *   acta_principal: string,
+     *   acta_asignable: string,
      *   acta_notas_a_actas: list<string>,
      *   acta_txt_cursada: string,
+     *   hay_alumnos_sin_nota: bool,
+     *   puede_nueva_convocatoria: bool,
      * }
      */
     public function execute(array $input): array
@@ -68,8 +75,11 @@ final class ActaNotasData
             'notas' => 'nuevo',
             'despl_actas_opciones' => [],
             'acta_principal' => '',
+            'acta_asignable' => '',
             'acta_notas_a_actas' => [],
             'acta_txt_cursada' => Nota::getStatusTxt(NotaSituacion::CURSADA),
+            'hay_alumnos_sin_nota' => false,
+            'puede_nueva_convocatoria' => false,
         ];
 
         $oActividadAsignatura = $this->resolverActividadAsignatura($idActiv, $idAsignatura, $idSchema);
@@ -119,14 +129,19 @@ final class ActaNotasData
         $notas = 'nuevo';
         $aActasList = [];
         $actasFirmadas = [];
+        $actasNoFirmadas = [];
+        $hayActaFirmada = false;
         if ($cActas !== []) {
             $desplActasOpciones = [0 => '', NotaSituacion::CURSADA => Nota::getStatusTxt(NotaSituacion::CURSADA)];
             foreach ($cActas as $oActa) {
                 $nomActa = $oActa->getActa();
-                $desplActasOpciones[$nomActa] = $oActa->getActa();
                 $aActasList[] = $nomActa;
                 if ($oActa->tienePdfFirmado()) {
                     $actasFirmadas[$nomActa] = true;
+                    $hayActaFirmada = true;
+                } else {
+                    $desplActasOpciones[$nomActa] = $nomActa;
+                    $actasNoFirmadas[] = $nomActa;
                 }
             }
             $notas = 'acta';
@@ -136,17 +151,24 @@ final class ActaNotasData
         } else {
             $desplActasOpciones = ['primero guardar acta'];
         }
+        $actaAsignable = count($actasNoFirmadas) === 1 ? $actasNoFirmadas[0] : '';
 
         $matriculasRows = [];
+        $hayAlumnosSinNota = false;
         foreach ($aPersonasMatriculadas as $nom => $oMatricula) {
+            $notaNum = $oMatricula->getNota_num();
+            $actaMatricula = $oMatricula->getActa();
+            if (!MatriculaNotaEstado::tieneNota($notaNum)) {
+                $hayAlumnosSinNota = true;
+            }
             $matriculasRows[] = [
                 'nom' => $nom,
                 'id_nom' => $oMatricula->getId_nom(),
-                'nota_num' => $oMatricula->getNota_num(),
+                'nota_num' => $notaNum,
                 'nota_max' => $oMatricula->getNota_max(),
                 'preceptor' => (bool) \src\shared\domain\helpers\FuncTablasSupport::isTrue($oMatricula->isPreceptor()),
-                'acta' => $oMatricula->getActa(),
-                'editable' => !isset($actasFirmadas[(string) $oMatricula->getActa()]),
+                'acta' => $actaMatricula,
+                'editable' => MatriculaNotaEstado::editable($actaMatricula, $notaNum, $actasFirmadas),
             ];
         }
 
@@ -159,8 +181,11 @@ final class ActaNotasData
             'notas' => $notas,
             'despl_actas_opciones' => $desplActasOpciones,
             'acta_principal' => $actaPrincipal,
+            'acta_asignable' => $actaAsignable,
             'acta_notas_a_actas' => $aActasList,
             'acta_txt_cursada' => Nota::getStatusTxt(NotaSituacion::CURSADA),
+            'hay_alumnos_sin_nota' => $hayAlumnosSinNota,
+            'puede_nueva_convocatoria' => $permiso === 3 && $hayAlumnosSinNota && $hayActaFirmada,
         ];
     }
 
