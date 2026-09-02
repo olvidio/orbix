@@ -3,6 +3,7 @@
 namespace src\actividadestudios\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\entity\ActividadAll;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\ActividadAsignatura;
@@ -80,12 +81,16 @@ final class ActaNotasData
 
         $oActividad = $this->actividadAllRepository->findById($idActiv);
         $nomActiv = $oActividad !== null ? $oActividad->getNom_activ() : '';
+        $esOrganizador = self::esDlOrganizadora($oActividad);
 
-        $cMatriculados = $this->matriculaRepository->getMatriculas([
+        $whereMatriculas = [
             'id_asignatura' => $idAsignatura,
             'id_activ' => $idActiv,
-            'id_schema' => $idSchema,
-        ]);
+        ];
+        if (!$esOrganizador) {
+            $whereMatriculas['id_schema'] = $idSchema;
+        }
+        $cMatriculados = $this->matriculaRepository->getMatriculas($whereMatriculas);
         $matriculados = count($cMatriculados);
         $aPersonasMatriculadas = [];
         if ($matriculados > 0) {
@@ -183,5 +188,15 @@ final class ActaNotasData
         }
 
         return $filas[0];
+    }
+
+    private static function esDlOrganizadora(?ActividadAll $actividad): bool
+    {
+        if ($actividad === null) {
+            return false;
+        }
+        $dlOrg = $actividad->getDl_org() ?? '';
+
+        return $dlOrg !== '' && $dlOrg === ConfigGlobal::mi_delef();
     }
 }

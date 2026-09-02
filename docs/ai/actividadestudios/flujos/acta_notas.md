@@ -36,7 +36,10 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 3. El sistema carga `acta_notas` y consulta `acta_notas_data` con `id_activ`,
    `id_asignatura` e `id_schema` de la fila seleccionada (para no mezclar el acta
    de la misma asignatura impartida por otra dl).
-4. Se muestra el acta con matriculados, desplegable de situaciones y permiso de edición.
+4. Las actas se filtran siempre por ese `id_schema`. Los matriculados: si la dl
+   de sesión es la que organiza la actividad (`dl_org`), se listan los de todos
+   los esquemas; si no, solo los del esquema de la fila.
+5. Se muestra el acta con matriculados, desplegable de situaciones y permiso de edición.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/acta_notas_data`
@@ -47,7 +50,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-El usuario abre el acta de una asignatura impartida en una actividad: el sistema muestra el formulario del acta (cabecera vía `acta_ver`) y debajo la lista de matriculados con nota, nota máxima, preceptor y situación de acta, según permisos de la DL propietaria.
+El usuario abre el acta de una asignatura impartida en una actividad: el sistema muestra el formulario del acta (cabecera vía `acta_ver`) y debajo la lista de matriculados con nota, nota máxima, preceptor y situación de acta. El acta es la del esquema de la fila; la dl organizadora ve (y puede grabar) matriculados de cualquier esquema.
 
 ## Limites De La Respuesta
 

@@ -31,9 +31,9 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. En el dossier de matrículas (1303 o 3103), pulsar **nuevo** o **modificar**.
-2. El sistema carga el formulario con `id_nom`, `id_activ`, `id_nivel`, `id_asignatura`.
-3. Se muestran desplegables de nivel y preceptor, con enlaces AJAX a opcionales/preceptores.
+1. En el dossier de matrículas de una persona (1303, desde asistentes → plan estudios), pulsar **matricular en una asignatura** o **añadir asignatura**.
+2. El sistema carga el formulario con `id_nom`, `id_activ`. Con **matricular en una asignatura** (`modo=matricular_ca`) el desplegable son las asignaturas ya ofertadas en el CA; si la oferta es de otra dl (o hay dos copias), el nombre lleva la sigla entre paréntesis.
+3. En **añadir asignatura** se muestran desplegables de nivel y preceptor, con enlaces AJAX a opcionales/preceptores.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/form_matriculas_de_una_persona_data`
@@ -44,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-El usuario abre el formulario para matricular o editar la matrícula de una persona en una asignatura de una actividad: el sistema devuelve desplegables de nivel, asignatura, preceptor y datos de la actividad según el modo.
+El usuario abre el formulario para matricular o editar la matrícula de una persona. **Matricular en una asignatura** solo ofrece las que ya existen en el CA. **Añadir asignatura** usa el catálogo del plan; si ya está en el CA pide confirmación y al continuar crea una nueva oferta. En el listado del plan (1303) las copias de otra dl muestran la sigla entre paréntesis delante del nombre.
 
 ## Limites De La Respuesta
 

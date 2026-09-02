@@ -5,6 +5,7 @@ namespace src\actividadestudios\application;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\application\support\ActividadAsignaturaSelToken;
+use src\actividadestudios\application\support\AsignaturaNombreDlPrefix;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
@@ -99,28 +100,52 @@ class Select_asignaturas_de_una_actividad
             'id_activ' => $this->id_pau, '_ordre' => 'id_asignatura',
         ]);
 
-        $c = 0;
-        $a_valores = [];
+        /** @var list<array{id_activ: int, id_asignatura: int, id_schema: int, dl: string, nombre_corto: string, creditos: mixed, id_profesor: ?int, avis: ?string, tipo: ?string, f_ini: ?string, f_fin: ?string}> $filas */
+        $filas = [];
         foreach ($cActivAsignaturas as $oActividadAsignatura) {
-            $c++;
-            $id_activ = $oActividadAsignatura->getId_activ();
             $id_asignatura = $oActividadAsignatura->getId_asignatura();
             $oAsignatura = $this->asignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
-            $nombre_corto = $oAsignatura->getNombre_corto();
-            $creditos = $oAsignatura->getCreditos();
             $id_schema = $oActividadAsignatura->getId_schema();
-            $cDbSchemas = $this->dbSchemaRepository->getDbSchemas(['id' => $id_schema]);
-            $a_reg = explode('-', $cDbSchemas[0]->getSchema());
-            $dl_matricula = substr($a_reg[1], 0, -1);
-            if ($dl_matricula !== $this->dl_org) {
-                $nombre_corto = "($dl_matricula) $nombre_corto";
-            }
+            $filas[] = [
+                'id_activ' => $oActividadAsignatura->getId_activ(),
+                'id_asignatura' => $id_asignatura,
+                'id_schema' => $id_schema,
+                'dl' => AsignaturaNombreDlPrefix::dlDesdeIdSchema($this->dbSchemaRepository, $id_schema),
+                'nombre_corto' => $oAsignatura->getNombre_corto() ?? '',
+                'creditos' => $oAsignatura->getCreditos(),
+                'id_profesor' => $oActividadAsignatura->getId_profesor(),
+                'avis' => $oActividadAsignatura->getAvis_profesor(),
+                'tipo' => $oActividadAsignatura->getTipo(),
+                'f_ini' => $oActividadAsignatura->getF_ini()?->getFromLocal(),
+                'f_fin' => $oActividadAsignatura->getF_fin()?->getFromLocal(),
+            ];
+        }
+
+        $porAsignatura = [];
+        foreach ($filas as $fila) {
+            $idAsig = $fila['id_asignatura'];
+            $porAsignatura[$idAsig] = ($porAsignatura[$idAsig] ?? 0) + 1;
+        }
+
+        $c = 0;
+        $a_valores = [];
+        foreach ($filas as $fila) {
+            $c++;
+            $id_activ = $fila['id_activ'];
+            $id_asignatura = $fila['id_asignatura'];
+            $id_schema = $fila['id_schema'];
+            $nombre_corto = AsignaturaNombreDlPrefix::aplicar(
+                $fila['nombre_corto'],
+                $fila['dl'],
+                $this->dl_org,
+                ($porAsignatura[$id_asignatura] ?? 0) > 1,
+            );
             $editable = $id_schema === ConfigGlobal::mi_id_schema();
 
-            $id_profesor = $oActividadAsignatura->getId_profesor();
+            $id_profesor = $fila['id_profesor'];
             if (!empty($id_profesor)) {
                 $oPersona = Persona::findPersonaEnGlobal($id_profesor);
                 if ($oPersona === null) {
@@ -132,14 +157,14 @@ class Select_asignaturas_de_una_actividad
             } else {
                 $nom = '';
             }
-            $aviso = match ($oActividadAsignatura->getAvis_profesor()) {
+            $aviso = match ($fila['avis']) {
                 'a' => _("avisado"),
                 'c' => _("confirmado"),
                 default => '',
             };
-            $tipo = $oActividadAsignatura->getTipo();
-            $f_ini = $oActividadAsignatura->getF_ini()?->getFromLocal();
-            $f_fin = $oActividadAsignatura->getF_fin()?->getFromLocal();
+            $tipo = $fila['tipo'];
+            $f_ini = $fila['f_ini'];
+            $f_fin = $fila['f_fin'];
 
             $a_valores[$c]['sel'] = ActividadAsignaturaSelToken::encode(
                 $id_activ,
@@ -148,7 +173,7 @@ class Select_asignaturas_de_una_actividad
                 $id_schema,
             );
             $a_valores[$c][1] = $nombre_corto;
-            $a_valores[$c][2] = $creditos;
+            $a_valores[$c][2] = $fila['creditos'];
             $a_valores[$c][3] = $tipo;
             $a_valores[$c][4] = $nom;
             $a_valores[$c][5] = $aviso;
@@ -189,7 +214,7 @@ class Select_asignaturas_de_una_actividad
             'segment_tipo' => 'select_asignaturas_de_una_actividad',
             'hash' => [
                 'campos_form' => '',
-                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
+                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!confirmar_con_matriculas',
                 'campos_hidden' => [
                     'pau' => $this->pau,
                     'id_pau' => $this->id_pau,

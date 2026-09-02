@@ -29,6 +29,12 @@
             <br>
             <table cellspacing=3 class=botones>
                 <tr class=botones>
+                    <?php if (!empty($link_matricular)) { ?>
+                    <td class=botones>
+                        <input type="button" onclick="fnjs_update_div('<?= $bloque ?>','<?= $link_matricular ?>');"
+                               value="<?= _("matricular en una asignatura"); ?>">
+                    </td>
+                    <?php } ?>
                     <td class=botones>
                         <input type="button" onclick="fnjs_update_div('<?= $bloque ?>','<?= $link_add ?>');"
                                value="<?= _("añadir asignatura"); ?>">

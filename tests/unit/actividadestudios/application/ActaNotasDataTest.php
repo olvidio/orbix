@@ -68,7 +68,9 @@ final class ActaNotasDataTest extends TestCase
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
         $matRepo->method('getMatriculas')->willReturnCallback(
             function (array $where) {
-                $this->assertSame(1001, $where['id_schema']);
+                $this->assertArrayNotHasKey('id_schema', $where);
+                $this->assertSame(10, $where['id_activ']);
+                $this->assertSame(1101, $where['id_asignatura']);
 
                 return [];
             }
@@ -77,6 +79,7 @@ final class ActaNotasDataTest extends TestCase
         $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
         $oActiv = $this->createMock(ActividadAll::class);
         $oActiv->method('getNom_activ')->willReturn('CA prueba');
+        $oActiv->method('getDl_org')->willReturn('dlbv');
         $actRepo->method('findById')->with(10)->willReturn($oActiv);
 
         $out = (new ActaNotasData($aaRepo, $actRepo, $matRepo, $actaRepo))->execute([
@@ -114,11 +117,16 @@ final class ActaNotasDataTest extends TestCase
         );
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $matRepo->method('getMatriculas')->willReturn([]);
+        $matRepo->expects($this->once())->method('getMatriculas')->with(
+            $this->callback(static function (array $where): bool {
+                return !array_key_exists('id_schema', $where);
+            })
+        )->willReturn([]);
 
         $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
         $oActiv = $this->createMock(ActividadAll::class);
         $oActiv->method('getNom_activ')->willReturn('CA prueba');
+        $oActiv->method('getDl_org')->willReturn('dlbv');
         $actRepo->method('findById')->willReturn($oActiv);
 
         $out = (new ActaNotasData($aaRepo, $actRepo, $matRepo, $actaRepo))->execute([
@@ -162,6 +170,37 @@ final class ActaNotasDataTest extends TestCase
 
         $this->assertSame(3, $out['permiso']);
         $this->assertSame(['dlbv 1/26'], $out['acta_notas_a_actas']);
+    }
+
+    public function test_dl_no_organizadora_filtra_matriculas_por_esquema(): void
+    {
+        $aaRepo = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
+        $aaRepo->method('getActividadAsignaturas')->willReturn([$this->actividadAsignatura(1001)]);
+
+        $actaRepo = $this->createMock(ActaRepositoryInterface::class);
+        $actaRepo->method('getActas')->willReturn([]);
+
+        $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
+        $matRepo->expects($this->once())->method('getMatriculas')->with(
+            $this->callback(static function (array $where): bool {
+                return ($where['id_schema'] ?? 0) === 1001;
+            })
+        )->willReturn([]);
+
+        $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
+        $oActiv = $this->createMock(ActividadAll::class);
+        $oActiv->method('getNom_activ')->willReturn('CA ajeno');
+        $oActiv->method('getDl_org')->willReturn('dlxx');
+        $actRepo->method('findById')->willReturn($oActiv);
+
+        $out = (new ActaNotasData($aaRepo, $actRepo, $matRepo, $actaRepo))->execute([
+            'id_activ' => 10,
+            'id_asignatura' => 1101,
+            'id_schema' => 1001,
+        ]);
+
+        $this->assertSame(3, $out['permiso']);
+        $this->assertSame(0, $out['matriculados']);
     }
 
     private function actividadAsignatura(int $idSchema): ActividadAsignatura

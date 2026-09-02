@@ -6,7 +6,7 @@ namespace Tests\unit\actividadestudios\application;
 
 use PHPUnit\Framework\TestCase;
 use src\actividadestudios\application\ActaNotasMatriculaGuardar;
-use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\Matricula;
 use src\notas\application\support\ActaFirmadaPolicy;
 use src\notas\domain\contracts\ActaRepositoryInterface;
@@ -20,7 +20,7 @@ final class ActaNotasMatriculaGuardarTest extends TestCase
         $matricula->method('getActa')->willReturn('dlb 1/26');
         $matricula->expects($this->never())->method('setNota_num');
 
-        $repo = $this->createMock(MatriculaDlRepositoryInterface::class);
+        $repo = $this->createMock(MatriculaRepositoryInterface::class);
         $repo->method('findById')->willReturn($matricula);
         $repo->expects($this->never())->method('Guardar');
 
@@ -49,7 +49,7 @@ final class ActaNotasMatriculaGuardarTest extends TestCase
         $matricula = $this->createMock(Matricula::class);
         $matricula->method('getActa')->willReturn('');
 
-        $repo = $this->createMock(MatriculaDlRepositoryInterface::class);
+        $repo = $this->createMock(MatriculaRepositoryInterface::class);
         $repo->method('findById')->willReturn($matricula);
 
         $_SESSION['oConfig'] = new class {
@@ -87,7 +87,7 @@ final class ActaNotasMatriculaGuardarTest extends TestCase
             }
         };
 
-        $repo = $this->createMock(MatriculaDlRepositoryInterface::class);
+        $repo = $this->createMock(MatriculaRepositoryInterface::class);
         $repo->expects($this->never())->method('findById');
 
         try {

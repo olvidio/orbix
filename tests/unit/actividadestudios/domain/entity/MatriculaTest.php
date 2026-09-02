@@ -37,10 +37,11 @@ class MatriculaTest extends myTest
         $this->assertEquals(1001, $this->Matricula->getIdAsignaturaVo()->value());
     }
 
-    public function test_set_and_get_id_nom()
+    public function test_set_and_get_id_schema(): void
     {
-        $this->Matricula->setId_nom(1);
-        $this->assertEquals(1, $this->Matricula->getId_nom());
+        $this->assertSame(0, $this->Matricula->getId_schema());
+        $this->Matricula->setId_schema(2002);
+        $this->assertSame(2002, $this->Matricula->getId_schema());
     }
 
     public function test_set_and_get_id_situacion()

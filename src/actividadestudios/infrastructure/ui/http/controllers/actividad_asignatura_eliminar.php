@@ -6,5 +6,12 @@ use src\shared\web\ContestarJson;
 
 /** @var ActividadAsignaturaEliminar $useCase */
 $useCase = DependencyResolver::get(ActividadAsignaturaEliminar::class);
-$error_txt = $useCase->execute($_POST);
-ContestarJson::enviar($error_txt, 'ok');
+$result = $useCase->execute($_POST);
+if ($result['requiere_confirmacion']) {
+    ContestarJson::enviar('', [
+        'requiere_confirmacion' => true,
+        'mensaje' => $result['mensaje'],
+    ]);
+} else {
+    ContestarJson::enviar($result['error'], 'ok');
+}

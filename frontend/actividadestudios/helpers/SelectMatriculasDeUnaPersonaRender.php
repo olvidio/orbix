@@ -102,12 +102,15 @@ final class SelectMatriculasDeUnaPersonaRender
 
         $linkSpec = ActividadestudiosRenderSupport::linkSpec($ca['link_add_spec'] ?? null);
         $linkAdd = $linkSpec !== null ? DossierTipoFormLinkSpecsSigning::fromSpec($linkSpec) : '';
+        $matricularSpec = ActividadestudiosRenderSupport::linkSpec($ca['link_matricular_spec'] ?? null);
+        $linkMatricular = $matricularSpec !== null ? DossierTipoFormLinkSpecsSigning::fromSpec($matricularSpec) : '';
 
         $oView = new ViewNewPhtml('frontend\actividadestudios\view');
         $inner = $oView->renderizar('selectUnCa.phtml', [
             'oHashCa' => $oHashCa,
             'oTabla' => $oTabla,
             'link_add' => $linkAdd,
+            'link_matricular' => $linkMatricular,
             'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($ca['nom_activ'] ?? ''),
             'form' => \frontend\shared\helpers\PayloadCoercion::string($ca['form'] ?? ''),
             'ca_num' => \frontend\shared\helpers\PayloadCoercion::int($ca['ca_num'] ?? 0),

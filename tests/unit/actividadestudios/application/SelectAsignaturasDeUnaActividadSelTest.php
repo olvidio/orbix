@@ -61,6 +61,7 @@ final class SelectAsignaturasDeUnaActividadSelTest extends TestCase
             function (array $where) {
                 $id = (int) ($where['id'] ?? 0);
                 $o = $this->createMock(DbSchema::class);
+                $o->method('getId')->willReturn($id);
                 $o->method('getSchema')->willReturn($id === 1001 ? 'H-dlbvv' : 'H-dlxxv');
 
                 return [$o];
@@ -81,6 +82,8 @@ final class SelectAsignaturasDeUnaActividadSelTest extends TestCase
         $this->assertNotSame($selPropia, $selAjena);
         $this->assertSame(1001, ActividadAsignaturaSelToken::decode($selPropia)['id_schema']);
         $this->assertSame(2002, ActividadAsignaturaSelToken::decode($selAjena)['id_schema']);
+        $this->assertSame('(dlbv) Latín I', $valores[1][1] ?? null);
+        $this->assertSame('(dlxx) Latín I', $valores[2][1] ?? null);
     }
 
     private function actividadAsignatura(int $idSchema): ActividadAsignatura

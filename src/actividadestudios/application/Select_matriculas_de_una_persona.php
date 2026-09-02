@@ -5,6 +5,8 @@ namespace src\actividadestudios\application;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\application\support\AsignaturaNombreDlPrefix;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\Matricula;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -18,6 +20,7 @@ use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 /**
  * Widget del dossier `1303` (codigo `matriculas_de_una_persona`):
@@ -39,6 +42,8 @@ class Select_matriculas_de_una_persona
         private AsignaturaRepositoryInterface $asignaturaRepository,
         private PersonaFinderService $personaFinderService,
         private PersonaDlRepositoryInterface $personaDlRepository,
+        private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
+        private DbSchemaRepositoryInterface $dbSchemaRepository,
     ) {
     }
 
@@ -76,6 +81,8 @@ class Select_matriculas_de_una_persona
     private mixed $id_activ;
     /** @var array{path: string, query: array<string, mixed>}|null */
     private ?array $linkAddSpec = null;
+    /** @var array{path: string, query: array<string, mixed>}|null */
+    private ?array $linkMatricularSpec = null;
 
     /**
      * @return array<int, array{txt: string, click: string}>
@@ -120,6 +127,8 @@ class Select_matriculas_de_una_persona
             throw new \Exception(sprintf(_("No se ha encontrado actividad con id: %s"), (string) $this->id_activ));
         }
         $nom_activ = $oActividad->getNom_activ();
+        $dlOrg = $oActividad->getDl_org() ?? '';
+        $ofertasPorAsignatura = $this->ofertasDlPorAsignatura((int) $this->id_activ);
 
         $oAlumno = $this->personaFinderService->findPersonaEnGlobalODePaso($this->id_pau);
         if ($oAlumno === null) {
@@ -152,6 +161,11 @@ class Select_matriculas_de_una_persona
         $i = 0;
         $a_valores = [];
         $msg_err = '';
+        $nMismaAsignatura = [];
+        foreach ($cMatriculas as $oMatricula) {
+            $idAsig = $oMatricula->getId_asignatura();
+            $nMismaAsignatura[$idAsig] = ($nMismaAsignatura[$idAsig] ?? 0) + 1;
+        }
         foreach ($cMatriculas as $oMatricula) {
             $i++;
             $id_asignatura = $oMatricula->getId_asignatura();
@@ -177,7 +191,20 @@ class Select_matriculas_de_una_persona
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
-            $nombre_corto = $oAsignatura->getNombre_corto();
+            $dlOferta = AsignaturaNombreDlPrefix::dlParaFilaMatricula(
+                $id_asignatura,
+                $oMatricula->getId_schema(),
+                ConfigGlobal::mi_id_schema(),
+                $ofertasPorAsignatura,
+            );
+            $forzarPrefijo = count($ofertasPorAsignatura[$id_asignatura] ?? []) > 1
+                || ($nMismaAsignatura[$id_asignatura] ?? 0) > 1;
+            $nombre_corto = AsignaturaNombreDlPrefix::aplicar(
+                $oAsignatura->getNombre_corto() ?? '',
+                $dlOferta,
+                $dlOrg,
+                $forzarPrefijo,
+            );
 
             $a_valores[$i]['sel'] = "$this->id_activ#$id_asignatura#$this->id_pau";
             $a_valores[$i][1] = $preceptor;
@@ -220,6 +247,7 @@ class Select_matriculas_de_una_persona
                 'valores' => $a_valores,
             ],
             'link_add_spec' => $this->linkAddSpec,
+            'link_matricular_spec' => $this->linkMatricularSpec,
             'nom_activ' => $nom_activ,
             'form' => $form,
             'ca_num' => $ca_num,
@@ -240,6 +268,27 @@ class Select_matriculas_de_una_persona
         ];
         array_walk($a_dataUrl, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
         $this->linkAddSpec = DossierTipoPublicUrls::formControllerLinkSpec($this->id_dossier, $a_dataUrl);
+        $aMatricular = $a_dataUrl;
+        $aMatricular['modo'] = FormMatriculasDeUnaPersonaData::MODO_MATRICULAR_CA;
+        $this->linkMatricularSpec = DossierTipoPublicUrls::formControllerLinkSpec($this->id_dossier, $aMatricular);
+    }
+
+    /**
+     * @return array<int, list<array{id_schema: int, dl: string}>>
+     */
+    private function ofertasDlPorAsignatura(int $idActiv): array
+    {
+        $ofertasPorAsignatura = [];
+        foreach ($this->actividadAsignaturaRepository->getActividadAsignaturas(['id_activ' => $idActiv]) as $oOferta) {
+            $idAsignatura = $oOferta->getId_asignatura();
+            $idSchema = $oOferta->getId_schema();
+            $ofertasPorAsignatura[$idAsignatura][] = [
+                'id_schema' => $idSchema,
+                'dl' => AsignaturaNombreDlPrefix::dlDesdeIdSchema($this->dbSchemaRepository, $idSchema),
+            ];
+        }
+
+        return $ofertasPorAsignatura;
     }
 
     /**

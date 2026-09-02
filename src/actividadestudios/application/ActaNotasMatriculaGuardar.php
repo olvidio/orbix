@@ -2,7 +2,7 @@
 
 namespace src\actividadestudios\application;
 
-use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\notas\application\support\ActaFirmadaPolicy;
 use src\notas\domain\value_objects\NotaSituacion;
@@ -18,7 +18,7 @@ use src\shared\config\ConfigGlobal;
 final class ActaNotasMatriculaGuardar
 {
     public function __construct(
-        private MatriculaDlRepositoryInterface $matriculaRepository,
+        private MatriculaRepositoryInterface $matriculaRepository,
         private ActaFirmadaPolicy $firmadaPolicy,
     ) {
     }

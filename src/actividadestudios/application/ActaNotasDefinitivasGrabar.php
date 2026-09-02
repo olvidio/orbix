@@ -97,11 +97,15 @@ final class ActaNotasDefinitivasGrabar
             $iepoca = NotaEpoca::EPOCA_INVIERNO;
         }
 
-        $cMatriculados = $this->matriculaRepository->getMatriculas([
+        $whereMatriculas = [
             'id_asignatura' => $Qid_asignatura,
             'id_activ' => $Qid_activ,
-            'id_schema' => $idSchema,
-        ]);
+        ];
+        $dlOrg = $oActividad->getDl_org() ?? '';
+        if ($dlOrg === '' || $dlOrg !== ConfigGlobal::mi_delef()) {
+            $whereMatriculas['id_schema'] = $idSchema;
+        }
+        $cMatriculados = $this->matriculaRepository->getMatriculas($whereMatriculas);
 
         foreach ($cMatriculados as $oMatricula) {
             $id_nom = $oMatricula->getId_nom();

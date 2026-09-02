@@ -29,6 +29,8 @@ class Matricula
     private ?Acta $acta = null;
     /** Delegación de origen en vistas agregadas región STGR (p. ej. H-Hv). */
     private ?int $id_dl = null;
+    /** Esquema de la fila en vistas `*_all` (distingue la misma asignatura de otra dl). */
+    private ?int $id_schema = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -273,5 +275,15 @@ class Matricula
     public function setId_dl(?int $id_dl = null): void
     {
         $this->id_dl = ($id_dl !== null && $id_dl <= 0) ? null : $id_dl;
+    }
+
+    public function getId_schema(): int
+    {
+        return $this->id_schema ?? 0;
+    }
+
+    public function setId_schema(int $id_schema): void
+    {
+        $this->id_schema = $id_schema > 0 ? $id_schema : null;
     }
 }

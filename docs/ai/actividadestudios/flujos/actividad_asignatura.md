@@ -37,6 +37,8 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 3. Si esa asignatura ya está en la actividad (incluida otra dl), aparece un aviso:
    «Ya existe esta asignatura en esta actividad. Solamente debería continuar si quiere hacerla con preceptor u otro profesor». Cancelar vuelve al listado; aceptar guarda.
 4. Si no hay duplicado (o se confirmó), el sistema crea la `ActividadAsignatura` y abre el dossier 3005.
+   En el listado, si la misma asignatura está en más de una dl, el nombre lleva delante
+   la sigla entre paréntesis (`(dlxx) …`) para distinguirlas.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/actividad_asignatura_nueva`
@@ -44,8 +46,12 @@ Referencias tecnicas para verificar la respuesta:
 ## Eliminar
 
 1. En el listado de asignaturas del dossier 3005, seleccionar una fila.
-2. Pulsar **borrar** y confirmar.
-3. El sistema elimina la asignatura impartida y refresca el listado.
+2. Pulsar **quitar asignatura** y confirmar el aviso genérico.
+3. Si hay alumnos matriculados, aparece un segundo aviso con el número y las dl
+   (p. ej. «Hay 3 alumnos matriculados (dlbv: 2, dlxx: 1). Si continúa se borrarán
+   también esas matrículas.»). Cancelar no borra nada; aceptar elimina la oferta
+   y esas matrículas de esta dl.
+4. Si no hay matriculados, se elimina solo la asignatura impartida y se refresca el listado.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/actividad_asignatura_eliminar`
@@ -56,7 +62,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-El usuario crea una nueva asignatura impartida en la actividad (profesor, fechas, tipo) o elimina una existente desde el dossier de asignaturas. Sustituye los cases `nuevo` y `eliminar` del antiguo `update_3005.php`.
+El usuario crea una nueva asignatura impartida en la actividad (profesor, fechas, tipo) o elimina una existente desde el dossier de asignaturas. Si al quitar hay matriculados, se advierte (cuántos y de qué dl) y al confirmar se borran también esas matrículas. Sustituye los cases `nuevo` y `eliminar` del antiguo `update_3005.php`.
 
 ## Errores Documentados
 

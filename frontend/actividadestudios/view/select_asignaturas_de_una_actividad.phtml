@@ -24,7 +24,7 @@
             }
         }
     }
-    fnjs_borrar_asignatura = function (formulario) {
+    fnjs_borrar_asignatura = function (formulario, confirmarConMatriculas) {
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
             $('#seleccionados' + ' input.sel').each(function () {
@@ -36,9 +36,13 @@
             if (permiso === 'false') {
                 alert(<?= json_encode((string)$txt_no_permiso) ?>);
             } else {
-                if (confirm(<?= json_encode((string)$txt_eliminar) ?>)) {
+                var seguir = confirmarConMatriculas ? true : confirm(<?= json_encode((string)$txt_eliminar) ?>);
+                if (seguir) {
                     $('#mod').val("eliminar");
                     var datos = $(formulario).serialize();
+                    if (confirmarConMatriculas) {
+                        datos += (datos ? '&' : '') + 'confirmar_con_matriculas=1';
+                    }
                     $.ajax({
                         data: datos,
                         url: '<?= $url_actividad_asignatura_eliminar ?>',
@@ -47,9 +51,23 @@
                     }).done(function (json) {
                         if (json.success !== true) {
                             alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
-                        } else {
-                            fnjs_actualizar(formulario);
+                            return;
                         }
+                        var data = json.data;
+                        if (typeof data === 'string') {
+                            try {
+                                data = JSON.parse(data);
+                            } catch (e) {
+                                data = null;
+                            }
+                        }
+                        if (data && data.requiere_confirmacion) {
+                            if (confirm(data.mensaje)) {
+                                fnjs_borrar_asignatura(formulario, true);
+                            }
+                            return;
+                        }
+                        fnjs_actualizar(formulario);
                     });
                 }
             }

@@ -15,6 +15,7 @@ try {
         'id_nom' => $idNom,
         'id_activ' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_activ'),
         'id_asignatura' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_asignatura'),
+        'modo' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'modo'),
         'sel' => isset($_POST['sel']) && is_array($_POST['sel']) ? $_POST['sel'] : null,
     ];
     /** @var FormMatriculasDeUnaPersonaData $useCase */

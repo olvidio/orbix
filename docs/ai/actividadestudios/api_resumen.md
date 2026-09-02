@@ -14,7 +14,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.acta_notas_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/acta_notas_data.php`
-- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_schema:integer` (esquema de la fila del dossier 3005; distingue la misma asignatura de la dl organizadora y de otra dl)
+- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_schema:integer` (esquema de la fila del dossier 3005; distingue la misma asignatura de la dl organizadora y de otra dl). El acta se filtra por `id_schema`; los matriculados de todos los esquemas si la sesión es la dl organizadora (`dl_org`).
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/acta_notas_definitivas_grabar`
@@ -42,8 +42,8 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.actividad_asignatura_eliminar`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/actividad_asignatura_eliminar.php`
-- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.pau:string`, `post.sel:array`
-- Respuesta: `standard_envelope_string_data`
+- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.pau:string`, `post.sel:array`, `post.confirmar_con_matriculas:boolean` (1 si hay matriculados y el usuario confirma que también se borren esas matrículas)
+- Respuesta: `standard_envelope_string_data` (`ok` al borrar; `{requiere_confirmacion, mensaje}` si hay alumnos matriculados y aún no se ha confirmado)
 
 ## `/src/actividadestudios/actividad_asignatura_nueva`
 
@@ -119,7 +119,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.form_matriculas_de_una_persona_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/form_matriculas_de_una_persona_data.php`
-- Entrada: `post.sel:array`, `post.id_nom:integer`, `post.id_pau:integer`, `post.id_activ:integer`, `post.id_asignatura:integer`
+- Entrada: `post.sel:array`, `post.id_nom:integer`, `post.id_pau:integer`, `post.id_activ:integer`, `post.id_asignatura:integer`, `post.modo:string` (`matricular_ca` = desplegable solo con asignaturas ya ofertadas en el CA)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/lista_clases_ca_data`
@@ -154,8 +154,8 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.matricula_nueva`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/matricula_nueva.php`
-- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_nivel:integer`, `post.id_nom:integer`, `post.id_pau:integer`, `post.id_preceptor:integer`, `post.id_situacion:integer`, `post.preceptor:string`
-- Respuesta: `standard_envelope_string_data`
+- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_nivel:integer`, `post.id_nom:integer`, `post.id_pau:integer`, `post.id_preceptor:integer`, `post.id_situacion:integer`, `post.preceptor:string`, `post.modo:string`, `post.confirmar_duplicado:boolean` (en **añadir asignatura**, si ya está en el CA hay que reenviar con este flag)
+- Respuesta: `standard_envelope_string_data` (o `requiere_confirmacion` + `mensaje` al añadir una que ya existe en el CA)
 
 ## `/src/actividadestudios/matriculas_lista_data`
 

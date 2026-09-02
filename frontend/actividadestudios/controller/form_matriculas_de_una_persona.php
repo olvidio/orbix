@@ -38,12 +38,14 @@ $Qid_nivel = (int) filter_input(INPUT_POST, 'id_nivel');
 $Qid_asignatura = (int) filter_input(INPUT_POST, 'id_asignatura');
 
 $a_sel = (array) filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qmodo = (string) filter_input(INPUT_POST, 'modo');
 $camposMatricula = [
     'id_nom' => $Qid_nom,
     'id_pau' => $Qid_nom,
     'id_activ' => $Qid_activ,
     'id_nivel' => $Qid_nivel,
     'id_asignatura' => $Qid_asignatura,
+    'modo' => $Qmodo,
 ];
 if (!empty($a_sel)) {
     $camposMatricula['sel'] = $a_sel;
@@ -60,12 +62,19 @@ $nombre_corto = $d['nombre_corto'];
 $chk_preceptor = $d['chk_preceptor'];
 $id_preceptor = $d['id_preceptor'];
 $condicion_js = $d['condicion_js'];
+$alta_desde_ca = $d['alta_desde_ca'];
 
 $oDesplNiveles = new Desplegable();
-$oDesplNiveles->setNombre('id_nivel');
-$oDesplNiveles->setOpciones($d['oDesplNiveles_opciones']);
-$oDesplNiveles->setBlanco(ActividadestudiosDesplegableSupport::blanco(1));
-$oDesplNiveles->setAction('fnjs_cmb_opcional()');
+if ($alta_desde_ca) {
+    $oDesplNiveles->setNombre('id_asignatura');
+    $oDesplNiveles->setOpciones($d['oDesplAsignaturas_opciones']);
+    $oDesplNiveles->setBlanco(ActividadestudiosDesplegableSupport::blanco(1));
+} else {
+    $oDesplNiveles->setNombre('id_nivel');
+    $oDesplNiveles->setOpciones($d['oDesplNiveles_opciones']);
+    $oDesplNiveles->setBlanco(ActividadestudiosDesplegableSupport::blanco(1));
+    $oDesplNiveles->setAction('fnjs_cmb_opcional()');
+}
 
 $oDesplProfesores = new Desplegable();
 if ($d['oDesplProfesores_opciones'] !== []) {
@@ -76,7 +85,7 @@ if ($d['oDesplProfesores_opciones'] !== []) {
 }
 
 $oHash = new HashFront();
-$oHash->setCamposNo('preceptor!id_preceptor');
+$oHash->setCamposNo('preceptor!id_preceptor!confirmar_duplicado');
 $oHash->setCamposForm($d['camposForm']);
 $oHash->setArraycamposHidden($d['a_camposHidden']);
 
@@ -115,6 +124,7 @@ $a_campos = [
     'id_preceptor' => $id_preceptor,
     'oDesplProfesores' => $oDesplProfesores,
     'mod' => $mod,
+    'alta_desde_ca' => $alta_desde_ca,
 ];
 
 (new ViewNewPhtml('frontend\\actividadestudios\\controller'))

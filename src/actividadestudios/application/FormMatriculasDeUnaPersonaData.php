@@ -3,6 +3,8 @@
 namespace src\actividadestudios\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\application\support\AsignaturaNombreDlPrefix;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -12,6 +14,7 @@ use src\notas\application\support\NivelesOcupadosEnPlan;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\profesores\domain\services\ProfesorStgrService;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 /**
  * @return array{
@@ -24,12 +27,16 @@ use src\profesores\domain\services\ProfesorStgrService;
  *   oDesplProfesores_opciones: array<int|string, string>,
  *   oDesplNiveles_opciones: array<int|string, string>,
  *   condicion_js: string,
+ *   alta_desde_ca: bool,
+ *   oDesplAsignaturas_opciones: array<int|string, string>,
  *   camposForm: string,
  *   a_camposHidden: array<string, int|string>
  * }
  */
 final class FormMatriculasDeUnaPersonaData
 {
+    public const MODO_MATRICULAR_CA = 'matricular_ca';
+
     public function __construct(
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private AsignaturaRepositoryInterface $asignaturaRepository,
@@ -38,6 +45,8 @@ final class FormMatriculasDeUnaPersonaData
         private PersonaNotaRepositoryInterface $personaNotaRepository,
         private MatriculaDlRepositoryInterface $matriculaDlRepository,
         private PlanEstudiosDePersona $planEstudiosDePersona,
+        private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
+        private DbSchemaRepositoryInterface $dbSchemaRepository,
     ) {
     }
 
@@ -53,6 +62,8 @@ final class FormMatriculasDeUnaPersonaData
      *   oDesplProfesores_opciones: array<int|string, string>,
      *   oDesplNiveles_opciones: array<int|string, string>,
      *   condicion_js: string,
+     *   alta_desde_ca: bool,
+     *   oDesplAsignaturas_opciones: array<int|string, string>,
      *   camposForm: string,
      *   a_camposHidden: array<string, int|string>
      * }
@@ -65,6 +76,7 @@ final class FormMatriculasDeUnaPersonaData
         }
         $idActiv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         $idAsignaturaPost = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_asignatura');
+        $modo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'modo');
         $sel = isset($input['sel']) && is_array($input['sel']) ? $input['sel'] : null;
 
         $idAsignaturaReal = 0;
@@ -80,14 +92,16 @@ final class FormMatriculasDeUnaPersonaData
             throw new \RuntimeException(sprintf(_('No se ha encontrado actividad con id: %s'), (string) $idActiv));
         }
         $nomActiv = $oActividad->getNom_activ();
-        $plan = $this->planEstudiosDePersona->resolve($idNom);
 
         $chkPreceptor = '';
         $idPreceptor = '';
         $nombreCorto = '';
         $oDesplProfesoresOpciones = [];
         $oDesplNivelesOpciones = [];
+        $oDesplAsignaturasOpciones = [];
+        $altaDesdeCa = false;
         $camposForm = '';
+        $condicionJs = '';
         $aCamposHidden = [
             'id_pau' => $idNom,
             'id_activ' => $idActiv,
@@ -115,8 +129,21 @@ final class FormMatriculasDeUnaPersonaData
             $aCamposHidden['id_asignatura'] = $idAsignatura;
             $aCamposHidden['id_nivel'] = $idNivel;
             $aCamposHidden['mod'] = $mod;
+        } elseif ($modo === self::MODO_MATRICULAR_CA) {
+            $mod = 'nuevo';
+            $altaDesdeCa = true;
+            $oDesplAsignaturasOpciones = $this->opcionesAsignaturasDelCa(
+                $idActiv,
+                $idNom,
+                $oActividad->getDl_org() ?? '',
+            );
+            $aCamposHidden['mod'] = $mod;
+            $aCamposHidden['modo'] = self::MODO_MATRICULAR_CA;
+            $camposForm = 'id_asignatura';
+            $condicionJs = 'false';
         } else {
             $mod = 'nuevo';
+            $plan = $this->planEstudiosDePersona->resolve($idNom);
             [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
                 'active' => 't',
                 'id_nivel' => 3000,
@@ -158,20 +185,20 @@ final class FormMatriculasDeUnaPersonaData
             $oDesplNivelesOpciones = $aFaltan;
             $aCamposHidden['mod'] = $mod;
             $camposForm = 'id_asignatura!id_nivel';
-        }
 
-        [$aWhereOp, $aOperadorOp] = PlanEstudiosFilter::apply($plan, [
-            'active' => 't',
-            'id_sector' => 1,
-            'id_nivel' => 3000,
-            '_ordre' => 'nombre_corto',
-        ], ['id_nivel' => '<']);
-        $cOpcionalesGenericas = $this->asignaturaRepository->getAsignaturas($aWhereOp, $aOperadorOp);
-        $condicion = '';
-        foreach ($cOpcionalesGenericas as $oOpcional) {
-            $condicion .= 'id==' . $oOpcional->getId_nivel() . ' || ';
+            [$aWhereOp, $aOperadorOp] = PlanEstudiosFilter::apply($plan, [
+                'active' => 't',
+                'id_sector' => 1,
+                'id_nivel' => 3000,
+                '_ordre' => 'nombre_corto',
+            ], ['id_nivel' => '<']);
+            $cOpcionalesGenericas = $this->asignaturaRepository->getAsignaturas($aWhereOp, $aOperadorOp);
+            $condicion = '';
+            foreach ($cOpcionalesGenericas as $oOpcional) {
+                $condicion .= 'id==' . $oOpcional->getId_nivel() . ' || ';
+            }
+            $condicionJs = $condicion !== '' ? substr($condicion, 0, -4) : 'false';
         }
-        $condicionJs = substr($condicion, 0, -4);
 
         return [
             'nom_activ' => $nomActiv,
@@ -183,8 +210,70 @@ final class FormMatriculasDeUnaPersonaData
             'oDesplProfesores_opciones' => $oDesplProfesoresOpciones,
             'oDesplNiveles_opciones' => $oDesplNivelesOpciones,
             'condicion_js' => $condicionJs,
+            'alta_desde_ca' => $altaDesdeCa,
+            'oDesplAsignaturas_opciones' => $oDesplAsignaturasOpciones,
             'camposForm' => $camposForm,
             'a_camposHidden' => $aCamposHidden,
         ];
+    }
+
+    /**
+     * @return array<int|string, string>
+     */
+    private function opcionesAsignaturasDelCa(int $idActiv, int $idNom, string $dlOrg): array
+    {
+        $yaMatriculadas = [];
+        foreach ($this->matriculaRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]) as $oMatricula) {
+            $yaMatriculadas[$oMatricula->getId_asignatura()] = true;
+        }
+
+        $nombres = $this->asignaturaRepository->getArrayAsignaturasCreditos();
+        $filas = [];
+        foreach ($this->actividadAsignaturaRepository->getActividadAsignaturas(['id_activ' => $idActiv]) as $oOferta) {
+            $idAsignatura = $oOferta->getId_asignatura();
+            if (isset($yaMatriculadas[$idAsignatura])) {
+                continue;
+            }
+            $datos = $nombres[$idAsignatura] ?? null;
+            $nombre = '';
+            if (is_array($datos) && isset($datos['nombre_asignatura']) && is_scalar($datos['nombre_asignatura'])) {
+                $nombre = (string) $datos['nombre_asignatura'];
+            }
+            if ($nombre === '') {
+                $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
+                $nombre = $oAsignatura?->getNombre_corto() ?? (string) $idAsignatura;
+            }
+            $idSchema = $oOferta->getId_schema();
+            $filas[] = [
+                'id_asignatura' => $idAsignatura,
+                'id_schema' => $idSchema,
+                'dl' => AsignaturaNombreDlPrefix::dlDesdeIdSchema($this->dbSchemaRepository, $idSchema),
+                'nombre' => $nombre,
+            ];
+        }
+
+        $porAsignatura = [];
+        foreach ($filas as $fila) {
+            $idAsig = $fila['id_asignatura'];
+            $porAsignatura[$idAsig] = ($porAsignatura[$idAsig] ?? 0) + 1;
+        }
+
+        $opciones = [];
+        foreach ($filas as $fila) {
+            $idAsignatura = $fila['id_asignatura'];
+            $forzar = ($porAsignatura[$idAsignatura] ?? 0) > 1;
+            $clave = $forzar
+                ? $idAsignatura . '#' . $fila['id_schema']
+                : (string) $idAsignatura;
+            $opciones[$clave] = AsignaturaNombreDlPrefix::aplicar(
+                $fila['nombre'],
+                $fila['dl'],
+                $dlOrg,
+                $forzar,
+            );
+        }
+        asort($opciones, SORT_NATURAL | SORT_FLAG_CASE);
+
+        return $opciones;
     }
 }

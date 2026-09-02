@@ -7,7 +7,7 @@
      */
     fnjs_cmb_opcional = function () {
         var id = $('#id_nivel').val();
-        if (<?= $condicion_js; ?>) { //solo si es opcional
+        if (<?= $condicion_js !== '' ? $condicion_js : 'false' ?>) { //solo si es opcional
             var id_nom = $('#id_pau').val();
             $.ajax({
                 url: '<?= $url_posibles_opcionales ?>',
@@ -37,8 +37,14 @@
             $('#lst_preceptores').html('');
         }
     }
-    fnjs_guardar = function (formulario) {
-        if (!($('#id_asignatura_real').length > 0)) {
+    fnjs_guardar = function (formulario, confirmarDuplicado) {
+        var altaDesdeCa = <?= $alta_desde_ca ? 'true' : 'false' ?>;
+        if (altaDesdeCa) {
+            if (!$('#id_asignatura').val()) {
+                alert(<?= json_encode(_("debe poner una asignatura")) ?>);
+                return;
+            }
+        } else if (!($('#id_asignatura_real').length > 0)) {
             if ($('#id_nivel').val() < 1000) {
                 alert(<?= json_encode(_("debe poner una asignatura")) ?>);
                 return;
@@ -47,6 +53,9 @@
         var mod = $(formulario).find('[name=mod]').val();
         var url = (mod === 'editar') ? '<?= $url_matricula_editar ?>' : '<?= $url_matricula_nueva ?>';
         var datos = $(formulario).serialize();
+        if (confirmarDuplicado) {
+            datos += (datos ? '&' : '') + 'confirmar_duplicado=1';
+        }
         $.ajax({
             data: datos,
             url: url,
@@ -55,9 +64,20 @@
         }).done(function (json) {
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
-            } else {
-                <?= $oPosicion->jsNavAtrasToDossiersParent(); ?>
+                return;
             }
+            if (mod !== 'editar' && !altaDesdeCa) {
+                var data = fnjs_parse_rta(json);
+                if (data && data.requiere_confirmacion) {
+                    if (confirm(data.mensaje)) {
+                        fnjs_guardar(formulario, true);
+                    } else {
+                        <?= $oPosicion->jsNavAtrasToDossiersParent(); ?>
+                    }
+                    return;
+                }
+            }
+            <?= $oPosicion->jsNavAtrasToDossiersParent(); ?>
         });
     }
 </script>
@@ -67,7 +87,7 @@
     <table>
         <thead>
         <tr>
-            <th colspan=4><?= _("matrícula de asignaturas") ?></th>
+            <th colspan=4><?= !empty($alta_desde_ca) ? _("matricular en una asignatura") : _("matrícula de asignaturas") ?></th>
         </tr>
         </thead>
         <tbody>
@@ -87,11 +107,13 @@
             <tr>
                 <td><?= ucfirst(_("asignatura")) ?>:</td>
                 <td><?= $oDesplNiveles->desplegable(); ?></td>
+                <?php if (empty($alta_desde_ca)) { ?>
                 <td colspan="2">
                     <div id='lst_opcionales'>
                         <input type="hidden" id="id_asignatura" name="id_asignatura" value="1">
                     </div>
                 </td>
+                <?php } ?>
             </tr>
         <?php } ?>
 

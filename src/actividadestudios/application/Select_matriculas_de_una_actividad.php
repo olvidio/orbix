@@ -7,6 +7,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
@@ -30,6 +31,7 @@ class Select_matriculas_de_una_actividad
         private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
         private AsignaturaRepositoryInterface $asignaturaRepository,
         private MatriculaDlRepositoryInterface $matriculaDlRepository,
+        private MatriculaRepositoryInterface $matriculaRepository,
     ) {
     }
 
@@ -145,7 +147,10 @@ class Select_matriculas_de_una_actividad
             $nombre_corto = $oAsignatura->getNombre_corto() ?? '';
             $aGrupos[$id_asignatura] = $nombre_corto;
 
-            $cMatriculas = $this->matriculaDlRepository->getMatriculas([
+            $repoMatriculas = ($mi_dele == $dl_org)
+                ? $this->matriculaRepository
+                : $this->matriculaDlRepository;
+            $cMatriculas = $repoMatriculas->getMatriculas([
                 'id_activ' => $this->id_pau,
                 'id_asignatura' => $id_asignatura,
             ]);
