@@ -34,10 +34,13 @@ confirmado borra matrículas previas y recalcula las matriculables (aprobadas + 
 - **Ramas de entrada:**
   - Con `sel[]`: toma el primer token; `id_nom = strtok(sel, '#')` (no usa `id_activ` del POST).
   - Sin `sel`, con `id_pau` (+ opcional `id_activ`): persona concreta; si hay `id_activ`, fuerza esa
-    asistencia (Dl o Out).
+    asistencia (dl, out o ex).
   - Sin `sel` ni `id_pau`: masivo DL, `situacion = 'A'`.
-- **Excluye nivel R:** filtro `nivel_stgr != R` (repaso); persona concreta en repaso → mensaje
-  `está de repaso`.
+- **Excluye nivel R:** persona concreta con `nivel_stgr = R` (repaso) → mensaje `está de repaso`.
+  Un nivel vacío/NULL **no** es repaso (no se filtra con SQL `!= R`: en PostgreSQL
+  `NULL != R` no devuelve la fila). El masivo DL sigue filtrando `nivel_stgr != R` en SQL.
+- **Asistencia con `id_activ`:** busca en dl, out y **ex** (`d_asistentes_ex` para personas
+  de paso con `id_nom` negativo).
 - **Switch `count(asistencias)`:**
   - `0`: no hace nada (`no tiene asignado ca`).
   - `1`: si `est_ok` (plan confirmado) → no toca; si no, borra matrículas del CA, matricula

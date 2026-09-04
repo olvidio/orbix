@@ -13,11 +13,11 @@ use src\actividadestudios\domain\entity\Matricula;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
+use src\asistentes\domain\entity\Asistente;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
-use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\entity\Persona;
 use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
@@ -29,9 +29,11 @@ use src\shared\domain\helpers\FuncTablasSupport;
  * - Si no, recorre a todas las personas en situacion `A` (activos) de la dl.
  *
  * Para cada persona:
- * 1. Determina la actividad de estudios activa (`ca-n`, `cv-agd`).
- * 2. Borra las matriculas previas (si el plan no esta confirmado).
- * 3. Recalcula las asignaturas matriculables, respetando las aprobadas y los
+ * 1. Si es concreta, excluye solo nivel STGR = R (repaso). Un nivel vacío/NULL
+ *    no es repaso: el filtro SQL `!= R` no sirve porque `NULL != R` no devuelve fila.
+ * 2. Determina la actividad de estudios activa (`ca-n`, `cv-agd`).
+ * 3. Borra las matriculas previas (si el plan no esta confirmado).
+ * 4. Recalcula las asignaturas matriculables, respetando las aprobadas y los
  *    topes de las opcionales por bienio/cuadrienio.
  *
  * Sustituye a `apps/actividadestudios/controller/matricular.php`.
@@ -40,11 +42,12 @@ final class MatriculaAutomatica
 {
 
     public function __construct(
-        private PersonaExRepositoryInterface $personaExRepository,
+        private PersonaFinderService $personaFinderService,
         private PersonaDlRepositoryInterface $personaDlRepository,
         private AsistenteActividadService $asistenteActividadService,
         private AsistenteDlRepositoryInterface $asistenteDlRepository,
         private AsistenteOutRepositoryInterface $asistenteOutRepository,
+        private AsistenteExRepositoryInterface $asistenteExRepository,
         private MatriculaDlRepositoryInterface $matriculaDlRepository,
         private PersonaNotaRepositoryInterface $personaNotaRepository,
         private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
@@ -70,54 +73,51 @@ final class MatriculaAutomatica
             $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
         }
 
-        $mes = (int) date('m');
-        /** @var ConfigSnapshot $oConfig */
-        $oConfig = $_SESSION['oConfig'];
-        $fin_m = $oConfig->getMesFinStgr();
-        $any = ($mes > $fin_m) ? (int) date('Y') + 1 : (int) date('Y');
-        $inicurs_ca = FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
-        $fincurs_ca = FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
-
-        $aWhere = [];
-        $aOperador = [];
         if (!empty($Qid_nom)) {
-            $aWhere['id_nom'] = $Qid_nom;
-            $aWhere['nivel_stgr'] = NivelStgrId::R;
-            $aOperador['nivel_stgr'] = '!=';
-
-            $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
+            $oPersona = $this->personaFinderService->findPersonaEnGlobalODePaso($Qid_nom);
             if ($oPersona === null) {
                 return [
                     'success' => false,
                     'msg' => sprintf(_('No se ha encontrado a la persona con id: %s'), $Qid_nom),
                 ];
             }
-            $classname = PersonaRepositoryResolver::objPauFromInstance($oPersona);
-
-            if ($classname === 'PersonaEx') {
-                $cAlumnos = $this->personaExRepository->getPersonas($aWhere, $aOperador);
-            } else {
-                $cAlumnos = $this->personaDlRepository->getPersonas($aWhere, $aOperador);
+            if ($oPersona->getNivel_stgr() === NivelStgrId::R) {
+                return [
+                    'success' => false,
+                    'msg' => _('está de repaso'),
+                ];
             }
-            if (empty($cAlumnos)) {
-                $msg = _('está de repaso');
-            }
+            $cAlumnos = [$oPersona];
         } else {
-            $aWhere['situacion'] = 'A';
-            $aWhere['nivel_stgr'] = NivelStgrId::R;
-            $aOperador['nivel_stgr'] = '!=';
-            $cAlumnos = $this->personaDlRepository->getPersonas($aWhere, $aOperador);
+            $cAlumnos = $this->personaDlRepository->getPersonas(
+                [
+                    'situacion' => 'A',
+                    'nivel_stgr' => NivelStgrId::R,
+                ],
+                ['nivel_stgr' => '!='],
+            );
         }
 
-        $aWhereAct = [
-            'status' => StatusId::ACTUAL,
-            'f_ini' => "'$inicurs_ca','$fincurs_ca'",
-            'id_tipo_activ' => '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)',
-        ];
-        $aOperadoresAct = [
-            'f_ini' => 'BETWEEN',
-            'id_tipo_activ' => '~',
-        ];
+        $aWhereAct = [];
+        $aOperadoresAct = [];
+        if (empty($Qid_activ)) {
+            $mes = (int) date('m');
+            /** @var ConfigSnapshot $oConfig */
+            $oConfig = $_SESSION['oConfig'];
+            $fin_m = $oConfig->getMesFinStgr();
+            $any = ($mes > $fin_m) ? (int) date('Y') + 1 : (int) date('Y');
+            $inicurs_ca = FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
+            $fincurs_ca = FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
+            $aWhereAct = [
+                'status' => StatusId::ACTUAL,
+                'f_ini' => "'$inicurs_ca','$fincurs_ca'",
+                'id_tipo_activ' => '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)',
+            ];
+            $aOperadoresAct = [
+                'f_ini' => 'BETWEEN',
+                'id_tipo_activ' => '~',
+            ];
+        }
 
         foreach ($cAlumnos as $oPersonaDl) {
             $id_nom = $oPersonaDl->getId_nom();
@@ -125,12 +125,8 @@ final class MatriculaAutomatica
             if (empty($Qid_activ)) {
                 $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente(['id_nom' => $id_nom, 'propio' => 't'], [], $aWhereAct, $aOperadoresAct);
             } else {
-                $oAsistenteDl = $this->asistenteDlRepository->findById($Qid_activ, $id_nom);
-                // si no es de la dl:
-                if ($oAsistenteDl === null) {
-                    $oAsistenteDl = $this->asistenteOutRepository->findById($Qid_activ, $id_nom);
-                }
-                $cAsistencias[0] = $oAsistenteDl;
+                $oAsistente = $this->findAsistenteEnActividad($Qid_activ, $id_nom);
+                $cAsistencias = $oAsistente === null ? [] : [$oAsistente];
             }
 
             switch (count($cAsistencias)) {
@@ -214,6 +210,32 @@ final class MatriculaAutomatica
         }
 
         return ['success' => $success, 'msg' => $msg];
+    }
+
+    /**
+     * Personas de paso (`id_nom` negativo) viven en `d_asistentes_ex`, no en dl/out.
+     */
+    private function findAsistenteEnActividad(int $idActiv, int $idNom): ?Asistente
+    {
+        if ($idNom < 0) {
+            $asistente = $this->asistenteExRepository->findById($idActiv, $idNom);
+            if ($asistente !== null) {
+                return $asistente;
+            }
+        }
+        $asistente = $this->asistenteDlRepository->findById($idActiv, $idNom);
+        if ($asistente !== null) {
+            return $asistente;
+        }
+        $asistente = $this->asistenteOutRepository->findById($idActiv, $idNom);
+        if ($asistente !== null) {
+            return $asistente;
+        }
+        if ($idNom >= 0) {
+            return $this->asistenteExRepository->findById($idActiv, $idNom);
+        }
+
+        return null;
     }
 
     private function matricularOpcionalSiCabe(
