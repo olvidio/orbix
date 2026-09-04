@@ -13,10 +13,17 @@ class DocumentoObservCtrTest extends myTest
         $this->assertEquals('test value', $documentoObservCtr->value());
     }
 
+    public function test_create_valid_documentoObservCtr_max_length()
+    {
+        $value = str_repeat('a', 80);
+        $documentoObservCtr = new DocumentoObservCtr($value);
+        $this->assertEquals($value, $documentoObservCtr->value());
+    }
+
     public function test_invalid_length_throws_exception()
     {
         $this->expectException(\InvalidArgumentException::class);
-        new DocumentoObservCtr(str_repeat('a', 1000)); // Assuming max length validation
+        new DocumentoObservCtr(str_repeat('a', 81));
     }
 
     public function test_equals_returns_true_for_same_documentoObservCtr()

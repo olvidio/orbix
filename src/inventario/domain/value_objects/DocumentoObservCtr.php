@@ -17,9 +17,9 @@ final class DocumentoObservCtr
 
     private function validate(string $value): void
     {
-        // UI sets argument 50
-        if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DocumentoObservCtr must be at most 50 characters', $value));
+        // UI sets argument 80
+        if (mb_strlen($value) > 80) {
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DocumentoObservCtr must be at most 80 characters', $value));
         }
     }
 

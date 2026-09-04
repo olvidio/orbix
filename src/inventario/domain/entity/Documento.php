@@ -592,7 +592,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setObserv_ctr');
         $oDatosCampo->setEtiqueta(_("observaciones para el centro"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument('50');
+        $oDatosCampo->setArgument('80');
         return $oDatosCampo;
     }
 
