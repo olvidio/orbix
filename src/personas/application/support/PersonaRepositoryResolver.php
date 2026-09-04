@@ -14,7 +14,7 @@ use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 /**
  * Helper transversal para resolver el repositorio de una persona
  * a partir de su `obj_pau` (PersonaN, PersonaAgd, ...) o de su
- * `id_tabla` (n, a, s, sssc, pn, pa, x, cp_sss, dl, cp).
+ * `id_tabla` (n, a, s, sssc, pn, pa, px, psssc, psss, x, cp_sss, dl, cp).
  */
 final class PersonaRepositoryResolver
 {
@@ -58,6 +58,9 @@ final class PersonaRepositoryResolver
             'cp_sss' => 'PersonaSSSC',
             'pn' => 'PersonaEx',
             'pa' => 'PersonaEx',
+            'px' => 'PersonaEx',
+            'psssc' => 'PersonaEx',
+            'psss' => 'PersonaEx',
             'dl' => 'PersonaDl',
             'cp' => 'PersonaSacd',
         ];
@@ -152,6 +155,47 @@ final class PersonaRepositoryResolver
             throw new \InvalidArgumentException("id_tabla '$id_tabla' no reconocido");
         }
         return $this->repositorio($map[$id_tabla]);
+    }
+
+    /**
+     * Código de `id_tabla` de PersonaEx tal como lo espera el `<select>` de
+     * `persona_de_paso.phtml` (`pn`, `pa`, `px`, `psssc`).
+     *
+     * Acepta alias históricos: `a`/`n`/`x` (sin prefijo `p`), `sss`/`sssc`/`psss`.
+     */
+    public static function idTablaDePasoParaSelect(string $id_tabla): string
+    {
+        return match (trim($id_tabla)) {
+            'n', 'pn' => 'pn',
+            'a', 'pa' => 'pa',
+            'x', 'px' => 'px',
+            'sss', 'sssc', 'psss', 'psssc' => 'psssc',
+            default => trim($id_tabla),
+        };
+    }
+
+    /**
+     * `id_tabla` de de-paso a partir del parámetro de menú `na` (`n`, `a`, `x`, `sss`).
+     */
+    public static function idTablaDePasoDesdeNa(string $na): string
+    {
+        return self::idTablaDePasoParaSelect('p' . trim($na));
+    }
+
+    /**
+     * Alias de de-paso que no colisionan con colectivos DL (`a`, `n`, `sssc`).
+     *
+     * @return list<string>
+     */
+    public static function idTablasDePasoParaFiltro(string $id_tabla): array
+    {
+        return match (self::idTablaDePasoParaSelect($id_tabla)) {
+            'pn' => ['pn'],
+            'pa' => ['pa'],
+            'px' => ['px'],
+            'psssc' => ['psssc', 'psss'],
+            default => trim($id_tabla) === '' ? [] : [trim($id_tabla)],
+        };
     }
 
     /**

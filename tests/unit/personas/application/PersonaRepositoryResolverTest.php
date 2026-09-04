@@ -59,6 +59,17 @@ final class PersonaRepositoryResolverTest extends TestCase
         $this->assertSame('cp', PersonaRepositoryResolver::idTablaFor('PersonaSacd'));
     }
 
+    public function test_idTablaDePasoParaSelect_agregado_y_sssc(): void
+    {
+        $this->assertSame('pa', PersonaRepositoryResolver::idTablaDePasoParaSelect('pa'));
+        $this->assertSame('pa', PersonaRepositoryResolver::idTablaDePasoParaSelect('a'));
+        $this->assertSame('psssc', PersonaRepositoryResolver::idTablaDePasoParaSelect('sssc'));
+        $this->assertSame('psssc', PersonaRepositoryResolver::idTablaDePasoParaSelect('psss'));
+        $this->assertSame('psssc', PersonaRepositoryResolver::idTablaDePasoDesdeNa('sss'));
+        $this->assertSame('pa', PersonaRepositoryResolver::idTablaDePasoDesdeNa('a'));
+        $this->assertSame(['psssc', 'psss'], PersonaRepositoryResolver::idTablasDePasoParaFiltro('psss'));
+    }
+
     public function test_repositorioPorIdTabla(): void
     {
         $repo = $this->createMock(PersonaNRepositoryInterface::class);

@@ -126,6 +126,64 @@ final class PersonaUpdateTest extends TestCase
         $this->assertSame(42, $persona->getEdad());
     }
 
+    public function test_persona_ex_guarda_id_tabla_del_desplegable(): void
+    {
+        $persona = new PersonaEx();
+        $persona->setId_nom(99);
+        $persona->setId_tabla('pn');
+        $persona->setApellido1('Externa');
+        $persona->setSituacion('A');
+
+        $repo = $this->createMock(PersonaExRepositoryInterface::class);
+        $repo->method('findById')->with(99)->willReturn($persona);
+        $repo->expects($this->once())->method('Guardar')->with($persona)->willReturn(true);
+
+        $useCase = new PersonaUpdate($this->makeResolver([
+            PersonaExRepositoryInterface::class => $repo,
+        ]));
+
+        $result = $useCase->execute([
+            'id_nom' => 99,
+            'obj_pau' => 'PersonaEx',
+            'id_tabla' => 'pa',
+            'situacion' => 'A',
+            'apellido1' => 'Externa',
+        ]);
+
+        $this->assertSame('', $result);
+        $this->assertSame('pa', $persona->getId_tabla());
+    }
+
+    public function test_persona_ex_alta_canoniza_sssc_a_psssc(): void
+    {
+        $repo = $this->createMock(PersonaExRepositoryInterface::class);
+        $repo->method('findById')->with(99)->willReturn(null);
+        $capturada = null;
+        $repo->expects($this->once())->method('Guardar')->willReturnCallback(
+            static function (PersonaEx $persona) use (&$capturada): bool {
+                $capturada = $persona;
+
+                return true;
+            }
+        );
+
+        $useCase = new PersonaUpdate($this->makeResolver([
+            PersonaExRepositoryInterface::class => $repo,
+        ]));
+
+        $result = $useCase->execute([
+            'id_nom' => 99,
+            'obj_pau' => 'PersonaEx',
+            'id_tabla' => 'sssc',
+            'situacion' => 'A',
+            'apellido1' => 'Externa',
+        ]);
+
+        $this->assertSame('', $result);
+        $this->assertInstanceOf(PersonaEx::class, $capturada);
+        $this->assertSame('psssc', $capturada->getId_tabla());
+    }
+
     public function test_falla_guardar(): void
     {
         $persona = $this->createMock(PersonaN::class);

@@ -3,6 +3,7 @@
 namespace src\personas\application;
 
 use src\actividades\domain\value_objects\NivelStgrId;
+use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\PersonaPublicacion;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -194,8 +195,14 @@ final class PersonasSelectData
             case 'p_de_paso':
             case 'p_de_paso_ex':
                 if (!empty($Qna)) {
-                    $aWhere['id_tabla'] = 'p' . $Qna;
-                    $id_tabla = 'p' . $Qna;
+                    $id_tabla = PersonaRepositoryResolver::idTablaDePasoDesdeNa($Qna);
+                    $a_id_tabla_filtro = PersonaRepositoryResolver::idTablasDePasoParaFiltro($id_tabla);
+                    if (count($a_id_tabla_filtro) > 1) {
+                        $aWhere['id_tabla'] = "'" . implode("','", $a_id_tabla_filtro) . "'";
+                        $aOperador['id_tabla'] = 'IN';
+                    } else {
+                        $aWhere['id_tabla'] = $id_tabla;
+                    }
                 }
                 $obj_pau = 'PersonaEx';
                 $cPersonas = $this->personaPubRepository

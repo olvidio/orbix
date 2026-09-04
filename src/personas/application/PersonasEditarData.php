@@ -22,7 +22,7 @@ use src\usuarios\domain\contracts\LocalRepositoryInterface;
  * `persona_de_paso.phtml`):
  *
  *  - valores de la persona (o defaults si `nuevo=1`),
- *  - `id_tabla` canonico segun `obj_pau`,
+ *  - `id_tabla` canonico segun `obj_pau` (PersonaEx conserva pn/pa/px/psssc),
  *  - opciones para los `<select>` de delegaciones, centros, situacion, lengua,
  *    nivel_stgr e incorporacion.
  *
@@ -82,7 +82,7 @@ final class PersonasEditarData
             'titulo' => '',
             'nom_ctr' => '',
             'id_ctr' => '',
-            'id_tabla' => \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tabla'),
+            'id_tabla' => self::idTablaFromInput($input),
             'dl' => '',
             'idioma_preferido' => '',
             'situacion' => '',
@@ -170,6 +170,7 @@ final class PersonasEditarData
         }
 
         // id_tabla canonico segun obj_pau (equivalente al switch del controller).
+        // PersonaEx no se fuerza a `pn`: el desplegable de de-paso usa pn/pa/px/psssc.
         $id_tabla_map = [
             'PersonaAgd' => 'a',
             'PersonaN' => 'n',
@@ -179,8 +180,12 @@ final class PersonasEditarData
         ];
         if (isset($id_tabla_map[$Qobj_pau])) {
             $out['id_tabla'] = $id_tabla_map[$Qobj_pau];
-        } elseif ($Qobj_pau === 'PersonaEx' && empty($out['id_tabla'])) {
-            $out['id_tabla'] = 'pn';
+        } elseif ($Qobj_pau === 'PersonaEx') {
+            $id_tabla_ex = (string)$out['id_tabla'];
+            if ($id_tabla_ex === '') {
+                $id_tabla_ex = 'pn';
+            }
+            $out['id_tabla'] = PersonaRepositoryResolver::idTablaDePasoParaSelect($id_tabla_ex);
         }
 
         // Opciones: delegaciones.
@@ -247,5 +252,20 @@ final class PersonasEditarData
             return [$sel];
         }
         return [];
+    }
+
+    /**
+     * Alta: el enlace «añadir persona» envía `id_tabla`; el listado a veces `tabla`.
+     *
+     * @param array<string,mixed> $input
+     */
+    private static function idTablaFromInput(array $input): string
+    {
+        $id_tabla = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tabla');
+        if ($id_tabla !== '') {
+            return $id_tabla;
+        }
+
+        return \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tabla');
     }
 }

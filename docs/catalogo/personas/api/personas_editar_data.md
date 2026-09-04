@@ -6,7 +6,7 @@ url: "/src/personas/personas_editar_data"
 metodos: ["GET", "POST"]
 operacion: "form_data"
 controller: "src/personas/infrastructure/ui/http/controllers/personas_editar_data.php"
-entrada: ["post.apellido1:string", "post.id_nom:integer", "post.nuevo:integer", "post.obj_pau:string", "post.sel:mixed", "post.tabla:string"]
+entrada: ["post.apellido1:string", "post.id_nom:integer", "post.id_tabla:string", "post.nuevo:integer", "post.obj_pau:string", "post.sel:mixed", "post.tabla:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -51,7 +51,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `sel` | `mixed` | application | No | Edición: `id_nom#id_tabla` |
 | `id_nom` | `integer` | application | No | Alternativa a `sel` |
 | `apellido1` | `string` | application | No | Solo alta: precarga apellido |
-| `tabla` | `string` | application | No | Alta: `id_tabla` inicial |
+| `tabla` | `string` | application | No | Alta: `id_tabla` inicial (compatibilidad) |
+| `id_tabla` | `string` | application | No | Alta de-paso: código del desplegable (`pn`/`pa`/`px`/`psssc`). Preferente frente a `tabla`. |
 
 ## Salida
 

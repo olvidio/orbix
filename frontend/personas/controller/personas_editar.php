@@ -31,7 +31,10 @@ $Qapellido1 = '';
 $id_tabla_post = '';
 if (!empty($Qnuevo)) {
     $Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
-    $id_tabla_post = (string)filter_input(INPUT_POST, 'tabla');
+    $id_tabla_post = (string)filter_input(INPUT_POST, 'id_tabla');
+    if ($id_tabla_post === '') {
+        $id_tabla_post = (string)filter_input(INPUT_POST, 'tabla');
+    }
 } else {
     $ids = PersonasPostInput::idFromSelPost();
     $Qid_nom = $ids['id_nom'];
@@ -75,6 +78,7 @@ $campos = [
     'obj_pau' => $Qobj_pau,
     'id_nom' => $Qid_nom,
     'tabla' => $id_tabla_post,
+    'id_tabla' => $id_tabla_post,
     'apellido1' => !empty($Qnuevo) ? $Qapellido1 : '',
 ];
 

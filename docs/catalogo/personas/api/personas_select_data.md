@@ -36,7 +36,7 @@ Ramas principales:
   `exacto`; filtra `situacion=A` salvo que `cmb` esté marcado y el usuario no tenga permiso `dtor`
   (entonces excluye situación `B`); opcional `es_sacd=1` y filtro por centros vía `centro`.
 - **Colectivos** (`switch tabla`): `p_numerarios`, `p_agregados`, `p_supernumerarios`, `p_nax`,
-  `p_sssc`, `p_de_paso`/`p_de_paso_ex` (con `na` → `id_tabla=p{na}`), `p_cp_ae_sssc` no está en
+  `p_sssc`, `p_de_paso`/`p_de_paso_ex` (con `na` → `id_tabla` de-paso `pn`/`pa`/`px`/`psssc`), `p_cp_ae_sssc` no está en
   switch → cae en `nada` si no coincide. Si el filtro de centro no devuelve ctr → `tabla=nada`.
 - Avisos suaves de región STGR (`RegionStgrAviso`) se devuelven en `aviso` sin cortar el listado;
   el controller convierte algunos `error` suaves en `aviso`.
@@ -53,7 +53,7 @@ Ramas principales:
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `tabla` | `string` | application | No | Colectivo: `p_numerarios`, `p_agregados`, `p_supernumerarios`, `p_nax`, `p_sssc`, `p_de_paso`, `p_de_paso_ex`, `nada` |
-| `na` | `string` | application | No | Para de paso: `n`, `a`, `s`, `x`, `sss` → filtra `id_tabla=p{na}` |
+| `na` | `string` | application | No | Para de paso: `n`, `a`, `x`, `sss`/`sssc` → `id_tabla` `pn`/`pa`/`px`/`psssc` (sss también lista `psss`) |
 | `tipo` | `string` | application | No | Si `planning`, no incluye columna `nivel_stgr` en filas n/agd |
 | `es_sacd` | `integer` | application | No | `1` filtra `sacd=t` |
 | `exacto` | `string` | application | No | Vacío → búsqueda con prefijo `^` sin acentos |

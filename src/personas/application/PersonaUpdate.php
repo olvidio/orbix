@@ -52,6 +52,12 @@ final class PersonaUpdate
         } catch (\InvalidArgumentException) {
             return _("No existe la clase de la persona");
         }
+        if ($obj_pau === 'PersonaEx') {
+            $id_tabla_post = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tabla');
+            if ($id_tabla_post !== '') {
+                $id_tabla = PersonaRepositoryResolver::idTablaDePasoParaSelect($id_tabla_post);
+            }
+        }
 
         try {
             return match ($obj_pau) {
@@ -157,8 +163,8 @@ final class PersonaUpdate
         if ($oPersona === null) {
             $oPersona = new PersonaEx();
             $oPersona->setId_nom($id_nom);
-            $oPersona->setId_tabla($id_tabla);
         }
+        $oPersona->setId_tabla($id_tabla);
 
         $this->applyCommonFields($oPersona, $input);
         $edadRaw = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'edad');

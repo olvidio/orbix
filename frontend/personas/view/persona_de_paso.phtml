@@ -23,12 +23,12 @@ $edad = $edad ?? '';
             <td colspan="2">
                 <span class="etiqueta">n, agd o sss+:</span>
                 <select class="datos" name="id_tabla">
-                    <option value="pn" <?= $id_tabla === "pn" ? 'selected' : '' ?>><?= _("numerario") ?></option>
-                    <option value="pa" <?= $id_tabla === "pa" ? 'selected' : '' ?>><?= _("agregado") ?></option>
+                    <option value="pn" <?= in_array($id_tabla, ['pn', 'n'], true) ? 'selected' : '' ?>><?= _("numerario") ?></option>
+                    <option value="pa" <?= in_array($id_tabla, ['pa', 'a'], true) ? 'selected' : '' ?>><?= _("agregado") ?></option>
                     <?php if (OrbixRuntime::miSfsv() === 2) : ?>
-                        <option value="px" <?= $id_tabla === "px" ? 'selected' : '' ?>><?= _("numeraria auxiliar") ?></option>
+                        <option value="px" <?= in_array($id_tabla, ['px', 'x'], true) ? 'selected' : '' ?>><?= _("numeraria auxiliar") ?></option>
                     <?php else : ?>
-                        <option value="psssc" <?= $id_tabla === "psssc" ? 'selected' : '' ?>><?= _("sss+") ?></option>
+                        <option value="psssc" <?= in_array($id_tabla, ['psssc', 'psss', 'sssc', 'sss'], true) ? 'selected' : '' ?>><?= _("sss+") ?></option>
                     <?php endif; ?>
                 </select>
             </td>

@@ -6,7 +6,7 @@ url: "/src/personas/persona_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/personas/infrastructure/ui/http/controllers/persona_update.php"
-entrada: ["post.apel_fam:string", "post.apellido1:string", "post.apellido2:string", "post.ce:integer", "post.ce_fin:integer", "post.ce_ini:integer", "post.ce_lugar:string", "post.dl:string", "post.eap:string", "post.edad:string", "post.f_inc:string", "post.f_nacimiento:string", "post.f_situacion:string", "post.id_ctr:integer", "post.id_nom:integer", "post.idioma_preferido:string", "post.inc:string", "post.lugar_nacimiento:string", "post.nivel_stgr:integer", "post.nom:string", "post.nx1:string", "post.nx2:string", "post.obj_pau:string", "post.observ:string", "post.profesion:string", "post.profesor_stgr:string", "post.sacd:string", "post.situacion:string", "post.trato:string"]
+entrada: ["post.apel_fam:string", "post.apellido1:string", "post.apellido2:string", "post.ce:integer", "post.ce_fin:integer", "post.ce_ini:integer", "post.ce_lugar:string", "post.dl:string", "post.eap:string", "post.edad:string", "post.f_inc:string", "post.f_nacimiento:string", "post.f_situacion:string", "post.id_ctr:integer", "post.id_nom:integer", "post.id_tabla:string", "post.idioma_preferido:string", "post.inc:string", "post.lugar_nacimiento:string", "post.nivel_stgr:integer", "post.nom:string", "post.nx1:string", "post.nx2:string", "post.obj_pau:string", "post.observ:string", "post.profesion:string", "post.profesor_stgr:string", "post.sacd:string", "post.situacion:string", "post.trato:string"]
 entrada_obligatoria: ["post.id_nom", "post.obj_pau"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -28,7 +28,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 Despacha a `guardarPersonaDl` (N, Agd, Nax, S, SSSC) o `guardarPersonaEx`. Si no existe
 registro, crea entidad nueva con `id_nom` e `id_tabla` del POST. Aplica campos comunes
 (identidad, situación, STGR, fechas, sacd, inc, observ) y campos DL (`id_ctr`, `ce*`).
-`PersonaEx` admite además `edad` y `profesor_stgr`.
+`PersonaEx` admite además `edad`, `profesor_stgr` y el `id_tabla` del desplegable
+(`pn`/`pa`/`px`/`psssc`; alias `sssc`/`psss` → `psssc`).
 
 ## Endpoint
 
