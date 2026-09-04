@@ -69,6 +69,12 @@ class PersonaNotaTest extends myTest
         $this->assertEquals('dlb 23/24', $this->PersonaNota->getActaVo()->value());
     }
 
+    public function test_get_acta_sin_asignar_es_null()
+    {
+        $this->assertNull($this->PersonaNota->getActa());
+        $this->assertNull($this->PersonaNota->getActaVo());
+    }
+
     public function test_set_and_get_f_acta()
     {
         $date = new DateTimeLocal('2024-01-15 10:30:00');

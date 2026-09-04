@@ -12,11 +12,12 @@ use src\notas\domain\value_objects\NotaSituacion;
 
 final class ActaFirmadaPolicyTest extends TestCase
 {
-    public function test_vacio_y_cursada_no_bloquean(): void
+    public function test_vacio_cursada_y_examinado_no_bloquean(): void
     {
         $policy = new ActaFirmadaPolicy($this->createMock(ActaRepositoryInterface::class));
         $this->assertSame('', $policy->mensajeSiFirmada(''));
         $this->assertSame('', $policy->mensajeSiFirmada((string) NotaSituacion::CURSADA));
+        $this->assertSame('', $policy->mensajeSiFirmada((string) NotaSituacion::EXAMINADO));
     }
 
     public function test_acta_sin_pdf_no_bloquea(): void

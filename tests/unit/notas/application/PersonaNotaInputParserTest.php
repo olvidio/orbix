@@ -68,6 +68,7 @@ final class PersonaNotaInputParserTest extends TestCase
         $this->assertSame(1002, $pn->getId_asignatura());
         $this->assertSame(2100, $pn->getId_nivel());
         $this->assertSame(TipoActa::FORMATO_CERTIFICADO, $pn->getTipo_acta());
+        $this->assertNull($pn->getActa());
     }
 
     public function test_id_asignatura_1_sin_filas_lanza(): void

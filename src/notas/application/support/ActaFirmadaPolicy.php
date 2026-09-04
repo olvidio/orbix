@@ -25,12 +25,17 @@ final class ActaFirmadaPolicy
 
     /**
      * Mensaje de bloqueo si el identificador corresponde a un acta firmada.
-     * Cadenas vacías y la situación «cursada» no son un número de acta.
+     * Cadenas vacías y códigos de situación guardados en `acta` («cursada»,
+     * «examinado») no son un número de acta.
      */
     public function mensajeSiFirmada(?string $acta): string
     {
         $acta = trim((string) $acta);
-        if ($acta === '' || $acta === (string) NotaSituacion::CURSADA) {
+        if (
+            $acta === ''
+            || $acta === (string) NotaSituacion::CURSADA
+            || $acta === (string) NotaSituacion::EXAMINADO
+        ) {
             return '';
         }
         $oActa = $this->actaRepository->findById($acta);

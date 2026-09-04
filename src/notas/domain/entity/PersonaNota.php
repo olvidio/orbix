@@ -60,7 +60,7 @@ class PersonaNota
 
     protected NotaSituacion $id_situacion;
 
-    protected ?ActaNumero $acta;
+    protected ?ActaNumero $acta = null;
 
     protected ?DateTimeLocal $f_acta = null;
 

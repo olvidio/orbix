@@ -7,6 +7,9 @@ use src\notas\application\support\ActaFirmadaPolicy;
 use src\notas\application\support\PersonaNotaInputParser;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\entity\PersonaNota;
+use src\notas\domain\value_objects\NotaSituacion;
+use src\notas\domain\value_objects\TipoActa;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
@@ -33,7 +36,7 @@ final class PersonaNotaEliminar
     {
         try {
             $oPersonaNota = $this->personaNotaInputParser->parse($input, eliminar: true);
-            $firmada = $this->firmadaPolicy->mensajeSiFirmada($oPersonaNota->getActa());
+            $firmada = $this->mensajeSiNoSePuedeEliminar($oPersonaNota);
             if ($firmada !== '') {
                 return $firmada;
             }
@@ -51,5 +54,26 @@ final class PersonaNotaEliminar
         } catch (\RuntimeException $e) {
             return $e->getMessage();
         }
+    }
+
+    /**
+     * El POST de borrar (listado) no trae `acta`. Hay que leer la nota persistida.
+     * «Examinado» no cierra acta: se puede borrar aunque coincida un PDF firmado.
+     */
+    private function mensajeSiNoSePuedeEliminar(PersonaNota $oPersonaNota): string
+    {
+        $existente = $this->personaNotaRepository->findById(
+            $oPersonaNota->getId_nom(),
+            $oPersonaNota->getId_nivel(),
+            $oPersonaNota->getTipo_acta() ?? TipoActa::FORMATO_ACTA,
+        );
+        if (!$existente instanceof PersonaNota) {
+            return '';
+        }
+        if ($existente->getId_situacion() === NotaSituacion::EXAMINADO) {
+            return '';
+        }
+
+        return $this->firmadaPolicy->mensajeSiFirmada($existente->getActa());
     }
 }
