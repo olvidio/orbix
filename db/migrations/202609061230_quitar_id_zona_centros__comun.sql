@@ -1,7 +1,6 @@
 -- Quita id_zona de las copias de centros. La zona vive en zonas_ctr.
-SELECT migracion_drop_columna_si_existe('global', 'cu_centros_dl', 'id_zona', true);
-SELECT migracion_drop_columna_si_existe('global', 'cu_centros_dlf', 'id_zona', true);
-
+-- Solo se elimina donde la columna es local (padre). En las hijas es
+-- heredada y PostgreSQL no permite DROP (42P16).
 DO $$
 DECLARE
     r RECORD;
@@ -16,8 +15,9 @@ BEGIN
           AND a.attname = 'id_zona'
           AND a.attnum > 0
           AND NOT a.attisdropped
+          AND a.attinhcount = 0
           AND n.nspname NOT IN ('pg_catalog', 'information_schema')
-        ORDER BY c.relname, n.nspname
+        ORDER BY CASE WHEN n.nspname = 'global' THEN 0 ELSE 1 END, n.nspname, c.relname
     LOOP
         PERFORM migracion_drop_columna_si_existe(r.esquema, r.tabla, 'id_zona', true);
     END LOOP;

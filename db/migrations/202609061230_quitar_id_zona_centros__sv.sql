@@ -1,7 +1,5 @@
 -- Quita u_centros_dl.id_zona: la zona vive en comun.zonas_ctr.
--- Primero el padre (arrastra hijas heredadas); luego residuos locales.
-SELECT migracion_drop_columna_si_existe('global', 'u_centros_dl', 'id_zona', true);
-
+-- Solo DROP donde la columna es local (padre). Las hijas heredan.
 DO $$
 DECLARE
     r RECORD;
@@ -16,8 +14,9 @@ BEGIN
           AND a.attname = 'id_zona'
           AND a.attnum > 0
           AND NOT a.attisdropped
+          AND a.attinhcount = 0
           AND n.nspname NOT IN ('pg_catalog', 'information_schema')
-        ORDER BY n.nspname
+        ORDER BY CASE WHEN n.nspname = 'global' THEN 0 ELSE 1 END, n.nspname
     LOOP
         PERFORM migracion_drop_columna_si_existe(r.esquema, 'u_centros_dl', 'id_zona', true);
     END LOOP;
