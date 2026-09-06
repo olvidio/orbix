@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace src\personas\domain;
 
+use src\shared\domain\copias\DefinicionCopia;
+use src\shared\domain\copias\ValorCopia;
 use src\shared\infrastructure\persistence\ConverterDate;
 
 /**
  * Definición de la copia `cp_sacd` (BD comun): qué columnas se copian, desde qué
- * orígenes, y cómo se compara una fila de origen con la de destino.
+ * orígenes, y cuándo una fila debe estar en la copia.
  *
  * `cp_sacd` es una copia de las personas marcadas como SACD que vive en la BD
  * **comun**, para que las instalaciones sin acceso a la BD interior (sf, DMZ)
@@ -22,6 +24,10 @@ use src\shared\infrastructure\persistence\ConverterDate;
  *
  * Quedan fuera `PersonaS` y `PersonaNax` (criterio histórico: el legacy
  * `PersonaS::DBGuardar()` tampoco llamaba a `copia2Comun()`).
+ *
+ * La mecánica común a todas las copias (proyectar, comparar, normalizar) está en
+ * {@see DefinicionCopia}; aquí queda lo propio de los sacd, que es el criterio
+ * de {@see debeCopiarse()}.
  */
 final class CpSacdFila
 {
@@ -58,6 +64,23 @@ final class CpSacdFila
     /** id_tabla de personas de paso: sólo se copian si están en la dl propia. */
     public const ID_TABLAS_DE_PASO = ['pn', 'pa'];
 
+    private static ?DefinicionCopia $definicion = null;
+
+    /**
+     * Los `id_nom` de las personas de paso son negativos, así que la clave
+     * admite negativos: sólo el 0 (o lo no numérico) invalida la fila.
+     */
+    public static function definicion(): DefinicionCopia
+    {
+        return self::$definicion ??= new DefinicionCopia(
+            tabla: 'cp_sacd',
+            clave: 'id_nom',
+            columnas: self::COLUMNAS,
+            columnasBooleanas: ['sacd'],
+            claveAdmiteNegativos: true,
+        );
+    }
+
     /**
      * Fila lista para escribir en `cp_sacd` a partir de una entidad de persona.
      *
@@ -92,12 +115,7 @@ final class CpSacdFila
      */
     public static function desdeRegistro(array $registro): array
     {
-        $fila = [];
-        foreach (self::COLUMNAS as $columna) {
-            $fila[$columna] = $registro[$columna] ?? null;
-        }
-
-        return $fila;
+        return self::definicion()->desdeRegistro($registro);
     }
 
     /**
@@ -107,9 +125,7 @@ final class CpSacdFila
      */
     public static function idNom(array $fila): int
     {
-        $valor = $fila['id_nom'] ?? null;
-
-        return is_numeric($valor) ? (int) $valor : 0;
+        return self::definicion()->valorClave($fila);
     }
 
     /**
@@ -147,17 +163,7 @@ final class CpSacdFila
      */
     public static function normalizar(array $fila): array
     {
-        $normalizada = [];
-        foreach (self::COLUMNAS as $columna) {
-            $valor = $fila[$columna] ?? null;
-            if ($columna === 'sacd') {
-                $normalizada[$columna] = self::esVerdadero($valor) ? 't' : 'f';
-                continue;
-            }
-            $normalizada[$columna] = self::aTexto($valor);
-        }
-
-        return $normalizada;
+        return self::definicion()->normalizar($fila);
     }
 
     /**
@@ -169,46 +175,11 @@ final class CpSacdFila
      */
     public static function diferencias(array $origen, array $destino): array
     {
-        $a = self::normalizar($origen);
-        $b = self::normalizar($destino);
-
-        $distintas = [];
-        foreach (self::COLUMNAS as $columna) {
-            if ($a[$columna] !== $b[$columna]) {
-                $distintas[] = $columna;
-            }
-        }
-
-        return $distintas;
-    }
-
-    private static function aTexto(mixed $valor): string
-    {
-        if ($valor === null) {
-            return '';
-        }
-        if (is_bool($valor)) {
-            return $valor ? 't' : 'f';
-        }
-        if (is_scalar($valor)) {
-            return trim((string) $valor);
-        }
-
-        return trim((string) json_encode($valor));
+        return self::definicion()->diferencias($origen, $destino);
     }
 
     public static function esVerdadero(mixed $valor): bool
     {
-        if (is_bool($valor)) {
-            return $valor;
-        }
-        if (is_int($valor)) {
-            return $valor === 1;
-        }
-        if (is_string($valor)) {
-            return in_array(strtolower(trim($valor)), ['t', 'true', '1', 'y', 'yes', 'si'], true);
-        }
-
-        return false;
+        return ValorCopia::esVerdadero($valor);
     }
 }

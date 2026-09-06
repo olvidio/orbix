@@ -15,7 +15,7 @@ class DBRefresh
 
     public function refreshSubscriptionModulo(string $db): ?string
     {
-        $fileLog = ConfigGlobal::$directorio . '/log/db/pg_error_modulos.sql';
+        $fileLog = self::archivoLogModulos();
         //cambiar la conexión
         // OJO en "importar" no está la Base de Datos de pruebas, pero aquí sólo hace falta el host.
         $oConfigDB = new ConfigDB('importar');
@@ -101,6 +101,29 @@ class DBRefresh
     {
         return str_contains($error, 'does not exist')
             && str_contains(strtolower($error), 'subscription');
+    }
+
+    private static function archivoLogModulos(): string
+    {
+        $dir = rtrim((string) ConfigGlobal::$directorio, '/') . '/log/db';
+        if (self::asegurarDirLog($dir)) {
+            return $dir . '/pg_error_modulos.sql';
+        }
+        $tmp = sys_get_temp_dir() . '/orbix-log-db';
+        if (self::asegurarDirLog($tmp)) {
+            return $tmp . '/pg_error_modulos.sql';
+        }
+
+        return sys_get_temp_dir() . '/pg_error_modulos.sql';
+    }
+
+    private static function asegurarDirLog(string $dir): bool
+    {
+        if (is_dir($dir)) {
+            return is_writable($dir);
+        }
+
+        return @mkdir($dir, 0775, true) && is_dir($dir) && is_writable($dir);
     }
 
     private static function rutaPsql(): string

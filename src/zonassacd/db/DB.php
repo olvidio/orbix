@@ -26,6 +26,7 @@ class DB extends DBAbstract
     public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_zonas_ctr();
             $this->eliminar_zonas();
             $this->eliminar_zonas_grupos();
             $this->eliminar_zonas_sacd();
@@ -38,19 +39,16 @@ class DB extends DBAbstract
             $this->create_zonas();
             $this->create_zonas_grupos();
             $this->create_zonas_sacd();
+            $this->create_zonas_ctr();
         });
     }
 
     /**
-     * En el esquema sv
-     *  // OJO Corresponde al esquema sf/sv, no al comun.
-     */
-    /**
-     * En la BD sf/sv (global).
+     * En la BD comun (global).
      */
     public function create_zonas(): void
     {
-        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "zonas";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -67,22 +65,22 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_zonas(): void
     {
-        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "zonas";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function create_zonas_grupos(): void
     {
-        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "zonas_grupos";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -97,22 +95,22 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_zonas_grupos(): void
     {
-        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "zonas_grupos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function create_zonas_sacd(): void
     {
-        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "zonas_sacd";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -135,22 +133,49 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_zonas_sacd(): void
     {
-        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-d'));
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "zonas_sacd";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
-    protected function modulosSuscripcionGlobal(): array
+    /**
+     * Relación centro-zona. Sustituye a la columna id_zona de las tablas de centros.
+     */
+    public function create_zonas_ctr(): void
     {
-        return ['sv-e'];
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
+        $tabla = "zonas_ctr";
+        $nom_tabla = $this->getNomTabla($tabla);
+        $a_sql = [];
+
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                id_schema integer NOT NULL,
+                id_ubi integer NOT NULL,
+                id_zona integer NOT NULL
+            );";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
+
+        $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
+    }
+
+    public function eliminar_zonas_ctr(): void
+    {
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
+        $tabla = "zonas_ctr";
+        $nom_tabla = $this->getNomTabla($tabla);
+        $this->eliminar($nom_tabla);
+
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
 }

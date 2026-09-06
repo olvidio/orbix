@@ -2,16 +2,20 @@
 
 declare(strict_types=1);
 
-namespace src\personas\application;
+namespace src\shared\application\copias;
 
 /**
- * Resultado de reconciliar `cp_sacd` en un esquema.
+ * Resultado de reconciliar una tabla copia en un esquema.
  *
- * @see ResincronizarCpSacd
+ * Tres desenlaces posibles y excluyentes: el esquema se **omite** (no aplica),
+ * falla con **error** (no se ha podido reconciliar, y en modo aplicar no se ha
+ * tocado nada), o queda **reconciliado** con su recuento de altas/cambios/bajas.
+ *
+ * @see ReconciliadorCopia
  */
-final class CpSacdInformeEsquema
+final class InformeEsquemaCopia
 {
-    /** @param list<string> $detalle columnas que difieren, por persona */
+    /** @param list<string> $detalle claves y columnas que difieren */
     private function __construct(
         public readonly string $esquema,
         public readonly int $origen = 0,
@@ -57,6 +61,11 @@ final class CpSacdInformeEsquema
     public function tieneError(): bool
     {
         return $this->error !== '';
+    }
+
+    public function tieneCambios(): bool
+    {
+        return $this->altas > 0 || $this->cambios > 0 || $this->bajas > 0;
     }
 
     /**

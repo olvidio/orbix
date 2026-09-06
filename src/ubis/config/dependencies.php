@@ -35,6 +35,8 @@ use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\contracts\TipoCasaRepositoryInterface;
 use src\ubis\domain\contracts\TipoCentroRepositoryInterface;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
+use src\ubis\infrastructure\persistence\postgresql\CuCentrosDlWriter;
+use src\ubis\infrastructure\persistence\postgresql\CuCentrosDlfWriter;
 use src\ubis\infrastructure\persistence\postgresql\PgCasaDlRepository;
 use src\ubis\infrastructure\persistence\postgresql\PgCasaExRepository;
 use src\ubis\infrastructure\persistence\postgresql\PgCasaRepository;
@@ -100,6 +102,8 @@ use src\ubis\application\DireccionesResolver;
 use src\ubis\application\DireccionesTablaData;
 use src\ubis\application\HomeUbisData;
 use src\ubis\application\ListCtrData;
+use src\ubis\application\ResincronizarCuCentrosDl;
+use src\ubis\application\ResincronizarCuCentrosDlf;
 use src\ubis\application\TelecoDescLista;
 use src\ubis\application\TelecoEditarData;
 use src\ubis\application\TelecoEliminar;
@@ -117,6 +121,7 @@ use src\ubis\application\UbisListaData;
 use src\ubis\application\UbisTablaData;
 use src\ubis\application\UbisTiposLaborEtiquetas;
 use src\ubis\application\services\CasasDropdown;
+use src\ubis\application\services\SincronizarCuCentros;
 use src\ubis\application\services\CentrosDropdown;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\application\services\DelegacionQuery;
@@ -177,6 +182,13 @@ return [
     CasaPeriodoRepositoryInterface::class => autowire(PgCasaPeriodoRepository::class),
     TarifaUbiRepositoryInterface::class => autowire(PgTarifaUbiRepository::class),
     TrasladoUbiRepositoryInterface::class => autowire(PgTrasladoUbiRepository::class),
+
+    // Copias de centros en la BD comun (cu_centros_dl / cu_centros_dlf)
+    CuCentrosDlWriter::class => autowire(CuCentrosDlWriter::class),
+    CuCentrosDlfWriter::class => autowire(CuCentrosDlfWriter::class),
+    SincronizarCuCentros::class => autowire(SincronizarCuCentros::class),
+    ResincronizarCuCentrosDl::class => autowire(ResincronizarCuCentrosDl::class),
+    ResincronizarCuCentrosDlf::class => autowire(ResincronizarCuCentrosDlf::class),
 
     // Servicios
     src\ubis\application\services\CasasDropdown::class => autowire(CasasDropdown::class),

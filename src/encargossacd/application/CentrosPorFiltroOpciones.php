@@ -5,6 +5,7 @@ namespace src\encargossacd\application;
 use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\zonassacd\application\services\CentrosDeZona;
 
 /**
  * Mapa id_ubi => nombre para el desplegable de centros según filtro de encargo (Postgres vía repositorios).
@@ -14,6 +15,7 @@ final class CentrosPorFiltroOpciones
     public function __construct(
         private CentroDlRepositoryInterface $centroDlRepository,
         private CentroEllasRepositoryInterface $centroEllasRepository,
+        private CentrosDeZona $centrosDeZona,
     ) {
     }
 
@@ -40,10 +42,15 @@ final class CentrosPorFiltroOpciones
                 if ($id_zona === 0) {
                     return [];
                 }
-                $query = "WHERE id_zona = $id_zona AND active='t' ";
+                $ids = $this->centrosDeZona->idUbisDeZona($id_zona);
+                if ($ids === []) {
+                    return [];
+                }
+                $lista = implode(',', array_map(static fn (int $id): string => (string) $id, $ids));
+                $query = "WHERE id_ubi IN ($lista) AND active='t' ";
                 $opciones_sv = $this->centroDlRepository->getArrayCentros($query);
                 $opciones_sf = $this->centroEllasRepository->getArrayCentros($query);
-                return self::normalizeStringKeys(array_merge($opciones_sv, $opciones_sf));
+                return self::normalizeStringKeys($opciones_sv + $opciones_sf);
             default:
                 return [];
         }
@@ -56,8 +63,8 @@ final class CentrosPorFiltroOpciones
     {
         $query = "WHERE tipo_ctr ~ 'cgioc|oc|cgi' AND active='t' ";
         $opciones_sv = $this->centroDlRepository->getArrayCentros($query);
-        $opciones_sf = $this->centroDlRepository->getArrayCentros($query);
-        return self::normalizeStringKeys(array_merge($opciones_sv, $opciones_sf));
+        $opciones_sf = $this->centroEllasRepository->getArrayCentros($query);
+        return self::normalizeStringKeys($opciones_sv + $opciones_sf);
     }
 
     /**

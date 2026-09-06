@@ -7,6 +7,7 @@ use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\shared\domain\helpers\OpcionesDesplegable;
 use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
+use src\zonassacd\application\services\CentrosDeZona;
 
 class DesplegableCentrosZonaData
 {
@@ -14,6 +15,7 @@ class DesplegableCentrosZonaData
     public function __construct(
         private readonly CentroEllasRepositoryInterface $centroEllasRepository,
         private readonly CentroEllosRepositoryInterface $centroEllosRepository,
+        private readonly CentrosDeZona $centrosDeZona,
     ) {
     }
     /**
@@ -30,15 +32,11 @@ class DesplegableCentrosZonaData
         $opciones_sf = [];
         $opciones_sv = [];
 
-        if ($id_zona !== 0) {
-            $aWhere = [
-                'active' => 't',
-                'id_zona' => $id_zona,
-                '_ordre' => 'nombre_ubi',
-            ];
-
-            $opciones_sf = self::mapaCentrosOrdenados($this->centroEllasRepository->getCentros($aWhere));
-            $opciones_sv = self::mapaCentrosOrdenados($this->centroEllosRepository->getCentros($aWhere));
+        $filtro = CentrosDeZona::whereActivosIn($this->centrosDeZona->idUbisDeZona($id_zona));
+        if ($filtro !== null) {
+            [$aWhere, $aOperador] = $filtro;
+            $opciones_sf = self::mapaCentrosOrdenados($this->centroEllasRepository->getCentros($aWhere, $aOperador));
+            $opciones_sv = self::mapaCentrosOrdenados($this->centroEllosRepository->getCentros($aWhere, $aOperador));
         }
 
         return [

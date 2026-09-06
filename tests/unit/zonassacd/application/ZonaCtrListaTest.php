@@ -5,29 +5,20 @@ declare(strict_types=1);
 namespace Tests\unit\zonassacd\application;
 
 use PHPUnit\Framework\TestCase;
+use src\permisos\domain\XPermisos;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
-use src\permisos\domain\XPermisos;
 use src\zonassacd\application\ZonaCtrLista;
+use src\zonassacd\application\services\CentrosDeZona;
+use src\zonassacd\domain\contracts\ZonaCtrRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\entity\Zona;
 
-/**
- * Unitarios para {@see ZonaCtrLista::execute()}.
- *
- * Cubre los tres caminos del switch:
- *  - `'no'`    -> centros DL sin zona asignada.
- *  - `'no_sf'` -> centros SF/Ellas sin zona asignada.
- *  - default   -> centros DL + SF de la zona, fusionados.
- *
- * Ademas verifica que los centros cuyo `id_ubi` empieza por `2` solo
- * aparezcan si el usuario tiene permisos `des` o `vcsd` (y en ese caso
- * se marquen con la clase `tono2`).
- */
 final class ZonaCtrListaTest extends TestCase
 {
+    /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
@@ -43,34 +34,32 @@ final class ZonaCtrListaTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_no_pide_centros_dl_sin_zona_y_no_busca_zona_null(): void
+    public function test_no_pide_centros_dl_sin_zona(): void
     {
-        // Regresion: en esta rama `getId_zona()` es `null` y
-        // `findById(int)` reventaba con TypeError al recibir null.
-        $oCentro = $this->centroDlStub(1042, 'Centro DL', null);
+        $oCentro = $this->centroDlStub(1042, 'Centro DL');
 
         $centroDlRepo = $this->createMock(CentroDlRepositoryInterface::class);
         $centroDlRepo->expects($this->once())
             ->method('getCentros')
-            ->with(
-                $this->equalTo([
-                    'active' => 't',
-                    'id_zona' => '',
-                    '_ordre' => 'nombre_ubi',
-                ]),
-                $this->equalTo(['id_zona' => 'IS NULL'])
-            )
+            ->with(['active' => 't', '_ordre' => 'nombre_ubi'])
             ->willReturn([$oCentro]);
+
+        $zonaCtr = $this->createMock(ZonaCtrRepositoryInterface::class);
+        $zonaCtr->expects($this->once())
+            ->method('mapaZonaPorCentro')
+            ->with([1042])
+            ->willReturn([]);
+        $centrosDeZona = new CentrosDeZona($zonaCtr);
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
         $zonaRepo->expects($this->never())->method('findById');
 
-        $lista = new ZonaCtrLista(
+        $out = (new ZonaCtrLista(
             $centroDlRepo,
             $this->createStub(CentroEllasRepositoryInterface::class),
             $zonaRepo,
-        );
-        $out = $lista->execute('no');
+            $centrosDeZona,
+        ))->execute('no');
 
         $this->assertSame('tabla', $out['tipo']);
         $this->assertCount(1, $out['a_valores']);
@@ -82,31 +71,25 @@ final class ZonaCtrListaTest extends TestCase
 
     public function test_no_sf_pide_centros_ellas_sin_zona(): void
     {
-        $oCentro = $this->centroEllasStub(2055, 'Centro SF', null);
+        $oCentro = $this->centroEllasStub(2055, 'Centro SF');
 
         $centroEllasRepo = $this->createMock(CentroEllasRepositoryInterface::class);
         $centroEllasRepo->expects($this->once())
             ->method('getCentros')
-            ->with(
-                $this->equalTo([
-                    'active' => 't',
-                    'id_zona' => '',
-                    '_ordre' => 'nombre_ubi',
-                ]),
-                $this->equalTo(['id_zona' => 'IS NULL'])
-            )
+            ->with(['active' => 't', '_ordre' => 'nombre_ubi'])
             ->willReturn([$oCentro]);
 
-        $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
-        $zonaRepo->expects($this->never())->method('findById');
+        $zonaCtr = $this->createStub(ZonaCtrRepositoryInterface::class);
+        $zonaCtr->method('mapaZonaPorCentro')->willReturn([]);
+        $centrosDeZona = new CentrosDeZona($zonaCtr);
 
         $_SESSION['oPerm'] = $this->oPermStub(['vcsd' => true]);
-        $lista = new ZonaCtrLista(
+        $out = (new ZonaCtrLista(
             $this->createStub(CentroDlRepositoryInterface::class),
             $centroEllasRepo,
-            $zonaRepo,
-        );
-        $out = $lista->execute('no_sf');
+            $this->createStub(ZonaRepositoryInterface::class),
+            $centrosDeZona,
+        ))->execute('no_sf');
 
         $this->assertCount(1, $out['a_valores']);
         $first = reset($out['a_valores']);
@@ -116,21 +99,28 @@ final class ZonaCtrListaTest extends TestCase
 
     public function test_default_fusiona_centros_dl_y_sf_de_la_zona(): void
     {
-        $oCentroDl = $this->centroDlStub(1042, 'Centro DL', 9);
-        $oCentroSf = $this->centroEllasStub(2055, 'Centro SF', 9);
+        $oCentroDl = $this->centroDlStub(1042, 'Centro DL');
+        $oCentroSf = $this->centroEllasStub(2055, 'Centro SF');
 
+        $zonaCtr = $this->createStub(ZonaCtrRepositoryInterface::class);
+        $zonaCtr->method('idUbisDeZona')->willReturn([1042, 2055]);
+        $centrosDeZona = new CentrosDeZona($zonaCtr);
+
+        $filtro = [
+            ['active' => 't', 'id_ubi' => [1042, 2055], '_ordre' => 'nombre_ubi'],
+            ['id_ubi' => 'IN'],
+        ];
         $centroDlRepo = $this->createMock(CentroDlRepositoryInterface::class);
-        $centroDlRepo->expects($this->once())->method('getCentros')->willReturn([$oCentroDl]);
+        $centroDlRepo->expects($this->once())->method('getCentros')->with($filtro[0], $filtro[1])->willReturn([$oCentroDl]);
 
         $centroEllasRepo = $this->createMock(CentroEllasRepositoryInterface::class);
-        $centroEllasRepo->expects($this->once())->method('getCentros')->willReturn([$oCentroSf]);
+        $centroEllasRepo->expects($this->once())->method('getCentros')->with($filtro[0], $filtro[1])->willReturn([$oCentroSf]);
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
-        $zonaRepo->method('findById')->willReturn($this->zonaStub('Zona 9'));
+        $zonaRepo->method('findById')->with(9)->willReturn($this->zonaStub('Zona 9'));
 
         $_SESSION['oPerm'] = $this->oPermStub(['des' => true]);
-        $lista = new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo);
-        $out = $lista->execute('9');
+        $out = (new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo, $centrosDeZona))->execute('9');
 
         $this->assertCount(2, $out['a_valores']);
         $vals = array_values($out['a_valores']);
@@ -142,59 +132,57 @@ final class ZonaCtrListaTest extends TestCase
 
     public function test_con_sel_solo_con_permiso_des_o_vcsd(): void
     {
-        $oCentro = $this->centroDlStub(1042, 'Centro DL', 9);
+        $zonaCtr = $this->createStub(ZonaCtrRepositoryInterface::class);
+        $zonaCtr->method('idUbisDeZona')->willReturn([1042]);
+        $centrosDeZona = new CentrosDeZona($zonaCtr);
 
         $centroDlRepo = $this->createStub(CentroDlRepositoryInterface::class);
-        $centroDlRepo->method('getCentros')->willReturn([$oCentro]);
+        $centroDlRepo->method('getCentros')->willReturn([$this->centroDlStub(1042, 'Centro DL')]);
         $centroEllasRepo = $this->createStub(CentroEllasRepositoryInterface::class);
         $centroEllasRepo->method('getCentros')->willReturn([]);
         $zonaRepo = $this->createStub(ZonaRepositoryInterface::class);
         $zonaRepo->method('findById')->willReturn($this->zonaStub('Zona 9'));
 
-        $lista = new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo);
+        $lista = new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo, $centrosDeZona);
         $this->assertFalse($lista->execute('9')['con_sel']);
 
         $_SESSION['oPerm'] = $this->oPermStub(['des' => true]);
-        $this->assertTrue((new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo))->execute('9')['con_sel']);
+        $this->assertTrue((new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo, $centrosDeZona))->execute('9')['con_sel']);
     }
 
     public function test_sin_permisos_descarta_centros_con_id_ubi_empezando_por_2(): void
     {
-        $oCentroDl = $this->centroDlStub(1042, 'Centro DL', 9);
-        $oCentroSf = $this->centroEllasStub(2055, 'Centro SF', 9);
+        $zonaCtr = $this->createStub(ZonaCtrRepositoryInterface::class);
+        $zonaCtr->method('idUbisDeZona')->willReturn([1042, 2055]);
+        $centrosDeZona = new CentrosDeZona($zonaCtr);
 
         $centroDlRepo = $this->createStub(CentroDlRepositoryInterface::class);
-        $centroDlRepo->method('getCentros')->willReturn([$oCentroDl]);
+        $centroDlRepo->method('getCentros')->willReturn([$this->centroDlStub(1042, 'Centro DL')]);
         $centroEllasRepo = $this->createStub(CentroEllasRepositoryInterface::class);
-        $centroEllasRepo->method('getCentros')->willReturn([$oCentroSf]);
-
+        $centroEllasRepo->method('getCentros')->willReturn([$this->centroEllasStub(2055, 'Centro SF')]);
         $zonaRepo = $this->createStub(ZonaRepositoryInterface::class);
         $zonaRepo->method('findById')->willReturn($this->zonaStub('Zona 9'));
 
-        // Sin permisos `des` ni `vcsd` -> el centro SF (id `2055`) se filtra.
-        $lista = new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo);
-        $out = $lista->execute('9');
+        $out = (new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo, $centrosDeZona))->execute('9');
 
         $this->assertCount(1, $out['a_valores']);
         $first = reset($out['a_valores']);
         $this->assertSame('1042', $first['sel']);
     }
 
-    private function centroDlStub(int $id_ubi, string $nombre, ?int $id_zona): CentroDl
+    private function centroDlStub(int $id_ubi, string $nombre): CentroDl
     {
         $stub = $this->createStub(CentroDl::class);
         $stub->method('getId_ubi')->willReturn($id_ubi);
         $stub->method('getNombre_ubi')->willReturn($nombre);
-        $stub->method('getId_zona')->willReturn($id_zona);
         return $stub;
     }
 
-    private function centroEllasStub(int $id_ubi, string $nombre, ?int $id_zona): CentroEllas
+    private function centroEllasStub(int $id_ubi, string $nombre): CentroEllas
     {
         $stub = $this->createStub(CentroEllas::class);
         $stub->method('getId_ubi')->willReturn($id_ubi);
         $stub->method('getNombre_ubi')->willReturn($nombre);
-        $stub->method('getId_zona')->willReturn($id_zona);
         return $stub;
     }
 
@@ -216,5 +204,4 @@ final class ZonaCtrListaTest extends TestCase
         );
         return $stub;
     }
-
 }

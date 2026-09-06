@@ -128,5 +128,8 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/ubis/delegaciones_region_stgr_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/delegaciones_region_stgr_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/centros_resincronizar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/centros_resincronizar.php';
+    });
 
 };

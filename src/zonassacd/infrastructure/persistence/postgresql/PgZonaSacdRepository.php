@@ -16,9 +16,9 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
 
     public function __construct()
     {
-        $oDbl = GlobalPdo::get('oDBE');
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = GlobalPdo::get('oDBE_Select');
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('zonas_sacd');
     }

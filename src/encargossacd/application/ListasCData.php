@@ -12,6 +12,7 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\zonassacd\application\services\CentrosDeZona;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
@@ -30,7 +31,8 @@ final class ListasCData
         private EncargoSacdRepositoryInterface $encargoSacdRepository,
         private PersonaDlRepositoryInterface $personaDlRepository,
         private ZonaGrupoRepositoryInterface $zonaGrupoRepository,
-        private ZonaRepositoryInterface $zonaRepository
+        private ZonaRepositoryInterface $zonaRepository,
+        private CentrosDeZona $centrosDeZona,
     ) {
     }
 
@@ -83,7 +85,10 @@ final class ListasCData
 
             foreach ($cZonas as $oZona) {
                 $id_zona = $oZona->getId_zona();
-                $cCentrosDl = $this->centroDlRepository->getCentros(['id_zona' => $id_zona]) ?: [];
+                $idsZona = $this->centrosDeZona->idUbisDeZona((int) $id_zona);
+                $cCentrosDl = $idsZona === []
+                    ? []
+                    : ($this->centroDlRepository->getCentros(['id_ubi' => $idsZona], ['id_ubi' => 'IN']) ?: []);
                 foreach ($cCentrosDl as $oCentroDl) {
                     $id_ubi = $oCentroDl->getId_ubi();
                     $cPersonas = $this->personaDlRepository->getPersonas([

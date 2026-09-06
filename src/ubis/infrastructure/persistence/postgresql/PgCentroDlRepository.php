@@ -12,6 +12,7 @@ use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
+use src\ubis\infrastructure\persistence\postgresql\traits\SincronizaCuCentrosTrait;
 use src\utils_database\domain\GenerateIdGlobal;
 
 /**
@@ -26,6 +27,7 @@ use src\utils_database\domain\GenerateIdGlobal;
 class PgCentroDlRepository extends ClaseRepository implements CentroDlRepositoryInterface
 {
     use HandlesPdoErrors;
+    use SincronizaCuCentrosTrait;
 
     public function __construct()
     {
@@ -152,7 +154,12 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $success = $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($success) {
+            $this->eliminarDeCuCentros($CentroDl);
+        }
+
+        return $success;
     }
 
     /**
@@ -210,7 +217,12 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
         if ($stmt === false) {
             return false;
         }
-        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        $success = $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        if ($success) {
+            $this->sincronizarCuCentros($CentroDl);
+        }
+
+        return $success;
     }
 
     private function isNew(int $id_ubi): bool

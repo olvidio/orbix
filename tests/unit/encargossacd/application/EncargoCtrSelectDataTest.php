@@ -8,6 +8,8 @@ use src\encargossacd\application\EncargoCtrSelectData;
 use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\zonassacd\application\services\CentrosDeZona;
+use src\zonassacd\domain\contracts\ZonaCtrRepositoryInterface;
 
 final class EncargoCtrSelectDataTest extends TestCase
 {
@@ -21,7 +23,7 @@ final class EncargoCtrSelectDataTest extends TestCase
         ]);
 
         $useCase = new EncargoCtrSelectData(
-            new CentrosPorFiltroOpciones($centroDl, $this->createMock(CentroEllasRepositoryInterface::class)),
+            $this->centrosPorFiltro($centroDl),
         );
 
         $out = $useCase->execute(501, EncargoGrupo::CENTRO_SV, 0);
@@ -42,7 +44,7 @@ final class EncargoCtrSelectDataTest extends TestCase
         ]);
 
         $useCase = new EncargoCtrSelectData(
-            new CentrosPorFiltroOpciones($centroDl, $this->createMock(CentroEllasRepositoryInterface::class)),
+            $this->centrosPorFiltro($centroDl),
         );
 
         $out = $useCase->execute(0, EncargoGrupo::CGI, 0);
@@ -62,7 +64,7 @@ final class EncargoCtrSelectDataTest extends TestCase
             ]);
 
         $useCase = new EncargoCtrSelectData(
-            new CentrosPorFiltroOpciones($centroDl, $this->createMock(CentroEllasRepositoryInterface::class)),
+            $this->centrosPorFiltro($centroDl),
         );
 
         $out = $useCase->execute(501, EncargoGrupo::CENTRO_SV, 99);
@@ -77,7 +79,7 @@ final class EncargoCtrSelectDataTest extends TestCase
         $centroDl->method('getArrayCentros')->willReturn([]);
 
         $useCase = new EncargoCtrSelectData(
-            new CentrosPorFiltroOpciones($centroDl, $this->createMock(CentroEllasRepositoryInterface::class)),
+            $this->centrosPorFiltro($centroDl),
         );
 
         $out = $useCase->execute(0, EncargoGrupo::CENTRO_SV, 0, '');
@@ -93,7 +95,7 @@ final class EncargoCtrSelectDataTest extends TestCase
         ]);
 
         $useCase = new EncargoCtrSelectData(
-            new CentrosPorFiltroOpciones($centroDl, $this->createMock(CentroEllasRepositoryInterface::class)),
+            $this->centrosPorFiltro($centroDl),
         );
 
         $out = $useCase->execute(0, EncargoGrupo::CENTRO_SV, 0);
@@ -110,11 +112,45 @@ final class EncargoCtrSelectDataTest extends TestCase
         ]);
 
         $useCase = new EncargoCtrSelectData(
-            new CentrosPorFiltroOpciones($centroDl, $this->createMock(CentroEllasRepositoryInterface::class)),
+            $this->centrosPorFiltro($centroDl),
         );
 
         $out = $useCase->execute(501, EncargoGrupo::CENTRO_SV, 0);
 
         $this->assertFalse($out['blanco']);
+    }
+
+    public function test_zonas_misas_filtra_por_id_ubi_de_zonas_ctr(): void
+    {
+        $zonaCtr = $this->createMock(ZonaCtrRepositoryInterface::class);
+        $zonaCtr->expects($this->once())->method('idUbisDeZona')->with(9)->willReturn([1042, 2005]);
+        $centrosDeZona = new CentrosDeZona($zonaCtr);
+
+        $centroDl = $this->createMock(CentroDlRepositoryInterface::class);
+        $centroDl->expects($this->once())
+            ->method('getArrayCentros')
+            ->with($this->stringContains('id_ubi IN (1042,2005)'))
+            ->willReturn([1042 => 'Centro DL']);
+
+        $centroEllas = $this->createMock(CentroEllasRepositoryInterface::class);
+        $centroEllas->expects($this->once())
+            ->method('getArrayCentros')
+            ->with($this->stringContains('id_ubi IN (1042,2005)'))
+            ->willReturn([2005 => 'Centro SF']);
+
+        $out = (new EncargoCtrSelectData(
+            new CentrosPorFiltroOpciones($centroDl, $centroEllas, $centrosDeZona),
+        ))->execute(0, EncargoGrupo::ZONAS_MISAS, 9);
+
+        $this->assertSame([['1042', 'Centro DL'], ['2005', 'Centro SF']], $out['opciones']);
+    }
+
+    private function centrosPorFiltro(CentroDlRepositoryInterface $centroDl): CentrosPorFiltroOpciones
+    {
+        return new CentrosPorFiltroOpciones(
+            $centroDl,
+            $this->createStub(CentroEllasRepositoryInterface::class),
+            new CentrosDeZona($this->createStub(ZonaCtrRepositoryInterface::class)),
+        );
     }
 }

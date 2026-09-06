@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace src\zonassacd\application;
 
 use src\permisos\domain\XPermisos;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\entity\CentroDl;
+use src\ubis\domain\entity\CentroEllas;
+use src\zonassacd\application\services\CentrosDeZona;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 final class ZonaCtrLista
@@ -13,6 +18,7 @@ final class ZonaCtrLista
         private CentroDlRepositoryInterface $centroDlRepository,
         private CentroEllasRepositoryInterface $centroEllasRepository,
         private ZonaRepositoryInterface $zonaRepository,
+        private CentrosDeZona $centrosDeZona,
     ) {
     }
 
@@ -21,31 +27,22 @@ final class ZonaCtrLista
      */
     public function execute(string $id_zona): array
     {
-        $aWhere = [];
-        $aOperador = [];
-        $cCentros = [];
+        $nombreZona = '';
         switch ($id_zona) {
             case 'no':
-                $aWhere['active'] = 't';
-                $aWhere['id_zona'] = '';
-                $aOperador['id_zona'] = 'IS NULL';
-                $aWhere['_ordre'] = 'nombre_ubi';
-                $cCentros = $this->centroDlRepository->getCentros($aWhere, $aOperador);
+                $cCentros = $this->activosSinZona(
+                    $this->centroDlRepository->getCentros(['active' => 't', '_ordre' => 'nombre_ubi']),
+                );
                 break;
             case 'no_sf':
-                $aWhere['active'] = 't';
-                $aWhere['id_zona'] = '';
-                $aOperador['id_zona'] = 'IS NULL';
-                $aWhere['_ordre'] = 'nombre_ubi';
-                $cCentros = $this->centroEllasRepository->getCentros($aWhere, $aOperador);
+                $cCentros = $this->activosSinZona(
+                    $this->centroEllasRepository->getCentros(['active' => 't', '_ordre' => 'nombre_ubi']),
+                );
                 break;
             default:
-                $aWhere['active'] = 't';
-                $aWhere['id_zona'] = $id_zona;
-                $aWhere['_ordre'] = 'nombre_ubi';
-                $cCentrosDl = $this->centroDlRepository->getCentros($aWhere);
-                $cCentrosSf = $this->centroEllasRepository->getCentros($aWhere);
-                $cCentros = array_merge($cCentrosDl, $cCentrosSf);
+                $oZona = $this->zonaRepository->findById((int) $id_zona);
+                $nombreZona = $oZona?->getNombre_zona() ?? '';
+                $cCentros = $this->activosDeZona((int) $id_zona);
         }
 
         $oPerm = $_SESSION['oPerm'] ?? null;
@@ -63,11 +60,9 @@ final class ZonaCtrLista
             if ($id_ubi[0] === '2') {
                 $a_valores[$i]['clase'] = 'tono2';
             }
-            $idZonaCentro = $oCentro->getId_zona();
-            $oZona = $idZonaCentro !== null ? $this->zonaRepository->findById($idZonaCentro) : null;
             $a_valores[$i]['sel'] = $id_ubi;
             $a_valores[$i][1] = $oCentro->getNombre_ubi();
-            $a_valores[$i][2] = $oZona?->getNombre_zona() ?? '';
+            $a_valores[$i][2] = $nombreZona;
         }
 
         return [
@@ -79,5 +74,43 @@ final class ZonaCtrLista
             'a_valores' => $a_valores,
             'error' => '',
         ];
+    }
+
+    /**
+     * @param list<CentroDl|CentroEllas> $cCentros
+     * @return list<CentroDl|CentroEllas>
+     */
+    private function activosSinZona(array $cCentros): array
+    {
+        $ids = [];
+        foreach ($cCentros as $oCentro) {
+            $ids[] = (int) $oCentro->getId_ubi();
+        }
+        $sin = array_flip($this->centrosDeZona->idUbisSinZonaEntre($ids));
+        $filtrados = [];
+        foreach ($cCentros as $oCentro) {
+            if (isset($sin[(int) $oCentro->getId_ubi()])) {
+                $filtrados[] = $oCentro;
+            }
+        }
+
+        return $filtrados;
+    }
+
+    /**
+     * @return list<CentroDl|CentroEllas>
+     */
+    private function activosDeZona(int $id_zona): array
+    {
+        $filtro = CentrosDeZona::whereActivosIn($this->centrosDeZona->idUbisDeZona($id_zona));
+        if ($filtro === null) {
+            return [];
+        }
+        [$aWhere, $aOperador] = $filtro;
+
+        return array_merge(
+            $this->centroDlRepository->getCentros($aWhere, $aOperador),
+            $this->centroEllasRepository->getCentros($aWhere, $aOperador),
+        );
     }
 }

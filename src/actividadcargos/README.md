@@ -17,6 +17,12 @@ Origen de la copia (BD sv-e):
 La definición de qué columnas se copian y cómo se compara una fila vive en
 `src/actividadcargos/domain/CdCargosActivFila.php`.
 
+> `cd_cargos_activ_dl` es una de las copias entre bases del proyecto. La mecánica
+> común a todas ellas (proyección, diff, writer, motor de reconciliación) está en
+> `src/shared/.../copias/` y se describe en
+> [`docs/dev/copias_entre_bases.md`](../../docs/dev/copias_entre_bases.md). Aquí
+> se documenta sólo lo propio de los cargos.
+
 ### Historia: por qué hace falta una reconciliación
 
 El mecanismo ya existía en el código legacy (`copia2Comun()` /
@@ -56,6 +62,10 @@ debería haber en `cd_cargos_activ_dl` (leído de `d_cargos_activ_dl` en sv-e)
 con lo que hay realmente. No borra y recarga entero: calcula altas, cambios y
 bajas fila a fila, para no generar ruido de más en la replicación hacia el
 exterior.
+
+El recorrido de esquemas, el diff y la transacción por esquema los pone el motor
+compartido `src\shared\application\copias\ReconciliadorCopia`; la clase de cargos
+sólo aporta la tabla de origen y el orden de aplicación (bajas antes que altas).
 
 Usa el mismo mecanismo de conexión que
 `src/devel_db_admin/application/MigracionesEjecutar.php`: el usuario de

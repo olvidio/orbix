@@ -28,6 +28,12 @@ La definición de qué columnas se copian, desde qué orígenes y cuándo una fi
 estar en la copia vive en `src/personas/domain/CpSacdFila.php` (`COLUMNAS`,
 `ID_TABLAS`, `debeCopiarse()`).
 
+> `cp_sacd` es una de las copias entre bases del proyecto. La mecánica común a
+> todas ellas (proyección, diff, writer, motor de reconciliación) está en
+> `src/shared/.../copias/` y se describe en
+> [`docs/dev/copias_entre_bases.md`](../../docs/dev/copias_entre_bases.md). Aquí
+> se documenta sólo lo propio de los sacd.
+
 ### Historia: por qué hace falta una reconciliación
 
 El mecanismo ya existía en el código legacy: `copia2Comun()` y `eliminarDeComun()` en
@@ -75,6 +81,10 @@ BD comun (o uno concreto), y para cada uno compara lo que debería haber en `cp_
 (leído de las tablas de origen en la BD interior) con lo que hay realmente. No borra
 y recarga entero: calcula altas, cambios y bajas fila a fila, para no generar ruido
 de más en la replicación hacia el exterior.
+
+El recorrido de esquemas, el diff y la transacción por esquema los pone el motor
+compartido `src\shared\application\copias\ReconciliadorCopia`; la clase de personas
+sólo aporta de qué cuatro tablas se lee el origen y con qué filtros.
 
 Usa el mismo mecanismo de conexión que
 `src/devel_db_admin/application/MigracionesEjecutar.php`: el usuario de mantenimiento

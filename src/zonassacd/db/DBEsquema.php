@@ -9,6 +9,9 @@ use src\utils_database\domain\entity\DBAbstract;
 /**
  * crear las tablas necesarias para el esquema.
  * Heredadas de global
+ *
+ * Las tablas de zonas están en la BD comun: las lee también la instalación sf
+ * (plan de misas) y la DMZ a través de comun_select.
  */
 class DBEsquema extends DBAbstract
 {
@@ -27,6 +30,7 @@ class DBEsquema extends DBAbstract
 
     public function dropAll(): void
     {
+        $this->eliminar_zonas_ctr();
         $this->eliminar_zonas();
         $this->eliminar_zonas_grupos();
         $this->eliminar_zonas_sacd();
@@ -42,6 +46,7 @@ class DBEsquema extends DBAbstract
         $this->create_zonas();
         $this->create_zonas_grupos();
         $this->create_zonas_sacd();
+        $this->create_zonas_ctr();
         // crear las tablas en la DBSelect para la sincronización.
         if (DBAbstract::hasServerSelect()) {
             $oDBEsquemaSelect = new DBEsquemaSelect();
@@ -79,6 +84,7 @@ class DBEsquema extends DBAbstract
                 $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
                 break;
             default:
+                // zonas_ctr no tiene secuencia: la clave es el id_ubi del centro.
                 $nom_tabla = $this->getNomTabla($tabla);
                 $campo_seq = '';
                 $id_seq = '';
@@ -91,18 +97,9 @@ class DBEsquema extends DBAbstract
         return $datosTabla;
     }
 
-    /**
-     * En la BD sf/sv (esquema).
-     */
     public function create_zonas(): void
     {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal('comun');
 
         $tabla = "zonas";
         $datosTabla = $this->infoTable($tabla);
@@ -115,7 +112,6 @@ class DBEsquema extends DBAbstract
          *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
          *  que ya había sido instalado y se había desactivado, pero no borrado.
          */
-
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
@@ -137,31 +133,14 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
-        /* Finalmente no se puede tampoco con sv, porque las zonas estan en sv-e, i los centros en sv.
-        // Foreign key en la tabla de centros (solo la sv, la sf está en otra base de datos y no se puede):
-        // Sólo se puede si el campo id_zona de u_centros_dl está vacio.
-        $a_sql[] = "UPDATE u_centros_dl SET id_zona = NULL; ";
-        $a_sql[] = "ALTER TABLE u_centros_dl
-                    ADD CONSTRAINT u_centros_dl_id_zona_fk FOREIGN KEY (id_zona) REFERENCES zonas(id_zona) ON UPDATE CASCADE ON DELETE SET NULL; ";
-        */
-
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
+        $this->delPermisoGlobal('comun');
     }
 
     public function eliminar_zonas(): void
     {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal('comun');
 
         $datosTabla = $this->infoTable("zonas");
 
@@ -174,21 +153,12 @@ class DBEsquema extends DBAbstract
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv-e');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
+        $this->delPermisoGlobal('comun');
     }
 
     public function create_zonas_grupos(): void
     {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal('comun');
 
         $tabla = "zonas_grupos";
         $datosTabla = $this->infoTable($tabla);
@@ -224,21 +194,12 @@ class DBEsquema extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
+        $this->delPermisoGlobal('comun');
     }
 
     public function eliminar_zonas_grupos(): void
     {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal('comun');
 
         $datosTabla = $this->infoTable("zonas_grupos");
 
@@ -251,21 +212,12 @@ class DBEsquema extends DBAbstract
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv-e');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
+        $this->delPermisoGlobal('comun');
     }
 
     public function create_zonas_sacd(): void
     {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal('comun');
 
         $tabla = "zonas_sacd";
         $datosTabla = $this->infoTable($tabla);
@@ -273,6 +225,7 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nom_zonas = $this->getNomTabla('zonas');
         $nompkey = $tabla . '_pkey';
         /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
          *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
@@ -283,11 +236,9 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                         CONSTRAINT $nompkey PRIMARY KEY (id_item),
                         CONSTRAINT zonas_sacd_id_nom_key UNIQUE (id_nom, id_zona),
-                        CONSTRAINT zonas_sacd_id_zona_fkey FOREIGN KEY (id_zona) 
-                            REFERENCES zonas(id_zona) ON DELETE CASCADE
-
+                        CONSTRAINT zonas_sacd_id_zona_fkey FOREIGN KEY (id_zona)
+                            REFERENCES $nom_zonas(id_zona) ON DELETE CASCADE
                 )
-    
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
@@ -305,21 +256,13 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
-        $this->delPermisoGlobal('sfsv-e');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
+
+        $this->delPermisoGlobal('comun');
     }
 
     public function eliminar_zonas_sacd(): void
     {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal('comun');
 
         $datosTabla = $this->infoTable("zonas_sacd");
 
@@ -332,20 +275,61 @@ class DBEsquema extends DBAbstract
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv-e');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
+        $this->delPermisoGlobal('comun');
     }
 
-    //// LLENAR 
+    /**
+     * Relación centro-zona: un centro pertenece como mucho a una zona, y la ausencia
+     * de fila significa que no tiene ninguna asignada.
+     *
+     * Vive en comun (y no como columna de las tablas de centros) porque el centro
+     * puede ser de sv (`u_centros_dl`, BD sv) o de sf (`cu_centros_dlf`, comun), y
+     * ambos casos se consultan desde el plan de misas, cuyas tablas están en comun.
+     */
+    public function create_zonas_ctr(): void
+    {
+        $this->addPermisoGlobal('comun');
+
+        $tabla = "zonas_ctr";
+        $datosTabla = $this->infoTable($tabla);
+
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $nom_zonas = $this->getNomTabla('zonas');
+        $nompkey = $tabla . '_pkey';
+
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_ubi),
+                        CONSTRAINT zonas_ctr_id_zona_fkey FOREIGN KEY (id_zona)
+                            REFERENCES $nom_zonas(id_zona) ON DELETE CASCADE
+                )
+            INHERITS (global.$tabla);";
+
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS zonas_ctr_id_zona_idx ON $nom_tabla (id_zona);";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
+
+        $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun');
+    }
+
+    public function eliminar_zonas_ctr(): void
+    {
+        $this->addPermisoGlobal('comun');
+
+        $datosTabla = $this->infoTable("zonas_ctr");
+
+        $this->eliminar($datosTabla['nom_tabla']);
+
+        $this->delPermisoGlobal('comun');
+    }
+
+    //// LLENAR
     public function llenar_zonas(): void
     {
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
-        $this->setConexion('sfsv-e');
+        $this->addPermisoGlobal('comun');
+        $this->setConexion('comun');
 
         $datosTabla = $this->infoTable("zonas");
 
@@ -354,12 +338,14 @@ class DBEsquema extends DBAbstract
         $id_seq = $datosTabla['id_seq'];
         $filename = $datosTabla['filename'];
         $oDbl = $this->oDbl;
+        $nom_zonas_sacd = $this->getNomTabla('zonas_sacd');
+        $nom_zonas_ctr = $this->getNomTabla('zonas_ctr');
 
         $a_sql = [];
-        // Como tiene un forign key, si se añade CASCADE, borrará todos los centros
-        // hay que borrar el fk y volverlo a crear.
-        // NO $a_sql[] = "ALTER TABLE u_centros_dl DROP CONSTRAINT u_centros_dl_id_zona_fk; ";
-        $a_sql[] = "ALTER TABLE zonas_sacd DROP CONSTRAINT zonas_sacd_id_zona_fkey; ";
+        // Las tablas que apuntan a zonas tienen un foreign key: con CASCADE se
+        // llevaría por delante sus filas, así que se quita y se vuelve a poner.
+        $a_sql[] = "ALTER TABLE $nom_zonas_sacd DROP CONSTRAINT IF EXISTS zonas_sacd_id_zona_fkey; ";
+        $a_sql[] = "ALTER TABLE $nom_zonas_ctr DROP CONSTRAINT IF EXISTS zonas_ctr_id_zona_fkey; ";
         $a_sql[] = "TRUNCATE $nom_tabla RESTART IDENTITY;";
         $this->executeSql($a_sql);
 
@@ -384,25 +370,20 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $a_sql = [];
-        /* Está en sv-e, y centros en sv
-        $a_sql[] = "UPDATE u_centros_dl SET id_zona = NULL; ";
-        $a_sql[] = "ALTER TABLE u_centros_dl
-                    ADD CONSTRAINT u_centros_dl_id_zona_fk FOREIGN KEY (id_zona) REFERENCES zonas(id_zona) ON UPDATE CASCADE ON DELETE SET NULL; ";
-        */
-        $a_sql[] = "ALTER TABLE $nom_tabla
-                        ADD CONSTRAINT zonas_sacd_id_zona_fkey FOREIGN KEY (id_zona) REFERENCES zonas(id_zona) ON DELETE CASCADE; ";
+        $a_sql[] = "ALTER TABLE $nom_zonas_sacd
+                        ADD CONSTRAINT zonas_sacd_id_zona_fkey FOREIGN KEY (id_zona) REFERENCES $nom_tabla(id_zona) ON DELETE CASCADE; ";
+        $a_sql[] = "ALTER TABLE $nom_zonas_ctr
+                        ADD CONSTRAINT zonas_ctr_id_zona_fkey FOREIGN KEY (id_zona) REFERENCES $nom_tabla(id_zona) ON DELETE CASCADE; ";
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal('comun');
     }
 
     public function llenar_zonas_grupos(): void
     {
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
-        $this->setConexion('sfsv-e');
+        $this->addPermisoGlobal('comun');
+        $this->setConexion('comun');
+
         $datosTabla = $this->infoTable("zonas_grupos");
 
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -434,16 +415,14 @@ class DBEsquema extends DBAbstract
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal('comun');
     }
 
     public function llenar_zonas_sacd(): void
     {
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
-        $this->setConexion('sfsv-e');
+        $this->addPermisoGlobal('comun');
+        $this->setConexion('comun');
+
         $datosTabla = $this->infoTable("zonas_sacd");
 
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -475,6 +454,6 @@ class DBEsquema extends DBAbstract
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal('comun');
     }
 }

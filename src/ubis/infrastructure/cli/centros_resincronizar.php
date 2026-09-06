@@ -1,0 +1,239 @@
+<?php
+
+use src\shared\config\ConfigGlobal;
+use src\shared\domain\helpers\FilterPostGet;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
+use src\ubis\application\ResincronizarCuCentrosDl;
+use src\ubis\application\ResincronizarCuCentrosDlf;
+
+/**
+ * Driver CLI para reconciliar la copia de centros de la BD comun con
+ * `u_centros_dl`, en todos los esquemas.
+ *
+ * Un solo fichero para las dos copias, porque cada instalación reconcilia la
+ * suya y nunca la otra: en **sv** compara `cu_centros_dl` con el origen sv, y en
+ * **sf** compara `cu_centros_dlf` con el origen sf. Así el crontab de cada
+ * servidor lleva la misma línea. También se invoca desde el menú web a través
+ * del controller homónimo, que hace `require` de este fichero.
+ *
+ * Por defecto **sólo informa**. Hay que pasar `--aplicar` para que escriba.
+ *
+ * Parámetros posicionales (mismo orden que `cargos_activ_resincronizar.php`):
+ *   argv[1] $username
+ *   argv[2] $password
+ *   argv[3] $dirweb
+ *   argv[4] $document_root
+ *   argv[5] $ubicacion
+ *   argv[6] $esquema
+ *   argv[7] $private
+ *   argv[8] $DB_SERVER
+ * Opciones (en cualquier posición posterior):
+ *   --aplicar          escribe los cambios (sin ella, sólo informe)
+ *   --esquema=H-dlb    limita la reconciliación a un esquema de comun
+ *
+ * Los ocho parámetros son obligatorios en CLI: no hay sesión, y el login se
+ * hace con ellos en `frontend/usuarios/controller/login.php` (incluido desde
+ * `global_object.inc`). Hace falta aunque la reconciliación abra sus propias
+ * conexiones de mantenimiento, porque el catálogo de esquemas se lee con la
+ * conexión de sesión `oDBPC`.
+ *
+ * Códigos de salida: 0 correcto, 1 error o abortado, 2 uso incorrecto.
+ *
+ * Ejemplo de crontab (cada noche; igual en sv y en sf cambiando UBICACION y esquema):
+ *   37 3 * * * /usr/bin/php /var/www/orbix/src/ubis/infrastructure/cli/centros_resincronizar.php \
+ *       usuario clave orbix /var/www sv H-dlbv sv 1 --aplicar \
+ *       >> /var/www/orbix/log/cu_centros.out 2>> /var/www/orbix/log/cu_centros.err
+ */
+
+if (PHP_SAPI === 'cli' && count(array_slice($argv ?? [], 1, 8)) < 8) {
+    fwrite(STDERR, "uso: centros_resincronizar.php <username> <password> <dirweb> <document_root>"
+        . " <ubicacion> <esquema> <private> <db_server> [--aplicar] [--esquema=H-dlb]\n");
+    exit(2);
+}
+
+if (!empty($argv[1])) {
+    $_POST['username'] = $argv[1];
+    $_POST['password'] = $argv[2];
+    $_SERVER['DIRWEB'] = $argv[3];
+    $_SERVER['DOCUMENT_ROOT'] = $argv[4];
+    putenv("UBICACION=$argv[5]");
+    putenv("ESQUEMA=$argv[6]");
+    putenv("PRIVATE=$argv[7]");
+    putenv("DB_SERVER=$argv[8]");
+}
+
+/**
+ * Si las credenciales no valen, `login.php` pinta el formulario de login y hace
+ * `die()`: sin esto, el cron acabaría con código 0 y sin nada en STDERR.
+ */
+register_shutdown_function(static function (): void {
+    if (PHP_SAPI !== 'cli' || defined('CU_CENTROS_RESYNC_ATENDIDO')) {
+        return;
+    }
+    fwrite(
+        STDERR,
+        sprintf(
+            "[%s] cu_centros resync: abortado antes de ejecutarse; revise usuario, contraseña y esquema\n",
+            date('c'),
+        ),
+    );
+    exit(1);
+});
+$document_root = isset($_SERVER['DOCUMENT_ROOT']) && is_string($_SERVER['DOCUMENT_ROOT'])
+    ? $_SERVER['DOCUMENT_ROOT']
+    : '';
+$dir_web = isset($_SERVER['DIRWEB']) && is_string($_SERVER['DIRWEB']) ? $_SERVER['DIRWEB'] : '';
+$path = "$document_root/$dir_web";
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+
+require_once("src/shared/global_header.inc");
+require_once("src/shared/global_object.inc");
+
+$isWeb = PHP_SAPI !== 'cli';
+
+/* -------- opciones -------------------------------------------------------- */
+
+$aplicar = false;
+$soloEsquema = '';
+if ($isWeb) {
+    $aplicar = (string) FilterPostGet::post('aplicar') === '1';
+    $esquemaRaw = FilterPostGet::post('esquema');
+    $soloEsquema = is_scalar($esquemaRaw) ? trim((string) $esquemaRaw) : '';
+} else {
+    foreach (array_slice($argv ?? [], 9) as $arg) {
+        if ($arg === '--aplicar') {
+            $aplicar = true;
+        }
+        if (str_starts_with($arg, '--esquema=')) {
+            $soloEsquema = substr($arg, strlen('--esquema='));
+        }
+    }
+}
+
+/* -------- guardas --------------------------------------------------------- */
+
+/** Ubicación de esta instalación, normalizada (`sv` / `sf` / ...). */
+function cu_centros_resincronizar_ubicacion(): string
+{
+    $ubicacion = getenv('UBICACION');
+
+    return is_string($ubicacion) ? strtolower(trim($ubicacion)) : '';
+}
+
+/**
+ * Cada instalación reconcilia su propia copia. Desde la DMZ no hay base interior
+ * con `u_centros_dl` de origen, y desde otra ubicación no habría origen que leer.
+ */
+function cu_centros_resincronizar_motivo_no_ejecutable(): string
+{
+    $ubicacion = cu_centros_resincronizar_ubicacion();
+    if ($ubicacion !== 'sv' && $ubicacion !== 'sf') {
+        return sprintf(_('Sólo se puede resincronizar desde sv o sf (UBICACION=%s)'), $ubicacion ?: '?');
+    }
+    if (ConfigGlobal::is_dmz()) {
+        return _('Sólo se puede resincronizar desde el interior (esta instalación es DMZ)');
+    }
+
+    return '';
+}
+
+/** Evita solapes con otra ejecución (mismo mecanismo que los avisos). */
+function cu_centros_resincronizar_tomar_pid(): string
+{
+    $filename = ConfigGlobal::$directorio . '/log/cu_centros_resync.pid';
+    if (file_exists($filename)) {
+        $edad = time() - (int) filemtime($filename);
+        if ($edad < 15 * 60) {
+            return _('Ya hay una resincronización de centros en marcha');
+        }
+    }
+    file_put_contents($filename, sprintf("%s -- pid %d\n", date('c'), getmypid()));
+
+    return '';
+}
+
+function cu_centros_resincronizar_soltar_pid(): void
+{
+    $filename = ConfigGlobal::$directorio . '/log/cu_centros_resync.pid';
+    if (file_exists($filename)) {
+        unlink($filename);
+    }
+}
+
+$motivo = cu_centros_resincronizar_motivo_no_ejecutable();
+if ($motivo === '' && $aplicar) {
+    $motivo = cu_centros_resincronizar_tomar_pid();
+}
+if ($motivo !== '') {
+    define('CU_CENTROS_RESYNC_ATENDIDO', true);
+    if ($isWeb) {
+        ContestarJson::enviar($motivo, '');
+
+        return;
+    }
+    fwrite(STDERR, $motivo . "\n");
+    exit(1);
+}
+
+/* -------- ejecución ------------------------------------------------------- */
+
+$esSf = cu_centros_resincronizar_ubicacion() === 'sf';
+$tablaCopia = $esSf ? 'cu_centros_dlf' : 'cu_centros_dl';
+
+try {
+    $useCase = $esSf
+        ? DependencyResolver::get(ResincronizarCuCentrosDlf::class)
+        : DependencyResolver::get(ResincronizarCuCentrosDl::class);
+    $resultado = $useCase->execute($aplicar, $soloEsquema);
+    define('CU_CENTROS_RESYNC_ATENDIDO', true);
+} catch (\Throwable $e) {
+    define('CU_CENTROS_RESYNC_ATENDIDO', true);
+    if ($aplicar) {
+        cu_centros_resincronizar_soltar_pid();
+    }
+    if ($isWeb) {
+        ContestarJson::enviar($e->getMessage(), '');
+
+        return;
+    }
+    fwrite(STDERR, sprintf("[%s] %s resync: %s\n", date('c'), $tablaCopia, $e->getMessage()));
+    exit(1);
+}
+
+if ($aplicar) {
+    cu_centros_resincronizar_soltar_pid();
+}
+
+$totales = $resultado['totales'];
+$resumen = sprintf(
+    '%s: %d esquema(s), altas=%d cambios=%d bajas=%d errores=%d',
+    $aplicar ? _('aplicado') : _('informe'),
+    $totales['esquemas'],
+    $totales['altas'],
+    $totales['cambios'],
+    $totales['bajas'],
+    $totales['errores'],
+);
+
+if ($isWeb) {
+    $html = '<p>' . htmlspecialchars($tablaCopia . ' — ' . $resumen, ENT_QUOTES, 'UTF-8') . '</p>';
+    $html .= '<pre>' . htmlspecialchars(implode("\n", $resultado['lineas']), ENT_QUOTES, 'UTF-8') . '</pre>';
+    if (!$aplicar) {
+        $html .= '<p class="comentario">'
+            . _('Informe sin cambios en la base de datos. Para aplicar, repita con «aplicar».')
+            . '</p>';
+    }
+    ContestarJson::enviar('', ['html' => $html, 'totales' => $totales]);
+
+    return;
+}
+
+fwrite(STDOUT, sprintf("[%s] %s resync %s\n", date('c'), $tablaCopia, $resumen));
+foreach ($resultado['lineas'] as $linea) {
+    fwrite(STDOUT, $linea . "\n");
+}
+
+if ($totales['errores'] > 0) {
+    exit(1);
+}

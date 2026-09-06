@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "ubis"
-endpoints: 40
+endpoints: 41
 estado_revision: "generado"
 ---
 
@@ -106,6 +106,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.centros_opciones_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/centros_opciones_data.php`
 - Entrada: `post.active:string`, `post.sv:string`, `post.sf:string`, `post.id_ubi_in:string`, `post.tipo_ctr:string`
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/ubis/centros_resincronizar`
+
+- Id: `ubis.centros_resincronizar`
+- Controller: `src/ubis/infrastructure/ui/http/controllers/centros_resincronizar.php`
+- Entrada: `post.aplicar:string`, `post.esquema:string`
+- Notas: reconcilia la copia de centros de la BD comun (`cu_centros_dl` en sv, `cu_centros_dlf` en sf) con `u_centros_dl`. Sin `aplicar=1` solo devuelve el informe.
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/centros_update`

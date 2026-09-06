@@ -49,6 +49,10 @@ final class RenombrarEsquemaDefaultsCatalog
             ['tabla' => 'x_config_schema', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
             ['tabla' => 'xa_tipo_activ_tarifa', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
             ['tabla' => 'xa_tipo_tarifa', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            ['tabla' => 'zonas', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            ['tabla' => 'zonas_ctr', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            ['tabla' => 'zonas_grupos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            ['tabla' => 'zonas_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
         ];
     }
 
@@ -141,9 +145,6 @@ final class RenombrarEsquemaDefaultsCatalog
             ['tabla' => 'propuesta_encargo_sacd_horario', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
             ['tabla' => 'propuesta_encargos_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
             ['tabla' => 'web_preferencias', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-            ['tabla' => 'zonas', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-            ['tabla' => 'zonas_grupos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-            ['tabla' => 'zonas_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ];
     }
 }

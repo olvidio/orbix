@@ -6,6 +6,7 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
+use src\zonassacd\application\services\CentrosDeZona;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 class VerEncargosCentrosData
@@ -17,6 +18,7 @@ class VerEncargosCentrosData
         private readonly EncargoCtrRepositoryInterface $encargoCtrRepository,
         private readonly EncargoRepositoryInterface $encargoRepository,
         private readonly ZonaRepositoryInterface $zonaRepository,
+        private readonly CentrosDeZona $centrosDeZona,
     ) {
     }
     /**
@@ -39,15 +41,15 @@ class VerEncargosCentrosData
         $rows = [];
         $centros_zona = [];
         if (!empty($id_zona)) {
-            $aWhere = [
-                'active' => 't',
-                'id_zona' => $id_zona,
-                '_ordre' => 'nombre_ubi',
-            ];
-            $cCentros = array_merge(
-                $this->centroEllosRepository->getCentros($aWhere),
-                $this->centroEllasRepository->getCentros($aWhere),
-            );
+            $filtro = CentrosDeZona::whereActivosIn($this->centrosDeZona->idUbisDeZona($id_zona));
+            $cCentros = [];
+            if ($filtro !== null) {
+                [$aWhere, $aOperador] = $filtro;
+                $cCentros = array_merge(
+                    $this->centroEllosRepository->getCentros($aWhere, $aOperador),
+                    $this->centroEllasRepository->getCentros($aWhere, $aOperador),
+                );
+            }
 
             foreach ($cCentros as $oCentro) {
                 $id_ubi = $oCentro->getId_ubi();

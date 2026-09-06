@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace src\actividadcargos\domain;
 
 use src\actividadcargos\domain\entity\ActividadCargo;
+use src\shared\domain\copias\DefinicionCopia;
+use src\shared\domain\copias\ValorCopia;
 
 /**
  * Definición de la copia `cd_cargos_activ_dl` (BD comun): qué columnas se copian
- * y cómo se compara una fila de origen con la de destino.
+ * y cuándo una fila debe estar en la copia.
  *
  * `cd_cargos_activ_dl` es una copia de `d_cargos_activ_dl` (BD sv-e) que vive
  * en la BD **comun**, para que las instalaciones sin acceso a sv-e (sf, DMZ)
@@ -16,6 +18,9 @@ use src\actividadcargos\domain\entity\ActividadCargo;
  * ({@see \src\actividadcargos\infrastructure\persistence\postgresql\PgActividadCargoDlRepository::getActividadSacds}).
  *
  * Origen (BD sv-e): `<esquema>v.d_cargos_activ_dl`.
+ *
+ * La mecánica común a todas las copias está en {@see DefinicionCopia}; aquí, a
+ * diferencia de `cp_sacd`, no hay filtro de negocio: es un espejo 1:1.
  */
 final class CdCargosActivFila
 {
@@ -28,6 +33,18 @@ final class CdCargosActivFila
         'puede_agd',
         'observ',
     ];
+
+    private static ?DefinicionCopia $definicion = null;
+
+    public static function definicion(): DefinicionCopia
+    {
+        return self::$definicion ??= new DefinicionCopia(
+            tabla: 'cd_cargos_activ_dl',
+            clave: 'id_item',
+            columnas: self::COLUMNAS,
+            columnasBooleanas: ['puede_agd'],
+        );
+    }
 
     /**
      * Fila lista para escribir en `cd_cargos_activ_dl` a partir de la entidad.
@@ -50,12 +67,7 @@ final class CdCargosActivFila
      */
     public static function desdeRegistro(array $registro): array
     {
-        $fila = [];
-        foreach (self::COLUMNAS as $columna) {
-            $fila[$columna] = $registro[$columna] ?? null;
-        }
-
-        return $fila;
+        return self::definicion()->desdeRegistro($registro);
     }
 
     /**
@@ -65,9 +77,7 @@ final class CdCargosActivFila
      */
     public static function idItem(array $fila): int
     {
-        $valor = $fila['id_item'] ?? null;
-
-        return is_numeric($valor) && (int) $valor > 0 ? (int) $valor : 0;
+        return self::definicion()->valorClave($fila);
     }
 
     /**
@@ -90,17 +100,7 @@ final class CdCargosActivFila
      */
     public static function normalizar(array $fila): array
     {
-        $normalizada = [];
-        foreach (self::COLUMNAS as $columna) {
-            $valor = $fila[$columna] ?? null;
-            if ($columna === 'puede_agd') {
-                $normalizada[$columna] = self::esVerdadero($valor) ? 't' : 'f';
-                continue;
-            }
-            $normalizada[$columna] = self::aTexto($valor);
-        }
-
-        return $normalizada;
+        return self::definicion()->normalizar($fila);
     }
 
     /**
@@ -112,46 +112,11 @@ final class CdCargosActivFila
      */
     public static function diferencias(array $origen, array $destino): array
     {
-        $a = self::normalizar($origen);
-        $b = self::normalizar($destino);
-
-        $distintas = [];
-        foreach (self::COLUMNAS as $columna) {
-            if ($a[$columna] !== $b[$columna]) {
-                $distintas[] = $columna;
-            }
-        }
-
-        return $distintas;
-    }
-
-    private static function aTexto(mixed $valor): string
-    {
-        if ($valor === null) {
-            return '';
-        }
-        if (is_bool($valor)) {
-            return $valor ? 't' : 'f';
-        }
-        if (is_scalar($valor)) {
-            return trim((string) $valor);
-        }
-
-        return trim((string) json_encode($valor));
+        return self::definicion()->diferencias($origen, $destino);
     }
 
     public static function esVerdadero(mixed $valor): bool
     {
-        if (is_bool($valor)) {
-            return $valor;
-        }
-        if (is_int($valor)) {
-            return $valor === 1;
-        }
-        if (is_string($valor)) {
-            return in_array(strtolower(trim($valor)), ['t', 'true', '1', 'y', 'yes', 'si'], true);
-        }
-
-        return false;
+        return ValorCopia::esVerdadero($valor);
     }
 }

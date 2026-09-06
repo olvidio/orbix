@@ -6,6 +6,7 @@ namespace src\devel_db_admin\application;
 
 use PDO;
 use PDOException;
+use src\shared\infrastructure\persistence\EsquemaPg;
 use Throwable;
 
 /**
@@ -18,9 +19,7 @@ final class MigracionEjecucionUtiles
      */
     public static function esEsquemaResto(string $schema): bool
     {
-        $s = strtolower($schema);
-
-        return $s === 'resto' || $s === 'restov' || $s === 'restof';
+        return EsquemaPg::esEsquemaResto($schema);
     }
 
     /**
@@ -29,7 +28,7 @@ final class MigracionEjecucionUtiles
      */
     public static function esEsquemaRegionStgrComun(string $schema): bool
     {
-        return $schema === 'H-H' || $schema === 'M-M';
+        return EsquemaPg::esEsquemaRegionStgrComun($schema);
     }
 
     public static function esReplicaSelect(string $database): bool
@@ -157,14 +156,7 @@ final class MigracionEjecucionUtiles
      */
     public static function esquemaExisteEnPostgres(PDO $pdo, string $schema): bool
     {
-        $sql = 'SELECT 1 FROM pg_catalog.pg_namespace WHERE nspname = ? LIMIT 1';
-        $stmt = $pdo->prepare($sql);
-        if ($stmt === false) {
-            return false;
-        }
-        $stmt->execute([$schema]);
-
-        return (bool) $stmt->fetchColumn();
+        return EsquemaPg::existeEnPostgres($pdo, $schema);
     }
 
     /**
