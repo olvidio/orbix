@@ -47,34 +47,19 @@ final class CuCentrosFilaTest extends TestCase
         $this->assertSame(CuCentrosFila::TABLA_SV, CuCentrosFila::definicionDe(1001234)->tabla);
     }
 
-    // --- id_zona es del destino -------------------------------------------
-
-    public function test_id_zona_no_se_copia_en_ninguna_de_las_dos_tablas(): void
+    public function test_ninguna_copia_tiene_columnas_del_destino(): void
     {
-        // La zona SACD de un centro de sf se asigna desde sv sobre la propia
-        // copia (ZonaCtrUpdate): copiarla desde el origen la borraría.
         foreach ([CuCentrosFila::definicionSv(), CuCentrosFila::definicionSf()] as $definicion) {
-            $this->assertNotContains('id_zona', $definicion->columnas);
-            $this->assertContains('id_zona', $definicion->columnasDelDestino);
+            $this->assertSame([], $definicion->columnasDelDestino);
         }
     }
 
-    public function test_una_fila_del_origen_no_arrastra_id_zona(): void
+    public function test_una_fila_del_origen_no_arrastra_columnas_ajenas(): void
     {
         $fila = CuCentrosFila::desdeRegistro(['id_ubi' => 1001234, 'id_zona' => 7]);
 
         $this->assertArrayNotHasKey('id_zona', $fila);
         $this->assertSame(CuCentrosFila::COLUMNAS, array_keys($fila));
-    }
-
-    public function test_un_id_zona_distinto_no_cuenta_como_diferencia(): void
-    {
-        $origen = $this->filaBase();
-        $destino = $this->filaBase();
-        $origen['id_zona'] = null;
-        $destino['id_zona'] = 7;
-
-        $this->assertSame([], CuCentrosFila::diferencias($origen, $destino));
     }
 
     // --- Proyección --------------------------------------------------------

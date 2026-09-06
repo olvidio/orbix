@@ -484,7 +484,7 @@ class DBAlterSchema
     /**
      *
      * @param array $aDatos
-     *   ['tabla' => 'u_centros_dl', 'campo' => 'id_zona'],
+     *   ['tabla' => 'ejemplo', 'campo' => 'campo_a_anular'],
      */
     /** @param list<array{tabla: string, campo: string}> $aDatos */ public function setNullDatos(array $aDatos): void
     {

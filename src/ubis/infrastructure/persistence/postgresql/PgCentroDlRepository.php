@@ -201,7 +201,6 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
                     observ                   = :observ,
                     num_habit_indiv          = :num_habit_indiv,
                     plazas                   = :plazas,
-                    id_zona                  = :id_zona,
                     sede                     = :sede,
                     num_cartas_mensuales     = :num_cartas_mensuales";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi";
@@ -209,8 +208,8 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
         }
         else {
             //INSERT
-            $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,n_buzon,num_pi,num_cartas,observ,num_habit_indiv,plazas,id_zona,sede,num_cartas_mensuales)";
-            $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:n_buzon,:num_pi,:num_cartas,:observ,:num_habit_indiv,:plazas,:id_zona,:sede,:num_cartas_mensuales)";
+            $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,n_buzon,num_pi,num_cartas,observ,num_habit_indiv,plazas,sede,num_cartas_mensuales)";
+            $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:n_buzon,:num_pi,:num_cartas,:observ,:num_habit_indiv,:plazas,:sede,:num_cartas_mensuales)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }

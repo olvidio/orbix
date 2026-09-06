@@ -155,8 +155,9 @@ Por cada esquema con el módulo instalado:
    propias en sus esquemas de zonas: en comun el esquema es compartido entre sv y sf,
    así que ahí habría colisión que decidir a mano.
 
-El script no borra nada de sv-e. Eso queda para la última fase, cuando no quede código
-leyendo allí.
+El script de traslado no borra nada de sv-e. La fase 4 lo hace con las
+migraciones `db/migrations/202609061230_*` y `202609061231_*` (menú
+devel_db_admin), cuando el código nuevo ya no lee esas tablas.
 
 ## Fases
 
@@ -167,8 +168,11 @@ leyendo allí.
    columnas antiguas.
 3. **Hecho.** Los ocho lectores resuelven los centros por `zonas_ctr`
    (`CentrosDeZona`).
-4. Retirar la doble escritura, las columnas `id_zona` de centros y las tablas de
-   zonas en sv-e y `sv-e_select`.
+4. **Hecho (código).** Sin doble escritura; `id_zona` fuera de las entidades y
+   repos de centros; `CuCentrosFila::COLUMNAS_DEL_DESTINO = []`. DDL en
+   `db/migrations/202609061230_quitar_id_zona_centros__{sv,sf,comun}.sql` y
+   `202609061231_drop_tablas_zonas_sve__{sv-e,sf}.sql` (el runner aplica
+   estructura también en `*_select`).
 
 ## Riesgos y decisiones
 

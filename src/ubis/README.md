@@ -29,22 +29,16 @@ regla que usan `DBTrasvase::ctr` y `UbiFactory`. Cada instalación es dueña de 
 centros: la sv alimenta `cu_centros_dl` y la sf `cu_centros_dlf`. El servicio de
 sincronización enruta por `id_ubi`, no por la instalación.
 
-**`id_zona` no se copia: es de la copia.** La zona SACD de un centro se asigna en
-`ZonaCtrUpdate` desde la instalación sv. Para los centros de sv escribe en el
-origen (`u_centros_dl`), pero para los de sf escribe **directamente en
-`cu_centros_dlf`**, porque sv no puede escribir en la base sf. Ese dato sólo
-existe en la copia, así que va declarado en `columnasDelDestino`: la
-reconciliación no lo lee, no lo escribe y no lo compara. Si se tratara como
-columna copiada, la primera pasada borraría todas las zonas de los centros de sf.
+**La zona SACD no va en estas tablas.** Vive en `zonas_ctr` (módulo zonassacd).
 
 **14 de las 24 columnas.** Quedan fuera las que sólo interesan en el interior
 (`n_buzon`, `num_pi`, `num_cartas`, `observ`, `num_habit_indiv`, `plazas`, `sede`,
-`num_cartas_mensuales`, `id_auto`) y la ya citada `id_zona`.
+`num_cartas_mensuales`, `id_auto`).
 
 ### Historia: por qué hacía falta esto
 
 Las dos copias se escribían **sólo en el trasvase inicial** (`DBTrasvase::ctr`, al
-crear la dl) y, en el caso de `id_zona`, desde `ZonaCtrUpdate`. `CentrosUpdate`
+crear la dl). `CentrosUpdate`
 guardaba en `u_centros_dl` y no propagaba nada, así que un centro nuevo, un cambio
 de nombre o una baja no llegaban nunca a la copia: quedaba congelada en el estado
 del alta de la delegación.

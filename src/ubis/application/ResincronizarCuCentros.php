@@ -21,9 +21,6 @@ use src\ubis\infrastructure\persistence\postgresql\CuCentrosContexto;
  * lo que las diferencia (base de origen, sufijo del esquema, tabla destino) sale
  * de {@see esCopiaDeSf()}; las subclases sólo declaran de qué lado son, y así el
  * contenedor puede inyectar a cada una su writer.
- *
- * `id_zona` no se reconcilia: es columna del destino
- * ({@see CuCentrosFila::COLUMNAS_DEL_DESTINO}).
  */
 abstract class ResincronizarCuCentros extends ReconciliadorCopia
 {

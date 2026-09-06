@@ -22,24 +22,14 @@ use src\shared\infrastructure\persistence\ConverterDate;
  *
  * 14 de las 24 columnas de `u_centros_dl`. Quedan fuera las que sólo interesan
  * en el interior (`n_buzon`, `num_pi`, `num_cartas`, `observ`,
- * `num_habit_indiv`, `plazas`, `sede`, `num_cartas_mensuales`, `id_auto`) y
- * `id_zona`, que es de la copia (más abajo).
+ * `num_habit_indiv`, `plazas`, `sede`, `num_cartas_mensuales`, `id_auto`).
+ * La zona SACD del centro vive en `zonas_ctr`, no en estas tablas.
  *
  * ## Reparto entre las dos copias
  *
  * Por el primer dígito de `id_ubi`, que es la misma regla que usan
  * `DBTrasvase::ctr` y `UbiFactory`: los centros de sf empiezan por `2`, los de
  * sv no.
- *
- * ## `id_zona` es del destino, no del origen
- *
- * `id_zona` existe en las dos copias pero **no se copia**. La zona SACD de un
- * centro se asigna en {@see \src\zonassacd\application\ZonaCtrUpdate} desde la
- * instalación sv: para los centros de sv escribe en el origen `u_centros_dl`,
- * pero para los de sf escribe **directamente en `cu_centros_dlf`**, porque sv no
- * puede escribir en la base sf. Reconciliar esa columna desde el origen borraría
- * todas las zonas de los centros de sf, así que se declara del destino en las
- * dos copias (ver {@see DefinicionCopia} y `docs/dev/copias_entre_bases.md`).
  */
 final class CuCentrosFila
 {
@@ -68,7 +58,7 @@ final class CuCentrosFila
     ];
 
     /** Existen en la copia pero las escribe la aplicación sobre ella, no el origen. */
-    public const COLUMNAS_DEL_DESTINO = ['id_zona'];
+    public const COLUMNAS_DEL_DESTINO = [];
 
     /** `active`, `sv`, `sf` y `cdc` son boolean en Postgres; los tres últimos admiten nulo. */
     public const COLUMNAS_BOOLEANAS = ['active', 'sv', 'sf', 'cdc'];

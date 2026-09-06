@@ -16,9 +16,6 @@ use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
  * la serie sf), pero no se hace: sv no escribe en sf, y la copia se mantiene con
  * la sincronización incremental de la propia sf. El driver CLI comprueba la
  * ubicación.
- *
- * `id_zona` se queda como esté en la copia: lo escribe `ZonaCtrUpdate` desde sv
- * y no existe en el origen sf.
  */
 final class ResincronizarCuCentrosDlf extends ResincronizarCuCentros
 {

@@ -65,8 +65,6 @@ class CentroEllas
 
     private ?CentroId $id_ctr_padre = null;
 
-    private ?int $id_zona = null;
-
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     public function __construct()
@@ -382,18 +380,6 @@ class CentroEllas
         $this->id_ctr_padre = $valor instanceof CentroId
             ? $valor
             : CentroId::fromNullableInt($valor);
-    }
-
-
-    public function getId_zona(): ?int
-    {
-        return $this->id_zona;
-    }
-
-
-    public function setId_zona(?int $id_zona = null): void
-    {
-        $this->id_zona = $id_zona;
     }
 
     /* MÉTODOS PARA GESTIÓN DE DIRECCIONES ----------------------------------------*/

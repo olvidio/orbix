@@ -127,12 +127,6 @@ class CentroEllasTest extends myTest
         $this->assertEquals(1, $this->CentroEllas->getIdCtrPadreVo()->value());
     }
 
-    public function test_set_and_get_id_zona()
-    {
-        $this->CentroEllas->setId_zona(1);
-        $this->assertEquals(1, $this->CentroEllas->getId_zona());
-    }
-
     public function test_set_all_attributes()
     {
         $centroEllas = new CentroEllas();
@@ -151,7 +145,6 @@ class CentroEllasTest extends myTest
             'tipo_labor' => new TipoLaborId(1),
             'cdc' => true,
             'id_ctr_padre' => new CentroId(1),
-            'id_zona' => 1,
         ];
         $centroEllas->setAllAttributes($attributes);
 
@@ -169,7 +162,6 @@ class CentroEllasTest extends myTest
         $this->assertEquals(1, $centroEllas->getTipoLaborVo()->value());
         $this->assertTrue($centroEllas->isCdc());
         $this->assertEquals(1, $centroEllas->getIdCtrPadreVo()->value());
-        $this->assertEquals(1, $centroEllas->getId_zona());
     }
 
     public function test_set_all_attributes_with_string_values()
@@ -190,7 +182,6 @@ class CentroEllasTest extends myTest
             'tipo_labor' => 1,
             'cdc' => true,
             'id_ctr_padre' => 1,
-            'id_zona' => 1,
         ];
         $centroEllas->setAllAttributes($attributes);
 
@@ -208,6 +199,5 @@ class CentroEllasTest extends myTest
         $this->assertEquals(1, $centroEllas->getTipoLaborVo()->value());
         $this->assertTrue($centroEllas->isCdc());
         $this->assertEquals(1, $centroEllas->getIdCtrPadreVo()->value());
-        $this->assertEquals(1, $centroEllas->getId_zona());
     }
 }

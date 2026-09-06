@@ -141,8 +141,8 @@ final class ZonasAComun
             'zonas_grupos' => $this->contar($pdoSve, "$qSve.zonas_grupos"),
             'zonas_sacd' => $this->contar($pdoSve, "$qSve.zonas_sacd"),
         ];
-        $centrosSv = $this->contar($pdoSv, "$qSv.u_centros_dl", 'id_zona IS NOT NULL');
-        $centrosSf = $this->contar($pdoComun, "$qComun.cu_centros_dlf", 'id_zona IS NOT NULL');
+        $centrosSv = $this->contarSiColumna($pdoSv, $esquemaSve, 'u_centros_dl', 'id_zona');
+        $centrosSf = $this->contarSiColumna($pdoComun, $esquemaComun, 'cu_centros_dlf', 'id_zona');
         $destino = [
             'zonas' => $this->contarSiExiste($pdoComun, $esquemaComun, 'zonas'),
             'zonas_grupos' => $this->contarSiExiste($pdoComun, $esquemaComun, 'zonas_grupos'),
@@ -366,7 +366,7 @@ final class ZonasAComun
     {
         $esquema = $this->esquemaDeTablaCualificada($tabla);
         $nombre = $this->nombreDeTablaCualificada($tabla);
-        if (!$this->tablaExiste($pdo, $esquema, $nombre)) {
+        if (!$this->tablaExiste($pdo, $esquema, $nombre) || !$this->columnaExiste($pdo, $esquema, $nombre, 'id_zona')) {
             return;
         }
         $stmt = $pdo->query("SELECT id_ubi, id_zona FROM $tabla WHERE id_zona IS NOT NULL");
@@ -565,6 +565,19 @@ final class ZonasAComun
         }
 
         return $this->contar($pdo, ContextoCopia::comillas($esquema) . '.' . $tabla);
+    }
+
+    private function contarSiColumna(PDO $pdo, string $esquema, string $tabla, string $columna): int
+    {
+        if (!$this->columnaExiste($pdo, $esquema, $tabla, $columna)) {
+            return 0;
+        }
+
+        return $this->contar(
+            $pdo,
+            ContextoCopia::comillas($esquema) . '.' . $tabla,
+            $columna . ' IS NOT NULL',
+        );
     }
 
     private function tablaExiste(PDO $pdo, string $esquema, string $tabla): bool

@@ -20,8 +20,7 @@ use src\ubis\domain\value_objects\{CentroId,
     RegionNameText,
     TipoCentroCode,
     TipoLaborId,
-    UbiNombreText,
-    ZonaId};
+    UbiNombreText};
 class CentroDl
 {
     use Hydratable;
@@ -76,8 +75,6 @@ class CentroDl
     private ?NumHabitIndiv $num_habit_indiv = null;
 
     private ?Plazas $plazas = null;
-
-    private ?ZonaId $id_zona = null;
 
     private?bool $sede = null;
 
@@ -600,36 +597,6 @@ class CentroDl
         $this->plazas = $valor instanceof Plazas
             ? $valor
             : Plazas::fromNullableInt($valor);
-    }
-
-
-    /**
-     * @deprecated Usar `getIdZonaVo(): ?ZonaId` en su lugar.
-     */
-    public function getId_zona(): ?int
-    {
-        return $this->id_zona?->value();
-    }
-
-
-    /**
-     * @deprecated Usar `setIdZonaVo(?ZonaId $id = null): void` en su lugar.
-     */
-    public function setId_zona(?int $id_zona = null): void
-    {
-        $this->id_zona = ZonaId::fromNullableInt($id_zona);
-    }
-
-    public function getIdZonaVo(): ?ZonaId
-    {
-        return $this->id_zona;
-    }
-
-    public function setIdZonaVo(ZonaId|int|null $valor = null): void
-    {
-        $this->id_zona = $valor instanceof ZonaId
-            ? $valor
-            : ZonaId::fromNullableInt($valor);
     }
 
 

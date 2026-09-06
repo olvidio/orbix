@@ -18,7 +18,6 @@ use src\ubis\domain\value_objects\NumCartas;
 use src\ubis\domain\value_objects\ObservCentroText;
 use src\ubis\domain\value_objects\NumHabitIndiv;
 use src\ubis\domain\value_objects\Plazas;
-use src\ubis\domain\value_objects\ZonaId;
 
 /**
  * Factory para crear instancias de CentroDl para tests
@@ -88,7 +87,6 @@ class CentroDlFactory
         $oCentroDl->setObservVo(new ObservCentroText($faker->word));
         $oCentroDl->setNumHabitIndivVo(new NumHabitIndiv($faker->numberBetween(1, 10)));
         $oCentroDl->setPlazasVo(new Plazas($faker->numberBetween(1, 10)));
-        $oCentroDl->setIdZonaVo(new ZonaId($faker->numberBetween(1, 10)));
         $oCentroDl->setSede($faker->boolean);
         $oCentroDl->setNumCartasMensualesVo(new NumCartas($faker->numberBetween(1, 10)));
 

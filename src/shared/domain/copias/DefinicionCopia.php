@@ -27,12 +27,6 @@ use InvalidArgumentException;
  * reconciliación no debe tocarlas nunca. No se escriben, no se leen y no entran
  * en el diff.
  *
- * El caso real es `cu_centros_dlf.id_zona`: la zona SACD de un centro de sf se
- * asigna desde la instalación **sv** (`ZonaCtrUpdate`), que no puede escribir en
- * la base sf, así que ese dato sólo existe en la copia. Si la reconciliación lo
- * tratara como columna copiada, lo sobrescribiría con el `id_zona` del origen y
- * borraría todas las asignaciones de zona.
- *
  * Se declara explícitamente, en vez de limitarse a omitir la columna de
  * `columnas`, para que la decisión quede escrita, se pueda testear, y añadirla
  * por descuido a `columnas` falle en el constructor en lugar de perder datos.

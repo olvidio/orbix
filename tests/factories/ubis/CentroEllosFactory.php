@@ -73,7 +73,6 @@ class CentroEllosFactory
         $oCentroEllos->setTipoLaborVo(new TipoLaborId($faker->numberBetween(1, 10)));
         $oCentroEllos->setCdc($faker->boolean);
         $oCentroEllos->setIdCtrPadreVo(new CentroId($faker->numberBetween(1, 10)));
-        $oCentroEllos->setId_zona($faker->numberBetween(1, 1000));
 
         return $oCentroEllos;
     }

@@ -17,7 +17,6 @@ use src\ubis\domain\value_objects\RegionNameText;
 use src\ubis\domain\value_objects\TipoCentroCode;
 use src\ubis\domain\value_objects\TipoLaborId;
 use src\ubis\domain\value_objects\UbiNombreText;
-use src\ubis\domain\value_objects\ZonaId;
 use Tests\myTest;
 
 class CentroDlTest extends myTest
@@ -164,14 +163,6 @@ class CentroDlTest extends myTest
         $this->assertEquals(1, $this->CentroDl->getPlazasVo()->value());
     }
 
-    public function test_set_and_get_id_zona()
-    {
-        $id_zonaVo = new ZonaId(1);
-        $this->CentroDl->setIdZonaVo($id_zonaVo);
-        $this->assertInstanceOf(ZonaId::class, $this->CentroDl->getIdZonaVo());
-        $this->assertEquals(1, $this->CentroDl->getIdZonaVo()->value());
-    }
-
     public function test_set_and_get_num_cartas_mensuales()
     {
         $num_cartas_mensualesVo = new NumCartas(1);
@@ -201,7 +192,6 @@ class CentroDlTest extends myTest
             'observ' => new ObservCentroText('Test'),
             'num_habit_indiv' => new NumHabitIndiv(1),
             'plazas' => new Plazas(1),
-            'id_zona' => new ZonaId(1),
             'num_cartas_mensuales' => new NumCartas(1),
         ];
         $centroDl->setAllAttributes($attributes);
@@ -223,7 +213,6 @@ class CentroDlTest extends myTest
         $this->assertEquals('Test', $centroDl->getObservVo()->value());
         $this->assertEquals(1, $centroDl->getNumHabitIndivVo()->value());
         $this->assertEquals(1, $centroDl->getPlazasVo()->value());
-        $this->assertEquals(1, $centroDl->getIdZonaVo()->value());
         $this->assertEquals(1, $centroDl->getNumCartasMensualesVo()->value());
     }
 
@@ -248,7 +237,6 @@ class CentroDlTest extends myTest
             'observ' => 'Test',
             'num_habit_indiv' => 1,
             'plazas' => 1,
-            'id_zona' => 1,
             'num_cartas_mensuales' => 1,
         ];
         $centroDl->setAllAttributes($attributes);
@@ -270,7 +258,6 @@ class CentroDlTest extends myTest
         $this->assertEquals('Test', $centroDl->getObservVo()->value());
         $this->assertEquals(1, $centroDl->getNumHabitIndivVo()->value());
         $this->assertEquals(1, $centroDl->getPlazasVo()->value());
-        $this->assertEquals(1, $centroDl->getIdZonaVo()->value());
         $this->assertEquals(1, $centroDl->getNumCartasMensualesVo()->value());
     }
 }

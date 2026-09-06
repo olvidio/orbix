@@ -167,12 +167,6 @@ final class RenombrarEsquema
         
             $oAlterSchema->updateDatosRegexp($aDatos);
         
-            // borrar
-            $aDatos = [
-                ['tabla' => 'u_centros_dl', 'campo' => 'id_zona'],
-            ];
-            $oAlterSchema->setNullDatos($aDatos);
-        
             // Todos los esquemas:
             $aDatos = [
                 ['tabla' => 'global.d_traslados', 'campo' => 'ctr_origen', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],

@@ -96,11 +96,7 @@ Son el caso menos simétrico y conviene tenerlo presente al tocarlas:
 - **Un solo driver CLI** (`src/ubis/infrastructure/cli/centros_resincronizar.php`)
   para las dos: elige la copia según `UBICACION`, de modo que el crontab de sv y el
   de sf llevan la misma línea. Desde sv no se reconcilia la copia de sf.
-- **`id_zona` es del destino.** Se asigna en `ZonaCtrUpdate` desde la instalación
-  sv: para los centros de sv escribe en el origen, pero para los de sf escribe
-  **directamente en `cu_centros_dlf`**, porque sv no escribe en la base sf. Por eso
-  va en `columnasDelDestino` y la reconciliación no la toca; si se copiara desde el
-  origen, borraría todas las zonas de los centros de sf.
+- **La zona SACD no se copia.** Vive en `zonas_ctr`, no en las tablas de centros.
 
 Antes de esto las dos copias sólo se escribían en el trasvase inicial
 (`DBTrasvase::ctr`): `CentrosUpdate` guardaba en `u_centros_dl` y no propagaba
@@ -120,9 +116,8 @@ nada, así que quedaban congeladas desde el alta de la dl.
    negocio `debeCopiarse()`, que es lo único que el núcleo no puede saber.
    Si la clave puede ser negativa (como el `id_nom` de las personas de paso), pasar
    `claveAdmiteNegativos: true`. Si la tabla copia tiene columnas que **no** vienen
-   del origen porque las escribe la aplicación sobre la copia (como
-   `cu_centros_dlf.id_zona`), declararlas en `columnasDelDestino`: no se escriben,
-   no se leen y no entran en el diff.
+   del origen porque las escribe la aplicación sobre la copia, declararlas en
+   `columnasDelDestino`: no se escriben, no se leen y no entran en el diff.
 2. **Contexto**: `<Copia>Contexto extends ContextoCopia`, con `nombreTabla()` y un
    `desdeSesion()` que use `oDBC` y `ConfigGlobal::mi_id_schema()`.
 3. **Writer**: `<Copia>Writer extends CopiaWriter`, con un constructor sin

@@ -186,15 +186,14 @@ class PgCentroEllasRepository extends ClaseRepository implements CentroEllasRepo
                     tipo_ctr                 = :tipo_ctr,
                     tipo_labor               = :tipo_labor,
                     cdc                      = :cdc,
-                    id_ctr_padre             = :id_ctr_padre,
-                    id_zona                  = :id_zona";
+                    id_ctr_padre             = :id_ctr_padre";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
         else {
             //INSERT
-            $campos = "(id_ubi,tipo_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,id_zona)";
-            $valores = "(:id_ubi,:tipo_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:id_zona)";
+            $campos = "(id_ubi,tipo_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre)";
+            $valores = "(:id_ubi,:tipo_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }

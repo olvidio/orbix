@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace src\zonassacd\application;
 
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaCtrRepositoryInterface;
 
 /**
  * Asigna (o quita) la zona de los centros seleccionados.
  *
- * Durante la transición escribe en `zonas_ctr` y también en la columna
- * `id_zona` de las tablas de centros, para no dejar a medias a quien todavía
- * lea esa columna. La columna se retirará en la fase 4.
+ * La relación vive solo en `zonas_ctr`. El borrado de zona lo hace la FK
+ * `ON DELETE CASCADE`; aquí `null` quita el centro de la zona.
  */
 final class ZonaCtrUpdate
 {
     public function __construct(
         private ZonaCtrRepositoryInterface $zonaCtrRepository,
-        private CentroDlRepositoryInterface $centroDlRepository,
-        private CentroEllasRepositoryInterface $centroEllasRepository,
     ) {
     }
 
@@ -37,29 +32,11 @@ final class ZonaCtrUpdate
             if ($idUbi === '') {
                 continue;
             }
-            $idUbiInt = (int) $idUbi;
-            if (!$this->zonaCtrRepository->asignar($idUbiInt, $idZona)) {
-                $errores[] = _("hay un error, no se ha guardado.");
-            }
-            if (!$this->escribirColumnaAntigua($idUbi, $idZona)) {
+            if (!$this->zonaCtrRepository->asignar((int) $idUbi, $idZona)) {
                 $errores[] = _("hay un error, no se ha guardado.");
             }
         }
 
         return ['tipo' => 'update', 'mensaje' => implode("\n", $errores), 'error' => ''];
-    }
-
-    private function escribirColumnaAntigua(string $idUbi, ?int $idZona): bool
-    {
-        $centroRepository = $idUbi[0] === '1'
-            ? $this->centroDlRepository
-            : $this->centroEllasRepository;
-        $oCentro = $centroRepository->findById((int) $idUbi);
-        if ($oCentro === null) {
-            return true;
-        }
-        $oCentro->setId_zona($idZona);
-
-        return $centroRepository->Guardar($oCentro) !== false;
     }
 }
