@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copiar a un sitio fuera del repo (p. ej. /var/www/conf/cron_sesion.inc
+ * o ../conf/cron_sesion.inc) y rellenar. No commitear contraseñas.
+ *
+ * Uso:
+ *   php src/shared/infrastructure/cli/copias_resincronizar.php --aplicar
+ *   php src/shared/infrastructure/cli/copias_resincronizar.php --sesion=/ruta/cron_sesion.inc --aplicar
+ */
+return [
+    'username' => 'usuario_orbix',
+    'password' => 'cambiar',
+    'dirweb' => 'orbix',
+    'document_root' => '/var/www',
+    'ubicacion' => 'sv',
+    'esquema' => 'H-dlbv',
+    'private' => 'sv',
+    'db_server' => '1',
+    // Aviso si falla la reconciliación (cola_mails de Orbix; vacío = no enviar).
+    'mail_aviso' => 'admin@example.com',
+];

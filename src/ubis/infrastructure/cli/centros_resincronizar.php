@@ -13,9 +13,10 @@ use src\ubis\application\ResincronizarCuCentrosDlf;
  *
  * Un solo fichero para las dos copias, porque cada instalación reconcilia la
  * suya y nunca la otra: en **sv** compara `cu_centros_dl` con el origen sv, y en
- * **sf** compara `cu_centros_dlf` con el origen sf. Así el crontab de cada
- * servidor lleva la misma línea. También se invoca desde el menú web a través
- * del controller homónimo, que hace `require` de este fichero.
+ * **sf** compara `cu_centros_dlf` con el origen sf. El crontab de producción
+ * usa el cron unificado (`src/shared/infrastructure/cli/copias_resincronizar.php`).
+ * Este driver queda para el menú web y para una pasada suelta. También se
+ * invoca desde el controller homónimo, que hace `require` de este fichero.
  *
  * Por defecto **sólo informa**. Hay que pasar `--aplicar` para que escriba.
  *
@@ -39,11 +40,6 @@ use src\ubis\application\ResincronizarCuCentrosDlf;
  * conexión de sesión `oDBPC`.
  *
  * Códigos de salida: 0 correcto, 1 error o abortado, 2 uso incorrecto.
- *
- * Ejemplo de crontab (cada noche; igual en sv y en sf cambiando UBICACION y esquema):
- *   37 3 * * * /usr/bin/php /var/www/orbix/src/ubis/infrastructure/cli/centros_resincronizar.php \
- *       usuario clave orbix /var/www sv H-dlbv sv 1 --aplicar \
- *       >> /var/www/orbix/log/cu_centros.out 2>> /var/www/orbix/log/cu_centros.err
  */
 
 if (PHP_SAPI === 'cli' && count(array_slice($argv ?? [], 1, 8)) < 8) {

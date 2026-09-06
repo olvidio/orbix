@@ -6,6 +6,7 @@
 # Entorno (.env sí contiene secretos; .env.example va en repo)
 .env
 .env.local
+cron_sesion.inc
 
 # Compiled source #
 ###################

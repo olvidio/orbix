@@ -107,31 +107,24 @@ Modos de uso:
 
 ### CLI y cron
 
-Driver: `src/personas/infrastructure/cli/sacd_resincronizar.php`.
+El crontab de producción no llama a este driver: las tres copias van en
+`src/shared/infrastructure/cli/copias_resincronizar.php` con un fichero de
+sesión (`cron_sesion.inc`). Detalle en
+[`docs/dev/copias_entre_bases.md`](../../docs/dev/copias_entre_bases.md).
 
-Recibe los mismos parámetros posicionales que
-`src/cambios/infrastructure/cli/avisos_generar_tabla.php` (usuario, password, dirweb,
-document_root, ubicación, esquema, private, DB_SERVER) y además dos opciones:
+Este driver (`src/personas/infrastructure/cli/sacd_resincronizar.php`) queda
+para el menú web y para una pasada suelta. Recibe los mismos parámetros
+posicionales que `src/cambios/infrastructure/cli/avisos_generar_tabla.php`
+(usuario, password, dirweb, document_root, ubicación, esquema, private,
+DB_SERVER) y además `--aplicar` y `--esquema=H-dlb`.
 
-- `--aplicar`: escribe los cambios (sin ella, sólo informa).
-- `--esquema=H-dlb`: limita la ejecución a un esquema de comun concreto.
-
-Los ocho parámetros posicionales son obligatorios en CLI: desde cron no hay sesión,
-así que el login se hace con el usuario y la contraseña que se pasan por línea de
-comandos (los recoge `frontend/usuarios/controller/login.php`, incluido desde
-`global_object.inc`). Sigue haciendo falta aunque la reconciliación abra sus propias
-conexiones de mantenimiento, porque el catálogo de esquemas (`public.db_idschema`) se
-lee con la conexión de sesión `oDBPC`.
+Los ocho parámetros posicionales son obligatorios en CLI: el login se hace con
+ellos en `frontend/usuarios/controller/login.php`. Hace falta aunque la
+reconciliación abra sus propias conexiones de mantenimiento, porque el
+catálogo de esquemas (`public.db_idschema`) se lee con la conexión de sesión
+`oDBPC`.
 
 Códigos de salida: `0` correcto, `1` error o abortado, `2` uso incorrecto.
-
-Línea de crontab de ejemplo (interior sv, cada noche):
-
-```
-17 3 * * * /usr/bin/php /var/www/orbix/src/personas/infrastructure/cli/sacd_resincronizar.php \
-    usuario clave orbix /var/www sv H-dlbv sv 1 --aplicar \
-    >> /var/www/orbix/log/cp_sacd.out 2>> /var/www/orbix/log/cp_sacd.err
-```
 
 El mismo driver sirve de espejo web: el controller
 `src/personas/infrastructure/ui/http/controllers/sacd_resincronizar.php` (ruta

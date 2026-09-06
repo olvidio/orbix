@@ -21,7 +21,7 @@ Todo el conocimiento del proyecto vive bajo `docs/`. No existe la carpeta `docum
 - [Guía técnica (onboarding)](dev/guia_tecnica_onboarding.md) — PHP, DDD, tests, PostgreSQL/esquemas/réplicas
 - [Índice de módulos](00_indice_modulos.md) — enlaces por módulo
 - [Índice de refactorización](dev/REFACTOR_INDICE.md) — estado migración DDD
-- [Copias entre bases](dev/copias_entre_bases.md) — tablas `cp_*` / `cd_*` en comun: sincronización, reconciliación, cómo añadir una
+- [Copias entre bases](dev/copias_entre_bases.md) — tablas `cp_*` / `cd_*` / `cu_*` en comun: sincronización, reconciliación, cron unificado
 - [Zonas SACD a comun (plan)](dev/zonas_a_comun_plan.md) — mover `zonas*` de sv-e a comun y tabla de relación `zonas_ctr`
 - [Traducciones gettext](dev/traducciones_gettext.md) — Poedit, plantilla `.pot`, scripts IA
 - [Plan de documentación](PLAN_DOCUMENTACION_MODULOS.md)

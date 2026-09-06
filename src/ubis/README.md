@@ -79,26 +79,22 @@ Modos de uso:
 
 ### CLI y cron
 
-Driver único para las dos copias:
-`src/ubis/infrastructure/cli/centros_resincronizar.php`. Elige la copia según
-`UBICACION`: en sv reconcilia `cu_centros_dl` contra el origen sv y en sf
-`cu_centros_dlf` contra el origen sf. Así el crontab de los dos servidores lleva
-la misma línea, y desde sv no se toca la copia de sf.
+El crontab de producción no llama a este driver: las tres copias van en
+`src/shared/infrastructure/cli/copias_resincronizar.php` con un fichero de
+sesión (`cron_sesion.inc`). En sv corre `cu_centros_dl`; en sf,
+`cu_centros_dlf`. Detalle en
+[`docs/dev/copias_entre_bases.md`](../../docs/dev/copias_entre_bases.md).
 
-Recibe los mismos parámetros posicionales que los demás drivers de reconciliación
-(usuario, password, dirweb, document_root, ubicación, esquema, private,
-DB_SERVER), más dos opciones:
+Este driver (`src/ubis/infrastructure/cli/centros_resincronizar.php`) queda
+para el menú web y para una pasada suelta. Elige la copia según `UBICACION`:
+en sv reconcilia `cu_centros_dl` contra el origen sv y en sf `cu_centros_dlf`
+contra el origen sf. Desde sv no se toca la copia de sf.
 
-- `--aplicar`: escribe los cambios (sin ella, sólo informa).
-- `--esquema=H-dlb`: limita la ejecución a un esquema de comun concreto.
+Recibe los mismos parámetros posicionales que los demás drivers de
+reconciliación (usuario, password, dirweb, document_root, ubicación, esquema,
+private, DB_SERVER), más `--aplicar` y `--esquema=H-dlb`.
 
 Códigos de salida: `0` correcto, `1` error o abortado, `2` uso incorrecto.
-
-```
-37 3 * * * /usr/bin/php /var/www/orbix/src/ubis/infrastructure/cli/centros_resincronizar.php \
-    usuario clave orbix /var/www sv H-dlbv sv 1 --aplicar \
-    >> /var/www/orbix/log/cu_centros.out 2>> /var/www/orbix/log/cu_centros.err
-```
 
 El mismo driver sirve de espejo web: el controller
 `src/ubis/infrastructure/ui/http/controllers/centros_resincronizar.php` (ruta

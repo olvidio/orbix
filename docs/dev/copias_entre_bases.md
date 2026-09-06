@@ -93,10 +93,51 @@ Son el caso menos simétrico y conviene tenerlo presente al tocarlas:
   de los suyos, así que cada una alimenta su copia: el reparto se decide por el
   primer dígito de `id_ubi` (misma regla que `DBTrasvase::ctr` y `UbiFactory`), no
   por la instalación.
-- **Un solo driver CLI** (`src/ubis/infrastructure/cli/centros_resincronizar.php`)
-  para las dos: elige la copia según `UBICACION`, de modo que el crontab de sv y el
-  de sf llevan la misma línea. Desde sv no se reconcilia la copia de sf.
+- **Un solo driver por módulo** (`src/ubis/infrastructure/cli/centros_resincronizar.php`)
+  para las dos: elige la copia según `UBICACION`. El crontab no llama a ese
+  driver: usa el cron unificado (abajo). Desde sv no se reconcilia la copia de sf.
 - **La zona SACD no se copia.** Vive en `zonas_ctr`, no en las tablas de centros.
+
+## Cron unificado
+
+Las tres reconciliaciones se lanzan con **una línea de cron** y **un fichero de
+sesión** (usuario, contraseña, esquema…). No van las credenciales en el crontab.
+
+| Instalación | Qué corre |
+|---|---|
+| **sv** | `cp_sacd`, `cd_cargos_activ_dl`, `cu_centros_dl` |
+| **sf** | sólo `cu_centros_dlf` (las otras dos se alimentan desde sv; correrlas aquí vería el origen vacío y borraría la copia) |
+| **DMZ** | no: aborta |
+
+Driver: `src/shared/infrastructure/cli/copias_resincronizar.php`.
+
+Sesión: copiar `src/shared/infrastructure/cli/cron_sesion.inc.example` a un sitio
+fuera del repo (p. ej. `/var/www/conf/cron_sesion.inc` o
+`../conf/cron_sesion.inc` respecto a la raíz del proyecto) y rellenar. El cron
+busca, por este orden: `--sesion=…`, `ORBIX_CRON_SESION`,
+`../conf/cron_sesion.inc`, `/var/www/conf/cron_sesion.inc`,
+`cron_sesion.inc` en la raíz del repo.
+
+```
+17 3 * * * /usr/bin/php /var/www/orbix/src/shared/infrastructure/cli/copias_resincronizar.php --aplicar \
+    >> /var/www/orbix/log/copias.out 2>> /var/www/orbix/log/copias.err
+```
+
+En sf la misma línea; cambia `ubicacion` / `esquema` / `private` en el fichero
+de sesión (`sf`, `H-dlbf`, `sf`).
+
+Opciones: `--aplicar` (sin ella, sólo informe), `--esquema=H-dlb` (un esquema de
+comun), `--sesion=/ruta/cron_sesion.inc`.
+
+Si falla algo (excepción o `errores > 0`) se encola un aviso en `cola_mails`
+hacia `mail_aviso` del fichero de sesión. Lo envía el cron de la DMZ
+(`enviar_mails_en_cola.php`), el mismo canal que avisos y recuperación de
+clave; no se usa el `mail()` del servidor interior. Sin `mail_aviso` (o vacío)
+sólo queda el registro en `log/copias.err`. Un login fallido no puede encolar
+(aún no hay sesión): sale por STDERR.
+
+Cada copia sigue teniendo su CLI de módulo para el menú web y para una pasada
+suelta. El bloqueo del cron unificado es `log/copias_resync.pid` (45 min).
 
 Antes de esto las dos copias sólo se escribían en el trasvase inicial
 (`DBTrasvase::ctr`): `CentrosUpdate` guardaba en `u_centros_dl` y no propagaba
@@ -132,9 +173,12 @@ nada, así que quedaban congeladas desde el alta de la dl.
    rellenando `claveEsquemaOrigen()`, `nombreBaseOrigen()`, `contextoDe()` y
    `leerOrigen()`. Si la copia tiene índices únicos por otra combinación de
    columnas, devolver `true` en `bajasAntesDeAltas()`.
-6. **CLI + cron**: un driver en `infrastructure/cli/` con los ocho parámetros
-   posicionales habituales más `--aplicar` y `--esquema=`, con las guardas de
-   ubicación, fichero de bloqueo y códigos de salida.
+6. **CLI + cron**: añadir la copia a `CopiasResincronizar` (qué instalación la
+   corre). El cron unificado es
+   `src/shared/infrastructure/cli/copias_resincronizar.php`. Cada copia sigue
+   teniendo su driver en `infrastructure/cli/` para el menú web y para una
+   pasada suelta. La sesión del cron vive en `cron_sesion.inc` (fuera del repo;
+   plantilla `src/shared/infrastructure/cli/cron_sesion.inc.example`).
 7. **Registrar** writer, servicio y reconciliador en `config/dependencies.php`.
 
 ### Cuidado con `leerOrigen()`

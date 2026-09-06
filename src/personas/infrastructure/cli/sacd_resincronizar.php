@@ -10,10 +10,10 @@ use src\shared\web\ContestarJson;
  * Driver CLI para reconciliar la copia `cp_sacd` (BD comun) con las tablas de
  * personas de la BD interior, en todos los esquemas.
  *
- * Pensado para crontab en el servidor **interior sv** (una sola línea: los
- * esquemas se descubren solos desde `public.db_idschema`). También se invoca
- * desde el menú web a través del controller homónimo, que hace `require` de
- * este fichero.
+ * El crontab de producción usa el cron unificado
+ * (`src/shared/infrastructure/cli/copias_resincronizar.php`). Este driver
+ * queda para el menú web y para una pasada suelta. También se invoca desde el
+ * controller homónimo, que hace `require` de este fichero.
  *
  * Por defecto **sólo informa**. Hay que pasar `--aplicar` para que escriba.
  *
@@ -37,11 +37,6 @@ use src\shared\web\ContestarJson;
  * conexión de sesión `oDBPC`.
  *
  * Códigos de salida: 0 correcto, 1 error o abortado, 2 uso incorrecto.
- *
- * Ejemplo de crontab (interior sv, cada noche):
- *   17 3 * * * /usr/bin/php /var/www/orbix/src/personas/infrastructure/cli/sacd_resincronizar.php \
- *       usuario clave orbix /var/www sv H-dlbv sv 1 --aplicar \
- *       >> /var/www/orbix/log/cp_sacd.out 2>> /var/www/orbix/log/cp_sacd.err
  */
 
 if (PHP_SAPI === 'cli' && count(array_slice($argv ?? [], 1, 8)) < 8) {
