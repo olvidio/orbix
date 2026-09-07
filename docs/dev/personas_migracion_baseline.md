@@ -223,7 +223,7 @@ libre de imports `src\` y de acceso al contenedor.
     ambito. Calcula `id_tabla` canonico (`PersonaAgd => 'a'`, etc, con el
     fallback `PersonaEx => 'pn'` cuando no viene) y devuelve las listas de
     delegaciones (aplicando `DBPropiedades::array_posibles_dl_de_esquemas`
-    para el caso alta de `PersonaEx`), centros (solo si aun no se conoce
+    para alta y edición de `PersonaEx`), centros (solo si aun no se conoce
     el centro), situacion, idioma, nivel_stgr e inc.
   - `src/personas/infrastructure/ui/http/controllers/personas_editar_data.php`
     expone `/src/personas/personas_editar_data`.

@@ -33,7 +33,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
   `nom_ctr` si hay `id_ctr`.
 - Devuelve mapas de opciones: `opciones_dl`, `opciones_centros` (si no hay ctr fijo),
   `opciones_situacion`, `opciones_lengua`, `opciones_stgr`, `opciones_inc`.
-- En alta `PersonaEx`, `opciones_dl` excluye delegaciones ya con esquema propio.
+- En `PersonaEx` (alta y edición), `opciones_dl` excluye delegaciones ya con esquema
+  propio. Si la persona editada ya tiene una de esas DL, se conserva en el desplegable.
 
 ## Endpoint
 

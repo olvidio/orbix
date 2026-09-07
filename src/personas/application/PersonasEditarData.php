@@ -24,7 +24,8 @@ use src\usuarios\domain\contracts\LocalRepositoryInterface;
  *  - valores de la persona (o defaults si `nuevo=1`),
  *  - `id_tabla` canonico segun `obj_pau` (PersonaEx conserva pn/pa/px/psssc),
  *  - opciones para los `<select>` de delegaciones, centros, situacion, lengua,
- *    nivel_stgr e incorporacion.
+ *    nivel_stgr e incorporacion. En `PersonaEx` (alta y edición) el desplegable
+ *    de delegación solo incluye las activas sin esquema Orbix.
  *
  * El frontend sigue siendo responsable del `switch($Qobj_pau)` que decide
  * `presentacion` y `ok/ok_txt/botones` porque depende de `$_SESSION['oPerm']`
@@ -39,6 +40,7 @@ final class PersonasEditarData
         private DelegacionRepositoryInterface $delegacionRepository,
         private SituacionRepositoryInterface $situacionRepository,
         private LocalRepositoryInterface $localRepository,
+        private DBPropiedades $dbPropiedades,
     ) {
     }
 
@@ -188,22 +190,14 @@ final class PersonasEditarData
             $out['id_tabla'] = PersonaRepositoryResolver::idTablaDePasoParaSelect($id_tabla_ex);
         }
 
-        // Opciones: delegaciones.
-        $repoDl = $this->delegacionRepository;
-        $cDeleg = $repoDl->getDelegaciones(['active' => true, '_ordre' => 'dl']);
+        // Opciones: delegaciones (PersonaEx: solo las que no tienen esquema Orbix).
+        $cDeleg = $this->delegacionRepository->getDelegaciones(['active' => true, '_ordre' => 'dl']);
         $a_dl_todas = [];
         foreach ($cDeleg as $oDeleg) {
             $dl_sigla = (string)$oDeleg->getDlVo()->value();
             $a_dl_todas[$dl_sigla] = $dl_sigla;
         }
-        if ($Qnuevo === 1 && $Qobj_pau === 'PersonaEx') {
-            $oDBPropiedades = new DBPropiedades();
-            $a_dl_esquemas = $oDBPropiedades->array_posibles_dl_de_esquemas(true);
-            $opciones_dl = array_diff_key($a_dl_todas, $a_dl_esquemas);
-        } else {
-            $opciones_dl = $a_dl_todas;
-        }
-        $out['opciones_dl'] = $opciones_dl;
+        $out['opciones_dl'] = $this->opcionesDl($Qobj_pau, $a_dl_todas, (string)$out['dl']);
 
         // Opciones: centros (solo si no se conoce nom_ctr todavia).
         if (empty($out['nom_ctr'])) {
@@ -252,6 +246,28 @@ final class PersonasEditarData
             return [$sel];
         }
         return [];
+    }
+
+    /**
+     * Personas de paso: solo DL activas sin esquema Orbix.
+     * Si la persona ya tiene una DL con esquema, se conserva para no perder el valor.
+     *
+     * @param array<string, string> $delegacionesActivas
+     * @return array<string, string>
+     */
+    private function opcionesDl(string $obj_pau, array $delegacionesActivas, string $dlActual): array
+    {
+        if ($obj_pau !== 'PersonaEx') {
+            return $delegacionesActivas;
+        }
+
+        $conEsquema = $this->dbPropiedades->array_posibles_dl_de_esquemas(true);
+        $opciones = array_diff_key($delegacionesActivas, $conEsquema);
+        if ($dlActual !== '' && isset($delegacionesActivas[$dlActual])) {
+            $opciones[$dlActual] = $delegacionesActivas[$dlActual];
+        }
+
+        return $opciones;
     }
 
     /**
