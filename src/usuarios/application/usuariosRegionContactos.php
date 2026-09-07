@@ -24,12 +24,107 @@ class usuariosRegionContactos
      */
     public function execute(string $region = ''): array
     {
+        $codigos = self::parseCodigosRegion($region);
+        if (count($codigos) > 1) {
+            return $this->contactosDeVariasRegiones($codigos);
+        }
+        if (count($codigos) === 1) {
+            return $this->contactosDeUnaRegion($codigos[0]);
+        }
+        if (strcasecmp(trim($region), 'todos') === 0) {
+            return [
+                'error' => '',
+                'data' => [
+                    'success' => true,
+                    'contactos' => [],
+                ],
+            ];
+        }
+
+        return $this->contactosDeUnaRegion($region);
+    }
+
+    /**
+     * Códigos de esquema (sin sufijo v/f) separados por coma. Ignora `todos`.
+     *
+     * @return list<string>
+     */
+    public static function parseCodigosRegion(string $region): array
+    {
+        $partes = preg_split('/\s*,\s*/', trim($region)) ?: [];
+        $out = [];
+        foreach ($partes as $codigo) {
+            if ($codigo === '' || strcasecmp($codigo, 'todos') === 0) {
+                continue;
+            }
+            if (!in_array($codigo, $out, true)) {
+                $out[] = $codigo;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param array<string, array{email: string, cargo: string, nombre?: string, region?: string}> $existentes
+     * @param array<string, array{email: string, cargo: string, nombre?: string, region?: string}> $nuevos
+     * @return array<string, array{email: string, cargo: string, nombre: string, region: string}>
+     */
+    public static function fusionarContactos(array $existentes, array $nuevos, string $codigo): array
+    {
+        foreach ($nuevos as $nom => $info) {
+            $nombre = $info['nombre'] ?? $nom;
+            $existentes[$codigo . '|' . $nombre] = [
+                'email' => $info['email'],
+                'cargo' => $info['cargo'],
+                'nombre' => $nombre,
+                'region' => $codigo,
+            ];
+        }
+
+        return $existentes;
+    }
+
+    /**
+     * @param list<string> $codigos
+     * @return array{error: string, data: array<string, mixed>}
+     */
+    private function contactosDeVariasRegiones(array $codigos): array
+    {
+        $aContactos = [];
+        foreach ($codigos as $codigo) {
+            $parcial = $this->contactosDeUnaRegion($codigo);
+            if ($parcial['error'] !== '') {
+                continue;
+            }
+            $mapa = $parcial['data']['contactos'] ?? [];
+            if (!is_array($mapa)) {
+                continue;
+            }
+            /** @var array<string, array{email: string, cargo: string, nombre?: string, region?: string}> $mapa */
+            $aContactos = self::fusionarContactos($aContactos, $mapa, $codigo);
+        }
+
+        return [
+            'error' => '',
+            'data' => [
+                'success' => true,
+                'contactos' => $aContactos,
+            ],
+        ];
+    }
+
+    /**
+     * @return array{error: string, data: array<string, mixed>}
+     */
+    private function contactosDeUnaRegion(string $region): array
+    {
         $error_txt = '';
         $esquema = $region . 'v';
-        $oConfigDB = new ConfigDB('sv-e_select');
-        $config = $oConfigDB->getEsquema($esquema);
-        $oConexion = new DBConnection($config);
         try {
+            $oConfigDB = new ConfigDB('sv-e_select');
+            $config = $oConfigDB->getEsquema($esquema);
+            $oConexion = new DBConnection($config);
             $oDevelPC = $oConexion->getPDO();
         } catch (\Throwable $e) {
             $error_txt = 'Error al obtener la conexión a la base de datos: ' . $e->getMessage();

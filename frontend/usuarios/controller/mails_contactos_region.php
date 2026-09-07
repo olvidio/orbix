@@ -28,22 +28,34 @@ $aContactos = UsuariosPayload::contactosFromPayload($resp['contactos'] ?? null);
 ob_start();
 if (!empty($resp['success']) && $resp['success'] === true) {
     echo '<div class="mails-region">';
-    $titulo = empty($Qregion) ? 'Contactos' : 'Contactos de ' . htmlspecialchars($Qregion);
+    $esAgregado = str_contains($Qregion, ',');
+    if ($esAgregado) {
+        $titulo = _('Contactos de todas las regiones');
+    } elseif ($Qregion === '') {
+        $titulo = _('Contactos');
+    } else {
+        $titulo = _('Contactos de') . ' ' . htmlspecialchars($Qregion, ENT_QUOTES, 'UTF-8');
+    }
     echo '<h3>' . $titulo . '</h3>';
     if ($aContactos === []) {
         echo '<p>' . _("No hay datos de contactos para esta región") . '.</p>';
     } else {
         echo '<ul>';
         foreach ($aContactos as $nombre => $info) {
-            $nombre_safe = htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8');
+            $nombreVisible = $info['nombre'] !== '' ? $info['nombre'] : $nombre;
+            $nombre_safe = htmlspecialchars($nombreVisible, ENT_QUOTES, 'UTF-8');
             $cargo = htmlspecialchars($info['cargo'], ENT_QUOTES, 'UTF-8');
             $email = htmlspecialchars($info['email'], ENT_QUOTES, 'UTF-8');
+            $regionLabel = htmlspecialchars($info['region'], ENT_QUOTES, 'UTF-8');
             $linea = '<a href="mailto:' . $email . '">' . $email . '</a>';
             if ($nombre_safe !== '' || $cargo !== '') {
                 $det = trim($nombre_safe . ($cargo !== '' ? ' - ' . $cargo : ''));
                 if ($det !== '') {
                     $linea .= ' (' . $det . ')';
                 }
+            }
+            if ($regionLabel !== '') {
+                $linea .= ' [' . $regionLabel . ']';
             }
             echo '<li>' . $linea . '</li>';
         }

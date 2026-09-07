@@ -395,7 +395,7 @@ final class UsuariosPayload
     }
 
     /**
-     * @return array<string, array{cargo: string, email: string}>
+     * @return array<string, array{cargo: string, email: string, nombre: string, region: string}>
      */
     public static function contactosFromPayload(mixed $raw): array
     {
@@ -410,10 +410,11 @@ final class UsuariosPayload
             if (!is_array($info)) {
                 continue;
             }
-            $key = $nombre;
-            $out[$key] = [
+            $out[$nombre] = [
                 'cargo' => PayloadCoercion::string($info['cargo'] ?? ''),
                 'email' => PayloadCoercion::string($info['email'] ?? ''),
+                'nombre' => PayloadCoercion::string($info['nombre'] ?? $nombre),
+                'region' => PayloadCoercion::string($info['region'] ?? ''),
             ];
         }
 

@@ -40,7 +40,7 @@ Devuelve contactos email de usuarios regionales con permisos de oficina relevant
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `region` | `string` | application | No | |
+| `region` | `string` | application | No | Código de esquema (`H-crH`) o lista separada por comas para agregar contactos de varias filas. |
 
 ## Salida
 
@@ -48,7 +48,9 @@ Devuelve contactos email de usuarios regionales con permisos de oficina relevant
 - Forma: `standard_envelope_string_data`.
 - Claves en `data` (doble `JSON.parse` salvo JsonResponse directo):
   - `success`: true
-  - `contactos`: mapa nom→{email,cargo} filtrado por perm oficina est/sm/agd
+  - `contactos`: mapa nom→{email,cargo} filtrado por perm oficina est/sm/agd.
+    Si `region` trae varios códigos, cada ítem incluye `nombre` y `region` (clave `codigo|nombre`).
+    Un esquema inexistente se omite y no aborta el resto.
 
 ## Errores conocidos
 
