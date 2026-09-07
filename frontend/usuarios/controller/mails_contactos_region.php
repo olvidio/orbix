@@ -35,10 +35,10 @@ if (!empty($resp['success']) && $resp['success'] === true) {
     } else {
         echo '<ul>';
         foreach ($aContactos as $nombre => $info) {
-            $nombre_safe = htmlspecialchars($nombre);
-            $cargo = htmlspecialchars($info['cargo']);
-            $email = htmlspecialchars($info['email']);
-            $linea = $email;
+            $nombre_safe = htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8');
+            $cargo = htmlspecialchars($info['cargo'], ENT_QUOTES, 'UTF-8');
+            $email = htmlspecialchars($info['email'], ENT_QUOTES, 'UTF-8');
+            $linea = '<a href="mailto:' . $email . '">' . $email . '</a>';
             if ($nombre_safe !== '' || $cargo !== '') {
                 $det = trim($nombre_safe . ($cargo !== '' ? ' - ' . $cargo : ''));
                 if ($det !== '') {

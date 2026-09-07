@@ -1310,7 +1310,22 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
             transform: 'none'
         });
         if ($.fn.draggable) {
-            $ventana.draggable({containment: 'window', cursor: 'move'});
+            // Arrastrar toda la ventana llama preventDefault en mousedown y
+            // impide seleccionar/copiar texto (p. ej. emails de contactos).
+            var dragOpts = {
+                containment: 'window',
+                cursor: 'move',
+                cancel: 'input, textarea, button, select, option, a, p, li, td, th, label, ul, ol, h1, h2, h3, h4, pre, code'
+            };
+            if ($ventana.children('#div_cerrar').length) {
+                dragOpts.handle = '#div_cerrar';
+            } else if ($ventana.find('.ventana-handle').length) {
+                dragOpts.handle = '.ventana-handle';
+            }
+            if ($ventana.hasClass('ui-draggable')) {
+                $ventana.draggable('destroy');
+            }
+            $ventana.draggable(dragOpts);
         }
     }
 

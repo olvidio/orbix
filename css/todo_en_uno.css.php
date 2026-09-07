@@ -412,6 +412,13 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 		transform: translate(-50%, -50%);
 		width: auto; height: auto;
 		max-width: 90vw; max-height: 90vh;
+		user-select: text;
+		-webkit-user-select: text;
+	}
+	div.ventana .ui-draggable-handle {
+		cursor: move;
+		user-select: none;
+		-webkit-user-select: none;
 	}
 	/* ## INCORPORACIONES ## */
 	table.incorporaciones { width: 85em; }
