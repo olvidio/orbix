@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
+use src\notas\domain\DestinoNotaExterno;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\RegionStgrAviso;
@@ -22,7 +23,7 @@ final class TesseraImprimirData
      */
     public function execute(int $id_nom): array
     {
-        if ($id_nom <= 0) {
+        if ($id_nom === 0) {
             return ['aviso' => RegionStgrAviso::mensajePersonaNoValida()];
         }
 
@@ -31,7 +32,7 @@ final class TesseraImprimirData
         if ($oPersona === null) {
             return ['aviso' => sprintf(_('No encuentro persona con id_nom: %s'), (string)$id_nom)];
         }
-        if ($oPersona->getId_schema() === 0) {
+        if ($oPersona->getId_schema() === 0 && !DestinoNotaExterno::esExternoPorIdNom($id_nom)) {
             RegionStgrAviso::registrarPersonaSinSchema(
                 $problemasRegionStgr,
                 $id_nom,

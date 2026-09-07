@@ -252,12 +252,12 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.tessera_imprimir_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/tessera_imprimir_data.php`
-- Entrada: `post.id_nom:integer`
+- Entrada: `post.id_nom:integer` (acepta `id_nom` negativo: persona / asistente de paso)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/tessera_ver_data`
 
 - Id: `notas.tessera_ver_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/tessera_ver_data.php`
-- Entrada: `post.id_nom:integer`
+- Entrada: `post.id_nom:integer` (acepta `id_nom` negativo: persona / asistente de paso)
 - Respuesta: `standard_envelope_string_data`

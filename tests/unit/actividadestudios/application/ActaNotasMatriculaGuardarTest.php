@@ -14,6 +14,65 @@ use src\notas\domain\entity\Acta;
 
 final class ActaNotasMatriculaGuardarTest extends TestCase
 {
+    public function test_guarda_nota_de_asistente_de_paso(): void
+    {
+        $idNomPaso = -1001123;
+        $matricula = $this->createMock(Matricula::class);
+        $matricula->method('getActa')->willReturn('');
+        $matricula->method('getNota_num')->willReturn(null);
+        $matricula->expects($this->once())->method('setNota_num')->with(8.0);
+        $matricula->method('isPreceptor')->willReturn(false);
+
+        $repo = $this->createMock(MatriculaRepositoryInterface::class);
+        $repo->expects($this->once())->method('findById')->with(1, 1101, $idNomPaso)->willReturn($matricula);
+        $repo->expects($this->once())->method('Guardar')->willReturn(true);
+
+        $_SESSION['oConfig'] = new class {
+            public function getNotaCorte(): float
+            {
+                return 0.6;
+            }
+        };
+
+        $uc = new ActaNotasMatriculaGuardar($repo, $this->policyConActaFirmada('dlb 1/26'));
+        $err = $uc->execute([
+            'id_activ' => 1,
+            'id_asignatura' => 1101,
+            'id_nom' => [$idNomPaso],
+            'nota_num' => ['8'],
+            'nota_max' => ['10'],
+            'form_preceptor' => [''],
+            'acta_nota' => ['dlb 2/26'],
+        ]);
+        $this->assertSame('', $err);
+    }
+
+    public function test_omite_id_nom_vacio_pero_no_el_de_paso(): void
+    {
+        $repo = $this->createMock(MatriculaRepositoryInterface::class);
+        $repo->expects($this->never())->method('findById');
+        $repo->expects($this->never())->method('Guardar');
+
+        $_SESSION['oConfig'] = new class {
+            public function getNotaCorte(): float
+            {
+                return 0.6;
+            }
+        };
+
+        $uc = new ActaNotasMatriculaGuardar($repo, $this->policyConActaFirmada('dlb 1/26'));
+        $err = $uc->execute([
+            'id_activ' => 1,
+            'id_asignatura' => 1101,
+            'id_nom' => [0, ''],
+            'nota_num' => ['8', '9'],
+            'nota_max' => ['10', '10'],
+            'form_preceptor' => ['', ''],
+            'acta_nota' => ['', ''],
+        ]);
+        $this->assertSame('', $err);
+    }
+
     public function test_omite_filas_de_acta_firmada(): void
     {
         $matricula = $this->createMock(Matricula::class);

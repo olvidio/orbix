@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
+use src\notas\domain\DestinoNotaExterno;
 use src\personas\application\services\PersonaFinderService;
 use src\ubis\domain\RegionStgrAviso;
 
@@ -22,7 +23,7 @@ final class TesseraVerData
      */
     public function execute(int $id_nom): array
     {
-        if ($id_nom <= 0) {
+        if ($id_nom === 0) {
             return $this->respuestaConAviso(RegionStgrAviso::mensajePersonaNoValida());
         }
 
@@ -37,7 +38,8 @@ final class TesseraVerData
                 (string)$id_nom
             ));
         }
-        if ($oPersona->getId_schema() === 0) {
+        // Personas de paso (id_nom negativo / restov): no exigen id_schema de DL Orbix.
+        if ($oPersona->getId_schema() === 0 && !DestinoNotaExterno::esExternoPorIdNom($id_nom)) {
             RegionStgrAviso::registrarPersonaSinSchema(
                 $problemasRegionStgr,
                 $id_nom,

@@ -21,7 +21,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.acta_notas_definitivas_grabar`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/acta_notas_definitivas_grabar.php`
-- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_schema:integer`
+- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_schema:integer`, `post.id_nom:array`, `post.nota_num:array`, `post.nota_max:array`, `post.form_preceptor:array`, `post.acta_nota:array` (el controller persiste primero el borrador del formulario, incluido `id_nom` negativo de asistentes de paso, y después convierte a tessera)
 - Respuesta: `raw_response`
 
 ## `/src/actividadestudios/acta_notas_matricula_guardar`

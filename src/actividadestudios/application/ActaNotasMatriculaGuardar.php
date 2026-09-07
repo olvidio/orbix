@@ -51,7 +51,8 @@ final class ActaNotasMatriculaGuardar
             $preceptor = (!empty($Qform_preceptor[$n]) && $Qform_preceptor[$n] === 'p');
             $idNomRaw = $Qid_nom[$n] ?? 0;
             $idNom = is_numeric($idNomRaw) ? (int) $idNomRaw : 0;
-            if ($idNom <= 0) {
+            // 0 = fila vacía / no numérica. Los asistentes de paso tienen id_nom negativo.
+            if ($idNom === 0) {
                 continue;
             }
 
