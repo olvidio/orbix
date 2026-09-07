@@ -1315,7 +1315,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
             var dragOpts = {
                 containment: 'window',
                 cursor: 'move',
-                cancel: 'input, textarea, button, select, option, a, p, li, td, th, label, ul, ol, h1, h2, h3, h4, pre, code, .ventana-icon-btn'
+                cancel: '#div_modificar5, #div_modificar5 *, input, textarea, button, select, option, a, p, li, td, th, label, ul, ol, h1, h2, h3, h4, pre, code, .ventana-icon-btn'
             };
             if ($ventana.children('#div_cerrar').length) {
                 dragOpts.handle = '#div_cerrar';
@@ -1326,6 +1326,11 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
                 $ventana.draggable('destroy');
             }
             $ventana.draggable(dragOpts);
+            // El mousedown del draggable está en la ventana entera: que el cuerpo
+            // no burbujee, si no no se puede seleccionar texto.
+            $ventana.children('#div_modificar5').off('mousedown.orbixSelect').on('mousedown.orbixSelect', function (event) {
+                event.stopPropagation();
+            });
         }
     }
 

@@ -47,7 +47,7 @@ if (!empty($resp['success']) && $resp['success'] === true) {
             $cargo = htmlspecialchars($info['cargo'], ENT_QUOTES, 'UTF-8');
             $email = htmlspecialchars($info['email'], ENT_QUOTES, 'UTF-8');
             $regionLabel = htmlspecialchars($info['region'], ENT_QUOTES, 'UTF-8');
-            $linea = '<a href="mailto:' . $email . '">' . $email . '</a>';
+            $linea = '<a href="mailto:' . $email . '" draggable="false">' . $email . '</a>';
             if ($nombre_safe !== '' || $cargo !== '') {
                 $det = trim($nombre_safe . ($cargo !== '' ? ' - ' . $cargo : ''));
                 if ($det !== '') {

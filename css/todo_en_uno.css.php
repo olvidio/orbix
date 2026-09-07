@@ -455,6 +455,17 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 	div.ventana .ui-draggable-handle .ventana-icon-btn {
 		cursor: pointer;
 	}
+	div.ventana #div_modificar5,
+	div.ventana .mails-region {
+		user-select: text;
+		-webkit-user-select: text;
+		-moz-user-select: text;
+	}
+	div.ventana .mails-region a {
+		-webkit-user-drag: none;
+		user-select: text;
+		-webkit-user-select: text;
+	}
 	/* ## INCORPORACIONES ## */
 	table.incorporaciones { width: 85em; }
 	th.nom,td.nom { width: 12em; }
