@@ -420,6 +420,41 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 		user-select: none;
 		-webkit-user-select: none;
 	}
+	div.ventana #div_cerrar {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 6px;
+		margin-bottom: 8px;
+		min-height: 28px;
+	}
+	div.ventana .ventana-icon-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		width: 28px;
+		height: 28px;
+		padding: 0;
+		border: 1px solid transparent;
+		border-radius: 6px;
+		background: transparent;
+		color: inherit;
+		cursor: pointer;
+		line-height: 0;
+	}
+	div.ventana .ventana-icon-btn:hover {
+		background: rgba(0, 0, 0, 0.08);
+	}
+	div.ventana .ventana-icon-btn svg {
+		width: 16px;
+		height: 16px;
+		display: block;
+	}
+	div.ventana .ui-draggable-handle .link,
+	div.ventana .ui-draggable-handle .ventana-icon-btn {
+		cursor: pointer;
+	}
 	/* ## INCORPORACIONES ## */
 	table.incorporaciones { width: 85em; }
 	th.nom,td.nom { width: 12em; }

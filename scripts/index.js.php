@@ -1315,7 +1315,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
             var dragOpts = {
                 containment: 'window',
                 cursor: 'move',
-                cancel: 'input, textarea, button, select, option, a, p, li, td, th, label, ul, ol, h1, h2, h3, h4, pre, code'
+                cancel: 'input, textarea, button, select, option, a, p, li, td, th, label, ul, ol, h1, h2, h3, h4, pre, code, .ventana-icon-btn'
             };
             if ($ventana.children('#div_cerrar').length) {
                 dragOpts.handle = '#div_cerrar';
