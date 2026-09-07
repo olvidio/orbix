@@ -28,7 +28,7 @@ use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
  * `src/<modulo>/application/legacy/`".
  *
  * Se conservan intactos:
- *   - `echo` a stdout en `fn_apuntar` y `anotado` (util en el log de cron
+ *   - `echo` a stdout en fallo de `fn_apuntar`/`anotado` (útil en el log de cron
  *     `log/avisos.out`/`log/avisos.err`).
  *   - Escritura directa al fichero PID `log/avisos.<esquema>.pid` para
  *     controlar concurrencia desde distintos procesos lanzados por
@@ -132,15 +132,8 @@ class Avisos
      */
     public function fn_apuntar(int|string $aviso_tipo): string
     {
-        $archivo_log = ConfigGlobal::$directorio . "/log/errores.log";
-
         $sfsv = ConfigGlobal::mi_sfsv();
 
-        // Log de entrada
-        $msg = "fn_apuntar: schema={$this->id_schema_cmb}, item={$this->id_item_cmb}, usuario={$this->id_usuario}, tipo={$aviso_tipo}, sfsv={$sfsv}";
-        error_log($msg . "\n", 3, $archivo_log);
-
-        // Asegurar que no existe:
         $aWhere = [
             'id_schema_cambio' => $this->id_schema_cmb,
             'id_item_cambio' => $this->id_item_cmb,
@@ -151,14 +144,8 @@ class Avisos
 
         $cCambioUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
 
-        // Log del resultado de busqueda
-        $msg = "fn_apuntar: Encontrados " . count($cCambioUsuario) . " registros existentes";
-        error_log($msg . "\n", 3, $archivo_log);
-
         $err_fila = '';
         if (count($cCambioUsuario) > 0) {
-            $msg = "fn_apuntar: DUPLICADO DETECTADO - No se insertara";
-            error_log($msg . "\n", 3, $archivo_log);
             $err_fila .= "<tr>";
             $err_fila .= "<td>" . $this->id_schema_cmb . "</td>";
             $err_fila .= "<td>" . $this->id_item_cmb . "</td>";
@@ -166,8 +153,6 @@ class Avisos
             $err_fila .= "<td>" . $aviso_tipo . "</td>";
             $err_fila .= "</tr>";
         } else {
-            $msg = "fn_apuntar: Insertando nuevo registro";
-            error_log($msg . "\n", 3, $archivo_log);
             $newIdItem = $this->cambioUsuarioRepository->getNewId();
             $oCambioUsuario = new CambioUsuario();
             $oCambioUsuario->setId_item($newIdItem);
@@ -178,9 +163,6 @@ class Avisos
             $oCambioUsuario->setAviso_tipo((int) $aviso_tipo);
 
             $resultado = $this->cambioUsuarioRepository->Guardar($oCambioUsuario);
-            $msg = "fn_apuntar: Resultado Guardar: " . ($resultado ? 'SUCCESS' : 'FAILED');
-            error_log($msg . "\n", 3, $archivo_log);
-
             if ($resultado === false) {
                 echo ConfigGlobal::$web_server . '-->' . date('c') . " " . _("Hay un error, no se ha guardado");
                 echo "<br>id_item_cmb: $this->id_item_cmb, id_usuario: $this->id_usuario, aviso_tipo: $aviso_tipo <br>\n";
