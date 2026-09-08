@@ -69,7 +69,7 @@ Así no se pierde el trabajo hecho: al menos una lengua bíblica cubre Primeros 
 ### Opcionales
 
 - Las opcionales “clásicas” del plan **1997** (p. ej. las del bienio 1230–1232 y el bloque antiguo de opcionales) **no** forman parte del catálogo 2026.
-- En **2026** hay un bloque nuevo de opcionales / seminarios (**Op. I–IV**).
+- En **2026** hay un bloque de opcionales / seminarios (**Op. I–V**).
 - En comprobaciones del plan **1997**, la opcional de nivel **2430** sigue contando para decidir **c1/c2** (año I vs II–IV). En **2026** esa regla no aplica: c1/c2 se basan en el bloque de bienio (1000–2000) más la marca de bienio acabado (**9999**).
 
 ### Otras convalidaciones

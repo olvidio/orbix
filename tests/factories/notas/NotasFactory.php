@@ -101,7 +101,7 @@ class NotasFactory
     }
 
 
-    private $id_nivel_opcionales = [1230, 1231, 1232, 2430, 2431, 2432, 2433];
+    private $id_nivel_opcionales = [1230, 1231, 1232, 2430, 2431, 2432, 2433, 2434];
 
     private $a_asignaturas = [
         ['id_asignatura' => 1101, 'id_nivel' => 1101],
@@ -185,6 +185,7 @@ class NotasFactory
         ['id_asignatura' => 2431, 'id_nivel' => 2431],
         ['id_asignatura' => 2432, 'id_nivel' => 2432],
         ['id_asignatura' => 2433, 'id_nivel' => 2433],
+        ['id_asignatura' => 2434, 'id_nivel' => 2434],
         ['id_asignatura' => 3107, 'id_nivel' => 3107],
         ['id_asignatura' => 3114, 'id_nivel' => 3114],
         ['id_asignatura' => 3116, 'id_nivel' => 3116],
