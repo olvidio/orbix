@@ -15,7 +15,11 @@ use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\entity\PersonaSacd;
 use src\personas\domain\services\TelecoPersonaService;
+use src\personas\domain\value_objects\PersonaApellido1Text;
+use src\personas\domain\value_objects\PersonaTablaCode;
+use src\personas\domain\value_objects\SituacionCode;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
@@ -142,6 +146,73 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
 
         $this->assertSame('2026-04-01', $ctx['inicioIso']);
         $this->assertSame('2026-06-30', $ctx['finIso']);
+    }
+
+    public function test_execute_nagd_incluye_sacd_sin_actividades_en_el_periodo(): void
+    {
+        $usuarioRepo = $this->createMock(UsuarioRepositoryInterface::class);
+        $usuarioRepo->method('findById')->willReturn(null);
+
+        $oPersona = new PersonaSacd();
+        $oPersona->setId_schema(1);
+        $oPersona->setId_nom(4411);
+        $oPersona->setIdTablaVo(new PersonaTablaCode('n'));
+        $oPersona->setApellido1Vo(new PersonaApellido1Text('García'));
+        $oPersona->setSituacionVo(new SituacionCode('A'));
+
+        $personaSacdRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
+        $personaSacdRepo->method('getPersonas')->willReturn([$oPersona]);
+
+        $personaExRepo = $this->createMock(PersonaExRepositoryInterface::class);
+        $personaExRepo->method('getPersonas')->willReturn([]);
+
+        $centroDlRepo = $this->createMock(CentroDlRepositoryInterface::class);
+        $centroDlRepo->method('getCentros')->willReturn([]);
+
+        $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
+        $cargoRepo->method('getArrayCargos')->willReturn([]);
+
+        $actividadCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
+        $actividadCargoRepo->method('getAsistenteCargoDeActividad')->willReturn([]);
+
+        $helper = new ActividadesSacdHelper(
+            $this->createMock(ActividadSacdTextoRepositoryInterface::class),
+            $centroDlRepo,
+        );
+        $service = new ComunicarActividadesSacdService(
+            $cargoRepo,
+            $this->createMock(ActividadAllRepositoryInterface::class),
+            $this->createMock(CentroEncargadoRepositoryInterface::class),
+            $actividadCargoRepo,
+            $helper,
+            $this->createMock(ConfigSchemaRepositoryInterface::class),
+            $usuarioRepo,
+            $this->createMock(PersonaDlRepositoryInterface::class),
+            $centroDlRepo,
+            $this->createMock(TelecoPersonaService::class),
+            $this->createMock(ColaMailRepositoryInterface::class),
+        );
+
+        $out = (new ComunicacionActividadesSacdData(
+            $usuarioRepo,
+            $this->createMock(RoleRepositoryInterface::class),
+            $personaSacdRepo,
+            $personaExRepo,
+            $service,
+            $helper,
+        ))->execute([
+            'que' => 'nagd',
+            'id_nom' => 0,
+            'propuesta' => '',
+            'periodo' => 'tot_any',
+            'year' => '2026',
+            'empiezamin' => '',
+            'empiezamax' => '',
+        ]);
+
+        $this->assertCount(1, $out['sacds']);
+        $this->assertSame(4411, $out['sacds'][0]['id_nom']);
+        $this->assertSame([], $out['sacds_paso']);
     }
 
     private function makeUseCase(

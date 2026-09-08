@@ -44,6 +44,15 @@ class PgPersonaSacdRepositoryTest extends myTest
         $this->assertNull($oPersonaEx);
     }
 
+    public function test_get_personas_devuelve_instancias_persona_sacd()
+    {
+        $cPersonas = $this->repository->getPersonas(['_limit' => 1]);
+        if ($cPersonas === []) {
+            $this->markTestSkipped('No hay filas en cp_sacd para comprobar el tipo hidratado');
+        }
+        $this->assertInstanceOf(PersonaSacd::class, $cPersonas[0]);
+    }
+
     public function test_get_sacds_by_select_sin_filtros()
     {
         $result = $this->repository->getSacdsBySelect(2);

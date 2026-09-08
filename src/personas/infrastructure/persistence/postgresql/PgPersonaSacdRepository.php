@@ -5,7 +5,6 @@ namespace src\personas\infrastructure\persistence\postgresql;
 use PDO;
 use src\personas\domain\PersonaPublicacion;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
-use src\personas\domain\entity\PersonaPub;
 use src\personas\domain\entity\PersonaSacd;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalListsTrait;
 use src\shared\infrastructure\GlobalPdo;
@@ -36,12 +35,14 @@ class PgPersonaSacdRepository extends ClaseRepository implements PersonaSacdRepo
     }
 
     /**
-     * Crea una entidad PersonaPub desde un array de datos
+     * Crea una entidad PersonaSacd desde un array de datos.
+     * No usar PersonaPub: es hermana, no padre; el listado de comunicación
+     * descarta todo lo que no sea instanceof PersonaSacd.
      */
     /** @param array<string, mixed> $aDatos */
-    protected function createEntityFromArray(array $aDatos): PersonaPub
+    protected function createEntityFromArray(array $aDatos): PersonaSacd
     {
-        return PersonaPub::fromArray($aDatos);
+        return PersonaSacd::fromArray($aDatos);
     }
 
     public function getSacdsBySelect(int $Qseleccion_sacd): array
