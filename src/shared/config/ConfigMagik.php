@@ -42,6 +42,113 @@ class ConfigMagik
     }
 
     /**
+     * Valor INI entre comillas dobles. Sin escapar, un `"` interior
+     * (p. ej. HTML `title="…"`) cierra la cadena y un `(` posterior
+     * provoca `syntax error, unexpected '('` en parse_ini_file.
+     */
+    private function encodeIniValue(mixed $value): string
+    {
+        $s = $this->scalarToString($value);
+
+        return '"' . addcslashes($s, "\\\"$") . '"';
+    }
+
+    /** Inverso de {@see encodeIniValue()} (`\"`, `\\`, `\$`). */
+    private function unescapeIniValue(string $raw): string
+    {
+        return (string) preg_replace_callback(
+            '/\\\\./',
+            static function (array $m): string {
+                return match ($m[0]) {
+                    '\\"' => '"',
+                    '\\\\' => '\\',
+                    '\\$' => '$',
+                    default => $m[0],
+                };
+            },
+            $raw
+        );
+    }
+
+    /**
+     * Parser propio: parse_ini_file no admite bien textos con comillas,
+     * paréntesis o saltos de línea (cabeceras/pies HTML).
+     *
+     * @return array<string, mixed>|false
+     */
+    private function parseIniContent(string $content): array|false
+    {
+        $lines = preg_split("/\r\n|\n|\r/", $content);
+        if ($lines === false) {
+            return false;
+        }
+
+        $kept = [];
+        foreach ($lines as $line) {
+            $trim = ltrim($line);
+            if ($trim === ''
+                || str_starts_with($trim, ';')
+                || str_starts_with($trim, '<?')
+                || str_starts_with($trim, '?>')
+                || str_starts_with($trim, '*')
+                || preg_match('/^mm\s*$/', $trim) === 1
+            ) {
+                continue;
+            }
+            $kept[] = $line;
+        }
+
+        $body = implode("\n", $kept);
+        if ($body === '') {
+            return [];
+        }
+
+        $chunks = preg_split('/^(?=(?:\[[^\]]+\]|[A-Za-z0-9_]+\s*=))/m', $body, -1, PREG_SPLIT_NO_EMPTY);
+        if ($chunks === false) {
+            return false;
+        }
+
+        $result = [];
+        $section = '';
+        foreach ($chunks as $chunk) {
+            $chunk = trim($chunk);
+            if ($chunk === '') {
+                continue;
+            }
+            if (preg_match('/^\[([^\]]+)\]$/', $chunk, $mSection) === 1) {
+                $section = $mSection[1];
+                continue;
+            }
+            if (preg_match('/^([A-Za-z0-9_]+)\s*=\s*(.*)$/s', $chunk, $mPair) !== 1) {
+                continue;
+            }
+            $key = $mPair[1];
+            $raw = trim($mPair[2]);
+            if (strlen($raw) >= 2 && str_starts_with($raw, '"') && str_ends_with($raw, '"')) {
+                $raw = substr($raw, 1, -1);
+            } elseif (strlen($raw) >= 2 && str_starts_with($raw, "'") && str_ends_with($raw, "'")) {
+                $raw = substr($raw, 1, -1);
+            }
+            $value = $this->unescapeIniValue($raw);
+            if ($this->PROCESS_SECTIONS) {
+                if ($section === '') {
+                    continue;
+                }
+                $sectionVars = $result[$section] ?? [];
+                if (!is_array($sectionVars)) {
+                    $sectionVars = [];
+                }
+                $sectionVars[$key] = $value;
+                $result[$section] = $sectionVars;
+            } else {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * @desc   Constructor of this class.
      * @param string|null $path Path to ini-file to load at startup.
      * NOTE:   If the ini-file can not be found, it will try to generate a
@@ -69,9 +176,7 @@ class ConfigMagik
                     fclose($fp_new);
                 }
             } else {
-                // try to load and parse ini-file at specified path
-                $loaded = $this->load($path);
-                if (!$loaded) die();
+                $this->load($path);
             }
         }
     }
@@ -260,11 +365,13 @@ class ConfigMagik
         if (!is_string($path) || $path === '') {
             return false;
         }
-        /*
-         * PHP's own method is used for parsing the ini-file instead of own code.
-         * It's robust enough ;-)
-         */
-        $parsed = parse_ini_file($path, $this->PROCESS_SECTIONS);
+        $raw = @file_get_contents($path);
+        if ($raw === false) {
+            $err = "ConfigMagik::load() - Could not read ini-file('$path'), error.";
+            array_push($this->ERRORS, $err);
+            return false;
+        }
+        $parsed = $this->parseIniContent($raw);
         if ($parsed === false) {
             $err = "ConfigMagik::load() - Could not parse ini-file('$path'), error.";
             array_push($this->ERRORS, $err);
@@ -308,12 +415,12 @@ class ConfigMagik
                     continue;
                 }
                 foreach ($elem as $key2 => $elem2) {
-                    $content .= $key2 . " = \"" . $this->scalarToString($elem2) . "\"\n";
+                    $content .= $key2 . ' = ' . $this->encodeIniValue($elem2) . "\n";
                 }
             }
         } else {
             foreach ($this->VARS as $key => $elem) {
-                $content .= $key . " = \"" . $this->scalarToString($elem) . "\"\n";
+                $content .= $key . ' = ' . $this->encodeIniValue($elem) . "\n";
             }
         }
 

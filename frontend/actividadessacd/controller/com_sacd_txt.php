@@ -18,6 +18,8 @@ use frontend\actividadessacd\helpers\ActividadessacdPayload;
  */
 
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
@@ -27,6 +29,12 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
+$oPosicion->nav()->enter(
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 $a_Claves = [
     'com_sacd' => _("comunicación a los sacerdotes"),
     't_propio' => _("titulo: propio"),
@@ -58,7 +66,6 @@ $initial = PostRequest::getDataFromUrl('/src/actividadessacd/texto_comunicacion_
 ]);
 $comunicacion = ActividadessacdPayload::textoFromPayload($initial);
 
-$api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
     $oHash = new HashFront();
     $oHash->setUrl($url);
