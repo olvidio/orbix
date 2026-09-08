@@ -38,7 +38,10 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
         return [
             'mi_sigla' => $miSigla,
             'dl_sin_esquema' => $dlSinEsquema,
-            'opciones_certificado_dl' => $this->siglasEsquemaOrbixExceptoPropia(),
+            'opciones_certificado_dl' => self::conSiglaRegionDelEsquema(
+                $this->siglasEsquemaOrbixExceptoPropia(),
+                ConfigGlobal::mi_region(),
+            ),
             'siglas_acta_permitidas' => $siglasActa,
         ];
     }
@@ -101,6 +104,41 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
     }
 
     /**
+     * Esquema de región STGR (H-H, M-M, Galbel-crGalbel), no una DL (H-dlb, M-dlmO).
+     */
+    public static function esEsquemaRegionStgr(string $region, string $dl): bool
+    {
+        $region = trim($region);
+        $dl = PersonaPublicacion::normalizarDl(trim($dl));
+        if ($region === '' || $dl === '') {
+            return false;
+        }
+        if (strcasecmp($region, $dl) === 0) {
+            return true;
+        }
+
+        return strlen($dl) > 2 && strncasecmp($dl, 'cr', 2) === 0;
+    }
+
+    /**
+     * Temporal: el desplegable de certificado incluye la sigla de la región del
+     * esquema actual (p. ej. H-dlbv → H), aunque esa región esté en aquinate.
+     *
+     * @param array<string, string> $opciones
+     * @return array<string, string>
+     */
+    public static function conSiglaRegionDelEsquema(array $opciones, string $regionEsquema): array
+    {
+        $sigla = self::siglaCertificadoSinPrefijoCr(trim($regionEsquema));
+        if ($sigla === '') {
+            return $opciones;
+        }
+        unset($opciones[$sigla]);
+
+        return [$sigla => $sigla] + $opciones;
+    }
+
+    /**
      * @param array<string, string> $opcionesCertDl
      * @param array{acta_sigla_sel: string, acta_num: string, acta_cert_dl_sel: string, acta_cert_num: string} $vacios
      * @return array{acta_sigla_sel: string, acta_num: string, acta_cert_dl_sel: string, acta_cert_num: string}
@@ -148,7 +186,7 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
     }
 
     /**
-     * Siglas DL de esquemas Orbix existentes (lista del login), excepto la propia.
+     * Siglas de región de esquemas Orbix (H, M, Galbel, …), no las DL de H/M (dlb, dlp, …).
      *
      * @return array<string, string> sigla => sigla
      */
@@ -157,19 +195,28 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
         $miDelef = ConfigGlobal::mi_delef();
         $miDele = ConfigGlobal::mi_dele();
         $dbProp = new DBPropiedades();
-        $aDl = $dbProp->array_posibles_dl_de_esquemas(false, true);
-        if (!is_array($aDl)) {
+        $aEsquemas = $dbProp->array_posibles_esquemas(false, true);
+        if (!is_array($aEsquemas)) {
             return [];
         }
 
         $out = [];
-        foreach ($aDl as $dl => $_label) {
-            $sigla = PersonaPublicacion::normalizarDl((string) $dl);
-            if ($sigla === '' || $this->esSiglaPropia($sigla, $miDelef, $miDele)) {
+        foreach ($aEsquemas as $esquema) {
+            $esquema = (string) $esquema;
+            $region = strtok($esquema, '-');
+            $dlParte = strtok('-');
+            if (!is_string($region) || $region === '' || !is_string($dlParte) || $dlParte === '') {
                 continue;
             }
-            $sigla = self::siglaCertificadoSinPrefijoCr($sigla);
-            if ($sigla === '') {
+            $dl = PersonaPublicacion::normalizarDl($dlParte);
+            if ($dl === '' || !self::esEsquemaRegionStgr($region, $dl)) {
+                continue;
+            }
+            if ($this->esSiglaPropia($dl, $miDelef, $miDele)) {
+                continue;
+            }
+            $sigla = self::siglaCertificadoSinPrefijoCr($dl);
+            if ($sigla === '' || strncasecmp($sigla, 'dl', 2) === 0) {
                 continue;
             }
             $out[$sigla] = $sigla;

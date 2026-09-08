@@ -31,4 +31,50 @@ final class ActaPersonaFormListasTest extends TestCase
         $this->assertSame('', ActaPersonaFormListas::siglaCertificadoSinPrefijoCr(''));
         $this->assertSame('', ActaPersonaFormListas::siglaCertificadoSinPrefijoCr('  '));
     }
+
+    public function test_con_sigla_region_del_esquema_la_pone_delante(): void
+    {
+        $opciones = ['Arg' => 'Arg', 'Ita' => 'Ita'];
+        $out = ActaPersonaFormListas::conSiglaRegionDelEsquema($opciones, 'H');
+        $this->assertSame(['H' => 'H', 'Arg' => 'Arg', 'Ita' => 'Ita'], $out);
+    }
+
+    public function test_con_sigla_region_del_esquema_quita_prefijo_cr(): void
+    {
+        $out = ActaPersonaFormListas::conSiglaRegionDelEsquema(['Arg' => 'Arg'], 'crGalbel');
+        $this->assertSame(['Galbel' => 'Galbel', 'Arg' => 'Arg'], $out);
+    }
+
+    public function test_con_sigla_region_del_esquema_si_ya_esta_la_mueve_al_frente(): void
+    {
+        $out = ActaPersonaFormListas::conSiglaRegionDelEsquema(['Arg' => 'Arg', 'H' => 'H'], 'H');
+        $this->assertSame(['H' => 'H', 'Arg' => 'Arg'], $out);
+    }
+
+    public function test_con_sigla_region_vacia_no_cambia_opciones(): void
+    {
+        $opciones = ['Arg' => 'Arg'];
+        $this->assertSame($opciones, ActaPersonaFormListas::conSiglaRegionDelEsquema($opciones, '  '));
+    }
+
+    public function test_esquema_region_stgr_acepta_h_m_y_cr(): void
+    {
+        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('H', 'H'));
+        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('H', 'Hv'));
+        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('M', 'M'));
+        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('Galbel', 'crGalbel'));
+        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('Galbel', 'crGalbelv'));
+        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('Cong', 'crCongf'));
+    }
+
+    public function test_esquema_region_stgr_rechaza_dl_de_h_y_m(): void
+    {
+        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('H', 'dlb'));
+        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('H', 'dlbv'));
+        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('H', 'dlp'));
+        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('M', 'dlm'));
+        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('M', 'dlmO'));
+        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('M', 'dlmOv'));
+        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('', 'H'));
+    }
 }
