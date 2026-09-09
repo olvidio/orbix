@@ -89,9 +89,9 @@ final class HabitacionFormData
             ]);
             if ($aLastHabitacion !== []) {
                 $oLastHabitacion = current($aLastHabitacion);
-                $orden = $oLastHabitacion->getOrdenVo()->value() + 10;
+                $orden = $oLastHabitacion->getOrdenVo()->value() + 1;
             } else {
-                $orden = 10;
+                $orden = 1;
             }
         }
 

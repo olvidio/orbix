@@ -33,7 +33,7 @@ final class HabitacionFormDataTest extends TestCase
             $this->createMock(CamaDlRepositoryInterface::class),
         ))->execute(['nuevo' => '1', 'id_ubi' => 8]);
 
-        $this->assertSame(10, $out['orden']);
+        $this->assertSame(1, $out['orden']);
         $this->assertSame(1, $out['numero_camas']);
         $this->assertSame(1, $out['numero_camas_vip']);
         $this->assertSame(8, $out['id_ubi']);
@@ -53,7 +53,7 @@ final class HabitacionFormDataTest extends TestCase
             $this->createMock(CamaDlRepositoryInterface::class),
         ))->execute(['nuevo' => '1', 'id_ubi' => 1]);
 
-        $this->assertSame(35, $out['orden']);
+        $this->assertSame(26, $out['orden']);
     }
 
     public function test_edita_habitacion_carga_camas(): void
