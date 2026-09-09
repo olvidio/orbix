@@ -238,6 +238,7 @@ $oDesplLengua = new Desplegable();
 $oDesplLengua->setOpciones($opciones_lengua);
 $oDesplLengua->setNombre('idioma_preferido');
 $oDesplLengua->setOpcion_sel($idioma_preferido);
+$oDesplLengua->setBlanco(true);
 
 $oDesplStgr = new Desplegable();
 $oDesplStgr->setNombre('nivel_stgr');
