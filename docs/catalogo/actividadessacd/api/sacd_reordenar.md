@@ -26,7 +26,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-- Valida `id_activ` e `id_nom` (> 0) y que `num_orden` sea `mas` o `menos`.
+- Valida `id_activ` (> 0) e `id_nom` (distinto de 0; negativo = sacd de paso) y que `num_orden` sea `mas` o `menos`.
 - Carga los `ActividadCargo` del grupo `sacd` de la actividad (orden por `id_cargo`).
 - Localiza la fila del `id_nom` indicado e intercambia su `id_nom` con el del cargo anterior
   (`mas`) o posterior (`menos`), guardando ambas filas. Si el vecino tiene `id_nom = 0` no hace nada.
@@ -43,7 +43,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `id_activ` | `integer` | controller (`inputInt`) | Si | Actividad |
-| `id_nom` | `integer` | controller (`inputInt`) | Si | Sacd a mover |
+| `id_nom` | `integer` | controller (`inputInt`) | Si | Sacd a mover. Negativo = de paso |
 | `num_orden` | `string` | controller (`inputString`) | Si | Dirección: `mas` (sube prioridad) o `menos` (baja) |
 
 El controller construye `$input` con `id_activ`, `id_nom` y `num_orden`. Nota: pese al nombre,

@@ -40,7 +40,8 @@ final class SacdAsignar
     {
         $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         $id_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_nom');
-        if ($id_activ <= 0 || $id_nom <= 0) {
+        // id_nom 0 = no enviado; negativo es válido (persona de paso).
+        if ($id_activ <= 0 || $id_nom === 0) {
             return _("faltan parametros id_activ / id_nom");
         }
 

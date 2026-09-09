@@ -59,6 +59,39 @@ final class SacdEliminarTest extends TestCase
         $this->assertSame('', $out);
     }
 
+    public function test_id_nom_de_paso_elimina_asistencia(): void {
+        $oCargo = new ActividadCargo();
+        $oCargo->setId_activ(500);
+        $oCargo->setId_cargo(2001);
+
+        $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
+        $activCargoRepo->method('getActividadCargos')
+            ->with(['id_activ' => 500, 'id_cargo' => 2001])
+            ->willReturn([$oCargo]);
+        $activCargoRepo->expects($this->once())
+            ->method('Eliminar')
+            ->with($oCargo)
+            ->willReturn(true);
+
+        $oAsistencia = new Asistente();
+        $oAsistencia->setId_activ(500);
+        $oAsistencia->setId_nom(-42);
+
+        $asistenteRepo = $this->createMock(AsistenteDlRepositoryInterface::class);
+        $asistenteRepo->method('findById')->with(500, -42)->willReturn($oAsistencia);
+        $asistenteRepo->expects($this->once())
+            ->method('Eliminar')
+            ->with($oAsistencia)
+            ->willReturn(true);
+
+        $out = (new SacdEliminar($activCargoRepo, $asistenteRepo))->execute([
+            'id_activ' => 500,
+            'id_cargo' => 2001,
+            'id_nom' => -42,
+        ]);
+        $this->assertSame('', $out);
+    }
+
     public function test_id_nom_cero_no_toca_asistencia(): void {
         $oCargo = new ActividadCargo();
         $oCargo->setId_cargo(2001);

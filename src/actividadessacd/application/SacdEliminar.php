@@ -41,7 +41,8 @@ final class SacdEliminar
             }
         }
 
-        if ($id_nom > 0) {
+        // id_nom 0 = no hay asistencia que borrar; negativo (de paso) sí.
+        if ($id_nom !== 0) {
             $oAsisActiv = $this->asistenteDlRepository->findById($id_activ, $id_nom);
             if ($oAsisActiv !== null) {
                 if ($this->asistenteDlRepository->Eliminar($oAsisActiv) === false) {

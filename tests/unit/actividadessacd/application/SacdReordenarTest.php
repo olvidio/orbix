@@ -25,6 +25,44 @@ final class SacdReordenarTest extends TestCase
         $this->assertStringContainsString('faltan parametros', $out);
     }
 
+    public function test_sin_id_nom_devuelve_error(): void {
+        $out = (new \src\actividadessacd\application\SacdReordenar($this->createMock(\src\actividadcargos\domain\contracts\CargoRepositoryInterface::class), $this->createMock(\src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface::class)))->execute([
+            'id_activ' => 500,
+            'id_nom' => 0,
+            'num_orden' => 'mas',
+        ]);
+        $this->assertStringContainsString('faltan parametros', $out);
+    }
+
+    public function test_id_nom_de_paso_intercambia_con_anterior(): void {
+        $cargo1 = new ActividadCargo();
+        $cargo1->setId_cargo(2001);
+        $cargo1->setId_nom(222);
+
+        $cargo2 = new ActividadCargo();
+        $cargo2->setId_cargo(2002);
+        $cargo2->setId_nom(-42);
+
+        $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
+        $cargoRepo->method('getArrayCargos')->with('sacd')->willReturn([
+            2001 => 'sacd1',
+            2002 => 'sacd2',
+        ]);
+
+        $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
+        $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
+        $activCargoRepo->expects($this->exactly(2))->method('Guardar')->willReturn(true);
+
+        $out = (new SacdReordenar($cargoRepo, $activCargoRepo))->execute([
+            'id_activ' => 500,
+            'id_nom' => -42,
+            'num_orden' => 'mas',
+        ]);
+        $this->assertSame('', $out);
+        $this->assertSame(-42, $cargo1->getId_nom());
+        $this->assertSame(222, $cargo2->getId_nom());
+    }
+
     public function test_direccion_invalida_devuelve_error(): void {
         $out = (new \src\actividadessacd\application\SacdReordenar($this->createMock(\src\actividadcargos\domain\contracts\CargoRepositoryInterface::class), $this->createMock(\src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface::class)))->execute([
             'id_activ' => 500,

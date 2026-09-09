@@ -28,7 +28,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - Valida `id_activ` e `id_cargo` (> 0).
 - Busca el `ActividadCargo` por `{id_activ, id_cargo}` y lo elimina si existe.
-- Si `id_nom > 0`, busca la `Asistencia` por `{id_activ, id_nom}` y la elimina si existe.
+- Si `id_nom !== 0`, busca la `Asistencia` por `{id_activ, id_nom}` y la elimina si existe (incluye sacd de paso, `id_nom` negativo).
 - Acumula los errores de ambas eliminaciones y los devuelve juntos.
 
 ## Endpoint
@@ -44,7 +44,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `id_activ` | `integer` | controller (`inputInt`) | Si | Actividad |
 | `id_cargo` | `integer` | controller (`inputInt`) | Si | Cargo sacd a borrar |
-| `id_nom` | `integer` | controller (`inputInt`) | No | Si `> 0`, elimina también la asistencia asociada |
+| `id_nom` | `integer` | controller (`inputInt`) | No | Si `!== 0`, elimina también la asistencia asociada (negativo = de paso) |
 
 El controller construye `$input` con `id_activ`, `id_cargo` e `id_nom`.
 

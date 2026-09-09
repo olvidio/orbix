@@ -57,6 +57,41 @@ final class SacdAsignarTest extends TestCase
         $this->assertStringContainsString('faltan parametros', $out);
     }
 
+    public function test_id_nom_de_paso_negativo_asigna_cargo(): void {
+        $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
+        $cargoRepo->method('getArrayCargos')->with('sacd')->willReturn([2001 => 'sacd1']);
+
+        $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
+        $activCargoRepo->method('getActividadCargos')->willReturn([]);
+        $activCargoRepo->method('getNewId')->willReturn(44);
+
+        $guardado = null;
+        $activCargoRepo->expects($this->once())
+            ->method('Guardar')
+            ->with($this->callback(function (ActividadCargo $oCargo) use (&$guardado) {
+                $guardado = $oCargo;
+                return true;
+            }))
+            ->willReturn(true);
+
+        $oActivSf = new ActividadAll();
+        $oActivSf->setId_tipo_activ(271000);
+        $actividadRepo = $this->createMock(ActividadDlRepositoryInterface::class);
+        $actividadRepo->method('findById')->with(500)->willReturn($oActivSf);
+
+        $asistenteRepo = $this->createMock(AsistenteDlRepositoryInterface::class);
+        $asistenteRepo->expects($this->never())->method('Guardar');
+
+        $out = (new SacdAsignar($cargoRepo, $activCargoRepo, $actividadRepo, $asistenteRepo))->execute([
+            'id_activ' => 500,
+            'id_nom' => -42,
+        ]);
+        $this->assertSame('', $out);
+        $this->assertNotNull($guardado);
+        $this->assertSame(-42, $guardado->getId_nom());
+        $this->assertSame(2001, $guardado->getId_cargo());
+    }
+
     public function test_todos_los_cargos_sacd_ocupados_devuelve_error(): void {
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->with('sacd')->willReturn([

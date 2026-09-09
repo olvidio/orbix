@@ -26,7 +26,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-- Valida que llegan `id_activ` e `id_nom` (> 0).
+- Valida que llegan `id_activ` (> 0) e `id_nom` (distinto de 0; negativo = sacd de paso).
 - Calcula el `id_cargo` a usar dentro del grupo de cargos `sacd` (`CargoRepository::getArrayCargos('sacd')`):
   primer hueco libre; si todos están ocupados, `max(id_cargo) + 1`. Si no cabe ninguno más devuelve error.
 - Crea el `ActividadCargo` (`id_item` nuevo, `id_activ`, `id_nom`, `id_cargo`).
@@ -48,7 +48,7 @@ Sucesor de la rama `asignar` del dispatcher legacy `apps/actividadessacd/control
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `id_activ` | `integer` | controller (`inputInt`) | Si | Actividad destino |
-| `id_nom` | `integer` | controller (`inputInt`) | Si | Persona (sacd) a asignar |
+| `id_nom` | `integer` | controller (`inputInt`) | Si | Persona (sacd) a asignar. Negativo = de paso |
 
 El controller construye `$input` explícitamente con `id_activ` e `id_nom` (`FuncTablasSupport::inputInt`).
 
