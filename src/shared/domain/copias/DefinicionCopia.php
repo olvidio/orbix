@@ -17,7 +17,7 @@ use InvalidArgumentException;
  * Esta clase concentra lo que antes estaba duplicado en cada `*Fila`: proyectar
  * un registro sobre las columnas copiadas, extraer la clave y comparar origen
  * con destino. Lo que **no** cabe aquí es el criterio de negocio de si una fila
- * concreta debe estar en la copia (`sacd IS TRUE`, la dl de los de paso, …):
+ * concreta debe estar en la copia (`sacd IS TRUE`, `dl = Otra` en los de paso, …):
  * eso vive en el módulo dueño de la copia, que es quien puede razonarlo.
  *
  * ## Columnas del destino

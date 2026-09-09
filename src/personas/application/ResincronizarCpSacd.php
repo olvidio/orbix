@@ -68,27 +68,26 @@ final class ResincronizarCpSacd extends ReconciliadorCopia
 
     /**
      * Personas que **deberían** estar en la copia de esta dl: las sacd de las
-     * tres tablas de la dl, más las de paso que ahora mismo están en ella.
+     * tres tablas de la dl, más las de paso con `dl = Otra`.
      *
      * @return array<int, array<string, mixed>> id_nom => fila
      */
     protected function leerOrigen(PDO $pdoOrigen, string $esquemaOrigen, ContextoCopia $contexto): array
     {
-        $dl = $contexto->dl;
         $filas = [];
 
         foreach (self::TABLAS_DL as $tabla) {
-            foreach ($this->consultarOrigen($pdoOrigen, $esquemaOrigen, $tabla, null) as $registro) {
+            foreach ($this->consultarOrigen($pdoOrigen, $esquemaOrigen, $tabla, false) as $registro) {
                 $fila = CpSacdFila::desdeRegistro($registro);
-                if (CpSacdFila::debeCopiarse($fila, $dl)) {
+                if (CpSacdFila::debeCopiarse($fila)) {
                     $filas[CpSacdFila::idNom($fila)] = $fila;
                 }
             }
         }
 
-        foreach ($this->consultarOrigen($pdoOrigen, self::ESQUEMA_DE_PASO, self::TABLA_DE_PASO, $dl) as $registro) {
+        foreach ($this->consultarOrigen($pdoOrigen, self::ESQUEMA_DE_PASO, self::TABLA_DE_PASO, true) as $registro) {
             $fila = CpSacdFila::desdeRegistro($registro);
-            if (CpSacdFila::debeCopiarse($fila, $dl)) {
+            if (CpSacdFila::debeCopiarse($fila)) {
                 $filas[CpSacdFila::idNom($fila)] = $fila;
             }
         }
@@ -99,9 +98,8 @@ final class ResincronizarCpSacd extends ReconciliadorCopia
     /**
      * @return list<array<string, mixed>>
      */
-    private function consultarOrigen(PDO $pdo, string $esquema, string $tabla, ?string $dl): array
+    private function consultarOrigen(PDO $pdo, string $esquema, string $tabla, bool $dePaso): array
     {
-        $dePaso = $dl !== null;
         $columnas = [];
         foreach (CpSacdFila::COLUMNAS as $columna) {
             if ($dePaso && in_array($columna, self::COLUMNAS_SIN_DE_PASO, true)) {
@@ -117,7 +115,7 @@ final class ResincronizarCpSacd extends ReconciliadorCopia
         $parametros = [];
         if ($dePaso) {
             $sql .= ' AND dl = :dl';
-            $parametros['dl'] = $dl;
+            $parametros['dl'] = CpSacdFila::DL_DE_PASO;
         }
 
         try {

@@ -75,7 +75,7 @@ toca ninguna fila, INSERT.
 
 | Copia | Origen | Módulo | Filtro |
 |---|---|---|---|
-| `cp_sacd` | `sv`: `<esq>v.p_numerarios`, `p_agregados`, `p_sssc`, `restov.p_de_paso_ex` | `src/personas/` | `sacd IS TRUE`; los de paso sólo mientras están en la dl |
+| `cp_sacd` | `sv`: `<esq>v.p_numerarios`, `p_agregados`, `p_sssc`, `restov.p_de_paso_ex` | `src/personas/` | `sacd IS TRUE`; los de paso sólo si `dl = Otra` |
 | `cd_cargos_activ_dl` | `sv-e`: `<esq>v.d_cargos_activ_dl` | `src/actividadcargos/` | ninguno (espejo 1:1) |
 | `cu_centros_dl` | `sv`: `<esq>v.u_centros_dl` | `src/ubis/` | centros de sv (`id_ubi` que no empieza por `2`) |
 | `cu_centros_dlf` | `sf`: `<esq>f.u_centros_dl` | `src/ubis/` | centros de sf (`id_ubi` que empieza por `2`) |

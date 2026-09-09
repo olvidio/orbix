@@ -83,27 +83,27 @@ final class SincronizarCpSacdTest extends TestCase
         $this->assertTrue($servicio->sincronizarPersona($persona, $this->contexto('dlb')));
     }
 
-    public function test_de_paso_de_otra_dl_elimina(): void
+    public function test_de_paso_con_dl_distinta_de_otra_elimina(): void
     {
         $writer = $this->createMock(CpSacdWriter::class);
         $writer->expects($this->once())->method('eliminar')->with($this->anything(), 10021)->willReturn(true);
         $writer->expects($this->never())->method('upsert');
 
         $servicio = new SincronizarCpSacd($writer);
-        // sacd=true pero de otra dl: no debe copiarse (se borra si estuviera).
-        $persona = $this->dePaso(10021, 'pn', 'dlc', true);
+        // sacd=true pero dl de esquema, no Otra: no debe copiarse (se borra si estuviera).
+        $persona = $this->dePaso(10021, 'pn', 'dlb', true);
 
         $this->assertTrue($servicio->sincronizarPersona($persona, $this->contexto('dlb')));
     }
 
-    public function test_de_paso_de_la_dl_propia_hace_upsert(): void
+    public function test_de_paso_con_dl_otra_hace_upsert(): void
     {
         $writer = $this->createMock(CpSacdWriter::class);
         $writer->expects($this->once())->method('upsert')->willReturn(true);
         $writer->expects($this->never())->method('eliminar');
 
         $servicio = new SincronizarCpSacd($writer);
-        $persona = $this->dePaso(10021, 'pn', 'dlb', true);
+        $persona = $this->dePaso(10021, 'pn', 'Otra', true);
 
         $this->assertTrue($servicio->sincronizarPersona($persona, $this->contexto('dlb')));
     }

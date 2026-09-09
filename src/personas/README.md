@@ -18,8 +18,10 @@ Orígenes de la copia (todos en la BD interior):
 - `<esquema>v.p_numerarios` (`id_tabla = n`)
 - `<esquema>v.p_agregados` (`id_tabla = a`)
 - `<esquema>v.p_sssc` (`id_tabla = sssc`)
-- `restov.p_de_paso_ex` (`id_tabla = pn` / `pa`), y sólo las filas cuya `dl` es la
-  propia del esquema (las personas de paso de otras dl no se copian)
+- `restov.p_de_paso_ex` (`id_tabla = pn` / `pa`), y sólo las filas cuya `dl` es
+  `Otra` (visitantes de una dl sin esquema Orbix). `restov` es compartido: esas
+  filas son origen de la copia en todos los esquemas, no se comparan con la dl
+  del esquema destino.
 
 Quedan **fuera** `PersonaS` y `PersonaNax`: es el mismo criterio que ya tenía el
 legacy, donde `PersonaS::DBGuardar()` tampoco llamaba a `copia2Comun()`.
@@ -52,8 +54,8 @@ Por eso hacen falta dos piezas independientes:
 
 `src/personas/application/services/SincronizarCpSacd.php` sabe reflejar el estado de
 una persona en `cp_sacd`: upsert si debe estar en la copia (`CpSacdFila::debeCopiarse()`),
-borrado si no (dejó de ser sacd, se trasladó de dl siendo de paso, o se ha eliminado
-la ficha).
+borrado si no (dejó de ser sacd, un de paso cuya `dl` ya no es `Otra`, o se ha
+eliminado la ficha).
 
 Se engancha al final de `Guardar()` / `Eliminar()` de los repositorios que alimentan
 la copia, mediante `SincronizaCpSacdTrait`

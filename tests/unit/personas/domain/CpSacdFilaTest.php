@@ -101,14 +101,14 @@ final class CpSacdFilaTest extends TestCase
     {
         $fila = ['id_tabla' => 'n', 'sacd' => true, 'dl' => 'dlb'];
 
-        $this->assertTrue(CpSacdFila::debeCopiarse($fila, 'dlb'));
+        $this->assertTrue(CpSacdFila::debeCopiarse($fila));
     }
 
     public function test_numerario_con_sacd_falso_no_entra(): void
     {
         $fila = ['id_tabla' => 'n', 'sacd' => false, 'dl' => 'dlb'];
 
-        $this->assertFalse(CpSacdFila::debeCopiarse($fila, 'dlb'));
+        $this->assertFalse(CpSacdFila::debeCopiarse($fila));
     }
 
     public function test_id_tabla_no_contemplado_no_entra(): void
@@ -116,31 +116,31 @@ final class CpSacdFilaTest extends TestCase
         $filaS = ['id_tabla' => 's', 'sacd' => true, 'dl' => 'dlb'];
         $filaNax = ['id_tabla' => 'nax', 'sacd' => true, 'dl' => 'dlb'];
 
-        $this->assertFalse(CpSacdFila::debeCopiarse($filaS, 'dlb'));
-        $this->assertFalse(CpSacdFila::debeCopiarse($filaNax, 'dlb'));
+        $this->assertFalse(CpSacdFila::debeCopiarse($filaS));
+        $this->assertFalse(CpSacdFila::debeCopiarse($filaNax));
     }
 
-    public function test_de_paso_entra_solo_si_la_dl_coincide_con_la_propia(): void
+    public function test_de_paso_entra_solo_si_la_dl_es_otra(): void
     {
-        $filaPn = ['id_tabla' => 'pn', 'sacd' => true, 'dl' => 'dlb'];
-        $filaPa = ['id_tabla' => 'pa', 'sacd' => true, 'dl' => 'dlb'];
+        $filaPn = ['id_tabla' => 'pn', 'sacd' => true, 'dl' => CpSacdFila::DL_DE_PASO];
+        $filaPa = ['id_tabla' => 'pa', 'sacd' => true, 'dl' => CpSacdFila::DL_DE_PASO];
 
-        $this->assertTrue(CpSacdFila::debeCopiarse($filaPn, 'dlb'));
-        $this->assertTrue(CpSacdFila::debeCopiarse($filaPa, 'dlb'));
+        $this->assertTrue(CpSacdFila::debeCopiarse($filaPn));
+        $this->assertTrue(CpSacdFila::debeCopiarse($filaPa));
     }
 
-    public function test_de_paso_de_otra_dl_no_entra(): void
+    public function test_de_paso_con_dl_de_esquema_no_entra(): void
     {
-        $fila = ['id_tabla' => 'pn', 'sacd' => true, 'dl' => 'dlc'];
+        $fila = ['id_tabla' => 'pn', 'sacd' => true, 'dl' => 'dlb'];
 
-        $this->assertFalse(CpSacdFila::debeCopiarse($fila, 'dlb'));
+        $this->assertFalse(CpSacdFila::debeCopiarse($fila));
     }
 
-    public function test_de_paso_no_entra_si_la_dl_propia_esta_vacia(): void
+    public function test_de_paso_no_entra_si_la_dl_esta_vacia(): void
     {
         $fila = ['id_tabla' => 'pn', 'sacd' => true, 'dl' => ''];
 
-        $this->assertFalse(CpSacdFila::debeCopiarse($fila, ''));
+        $this->assertFalse(CpSacdFila::debeCopiarse($fila));
     }
 
     // --- diferencias() ---------------------------------------------------

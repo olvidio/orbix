@@ -20,7 +20,7 @@ use src\shared\infrastructure\persistence\ConverterDate;
  *   - `<esquema>v.p_numerarios`  → id_tabla `n`
  *   - `<esquema>v.p_agregados`   → id_tabla `a`
  *   - `<esquema>v.p_sssc`        → id_tabla `sssc`
- *   - `restov.p_de_paso_ex`      → id_tabla `pn` / `pa`, sólo los de la dl propia
+ *   - `restov.p_de_paso_ex`      → id_tabla `pn` / `pa`, sólo si `dl` es `Otra`
  *
  * Quedan fuera `PersonaS` y `PersonaNax` (criterio histórico: el legacy
  * `PersonaS::DBGuardar()` tampoco llamaba a `copia2Comun()`).
@@ -61,8 +61,14 @@ final class CpSacdFila
     /** id_tabla que alimentan la copia. */
     public const ID_TABLAS = ['n', 'a', 'pn', 'pa', 'sssc'];
 
-    /** id_tabla de personas de paso: sólo se copian si están en la dl propia. */
+    /** id_tabla de personas de paso: sólo se copian si su `dl` es {@see DL_DE_PASO}. */
     public const ID_TABLAS_DE_PASO = ['pn', 'pa'];
+
+    /**
+     * Valor de `dl` que marca a un de paso como visitante de fuera (sin esquema Orbix).
+     * No es la dl de la copia: en `p_de_paso_ex` la ficha no lleva la dl anfitriona.
+     */
+    public const DL_DE_PASO = 'Otra';
 
     private static ?DefinicionCopia $definicion = null;
 
@@ -129,11 +135,14 @@ final class CpSacdFila
     }
 
     /**
-     * ¿Esta persona debe estar en `cp_sacd` de la dl indicada?
+     * ¿Esta persona debe estar en `cp_sacd`?
+     *
+     * Los de paso no se filtran por la dl de la copia (su ficha no la guarda):
+     * entran mientras `dl` es {@see DL_DE_PASO}. Si dejan de serlo, salen.
      *
      * @param array<string, mixed> $fila
      */
-    public static function debeCopiarse(array $fila, string $dlPropia): bool
+    public static function debeCopiarse(array $fila): bool
     {
         if (!self::esVerdadero($fila['sacd'] ?? null)) {
             return false;
@@ -144,11 +153,10 @@ final class CpSacdFila
             return false;
         }
 
-        // Los de paso sólo mientras están en la dl: cuando se van, se borran de la copia.
         if (in_array($id_tabla, self::ID_TABLAS_DE_PASO, true)) {
             $dl = is_scalar($fila['dl'] ?? null) ? (string) $fila['dl'] : '';
 
-            return $dlPropia !== '' && $dl === $dlPropia;
+            return $dl === self::DL_DE_PASO;
         }
 
         return true;

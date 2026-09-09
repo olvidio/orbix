@@ -16,8 +16,9 @@ use src\personas\infrastructure\persistence\postgresql\CpSacdWriter;
  * (`apps/personas/model/entity/PersonaDl.php:256` y `PersonaPub.php:274`), que
  * se perdió en la migración a repositorios y dejó la copia congelada. A
  * diferencia del legacy:
- *   - borra de la copia cuando la persona deja de ser sacd, se traslada o se
- *     elimina (el legacy sólo lo hacía con los de paso, de ahí los huérfanos);
+ *   - borra de la copia cuando la persona deja de ser sacd, un de paso deja de
+ *     tener `dl = Otra`, o se elimina (el legacy sólo lo hacía con los de paso,
+ *     de ahí los huérfanos);
  *   - no vive en los setters de la entidad, sino en el guardado del repositorio.
  *
  * No hay transacción entre la BD interior y comun: si la copia falla, la ficha
@@ -33,14 +34,14 @@ final class SincronizarCpSacd
 
     /**
      * Refleja el estado de la persona en la copia: upsert si debe estar,
-     * borrado si no (dejó de ser sacd, o un de paso que ya no está en la dl).
+     * borrado si no (dejó de ser sacd, o un de paso cuya `dl` ya no es `Otra`).
      */
     public function sincronizarPersona(object $persona, ?CpSacdContexto $contexto = null): bool
     {
         $contexto ??= CpSacdContexto::desdeSesion();
         $fila = CpSacdFila::desdePersona($persona);
 
-        if (CpSacdFila::debeCopiarse($fila, $contexto->dl)) {
+        if (CpSacdFila::debeCopiarse($fila)) {
             return $this->writer->upsert($contexto, $fila);
         }
 
