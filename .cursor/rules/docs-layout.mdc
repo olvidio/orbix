@@ -17,7 +17,7 @@ No crear la carpeta `documentacion/` ni escribir docs sueltas en la raíz del re
 | ¿Baseline de migración, arquitectura, deuda técnica? | `docs/dev/` |
 | ¿Informe JSON de herramienta (`tools/qa/…`)? | `docs/dev/reports/` |
 | ¿Referencia histórica Obix (solo lectura)? | `docs/legacy/obix/` |
-| ¿Guía de proceso de negocio (repo aparte)? | `docs/guias/` |
+| ¿Guía de proceso de negocio (submodule `orbix_docs`)? | `docs/guias/` |
 | ¿Script que genera docs? | `docs/scripts/` |
 
 ## Prohibido

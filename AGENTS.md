@@ -175,6 +175,7 @@ Detalle y ejemplos: [`tools/README.md`](tools/README.md). Regla Cursor: [`.curso
 | Baseline migración, arquitectura interna | `docs/dev/` |
 | Informes JSON de herramientas | `docs/dev/reports/` |
 | Legacy Obix (solo consulta) | `docs/legacy/obix/` |
+| Guías de proceso (submodule `orbix_docs`) | `docs/guias/` |
 | Generadores | `docs/scripts/` |
 
 Índice: [`docs/README.md`](docs/README.md). Regla Cursor: [`.cursor/rules/docs-layout.mdc`](.cursor/rules/docs-layout.mdc).

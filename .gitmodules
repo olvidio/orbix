@@ -1,0 +1,3 @@
+[submodule "docs/guias"]
+	path = docs/guias
+	url = https://github.com/olvidio/orbix_docs.git

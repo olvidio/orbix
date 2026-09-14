@@ -12,7 +12,7 @@ Todo el conocimiento del proyecto vive bajo `docs/`. No existe la carpeta `docum
 | [`dev/`](dev/) | Refactor, baselines, arquitectura interna | Desarrollo |
 | [`dev/reports/`](dev/reports/) | Informes JSON de herramientas | Desarrollo |
 | [`legacy/obix/`](legacy/obix/) | Bóveda Obsidian legacy (solo consulta) | Referencia histórica |
-| [`guias/`](guias/) | Guías de procesos (repo Git aparte) | Usuarios internos |
+| [`guias/`](guias/) | Guías de procesos ([submodule](#submodule-docs-guias) `orbix_docs`) | Usuarios internos |
 | [`scripts/`](scripts/) | Generadores de documentación | Desarrollo |
 
 ## Documentos de entrada
@@ -46,6 +46,24 @@ Tres documentos para presentar el estado actual a técnicos que supervisan o rep
 ```bash
 docs/scripts/generar_documentacion_modulo.sh <modulo> --force
 ```
+
+## Submodule `docs/guias`
+
+Las **guías de proceso** (oficina, lenguaje de usuario) viven en el repositorio [olvidio/orbix_docs](https://github.com/olvidio/orbix_docs) y se anidan aquí como Git submodule.
+
+Al clonar Orbix:
+
+```bash
+git clone --recurse-submodules git@orbix:olvidio/orbix.git
+```
+
+Si el clone ya existía sin el submodule:
+
+```bash
+git submodule update --init --recursive
+```
+
+Editar una guía: commit y push **dentro de `docs/guias`** (repo `orbix_docs`), luego en Orbix `git add docs/guias` para actualizar el puntero. Regenerar `_referencia_menus.md` escribe en el submodule; hay que commitearlo allí.
 
 ## Dónde escribir documentación nueva
 

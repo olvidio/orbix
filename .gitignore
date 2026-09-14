@@ -108,8 +108,8 @@ log/*
 /e2e/playwright/.cache/
 /docs/.cache/
 
-# Guías de procesos: repositorio Git independiente (ver docs/guias/README.md)
-/docs/guias/
+# Guías de procesos: submodule `docs/guias` → github.com/olvidio/orbix_docs
+# (no ignorar: Orbix debe versionar el puntero del submodule)
 
 # Herramientas de desarrollo: entornos Python locales
 tools/**/.venv/
