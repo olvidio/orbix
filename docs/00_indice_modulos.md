@@ -27,6 +27,7 @@ fecha: 2026-05-21
 Documentos transversales:
 
 - **Índice documentación:** [README.md](README.md)
+- **Supervisión técnica:** [arquitectura](dev/supervision_arquitectura.md) · [acceso](dev/supervision_acceso_autorizacion.md) · [módulos y procesos](dev/supervision_modulos_menus_procesos.md)
 - **Resumen / presentación:** [QUE_ES_ORBIX.md](QUE_ES_ORBIX.md)
 - Plan: [PLAN_DOCUMENTACION_MODULOS.md](PLAN_DOCUMENTACION_MODULOS.md)
 - **Repaso final:** [REPASSO_FINAL.md](REPASSO_FINAL.md)

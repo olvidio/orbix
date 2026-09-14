@@ -282,6 +282,7 @@ Todo el conocimiento del sistema está organizado en `docs/`:
 
 | Tipo | Ruta | Para qué sirve |
 |------|------|----------------|
+| **Supervisión técnica (3 docs)** | `docs/dev/supervision_*.md` | Arquitectura, acceso, módulos — para técnicos que supervisan |
 | **Este resumen** | `docs/QUE_ES_ORBIX.md` | Visión global / presentación |
 | **Índice** | `docs/00_indice_modulos.md` | Enlaces a cada módulo |
 | **Manuales** | `docs/manual/<modulo>.md` | Uso desde menú, paso a paso |

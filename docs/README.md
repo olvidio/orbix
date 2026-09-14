@@ -17,6 +17,18 @@ Todo el conocimiento del proyecto vive bajo `docs/`. No existe la carpeta `docum
 
 ## Documentos de entrada
 
+### Supervisión técnica (Aquinate)
+
+Tres documentos para presentar el estado actual a técnicos que supervisan o replantean el sistema. No sustituyen `AGENTS.md` ni los manuales de usuario.
+
+| Documento | Contenido |
+|-----------|-----------|
+| [Arquitectura técnica](dev/supervision_arquitectura.md) | Front/back, lenguajes, infra, tests, calidad, instalaciones |
+| [Acceso y autorización](dev/supervision_acceso_autorizacion.md) | Login, 2FA, roles, DMZ, menús, permisos por fase |
+| [Módulos, menús y procesos](dev/supervision_modulos_menus_procesos.md) | Cómo se implementa un módulo, menús, catálogo, diagramas |
+
+### Resto
+
 - [Qué es Orbix](QUE_ES_ORBIX.md) — visión global
 - [Guía técnica (onboarding)](dev/guia_tecnica_onboarding.md) — PHP, DDD, tests, PostgreSQL/esquemas/réplicas
 - [Índice de módulos](00_indice_modulos.md) — enlaces por módulo

@@ -9,6 +9,9 @@ Documento para programadores que entran al proyecto y necesitan el mapa técnico
 | [`tests/AGENTS.md`](../../tests/AGENTS.md) | Cómo escribir tests |
 | [`db/migrations/README.md`](../../db/migrations/README.md) | Cómo evolucionar el esquema SQL |
 | [`QUE_ES_ORBIX.md`](../QUE_ES_ORBIX.md) | Qué hace el producto (visión funcional) |
+| [`supervision_arquitectura.md`](supervision_arquitectura.md) | Presentación a supervisión técnica (stack, infra, calidad) |
+| [`supervision_acceso_autorizacion.md`](supervision_acceso_autorizacion.md) | Login, roles, DMZ, permisos |
+| [`supervision_modulos_menus_procesos.md`](supervision_modulos_menus_procesos.md) | Módulos, menús, diagramas de proceso |
 
 ---
 

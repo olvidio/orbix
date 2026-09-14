@@ -1,0 +1,201 @@
+{
+  "main": {
+    "id": "f8b72bf484354aed",
+    "type": "split",
+    "children": [
+      {
+        "id": "fb32528e46691c83",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a6a90e9d6a043c30",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "README"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "ce95b5b943489089",
+    "type": "split",
+    "children": [
+      {
+        "id": "8dea5da019e1ef34",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "76a5c3de1b293e97",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de fitxers"
+            }
+          },
+          {
+            "id": "e69b6adab8e27144",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Cerca"
+            }
+          },
+          {
+            "id": "db82c1ff0c768002",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Marcadors"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "8ca71f9e2ebef35a",
+    "type": "split",
+    "children": [
+      {
+        "id": "c8a8c11ea951ab85",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d0c9aba7157ee789",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "README.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Retroenllaços"
+            }
+          },
+          {
+            "id": "36a79ef3d425262e",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "README.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Enllaços sortints"
+            }
+          },
+          {
+            "id": "9e6ebc87d02fc984",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetes"
+            }
+          },
+          {
+            "id": "620fd2a6ee9779c3",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Totes les propietats"
+            }
+          },
+          {
+            "id": "bed2b9b197e0c2a3",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "README.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Esquema"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Obre el selector ràpid": false,
+      "graph:Obre la vista gràfica": false,
+      "canvas:Crea un llenç nou": false,
+      "daily-notes:Obre la nota d'avui": false,
+      "templates:Inserir plantilla": false,
+      "command-palette:Obre la paleta d'ordres": false,
+      "bases:Crea una base nova": false
+    }
+  },
+  "active": "a6a90e9d6a043c30",
+  "lastOpenFiles": [
+    "dev/supervision_arquitectura.md",
+    "README.md",
+    "REPASSO_FINAL.md",
+    "00_indice_modulos.md",
+    "dev/supervision_modulos_menus_procesos.md",
+    "dev/supervision_acceso_autorizacion.md",
+    "QUE_ES_ORBIX.md"
+  ]
+}
