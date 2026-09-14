@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\notas\application\PlanEstudiosDePersona;
+use src\notas\application\support\NivelCatalogoAsignaturaEnPlan;
 use src\notas\application\support\PersonaNotaInputParser;
 use src\notas\application\support\SiglaActaPermitida;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -16,14 +17,20 @@ use src\notas\domain\value_objects\TipoActa;
 
 final class PersonaNotaInputParserTest extends TestCase
 {
-    private function parser(?SiglaActaPermitida $listas = null): PersonaNotaInputParser
+    private function parser(
+        ?SiglaActaPermitida $listas = null,
+        ?AsignaturaRepositoryInterface $asigRepo = null,
+    ): PersonaNotaInputParser
     {
         $listas ??= $this->listasMock(['dlp', 'dlpf']);
+        $asigRepo ??= $this->createMock(AsignaturaRepositoryInterface::class);
+        $plan = $this->planEstudiosDePersona();
 
         return new PersonaNotaInputParser(
-            $this->createMock(AsignaturaRepositoryInterface::class),
-            $this->planEstudiosDePersona(),
+            $asigRepo,
+            $plan,
             $listas,
+            new NivelCatalogoAsignaturaEnPlan($asigRepo, $plan),
         );
     }
 
@@ -79,10 +86,12 @@ final class PersonaNotaInputParserTest extends TestCase
             ->with(['id_nivel' => 3100, 'plan_estudios' => PlanEstudios::PLAN_2026])
             ->willReturn([]);
 
+        $plan = $this->planEstudiosDePersona();
         $parser = new PersonaNotaInputParser(
             $repo,
-            $this->planEstudiosDePersona(),
+            $plan,
             $this->listasMock(['dlp']),
+            new NivelCatalogoAsignaturaEnPlan($repo, $plan),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -102,10 +111,12 @@ final class PersonaNotaInputParserTest extends TestCase
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
         $repo->method('getAsignaturas')->willReturn([$asig]);
 
+        $plan = $this->planEstudiosDePersona();
         $parser = new PersonaNotaInputParser(
             $repo,
-            $this->planEstudiosDePersona(),
+            $plan,
             $this->listasMock(['dlp']),
+            new NivelCatalogoAsignaturaEnPlan($repo, $plan),
         );
 
         $pn = $parser->parse([
@@ -120,9 +131,8 @@ final class PersonaNotaInputParserTest extends TestCase
 
     public function test_tipo_acta_cero_se_normaliza_a_formato_acta(): void
     {
-        $parser = $this->parser();
-
-        $pn = $parser->parse([
+        $pn = $this->parser()->parse([
+            'mod' => 'editar',
             'id_pau' => 1,
             'id_asignatura' => 1002,
             'id_nivel' => 2100,
@@ -133,5 +143,48 @@ final class PersonaNotaInputParserTest extends TestCase
 
         $this->assertSame(TipoActa::FORMATO_ACTA, $pn->getTipo_acta());
         $this->assertSame(NotaEpoca::EPOCA_OTRO, $pn->getEpocaVo()?->value());
+    }
+
+    public function test_nuevo_obligatoria_sustituye_id_nivel_por_hueco_del_plan(): void
+    {
+        $latin4 = $this->createMock(\src\asignaturas\domain\entity\Asignatura::class);
+        $latin4->method('getId_nivel')->willReturn(2212);
+        $latin4->method('isActive')->willReturn(true);
+
+        $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
+        $asigRepo->method('findById')
+            ->with(2312, PlanEstudios::PLAN_2026)
+            ->willReturn($latin4);
+
+        $pn = $this->parser(asigRepo: $asigRepo)->parse([
+            'mod' => 'nuevo',
+            'id_pau' => 103615,
+            'id_asignatura' => 2312,
+            'id_nivel' => 2312,
+            'tipo_acta' => 1,
+            'id_situacion' => 10,
+            'epoca' => 0,
+        ]);
+
+        $this->assertSame(2212, $pn->getId_nivel());
+        $this->assertSame(2312, $pn->getId_asignatura());
+    }
+
+    public function test_editar_no_sustituye_id_nivel_por_catalogo(): void
+    {
+        $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
+        $asigRepo->expects($this->never())->method('findById');
+
+        $pn = $this->parser(asigRepo: $asigRepo)->parse([
+            'mod' => 'editar',
+            'id_pau' => 103615,
+            'id_asignatura' => 2312,
+            'id_nivel' => 2312,
+            'tipo_acta' => 1,
+            'id_situacion' => 10,
+            'epoca' => 0,
+        ]);
+
+        $this->assertSame(2312, $pn->getId_nivel());
     }
 }

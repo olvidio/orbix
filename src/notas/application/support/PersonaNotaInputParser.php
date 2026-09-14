@@ -24,6 +24,7 @@ final class PersonaNotaInputParser
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
         private readonly PlanEstudiosDePersona $planEstudiosDePersona,
         private readonly SiglaActaPermitida $actaPersonaFormListas,
+        private readonly NivelCatalogoAsignaturaEnPlan $nivelCatalogoAsignaturaEnPlan,
     ) {
     }
     /**
@@ -57,6 +58,14 @@ final class PersonaNotaInputParser
                 throw new \RuntimeException(sprintf(_("No se encuentra una asignatura para el nivel: %s"), $id_nivel));
             }
             $id_asignatura = $cAsignaturas[0]->getId_asignatura();
+        }
+
+        if (
+            !$eliminar
+            && $this->debeNormalizarNivelDesdeCatalogo($input)
+            && $this->nivelCatalogoAsignaturaEnPlan->esObligatoria($id_asignatura)
+        ) {
+            $id_nivel = $this->nivelCatalogoAsignaturaEnPlan->resolve($id_pau, $id_asignatura);
         }
 
         if ($tipo_acta === 0) {
@@ -148,5 +157,15 @@ final class PersonaNotaInputParser
         }
 
         return $acta;
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    private function debeNormalizarNivelDesdeCatalogo(array $input): bool
+    {
+        $mod = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'mod');
+
+        return $mod !== 'editar';
     }
 }

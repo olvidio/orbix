@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\notas\application\ActaVerAddPersonaFormData;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -55,7 +56,7 @@ final class ActaVerAddPersonaFormDataTest extends TestCase
         $asig = $this->createMock(Asignatura::class);
         $asig->method('getId_nivel')->willReturn(1100);
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
-        $asigRepo->method('getAsignaturas')->willReturn([$asig]);
+        $asigRepo->method('findById')->with(100, PlanEstudios::PLAN_2026)->willReturn($asig);
 
         $ok = $this->createMock(PersonaDl::class);
         $ok->method('getId_nom')->willReturn(7);

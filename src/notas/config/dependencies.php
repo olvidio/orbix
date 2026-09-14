@@ -150,6 +150,8 @@ return [
     PersonaNotaInputParser::class => autowire(PersonaNotaInputParser::class),
     \src\notas\application\support\LiberarHuecoNivelNota::class
         => autowire(\src\notas\application\support\LiberarHuecoNivelNota::class),
+    \src\notas\application\support\NivelCatalogoAsignaturaEnPlan::class
+        => autowire(\src\notas\application\support\NivelCatalogoAsignaturaEnPlan::class),
     \src\notas\application\support\SiglaActaPermitida::class
         => get(\src\notas\application\support\ActaPersonaFormListas::class),
 ];

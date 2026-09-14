@@ -9,6 +9,7 @@ use src\asignaturas\domain\value_objects\NivelId;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\notas\application\support\LiberarHuecoNivelNota;
+use src\notas\application\support\NivelCatalogoAsignaturaEnPlan;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
@@ -36,6 +37,7 @@ final class ActaVerAddPersona
         private readonly PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
         private readonly MapaPrefijoActaEsquemaRepositoryInterface $mapaPrefijoActaEsquemaRepository,
         private readonly LiberarHuecoNivelNota $liberarHuecoNivelNota,
+        private readonly NivelCatalogoAsignaturaEnPlan $nivelCatalogoAsignaturaEnPlan,
     ) {
     }
 
@@ -78,10 +80,14 @@ final class ActaVerAddPersona
         }
         $nota_corte = (float) $oConfig->getNotaCorte();
 
-        $id_nivel = 0;
-        $cAsignatura = $this->asignaturaRepository->getAsignaturas(['id_asignatura' => $id_asignatura]);
-        if ($cAsignatura !== []) {
-            $id_nivel = (int) ($cAsignatura[0]->getId_nivel() ?? 0);
+        if ($this->nivelCatalogoAsignaturaEnPlan->esObligatoria($id_asignatura)) {
+            $id_nivel = $this->nivelCatalogoAsignaturaEnPlan->resolve($id_nom, $id_asignatura);
+        } else {
+            $id_nivel = 0;
+            $cAsignatura = $this->asignaturaRepository->getAsignaturas(['id_asignatura' => $id_asignatura]);
+            if ($cAsignatura !== []) {
+                $id_nivel = (int) ($cAsignatura[0]->getId_nivel() ?? 0);
+            }
         }
 
         $id_situacion = NotaSituacion::NUMERICA;

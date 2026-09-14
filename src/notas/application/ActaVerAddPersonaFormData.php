@@ -6,6 +6,7 @@ namespace src\notas\application;
 
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -69,9 +70,9 @@ final class ActaVerAddPersonaFormData
         }
 
         $id_nivel = 0;
-        $cAsignatura = $this->asignaturaRepository->getAsignaturas(['id_asignatura' => $id_asignatura]);
-        if ($cAsignatura !== []) {
-            $id_nivel = (int) ($cAsignatura[0]->getId_nivel() ?? 0);
+        $oAsignatura = $this->asignaturaRepository->findById($id_asignatura, PlanEstudios::PLAN_2026);
+        if ($oAsignatura !== null) {
+            $id_nivel = $oAsignatura->getId_nivel();
         }
 
         /** @var ConfigSnapshot $oConfig */

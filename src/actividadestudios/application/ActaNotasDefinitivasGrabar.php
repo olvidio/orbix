@@ -13,6 +13,7 @@ use src\actividadestudios\application\support\MatriculaNotaEstado;
 use src\notas\application\EditarPersonaNota;
 use src\notas\application\support\ActaFirmadaPolicy;
 use src\notas\application\support\LiberarHuecoNivelNota;
+use src\notas\application\support\NivelCatalogoAsignaturaEnPlan;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -50,6 +51,7 @@ final class ActaNotasDefinitivasGrabar
         private DossierRepositoryInterface $dossierRepository,
         private PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
         private LiberarHuecoNivelNota $liberarHuecoNivelNota,
+        private NivelCatalogoAsignaturaEnPlan $nivelCatalogoAsignaturaEnPlan,
         private ActaFirmadaPolicy $firmadaPolicy,
     ) {
     }
@@ -220,11 +222,7 @@ final class ActaNotasDefinitivasGrabar
                     continue;
                 }
             } else {
-                $oAsignatura = $this->asignaturaRepository->findById($Qid_asignatura);
-                if ($oAsignatura === null) {
-                    return ['success' => false, 'mensaje' => _('no encuentro la asignatura')];
-                }
-                $id_nivel = $oAsignatura->getIdNivelVo()->value();
+                $id_nivel = $this->nivelCatalogoAsignaturaEnPlan->resolve($id_nom, $Qid_asignatura);
             }
 
             $cBuscarPersonaNotas = $this->personaNotaRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $Qid_asignatura]);
