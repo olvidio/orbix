@@ -95,4 +95,32 @@ final class CambioAvisoTxtBuilderTest extends TestCase
         $this->assertStringContainsString('Pérez, Ana', $txt);
         $this->assertStringNotContainsString('"55"', $txt);
     }
+
+    public function test_insert_sacd_de_paso_resuelve_id_nom_negativo(): void
+    {
+        $nombreParaAviso = $this->createMock(PersonaNombreParaAvisoInterface::class);
+        $nombreParaAviso->expects($this->once())
+            ->method('resolve')
+            ->with(-10016280)
+            ->willReturn('Martínez, Pedro');
+
+        $actividad = $this->createMock(ActividadAll::class);
+        $actividad->method('getNom_activ')->willReturn('cv n verano');
+
+        $builder = $this->createBuilder($actividad, $nombreParaAviso);
+
+        $cambio = new Cambio();
+        $cambio->setId_tipo_cambio(Cambio::TIPO_CMB_INSERT);
+        $cambio->setObjeto('ActividadCargoSacd');
+        $cambio->setId_activ(8);
+        $cambio->setPropiedad('id_nom');
+        $cambio->setValor_old(null);
+        $cambio->setValor_new('-10016280');
+
+        $txt = $builder->build($cambio);
+
+        $this->assertIsString($txt);
+        $this->assertStringContainsString('Martínez, Pedro', $txt);
+        $this->assertStringNotContainsString('-10016280', $txt);
+    }
 }
