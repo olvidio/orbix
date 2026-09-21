@@ -66,7 +66,7 @@ if (is_file($menusFile)) {
 
 // --- Resúmenes pantallas ---
 $pantallaResumen = [
-    'misas_index' => 'Índice de navegación del módulo con enlaces HashFront a las 10 pantallas principales (plan, encargos, plantilla, iniciales, status). Sin backend JSON.',
+    'misas_index' => 'Índice de navegación del módulo con enlaces HashF a las 10 pantallas principales (plan, encargos, plantilla, iniciales, status). Sin backend JSON.',
     'modificar_iniciales_sacd_zona' => 'Entry point para editar iniciales y color de sacerdotes por zona. Selector de zona y carga AJAX de `ver_iniciales_zona`.',
     'ver_iniciales_zona' => 'Fragmento SlickGrid con sacds de la zona; edición inline que postea a `update_iniciales`.',
     'modificar_encargos' => 'Entry point para CRUD de encargos de zona (grupo ZONAS_MISAS). Selectores zona/orden y grid AJAX `ver_encargos_zona`.',
