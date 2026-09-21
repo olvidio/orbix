@@ -34,11 +34,11 @@ Opera sobre tablas staging `propuesta_*` (encargos SACD propuestos para el nuevo
 |-------|----------------|
 | `get_lista` | HTML editable de encargos por centros filtrados (`filtro_ctr`). |
 | `crear_tabla` | Crea/recrea tablas staging (`DBPropuestas::createAll`). |
-| `lista_sacd` | HTML del desplegable de SACD posibles para titular/suplente/colaborador. |
+| `lista_sacd` | Datos del desplegable de SACD posibles para titular/suplente/colaborador. |
 | `cmb_sacd` | Asigna o cambia SACD propuesto (`id_nom_new`); alta si `id_item === id_enc`. |
-| `dedicacion` | Formulario HTML de dedicación m/t/v. |
+| `dedicacion` | Datos del formulario de dedicación m/t/v. |
 | `dedicacion_update` | Guarda dedicación en horario staging. |
-| `info` | Popup HTML con encargos propuestos del SACD. |
+| `info` | Datos del popup con encargos propuestos del SACD. |
 | *(otro)* | `success: false`, mensaje «Operación no soportada». |
 
 ## Endpoint
@@ -65,7 +65,7 @@ Opera sobre tablas staging `propuesta_*` (encargos SACD propuestos para el nuevo
 - **`get_lista`**: si no existen tablas staging → error «Debe crear la tabla de propuestas».
 - **`crear_tabla`**: `RuntimeException` → «No se puede crear la tabla».
 - **`cmb_sacd`** con `id_item === id_enc`: crea `PropuestaEncargoSacd` (modo 2/4/5 según `tipo`).
-- **`cmb_sacd`** colaborador sin SACD actual ni nuevo: elimina la fila (`html: "borrar"`).
+- **`cmb_sacd`** colaborador sin SACD actual ni nuevo: devuelve `row.tipo="borrar"` para eliminar la fila.
 - **`dedicacion_update`**: si `id_item === id_enc` intenta resolver el ítem real; si no hay exactamente uno → «No se puede guardar. Vuelva a cargar la vista».
 - **`filtro_ctr=8` (zonas)** aparece en opciones de sección pero `PropuestasCentrosPorFiltro` no tiene rama 8 (queda vacío). Pendiente de aclarar si es intencional.
 
@@ -75,9 +75,12 @@ Opera sobre tablas staging `propuesta_*` (encargos SACD propuestos para el nuevo
 - Payload interno (clave `data` del sobre): siempre incluye `success: bool`.
   - `get_lista`: `{success, lista}` (HTML) o `{success:false, mensaje}`.
   - `crear_tabla` / `dedicacion_update`: `{success}` o `{success:false, mensaje}`.
-  - `lista_sacd` / `dedicacion` / `info`: `{success, html}`.
-  - `cmb_sacd`: `{success, nombre, id_sacd, html}` o error.
-- El controller FE `propuestas_ajax.php` emite ese payload en la raíz del JSON HTTP (el JS no hace segundo parse del sobre).
+  - `lista_sacd`: `{success, popup:"lista_sacd", opciones, id_sacd, id_item, id_enc, tipo}`.
+  - `dedicacion`: `{success, popup:"dedicacion", apellidos_nombre, desc_enc, dedic_m, dedic_t, dedic_v, ...ids}`.
+  - `info`: `{success, popup:"info", apellidos_nombre, encargos}`.
+  - `cmb_sacd`: `{success, nombre, id_sacd, row}` o error.
+- El controller FE `propuestas_ajax.php` renderiza estos datos y emite el contrato HTML legacy en la
+  raíz del JSON HTTP; `PropuestasAjaxPayload` firma el formulario de dedicación con `HashF`.
 
 ## Errores conocidos
 

@@ -2,6 +2,7 @@
 
 use frontend\shared\FrontBootstrap;
 use frontend\shared\PostRequest;
+use frontend\encargossacd\helpers\PropuestasAjaxPayload;
 use Illuminate\Http\JsonResponse;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -12,5 +13,5 @@ if (isset($data['error'])) {
     (new JsonResponse(['success' => false, 'mensaje' => $data['error']]))->send();
     exit;
 }
-// JS legacy de propuestas espera {success, mensaje?, lista?, html?, ...} en la raíz.
-(new JsonResponse($data))->send();
+// JS legacy espera fragmentos HTML en la raíz; se construyen en frontend desde datos neutros.
+(new JsonResponse(PropuestasAjaxPayload::render($data)))->send();
