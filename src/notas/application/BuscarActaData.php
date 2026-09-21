@@ -7,12 +7,18 @@ namespace src\notas\application;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\application\support\NivelCatalogoAsignaturaEnPlan;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaExRepositoryInterface;
 use src\notas\domain\value_objects\NotaEpoca;
 
 /**
  * Busca un acta por sigla + num/aa y devuelve los datos asociados.
+ *
+ * El acta identifica la asignatura por `id_asignatura`. El `id_nivel` del
+ * desplegable (hueco curricular) se resuelve con el plan del alumno:
+ * el mismo id puede ocupar slots distintos en 1997 y 2026 (p. ej. Latín III
+ * 2211 → 2212 en 1997 y 2112 en 2026; 2212 en 2026 es Latín IV).
  */
 final class BuscarActaData
 {
@@ -22,6 +28,7 @@ final class BuscarActaData
         private readonly ActaExRepositoryInterface $actaExRepository,
         private readonly ActividadAllRepositoryInterface $actividadAllRepository,
         private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly NivelCatalogoAsignaturaEnPlan $nivelCatalogoAsignaturaEnPlan,
     ) {
     }
 
@@ -70,21 +77,37 @@ final class BuscarActaData
             $epoca = NotaEpoca::EPOCA_OTRO;
         }
 
-        $AsignaturaRepository = $this->asignaturaRepository;
-        $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
-        if ($oAsignatura === null) {
-            throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
-        }
+        $idAsignatura = (int) $id_asignatura;
+        $idPau = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
 
         return [
-            'id_asignatura' => (string)$id_asignatura,
-            'id_nivel' => (string)$oAsignatura->getId_nivel(),
+            'id_asignatura' => (string) $idAsignatura,
+            'id_nivel' => (string) $this->resolveIdNivel($idPau, $idAsignatura),
             'id_activ' => (string)$id_activ,
             'f_acta' => (string)$oActa->getF_acta()?->getFromLocal(),
             'nom_activ' => (string)$nom_activ,
             'epoca' => (string)$epoca,
             'acta' => $actaEncontrada,
         ];
+    }
+
+    /**
+     * Hueco curricular de la asignatura del acta en el plan del alumno.
+     * Sin `id_pau` no hay plan: se toma una fila cualquiera del catálogo
+     * (mismo `LIMIT 1` que antes; no usar en el formulario de nota nueva).
+     */
+    private function resolveIdNivel(int $idPau, int $idAsignatura): int
+    {
+        if ($idPau > 0 && $this->nivelCatalogoAsignaturaEnPlan->esObligatoria($idAsignatura)) {
+            return $this->nivelCatalogoAsignaturaEnPlan->resolve($idPau, $idAsignatura);
+        }
+
+        $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
+        if ($oAsignatura === null) {
+            throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), $idAsignatura));
+        }
+
+        return $oAsignatura->getId_nivel();
     }
 
     private function componerActa(string $sigla, string $numPart): string

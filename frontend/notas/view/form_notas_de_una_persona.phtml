@@ -50,6 +50,7 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
             type: 'post',
             data: 'acta=' + encodeURIComponent(actaNum)
                 + '&acta_sigla=' + encodeURIComponent($('#acta_sigla').val())
+                + '&id_pau=' + encodeURIComponent($('#id_pau').val())
                 + '<?= $h_buscar_acta ?>',
             dataType: 'json'
         })
@@ -94,6 +95,13 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
                     } else {
                         id_nivel = rta_json.id_nivel;
                         $('#id_nivel').val(id_nivel);
+                        var idAsigNum = parseInt(id_asignatura, 10);
+                        if (!isNaN(idAsigNum) && idAsigNum > 0) {
+                            $('#lst_opcionales').html(
+                                '<input type="hidden" id="id_asignatura" name="id_asignatura" value="'
+                                + idAsigNum + '">'
+                            );
+                        }
                     }
                 }
             });

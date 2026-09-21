@@ -177,7 +177,7 @@ $h_actividad_buscar = $oHashActivBuscar->linkSinValParams();
 $url_buscar_acta = AppUrlConfig::srcBrowserUrl('/src/notas/buscar_acta');
 $oHashBuscarActa = new HashF();
 $oHashBuscarActa->setUrl($url_buscar_acta);
-$oHashBuscarActa->setCamposForm('acta!acta_sigla');
+$oHashBuscarActa->setCamposForm('acta!acta_sigla!id_pau');
 $h_buscar_acta = $oHashBuscarActa->linkSinValParams();
 
 $opcionesCertDl = is_array($datos['opciones_certificado_dl'] ?? null) ? $datos['opciones_certificado_dl'] : [];
