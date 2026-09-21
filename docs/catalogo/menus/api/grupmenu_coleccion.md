@@ -46,7 +46,8 @@ Sin parámetros POST: lee `$_SESSION['session_auth']` y `$_SESSION['oConfig']` (
 
 - Helper: `ContestarJson::enviarDataAnidado` (objeto anidado directo en `data`, sin doble `JSON.parse`).
 - `data.a_valores`: array indexado con `{sel, grupmenu, orden, menus}` donde `menus` es la lista de
-  `{id_menu, indice, menu, url, full_url, parametros, orden}` ya filtrada.
+  `{id_menu, indice, menu, url, link_spec, orden}` ya filtrada. `link_spec` se firma al consumirla
+  desde frontend.
 
 ## Errores conocidos
 

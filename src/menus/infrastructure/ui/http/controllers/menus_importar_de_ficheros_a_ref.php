@@ -1,17 +1,21 @@
 <?php
 
 use frontend\shared\config\OrbixRuntime;
-use frontend\shared\security\HashF;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
-use src\shared\domain\helpers\FilterPostGet;
+use src\shared\web\ContestarJson;
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 $oDBPC = GlobalPdo::get('oDBPC');
 $gestorErrores = $_SESSION['oGestorErrores'] ?? null;
+$messages = [];
+$fail = static function (string $message): never {
+    ContestarJson::enviar($message, 'none');
+    exit;
+};
 
 $Qseguro = \src\shared\domain\helpers\FilterPostGet::post('seguro', FILTER_VALIDATE_INT);
 if ($Qseguro === false || $Qseguro === null) {
@@ -26,30 +30,11 @@ $Qseguro = ($Qseguro === false || $Qseguro === null || $Qseguro === 0) ? 2 : $Qs
 $Qtodos = ($Qtodos === false || $Qtodos === null || $Qtodos === 0) ? 2 : $Qtodos;
 
 if ($Qseguro === 2) {
-    if (OrbixRuntime::miDele() === 'dlb') {
-        echo _("casi seguro que no quieres hacerlo");
-        echo "<br>";
-
-        $go1 = HashF::link('src/menus/menus_importar_de_ficheros_a_ref?' . http_build_query(array('seguro' => 1, 'todos' => 1)));
-        $html = "Esto pondrá los menus por defecto. Para todas las dl";
-        $html .= "tarda mucho (3min para 10 dl), pero acaba bien (creo)";
-        $html .= "<br>";
-        $html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go1');\">" . _("Poner todas las dl igual") . "</span>";
-        $html .= "<br>";
-        echo $html;
-    }
-
-    $go = HashF::link('src/menus/menus_importar_de_ficheros_a_ref?' . http_build_query(array('seguro' => 1)));
-    $html = "Esto pondrá los menus por defecto. Se eliminaran todas las modificaciones que se hayan hecho en los menus y grupos de menu";
-    $html .= "<br>";
-    $html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("continuar") . "</span>";
-    $html .= "<br><br><ul><li>";
-    $html .= _("Para sf: también se copian los grupMenu de los Roles (de sv). Hay que volver a poner lo que había.");
-    $html .= " ";
-    $html .= _("De momento se ha anulado la restauración. Se queda como está") . ":<br>";
-    $html .= _("Hay que corregir a mano");
-    $html .= "</li></ul>";
-    echo $html;
+    ContestarJson::enviar('', [
+        'estado' => 'confirmacion',
+        'puede_importar_todas' => OrbixRuntime::miDele() === 'dlb',
+    ]);
+    return;
 }
 
 if ($Qseguro === 1) {
@@ -69,22 +54,22 @@ if ($Qseguro === 1) {
         if ($esquema === "H-Hv") {
             continue;
         }
-        echo ">>>>actualizando menus para $esquema<br>";
+        $messages[] = ">>>>actualizando menus para $esquema";
         $sec = substr($esquema, -1); // la 'v' o la 'f'.
-        echo ">>>$sec>>actualizando menus para $esquema<br>";
+        $messages[] = ">>>$sec>>actualizando menus para $esquema";
         if ($sec === 'v') {
             $oConfigDB = new ConfigDB('sv-e');
         } elseif ($sec === 'f') {
             $oConfigDB = new ConfigDB('sf-e');
         } else {
-            echo "esquema desconocido: $esquema<br>";
+            $messages[] = "esquema desconocido: $esquema";
             continue;
         }
         $config = $oConfigDB->getEsquema($esquema);
         $oConexion = new DBConnection($config);
         $oDB = $oConexion->getPDO();
 
-        echo "actualizando menus para $esquema<br>";
+        $messages[] = "actualizando menus para $esquema";
 
         //************ GRUPMENU **************
         $sql_del = 'TRUNCATE TABLE aux_grupmenu RESTART IDENTITY CASCADE';
@@ -93,7 +78,7 @@ if ($Qseguro === 1) {
             if ($gestorErrores instanceof GestorErrores) {
                 $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
             }
-            return false;
+            $fail(_("No se han podido actualizar los menus"));
         }
 
         $sQry = 'SELECT * FROM ref_grupmenu';
@@ -111,7 +96,7 @@ if ($Qseguro === 1) {
                     if ($gestorErrores instanceof GestorErrores) {
                         $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
                     }
-                    return false;
+                    $fail(_("No se han podido actualizar los menus"));
                 }
 
                 try {
@@ -123,7 +108,7 @@ if ($Qseguro === 1) {
                     if ($gestorErrores instanceof GestorErrores) {
                         $gestorErrores->addErrorAppLastErrorNoThrowText($err_txt, $sClauError, (string) __LINE__, __FILE__);
                     }
-                    return false;
+                    $fail(_("No se han podido actualizar los menus"));
                 }
             }
         }
@@ -137,7 +122,7 @@ if ($Qseguro === 1) {
                 if ($gestorErrores instanceof GestorErrores) {
                     $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
                 }
-                return false;
+                $fail(_("No se han podido actualizar los menus"));
             }
 
             $sQry = 'SELECT * FROM ref_grupmenu_rol';
@@ -155,7 +140,7 @@ if ($Qseguro === 1) {
                         if ($gestorErrores instanceof GestorErrores) {
                             $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
                         }
-                        return false;
+                        $fail(_("No se han podido actualizar los menus"));
                     }
 
                     try {
@@ -167,7 +152,7 @@ if ($Qseguro === 1) {
                         if ($gestorErrores instanceof GestorErrores) {
                             $gestorErrores->addErrorAppLastErrorNoThrowText($err_txt, $sClauError, (string) __LINE__, __FILE__);
                         }
-                        return false;
+                        $fail(_("No se han podido actualizar los menus"));
                     }
                 }
             }
@@ -179,7 +164,7 @@ if ($Qseguro === 1) {
             if ($gestorErrores instanceof GestorErrores) {
                 $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
             }
-            return false;
+            $fail(_("No se han podido actualizar los menus"));
         }
 
         $sQry = 'SELECT * FROM ref_menus';
@@ -197,7 +182,7 @@ if ($Qseguro === 1) {
                     if ($gestorErrores instanceof GestorErrores) {
                         $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
                     }
-                    return false;
+                    $fail(_("No se han podido actualizar los menus"));
                 }
 
                 try {
@@ -209,9 +194,14 @@ if ($Qseguro === 1) {
                     if ($gestorErrores instanceof GestorErrores) {
                         $gestorErrores->addErrorAppLastErrorNoThrowText($err_txt, $sClauError, (string) __LINE__, __FILE__);
                     }
-                    return false;
+                    $fail(_("No se han podido actualizar los menus"));
                 }
             }
         }
     }
 }
+
+ContestarJson::enviar('', [
+    'estado' => 'completado',
+    'mensajes' => $messages,
+]);

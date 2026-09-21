@@ -227,12 +227,13 @@ class LegacyLayout implements LayoutInterface
             if (!is_array($raw)) {
                 continue;
             }
+            $navigation = MenuNavigationLink::fromSpec($raw['link_spec'] ?? null);
             $items[] = [
                 'indice' => self::scalarInt($raw['indice'] ?? 0),
                 'menu' => self::scalarString($raw['menu'] ?? ''),
                 'url' => self::scalarString($raw['url'] ?? ''),
-                'full_url' => self::scalarString($raw['full_url'] ?? ''),
-                'parametros' => self::scalarString($raw['parametros'] ?? ''),
+                'full_url' => $navigation['full_url'],
+                'parametros' => $navigation['parametros'],
                 'menu_perm' => self::scalarInt($raw['menu_perm'] ?? 0),
             ];
         }

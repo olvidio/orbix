@@ -325,9 +325,11 @@ El hash de presentación (**`frontend\shared\security\HashF`**) es responsabilid
 
 | Área | Archivo |
 |------|-----------|
-| menus | `src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php` (ruta HTTP `/src/menus/menus_importar_de_ficheros_a_ref`) |
+| notas | `src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php` |
 
-Actualizar esta tabla conforme se migre cada módulo (o sustituir por enlace a `rg` en el PR si se prefiere no duplicar).
+No quedan excepciones en `menus`: sus casos de uso devuelven `link_spec` y
+`frontend/shared/layouts/MenuNavigationLink.php` compone la navegación firmada.
+Actualizar esta tabla conforme se migre cada módulo.
 
 ### Ejemplo práctico: módulo ubiscamas
 

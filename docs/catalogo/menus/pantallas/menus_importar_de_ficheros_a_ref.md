@@ -4,26 +4,26 @@ tipo: "pantalla_frontend"
 subtipo: "pantalla_principal"
 modulo: "menus"
 nombre: "Restaurar menús ref→DL"
-controller: "src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php"
-vistas: []
-fragmentos_frontend: []
+controller: "frontend/menus/controller/menus_importar_de_ficheros_a_ref.php"
+vistas: ["frontend/menus/view/menus_importar_de_ficheros_a_ref.phtml"]
+fragmentos_frontend: ["frontend/menus/controller/menus_importar_de_ficheros_a_ref.php"]
 endpoints: ["/src/menus/menus_importar_de_ficheros_a_ref"]
 capacidades: []
 campos: ["get.seguro", "get.todos", "post.seguro", "post.todos"]
-acciones: ["fnjs_update_div"]
+acciones: ["fnjs_link_submenu"]
 estado_revision: "revisado"
 ---
 
 # Restaurar menús por defecto (ref→DL)
 
-Página HTML del endpoint `/src/menus/menus_importar_de_ficheros_a_ref`: confirma y ejecuta la
+Página frontend que confirma y ejecuta, mediante `/src/menus/menus_importar_de_ficheros_a_ref`, la
 copia masiva de menús de referencia (public) hacia `aux_*` del/los esquema(s). **No lee ficheros SQL**
 (ese flujo es `menus_exportar_ref_a_ficheros?accion=importar`).
 
 ## Tipo
 
-- Subtipo: `pantalla_principal` (respuesta HTML del controller en `src/menus/`)
-- Controller: `src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php`
+- Subtipo: `pantalla_principal`
+- Controller: `frontend/menus/controller/menus_importar_de_ficheros_a_ref.php`
 
 ## Casos particulares
 

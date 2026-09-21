@@ -8,10 +8,10 @@ operacion: "mutacion"
 controller: "src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php"
 entrada: ["get.seguro:integer", "get.todos:integer", "post.seguro:integer", "post.todos:integer"]
 entrada_obligatoria: []
-respuesta: "raw_response"
-requiere_hashb: true
+respuesta: "standard_envelope_string_data"
+requiere_hashb: false
 errores: []
-frontend_referencias: []
+frontend_referencias: ["frontend/menus/controller/menus_importar_de_ficheros_a_ref.php"]
 casos_uso: []
 tags: ["menus", "importar", "ficheros", "ref"]
 estado_revision: "revisado"
@@ -19,14 +19,15 @@ estado_revision: "revisado"
 
 # Restaurar menús por defecto (ref → esquemas DL)
 
-Flujo HTML en dos pasos: confirmación (`seguro=2`) y ejecución (`seguro=1`). Copia tablas `ref_*` de BD
-pública a `aux_*` de uno o todos los esquemas regionales. **No JSON.**
+API JSON en dos pasos: confirmación (`seguro=2`) y ejecución (`seguro=1`). Copia tablas `ref_*` de BD
+pública a `aux_*` de uno o todos los esquemas regionales. El HTML y las URLs firmadas viven en
+`frontend/menus/controller/menus_importar_de_ficheros_a_ref.php`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-- `seguro=2`: pantalla de advertencia con enlaces HashFront.
+- `seguro=2`: devuelve `estado=confirmacion` y si se permite importar todas las DL.
 - `seguro=1`: TRUNCATE+INSERT por esquema (`todos=1` → todas las DL excepto `H-Hv`).
 - En esquemas `sf` (`…f`) **no** copia `aux_grupmenu_rol` (roles distintos).
 
@@ -39,7 +40,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Salida
 
-- HTML progreso en `#main` vía `fnjs_update_div`.
+- Envelope `ContestarJson`: `estado=confirmacion|completado`, `puede_importar_todas` para la
+  confirmación y `mensajes` durante la ejecución.
 
 ## Permisos
 
@@ -47,4 +49,5 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-- Enlace desde menú (legacy); controller en `src/menus/…` servido con HashFront.
+- `frontend/menus/controller/menus_importar_de_ficheros_a_ref.php` compone la confirmación y
+  firma las navegaciones con `HashF`.

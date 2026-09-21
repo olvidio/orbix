@@ -22,13 +22,13 @@ Dejar los menús del esquema (o de todas las DL si dlb) como la referencia por d
 
 ## Punto De Entrada
 
-- URL directa `/src/menus/menus_importar_de_ficheros_a_ref` (sin entrada de menú propia).
+- `frontend/menus/controller/menus_importar_de_ficheros_a_ref.php` (sin entrada de menú propia).
 
 ## Escenarios
 
 ### Confirmar (`seguro=2`)
 
-1. Abrir endpoint → mensajes de advertencia + enlace «continuar» (`seguro=1`).
+1. Abrir la pantalla frontend → mensajes de advertencia + enlace firmado «continuar» (`seguro=1`).
 2. Si `miDele()==='dlb'`: enlace extra «Poner todas las dl igual» (`seguro=1&todos=1`).
 
 ### Ejecutar (`seguro=1`)

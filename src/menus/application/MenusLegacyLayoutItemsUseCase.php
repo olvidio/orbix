@@ -2,7 +2,6 @@
 
 namespace src\menus\application;
 
-use frontend\shared\security\HashF;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use src\menus\domain\PermisoMenu;
@@ -12,7 +11,7 @@ use src\shared\config\ConfigGlobal;
  * Entradas de menú para el layout legacy (grupos 1 y el seleccionado, mismo filtro que el antiguo
  * {@see \frontend\shared\layouts\LegacyLayout} antes de mover la lectura a HTTP).
  *
- * @return list<array{indice:int,menu:?string,url:string,full_url:string,parametros:?string,menu_perm:mixed}>
+ * @return list<array{indice:int,menu:?string,url:string,link_spec:array{path:string,parametros:string}|null,menu_perm:mixed}>
  */
 final class MenusLegacyLayoutItemsUseCase
 {
@@ -22,7 +21,7 @@ final class MenusLegacyLayoutItemsUseCase
     ) {
     }
 
-    /** @return list<array{indice:int,menu:?string,url:string,full_url:string,parametros:?string,menu_perm:int|null}> */
+    /** @return list<array{indice:int,menu:?string,url:string,link_spec:array{path:string,parametros:string}|null,menu_perm:int|null}> */
     public function __invoke(string $id_grupmenu): array
     {
         $oPermisoMenu = new PermisoMenu();
@@ -86,11 +85,6 @@ final class MenusLegacyLayoutItemsUseCase
                 continue;
             }
 
-            $full_url = '';
-            if (!empty($url)) {
-                $full_url = ConfigGlobal::getWeb() . '/' . $url;
-            }
-            $parametros = HashF::add_hash($parametros, $full_url);
             $indice = count($orden);
 
             if ($indice == 1 && !$oPermisoMenu->visible($menu_perm ?? 0)) {
@@ -107,8 +101,12 @@ final class MenusLegacyLayoutItemsUseCase
                 'indice' => $indice,
                 'menu' => $menu,
                 'url' => $url,
-                'full_url' => $full_url,
-                'parametros' => $parametros,
+                'link_spec' => $url === '' || str_contains($url, 'fnjs')
+                    ? null
+                    : [
+                        'path' => $url,
+                        'parametros' => $parametros ?? '',
+                    ],
                 'menu_perm' => $menu_perm,
             ];
         }

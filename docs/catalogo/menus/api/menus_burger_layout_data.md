@@ -19,7 +19,8 @@ estado_revision: "revisado"
 
 # Datos menú layout Burger/Pills2
 
-Árbol de menú para layouts modernos: grupo Utilidades (HTML usuario) + resto de grupos según `lista_grup_menu_json`.
+Árbol de menú para layouts modernos: grupo Utilidades y resto de grupos según
+`lista_grup_menu_json`. El endpoint no genera HTML ni firma enlaces.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -31,8 +32,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Salida
 
-- `data.menu_config`: árbol anidado `{name, submenu, onClick}` por grupo.
-- `data.user_menus_html`: HTML menú usuario (Utilidades).
+- `data.menu_config`: árbol anidado `{name, submenu, link_spec, client_action}` por grupo.
+- `data.user_menu_nodes`: nodos del menú Utilidades con el mismo contrato.
+- `frontend/shared/layouts/MenusBurgerLayoutSupport.php` firma `link_spec` con `HashF` y
+  construye los atributos `onClick` y el HTML de Utilidades.
 
 ## Casos De Uso
 

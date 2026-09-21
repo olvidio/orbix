@@ -134,7 +134,8 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `menus.menus_importar_de_ficheros_a_ref`
 - Controller: `src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php`
 - Entrada: `get.seguro:integer`, `get.todos:integer`, `post.seguro:integer`, `post.todos:integer`
-- Respuesta: `raw_response`
+- Respuesta: `standard_envelope_string_data`; la confirmación y navegación firmada se componen en
+  `frontend/menus/controller/menus_importar_de_ficheros_a_ref.php`
 
 ## `/src/menus/menus_legacy_layout_items_data`
 

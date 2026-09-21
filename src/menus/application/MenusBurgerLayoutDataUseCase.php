@@ -2,7 +2,6 @@
 
 namespace src\menus\application;
 
-use frontend\shared\security\HashF;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
@@ -22,7 +21,7 @@ final class MenusBurgerLayoutDataUseCase
 
     /**
      * @param array<int|string, string> $listaGrupMenu id_grupmenu => etiqueta (como en index.php)
-     * @return array{menu_config: array<string, mixed>, user_menus_html: string}
+     * @return array{menu_config: array<string, mixed>, user_menu_nodes: list<array<string, mixed>>}
      */
     public function __invoke(array $listaGrupMenu): array
     {
@@ -40,12 +39,12 @@ final class MenusBurgerLayoutDataUseCase
         $aOperador = ['id_grupmenu' => '!='];
         $cMenuDbs = $this->menuDbRepository->getMenuDbs($aWhere, $aOperador);
 
-        $userMenusHtml = $this->buildUserMenus($cMenusUtilidades);
+        $userMenuNodes = $this->buildUserMenuNodes($cMenusUtilidades);
         $menuConfig = $this->buildMenuStructure($cMenuDbs, $listaGrupMenu);
 
         return [
             'menu_config' => $menuConfig,
-            'user_menus_html' => $userMenusHtml,
+            'user_menu_nodes' => $userMenuNodes,
         ];
     }
 
@@ -81,25 +80,13 @@ final class MenusBurgerLayoutDataUseCase
                 continue;
             }
 
-            $full_url = '';
-            $onClick = '';
-            if (!empty($url)) {
-                $full_url = ConfigGlobal::getWeb() . '/' . $url;
-            }
             $parametros = $itemObject->getParametros();
-            $parametros = HashF::add_hash($parametros, $full_url);
-            if (!empty($full_url)) {
-                if (strstr($url, 'fnjs') !== false) {
-                    $onClick = "\"$url;\"";
-                } else {
-                    $onClick = "fnjs_link_submenu('$full_url','$parametros');";
-                }
-            }
 
             $indexedNodes[$pathKey] = [
                 'name' => _((string) ($itemObject->getMenu() ?? '')),
                 'submenu' => [],
-                'onClick' => $onClick,
+                'link_spec' => self::navigationLinkSpec($url, $parametros),
+                'client_action' => str_contains($url, 'fnjs') ? $url : '',
             ];
         }
 
@@ -147,7 +134,7 @@ final class MenusBurgerLayoutDataUseCase
     /**
      * @param list<MenuDb> $cMenusUtilidades
      */
-    private function buildUserMenus(array $cMenusUtilidades): string
+    private function buildUserMenuNodes(array $cMenusUtilidades): array
     {
 
         $indexedNodes = [];
@@ -172,29 +159,17 @@ final class MenusBurgerLayoutDataUseCase
                 }
                 $url = $oMetamenu->getUrl() ?? '';
             }
-            $full_url = '';
-            $onClick = '';
-            if (!empty($url)) {
-                $full_url = ConfigGlobal::getWeb() . '/' . $url;
-            }
             $parametros = $itemObject->getParametros();
-            $parametros = HashF::add_hash($parametros, $full_url);
-            if (!empty($full_url)) {
-                if (strstr($url, 'fnjs') !== false) {
-                    $onClick = "$url;";
-                } else {
-                    $onClick = "fnjs_link_submenu('$full_url','$parametros');";
-                }
-            }
 
             $indexedNodes[$pathKey] = [
                 'name' => _((string) ($itemObject->getMenu() ?? '')),
                 'submenu' => [],
-                'onClick' => $onClick,
+                'indice' => count($orden),
+                'link_spec' => self::navigationLinkSpec($url, $parametros),
+                'client_action' => str_contains($url, 'fnjs') ? $url : '',
             ];
         }
 
-        $groupedRootNodes = [];
         foreach ($cMenusUtilidades as $itemObject) {
             $currentGroup = $itemObject->getId_grupmenu();
             $currentOrder = $itemObject->getOrden() ?? [];
@@ -202,44 +177,33 @@ final class MenusBurgerLayoutDataUseCase
                 continue;
             }
             $currentPathKey = $currentGroup . '_' . implode('_', $currentOrder);
-
             if (!isset($indexedNodes[$currentPathKey])) {
                 continue;
             }
-            $currentNode = &$indexedNodes[$currentPathKey];
-
-            if (count($currentOrder) === 1) {
-                if (!isset($groupedRootNodes[$currentGroup])) {
-                    $groupedRootNodes[$currentGroup] = [];
-                }
-                $groupedRootNodes[$currentGroup][] = &$currentNode;
-            } else {
+            if (count($currentOrder) > 1) {
                 $parentOrder = array_slice($currentOrder, 0, -1);
                 $parentPathKey = $currentGroup . '_' . implode('_', $parentOrder);
-
                 if (isset($indexedNodes[$parentPathKey])) {
-                    $indexedNodes[$parentPathKey]['submenu'][] = &$currentNode;
+                    $indexedNodes[$parentPathKey]['submenu'][] = &$indexedNodes[$currentPathKey];
                 }
             }
         }
 
-        $li_submenus = '';
-        $indice_old = 0;
-        foreach ($indexedNodes as $key => $node) {
-            $indice = substr_count((string)$key, '_');
-            $nameEsc = htmlspecialchars((string) ($node['name'] ?? ''), ENT_QUOTES, 'UTF-8');
-            if (empty($node['submenu'])) {
-                if ($indice_old > $indice) {
-                    $li_submenus .= '</ul></div></li>';
-                }
-                $li_submenus .= "<li><a href='#' onclick=\"" . $node['onClick'] . '"  >' . $nameEsc . '</a></li>';
-            } else {
-                $li_submenus .= "<li><a href='#'  class=\"has-submenu\" onclick=\"\"  >" . $nameEsc . '</a>';
-                $li_submenus .= '<div class="user-dropdown"> <ul>';
-            }
-            $indice_old = $indice;
+        return array_values($indexedNodes);
+    }
+
+    /**
+     * @return array{path:string,parametros:string}|null
+     */
+    private static function navigationLinkSpec(string $url, ?string $parametros): ?array
+    {
+        if ($url === '' || str_contains($url, 'fnjs')) {
+            return null;
         }
 
-        return $li_submenus;
+        return [
+            'path' => $url,
+            'parametros' => $parametros ?? '',
+        ];
     }
 }
