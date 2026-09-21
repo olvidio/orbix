@@ -30,7 +30,7 @@ public static function postData(mixed $data): array
 }
 
 /**
- * @return list<array{id_nom: int, apellidos: string}>
+ * @return list<array{apellidos: string, ctx_update_cama: string}>
  */
 public static function asistentesSinCamaList(mixed $raw): array
 {
@@ -42,14 +42,14 @@ public static function asistentesSinCamaList(mixed $raw): array
         if (!is_array($item)) {
             continue;
         }
-        $idNom = \frontend\shared\helpers\PayloadCoercion::int($item['id_nom'] ?? 0);
         $apellidos = \frontend\shared\helpers\PayloadCoercion::string($item['apellidos'] ?? '');
-        if ($idNom <= 0 && $apellidos === '') {
+        $ctxUpdateCama = \frontend\shared\helpers\PayloadCoercion::string($item['ctx_update_cama'] ?? '');
+        if ($ctxUpdateCama === '' || $apellidos === '') {
             continue;
         }
         $out[] = [
-            'id_nom' => $idNom,
             'apellidos' => $apellidos,
+            'ctx_update_cama' => $ctxUpdateCama,
         ];
     }
 
@@ -111,10 +111,9 @@ public static function linkSpec(mixed $raw): ?array
  *     id_ubi: int|string,
  *     habitaciones_con_camas: array<int|string, mixed>,
  *     camas_con_asistentes: array<int|string, mixed>,
- *     asistentes_sin_cama: list<array{id_nom: int, apellidos: string}>,
+ *     asistentes_sin_cama: list<array{apellidos: string, ctx_update_cama: string}>,
  *     solo_vip: bool|string,
  *     url_update_cama_full: string,
- *     ctx_update_cama: string,
  *     update_solo_vip_full_url: string,
  *     ctx_update_solo_vip: string,
  *     reload_main_url: string,
@@ -141,7 +140,6 @@ public static function habitacionesListaFromPayload(array $data): array
         'asistentes_sin_cama' => self::asistentesSinCamaList($data['asistentes_sin_cama'] ?? []),
         'solo_vip' => NotasFormSupport::formBoolOrString($data['solo_vip'] ?? ''),
         'url_update_cama_full' => \frontend\shared\helpers\PayloadCoercion::string($data['url_update_cama_full'] ?? ''),
-        'ctx_update_cama' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_update_cama'] ?? ''),
         'update_solo_vip_full_url' => \frontend\shared\helpers\PayloadCoercion::string($data['update_solo_vip_full_url'] ?? ''),
         'ctx_update_solo_vip' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_update_solo_vip'] ?? ''),
         'reload_main_url' => $signed['reload_main_url'],

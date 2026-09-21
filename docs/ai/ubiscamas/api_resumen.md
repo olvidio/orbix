@@ -63,7 +63,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubiscamas.update_cama_asistente`
 - Controller: `src/ubiscamas/infrastructure/ui/http/controllers/update_cama_asistente.php`
-- Entrada: `post.ctx:string`, `post.id_nom:integer`, `post.id_cama:string`
+- Entrada: `post.ctx:string`, `post.id_cama:string` (`id_nom` va dentro de `ctx`)
 - Respuesta: `raw_response`
 
 ## `/src/ubiscamas/update_solo_vip`

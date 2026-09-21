@@ -256,7 +256,7 @@ Este orden minimiza el riesgo y permite verificar la arquitectura antes de aplic
 1. **Mantener `HashF`** como firma canónica de UI en `frontend/shared/security/HashF.php`, sin cambiar el protocolo actual.
 2. **Mantener `HashB`** con `sign`/`open` en `src/shared/security/HashB.php` y ampliar solo los pilotos ya acordados.
 3. **Cerrar las excepciones por módulo**: menus, encargossacd y notas ya devuelven datos sin firmar; revisar de nuevo con `rg` antes de declarar otro módulo como excepción.
-4. **Mantener completo el piloto de actividadtarifas** (tokens por fila y sin IDs planos) y completar o declarar híbrido el de ubiscamas antes de extender `HashB`.
+4. **Mantener completos los pilotos** de actividadtarifas (tokens por fila y sin IDs planos) y ubiscamas (contexto por asistente, sin `id_nom` en claro) antes de extender `HashB`.
 5. **Ola por módulo**, siguiendo el plan de migración acordado por equipo (prioridades por módulo en baselines `docs/dev/*_migracion_baseline.md`).
 6. **Última fase:** decidir si `HashB` deja de ser session-derived y pasa a HMAC con secreto de servidor.
 

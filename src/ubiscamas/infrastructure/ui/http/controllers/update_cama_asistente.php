@@ -20,8 +20,13 @@ if ($Qid_activ <= 0) {
     exit;
 }
 
-$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom');
+$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($opened, 'id_nom');
 $Qid_cama = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_cama');
+if ($Qid_nom <= 0) {
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'mensaje' => _('Operación no autorizada')]);
+    exit;
+}
 
 /** @var UpdateCamaAsistente $useCase */
 $useCase = DependencyResolver::get(UpdateCamaAsistente::class);

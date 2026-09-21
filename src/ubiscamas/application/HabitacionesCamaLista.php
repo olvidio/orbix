@@ -7,6 +7,7 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
+use src\shared\security\HashB;
 class HabitacionesCamaLista
 {
     public function __construct(
@@ -68,15 +69,19 @@ class HabitacionesCamaLista
 
         foreach ($cAsistentes as $apellidos => $oAsistente) {
             $camaId = $oAsistente->getCamaVo()?->value();
+            $ctxUpdateCama = HashB::sign('update_cama_asistente', [
+                'id_activ' => $id_activ,
+                'id_nom' => $oAsistente->getId_nom(),
+            ]);
             if (!empty($camaId)) {
                 $camasConAsistentes[$camaId] = [
-                    'id_nom' => $oAsistente->getId_nom(),
                     'apellidos' => $apellidos,
+                    'ctx_update_cama' => $ctxUpdateCama,
                 ];
             } else {
                 $asistentesSinCama[] = [
-                    'id_nom' => $oAsistente->getId_nom(),
                     'apellidos' => $apellidos,
+                    'ctx_update_cama' => $ctxUpdateCama,
                 ];
             }
         }
@@ -124,14 +129,14 @@ class HabitacionesCamaLista
                 $aRow[9] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($oCama->isVip()) ? 'X' : '';
 
                 $ocupada_por = '';
-                $id_nom = '';
+                $ctx_update_cama = '';
                 if (isset($camasConAsistentes[$id_cama])) {
                     $aAsistente = $camasConAsistentes[$id_cama];
                     $ocupada_por = $aAsistente['apellidos'];
-                    $id_nom = $aAsistente['id_nom'];
+                    $ctx_update_cama = $aAsistente['ctx_update_cama'];
                 }
                 $aRow[10] = $ocupada_por;
-                $aRow['id_nom'] = $id_nom;
+                $aRow['ctx_update_cama'] = $ctx_update_cama;
 
                 $aRow[11] = $oHabitacion->getObservacionesVo()?->value() ?? '';
 

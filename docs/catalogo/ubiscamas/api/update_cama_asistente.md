@@ -6,8 +6,8 @@ url: "/src/ubiscamas/update_cama_asistente"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubiscamas/infrastructure/ui/http/controllers/update_cama_asistente.php"
-entrada: ["post.ctx:string", "post.id_nom:integer", "post.id_cama:string"]
-entrada_obligatoria: ["ctx", "id_nom"]
+entrada: ["post.ctx:string", "post.id_cama:string"]
+entrada_obligatoria: ["ctx"]
 respuesta: "raw_response"
 respuesta_data_schema: "ubiscamas_UpdateCamaAsistenteData"
 respuesta_data: ["success:bool, mensaje: string"]
@@ -21,13 +21,16 @@ errores: ["Operación no autorizada", "Asistencia no encontrada para id_nom", "E
 
 # Update Cama Asistente
 
-Asigna o reasigna la cama de un asistente en una actividad. `id_activ` se extrae de la cápsula `ctx` firmada (`HashB::sign('update_cama_asistente', {id_activ})`); `id_cama` vacío desasigna.
+Asigna o reasigna la cama de un asistente en una actividad. `id_activ` e `id_nom` se extraen de
+la cápsula `ctx` firmada; `id_cama` vacío desasigna.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Asigna o reasigna la cama de un asistente en una actividad. `id_activ` se extrae de la cápsula `ctx` firmada (`HashB::sign('update_cama_asistente', {id_activ})`); `id_cama` vacío desasigna.
+Asigna o reasigna la cama de un asistente en una actividad. `id_activ` e `id_nom` se extraen de
+la cápsula `ctx` firmada (`HashB::sign('update_cama_asistente', {id_activ, id_nom})`); `id_cama`
+vacío desasigna.
 
 ## Endpoint
 
@@ -40,8 +43,7 @@ Asigna o reasigna la cama de un asistente en una actividad. `id_activ` se extrae
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `ctx` | `string` | application | Si | Cápsula HashB; `id_activ` se lee del contexto abierto |
-| `id_nom` | `integer` | application | Si |  |
+| `ctx` | `string` | application | Si | Cápsula HashB; `id_activ` e `id_nom` se leen del contexto abierto |
 | `id_cama` | `string` | application | No |  |
 
 ## Salida
