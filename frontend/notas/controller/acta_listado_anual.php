@@ -3,7 +3,7 @@
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\helpers\FuncTablasSupport;
@@ -60,7 +60,7 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setBoton($boton);
 
-$oHashPeriodo = new HashFront();
+$oHashPeriodo = new HashF();
 $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
 $oHashPeriodo->setCamposNo('!refresh');
 $oHashPeriodo->setArraycamposHidden([]);

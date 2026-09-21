@@ -2,7 +2,7 @@
 
 use frontend\encargossacd\support\SacdFichaAjaxHashes;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\shared\helpers\ListNavSupport;
@@ -37,7 +37,7 @@ $hashes = SacdFichaAjaxHashes::hashesComunes();
 $oDesplFiltroSacd = SacdFichaAjaxHashes::desplegableFiltroSacd($Qfiltro_sacd);
 
 $url_get = 'frontend/encargossacd/controller/sacd_ausencias_get.php';
-$oHashGet = new HashFront();
+$oHashGet = new HashF();
 $oHashGet->setUrl($url_get);
 $oHashGet->setCamposForm('filtro_sacd!id_nom!historial');
 $h_get = $oHashGet->linkSinValParams();

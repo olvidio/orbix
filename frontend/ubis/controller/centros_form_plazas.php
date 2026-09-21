@@ -3,7 +3,7 @@
 use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\FuncTablasSupport;
 
@@ -17,7 +17,7 @@ $chk_sede = \src\shared\domain\helpers\FuncTablasSupport::isTrue($form['sede']) 
 
 $url_update = AppUrlConfig::srcBrowserUrl('/src/ubis/centros_update');
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_update);
 $oHash->setArrayCamposHidden([
     'id_ubi' => $Qid_ubi,

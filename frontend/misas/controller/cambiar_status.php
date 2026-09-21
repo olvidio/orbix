@@ -4,7 +4,7 @@ use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\misas\support\PeriodoTdHelper;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\misas\helpers\MisasDesplegableSupport;
 
@@ -36,18 +36,18 @@ $oDesplOrden->setNombre('orden');
 $oDesplOrden->setAction('fnjs_ver_cuadricula_zona()');
 
 $url_nuevo_status = '/src/misas/nuevo_status';
-$oHashNuevoStatus = new HashFront();
+$oHashNuevoStatus = new HashF();
 $oHashNuevoStatus->setUrl($url_nuevo_status);
 $oHashNuevoStatus->setCamposForm('id_zona!periodo!estado!empiezamin!empiezamax');
 $h_nuevo_status = $oHashNuevoStatus->linkSinValParams();
 
 $url_ver_cuadricula_zona = 'frontend/misas/controller/ver_cuadricula_zona.php';
-$oHashZonaStatus = new HashFront();
+$oHashZonaStatus = new HashF();
 $oHashZonaStatus->setUrl($url_ver_cuadricula_zona);
 $oHashZonaStatus->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden!tipo_plantilla');
 $h_zona_status = $oHashZonaStatus->linkSinValParams();
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl('frontend/misas/controller/cambiar_status.php');
 $oHash->setCamposForm('id_zona!estado!orden!periodo!empiezamin!empiezamax');
 

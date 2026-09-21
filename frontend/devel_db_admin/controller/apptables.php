@@ -5,7 +5,7 @@ namespace frontend\devel_db_admin\controller;
 use frontend\devel_db_admin\helpers\DevelDbAdminPayload;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
@@ -31,7 +31,7 @@ $oDeslpApps = new Desplegable([], ['_ordre' => 'id_app']);
 $oDeslpApps->setNombre('id_app');
 $oDeslpApps->setOpciones($a_apps);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('id_app!esquema');
 $oHash->setcamposNo('accion');
 $oHash->setArraycamposHidden(['accion' => 'x']);

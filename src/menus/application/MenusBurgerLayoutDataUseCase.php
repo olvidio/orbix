@@ -2,7 +2,7 @@
 
 namespace src\menus\application;
 
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
@@ -87,7 +87,7 @@ final class MenusBurgerLayoutDataUseCase
                 $full_url = ConfigGlobal::getWeb() . '/' . $url;
             }
             $parametros = $itemObject->getParametros();
-            $parametros = HashFront::add_hash($parametros, $full_url);
+            $parametros = HashF::add_hash($parametros, $full_url);
             if (!empty($full_url)) {
                 if (strstr($url, 'fnjs') !== false) {
                     $onClick = "\"$url;\"";
@@ -178,7 +178,7 @@ final class MenusBurgerLayoutDataUseCase
                 $full_url = ConfigGlobal::getWeb() . '/' . $url;
             }
             $parametros = $itemObject->getParametros();
-            $parametros = HashFront::add_hash($parametros, $full_url);
+            $parametros = HashF::add_hash($parametros, $full_url);
             if (!empty($full_url)) {
                 if (strstr($url, 'fnjs') !== false) {
                     $onClick = "$url;";

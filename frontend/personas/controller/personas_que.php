@@ -3,7 +3,7 @@ namespace frontend\personas\controller;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\PayloadCoercion;
@@ -68,7 +68,7 @@ if (!empty($Qtabla)) {
 
 $action = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/personas_select.php';
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('nombre!apellido1!apellido2!centro!exacto!cmb');
 $oHash->setcamposNo('exacto!cmb');
 $oHash->setArraycamposHidden([

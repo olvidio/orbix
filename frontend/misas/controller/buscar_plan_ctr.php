@@ -4,7 +4,7 @@ use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\misas\support\PeriodoTdHelper;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\misas\helpers\MisasDesplegableSupport;
 use frontend\shared\helpers\PayloadCoercion;
@@ -44,13 +44,13 @@ if ($cs !== '') {
 }
 
 $url_buscar_plan_ctr = 'frontend/misas/controller/buscar_plan_ctr.php';
-$oHashBuscarPlanCtr = new HashFront();
+$oHashBuscarPlanCtr = new HashF();
 $oHashBuscarPlanCtr->setUrl($url_buscar_plan_ctr);
 $oHashBuscarPlanCtr->setCamposForm('id_zona');
 $h_buscar_plan_ctr = $oHashBuscarPlanCtr->linkSinValParams();
 
 $url_ver_plan_ctr = 'frontend/misas/controller/ver_plan_ctr.php';
-$oHashPlanCtr = new HashFront();
+$oHashPlanCtr = new HashF();
 $oHashPlanCtr->setUrl($url_ver_plan_ctr);
 $oHashPlanCtr->setCamposForm('id_zona!id_ubi!periodo!empiezamin!empiezamax');
 $h_plan_ctr = $oHashPlanCtr->linkSinValParams();

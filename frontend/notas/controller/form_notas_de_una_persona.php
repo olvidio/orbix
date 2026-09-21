@@ -27,7 +27,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\session\SessionConfig;
 
@@ -130,7 +130,7 @@ $helpersRaw = $datos['helpers'] ?? [];
 /** @var array{op_genericas_json: string, condicion_js: string} $helpers */
 $helpers = is_array($helpersRaw) ? $helpersRaw : ['op_genericas_json' => '', 'condicion_js' => ''];
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $campos_chk = '!preceptor!epoca!tipo_acta';
 $camposForm = 'preceptor!nota_num!nota_max!id_situacion!acta!acta_sigla!acta_num!acta_cert_dl!acta_cert_num!tipo_acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
 $camposNo = 'refresh!id_preceptor!id_activ' . $campos_chk;
@@ -158,24 +158,24 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
 $url_posibles_opcionales = AppUrlConfig::srcBrowserUrl('/src/notas/posibles_opcionales_data');
-$oHashOpcionales = new HashFront();
+$oHashOpcionales = new HashF();
 $oHashOpcionales->setUrl($url_posibles_opcionales);
 $oHashOpcionales->setCamposForm('id_nom');
 $h_posibles_opcionales = $oHashOpcionales->linkSinValParams();
 
 $url_posibles_preceptores = AppUrlConfig::srcBrowserUrl('/src/notas/posibles_preceptores_data');
-$oHashPreceptores = new HashFront();
+$oHashPreceptores = new HashF();
 $oHashPreceptores->setUrl($url_posibles_preceptores);
 $h_posibles_preceptores = $oHashPreceptores->linkSinValParams();
 
 $url_actividad_buscar = $web . '/frontend/notas/controller/actividad_buscar_form.php';
-$oHashActivBuscar = new HashFront();
+$oHashActivBuscar = new HashF();
 $oHashActivBuscar->setUrl($url_actividad_buscar);
 $oHashActivBuscar->setCamposForm('dl_org!f_acta_iso');
 $h_actividad_buscar = $oHashActivBuscar->linkSinValParams();
 
 $url_buscar_acta = AppUrlConfig::srcBrowserUrl('/src/notas/buscar_acta');
-$oHashBuscarActa = new HashFront();
+$oHashBuscarActa = new HashF();
 $oHashBuscarActa->setUrl($url_buscar_acta);
 $oHashBuscarActa->setCamposForm('acta!acta_sigla');
 $h_buscar_acta = $oHashBuscarActa->linkSinValParams();

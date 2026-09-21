@@ -2,12 +2,12 @@
 
 namespace frontend\dossiers\helpers;
 
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 
 /**
  * Compone el bloque HTML (form + hash + tabla dossier) para dossiers_ver a partir de los datos
- * planos devueltos por `DossiersVerPantallaData`. Toda la firma de URLs con `HashFront` ocurre
+ * planos devueltos por `DossiersVerPantallaData`. Toda la firma de URLs con `HashF` ocurre
  * aquí (frontend); el backend sólo entrega `*_link_spec` y `script_ctx`.
  */
 class DossiersVerFichaDatosTabla
@@ -23,7 +23,7 @@ class DossiersVerFichaDatosTabla
 
         $script = self::buildScript($parsed['script_ctx'], $actionTablaUrl);
 
-        $oHashSelect = new HashFront();
+        $oHashSelect = new HashF();
         $oHashSelect->setCamposForm($parsed['hash_campos_form']);
         $oHashSelect->setCamposNo($parsed['hash_campos_no']);
         $oHashSelect->setArrayCamposHidden($parsed['hash_campos_hidden']);

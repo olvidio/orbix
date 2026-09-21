@@ -5,7 +5,7 @@ use frontend\usuarios\helpers\UsuariosPostInput;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -67,12 +67,12 @@ $oTabla->setCabeceras($roleForm['cabeceras']);
 $oTabla->setBotones($roleForm['botones']);
 $oTabla->setDatos($roleForm['valores']);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('que!role!sf!sv!pau!dmz');
 $oHash->setcamposNo('sf!sv!dmz!refresh');
 $oHash->setArraycamposHidden(['id_role' => $Qid_role]);
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setCamposForm('que!sel');
 $oHash1->setcamposNo('scroll_id!refresh');
 $oHash1->setArraycamposHidden(['id_role' => $Qid_role]);

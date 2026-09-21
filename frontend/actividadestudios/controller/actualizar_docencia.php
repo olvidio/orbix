@@ -18,7 +18,7 @@ use frontend\shared\helpers\FuncTablasSupport;
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
 
@@ -53,7 +53,7 @@ if (empty($continuar)) {
     $oFormP->setEmpiezaMax($Qempiezamax);
     $oFormP->setEmpiezaMin($Qempiezamin);
     $oFormP->setBoton($boton);
-    $oHashPeriodo = new HashFront();
+    $oHashPeriodo = new HashF();
     $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
     $oHashPeriodo->setCamposNo('!refresh');
     $oHashPeriodo->setArraycamposHidden(['continuar' => 1]);

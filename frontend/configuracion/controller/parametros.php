@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 use frontend\configuracion\helpers\ConfiguracionPayload;
@@ -31,7 +31,7 @@ $a_campos['url'] = $url;
 // añado los hash de cada campo
 // ----------- Periodo Curso crt -------------------
 $parametro = 'curso_crt';
-$oHashCrt = new HashFront();
+$oHashCrt = new HashF();
 $oHashCrt->setUrl($url);
 $oHashCrt->setCamposForm('ini_dia!ini_mes!fin_dia!fin_mes');
 $oHashCrt->setArrayCamposHidden(['parametro' => $parametro]);
@@ -40,7 +40,7 @@ $a_campos['oHashCrt'] = $oHashCrt;
 
 // ----------- Periodo Curso stgr -------------------
 $parametro = 'curso_stgr';
-$oHashStgr = new HashFront();
+$oHashStgr = new HashF();
 $oHashStgr->setUrl($url);
 $oHashStgr->setCamposForm('ini_dia!ini_mes!fin_dia!fin_mes');
 $oHashStgr->setArrayCamposHidden(['parametro' => $parametro]);
@@ -49,7 +49,7 @@ $a_campos['oHashStgr'] = $oHashStgr;
 
 // ----------- Jefe(s) Calendario -------------------
 $parametro = 'jefe_calendario';
-$oHashJC = new HashFront();
+$oHashJC = new HashF();
 $oHashJC->setUrl($url);
 $oHashJC->setCamposForm('valor');
 $oHashJC->setArrayCamposHidden(['parametro' => $parametro]);
@@ -58,7 +58,7 @@ $a_campos['oHashJC'] = $oHashJC;
 
 // ----------- Lugar centro(s) estudios -------------------
 $parametro = 'ce_lugar';
-$oHashCE = new HashFront();
+$oHashCE = new HashF();
 $oHashCE->setUrl($url);
 $oHashCE->setCamposForm('valor');
 $oHashCE->setArrayCamposHidden(['parametro' => $parametro]);
@@ -67,7 +67,7 @@ $a_campos['oHashCE'] = $oHashCE;
 
 // ----------- Nombre región en latin (html) -------------------
 $parametro = 'region_latin';
-$oHashRL = new HashFront();
+$oHashRL = new HashF();
 $oHashRL->setUrl($url);
 $oHashRL->setCamposForm('valor');
 $oHashRL->setArrayCamposHidden(['parametro' => $parametro]);
@@ -76,7 +76,7 @@ $a_campos['oHashRL'] = $oHashRL;
 
 // ----------- Nombre secretario estudios región stgr (certificados) -------------------
 $parametro = 'vstgr';
-$oHashVE = new HashFront();
+$oHashVE = new HashF();
 $oHashVE->setUrl($url);
 $oHashVE->setCamposForm('valor');
 $oHashVE->setArrayCamposHidden(['parametro' => $parametro]);
@@ -85,7 +85,7 @@ $a_campos['oHashVE'] = $oHashVE;
 
 // ----------- Lugar firma stgr (certificados) -------------------
 $parametro = 'lugar_firma';
-$oHashLF = new HashFront();
+$oHashLF = new HashF();
 $oHashLF->setUrl($url);
 $oHashLF->setCamposForm('valor');
 $oHashLF->setArrayCamposHidden(['parametro' => $parametro]);
@@ -94,7 +94,7 @@ $a_campos['oHashLF'] = $oHashLF;
 
 // ----------- Direccion stgr (certificados) -------------------
 $parametro = 'dir_stgr';
-$oHashDir = new HashFront();
+$oHashDir = new HashF();
 $oHashDir->setUrl($url);
 $oHashDir->setCamposForm('valor');
 $oHashDir->setArrayCamposHidden(['parametro' => $parametro]);
@@ -103,7 +103,7 @@ $a_campos['oHashDir'] = $oHashDir;
 
 // ----------- Nota de corte (sibre 1) -------------------
 $parametro = 'nota_corte';
-$oHashNC = new HashFront();
+$oHashNC = new HashF();
 $oHashNC->setUrl($url);
 $oHashNC->setCamposForm('valor');
 $oHashNC->setArrayCamposHidden(['parametro' => $parametro]);
@@ -113,7 +113,7 @@ $a_campos['oHashNC'] = $oHashNC;
 
 // ----------- Nota máxima evaluación -------------------
 $parametro = 'nota_max';
-$oHashN = new HashFront();
+$oHashN = new HashF();
 $oHashN->setUrl($url);
 $oHashN->setCamposForm('valor');
 $oHashN->setArrayCamposHidden(['parametro' => $parametro]);
@@ -122,7 +122,7 @@ $a_campos['oHashN'] = $oHashN;
 
 // ----------- Años en los que caduca el asignatura cursada  -------------------
 $parametro = 'caduca_cursada';
-$oHashC = new HashFront();
+$oHashC = new HashF();
 $oHashC->setUrl($url);
 $oHashC->setCamposForm('valor');
 $oHashC->setArrayCamposHidden(['parametro' => $parametro]);
@@ -131,7 +131,7 @@ $a_campos['oHashC'] = $oHashC;
 
 // ----------- Idioma por defecto de la dl -------------------
 $parametro = 'idioma_default';
-$oHashI = new HashFront();
+$oHashI = new HashF();
 $oHashI->setUrl($url);
 $oHashI->setCamposForm('valor');
 $oHashI->setArrayCamposHidden(['parametro' => $parametro]);
@@ -150,7 +150,7 @@ $a_campos['idioma_default'] = $val_idioma_default;
 
 // ----------- Ámbito: delegación o región -------------------
 $parametro = 'ambito';
-$oHashDLR = new HashFront();
+$oHashDLR = new HashF();
 $oHashDLR->setUrl($url);
 $oHashDLR->setCamposForm('valor');
 $oHashDLR->setArrayCamposHidden(['parametro' => $parametro]);
@@ -159,7 +159,7 @@ $a_campos['oHashDLR'] = $oHashDLR;
 
 // ----------- Gestión calendario: centralizada o por oficinas -------------------
 $parametro = 'gesCalendario';
-$oHashCal = new HashFront();
+$oHashCal = new HashF();
 $oHashCal->setUrl($url);
 $oHashCal->setCamposForm('valor');
 $oHashCal->setArrayCamposHidden(['parametro' => $parametro]);
@@ -168,7 +168,7 @@ $a_campos['oHashCal'] = $oHashCal;
 
 // ----------- Inicio Contador Certificados -------------------
 $parametro = 'ini_contador_certificados';
-$oHashC1 = new HashFront();
+$oHashC1 = new HashF();
 $oHashC1->setUrl($url);
 $oHashC1->setcamposForm('valor');
 $oHashC1->setArrayCamposHidden(['parametro' => $parametro]);

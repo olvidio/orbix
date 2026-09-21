@@ -5,7 +5,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\procesos\helpers\ProcesosPostInput;
 use frontend\procesos\helpers\ProcesosPayload;
@@ -33,7 +33,7 @@ $aQuery = [
     'obj_pau' => 'Actividad',
 ];
 array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
-$godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
+$godossiers = HashF::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
 $alt = _("ver dossiers");
 $dos = _("dossiers");
@@ -45,21 +45,21 @@ $url_generar = AppUrlConfig::srcBrowserUrl('/src/procesos/actividad_proceso_gene
 $url_get = 'frontend/procesos/controller/actividad_proceso_get.php';
 $url_update = AppUrlConfig::srcBrowserUrl('/src/procesos/actividad_proceso_update');
 
-$oHashGenerar = new HashFront();
+$oHashGenerar = new HashF();
 $oHashGenerar->setUrl($url_generar);
 $oHashGenerar->setArraycamposHidden([
     'id_activ' => $Qid_activ,
 ]);
 $param_generar = $oHashGenerar->getParamAjax();
 
-$oHashActualizar = new HashFront();
+$oHashActualizar = new HashF();
 $oHashActualizar->setUrl($url_get);
 $oHashActualizar->setArraycamposHidden([
     'id_activ' => $Qid_activ,
 ]);
 $param_actualizar = $oHashActualizar->getParamAjax();
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl($url_update);
 $oHash1->setCamposForm('force!id_item!completado!observ');
 $h_update = $oHash1->linkSinValParams();

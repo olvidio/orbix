@@ -9,11 +9,11 @@ use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 
 /**
- * Bloque dossier 3005 en frontend: HashFront, Lista, URLs firmadas.
+ * Bloque dossier 3005 en frontend: HashF, Lista, URLs firmadas.
  *
  * @see \src\actividadestudios\application\Select_asignaturas_de_una_actividad::getSegmentData()
  */
@@ -25,7 +25,7 @@ final class SelectAsignaturasDeUnaActividadRender
     public static function render(array $seg): string
     {
         $hash = isset($seg['hash']) && is_array($seg['hash']) ? $seg['hash'] : [];
-        $oHashSelect = new HashFront();
+        $oHashSelect = new HashF();
         $oHashSelect->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_form'] ?? ''));
         $oHashSelect->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_no'] ?? ''));
         $hidden = $hash['campos_hidden'] ?? [];

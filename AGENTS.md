@@ -132,7 +132,7 @@ Al mapear PDO → entidad/array, convertir fechas y json/jsonb **en el mismo blo
 - [ ] ¿Se han ejecutado y pasado los tests existentes al modificar código?
 - [ ] ¿Se mantiene la separación estricta: nada de HTML/UI en `src/`, nada de lógica de dominio en `frontend/`?
 - [ ] Si se añaden descargas GET de binarios desde `src/` pensadas para `window.open` o enlaces directos, ¿usan **`SignedDownloadToken`** + `ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET` y no exponen id sin `tk`?
-- [ ] ¿Ningún archivo nuevo en `src/application/` o `src/domain/` importa `web\Hash` para navegación UI?
+- [ ] ¿Ningún archivo nuevo en `src/application/` o `src/domain/` importa `frontend\shared\security\HashF` para navegación UI?
 - [ ] ¿Los endpoints AJAX de desplegables devuelven `opciones` como array de pares `[value, label]` (no mapa) y el JS usa el helper compartido `fnjs_construir_desplegable`?
 - [ ] ¿Columnas `date`/`time`/`timestamp` leídas con `ConverterDate::fromPg` y escritas con `toPg` (mismo `$type`; converters en `toArrayForDatabase`; sin fallback Hydratable ni `format` manual)?
 - [ ] ¿Columnas `json`/`jsonb` vía `ConverterJson` (no `json_encode`/`json_decode` sueltos para persistencia)?
@@ -308,24 +308,24 @@ Los nuevos módulos deben separar claramente la presentación (frontend) de la l
   - Sin lógica de negocio compleja: la lógica reutilizable debe quedar en `application/`
   - **Prohibido:** Generar HTML, usar `frontend/...`, o interactuar directamente con la UI.
 
-### Enlaces firmados hacia la UI (`Hash::link` / `HashF`) — directiva
+### Enlaces firmados hacia la UI (`HashF::link`) — directiva
 
-El hash de presentación (**`web\Hash`**, futuro **`frontend\shared\security\HashF`**) es responsabilidad **solo de la capa que sirve HTML al navegador** (`frontend/`, y mientras exista, `apps/` legacy). El backend de dominio/aplicación **no** debe saber cómo se construye esa firma.
+El hash de presentación (**`frontend\shared\security\HashF`**) es responsabilidad **solo de la capa que sirve HTML al navegador** (`frontend/`, y mientras exista, `apps/` legacy). El backend de dominio/aplicación **no** debe saber cómo se construye esa firma.
 
 **Reglas:**
 
-1. **`src/domain/`** y **`src/application/`**: prohibido `use web\Hash`, `Hash::link`, `Hash::cmdConParametros`, etc. para URLs hacia `frontend/...` o `apps/...`.
-2. **Patrón `link_spec`**: los listados / DTOs que hoy ponen `'ira' => Hash::link(...)` deben evolucionar a datos neutros, por ejemplo:
+1. **`src/domain/`** y **`src/application/`**: prohibido `use frontend\shared\security\HashF`, `HashF::link`, `HashF::cmdConParametros`, etc. para URLs hacia `frontend/...` o `apps/...`.
+2. **Patrón `link_spec`**: los listados / DTOs que hoy ponen `'ira' => HashF::link(...)` deben evolucionar a datos neutros, por ejemplo:
    - `'link_spec' => ['path' => 'frontend/modulo/controller/foo.php', 'query' => ['id' => 123]]`
-   El **controlador `frontend/<modulo>/controller/*.php`** (tras `PostRequest` o al montar la vista) convierte cada `link_spec` en URL firmada con `Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/' . ltrim($path, '/') . '?' . http_build_query($query))` y rellena `ira` / `href` como espera `Lista` o la plantilla.
+   El **controlador `frontend/<modulo>/controller/*.php`** (tras `PostRequest` o al montar la vista) convierte cada `link_spec` en URL firmada con `HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/' . ltrim($path, '/') . '?' . http_build_query($query))` y rellena `ira` / `href` como espera `Lista` o la plantilla.
 3. **`src/.../infrastructure/ui/http/controllers/`**: preferible devolver JSON con `link_spec` y firmar en `frontend/`; si un controlador `src` aún emite HTML legacy, documentar excepción y plan de migración.
-4. **Documentación de arquitectura**: `docs/dev/hash_arquitectura.md` (§7.4) y pilotos de referencia: `GruposLista` + `grupo_lista.php`, `usuariosLista` + `usuario_lista.php`, `UbisTablaData` + `ubis_tabla.php` (celdas con `link_spec`; además `pagina_link_spec` → `pagina_link` firmado en el controlador), `ListCtrData` + `list_ctr.php`, `ListaActivTabla` + `lista_activ_datos.php` (JSON con `link_spec`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_activ.php`, `ActividadSelectListado` + `actividad_select_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/actividad_select.php`, `ListaActividadesSgListado` + `lista_actividades_sg_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_actividades_sg.php`, `HabitacionesCamaLista` + `actividad_habitaciones_lista.php` (`reload_main_link_spec` / `distribucion_open_link_spec` / `nombres_open_link_spec`; firma con `HashFrontSignedLink` en `frontend/ubiscamas/controller/lista_habitaciones.php`; mutaciones AJAX `update_cama_asistente` y `update_solo_vip` con `HashB::sign` en el endpoint y POST `ctx`), `SelectHabitacionesCdc::getSegmentData()` + tipo `select_habitaciones_cdc` en `DossiersVerPantallaData` → `frontend/ubiscamas/helpers/SelectHabitacionesCdcRender.php` (`HashFront` + `Lista` + `SelectHabitacionesCdcUrlSigning` al pintar desde `dossiers_ver.php`), `Select_certificados_de_una_persona` + `frontend/certificados/helpers/SelectCertificadosDeUnaPersonaUrlSigning.php`, `Select_notas_de_una_persona` + `frontend/notas/helpers/SelectNotasDeUnaPersonaUrlSigning.php`, `ActivPendientesSelectData` + `activ_pendientes_select_data.php` (`link_spec` → `home_persona` en `frontend/personas/...`), `ActividadTipo` (Twig de filtros tipo actividad) + `frontend/shared/helpers/ActividadTipoTwigHashCompose.php` (tokens `h` / `h_act` para AJAX); formularios gestión tipo (`TipoActivFormNuevo` / `TipoActivFormModificar`) + `frontend/shared/helpers/TipoActivGestionFormHashCompose.php` (`getCamposHtml`), `FichaProfesorStgr` + `frontend/profesores/controller/ficha_profesor_stgr.php` (`go_cosas_link_specs` / `ficha_self_link_spec`; los enlaces a `tablaDB_lista_ver.php` reciben `go_to` firmado desde la spec de la ficha), módulo dossiers: `DossiersListaFichasData` (`href_*_link_spec`) + firma en `frontend/dossiers/controller/lista_dossiers.php` (`HashFrontSignedLink::signRowLinkSpecs`); `DossiersVerPantallaData` (datos planos: `top_data`, `ficha_segmentos` con `action_tabla_link_spec` / `ins_traslado_link_spec` / `script_ctx` / `hash`) + firma y render en `frontend/dossiers/controller/dossiers_ver.php` y helper `frontend/dossiers/helpers/DossiersVerFichaDatosTabla.php` (el `<script>` de `DatosTablaRepo` también se compone en frontend); `PermDossiersListaData` (`pagina_link_spec`) + firma en `frontend/dossiers/controller/perm_dossiers.php`; `PermDossierVerFormData` expone `go_to_link_spec` y `hash_config` y el `HashFront` se instancia en `frontend/dossiers/controller/perm_dossier_ver.php`; `DossierTipoPublicUrls::formControllerLinkSpec` en los `Select_*` que enlazan al form dossier + `frontend/dossiers/helpers/DossierTipoFormLinkSpecsSigning.php` (`HashFront::link` al renderizar `getHtml()`); helper genérico reutilizable `frontend/shared/security/HashFrontSignedLink.php` (`fromSpec`, `fromSpecMap`, `signRowLinkSpecs`).
+4. **Documentación de arquitectura**: `docs/dev/hash_arquitectura.md` (§7.4) y pilotos de referencia: `GruposLista` + `grupo_lista.php`, `usuariosLista` + `usuario_lista.php`, `UbisTablaData` + `ubis_tabla.php` (celdas con `link_spec`; además `pagina_link_spec` → `pagina_link` firmado en el controlador), `ListCtrData` + `list_ctr.php`, `ListaActivTabla` + `lista_activ_datos.php` (JSON con `link_spec`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_activ.php`, `ActividadSelectListado` + `actividad_select_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/actividad_select.php`, `ListaActividadesSgListado` + `lista_actividades_sg_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_actividades_sg.php`, `HabitacionesCamaLista` + `actividad_habitaciones_lista.php` (`reload_main_link_spec` / `distribucion_open_link_spec` / `nombres_open_link_spec`; firma con `HashFSignedLink` en `frontend/ubiscamas/controller/lista_habitaciones.php`; mutaciones AJAX `update_cama_asistente` y `update_solo_vip` con `HashB::sign` en el endpoint y POST `ctx`), `SelectHabitacionesCdc::getSegmentData()` + tipo `select_habitaciones_cdc` en `DossiersVerPantallaData` → `frontend/ubiscamas/helpers/SelectHabitacionesCdcRender.php` (`HashF` + `Lista` + `SelectHabitacionesCdcUrlSigning` al pintar desde `dossiers_ver.php`), `Select_certificados_de_una_persona` + `frontend/certificados/helpers/SelectCertificadosDeUnaPersonaUrlSigning.php`, `Select_notas_de_una_persona` + `frontend/notas/helpers/SelectNotasDeUnaPersonaUrlSigning.php`, `ActivPendientesSelectData` + `activ_pendientes_select_data.php` (`link_spec` → `home_persona` en `frontend/personas/...`), `ActividadTipo` (Twig de filtros tipo actividad) + `frontend/shared/helpers/ActividadTipoTwigHashCompose.php` (tokens `h` / `h_act` para AJAX); formularios gestión tipo (`TipoActivFormNuevo` / `TipoActivFormModificar`) + `frontend/shared/helpers/TipoActivGestionFormHashCompose.php` (`getCamposHtml`), `FichaProfesorStgr` + `frontend/profesores/controller/ficha_profesor_stgr.php` (`go_cosas_link_specs` / `ficha_self_link_spec`; los enlaces a `tablaDB_lista_ver.php` reciben `go_to` firmado desde la spec de la ficha), módulo dossiers: `DossiersListaFichasData` (`href_*_link_spec`) + firma en `frontend/dossiers/controller/lista_dossiers.php` (`HashFSignedLink::signRowLinkSpecs`); `DossiersVerPantallaData` (datos planos: `top_data`, `ficha_segmentos` con `action_tabla_link_spec` / `ins_traslado_link_spec` / `script_ctx` / `hash`) + firma y render en `frontend/dossiers/controller/dossiers_ver.php` y helper `frontend/dossiers/helpers/DossiersVerFichaDatosTabla.php` (el `<script>` de `DatosTablaRepo` también se compone en frontend); `PermDossiersListaData` (`pagina_link_spec`) + firma en `frontend/dossiers/controller/perm_dossiers.php`; `PermDossierVerFormData` expone `go_to_link_spec` y `hash_config` y el `HashF` se instancia en `frontend/dossiers/controller/perm_dossier_ver.php`; `DossierTipoPublicUrls::formControllerLinkSpec` en los `Select_*` que enlazan al form dossier + `frontend/dossiers/helpers/DossierTipoFormLinkSpecsSigning.php` (`HashF::link` al renderizar `getHtml()`); helper genérico reutilizable `frontend/shared/security/HashFSignedLink.php` (`fromSpec`, `fromSpecMap`, `signRowLinkSpecs`).
 
-**Inventario — `Hash::link` aún presente en `src/` (pendiente de alinear con esta directiva):**
+**Inventario — `HashF::link` aún presente en `src/` (pendiente de alinear con esta directiva):**
 
 | Área | Archivo |
 |------|-----------|
-| menus | `frontend/menus/controller/menus_importar_de_ficheros_a_ref.php` (ruta HTTP `/src/menus/menus_importar_de_ficheros_a_ref`) |
+| menus | `src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php` (ruta HTTP `/src/menus/menus_importar_de_ficheros_a_ref`) |
 
 Actualizar esta tabla conforme se migre cada módulo (o sustituir por enlace a `rg` en el PR si se prefiere no duplicar).
 
@@ -336,11 +336,11 @@ frontend/ubiscamas/
   controller/
     habitacion_form.php    ← Prepara datos para el formulario
     cama_form.php         ← Prepara datos para el formulario
-    lista_habitaciones.php ← PostRequest a `actividad_habitaciones_lista`; convierte `*_link_spec` con `HashFrontSignedLink`
+    lista_habitaciones.php ← PostRequest a `actividad_habitaciones_lista`; convierte `*_link_spec` con `HashFSignedLink`
   helpers/
     SelectHabitacionesCdcUrlSigning.php
-    SelectHabitacionesCdcRender.php ← Bloque dossier habitaciones (`HashFront` + `select_habitaciones_cdc.phtml`)
-    UbiscamasFormHashCompose.php ← `HashFront` para `habitacion_form` / `cama_form` (datos desde `HabitacionFormData` / `CamaFormData`)
+    SelectHabitacionesCdcRender.php ← Bloque dossier habitaciones (`HashF` + `select_habitaciones_cdc.phtml`)
+    UbiscamasFormHashCompose.php ← `HashF` para `habitacion_form` / `cama_form` (datos desde `HabitacionFormData` / `CamaFormData`)
   view/
     habitacion_form.phtml ← Vista HTML del formulario
     cama_form.phtml      ← Vista HTML del formulario
@@ -358,10 +358,10 @@ src/ubiscamas/
       HabitacionId.php
       CamaId.php
       BañoTipo.php
-    SelectHabitacionesCdc.php ← `getSegmentData()` (sin `HashFront`; render en frontend)
+    SelectHabitacionesCdc.php ← `getSegmentData()` (sin `HashF`; render en frontend)
   infrastructure/
     ui/http/controllers/
-      actividad_habitaciones_lista.php ← `link_spec` + `HashB` (`ctx` para update cama / solo VIP); sin `HashFront`
+      actividad_habitaciones_lista.php ← `link_spec` + `HashB` (`ctx` para update cama / solo VIP); sin `HashF`
     controllers/
       habitacion_update.php ← Lógica de guardado
       cama_update.php      ← Lógica de guardado
@@ -524,9 +524,9 @@ La clase **`src\permisos\domain\PermisosActividades`** nació para **tener en se
 
    **Fases de proceso (permisos on/off):** usar **`/src/actividades/actividad_fases_completadas_datos`** (`id_activ` → `fases_completadas`) antes de `getPermisoActual` / `getPermisoOn` en flujos solo-frontend (p. ej. `PrefillPermActividadesFases::desdeBackend`). Consulta unitaria equivalente a `faseCompletada`: **`/src/actividades/actividad_fase_completada_datos`** (`id_activ`, `id_fase` → `completada`).
 
-### Seguridad (Hash.php)
+### Seguridad (`HashF`)
 Cuando se añaden campos de estado en el frontend (ej: `<input type="hidden" name="scroll_id_...">`), estos campos deben excluirse de la validación del hash para evitar errores de "Hash mismatch".
-- Modificar `web\Hash::isValid()` para ignorar prefijos específicos (como `scroll_id_`).
+- Modificar `HashF::validatePost()` para ignorar prefijos específicos (como `scroll_id_`).
 - Quién **firma** URLs hacia `frontend/` no debe ser `src/application` ni `src/domain`: ver la directiva **Enlaces firmados hacia la UI** en esta misma sección.
 
 ### Pitfalls: salida parcial, JSON y tema CSS (legado)
@@ -605,7 +605,7 @@ Centralizar límites y errores de subida PHP en **`src\shared\infrastructure\ui\
 
 ### Descargas GET firmadas: `SignedDownloadToken`
 
-Para abrir en **nueva pestaña** (`window.open`) enlaces que sirven **binarios desde `src/...`** (p. ej. PDF de acta o certificado) sin depender de **`HashFront`** en la query string: el hash de formulario asume URL “completa” coherente entre quien firma y quien valida; si el enlace se construye mal o pasa por `realFullUrl`/dominios distintos, puede fallar la verificación y disparar redirección de sesión (p. ej. a inicio). La alternativa es un **token HMAC** con **caducidad** en el parámetro **`tk`**, generado en **frontend** pero verificado en el **controlador de descarga** (validación idempotente; no “consume” el token en servidor).
+Para abrir en **nueva pestaña** (`window.open`) enlaces que sirven **binarios desde `src/...`** (p. ej. PDF de acta o certificado) sin depender de **`HashF`** en la query string: el hash de formulario asume URL “completa” coherente entre quien firma y quien valida; si el enlace se construye mal o pasa por `realFullUrl`/dominios distintos, puede fallar la verificación y disparar redirección de sesión (p. ej. a inicio). La alternativa es un **token HMAC** con **caducidad** en el parámetro **`tk`**, generado en **frontend** pero verificado en el **controlador de descarga** (validación idempotente; no “consume” el token en servidor).
 
 **Helper:** `frontend\shared\helpers\SignedDownloadToken`
 
@@ -615,11 +615,11 @@ Para abrir en **nueva pestaña** (`window.open`) enlaces que sirven **binarios d
 - **Payload:** debe incluir siempre el alcance **`s`** y **`e`** (expiración); además identificadores por tipo (p. ej. `a` para id de acta, `id` para id de ítem de certificado). **`parse()`** rechaza tokens sin `s` o con firma/expiración incorrecta.
 - **URL pública:** construir con `AppUrlConfig::getPublicAppBaseUrl()` + ruta bajo `src/...` del endpoint de descarga (mismo criterio que al abrir el enlace en el navegador).
 
-**Controladores de descarga (`src/.../infrastructure/ui/http/controllers/`):** leen solo **`$_GET['tk']`**, llaman a **`SignedDownloadToken::parse($tk)`**, comprueban alcance y cargan el recurso (404 si no existe entidad o blob vacío). **No** está soportado **`key` + `h`** (HashFront) en estos endpoints; no aceptar identificadores “en claro” sin `tk` válido.
+**Controladores de descarga (`src/.../infrastructure/ui/http/controllers/`):** leen solo **`$_GET['tk']`**, llaman a **`SignedDownloadToken::parse($tk)`**, comprueban alcance y cargan el recurso (404 si no existe entidad o blob vacío). **No** está soportado **`key` + `h`** (`HashF`) en estos endpoints; no aceptar identificadores “en claro” sin `tk` válido.
 
 **UI (listas con checkbox `sel`):** en el controlador **frontend** que monta la tabla, generar un mapa **valor de `sel` → URL firmada** con los métodos estáticos del helper (`urlNotasActa`, `urlCertificadoEmitido`, `urlCertificadoRecibido`), serializarlo a JSON (`json_encode(..., JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP)`) y pasarlo a la vista; en JS, **`window.open(mapa[key])`** (patrón alineado con `frontend/notas/view/acta_select.phtml`, `frontend/certificados/view/certificado_emitido_lista.phtml`, bloque dossier renderizado por `frontend/certificados/helpers/SelectCertificadosDeUnaPersonaRender.php`).
 
-**Alcances definidos (`s`):** `notas.acta`, `cert.emitido`, `cert.recibido`. Para otros recursos GET (p. ej. planos subidos desde **`frontend/ubis/controller/plano_bytea.php`**) el flujo puede seguir siendo **`HashFront` + `plano_bytea.php`** hasta que exista alcance dedicado en `SignedDownloadToken` y endpoint en `src/`.
+**Alcances definidos (`s`):** `notas.acta`, `cert.emitido`, `cert.recibido`. Para otros recursos GET (p. ej. planos subidos desde **`frontend/ubis/controller/plano_bytea.php`**) el flujo puede seguir siendo **`HashF` + `plano_bytea.php`** hasta que exista alcance dedicado en `SignedDownloadToken` y endpoint en `src/`.
 
 ---
 
@@ -723,7 +723,7 @@ Reglas: no mezclar `*Service` en la raíz de `application/` (mover a `services/`
 - Servicios `*Dropdown` en `src/.../application/services/`: **solo** `array` value => etiqueta; no instanciar `web\Desplegable` en `src`. El `<select>` se monta en `frontend/ubis/view/*.phtml` con `web\Desplegable::desdeOpciones`, etc.
 - Lecturas agrupadas en clases `*Data` + controlador HTTP mínimo con `ContestarJson::enviar`; frontend con `PostRequest::getDataFromUrl('/src/ubis/<endpoint>', ...)`.
 - Mutaciones: JSON estándar desde `src/`; proxies frontend pueden adaptar errores para AJAX antiguo.
-- Respuesta **texto plano** solo donde el consumidor legacy lo exige: p. ej. `centros_update` con `Content-Type: text/plain` y cuerpo desde caso de uso; formularios con `web\Hash` deben usar **URL absoluta** `rtrim(ConfigGlobal::getWeb(), '/') . '/src/ubis/centros_update'` para que el hash coincida.
+- Respuesta **texto plano** solo donde el consumidor legacy lo exige: p. ej. `centros_update` con `Content-Type: text/plain` y cuerpo desde caso de uso; formularios con `HashF` deben usar **URL absoluta** `rtrim(ConfigGlobal::getWeb(), '/') . '/src/ubis/centros_update'` para que el hash coincida.
 - Direcciones: reutilizar `DireccionesResolver` donde aplique.
 
 ### URLs canónicas y menús
@@ -836,9 +836,9 @@ Funciones expuestas: `fnjs_construir_desplegable` (envelope JSON o payload direc
 6. `php -l` y prueba manual por consumidor.
 7. Consumidores **PHP** vía `PostRequest::getDataFromUrl` / `getData`: cumplir **### Endpoints JSON para `PostRequest::getDataFromUrl` / `PostRequest::getData`** (tipos en el payload decodificado; ack `'ok'` → `[]` en el caller).
 
-### Hash al mover endpoints AJAX (`Hash::getCamposHtml` vs `Hash::linkSinVal`)
-- **`Hash::getCamposHtml($aCampos, $aHidden)`**: firma campos del formulario (no la URL). Para **POST** con URL fija.
-- **`Hash::linkSinVal($url, $aCampos)`**: firma **URL + nombres de campo**; fragmento para GET/AJAX; cuidado con `?` vs `&` al concatenar.
+### Hash al mover endpoints AJAX (`HashF::getCamposHtml` vs `HashF::linkSinVal`)
+- **`$oHash->getCamposHtml()`**: firma campos del formulario (no la URL), configurados antes con `setCamposForm()` y `setArrayCamposHidden()`. Para **POST** con URL fija.
+- **`$oHash->linkSinVal()`**: firma **URL + nombres de campo**, configurados antes con `setUrl()` y `setCamposForm()`; fragmento GET/AJAX, cuidar `?` vs `&`.
 - Una URL nueva suele implicar un **Hash nuevo** (no reaprovechar el del dispatcher monolítico partido).
 - No incluir en `setCamposForm` campos que a veces no viajan.
 - Preferir pasar URLs ya construidas desde PHP a la vista (`$a_campos['url_foo']`) para facilitar `rg` y coherencia.

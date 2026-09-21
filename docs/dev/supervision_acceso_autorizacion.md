@@ -285,8 +285,7 @@ Hoy convive:
 
 | Pieza | Qué hace |
 |-------|----------|
-| `web\Hash` (legado) | Firma MD5 de campos/URL + `session_id` + sal constante. Detecta POST o query alterados. El navegador **puede** cambiar un hidden; el servidor lo rechaza si el hash no cuadra. |
-| `HashFront` | Misma idea, usada desde `frontend/`. |
+| `HashF` | Firma MD5 de campos/URL + `session_id` + sal constante. Detecta POST o query alterados. El navegador **puede** cambiar un hidden; el servidor lo rechaza si el hash no cuadra. Se usa desde `frontend/` y durante la transición también valida requests hacia `/src/...`. |
 | `HashB` (piloto) | Cápsula opaca firmada en backend (`action` + contexto + sesión). Los ids de negocio **no** van en el DOM; el frontend reenvía el token. |
 | `SignedDownloadToken` | HMAC con secreto de entorno, TTL 10 min, para PDF en nueva pestaña. |
 

@@ -7,7 +7,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\planning\support\PlanningRenderer;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
@@ -66,7 +66,7 @@ ListNavSupport::syncNavStateAt(
     ], $Qid_sel, $Qscroll_id),
 );
 
-$goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
+$goLeyenda = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
 $oPeriodo = Periodo::conCalendarioDesdeBackend();
 $oPeriodo->setDefaultAny('next');

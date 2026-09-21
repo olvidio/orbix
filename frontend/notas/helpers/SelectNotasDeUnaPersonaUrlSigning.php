@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace frontend\notas\helpers;
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 /**
  * Firma la URL "nueva nota" para {@see \frontend\notas\helpers\SelectNotasDeUnaPersonaRender}.
@@ -26,7 +26,7 @@ final class SelectNotasDeUnaPersonaUrlSigning
             if ($path !== '') {
                 $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
                 $url = $base . '/' . ltrim($path, '/') . '?' . http_build_query($query);
-                $linkInsert = HashFront::link($url);
+                $linkInsert = HashF::link($url);
             }
         }
 

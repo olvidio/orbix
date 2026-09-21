@@ -2,7 +2,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -11,22 +11,22 @@ $oPosicion = FrontBootstrap::boot();
 $web = AppUrlConfig::getPublicAppBaseUrl();
 $url_ajax = $web . '/frontend/pasarela/controller/activacion_ajax.php';
 
-$oHashDefault = new HashFront();
+$oHashDefault = new HashF();
 $oHashDefault->setUrl($url_ajax);
 $oHashDefault->setCamposForm('que');
 $h_default = $oHashDefault->linkSinValParams();
 
-$oHashMod = new HashFront();
+$oHashMod = new HashF();
 $oHashMod->setUrl($url_ajax);
 $oHashMod->setCamposForm('activacion!que!id_tipo_activ');
 $h_modificar = $oHashMod->linkSinValParams();
 
-$oHashNew = new HashFront();
+$oHashNew = new HashF();
 $oHashNew->setUrl($url_ajax);
 $oHashNew->setCamposForm('que');
 $h_nuevo = $oHashNew->linkSinValParams();
 
-$oHashLista = new HashFront();
+$oHashLista = new HashF();
 $oHashLista->setUrl($url_ajax);
 $oHashLista->setCamposForm('que');
 $h_lista = $oHashLista->linkSinValParams();
@@ -34,13 +34,13 @@ $h_lista = $oHashLista->linkSinValParams();
 // Mutaciones modificar/eliminar → /src/... con linkSinValParams (hnov=1), sin hash del formulario
 // completo (evita campos extra del widget ActividadTipo y el redirect a index).
 $url_src_excepcion_guardar = AppUrlConfig::srcBrowserUrl('/src/pasarela/activacion_excepcion_guardar');
-$oHashSrcGuardar = new HashFront();
+$oHashSrcGuardar = new HashF();
 $oHashSrcGuardar->setUrl($url_src_excepcion_guardar);
 $oHashSrcGuardar->setCamposForm('id_tipo_activ!valor');
 $h_src_excepcion_guardar = $oHashSrcGuardar->linkSinValParams();
 
 $url_src_excepcion_eliminar = AppUrlConfig::srcBrowserUrl('/src/pasarela/activacion_excepcion_eliminar');
-$oHashSrcEliminar = new HashFront();
+$oHashSrcEliminar = new HashF();
 $oHashSrcEliminar->setUrl($url_src_excepcion_eliminar);
 $oHashSrcEliminar->setCamposForm('id_tipo_activ');
 $h_src_excepcion_eliminar = $oHashSrcEliminar->linkSinValParams();

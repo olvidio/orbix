@@ -4,7 +4,7 @@ use frontend\notas\helpers\NotasFormSupport;
 use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\FuncTablasSupport;
 
@@ -60,7 +60,7 @@ switch ($tipo) {
         break;
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 
 $s_camposForm = 'simple!nombre_ubi!opcion!ciudad';
 $oHash->setcamposNo('cmb!simple!tipo_ctr!tipo_casa');
@@ -77,9 +77,9 @@ if ($simple === 2) {
 $oHash->setCamposForm($s_camposForm);
 
 if ($simple === 1) {
-    $pagina = HashFront::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(['simple' => '2']));
+    $pagina = HashF::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(['simple' => '2']));
 } else {
-    $pagina = HashFront::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(['simple' => '1']));
+    $pagina = HashF::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(['simple' => '1']));
 }
 
 $a_campos = [

@@ -4,7 +4,7 @@ use src\shared\domain\helpers\FilterPostGet;
 
 /**
  * JSON del listado para `actividad_select`: filtros POST → {@see ActividadSelectListado}.
- * Sin `HashFront` ni HTML: celdas con `link_spec` y, si aplica, `advertencia_demasiadas`
+ * Sin `HashF` ni HTML: celdas con `link_spec` y, si aplica, `advertencia_demasiadas`
  * con `*_link_spec`; el front firma y pinta en {@see frontend\actividades\controller\actividad_select}.
  */
 

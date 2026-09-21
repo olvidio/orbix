@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace frontend\configuracion\helpers;
 
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 /**
  * Completa el JSON de {@see \src\configuracion\application\ModulosSelectData} para la vista.
@@ -19,7 +19,7 @@ final class ModulosSelectRender
     public static function enrich(array $payload): array
     {
         $hm = isset($payload['hash_lista']) && is_array($payload['hash_lista']) ? $payload['hash_lista'] : [];
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hm['campos_form'] ?? ''));
         $cn = \frontend\shared\helpers\PayloadCoercion::string($hm['campos_no'] ?? '');
         if ($cn !== '') {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\application\AsignaturasMapData;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -176,7 +176,7 @@ $superada = "(n.id_situacion = " . $nota_situ_numerica . " OR n.id_situacion::te
 $comprobarNotasUrl = static function (array $params) use ($Qid_tabla, $Qplan): string {
     $params += ['id_tabla' => $Qid_tabla, 'plan_estudios' => $Qplan];
 
-    return HashFront::link(
+    return HashF::link(
         AppUrlConfig::getPublicAppBaseUrl()
         . '/frontend/notas/controller/comprobar_notas.php?'
         . http_build_query($params)

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\actividades\helpers;
 
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashFSignedLink;
 
 /**
  * Normalización de cabeceras, botones y datos para {@see \frontend\shared\web\Lista}.
@@ -117,7 +117,7 @@ final class ActividadesListaSupport
                 if (!is_array($cell) || !isset($cell['link_spec'])) {
                     continue;
                 }
-                $signed = HashFrontSignedLink::tryFromSpec($cell['link_spec']);
+                $signed = HashFSignedLink::tryFromSpec($cell['link_spec']);
                 if ($signed !== '') {
                     $cell['ira'] = $signed;
                 }

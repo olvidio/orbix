@@ -7,7 +7,7 @@ namespace frontend\ubiscamas\helpers;
 use frontend\notas\helpers\NotasFormSupport;
 use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashFSignedLink;
 
 final class UbiscamasPayload
 {
@@ -125,9 +125,9 @@ public static function linkSpec(mixed $raw): ?array
 public static function habitacionesListaFromPayload(array $data): array
 {
     $signed = [
-        'reload_main_url' => HashFrontSignedLink::tryFromSpec($data['reload_main_link_spec'] ?? null),
-        'distribucion_open_url' => HashFrontSignedLink::tryFromSpec($data['distribucion_open_link_spec'] ?? null),
-        'nombres_open_url' => HashFrontSignedLink::tryFromSpec($data['nombres_open_link_spec'] ?? null),
+        'reload_main_url' => HashFSignedLink::tryFromSpec($data['reload_main_link_spec'] ?? null),
+        'distribucion_open_url' => HashFSignedLink::tryFromSpec($data['distribucion_open_link_spec'] ?? null),
+        'nombres_open_url' => HashFSignedLink::tryFromSpec($data['nombres_open_link_spec'] ?? null),
     ];
 
     return [

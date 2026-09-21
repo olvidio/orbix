@@ -6,7 +6,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\session\SessionConfig;
 use frontend\shared\helpers\ListNavSupport;
@@ -77,11 +77,11 @@ $lugar_fecha = $presentacion['lugar_fecha'];
 $examinadores = $presentacion['examinadores'];
 $acta = $presentacion['acta'] !== '' ? $presentacion['acta'] : $acta;
 
-$caraA = HashFront::link('frontend/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'A', 'acta' => $acta, 'refresh' => 1)));
-$caraB = HashFront::link('frontend/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'B', 'acta' => $acta, 'refresh' => 1)));
+$caraA = HashF::link('frontend/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'A', 'acta' => $acta, 'refresh' => 1)));
+$caraB = HashF::link('frontend/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'B', 'acta' => $acta, 'refresh' => 1)));
 
 $url_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/acta_2_mpdf.php';
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_pdf);
 $oHash->setCamposForm('acta');
 $go_pdf = $url_pdf . "?acta=$acta&" . $oHash->linkConVal();

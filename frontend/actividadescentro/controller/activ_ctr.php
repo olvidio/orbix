@@ -18,7 +18,7 @@ use frontend\shared\helpers\FuncTablasSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
 
@@ -43,7 +43,7 @@ $signShellEndpoint = static function (array $spec): string {
         return '';
     }
     $url = AppUrlConfig::browserUrlFromAppRelative($path);
-    $oHashEndpoint = new HashFront();
+    $oHashEndpoint = new HashF();
     $oHashEndpoint->setUrl($url);
     $oHashEndpoint->setCamposForm($camposForm);
 
@@ -68,7 +68,7 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setBoton("<input type=\"button\" name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">");
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('empiezamax!empiezamin!periodo!year!tipo');
 $oHash->setCamposNo('iactividad_val!iasistentes_val');
 $oHash->setArraycamposHidden([

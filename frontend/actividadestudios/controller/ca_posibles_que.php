@@ -8,7 +8,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 
@@ -106,7 +106,7 @@ $oFormP->setDesplAnysOpcion_sel($any);
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('id_ctr_agd!id_ctr_n!texto!empiezamax!empiezamin!periodo!ref!iactividad_val!iasistentes_val!year');
 $oHash->setCamposNo('na!grupo_estudios!ca_estudios!ca_repaso!ca_todos');
 $a_camposHidden = array(

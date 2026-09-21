@@ -5,7 +5,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -58,12 +58,12 @@ $data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/direcciones
 
 if (!empty($data['sin_direccion'])) {
     echo '<table><tr><td>' . \frontend\shared\helpers\PayloadCoercion::string($data['msg_sin_direccion'] ?? '') . '</td></tr></table><br>';
-    $golistadir = HashFront::link('frontend/ubis/controller/direcciones_que.php?' . http_build_query(['id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir]));
+    $golistadir = HashF::link('frontend/ubis/controller/direcciones_que.php?' . http_build_query(['id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir]));
     echo "<span class='link' onclick=\"fnjs_update_div('#ficha','$golistadir');\">" . mb_strtoupper(_("asignar una dirección")) . "</span>";
     return;
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $campos_chk = 'cp_dcha!propietario!principal';
 $oHash->setCamposForm('a_p!c_p!direccion!f_direccion!latitud!longitud!nom_sede!observ!pais!poblacion!provincia!que');
 $oHash->setcamposNo('que!inc');
@@ -77,10 +77,10 @@ $oHash->setArraycamposHidden([
     'id_ubi' => $Qid_ubi,
 ]);
 
-$goInfo = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/ubis/controller/info_ubis.php?' . http_build_query(['id_item' => 1]));
-$golistadir = HashFront::link('frontend/ubis/controller/direcciones_que.php?' . http_build_query(['id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir]));
+$goInfo = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/ubis/controller/info_ubis.php?' . http_build_query(['id_item' => 1]));
+$golistadir = HashF::link('frontend/ubis/controller/direcciones_que.php?' . http_build_query(['id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir]));
 
-$oHashGo = new HashFront();
+$oHashGo = new HashF();
 $oHashGo->setUrl('frontend/ubis/controller/direcciones_editar.php?');
 $oHashGo->setcamposNo('inc');
 $oHashGo->setArrayCamposHidden([
@@ -94,12 +94,12 @@ $oHashGo->setArrayCamposHidden([
 $h = $oHashGo->linkConVal();
 $go_dir = 'frontend/ubis/controller/direcciones_editar.php?'.$h;
 
-$oHashPlano = new HashFront();
+$oHashPlano = new HashF();
 $oHashPlano->setUrl('frontend/ubis/controller/direcciones_asignar.php');
 $oHashPlano->setCamposForm('obj_dir!id_ubi!id_direccion');
 $h_asignar = $oHashPlano->linkSinValParams();
 
-$oHashPlano2 = new HashFront();
+$oHashPlano2 = new HashF();
 $oHashPlano2->setUrl('frontend/ubis/controller/plano_bytea.php');
 $oHashPlano2->setCamposForm('obj_dir!act!id_direccion');
 $h = $oHashPlano2->linkSinValParams();

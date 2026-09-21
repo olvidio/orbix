@@ -7,7 +7,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\CasasQue;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -68,7 +68,7 @@ $oPosicion->nav()->enter(
     ], $Qid_sel, $Qscroll_id),
 );
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!modelo!periodo!sin_activ!year');
 $oHash->setcamposNo('id_cdc');
 $oHash->setArraycamposHidden([

@@ -7,12 +7,12 @@ namespace frontend\shared\security;
 use frontend\shared\config\AppUrlConfig;
 
 /**
- * Firma link_specs (`{path, query?}`) a URLs firmadas con HashFront en el borde del frontend.
+ * Firma link_specs (`{path, query?}`) a URLs firmadas con HashF en el borde del frontend.
  *
  * Los casos de uso del backend devuelven datos planos (specs) y el frontend es el único
- * responsable de firmar: nada de HashFront en `src/`.
+ * responsable de firmar: nada de HashF en `src/`.
  */
-final class HashFrontSignedLink
+final class HashFSignedLink
 {
     public static function tryFromSpec(mixed $value): string
     {
@@ -39,7 +39,7 @@ final class HashFrontSignedLink
             $url .= '?' . http_build_query($query);
         }
 
-        return HashFront::link($url);
+        return HashF::link($url);
     }
 
     /**

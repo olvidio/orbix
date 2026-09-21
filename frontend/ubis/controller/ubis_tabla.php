@@ -4,7 +4,7 @@ use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
@@ -51,7 +51,7 @@ $oTabla->setCabeceras($tabla['cabeceras']);
 $oTabla->setBotones($tabla['botones']);
 $oTabla->setDatos($a_valores);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('!sel');
 $oHash->setCamposNo('!scroll_id');
 $oHash->setArrayCamposHidden($tabla['hash_hidden']);

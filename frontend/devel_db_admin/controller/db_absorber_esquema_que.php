@@ -4,7 +4,7 @@ namespace frontend\devel_db_admin\controller;
 
 use frontend\devel_db_admin\helpers\DevelDbAdminPayload;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
@@ -29,7 +29,7 @@ $oDesplDel->setNombre('esquema_del');
 $oDesplDel->setBlanco(true);
 $oDesplDel->setOpciones($a_posibles_esquemas);
 
-$oHashAbsorber = new HashFront();
+$oHashAbsorber = new HashF();
 $oHashAbsorber->setCamposForm('esquema_matriz!esquema_del');
 
 $msg_falta_esquemas = _("Debe elegir el esquema matriz y el esquema a disolver.");

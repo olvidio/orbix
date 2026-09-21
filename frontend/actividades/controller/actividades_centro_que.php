@@ -15,7 +15,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\CentrosQue;
 use frontend\shared\web\DesplegableArray;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
 
@@ -151,7 +151,7 @@ if ($Qperiodo === 'no') {
 $url_ajax = AppUrlConfig::getPublicAppBaseUrl() . '/programas/centro_ajax.php';
 
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url);
 $oHash->setCamposForm('empiezamin!empiezamax!iactividad_val!iasistentes_val!id_ctr!id_ctr_mas!id_ctr_num!periodo!year');
 $oHash->setCamposNo('id_ctr');

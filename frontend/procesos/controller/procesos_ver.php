@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\procesos\helpers\ProcesosPostInput;
 use frontend\procesos\helpers\ProcesosPayload;
@@ -76,7 +76,7 @@ $apiBase = AppUrlConfig::getApiBaseUrl();
 $url_update = AppUrlConfig::srcBrowserUrl('/src/procesos/procesos_update');
 $url_depende = AppUrlConfig::srcBrowserUrl('/src/procesos/procesos_depende');
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_update);
 $oHash->setCamposForm('dep_num!id_fase!id_fase_previa!id_tarea!id_tarea_previa!mensaje_requisito!id_of_responsable!status');
 $oHash->setCamposNo('id_fase_previa[]!id_tarea_previa[]!mensaje_requisito[]');
@@ -87,7 +87,7 @@ $a_camposHidden = [
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oHashDepende = new HashFront();
+$oHashDepende = new HashF();
 $oHashDepende->setUrl($url_depende);
 $oHashDepende->setCamposForm('acc!valor_depende');
 $h_depende = $oHashDepende->linkSinValParams();

@@ -16,7 +16,7 @@
 use frontend\shared\AppInstalled;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -25,7 +25,7 @@ FrontBootstrap::boot();
 
 $url_ejecutar = AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_nuevo_curso_ejecutar');
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_ejecutar);
 $oHash->setCamposForm('year_ref!year');
 $oHash->setCamposNo('ver_lista');

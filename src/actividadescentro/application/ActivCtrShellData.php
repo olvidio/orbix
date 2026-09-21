@@ -5,7 +5,7 @@ namespace src\actividadescentro\application;
 use src\shared\config\ConfigGlobal;
 
 /**
- * Tipo resuelto y especificaciones de URL para la shell de `activ_ctr` (sin `HashFront` en `src/`).
+ * Tipo resuelto y especificaciones de URL para la shell de `activ_ctr` (sin `HashF` en `src/`).
  * La firma `linkSinVal` se aplica en {@see frontend\actividadescentro\controller\activ_ctr}.
  */
 final class ActivCtrShellData

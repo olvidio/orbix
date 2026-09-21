@@ -6,7 +6,7 @@ use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -73,7 +73,7 @@ $isoFin = $zonesSelect['planning_fin_iso'];
 $oIniPlanning = \DateTimeImmutable::createFromFormat('Y-m-d', $isoIni) ?: new \DateTimeImmutable($isoIni);
 $oFinPlanning = \DateTimeImmutable::createFromFormat('Y-m-d', $isoFin) ?: new \DateTimeImmutable($isoFin);
 
-$goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
+$goLeyenda = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
 $estilos = PlanningPayload::calendarioEstilos();
 $css = $estilos['css'];

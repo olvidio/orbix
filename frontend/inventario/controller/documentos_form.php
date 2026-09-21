@@ -3,7 +3,7 @@
  * Fragmento AJAX: formulario “modificar por bloques” de documentos (inventario).
  * Antes en `src/inventario/.../documentos_form.php`.
  */
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -12,7 +12,7 @@ FrontBootstrap::boot();
 $Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');
 $Qdocumentos = (string)filter_input(INPUT_POST, 'documentos');
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $sCamposFrom = 'f_recibido!f_asignado!eliminado!f_eliminado!num_ini!num_fin';
 $oHash->setCamposForm($sCamposFrom);
 $sCamposNo = 'chk_f_recibido!chk_f_asignado!chk_eliminado!chk_f_eliminado!chk_num_ini!chk_num_fin';

@@ -6,7 +6,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
@@ -52,7 +52,7 @@ if ($presentacion['ambito_rstgr']) {
     $oCuadros->setChecked($aChecked);
     $oCuadros->setOpciones($a_delegacionesStgr);
 
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setCamposForm('dl');
     $oHash->setcamposNo('dl');
 

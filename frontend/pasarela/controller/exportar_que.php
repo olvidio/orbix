@@ -4,7 +4,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\CasasQue;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\Posicion;
@@ -92,7 +92,7 @@ $oForm->setFiltroCasas(['active' => true]);
 
 $url_ajax = $web . '/frontend/pasarela/controller/exportar_select.php';
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_ajax);
 $oHash->setCamposForm('cdc_sel!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!id_cdc!id_cdc_mas!id_cdc_num!id_tipo_activ!inom_tipo_val!isfsv_val!periodo!year');
 $oHash->setCamposNo('cdc_sel!id_cdc!id_cdc_mas!id_cdc_num');

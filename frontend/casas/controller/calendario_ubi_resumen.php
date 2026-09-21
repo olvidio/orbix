@@ -25,7 +25,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -60,17 +60,17 @@ $oDesplCasas->setOpcion_sel(CasasPayload::desplegableOpcionSel($Qid_ubi));
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
-$oHashBody = new HashFront();
+$oHashBody = new HashF();
 $oHashBody->setUrl($web . '/frontend/casas/controller/calendario_ubi_resumen_body.php');
 $oHashBody->setCamposForm('id_ubi!G!inc_t!seccion');
 $url_body = $web . '/frontend/casas/controller/calendario_ubi_resumen_body.php' . $oHashBody->linkSinVal();
 
-$oHashTarifas = new HashFront();
+$oHashTarifas = new HashF();
 $oHashTarifas->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_update_inc'));
 $oHashTarifas->setCamposForm('id_ubi!year!inc_cantidad');
 $url_tarifas = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_update_inc') . $oHashTarifas->linkSinVal();
 
-$oHashForm = new HashFront();
+$oHashForm = new HashF();
 $oHashForm->setCamposForm('id_ubi!G!inc_t!seccion');
 
 $a_campos = [

@@ -7,7 +7,7 @@ namespace frontend\shared\helpers;
 use frontend\shared\config\AppUrlConfig;
 
 /**
- * URLs de descarga GET firmadas con HMAC (`tk`), sin HashFront (`realFullUrl` / discrepancia emisor–receptor).
+ * URLs de descarga GET firmadas con HMAC (`tk`), sin HashF (`realFullUrl` / discrepancia emisor–receptor).
  * Hoy cubre PDFs servidos desde controladores específicos; el alcance `s` puede ampliarse a otros binarios.
  *
  * Producción: definir `ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET` (cadena suficientemente larga y aleatoria).

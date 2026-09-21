@@ -1,7 +1,7 @@
 <?php
 
 use frontend\shared\config\OrbixRuntime;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
@@ -30,7 +30,7 @@ if ($Qseguro === 2) {
         echo _("casi seguro que no quieres hacerlo");
         echo "<br>";
 
-        $go1 = HashFront::link('src/menus/menus_importar_de_ficheros_a_ref?' . http_build_query(array('seguro' => 1, 'todos' => 1)));
+        $go1 = HashF::link('src/menus/menus_importar_de_ficheros_a_ref?' . http_build_query(array('seguro' => 1, 'todos' => 1)));
         $html = "Esto pondrá los menus por defecto. Para todas las dl";
         $html .= "tarda mucho (3min para 10 dl), pero acaba bien (creo)";
         $html .= "<br>";
@@ -39,7 +39,7 @@ if ($Qseguro === 2) {
         echo $html;
     }
 
-    $go = HashFront::link('src/menus/menus_importar_de_ficheros_a_ref?' . http_build_query(array('seguro' => 1)));
+    $go = HashF::link('src/menus/menus_importar_de_ficheros_a_ref?' . http_build_query(array('seguro' => 1)));
     $html = "Esto pondrá los menus por defecto. Se eliminaran todas las modificaciones que se hayan hecho en los menus y grupos de menu";
     $html .= "<br>";
     $html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("continuar") . "</span>";

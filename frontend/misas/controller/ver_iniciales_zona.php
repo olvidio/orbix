@@ -3,7 +3,7 @@
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\PayloadCoercion;
 
@@ -23,7 +23,7 @@ $id_zona = \frontend\shared\helpers\PayloadCoercion::int($data['id_zona'] ?? $Qi
 // URL absoluta del endpoint backend: web\Hash genera el hash a partir de la
 // URL; el JS posteara contra la misma ruta para que el hash coincida.
 $url_update_iniciales = AppUrlConfig::srcBrowserUrl('/src/misas/update_iniciales');
-$oHashIniciales = new HashFront();
+$oHashIniciales = new HashF();
 $oHashIniciales->setUrl($url_update_iniciales);
 $oHashIniciales->setCamposForm('id_sacd!iniciales!color');
 $h_iniciales = $oHashIniciales->linkSinValParams();

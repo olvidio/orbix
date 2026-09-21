@@ -1,7 +1,7 @@
 <?php
 namespace core;
 
-use frontend\shared\security\HashFront;use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use frontend\shared\security\HashF;use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
 use src\tablonanuncios\domain\TablonAnunciosParaGM;
 use frontend\shared\web\Lista;
@@ -51,7 +51,7 @@ if (!empty($id_grupmenu)) {
 
 $txt_eliminar = _("esto borrará los anuncios seleccionados");
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('sel!mod');
 $oHash->setCamposNo('sel!scroll_id!refresh!mod!id_sel');
 $oHash->setArrayCamposHidden(['id_grupmenu' => $id_grupmenu]);

@@ -17,7 +17,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
@@ -86,10 +86,10 @@ $oTabla->setCabeceras($tabla['cabeceras']);
 $oTabla->setBotones($tabla['botones']);
 $oTabla->setDatos($a_valores);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('certificado');
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh!id_sel');
 

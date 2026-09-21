@@ -8,7 +8,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 
@@ -72,7 +72,7 @@ $oDesplRoles = new Desplegable('id_role', $a_campos_src['aOpcionesRoles'], $a_ca
 $a_campos['oDesplRoles'] = $oDesplRoles;
 $a_campos['oDesplArrayCtrCasas'] = UsuariosPayload::desplegableCasasFromData($a_campos_src['aDataDespl']);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $camposMas = $a_campos_src['camposMas'];
 $camposForm = 'que!usuario!nom_usuario!password!email!id_role';
 $a_camposHidden = array(
@@ -91,25 +91,25 @@ $a_campos['oHash'] = $oHash;
 $a_campos['oPosicion'] = $oPosicion;
 $a_campos['txt_guardar'] = $txt_guardar;
 $a_campos['txt_eliminar'] = $txt_eliminar;
-$a_campos['url_usuario_guardar'] = HashFront::link(AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_guardar')
+$a_campos['url_usuario_guardar'] = HashF::link(AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_guardar')
 );
 
 $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_grupo_lst.php';
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl($url);
 $oHash1->setCamposForm('id_usuario');
 $oHash1->setCamposNo('scroll_id');
 $a_campos['h_lst'] = $oHash1->linkSinValParams();
 
 $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_grupo_del_lst.php';
-$oHash2 = new HashFront();
+$oHash2 = new HashF();
 $oHash2->setUrl($url);
 $oHash2->setCamposForm('id_usuario');
 $oHash2->setCamposNo('scroll_id');
 $a_campos['h_del_lst'] = $oHash2->linkSinValParams();
 
 $url_usuario_update = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_check_pwd');
-$oHash3 = new HashFront();
+$oHash3 = new HashF();
 $oHash3->setUrl($url_usuario_update);
 $oHash3->setCamposForm('id_usuario!usuario!password');
 $a_campos['h_pwd'] = $oHash3->linkSinValParams();
@@ -136,11 +136,11 @@ if (!empty($Qid_usuario)) {
     $oView->renderizar('usuario_grupo.phtml', $a_campos);
 
     if (AppInstalled::is('procesos')) {
-        $url = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
+        $url = HashF::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
             . '/frontend/usuarios/controller/perm_activ_lista.php'
         );
 
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setUrl($url);
         $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'olvidar' => 1]);
         $hash_params = $oHash->getArrayCampos();
@@ -149,12 +149,12 @@ if (!empty($Qid_usuario)) {
     }
 
     if (AppInstalled::is('cambios')) {
-        $url_avisos = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
+        $url_avisos = HashF::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
             . '/frontend/cambios/controller/usuario_form_avisos.php?'
             . http_build_query(['quien' => 'usuario', 'id_usuario' => $Qid_usuario])
         );
 
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setUrl($url_avisos);
         $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'quien' => 'usuario']);
         $hash_params = $oHash->getArrayCampos();

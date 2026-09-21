@@ -4,7 +4,7 @@ use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\misas\helpers\MisasDesplegableSupport;
 
@@ -30,31 +30,31 @@ $oDesplZonasCtr->setNombre('id_zona_enc');
 $oDesplZonasCtr->setAction('fnjs_prepara_select_encargo()');
 
 $url_guardar_encargo_centro = AppUrlConfig::srcBrowserUrl('/src/misas/guardar_encargo_centro');
-$oHashGuardar = new HashFront();
+$oHashGuardar = new HashF();
 $oHashGuardar->setUrl($url_guardar_encargo_centro);
 $oHashGuardar->setCamposForm('id_item!id_enc!id_ctr');
 $h_guardar_encargo_centro = $oHashGuardar->linkSinValParams();
 
 $url_eliminar_encargo_centro = AppUrlConfig::srcBrowserUrl('/src/misas/eliminar_encargo_centro');
-$oHashEliminar = new HashFront();
+$oHashEliminar = new HashF();
 $oHashEliminar->setUrl($url_eliminar_encargo_centro);
 $oHashEliminar->setCamposForm('id_item');
 $h_eliminar_encargo_centro = $oHashEliminar->linkSinValParams();
 
 $url_desplegable_encargos = AppUrlConfig::srcBrowserUrl('/src/misas/desplegable_encargos');
-$oHashDespl = new HashFront();
+$oHashDespl = new HashF();
 $oHashDespl->setUrl($url_desplegable_encargos);
 $oHashDespl->setCamposForm('id_zona!id_enc');
 $h_desplegable_encargos = $oHashDespl->linkSinValParams();
 
 $url_desplegable_centros_zona = AppUrlConfig::srcBrowserUrl('/src/misas/desplegable_centros_zona');
-$oHashDesplCtr = new HashFront();
+$oHashDesplCtr = new HashF();
 $oHashDesplCtr->setUrl($url_desplegable_centros_zona);
 $oHashDesplCtr->setCamposForm('id_zona!id_ubi');
 $h_desplegable_centros_zona = $oHashDesplCtr->linkSinValParams();
 
 $url_ver_encargos_centros = 'frontend/misas/controller/ver_encargos_centros.php';
-$oHashVer = new HashFront();
+$oHashVer = new HashF();
 $oHashVer->setUrl($url_ver_encargos_centros);
 $oHashVer->setCamposForm('id_zona');
 $h_ver_encargos_centros = $oHashVer->linkSinValParams();

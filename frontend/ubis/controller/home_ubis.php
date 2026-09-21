@@ -5,7 +5,7 @@ use frontend\dossiers\helpers\DossiersListaRender;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -55,12 +55,12 @@ ListNavSupport::syncNavStateAt(
 $home = UbisPayload::homeFromPayload(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/home_ubis_data', ['id_ubi' => $id_ubi])));
 
 $base = AppUrlConfig::getPublicAppBaseUrl();
-$gohome = HashFront::link($base . '/frontend/ubis/controller/home_ubis.php?' . http_build_query(['id_ubi' => $id_ubi, 'obj_pau' => $home['obj_pau']]));
-$godossiers = HashFront::link($base . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query(['pau' => $home['pau'], 'id_pau' => $home['id_pau'], 'obj_pau' => $home['obj_pau']]));
+$gohome = HashF::link($base . '/frontend/ubis/controller/home_ubis.php?' . http_build_query(['id_ubi' => $id_ubi, 'obj_pau' => $home['obj_pau']]));
+$godossiers = HashF::link($base . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query(['pau' => $home['pau'], 'id_pau' => $home['id_pau'], 'obj_pau' => $home['obj_pau']]));
 
-$go_ubi = HashFront::link('frontend/ubis/controller/ubis_editar.php?' . http_build_query(['id_ubi' => $id_ubi, 'obj_pau' => $home['obj_pau'], 'bloque' => $bloque]));
-$go_dir = HashFront::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query(['id_ubi' => $id_ubi, 'id_direccion' => $home['id_direccion'], 'obj_dir' => $home['obj_dir'], 'bloque' => $bloque]));
-$go_tel = HashFront::link('frontend/ubis/controller/teleco_tabla.php?' . http_build_query(['id_ubi' => $id_ubi, 'obj_pau' => $home['obj_pau'], 'bloque' => $bloque]));
+$go_ubi = HashF::link('frontend/ubis/controller/ubis_editar.php?' . http_build_query(['id_ubi' => $id_ubi, 'obj_pau' => $home['obj_pau'], 'bloque' => $bloque]));
+$go_dir = HashF::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query(['id_ubi' => $id_ubi, 'id_direccion' => $home['id_direccion'], 'obj_dir' => $home['obj_dir'], 'bloque' => $bloque]));
+$go_tel = HashF::link('frontend/ubis/controller/teleco_tabla.php?' . http_build_query(['id_ubi' => $id_ubi, 'obj_pau' => $home['obj_pau'], 'bloque' => $bloque]));
 
 $alt = _("ver dossiers");
 $dos = _("dossiers");

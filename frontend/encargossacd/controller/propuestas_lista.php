@@ -3,7 +3,7 @@
 use frontend\shared\FrontBootstrap;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 use frontend\encargossacd\helpers\EncargossacdPostInput;
 
@@ -28,22 +28,22 @@ $oDesplGrupoCtrs->setAction('fnjs_lista_propuestas();');
 
 $url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_ajax);
 $oHash->setCamposForm('que!filtro_ctr');
 $h = $oHash->linkSinValParams();
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl($url_ajax);
 $oHash1->setCamposForm('que!tipo!id_item!id_enc!id_sacd');
 $h_cmb = $oHash1->linkSinValParams();
 
-$oHash2 = new HashFront();
+$oHash2 = new HashF();
 $oHash2->setUrl($url_ajax);
 $oHash2->setCamposForm('que!id_sacd');
 $h_info = $oHash2->linkSinValParams();
 
-$oHash3 = new HashFront();
+$oHash3 = new HashF();
 $oHash3->setUrl($url_ajax);
 $oHash3->setCamposForm('que!id_sacd!id_item!id_enc');
 $h_dedicacion = $oHash3->linkSinValParams();

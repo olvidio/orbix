@@ -1,7 +1,7 @@
 <?php
 
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
@@ -36,12 +36,12 @@ $oFormP->setEmpiezaMin(InventarioPayload::periodoSelString($Qempiezamin));
 $oFormP->setEmpiezaMax(InventarioPayload::periodoSelString($Qempiezamax));
 $oFormP->setTitulo(_('periodo de selección de actividades'));
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $sCamposForm = 'empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val!id_cdc';
 $oHash->setCamposForm($sCamposForm);
 $oHash->setCamposNo('id_cdc');
 
-$url_ver_equipajes = HashFront::link('frontend/inventario/controller/equipajes_ver.php');
+$url_ver_equipajes = HashF::link('frontend/inventario/controller/equipajes_ver.php');
 
 $a_campos = [
     'oHash' => $oHash,

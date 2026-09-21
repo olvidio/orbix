@@ -2,7 +2,7 @@
 
 namespace src\encargossacd\application;
 
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
@@ -150,7 +150,7 @@ final class PropuestasAjaxMutations
         $encargo = $this->encargoRepository->findById($id_enc);
         $desc_enc = (string) ($encargo?->getDesc_enc() ?? '');
 
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setUrl('frontend/encargossacd/controller/propuestas_ajax.php');
         $oHash->setArrayCamposHidden([
             'que' => 'dedicacion_update',

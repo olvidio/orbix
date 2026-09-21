@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 use frontend\actividades\helpers\ActividadesMutacionSupport;
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 require_once __DIR__ . '/../libs/vendor/autoload.php';
 require_once __DIR__ . '/../src/shared/load_env.php';
@@ -29,7 +29,7 @@ $_SERVER['SERVER_PORT'] = '443';
 $urlMutacionAjax = AppUrlConfig::getPublicAppBaseUrl()
     . '/frontend/actividades/controller/actividad_mutacion_ajax.php';
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($urlMutacionAjax);
 $oHash->setArraycamposHidden([
     'id_tipo_activ' => '123456',
@@ -66,7 +66,7 @@ if (!$report['h_ok']) {
 /**
  * @return list<string>
  */
-function calendario_hash_expected_field_names(HashFront $oHash): array
+function calendario_hash_expected_field_names(HashF $oHash): array
 {
     $ref = new ReflectionClass($oHash);
     $addHidden = $ref->getMethod('addHiddenToForm');
@@ -173,7 +173,7 @@ function calendario_hash_validate_report(array $aPOST): array
         }
         $aCamposHh[$campo] = $post[$campo] ?? '';
     }
-    $ref = new ReflectionClass(HashFront::class);
+    $ref = new ReflectionClass(HashF::class);
     $getHashArray = $ref->getMethod('getHashArray');
     $getHashArray->setAccessible(true);
     $h2hh = $getHashArray->invoke(null, $aCamposHh);
@@ -183,10 +183,10 @@ function calendario_hash_validate_report(array $aPOST): array
     }
 
     unset($post['PHPSESSID'], $post['atras'], $post['h'], $post['horig'], $post['hh'], $post['hhc'], $post['hhorig'], $post['hno'], $post['hchk'], $post['hnov']);
-    $post = HashFront::stripPostCamposUiDinamicos($post);
+    $post = HashF::stripPostCamposUiDinamicos($post);
     ksort($post);
 
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setCamposForm(ActividadesMutacionSupport::calendarioFormHashCamposForm());
     $oHash->setCamposNo('id_tipo_activ!mod');
     $expected = calendario_hash_expected_field_names($oHash);

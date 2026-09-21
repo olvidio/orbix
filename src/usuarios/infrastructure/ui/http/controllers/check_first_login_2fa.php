@@ -23,7 +23,7 @@ $has_2fa = $oUsuario->isHas_2fa();
 
 // Si el usuario no tiene 2FA habilitado, redirigir a la página de configuración de 2FA
 if (!$has_2fa) {
-    // Misma lógica que HashFront::cmdSinParametros: enlace usable desde sf (puerto exterior → interior).
+    // Misma lógica que HashF::cmdSinParametros: enlace usable desde sf (puerto exterior → interior).
     $url_2fa_settings = ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_2fa.php';
     $url_2fa_settings = str_replace(ConfigGlobal::$web_port_sf, ConfigGlobal::$web_port, $url_2fa_settings);
     

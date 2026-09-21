@@ -6,7 +6,7 @@ namespace frontend\dossiers\helpers;
 
 use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashFSignedLink;
 
 final class DossiersSegmentSupport
 {
@@ -47,8 +47,8 @@ final class DossiersSegmentSupport
 
         return [
             'titulo' => PayloadCoercion::string($seg['titulo'] ?? ''),
-            'action_tabla_url' => HashFrontSignedLink::tryFromSpec($seg['action_tabla_link_spec'] ?? null),
-            'ins_traslado_url' => HashFrontSignedLink::tryFromSpec($seg['ins_traslado_link_spec'] ?? null),
+            'action_tabla_url' => HashFSignedLink::tryFromSpec($seg['action_tabla_link_spec'] ?? null),
+            'ins_traslado_url' => HashFSignedLink::tryFromSpec($seg['ins_traslado_link_spec'] ?? null),
             'hash_campos_form' => PayloadCoercion::string($hash['campos_form'] ?? 'mod'),
             'hash_campos_no' => PayloadCoercion::string($hash['campos_no'] ?? ''),
             'hash_campos_hidden' => $hidden,

@@ -19,7 +19,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
@@ -102,9 +102,9 @@ foreach ($cActasData as $oActa) {
         $nombre_corto = $a_asignaturas[$id_asignatura];
     }
     $acta_2 = urlencode($acta);
-    /* Token HMAC (sin HashFront): evita redirección a inicio si emisor/receptor no coinciden en URL. */
+    /* Token HMAC (sin HashF): evita redirección a inicio si emisor/receptor no coinciden en URL. */
     $pdf_signed_urls[$acta_2] = SignedDownloadToken::urlNotasActa($acta);
-    $pagina = HashFront::link('frontend/notas/controller/acta_ver.php?' . http_build_query(array('acta' => $acta)));
+    $pagina = HashF::link('frontend/notas/controller/acta_ver.php?' . http_build_query(array('acta' => $acta)));
     $a_valores[$i]['sel'] = $acta_2;
     if (SessionPerm::havePermOficina('est')) {
         $a_valores[$i][1] = array('ira' => $pagina, 'valor' => $acta);
@@ -122,10 +122,10 @@ if ($Qscroll_id !== '') {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('acta');
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh!id_sel');
 

@@ -10,7 +10,7 @@ use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\cambios\helpers\CambiosPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\web\DesplegableArray;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -41,7 +41,7 @@ if ($Qpropiedad === 'id_ubi') {
     $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('salida!objeto!propiedad!operador!valor');
 $oHash->setCamposChk('valor_old!valor_new');
 $oHash->setCamposNo('id_ubi!id_ubi_mas!id_ubi_num');

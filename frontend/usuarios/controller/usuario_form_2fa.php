@@ -13,7 +13,7 @@ use Endroid\QrCode\Writer\PngWriter;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\UrlBaseProject;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -44,7 +44,7 @@ if (preg_match('/(.*?)\.docker/', OrbixRuntime::servidor())) {
 }
 $qr_url = get_qr_code_data($usuario, $secret_2fa, $appName);
 
-$oHashUpdate = new HashFront();
+$oHashUpdate = new HashF();
 $url_2fa_update = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_2fa_update');
 $oHashUpdate->setUrl($url_2fa_update);
 $oHashUpdate->setCamposForm('enable_2fa!verification_code');
@@ -54,7 +54,7 @@ $oHashUpdate->setArraycamposHidden([
     'secret_2fa' => $secret_2fa,
 ]);
 
-$oHashVerify = new HashFront();
+$oHashVerify = new HashF();
 $url_2fa_verify = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_2fa_verify');
 $oHashVerify->setUrl($url_2fa_verify);
 $oHashVerify->setCamposForm('secret_2fa!verification_code');

@@ -37,7 +37,7 @@ require_once("src/shared/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
 use DI\ContainerBuilder;
@@ -106,7 +106,7 @@ if (isset($primera)) {
     $isCambio_password = $oUsuario->isCambio_password();
     if ($isCambio_password) {
         // Redirigir a la página de verificación de 2FA para usuarios nuevos
-        $url_cambio_password = HashFront::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_pwd.php');
+        $url_cambio_password = HashF::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_pwd.php');
         header("Location: $url_cambio_password");
         exit();
     }
@@ -259,7 +259,7 @@ $layoutParams = [
 // Generate HTML components using the layout
 $htmlComponents = $oLayout->generateMenuHtml($layoutParams);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl(AppUrlConfig::getApiBaseUrl() . '/src/usuarios/preferencias_guardar');
 $oHash->setCamposForm('que!tabla!sPrefs');
 $h = $oHash->linkSinValParams();

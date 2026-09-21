@@ -7,7 +7,7 @@ namespace frontend\devel_db_admin\controller;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\PayloadCoercion;
@@ -28,7 +28,7 @@ $oTabla->setBotones([
     ['txt' => _('quitar registro de seleccionadas'), 'click' => 'fnjs_migraciones_quitar_registro()'],
 ]);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('sel');
 $oHash->setArrayCamposHidden([
     'modo' => '',

@@ -2,7 +2,7 @@
 
 namespace frontend\shared;
 
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use src\shared\application\RefreshCrStgrMaterializedViews;
 use src\shared\config\ConfigGlobal;
@@ -217,7 +217,7 @@ final class FrontBootstrap
 
     private static function validateRequestHash(): void
     {
-        $oValidator = new HashFront();
+        $oValidator = new HashF();
         $aData = $_POST !== [] ? $_POST : (isset($_GET['h']) ? $_GET : []);
         $oValidator->validatePost($aData);
     }

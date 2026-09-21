@@ -7,7 +7,7 @@ namespace frontend\asistentes\helpers;
 use frontend\shared\helpers\FuncTablasSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\BotonesCurso;
 use frontend\shared\web\Lista;
 use frontend\shared\helpers\PayloadCoercion;
@@ -34,7 +34,7 @@ final class SelectActividadesDeUnaPersonaRender
         );
 
         $hash = isset($seg['hash']) && is_array($seg['hash']) ? $seg['hash'] : [];
-        $oHashSelect = new HashFront();
+        $oHashSelect = new HashF();
         $oHashSelect->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($hash, 'campos_form'));
         $oHashSelect->setCamposNo(\frontend\shared\helpers\FuncTablasSupport::payloadString($hash, 'campos_no'));
         $hidden = AsistentesRenderSupport::hashCamposHidden($hash['campos_hidden'] ?? []);

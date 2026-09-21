@@ -8,7 +8,7 @@ use src\ubiscamas\domain\value_objects\CamaId;
 
 /**
  * Datos para `frontend/ubiscamas/controller/cama_form.php`.
- * La composición de `HashFront` ocurre en {@see \frontend\ubiscamas\helpers\UbiscamasFormHashCompose::camaForm}.
+ * La composición de `HashF` ocurre en {@see \frontend\ubiscamas\helpers\UbiscamasFormHashCompose::camaForm}.
  */
 final class CamaFormData
 {

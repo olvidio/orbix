@@ -3,7 +3,7 @@
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\misas\helpers\MisasDesplegableSupport;
 
@@ -23,7 +23,7 @@ $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_encargos_centros()');
 
 $url_ver_encargos_centros = 'frontend/misas/controller/ver_encargos_centros.php';
-$oHashZona = new HashFront();
+$oHashZona = new HashF();
 $oHashZona->setUrl($url_ver_encargos_centros);
 $oHashZona->setCamposForm('id_zona');
 $h_zona = $oHashZona->linkSinValParams();

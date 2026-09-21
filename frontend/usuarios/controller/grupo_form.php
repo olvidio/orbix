@@ -7,7 +7,7 @@ use frontend\shared\AppInstalled;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -61,7 +61,7 @@ if (!empty($Qid_usuario)) {
     $infoData = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/grupo_info', ['id_usuario' => $Qid_usuario]));
     $usuario = \frontend\shared\helpers\PayloadCoercion::string($infoData['nombre'] ?? '');
 
-    $oHashG = new HashFront();
+    $oHashG = new HashF();
     $oHashG->setCamposForm('que!usuario');
     $oHashG->setcamposNo('id_ctr!id_sacd!casas!refresh');
     $oHashG->setArraycamposHidden(['id_usuario' => $Qid_usuario]);
@@ -86,7 +86,7 @@ if (!empty($Qid_usuario)) {
     $oTablaPermMenu->setBotones($lista['botones']);
     $oTablaPermMenu->setDatos($lista['valores']);
 
-    $oHashPermisos = new HashFront();
+    $oHashPermisos = new HashF();
     $oHashPermisos->setCamposForm('que!sel');
     $oHashPermisos->setcamposNo('scroll_id!refresh');
     $oHashPermisos->setArraycamposHidden(['id_usuario' => $Qid_usuario]);
@@ -100,11 +100,11 @@ if (!empty($Qid_usuario)) {
     $oView->renderizar('perm_menu_lista.phtml', $a_camposP);
 
     if (AppInstalled::is('procesos')) {
-        $url = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
+        $url = HashF::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
             . '/frontend/usuarios/controller/perm_activ_lista.php'
         );
 
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setUrl($url);
         $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario]);
         $hash_params = $oHash->getArrayCampos();
@@ -112,7 +112,7 @@ if (!empty($Qid_usuario)) {
         echo PostRequest::getContent($url, $hash_params);
     }
 } else {
-    $oHashG = new HashFront();
+    $oHashG = new HashF();
     $oHashG->setCamposForm('que!usuario');
     $oHashG->setcamposNo('id_ctr!id_sacd!casas!refresh');
     $oHashG->setArraycamposHidden(['id_usuario' => '']);

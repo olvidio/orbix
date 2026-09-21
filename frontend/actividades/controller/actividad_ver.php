@@ -32,7 +32,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\actividades\helpers\PrefillPermActividadesFases;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\session\SessionPerm;
@@ -75,7 +75,7 @@ $aQuery = array(
     'obj_pau' => $Qobj_pau,
 );
 array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
-$godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
+$godossiers = HashF::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
 $permiso_des = ActividadesPermSupport::permDes();
 
@@ -326,7 +326,7 @@ if (!empty($tarifa) && !empty($calc_tarifa_inicial)) {
     }
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $camposForm = 'status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!id_tarifa!publicado!plazas!idioma';
 $camposNo = 'mod!id_tarifa';
 if ($Qmod === 'nuevo' || $Qmod === 'cambiar_tipo') {
@@ -344,7 +344,7 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_select_ubi.php');
 $oHash1->setCamposForm('dl_org!ssfsv!isfsv');
 $h = $oHash1->linkSinVal();

@@ -5,7 +5,7 @@ use frontend\usuarios\helpers\UsuariosPostInput;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -30,7 +30,7 @@ $nombre = \frontend\shared\helpers\PayloadCoercion::string($data['nombre'] ?? ''
 $menu_perm = \frontend\shared\helpers\PayloadCoercion::int($data['menu_perm'] ?? 0);
 $menu_perm_dl_map = UsuariosPayload::permMenuDlMapFromPayload($data['menu_perm_dl_map'] ?? null);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('menu_perm');
 $oHash->setArraycamposHidden([
     'id_usuario' => $Qid_usuario,

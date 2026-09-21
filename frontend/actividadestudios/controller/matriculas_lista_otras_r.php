@@ -7,7 +7,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -84,7 +84,7 @@ $titulo = $lista['titulo'];
 $msg_err = $lista['msg_err'];
 $a_valores = ActividadestudiosListaSupport::valores($lista['a_valores'], $Qid_sel, $Qscroll_id);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposNo('sel!mod!pau!scroll_id!id_sel!id_pau');
 $a_camposHidden = array(
     'id_dossier' => 3005,
@@ -104,7 +104,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$oHashApellidos = new HashFront();
+$oHashApellidos = new HashF();
 $oHashApellidos->setCamposForm('apellido1');
 $a_camposHiddenP = [];
 $oHashApellidos->setArraycamposHidden($a_camposHiddenP);

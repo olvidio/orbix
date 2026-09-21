@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\usuarios\helpers\UsuariosPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -15,9 +15,9 @@ if ($Qregion === '') {
     $Qregion = (string)(filter_input(INPUT_POST, 'region') ?? '');
 }
 
-$url_lista_backend = HashFront::cmdSinParametros(AppUrlConfig::srcBrowserUrl('/src/usuarios/mails_contactos_region')
+$url_lista_backend = HashF::cmdSinParametros(AppUrlConfig::srcBrowserUrl('/src/usuarios/mails_contactos_region')
 );
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_lista_backend);
 $oHash->setArrayCamposHidden(['region' => $Qregion]);
 $hash_params = $oHash->getArrayCampos();

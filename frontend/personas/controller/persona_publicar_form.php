@@ -7,7 +7,7 @@ use frontend\personas\helpers\PersonasPostInput;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -68,7 +68,7 @@ $oDespl->setNombre('dl');
 $oDespl->setOpciones($opciones);
 $oDespl->setBlanco(true);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('dl');
 $oHash->setArraycamposHidden([
     'id_tabla' => $id_tabla,

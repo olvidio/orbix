@@ -11,7 +11,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -21,7 +21,7 @@ $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
 $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadplazas/peticiones_incorporar'));
 $oHash->setCamposForm('sactividad!sasistentes');
 $url_incorporar = AppUrlConfig::srcBrowserUrl('/src/actividadplazas/peticiones_incorporar') . $oHash->linkSinVal();

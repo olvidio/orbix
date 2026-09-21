@@ -22,7 +22,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -84,7 +84,7 @@ if ($d['oDesplProfesores_opciones'] !== []) {
     $oDesplProfesores->setOpcion_sel(ActividadestudiosDesplegableSupport::opcionSel($id_preceptor));
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposNo('preceptor!id_preceptor!confirmar_duplicado');
 $oHash->setCamposForm($d['camposForm']);
 $oHash->setArraycamposHidden($d['a_camposHidden']);
@@ -92,13 +92,13 @@ $oHash->setArraycamposHidden($d['a_camposHidden']);
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
 $url_posibles_opcionales = AppUrlConfig::srcBrowserUrl('/src/notas/posibles_opcionales_data');
-$oHashOpcionales = new HashFront();
+$oHashOpcionales = new HashF();
 $oHashOpcionales->setUrl($url_posibles_opcionales);
 $oHashOpcionales->setCamposForm('id_nom');
 $h_posibles_opcionales = $oHashOpcionales->linkSinValParams();
 
 $url_posibles_preceptores = AppUrlConfig::srcBrowserUrl('/src/notas/posibles_preceptores_data');
-$oHashPreceptores = new HashFront();
+$oHashPreceptores = new HashF();
 $oHashPreceptores->setUrl($url_posibles_preceptores);
 $h_posibles_preceptores = $oHashPreceptores->linkSinValParams();
 

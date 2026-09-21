@@ -7,7 +7,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -74,7 +74,7 @@ $oDesplSituacion = new Desplegable();
 $oDesplSituacion->setOpciones($opciones_situacion);
 $oDesplSituacion->setNombre('situacion');
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('new_ctr!f_ctr!new_dl!f_dl!situacion');
 $oHash->setArraycamposHidden([
     'obj_pau' => $Qobj_pau,
@@ -85,9 +85,9 @@ $oHash->setArraycamposHidden([
 ]);
 
 $a_parametros = ['pau' => 'p', 'id_nom' => $id_pau, 'obj_pau' => $Qobj_pau];
-$gohome = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
+$gohome = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
 $a_parametros_dossier = ['pau' => 'p', 'id_pau' => $id_pau, 'obj_pau' => $Qobj_pau];
-$godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
+$godossiers = HashF::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 
 $a_campos = [
     'oPosicion' => $oPosicion,

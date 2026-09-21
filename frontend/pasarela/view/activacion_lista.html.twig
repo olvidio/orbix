@@ -1,7 +1,7 @@
 <script>
     {# fnjs_update_div vuelve a ejecutar este script: `let` en global fallaría por redeclaración; `window.*` solo reasigna.
        En callbacks AJAX usar siempre window.fnjs_* : el identificador global desnudo puede no resolverse igual tras reinyectar el bloque.
-       HashFront: el POST no puede llevar campos que no estén en setCamposForm del Hash (p. ej. id_tarifa, fases_on[] del widget ActividadTipo); si no, validatePost falla y la respuesta AJAX acaba siendo el HTML de index.php. #}
+       HashF: el POST no puede llevar campos que no estén en setCamposForm del Hash (p. ej. id_tarifa, fases_on[] del widget ActividadTipo); si no, validatePost falla y la respuesta AJAX acaba siendo el HTML de index.php. #}
     window.fnjs_serialize_activacion_hash = function (formulario, modo) {
         var allowTipo = {
             que: 1, id_tipo_activ: 1, extendida: 1, isfsv_val: 1, iasistentes_val: 1, iactividad_val: 1, inom_tipo_val: 1, activacion: 1,

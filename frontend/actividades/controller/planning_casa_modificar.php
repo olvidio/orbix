@@ -25,7 +25,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\actividades\helpers\PrefillPermActividadesFases;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\session\SessionPermActividades;
@@ -117,7 +117,7 @@ $actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_h
 
 $urlMutacionAjax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_mutacion_ajax.php';
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $camposForm = ActividadesMutacionSupport::calendarioFormHashCamposForm();
 $camposNo = 'id_tipo_activ!mod';
 $a_camposHidden = [
@@ -130,7 +130,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposForm($camposForm);
 $oHash->setCamposNo($camposNo);
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_select_ubi.php');
 $oHash1->setCamposForm('dl_org!isfsv!ssfsv');
 $h = $oHash1->linkSinValParams();

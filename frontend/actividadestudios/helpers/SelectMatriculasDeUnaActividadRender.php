@@ -8,11 +8,11 @@ use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 
 /**
- * Bloque dossier 3103 en frontend: HashFront, Lista agrupada, URLs.
+ * Bloque dossier 3103 en frontend: HashF, Lista agrupada, URLs.
  *
  * @see \src\actividadestudios\application\Select_matriculas_de_una_actividad::getSegmentData()
  */
@@ -32,7 +32,7 @@ final class SelectMatriculasDeUnaActividadRender
         );
 
         $hash = isset($seg['hash']) && is_array($seg['hash']) ? $seg['hash'] : [];
-        $oHashSelect = new HashFront();
+        $oHashSelect = new HashF();
         $oHashSelect->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_form'] ?? ''));
         $oHashSelect->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_no'] ?? ''));
         $hidden = $hash['campos_hidden'] ?? [];

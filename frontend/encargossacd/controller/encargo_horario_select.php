@@ -7,7 +7,7 @@ use frontend\shared\helpers\ListNavSupport;
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\web\Posicion;
@@ -104,7 +104,7 @@ foreach ($filas as $fila) {
         'desc_enc' => $desc_enc,
     ];
     array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
-    $pagina = HashFront::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
+    $pagina = HashF::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
     $a_valores[$i] = [
         'sel' => $id_item_h,
@@ -131,7 +131,7 @@ $aQuery = [
     'origen' => $Qorigen,
 ];
 array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
-$pagina_nuevo = HashFront::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
+$pagina_nuevo = HashF::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('encargo_horario_select');
@@ -140,7 +140,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $url_actualizar = 'frontend/encargossacd/controller/horario_ver.php';
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_actualizar);
 $oHash->setArrayCamposHidden([
     'mod' => $Qmod,

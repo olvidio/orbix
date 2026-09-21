@@ -3,7 +3,7 @@
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\misas\helpers\MisasDesplegableSupport;
 
@@ -19,7 +19,7 @@ $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_iniciales_sacd_zona()');
 
 $url_ver_iniciales_zona = 'frontend/misas/controller/ver_iniciales_zona.php';
-$oHashZona = new HashFront();
+$oHashZona = new HashF();
 $oHashZona->setUrl($url_ver_iniciales_zona);
 $oHashZona->setCamposForm('id_zona');
 $h_zona = $oHashZona->linkSinValParams();

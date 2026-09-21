@@ -6,7 +6,7 @@ namespace frontend\asistentes\helpers;
 
 use frontend\shared\helpers\FuncTablasSupport;
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\actividades\helpers\ActividadesListaSupport;
 
@@ -31,7 +31,7 @@ final class ActivPendientesSelectRender
         $payload['form_action'] = $formRel !== '' ? $base . '/' . ltrim($formRel, '/') : '';
 
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
-        $oHashForm = new HashFront();
+        $oHashForm = new HashF();
         $oHashForm->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_form', 'tipo_personas!sactividad!any'));
         $cn = \frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_no');
         if ($cn !== '') {

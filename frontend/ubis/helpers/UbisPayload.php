@@ -8,7 +8,7 @@ use frontend\notas\helpers\NotasFormSupport;
 use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use InvalidArgumentException;
 
 final class UbisPayload
@@ -606,7 +606,7 @@ public static function paginaLinkFromTabla(array $tabla): string
     $query = is_array($queryRaw) ? $queryRaw : [];
     $url = $baseUrl . '/' . ltrim($path, '/') . '?' . http_build_query($query);
 
-    return HashFront::link($url);
+    return HashF::link($url);
 }
 
 /**

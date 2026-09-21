@@ -3,7 +3,7 @@
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
 
@@ -29,7 +29,7 @@ $oDespl->setNombre($nom_grupo);
 $oDespl->setBlanco(true);
 $oDespl->setAction("fnjs_ver_docs('$new_id_grupo')");
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm($nom_grupo);
 $oHash->setArrayCamposHidden([
     'id_grupo' => $new_id_grupo,

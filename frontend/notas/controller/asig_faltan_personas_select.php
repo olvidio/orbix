@@ -4,7 +4,7 @@ use frontend\notas\helpers\NotasPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -105,7 +105,7 @@ foreach ($rows as $rowRaw) {
     $telfs = $row['telfs'];
     $mails = $row['mails'];
 
-    $pagina = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query(['id_nom' => $id_nom, 'obj_pau' => $obj_pau]));
+    $pagina = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query(['id_nom' => $id_nom, 'obj_pau' => $obj_pau]));
 
     $a_valores[$i] = [
         'sel' => "$id_nom#$id_tabla",
@@ -117,7 +117,7 @@ foreach ($rows as $rowRaw) {
         6 => $mails,
     ];
 }
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('sel');
 $oHash->setCamposNo('sel!scroll_id!id_sel');
 $oHash->setArraycamposHidden(['pau' => 'p', 'obj_pau' => $obj_pau]);

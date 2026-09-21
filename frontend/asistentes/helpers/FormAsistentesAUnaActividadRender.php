@@ -7,12 +7,12 @@ namespace frontend\asistentes\helpers;
 use frontend\shared\helpers\FuncTablasSupport;
 use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 
 /**
  * Completa el payload de {@see \src\asistentes\application\FormAsistentesAUnaActividadData}
- * con HTML de HashFront y Desplegable.
+ * con HTML de HashF y Desplegable.
  */
 final class FormAsistentesAUnaActividadRender
 {
@@ -45,7 +45,7 @@ final class FormAsistentesAUnaActividadRender
                 $ajaxMeta = isset($payload['ajax_propietarios']) && is_array($payload['ajax_propietarios'])
                     ? $payload['ajax_propietarios']
                     : [];
-                $oHash1 = new HashFront();
+                $oHash1 = new HashF();
                 $oHash1->setUrl($url_ajax);
                 $oHash1->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($ajaxMeta, 'campos_form', 'id_activ!id_nom'));
                 $h1 = $oHash1->linkSinValParams();
@@ -53,7 +53,7 @@ final class FormAsistentesAUnaActividadRender
         }
 
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_form'));
         $oHash->setCamposNo(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_no'));
         $hidden = AsistentesRenderSupport::hashCamposHidden($hashMain['campos_hidden'] ?? []);

@@ -15,7 +15,7 @@ use frontend\shared\helpers\PayloadCoercion;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -42,30 +42,30 @@ $dl_org = \frontend\shared\helpers\PayloadCoercion::string($_REQUEST['dl_org'] ?
 
 // URL + hash para cargar desplegables (freq/region) via AJAX.
 $url_desplegable = AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_select_ubi_desplegable');
-$oHashDespl = new HashFront();
+$oHashDespl = new HashF();
 $oHashDespl->setUrl($url_desplegable);
 $oHashDespl->setCamposForm('tipo!dl_org!isfsv');
 $h_desplegable = $oHashDespl->linkSinValParams();
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get'));
 $oHash->setCamposForm('extendida!modo!salida!entrada!isfsv');
 $h = $oHash->linkSinValParams();
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setCamposForm('id_ubi_1');
 
-$oHash2 = new HashFront();
+$oHash2 = new HashF();
 $oHash2->setCamposForm('filtro_lugar!lst_lugar');
 
-$oHash3 = new HashFront();
+$oHash3 = new HashF();
 $oHash3->setCamposForm('nombre_ubi');
 $oHash3->setArraycamposHidden([
     'tipo' => 'tot',
     'loc' => 'tot',
 ]);
 
-$oHash4 = new HashFront();
+$oHash4 = new HashF();
 $oHash4->setCamposForm('frm_4_nombre_ubi');
 
 $txt_alert = _("no olvides ajustar el nombre de la actividad");

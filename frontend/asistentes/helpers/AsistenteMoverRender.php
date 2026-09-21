@@ -7,7 +7,7 @@ namespace frontend\asistentes\helpers;
 use frontend\shared\helpers\FuncTablasSupport;
 use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 
 /**
@@ -28,7 +28,7 @@ final class AsistenteMoverRender
 
         $hm = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         if ($hm !== []) {
-            $oHash = new HashFront();
+            $oHash = new HashF();
             $cn = \frontend\shared\helpers\FuncTablasSupport::payloadString($hm, 'campos_no');
             if ($cn !== '') {
                 $oHash->setCamposNo($cn);

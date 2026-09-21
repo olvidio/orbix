@@ -4,7 +4,7 @@ use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\FuncTablasSupport;
@@ -57,11 +57,11 @@ $oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
 $oDesplAsignaturas->setNombre('id_asignatura');
 $oDesplAsignaturas->setOpcion_sel($Qid_asignatura);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setcamposChk('personas_n!personas_agd!c1!c2!lista');
 $oHash->setCamposForm('numero!b_c');
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setcamposChk('personas_n!personas_agd!c1!c2!lista');
 $oHash1->setCamposForm('id_asignatura!b_c');
 

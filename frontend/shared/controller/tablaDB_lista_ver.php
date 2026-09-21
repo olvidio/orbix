@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
@@ -192,7 +192,7 @@ if ($QaSerieBuscar === null && $Qk_buscar === null) {
     $a_campos_buscar = tablaDB_lista_ver_campos_buscar($data['a_campos'] ?? null);
     $meta = tablaDB_lista_ver_campos_buscar($a_campos_buscar['documentos_form_hash_meta'] ?? null);
     if ($meta !== []) {
-        $oHashDocForm = new HashFront();
+        $oHashDocForm = new HashF();
         $oHashDocForm->setUrl(tablaDB_lista_ver_payload_string($meta, 'url'));
         $oHashDocForm->setCamposForm(tablaDB_lista_ver_payload_string($meta, 'campos_form'));
         $a_campos_buscar['h1'] = $oHashDocForm->linkSinValParams();
@@ -206,7 +206,7 @@ if ($QaSerieBuscar === null && $Qk_buscar === null) {
     if (is_string($camposFormExtra) && $camposFormExtra !== '') {
         $camposFormBuscar .= $camposFormExtra;
     }
-    $oHashBuscar = new HashFront();
+    $oHashBuscar = new HashF();
     $oHashBuscar->setCamposForm($camposFormBuscar);
     $a_camposHiddenBuscar = array(
         'clase_info' => $Qclase_info_encoded,
@@ -251,7 +251,7 @@ $a_cabeceras = tablaDB_lista_ver_cabeceras($data['a_cabeceras'] ?? null);
 $a_botones = tablaDB_lista_ver_botones($data['a_botones'] ?? null);
 $a_valores = tablaDB_lista_ver_datos($data['a_valores'] ?? null);
 
-$oHashSelect = new HashFront();
+$oHashSelect = new HashF();
 $oHashSelect->setCamposForm('sel');
 $oHashSelect->setCamposNo('mod!sel!scroll_id!refresh');
 $a_camposHiddenSelect = array(

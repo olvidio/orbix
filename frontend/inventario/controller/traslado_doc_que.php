@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
 use frontend\shared\helpers\ListNavSupport;
@@ -31,11 +31,11 @@ $oDesplUbis->setAction('fnjs_busca_lugares_origen()');
 $oDesplUbisNew = new Desplegable('id_ubi_new', $a_opciones, '', true);
 $oDesplUbisNew->setAction('fnjs_busca_lugares_destino()');
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('id_ubi!id_ubi_new!sel');
 $oHash->setCamposNo('sel!id_lugar!id_lugar_new!id_sel');
 
-$oHashLugar = new HashFront();
+$oHashLugar = new HashF();
 $oHashLugar->setUrl(AppUrlConfig::srcBrowserUrl('/src/inventario/lista_lugares_de_ubi'));
 $oHashLugar->setCamposForm('id_ubi');
 $h_lugar = $oHashLugar->linkSinValParams();

@@ -36,8 +36,8 @@ use frontend\shared\helpers\ListNavSupport;
 use frontend\actividades\helpers\ActividadStatusId;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashF;
+use frontend\shared\security\HashFSignedLink;
 use frontend\shared\web\Lista;
 
 use frontend\shared\FrontBootstrap;
@@ -169,7 +169,7 @@ $data = PostRequest::getDataFromUrl('/src/actividades/actividad_select_datos', [
 if (!empty($data['advertencia_demasiadas']) && is_array($data['advertencia_demasiadas'])) {
     $ad = $data['advertencia_demasiadas'];
     $continuarQuery = array_merge(['continuar' => 'si'], $actividadSelectReturn);
-    $go_avant = HashFrontSignedLink::fromSpec([
+    $go_avant = HashFSignedLink::fromSpec([
         'path' => 'frontend/actividades/controller/actividad_select.php',
         'query' => $continuarQuery,
     ]);
@@ -198,7 +198,7 @@ $aTiposActiv = ActividadesListaSupport::datos($data['aTiposActiv'] ?? []);
 $extendida = (bool) ($data['extendida'] ?? false);
 $id_tipo_activ_efectivo = \frontend\shared\helpers\PayloadCoercion::string($data['id_tipo_activ_efectivo'] ?? $Qid_tipo_activ);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl('frontend/actividades/controller/actividad_que.php');
 $a_camposHidden = [
     'modo' => $Qmodo,
@@ -220,7 +220,7 @@ $a_camposHidden = [
 $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposNo('extendida!modo!que!id_tipo_activ!id_ubi!nom_activ!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar!fases_on!fases_off');
 
-$oHashSel = new HashFront();
+$oHashSel = new HashF();
 $oHashSel->setCamposForm('!mod!queSel!id_dossier');
 $oHashSel->setcamposNo('continuar!sel!scroll_id!fases_on!fases_off!id_sel');
 $a_camposHiddenSel = [

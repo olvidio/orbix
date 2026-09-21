@@ -2,7 +2,7 @@
 
 namespace src\menus\application;
 
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use src\menus\domain\PermisoMenu;
@@ -90,7 +90,7 @@ final class MenusVisiblesPorGrupoMenuUseCase
             if (!empty($url)) {
                 $full_url = ConfigGlobal::getWeb() . '/' . $url;
             }
-            $parametros = HashFront::add_hash($parametros, $full_url);
+            $parametros = HashF::add_hash($parametros, $full_url);
             $indice = count($orden);
             if ($indice == 1 && !$oPermisoMenu->visible($menu_perm ?? 0)) {
                 $num_menu_1 = $orden[0];

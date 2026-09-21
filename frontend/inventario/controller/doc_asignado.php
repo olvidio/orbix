@@ -4,7 +4,7 @@ use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
@@ -44,7 +44,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
 
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('id_tipo_doc');
 $oHash->setArrayCamposHidden(['inventario' => $Qinventario]);
 

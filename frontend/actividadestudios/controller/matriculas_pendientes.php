@@ -6,7 +6,7 @@ use frontend\actividadestudios\helpers\MatriculasListaPayload;
 use frontend\actividadestudios\helpers\ActividadestudiosRenderSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -50,7 +50,7 @@ $a_botones = array(
 
 $a_cabeceras = array(_("actividad"), _("asignatura"), _("alumno"), _("p"));
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposNo('sel!mod!pau!scroll_id!id_sel!id_pau');
 $a_camposHidden = array(
     'id_dossier' => 3005,
@@ -99,7 +99,7 @@ echo $oPosicion->mostrarNavAtras(1);
         }
     }
     fnjs_actualizar = function () {
-        var url = '<?= HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/matriculas_pendientes.php') ?>';
+        var url = '<?= HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/matriculas_pendientes.php') ?>';
         fnjs_update_div('#main', url);
     }
 </script>

@@ -6,7 +6,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
@@ -68,10 +68,10 @@ $oTabla->setCabeceras($lista['cabeceras']);
 $oTabla->setBotones($lista['botones']);
 $oTabla->setDatos($lista['valores']);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('loc!que_lista');
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setCamposForm('sel');
 $oHash1->setcamposNo('scroll_id!dl_dst');
 $a_camposHidden1 = [
@@ -80,7 +80,7 @@ $a_camposHidden1 = [
 ];
 $oHash1->setArraycamposHidden($a_camposHidden1);
 
-$oHash2 = new HashFront();
+$oHash2 = new HashF();
 $oHash2->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/ubis/controller/delegacion_que.php');
 $oHash2->setCamposForm('');
 $h2 = $oHash2->linkSinVal();

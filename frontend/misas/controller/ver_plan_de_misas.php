@@ -4,7 +4,7 @@ use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\misas\support\PeriodoTdHelper;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\misas\helpers\MisasDesplegableSupport;
 
@@ -34,12 +34,12 @@ $oDesplOrden->setNombre('orden');
 $oDesplOrden->setAction('fnjs_ver_cuadricula_zona()');
 
 $url_ver_cuadricula_zona = 'frontend/misas/controller/ver_cuadricula_zona.php';
-$oHashZonaPeriodo = new HashFront();
+$oHashZonaPeriodo = new HashF();
 $oHashZonaPeriodo->setUrl($url_ver_cuadricula_zona);
 $oHashZonaPeriodo->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden!tipo_plantilla');
 $h_zona_periodo = $oHashZonaPeriodo->linkSinValParams();
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl('frontend/misas/controller/ver_plan_de_misas.php');
 $oHash->setCamposForm('id_zona!orden!periodo!empiezamin!empiezamax');
 

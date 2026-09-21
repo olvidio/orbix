@@ -4,7 +4,7 @@ use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -45,7 +45,7 @@ $oDesplegableDescTeleco->setNombre('id_desc_teleco');
 $oDesplegableDescTeleco->setOpcion_sel($data['id_desc_teleco']);
 $oDesplegableDescTeleco->setBlanco(true);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('mod!id_tipo_teleco!id_desc_teleco!num_teleco!observ');
 $oHash->setcamposNo('mod!');
 $oHash->setArraycamposHidden([

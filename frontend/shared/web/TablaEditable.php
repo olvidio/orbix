@@ -3,7 +3,7 @@
 namespace frontend\shared\web;
 
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\helpers\FuncTablasSupport;
 
 /**
@@ -692,7 +692,7 @@ class TablaEditable
 		</div>
 		";
 
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setCamposNo('data!colName');
         $a_camposHidden = ['que' => 'update'];
         $oHash->setArraycamposHidden($a_camposHidden);

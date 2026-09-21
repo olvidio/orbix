@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../FrontBootstrap.php';
@@ -87,9 +87,9 @@ function manualEnlaceModulo(string $manualBase, string $slug): array
     $query = 'modulo=' . rawurlencode($slug);
     $fullUrl = $manualBase;
     return [
-        'href' => HashFront::link($manualBase . '?' . $query),
+        'href' => HashF::link($manualBase . '?' . $query),
         'full_url' => $fullUrl,
-        'parametros' => HashFront::add_hash($query, $fullUrl),
+        'parametros' => HashF::add_hash($query, $fullUrl),
     ];
 }
 
@@ -112,14 +112,14 @@ foreach ($modulos as $item) {
 }
 
 $enlaceIndice = [
-    'href' => HashFront::link($manualBase),
+    'href' => HashF::link($manualBase),
     'full_url' => $manualBase,
-    'parametros' => HashFront::add_hash('', $manualBase),
+    'parametros' => HashF::add_hash('', $manualBase),
 ];
 $enlaceAyuda = [
-    'href' => HashFront::link($ayudaIndexUrl),
+    'href' => HashF::link($ayudaIndexUrl),
     'full_url' => $ayudaIndexUrl,
-    'parametros' => HashFront::add_hash('', $ayudaIndexUrl),
+    'parametros' => HashF::add_hash('', $ayudaIndexUrl),
 ];
 
 $a_campos = [

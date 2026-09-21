@@ -6,7 +6,7 @@ namespace frontend\asistentes\helpers;
 
 use frontend\shared\helpers\FuncTablasSupport;
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 /**
  * Completa el JSON de {@see \src\asistentes\application\ListaUltimQueCtrData} para la vista.
@@ -25,7 +25,7 @@ final class ListaUltimQueCtrRender
         $payload['form_action'] = $formRel !== '' ? $base . '/' . ltrim($formRel, '/') : '';
 
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_form', 'id_ubi'));
         $cn = \frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_no');
         if ($cn !== '') {

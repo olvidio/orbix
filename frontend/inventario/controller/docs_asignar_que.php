@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
 use frontend\shared\helpers\ListNavSupport;
@@ -56,7 +56,7 @@ $url_no_asignados = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/
 $url_ctr = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_de_ctr.php?';
 $url_dlb = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_de_dlb.php?';
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('id_tipo_doc');
 $oHash->setArrayCamposHidden(['inventario' => $Qinventario]);
 

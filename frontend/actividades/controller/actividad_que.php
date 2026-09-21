@@ -23,7 +23,7 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\Posicion;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -112,7 +112,7 @@ $mi_dele = OrbixRuntime::miDelef((string)$Qisfsv);
 // cliente via AJAX al proxy frontend (fichero físico; funciona bajo /orbixsf),
 // que reenvía a /src/actividades/actividad_que_filtros.
 $url_filtros = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_que_filtros.php';
-$oHashFiltros = new HashFront();
+$oHashFiltros = new HashF();
 $oHashFiltros->setUrl($url_filtros);
 $oHashFiltros->setCamposForm('sfsv!modo!dl_org!filtro_lugar!id_ubi!publicado');
 $h_filtros = $oHashFiltros->linkSinValParams();
@@ -138,7 +138,7 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $sCamposForm = 'dl_org!empiezamax!empiezamin!filtro_lugar!extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year';
 if ($Qmodo !== 'importar') {
     $sCamposForm .= '!publicado';
@@ -157,14 +157,14 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $url_actividad_tipo_get = AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get');
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl($url_actividad_tipo_get);
 $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
 $h = $oHash1->linkSinValParams();
 
 $aQuery = array('que' => $Qque, 'sactividad' => $Qsactividad, 'sasistentes' => $Qsasistentes);
 array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
-$Link_borrar = HashFront::link('frontend/actividades/controller/actividad_que.php?' . http_build_query($aQuery));
+$Link_borrar = HashF::link('frontend/actividades/controller/actividad_que.php?' . http_build_query($aQuery));
 
 switch ($Qmodo) {
     case 'importar':
@@ -230,7 +230,7 @@ $fases_off_csv = '';
 if (AppInstalled::is('procesos')) {
     $proceso_installed = TRUE;
     $url_actualizar_fases = AppUrlConfig::srcBrowserUrl('/src/procesos/actividad_que_fases_ajax');
-    $oHash1 = new HashFront();
+    $oHash1 = new HashF();
     $oHash1->setUrl($url_actualizar_fases);
     $oHash1->setCamposForm('dl_propia!id_tipo_activ!selected');
     $h_actualizar_fases = $oHash1->linkSinValParams();

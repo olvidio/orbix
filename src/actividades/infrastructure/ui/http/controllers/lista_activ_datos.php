@@ -4,7 +4,7 @@ use src\shared\domain\helpers\FilterPostGet;
 
 /**
  * JSON del listado `lista_activ`: filtros POST → {@see ListaActivTabla}.
- * Sin `HashFront` ni `Lista` aquí: celdas pueden traer `link_spec`; el front firma y
+ * Sin `HashF` ni `Lista` aquí: celdas pueden traer `link_spec`; el front firma y
  * renderiza en {@see frontend\actividades\controller\lista_activ}.
  */
 

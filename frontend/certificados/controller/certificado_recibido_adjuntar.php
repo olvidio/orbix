@@ -6,7 +6,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\certificados\helpers\CertificadosPostInput;
 use frontend\certificados\helpers\CertificadosPayload;
@@ -45,7 +45,7 @@ $f_recibido = $form['f_enviado'];
 $firmado = '';
 $chk_firmado = \src\shared\domain\helpers\FuncTablasSupport::isTrue($firmado) ? 'checked' : '';
 
-$oHashCertificadoPdf = new HashFront();
+$oHashCertificadoPdf = new HashF();
 $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!f_certificado!idioma!f_recibido');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado!stack');
 $oHashCertificadoPdf->setArrayCamposHidden([

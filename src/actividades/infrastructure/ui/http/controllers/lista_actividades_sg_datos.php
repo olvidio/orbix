@@ -4,7 +4,7 @@ use src\shared\domain\helpers\FilterPostGet;
 
 /**
  * JSON del listado para `lista_actividades_sg`: POST → {@see ListaActividadesSgListado}.
- * Sin `HashFront` ni HTML: celdas con `link_spec` opcional y, si aplica, `advertencia_demasiadas`;
+ * Sin `HashF` ni HTML: celdas con `link_spec` opcional y, si aplica, `advertencia_demasiadas`;
  * el front firma y pinta en {@see frontend\actividades\controller\lista_actividades_sg}.
  */
 

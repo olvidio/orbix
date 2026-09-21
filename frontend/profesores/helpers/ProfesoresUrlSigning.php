@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\profesores\helpers;
 
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashFSignedLink;
 
 final class ProfesoresUrlSigning
 {
@@ -51,14 +51,14 @@ final class ProfesoresUrlSigning
      */
     public static function goCosasFromSpecs(mixed $fichaSelfLinkSpec, array $goCosasLinkSpecs): array
     {
-        $goTo = HashFrontSignedLink::tryFromSpec($fichaSelfLinkSpec);
+        $goTo = HashFSignedLink::tryFromSpec($fichaSelfLinkSpec);
         $goCosas = [];
         foreach ($goCosasLinkSpecs as $key => $spec) {
             if (!is_string($key) || !is_array($spec)) {
                 continue;
             }
             if ($key === 'print') {
-                $goCosas[$key] = HashFrontSignedLink::tryFromSpec($spec);
+                $goCosas[$key] = HashFSignedLink::tryFromSpec($spec);
                 continue;
             }
             $parsed = self::linkSpecFromMixed($spec);
@@ -68,7 +68,7 @@ final class ProfesoresUrlSigning
             $query = $parsed['query'] ?? [];
             $query['go_to'] = $goTo;
             $parsed['query'] = $query;
-            $goCosas[$key] = HashFrontSignedLink::fromSpec($parsed);
+            $goCosas[$key] = HashFSignedLink::fromSpec($parsed);
         }
 
         return $goCosas;

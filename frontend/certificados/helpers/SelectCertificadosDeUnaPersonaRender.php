@@ -9,7 +9,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 
 /**
@@ -49,7 +49,7 @@ final class SelectCertificadosDeUnaPersonaRender
         ]);
 
         $hashMain = isset($seg['hash_main']) && is_array($seg['hash_main']) ? $seg['hash_main'] : [];
-        $oHashSelect = new HashFront();
+        $oHashSelect = new HashF();
         $cf = \frontend\shared\helpers\PayloadCoercion::string($hashMain['campos_form'] ?? '');
         if ($cf !== '') {
             $oHashSelect->setCamposForm($cf);

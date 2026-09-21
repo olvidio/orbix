@@ -71,7 +71,7 @@
         }
 
         // Construye el body del POST a partir de la lista de campos firmados por el hash.
-        // Importante: el hash de HashFront compara EXACTAMENTE los nombres de campo. Un
+        // Importante: el hash de HashF compara EXACTAMENTE los nombres de campo. Un
         // serialize() normal OMITE selects vacíos (p. ej. id_tarifa sin tarifas) y radios
         // sin marcar (publicado/status), dejando el campo fuera del POST → el hash falla y
         // el servidor redirige a index.php (HTML). Aquí forzamos que TODOS los campos de

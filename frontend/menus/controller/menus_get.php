@@ -4,7 +4,7 @@ use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 use frontend\menus\helpers\MenusPayload;
@@ -59,7 +59,7 @@ $aOpciones = NotasFormSupport::desplegableOpciones($data['a_lista'] ?? []);
 $oDesplGM = new Desplegable('', $aOpciones, '', true);
 $oDesplGM->setNombre('gm_new');
 
-$oHash3 = new HashFront();
+$oHash3 = new HashF();
 $a_camposHidden = array(
     'filtro_grupo' => $Qfiltro_grupo,
     'nuevo' => 1
@@ -88,7 +88,7 @@ if ($page['mode'] === 'edit') {
         $oDesplMeta->setOpcion_sel($page['id_metamenu']);
     }
 
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setCamposForm("$campos_chk!orden!txt_menu!id_metamenu!parametros!perm_menu");
     $oHash->setcamposNo($campos_chk);
     $a_camposHidden = array(
@@ -98,7 +98,7 @@ if ($page['mode'] === 'edit') {
     );
     $oHash->setArraycamposHidden($a_camposHidden);
 
-    $oHash2 = new HashFront();
+    $oHash2 = new HashF();
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
         'filtro_grupo' => $Qfiltro_grupo,
@@ -106,13 +106,13 @@ if ($page['mode'] === 'edit') {
     );
     $oHash2->setArraycamposHidden($a_camposHidden);
 
-    $oHash4 = new HashFront();
+    $oHash4 = new HashF();
     $a_camposHidden = array(
         'filtro_grupo' => $Qfiltro_grupo
     );
     $oHash4->setArraycamposHidden($a_camposHidden);
 
-    $oHash5 = new HashFront();
+    $oHash5 = new HashF();
     $oHash5->setCamposForm("gm_new");
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
@@ -121,7 +121,7 @@ if ($page['mode'] === 'edit') {
     );
     $oHash5->setArraycamposHidden($a_camposHidden);
 
-    $oHash6 = new HashFront();
+    $oHash6 = new HashF();
     $oHash6->setCamposForm("gm_new");
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
@@ -154,7 +154,7 @@ if ($page['mode'] === 'edit') {
     $menuRows = $page['menu_rows'];
 
     $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/menus/controller/menus_get.php';
-    $oHash2 = new HashFront();
+    $oHash2 = new HashF();
     $oHash2->setUrl($url);
     $oHash2->setCamposForm('filtro_grupo!id_menu');
     $h2 = $oHash2->linkSinValParams();

@@ -15,7 +15,7 @@ use src\shared\config\ConfigGlobal;
 
 /**
  * Dossier actividades de una persona (1301). Datos puros para el formulario;
- * la UI (HashFront, Desplegable) se compone en frontend.
+ * la UI (HashF, Desplegable) se compone en frontend.
  */
 final class FormActividadesDeUnaPersonaData
 {

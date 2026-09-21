@@ -6,7 +6,7 @@ use frontend\actividades\helpers\ActividadTipo;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\pasarela\helpers\PasarelaPayload;
 use frontend\pasarela\helpers\PasarelaExcepcionRender;
@@ -55,7 +55,7 @@ switch ($Qque) {
         $default = \frontend\shared\helpers\PayloadCoercion::string($data['default'] ?? '');
         $txt = _('Valor por defecto en €');
 
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setUrl($url_ajax);
         $oHash->setCamposForm('default');
         $oHash->setArrayCamposHidden(['que' => 'update_default']);
@@ -82,7 +82,7 @@ switch ($Qque) {
         ]);
         $tipo_txt = PasarelaPayload::tipoTxtFromPayload($data);
 
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setUrl($url_ajax);
         $oHash->setCamposForm('id_tipo_activ!contribucion');
         $oHash->setCamposNo('id_tipo_activ!que');
@@ -118,7 +118,7 @@ switch ($Qque) {
         $oActividadTipo->setNom_tipo($Qsnom_tipo);
         $oActividadTipo->setPara('tipoactiv-tarifas');
 
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setUrl($url_ajax);
         $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!contribucion');
         $oHash->setCamposNo('id_tipo_activ!que');

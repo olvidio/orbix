@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace frontend\dossiers\helpers;
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 /**
  * Firma URLs de formulario dossier (`DossierTipoPublicUrls::formControllerLinkSpec`) en el borde
@@ -41,6 +41,6 @@ final class DossierTipoFormLinkSpecsSigning
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $url = $base . '/' . ltrim($path, '/') . '?' . http_build_query($query);
 
-        return HashFront::link($url);
+        return HashF::link($url);
     }
 }

@@ -17,7 +17,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\CasasQue;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 
 use frontend\shared\FrontBootstrap;
@@ -80,7 +80,7 @@ $oFormP->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "
 $web = AppUrlConfig::getPublicAppBaseUrl();
 $url_ajax = $web . '/frontend/casas/controller/casas_resumen_lista.php';
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $sCamposForm = 'cdc_sel!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!id_cdc!id_cdc_mas!id_cdc_num!periodo!sfsv!tipo!year!que';
 $aCamposHidden = [
     'tipo' => $Qtipo,

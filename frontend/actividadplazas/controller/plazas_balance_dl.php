@@ -15,7 +15,7 @@ use frontend\shared\helpers\AjaxJsonSupport;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\TablaEditable;
 use frontend\shared\FrontBootstrap;
 use frontend\actividadplazas\helpers\ActividadplazasPayload;
@@ -42,7 +42,7 @@ if ($dlB === '') {
 }
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
-$oHashUpdate = new HashFront();
+$oHashUpdate = new HashF();
 $oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadplazas/gestion_plazas_update'));
 $oHashUpdate->setCamposForm('data!colName');
 $UpdateUrl = AppUrlConfig::srcBrowserUrl('/src/actividadplazas/gestion_plazas_update') . $oHashUpdate->linkSinVal();

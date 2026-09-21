@@ -2,7 +2,7 @@
 
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
@@ -40,7 +40,7 @@ $oLista->setId_tabla('docs_' . $Qid_grupo);
 $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_valores);
 
-$oHashGrupo = new HashFront();
+$oHashGrupo = new HashF();
 $oHashGrupo->setArrayCamposHidden([
     'id_grupo' => $Qid_grupo,
     'id_equipaje' => $Qid_equipaje,

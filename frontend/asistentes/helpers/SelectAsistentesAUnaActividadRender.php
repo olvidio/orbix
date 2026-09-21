@@ -7,7 +7,7 @@ namespace frontend\asistentes\helpers;
 use frontend\shared\helpers\FuncTablasSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\actividades\helpers\ActividadesListaSupport;
@@ -30,7 +30,7 @@ final class SelectAsistentesAUnaActividadRender
             return '';
         }
         $url = AppUrlConfig::browserUrlFromAppRelative($path);
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setUrl($url);
         $oHash->setCamposForm($campos);
 
@@ -68,14 +68,14 @@ final class SelectAsistentesAUnaActividadRender
         ]);
 
         $hashMain = isset($seg['hash_main']) && is_array($seg['hash_main']) ? $seg['hash_main'] : [];
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_form'));
         $oHash->setCamposNo(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMain, 'campos_no'));
         $hidden = AsistentesRenderSupport::hashCamposHidden($hashMain['campos_hidden'] ?? []);
         $oHash->setArrayCamposHidden($hidden);
 
         $hashMat = isset($seg['hash_matriculas']) && is_array($seg['hash_matriculas']) ? $seg['hash_matriculas'] : [];
-        $oHash1 = new HashFront();
+        $oHash1 = new HashF();
         $oHash1->setCamposForm(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMat, 'campos_form'));
         $oHash1->setCamposNo(\frontend\shared\helpers\FuncTablasSupport::payloadString($hashMat, 'campos_no'));
         $hiddenM = AsistentesRenderSupport::hashCamposHidden($hashMat['campos_hidden'] ?? []);

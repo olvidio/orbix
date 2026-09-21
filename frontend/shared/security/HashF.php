@@ -4,7 +4,7 @@ namespace frontend\shared\security;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 
-class HashFront
+class HashF
 {
     /**
      * Campos que el JS puede inyectar al enviar (p. ej. fnjs_solo_uno) y no forman parte del hash del formulario origen.
@@ -922,7 +922,7 @@ class HashFront
 
 
     /**
-     * Calcula el HashFront(md5) del string que se le pasa. Se añade el id_session y algún carácter más.
+     * Calcula el HashF(md5) del string que se le pasa. Se añade el id_session y algún carácter más.
      * Por lo que sólo sirve para la misma session.
      *
      * @param string $str

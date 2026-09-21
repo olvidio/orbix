@@ -6,7 +6,7 @@ namespace frontend\cartaspresentacion\helpers;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 /**
  * Completa el JSON de {@see \src\cartaspresentacion\application\CartaPresentacionFormData} para la vista.
@@ -27,7 +27,7 @@ final class CartaPresentacionFormRender
             $url = AppUrlConfig::browserUrlFromAppRelative(
                 \frontend\shared\helpers\PayloadCoercion::string($paths['update'] ?? '')
             );
-            $oHash = new HashFront();
+            $oHash = new HashF();
             $oHash->setUrl($url);
             $hidden = CartaspresentacionPayload::hashCamposHidden($hu['campos_hidden'] ?? []);
             if ($hidden !== []) {

@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
 
@@ -22,7 +22,7 @@ $a_opciones = InventarioPayload::desplegableOpciones($payload['a_opciones'] ?? [
 $oDesplTiposDoc = new Desplegable('id_tipo_doc', $a_opciones, '', true);
 $oDesplTiposDoc->setAction('fnjs_docs_libres()');
 
-$oHashForm = new HashFront();
+$oHashForm = new HashF();
 $oHashForm->setCamposForm('id_tipo_doc!sel');
 $oHashForm->setCamposNo('sel');
 $oHashForm->setArrayCamposHidden([

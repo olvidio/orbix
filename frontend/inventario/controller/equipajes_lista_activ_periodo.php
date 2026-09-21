@@ -3,7 +3,7 @@
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
@@ -51,7 +51,7 @@ $oLista->setDatos($a_valores);
 $oLista->setBotones($a_botones);
 
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('sel');
 $oHash->setArrayCamposHidden([
     'id_cdc' => $Qid_cdc,

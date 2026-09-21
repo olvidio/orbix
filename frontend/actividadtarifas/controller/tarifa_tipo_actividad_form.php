@@ -22,7 +22,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -52,7 +52,7 @@ if (!$es_nuevo) {
 $api = AppUrlConfig::getApiBaseUrl();
 
 // Hash para el form (campos que se serializan en el submit):
-$oHash = new HashFront();
+$oHash = new HashF();
 $a_camposHidden = [];
 if ($es_nuevo) {
     $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));

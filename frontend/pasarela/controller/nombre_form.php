@@ -14,7 +14,7 @@
 use frontend\actividades\helpers\ActividadTipo;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -31,7 +31,7 @@ if ($Qid_item !== 'nuevo') {
     $oTipoActiv = new src\actividades\domain\entity\TiposActividades($Qid_tipo_activ);
     $isfsv = $oTipoActiv->getSfsvId();
 
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
     $oHash->setCamposForm('id_item!id_tarifa!id_tipo_activ');
     $a_camposHidden = [
@@ -40,7 +40,7 @@ if ($Qid_item !== 'nuevo') {
     ];
     $oHash->setArrayCamposHidden($a_camposHidden);
 
-    $oHash1 = new HashFront();
+    $oHash1 = new HashF();
     $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get'));
     $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
@@ -75,7 +75,7 @@ if ($Qid_item !== 'nuevo') {
     $oActividadTipo->setNom_tipo($Qsnom_tipo);
     $oActividadTipo->setPara('tipoactiv-tarifas');
 
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
     $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!nombre_actividad');
     $oHash->setCamposNo('id_tipo_activ');
@@ -84,7 +84,7 @@ if ($Qid_item !== 'nuevo') {
     ];
     $oHash->setArrayCamposHidden($a_camposHidden);
 
-    $oHash1 = new HashFront();
+    $oHash1 = new HashF();
     $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get'));
     $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
