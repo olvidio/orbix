@@ -26,12 +26,8 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `html.cantidad`
 - `html.ctx_eliminar`
 - `html.ctx_update`
-- `html.id_item`
-- `html.id_ubi`
-- `html.year`
-- `post.id_item`
+- `post.ctx_form`
 - `post.id_ubi`
-- `post.letra`
 - `post.year`
 
 ## Acciones Detectadas

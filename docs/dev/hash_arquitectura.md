@@ -128,8 +128,7 @@ GET /src/actividadtarifas/tarifa_ubi_lista →
         "id_tarifa": 3,
         "cantidad": 100,
         "tokens": {
-          "update":   "B64.SIG",
-          "eliminar": "B64.SIG"
+          "form": "B64.SIG"
         }
       },
       ...
@@ -141,18 +140,15 @@ GET /src/actividadtarifas/tarifa_ubi_lista →
 }
 ```
 
-El JS al clicar en una acción de fila hace:
+El JS al clicar en editar transporta solo la cápsula de la fila:
 
 ```javascript
-$.ajax({
-    url: '/src/actividadtarifas/tarifa_ubi_eliminar',
-    method: 'POST',
-    data: { ctx: fila.tokens.eliminar },
-    dataType: 'json'
-});
+fnjs_modificar(fila.tokens.form);
 ```
 
-No envía `id_tarifa` ni nada que identifique la fila como campo plano. Todo va dentro de `ctx`.
+El controlador frontend reenvía `ctx_form` a `/src/actividadtarifas/tarifa_ubi_form_data`; este
+abre `HashB::open($ctx_form, 'tarifa_ubi_form')` y emite los tokens `ctx_update` / `ctx_eliminar`
+del formulario. No se envía `id_item` ni nada que identifique la fila como campo plano.
 
 ### 4.4 Form de creación — cápsula sin contexto de recurso
 
@@ -260,7 +256,7 @@ Este orden minimiza el riesgo y permite verificar la arquitectura antes de aplic
 1. **Mantener `HashF`** como firma canónica de UI en `frontend/shared/security/HashF.php`, sin cambiar el protocolo actual.
 2. **Mantener `HashB`** con `sign`/`open` en `src/shared/security/HashB.php` y ampliar solo los pilotos ya acordados.
 3. **Cerrar las excepciones por módulo**: menus, encargossacd y notas ya devuelven datos sin firmar; revisar de nuevo con `rg` antes de declarar otro módulo como excepción.
-4. **Completar o declarar híbridos los pilotos** de actividadtarifas y ubiscamas antes de extender `HashB`.
+4. **Mantener completo el piloto de actividadtarifas** (tokens por fila y sin IDs planos) y completar o declarar híbrido el de ubiscamas antes de extender `HashB`.
 5. **Ola por módulo**, siguiendo el plan de migración acordado por equipo (prioridades por módulo en baselines `docs/dev/*_migracion_baseline.md`).
 6. **Última fase:** decidir si `HashB` deja de ser session-derived y pasa a HMAC con secreto de servidor.
 

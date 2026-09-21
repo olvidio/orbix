@@ -28,7 +28,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 Alta (`id_item=0` en el contexto firmado) o edición de una tarifa por casa/año. En alta el
 formulario envía `id_tarifa` y `id_serie`; en edición solo `cantidad` y `observ` (la tarifa y
 serie ya están en el registro). El controller abre la cápsula `ctx_update` y extrae de ella
-`id_item`, `id_ubi` y `year`; los hidden homónimos del formulario se ignoran (fase transitoria).
+`id_item`, `id_ubi` y `year`; el formulario no envía identificadores planos.
 
 ## Endpoint
 
@@ -47,7 +47,7 @@ serie ya están en el registro). El controller abre la cápsula `ctx_update` y e
 | `cantidad` | `string` | POST | No | Importe en euros |
 | `observ` | `string` | POST | No | Observaciones |
 
-Los campos `id_item`, `id_ubi` y `year` del POST no los usa el controller: los lee de `ctx_update`.
+El controller obtiene toda la identidad de recurso desde `ctx_update`.
 
 ## Salida
 
@@ -76,4 +76,4 @@ Los campos `id_item`, `id_ubi` y `year` del POST no los usa el controller: los l
 
 - `frontend/actividadtarifas/view/tarifa_ubi_form.phtml`: submit con `ctx_update` y campos del form.
 - `frontend/actividadtarifas/view/tarifa_ubi.phtml`: `fnjs_guardar(..., 'update')` serializa el form
-  contra la URL firmada `url_update`.
+  contra el endpoint protegido por `ctx_update`.

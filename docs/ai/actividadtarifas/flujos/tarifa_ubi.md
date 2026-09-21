@@ -105,7 +105,7 @@ Consultar y mantener las tarifas económicas de una casa para un año: listado, 
 
 ## Errores Documentados
 
-- `Operación no autorizada (cápsula HashB inválida en update/eliminar/copiar)`
+- `Operación no autorizada (cápsula HashB inválida en form/update/eliminar/copiar)`
 - `función de copiar tarifas pendiente de reimplementar`
 - `hay un error, no se ha borrado`
 - `hay un error, no se ha guardado`

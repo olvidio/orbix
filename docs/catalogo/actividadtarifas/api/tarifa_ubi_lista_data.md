@@ -11,7 +11,7 @@ entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadtarifas_TarifaUbiListaDataData"
 respuesta_data: ["a_cabeceras:array", "a_valores:array", "any_anterior:integer", "any_actual:integer", "puede_anadir:boolean", "id_ubi:integer", "year:integer", "token_copiar:string"]
-requiere_hashb: false
+requiere_hashb: true
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa_ubi_lista.php"]
 casos_uso: ["src\\actividadtarifas\\application\\TarifaUbiListaData"]
 tags: ["actividadtarifas", "tarifa", "ubi", "lista", "data"]
@@ -28,7 +28,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 Construye la tabla de tarifas de una casa/año: sección, letra+serie (enlace JS si editable),
 tipos de actividad aplicados, mínimo (siempre `0`), precio y método. Ordena por sección DESC y
-letra ASC. Emite `token_copiar` (`HashB`) si el usuario puede añadir tarifas.
+letra ASC. Emite una cápsula HashB por fila editable (`token_form`) y `token_copiar`
+si el usuario puede añadir tarifas.
 
 ## Endpoint
 
@@ -49,7 +50,9 @@ letra ASC. Emite `token_copiar` (`HashB`) si el usuario puede añadir tarifas.
 - Helper: `ContestarJson::enviar` → doble `JSON.parse` en cliente.
 - Payload en `data`:
   - `a_cabeceras`: sección, tarifa, se aplica a, mínimo, precio, método
-  - `a_valores`: filas indexadas; columna tarifa puede ser `{script, valor}` con `fnjs_modificar(id_item, letra)`
+  - `a_valores`: filas indexadas; columna tarifa editable es
+    `{script, valor, token_form}` con `fnjs_modificar(token_form)`. El identificador de fila
+    solo viaja dentro de la cápsula.
   - `any_anterior` (`year-1`), `any_actual`, `puede_anadir`, `id_ubi`, `year`
   - `token_copiar`: cápsula `HashB` para `tarifa_ubi_copiar` (vacía si no aplica)
 

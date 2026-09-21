@@ -15,7 +15,8 @@ estado_revision: "generado"
 
 ## Resumen
 
-Fragmento AJAX: tabla de `TarifaUbi` para la casa/año seleccionados; emite `token_copiar` (HashB).
+Fragmento AJAX: tabla de `TarifaUbi` para la casa/año seleccionados; emite `token_form`
+por fila editable y `token_copiar` (HashB).
 
 ## Uso En Ayuda
 

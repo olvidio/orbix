@@ -56,7 +56,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadtarifas.tarifa_ubi_form_data`
 - Controller: `src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_form_data.php`
-- Entrada: `post.id_item:string`, `post.id_ubi:integer`, `post.letra:string`, `post.year:integer`
+- Entrada: `post.ctx_form:string`, `post.id_ubi:integer`, `post.year:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadtarifas/tarifa_ubi_lista_data`

@@ -101,22 +101,14 @@ Endpoints asociados:
 
 Campos:
 - `form.cantidad`
-- `form.id_item`
 - `form.id_serie`
 - `form.id_tarifa`
-- `form.id_ubi`
-- `form.letra`
-- `form.year`
 - `html.buscar`
 - `html.cantidad`
 - `html.ctx_eliminar`
 - `html.ctx_update`
-- `html.id_item`
-- `html.id_ubi`
-- `html.year`
-- `post.id_item`
+- `post.ctx_form`
 - `post.id_ubi`
-- `post.letra`
 - `post.year`
 
 Acciones JavaScript:
