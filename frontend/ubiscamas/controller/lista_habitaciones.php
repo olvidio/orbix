@@ -51,7 +51,6 @@ $a_campos = [
     'solo_vip' => $view['solo_vip'],
     'reload_main_url' => $view['reload_main_url'],
     'url_update_cama_full' => $view['url_update_cama_full'],
-    'ctx_update_cama' => $view['ctx_update_cama'],
     'update_solo_vip_full_url' => $view['update_solo_vip_full_url'],
     'ctx_update_solo_vip' => $view['ctx_update_solo_vip'],
     'distribucion_open_url' => $view['distribucion_open_url'],

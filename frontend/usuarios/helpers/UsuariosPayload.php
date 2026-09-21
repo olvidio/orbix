@@ -9,8 +9,8 @@ use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\security\HashFront;
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashF;
+use frontend\shared\security\HashFSignedLink;
 use frontend\shared\web\Desplegable;
 use frontend\shared\web\DesplegableArray;
 use frontend\shared\session\SessionConfig;
@@ -63,7 +63,7 @@ final class UsuariosPayload
                     continue;
                 }
                 $url = $baseUrl . '/' . ltrim($path, '/') . '?' . http_build_query($query);
-                $cell['ira'] = HashFront::link($url);
+                $cell['ira'] = HashF::link($url);
                 unset($cell['link_spec']);
                 $row[$colKey] = $cell;
             }
@@ -271,7 +271,7 @@ final class UsuariosPayload
             }
         }
 
-        return HashFrontSignedLink::fromSpec($parsed);
+        return HashFSignedLink::fromSpec($parsed);
     }
 
     /**

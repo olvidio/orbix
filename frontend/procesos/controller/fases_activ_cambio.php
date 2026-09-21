@@ -4,7 +4,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -93,18 +93,18 @@ $url_lista = 'frontend/procesos/controller/fases_activ_cambio_lista.php';
 $url_update = AppUrlConfig::srcBrowserUrl('/src/procesos/fases_activ_cambio_update');
 $url_get = AppUrlConfig::srcBrowserUrl('/src/procesos/fases_activ_cambio_get');
 
-$oHashLista = new HashFront();
+$oHashLista = new HashF();
 $oHashLista->setUrl($url_lista);
 $oHashLista->setCamposForm('dl_propia!id_tipo_activ!id_fase_nueva!periodo!year!empiezamax!empiezamin!accion');
 $h_lista = $oHashLista->linkSinValParams();
 
-$oHashAct = new HashFront();
+$oHashAct = new HashF();
 $oHashAct->setUrl($url_get);
 $oHashAct->setCamposForm('dl_propia!id_tipo_activ!id_fase_sel');
 $h_actualizar = $oHashAct->linkSinValParams();
 
 $url_tipo = AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get');
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl($url_tipo);
 $oHash1->setCamposForm('extendida!modo!salida!entrada');
 $h_tipo = $oHash1->linkSinVal();

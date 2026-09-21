@@ -2,7 +2,6 @@
 
 namespace src\menus\application;
 
-use frontend\shared\security\HashFront;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use src\menus\domain\PermisoMenu;
@@ -22,7 +21,7 @@ final class MenusVisiblesPorGrupoMenuUseCase
     }
 
     /**
-     * @return list<array{id_menu:int,indice:int,menu:?string,url:string,full_url:string,parametros:?string,orden:list<int>}>
+     * @return list<array{id_menu:int,indice:int,menu:?string,url:string,link_spec:array{path:string,parametros:string}|null,orden:list<int>}>
      */
     public function __invoke(int $id_grupmenu): array
     {
@@ -86,11 +85,6 @@ final class MenusVisiblesPorGrupoMenuUseCase
                 continue;
             }
 
-            $full_url = '';
-            if (!empty($url)) {
-                $full_url = ConfigGlobal::getWeb() . '/' . $url;
-            }
-            $parametros = HashFront::add_hash($parametros, $full_url);
             $indice = count($orden);
             if ($indice == 1 && !$oPermisoMenu->visible($menu_perm ?? 0)) {
                 $num_menu_1 = $orden[0];
@@ -108,8 +102,12 @@ final class MenusVisiblesPorGrupoMenuUseCase
                 'indice' => $indice,
                 'menu' => $menu,
                 'url' => (string)($url ?? ''),
-                'full_url' => $full_url,
-                'parametros' => $parametros,
+                'link_spec' => empty($url) || str_contains((string)$url, 'fnjs')
+                    ? null
+                    : [
+                        'path' => (string)$url,
+                        'parametros' => $parametros ?? '',
+                    ],
                 'orden' => array_map(static fn ($v): int => (int)$v, $orden),
             ];
         }

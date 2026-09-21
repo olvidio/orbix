@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\PayloadCoercion;
@@ -62,7 +62,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
 }
 
 $web_depende = AppUrlConfig::srcBrowserUrl('/src/shared/tablaDB_depende_datos');
-$oHashDepende = new HashFront();
+$oHashDepende = new HashF();
 $oHashDepende->setUrl($web_depende);
 $oHashDepende->setCamposForm('clase_info!accion!valor_depende');
 $h_depende = $oHashDepende->linkSinValParams();
@@ -73,10 +73,10 @@ $aQuery['s_pkey'] = $Qs_pkey;
 if (!empty($Qobj_pau)) {
     $aQuery['obj_pau'] = $Qobj_pau;
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . "/frontend/dossiers/controller/dossiers_ver.php?$sQuery");
+    $Qgo_to = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . "/frontend/dossiers/controller/dossiers_ver.php?$sQuery");
 } else {
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = HashFront::link(AppUrlConfig::srcBrowserUrl('/src/shared/tablaDB_lista_datos') . '?' . $sQuery);
+    $Qgo_to = HashF::link(AppUrlConfig::srcBrowserUrl('/src/shared/tablaDB_lista_datos') . '?' . $sQuery);
 }
 
 $url_backend = '/src/shared/tablaDB_formulario_datos';
@@ -97,7 +97,7 @@ $explicacion_txt = $data['explicacion_txt'];
 $camposForm = is_string($data['camposForm'] ?? null) ? $data['camposForm'] : '';
 $camposNo = is_string($data['camposNo'] ?? null) ? $data['camposNo'] : '';
 
-$oHashSelect = new HashFront();
+$oHashSelect = new HashF();
 $oHashSelect->setCamposForm($camposForm);
 $oHashSelect->setCamposNo('sel!' . $camposNo);
 $a_camposHidden = array(

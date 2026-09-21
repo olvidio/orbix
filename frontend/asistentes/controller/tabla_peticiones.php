@@ -7,7 +7,7 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\asistentes\helpers\TablaPeticionesRender;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashFSignedLink;
 use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -50,7 +50,7 @@ $campos = array_merge($_GET, $_POST);
 $payload = AsistentesPayload::postData(PostRequest::getDataFromUrl('/src/asistentes/tabla_peticiones_data', $campos));
 $payload = TablaPeticionesRender::enrich($payload);
 
-$payload['reload_url'] = HashFrontSignedLink::fromSpec([
+$payload['reload_url'] = HashFSignedLink::fromSpec([
     'path' => 'frontend/asistentes/controller/tabla_peticiones.php',
     'query' => $navState,
 ]);

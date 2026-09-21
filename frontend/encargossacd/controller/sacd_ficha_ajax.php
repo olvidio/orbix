@@ -7,7 +7,7 @@ use frontend\encargossacd\helpers\EncargossacdPayload;
 
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 /**
@@ -61,7 +61,7 @@ switch ($Qque) {
         foreach ($encargos as $idx => $e) {
             $aQuery = ['id_ubi' => EncargossacdPayload::sacdFichaEncargoIdUbi($e)];
             array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
-            $encargos[$idx]['pagina_ctr'] = HashFront::link(
+            $encargos[$idx]['pagina_ctr'] = HashF::link(
                 'frontend/encargossacd/controller/ctr_ficha.php?' . http_build_query($aQuery),
             );
         }
@@ -72,7 +72,7 @@ switch ($Qque) {
         $oDesplEncs->setBlanco(EncargossacdPayload::desplegableBlanco(1));
         $oDesplEncs->setAction("fnjs_mas_enc();");
 
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setCamposForm('enc_num!mas!observ!dedic_m!dedic_t!dedic_v!id_tipo_enc');
         $oHash->setcamposNo('id_enc!mas!refresh');
         $oHash->setArrayCamposHidden([

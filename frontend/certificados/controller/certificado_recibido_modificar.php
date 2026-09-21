@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\certificados\helpers\CertificadosPayload;
 use frontend\shared\helpers\ListNavSupport;
@@ -30,7 +30,7 @@ ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildCertificadoIm
 
 $oDesplIdiomas = new Desplegable('idioma', $form['a_locales'], $form['idioma'], true);
 
-$oHashCertificadoPdf = new HashFront();
+$oHashCertificadoPdf = new HashF();
 $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!f_certificado!idioma!f_recibido');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado!stack');
 $oHashCertificadoPdf->setArrayCamposHidden([

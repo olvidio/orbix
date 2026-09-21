@@ -4,7 +4,7 @@ use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\MultipartUploadHelper;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 
@@ -131,12 +131,12 @@ case "download":
     die();
 case 'adjuntar':
 $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/ubis/controller/plano_bytea.php';
-$oHashComprobar = new HashFront();
+$oHashComprobar = new HashF();
 $oHashComprobar->setUrl($url);
 $oHashComprobar->setCamposForm('id_direccion!obj_dir!act');
 $h = $oHashComprobar->linkSinValParams();
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $a_camposHidden = [
     'id_direccion' => $Qid_direccion,
     'obj_dir' => $Qobj_dir,

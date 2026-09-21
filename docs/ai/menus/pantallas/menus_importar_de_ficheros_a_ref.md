@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Página HTML del endpoint `/src/menus/menus_importar_de_ficheros_a_ref`: confirma y ejecuta la copia masiva de menús de referencia (public) hacia `aux_*` del/los esquema(s). **No lee ficheros SQL** (ese flujo es `menus_exportar_ref_a_ficheros?accion=importar`).
+Página frontend que confirma y ejecuta, mediante `/src/menus/menus_importar_de_ficheros_a_ref`, la copia masiva de menús de referencia (public) hacia `aux_*` del/los esquema(s). **No lee ficheros SQL** (ese flujo es `menus_exportar_ref_a_ficheros?accion=importar`).
 
 ## Uso En Ayuda
 
@@ -30,7 +30,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Acciones Detectadas
 
-- `fnjs_update_div`
+- `fnjs_link_submenu`
 
 ## Capacidades Relacionadas
 

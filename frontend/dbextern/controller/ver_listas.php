@@ -4,7 +4,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\dbextern\helpers\DbexternPayload;
 
@@ -65,7 +65,7 @@ if ($new_id > 0 && isset($listas[$new_id])) {
 }
 
 $url_sincro_ver = AppUrlConfig::getApiBaseUrl() . '/frontend/dbextern/controller/ver_listas.php';
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_sincro_ver);
 $oHash->setcamposNo('mov');
 $a_camposHidden = [
@@ -77,19 +77,19 @@ $a_camposHidden = [
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $url_sincro_crear = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_crear');
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl($url_sincro_crear);
 $oHash1->setCamposForm('id_nom_listas!id_orbix!region!dl!id!tipo_persona');
 $h_crear = $oHash1->linkSinValParams();
 
 $url_sincro_unir = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_unir');
-$oHash2 = new HashFront();
+$oHash2 = new HashF();
 $oHash2->setUrl($url_sincro_unir);
 $oHash2->setCamposForm('id_nom_listas!id_orbix!region!dl!id!tipo_persona');
 $h_unir = $oHash2->linkSinValParams();
 
 $url_sincro_crear_todos = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_crear_todos');
-$oHash3 = new HashFront();
+$oHash3 = new HashF();
 $oHash3->setUrl($url_sincro_crear_todos);
 $oHash3->setCamposForm('region!dl!tipo_persona');
 $h_crear_todos = $oHash3->linkSinValParams();

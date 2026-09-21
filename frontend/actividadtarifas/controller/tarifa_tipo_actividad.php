@@ -15,7 +15,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -24,22 +24,22 @@ $oPosicion = FrontBootstrap::boot();
 $public = AppUrlConfig::getPublicAppBaseUrl();
 $api = AppUrlConfig::getApiBaseUrl();
 
-$oHashLista = new HashFront();
+$oHashLista = new HashF();
 $oHashLista->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php');
 $oHashLista->setCamposForm('');
 $h_lista = $oHashLista->linkSinVal();
 
-$oHashForm = new HashFront();
+$oHashForm = new HashF();
 $oHashForm->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php');
 $oHashForm->setCamposForm('id_item');
 $h_form = $oHashForm->linkSinVal();
 
-$oHashUpdate = new HashFront();
+$oHashUpdate = new HashF();
 $oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
 $oHashUpdate->setCamposForm('id_item!id_tarifa!id_tipo_activ');
 $url_update = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update') . $oHashUpdate->linkSinVal();
 
-$oHashEliminar = new HashFront();
+$oHashEliminar = new HashF();
 $oHashEliminar->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_eliminar'));
 $oHashEliminar->setCamposForm('id_item');
 $url_eliminar = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_eliminar') . $oHashEliminar->linkSinVal();

@@ -2,7 +2,7 @@
 
 use frontend\shared\FrontBootstrap;
 use frontend\shared\model\ViewNewTwig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -19,7 +19,7 @@ $lnk = static function (string $script, array $params = []): string {
         $url .= '?' . http_build_query($params);
     }
 
-    return HashFront::link($url);
+    return HashF::link($url);
 };
 
 $a_campos = [

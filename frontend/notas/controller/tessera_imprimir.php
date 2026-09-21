@@ -22,7 +22,7 @@ use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\session\SessionConfig;
 
@@ -172,11 +172,11 @@ $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 // -----------------------------
 $rowEmpty = TesseraImprimirPayload::emptyRow();
 // -----------------------------  cabecera ---------------------------------
-$caraA = HashFront::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
-$caraB = HashFront::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
+$caraA = HashF::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
+$caraB = HashF::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 
 $url_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/tessera_2_mpdf.php';
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_pdf);
 $aCamposHidden = ['id_nom' => $id_nom,
     'id_tabla' => $id_tabla,

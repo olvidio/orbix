@@ -8,11 +8,11 @@ use frontend\actividades\helpers\ActividadesListaSupport;
 
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 
 /**
- * Compone el bloque dossier 3102 (habitaciones CDC) en frontend: HashFront + URLs firmadas.
+ * Compone el bloque dossier 3102 (habitaciones CDC) en frontend: HashF + URLs firmadas.
  *
  * @see \src\ubiscamas\domain\Select_habitaciones_cdc::getSegmentData()
  */
@@ -24,7 +24,7 @@ final class SelectHabitacionesCdcRender
     public static function render(array $seg): string
     {
         $hash = isset($seg['hash']) && is_array($seg['hash']) ? $seg['hash'] : [];
-        $oHashSelect = new HashFront();
+        $oHashSelect = new HashF();
         $oHashSelect->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_form'] ?? ''));
         $oHashSelect->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_no'] ?? ''));
         $oHashSelect->setArrayCamposHidden(UbiscamasPayload::hashCamposHidden($hash['campos_hidden'] ?? []));

@@ -18,7 +18,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -71,7 +71,7 @@ if ($d['oDesplAsignaturas_opciones'] !== []) {
     $oDesplAsignaturas->setAction("fnjs_mas_profes('asignatura')");
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposNo('mod!avis_profesor!confirmar_duplicado');
 $oHash->setCamposForm($d['camposForm']);
 $oHash->setArraycamposHidden($d['a_camposHidden']);
@@ -79,7 +79,7 @@ $oHash->setArraycamposHidden($d['a_camposHidden']);
 $web = AppUrlConfig::getPublicAppBaseUrl();
 $url_profesores = AppUrlConfig::srcBrowserUrl('/src/actividadestudios/profesores_desplegable_data');
 
-$oHashTipo = new HashFront();
+$oHashTipo = new HashF();
 $oHashTipo->setUrl($url_profesores);
 $oHashTipo->setCamposNo('id_profesor');
 $oHashTipo->setCamposForm('salida');

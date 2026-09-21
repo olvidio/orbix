@@ -1,17 +1,17 @@
 # Arquitectura de tokens de seguridad: `HashF` y `HashB`
 
-Este documento fija la visión arquitectónica hacia la que queremos llevar el repo en lo relativo al token anti-tamper / anti-CSRF que hoy proporciona la clase única `web\Hash` (`apps/web/Hash.php`). **Es el *north star*, no el estado actual.** La migración real se hará por pasos, por módulos, y siguiendo los criterios de `AGENTS.md` (sección *Migración `apps/` → `frontend/` + `src/`* y subsección *Hash al mover endpoints AJAX*).
+Este documento describe el estado actual y la evolución prevista del token anti-tamper / anti-CSRF. La firma de UI canónica es `frontend\shared\security\HashF`; `HashB` es un piloto de autorización backend. La migración seguirá por módulos y los criterios de `AGENTS.md` (sección *Migración `apps/` → `frontend/` + `src/`* y subsección *Hash al mover endpoints AJAX*).
 
-Referencia cruzada: `AGENTS.md` — *Hash al mover endpoints AJAX (`Hash::getCamposHtml` vs `Hash::linkSinVal`)*.
+Referencia cruzada: `AGENTS.md` — *Hash al mover endpoints AJAX (`HashF::getCamposHtml` vs `HashF::linkSinVal`)*.
 
-## 1. Problema a resolver
+## 1. Estado actual y problema a resolver
 
-Hoy existe **una sola clase de hash** para todo:
+La implementación de presentación actual es `HashF`:
 
-- Vive en `apps/web/Hash.php`, namespace `web\Hash`.
-- Firma con `md5(strOrdenado + session_id() + "a+a+")`. El "secreto" es el `session_id` + una sal constante.
-- Se usa tanto para **emitir** tokens (métodos `getCamposHtml`, `linkSinVal`, `linkConVal`, `Hash::link`, `Hash::add_hash`, `Hash::cmdCon/SinParametros`, `getParamAjax*`) como para **validar** los que llegan (`validatePost`).
-- La validación se invoca en dos bootstraps: `src/shared/global_object.inc` (vía `after_global_object.inc`) para `/src/...` y `frontend\shared\FrontBootstrap` para controladores `frontend/`.
+- Vive en `frontend/shared/security/HashF.php`, namespace `frontend\shared\security`.
+- Firma con `md5(strOrdenado + session_id() + "a+front+")`. El "secreto" es el `session_id` + una sal constante.
+- Se usa tanto para **emitir** tokens (métodos `getCamposHtml`, `linkSinVal`, `linkConVal`, `HashF::link`, `HashF::add_hash`, `HashF::cmdCon/SinParametros`, `getParamAjax*`) como para **validar** los que llegan (`validatePost`).
+- La validación se invoca en `frontend\shared\FrontBootstrap` y en `frontend/shared/bootstrap/after_global_object.inc`, incluido por el bootstrap que atiende `/src/...`.
 - Como `frontend/` y `src/` son el mismo monolito PHP con la misma cookie `PHPSESSID`, el mismo `session_id()` sirve de secreto a ambos lados. Es una **coincidencia del monolito**, no una decisión arquitectónica.
 
 Cuatro síntomas del problema conceptual:
@@ -33,10 +33,10 @@ Dos clases distintas con responsabilidades asimétricas.
 - Sigue el algoritmo actual (session-derived) **sin cambios**.
 - **Simétrica:** cualquier código de `frontend/` puede firmar y cualquier código de `frontend/` puede validar.
 - Usos:
-    - Anti-CSRF para endpoints en `frontend/` (validación en `FrontBootstrap::boot()` / `HashFront::validatePost`).
+    - Anti-CSRF para endpoints en `frontend/` (validación en `FrontBootstrap::boot()` / `HashF::validatePost`).
     - Integridad de URL en navegaciones `frontend/`↔`frontend/` (listas, filtros, paginación, scroll memory).
     - Integridad de nombres de campos en forms (el `h` de hoy): el usuario puede editar los valores, pero no puede añadir/quitar campos.
-- `src/` **no importa** `HashF`. Las piezas de `src/` que hoy generan URLs para el navegador (layouts, etc.) se mueven a `frontend/shared/` (ver §7.2).
+- Objetivo: `src/` **no importa** `HashF`. Los slices de menus, encargossacd y notas ya devuelven datos o `link_spec` sin firmar; el frontend compone las URLs.
 
 ### `HashB` (backend)
 
@@ -128,8 +128,7 @@ GET /src/actividadtarifas/tarifa_ubi_lista →
         "id_tarifa": 3,
         "cantidad": 100,
         "tokens": {
-          "update":   "B64.SIG",
-          "eliminar": "B64.SIG"
+          "form": "B64.SIG"
         }
       },
       ...
@@ -141,18 +140,15 @@ GET /src/actividadtarifas/tarifa_ubi_lista →
 }
 ```
 
-El JS al clicar en una acción de fila hace:
+El JS al clicar en editar transporta solo la cápsula de la fila:
 
 ```javascript
-$.ajax({
-    url: '/src/actividadtarifas/tarifa_ubi_eliminar',
-    method: 'POST',
-    data: { ctx: fila.tokens.eliminar },
-    dataType: 'json'
-});
+fnjs_modificar(fila.tokens.form);
 ```
 
-No envía `id_tarifa` ni nada que identifique la fila como campo plano. Todo va dentro de `ctx`.
+El controlador frontend reenvía `ctx_form` a `/src/actividadtarifas/tarifa_ubi_form_data`; este
+abre `HashB::open($ctx_form, 'tarifa_ubi_form')` y emite los tokens `ctx_update` / `ctx_eliminar`
+del formulario. No se envía `id_item` ni nada que identifique la fila como campo plano.
 
 ### 4.4 Form de creación — cápsula sin contexto de recurso
 
@@ -169,8 +165,8 @@ Para acciones "crear nuevo" donde aún no hay recurso, la cápsula contiene solo
 | **Secreto (futuro)** | session-derived (CSRF basado en sesión es estándar) | HMAC con env var / clave backend-only |
 | **Formato** | Parámetros `h`, `hh`, `hno`, `hchk`, `hnov`, `horig`, `hpos` como hoy | Token opaco `base64(payload).sig` |
 | **El navegador lo ve** | Sí (es su CSRF, debe verlo) | Sí (lo transporta), pero opaco y sin posibilidad de manipulación útil |
-| **Métodos del emisor** | `getCamposHtml`, `linkSinVal`, `linkConVal`, `Hash::link`, `Hash::add_hash`, … | `HashB::sign($action, $context, $ttl?)` |
-| **Método del receptor** | `validatePost` en `FrontBootstrap` (`HashFront`) | `HashB::open($ctx, $expectedAction)` en cada controlador HTTP de `src/` |
+| **Métodos del emisor** | `getCamposHtml`, `linkSinVal`, `linkConVal`, `HashF::link`, `HashF::add_hash`, … | `HashB::sign($action, $context, $ttl?)` |
+| **Método del receptor** | `validatePost` en `FrontBootstrap` (`HashF`) | `HashB::open($ctx, $expectedAction)` en cada controlador HTTP de `src/` |
 | **Quién puede llamar al emisor** | `frontend/` (controllers, views) | `src/` (controllers HTTP, `application/` cuando responde lecturas) |
 | **Quién puede llamar al receptor** | Cualquier controlador `frontend/` | Cualquier controlador `src/` |
 
@@ -210,22 +206,22 @@ Para acciones "crear nuevo" donde aún no hay recurso, la cápsula contiene solo
 
 ### 7.1 La validación del bootstrap frontend
 
-`frontend\shared\FrontBootstrap::boot()` (sustituto del antiguo `global_header_front.inc`) hace:
+`frontend\shared\FrontBootstrap::boot()` valida con `HashF`; el bootstrap de `/src/...` incluye el mismo validador mediante `frontend/shared/bootstrap/after_global_object.inc`:
 
 ```php
-$oValidator = new HashFront();
-echo $oValidator->validatePost($a_data);
+$oValidator = new HashF();
+$oValidator->validatePost($aData);
 ```
 
-En la visión futura pasará a `HashF`. **No** valida `HashB`. Si un endpoint de `src/` necesita verificar cápsula, lo hace él mismo con `HashB::open`.
+**No** valida `HashB`. Si un endpoint de `src/` necesita verificar cápsula, lo hace él mismo con `HashB::open`.
 
-### 7.2 `apps/web/Hash.php`, `apps/web/Posicion.php`, `src/layouts/*`
+### 7.2 Rutas legacy ya retiradas
 
-Son **capa UI**:
+`apps/web/Hash.php`, `apps/web/Posicion.php` y `src/layouts/*` no existen en el árbol actual. La firma de UI y su navegación viven bajo `frontend/`:
 
-- `apps/web/Hash.php` → se divide en `frontend/shared/security/HashF.php` + `src/shared/security/HashB.php`. Queda una fase transicional con *shim* en `apps/web/Hash.php` delegando a `HashF` para no romper nada hasta que esté todo migrado.
-- `apps/web/Posicion.php` → se mueve a `frontend/shared/` y usa solo `HashF`.
-- `src/layouts/BurgerLayout.php`, `src/layouts/LegacyLayout.php` → se mueven a `frontend/shared/layouts/`. `src/` deja de producir HTML de UI (coherente con `AGENTS.md` — *Qué evitar al migrar pantallas*).
+- `frontend/shared/security/HashF.php` implementa la firma de UI.
+- `frontend/shared/web/Posicion.php` y `frontend/shared/web/NavStack.php` gestionan navegación y estado.
+- `src/shared/security/HashB.php` implementa el piloto de cápsulas backend.
 
 ### 7.3 `apps/core/global_object.inc`
 
@@ -233,14 +229,14 @@ Es el header legacy de `apps/`. Se mantiene mientras exista `apps/`. Su `validat
 
 ### 7.4 Controladores `src/` que hoy generan HTML o URLs firmadas
 
-Los ~30 ficheros de `src/` que hoy usan `Hash` caen en dos grupos:
+Las excepciones actuales de `src/` que aún usan `HashF` caen en dos grupos:
 
 - **Productores de HTML de UI** (layouts, `Select_certificados_de_una_persona`, etc.) → se mueven a `frontend/shared/` y usan `HashF`.
 - **`application/` que genera URLs** (p.ej. para listados con enlaces) → emite los strings de URL ya firmados con `HashF`, pero desde `src/application/` esto rompe la separación de capas. Preferible: el `application/` devuelve datos crudos (ids, nombres) y el frontend controller firma las URLs al construir la vista.
 
 ### 7.5 Forms y AJAX existentes
 
-Los ~210 usos de `Hash` en `frontend/` se clasificarán en tres patrones durante la migración:
+Los usos de `HashF` en `frontend/` se clasifican en tres patrones durante la migración:
 
 - **(a) frontend→frontend:** cambia `new Hash()` por `new HashF()`. Mecánico.
 - **(b) frontend→src directo (navegador POSTea a `/src/...`):** cambia el modelo. La vista deja de llevar hidden `id_item`; lleva `<input name="ctx" value="<?= $token ?>">` con el token obtenido vía `PostRequest` desde el controller frontend, que a su vez lo pidió al backend.
@@ -257,12 +253,12 @@ Los ~210 usos de `Hash` en `frontend/` se clasificarán en tres patrones durante
 
 Este orden minimiza el riesgo y permite verificar la arquitectura antes de aplicarla masivamente:
 
-1. **Crear `HashF`** como alias/subclase de `web\Hash` en `frontend/shared/security/HashF.php`. Cero cambios de comportamiento.
-2. **Crear `HashB`** con `sign`/`open` en `src/shared/security/HashB.php`. Incluir tests unitarios mínimos (sign-open roundtrip, sesión cruzada, expiración, action distinto).
-3. **Piloto en un solo módulo** (candidato: `actividadtarifas`, porque ya está listo con el patrón `_lista` / `_form` / `_update` / `_eliminar` / `_copiar`). Migrar solo ese vertical slice al modelo cápsula y verificar comportamiento.
-4. **Piloto en un segundo módulo** con patrón distinto (p.ej. `ubis` por su mezcla de proxies y datos compartidos).
+1. **Mantener `HashF`** como firma canónica de UI en `frontend/shared/security/HashF.php`, sin cambiar el protocolo actual.
+2. **Mantener `HashB`** con `sign`/`open` en `src/shared/security/HashB.php` y ampliar solo los pilotos ya acordados.
+3. **Cerrar las excepciones por módulo**: menus, encargossacd y notas ya devuelven datos sin firmar; revisar de nuevo con `rg` antes de declarar otro módulo como excepción.
+4. **Mantener completos los pilotos** de actividadtarifas (tokens por fila y sin IDs planos) y ubiscamas (contexto por asistente, sin `id_nom` en claro) antes de extender `HashB`.
 5. **Ola por módulo**, siguiendo el plan de migración acordado por equipo (prioridades por módulo en baselines `docs/dev/*_migracion_baseline.md`).
-6. **Última fase:** cuando no queden `new Hash()` fuera de `apps/` legacy, borrar `web\Hash` o dejarlo como shim final. Decidir qué hacer con el secreto de `HashB` (seguir session-derived o pasar a HMAC).
+6. **Última fase:** decidir si `HashB` deja de ser session-derived y pasa a HMAC con secreto de servidor.
 
 ## 10. Checklist para cada slice
 

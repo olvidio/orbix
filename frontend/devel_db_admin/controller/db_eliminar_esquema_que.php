@@ -8,7 +8,7 @@ use frontend\devel_db_admin\helpers\DevelDbAdminPayload;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 
@@ -25,11 +25,11 @@ $a_opciones_regiones = DevelDbAdminPayload::desplegableOpciones($dbProps['a_opci
 $oDesplRegiones = Desplegable::desdeOpciones($a_opciones_regiones, 'region');
 $oDesplRegiones->setAction('fnjs_dl()');
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('region!dl!comun!sv!sf');
 $oHash->setcamposNo('comun!sv!sf');
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/devel_db_admin/db_lugar'));
 $oHash1->setCamposForm('region');
 $h = $oHash1->linkSinValParams();

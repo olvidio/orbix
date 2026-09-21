@@ -386,7 +386,7 @@ Dejar los menús del esquema (o de todas las DL si dlb) como la referencia por d
 
 ### Donde Entrar
 
-- Restaurar menús ref→DL (src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php)
+- Restaurar menús ref→DL (`frontend/menus/controller/menus_importar_de_ficheros_a_ref.php`)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales

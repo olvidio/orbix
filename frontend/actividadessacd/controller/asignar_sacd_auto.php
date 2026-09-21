@@ -16,7 +16,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\actividadessacd\helpers\ActividadessacdSession;
 
@@ -38,7 +38,7 @@ $inicurs_des_iso = $oF_inicurs_des->format('Y-m-d');
 
 $api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setUrl($url);
     $oHash->setCamposForm($campos);
     return $url . $oHash->linkSinVal();

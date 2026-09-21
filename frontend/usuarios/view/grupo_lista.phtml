@@ -1,7 +1,7 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 ?>
 <?= $oPosicion->mostrarNavAtras(1) ?>
@@ -46,7 +46,7 @@ use frontend\shared\security\HashFront;
         }
     }
     fnjs_actualizar = function () {
-        var url = '<?= HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/grupo_lista.php') ?>';
+        var url = '<?= HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/grupo_lista.php') ?>';
         fnjs_update_div('#main', url);
     }
     fnjs_left_side_hide();

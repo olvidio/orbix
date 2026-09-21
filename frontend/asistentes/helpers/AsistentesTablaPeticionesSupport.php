@@ -7,7 +7,7 @@ namespace frontend\asistentes\helpers;
 use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 /**
  * Tabla de peticiones de cambio de actividad (dossier asistentes).
@@ -49,7 +49,7 @@ final class AsistentesTablaPeticionesSupport
             if ($p['t'] === 'p') {
                 $out .= $p['s'];
             } elseif ($p['t'] === 'm' && $p['h'] !== []) {
-                $oHash = new HashFront();
+                $oHash = new HashF();
                 $oHash->setUrl($apiSaveUrl);
                 $oHash->setArrayCamposHidden($p['h']);
                 $param = $oHash->getParamAjax();

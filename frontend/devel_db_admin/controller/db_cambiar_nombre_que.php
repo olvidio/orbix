@@ -7,7 +7,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\devel_db_admin\helpers\DevelDbAdminPayload;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
@@ -28,11 +28,11 @@ $oDesplEsquemaOrigen = Desplegable::desdeOpciones($a_esquemas_union, 'esquema_or
 $oDesplRegiones = Desplegable::desdeOpciones($a_opciones_regiones, 'region');
 $oDesplRegiones->setAction('fnjs_dl()');
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('esquema_origen!region!dl!comun!sv!sf');
 $oHash->setcamposNo('comun!sv!sf');
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/devel_db_admin/db_lugar'));
 $oHash1->setCamposForm('region');
 $h = $oHash1->linkSinValParams();
@@ -41,12 +41,12 @@ $msg_falta_dl = _('debe elegir la delegación de destino');
 $msg_falta_region = _('debe elegir la región de destino');
 $msg_falta_origen = _('debe elegir el esquema de origen (nombre base antiguo)');
 
-$oHashVerificar = new HashFront();
+$oHashVerificar = new HashF();
 $oHashVerificar->setUrl(OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/db_verificar_renombrar_esquema.php');
 $oHashVerificar->setCamposForm('esquema_origen!region!dl!comun!sv!sf');
 $oHashVerificar->setcamposNo('comun!sv!sf');
 
-$oHashCorregir = new HashFront();
+$oHashCorregir = new HashF();
 $oHashCorregir->setUrl(OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/db_corregir_renombrar_esquema.php');
 $oHashCorregir->setCamposForm('esquema_origen!region!dl!comun!sv!sf');
 $oHashCorregir->setcamposNo('comun!sv!sf');

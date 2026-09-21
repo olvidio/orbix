@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\dbextern\helpers\DbexternPayload;
 
@@ -62,7 +62,7 @@ if ($max === 0) {
 }
 
 $url_sincro_ver = AppUrlConfig::getApiBaseUrl() . '/frontend/dbextern/controller/ver_orbix.php';
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_sincro_ver);
 $oHash->setcamposNo('mov');
 $a_camposHidden = [
@@ -74,7 +74,7 @@ $a_camposHidden = [
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $url_sincro_unir = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_unir');
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl($url_sincro_unir);
 $oHash1->setCamposForm('region!dl!id_nom_listas!id!id_orbix!tipo_persona');
 $h1 = $oHash1->linkSinValParams();

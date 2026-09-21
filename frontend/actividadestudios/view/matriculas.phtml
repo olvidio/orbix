@@ -1,10 +1,10 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 $jsUrlMatriculaEliminar = AppUrlConfig::srcBrowserUrl('/src/actividadestudios/matricula_eliminar');
-$jsUrlMatriculasListaRefresh = HashFront::link(
+$jsUrlMatriculasListaRefresh = HashF::link(
     AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/matriculas_lista.php',
 );
 ?>

@@ -22,7 +22,7 @@ use frontend\shared\helpers\FuncTablasSupport;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
 
@@ -60,7 +60,7 @@ $perm_des = ActividadesPermSupport::havePermOficina('des');
 // la firma cubre URL + nombres de campos; los valores viajan en el body POST.
 $api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setUrl($url);
     $oHash->setCamposForm($campos);
     return $url . $oHash->linkSinVal();
@@ -98,7 +98,7 @@ $url_eliminar = $buildHashedUrl(
 // Hash para los campos del form de filtros (input hidden `hash` del form).
 // PeriodoQue::getHtml() incluye iactividad_val / iasistentes_val (hooks JS);
 // deben ir en camposNo para que no desalineen h1 vs h2 en validatePost.
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('empiezamax!empiezamin!periodo!year!tipo');
 $oHash->setCamposNo('iactividad_val!iasistentes_val');
 $oHash->setArraycamposHidden([

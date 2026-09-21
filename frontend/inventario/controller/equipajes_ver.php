@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
 
@@ -52,11 +52,11 @@ if ($Qeliminar !== '') {
     $oDesplEquipajes->setAction('');
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('filtro!id_equipaje');
 $oHash->setArrayCamposHidden(['eliminar' => $Qeliminar, 'imprimir' => $Qimprimir]);
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl('frontend/inventario/controller/equipajes_form_texto_listado.php');
 $oHash1->setCamposForm('loc!id_equipaje!texto');
 $h_mod_txt = $oHash1->linkSinValParams();

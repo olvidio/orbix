@@ -129,7 +129,7 @@ Migración desde el legado `apps/` → `frontend/` + `src/`: **muy avanzada**.
 Deuda residual típica (detalle en [índice de refactor](REFACTOR_INDICE.md)):
 
 - Controllers HTTP siguen siendo scripts, no clases.
-- Hash anti-tamper: conviven el legado `web\Hash` y el piloto `HashB` ([visión](hash_arquitectura.md)).
+- Hash anti-tamper: `HashF` sigue cubriendo la mayoría de formularios y URLs de UI; `HashB` es un piloto acotado para autorizaciones backend ([visión](hash_arquitectura.md)).
 - Cobertura de tests **desigual** por módulo.
 - Configuración de instalación aún en `ServerConf` (constantes PHP), no solo `.env`.
 
@@ -244,7 +244,7 @@ El detalle está en [acceso y autorización](supervision_acceso_autorizacion.md)
 
 1. **Autenticación:** usuario + contraseña (Whirlpool + salt) + 2FA TOTP opcional/forzado.
 2. **Autorización en capas:** rol → grupos de menú → bits de oficina en cada ítem → permisos por tipo de actividad y fase de proceso → permisos de dossier.
-3. **Anti-tamper / CSRF:** firma de campos y URLs con hash ligado a `session_id` (legado `web\Hash`; evolución `HashF` / `HashB`).
+3. **Anti-tamper / CSRF:** `HashF` firma campos y URLs de UI con un hash ligado a `session_id`; `HashB` añade cápsulas backend en los pilotos que ya lo usan.
 4. **Descargas binarias** (PDF): token HMAC de corta vida (`SignedDownloadToken`), no el id en claro.
 5. **Frontera de datos:** copias filtradas + flag DMZ en el rol.
 

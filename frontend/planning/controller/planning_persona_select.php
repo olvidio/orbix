@@ -5,7 +5,7 @@ use frontend\planning\helpers\PlanningPostInput;
 use frontend\planning\helpers\PlanningPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
@@ -163,7 +163,7 @@ foreach ($cPersonas as $row) {
         'id_tabla' => $id_tabla,
     ];
     array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
-    $pagina = HashFront::link('frontend/personas/controller/home_persona.php?' . http_build_query($aQuery));
+    $pagina = HashF::link('frontend/personas/controller/home_persona.php?' . http_build_query($aQuery));
 
     $a_valores[$i] = [
         'sel' => (string) $id_nom,
@@ -173,7 +173,7 @@ foreach ($cPersonas as $row) {
     ];
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setcamposNo('sel!scroll_id!modelo!que!id_dossier!sSeleccionados');
 $oHash->setArraycamposHidden([
     'obj_pau' => $Qobj_pau,

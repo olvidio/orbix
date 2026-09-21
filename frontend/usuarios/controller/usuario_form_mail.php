@@ -5,7 +5,7 @@ use frontend\usuarios\helpers\UsuariosPostInput;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -21,7 +21,7 @@ if ($usuario === '' && $id_usuario > 0) {
     $email = \frontend\shared\helpers\PayloadCoercion::string($data['email'] ?? '');
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('email');
 $oHash->setArraycamposHidden([
     'id_usuario' => $id_usuario,

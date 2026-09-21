@@ -3,7 +3,7 @@
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\misas\helpers\MisasDesplegableSupport;
 
@@ -33,7 +33,7 @@ $oDesplOrden->setNombre('orden_select');
 $oDesplOrden->setAction('fnjs_ver_encargos_zona()');
 
 $url_ver_encargos_zona = 'frontend/misas/controller/ver_encargos_zona.php';
-$oHashZona = new HashFront();
+$oHashZona = new HashF();
 $oHashZona->setUrl($url_ver_encargos_zona);
 $oHashZona->setCamposForm('id_zona!orden');
 $h_zona = $oHashZona->linkSinValParams();

@@ -5,7 +5,7 @@ use frontend\usuarios\helpers\UsuariosPostInput;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 require __DIR__ . '/../../../libs/vendor/autoload.php';
 

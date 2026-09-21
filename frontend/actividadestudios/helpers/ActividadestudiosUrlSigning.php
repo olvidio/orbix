@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace frontend\actividadestudios\helpers;
 
 use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashFSignedLink;
 
 /**
  * Firma de enlaces a partir de `link_spec` en pantallas actividadestudios.
@@ -26,6 +26,6 @@ final class ActividadestudiosUrlSigning
             return '';
         }
 
-        return HashFrontSignedLink::fromSpec($parsed);
+        return HashFSignedLink::fromSpec($parsed);
     }
 }

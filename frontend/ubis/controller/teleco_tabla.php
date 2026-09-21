@@ -3,7 +3,7 @@
 use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
@@ -53,7 +53,7 @@ $oTabla->setCabeceras($lista['cabeceras']);
 $oTabla->setBotones($lista['botones']);
 $oTabla->setDatos($lista['valores']);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('mod!sel');
 $oHash->setcamposNo('mod!sel!scroll_id!refresh');
 $oHash->setArraycamposHidden([

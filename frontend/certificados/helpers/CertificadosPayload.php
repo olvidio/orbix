@@ -7,7 +7,7 @@ namespace frontend\certificados\helpers;
 use frontend\notas\helpers\NotasFormSupport;
 use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashFSignedLink;
 use frontend\shared\session\SessionConfig;
 
 final class CertificadosPayload
@@ -338,7 +338,7 @@ final class CertificadosPayload
 
     public static function urlNuevoFromSpec(mixed $spec): string
     {
-        return HashFrontSignedLink::tryFromSpec($spec);
+        return HashFSignedLink::tryFromSpec($spec);
     }
 
     private static function creditosFloat(mixed $value): float

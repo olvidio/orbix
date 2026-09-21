@@ -2,7 +2,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\PayloadCoercion;
@@ -25,7 +25,7 @@ $url_ctr = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controlle
 // 13
 $url_dlb = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_de_dlb.php?';
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setArrayCamposHidden(['inventario' => 1]);
 
 $a_campos = [

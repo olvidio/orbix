@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\menus\helpers\MenusPostInput;
 use frontend\shared\helpers\ListNavSupport;
@@ -57,7 +57,7 @@ if (!empty($Qid_grupmenu)) {
     $grupmenu = $data['grupmenu'];
     $orden = $data['orden'];
 
-    $oHashG = new HashFront();
+    $oHashG = new HashF();
     $oHashG->setCamposForm('que!grupmenu!orden');
     $oHashG->setcamposNo('refresh');
     $a_camposHidden = array(
@@ -78,7 +78,7 @@ if (!empty($Qid_grupmenu)) {
     $oView->renderizar('grupmenu_form.phtml', $a_camposG);
 
 } else {
-    $oHashG = new HashFront();
+    $oHashG = new HashF();
     $oHashG->setCamposForm('que!grupmenu!orden');
     $oHashG->setcamposNo('refresh');
     $a_camposHidden = array(

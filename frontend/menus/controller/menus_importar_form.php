@@ -4,7 +4,7 @@ use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 
@@ -21,7 +21,7 @@ $a_opciones = NotasFormSupport::desplegableOpciones($data['a_opciones'] ?? []);
 $oDesplTemplates = new Desplegable('id_template_menu', $a_opciones, '', true);
 
 $url = AppUrlConfig::srcBrowserUrl('/src/menus/menus_importar');
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url);
 $oHash->setCamposForm('id_template_menu');
 

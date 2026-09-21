@@ -3,7 +3,7 @@
 use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;

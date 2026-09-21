@@ -1,5 +1,5 @@
 <?php
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 ?>
 function orbixLayoutDefaultGrupMenu() {
     return (window.orbixLayout && window.orbixLayout.defaultGrupMenu) || '';
@@ -360,7 +360,7 @@ document.addEventListener('click', function (e) {
 
 function showPortada(groupName) {
     <?php
-    $oHash1 = new HashFront();
+    $oHash1 = new HashF();
     $oHash1->setUrl('public/portada.php');
     $oHash1->setCamposForm('grupmenu');
     $h = $oHash1->linkSinValParams();

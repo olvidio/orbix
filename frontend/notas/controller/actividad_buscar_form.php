@@ -11,7 +11,7 @@ use frontend\shared\helpers\PayloadCoercion;
 
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -42,7 +42,7 @@ $oDesplActividades->setBlanco(true);
 $oDesplActividades->setNombre('id_activ_sel');
 $oDesplActividades->setOpcion_sel(PayloadCoercion::string($buscar['id_activ_sel'] ?? ''));
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('pres_nom!pres_telf!pres_mail!zona!observ');
 $oHash->setCamposNo('scroll_id!sel');
 

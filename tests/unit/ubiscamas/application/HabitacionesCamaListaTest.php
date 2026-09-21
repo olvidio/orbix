@@ -9,6 +9,8 @@ use Ramsey\Uuid\Uuid;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\domain\entity\Asistente;
+use src\shared\security\HashB;
 use src\ubiscamas\application\HabitacionesCamaLista;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
@@ -109,5 +111,42 @@ final class HabitacionesCamaListaTest extends TestCase
         $this->assertCount(1, $out['a_valores']);
         $this->assertSame("$hid#$cid", $out['a_valores'][1]['sel']);
         $this->assertSame(_('completo'), $out['a_valores'][1][4]);
+    }
+
+    public function test_asistente_sin_cama_recibe_contexto_firmado_sin_id_nom_plano(): void
+    {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+        session_id('habitaciones-cama-lista-token-test');
+
+        $act = $this->createMock(ActividadAll::class);
+        $act->method('getId_ubi')->willReturn(40);
+        $act->method('getDesc_activ')->willReturn('normal');
+        $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
+        $actRepo->method('findById')->with(9)->willReturn($act);
+
+        $asistente = $this->createMock(Asistente::class);
+        $asistente->method('getCamaVo')->willReturn(null);
+        $asistente->method('getId_nom')->willReturn(7);
+        $asistenteSvc = $this->createMock(AsistenteActividadService::class);
+        $asistenteSvc->method('getAsistentesDeActividad')->with(9)->willReturn(['Doe, Jane' => $asistente]);
+
+        $habRepo = $this->createMock(HabitacionDlRepositoryInterface::class);
+        $habRepo->method('getHabitaciones')->willReturn([]);
+
+        $out = (new HabitacionesCamaLista(
+            $actRepo,
+            $asistenteSvc,
+            $habRepo,
+            $this->createMock(CamaDlRepositoryInterface::class),
+        ))(9);
+
+        $asistenteOut = $out['asistentes_sin_cama'][0];
+        $this->assertArrayNotHasKey('id_nom', $asistenteOut);
+        $this->assertSame(
+            ['id_activ' => 9, 'id_nom' => 7],
+            HashB::open($asistenteOut['ctx_update_cama'], 'update_cama_asistente')
+        );
     }
 }

@@ -23,7 +23,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -67,7 +67,7 @@ $initial = PostRequest::getDataFromUrl('/src/actividadessacd/texto_comunicacion_
 $comunicacion = ActividadessacdPayload::textoFromPayload($initial);
 
 $buildHashedUrl = static function (string $url, string $campos): string {
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setUrl($url);
     $oHash->setCamposForm($campos);
     return $url . $oHash->linkSinVal();

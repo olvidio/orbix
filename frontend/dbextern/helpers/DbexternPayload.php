@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace frontend\dbextern\helpers;
 
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashFSignedLink;
 
 final class DbexternPayload
 {
     public static function signedLink(mixed $spec): string
     {
-        return HashFrontSignedLink::tryFromSpec($spec);
+        return HashFSignedLink::tryFromSpec($spec);
     }
 
     /**

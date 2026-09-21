@@ -7,7 +7,7 @@ use frontend\actividadestudios\helpers\ActividadestudiosRenderSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 
@@ -39,7 +39,7 @@ $txt_actividad = $d['txt_actividad'];
 $matriculas = $d['matriculas'];
 $aAsignaturasMatriculadas = $d['aAsignaturasMatriculadas'];
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/e43_2_mpdf.php');
 $oHash->setCamposForm('id_nom!id_activ');
 $h = $oHash->linkSinVal();

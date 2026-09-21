@@ -7,7 +7,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -51,7 +51,7 @@ if ($rstgr && $Qfiltro === 1) {
     $oCuadros->setChecked($aChecked);
     $oCuadros->setOpciones($a_delegacionesStgr);
 
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setCamposForm('dl');
     $oHash->setcamposNo('dl');
     $oHash->setArrayCamposHidden(['filtro' => 1]);
@@ -79,16 +79,16 @@ if ($rstgr && $Qfiltro === 1) {
     $oViewFiltro->renderizar('dl_rstgr_que.html.twig', $a_camposFiltro);
 }
 
-$go['comprobar_n'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_n));
-$go['comprobar_a'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_a));
-$go['n_listado'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_listado));
-$go['n_numeros'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_numeros));
-$go['agd_listado'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_listado));
-$go['agd_numeros'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_numeros));
-$go['profesores_numeros'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_numeros));
-$go['profesores_listado'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_listado));
-$go['asig_faltan'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/asig_faltan_que.php');
-$go['filtro'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/resumen_anual.php?' . http_build_query(['filtro' => 1]));
+$go['comprobar_n'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_n));
+$go['comprobar_a'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_a));
+$go['n_listado'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_listado));
+$go['n_numeros'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_numeros));
+$go['agd_listado'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_listado));
+$go['agd_numeros'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_numeros));
+$go['profesores_numeros'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_numeros));
+$go['profesores_listado'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_listado));
+$go['asig_faltan'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/asig_faltan_que.php');
+$go['filtro'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/resumen_anual.php?' . http_build_query(['filtro' => 1]));
 
 $mostrarResumen = !$rstgr || $Qfiltro !== 1 || $Qdl !== [];
 if ($mostrarResumen) {

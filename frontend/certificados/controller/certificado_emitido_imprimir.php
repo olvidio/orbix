@@ -7,7 +7,7 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\config\OrbixRuntime;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\certificados\helpers\CertificadosPostInput;
 use frontend\certificados\helpers\CertificadosPayload;
@@ -55,19 +55,19 @@ $sigla = OrbixRuntime::miRegion();
 $certificado = $sigla . ' ' . $personaData['contador'] . '/' . $any;
 $destino = '';
 
-$oHashCertificadoPdf = new HashFront();
+$oHashCertificadoPdf = new HashF();
 $oHashCertificadoPdf->setCamposForm('certificado!firmado!f_certificado!idioma!destino');
 $oHashCertificadoPdf->setCamposNo('firmado');
 $oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $id_nom, 'nuevo' => 1]);
 
 $pag_certificado_2_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/certificados/controller/certificado_emitido_2_mpdf.php';
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($pag_certificado_2_pdf);
 $oHash->setCamposForm('id_item!guardar');
 $h = $oHash->linkSinValParams();
 
 $pag_certificado_eliminar = AppUrlConfig::srcBrowserUrl('/src/certificados/certificado_emitido_delete');
-$oHash_e = new HashFront();
+$oHash_e = new HashF();
 $oHash_e->setUrl($pag_certificado_eliminar);
 $oHash_e->setCamposForm('id_item');
 $h_eliminar = $oHash_e->linkSinValParams();

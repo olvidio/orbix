@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace frontend\configuracion\helpers;
 
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 /**
  * Completa el JSON de {@see \src\configuracion\application\ModulosFormData} para la vista.
@@ -19,7 +19,7 @@ final class ModulosFormRender
     public static function enrich(array $payload): array
     {
         $hm = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hm['campos_form'] ?? ''));
         $cn = \frontend\shared\helpers\PayloadCoercion::string($hm['campos_no'] ?? '');
         if ($cn !== '') {
@@ -29,7 +29,7 @@ final class ModulosFormRender
         $payload['hash_form_html'] = $oHash->getCamposHtml();
 
         $ha = isset($payload['hash_actualizar']) && is_array($payload['hash_actualizar']) ? $payload['hash_actualizar'] : [];
-        $oHashA = new HashFront();
+        $oHashA = new HashF();
         $cna = \frontend\shared\helpers\PayloadCoercion::string($ha['campos_no'] ?? '');
         if ($cna !== '') {
             $oHashA->setCamposNo($cna);

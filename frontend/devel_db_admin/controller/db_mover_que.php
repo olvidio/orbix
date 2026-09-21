@@ -4,7 +4,7 @@ namespace frontend\devel_db_admin\controller;
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -29,7 +29,7 @@ $dbProps = PostRequest::getDataFromUrl('/src/devel_db_admin/db_propiedades_data'
 ]);
 $desplTablas = $dbProps['desplTablas'] ?? '';
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('tabla');
 
 $msg_falta_tabla = _("debe poner la tabla");

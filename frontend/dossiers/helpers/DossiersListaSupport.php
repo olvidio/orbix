@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\dossiers\helpers;
 
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashFSignedLink;
 
 final class DossiersListaSupport
 {
@@ -14,6 +14,6 @@ final class DossiersListaSupport
      */
     public static function signFilas(mixed $raw, array $cols): array
     {
-        return HashFrontSignedLink::signRowLinkSpecs(DossiersPayload::listRows($raw), $cols);
+        return HashFSignedLink::signRowLinkSpecs(DossiersPayload::listRows($raw), $cols);
     }
 }

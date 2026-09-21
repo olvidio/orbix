@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 
 
-use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\application\AsignaturasMapData;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -173,14 +171,16 @@ if ($Qplan === PlanEstudios::PLAN_2026) {
 
 $superada = "(n.id_situacion = " . $nota_situ_numerica . " OR n.id_situacion::text ~ '[1345]')";
 
-$comprobarNotasUrl = static function (array $params) use ($Qid_tabla, $Qplan): string {
+$linkSpecs = [];
+$comprobarNotasUrl = static function (array $params) use (&$linkSpecs, $Qid_tabla, $Qplan): string {
     $params += ['id_tabla' => $Qid_tabla, 'plan_estudios' => $Qplan];
+    $token = '__COMPROBAR_NOTAS_LINK_' . count($linkSpecs) . '__';
+    $linkSpecs[$token] = [
+        'path' => 'frontend/notas/controller/comprobar_notas.php',
+        'query' => $params,
+    ];
 
-    return HashFront::link(
-        AppUrlConfig::getPublicAppBaseUrl()
-        . '/frontend/notas/controller/comprobar_notas.php?'
-        . http_build_query($params)
-    );
+    return $token;
 };
 
 /**

@@ -6,7 +6,7 @@ namespace frontend\notas\helpers;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\helpers\PayloadCoercion;
 
@@ -28,7 +28,7 @@ final class SelectNotasDeUnaPersonaRender
         );
 
         $hashMain = isset($seg['hash_main']) && is_array($seg['hash_main']) ? $seg['hash_main'] : [];
-        $oHashSelect = new HashFront();
+        $oHashSelect = new HashF();
         $oHashSelect->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hashMain['campos_no'] ?? ''));
         $hidden = $hashMain['campos_hidden'] ?? [];
         $oHashSelect->setArrayCamposHidden(is_array($hidden) ? $hidden : []);

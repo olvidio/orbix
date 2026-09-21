@@ -17,7 +17,7 @@ use frontend\casas\helpers\CasasPayload;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -36,7 +36,7 @@ if (!$form['ok']) {
 }
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
-$oHashGuardar = new HashFront();
+$oHashGuardar = new HashF();
 $oHashGuardar->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/casa_ec_gastos_guardar'));
 $sCamposForm = 'id_ubi!year';
 for ($m = 1; $m < 13; $m++) {

@@ -4,7 +4,7 @@ use frontend\usuarios\helpers\UsuariosPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -50,26 +50,26 @@ $oTabla->setCabeceras($lista['cabeceras']);
 $oTabla->setBotones($lista['botones']);
 $oTabla->setDatos($a_valores);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('username');
 $oHash->setcamposNo('scroll_id');
 $oHash->setArraycamposHidden(array('quien' => 'usuario'));
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setCamposForm('sel');
 $oHash1->setcamposNo('scroll_id');
 $oHash1->setArraycamposHidden(array('que' => 'eliminar'));
 
 $aQuery = ['nuevo' => 1, 'quien' => 'usuario'];
-$url_nuevo = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
+$url_nuevo = HashF::link(AppUrlConfig::getPublicAppBaseUrl()
     . '/frontend/usuarios/controller/usuario_form.php?'
     . http_build_query($aQuery)
 );
 
-$url_lista = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
+$url_lista = HashF::link(AppUrlConfig::getPublicAppBaseUrl()
     . '/frontend/usuarios/controller/usuario_lista.php'
 );
-$url_eliminar = HashFront::link(AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_eliminar')
+$url_eliminar = HashF::link(AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_eliminar')
 );
 
 $a_campos = [

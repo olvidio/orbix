@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace frontend\actividadcargos\helpers;
 
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 
 /**
- * Hash `HashFront` para formularios y listas dossier actividadcargos.
+ * Hash `HashF` para formularios y listas dossier actividadcargos.
  *
  * - {@see \src\actividadcargos\application\FormCargosDeActividadData}
  * - {@see \src\actividadcargos\application\FormCargosPersonasEnActividadData}
@@ -44,7 +44,7 @@ final class FormCargosDeActividadHashCompose
      */
     public static function hashFrontFormHtml(array $cfg): string
     {
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $cf = $cfg['campos_form'] ?? null;
         if (is_string($cf) && $cf !== '') {
             $oHash->setCamposForm($cf);

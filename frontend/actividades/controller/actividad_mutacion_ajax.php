@@ -2,7 +2,7 @@
 /**
  * Proxy AJAX frontend → `/src/actividades/actividad_{nuevo,editar,cambiar_tipo}`.
  *
- * El formulario lleva hash de {@see HashFront::getCamposHtml} pensado para la pantalla
+ * El formulario lleva hash de {@see HashF::getCamposHtml} pensado para la pantalla
  * frontend (p. ej. planning_casa_modificar). Un POST directo a `/src/...` repasa
  * `after_global_object.inc` y el hash no cuadra → 302 a index.php (el cliente ve HTML).
  *

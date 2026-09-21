@@ -5,7 +5,7 @@ use frontend\notas\helpers\NotasPostInput;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\PayloadCoercion;
@@ -51,7 +51,7 @@ $oDesplPersonas->setNombre('id_nom_dst');
 $oDesplPersonas->setBlanco('true');
 $oDesplPersonas->setOpciones($aPosibles);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('id_nom_dst');
 $oHash->setArraycamposHidden(['id_nom_org' => $id_nom]);
 

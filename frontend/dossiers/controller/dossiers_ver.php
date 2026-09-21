@@ -4,7 +4,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashFSignedLink;
 use frontend\dossiers\helpers\DossiersVerFichaDatosTabla;
 use frontend\ubiscamas\helpers\SelectHabitacionesCdcRender;
 use frontend\actividadestudios\helpers\SelectAsignaturasDeUnaActividadRender;
@@ -66,13 +66,13 @@ if ($avisoRegionStgr !== '') {
     echo '</div>';
 }
 
-// ----- Firma de link_specs en el frontend (HashFront vive sólo en frontend/) -----
+// ----- Firma de link_specs en el frontend (HashF vive sólo en frontend/) -----
 $topData = $data['top_data'] ?? [];
 if (!is_array($topData)) {
     $topData = [];
 }
-$goDossiers = HashFrontSignedLink::tryFromSpec($topData['go_dossiers_link_spec'] ?? null);
-$goHome = HashFrontSignedLink::tryFromSpec($topData['go_home_link_spec'] ?? null);
+$goDossiers = HashFSignedLink::tryFromSpec($topData['go_dossiers_link_spec'] ?? null);
+$goHome = HashFSignedLink::tryFromSpec($topData['go_home_link_spec'] ?? null);
 
 echo $oPosicion->mostrarNavAtrasFromDossiers();
 

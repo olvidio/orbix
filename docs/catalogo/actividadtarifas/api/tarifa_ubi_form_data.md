@@ -6,12 +6,12 @@ url: "/src/actividadtarifas/tarifa_ubi_form_data"
 metodos: ["GET", "POST"]
 operacion: "form_data"
 controller: "src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_form_data.php"
-entrada: ["post.id_item:string", "post.id_ubi:integer", "post.letra:string", "post.year:integer"]
+entrada: ["post.ctx_form:string", "post.id_ubi:integer", "post.year:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadtarifas_TarifaUbiFormDataData"
-respuesta_data: ["es_nuevo:boolean", "id_item:string", "id_ubi:integer", "year:integer", "letra:string", "cantidad:string", "opciones_tarifa:array", "opciones_serie:array", "id_serie_sel:integer", "token_update:string", "token_eliminar:string"]
-requiere_hashb: false
+respuesta_data: ["es_nuevo:boolean", "letra:string", "cantidad:string", "opciones_tarifa:array", "opciones_serie:array", "id_serie_sel:integer", "token_update:string", "token_eliminar:string"]
+requiere_hashb: true
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa_ubi_form.php"]
 casos_uso: ["src\\actividadtarifas\\application\\TarifaUbiFormData"]
 tags: ["actividadtarifas", "tarifa", "ubi", "form", "data"]
@@ -26,10 +26,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Builder del popup de tarifa por casa/año. Alta: `id_item` vacío, desplegables de tarifa y serie,
-contexto `{id_ubi, year}`. Edición: carga `cantidad` del registro, título con `letra`, contexto
-`{id_item, id_ubi, year}` y token de eliminar. Firma `token_update` / `token_eliminar` para las
-mutaciones posteriores.
+Builder del popup de tarifa por casa/año. Alta: recibe los filtros visibles `id_ubi`/`year` y
+emite la cápsula de actualización. Edición: abre `ctx_form` emitido por la fila, carga `cantidad`
+y título desde ese contexto, y emite los tokens de actualizar/eliminar. La identidad de la fila
+no viaja como campo plano.
 
 ## Endpoint
 
@@ -42,17 +42,16 @@ mutaciones posteriores.
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `string` | application | No | Vacío = alta; numérico = edición |
+| `ctx_form` | `string` | controller | No | Cápsula HashB de edición con `id_item`, `id_ubi`, `year`, `letra` |
 | `id_ubi` | `integer` | application | No | Casa (obligatoria en alta) |
 | `year` | `integer` | application | No | Año calendario |
-| `letra` | `string` | application | No | Título; por defecto `nueva` si vacío |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data` con doble `JSON.parse` en cliente.
 - Payload en `data`:
-  - `es_nuevo`, `id_item`, `id_ubi`, `year`, `letra`, `cantidad`
+  - `es_nuevo`, `letra`, `cantidad`
   - `opciones_tarifa` (solo alta; filtradas por `mi_sfsv`)
   - `opciones_serie`, `id_serie_sel` (por defecto `SerieId::GENERAL`)
   - `token_update`, `token_eliminar` (cápsulas `HashB` opacas para `ctx_update` / `ctx_eliminar`)

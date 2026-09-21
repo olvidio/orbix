@@ -5,7 +5,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\permisos\MenuPermisoMenuHtml;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -50,7 +50,7 @@ if ($tipo_ubi === "ctrdl" || $tipo_ubi === "ctrex" || $tipo_ubi === "ctrsf") {
 if ($tipo_ubi === "cdcdl" || $tipo_ubi === "cdcex") {
     $camposForm .= '!tipo_casa!plazas!plazas_min!num_sacd!sf!sv';
 }
-$oHash = new HashFront();
+$oHash = new HashF();
 // `status` es el nombre legado del checkbox «en uso»; si llega no debe romper el hash.
 $oHash->setcamposNo('que!status!' . $campos_chk);
 $oHash->setCamposForm($camposForm);

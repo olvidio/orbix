@@ -31,7 +31,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Salida
 
-- `data.items`: lista `{indice, menu, url, full_url, parametros, menu_perm}` (doble `JSON.parse`).
+- `data.items`: lista neutra `{indice, menu, url, link_spec, menu_perm}` (doble `JSON.parse`).
+  `link_spec` contiene `{path, parametros}` sin firmar; `LegacyLayout` la transforma en
+  `full_url` y parámetros `HashF` antes de renderizar.
 
 ## Casos De Uso
 

@@ -4,7 +4,7 @@ use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\permisos\MenuPermisoMenuHtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -17,7 +17,7 @@ $tipo_labor_check_html = MenuPermisoMenuHtml::cuadrosCheck('tipo_labor', $form['
 
 $url_update = AppUrlConfig::srcBrowserUrl('/src/ubis/centros_update');
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_update);
 $oHash->setArrayCamposHidden([
     'labor' => 'si',

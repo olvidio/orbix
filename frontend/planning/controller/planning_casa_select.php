@@ -3,7 +3,7 @@ namespace frontend\planning\controller;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -73,13 +73,13 @@ ListNavSupport::syncNavStateAt(
     ], $Qid_sel, $Qscroll_id),
 );
 
-$oHashMod = new HashFront();
+$oHashMod = new HashF();
 $oHashMod->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/planning_casa_modificar.php');
 $oHashMod->setArraycamposHidden(['que' => 'modificar']);
 $oHashMod->setCamposForm('id_activ');
 $param_mod = $oHashMod->getParamAjax();
 
-$oHashNew = new HashFront();
+$oHashNew = new HashF();
 $oHashNew->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/planning_casa_nueva.php');
 $oHashNew->setArraycamposHidden(['que' => 'nueva']);
 $oHashNew->setCamposForm('id_ubi');
@@ -97,7 +97,7 @@ $aCamposHiddenVer = [
     'propuesta_calendario' => $Qpropuesta_calendario,
 ];
 
-$oHashVer = new HashFront();
+$oHashVer = new HashF();
 $oHashVer->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/planning_casa_ver.php');
 $oHashVer->setArraycamposHidden($aCamposHiddenVer);
 $param_ver = $oHashVer->getParamAjax();

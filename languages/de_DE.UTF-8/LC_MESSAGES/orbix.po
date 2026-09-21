@@ -2546,8 +2546,8 @@ msgid "Página"
 msgstr "Seite"
 
 #: frontend/shared/PostRequest.php:940
-msgid "POST interno firmado (HashFront) con PHPSESSID (cookie o session_id())."
-msgstr "POST interner Signatur (HashFront) mit PHPSESSID (Cookie oder session_id())."
+msgid "POST interno firmado (HashF) con PHPSESSID (cookie o session_id())."
+msgstr "POST interner Signatur (HashF) mit PHPSESSID (Cookie oder session_id())."
 
 #: frontend/shared/controller/ayuda_index.php:56 frontend/menus/view/traducir_menu.phtml:9 frontend/shared/view/manual.phtml:58 frontend/shared/view/manual.phtml:80
 #, fuzzy
@@ -2623,29 +2623,29 @@ msgstr "beenden"
 msgid "Utilidades"
 msgstr "Dienstprogramme"
 
-#: frontend/shared/security/HashFront.php:230
+#: frontend/shared/security/HashF.php:230
 msgid "llegan campos hidden modificados"
 msgstr "llegan campos hidden modificados"
 
-#: frontend/shared/security/HashFront.php:258
+#: frontend/shared/security/HashF.php:258
 #, fuzzy
 #| msgid "llegan distinto número o nombre de los campos que se dice que se envian"
 msgid "llegan distinto número o nombre de los campos que se dice que se envían"
 msgstr "llegan distinto número o nombre de los campos que se dice que se envian"
 
-#: frontend/shared/security/HashFront.php:272 frontend/shared/security/HashFront.php:313
+#: frontend/shared/security/HashF.php:272 frontend/shared/security/HashF.php:313
 msgid "url modificada"
 msgstr "Geänderte URL"
 
-#: frontend/shared/security/HashFront.php:328 frontend/shared/security/HashFront.php:335
+#: frontend/shared/security/HashF.php:328 frontend/shared/security/HashF.php:335
 msgid "problema general de seguridad"
 msgstr "Allgemeines Sicherheitsproblem"
 
-#: frontend/shared/security/HashFront.php:336
+#: frontend/shared/security/HashF.php:336
 msgid "para ver más detalles define ORBIX_FRONT_DEBUG=1 en el entorno del frontend"
 msgstr "Um weitere Details zu erhalten, definiere ORBIX_FRONT_DEBUG=1 im Frontend-Umgebung."
 
-#: frontend/shared/security/HashFront.php:381
+#: frontend/shared/security/HashF.php:381
 msgid "página con seguridad desactivada"
 msgstr "Seite mit ausgeschalteter Sicherheit"
 

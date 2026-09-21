@@ -24,7 +24,6 @@ if (!empty($data['success'])) {
     ];
 
     $data['url_update_cama_full'] = $web . '/src/ubiscamas/update_cama_asistente';
-    $data['ctx_update_cama'] = HashB::sign('update_cama_asistente', ['id_activ' => $id_activ]);
 
     $data['update_solo_vip_full_url'] = $web . '/src/ubiscamas/update_solo_vip';
     $data['ctx_update_solo_vip'] = HashB::sign('update_solo_vip', ['id_activ' => $id_activ]);

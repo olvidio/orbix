@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\zonassacd\helpers\ZonassacdPayload;
 
@@ -19,7 +19,7 @@ $oDesplZonas->setBlanco(false);
 $url_ajax_lista = 'frontend/zonassacd/controller/zona_sacd_lista_ajax.php';
 $url_ajax_update = 'frontend/zonassacd/controller/zona_sacd_update_ajax.php';
 
-$oHashSacd = new HashFront();
+$oHashSacd = new HashF();
 $oHashSacd->setUrl($url_ajax_lista);
 $oHashSacd->setCamposForm('id_zona');
 $h_sacd = $oHashSacd->linkSinValParams();
@@ -27,17 +27,17 @@ $h_sacd = $oHashSacd->linkSinValParams();
 $url_zona_sacd_get = 'frontend/zonassacd/controller/zona_sacd_datos_get_ajax.php';
 $url_zona_sacd_put = 'frontend/zonassacd/controller/zona_sacd_datos_put_ajax.php';
 
-$oHashUrlGet = new HashFront();
+$oHashUrlGet = new HashF();
 $oHashUrlGet->setUrl($url_zona_sacd_get);
 $oHashUrlGet->setCamposForm('id_sacd!id_zona');
 $h_url_get = $oHashUrlGet->linkSinValParams();
 
-$oHashUrlPut = new HashFront();
+$oHashUrlPut = new HashF();
 $oHashUrlPut->setUrl($url_zona_sacd_put);
 $oHashUrlPut->setCamposForm('id_sacd!id_zona!propia!dw1!dw2!dw3!dw4!dw5!dw6!dw7');
 $h_url_put = $oHashUrlPut->linkSinValParams();
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_ajax_update);
 $oHash->setArraycamposHidden(['acumular' => 0]);
 $oHash->setCamposForm('id_zona!id_zona_new');

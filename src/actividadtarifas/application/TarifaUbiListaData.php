@@ -27,7 +27,7 @@ final class TarifaUbiListaData
      * @param array<string, mixed> $input
      * @return array{
      *   a_cabeceras: array<int,string>,
-     *   a_valores: array<int,array<int,string|array{clase?:string,script?:string,valor?:string}>>,
+     *   a_valores: array<int,array<int,string|array{clase?:string,script?:string,valor?:string,token_form?:string}>>,
      *   any_anterior: int,
      *   any_actual: int,
      *   puede_anadir: bool,
@@ -84,10 +84,17 @@ final class TarifaUbiListaData
 
             $a_valores[$i][1] = $a_seccion[$seccion] ?? '';
             if ($miSfsv === $seccion && $this->havePermOficina('adl')) {
-                $letraJs = json_encode($letra, JSON_UNESCAPED_SLASHES);
+                $token_form = HashB::sign('tarifa_ubi_form', [
+                    'id_item' => $id_item,
+                    'id_ubi' => $id_ubi,
+                    'year' => $year,
+                    'letra' => $letra,
+                ]);
+                $tokenFormJs = json_encode($token_form, JSON_UNESCAPED_SLASHES);
                 $a_valores[$i][2] = [
-                    'script' => "fnjs_modificar($id_item,$letraJs)",
+                    'script' => "fnjs_modificar($tokenFormJs)",
                     'valor' => $letra_serie,
+                    'token_form' => $token_form,
                 ];
             } else {
                 $a_valores[$i][2] = $letra_serie;

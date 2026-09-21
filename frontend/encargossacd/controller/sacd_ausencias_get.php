@@ -2,7 +2,7 @@
 
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\encargossacd\helpers\EncargossacdPayload;
@@ -67,11 +67,11 @@ $a_cosas = [
     'filtro_sacd' => $Qfiltro_sacd,
     'historial' => 1,
 ];
-$go_to = HashFront::link('frontend/encargossacd/controller/sacd_ausencias_get.php?' . http_build_query($a_cosas));
+$go_to = HashF::link('frontend/encargossacd/controller/sacd_ausencias_get.php?' . http_build_query($a_cosas));
 $lnk_historia = "<span class='link' onclick=\"fnjs_update_div('#ficha','$go_to');\">" . _("ver anteriores") . "</span>";
 
 $url_update = "frontend/encargossacd/controller/sacd_ausencias_update.php";
-$oHash = new HashFront();
+$oHash = new HashF();
 $aCamposHidden = [
     "enc_num" => $enc_num,
     "id_nom" => $Qid_nom,

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace frontend\cambios\helpers;
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\actividades\helpers\ActividadTipo;
 use frontend\actividades\helpers\TiposDeActividades;
 use frontend\shared\helpers\PayloadCoercion;
@@ -40,7 +40,7 @@ final class AvisosGenerarListaRender
         );
 
         $he = isset($payload['hash_eliminar']) && is_array($payload['hash_eliminar']) ? $payload['hash_eliminar'] : [];
-        $oHashElim = new HashFront();
+        $oHashElim = new HashF();
         $oHashElim->setUrl($url_eliminar);
         $cn = \frontend\shared\helpers\PayloadCoercion::string($he['campos_no'] ?? '');
         if ($cn !== '') {
@@ -49,7 +49,7 @@ final class AvisosGenerarListaRender
         $h_eliminar = $oHashElim->linkSinValParams();
 
         $hef = isset($payload['hash_eliminar_fecha']) && is_array($payload['hash_eliminar_fecha']) ? $payload['hash_eliminar_fecha'] : [];
-        $oHashElimF = new HashFront();
+        $oHashElimF = new HashF();
         $oHashElimF->setUrl($url_eliminar_fecha);
         $oHashElimF->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hef['campos_form'] ?? ''));
         $h_eliminar_fecha = $oHashElimF->linkSinValParams();

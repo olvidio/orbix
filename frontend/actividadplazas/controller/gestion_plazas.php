@@ -21,7 +21,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\TablaEditable;
 use frontend\shared\FrontBootstrap;
@@ -79,7 +79,7 @@ ListNavSupport::syncNavStateAt(
 );
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
-$oHashUpdate = new HashFront();
+$oHashUpdate = new HashF();
 $oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadplazas/gestion_plazas_update'));
 $oHashUpdate->setCamposForm('data!colName');
 $UpdateUrl = AppUrlConfig::srcBrowserUrl('/src/actividadplazas/gestion_plazas_update') . $oHashUpdate->linkSinVal();
@@ -116,7 +116,7 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 $oFormP->setBoton($boton);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm(
     'empiezamax!empiezamin!iactividad_val!iasistentes_val!id_tipo_activ!periodo!year!sasistentes!sactividad!sactividad2!extendida'
 );

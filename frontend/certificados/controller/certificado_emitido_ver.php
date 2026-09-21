@@ -7,7 +7,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\certificados\helpers\CertificadosPostInput;
 use frontend\certificados\helpers\CertificadosPayload;
@@ -62,7 +62,7 @@ $locData = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/share
 $a_locales = NotasFormSupport::desplegableOpciones($locData['a_locales'] ?? []);
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, $idioma, true);
 
-$oHashCertificadoPdf = new HashFront();
+$oHashCertificadoPdf = new HashF();
 $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!destino!f_certificado!idioma!nom!f_enviado');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado');
 $oHashCertificadoPdf->setArrayCamposHidden([

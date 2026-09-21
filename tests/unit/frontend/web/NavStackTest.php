@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\unit\frontend\web;
 
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\NavStack;
 use PHPUnit\Framework\TestCase;
 
@@ -181,7 +181,7 @@ class NavStackTest extends TestCase
         $this->assertSame('1', $post['hpos'] ?? null);
         $this->assertSame('z', $post['filtro'] ?? null);
 
-        $rebuilt = HashFront::add_hash(
+        $rebuilt = HashF::add_hash(
             ['filtro' => 'z'],
             $target['url'],
         );

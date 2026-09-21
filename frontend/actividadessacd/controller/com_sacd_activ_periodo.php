@@ -33,7 +33,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
 
@@ -89,7 +89,7 @@ $oFormP->setBoton("$sBotonBuscar  $sBotonEnviar");
 $pageData = PostRequest::getDataFromUrl('/src/actividadessacd/com_sacd_activ_periodo_page_data', []);
 $perm_mod_txt = (bool)($pageData['perm_mod_txt'] ?? true);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $a_camposHidden = [
     'sacd' => 'uno',
@@ -101,7 +101,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
-    $oHashUrl = new HashFront();
+    $oHashUrl = new HashF();
     $oHashUrl->setUrl($url);
     $oHashUrl->setCamposForm($campos);
     return $url . $oHashUrl->linkSinVal();
@@ -116,7 +116,7 @@ $url_enviar = $buildHashedUrl(
     AppUrlConfig::srcBrowserUrl('/src/actividadessacd/comunicacion_activ_sacd_enviar'),
     $camposForm
 );
-$url_com_txt = HashFront::link('frontend/actividadessacd/controller/com_sacd_txt.php');
+$url_com_txt = HashF::link('frontend/actividadessacd/controller/com_sacd_txt.php');
 
 $a_campos = [
     'oPosicion' => $oPosicion,

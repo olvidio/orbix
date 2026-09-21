@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../FrontBootstrap.php';
@@ -17,14 +17,14 @@ function ayudaPreguntarEnlace(string $path, string $query = ''): array
 {
     $fullUrl = AppUrlConfig::getPublicAppBaseUrl() . $path;
     return [
-        'href' => HashFront::link($query === '' ? $fullUrl : $fullUrl . '?' . $query),
+        'href' => HashF::link($query === '' ? $fullUrl : $fullUrl . '?' . $query),
         'full_url' => $fullUrl,
-        'parametros' => HashFront::add_hash($query, $fullUrl),
+        'parametros' => HashF::add_hash($query, $fullUrl),
     ];
 }
 
 $urlPreguntar = AppUrlConfig::srcBrowserUrl('/src/shared/ayuda_preguntar');
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($urlPreguntar);
 $oHash->setCamposForm('pregunta!limite');
 $hashPreguntar = $oHash->getParamAjaxEnArray();

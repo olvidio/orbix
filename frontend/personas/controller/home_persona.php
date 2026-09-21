@@ -7,7 +7,7 @@ use frontend\dossiers\helpers\DossiersListaRender;
 use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\PayloadCoercion;
@@ -99,10 +99,10 @@ $aviso = $home['aviso'];
 
 $a_parametros = ['pau' => $pau, 'id_nom' => $id_nom, 'obj_pau' => $Qobj_pau];
 $base = AppUrlConfig::getPublicAppBaseUrl();
-$gohome = HashFront::link($base . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
-$go_ficha = HashFront::link($base . '/frontend/personas/controller/personas_editar.php?' . http_build_query($a_parametros));
+$gohome = HashF::link($base . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
+$go_ficha = HashF::link($base . '/frontend/personas/controller/personas_editar.php?' . http_build_query($a_parametros));
 $a_parametros_dossier = ['pau' => $pau, 'id_pau' => $id_nom, 'obj_pau' => $Qobj_pau];
-$godossiers = HashFront::link($base . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
+$godossiers = HashF::link($base . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 
 $lista_dossiers_html = \frontend\dossiers\helpers\DossiersListaRender::render($pau, $id_nom, $Qobj_pau);
 

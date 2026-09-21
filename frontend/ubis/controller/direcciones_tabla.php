@@ -3,7 +3,7 @@
 use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
@@ -31,7 +31,7 @@ $oTabla->setCabeceras($lista['cabeceras']);
 $oTabla->setBotones([]);
 $oTabla->setDatos($lista['valores']);
 
-$url_nueva = HashFront::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query([
+$url_nueva = HashF::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query([
     'mod' => 'nuevo',
     'id_ubi' => $Qid_ubi,
     'obj_dir' => $Qobj_dir,

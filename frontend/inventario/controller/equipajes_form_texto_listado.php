@@ -3,7 +3,7 @@
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
 
@@ -41,7 +41,7 @@ switch ($Qloc) {
         break;
 }
 
-$oHashForm = new HashFront();
+$oHashForm = new HashF();
 $oHashForm->setCamposForm('texto');
 $oHashForm->setArrayCamposHidden([
     'id_equipaje' => $Qid_equipaje,

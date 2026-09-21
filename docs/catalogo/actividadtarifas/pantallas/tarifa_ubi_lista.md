@@ -16,7 +16,8 @@ estado_revision: "revisado"
 
 # Tarifa Ubi Lista
 
-Fragmento AJAX: tabla de `TarifaUbi` para la casa/año seleccionados; emite `token_copiar` (HashB).
+Fragmento AJAX: tabla de `TarifaUbi` para la casa/año seleccionados; emite `token_form` HashB
+por fila editable y `token_copiar` para la acción global.
 
 ## Tipo
 
@@ -52,7 +53,8 @@ No se han detectado controladores frontend relacionados.
 ## Manual De Usuario
 
 Recibe `id_ubi` y `year` del formulario principal. Muestra botón copiar tarifas del año anterior
-si `puede_anadir`; pasa `token_copiar` a `fnjs_copiar_tarifas`.
+si `puede_anadir`; pasa `token_copiar` a `fnjs_copiar_tarifas`. Cada edición llama
+`fnjs_modificar(token_form)` sin exponer `id_item`.
 
 ## Ruta de menú
 

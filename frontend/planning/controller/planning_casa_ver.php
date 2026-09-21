@@ -7,7 +7,7 @@ use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Periodo;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\FuncTablasSupport;
@@ -70,7 +70,7 @@ try {
     $a_actividades = PlanningPayload::actividadesMap($d['a_actividades'] ?? null);
     $casa_periodos_por_ubi = PlanningPayload::casaPeriodosPorUbi($d['casa_periodos_por_ubi'] ?? null);
 
-    $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
+    $goLeyenda = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
     $estilos = PlanningPayload::calendarioEstilos();
     $css = $estilos['css'];

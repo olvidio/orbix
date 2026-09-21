@@ -9,7 +9,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 /**
@@ -53,13 +53,13 @@ $oDesplCtrs = DesplCentros::build($Qfiltro_ctr, $Qid_ubi);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $url_ctr = AppUrlConfig::srcBrowserUrl('/src/encargossacd/ctr_get_select_data');
-$oHashCtr = new HashFront();
+$oHashCtr = new HashF();
 $oHashCtr->setUrl($url_ctr);
 $oHashCtr->setCamposForm('filtro_ctr!id_ubi');
 $h_ctr = $oHashCtr->linkSinValParams();
 
 $url_ficha = 'frontend/encargossacd/controller/ctr_get_ficha.php';
-$oHashFicha = new HashFront();
+$oHashFicha = new HashF();
 $oHashFicha->setUrl($url_ficha);
 $oHashFicha->setCamposForm('id_ubi');
 $h_ficha = $oHashFicha->linkSinValParams();

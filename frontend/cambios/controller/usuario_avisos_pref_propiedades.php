@@ -10,7 +10,7 @@ use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\cambios\helpers\CambiosPayload;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -41,7 +41,7 @@ foreach ($propiedades as $p) {
     $scamposForm .= $id_cond . '!' . $td_item . '!';
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm($scamposForm . '!salida!id_item_usuario_objeto_prop');
 $oHash->setArrayCamposHidden(['objeto_prop' => $Qobjeto]);
 $oHash->setCamposChk($Qobjeto);

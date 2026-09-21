@@ -4,20 +4,20 @@
 
 // This file requires the $h variable to be defined before inclusion
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use src\shared\config\ConfigGlobal;
 if (!isset($h)) {
     $h = '';
 }
 
 $navAtrasUrl = 'frontend/shared/controller/nav_atras.php';
-$oHashNavAtras = new HashFront();
+$oHashNavAtras = new HashF();
 $oHashNavAtras->setUrl($navAtrasUrl);
 $oHashNavAtras->setCamposNo('n');
 $navAtrasSignedParams = $oHashNavAtras->linkSinValParams();
 
 $navStateUrl = 'frontend/shared/controller/nav_state.php';
-$oHashNavState = new HashFront();
+$oHashNavState = new HashF();
 $oHashNavState->setUrl($navStateUrl);
 $oHashNavState->setCamposNo('nav_patch');
 $navStateSignedParams = $oHashNavState->linkSinValParams();
@@ -442,7 +442,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
             "heightGrid": heightGrid
         };
         var sPrefs = JSON.stringify(oPrefs);
-        // Misma URL base que {@see index.php} al construir HashFront para preferencias_guardar (FastRoute).
+        // Misma URL base que {@see index.php} al construir HashF para preferencias_guardar (FastRoute).
         var url = "<?= AppUrlConfig::srcBrowserUrl('/src/usuarios/preferencias_guardar') ?>";
         var parametros = 'que=slickGrid&tabla=' + tabla + '&sPrefs=' + encodeURIComponent(sPrefs) + '<?= $h ?>';
         $.ajax({

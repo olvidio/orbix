@@ -2,7 +2,7 @@
 
 use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -14,7 +14,7 @@ $data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/calendario_
     'id_ubi' => $Qid_ubi,
 ]));
 $rows = UbisPayload::calendarioPeriodoRows($data['rows'] ?? []);
-$oHash = new HashFront();
+$oHash = new HashF();
 $i = 0;
 $txt = '';
 foreach ($rows as $row) {

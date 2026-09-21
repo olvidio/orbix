@@ -3,7 +3,7 @@
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\encargossacd\helpers\EncargossacdCtrRender;
 use frontend\encargossacd\helpers\EncargossacdPostInput;
@@ -80,7 +80,7 @@ foreach ($encargos as $idx => $enc) {
     $dedic_ctr_t[$e] = $enc['dedic_ctr_t'];
     $dedic_ctr_v[$e] = $enc['dedic_ctr_v'];
 
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setArrayCamposHidden([
         'e' => $e,
         "mod_$e" => $mod,
@@ -126,7 +126,7 @@ if ($num_enc === 0) {
 }
 
 $url_ficha = 'frontend/encargossacd/controller/ctr_get_ficha.php';
-$oHashFicha = new HashFront();
+$oHashFicha = new HashF();
 $oHashFicha->setUrl($url_ficha);
 $oHashFicha->setCamposForm('id_ubi!seleccion_sacd');
 $h_ficha = $oHashFicha->linkSinValParams();

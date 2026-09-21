@@ -61,7 +61,7 @@ function pathOnlyLastSegment(pathname: string): string {
 }
 
 /**
- * Muchos controllers Orbix están pensados para POST (HashFront); un GET suele esperar entrada o tardar hasta el timeout del servidor.
+ * Muchos controllers Orbix están pensados para POST (HashF); un GET suele esperar entrada o tardar hasta el timeout del servidor.
  * Por defecto no los probamos así. Para forzar todos los enlaces recolectados: `E2E_STRICT_MENU_LINK_GET=1` (mucho más lento / inestable).
  */
 function shouldSkipBareGetOrbix(heuristicHref: string): boolean {

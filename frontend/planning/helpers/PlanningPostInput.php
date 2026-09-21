@@ -42,7 +42,7 @@ public static function postStringList(string $name): array
 
 /**
  * Personas seleccionadas en listas SlickGrid (planning persona, etc.).
- * Prioriza `sSeleccionados` (csv) porque PostRequest/HashFront pierden arrays `sel[]`.
+ * Prioriza `sSeleccionados` (csv) porque PostRequest/HashF pierden arrays `sel[]`.
  *
  * @return list<string>
  */

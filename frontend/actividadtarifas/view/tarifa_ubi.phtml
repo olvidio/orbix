@@ -50,24 +50,23 @@
         });
     };
 
-    fnjs_modificar = function (id_item, letra) {
+    fnjs_modificar = function (ctx_form) {
         $('#div_modificar').addClass('ventana');
         $('#div_modificar').width('auto');
         $('#div_modificar').height('auto');
         document.getElementById("overlay").style.display = "block";
 
-        // Usamos URLs firmadas distintas para "nuevo" y "modificar":
-        // validatePost exige que los parametros que llegan sean
-        // exactamente los que se firmaron.
+        // La edición transporta una cápsula HashB opaca por fila. El alta
+        // aún usa los filtros visibles porque no existe recurso que identificar.
         var url, params;
-        if (id_item === 'nuevo') {
+        if (ctx_form === 'nuevo') {
             var id_ubi = $('#id_cdc').val();
             var year = $('#year').val();
             url = URL_FORM_NUEVO;
             params = 'id_ubi=' + encodeURIComponent(id_ubi) + '&year=' + encodeURIComponent(year);
         } else {
             url = URL_FORM_MODIFICAR;
-            params = 'id_item=' + encodeURIComponent(id_item) + '&letra=' + encodeURIComponent(letra || '');
+            params = 'ctx_form=' + encodeURIComponent(ctx_form || '');
         }
         var sep = url.indexOf('?') === -1 ? '?' : '&';
         fnjs_update_div('#div_modificar', url + sep + params);

@@ -4,7 +4,7 @@ use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\misas\support\PeriodoTdHelper;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\misas\helpers\MisasDesplegableSupport;
 use frontend\shared\helpers\PayloadCoercion;
@@ -40,7 +40,7 @@ if (empty($a_sacd)) {
 }
 
 $url_ver_plan_sacd = 'frontend/misas/controller/ver_plan_sacd.php';
-$oHashPlanSacd = new HashFront();
+$oHashPlanSacd = new HashF();
 $oHashPlanSacd->setUrl($url_ver_plan_sacd);
 $oHashPlanSacd->setCamposForm('id_sacd!periodo!empiezamin!empiezamax');
 $h_plan_sacd = $oHashPlanSacd->linkSinValParams();

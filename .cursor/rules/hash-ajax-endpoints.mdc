@@ -1,5 +1,5 @@
 ---
-description: Hash de formularios/AJAX al mover endpoints (getCamposHtml vs linkSinVal)
+description: HashF de formularios/AJAX al mover endpoints
 globs: frontend/**/controller/**/*.php,frontend/**/view/**/*.phtml,frontend/**/view/**/*.html.twig,apps/**/controller/**/*.php
 alwaysApply: false
 ---
@@ -10,9 +10,9 @@ alwaysApply: false
 
 | API | Firma | Uso |
 |-----|-------|-----|
-| `Hash::getCamposHtml($aCampos, $aHidden)` | Campos del formulario (no la URL) | **POST** con URL fija |
-| `Hash::linkSinVal($url, $aCampos)` | **URL + nombres de campo** | Fragmento GET/AJAX; cuidar `?` vs `&` |
-| `Hash::link` / `HashF` | URL hacia UI | Solo en capa que sirve HTML (`frontend/`, `apps/` legacy) |
+| `$oHashF->getCamposHtml()` | Campos del formulario (no la URL), configurados con `setCamposForm()` y `setArrayCamposHidden()` | **POST** con URL fija |
+| `$oHashF->linkSinVal()` | **URL + nombres de campo**, configurados con `setUrl()` y `setCamposForm()` | Fragmento GET/AJAX; cuidar `?` vs `&` |
+| `HashF::link()` | URL hacia UI | Solo en capa que sirve HTML (`frontend/`, `apps/` legacy) |
 
 - URL nueva → **Hash nuevo** (no reusar el del dispatcher monolítico partido).
 - No meter en `setCamposForm` campos que a veces no viajan.
@@ -21,7 +21,7 @@ alwaysApply: false
 
 ## Checklist URL + AJAX
 
-1. Nuevo Hash en el controlador frontend para esa URL.
+1. Nuevo `HashF` en el controlador frontend para esa URL.
 2. Pasar `url_xxx` en `$a_campos`.
 3. En JS: `var url_xxx = '<?= $url_xxx ?>';`
 4. `dataType: 'json'` y parseo de `ContestarJson`.
@@ -29,8 +29,8 @@ alwaysApply: false
 
 ## Firma de presentación vs backend
 
-- `src/domain` y `src/application`: **no** `Hash::link` hacia `frontend/`/`apps/`.
-- Preferir `link_spec` en JSON/DTO; firmar en `frontend/` (`HashFrontSignedLink` / `Hash::link`).
+- `src/domain` y `src/application`: **no** `HashF::link` hacia `frontend/`/`apps/`.
+- Preferir `link_spec` en JSON/DTO; firmar en `frontend/` (`HashFSignedLink` / `HashF::link`).
 - Mutaciones AJAX con contexto firmado: patrón `HashB::sign` + POST `ctx` donde ya exista.
 
 Referencia: [`AGENTS.md`](../../AGENTS.md) §§ «Hash al mover endpoints AJAX», «Enlaces firmados hacia la UI»; [`docs/dev/hash_arquitectura.md`](../../docs/dev/hash_arquitectura.md).

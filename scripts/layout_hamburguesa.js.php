@@ -3,7 +3,7 @@
    importante para que el navegador entienda que lo que sigue es javascrip, ya que
 	la extension del fichero no es ".js", sino ".js.php"
 */
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 //header('Content-Type: text/javascript; charset=UTF-8');
 ?>
@@ -167,7 +167,7 @@ function showUser() {
 
 function showPortada(groupName) {
     <?php
-    $oHash1 = new HashFront();
+    $oHash1 = new HashF();
     $oHash1->setUrl("public/portada.php");
     $oHash1->setCamposForm('grupmenu');
     $h = $oHash1->linkSinValParams();

@@ -7,7 +7,6 @@
  * @var int $id_ubi
  * @var string $reload_main_url
  * @var string $url_update_cama_full
- * @var string $ctx_update_cama
  * @var string $update_solo_vip_full_url
  * @var string $ctx_update_solo_vip
  * @var string $distribucion_open_url
@@ -106,7 +105,8 @@
         <h3>Asistentes sin asignar</h3>
         <div id="lista-asistentes">
             <?php foreach ($asistentes_sin_cama as $aAsistente): ?>
-            <div class="asistente-row" data-id-nom="<?= $aAsistente['id_nom']?>">
+            <div class="asistente-row"
+                 data-ctx-update-cama="<?= htmlspecialchars($aAsistente['ctx_update_cama'], ENT_QUOTES) ?>">
                 <?= htmlspecialchars($aAsistente['apellidos'])?>
             </div>
             <?php
@@ -194,15 +194,15 @@ endforeach; ?>
             }
 
             let id_cama = camaSeleccionada.id_cama;
-            let id_nom = asistenteSeleccionado.data('id-nom');
+            let ctx_update_cama = asistenteSeleccionado.data('ctx-update-cama');
             let nombreAsistente = asistenteSeleccionado.text().trim();
 
-            if (camaSeleccionada.id_nom) {
+            if (camaSeleccionada.ctx_update_cama) {
                 alert("Esta cama ya tiene un asistente asignado. Desasigne primero.");
                 return;
             }
 
-            asignarCamaBD(id_cama, id_nom, function (success) {
+            asignarCamaBD(id_cama, ctx_update_cama, function (success) {
                 if (success) {
                     // Recargar la página para ver los cambios reflejados en ambos lados
                     // Es lo más seguro dado que la tabla se genera en el backend
@@ -217,13 +217,13 @@ endforeach; ?>
                 return;
             }
 
-            let id_nom = camaSeleccionada.id_nom;
-            if (!id_nom) {
+            let ctx_update_cama = camaSeleccionada.ctx_update_cama;
+            if (!ctx_update_cama) {
                 alert("Esta cama no tiene asistente.");
                 return;
             }
 
-            asignarCamaBD('', id_nom, function (success) {
+            asignarCamaBD('', ctx_update_cama, function (success) {
                 if (success) {
                     fnjs_actualizar();
                 }
@@ -242,12 +242,11 @@ endforeach; ?>
             fnjs_update_div('#main', '<?= htmlspecialchars($reload_main_url, ENT_QUOTES) ?>');
         }
 
-        function asignarCamaBD(id_cama, id_nom, callback) {
+        function asignarCamaBD(id_cama, ctx_update_cama, callback) {
             let url = '<?= htmlspecialchars($url_update_cama_full, ENT_QUOTES) ?>';
             let parameters = {
-                id_nom: id_nom,
                 id_cama: id_cama,
-                ctx: <?= json_encode($ctx_update_cama, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
+                ctx: ctx_update_cama
         };
 
         $.ajax({

@@ -52,7 +52,7 @@ if (is_file($menusFile)) {
 }
 
 $pantallaResumen = [
-    'dossiers_ver' => 'Visor de dossiers de una entidad (persona/actividad/ubi): cabecera con enlaces «dossiers» y «home», modo lista de carpetas o modo ficha con segmentos `select_*` y tablas `datos_tabla`. Gestiona navegación con `ListNavSupport` y firma `link_spec` en el frontend (`HashFront`).',
+    'dossiers_ver' => 'Visor de dossiers de una entidad (persona/actividad/ubi): cabecera con enlaces «dossiers» y «home», modo lista de carpetas o modo ficha con segmentos `select_*` y tablas `datos_tabla`. Gestiona navegación con `ListNavSupport` y firma `link_spec` en el frontend (`HashF`).',
     'lista_dossiers' => 'Tabla parcial «relación de dossiers» (modo lista de `dossiers_ver`): icono y descripción por tipo; enlaces `href_ver` según permiso (`perm_a` 1 sin acceso, 2 lectura, 3 escritura). Renderizada desde `dossiers_ver.php`, no tiene controller propio.',
     'perm_dossiers' => 'Listado de tipos de dossier para administrar permisos de un ámbito (`tipo` = `p` personas, `u` ubis, `a` actividades). Cada fila enlaza a `perm_dossier_ver` para ver o modificar la definición del tipo.',
     'perm_dossier_ver' => 'Formulario de permisos de acceso a un tipo de dossier: metadatos (descripción, tablas, app/class/código), checkbox `depende_modificar` y máscaras de lectura/escritura por oficina. Guardar/eliminar solo con `admin_sv`/`admin_sf` (`perm_admin`).',

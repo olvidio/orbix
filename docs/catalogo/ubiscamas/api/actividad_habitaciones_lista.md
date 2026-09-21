@@ -50,14 +50,13 @@ Construye el listado de habitaciones/camas de la ubi de una actividad con ocupac
   - `id_ubi`: ubi de la actividad
   - `solo_vip`: boolean (desc_activ=camasVIP)
   - `habitaciones_con_camas`: map id_hab=>{habitacion, camas[]}
-  - `camas_con_asistentes`: map id_cama=>{id_nom, apellidos}
-  - `asistentes_sin_cama`: lista {id_nom, apellidos}
+  - `camas_con_asistentes`: map id_cama=>{apellidos, ctx_update_cama}
+  - `asistentes_sin_cama`: lista {apellidos, ctx_update_cama}
   - `a_cabeceras`: cabeceras tabla
   - `a_botones`: botones (vacío)
-  - `a_valores`: filas con sel id_habitacion#id_cama
+  - `a_valores`: filas con sel id_habitacion#id_cama y `ctx_update_cama` cuando hay ocupante
   - `reload_main_link_spec`: link_spec lista_habitaciones
   - `url_update_cama_full`: URL update_cama_asistente
-  - `ctx_update_cama`: HashB firmado
   - `update_solo_vip_full_url`: URL update_solo_vip
   - `ctx_update_solo_vip`: HashB firmado
   - `distribucion_open_link_spec`: link_spec distribución

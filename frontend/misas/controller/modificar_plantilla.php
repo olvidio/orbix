@@ -3,7 +3,7 @@
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\misas\helpers\MisasDesplegableSupport;
 use frontend\shared\helpers\PayloadCoercion;
@@ -39,18 +39,18 @@ $oDesplOrden->setNombre('orden');
 $oDesplOrden->setAction('fnjs_ver_plantilla_zona()');
 
 $url_importar_plantilla = 'frontend/misas/controller/importar_plantilla.php';
-$oHashImportarPlantilla = new HashFront();
+$oHashImportarPlantilla = new HashF();
 $oHashImportarPlantilla->setUrl($url_importar_plantilla);
 $oHashImportarPlantilla->setCamposForm('id_zona!tipo_plantilla_origen!tipo_plantilla_destino');
 $h_importar_plantilla = $oHashImportarPlantilla->linkSinValParams();
 
 $url_modificar_cuadricula_zona = 'frontend/misas/controller/modificar_cuadricula_zona.php';
-$oHashZonaTipo = new HashFront();
+$oHashZonaTipo = new HashF();
 $oHashZonaTipo->setUrl($url_modificar_cuadricula_zona);
 $oHashZonaTipo->setCamposForm('id_zona!tipo_plantilla!orden');
 $h_zona_tipo = $oHashZonaTipo->linkSinValParams();
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl('frontend/misas/controller/modificar_plantilla.php');
 $oHash->setCamposForm('id_zona!tipo_plantilla!orden!importar_de_plantilla');
 

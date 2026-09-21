@@ -15,7 +15,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 use frontend\shared\web\Lista;
 
@@ -112,7 +112,7 @@ if ($Qaviso_tipo !== 0) {
     $oDesplTiposAviso->setOpcion_sel(\frontend\shared\helpers\PayloadCoercion::string($Qaviso_tipo));
 }
 
-$oHashCond = new HashFront();
+$oHashCond = new HashF();
 $oHashCond->setCamposForm("id_usuario!aviso_tipo");
 $oHashCond->setCamposNo('solo_lista');
 
@@ -135,7 +135,7 @@ if ($Qid_usuario !== 0) {
     $oTabla->setBotones($a_botones);
     $oTabla->setDatos($view['a_valores']);
 
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setArrayCamposHidden([
         'id_usuario' => $Qid_usuario,
         'aviso_tipo' => $Qaviso_tipo,

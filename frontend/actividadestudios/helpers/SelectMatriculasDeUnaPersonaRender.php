@@ -9,11 +9,11 @@ use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 
 /**
- * Bloque dossier 1303 en frontend: HashFront, Lista, URLs firmadas.
+ * Bloque dossier 1303 en frontend: HashF, Lista, URLs firmadas.
  *
  * @see \src\actividadestudios\application\Select_matriculas_de_una_persona::getSegmentData()
  */
@@ -38,7 +38,7 @@ final class SelectMatriculasDeUnaPersonaRender
             $msg = \frontend\shared\helpers\PayloadCoercion::string($todosForm['mensaje'] ?? '');
             $action = \frontend\shared\helpers\PayloadCoercion::string($todosForm['dossiers_form_action'] ?? 'frontend/dossiers/controller/dossiers_ver.php');
             $hash = isset($todosForm['hash']) && is_array($todosForm['hash']) ? $todosForm['hash'] : [];
-            $oHashA = new HashFront();
+            $oHashA = new HashF();
             $oHashA->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_form'] ?? ''));
             $oHashA->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_no'] ?? ''));
             $hiddenA = $hash['campos_hidden'] ?? [];
@@ -87,7 +87,7 @@ final class SelectMatriculasDeUnaPersonaRender
     private static function renderCa(array $ca, array $wrapper): string
     {
         $hash = isset($ca['hash']) && is_array($ca['hash']) ? $ca['hash'] : [];
-        $oHashCa = new HashFront();
+        $oHashCa = new HashF();
         $oHashCa->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_form'] ?? ''));
         $oHashCa->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hash['campos_no'] ?? ''));
         $hidden = $hash['campos_hidden'] ?? [];

@@ -147,8 +147,8 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.buscar_acta`
 - Controller: `src/notas/infrastructure/ui/http/controllers/buscar_acta.php`
-- Entrada: `post.acta:string`
-- Respuesta: `standard_envelope_string_data`
+- Entrada: `post.acta:string`, `post.acta_sigla:string`, `post.id_pau:int` (id_nom del alumno; necesario para resolver `id_nivel` de asignaturas obligatorias según su plan)
+- Respuesta: `standard_envelope_string_data` (`id_asignatura` del acta; `id_nivel` = hueco curricular en el plan del alumno)
 
 ## `/src/notas/comprobar_notas_constants_data`
 

@@ -19,7 +19,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -41,7 +41,7 @@ $mi_dele = OrbixRuntime::miDelef();
 $txt = sprintf(_("comparar %s con:"), $mi_dele);
 
 $url_balance_dl = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadplazas/controller/plazas_balance_dl.php';
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_balance_dl);
 $oHash->setCamposForm('dl!id_tipo_activ');
 $h = $oHash->linkSinValParams();

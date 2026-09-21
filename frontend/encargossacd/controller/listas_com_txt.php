@@ -6,7 +6,7 @@ use frontend\encargossacd\helpers\EncargossacdPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 /**
@@ -58,12 +58,12 @@ $oDesplIdiomas = new Desplegable('idioma', $a_locales, 'es', true);
 $oDesplIdiomas->setAction('fnjs_get_texto()');
 
 $url_update = 'frontend/encargossacd/controller/listas_com_txt_update.php';
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_update);
 $oHash->setCamposForm('comunicacion!clave!idioma');
 
 $url_get = 'frontend/encargossacd/controller/listas_com_txt_get.php';
-$oHashGet = new HashFront();
+$oHashGet = new HashF();
 $oHashGet->setUrl($url_get);
 $oHashGet->setCamposForm('clave!idioma');
 $h_get = $oHashGet->linkSinValParams();

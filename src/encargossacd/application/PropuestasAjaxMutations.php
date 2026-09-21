@@ -2,8 +2,6 @@
 
 namespace src\encargossacd\application;
 
-use frontend\shared\security\HashFront;
-use frontend\shared\web\Desplegable;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdRepositoryInterface;
@@ -52,14 +50,15 @@ final class PropuestasAjaxMutations
         $id_enc = (int) (\src\shared\domain\helpers\FilterPostGet::post('id_enc') ?? 0);
         $tipo = (string) (\src\shared\domain\helpers\FilterPostGet::post('tipo') ?? '');
 
-        $opciones = $this->personaSacdRepository->getArraySacd("AND id_tabla ~ '^(a|n|sss)$'");
-        $oDesplTitular = new Desplegable('prop_sacd', $opciones, (string) $id_sacd);
-        $oDesplTitular->setAction("fnjs_cmb_sacd('$tipo',$id_item,$id_enc);");
-
-        $html = '<span class="x" onClick="fnjs_cerrar_propuesta_popup(); return false;" title=' . _('cerrar') . '>[x]</span><br><br>';
-        $html .= $oDesplTitular->desplegable();
-
-        return ['success' => true, 'html' => $html];
+        return [
+            'success' => true,
+            'popup' => 'lista_sacd',
+            'opciones' => $this->personaSacdRepository->getArraySacd("AND id_tabla ~ '^(a|n|sss)$'"),
+            'id_sacd' => $id_sacd,
+            'id_item' => $id_item,
+            'id_enc' => $id_enc,
+            'tipo' => $tipo,
+        ];
     }
 
     /**
@@ -150,27 +149,18 @@ final class PropuestasAjaxMutations
         $encargo = $this->encargoRepository->findById($id_enc);
         $desc_enc = (string) ($encargo?->getDesc_enc() ?? '');
 
-        $oHash = new HashFront();
-        $oHash->setUrl('frontend/encargossacd/controller/propuestas_ajax.php');
-        $oHash->setArrayCamposHidden([
-            'que' => 'dedicacion_update',
+        return [
+            'success' => true,
+            'popup' => 'dedicacion',
+            'apellidos_nombre' => $apellidos_nombre,
+            'desc_enc' => $desc_enc,
             'id_sacd' => $id_sacd,
             'id_item' => $id_item,
             'id_enc' => $id_enc,
-        ]);
-        $oHash->setCamposForm('dedic_m!dedic_t!dedic_v');
-
-        $html = $apellidos_nombre;
-        $html .= '<span class="x" onClick="fnjs_cerrar_propuesta_popup(); return false;" title=' . _('cerrar') . '>[x]</span><br>';
-        $html .= "<form method='post' id='modulos' action=''>";
-        $html .= $oHash->getCamposHtml();
-        $html .= "<table style='width: 400px;' class='tono2'><tr><td colspan=3>$desc_enc</td></tr>";
-        $html .= "<td><input type='text' size='1' name='dedic_m' value='$dedic_m'>" . _('mañanas') . '</td>';
-        $html .= "<td><input type='text' size='1' name='dedic_t' value='$dedic_t'>" . _('tarde 1ª hora') . '</td>';
-        $html .= "<td><input type='text' size='1' name='dedic_v' value='$dedic_v'>" . _('tarde 2ª hora') . '</td></tr>';
-        $html .= "<tr><td colspan=3><input type='button' onClick='fnjs_guardar_horario();' value='" . _('ok') . "'></td></tr></table></form>";
-
-        return ['success' => true, 'html' => $html];
+            'dedic_m' => $dedic_m,
+            'dedic_t' => $dedic_t,
+            'dedic_v' => $dedic_v,
+        ];
     }
 
     /**
@@ -182,14 +172,18 @@ final class PropuestasAjaxMutations
         $apellidos_nombre = $this->apellidosNombre($id_sacd);
         $cEncargosSacd = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(['id_nom_new' => $id_sacd]);
 
-        $html = "<span class=\"nom\">$apellidos_nombre</span>";
-        $html .= '<span class="x" onClick="fnjs_cerrar_propuesta_popup(); return false;" title=' . _('cerrar') . '>[x]</span>';
+        $encargos = [];
         foreach ($cEncargosSacd as $oEncargoSacd) {
             $encargo = $this->encargoRepository->findById($oEncargoSacd->getId_enc());
-            $html .= '<br><br>' . (string) ($encargo?->getDesc_enc() ?? '');
+            $encargos[] = (string) ($encargo?->getDesc_enc() ?? '');
         }
 
-        return ['success' => true, 'html' => $html];
+        return [
+            'success' => true,
+            'popup' => 'info',
+            'apellidos_nombre' => $apellidos_nombre,
+            'encargos' => $encargos,
+        ];
     }
 
     /**
@@ -202,7 +196,7 @@ final class PropuestasAjaxMutations
         $id_enc = (int) (\src\shared\domain\helpers\FilterPostGet::post('id_enc') ?? 0);
         $id_sacd = (int) (\src\shared\domain\helpers\FilterPostGet::post('id_sacd') ?? 0);
 
-        $html = '';
+        $row = null;
         $id_sacd_old = 0;
         $id_sacd_prop = 0;
         $error_txt = '';
@@ -235,11 +229,19 @@ final class PropuestasAjaxMutations
             if ($id_sacd_old === 0 && $id_sacd === 0) {
                 $nombre = _('nuevo');
                 if ($tipo === 'colaborador') {
-                    $html = 'borrar';
+                    $row = ['tipo' => 'borrar'];
                     $this->propuestaEncargoSacdRepository->Eliminar($oPropuesta);
                 } else {
                     $nom_tipo = $tipo === 'titular' ? _('titular') : _('suplente');
-                    $html = $this->filaPropuestaHtml($tipo, $id_item, $id_enc, $id_sacd, $nombre, $nom_tipo);
+                    $row = [
+                        'tipo' => 'celdas',
+                        'encargo_tipo' => $tipo,
+                        'id_item' => $id_item,
+                        'id_enc' => $id_enc,
+                        'id_sacd' => $id_sacd,
+                        'nombre' => $nombre,
+                        'nom_tipo' => $nom_tipo,
+                    ];
                     $oPropuesta->setId_nom_new(null);
                     $this->propuestaEncargoSacdRepository->Guardar($oPropuesta);
                 }
@@ -260,8 +262,14 @@ final class PropuestasAjaxMutations
         $nombre = $this->apellidosNombre($id_sacd);
         $nombre = $nombre === '' ? _('nuevo') : $nombre;
 
-        if ($html === '' && $id_item === $id_enc) {
-            $html = '<tr id="tr_colaborador' . $id_item_new . '" class="sf" title="' . $id_sacd . '"><td>' . _('colaborador') . '</td><td>-</td><td><span class="link" id="colaborador_' . $id_item_new . '" title="' . $id_sacd . '" onClick="fnjs_ver_sacd_posibles(\'colaborador\',' . $id_item_new . ',' . $id_enc . ')">' . $nombre . '</span></td><td><span class="link" onClick="fnjs_info(\'colaborador\',' . $id_item_new . ')">' . _('+ info') . '</span></td><td><span class="link" onClick="fnjs_dedicacion(\'colaborador\',' . $id_item_new . ',' . $id_enc . ')">?</span></td><td id="td_' . $id_item_new . '"></td></tr>';
+        if ($row === null && $id_item === $id_enc) {
+            $row = [
+                'tipo' => 'fila_colaborador',
+                'id_item' => $id_item_new,
+                'id_enc' => $id_enc,
+                'id_sacd' => $id_sacd,
+                'nombre' => $nombre,
+            ];
         }
 
         if ($error_txt !== '') {
@@ -272,7 +280,7 @@ final class PropuestasAjaxMutations
             'success' => true,
             'nombre' => $nombre,
             'id_sacd' => $id_sacd,
-            'html' => $html,
+            'row' => $row,
         ];
     }
 
@@ -286,14 +294,4 @@ final class PropuestasAjaxMutations
         return $persona?->getApellidosNombre() ?? '';
     }
 
-    private function filaPropuestaHtml(
-        string $tipo,
-        int $id_item,
-        int $id_enc,
-        int $id_sacd,
-        string $nombre,
-        string $nom_tipo,
-    ): string {
-        return "<td>$nom_tipo</td><td>-</td><td><span class=\"link\" id=\"{$tipo}_$id_item\" title=\"$id_sacd\" onClick=\"fnjs_ver_sacd_posibles('$tipo',$id_item,$id_enc)\">$nombre</span></td><td><span class=\"link\" onClick=\"fnjs_info('$tipo',$id_item)\">" . _('+ info') . "</span></td><td><span class=\"link\" onClick=\"fnjs_dedicacion('$tipo',$id_item,$id_enc)\">?</span></td><td id=\"td_$id_item\"></td>";
-    }
 }

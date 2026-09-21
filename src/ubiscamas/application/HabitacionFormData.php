@@ -9,7 +9,7 @@ use src\ubiscamas\domain\value_objects\TipoLavabo;
 
 /**
  * Datos para `frontend/ubiscamas/controller/habitacion_form.php`.
- * La composición de `HashFront` ocurre en {@see \frontend\ubiscamas\helpers\UbiscamasFormHashCompose::habitacionForm}.
+ * La composición de `HashF` ocurre en {@see \frontend\ubiscamas\helpers\UbiscamasFormHashCompose::habitacionForm}.
  */
 final class HabitacionFormData
 {

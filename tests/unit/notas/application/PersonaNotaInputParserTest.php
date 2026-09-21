@@ -170,6 +170,31 @@ final class PersonaNotaInputParserTest extends TestCase
         $this->assertSame(2312, $pn->getId_asignatura());
     }
 
+    public function test_nuevo_latin_iii_sustituye_id_nivel_por_hueco_del_plan_2026(): void
+    {
+        $latin3 = $this->createMock(\src\asignaturas\domain\entity\Asignatura::class);
+        $latin3->method('getId_nivel')->willReturn(2112);
+        $latin3->method('isActive')->willReturn(true);
+
+        $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
+        $asigRepo->method('findById')
+            ->with(2211, PlanEstudios::PLAN_2026)
+            ->willReturn($latin3);
+
+        $pn = $this->parser(asigRepo: $asigRepo)->parse([
+            'mod' => 'nuevo',
+            'id_pau' => 103615,
+            'id_asignatura' => 2211,
+            'id_nivel' => 2212,
+            'tipo_acta' => 1,
+            'id_situacion' => 10,
+            'epoca' => 0,
+        ]);
+
+        $this->assertSame(2112, $pn->getId_nivel());
+        $this->assertSame(2211, $pn->getId_asignatura());
+    }
+
     public function test_editar_no_sustituye_id_nivel_por_catalogo(): void
     {
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);

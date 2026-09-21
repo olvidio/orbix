@@ -12,7 +12,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -20,22 +20,22 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
-$oHashLista = new HashFront();
+$oHashLista = new HashF();
 $oHashLista->setUrl($web . '/frontend/casas/controller/grupo_lista.php');
 $oHashLista->setCamposForm('');
 $h_lista = $oHashLista->linkSinVal();
 
-$oHashForm = new HashFront();
+$oHashForm = new HashF();
 $oHashForm->setUrl($web . '/frontend/casas/controller/grupo_form.php');
 $oHashForm->setCamposForm('id_item');
 $h_form = $oHashForm->linkSinVal();
 
-$oHashUpdate = new HashFront();
+$oHashUpdate = new HashF();
 $oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/grupo_update'));
 $oHashUpdate->setCamposForm('id_item!id_ubi_padre!id_ubi_hijo');
 $url_update = AppUrlConfig::srcBrowserUrl('/src/casas/grupo_update') . $oHashUpdate->linkSinVal();
 
-$oHashEliminar = new HashFront();
+$oHashEliminar = new HashF();
 $oHashEliminar->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/grupo_eliminar'));
 $oHashEliminar->setCamposForm('id_item');
 $url_eliminar = AppUrlConfig::srcBrowserUrl('/src/casas/grupo_eliminar') . $oHashEliminar->linkSinVal();

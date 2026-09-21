@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace frontend\ubiscamas\helpers;
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\helpers\PayloadCoercion;
 
 
@@ -33,7 +33,7 @@ final class SelectHabitacionesCdcUrlSigning
             $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
             if ($path !== '') {
                 $url = $base . '/' . ltrim($path, '/') . '?' . http_build_query($query);
-                $urlNuevo = HashFront::link($url);
+                $urlNuevo = HashF::link($url);
             }
         }
         $aLinksDl = [];
@@ -49,7 +49,7 @@ final class SelectHabitacionesCdcUrlSigning
                 continue;
             }
             $url = $base . '/' . ltrim($path, '/') . '?' . http_build_query($query);
-            $aLinksDl[$label] = HashFront::link($url);
+            $aLinksDl[$label] = HashF::link($url);
         }
 
         return [

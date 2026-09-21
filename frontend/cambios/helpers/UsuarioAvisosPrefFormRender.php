@@ -8,7 +8,7 @@ use frontend\actividades\helpers\ActividadTipo;
 use frontend\actividades\helpers\TiposDeActividades;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 /**
  * Completa el JSON de {@see \src\cambios\application\UsuarioAvisosPrefFormData} para la vista.
@@ -32,7 +32,7 @@ final class UsuarioAvisosPrefFormRender
         $result['url_get_fases'] = $abs(\frontend\shared\helpers\PayloadCoercion::string($paths['usuario_avisos_pref_fases'] ?? ''));
 
         $hm = isset($result['hash_main']) && is_array($result['hash_main']) ? $result['hash_main'] : [];
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hm['campos_form'] ?? ''));
         $oHash->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hm['campos_no'] ?? ''));
         $chk = \frontend\shared\helpers\PayloadCoercion::string($hm['campos_chk'] ?? '');
@@ -43,19 +43,19 @@ final class UsuarioAvisosPrefFormRender
         $result['hash_form_html'] = $oHash->getCamposHtml();
 
         $hf = isset($result['hash_ajax_fases']) && is_array($result['hash_ajax_fases']) ? $result['hash_ajax_fases'] : [];
-        $oHashFases = new HashFront();
+        $oHashFases = new HashF();
         $oHashFases->setUrl($abs(\frontend\shared\helpers\PayloadCoercion::string($hf['path'] ?? '')));
         $oHashFases->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hf['campos_form'] ?? ''));
         $result['h_actualizar'] = $oHashFases->linkSinValParams();
 
         $hp = isset($result['hash_ajax_propiedades']) && is_array($result['hash_ajax_propiedades']) ? $result['hash_ajax_propiedades'] : [];
-        $oHashProp = new HashFront();
+        $oHashProp = new HashF();
         $oHashProp->setUrl($abs(\frontend\shared\helpers\PayloadCoercion::string($hp['path'] ?? '')));
         $oHashProp->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hp['campos_form'] ?? ''));
         $result['h_propiedades'] = $oHashProp->linkSinValParams();
 
         $hm2 = isset($result['hash_ajax_mod']) && is_array($result['hash_ajax_mod']) ? $result['hash_ajax_mod'] : [];
-        $oHashMod = new HashFront();
+        $oHashMod = new HashF();
         $oHashMod->setUrl($abs(\frontend\shared\helpers\PayloadCoercion::string($hm2['path'] ?? '')));
         $oHashMod->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hm2['campos_form'] ?? ''));
         $result['h_mod'] = $oHashMod->linkSinValParams();

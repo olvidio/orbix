@@ -3,7 +3,7 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\encargossacd\helpers\EncargossacdPayload;
@@ -110,7 +110,7 @@ $oDesplRef->setOpciones($opciones_dia_ref);
 $oDesplRef->setOpcion_sel($dia_ref);
 
 $url_actualizar = 'frontend/encargossacd/controller/encargo_ver.php';
-$oHash = new HashFront();
+$oHash = new HashF();
 $aCamposHidden = [
     'mod' => $Qmod,
     'id_enc' => $Qid_enc,

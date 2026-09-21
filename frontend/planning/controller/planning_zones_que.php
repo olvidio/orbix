@@ -6,7 +6,7 @@ use frontend\planning\helpers\PlanningPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
@@ -86,7 +86,7 @@ if ($Qid_zona !== 0) {
 $is_jefeCalendario = PlanningPayload::isJefeCalendario();
 $url = 'frontend/planning/controller/planning_zones_select.php';
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url);
 $oHash->setArraycamposHidden([
     'modelo' => $Qmodelo,

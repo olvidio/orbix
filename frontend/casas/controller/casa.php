@@ -23,7 +23,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\CasasQue;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 
 use frontend\shared\FrontBootstrap;
@@ -129,7 +129,7 @@ switch ($Qtipo_lista) {
         $sCamposForm .= '!periodo';
 }
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm($sCamposForm);
 // id_cdc[n] es dinámico (DesplegableArray): no puede fijar el hash del formulario.
 $oHash->setCamposNo('id_cdc');
@@ -137,17 +137,17 @@ if ($aCamposHidden !== []) {
     $oHash->setArrayCamposHidden($aCamposHidden);
 }
 
-$oHashForm = new HashFront();
+$oHashForm = new HashF();
 $oHashForm->setUrl($web . '/frontend/casas/controller/casa_ingreso_form.php');
 $oHashForm->setCamposForm('id_activ');
 $url_form = $web . '/frontend/casas/controller/casa_ingreso_form.php' . $oHashForm->linkSinVal();
 
-$oHashUpdate = new HashFront();
+$oHashUpdate = new HashF();
 $oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_update'));
 $oHashUpdate->setCamposForm('id_activ!id_tarifa!precio!ingresos!num_asistentes!observ');
 $url_update = AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_update') . $oHashUpdate->linkSinVal();
 
-$oHashEliminar = new HashFront();
+$oHashEliminar = new HashF();
 $oHashEliminar->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_eliminar'));
 $oHashEliminar->setCamposForm('id_activ');
 $url_eliminar = AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_eliminar') . $oHashEliminar->linkSinVal();

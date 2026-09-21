@@ -3,7 +3,7 @@ use frontend\cambios\helpers\CambiosPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -56,7 +56,7 @@ $oTablaAvisos->setDatos($view['a_valores']);
 
 
 $url_usuario_ajax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/usuario_avisos_pref.php';
-$oHashAvisos = new HashFront();
+$oHashAvisos = new HashF();
 $oHashAvisos->setUrl($url_usuario_ajax);
 $oHashAvisos->setCamposNo('sel!scroll_id!salida!id_sel');
 $a_camposHidden = array(

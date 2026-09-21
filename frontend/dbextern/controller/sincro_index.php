@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\dbextern\helpers\DbexternPayload;
 
@@ -31,13 +31,13 @@ $ver_910 = DbexternPayload::signedLink($data['link_spec_ver_orbix'] ?? null);
 $url_actualizar = DbexternPayload::signedLink($data['link_spec_self'] ?? null);
 
 $url_sincro_syncro =  AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_syncro');
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setUrl($url_sincro_syncro);
 $oHash1->setCamposForm('region!dl_listas!tipo_persona');
 $h1 = $oHash1->linkSinValParams();
 
 $url_refrescar = AppUrlConfig::srcBrowserUrl('/src/dbextern/refrescar_bdu');
-$oHash2 = new HashFront();
+$oHash2 = new HashF();
 $oHash2->setUrl($url_refrescar);
 $oHash2->setCamposForm('que');
 $h2 = $oHash2->linkSinValParams();

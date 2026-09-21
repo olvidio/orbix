@@ -6,7 +6,7 @@ use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
@@ -123,7 +123,7 @@ $msg_txt = $ctrSelect['msg_txt'];
 $cabecera_title = $ctrSelect['cabecera_title'];
 $a_actividades2 = $ctrSelect['a_actividades2'];
 
-$goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
+$goLeyenda = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
 $estilos = PlanningPayload::calendarioEstilos();
 $css = $estilos['css'];

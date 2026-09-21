@@ -3132,8 +3132,8 @@ msgid "Página"
 msgstr "Pàgina"
 
 #: frontend/shared/PostRequest.php:940
-msgid "POST interno firmado (HashFront) con PHPSESSID (cookie o session_id())."
-msgstr "POST intern signat (HashFront) amb PHPSESSID (cookie o session_id())."
+msgid "POST interno firmado (HashF) con PHPSESSID (cookie o session_id())."
+msgstr "POST intern signat (HashF) amb PHPSESSID (cookie o session_id())."
 
 #: frontend/shared/controller/ayuda_index.php:56
 #: frontend/menus/view/traducir_menu.phtml:9
@@ -3229,31 +3229,31 @@ msgstr "sortir"
 msgid "Utilidades"
 msgstr "Utilitats"
 
-#: frontend/shared/security/HashFront.php:230
+#: frontend/shared/security/HashF.php:230
 msgid "llegan campos hidden modificados"
 msgstr "arriben camps hidden modificats"
 
-#: frontend/shared/security/HashFront.php:258
+#: frontend/shared/security/HashF.php:258
 msgid "llegan distinto número o nombre de los campos que se dice que se envían"
 msgstr "arriben diferents números o noms dels camps que es diu que s'envien"
 
-#: frontend/shared/security/HashFront.php:272
-#: frontend/shared/security/HashFront.php:313
+#: frontend/shared/security/HashF.php:272
+#: frontend/shared/security/HashF.php:313
 msgid "url modificada"
 msgstr "url modificada"
 
-#: frontend/shared/security/HashFront.php:328
-#: frontend/shared/security/HashFront.php:335
+#: frontend/shared/security/HashF.php:328
+#: frontend/shared/security/HashF.php:335
 msgid "problema general de seguridad"
 msgstr "problema general de seguretat"
 
-#: frontend/shared/security/HashFront.php:336
+#: frontend/shared/security/HashF.php:336
 msgid ""
 "para ver más detalles define ORBIX_FRONT_DEBUG=1 en el entorno del frontend"
 msgstr ""
 "per veure més detalls defineix ORBIX_FRONT_DEBUG=1 a l'entorn del frontend"
 
-#: frontend/shared/security/HashFront.php:381
+#: frontend/shared/security/HashF.php:381
 msgid "página con seguridad desactivada"
 msgstr "pàgina amb seguretat desactivada"
 

@@ -7,7 +7,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -215,7 +215,7 @@ switch ($Qobj_pau) {
 
 $ir_a_traslado = '';
 if (empty($Qnuevo)) {
-    $ir_a_traslado = HashFront::link(
+    $ir_a_traslado = HashF::link(
         AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/traslado_form.php?'
         . http_build_query(['pau' => 'p', 'id_pau' => $Qid_nom, 'obj_pau' => $Qobj_pau])
     );
@@ -252,7 +252,7 @@ $oDesplInc->setOpciones($opciones_inc);
 $oDesplInc->setOpcion_sel($inc);
 $oDesplInc->setBlanco(true);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $campos_chk = 'sacd';
 $camposForm = 'id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!idioma_preferido!nom!nx1!nx2!observ!profesion!situacion!nivel_stgr!trato!lugar_nacimiento!ce!ce_lugar!ce_ini!ce_fin';
 if ($Qobj_pau === 'PersonaSSSC') {
@@ -271,9 +271,9 @@ $oHash->setArraycamposHidden([
 ]);
 
 $a_parametros = ['pau' => 'p', 'id_nom' => $Qid_nom, 'obj_pau' => $Qobj_pau];
-$gohome = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
+$gohome = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
 $a_parametros_dossier = ['pau' => 'p', 'id_pau' => $Qid_nom, 'obj_pau' => $Qobj_pau];
-$godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
+$godossiers = HashF::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 
 $a_campos = [
     'obj_txt' => $obj,

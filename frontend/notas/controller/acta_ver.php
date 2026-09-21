@@ -10,7 +10,7 @@ use frontend\shared\helpers\FuncTablasSupport;
  * Esta página muestra un formulario para modificar los datos de un acta.
  *
  * Payload vía `PostRequest` → `/src/notas/acta_ver_form_data` (`ActaVerFormData`);
- * el controlador arma HashFront y la vista.
+ * el controlador arma HashF y la vista.
  *
  * @package    delegacion
  * @subpackage    est
@@ -23,7 +23,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\web\Desplegable;
@@ -151,7 +151,7 @@ if ($form['warn_no_id_activ']) {
 
 $obj = 'notas\\model\\entity\\ActaDl';
 
-$oHashActa = new HashFront();
+$oHashActa = new HashF();
 $sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta!name_asignatura';
 if ($Qmod === 'nueva' || $notas === 'nuevo') {
     $sCamposForm .= '!acta_num';
@@ -187,7 +187,7 @@ if ($bloqueActaNotas !== '') {
 }
 $oHashActa->setArrayCamposHidden($a_camposHidden);
 
-$oHashActaPdf = new HashFront();
+$oHashActaPdf = new HashF();
 $oHashActaPdf->setCamposForm('acta_pdf');
 $oHashActaPdf->setCamposNo('acta_pdf');
 $oHashActaPdf->setArrayCamposHidden(['acta_num' => $acta_actual]);
@@ -195,13 +195,13 @@ $oHashActaPdf->setArrayCamposHidden(['acta_num' => $acta_actual]);
 $titulo = strtoupper(_('datos del acta'));
 
 $url_examinadores = AppUrlConfig::srcBrowserUrl('/src/notas/examinadores_search');
-$oHashExaminadores = new HashFront();
+$oHashExaminadores = new HashF();
 $oHashExaminadores->setUrl($url_examinadores);
 $oHashExaminadores->setCamposForm('search');
 $h_examinadores = $oHashExaminadores->getParamAjaxEnArray();
 
 $url_asignaturas = AppUrlConfig::srcBrowserUrl('/src/notas/asignaturas_search');
-$oHashAsignaturas = new HashFront();
+$oHashAsignaturas = new HashF();
 $oHashAsignaturas->setUrl($url_asignaturas);
 $oHashAsignaturas->setCamposForm('search');
 $h_asignaturas = $oHashAsignaturas->getParamAjaxEnArray();
@@ -221,7 +221,7 @@ if (!$has_pdf) {
     $url_download = SignedDownloadToken::urlNotasActa(PayloadCoercion::string($acta_actual));
     $url_delete = $base . '/frontend/notas/controller/acta_pdf_delete.php';
 }
-$oHashActaDelete = new HashFront();
+$oHashActaDelete = new HashF();
 $oHashActaDelete->setArrayCamposHidden(['acta_num' => $acta_actual]);
 $h_delete = $oHashActaDelete->getParamAjax();
 
@@ -288,7 +288,7 @@ if (
             $oDesplAddPersona->setOpciones($opcionesPersonas);
             $oDesplAddPersona->setBlanco(true);
 
-            $oHashAddPersona = new HashFront();
+            $oHashAddPersona = new HashF();
             $oHashAddPersona->setCamposForm('id_nom!nota_num!nota_max');
             $oHashAddPersona->setArrayCamposHidden([
                 'acta' => $acta_actual,

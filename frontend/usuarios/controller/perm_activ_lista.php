@@ -3,7 +3,7 @@
 use frontend\usuarios\helpers\UsuariosPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -29,7 +29,7 @@ if (empty($Qolvidar)) {
 $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/perm_activ_lista', ['id_usuario' => $Qid_usuario]));
 $lista = UsuariosPayload::listaFromPayload($data);
 
-$oHash3 = new HashFront();
+$oHash3 = new HashF();
 $oHash3->setCamposForm('que!sel');
 $oHash3->setcamposNo('sel!refresh!scroll_id');
 $a_camposHidden = array(

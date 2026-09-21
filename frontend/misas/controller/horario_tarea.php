@@ -3,7 +3,7 @@
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\PayloadCoercion;
 
@@ -20,7 +20,7 @@ $t_start = \frontend\shared\helpers\PayloadCoercion::string($data['t_start'] ?? 
 $t_end = \frontend\shared\helpers\PayloadCoercion::string($data['t_end'] ?? '');
 
 $url_guardar = AppUrlConfig::srcBrowserUrl('/src/misas/guardar_horario');
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setArrayCamposHidden(['id_item_h' => $Qid_item_h]);
 $oHash->setUrl($url_guardar);
 $oHash->setCamposForm('t_start!t_end');

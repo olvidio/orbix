@@ -24,9 +24,6 @@ final class TarifaUbiFormData
      * @param array<string, mixed> $input
      * @return array{
      *   es_nuevo: bool,
-     *   id_item: string,
-     *   id_ubi: int,
-     *   year: int,
      *   letra: string,
      *   cantidad: string,
      *   opciones_tarifa: array<int,string>,
@@ -75,9 +72,6 @@ final class TarifaUbiFormData
 
         return [
             'es_nuevo' => $es_nuevo,
-            'id_item' => $id_item,
-            'id_ubi' => $id_ubi,
-            'year' => $year,
             'letra' => $letra,
             'cantidad' => $cantidad,
             'opciones_tarifa' => $opciones_tarifa,

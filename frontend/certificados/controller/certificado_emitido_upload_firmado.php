@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\certificados\helpers\CertificadosPayload;
 use frontend\shared\helpers\ListNavSupport;
@@ -26,7 +26,7 @@ $oPosicion->nav()->enter(
 ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildSelectionStatePatchFromPost());
 
 
-$oHashCertificadoPdf = new HashFront();
+$oHashCertificadoPdf = new HashF();
 $oHashCertificadoPdf->setCamposNo('certificado_pdf');
 $oHashCertificadoPdf->setArrayCamposHidden([
     'id_item' => $form['id_item'],

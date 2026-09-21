@@ -5,7 +5,7 @@ use frontend\planning\helpers\PlanningPayload;
 use frontend\planning\support\PeriodoPlanningHelper;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -63,7 +63,7 @@ $oPosicion->nav()->enter(
 
 $locale_us = OrbixRuntime::isLocaleUs();
 
-$oHash1 = new HashFront();
+$oHash1 = new HashF();
 $oHash1->setCamposForm('sacd!ctr!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $oHash1->setcamposNo('todos_n!todos_agd!todos_s!modelo');
 $oHash1->setArraycamposHidden([

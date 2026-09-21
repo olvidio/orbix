@@ -17,7 +17,7 @@ use src\notas\domain\entity\Acta;
 use src\shared\config\ConfigGlobal;
 
 /**
- * Estado del formulario `acta_ver` (sin HashFront ni vistas).
+ * Estado del formulario `acta_ver` (sin HashF ni vistas).
  */
 final class ActaVerFormData
 {

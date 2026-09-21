@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\shared\helpers;
 
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 /**
  * Tokens `h` / `h_act` para los Twig de {@see \frontend\actividades\helpers\ActividadTipo}
@@ -21,12 +21,12 @@ final class ActividadTipoTwigHashCompose
     {
         $urlRaw = $a_campos['url'] ?? null;
         $url = is_string($urlRaw) ? $urlRaw : '';
-        $oHashTipo = new HashFront();
+        $oHashTipo = new HashF();
         $oHashTipo->setUrl($url);
         $oHashTipo->setCamposForm('extendida!modo!salida!entrada');
         $a_campos['h'] = $oHashTipo->linkSinValParams();
 
-        $oHashAct = new HashFront();
+        $oHashAct = new HashF();
         $oHashAct->setUrl('frontend/actividades/controller/actividad_ver.php');
         $oHashAct->setCamposForm('id_tipo_activ!refresh');
         $a_campos['h_act'] = $oHashAct->linkSinValParams();

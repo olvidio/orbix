@@ -2,7 +2,7 @@
 
 use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\inventario\helpers\InventarioPayload;
 
@@ -28,7 +28,7 @@ $ids_activ = $view['ids_activ'];
 
 $nom_equipaje = htmlspecialchars($nombre_ubi, ENT_QUOTES, 'UTF-8') . " ($ini - $fin)";
 
-$oHashForm = new HashFront();
+$oHashForm = new HashF();
 $oHashForm->setCamposForm('nom_equipaje');
 $oHashForm->setArrayCamposHidden([
     'lugar' => $nombre_ubi,

@@ -6,7 +6,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -27,7 +27,7 @@ if (($data['modo'] ?? '') === 'filtro') {
     $oCuadros->setChecked(NotasPostInput::checkedIdsFromPost($data['a_checked'] ?? []));
     $oCuadros->setOpciones(NotasFormSupport::desplegableOpciones($data['a_delegaciones'] ?? []));
 
-    $oHash = new HashFront();
+    $oHash = new HashF();
     $oHash->setCamposForm('dl');
     $oHash->setcamposNo('dl');
     $oHash->setArrayCamposHidden(['filtro' => 1]);

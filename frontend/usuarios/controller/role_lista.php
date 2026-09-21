@@ -5,7 +5,7 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -42,11 +42,11 @@ $oTabla->setCabeceras($lista['cabeceras']);
 $oTabla->setBotones($lista['botones']);
 $oTabla->setDatos($a_valores);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('sel');
 $oHash->setcamposNo('scroll_id');
 
-$url_nuevo = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
+$url_nuevo = HashF::link(AppUrlConfig::getPublicAppBaseUrl()
     . '/frontend/usuarios/controller/role_form.php?'
 );
 

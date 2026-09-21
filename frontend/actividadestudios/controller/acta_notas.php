@@ -21,7 +21,7 @@ use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\web\Desplegable;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
@@ -86,7 +86,7 @@ if ($permiso === 3) {
     }
 }
 
-$oHashNotas = new HashFront();
+$oHashNotas = new HashF();
 // Solo los alumnos editables (sin nota en acta firmada) viajan en el POST;
 // si se firman todos los campos, el hash no coincide al omitir filas bloqueadas.
 $oHashNotas->setCamposForm($hayFilasEditables ? 'id_nom!nota_num!nota_max!form_preceptor!acta_nota' : '');

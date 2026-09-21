@@ -4,8 +4,8 @@ use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\permisos\MenuPermisoMenuHtml;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashF;
+use frontend\shared\security\HashFSignedLink;
 use frontend\shared\FrontBootstrap;
 use frontend\dossiers\helpers\DossiersPayload;
 
@@ -26,14 +26,14 @@ $data = PostRequest::getDataFromUrl('/src/dossiers/perm_dossier_ver_data', [
 ]);
 
 // Firma de URLs y composición del bloque hash en el frontend.
-$goTo = HashFrontSignedLink::tryFromSpec($data['go_to_link_spec'] ?? null);
+$goTo = HashFSignedLink::tryFromSpec($data['go_to_link_spec'] ?? null);
 unset($data['go_to_link_spec']);
 
 $hashConfigRaw = $data['hash_config'] ?? [];
 $hashConfig = is_array($hashConfigRaw) ? $hashConfigRaw : [];
 unset($data['hash_config']);
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm(\frontend\shared\helpers\PayloadCoercion::string($hashConfig['campos_form'] ?? ''));
 $oHash->setCamposNo(\frontend\shared\helpers\PayloadCoercion::string($hashConfig['campos_no'] ?? ''));
 $camposHidden = [];

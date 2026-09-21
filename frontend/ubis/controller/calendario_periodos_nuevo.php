@@ -2,7 +2,7 @@
 
 use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -15,7 +15,7 @@ $data = UbisPayload::calendarioPeriodoFields(UbisPayload::postData(PostRequest::
     'year' => $Qyear,
 ])));
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setArrayCamposHidden([
     'id_ubi' => $Qid_ubi,
 ]);

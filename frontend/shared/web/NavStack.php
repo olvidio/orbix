@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\shared\web;
 
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 /**
  * Pila de navegación v2 en la clave de sesión `nav`.
@@ -13,7 +13,7 @@ final class NavStack
 {
     private const MAX_STACK = 20;
 
-    /** Campos UI que HashFront excluye del hash pero deben ir en el POST de vuelta. */
+    /** Campos UI que HashF excluye del hash pero deben ir en el POST de vuelta. */
     private const BACK_QUERY_UI_FIELDS = ['id_sel', 'scroll_id'];
 
     /** @var array<string, mixed> */
@@ -216,7 +216,7 @@ final class NavStack
      */
     private static function buildBackQuery(array $params, string $url): string
     {
-        $query = HashFront::add_hash($params, $url);
+        $query = HashF::add_hash($params, $url);
 
         foreach (self::BACK_QUERY_UI_FIELDS as $key) {
             if (!array_key_exists($key, $params)) {

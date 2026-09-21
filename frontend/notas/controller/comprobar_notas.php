@@ -2,6 +2,7 @@
 
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\PayloadCoercion;
+use frontend\notas\helpers\ComprobarNotasLinkSigning;
 
 /**
  * Pantalla “comprobar notas”: el SQL y mutaciones corren en
@@ -63,5 +64,8 @@ if (!isset($payload['html']) || !is_string($payload['html'])) {
     exit(_('No se pudo cargar la comprobación de notas.'));
 }
 
-echo $payload['html'];
+$linkSpecs = isset($payload['link_specs']) && is_array($payload['link_specs'])
+    ? $payload['link_specs']
+    : [];
+echo ComprobarNotasLinkSigning::signHtml($payload['html'], $linkSpecs);
 echo $oPosicion->mostrarNavAtras(1);

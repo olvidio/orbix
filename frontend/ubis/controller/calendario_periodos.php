@@ -14,7 +14,7 @@ use frontend\actividades\helpers\ActividadesPermSupport;
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -40,17 +40,17 @@ $url_form_periodo = $public . '/frontend/ubis/controller/calendario_periodos_for
 $url_guardar = AppUrlConfig::srcBrowserUrl('/src/ubis/calendario_periodos_guardar');
 $url_eliminar = AppUrlConfig::srcBrowserUrl('/src/ubis/calendario_periodos_eliminar');
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl($url_get2);
 $oHash->setCamposForm('id_ubi!year');
 $h_ver = $oHash->linkSinValParams();
 
-$oHashNew = new HashFront();
+$oHashNew = new HashF();
 $oHashNew->setUrl($url_nuevo);
 $oHashNew->setCamposForm('id_ubi!year');
 $h_nuevo = $oHashNew->linkSinValParams();
 
-$oHashMod = new HashFront();
+$oHashMod = new HashF();
 $oHashMod->setUrl($url_form_periodo);
 $oHashMod->setCamposForm('id_item');
 $h_modificar = $oHashMod->linkSinValParams();

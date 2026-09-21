@@ -9,7 +9,7 @@ vistas: ["frontend/actividadtarifas/view/tarifa_ubi_form.phtml"]
 fragmentos_frontend: []
 endpoints: ["/src/actividadtarifas/tarifa_ubi_form_data", "/src/actividadtarifas/tarifa_ubi_update"]
 capacidades: ["actividadtarifas.tarifa_ubi.gestionar"]
-campos: ["html.cantidad", "html.ctx_eliminar", "html.ctx_update", "html.id_item", "html.id_ubi", "html.year", "post.id_item", "post.id_ubi", "post.letra", "post.year"]
+campos: ["html.cantidad", "html.ctx_eliminar", "html.ctx_update", "post.ctx_form", "post.id_ubi", "post.year"]
 acciones: ["fnjs_cerrar", "fnjs_comprobar_dinero", "fnjs_guardar"]
 estado_revision: "revisado"
 ---
@@ -45,12 +45,8 @@ No se han detectado controladores frontend relacionados.
 - `html.cantidad`
 - `html.ctx_eliminar`
 - `html.ctx_update`
-- `html.id_item`
-- `html.id_ubi`
-- `html.year`
-- `post.id_item`
+- `post.ctx_form`
 - `post.id_ubi`
-- `post.letra`
 - `post.year`
 
 ## Acciones Detectadas
@@ -62,7 +58,7 @@ No se han detectado controladores frontend relacionados.
 ## Manual De Usuario
 
 Alta: desplegables tarifa y serie + importe. Edición: solo importe (y eliminar). Los hidden `ctx_*`
-autorizan las mutaciones; los `id_ubi`/`year`/`id_item` del form son compatibilidad transitoria.
+autorizan las mutaciones y contienen la identidad firmada; el formulario no transporta IDs planos.
 
 ## Ruta de menú
 

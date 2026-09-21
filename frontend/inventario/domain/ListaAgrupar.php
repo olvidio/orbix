@@ -5,7 +5,7 @@ namespace frontend\inventario\domain;
 use frontend\inventario\helpers\InventarioPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 
 
 class ListaAgrupar

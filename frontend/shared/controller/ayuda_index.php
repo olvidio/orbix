@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 require_once __DIR__ . '/../FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -14,9 +14,9 @@ function ayudaEnlace(string $path): array
 {
     $fullUrl = AppUrlConfig::getPublicAppBaseUrl() . $path;
     return [
-        'href' => HashFront::link($fullUrl),
+        'href' => HashF::link($fullUrl),
         'full_url' => $fullUrl,
-        'parametros' => HashFront::add_hash('', $fullUrl),
+        'parametros' => HashF::add_hash('', $fullUrl),
     ];
 }
 
@@ -27,10 +27,10 @@ $enlaceManual = ayudaEnlace('/frontend/shared/controller/manual.php');
 $enlacePreguntar = ayudaEnlace('/frontend/shared/controller/ayuda_preguntar.php');
 $enlaceTraducciones = ayudaEnlace('/public/ayuda/traducciones.php');
 
-$urlContactos = HashFront::cmdSinParametros(
+$urlContactos = HashF::cmdSinParametros(
     OrbixRuntime::getWeb() . 'frontend/usuarios/controller/mails_contactos_region.php'
 );
-$oHashRegion = new HashFront();
+$oHashRegion = new HashF();
 $oHashRegion->setUrl($urlContactos);
 $oHashRegion->setCamposForm('region');
 $hashParamsRegiones = $oHashRegion->getParamAjaxEnArray();

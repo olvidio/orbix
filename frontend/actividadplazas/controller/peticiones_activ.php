@@ -22,7 +22,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\DesplegableArray;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -75,7 +75,7 @@ $oSelects = new DesplegableArray($sid_activ, $aOpciones, 'actividades');
 $oSelects->setBlanco('t');
 $oSelects->setAccionConjunto('fnjs_mas_actividades(event)');
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setCamposForm('actividades!actividades_mas!actividades_num');
 $oHash->setcamposNo('que!actividades');
 $oHash->setArraycamposHidden([
@@ -87,7 +87,7 @@ $oHash->setArraycamposHidden([
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
-    $oHashLocal = new HashFront();
+    $oHashLocal = new HashF();
     $oHashLocal->setUrl($url);
     $oHashLocal->setCamposForm($campos);
     return $url . $oHashLocal->linkSinVal();

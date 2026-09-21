@@ -24,8 +24,8 @@ use frontend\shared\helpers\ListNavSupport;
 use frontend\actividades\helpers\ActividadStatusId;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
-use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\security\HashF;
+use frontend\shared\security\HashFSignedLink;
 use frontend\shared\web\Lista;
 
 use frontend\shared\web\PeriodoQue;
@@ -109,7 +109,7 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_actividades_sg_datos
 if (!empty($data['advertencia_demasiadas']) && is_array($data['advertencia_demasiadas'])) {
     $ad = $data['advertencia_demasiadas'];
     $continuarQuery = array_merge(['continuar' => 'si'], $listaSgReturn);
-    $go_avant = HashFrontSignedLink::fromSpec([
+    $go_avant = HashFSignedLink::fromSpec([
         'path' => 'frontend/actividades/controller/lista_actividades_sg.php',
         'query' => $continuarQuery,
     ]);
@@ -155,7 +155,7 @@ $oFormP->setDesplAnysOpcion_sel(ActividadesPostInput::posicionString($Qyear));
 $oFormP->setEmpiezaMin(ActividadesPostInput::posicionString($Qempiezamin));
 $oFormP->setEmpiezaMax(ActividadesPostInput::posicionString($Qempiezamax));
 
-$oHash = new HashFront();
+$oHash = new HashF();
 $oHash->setUrl('frontend/actividades/controller/lista_actividades_sg.php');
 $a_camposHidden = [
     'que' => $Qque,
@@ -169,7 +169,7 @@ $a_camposHidden = [
 $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposNo('modo!id_tipo_activ!id_ubi!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar');
 
-$oHashSel = new HashFront();
+$oHashSel = new HashF();
 $oHashSel->setCamposForm('!sel!mod!queSel');
 $oHashSel->setcamposNo('continuar!scroll_id');
 $a_camposHiddenSel = [

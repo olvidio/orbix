@@ -24,10 +24,9 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $campos = [
-    'id_item' => (string)filter_input(INPUT_POST, 'id_item'),
+    'ctx_form' => (string)filter_input(INPUT_POST, 'ctx_form'),
     'id_ubi' => (string)filter_input(INPUT_POST, 'id_ubi'),
     'year' => (string)filter_input(INPUT_POST, 'year'),
-    'letra' => (string)filter_input(INPUT_POST, 'letra'),
 ];
 
 $fields = ActividadtarifasPayload::fields(
@@ -48,9 +47,6 @@ if ($fields['es_nuevo']) {
 
 $a_campos = [
     'es_nuevo' => $fields['es_nuevo'],
-    'id_item' => $fields['id_item'],
-    'id_ubi' => $fields['id_ubi'],
-    'year' => $fields['year'],
     'letra' => $fields['letra'],
     'cantidad' => $fields['cantidad'],
     'oDesplSeries' => $oDesplSeries,

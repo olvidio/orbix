@@ -5,7 +5,7 @@ namespace frontend\shared;
 use frontend\shared\config\OrbixRuntime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
-use frontend\shared\security\HashFront;
+use frontend\shared\security\HashF;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\BootstrapPdoGlobals;
 use src\shared\infrastructure\ConnectionBootstrap;
@@ -413,7 +413,7 @@ class PostRequest
 
     /**
      * POST interno (URL ya resuelta/hasheada si aplica). Misma respuesta que {@see getDataFromUrl}
-     * sin envolver en HashFront desde ruta relativa.
+     * sin envolver en HashF desde ruta relativa.
      *
      * @param string $url
      * @param array<string, mixed> $hash_params
@@ -429,7 +429,7 @@ class PostRequest
      * Parámetros de la petición HTTP actual para repetir el hash en llamadas server-to-server.
      * Debe coincidir con validatePost en FrontBootstrap y
      * frontend/shared/bootstrap/after_global_object.inc (tras global_object.inc):
-     * POST si el cuerpo no está vacío; si no, GET cuando existe el parámetro `h` (p. ej. HashFront::link).
+     * POST si el cuerpo no está vacío; si no, GET cuando existe el parámetro `h` (p. ej. HashF::link).
      */
     /**
      * @return array<string, mixed>
@@ -462,7 +462,7 @@ class PostRequest
     }
 
     /**
-     * POST interno firmado (HashFront) al backend; devuelve siempre un array.
+     * POST interno firmado (HashF) al backend; devuelve siempre un array.
      *
      * - Si el backend responde error en envelope: `['error' => '…html…']` y, por defecto, `exit`.
      * - Si éxito: el contenido útil es {@see envelopeDataFieldToArray} sobre `data`
@@ -475,17 +475,17 @@ class PostRequest
     public static function getDataFromUrl(string $url, array $campos = [], bool $exitOnError = true): array
     {
         $url = self::absoluteHttpUrlFromAppRelative($url);
-        $url_hased = HashFront::cmdSinParametros($url);
+        $url_hased = HashF::cmdSinParametros($url);
 
         // Si el payload proviene de $_POST (PostRequest::requestPayloadForHash),
         // arrastra los meta-campos de hash del navegador (h/hh/hhc/hno/horig/…).
         // Esta función genera su propio hash para la llamada server-to-server;
-        // `HashFront::getArrayCampos()` hace `array_merge(paramHash, camposHidden)`
+        // `HashF::getArrayCampos()` hace `array_merge(paramHash, camposHidden)`
         // y los meta-campos del navegador sobrescribirían el hash fresco, causando
         // que `validatePost` en el endpoint rechace el POST y redirija a index.php.
         $campos = self::stripInboundHashMeta($campos);
 
-        $oHash = new HashFront();
+        $oHash = new HashF();
         $oHash->setUrl($url_hased);
         if (!empty($campos)) {
             $campos = self::normalizeCamposParaHash($campos);
@@ -535,13 +535,13 @@ class PostRequest
      * el hash fresco calculado aquí.
      *
      * También quita `id_sel` (inyectado por fnjs_solo_uno): si se reenvía en la firma server-to-server
-     * pero validatePost lo excluye vía {@see HashFront::stripPostCamposUiDinamicos}, h/hh no coinciden → 302.
+     * pero validatePost lo excluye vía {@see HashF::stripPostCamposUiDinamicos}, h/hh no coinciden → 302.
      *
      * También quita `PHPSESSID`, `atras` y `hpos`:
      * - `PHPSESSID`: `fnjs_update_div` añade `&PHPSESSID=1`; si formara parte del hash hidden,
      *   el receptor lo borra antes de recalcular `hh` → firma rota → 302.
      * - `atras`: análogo (campo auxiliar del POST que no debe mezclarse con la firma nueva).
-     * - `hpos`: `web\Posicion` / `HashFront::add_hash` ponen `hpos=1` al volver atrás; entonces
+     * - `hpos`: `web\Posicion` / `HashF::add_hash` ponen `hpos=1` al volver atrás; entonces
      *   `validatePost` recalcula `h` con `realFullUrl()` + query (flujo Posición). La llamada
      *   server-to-server a otro script (p.ej. `dossiers_ver_pantalla_data`) firma `h` con
      *   `ordenarQuery(camposForm)` (flujo formulario). Si se reenvía `hpos`, receptor y emisor
@@ -561,11 +561,11 @@ class PostRequest
             }
         }
 
-        return HashFront::stripPostCamposUiDinamicos($campos);
+        return HashF::stripPostCamposUiDinamicos($campos);
     }
 
     /**
-     * Un array vacío no genera inputs hidden en web\HashFront::getCamposHiddenHtml;
+     * Un array vacío no genera inputs hidden en web\HashF::getCamposHiddenHtml;
      * validatePost trata el campo ausente como ''.
      * Firmar con [] hace que http_build_query difiera de '' y falle el hash hh.
      *
@@ -945,6 +945,6 @@ class PostRequest
     {
         return '<br><strong>' . _('Procedencia') . ':</strong> '
             . '<code>' . htmlspecialchars(self::class . '::getData', ENT_QUOTES, 'UTF-8') . '</code>'
-            . ' — ' . _('POST interno firmado (HashFront) con PHPSESSID (cookie o session_id()).');
+            . ' — ' . _('POST interno firmado (HashF) con PHPSESSID (cookie o session_id()).');
     }
 }
