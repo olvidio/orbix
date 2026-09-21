@@ -13,10 +13,16 @@ class EquipajeCabeceraTest extends myTest
         $this->assertEquals('test value', $equipajeCabecera->value());
     }
 
+    public function test_accepts_text_up_to_400_characters()
+    {
+        $equipajeCabecera = new EquipajeCabecera(str_repeat('a', 400));
+        $this->assertSame(400, mb_strlen($equipajeCabecera->value()));
+    }
+
     public function test_invalid_length_throws_exception()
     {
         $this->expectException(\InvalidArgumentException::class);
-        new EquipajeCabecera(str_repeat('a', 1000)); // Assuming max length validation
+        new EquipajeCabecera(str_repeat('a', 401));
     }
 
     public function test_to_string_returns_equipajeCabecera_value()

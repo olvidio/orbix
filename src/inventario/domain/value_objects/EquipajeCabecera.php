@@ -17,8 +17,8 @@ final class EquipajeCabecera
 
     private function validate(string $value): void
     {
-        if (mb_strlen($value) > 255) {
-            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('EquipajeCabecera must be at most 255 characters', $value));
+        if (mb_strlen($value) > 400) {
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('EquipajeCabecera must be at most 400 characters', $value));
         }
     }
 

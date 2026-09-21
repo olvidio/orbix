@@ -1,5 +1,21 @@
 <script>
+    fnjs_mostrar_error_listado = function (formulario, mensaje) {
+        var texto = mensaje || <?= json_encode(_("Error desconocido")) ?>;
+        var $err = $(formulario).find('#frm_listado_error');
+        if (!$err.length) {
+            $err = $('<p id="frm_listado_error" class="error"></p>').css({
+                color: '#c00',
+                fontWeight: 'bold',
+                margin: '0.5em 0'
+            });
+            $(formulario).find('textarea').first().after($err);
+        }
+        $err.text(texto).show();
+        alert(<?= json_encode(_("respuesta")) ?> + ': ' + texto);
+    }
+
     fnjs_guardar_listado = function (formulario) {
+        $(formulario).find('#frm_listado_error').hide().text('');
         parametros = $(formulario).serialize();
         let request = $.ajax({
             url: 'src/inventario/equipajes_texto_listado_guardar',
@@ -9,11 +25,28 @@
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+                fnjs_mostrar_error_listado(formulario, json.mensaje);
             } else {
                 fnjs_cerrar();
                 fnjs_ver_2();
             }
+        });
+        request.fail(function (xhr) {
+            var mensaje = '';
+            var json = xhr.responseJSON;
+            if (json === undefined && xhr.responseText) {
+                try {
+                    json = JSON.parse(xhr.responseText);
+                } catch (e) {
+                    json = null;
+                }
+            }
+            if (json && json.mensaje) {
+                mensaje = json.mensaje;
+            } else {
+                mensaje = <?= json_encode(_("Error en la conexión con el servidor")) ?>;
+            }
+            fnjs_mostrar_error_listado(formulario, mensaje);
         });
     }
 
