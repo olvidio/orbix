@@ -9,7 +9,7 @@ controller: "src/dbextern/infrastructure/ui/http/controllers/sincro_unir.php"
 entrada: ["post.id:integer", "post.id_nom_listas:integer", "post.id_orbix:integer", "post.tipo_persona:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-errores: ["hay un error, no se ha guardado"]
+errores: ["hay un error, no se ha guardado", "esta persona de aquinate ya está unida a la BDU (id=%s)"]
 frontend_referencias: ["frontend/dbextern/controller/ver_listas.php", "frontend/dbextern/controller/ver_orbix.php"]
 casos_uso: ["src\\dbextern\\application\\UnirPersonaUseCase"]
 tags: ["dbextern", "sincro", "unir"]
@@ -24,7 +24,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Guarda `IdMatchPersona` con `id_tabla = tipo_persona`. Si llega `id` de sesión `DBListas`/`DBOrbix`,
+Guarda `IdMatchPersona` con `id_tabla = tipo_persona`. Si `id_orbix` ya está unido a un `id_listas`
+que ya no existe en la BDU, reasigna el match. Si llega `id` de sesión `DBListas`/`DBOrbix`,
 elimina esa fila de la sesión tras éxito.
 
 ## Endpoint
@@ -52,6 +53,7 @@ elimina esa fila de la sesión tras éxito.
 ## Errores conocidos
 
 - `hay un error, no se ha guardado` (+ texto de `getErrorTxt()`)
+- `esta persona de aquinate ya está unida a la BDU (id=%s)` si el `id_orbix` sigue unido a otra persona BDU viva
 
 ## Permisos
 

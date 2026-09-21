@@ -36,9 +36,15 @@ class VerListasData
             if ($cIdMatch !== []) {
                 continue;
             }
-            if ($first_load && $oSincroDB->union_automatico($oPersonaBDU)) {
-                $cont_sync++;
-                continue;
+            if ($first_load) {
+                try {
+                    if ($oSincroDB->union_automatico($oPersonaBDU)) {
+                        $cont_sync++;
+                        continue;
+                    }
+                } catch (\Throwable) {
+                    // Una unión automática fallida no debe abortar el listado.
+                }
             }
 
             $i++;

@@ -20,6 +20,7 @@ use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
 use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\dbextern\domain\CopiarBDU;
 use src\dbextern\domain\SincroDB;
+use src\dbextern\domain\VincularIdMatch;
 use src\dbextern\infrastructure\persistence\postgresql\OdbcDlListasRepository;
 use src\dbextern\infrastructure\persistence\postgresql\PgIdMatchPersonaRepository;
 use src\dbextern\infrastructure\persistence\postgresql\PgPersonaBDURepository;
@@ -31,6 +32,7 @@ return [
 
     OdbcDlListasRepository::class => autowire(OdbcDlListasRepository::class),
     CopiarBDU::class => autowire(CopiarBDU::class),
+    VincularIdMatch::class => autowire(VincularIdMatch::class),
     SincroDB::class => autowire(SincroDB::class),
     SincroDBFactory::class => autowire(SincroDBFactory::class),
 

@@ -6,7 +6,6 @@ use PDO;
 use PDOStatement;
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
 use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
-use src\dbextern\domain\entity\IdMatchPersona;
 use src\dbextern\domain\entity\PersonaBDU;
 use src\dbextern\infrastructure\persistence\postgresql\OdbcDlListasRepository;
 use src\personas\application\support\PersonaRepositoryResolver;
@@ -63,6 +62,7 @@ class SincroDB
         private OdbcDlListasRepository $dlListasRepository,
         private PersonaRepositoryResolver $personaRepositoryResolver,
         private Trasladar $trasladar,
+        private VincularIdMatch $vincularIdMatch,
     ) {
         $this->tabla = 'tmp_bdu';
     }
@@ -238,16 +238,7 @@ class SincroDB
             $oPersonaDl = $cPersonasDl[0];
             $id_nom = $oPersonaDl->getId_nom();
 
-            $oIdMatch = new IdMatchPersona();
-            $oIdMatch->setId_listas($id_nom_listas);
-            $oIdMatch->setId_orbix($id_nom);
-            $oIdMatch->setId_tabla($this->tipo_persona);
-
-            if ($this->idMatchRepository->Guardar($oIdMatch) === false) {
-                return false;
-            }
-
-            return true;
+            return $this->vincularIdMatch->vincular($id_nom_listas, $id_nom, $this->tipo_persona) === '';
         }
 
         return false;
@@ -364,7 +355,7 @@ class SincroDB
         foreach ($cPersonasDl as $oPersonaDl) {
             $id_nom = $oPersonaDl->getId_nom();
             $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_orbix' => $id_nom]);
-            if ($cIdMatch !== []) {
+            if ($cIdMatch !== [] && $this->vincularIdMatch->esMatchVigente($cIdMatch[0])) {
                 continue;
             }
             $f_nacimiento = $oPersonaDl->getF_nacimiento()?->getFromLocal();

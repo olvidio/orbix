@@ -28,8 +28,11 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 Dos modos según `id_nom_bdu`:
 
 - **`id_nom_bdu` = 0**: devuelve `lista` de personas BDU no unidas. Con `first_load=true` intenta
-  `union_automatico` y omite las unidas (incrementa `cont_sync`).
-- **`id_nom_bdu` > 0**: devuelve `posibles_misma_dl` y `posibles_otra_dl` (candidatos Orbix).
+  `union_automatico` y omite las unidas (incrementa `cont_sync`). Si el `id_orbix` candidato ya está
+  unido a un `id_listas` que ya no existe en la BDU, reasigna el match en vez de insertar (evita
+  `conv_id_personas_id_orbix_key`). Un fallo de unión automática no aborta el listado.
+- **`id_nom_bdu` > 0**: devuelve `posibles_misma_dl` y `posibles_otra_dl` (candidatos Orbix; ignora
+  matches huérfanos cuyo `id_listas` ya no está en la BDU).
 
 ## Endpoint
 
