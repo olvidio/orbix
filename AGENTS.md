@@ -323,13 +323,9 @@ El hash de presentación (**`frontend\shared\security\HashF`**) es responsabilid
 
 **Inventario — `HashF::link` aún presente en `src/` (pendiente de alinear con esta directiva):**
 
-| Área | Archivo |
-|------|-----------|
-| notas | `src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php` |
-
-No quedan excepciones en `menus`: sus casos de uso devuelven `link_spec` y
-`frontend/shared/layouts/MenuNavigationLink.php` compone la navegación firmada.
-Actualizar esta tabla conforme se migre cada módulo.
+No quedan excepciones conocidas: menus, encargossacd y notas devuelven datos o `link_spec` sin
+firmar, y el frontend compone las URLs `HashF`. Actualizar este inventario si se detecta otra
+excepción.
 
 ### Ejemplo práctico: módulo ubiscamas
 

@@ -19,9 +19,8 @@ estado_revision: "revisado"
 
 # Comprobar Notas Page Data
 
-Ejecuta comprobaciones SQL y devuelve HTML de resultados.
-
-HTML de {
+Ejecuta comprobaciones SQL y devuelve HTML legado de resultados junto con `link_specs`
+sin firmar. El frontend sustituye los marcadores de acción por URLs `HashF`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -41,7 +40,7 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Helper: `ContestarJson::enviar` (doble `JSON.parse` salvo excepciones).
-- `{html: string}` en `data` (doble `JSON.parse`).
+- `{html: string, link_specs: map<string, {path, query}>}` en `data` (doble `JSON.parse`).
 
 ## Objetivo funcional
 
@@ -61,4 +60,5 @@ No se han detectado imports de `src\...\application\...`.
 
 ## Frontend Relacionado
 
-- `frontend/notas/controller/comprobar_notas.php`.
+- `frontend/notas/controller/comprobar_notas.php` y
+  `frontend/notas/helpers/ComprobarNotasLinkSigning.php`.

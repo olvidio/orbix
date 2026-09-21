@@ -20,5 +20,9 @@ try {
     return;
 }
 $html = ob_get_clean();
+$linkSpecs = isset($linkSpecs) && is_array($linkSpecs) ? $linkSpecs : [];
 
-ContestarJson::enviar('', ['html' => $html]);
+ContestarJson::enviar('', [
+    'html' => $html,
+    'link_specs' => $linkSpecs,
+]);

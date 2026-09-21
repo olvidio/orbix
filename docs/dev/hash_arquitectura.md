@@ -36,7 +36,7 @@ Dos clases distintas con responsabilidades asimétricas.
     - Anti-CSRF para endpoints en `frontend/` (validación en `FrontBootstrap::boot()` / `HashF::validatePost`).
     - Integridad de URL en navegaciones `frontend/`↔`frontend/` (listas, filtros, paginación, scroll memory).
     - Integridad de nombres de campos en forms (el `h` de hoy): el usuario puede editar los valores, pero no puede añadir/quitar campos.
-- Objetivo: `src/` **no importa** `HashF`. La excepción pendiente está en notas; se migra en un slice separado, no como parte de este cambio de nombre.
+- Objetivo: `src/` **no importa** `HashF`. Los slices de menus, encargossacd y notas ya devuelven datos o `link_spec` sin firmar; el frontend compone las URLs.
 
 ### `HashB` (backend)
 
@@ -259,7 +259,7 @@ Este orden minimiza el riesgo y permite verificar la arquitectura antes de aplic
 
 1. **Mantener `HashF`** como firma canónica de UI en `frontend/shared/security/HashF.php`, sin cambiar el protocolo actual.
 2. **Mantener `HashB`** con `sign`/`open` en `src/shared/security/HashB.php` y ampliar solo los pilotos ya acordados.
-3. **Cerrar las excepciones por módulo**: menus y encargossacd ya devuelven datos sin firmar; queda notas como slice separado.
+3. **Cerrar las excepciones por módulo**: menus, encargossacd y notas ya devuelven datos sin firmar; revisar de nuevo con `rg` antes de declarar otro módulo como excepción.
 4. **Completar o declarar híbridos los pilotos** de actividadtarifas y ubiscamas antes de extender `HashB`.
 5. **Ola por módulo**, siguiendo el plan de migración acordado por equipo (prioridades por módulo en baselines `docs/dev/*_migracion_baseline.md`).
 6. **Última fase:** decidir si `HashB` deja de ser session-derived y pasa a HMAC con secreto de servidor.

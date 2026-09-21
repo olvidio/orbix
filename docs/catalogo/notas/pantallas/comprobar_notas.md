@@ -6,7 +6,7 @@ modulo: "notas"
 nombre: "Comprobar Notas"
 controller: "frontend/notas/controller/comprobar_notas.php"
 vistas: []
-fragmentos_frontend: []
+fragmentos_frontend: ["frontend/notas/helpers/ComprobarNotasLinkSigning.php"]
 endpoints: ["/src/notas/comprobar_notas_page_data"]
 capacidades: ["notas.comprobar_notas_page.gestionar"]
 campos: []
@@ -29,7 +29,8 @@ No se han detectado vistas PHTML relacionadas.
 
 ## Fragmentos Frontend Relacionados
 
-No se han detectado controladores frontend relacionados.
+- `frontend/notas/helpers/ComprobarNotasLinkSigning.php` firma los `link_specs` devueltos por
+  la API antes de insertar el HTML legado.
 
 ## Endpoints Usados
 
