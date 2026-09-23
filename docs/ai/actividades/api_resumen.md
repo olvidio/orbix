@@ -133,8 +133,8 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividades.actividad_tipo_get`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_tipo_get.php`
-- Entrada: `post.salida:string`, `post.entrada:string`, `post.extendida:string`, `post.modo:string`, `post.opcion_sel:string`, `post.isfsv:integer`, `post.ssfsv:string`
-- Respuesta: `standard_envelope_string_data`
+- Entrada: `post.salida:string` (`asistentes`, `actividad`, `nom_tipo`, `lugar`, `dl_org`, `filtro_lugar`, `tarifa`, `nom_tipo_tabla`, `id_tarifa`, `nivel_stgr_defecto`), `post.entrada:string`, `post.extendida:string`, `post.modo:string`, `post.opcion_sel:string`, `post.isfsv:integer`, `post.ssfsv:string`
+- Respuesta: `standard_envelope_string_data`. `salida=tarifa` devuelve el desplegable de tarifas de la sección (`entrada` = sv/sf) con `selected` vacío.
 
 ## `/src/actividades/actividad_ver_datos`
 

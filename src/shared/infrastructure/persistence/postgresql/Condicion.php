@@ -114,9 +114,11 @@ class Condicion
         foreach ($valor as $v) {
             if (is_int($v) || is_float($v)) {
                 $parts[] = (string) (int) $v;
-            } elseif (is_string($v) && $v !== '' && ctype_digit($v)) {
-                $parts[] = $v;
             } elseif (is_string($v)) {
+                // Las cadenas van siempre entre comillas, también si son solo dígitos.
+                // Sin comillas, '1' es integer y rompe columnas varchar:
+                // id_tipo_activ_txt IN ('1.....',1,000001) → varchar = integer.
+                // En columnas integer el literal desconocido '17' sigue siendo coercible.
                 $parts[] = "'" . str_replace("'", "''", $v) . "'";
             } else {
                 throw new \InvalidArgumentException('IN/NOT IN: cada elemento debe ser numérico o cadena escalar');

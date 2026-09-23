@@ -63,6 +63,22 @@ final class ActividadVerDatos
     }
 
     /**
+     * Id de la opción «No se repite» en el mapa id => etiqueta del desplegable.
+     *
+     * @param array<int|string, string> $opciones
+     */
+    private static function idRepeticionNoSeRepite(array $opciones): int
+    {
+        foreach ($opciones as $id => $label) {
+            if (mb_strtolower(trim((string) $label)) === 'no se repite') {
+                return (int) $id;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
      * @param array<string, mixed> $input Claves admitidas (todas opcionales):
      *   - id_activ (int): si > 0, carga actividad por id.
      *   - isfsv (int)
@@ -127,6 +143,11 @@ final class ActividadVerDatos
         }
 
         $bdlBool = ($Bdl === 't');
+        $opcionesRepeticion = $this->repeticionRepository->getArrayRepeticion();
+        if ($id_activ <= 0 && $id_repeticion === 0) {
+            $id_repeticion = self::idRepeticionNoSeRepite($opcionesRepeticion);
+        }
+        $tarifaSeleccionada = (string) $tarifa;
 
         $nombre_ubi = '';
         if (!empty($id_ubi) && $id_ubi !== 1) {
@@ -158,8 +179,8 @@ final class ActividadVerDatos
             'select_tarifa' => [
                 'id' => 'id_tarifa',
                 'opciones' => $this->tipoTarifaRepository->getArrayTipoTarifas($isfsv),
-                'selected' => (string) $tarifa,
-                'blanco' => false,
+                'selected' => $tarifaSeleccionada,
+                'blanco' => $tarifaSeleccionada === '',
             ],
             'select_nivel_stgr' => [
                 'id' => 'nivel_stgr',
@@ -175,7 +196,7 @@ final class ActividadVerDatos
             ],
             'select_repeticion' => [
                 'id' => 'id_repeticion',
-                'opciones' => $this->repeticionRepository->getArrayRepeticion(),
+                'opciones' => $opcionesRepeticion,
                 'selected' => (string) $id_repeticion,
                 'blanco' => false,
             ],

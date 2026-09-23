@@ -23,6 +23,7 @@ use src\actividades\application\ActividadTipoGetDlOrg;
 use src\actividades\application\ActividadTipoGetFiltroLugar;
 use src\actividades\application\ActividadTipoGetIdTarifa;
 use src\actividades\application\ActividadTipoGetLugar;
+use src\actividades\application\ActividadTipoGetTarifas;
 use src\actividades\application\ActividadTipoGetNomTipo;
 use src\actividades\application\ActividadTipoGetNomTipoTabla;
 use src\actividades\application\ActividadTipoGetNivelStgrDefecto;
@@ -95,6 +96,7 @@ return [
     ActividadTipoGetFiltroLugar::class => autowire(ActividadTipoGetFiltroLugar::class),
     ActividadTipoGetIdTarifa::class => autowire(ActividadTipoGetIdTarifa::class),
     ActividadTipoGetLugar::class => autowire(ActividadTipoGetLugar::class),
+    ActividadTipoGetTarifas::class => autowire(ActividadTipoGetTarifas::class),
     ActividadTipoGetNomTipo::class => autowire(ActividadTipoGetNomTipo::class),
     ActividadTipoGetNomTipoTabla::class => autowire(ActividadTipoGetNomTipoTabla::class),
     ActividadTipoGetNivelStgrDefecto::class => autowire(ActividadTipoGetNivelStgrDefecto::class),

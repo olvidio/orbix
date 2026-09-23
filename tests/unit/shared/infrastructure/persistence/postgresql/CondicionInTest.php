@@ -32,4 +32,11 @@ final class CondicionInTest extends TestCase
         $sql = $c->getCondicion('nivel_stgr', 'NOT IN', [1 => 'A']);
         self::assertSame('nivel_stgr NOT IN (1)', $sql);
     }
+
+    public function test_in_quotes_digit_strings_on_varchar_lists(): void
+    {
+        $c = new Condicion();
+        $sql = $c->getCondicion('id_tipo_activ_txt', 'IN', ['1.....', '1', '000001']);
+        self::assertSame("id_tipo_activ_txt IN ('1.....','1','000001')", $sql);
+    }
 }

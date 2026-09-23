@@ -115,6 +115,29 @@
                     if (html) { $('#filtro_lugar').replaceWith(html); }
                 });
         }
+        if ($('#id_tarifa').length) {
+            var parametrosTarifa = 'extendida='+extendida+'&modo=buscar&salida=tarifa&entrada=' + isfsv + '{{ h|raw }}';
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametrosTarifa,
+                dataType: 'json'
+            })
+                .done(function (json) {
+                    var html = fnjs_construir_desplegable(json);
+                    if (html) { $('#id_tarifa').replaceWith(html); }
+                });
+        }
+        var $repeticion = $('#id_repeticion');
+        if ($repeticion.length) {
+            var txtNoRepite = {{ "No se repite"|trans|json_encode|raw }};
+            $repeticion.find('option').each(function () {
+                if ($(this).text().trim() === txtNoRepite) {
+                    $repeticion.val($(this).val());
+                    return false;
+                }
+            });
+        }
     }
     fnjs_actividad = function () {
         var url = '{{ url }}';

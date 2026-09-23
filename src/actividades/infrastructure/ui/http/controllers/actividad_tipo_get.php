@@ -8,7 +8,7 @@ use src\shared\domain\helpers\FilterPostGet;
  * cascadas de filtros de actividades desde callers AJAX (templates Twig/phtml).
  *
  * Responde siempre JSON via src\shared\web\ContestarJson. Las salidas de tipo desplegable
- * (asistentes, actividad, nom_tipo, dl_org, filtro_lugar, lugar) devuelven
+ * (asistentes, actividad, nom_tipo, dl_org, filtro_lugar, lugar, tarifa) devuelven
  * bajo `data` el payload {id, opciones, selected, blanco, val_blanco, action}
  * y el frontend construye el `<select>`. Las salidas nom_tipo_tabla e
  * id_tarifa y nivel_stgr_defecto mantienen la forma legacy {content: string}
@@ -21,6 +21,7 @@ use src\actividades\application\ActividadTipoGetDlOrg;
 use src\actividades\application\ActividadTipoGetFiltroLugar;
 use src\actividades\application\ActividadTipoGetIdTarifa;
 use src\actividades\application\ActividadTipoGetLugar;
+use src\actividades\application\ActividadTipoGetTarifas;
 use src\actividades\application\ActividadTipoGetNomTipo;
 use src\actividades\application\ActividadTipoGetNomTipoTabla;
 use src\actividades\application\ActividadTipoGetNivelStgrDefecto;
@@ -61,6 +62,11 @@ switch ($Qsalida) {
     case 'filtro_lugar':
         /** @var ActividadTipoGetFiltroLugar $useCase */
         $useCase = DependencyResolver::get(ActividadTipoGetFiltroLugar::class);
+        ContestarJson::enviar('', $useCase->execute($_POST));
+        exit;
+    case 'tarifa':
+        /** @var ActividadTipoGetTarifas $useCase */
+        $useCase = DependencyResolver::get(ActividadTipoGetTarifas::class);
         ContestarJson::enviar('', $useCase->execute($_POST));
         exit;
 }

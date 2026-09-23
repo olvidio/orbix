@@ -63,6 +63,13 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
         $this->assertArrayHasKey('nombre_ubi', $out);
         $this->assertIsArray($out['select_dl_org']);
         $this->assertArrayHasKey('opciones', $out['select_dl_org']);
+        $this->assertTrue($out['select_tarifa']['blanco']);
+        $this->assertSame('', $out['select_tarifa']['selected']);
+        $idRepeticion = (int) $out['select_repeticion']['selected'];
+        $this->assertSame(
+            'no se repite',
+            mb_strtolower((string) ($out['select_repeticion']['opciones'][$idRepeticion] ?? ''))
+        );
     }
 
     public function test_lista_sr_csv_listado_devuelve_estructura(): void

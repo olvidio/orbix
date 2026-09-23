@@ -14,7 +14,9 @@
             }
             var $opt = $('<option></option>').val(value).text(label);
             if (data && data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
-                $opt.prop('selected', true);
+                // Atributo, no propiedad: el <select> aún no está en el DOM y
+                // outerHTML no serializa option.selected.
+                $opt.attr('selected', 'selected');
             }
             $sel.append($opt);
         };
