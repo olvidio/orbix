@@ -13,6 +13,7 @@ use src\notas\application\ExpedienteNotasPersona;
 use src\notas\application\PlanEstudiosDePersona;
 use src\notas\application\Tesera;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\entity\PersonaNota;
 
 final class TeseraFilasImpresionTest extends TestCase
 {
@@ -49,6 +50,55 @@ final class TeseraFilasImpresionTest extends TestCase
         $this->assertSame(2434, $filas[1]['id_nivel']);
         $this->assertSame('probatus', $filas[1]['nota']);
         $this->assertStringContainsString('Seminarium', $filas[1]['nombre']);
+    }
+
+    public function test_opcional_historica_fuera_del_plan_2026_usa_el_nivel_de_la_nota(): void
+    {
+        $concreta = $this->asignatura(3241, 'De Arte Sacra');
+        $concreta->setActive(false);
+        $hueco = $this->asignatura(2430, 'Op. I');
+        $hueco->setActive(true);
+
+        $nota = $this->createStub(PersonaNota::class);
+        $nota->method('getIdNivelVo')->willReturn(new NivelId(2430));
+        $nota->method('getId_asignatura')->willReturn(3241);
+        $nota->method('getF_acta')->willReturn(null);
+        $nota->method('getId_situacion')->willReturn(3);
+        $nota->method('isAprobada')->willReturn(true);
+        $nota->method('getNota_txt')->willReturn('probatus');
+        $nota->method('getActaVo')->willReturn(null);
+
+        $notaRepo = $this->createStub(PersonaNotaRepositoryInterface::class);
+        $notaRepo->method('getPersonaNotas')->willReturn([$nota]);
+
+        $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
+        $asigRepo->method('findById')->willReturnCallback(
+            static function (int $id, int|array|null $plan = null) use ($concreta, $hueco): ?Asignatura {
+                if ($id === 3241 && $plan === Tesera::PLAN_NUEVO) {
+                    return null;
+                }
+                if ($id === 3241) {
+                    return $concreta;
+                }
+                if ($id === 2430 && $plan === Tesera::PLAN_NUEVO) {
+                    return $hueco;
+                }
+
+                return null;
+            }
+        );
+
+        $tesera = new Tesera(
+            new ExpedienteNotasPersona($notaRepo),
+            $asigRepo,
+            new PlanEstudiosDePersona($notaRepo),
+        );
+
+        $aprobadas = $tesera->getAsignaturasAprobadas(100517149, Tesera::PLAN_NUEVO);
+
+        $this->assertArrayHasKey(2430, $aprobadas);
+        $this->assertSame(3241, $aprobadas[2430]['id_asignatura']);
+        $this->assertSame('De Arte Sacra', $aprobadas[2430]['nombre_asignatura']);
     }
 
     private function tesera(): Tesera

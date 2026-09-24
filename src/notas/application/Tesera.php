@@ -155,16 +155,22 @@ final class Tesera
             $idAsig = (int)$oNota->getId_asignatura();
 
             $oAsig = $asignaturaRepo->findById($idAsig, $plan);
-            if ($oAsig === null) {
-                continue;
-            }
-
             if ($idAsig > self::ID_ASIG_OPCIONAL_UMBRAL) {
+                // El hueco es el id_nivel de la nota (2430–2434), no el id_nivel
+                // de la asignatura concreta. Esa puede existir solo en el plan 1997.
+                if ($oAsig === null) {
+                    $oAsig = $asignaturaRepo->findById($idAsig);
+                }
+                if ($oAsig === null) {
+                    continue;
+                }
                 $idNivelAsig = $idNivel;
                 $oAsignaturaOpcionalGenerica = $asignaturaRepo->findById($idNivel, $plan);
                 if ($oAsignaturaOpcionalGenerica === null || !$oAsignaturaOpcionalGenerica->isActive()) {
                     continue;
                 }
+            } elseif ($oAsig === null) {
+                continue;
             } else {
                 if (!$oAsig->isActive()) {
                     continue;
