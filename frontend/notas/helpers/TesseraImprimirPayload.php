@@ -65,6 +65,35 @@ final class TesseraImprimirPayload
 
     /**
      * @param array<int|string, mixed> $payload
+     * @return list<array{id_nivel: int, pendiente: bool, opcional: bool, nombre: string, nota: string, fecha_local: string, acta: string}>
+     */
+    public static function filasFromPayload(array $payload): array
+    {
+        $raw = $payload['filas'] ?? [];
+        if (!is_array($raw)) {
+            return [];
+        }
+        $out = [];
+        foreach ($raw as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+            $out[] = [
+                'id_nivel' => PayloadCoercion::int($item['id_nivel'] ?? 0),
+                'pendiente' => (bool) ($item['pendiente'] ?? true),
+                'opcional' => (bool) ($item['opcional'] ?? false),
+                'nombre' => PayloadCoercion::string($item['nombre'] ?? ''),
+                'nota' => PayloadCoercion::string($item['nota'] ?? ''),
+                'fecha_local' => PayloadCoercion::string($item['fecha_local'] ?? ''),
+                'acta' => PayloadCoercion::string($item['acta'] ?? ''),
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param array<int|string, mixed> $payload
      * @return list<array{id_nivel: int, id_asignatura: int, nombre_asignatura: string}>
      */
     public static function asignaturasFromPayload(array $payload): array

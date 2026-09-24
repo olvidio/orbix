@@ -6,7 +6,6 @@ namespace src\notas\application;
 
 use src\notas\domain\DestinoNotaExterno;
 use src\personas\domain\entity\Persona;
-use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\RegionStgrAviso;
 
 /**
@@ -47,32 +46,10 @@ final class TesseraImprimirData
         $cAsignaturas = $this->tesera->getAsignaturasPosibles($plan);
         $aAprobadas = $this->tesera->getAsignaturasAprobadas($id_nom, $plan);
 
-        $outAsigs = [];
-        foreach ($cAsignaturas as $oAsig) {
-            $outAsigs[] = [
-                'id_nivel' => (int)$oAsig->getId_nivel(),
-                'nombre_asignatura' => $oAsig->getNombre_asignatura(),
-                'id_asignatura' => (int)$oAsig->getId_asignatura(),
-            ];
-        }
-
-        $outApr = [];
-        foreach ($aAprobadas as $k => $row) {
-            $fecha = $row['fecha'];
-            unset($row['fecha']);
-            $fechaLocal = '';
-            if ($fecha instanceof DateTimeLocal) {
-                $fechaLocal = $fecha->getFromLocal();
-            }
-            $row['fecha_local'] = $fechaLocal;
-            $outApr[$k] = $row;
-        }
-
         return [
             'nom' => $oPersona->getNombreApellidos(),
             'plan' => $plan,
-            'c_asignaturas' => $outAsigs,
-            'a_aprobadas' => $outApr,
+            'filas' => $this->tesera->filasParaImpresion($cAsignaturas, $aAprobadas),
         ];
     }
 }

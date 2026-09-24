@@ -21,7 +21,8 @@ use src\shared\domain\value_objects\DateTimeLocal;
  *   - Tessera vista HTML (`tessera_ver.php`): dataset vía `TesseraVerData`
  *     (`/src/notas/tessera_ver_data`), que delega en `datosParaVistaTesera`.
  *   - Tessera imprimible / PDF: `tessera_imprimir.php` / `tessera_imprimir_mpdf.php`
- *     cargan vía `TesseraImprimirData` (`/src/notas/tessera_imprimir_data`).
+ *     cargan filas ya emparejadas vía `TesseraImprimirData`
+ *     (`/src/notas/tessera_imprimir_data`), con el mismo cruce que la vista.
  *
  * Sucesor de `apps/notas/model/Tesera.php` (eliminado).
  * Mejoras respecto al legacy:
@@ -224,14 +225,6 @@ final class Tesera
             $numCreditosTotal += (float) $oAsig->getCreditos();
         }
 
-        $aprobadosList = array_values($aAprobadas);
-        $numAprob = count($aprobadosList);
-        $planNiveles = [];
-        foreach ($cAsignaturas as $oAsigPlan) {
-            $planNiveles[(int) $oAsigPlan->getId_nivel()] = true;
-        }
-
-        $j = 0;
         $tabla = [];
         $i = 0;
         $seccionActual = null;
@@ -240,22 +233,14 @@ final class Tesera
         $numasigYear = 0;
         $numcredYear = 0.0;
 
-        foreach ($cAsignaturas as $oAsig) {
-            while (
-                $j < $numAprob
-                && !isset($planNiveles[(int) $aprobadosList[$j]['id_nivel_asig']])
-            ) {
-                $j++;
-            }
-
+        foreach ($this->emparejarPlan($cAsignaturas, $aAprobadas) as $par) {
+            $oAsig = $par['asig'];
             $idNivelPlan = (int) $oAsig->getId_nivel();
-            if ($j < $numAprob && (int) $aprobadosList[$j]['id_nivel_asig'] === $idNivelPlan) {
-                $row = $aprobadosList[$j++];
-                $i++;
-                $tabla[$i] = $this->filaAprobada($oAsig, $row);
-                $this->anotarTituloSeccion($tabla, $i, $idNivelPlan, $seccionActual);
+            $i++;
+            if ($par['row'] !== null) {
+                $tabla[$i] = $this->filaAprobada($oAsig, $par['row']);
                 $this->acumularEstadisticasAprobada(
-                    $row,
+                    $par['row'],
                     $curso,
                     $numasig,
                     $numcred,
@@ -264,10 +249,9 @@ final class Tesera
                     $oAsig,
                 );
             } else {
-                $i++;
                 $tabla[$i] = $this->filaPendiente($oAsig);
-                $this->anotarTituloSeccion($tabla, $i, $idNivelPlan, $seccionActual);
             }
+            $this->anotarTituloSeccion($tabla, $i, $idNivelPlan, $seccionActual);
         }
 
         return [
@@ -282,6 +266,90 @@ final class Tesera
             'curso_txt' => $curso['texto'],
             'numcred_year' => $numcredYear,
         ];
+    }
+
+    /**
+     * Filas ya emparejadas para imprimir (HTML y PDF). Mismo cruce que la vista:
+     * cada asignatura del plan, con su nota si el slot coincide, o vacía si está pendiente.
+     * Sin tope fijo de opcionales.
+     *
+     * @param Asignatura[] $cAsignaturas
+     * @param array<int, array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_asignatura: string, nombre_corto: string, fecha: DateTimeLocal|null, id_situacion: int, bAprobada: bool|string, nota: string|null, acta: string|null}> $aAprobadas
+     * @return list<array{id_nivel: int, pendiente: bool, opcional: bool, nombre: string, nota: string, fecha_local: string, acta: string}>
+     */
+    public function filasParaImpresion(array $cAsignaturas, array $aAprobadas): array
+    {
+        $filas = [];
+        foreach ($this->emparejarPlan($cAsignaturas, $aAprobadas) as $par) {
+            $oAsig = $par['asig'];
+            $row = $par['row'];
+            $opcional = false;
+            $nombre = (string) $oAsig->getNombre_asignatura();
+            $nota = '';
+            $fechaLocal = '';
+            $acta = '';
+            $pendiente = true;
+            if ($row !== null) {
+                $pendiente = false;
+                $idAsig = (int) $row['id_asignatura'];
+                $nota = (string) ($row['nota'] ?? '');
+                $fecha = $row['fecha'];
+                if ($fecha instanceof DateTimeLocal) {
+                    $fechaLocal = $fecha->getFromLocal();
+                }
+                $acta = (string) ($row['acta'] ?? '');
+                if ($idAsig > self::ID_ASIG_OPCIONAL_UMBRAL && $idAsig < self::ID_ASIG_OPCIONAL_MAX) {
+                    $opcional = true;
+                    $nombre .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . (string) $row['nombre_asignatura'];
+                }
+            }
+            $filas[] = [
+                'id_nivel' => (int) $oAsig->getId_nivel(),
+                'pendiente' => $pendiente,
+                'opcional' => $opcional,
+                'nombre' => $nombre,
+                'nota' => $nota,
+                'fecha_local' => $fechaLocal,
+                'acta' => $acta,
+            ];
+        }
+
+        return $filas;
+    }
+
+    /**
+     * @param Asignatura[] $cAsignaturas
+     * @param array<int, array{id_nivel_asig: int, id_asignatura: int, nombre_asignatura: string, nombre_corto: string, fecha: DateTimeLocal|null, bAprobada: bool|string, nota: string|null, acta?: string|null}> $aAprobadas
+     * @return list<array{asig: Asignatura, row: array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_asignatura: string, nombre_corto: string, fecha: DateTimeLocal|null, id_situacion: int, bAprobada: bool|string, nota: string|null, acta: string|null}|null}>
+     */
+    private function emparejarPlan(array $cAsignaturas, array $aAprobadas): array
+    {
+        $aprobadosList = array_values($aAprobadas);
+        $numAprob = count($aprobadosList);
+        $planNiveles = [];
+        foreach ($cAsignaturas as $oAsigPlan) {
+            $planNiveles[(int) $oAsigPlan->getId_nivel()] = true;
+        }
+
+        $j = 0;
+        $pares = [];
+        foreach ($cAsignaturas as $oAsig) {
+            while (
+                $j < $numAprob
+                && !isset($planNiveles[(int) $aprobadosList[$j]['id_nivel_asig']])
+            ) {
+                $j++;
+            }
+
+            $idNivelPlan = (int) $oAsig->getId_nivel();
+            if ($j < $numAprob && (int) $aprobadosList[$j]['id_nivel_asig'] === $idNivelPlan) {
+                $pares[] = ['asig' => $oAsig, 'row' => $aprobadosList[$j++]];
+            } else {
+                $pares[] = ['asig' => $oAsig, 'row' => null];
+            }
+        }
+
+        return $pares;
     }
 
     private static function seccionTituloDeIdNivel(int $idNivel): ?string

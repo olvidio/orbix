@@ -162,15 +162,12 @@ $payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
     'id_nom' => $id_nom,
 ]);
 $nom = \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? '');
-$cAsignaturas = TesseraImprimirPayload::asignaturasFromPayload($payload);
-$aAprobadas = TesseraImprimirPayload::aprobadasFromPayload($payload);
+$filas = TesseraImprimirPayload::filasFromPayload($payload);
 $region_latin = SessionConfig::getNomRegionLatin();
 
 // conversion
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 
-// -----------------------------
-$rowEmpty = TesseraImprimirPayload::emptyRow();
 // -----------------------------  cabecera ---------------------------------
 $caraA = HashF::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 $caraB = HashF::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
@@ -232,169 +229,33 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                     </tr>
                                     <?php
                                     }
-                                    $num_asig = count($cAsignaturas);
-                                    $a = 0;
-                                    $j = 0;
                                     $i = 0;
-                                    reset($aAprobadas);
-                                    $rowCurrent = current($aAprobadas);
-                                    $row = is_array($rowCurrent)
-                                        ? TesseraImprimirPayload::aprobadaRow($rowCurrent)
-                                        : $rowEmpty;
-                                    if (key($aAprobadas) === null) { // ha llegado al final
-                                        $row = $rowEmpty;
-                                    }
-                                    // Cara B: descartar notas de la cara A una sola vez, por id_nivel_asig
-                                    // (el slot del plan), no por id_nivel de la fila en e_notas.
-                                    if ($Qcara === 'B') {
-                                        while (key($aAprobadas) !== null) {
-                                            $rowCurrent = current($aAprobadas);
-                                            $rowCheck = is_array($rowCurrent)
-                                                ? TesseraImprimirPayload::aprobadaRow($rowCurrent)
-                                                : $rowEmpty;
-                                            if ($rowCheck['id_nivel_asig'] >= 2108) {
-                                                $row = $rowCheck;
-                                                break;
-                                            }
-                                            if (next($aAprobadas) === false) {
-                                                $row = $rowEmpty;
-                                                break;
-                                            }
+                                    foreach ($filas as $fila) {
+                                        if ($Qcara === 'A' && $fila['id_nivel'] > 2107) {
+                                            continue;
                                         }
-                                    }
-
-                                    while ($a < count($cAsignaturas)) {
-                                    $oAsignatura = $cAsignaturas[$a++];
-
-                                    // para imprimir sólo una cara:
-                                    // cara A hasta la asignatura 2107
-                                    if ($Qcara === "A" && $oAsignatura['id_nivel'] > 2107) {
-                                        $rowCurrent = current($aAprobadas);
-                                        $row = is_array($rowCurrent)
-                                            ? TesseraImprimirPayload::aprobadaRow($rowCurrent)
-                                            : $rowEmpty;
-                                        continue;
-                                    }
-                                    if ($Qcara === "B" && $oAsignatura['id_nivel'] < 2108) {
-                                        continue;
-                                    }
-                                    while (($row['id_nivel_asig'] < $oAsignatura['id_nivel']) && ($j < $num_asig)) {
-                                        if (key($aAprobadas) === null) { // ha llegado al final
-                                            $row = $rowEmpty;
-                                            break;
+                                        if ($Qcara === 'B' && $fila['id_nivel'] < 2108) {
+                                            continue;
                                         }
-                                        $rowCurrent = current($aAprobadas);
-                                        $row = is_array($rowCurrent)
-                                            ? TesseraImprimirPayload::aprobadaRow($rowCurrent)
-                                            : $rowEmpty;
-                                        if (next($aAprobadas) === false) {
-                                            break;
-                                        }
-                                        $j++;
-                                    }
-                                    while (($oAsignatura['id_nivel'] < $row['id_nivel_asig']) && ($row['id_nivel'] < 2434)) {
-                                    $clase = "impar";
-                                    $i % 2 ? 0 : $clase = "par";
-                                    $i++;
-                                    echo titulo($oAsignatura['id_nivel'], $Qcara);
-                                    $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
-                                    ?>
-                                    <tr class="<?= $clase; ?>" valign="bottom">
+                                        $clase = ($i % 2) === 0 ? 'par' : 'impar';
+                                        $i++;
+                                        echo titulo($fila['id_nivel'], $Qcara);
+                                        $nombre = strtr($fila['nombre'], $replace);
+                                        $valign = $fila['opcional'] ? ' valign="bottom"' : '';
+                                        ?>
+                                    <tr class="<?= $clase; ?>"<?= $valign; ?>>
                                         <td></td>
                                         <td>
-                                            <?= $nombre_asignatura; ?>&nbsp;
+                                            <?= $nombre; ?>&nbsp;
                                         </td>
-                                        <td class="dato">&nbsp;</td>
+                                        <td class="dato"><?= $fila['pendiente'] ? '' : $fila['nota']; ?>&nbsp;</td>
                                         <td>&nbsp;</td>
-                                        <td class="dato">&nbsp;</td>
+                                        <td class="dato"><?= $fila['pendiente'] ? '' : $fila['fecha_local']; ?>&nbsp;</td>
                                         <td>&nbsp;</td>
-                                        <td class="dato">&nbsp;</td>
+                                        <td class="dato"><?= $fila['pendiente'] ? '' : $fila['acta']; ?>&nbsp;</td>
                                         <td></td>
                                     </tr>
-                                    <?php
-                                    $oAsignatura = $cAsignaturas[$a++];
-                                    if ($Qcara === "A" && $oAsignatura['id_nivel'] > 2107) {
-                                        continue 2;
-                                    }
-                                    }
-
-                                    if ($oAsignatura['id_nivel'] == $row["id_nivel_asig"]) {
-                                    $clase = "impar";
-                                    $i % 2 ? 0 : $clase = "par";
-                                    $i++;
-                                    echo titulo($oAsignatura['id_nivel'], $Qcara);
-                                    // para las opcionales
-                                    if ($row["id_asignatura"] > 3000 && $row["id_asignatura"] < 9000) {
-
-                                    $nombre_asignatura = strtr($row["nombre_asignatura"], $replace);
-                                    $algo = $oAsignatura['nombre_asignatura'] . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
-                                    ?>
-                                    <tr class="<?= $clase; ?>" valign="bottom">
-                                        <td></td>
-                                        <td>
-                                            <?= $algo; ?>&nbsp;
-                                        </td>
-                                        <td class="dato">
-                                            <?= $row["nota"]; ?>&nbsp;
-                                        </td>
-                                        <td>&nbsp;</td>
-                                        <td class="dato">
-                                            <?= $row["fecha_local"] ?>&nbsp;
-                                        </td>
-                                        <td>&nbsp;</td>
-                                        <td class="dato">
-                                            <?= $row["acta"]; ?>&nbsp;
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                    <?php
-                                    } else {
-                                    $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
-                                    ?>
-                                    <tr class="<?= $clase; ?>">
-                                        <td></td>
-                                        <td>
-                                            <?= $nombre_asignatura; ?>&nbsp;
-                                        </td>
-                                        <td class="dato">
-                                            <?= $row["nota"]; ?>&nbsp;
-                                        </td>
-                                        <td>&nbsp;</td>
-                                        <td class="dato">
-                                            <?= $row["fecha_local"] ?>&nbsp;
-                                        </td>
-                                        <td>&nbsp;</td>
-                                        <td class="dato">
-                                            <?= $row["acta"]; ?>&nbsp;
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                    <?php
-                                    }
-                                    $num_asig++;
-                                    } else {
-                                    if (!$row["id_nivel"] || ($j == $num_asig)) {
-                                    $clase = "impar";
-                                    $i % 2 ? 0 : $clase = "par";
-                                    $i++;
-                                    echo titulo($oAsignatura['id_asignatura'], $Qcara);
-                                    $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
-                                    ?>
-                                    <tr class="<?= $clase; ?>">
-                                        <td></td>
-                                        <td>
-                                            <?= $nombre_asignatura; ?>&nbsp;
-                                        </td>
-                                        <td class="dato">&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td class="dato">&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td class="dato">&nbsp;</td>
-                                        <td></td>
-                                    </tr>
-                                    <?php
-                                    }
-                                    }
+                                        <?php
                                     }
                                     ?>
                                 </tr>
