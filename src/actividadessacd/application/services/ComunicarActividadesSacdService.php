@@ -183,19 +183,23 @@ final class ComunicarActividadesSacdService
                         } else {
                             $oPermSesion->setActividad($id_activ);
                         }
-                        $permiso_ver = $oPermSesion->havePermisoSacd($id_cargo, $propio);
+                        $motivo = $oPermSesion->motivoSinPermisoSacd($id_cargo, $propio);
                     } else {
-                        $permiso_ver = true;
+                        $motivo = null;
                     }
                 } else {
-                    $permiso_ver = true;
+                    $motivo = null;
                 }
-                if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($permiso_ver)) {
+                if ($motivo !== null) {
+                    $oFIniAviso = $oActividad->getF_ini();
+                    $fecha = $oFIniAviso !== null ? $oFIniAviso->getFromLocal() : '';
                     $this->avisos[] = sprintf(
-                        _('No se muestra «%s» (id %d) del sacd %s: falta permiso de ver. La fase sacd o asistentes sacd no está completada, o este tipo no tiene permiso de ver.'),
+                        _('La actividad «%s» (id %d%s) del sacd %s no tiene permiso: %s.'),
                         $oActividad->getNom_activ(),
                         $id_activ,
-                        $nom_ap
+                        $fecha !== '' ? ', ' . $fecha : '',
+                        $nom_ap,
+                        $motivo
                     );
                     continue;
                 }

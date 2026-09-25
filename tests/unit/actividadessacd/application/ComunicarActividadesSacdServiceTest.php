@@ -96,7 +96,7 @@ final class ComunicarActividadesSacdServiceTest extends TestCase
             ->willReturnCallback(function (int $idActiv, string $tipo, string $dl) use (&$vistos): void {
                 $vistos[] = [$idActiv, $tipo, $dl];
             });
-        $perm->method('havePermisoSacd')->willReturn(false);
+        $perm->method('motivoSinPermisoSacd')->willReturn('la fase sacd no está completada');
         $_SESSION['oPermActividades'] = $perm;
 
         $cargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);

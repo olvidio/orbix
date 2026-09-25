@@ -629,34 +629,80 @@ class PermisosActividades
      */
     public function havePermisoSacd(?int $id_cargo, bool $propio): bool
     {
-        $permiso_ver = FALSE;
-        $oPermActiv = $this->getPermisoActual('datos');
-        // sólo si la fase de 'ok sacd' está completada:
-        $oPermSacd = $this->getPermisoOn('sacd');
-        // sólo si la fase de 'ok asist. sacd' está completada:
-        $oPermAsisSacd = $this->getPermisoOn('asistentesSacd');
-        // para ver la actividad:
-        if ($oPermActiv->have_perm_activ('ver') === FALSE) {
-            return FALSE;
-            // No hace falta seguir mirando.
+        return $this->motivoSinPermisoSacd($id_cargo, $propio) === null;
+    }
+
+    /**
+     * Null si el sacd puede ver la actividad. Si no, el motivo concreto
+     * (fase sin completar, sin permiso de ver, sin fase definida).
+     */
+    public function motivoSinPermisoSacd(?int $id_cargo, bool $propio): ?string
+    {
+        if ($this->getPermisoActual('datos')->have_perm_activ('ver') === false) {
+            return _('sin permiso de ver los datos en la fase actual');
         }
 
-        // si es solo cargo, tiene propio='f' como sacd de la actividad
+        $sacd = $this->diagnosticoPermisoOn('sacd');
+        $asis = $this->diagnosticoPermisoOn('asistentesSacd');
+        $propioSi = \src\shared\domain\helpers\FuncTablasSupport::isTrue($propio) === true;
+
         if (!empty($id_cargo)) {
-            if ($oPermSacd->have_perm_activ('ver') === TRUE) {
-                $permiso_ver = TRUE;
+            if ($sacd === 'ok' || ($propioSi && $asis === 'ok')) {
+                return null;
             }
-            //si también asiste. tiene propio = 't'
-            if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($propio) && $oPermAsisSacd->have_perm_activ('ver') === TRUE) {
-                $permiso_ver = TRUE;
+            $motivo = _('tiene cargo y ') . $this->textoDiagnosticoPermiso($sacd, _('fase sacd'));
+            if ($propioSi) {
+                $motivo .= '; ' . $this->textoDiagnosticoPermiso($asis, _('fase asistentes sacd'));
             }
-        } else {
-            // sólo asiste
-            if ($oPermAsisSacd->have_perm_activ('ver') === TRUE) {
-                $permiso_ver = TRUE;
-            }
+
+            return $motivo;
         }
-        return $permiso_ver;
+
+        if ($asis === 'ok') {
+            return null;
+        }
+
+        return _('solo asiste y ') . $this->textoDiagnosticoPermiso($asis, _('fase asistentes sacd'));
+    }
+
+    /**
+     * @return 'ok'|'fase_no_completada'|'sin_permiso_ver'|'sin_fase'
+     */
+    private function diagnosticoPermisoOn(string $afecta): string
+    {
+        $iAfecta = self::AFECTA[$afecta];
+        if (!empty($this->iid_activ)) {
+            $this->setActividad($this->iid_activ);
+        }
+        $id_fase_ref = $this->getFaseRef($iAfecta);
+        if ($this->btop || $id_fase_ref === false) {
+            return 'sin_fase';
+        }
+        if (!empty($this->iid_activ)) {
+            $this->setActividad($this->iid_activ);
+        }
+        if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($this->isCompletada($id_fase_ref))) {
+            return 'fase_no_completada';
+        }
+        $oPerm = $this->getPermisos($iAfecta);
+        if ($oPerm === false) {
+            return 'sin_permiso_ver';
+        }
+        $perm = $oPerm->getPerm($iAfecta, $id_fase_ref, 'on');
+        if ($perm === 0 || !(new PermAccion($perm))->have_perm_activ('ver')) {
+            return 'sin_permiso_ver';
+        }
+
+        return 'ok';
+    }
+
+    private function textoDiagnosticoPermiso(string $diagnostico, string $fase): string
+    {
+        return match ($diagnostico) {
+            'fase_no_completada' => sprintf(_('la %s no está completada'), $fase),
+            'sin_fase' => sprintf(_('no hay %s definida para este tipo'), $fase),
+            default => sprintf(_('la %s está completada pero no hay permiso de ver'), $fase),
+        };
     }
 
     public function getPermisos(int $iAfecta, string $id_tipo_activ_txt = ''): XResto|false

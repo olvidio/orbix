@@ -82,6 +82,18 @@ $i18n = [
     }
 
     .pie-pag { display: block; }
+
+    .aviso-permiso-sacd {
+        clear: both;
+        margin: 0 0 1em 0;
+        padding: 0.6em 0.8em;
+        border: 1px solid #a00;
+        background: #fff4f4;
+        color: #600;
+        font-family: 'Arial', serif;
+        font-size: 12pt;
+    }
+    .aviso-permiso-sacd p { margin: 0.3em 0; }
     .pie-pag .izquierda { display: block; float: left; text-align: left; }
     .pie-pag .derecha { display: block; float: right; text-align: right; }
 
@@ -222,7 +234,15 @@ $i18n = [
     };
 
     fnjs_construir_listado = function (data) {
-        var html = '<span id="span_exportar" title="comunicacion_sacd">';
+        var html = '';
+        if (Array.isArray(data.avisos) && data.avisos.length > 0) {
+            html += '<div class="aviso-permiso-sacd">';
+            for (var a = 0; a < data.avisos.length; a++) {
+                html += '<p>' + fnjs_esc_html(data.avisos[a]) + '</p>';
+            }
+            html += '</div>';
+        }
+        html += '<span id="span_exportar" title="comunicacion_sacd">';
         html += fnjs_pintar_sacds(data.sacds || [], data);
         if (Array.isArray(data.sacds_paso) && data.sacds_paso.length > 0) {
             html += '<div id="sacds_paso_titulo">' + fnjs_esc_html(I18N_COM.sacd_paso_titulo) + '</div>';
@@ -231,7 +251,8 @@ $i18n = [
         html += '</span>';
 
         if ((!data.sacds || data.sacds.length === 0) &&
-            (!data.sacds_paso || data.sacds_paso.length === 0)) {
+            (!data.sacds_paso || data.sacds_paso.length === 0) &&
+            (!data.avisos || data.avisos.length === 0)) {
             html = '<p>' + fnjs_esc_html(I18N_COM.sin_datos) + '</p>';
         }
         return html;
@@ -252,9 +273,6 @@ $i18n = [
                 return;
             }
             $('#exportar').html(fnjs_construir_listado(data));
-            if (Array.isArray(data.avisos) && data.avisos.length > 0) {
-                alert(data.avisos.join("\n"));
-            }
         }).fail(function () {
             alert(I18N_COM.err_comunicacion);
         });
