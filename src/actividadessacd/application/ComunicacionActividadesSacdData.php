@@ -56,6 +56,7 @@ final class ComunicacionActividadesSacdData
                 'periodo_txt' => $periodo_txt,
                 'sacds' => [],
                 'sacds_paso' => [],
+                'avisos' => [],
                 'mensaje_periodo' => _("falta determinar un periodo"),
             ];
         }
@@ -68,6 +69,7 @@ final class ComunicacionActividadesSacdData
         $service->setPropuesta($propuesta);
         $service->setPersonas($cPersonas);
         $sacds = $service->getArrayComunicacion();
+        $avisos = $service->getAvisos();
 
         $sacds_paso = [];
         if ($que !== 'un_sacd') {
@@ -86,6 +88,7 @@ final class ComunicacionActividadesSacdData
             $servicePaso->setQuitarInactivos(true);
             $servicePaso->setPersonas($cPersonasPaso);
             $sacds_paso = $servicePaso->getArrayComunicacion();
+            $avisos = array_merge($avisos, $servicePaso->getAvisos());
         }
 
         return [
@@ -96,6 +99,7 @@ final class ComunicacionActividadesSacdData
             'periodo_txt' => $periodo_txt,
             'sacds' => $this->normalizarSacds($sacds),
             'sacds_paso' => $this->normalizarSacds($sacds_paso),
+            'avisos' => array_values(array_unique($avisos)),
         ];
     }
 

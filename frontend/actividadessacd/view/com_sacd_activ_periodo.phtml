@@ -252,6 +252,9 @@ $i18n = [
                 return;
             }
             $('#exportar').html(fnjs_construir_listado(data));
+            if (Array.isArray(data.avisos) && data.avisos.length > 0) {
+                alert(data.avisos.join("\n"));
+            }
         }).fail(function () {
             alert(I18N_COM.err_comunicacion);
         });

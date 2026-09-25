@@ -44,6 +44,9 @@ final class ComunicarActividadesSacdService
     private bool $soloCargos = false;
     private bool $quitarInactivos = false;
 
+    /** @var list<string> */
+    private array $avisos = [];
+
     public function __construct(
         private CargoRepositoryInterface $cargoRepository,
         private ActividadAllRepositoryInterface $actividadAllRepository,
@@ -93,6 +96,17 @@ final class ComunicarActividadesSacdService
     }
 
     /**
+     * Actividades asignadas que no se muestran porque havePermisoSacd es false.
+     * Cada actividad se evalúa sola; un false no se arrastra a las demás.
+     *
+     * @return list<string>
+     */
+    public function getAvisos(): array
+    {
+        return $this->avisos;
+    }
+
+    /**
      * Estructura: `id_nom => ['nom_ap', 'txt' => [clave=>texto], 'actividades' => [...]]`.
      * Si `quitarInactivos=true` y una persona no tiene actividades, se
      * excluye del array de salida.
@@ -105,6 +119,7 @@ final class ComunicarActividadesSacdService
 
         $oHelper = $this->actividadesSacdHelper;
         $array_actividades = [];
+        $this->avisos = [];
 
         // Solape con el periodo: f_ini <= fin AND f_fin >= inicio.
         // Sin comillas extras: Condicion usa placeholders PDO para <= / >=.
@@ -154,10 +169,20 @@ final class ComunicarActividadesSacdService
                     ? $this->mixedToInt($aAsistente['id_cargo'])
                     : null;
 
+                $oActividad = $ActividadAllRepository->findById($id_activ);
+                if ($oActividad === null) {
+                    continue;
+                }
+
                 $oPermSesion = $_SESSION['oPermActividades'] ?? null;
                 if ($oPermSesion instanceof PermisosActividades) {
-                    $oPermSesion->setId_activ($id_activ);
                     if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($this->propuesta) && ConfigGlobal::is_app_installed('procesos')) {
+                        $dlOrg = $oActividad->getDl_org();
+                        if ($dlOrg !== null && $dlOrg !== '') {
+                            $oPermSesion->setActividad($id_activ, (string) $oActividad->getId_tipo_activ(), $dlOrg);
+                        } else {
+                            $oPermSesion->setActividad($id_activ);
+                        }
                         $permiso_ver = $oPermSesion->havePermisoSacd($id_cargo, $propio);
                     } else {
                         $permiso_ver = true;
@@ -166,11 +191,12 @@ final class ComunicarActividadesSacdService
                     $permiso_ver = true;
                 }
                 if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($permiso_ver)) {
-                    continue;
-                }
-
-                $oActividad = $ActividadAllRepository->findById($id_activ);
-                if ($oActividad === null) {
+                    $this->avisos[] = sprintf(
+                        _('No se muestra «%s» (id %d) del sacd %s: falta permiso de ver. La fase sacd o asistentes sacd no está completada, o este tipo no tiene permiso de ver.'),
+                        $oActividad->getNom_activ(),
+                        $id_activ,
+                        $nom_ap
+                    );
                     continue;
                 }
                 $id_tipo_activ = $oActividad->getId_tipo_activ();

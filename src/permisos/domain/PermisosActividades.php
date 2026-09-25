@@ -708,6 +708,14 @@ class PermisosActividades
 
     public function setId_activ(int $id_activ): void
     {
+        if ($this->iid_activ !== $id_activ) {
+            // Si no se invalida, setActividad() cree que el id ya está resuelto
+            // y reutiliza tipo, delegación y fases de la actividad anterior.
+            $this->aFasesCompletadas = [];
+            $this->setActividadContextTipo = null;
+            $this->setActividadContextDlOrg = null;
+            $this->btop = false;
+        }
         $this->iid_activ = $id_activ;
     }
 
