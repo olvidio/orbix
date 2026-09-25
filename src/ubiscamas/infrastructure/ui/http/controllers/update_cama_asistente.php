@@ -22,7 +22,8 @@ if ($Qid_activ <= 0) {
 
 $Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($opened, 'id_nom');
 $Qid_cama = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_cama');
-if ($Qid_nom <= 0) {
+// id_nom negativo: asistente de paso (d_asistentes_ex). Cero no es un id válido.
+if ($Qid_nom === 0) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'mensaje' => _('Operación no autorizada')]);
     exit;

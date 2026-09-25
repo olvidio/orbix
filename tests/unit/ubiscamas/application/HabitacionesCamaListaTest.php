@@ -149,4 +149,36 @@ final class HabitacionesCamaListaTest extends TestCase
             HashB::open($asistenteOut['ctx_update_cama'], 'update_cama_asistente')
         );
     }
+
+    public function test_asistente_de_paso_conserva_id_nom_negativo_en_el_contexto(): void
+    {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+        session_id('habitaciones-cama-lista-de-paso-test');
+
+        $act = $this->createMock(ActividadAll::class);
+        $act->method('getId_ubi')->willReturn(40);
+        $act->method('getDesc_activ')->willReturn('normal');
+        $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
+        $actRepo->method('findById')->with(9)->willReturn($act);
+
+        $asistente = $this->createMock(Asistente::class);
+        $asistente->method('getCamaVo')->willReturn(null);
+        $asistente->method('getId_nom')->willReturn(-42);
+        $asistenteSvc = $this->createMock(AsistenteActividadService::class);
+        $asistenteSvc->method('getAsistentesDeActividad')->with(9)->willReturn(['Paso, Ana' => $asistente]);
+
+        $out = (new HabitacionesCamaLista(
+            $actRepo,
+            $asistenteSvc,
+            $this->createMock(HabitacionDlRepositoryInterface::class),
+            $this->createMock(CamaDlRepositoryInterface::class),
+        ))(9);
+
+        $this->assertSame(
+            ['id_activ' => 9, 'id_nom' => -42],
+            HashB::open($out['asistentes_sin_cama'][0]['ctx_update_cama'], 'update_cama_asistente')
+        );
+    }
 }

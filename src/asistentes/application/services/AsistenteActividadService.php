@@ -284,12 +284,12 @@ class AsistenteActividadService
 
         $msg_err = '';
         if ($dl === ConfigGlobal::mi_delef()) {
-            // Todos los asistentes
-            /* Buscar en los tres tipos de asistente: Dl, IN y Out. */
+            // Todos los asistentes. Los de paso (id_nom negativo) viven en d_asistentes_ex.
             $a_Clases = [
                 ['repo' => AsistenteDlRepositoryInterface::class, 'get' => 'getAsistentes'],
                 ['repo' => AsistentePubRepositoryInterface::class, 'get' => 'getAsistentes'],
                 ['repo' => AsistenteOutRepositoryInterface::class, 'get' => 'getAsistentes'],
+                ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
             ];
         } else {
             if ($id_tabla === 'dl') {
