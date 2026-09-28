@@ -195,7 +195,7 @@ Usar al terminar la migración estructural de un módulo (asistentes es la plant
 - [ ] `grep -n 'use src\\\\' frontend/<modulo>/controller/` → **0** (salvo excepciones documentadas)
 - [ ] Sin `require_once` explícito de `global_object.inc` en controladores del módulo
 - [ ] Endpoints `/src/<modulo>/...` registrados en `config/routes.php`; un endpoint por acción
-- [ ] Widgets dossier / listados con `link_spec` firmado en `frontend/` (no `Hash::link` en `application/`)
+- [ ] Widgets dossier / listados con `link_spec` firmado en `frontend/` (no `HashF::link` en `application/`)
 - [ ] `$GLOBALS['container']` migrado a DI por constructor en `application/` (controllers HTTP pueden usar contenedor vía DI o wrapper fino)
 - [ ] `composer phpstan:file -- src/<modulo>/` sin errores (PS₀); entradas del módulo reducidas en `phpstan-baseline.neon` si aplica
 - [ ] Sección **«Deuda post-refactor»** actualizada en `docs/dev/<modulo>_migracion_baseline.md`

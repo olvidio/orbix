@@ -74,7 +74,7 @@ Documento de referencia según `refactor.md` (misma línea que `profesores` / `m
 - **Endpoints:** `GET|POST /src/encargossacd/sacd_select_data`, `GET|POST /src/encargossacd/sacd_ficha_data`, `GET|POST /src/encargossacd/sacd_ficha_update` (registrados en `src/encargossacd/config/routes.php`).
 - **Frontend:** `frontend/encargossacd/controller/sacd_ficha_ajax.php` queda como dispatcher delgado sobre `que`:
   - `get_select`: llama al endpoint, construye `web\Desplegable` y hace `echo` del HTML (la vista `sacd_ficha.phtml` sigue consumiendo texto HTML con `dataType:'html'`).
-  - `ficha`: llama al endpoint, calcula los `Hash::link` para enlazar a `ctr_ficha.php` desde el controlador (para no usar `Hash` dentro del namespace del renderer) y delega la plantilla HTML a la nueva vista `frontend/encargossacd/view/sacd_ficha_ajax_ficha.phtml`.
+  - `ficha`: llama al endpoint, calcula los `HashF::link` para enlazar a `ctr_ficha.php` desde el controlador (para no usar la firma UI dentro del namespace del renderer) y delega la plantilla HTML a la nueva vista `frontend/encargossacd/view/sacd_ficha_ajax_ficha.phtml`.
   - `update`: proxy JSON -> texto plano via `PostRequest`; mantiene la compatibilidad con `fnjs_guardar` (que muestra `alert(rta_txt)`).
   - Cero `use src\...`.
 
@@ -86,7 +86,7 @@ Documento de referencia según `refactor.md` (misma línea que `profesores` / `m
 - **Backend mutacion:**
   - `SacdAusenciasUpdate::execute(array $post)` reproduce la combinacion `modifica_sacd_ausencias` + `insert_sacd_ausencias` del antiguo controlador. Devuelve `['error' => bool, 'mensajes' => string]`; el HTTP controller lo envuelve en `ContestarJson::enviar`.
 - **Endpoints:** `GET|POST /src/encargossacd/sacd_ausencias_get_data`, `GET|POST /src/encargossacd/sacd_ausencias_update`, `GET|POST /src/encargossacd/sacd_ausencias_jefe_zona_data`.
-- **Frontend:** `frontend/encargossacd/controller/sacd_ausencias_get.php` y `sacd_ausencias_jefe_zona.php` consumen `PostRequest::getDataFromUrl(...)` y arman `web\Desplegable`/`web\Hash` sobre los arrays del payload. `sacd_ausencias_update.php` es ahora un proxy (`PostRequest` -> texto plano en error / cuerpo vacio en exito) compatible con `fnjs_guardar`.
+- **Frontend:** `frontend/encargossacd/controller/sacd_ausencias_get.php` y `sacd_ausencias_jefe_zona.php` consumen `PostRequest::getDataFromUrl(...)` y arman `frontend\shared\web\Desplegable`/`HashF` sobre los arrays del payload. `sacd_ausencias_update.php` es ahora un proxy (`PostRequest` -> texto plano en error / cuerpo vacio en exito) compatible con `fnjs_guardar`.
   - Cero `use src\...` en los tres ficheros.
 
 ## Slice `listas_*` (completado)
@@ -108,7 +108,7 @@ Cambios sin impacto funcional, centrados en coherencia con `refactor.md` y reduc
 - **URLs rotas a `des/tareas/*`**. Varias vistas JS aun apuntaban a controladores legacy inexistentes (`des/tareas/horario_ver.php`, `des/tareas/horario_update.php`, `des/tareas/horario_excepcion_ver.php`, `des/tareas/encargo_horario`, `des/tareas/sacd_ausencias_get.php`). Se redirigen a los canonicos bajo `frontend/encargossacd/controller/...`. El fallback `mod == 'excepcion'` en `horario_ver.phtml` era codigo muerto (el `action` se sobreescribia en la linea siguiente): eliminado.
 - **`web\Desplegable` fuera de `src/application`.** `EncargoCtrSelectData` y `EncargoZonasSelectData` ya no instancian `web\Desplegable` para despues llamar a `->export()`. Devuelven directamente el payload estandar (`refactor.md`: "payload + constructor en frontend"). El frontend (`DesplCentros`, `fnjs_construir_desplegable`) no cambia de contrato.
 - **Dispatcher `listas_com_txt_ajax` eliminado.** Se partio el endpoint multiproposito (`que=get_texto|update`) en dos endpoints independientes (`/src/encargossacd/listas_com_txt_get` y `/src/encargossacd/listas_com_txt_update`), con sus dos clases application (`ListasComTxtGet`, `ListasComTxtUpdate`) y sus dos proxies frontend (`listas_com_txt_get.php`, `listas_com_txt_update.php`). Se suprimieron `EncargoTextoListasComAjax`, el HTTP controller y el proxy antiguos. La vista `listas_com_txt.phtml` deja de enviar `que=` y apunta cada accion a su proxy.
-- **`listas_index.php` simplificado.** Se extrajo un closure `$lnk(...)` para armar URLs con `Hash::link + http_build_query + poner_empty_on_null`, eliminando el patron duplicado 12 veces (`$aQuery = [...]; if (is_array($aQuery)) array_walk(...);`).
+- **`listas_index.php` simplificado.** Se extrajo un closure `$lnk(...)` para armar URLs con `HashF::link + http_build_query + poner_empty_on_null`, eliminando el patron duplicado 12 veces (`$aQuery = [...]; if (is_array($aQuery)) array_walk(...);`).
 - **Helper `frontend\encargossacd\support\SacdFichaAjaxHashes`**. Centraliza las piezas duplicadas byte a byte en `sacd_ficha.php`, `sacd_ausencias.php` y `sacd_ausencias_jefe_zona.php`: el `<select>` de `filtro_sacd` con sus 4 opciones, los hashes hacia `sacd_ficha_ajax.php` (`h_ficha`, `h_lista`) y hacia `horario_sacd_ver.php` (`h_horario`).
 - **`DesplCentros` sin estado mutable.** Se sustituye `new DesplCentros(); setIdZona(); getDesplPorFiltro()` por `DesplCentros::build($filtro_ctr, $id_ubi, $id_zona)`. Dos callers (`ctr_ficha.php`, `encargo_ver.php`) quedan mas compactos y alineados con el resto de helpers frontend (`PeriodoTdHelper`, `CuadriculaZonaRenderer`, `SacdFichaAjaxHashes`, ...).
 

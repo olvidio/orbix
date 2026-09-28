@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `proc
 
 ## Objetivo Funcional
 
-Gestiona ProcesosSelect. Caso de uso: datos para la pantalla procesos_select. Devuelve las opciones del desplegable de tipo de proceso para que la vista frontend monte el frontend\shared\web\Desplegable y los web\Hash correspondientes.
+Gestiona ProcesosSelect. Caso de uso: datos para la pantalla procesos_select. Devuelve las opciones del desplegable de tipo de proceso para que la vista frontend monte el frontend\shared\web\Desplegable y los HashF correspondientes.
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ Gestiona ProcesosSelect. Caso de uso: datos para la pantalla procesos_select. De
 
 ## Pistas Desde Endpoints
 
-- Caso de uso: datos para la pantalla `procesos_select`. Devuelve las opciones del desplegable de tipo de proceso para que la vista frontend monte el `frontend\shared\web\Desplegable` y los `web\Hash` correspondientes.
+- Caso de uso: datos para la pantalla `procesos_select`. Devuelve las opciones del desplegable de tipo de proceso para que la vista frontend monte el `frontend\shared\web\Desplegable` y los `HashF` correspondientes.
 
 ## Errores Conocidos
 

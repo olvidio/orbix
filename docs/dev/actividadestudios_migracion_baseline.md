@@ -134,7 +134,7 @@ Grep resumen:
 
 1. **Dispatchers `$Qmod`** en `update_3103` (6 ramas) y `update_3005`
    (3 ramas) — split en endpoints por accion.
-2. **Widgets Select en `apps/<app>/model/`** con `web\Lista`, `web\Hash`,
+2. **Widgets Select en `apps/<app>/model/`** con `frontend\shared\web\Lista`, `HashF`,
    `web\ViewPhtml` — deben vivir en `src/actividadestudios/application/`
    renombrados con `codigo` (patron `actividadcargos`).
 3. **Controladores en `apps/`** — no hay `frontend/actividadestudios/`

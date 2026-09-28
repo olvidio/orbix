@@ -188,7 +188,7 @@ Resumen (ver `rg "apps/asistentes"` para la lista completa):
 
 1. **Dispatcher `$Qmod`** en `update_3101` (5 ramas: plaza / mover /
    eliminar / nuevo / editar) -> split en casos de uso.
-2. **Widget Select en `apps/<app>/model/`** con `web\Lista`, `web\Hash`,
+2. **Widget Select en `apps/<app>/model/`** con `frontend\shared\web\Lista`, `HashF`,
    `core\ViewPhtml` -> debe vivir en `src/asistentes/application/`
    renombrado con `codigo`.
 3. **`ListaPlazas` en `apps/<app>/model/`** -> es pura logica de

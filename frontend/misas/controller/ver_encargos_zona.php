@@ -39,7 +39,7 @@ $oDesplCentros->setOpciones(MisasDesplegableSupport::opciones($centros));
 
 $oDesplIdiomas = new Desplegable('idioma_enc', MisasDesplegableSupport::opciones($idiomas), '', true);
 
-// URL absoluta del endpoint backend: web\Hash genera el hash a partir de la
+// URL absoluta del endpoint backend: HashF genera el hash a partir de la
 // URL; el JS posteara contra la misma ruta para que el hash coincida.
 $url_guardar_encargo_zona = AppUrlConfig::srcBrowserUrl('/src/misas/guardar_encargo_zona');
 $oHashGuardar = new HashF();

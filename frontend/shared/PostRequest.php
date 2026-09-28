@@ -565,7 +565,7 @@ class PostRequest
     }
 
     /**
-     * Un array vacío no genera inputs hidden en web\HashF::getCamposHiddenHtml;
+     * Un array vacío no genera inputs hidden en HashF::getCamposHiddenHtml;
      * validatePost trata el campo ausente como ''.
      * Firmar con [] hace que http_build_query difiera de '' y falle el hash hh.
      *

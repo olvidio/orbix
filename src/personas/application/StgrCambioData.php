@@ -13,7 +13,7 @@ use src\personas\application\support\PersonaRepositoryResolver;
  * - nivel_stgr actual (para preseleccionar),
  * - mapa `value => etiqueta` de niveles posibles (para el `<select>`).
  *
- * El frontend construye `web\Desplegable` y `web\Hash`; aqui no hay HTML.
+ * El frontend construye `frontend\shared\web\Desplegable` y la firma de UI; aqui no hay HTML.
  */
 final class StgrCambioData
 {

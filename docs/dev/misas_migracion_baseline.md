@@ -15,7 +15,7 @@ Este baseline documenta el estado actual del modulo `misas` y el plan de migraci
 ## Plan de slices (un commit logico por slice)
 
 1. **Slice 0 — Baseline y andamiaje.** Este documento + `src/misas/config/routes.php` + carpetas vacias `frontend/misas/controller|view` y `src/misas/infrastructure/ui/http/controllers`.
-2. **Slice 1 — `misas_index`.** Index de navegacion (sin backend: pura UI + `Hash::link`).
+2. **Slice 1 — `misas_index`.** Index de navegacion (sin backend: pura UI + `HashF::link`).
 3. ~~**Slice 2 — Seleccion de zona.** `seleccionar_zona`.~~ **DESCARTADO.** El controlador `apps/misas/controller/seleccionar_zona.php` es codigo muerto: renderizaba una vista inexistente (`seleccionar_zona_tipo.html.twig`), apuntaba a un destino inexistente (`apps/misas/controller/crear_plantilla.php`) y no tiene consumidores en el repo. Se ha renombrado a `zseleccionar_zona.php` + `zseleccionar_zona.html.twig` para preservarlo por si hiciera falta consulta/rollback. No se migra a `frontend/misas`.
 4. **Slice 3 — Iniciales SACD.** `modificar_iniciales_sacd_zona`, `update_iniciales`, `ver_iniciales_zona`.
 5. **Slice 4 — Encargos zona.** `modificar_encargos`, `ver_encargos_zona`, `update_encargos_zona`. `modificar_encargos_zona` queda descartado como codigo muerto (duplicado de `zver_plantilla_zona.php` que renderiza `ver_plantilla_zona.html.twig` inexistente, sin consumidores). `desplegable_encargos` se migra en el Slice 5 porque su unico consumidor es `ver_encargos_centros`.
@@ -71,7 +71,7 @@ El modulo `misas` usa varios dispatchers que habra que partir por accion en cada
 
 ## Slice 1 — `misas_index` (este PR/commit)
 
-- **Entrada actual:** `apps/misas/controller/misas_index.php` (Twig) — index estatico con 10 enlaces `Hash::link(...)` a las pantallas del modulo, sin acceso a BD.
+- **Entrada actual:** `apps/misas/controller/misas_index.php` (Twig) — index estatico con 10 enlaces `HashF::link(...)` a las pantallas del modulo, sin acceso a BD.
 - **Destino:** `frontend/misas/controller/misas_index.php` + `frontend/misas/view/misas_index.phtml`.
 - **Backend en `src`:** no aplica (pantalla pura UI, sin `PostRequest`).
 - **Compatibilidad legacy:** `apps/misas/controller/misas_index.php` pasa a ser wrapper que hace `require` al frontend. Asi `public/ayuda/index.php`, menus en BD y `docs/legacy/obix/menus.csv` siguen funcionando sin cambios.

@@ -20,7 +20,7 @@ $columns = $data['columns'] ?? [];
 $rows = $data['rows'] ?? [];
 $id_zona = \frontend\shared\helpers\PayloadCoercion::int($data['id_zona'] ?? $Qid_zona);
 
-// URL absoluta del endpoint backend: web\Hash genera el hash a partir de la
+// URL absoluta del endpoint backend: HashF genera el hash a partir de la
 // URL; el JS posteara contra la misma ruta para que el hash coincida.
 $url_update_iniciales = AppUrlConfig::srcBrowserUrl('/src/misas/update_iniciales');
 $oHashIniciales = new HashF();

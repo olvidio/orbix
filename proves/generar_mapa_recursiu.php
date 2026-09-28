@@ -41,7 +41,7 @@ function rastrejar($ruta_relativa)
         }
     }
 
-    // TAMBÉ BUSCAR DINS DEL PHP (per si hi ha Hash::link o redireccions)
+    // TAMBÉ BUSCAR DINS DEL PHP (per si hi ha HashF::link o redireccions)
     preg_match_all('/[\'"]([a-z0-9_\-\.\/]+\.php)[\'"]/i', $contingut_php, $m_php);
     foreach ($m_php[1] as $url) {
         processar_troballa($nom_node, $url, $ruta_relativa);
