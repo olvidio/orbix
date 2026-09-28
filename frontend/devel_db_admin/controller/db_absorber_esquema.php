@@ -15,6 +15,7 @@ $QEsquemaDel = (string) filter_input(INPUT_POST, 'esquema_del');
 $data = PostRequest::getDataFromUrl('/src/devel_db_admin/absorber_esquema', [
     'esquema_matriz' => $QEsquemaMatriz,
     'esquema_del' => $QEsquemaDel,
+    'ctx_absorber' => (string) filter_input(INPUT_POST, 'ctx_absorber'),
 ]);
 
 foreach (DevelDbAdminPayload::avisosList($data['lines'] ?? []) as $line) {

@@ -13,7 +13,19 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\MoverTabla;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 
+
+try {
+    HashB::open(
+        (string) \src\shared\domain\helpers\FilterPostGet::post('ctx_mover'),
+        'mover_tabla'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 $tablaRaw = \src\shared\domain\helpers\FilterPostGet::post('tabla');
 $tabla = is_scalar($tablaRaw) ? (string) $tablaRaw : '';

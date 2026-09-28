@@ -9,14 +9,26 @@ use src\shared\config\ServerConf;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\LocaleCode;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
 /** @var CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository */
 $certificadoEmitidoRepository = DependencyResolver::get(CertificadoEmitidoRepositoryInterface::class);
 
-$Qnuevo = (bool)\src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'nuevo');
-$Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item');
-$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom');
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_guardar'),
+        'certificado_emitido_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qnuevo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'nuevo') === 1;
+$Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_item');
+$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_nom');
 $Qnom = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nom');
 $Qidioma = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'idioma');
 $Qdestino = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'destino');

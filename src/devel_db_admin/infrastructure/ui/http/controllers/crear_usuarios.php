@@ -11,7 +11,19 @@ use src\shared\domain\helpers\FilterPostGet;
 
 use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\CrearUsuarios;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 
+
+try {
+    HashB::open(
+        (string) \src\shared\domain\helpers\FilterPostGet::post('ctx_crear_usuarios'),
+        'crear_usuarios'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 $Qregion = (string) \src\shared\domain\helpers\FilterPostGet::post('region');
 $Qdl = (string) \src\shared\domain\helpers\FilterPostGet::post('dl');

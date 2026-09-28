@@ -166,6 +166,7 @@ $oHashActa->setCamposNo('go_to!examinadores!notas!refresh!bloque');
 $a_camposHidden = [];
 if ($Qmod === 'nueva' || $notas === 'nuevo') {
     $a_camposHidden['mod'] = 'nueva';
+    $a_camposHidden['ctx_nuevo'] = $form['ctx_nuevo'];
     if ($id_activ !== 0) {
         $a_camposHidden['id_activ'] = $id_activ;
     }
@@ -173,6 +174,7 @@ if ($Qmod === 'nueva' || $notas === 'nuevo') {
     $a_camposHidden['mod'] = '';
     $a_camposHidden['id_activ'] = $id_activ;
     $a_camposHidden['sa_actas'] = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($a_actas, JSON_THROW_ON_ERROR));
+    $a_camposHidden['ctx_guardar'] = $form['ctx_guardar'];
 }
 if ($notas !== '') {
     $a_camposHidden['notas'] = $notas;

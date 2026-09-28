@@ -11,20 +11,18 @@
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             if (confirm(<?= json_encode(_("¿Está seguro que desea borrar este aviso?")) ?>)) {
-                $('#av_salida').val('eliminar');
-                $(formulario).attr('action', 'src/cambios/usuario_avisos_pref_eliminar.php');
-                $(formulario).one("submit", function () {
-                    fnjs_ajax_json({
-                        url: $(this).attr('action'),
-                        data: $(this).serialize(),
-                        onSuccess: function () {
-                            fnjs_enviar_formulario('#avisos');
-                        }
-                    });
-                    return false;
+                var ctx_eliminar = fnjs_ctx_fila_seleccionada(formulario, 'ctx_eliminar');
+                if (!ctx_eliminar) {
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + <?= json_encode(_("Operación no autorizada")) ?>);
+                    return;
+                }
+                fnjs_ajax_json({
+                    url: <?= json_encode($url_eliminar_aviso) ?>,
+                    data: 'ctx_eliminar=' + encodeURIComponent(ctx_eliminar),
+                    onSuccess: function () {
+                        fnjs_enviar_formulario('#avisos');
+                    }
                 });
-                $(formulario).trigger("submit");
-                $(formulario).off();
             }
         }
     }
@@ -40,6 +38,6 @@
 <h3><?= _("avisos de cambios") ?>:</h3>
 <form id="avisos" name="avisos" action=''>
     <?= $oHashAvisos->getCamposHtml(); ?>
-    <?= $oTablaAvisos->mostrar_tabla(); ?>
+    <?= $oTablaAvisos->mostrar_tabla_html(); ?>
     <input type=button onclick="fnjs_add_cambio();" value="<?= _("añadir aviso") ?>">
 </form>

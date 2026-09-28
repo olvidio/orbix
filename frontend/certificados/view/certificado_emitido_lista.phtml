@@ -65,9 +65,13 @@
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             if (confirm(<?= json_encode((string)$txt_eliminar) ?>)) {
-                $('#mod').val("eliminar");
+                var ctx_eliminar = fnjs_ctx_fila_seleccionada(formulario, 'ctx_eliminar');
+                if (!ctx_eliminar) {
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + <?= json_encode(_("Operación no autorizada")) ?>);
+                    return;
+                }
                 let request = $.ajax({
-                    data: $(formulario).serialize(),
+                    data: 'ctx_eliminar=' + encodeURIComponent(ctx_eliminar),
                     url: 'src/certificados/certificado_emitido_delete',
                     method: 'POST',
                     dataType: 'json'
@@ -129,5 +133,5 @@
 <form id='seleccionados' name='seleccionados' action='' method='post'>
     <?= $oHash1->getCamposHtml() ?>
     <input type='Hidden' id='mod' name='mod' value=''>
-    <?= $oTabla->mostrar_tabla() ?>
+    <?= $oTabla->mostrar_tabla_html() ?>
 </form>

@@ -6,19 +6,24 @@
  */
 
 use src\cambios\application\CambioUsuarioObjetoPrefEliminar;
-use src\shared\domain\helpers\FuncTablasSupport;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$a_sel = FuncTablasSupport::inputStringList($_POST, 'sel');
-if ($a_sel !== []) {
-    strtok((string)$a_sel[0], '#');
-    $id_item_usuario_objeto = (int)strtok('#');
-} else {
-    $id_item_usuario_objeto = FuncTablasSupport::inputInt($_POST, 'id_item_usuario_objeto');
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_eliminar'),
+        'cambio_usuario_objeto_pref_eliminar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
 }
 
-$input = ['id_item_usuario_objeto' => $id_item_usuario_objeto];
+$input = [
+    'id_item_usuario_objeto' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_item_usuario_objeto'),
+];
 
 /** @var CambioUsuarioObjetoPrefEliminar $useCase */
 $useCase = DependencyResolver::get(CambioUsuarioObjetoPrefEliminar::class);

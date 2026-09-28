@@ -52,6 +52,7 @@ $oHashCertificadoPdf->setArrayCamposHidden([
     'id_nom' => $id_nom,
     'nuevo' => $Qnuevo,
     'refresh' => 1,
+    'ctx_guardar' => $form['ctx_guardar'],
 ]);
 
 $locData = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/certificados/certificados_locales_data', []));

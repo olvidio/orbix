@@ -28,6 +28,9 @@ $oDesplRegiones->setAction('fnjs_dl()');
 $oHash = new HashF();
 $oHash->setCamposForm('region!dl!comun!sv!sf');
 $oHash->setcamposNo('comun!sv!sf');
+$oHash->setArrayCamposHidden([
+    'ctx_eliminar' => (string) ($dbProps['ctx_eliminar'] ?? ''),
+]);
 
 $oHash1 = new HashF();
 $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/devel_db_admin/db_lugar'));

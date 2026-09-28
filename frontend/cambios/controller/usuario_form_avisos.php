@@ -58,7 +58,7 @@ $oTablaAvisos->setDatos($view['a_valores']);
 $url_usuario_ajax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/usuario_avisos_pref.php';
 $oHashAvisos = new HashF();
 $oHashAvisos->setUrl($url_usuario_ajax);
-$oHashAvisos->setCamposNo('sel!scroll_id!salida!id_sel');
+$oHashAvisos->setCamposNo('sel!scroll_id!salida!id_sel!ctx_eliminar');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
     'quien' => $Qquien,
@@ -73,6 +73,7 @@ $a_camposAvisos = [
     'oHashAvisos' => $oHashAvisos,
     'oTablaAvisos' => $oTablaAvisos,
     'nombre_usuario' => $view['nombre_usuario'],
+    'url_eliminar_aviso' => AppUrlConfig::srcBrowserUrl('/src/cambios/cambio_usuario_objeto_pref_eliminar'),
 ];
 
 $oView = new ViewNewPhtml('frontend\cambios\controller');

@@ -12,7 +12,19 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\AbsorberEsquema;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 
+
+try {
+    HashB::open(
+        (string) \src\shared\domain\helpers\FilterPostGet::post('ctx_absorber'),
+        'absorber_esquema'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 /** @var AbsorberEsquema $useCase */
 $useCase = DependencyResolver::get(AbsorberEsquema::class);

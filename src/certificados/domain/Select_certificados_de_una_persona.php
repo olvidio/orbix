@@ -4,6 +4,7 @@ namespace src\certificados\domain;
 
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\shared\security\HashB;
 
 /**
  * Listado de certificados recibidos de una persona (dossier 1010 / código certificados_de_una_persona).
@@ -103,6 +104,7 @@ class Select_certificados_de_una_persona
             $pdf = $oCertificado->getDocumento();
 
             $a_valores[$i]['sel'] = $id_item;
+            $a_valores[$i]['ctx_eliminar'] = HashB::sign('certificado_recibido_delete', ['id_item' => (int) $id_item]);
             $a_valores[$i][1] = $certificado;
             $a_valores[$i][2] = $f_certificado;
             $a_valores[$i][3] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($firmado) ? _("Sí") : _("No");
@@ -134,7 +136,7 @@ class Select_certificados_de_una_persona
         return [
             'segment_tipo' => 'select_certificados_de_una_persona',
             'hash_main' => [
-                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
+                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar',
                 'campos_hidden' => [
                     'pau' => $this->pau,
                     'id_pau' => $this->id_pau,

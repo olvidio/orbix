@@ -4,6 +4,7 @@ namespace src\certificados\application;
 
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 
 final class CertificadoRecibidoModificarFormData
@@ -39,6 +40,7 @@ final class CertificadoRecibidoModificarFormData
         $firmado = (bool) ($oCertificadoRecibido->isFirmado() ?? false);
 
         return [
+            'id_item' => $id_item,
             'id_nom' => $id_nom,
             'nom' => $nom,
             'idioma' => $idioma,
@@ -49,6 +51,11 @@ final class CertificadoRecibidoModificarFormData
             'firmado' => $firmado,
             'chk_firmado' => $firmado ? 'checked' : '',
             'a_locales' => $this->localRepository->getArrayLocales(),
+            'ctx_guardar' => HashB::sign('certificado_recibido_guardar', [
+                'nuevo' => 0,
+                'id_item' => $id_item,
+                'id_nom' => $id_nom,
+            ]),
         ];
     }
 }

@@ -29,6 +29,11 @@ $oDesplRegiones->setAction('fnjs_dl()');
 $oHash = new HashF();
 $oHash->setCamposForm('esquema!region!dl!comun!sv!sf');
 $oHash->setcamposNo('comun!sv!sf');
+$oHash->setArrayCamposHidden([
+    'ctx_crear' => (string) ($dbProps['ctx_crear'] ?? ''),
+    'ctx_copiar' => (string) ($dbProps['ctx_copiar'] ?? ''),
+    'ctx_crear_usuarios' => (string) ($dbProps['ctx_crear_usuarios'] ?? ''),
+]);
 
 $oHash1 = new HashF();
 $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/devel_db_admin/db_lugar'));

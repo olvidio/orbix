@@ -1,5 +1,14 @@
 <script>
     fnjs_trasladar = function (formulario) {
+        $(formulario).find('input[name="ctx_trasladar[]"]').remove();
+        var ctxs = fnjs_ctx_filas_seleccionadas(formulario, 'ctx_trasladar');
+        if (ctxs.length === 0) {
+            alert(<?= json_encode(_("Operación no autorizada")) ?>);
+            return;
+        }
+        for (var i = 0; i < ctxs.length; i++) {
+            $('<input>').attr({type: 'hidden', name: 'ctx_trasladar[]', value: ctxs[i]}).appendTo(formulario);
+        }
         $(formulario).attr('action', "frontend/ubis/controller/trasladar_ubis.php");
         fnjs_enviar_formulario(formulario);
     }
@@ -31,7 +40,7 @@
 <form id="seleccionados" name="seleccionados" action="" method="post">
     <?= $oHash->getCamposHtml(); ?>
     <h2 class=titulo><?= $titulo; ?></h2>
-    <?= $oTabla->mostrar_tabla(); ?>
+    <?= $oTabla->mostrar_tabla_html(); ?>
 </form>
 <?php
 switch ($nueva_ficha) {

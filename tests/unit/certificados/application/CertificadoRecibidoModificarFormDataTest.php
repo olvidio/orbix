@@ -7,6 +7,7 @@ use src\certificados\application\CertificadoRecibidoModificarFormData;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 
 final class CertificadoRecibidoModificarFormDataTest extends TestCase
@@ -61,6 +62,11 @@ final class CertificadoRecibidoModificarFormDataTest extends TestCase
         $this->assertTrue($data['firmado']);
         $this->assertSame('checked', $data['chk_firmado']);
         $this->assertSame(['ca_ES.UTF-8' => 'Català'], $data['a_locales']);
+        $this->assertSame(10, $data['id_item']);
+        $ctx = HashB::open($data['ctx_guardar'], 'certificado_recibido_guardar');
+        $this->assertSame(0, $ctx['nuevo']);
+        $this->assertSame(10, $ctx['id_item']);
+        $this->assertSame(55, $ctx['id_nom']);
     }
 
     public function test_firmado_false_chk_vacio(): void

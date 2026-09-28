@@ -9,6 +9,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
+use src\shared\security\HashB;
 
 /**
  * Agrega los datos de la tabla "select_notas_de_una_persona" (listado de
@@ -124,6 +125,14 @@ final class NotasDeUnaPersonaData
 
             $tipo_acta = $oPersonaNota->getTipo_acta();
             $a_valores[$i]['sel'] = $permiso == 3 ? "$id_nivel#$id_asignatura#$tipo_acta" : '';
+            if ($permiso == 3) {
+                $a_valores[$i]['ctx_eliminar'] = HashB::sign('persona_nota_eliminar', [
+                    'id_nom' => $id_pau,
+                    'id_nivel' => (int) $id_nivel,
+                    'id_asignatura' => (int) $id_asignatura,
+                    'tipo_acta' => (int) $tipo_acta,
+                ]);
+            }
             $a_valores[$i][1] = $nombre_corto;
             $a_valores[$i][2] = $oPersonaNota->getNota_txt();
             $a_valores[$i][3] = $acta;

@@ -6,6 +6,7 @@ use src\permisos\domain\XPermisos;
 
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\shared\security\HashB;
 use src\ubis\application\services\UbiTelecoService;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
@@ -275,6 +276,7 @@ class ListCtrData
             }
 
             $filas[$i]['sel'] = "$id_ubi";
+            $filas[$i]['ctx_trasladar'] = HashB::sign('trasladar_ubis', ['id_ubi' => (int) $id_ubi]);
             $filas[$i][1] = [
                 'link_spec' => [
                     'path' => 'frontend/ubis/controller/home_ubis.php',

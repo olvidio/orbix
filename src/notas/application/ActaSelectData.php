@@ -10,6 +10,7 @@ use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaExRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
@@ -131,6 +132,7 @@ final class ActaSelectData
                 'f_acta' => $oActa->getF_acta()?->getFromLocal(),
                 'id_asignatura' => (int)$oActa->getId_asignatura(),
                 'has_pdf' => $pdf !== null,
+                'ctx_eliminar' => HashB::sign('acta_eliminar', ['acta' => (string) $oActa->getActa()]),
             ];
         }
 

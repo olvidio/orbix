@@ -11,6 +11,7 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\XPermisos;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -238,6 +239,10 @@ final class UsuarioAvisosPrefFormData
                 'id_usuario' => $id_usuario,
                 'id_item_usuario_objeto' => $id_item_usuario_objeto,
                 'quien' => $quien,
+                'ctx_guardar' => HashB::sign('cambio_usuario_objeto_pref_guardar', [
+                    'id_usuario' => $id_usuario,
+                    'id_item_usuario_objeto' => $id_item_usuario_objeto,
+                ]),
             ],
         ];
         $result['paths'] = [

@@ -7,8 +7,20 @@ declare(strict_types=1);
  */
 
 use src\devel_db_admin\application\ApptablesUpdate;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
+
+try {
+    HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_apptables'),
+        'apptables_update'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 try {
     $result = (new ApptablesUpdate())->ejecutar($_POST);

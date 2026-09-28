@@ -17,6 +17,7 @@ $Qtabla = (string) filter_input(INPUT_POST, 'tabla');
 
 $data = PostRequest::getDataFromUrl('/src/devel_db_admin/mover_tabla', [
     'tabla' => $Qtabla,
+    'ctx_mover' => (string) filter_input(INPUT_POST, 'ctx_mover'),
 ]);
 
 print_r($data['a_esquemas'] ?? []);
