@@ -94,6 +94,14 @@ final class ActaNotasDataTest extends TestCase
         $this->assertSame('acta', $out['notas']);
         $this->assertArrayHasKey('dlbv 1/26', $out['despl_actas_opciones']);
         $this->assertFalse($out['puede_nueva_convocatoria']);
+        $this->assertSame(
+            ['id_activ' => 10, 'id_asignatura' => 1101, 'id_schema' => 1001],
+            \src\shared\security\HashB::open((string) $out['ctx_guardar'], 'acta_notas_matricula_guardar')
+        );
+        $this->assertSame(
+            ['id_activ' => 10, 'id_asignatura' => 1101, 'id_schema' => 1001],
+            \src\shared\security\HashB::open((string) $out['ctx_definitivas'], 'acta_notas_definitivas_grabar')
+        );
     }
 
     public function test_otra_dl_no_mezcla_acta_ni_deja_modificar(): void

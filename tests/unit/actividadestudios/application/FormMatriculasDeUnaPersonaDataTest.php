@@ -64,6 +64,10 @@ final class FormMatriculasDeUnaPersonaDataTest extends TestCase
         $this->assertSame(['1202' => 'Moral'], self::stringifyKeys($out['oDesplAsignaturas_opciones']));
         $this->assertSame('id_asignatura', $out['camposForm']);
         $this->assertSame('false', $out['condicion_js']);
+        $this->assertSame(
+            ['id_activ' => 10, 'id_pau' => 7],
+            \src\shared\security\HashB::open((string) $out['a_camposHidden']['ctx_nueva'], 'matricula_nueva')
+        );
     }
 
     public function test_matricular_ca_prefija_dl_en_asignatura_de_otra_dl(): void

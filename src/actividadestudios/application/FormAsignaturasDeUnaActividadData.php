@@ -8,6 +8,7 @@ use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\profesores\domain\ProfesorActividad;
 use src\profesores\domain\services\ProfesorAsignaturaService;
+use src\shared\security\HashB;
 
 /**
  * @return array{
@@ -119,6 +120,10 @@ final class FormAsignaturasDeUnaActividadData
             $primaryKeyS = "id_activ=$idActiv AND id_asignatura=$idAsignatura";
             $aCamposHidden['id_asignatura'] = $idAsignatura;
             $aCamposHidden['primary_key_s'] = $primaryKeyS;
+            $aCamposHidden['ctx_editar'] = HashB::sign('actividad_asignatura_editar', [
+                'id_activ' => $idActiv,
+                'id_asignatura' => $idAsignatura,
+            ]);
         } else {
             $mod = 'nuevo';
             $nombreCorto = '';
@@ -135,6 +140,9 @@ final class FormAsignaturasDeUnaActividadData
                 PlanEstudios::PLAN_2026,
             );
             $camposForm .= '!id_asignatura';
+            $aCamposHidden['ctx_nueva'] = HashB::sign('actividad_asignatura_nueva', [
+                'id_activ' => $idActiv,
+            ]);
         }
 
         return [

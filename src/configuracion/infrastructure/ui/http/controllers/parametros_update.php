@@ -5,9 +5,21 @@ use src\configuracion\domain\entity\ConfigSchema;
 use src\configuracion\domain\value_objects\ConfigParametroCode;
 use src\configuracion\domain\value_objects\ConfigValor;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$Qparametro = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'parametro');
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_guardar'),
+        'parametros_update'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qparametro = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'parametro');
 $Qvalor = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'valor');
 
 if ($Qparametro === 'curso_stgr' || $Qparametro === 'curso_crt') {

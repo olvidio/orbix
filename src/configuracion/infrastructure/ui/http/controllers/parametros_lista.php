@@ -2,6 +2,7 @@
 
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use src\shared\web\ContestarJson;
 
@@ -218,6 +219,31 @@ $oConfigSchema = $ConfigRepository->findById($parametro);
 $valor = $oConfigSchema?->getValorVo()?->value();
 
 $a_campos['ini_contador_certificados'] = $valor;
+
+$parametrosCtx = [
+    'curso_crt',
+    'curso_stgr',
+    'jefe_calendario',
+    'ce_lugar',
+    'region_latin',
+    'vstgr',
+    'lugar_firma',
+    'dir_stgr',
+    'nota_corte',
+    'nota_max',
+    'caduca_cursada',
+    'idioma_default',
+    'ambito',
+    'gesCalendario',
+    'ini_contador_certificados',
+];
+$ctx_guardar = [];
+foreach ($parametrosCtx as $nombreParametro) {
+    $ctx_guardar[$nombreParametro] = HashB::sign('parametros_update', [
+        'parametro' => $nombreParametro,
+    ]);
+}
+$a_campos['ctx_guardar'] = $ctx_guardar;
 
 $error_txt = '';
 $data = $a_campos;

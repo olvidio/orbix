@@ -5,6 +5,7 @@ namespace src\tablonanuncios\domain;
 use frontend\shared\web\Lista;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
 
 class TablonAnunciosParaGM
@@ -40,7 +41,9 @@ class TablonAnunciosParaGM
             $texto_anuncio = $Anuncio->getTextoAnuncioVo()->value();
             $t_anotado = $Anuncio->getT_anotado();
 
-            $a_valores[$i]['sel'] = $uuid_item;
+            $a_valores[$i]['sel'] = HashB::sign('anuncio_delete', [
+                'uuid_item' => $uuid_item,
+            ]);
             $a_valores[$i][1] = $esquema_emisor;
             $a_valores[$i][2] = $t_anotado instanceof DateTimeLocal ? $t_anotado->getFromLocal() : '';
             $a_valores[$i][3] = $texto_anuncio;

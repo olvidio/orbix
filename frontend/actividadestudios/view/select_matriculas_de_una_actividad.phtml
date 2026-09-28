@@ -12,9 +12,13 @@
         if (rta == 1) {
             if (confirm(<?= json_encode((string)$txt_eliminar) ?>)) {
                 $('#mod').val("eliminar");
-                var datos = $(formulario).serialize();
+                var packed = fnjs_sel_ctx_serialize(formulario, 'ctx_eliminar');
+                if (!packed.count) {
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + <?= json_encode(_("Operación no autorizada")) ?>);
+                    return;
+                }
                 $.ajax({
-                    data: datos,
+                    data: packed.datos,
                     url: '<?= $url_matricula_eliminar ?>',
                     method: 'POST',
                     dataType: 'json'
@@ -39,5 +43,5 @@
 <form id="seleccionados" name="seleccionados" action="" method="post">
     <?= $oHashSelect->getCamposHtml(); ?>
     <input type='hidden' id='mod' name='mod' value=''>
-    <?= $oTabla->listaPaginada(); ?>
+    <?= $oTabla->mostrar_tabla_html(); ?>
 </form>

@@ -316,6 +316,7 @@ final class PersonasPayload
      *     opciones_centros: array<int|string, string>,
      *     opciones_dl: array<int|string, string>,
      *     opciones_situacion: array<int|string, string>,
+     *     ctx_update: string,
      * }
      */
     public static function trasladoFormFromPayload(array $payload): array
@@ -329,6 +330,7 @@ final class PersonasPayload
             'opciones_centros' => NotasFormSupport::desplegableOpciones($payload['opciones_centros'] ?? []),
             'opciones_dl' => NotasFormSupport::desplegableOpciones($payload['opciones_dl'] ?? []),
             'opciones_situacion' => NotasFormSupport::desplegableOpciones($payload['opciones_situacion'] ?? []),
+            'ctx_update' => PayloadCoercion::string($payload['ctx_update'] ?? ''),
         ];
     }
 }

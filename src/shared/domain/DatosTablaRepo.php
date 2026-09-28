@@ -79,14 +79,20 @@ class DatosTablaRepo
 			rta=fnjs_solo_uno(formulario);
 			if (rta==1) {
 				if (confirm(eliminar) ) {
+					var ctx_eliminar = fnjs_ctx_fila_seleccionada(formulario, 'ctx_eliminar');
+					if (!ctx_eliminar) {
+						alert(\"$respuesta\" + ': ' + " . json_encode(_("Operación no autorizada")) . ");
+						return;
+					}
 					$('#mod').val(\"eliminar\");
 					$(formulario).attr('action',\"$action_update\");
 					$(formulario).one(\"submit\", function() {
 						$.ajax({
 							url: $(this).attr('action'),
 							type: 'post',
-							data: $(this).serialize()},
-							)
+							data: $(this).serialize() + '&ctx_eliminar=' + encodeURIComponent(ctx_eliminar),
+							dataType: 'json'
+							})
                         .done(function (json) {
                             if (json.success !== true) {
                                 alert(\"$respuesta\" + ': ' + json.mensaje);

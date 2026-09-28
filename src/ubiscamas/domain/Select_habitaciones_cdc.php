@@ -3,6 +3,7 @@
 namespace src\ubiscamas\domain;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
 
@@ -104,6 +105,9 @@ class Select_habitaciones_cdc
             $tipoLavabo_txt = $tiposLavabo[$tipoLavabo ?? 0] ?? '';
 
             $a_valores[$c]['sel'] = "$id_habitacion#$id_ubi#$orden";
+            $a_valores[$c]['ctx_eliminar'] = HashB::sign('habitacion_delete', [
+                'id_habitacion' => (string)$id_habitacion,
+            ]);
             $a_valores[$c][1] = $nombre;
             $a_valores[$c][2] = $planta;
             $a_valores[$c][3] = $adaptada_txt;
@@ -134,7 +138,7 @@ class Select_habitaciones_cdc
         return [
             'hash' => [
                 'campos_form' => '',
-                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
+                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar',
                 'campos_hidden' => [
                     'pau' => $this->pau,
                     'id_pau' => $this->id_pau,

@@ -4,6 +4,7 @@ namespace src\cartaspresentacion\application;
 
 use src\shared\config\ConfigGlobal;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 
@@ -103,8 +104,10 @@ final class CartaPresentacionFormData
             ],
             'hash_update' => [
                 'campos_hidden' => [
-                    'id_ubi' => $id_ubi,
-                    'id_direccion' => $id_direccion,
+                    'ctx_update' => HashB::sign('carta_presentacion_update', [
+                        'id_ubi' => $id_ubi,
+                        'id_direccion' => $id_direccion,
+                    ]),
                 ],
                 'campos_form' => 'pres_nom!pres_telf!pres_mail!zona!observ',
             ],

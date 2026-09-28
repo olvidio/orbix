@@ -2,36 +2,45 @@
 
 use src\shared\domain\DatosUpdateRepo;
 use src\shared\infrastructure\DatosInfoRepoResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
-$Qclase_info_encoded = (string)\src\shared\domain\helpers\FilterPostGet::post('clase_info');
-$Qs_pkey = (string)\src\shared\domain\helpers\FilterPostGet::post('s_pkey');
-$Qid_pau = (string)\src\shared\domain\helpers\FilterPostGet::post('id_pau');
-$Qmod = (string)\src\shared\domain\helpers\FilterPostGet::post('mod');
-$Qobj_pau = (string)\src\shared\domain\helpers\FilterPostGet::post('obj_pau');
-$Qgo_to = (string)\src\shared\domain\helpers\FilterPostGet::post('go_to');
-
-// Cuando es eliminar, viene directamente de la tabla (mod_tabla_sql)
-// Como es borrar, no hace falta mantener el scroll
-$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$stack = '';
-if (!empty($a_sel)) { //vengo de un checkbox
-    $sel0 = $a_sel[0] ?? '';
-    $Qs_pkey = explode('#', (string) $sel0);
-    // he cambiado las comillas dobles por simples. Deshago el cambio.
-    $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
+$ctxEliminar = (string)FilterPostGet::post('ctx_eliminar');
+$selIn = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if ($ctxEliminar === '' && $selIn !== []) {
+    $first = $selIn[0] ?? '';
+    $ctxEliminar = is_scalar($first) ? (string) $first : '';
 }
+
+try {
+    if ($ctxEliminar !== '') {
+        $ctx = HashB::open($ctxEliminar, 'tablaDB_update');
+        $Qmod = 'eliminar';
+    } else {
+        $ctx = HashB::open((string)FilterPostGet::post('ctx_update'), 'tablaDB_update');
+        $Qmod = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'mod');
+    }
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qclase_info_encoded = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'clase_info');
+$Qs_pkey = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 's_pkey');
+$Qid_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'id_pau');
+$Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'obj_pau');
+$Qgo_to = (string)FilterPostGet::post('go_to');
 
 $pkeyJson = src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($Qs_pkey);
 $a_pkey = $pkeyJson !== '' ? json_decode($pkeyJson, true) : null;
 
-// Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info_encoded);
 $oInfoClase = DatosInfoRepoResolver::resolve($obj);
 $oInfoClase->setMod($Qmod);
-$oInfoClase->setA_pkey($a_pkey); //Para eliminar y editar
-$oInfoClase->setId_pau($Qid_pau); //Para nuevo
+$oInfoClase->setA_pkey($a_pkey);
+$oInfoClase->setId_pau($Qid_pau);
 if (method_exists($oInfoClase, 'setObj_pau')) {
     $oInfoClase->setObj_pau($Qobj_pau);
 }
@@ -42,8 +51,6 @@ $repositoryInterface = $oInfoClase->getRepositoryInterface();
 $oDatosUpdate = new DatosUpdateRepo();
 $oDatosUpdate->setRepositoryInterface($repositoryInterface);
 $oDatosUpdate->setFicha($oFicha);
-
-// campos del dossier (de hecho todo el $_POST, porque desconozco...)
 $oDatosUpdate->setCampos($_POST);
 
 $rta = _("no se ha ejecutado la acción");

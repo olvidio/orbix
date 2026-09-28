@@ -79,6 +79,10 @@ final class SelectAsignaturasDeUnaActividadSelTest extends TestCase
 
         $this->assertSame('10#1101#true#1001', $selPropia);
         $this->assertSame('10#1101#false#2002', $selAjena);
+        $this->assertSame(
+            ['id_activ' => 10, 'id_asignatura' => 1101],
+            \src\shared\security\HashB::open((string) ($valores[1]['ctx_eliminar'] ?? ''), 'actividad_asignatura_eliminar')
+        );
         $this->assertNotSame($selPropia, $selAjena);
         $this->assertSame(1001, ActividadAsignaturaSelToken::decode($selPropia)['id_schema']);
         $this->assertSame(2002, ActividadAsignaturaSelToken::decode($selAjena)['id_schema']);

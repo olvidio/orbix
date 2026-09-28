@@ -18,6 +18,7 @@ use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
+use src\shared\security\HashB;
 use src\personas\domain\entity\PersonaPub;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
@@ -207,6 +208,10 @@ class Select_matriculas_de_una_persona
             );
 
             $a_valores[$i]['sel'] = "$this->id_activ#$id_asignatura#$this->id_pau";
+            $a_valores[$i]['ctx_eliminar'] = HashB::sign('matricula_eliminar', [
+                'sel' => "$this->id_activ#$id_asignatura#$this->id_pau",
+                'pau' => $this->pau,
+            ]);
             $a_valores[$i][1] = $preceptor;
             $a_valores[$i][2] = $nombre_corto;
         }
@@ -238,6 +243,22 @@ class Select_matriculas_de_una_persona
                     'queSel' => $this->queSel,
                     'id_dossier' => $this->id_dossier,
                     'permiso' => $this->permiso,
+                    'ctx_observ_est' => HashB::sign('asistente_observ_est', [
+                        'id_activ' => $this->id_activ,
+                        'id_pau' => $this->id_pau,
+                    ]),
+                    'ctx_plan_est_ok' => HashB::sign('asistente_plan_est_ok', [
+                        'id_activ' => $this->id_activ,
+                        'id_pau' => $this->id_pau,
+                    ]),
+                    'ctx_observ' => HashB::sign('asistente_observ', [
+                        'id_activ' => $this->id_activ,
+                        'id_pau' => $this->id_pau,
+                    ]),
+                    'ctx_auto' => HashB::sign('matricula_automatica', [
+                        'id_pau' => $this->id_pau,
+                        'id_activ' => $this->id_activ,
+                    ]),
                 ],
             ],
             'tabla' => [

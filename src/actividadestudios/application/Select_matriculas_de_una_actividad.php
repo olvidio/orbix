@@ -11,6 +11,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
+use src\shared\security\HashB;
 
 /**
  * Widget del dossier `3103` (codigo `matriculas_de_una_actividad`):
@@ -166,6 +167,10 @@ class Select_matriculas_de_una_actividad
                 $ctr = $oPersona->getCentro_o_dl();
 
                 $a_valores[$id_asignatura][$m]['sel'] = "$id_nom#$id_asignatura";
+                $a_valores[$id_asignatura][$m]['ctx_eliminar'] = HashB::sign('matricula_eliminar', [
+                    'sel' => "$id_nom#$id_asignatura#" . $this->id_pau,
+                    'pau' => $this->pau,
+                ]);
                 $a_valores[$id_asignatura][$m][1] = $nombre_corto;
                 $a_valores[$id_asignatura][$m][2] = "$nom_persona ($ctr)";
                 $m++;
@@ -205,7 +210,7 @@ class Select_matriculas_de_una_actividad
             ],
             'hash' => [
                 'campos_form' => '',
-                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
+                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar',
                 'campos_hidden' => [
                     'pau' => $this->pau,
                     'id_pau' => $this->id_pau,

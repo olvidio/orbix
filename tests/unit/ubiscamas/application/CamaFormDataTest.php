@@ -31,6 +31,13 @@ final class CamaFormDataTest extends TestCase
         $this->assertFalse($out['larga']);
         $this->assertFalse($out['vip']);
         $this->assertSame(4, $out['id_ubi']);
+        $this->assertSame(
+            ['id_cama' => $out['id_cama'], 'id_habitacion' => 'hab-x'],
+            \src\shared\security\HashB::open(
+                (string) ($out['hash_form']['campos_hidden']['ctx_update'] ?? ''),
+                'cama_update'
+            )
+        );
     }
 
     public function test_con_id_cama_carga_desde_repositorio(): void

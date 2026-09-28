@@ -9,6 +9,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\application\services\PersonaListadoLookup;
 use src\ubis\domain\RegionStgrAviso;
+use src\shared\security\HashB;
 
 /**
  * Filas para `frontend/actividadestudios/controller/matriculas_pendientes.php`.
@@ -73,6 +74,10 @@ final readonly class MatriculasPendientesData
 
             $apellidosNombre = $oPersona->getPrefApellidosNombre();
             $aValores[$i]['sel'] = "$idActiv#$idAsignatura#$idNom";
+            $aValores[$i]['ctx_eliminar'] = HashB::sign('matricula_eliminar', [
+                'sel' => "$idActiv#$idAsignatura#$idNom",
+                'pau' => 'p',
+            ]);
             $aValores[$i][1] = $nomActiv;
             $aValores[$i][2] = $nombreCorto;
             $aValores[$i][3] = $apellidosNombre;

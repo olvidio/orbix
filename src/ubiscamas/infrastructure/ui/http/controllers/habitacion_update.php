@@ -2,6 +2,8 @@
 
 use Ramsey\Uuid\Uuid;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
@@ -15,14 +17,19 @@ use src\ubiscamas\domain\value_objects\HabitacionOrden;
 use src\ubiscamas\domain\value_objects\NumeroCamas;
 use src\ubiscamas\domain\value_objects\PlantaText;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
-$a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'sel');
 
-$Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_habitacion');
-$Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi');
-
-if ($a_sel !== []) {
-    $Qid_habitacion = urldecode(strtok($a_sel[0], '#') ?: '');
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_update'),
+        'habitacion_update'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
 }
+
+$Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'id_habitacion');
+$Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_ubi');
 
 $Qorden = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'orden');
 $Qnombre = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nombre');

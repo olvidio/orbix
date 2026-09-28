@@ -132,6 +132,7 @@ $a_campos = [
     'url_get' => $url_get,
     'url_tipo' => $url_tipo,
     'txt_eliminar' => $txt_eliminar,
+    'txt_no_autorizado' => _("Operación no autorizada"),
     'chk_propia' => $chk_propia,
     'chk_no_propia' => $chk_no_propia,
     'id_fase_nueva' => $Qid_fase_nueva,

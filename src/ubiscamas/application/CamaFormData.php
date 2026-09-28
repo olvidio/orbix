@@ -3,6 +3,7 @@
 namespace src\ubiscamas\application;
 
 use Ramsey\Uuid\Uuid;
+use src\shared\security\HashB;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\CamaId;
 
@@ -54,6 +55,10 @@ final class CamaFormData
                     'id_habitacion' => $Qid_habitacion,
                     'id_ubi' => $Qid_ubi,
                     'mod' => $Qmod,
+                    'ctx_update' => HashB::sign('cama_update', [
+                        'id_cama' => $Qid_cama,
+                        'id_habitacion' => $Qid_habitacion,
+                    ]),
                 ],
             ],
             'id_cama' => $Qid_cama,

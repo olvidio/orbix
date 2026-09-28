@@ -8,6 +8,7 @@ use src\personas\domain\entity\PersonaPub;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/traslado_form_data`.
@@ -52,6 +53,7 @@ final class TrasladoFormData
         $nombre_ctr = (string)($oCentroDl?->getNombre_ubi() ?? '');
         $dl = (string)($oPersona->getDl() ?? '');
         $hoy = (new DateTimeLocal())->getFromLocal();
+        $obj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'obj_pau');
 
         return [
             'titulo' => (string)$oPersona->getNombreApellidos(),
@@ -60,6 +62,11 @@ final class TrasladoFormData
             'dl' => $dl,
             'hoy' => (string)$hoy,
             'id_pau' => $id_pau,
+            'obj_pau' => $obj_pau,
+            'ctx_update' => HashB::sign('traslado_update', [
+                'id_pau' => $id_pau,
+                'obj_pau' => $obj_pau,
+            ]),
             'opciones_centros' => $opciones_centros,
             'opciones_dl' => $opciones_dl,
             'opciones_situacion' => $opciones_situacion,

@@ -27,6 +27,7 @@ foreach ($a_tarifas_prev as $id_tarifa => $aTarifa) {
 <form id="frm_tarifas" action="">
     <input type="hidden" name="id_ubi" value="<?= (int)$id_ubi ?>">
     <input type="hidden" name="year" value="<?= (int)$any_prev ?>">
+    <input type="hidden" name="ctx_inc" value="<?= htmlspecialchars((string)($ctx_inc ?? ''), ENT_QUOTES) ?>">
     <table>
         <tr>
             <td><?= _("id_tarifa") ?></td>

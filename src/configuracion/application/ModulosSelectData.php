@@ -4,6 +4,7 @@ namespace src\configuracion\application;
 
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Listado de módulos (`frontend/configuracion/controller/modulos_select.php`).
@@ -104,6 +105,9 @@ final class ModulosSelectData
             }
 
             $a_valores[$i]['sel'] = "$id_mod#";
+            $a_valores[$i]['ctx_eliminar'] = HashB::sign('modulos_eliminar', [
+                'id_mod' => (int)$id_mod,
+            ]);
             $a_valores[$i][1] = $nom;
             $a_valores[$i][2] = $descripcion;
             $a_valores[$i][3] = $lista_mods;
@@ -123,7 +127,7 @@ final class ModulosSelectData
             'a_valores' => $a_valores,
             'hash_lista' => [
                 'campos_form' => 'sel!mod',
-                'campos_no' => 'scroll_id!sel!refresh',
+                'campos_no' => 'scroll_id!sel!refresh!ctx_eliminar',
             ],
             'txt_eliminar' => _("¿Está seguro?"),
             'txt_anadir_modulo' => \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("añadir módulo")),

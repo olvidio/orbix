@@ -53,10 +53,13 @@
         fnjs_update_div('#ficha2006', url + '?' + parametros);
     }
 
-    fnjs_eliminar_cama = function (id_cama) {
+    fnjs_eliminar_cama = function (ctx) {
+        if (!ctx) {
+            alert(<?= json_encode(_("respuesta") . ": ") ?> + <?= json_encode(_("Operación no autorizada")) ?>);
+            return;
+        }
         if (confirm(<?= json_encode(_("¿Seguro que desea borrar esta cama?")) ?>)) {
-            let id_habitacion = $('#frm2 [name="id_habitacion"]').val();
-            let parametros = 'id_ubi=' + <?= json_encode((string)$id_ubi) ?> + '&id_habitacion=' + encodeURIComponent(id_habitacion) + '&id_cama=' + encodeURIComponent(id_cama) + '<?= $h_cama_delete_params ?>';
+            let parametros = 'ctx_delete=' + encodeURIComponent(ctx) + '<?= $h_cama_delete_params ?>';
             let request = $.ajax({
                 data: parametros,
                 url: <?= json_encode($url_cama_delete) ?>,
@@ -178,7 +181,7 @@
                             <button type="button" onclick="fnjs_editar_cama('<?= htmlspecialchars((string)($rowCama['id_cama'] ?? ''), ENT_QUOTES) ?>')">
                                 <?= _("Editar") ?>
                             </button>
-                            <button type="button" onclick="fnjs_eliminar_cama('<?= htmlspecialchars((string)($rowCama['id_cama'] ?? ''), ENT_QUOTES) ?>')">
+                            <button type="button" onclick="fnjs_eliminar_cama(<?= htmlspecialchars(json_encode((string)($rowCama['ctx_delete'] ?? ''), JSON_THROW_ON_ERROR), ENT_QUOTES) ?>)">
                                 <?= _("Eliminar") ?>
                             </button>
                         </td>

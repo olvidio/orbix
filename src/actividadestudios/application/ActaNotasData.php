@@ -13,6 +13,7 @@ use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 
 /**
  * @return array{
@@ -80,6 +81,16 @@ final class ActaNotasData
             'acta_txt_cursada' => Nota::getStatusTxt(NotaSituacion::CURSADA),
             'hay_alumnos_sin_nota' => false,
             'puede_nueva_convocatoria' => false,
+            'ctx_guardar' => HashB::sign('acta_notas_matricula_guardar', [
+                'id_activ' => $idActiv,
+                'id_asignatura' => $idAsignatura,
+                'id_schema' => $idSchema,
+            ]),
+            'ctx_definitivas' => HashB::sign('acta_notas_definitivas_grabar', [
+                'id_activ' => $idActiv,
+                'id_asignatura' => $idAsignatura,
+                'id_schema' => $idSchema,
+            ]),
         ];
 
         $oActividadAsignatura = $this->resolverActividadAsignatura($idActiv, $idAsignatura, $idSchema);
@@ -186,6 +197,16 @@ final class ActaNotasData
             'acta_txt_cursada' => Nota::getStatusTxt(NotaSituacion::CURSADA),
             'hay_alumnos_sin_nota' => $hayAlumnosSinNota,
             'puede_nueva_convocatoria' => $permiso === 3 && $hayAlumnosSinNota && $hayActaFirmada,
+            'ctx_guardar' => HashB::sign('acta_notas_matricula_guardar', [
+                'id_activ' => $idActiv,
+                'id_asignatura' => $idAsignatura,
+                'id_schema' => $idSchema,
+            ]),
+            'ctx_definitivas' => HashB::sign('acta_notas_definitivas_grabar', [
+                'id_activ' => $idActiv,
+                'id_asignatura' => $idAsignatura,
+                'id_schema' => $idSchema,
+            ]),
         ];
     }
 

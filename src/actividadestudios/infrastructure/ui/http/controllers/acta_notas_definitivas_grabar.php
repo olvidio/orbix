@@ -3,6 +3,9 @@
 use src\actividadestudios\application\ActaNotasDefinitivasGrabar;
 use src\actividadestudios\application\ActaNotasMatriculaGuardar;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
+use src\shared\web\ContestarJson;
 
 /**
  * Convierte las matriculas/notas borrador en `PersonaNota` definitivas
@@ -15,6 +18,20 @@ use src\shared\infrastructure\DependencyResolver;
  * Devuelve JSON `{success, mensaje}` directamente para no romper los
  * consumidores actuales.
  */
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_definitivas'),
+        'acta_notas_definitivas_grabar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$_POST['id_activ'] = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_activ');
+$_POST['id_asignatura'] = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_asignatura');
+$_POST['id_schema'] = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_schema');
+
 /** @var ActaNotasMatriculaGuardar $guardarBorrador */
 $guardarBorrador = DependencyResolver::get(ActaNotasMatriculaGuardar::class);
 $errorBorrador = $guardarBorrador->execute($_POST);

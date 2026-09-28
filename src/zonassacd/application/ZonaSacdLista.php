@@ -7,6 +7,7 @@ use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\helpers\FuncTablasSupport;
+use src\shared\security\HashB;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 final class ZonaSacdLista
@@ -44,6 +45,10 @@ final class ZonaSacdLista
                 $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_nom' => $id_nom]);
                 if ($cZonaSacd === []) {
                     $a_valores[$i]['sel'] = $id_nom;
+                    $a_valores[$i]['ctx_update'] = HashB::sign('zona_sacd_update', [
+                        'id_nom' => (int) $id_nom,
+                        'id_zona' => $id_zona,
+                    ]);
                     $a_valores[$i][1] = $oPersona->getPrefApellidosNombre();
                     $a_valores[$i][2] = $oPersona->getId_tabla();
                     $i++;
@@ -67,6 +72,10 @@ final class ZonaSacdLista
                     : $oPersona->getPrefApellidosNombre();
                 $aAp1[$i] = $ap_nom;
                 $a_valores[$i]['sel'] = $id_nom;
+                $a_valores[$i]['ctx_update'] = HashB::sign('zona_sacd_update', [
+                    'id_nom' => (int) $id_nom,
+                    'id_zona' => (string) $idZona,
+                ]);
                 $a_valores[$i][1] = $ap_nom;
                 $a_valores[$i][2] = $nombre_zona;
                 $a_valores[$i][3] = $oZonaSacd->isPropia();

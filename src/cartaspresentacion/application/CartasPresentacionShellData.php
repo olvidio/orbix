@@ -39,7 +39,7 @@ final class CartasPresentacionShellData
                 'campos_form' => 'filtro',
             ],
             'hash_eliminar' => [
-                'campos_form' => 'id_ubi!id_direccion',
+                'campos_form' => 'ctx_eliminar',
             ],
         ];
     }
