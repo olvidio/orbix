@@ -73,18 +73,30 @@ final class ComunicacionActividadesSacdData
 
         $sacds_paso = [];
         if ($que !== 'un_sacd') {
-            $cPersonasPaso = $this->personaExRepository->getPersonas([
-                'situacion' => 'A',
-                'sacd' => 't',
-                'dl' => $mi_dele,
-                '_ordre' => 'apellido1,apellido2,nom',
-            ]);
+            // En cp_sacd el de paso tiene id_tabla pn/pa y dl = Otra, no la dl anfitriona.
+            $idsDl = [];
+            foreach ($cPersonas as $oPersonaDl) {
+                $idsDl[(int) $oPersonaDl->getId_nom()] = true;
+            }
+            $cPersonasPaso = [];
+            foreach ($this->personaSacdRepository->getPersonas(
+                [
+                    'id_tabla' => "'pn','pa'",
+                    'situacion' => 'A',
+                    'sacd' => 't',
+                    '_ordre' => 'apellido1,apellido2,nom',
+                ],
+                ['id_tabla' => 'IN']
+            ) as $oPersonaPaso) {
+                if (!isset($idsDl[(int) $oPersonaPaso->getId_nom()])) {
+                    $cPersonasPaso[] = $oPersonaPaso;
+                }
+            }
 
             $servicePaso = clone $this->comunicarActividadesSacdService;
             $servicePaso->setInicioIso($inicioIso);
             $servicePaso->setFinIso($finIso);
             $servicePaso->setPropuesta($propuesta);
-            $servicePaso->setSoloCargos(true);
             $servicePaso->setQuitarInactivos(true);
             $servicePaso->setPersonas($cPersonasPaso);
             $sacds_paso = $servicePaso->getArrayComunicacion();
