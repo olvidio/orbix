@@ -25,6 +25,7 @@ $data = PostRequest::getDataFromUrl('/src/devel_db_admin/corregir_renombrar_esqu
     'comun' => $Qcomun,
     'sv' => $Qsv,
     'sf' => $Qsf,
+    'ctx_corregir' => (string) filter_input(INPUT_POST, 'ctx_corregir'),
 ]);
 
 header('Content-Type: application/json; charset=UTF-8');

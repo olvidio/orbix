@@ -6,6 +6,7 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\entity\Ubi;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -56,6 +57,7 @@ $data = [
     'ini' => $ini,
     'fin' => $fin,
     'ids_activ' => $ids_activ,
+    'ctx_nuevo' => HashB::sign('equipajes_nuevo_guardar', ['id_ubi_activ' => $Qid_cdc]),
 ];
 
 // envía una Response

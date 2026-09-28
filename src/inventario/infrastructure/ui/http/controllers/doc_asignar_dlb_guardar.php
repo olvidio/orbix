@@ -5,9 +5,21 @@ use src\shared\infrastructure\DependencyResolver;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$Qid_tipo_doc = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_tipo_doc');
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_guardar'),
+        'doc_asignar_dlb_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qid_tipo_doc = (string) \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_tipo_doc');
 $Qnumerado = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'numerado');
 $Qstr_selected_id = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'str_selected_id');
 $Qf_recibido = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_recibido');

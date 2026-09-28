@@ -7,6 +7,7 @@ use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $Qid_tipo_doc = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_tipo_doc');
@@ -79,6 +80,7 @@ $data = [
     'nombreDoc' => $nombreDoc,
     'isNumerado' => $isNumerado,
     'sCamposForm' => $sCamposForm,
+    'ctx_guardar' => HashB::sign('doc_asignar_dlb_guardar', ['id_tipo_doc' => $Qid_tipo_doc]),
 ];
 
 // envía una Response

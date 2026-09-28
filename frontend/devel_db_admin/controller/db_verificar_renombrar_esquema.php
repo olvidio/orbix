@@ -25,6 +25,7 @@ $data = PostRequest::getDataFromUrl('/src/devel_db_admin/verificar_renombrar_esq
     'comun' => $Qcomun,
     'sv' => $Qsv,
     'sf' => $Qsf,
+    'ctx_verificar' => (string) filter_input(INPUT_POST, 'ctx_verificar'),
 ]);
 
 header('Content-Type: application/json; charset=UTF-8');

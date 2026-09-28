@@ -3,6 +3,7 @@
  * Fragmento AJAX: formulario “modificar por bloques” de documentos (inventario).
  * Antes en `src/inventario/.../documentos_form.php`.
  */
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
@@ -12,6 +13,9 @@ FrontBootstrap::boot();
 $Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');
 $Qdocumentos = (string)filter_input(INPUT_POST, 'documentos');
 
+$data = PostRequest::getDataFromUrl('/src/inventario/lista_tipo_doc');
+$ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_documentos_guardar'] ?? '');
+
 $oHash = new HashF();
 $sCamposFrom = 'f_recibido!f_asignado!eliminado!f_eliminado!num_ini!num_fin';
 $oHash->setCamposForm($sCamposFrom);
@@ -20,6 +24,7 @@ $oHash->setCamposNo($sCamposNo);
 $oHash->setArrayCamposHidden([
     'id_tipo_doc' => $Qid_tipo_doc,
     'documentos' => $Qdocumentos,
+    'ctx_guardar' => $ctx_guardar,
 ]);
 
 $txt2 = '<tr><td>' . _('modificar') . '</td><td>' . _('campo') . '</td><td>' . _('valor') . '</td></tr>';

@@ -3,10 +3,22 @@
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\EgmRepositoryInterface;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$Qid_grupo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_grupo');
-$Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_equipaje');
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_eliminar_grupo'),
+        'equipajes_eliminar_grupo'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qid_grupo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_grupo');
+$Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_equipaje');
 
 $error_txt = '';
 

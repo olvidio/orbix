@@ -12,8 +12,20 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\devel_db_admin\application\RenombrarEsquema;
 use src\devel_db_admin\application\RenombrarEsquemaVerificacionContexto;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
+
+try {
+    HashB::open(
+        (string) \src\shared\domain\helpers\FilterPostGet::post('ctx_renombrar'),
+        'renombrar_esquema'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 /** @var RenombrarEsquema $useCase */
 $useCase = DependencyResolver::get(RenombrarEsquema::class);

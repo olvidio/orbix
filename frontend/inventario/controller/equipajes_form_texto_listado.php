@@ -13,6 +13,7 @@ FrontBootstrap::boot();
 $Qtexto = (string)filter_input(INPUT_POST, 'texto');
 $Qloc = (string)filter_input(INPUT_POST, 'loc');
 $Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
+$ctx_guardar = (string)filter_input(INPUT_POST, 'ctx_guardar');
 
 $titulo = '';
 $texto = htmlspecialchars_decode($Qtexto);
@@ -46,6 +47,7 @@ $oHashForm->setCamposForm('texto');
 $oHashForm->setArrayCamposHidden([
     'id_equipaje' => $Qid_equipaje,
     'loc' => $Qloc,
+    'ctx_guardar' => $ctx_guardar,
 ]);
 
 $a_campos = [

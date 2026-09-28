@@ -25,6 +25,7 @@ PostRequest::getDataFromUrl('/src/devel_db_admin/renombrar_esquema', [
     'comun' => $Qcomun,
     'sv' => $Qsv,
     'sf' => $Qsf,
+    'ctx_renombrar' => (string) filter_input(INPUT_POST, 'ctx_renombrar'),
 ]);
 
 echo '<br>';

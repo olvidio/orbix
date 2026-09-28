@@ -7,6 +7,7 @@ use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi');
@@ -95,7 +96,7 @@ foreach ($cDocumentos as $oDocumento) {
         $nom_compost .= " $num_ini" . "-";
         $nom_compost .= !empty($num_fin) ? " $num_fin" : _("Actual");
     }
-    $a_valores[$d]['sel'] = $id_doc;
+    $a_valores[$d]['sel'] = HashB::sign('traslado_doc_guardar', ['id_doc' => (int) $id_doc]);
     $a_valores[$d][1] = array('clase' => 'doc', 'valor' => $nom_compost);
     $a_valores[$d][2] = $observ;
     //para poder ordenar

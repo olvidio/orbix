@@ -18,18 +18,28 @@ $data = PostRequest::getDataFromUrl('/src/misas/horario_tarea_data', [
 
 $t_start = \frontend\shared\helpers\PayloadCoercion::string($data['t_start'] ?? '');
 $t_end = \frontend\shared\helpers\PayloadCoercion::string($data['t_end'] ?? '');
+$ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? '');
+$ctx_quitar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_quitar'] ?? '');
 
 $url_guardar = AppUrlConfig::srcBrowserUrl('/src/misas/guardar_horario');
-$oHash = new HashF();
-$oHash->setArrayCamposHidden(['id_item_h' => $Qid_item_h]);
-$oHash->setUrl($url_guardar);
-$oHash->setCamposForm('t_start!t_end');
-$param_guardar = $oHash->getParamAjax();
+$oHashGuardar = new HashF();
+$oHashGuardar->setArrayCamposHidden([
+    'id_item_h' => $Qid_item_h,
+    'ctx_guardar' => $ctx_guardar,
+]);
+$oHashGuardar->setUrl($url_guardar);
+$oHashGuardar->setCamposForm('t_start!t_end');
+$param_guardar = $oHashGuardar->getParamAjax();
 
 $url_quitar = AppUrlConfig::srcBrowserUrl('/src/misas/quitar_horario');
-$oHash->setUrl($url_quitar);
-$oHash->setCamposForm('id_item');
-$param_quitar = $oHash->getParamAjax();
+$oHashQuitar = new HashF();
+$oHashQuitar->setArrayCamposHidden([
+    'id_item' => $Qid_item_h,
+    'ctx_quitar' => $ctx_quitar,
+]);
+$oHashQuitar->setUrl($url_quitar);
+$oHashQuitar->setCamposForm('id_item');
+$param_quitar = $oHashQuitar->getParamAjax();
 
 $a_campos = [
     't_start' => $t_start,

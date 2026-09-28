@@ -72,13 +72,22 @@ final class DbPropiedadesFormData
     }
 
     /**
-     * @return array{a_esquemas_union: array<string, string>, a_opciones_regiones: array<string, string>}
+     * @return array{
+     *     a_esquemas_union: array<string, string>,
+     *     a_opciones_regiones: array<string, string>,
+     *     ctx_renombrar: string,
+     *     ctx_verificar: string,
+     *     ctx_corregir: string
+     * }
      */
     private function dbCambiarNombreEsquemas(DBPropiedades $dbp): array
     {
         return [
             'a_esquemas_union' => $dbp->array_esquemas_union_importar(),
             'a_opciones_regiones' => $this->regionDropdown->activasOrdenNombre(),
+            'ctx_renombrar' => HashB::sign('renombrar_esquema'),
+            'ctx_verificar' => HashB::sign('verificar_renombrar_esquema'),
+            'ctx_corregir' => HashB::sign('corregir_renombrar_esquema'),
         ];
     }
 

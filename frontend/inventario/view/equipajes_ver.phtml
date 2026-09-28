@@ -1,5 +1,6 @@
 <script>
     window.equipaje_ctx_map = <?= json_encode($equipaje_ctx_map, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+    window.equipaje_ctx_texto_map = <?= json_encode($equipaje_ctx_texto_map ?? [], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?>;
 
     fnjs_mostrar_error_listado = function (formulario, mensaje) {
         var texto = mensaje || <?= json_encode(_("Error desconocido")) ?>;
@@ -62,7 +63,8 @@
         id_equipaje = $('#id_equipaje').val();
         var id = '#' + loc;
         texto = encodeURIComponent($(id).html());
-        var parametros = 'loc=' + loc + '&texto=' + texto + '&id_equipaje=' + id_equipaje + '<?= $h_mod_txt ?>';
+        var ctx_guardar = encodeURIComponent((window.equipaje_ctx_texto_map || {})[id_equipaje] || '');
+        var parametros = 'loc=' + loc + '&texto=' + texto + '&id_equipaje=' + id_equipaje + '&ctx_guardar=' + ctx_guardar + '<?= $h_mod_txt ?>';
         fnjs_update_div('#div_modificar', url + '?' + parametros);
     }
 
@@ -168,8 +170,7 @@
         seguro = confirm(<?= json_encode(_("¿Está seguro de borrar este grupo?")) ?>);
         if (seguro) {
             id_span = '#grupo_' + id_grupo;
-            $('#id_grupo').val(id_grupo);
-            let formulario = '#form_maletas';
+            let formulario = '#form_docs_grupo_' + id_grupo;
             parametros = $(formulario).serialize();
             let request = $.ajax({
                 url: 'src/inventario/equipajes_eliminar_grupo',

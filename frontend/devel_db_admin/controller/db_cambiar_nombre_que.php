@@ -31,6 +31,9 @@ $oDesplRegiones->setAction('fnjs_dl()');
 $oHash = new HashF();
 $oHash->setCamposForm('esquema_origen!region!dl!comun!sv!sf');
 $oHash->setcamposNo('comun!sv!sf');
+$oHash->setArrayCamposHidden([
+    'ctx_renombrar' => (string) ($dbProps['ctx_renombrar'] ?? ''),
+]);
 
 $oHash1 = new HashF();
 $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/devel_db_admin/db_lugar'));
@@ -45,11 +48,17 @@ $oHashVerificar = new HashF();
 $oHashVerificar->setUrl(OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/db_verificar_renombrar_esquema.php');
 $oHashVerificar->setCamposForm('esquema_origen!region!dl!comun!sv!sf');
 $oHashVerificar->setcamposNo('comun!sv!sf');
+$oHashVerificar->setArrayCamposHidden([
+    'ctx_verificar' => (string) ($dbProps['ctx_verificar'] ?? ''),
+]);
 
 $oHashCorregir = new HashF();
 $oHashCorregir->setUrl(OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/db_corregir_renombrar_esquema.php');
 $oHashCorregir->setCamposForm('esquema_origen!region!dl!comun!sv!sf');
 $oHashCorregir->setcamposNo('comun!sv!sf');
+$oHashCorregir->setArrayCamposHidden([
+    'ctx_corregir' => (string) ($dbProps['ctx_corregir'] ?? ''),
+]);
 
 $a_campos = [
     'oHash' => $oHash,

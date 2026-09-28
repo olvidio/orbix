@@ -87,6 +87,13 @@ $data = [
         'id_grupo' => (int) $oEgm->getId_grupo(),
         'id_equipaje' => (int) $oEgm->getId_equipaje(),
     ]),
+    'ctx_add' => HashB::sign('equipajes_add_doc', [
+        'id_item_egm' => $Qid_item_egm,
+    ]),
+    'ctx_eliminar_grupo' => HashB::sign('equipajes_eliminar_grupo', [
+        'id_grupo' => (int) $oEgm->getId_grupo(),
+        'id_equipaje' => (int) $oEgm->getId_equipaje(),
+    ]),
 ];
 
 // envía una Response

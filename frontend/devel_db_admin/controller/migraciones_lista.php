@@ -34,7 +34,7 @@ $oHash->setArrayCamposHidden([
     'modo' => '',
     'prefijo_hasta' => '',
 ]);
-$oHash->setCamposNo('modo!prefijo_hasta');
+$oHash->setCamposNo('modo!prefijo_hasta!ctx_ejecutar!ctx_quitar');
 
 $a_campos = [
     'oTabla' => $oTabla,

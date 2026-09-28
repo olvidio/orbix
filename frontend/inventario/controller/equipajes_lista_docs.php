@@ -24,6 +24,8 @@ if ($Qid_lugar !== 0) {
 $a_campos_backend = [
     'id_lugar' => $Qid_lugar,
     'id_item_egm' => $Qid_item_egm,
+    'id_grupo' => $Qid_grupo,
+    'id_equipaje' => $Qid_equipaje,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $payload = InventarioPayload::postPayload($data);
@@ -45,6 +47,8 @@ $oHashGrupo->setArrayCamposHidden([
     'id_grupo' => $Qid_grupo,
     'id_equipaje' => $Qid_equipaje,
     'id_item_egm' => $Qid_item_egm,
+    'ctx_add' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_add'] ?? ''),
+    'ctx_eliminar_grupo' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_eliminar_grupo'] ?? ''),
 ]);
 
 $a_campos = [
