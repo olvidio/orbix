@@ -150,6 +150,7 @@ $a_campos_lista = [
     'url_eliminar_fecha' => $view['url_eliminar_fecha'],
     'h_eliminar' => $view['h_eliminar'],
     'h_eliminar_fecha' => $view['h_eliminar_fecha'],
+    'ctx_eliminar_fecha' => $view['ctx_eliminar_fecha'],
 ];
 
 $oView = new ViewNewPhtml('frontend\\cambios\\view');
@@ -175,6 +176,7 @@ $a_campos_view = [
     'url_eliminar_fecha' => $view['url_eliminar_fecha'],
     'h_eliminar' => $view['h_eliminar'],
     'h_eliminar_fecha' => $view['h_eliminar_fecha'],
+    'ctx_eliminar_fecha' => $view['ctx_eliminar_fecha'],
 ];
 
 $oView->renderizar('avisos_generar.phtml', $a_campos_view);
