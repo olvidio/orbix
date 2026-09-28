@@ -25,4 +25,12 @@ final class ActividadessacdPayload
     {
         return \frontend\shared\helpers\PayloadCoercion::string($payload['texto'] ?? '');
     }
+
+    /**
+     * @param array<int|string, mixed> $payload
+     */
+    public static function ctxGuardarFromPayload(array $payload): string
+    {
+        return \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? '');
+    }
 }

@@ -282,7 +282,9 @@ $i18n = [
             var ap = fnjs_esc(s.ap_nom || '');
             if (puedeMod) {
                 var id_txt = id_activ + '_' + s.id_nom;
-                var onclick = 'fnjs_cambiar_sacd(event,' + id_activ + ',' + s.id_cargo + ',' + s.id_nom + ')';
+                var onclick = 'fnjs_cambiar_sacd(event,' + id_activ + ','
+                    + JSON.stringify(s.ctx_eliminar || '') + ','
+                    + JSON.stringify(s.ctx_reordenar || '') + ')';
                 txt += '<span class="link" id="' + id_txt + '" onclick="' + fnjs_esc(onclick) + '"> '
                     + ap + ';</span>';
             } else {
@@ -349,14 +351,14 @@ $i18n = [
         html += '<tr><td class="cabecera">' + fnjs_esc(I18N.sacd) + '</td></tr>';
         for (var i = 0; i < ctr.length; i++) {
             var c = ctr[i];
-            var onclick = "fnjs_asignar_sacd('" + id_activ + "','" + c.id_nom + "')";
+            var onclick = 'fnjs_asignar_sacd(' + JSON.stringify(c.ctx_asignar || '') + ',' + id_activ + ')';
             html += '<tr><td><span class="link" id="' + c.id_nom
                 + '" onclick="' + fnjs_esc(onclick) + '">'
                 + fnjs_esc(c.num_orden) + ' * ' + fnjs_esc(c.ap_nom) + '</span></td></tr>';
         }
         for (var j = 0; j < todos.length; j++) {
             var t = todos[j];
-            var onclickT = "fnjs_asignar_sacd('" + id_activ + "','" + t.id_nom + "')";
+            var onclickT = 'fnjs_asignar_sacd(' + JSON.stringify(t.ctx_asignar || '') + ',' + id_activ + ')';
             html += '<tr><td><span class="link" id="' + t.id_nom
                 + '" onclick="' + fnjs_esc(onclickT) + '"> '
                 + fnjs_esc(t.ap_nom) + '</span></td></tr>';
@@ -366,11 +368,11 @@ $i18n = [
     };
 
     // ------------------------------------------------------- ASIGNAR
-    fnjs_asignar_sacd = function (id_activ, id_nom) {
+    fnjs_asignar_sacd = function (ctx_asignar, id_activ) {
         $.ajax({
             url: URL_ASIGNAR,
             type: 'post',
-            data: { id_activ: id_activ, id_nom: id_nom },
+            data: { ctx_asignar: ctx_asignar },
             dataType: 'json'
         }).done(function (rta) {
             if (!rta || rta.success !== true) {
@@ -385,18 +387,21 @@ $i18n = [
     };
 
     // ------------------------------------------------------- ORDEN / BORRAR
-    fnjs_cambiar_sacd = function (evt, id_activ, id_cargo, id_nom) {
+    fnjs_cambiar_sacd = function (evt, id_activ, ctx_eliminar, ctx_reordenar) {
         fnjs_cerrar();
-        if (id_activ && id_nom) {
-            var onMas = "fnjs_orden('" + id_activ + "','" + id_cargo + "','" + id_nom + "','mas')";
-            var onMenos = "fnjs_orden('" + id_activ + "','" + id_cargo + "','" + id_nom + "','menos')";
-            var onBorrar = "fnjs_orden('" + id_activ + "','" + id_cargo + "','" + id_nom + "','borrar')";
+        if (id_activ && ctx_eliminar) {
+            var onMas = 'fnjs_orden(' + id_activ + ',' + JSON.stringify(ctx_eliminar) + ','
+                + JSON.stringify(ctx_reordenar || '') + ',"mas")';
+            var onMenos = 'fnjs_orden(' + id_activ + ',' + JSON.stringify(ctx_eliminar) + ','
+                + JSON.stringify(ctx_reordenar || '') + ',"menos")';
+            var onBorrar = 'fnjs_orden(' + id_activ + ',' + JSON.stringify(ctx_eliminar) + ','
+                + JSON.stringify(ctx_reordenar || '') + ',"borrar")';
             var html = '<div id="div_orden" class="orden">'
                 + '<p class="tres" onclick="' + fnjs_esc(onMas) + '">' + fnjs_esc(I18N.plus_prioridad) + '</p>'
                 + '<p class="tres" onclick="' + fnjs_esc(onMenos) + '">' + fnjs_esc(I18N.menos_prioridad) + '</p>'
                 + '<p class="tres" onclick="' + fnjs_esc(onBorrar) + '">' + fnjs_esc(I18N.borrar) + '</p>'
                 + '</div>';
-            var $anchor = $('#' + id_activ + '_' + id_nom);
+            var $anchor = $(evt.currentTarget);
             $anchor.addClass('activ_sacd_popup_anchor');
             $anchor.append(html);
             fnjs_marcar_fila_popup($('#' + id_activ));
@@ -406,12 +411,12 @@ $i18n = [
         return false;
     };
 
-    fnjs_orden = function (id_activ, id_cargo, id_nom, num_orden) {
+    fnjs_orden = function (id_activ, ctx_eliminar, ctx_reordenar, num_orden) {
         if (num_orden === 'borrar') {
             $.ajax({
                 url: URL_ELIMINAR,
                 type: 'post',
-                data: { id_activ: id_activ, id_nom: id_nom, id_cargo: id_cargo },
+                data: { ctx_eliminar: ctx_eliminar },
                 dataType: 'json'
             }).done(function (rta) {
                 if (!rta || rta.success !== true) {
@@ -427,7 +432,7 @@ $i18n = [
         $.ajax({
             url: URL_REORDENAR,
             type: 'post',
-            data: { id_activ: id_activ, id_nom: id_nom, num_orden: num_orden },
+            data: { ctx_reordenar: ctx_reordenar, num_orden: num_orden },
             dataType: 'json'
         }).done(function (rta) {
             if (!rta || rta.success !== true) {

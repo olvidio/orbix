@@ -8,6 +8,7 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\shared\security\HashB;
 
 /**
  * Devuelve la lista de sacd candidatos para asignar a una actividad.
@@ -63,6 +64,10 @@ final class SacdsDisponiblesData
                     'id_nom' => $id_nom,
                     'ap_nom' => $ap_nom,
                     'num_orden' => $num_orden,
+                    'ctx_asignar' => HashB::sign('sacd_asignar', [
+                        'id_activ' => $id_activ,
+                        'id_nom' => $id_nom,
+                    ]),
                 ];
             }
         }
@@ -70,9 +75,14 @@ final class SacdsDisponiblesData
         $sacds_todos = [];
         $cPersonas = $this->personaSacdRepository->getSacdsBySelect($seleccion);
         foreach ($cPersonas as $oPersona) {
+            $id_nom_todo = (int)$oPersona->getId_nom();
             $sacds_todos[] = [
-                'id_nom' => (int)$oPersona->getId_nom(),
+                'id_nom' => $id_nom_todo,
                 'ap_nom' => (string)$oPersona->getPrefApellidosNombre(),
+                'ctx_asignar' => HashB::sign('sacd_asignar', [
+                    'id_activ' => $id_activ,
+                    'id_nom' => $id_nom_todo,
+                ]),
             ];
         }
 

@@ -3,6 +3,7 @@
 namespace src\actividadessacd\application;
 
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Devuelve el texto de comunicacion asociado a `{clave, idioma}`.
@@ -16,7 +17,7 @@ final class TextoComunicacionData
 
     /**
      * @param array<string, mixed> $input
-     * @return array{texto: string}
+     * @return array{texto: string, ctx_guardar?: string}
      */
     public function execute(array $input): array
     {
@@ -30,10 +31,15 @@ final class TextoComunicacionData
             'clave' => $clave,
             'idioma' => $idioma,
         ]);
-        if (count($cTextos) === 0) {
-            return ['texto' => ''];
-        }
-        return ['texto' => (string)$cTextos[0]->getTexto()];
+        $texto = count($cTextos) === 0 ? '' : (string)$cTextos[0]->getTexto();
+
+        return [
+            'texto' => $texto,
+            'ctx_guardar' => HashB::sign('texto_comunicacion_guardar', [
+                'clave' => $clave,
+                'idioma' => $idioma,
+            ]),
+        ];
     }
 
 }

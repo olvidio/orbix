@@ -9,6 +9,7 @@ use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\procesos\domain\PermAccion;
+use src\shared\security\HashB;
 
 /**
  * Devuelve los sacd encargados actuales de una actividad.
@@ -58,10 +59,20 @@ final class SacdsEncargadosData
                     $ap_nom = is_object($oPersona)
                         ? (string)$oPersona->getPrefApellidosNombre()
                         : (string)$oPersona;
+                    $id_cargo = (int)$oCargo->getId_cargo();
                     $sacds[] = [
                         'id_nom' => $id_nom,
-                        'id_cargo' => (int)$oCargo->getId_cargo(),
+                        'id_cargo' => $id_cargo,
                         'ap_nom' => $ap_nom,
+                        'ctx_eliminar' => HashB::sign('sacd_eliminar', [
+                            'id_activ' => $id_activ,
+                            'id_nom' => $id_nom,
+                            'id_cargo' => $id_cargo,
+                        ]),
+                        'ctx_reordenar' => HashB::sign('sacd_reordenar', [
+                            'id_activ' => $id_activ,
+                            'id_nom' => $id_nom,
+                        ]),
                     ];
             }
         }

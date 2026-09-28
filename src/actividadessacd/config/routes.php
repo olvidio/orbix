@@ -24,6 +24,10 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/sacd_asignar_auto.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/actividadessacd/sacd_asignar_auto_form_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/sacd_asignar_auto_form_data.php';
+    });
+
     // Lecturas (data builders).
     $r->addRoute(['GET', 'POST'], '/src/actividadessacd/sacds_encargados_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/sacds_encargados_data.php';

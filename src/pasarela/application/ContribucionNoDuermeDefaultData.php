@@ -3,6 +3,7 @@
 namespace src\pasarela\application;
 
 use src\pasarela\domain\ContribucionNoDuerme;
+use src\shared\security\HashB;
 
 /**
  * Devuelve solo el valor por defecto del parámetro `contribucion_no_duerme`,
@@ -16,13 +17,14 @@ final class ContribucionNoDuermeDefaultData
     }
 
     /**
-     * @return array{default: string}
+     * @return array{default: string, ctx_guardar: string}
      */
     public function execute(): array
     {
         
         return [
             'default' => (string)$this->contribucionNoDuerme->getDefault(),
+            'ctx_guardar' => HashB::sign('contribucion_no_duerme_default_guardar'),
         ];
     }
 }

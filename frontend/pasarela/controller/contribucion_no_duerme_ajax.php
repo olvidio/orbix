@@ -46,8 +46,10 @@ switch ($Qque) {
         break;
     case 'update_default':
         $Qdefault = (string)filter_input(INPUT_POST, 'default');
+        $Qctx_guardar = (string)filter_input(INPUT_POST, 'ctx_guardar');
         PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_default_guardar', [
             'default' => $Qdefault,
+            'ctx_guardar' => $Qctx_guardar,
         ]);
         break;
     case 'lista':
@@ -58,12 +60,13 @@ switch ($Qque) {
     case 'form_default':
         $data = PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_default_data');
         $default = \frontend\shared\helpers\PayloadCoercion::string($data['default'] ?? '');
+        $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? '');
         $txt = _('Valor por defecto en %');
 
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
         $oHash->setCamposForm('default');
-        $oHash->setArrayCamposHidden(['que' => 'update_default']);
+        $oHash->setArrayCamposHidden(['que' => 'update_default', 'ctx_guardar' => $ctx_guardar]);
 
         $a_campos = [
             'oPosicion' => $oPosicion,

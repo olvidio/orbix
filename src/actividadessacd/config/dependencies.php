@@ -7,6 +7,7 @@ use src\actividadessacd\application\ListaActividadesSacdData;
 use src\actividadessacd\application\LocalesDesplegableData;
 use src\actividadessacd\application\SacdAsignar;
 use src\actividadessacd\application\SacdAsignarAuto;
+use src\actividadessacd\application\SacdAsignarAutoFormData;
 use src\actividadessacd\application\SacdEliminar;
 use src\actividadessacd\application\SacdReordenar;
 use src\actividadessacd\application\SacdsDisponiblesData;
@@ -33,6 +34,7 @@ return [
     LocalesDesplegableData::class => autowire(LocalesDesplegableData::class),
     SacdAsignar::class => autowire(SacdAsignar::class),
     SacdAsignarAuto::class => autowire(SacdAsignarAuto::class),
+    SacdAsignarAutoFormData::class => autowire(SacdAsignarAutoFormData::class),
     SacdEliminar::class => autowire(SacdEliminar::class),
     SacdReordenar::class => autowire(SacdReordenar::class),
     SacdsDisponiblesData::class => autowire(SacdsDisponiblesData::class),

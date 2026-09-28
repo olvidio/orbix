@@ -4,6 +4,7 @@ namespace src\actividades\application;
 
 use frontend\shared\helpers\TipoActivGestionFormHashCompose;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\security\HashB;
 
 /**
  * Devuelve el HTML del formulario para modificar/eliminar un tipo de actividad
@@ -26,7 +27,11 @@ class TipoActivFormModificar
         $nom_tipo = $oTiposActividades->getNom_tipoText();
 
         $txt = "<form id='frm_tipo_activ'>";
-        $txt .= TipoActivGestionFormHashCompose::modificarHiddenHtml($Qid_tipo_activ);
+        $txt .= TipoActivGestionFormHashCompose::modificarHiddenHtml(
+            $Qid_tipo_activ,
+            HashB::sign('tipo_activ_update', ['id_tipo_activ' => $Qid_tipo_activ]),
+            HashB::sign('tipo_activ_eliminar', ['id_tipo_activ' => $Qid_tipo_activ])
+        );
         $txt .= '<h3>' . $nom_actividad . '</h3>';
         $txt .= _("nombre") . ": <input type=text size=25 id=nom_tipo_activ  name=nom_tipo_activ value=\"$nom_tipo\">";
         $txt .= '<br><br>';

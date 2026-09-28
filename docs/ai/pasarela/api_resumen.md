@@ -50,13 +50,13 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `pasarela.contribucion_no_duerme_default_data`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/contribucion_no_duerme_default_data.php`
 - Entrada: ninguna detectada.
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`, cápsula `HashB` sin contexto para `contribucion_no_duerme_default_guardar`)
 
 ## `/src/pasarela/contribucion_no_duerme_default_guardar`
 
 - Id: `pasarela.contribucion_no_duerme_default_guardar`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/contribucion_no_duerme_default_guardar.php`
-- Entrada: ``
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `contribucion_no_duerme_default_guardar`, sin contexto; emitida por `contribucion_no_duerme_default_data`), `post.default:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/pasarela/contribucion_no_duerme_excepcion_eliminar`
@@ -85,13 +85,13 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `pasarela.contribucion_reserva_default_data`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/contribucion_reserva_default_data.php`
 - Entrada: ninguna detectada.
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`, cápsula `HashB` sin contexto para `contribucion_reserva_default_guardar`)
 
 ## `/src/pasarela/contribucion_reserva_default_guardar`
 
 - Id: `pasarela.contribucion_reserva_default_guardar`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/contribucion_reserva_default_guardar.php`
-- Entrada: ``
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `contribucion_reserva_default_guardar`, sin contexto; emitida por `contribucion_reserva_default_data`), `post.default:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/pasarela/contribucion_reserva_excepcion_eliminar`
