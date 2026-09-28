@@ -36,6 +36,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `misas.cambiar_status_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/cambiar_status_data.php`
 - Entrada: ninguna detectada.
+- Respuesta: incluye `zona_ctx_map` (mapa `id_zona => ctx`), una cápsula `HashB` por zona permitida para `nuevo_status`, atada a `{id_zona}` — `NuevoStatusPeriodo` no vuelve a comprobar permiso sobre `id_zona`, así que la cápsula solo permite operar sobre una de las zonas que `getArrayZonas` ya filtró para este jefe
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/crear_nuevo_periodo_data`
@@ -154,7 +155,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.nuevo_status`
 - Controller: `src/misas/infrastructure/ui/http/controllers/nuevo_status.php`
-- Entrada: `post.id_zona:integer`, `post.periodo:string`, `post.empiezamin:string`, `post.empiezamax:string`, `post.estado:integer`
+- Entrada: `post.ctx_nuevo_status:string` (cápsula `HashB` acción `nuevo_status`, contexto `{id_zona}`; emitida por `cambiar_status_data` como una entrada de `zona_ctx_map`), `post.periodo:string`, `post.empiezamin:string`, `post.empiezamax:string`, `post.estado:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/plan_de_misas_pantalla_data`
