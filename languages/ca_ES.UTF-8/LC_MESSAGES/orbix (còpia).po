@@ -9384,32 +9384,32 @@ msgstr "hi ha una superposició propera a %s"
 msgid "tiene que ser un array"
 msgstr "ha de ser un array"
 
-#: apps/web/Hash.php:184
+#: frontend/shared/security/HashF.php:184
 msgid "llegan campos hidden modificados"
 msgstr "arriben camps hidden modificats"
 
-#: apps/web/Hash.php:215
+#: frontend/shared/security/HashF.php:215
 #, fuzzy
 #| msgid ""
 #| "llegan distinto número o nombre de los campos que se dice que se envian"
 msgid "llegan distinto número o nombre de los campos que se dice que se envían"
 msgstr "arriben diferent nombre o nom dels camps que es diu que s'envien"
 
-#: apps/web/Hash.php:262
+#: frontend/shared/security/HashF.php:262
 msgid "url modificada"
 msgstr "url modificada"
 
-#: apps/web/Hash.php:273 apps/web/Hash.php:278
+#: frontend/shared/security/HashF.php:273 frontend/shared/security/HashF.php:278
 msgid "problema general de seguridad"
 msgstr "problema general de seguretat"
 
-#: apps/web/Hash.php:279
+#: frontend/shared/security/HashF.php:279
 #, fuzzy
 #| msgid "para ver más detalles activa el mode debug en core\\confgiGlobal"
 msgid "para ver más detalles activa el mode debug en core\\configGlobal"
 msgstr "per veure més detalls activa el model debug en core\\confgiGlobal"
 
-#: apps/web/Hash.php:323
+#: frontend/shared/security/HashF.php:323
 msgid "página con seguridad desactivada"
 msgstr "pàgina amb seguretat desactivada"
 

@@ -61,7 +61,7 @@ Ningun JS/PHP mas referencia `form_3102`, `form_1302`, `update_3102`, `Select310
 1. **Dispatcher `$Qmod`** en `update_3102.php` (eliminar/nuevo/editar) — split en 3 endpoints.
 2. **Mutaciones sin `ContestarJson`** — responden `echo $msg_err` (texto plano).
 3. **Vistas con `form.one("submit") + trigger("submit") + off()`** en los 6 `.phtml` — patron legacy.
-4. **Models instancian UI** — `Select3102` y `Select1302` usan `web\\Lista`, `web\\Hash` directamente desde `apps/<app>/model/` (aceptable: son widgets dossier, el `application/legacy/` no aplica por tamaño, pero deben vivir en `src/<app>/application/` como los `Select*` de notas, no en `apps/<app>/model/`).
+4. **Models instancian UI** — `Select3102` y `Select1302` usan `frontend\shared\web\Lista` y `HashF` directamente desde `apps/<app>/model/` (aceptable: son widgets dossier, el `application/legacy/` no aplica por tamaño, pero deben vivir en `src/<app>/application/` como los `Select*` de notas, no en `apps/<app>/model/`).
 5. **Controladores en `apps/`** — no hay `frontend/actividadcargos/` para la version migrada.
 6. **Duplicacion por convencion de naming**: existen tanto `Select3102` como `Select_cargos_de_actividad` (este ultimo como shim que solo cambia el template). La convencion final debe ser **una sola clase, nombrada por el codigo del `TipoDossier`**.
 7. **Convencion de naming inconsistente** con el rol: el form y el update son `form_3102` / `update_3102` (id-based) con wrappers `*_cargos_de_actividad` (codigo-based) que solo hacen `require`. Tras migrar, el unico fichero vivo debe ser el nombrado con codigo.

@@ -30,6 +30,6 @@ Controller HTTP: leer request → un caso de uso → JSON (preferible). Legacy (
 
 - **`frontend/`**: vistas, controllers de presentación, `PostRequest` a `/src/...`. No instanciar use cases/repos de `src/`.
 - **`src/.../controllers`**: lógica + `ContestarJson`. Prohibido HTML de app, `frontend\`, `web\Lista`/`Desplegable` en application o controllers HTTP nuevos.
-- Enlaces a UI: `src` devuelve `link_spec`; firma `Hash::link` / `HashF` solo en `frontend/` (o `apps/` legacy).
+- Enlaces a UI: `src` devuelve `link_spec`; firma `HashF::link` solo en `frontend/` (o `apps/` legacy).
 
 Referencia: [`AGENTS.md`](../../AGENTS.md) §§ «Estructura mínima», «Reglas de capas», «Arquitectura Frontend/Backend».
