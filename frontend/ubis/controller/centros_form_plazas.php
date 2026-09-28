@@ -21,6 +21,7 @@ $oHash = new HashF();
 $oHash->setUrl($url_update);
 $oHash->setArrayCamposHidden([
     'id_ubi' => $Qid_ubi,
+    'ctx_guardar' => $form['ctx_guardar'],
 ]);
 $oHash->setCamposForm('num_habit_indiv!plazas');
 $oHash->setCamposChk('sede');

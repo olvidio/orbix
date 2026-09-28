@@ -273,6 +273,8 @@ public static function homeFromPayload(array $payload): array
  *     num_sacd: int|float|string,
  *     sv_chk: string,
  *     sf_chk: string,
+ *     ctx_guardar: string,
+ *     ctx_eliminar: string,
  * }
  */
 public static function editarLoadFromPayload(array $load): array
@@ -305,6 +307,8 @@ public static function editarLoadFromPayload(array $load): array
         'num_sacd' => NotasFormSupport::formScalar($load['num_sacd'] ?? ''),
         'sv_chk' => \frontend\shared\helpers\PayloadCoercion::string($load['sv_chk'] ?? ''),
         'sf_chk' => \frontend\shared\helpers\PayloadCoercion::string($load['sf_chk'] ?? ''),
+        'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($load['ctx_guardar'] ?? ''),
+        'ctx_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($load['ctx_eliminar'] ?? ''),
     ];
 }
 
@@ -502,7 +506,7 @@ public static function calendarioPeriodoFields(array $payload): array
 
 /**
  * @param array<string, mixed> $payload
- * @return array{nombre_ubi: string, tipo_ctr: string, tipo_labor: int, tipo_labor_bit_map: array<string, int>}
+ * @return array{nombre_ubi: string, tipo_ctr: string, tipo_labor: int, tipo_labor_bit_map: array<string, int>, ctx_guardar: string}
  */
 public static function centroLaborFormFromPayload(array $payload): array
 {
@@ -511,6 +515,7 @@ public static function centroLaborFormFromPayload(array $payload): array
         'tipo_ctr' => \frontend\shared\helpers\PayloadCoercion::string($payload['tipo_ctr'] ?? ''),
         'tipo_labor' => \frontend\shared\helpers\PayloadCoercion::int($payload['tipo_labor'] ?? 0),
         'tipo_labor_bit_map' => self::permBitMap($payload['tipo_labor_bit_map'] ?? []),
+        'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
     ];
 }
 
@@ -541,7 +546,7 @@ public static function viewVars(array $base, array $extra): array
 
 /**
  * @param array<string, mixed> $payload
- * @return array{nombre_ubi: string, n_buzon: int|float|string, num_pi: int|float|string, num_cartas: int|float|string}
+ * @return array{nombre_ubi: string, n_buzon: int|float|string, num_pi: int|float|string, num_cartas: int|float|string, ctx_guardar: string}
  */
 public static function centroNumFormFromPayload(array $payload): array
 {
@@ -550,12 +555,13 @@ public static function centroNumFormFromPayload(array $payload): array
         'n_buzon' => NotasFormSupport::formScalar($payload['n_buzon'] ?? ''),
         'num_pi' => NotasFormSupport::formScalar($payload['num_pi'] ?? ''),
         'num_cartas' => NotasFormSupport::formScalar($payload['num_cartas'] ?? ''),
+        'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
     ];
 }
 
 /**
  * @param array<string, mixed> $payload
- * @return array{nombre_ubi: string, num_habit_indiv: int|float|string, plazas: int|float|string, sede: bool|string}
+ * @return array{nombre_ubi: string, num_habit_indiv: int|float|string, plazas: int|float|string, sede: bool|string, ctx_guardar: string}
  */
 public static function centroPlazasFormFromPayload(array $payload): array
 {
@@ -564,6 +570,7 @@ public static function centroPlazasFormFromPayload(array $payload): array
         'num_habit_indiv' => NotasFormSupport::formScalar($payload['num_habit_indiv'] ?? ''),
         'plazas' => NotasFormSupport::formScalar($payload['plazas'] ?? ''),
         'sede' => NotasFormSupport::formBoolOrString($payload['sede'] ?? false),
+        'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
     ];
 }
 
@@ -624,6 +631,7 @@ public static function paginaLinkFromTabla(array $tabla): string
  *     botones: int|float|string,
  *     ficha: string,
  *     tit_txt: string,
+ *     ctx_guardar: string,
  * }
  */
 public static function telecoFromPayload(array $payload): array
@@ -639,6 +647,7 @@ public static function telecoFromPayload(array $payload): array
         'botones' => NotasFormSupport::formScalar($payload['botones'] ?? 0),
         'ficha' => \frontend\shared\helpers\PayloadCoercion::string($payload['ficha'] ?? ''),
         'tit_txt' => \frontend\shared\helpers\PayloadCoercion::string($payload['tit_txt'] ?? ''),
+        'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
     ];
 }
 

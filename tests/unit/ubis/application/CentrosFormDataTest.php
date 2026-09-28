@@ -6,6 +6,7 @@ namespace Tests\unit\ubis\application;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use src\shared\security\HashB;
 use src\ubis\application\CentrosFormData;
 use src\ubis\domain\CuadrosLaborBits;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -50,9 +51,12 @@ final class CentrosFormDataTest extends TestCase
     {
         $result = $this->createUseCase(null)->execute(123, CentrosFormData::MODO_LABOR);
 
+        $ctxGuardar = $this->extractCtxGuardar($result, 123);
+
         $this->assertSame([
             'id_ubi' => 123,
             'nombre_ubi' => '',
+            'ctx_guardar' => $ctxGuardar,
             'tipo_ctr' => '',
             'tipo_labor' => 0,
             'tipo_labor_bit_map' => CuadrosLaborBits::labeledMap(1),
@@ -69,9 +73,12 @@ final class CentrosFormDataTest extends TestCase
 
         $result = $this->createUseCase($centro)->execute(7, CentrosFormData::MODO_LABOR);
 
+        $ctxGuardar = $this->extractCtxGuardar($result, 7);
+
         $this->assertSame([
             'id_ubi' => 7,
             'nombre_ubi' => 'Centro Uno',
+            'ctx_guardar' => $ctxGuardar,
             'tipo_ctr' => 'Z',
             'tipo_labor' => 42,
             'tipo_labor_bit_map' => CuadrosLaborBits::labeledMap(1),
@@ -89,9 +96,12 @@ final class CentrosFormDataTest extends TestCase
 
         $result = $this->createUseCase($centro)->execute(8, CentrosFormData::MODO_NUM);
 
+        $ctxGuardar = $this->extractCtxGuardar($result, 8);
+
         $this->assertSame([
             'id_ubi' => 8,
             'nombre_ubi' => 'Centro Dos',
+            'ctx_guardar' => $ctxGuardar,
             'n_buzon' => 10,
             'num_pi' => 5,
             'num_cartas' => 3,
@@ -109,13 +119,28 @@ final class CentrosFormDataTest extends TestCase
 
         $result = $this->createUseCase($centro)->execute(9, CentrosFormData::MODO_PLAZAS);
 
+        $ctxGuardar = $this->extractCtxGuardar($result, 9);
+
         $this->assertSame([
             'id_ubi' => 9,
             'nombre_ubi' => 'Centro Tres',
+            'ctx_guardar' => $ctxGuardar,
             'num_habit_indiv' => 2,
             'plazas' => 12,
             'sede' => true,
         ], $result);
+    }
+
+    /**
+     * @param array<string, mixed> $result
+     */
+    private function extractCtxGuardar(array $result, int $expectedIdUbi): string
+    {
+        $ctxGuardar = $result['ctx_guardar'] ?? '';
+        $this->assertIsString($ctxGuardar);
+        $this->assertSame(['id_ubi' => $expectedIdUbi], HashB::open($ctxGuardar, 'centros_update'));
+
+        return $ctxGuardar;
     }
 
     private function createUseCase(?CentroDl $centro): CentrosFormData

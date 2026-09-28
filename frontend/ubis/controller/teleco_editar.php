@@ -53,6 +53,7 @@ $oHash->setArraycamposHidden([
     'obj_pau' => $Qobj_pau,
     'id_ubi' => $Qid_ubi,
     's_pkey' => $s_pkey,
+    'ctx_guardar' => $data['ctx_guardar'],
 ]);
 
 $a_campos = [

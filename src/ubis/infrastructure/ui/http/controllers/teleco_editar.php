@@ -2,6 +2,7 @@
 
 use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\TelecoEditarData;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'obj_pau');
@@ -46,4 +47,10 @@ if (isset($a_pkey[0])) {
 
 /** @var TelecoEditarData $useCase */
 $useCase = DependencyResolver::get(TelecoEditarData::class);
-ContestarJson::enviar('', $useCase->execute($Qobj_pau, $Qmod, $Qid_ubi, $pkey));
+$data = $useCase->execute($Qobj_pau, $Qmod, $Qid_ubi, $pkey);
+$data['ctx_guardar'] = HashB::sign('teleco_guardar', [
+    'obj_pau' => $Qobj_pau,
+    'id_ubi' => $Qid_ubi,
+    'pkey' => $a_pkey,
+]);
+ContestarJson::enviar('', $data);

@@ -16,6 +16,7 @@ use src\ubis\domain\entity\Centro;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEx;
 use src\ubis\domain\CuadrosLaborBits;
+use src\shared\security\HashB;
 
 /**
  * Carga ficha ubis (centro/casa) para `frontend/ubis/controller/ubis_editar.php`
@@ -84,6 +85,8 @@ final class UbisEditarLoadData
             'id_direccion' => '',
             'es_de_dl' => $es_de_dl,
             'botones' => $botones,
+            'ctx_guardar' => HashB::sign('ubis_guardar', ['obj_pau' => $Qobj_pau, 'id_ubi' => $id_ubi]),
+            'ctx_eliminar' => HashB::sign('ubis_eliminar', ['obj_pau' => $Qobj_pau, 'id_ubi' => $id_ubi]),
         ];
 
         $laborMap = CuadrosLaborBits::labeledMap(ConfigGlobal::mi_sfsv());
@@ -154,6 +157,8 @@ final class UbisEditarLoadData
             'es_de_dl' => str_contains($Qobj_pau, 'Dl'),
             'botones' => $botones,
             'chk' => 'checked',
+            'ctx_guardar' => HashB::sign('ubis_guardar', ['obj_pau' => $Qobj_pau, 'id_ubi' => 0]),
+            'ctx_eliminar' => HashB::sign('ubis_eliminar', ['obj_pau' => $Qobj_pau, 'id_ubi' => 0]),
         ];
 
         $sv = false;
