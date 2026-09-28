@@ -2,6 +2,8 @@
 
 namespace src\ubis\application;
 
+use src\shared\security\HashB;
+
 final class DireccionesTablaData
 {
     public function __construct(
@@ -35,8 +37,13 @@ final class DireccionesTablaData
         foreach ($cDirecciones as $oDireccion) {
             $i++;
             $id_direccion = $oDireccion->getId_direccion();
+            $ctx_asignar = HashB::sign('direcciones_asignar', [
+                'id_ubi' => $id_ubi,
+                'obj_dir' => $obj_dir,
+                'id_direccion' => $id_direccion,
+            ]);
             $a_valores[$i][1] = $id_direccion;
-            $a_valores[$i][2] = ['script' => "fnjs_asignar_dir($id_ubi,\"$obj_dir\", $id_direccion)", 'valor' => 'ok'];
+            $a_valores[$i][2] = ['script' => 'fnjs_asignar_dir(' . json_encode($ctx_asignar) . ')', 'valor' => 'ok'];
             $a_valores[$i][3] = $oDireccion->getDireccionVo()?->value() ?? '';
             $a_valores[$i][4] = $oDireccion->getC_p();
             $a_valores[$i][5] = $oDireccion->getPoblacion();

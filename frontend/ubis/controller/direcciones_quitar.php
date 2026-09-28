@@ -8,10 +8,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 PostRequest::getDataFromUrl('/src/ubis/direcciones_quitar', [
-    'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),
-    'idx' => (int)filter_input(INPUT_POST, 'idx'),
-    'obj_dir' => (string)filter_input(INPUT_POST, 'obj_dir'),
-    'id_direccion' => (string)filter_input(INPUT_POST, 'id_direccion'),
+    'ctx_quitar' => (string)filter_input(INPUT_POST, 'ctx_quitar'),
 ]);
 
 AjaxJsonSupport::response();

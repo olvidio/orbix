@@ -3,6 +3,7 @@
 namespace src\ubis\application;
 
 use src\shared\domain\DatosCampo;
+use src\shared\security\HashB;
 use src\ubis\application\services\UbiPermisos;
 use src\ubis\application\services\UbiRepositoryResolver;
 use src\ubis\domain\entity\TelecoUbi;
@@ -33,7 +34,15 @@ final class TelecoTablaData
             $pks1 = 'get' . ucfirst($oFila->getPrimary_key());
             $val_pks = $oFila->$pks1();
             $pks = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
+            // `sel` sigue en el formato legado (b64+json de la pkey): lo sigue
+            // parseando `frontend/ubis/controller/teleco_editar.php` para cargar
+            // el formulario de modificación. `ctx_eliminar` (vía `data-json`, no
+            // por `sel`) protege solo la acción de borrado.
             $a_valores[$c]['sel'] = $pks;
+            $a_valores[$c]['ctx_eliminar'] = HashB::sign('teleco_eliminar', [
+                'obj_pau' => $obj_pau,
+                'pkey' => $val_pks,
+            ]);
             foreach ($oFila->getDatosCampos() as $oDatosCampo) {
                 if ($c === 0) {
                     $a_cabeceras[] = ucfirst($oDatosCampo->getEtiqueta() ?? '');

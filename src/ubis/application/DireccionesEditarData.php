@@ -2,6 +2,7 @@
 
 namespace src\ubis\application;
 
+use src\shared\security\HashB;
 use src\ubis\application\services\UbiPermisos;
 use src\ubis\application\services\UbiRepositoryResolver;
 final class DireccionesEditarData
@@ -103,6 +104,15 @@ final class DireccionesEditarData
         if (UbiPermisos::puedeModificarPorObjeto($obj_dir, (string)($oUbi->getDl() ?? ''))) {
             $data['botones'] = '1,4,5';
         }
+
+        $contexto = [
+            'obj_dir' => $obj_dir,
+            'id_ubi' => $id_ubi,
+            'idx' => $data['idx'],
+            'id_direccion' => $data['id_direccion'],
+        ];
+        $data['ctx_guardar'] = HashB::sign('direccion_update', $contexto);
+        $data['ctx_quitar'] = HashB::sign('direcciones_quitar', $contexto);
 
         return $data;
     }

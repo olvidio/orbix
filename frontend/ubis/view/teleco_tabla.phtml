@@ -16,7 +16,12 @@
         var eliminar = <?= json_encode(_("¿Está seguro que desea eliminar este registro?")) ?>;
         rta = fnjs_solo_uno(formulario);
         if (rta == 1 && confirm(eliminar)) {
-            let datos = $(formulario).serialize();
+            var ctx_eliminar = fnjs_ctx_fila_seleccionada(formulario, 'ctx_eliminar');
+            if (!ctx_eliminar) {
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + <?= json_encode(_("Operación no autorizada")) ?>);
+                return;
+            }
+            let datos = 'ctx_eliminar=' + encodeURIComponent(ctx_eliminar);
             let request = $.ajax({
                 url: '<?= $url_eliminar ?>',
                 type: 'post',
@@ -43,7 +48,10 @@
 <form id='seleccionados' name='seleccionados' action='' method='post'>
     <?= $oHash->getCamposHtml(); ?>
     <input type="hidden" id="mod" name="mod" value="">
-    <?= $oTabla->mostrar_tabla(); ?>
+    <?php // HTML forzado (no SlickGrid): la fila lleva `ctx_eliminar` en `data-json`,
+    // y solo `mostrar_tabla_html()` evita que una clave extra desplace las
+    // columnas numeradas del grid (ver AGENTS.md / Lista::mostrar_tabla_slickgrid). ?>
+    <?= $oTabla->mostrar_tabla_html(); ?>
     <?php if ($botones == 1) { ?>
         <br>
         <table cellspacing=3 class=botones><tr class=botones>

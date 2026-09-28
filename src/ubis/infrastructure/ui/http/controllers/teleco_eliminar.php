@@ -2,27 +2,33 @@
 
 use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\TelecoEliminar;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'obj_pau');
-$a_sel = $_POST['sel'] ?? [];
-if (!is_array($a_sel)) {
-    $a_sel = [];
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_eliminar'),
+        'teleco_eliminar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
 }
+
+$Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'obj_pau');
+$pkeyRaw = $ctx['pkey'] ?? null;
 
 /** @var list<int|string> $a_pkey */
 $a_pkey = [];
-if ($a_sel !== [] && isset($a_sel[0]) && is_string($a_sel[0])) {
-    $parts = explode('#', $a_sel[0]);
-    $s = str_replace("'", '"', $parts[0]);
-    $decoded = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($s), true);
-    if (is_array($decoded)) {
-        foreach (array_values($decoded) as $item) {
-            if (is_int($item) || is_string($item)) {
-                $a_pkey[] = $item;
-            }
+if (is_array($pkeyRaw)) {
+    foreach (array_values($pkeyRaw) as $item) {
+        if (is_int($item) || is_string($item)) {
+            $a_pkey[] = $item;
         }
     }
+} elseif (is_int($pkeyRaw) || is_string($pkeyRaw)) {
+    $a_pkey[] = $pkeyRaw;
 }
 
 /** @var TelecoEliminar $useCase */

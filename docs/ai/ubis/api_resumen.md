@@ -141,14 +141,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.direccion_update`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direccion_update.php`
-- Entrada: `post.obj_dir:string`, `post.id_ubi:integer`, `post.idx:string`, `post.id_direccion:string`, `post.nom_sede:string`, `post.direccion:string`, `post.a_p:string`, `post.c_p:string`, `post.poblacion:string`, `post.provincia:string`, `post.pais:string`, `post.observ:string`, `post.f_direccion:string`, `post.latitud:string`, `post.longitud:string`, `post.cp_dcha:string`, `post.propietario:string`, `post.principal:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `direccion_update`, contexto `{obj_dir, id_ubi, idx, id_direccion}`; emitida por `direcciones_editar`), `post.nom_sede:string`, `post.direccion:string`, `post.a_p:string`, `post.c_p:string`, `post.poblacion:string`, `post.provincia:string`, `post.pais:string`, `post.observ:string`, `post.f_direccion:string`, `post.latitud:string`, `post.longitud:string`, `post.cp_dcha:string`, `post.propietario:string`, `post.principal:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/direcciones_asignar`
 
 - Id: `ubis.direcciones_asignar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direcciones_asignar.php`
-- Entrada: `post.id_ubi:integer`, `post.obj_dir:string`, `post.id_direccion:integer`
+- Entrada: `post.ctx_asignar:string` (cápsula `HashB` acción `direcciones_asignar`, contexto `{id_ubi, obj_dir, id_direccion}`; emitida por fila en `direcciones_tabla`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/direcciones_editar`
@@ -156,6 +156,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.direcciones_editar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direcciones_editar.php`
 - Entrada: `post.id_ubi:integer`, `post.mod:string`, `post.obj_dir:string`, `post.id_direccion:string`, `post.idx:integer`, `post.inc:string`
+- Respuesta: incluye `ctx_guardar` / `ctx_quitar`, cápsulas `HashB` para `direccion_update` / `direcciones_quitar` atadas a `{obj_dir, id_ubi, idx, id_direccion}` (ausentes si `sin_direccion` es `true`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/direcciones_que`
@@ -169,7 +170,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.direcciones_quitar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direcciones_quitar.php`
-- Entrada: `post.id_ubi:integer`, `post.idx:integer`, `post.obj_dir:string`, `post.id_direccion:string`
+- Entrada: `post.ctx_quitar:string` (cápsula `HashB` acción `direcciones_quitar`, contexto `{obj_dir, id_ubi, idx, id_direccion}`; emitida por `direcciones_editar`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/direcciones_tabla`
@@ -177,6 +178,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.direcciones_tabla`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direcciones_tabla.php`
 - Entrada: `post.id_ubi:integer`, `post.obj_dir:string`, `post.c_p:string`, `post.ciudad:string`, `post.pais:string`
+- Respuesta: cada fila incluye un `script` `fnjs_asignar_dir(ctx)` con `ctx`, cápsula `HashB` para `direcciones_asignar` atada a `{id_ubi, obj_dir, id_direccion}`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/home_ubis_data`
@@ -218,7 +220,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.teleco_eliminar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/teleco_eliminar.php`
-- Entrada: `post.obj_pau:string`, `post.sel:string`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `teleco_eliminar`, contexto `{obj_pau, pkey}`; emitida por fila en `teleco_tabla`, transportada aparte de `sel` porque `sel` sigue en el formato legado b64+json que `frontend/ubis/controller/teleco_editar.php` necesita para el flujo de modificar)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/teleco_guardar`
@@ -233,6 +235,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.teleco_tabla`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/teleco_tabla.php`
 - Entrada: `post.obj_pau:string`, `post.id_ubi:integer`
+- Respuesta: cada fila incluye `ctx_eliminar`, cápsula `HashB` para `teleco_eliminar` atada a `{obj_pau, pkey}`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/trasladar_ubis`
