@@ -1,9 +1,12 @@
 <?php
 
-use src\shared\infrastructure\DependencyResolver;
+declare(strict_types=1);
 
+use src\inventario\application\support\DocumentoTablaSelKey;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 $Qdocumentos = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'documentos');
 $Qchk_f_recibido = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'chk_f_recibido');
@@ -21,33 +24,35 @@ $Qnum_fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'n
 
 $error_txt = '';
 
+$anyFieldToUpdate = FuncTablasSupport::isTrue($Qchk_f_recibido) === true
+    || FuncTablasSupport::isTrue($Qchk_f_asignado) === true
+    || FuncTablasSupport::isTrue($Qchk_eliminado) === true
+    || FuncTablasSupport::isTrue($Qchk_f_eliminado) === true
+    || FuncTablasSupport::isTrue($Qchk_num_ini) === true
+    || FuncTablasSupport::isTrue($Qchk_num_fin) === true;
+
 if (!empty($Qdocumentos)) {
+    if (!$anyFieldToUpdate) {
+        $error_txt = _('Debe marcar al menos un campo a modificar');
+    } else {
     $a_documentos = explode('#', $Qdocumentos);
     /** @var DocumentoRepositoryInterface $Repository */
-$Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
+    $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
+    $processed = 0;
     foreach ($a_documentos as $s_doc_key) {
         if ($s_doc_key === '') {
             continue;
         }
-        $decoded = base64_decode($s_doc_key, true);
-        if (!is_string($decoded) || $decoded === '') {
+        $id_doc = DocumentoTablaSelKey::idDocFromUrlsafeKey($s_doc_key);
+        if ($id_doc === null) {
             continue;
         }
-        $a_pkey = json_decode($decoded, true);
-        if (!is_array($a_pkey)) {
-            continue;
-        }
-        $rawId = $a_pkey['id_doc'] ?? $a_pkey[0] ?? null;
-        if (!is_numeric($rawId)) {
-            continue;
-        }
-        $id_doc = (int) $rawId;
         $oDocumento = $Repository->findById($id_doc);
         if ($oDocumento === null) {
             continue;
         }
 
-        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qchk_f_recibido)) {
+        if (FuncTablasSupport::isTrue($Qchk_f_recibido)) {
             if (empty($Qf_recibido)) {
                 $oF_recibido = null;
             } else {
@@ -56,7 +61,7 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
             }
             $oDocumento->setF_recibido($oF_recibido);
         }
-        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qchk_f_asignado)) {
+        if (FuncTablasSupport::isTrue($Qchk_f_asignado)) {
             if (empty($Qf_asignado)) {
                 $oF_asignado = null;
             } else {
@@ -65,14 +70,14 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
             }
             $oDocumento->setF_asignado($oF_asignado);
         }
-        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qchk_eliminado)) {
+        if (FuncTablasSupport::isTrue($Qchk_eliminado)) {
             if ($Qeliminado === 1) {
                 $oDocumento->setEliminado(TRUE);
             } else if ($Qeliminado === 2) {
                 $oDocumento->setEliminado(false);
             }
         }
-        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qchk_f_eliminado)) {
+        if (FuncTablasSupport::isTrue($Qchk_f_eliminado)) {
             if (empty($Qf_eliminado)) {
                 $oF_eliminado = null;
             } else {
@@ -81,17 +86,23 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
             }
             $oDocumento->setF_eliminado($oF_eliminado);
         }
-        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qchk_num_ini)) {
+        if (FuncTablasSupport::isTrue($Qchk_num_ini)) {
             $oDocumento->setNum_ini($Qnum_ini !== '' && is_numeric($Qnum_ini) ? (int) $Qnum_ini : null);
         }
-        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qchk_num_fin)) {
+        if (FuncTablasSupport::isTrue($Qchk_num_fin)) {
             $oDocumento->setNum_fin($Qnum_fin !== '' && is_numeric($Qnum_fin) ? (int) $Qnum_fin : null);
         }
 
         if ($Repository->Guardar($oDocumento) === false) {
             $error_txt .= _("hay un error, no se ha guardado");
             $error_txt .= "\n" . $Repository->getErrorTxt();
+        } else {
+            $processed++;
         }
+    }
+    if ($error_txt === '' && $processed === 0) {
+        $error_txt = _('No se pudo aplicar la modificación a los documentos seleccionados');
+    }
     }
 } else {
     $error_txt = _("No ha seleccionado ningún documento");

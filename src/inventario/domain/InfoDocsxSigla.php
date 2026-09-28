@@ -61,6 +61,7 @@ class InfoDocsxSigla extends DatosInfoRepo
         ];
 
         $a_campos['locale_us'] = ConfigGlobal::is_locale_us();
+        $a_campos['url_documentos_guardar'] = rtrim(ConfigGlobal::getWeb(), '/') . '/src/inventario/documentos_guardar';
 
         return $a_campos;
     }

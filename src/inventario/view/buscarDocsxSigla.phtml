@@ -25,9 +25,39 @@
 
 </form>
 <!-- para modificar por bloques -->
+<p id="mod_bloque_mensaje" class="error" role="alert"
+   style="display:none;color:#c00;font-weight:bold;margin:0.5em 0;"></p>
 <script>
 
+    fnjs_mod_bloque_mensaje = function (mensaje, esExito) {
+        let $box = $('#mod_bloque_mensaje');
+        if (!mensaje) {
+            $box.hide().text('');
+            return;
+        }
+        $box.text(mensaje).css('color', esExito ? '#060' : '#c00').show();
+    };
+
+    fnjs_mod_bloque_form_mensaje = function (formulario, mensaje) {
+        let $form = $(formulario);
+        let $err = $form.find('#frm_mod_bloque_mensaje');
+        if (!$err.length) {
+            $err = $('<p id="frm_mod_bloque_mensaje" role="alert"></p>').css({
+                color: '#c00',
+                fontWeight: 'bold',
+                margin: '0 0 0.5em 0'
+            });
+            $form.prepend($err);
+        }
+        if (!mensaje) {
+            $err.hide().text('');
+            return;
+        }
+        $err.text(mensaje).show();
+    };
+
     fnjs_cerrar = function () {
+        fnjs_mod_bloque_form_mensaje('#frm_mod_bloque', '');
         $('#div_modificar').html('');
         $('#div_modificar').hide();
         $('#div_modificar').removeClass('ventana');
@@ -35,12 +65,13 @@
     }
 
     fnjs_mod_bloque = function (formulario) {
+        fnjs_mod_bloque_mensaje('');
         let id_tipo_doc = $("#k_buscar").val();
 
         let err = 0;
         // comprobar: tipo de documento seleccionado
         if (!id_tipo_doc) {
-            alert(<?= json_encode(_("Debe seleccionar un tipo de documento")) ?>);
+            fnjs_mod_bloque_mensaje(<?= json_encode(_("Debe seleccionar un tipo de documento")) ?>);
             err = 1;
         }
 
@@ -57,7 +88,7 @@
             }
         });
         if (documentos === '') {
-            alert(<?= json_encode(_("Debe seleccionar algún documento")) ?>);
+            fnjs_mod_bloque_mensaje(<?= json_encode(_("Debe seleccionar algún documento")) ?>);
             err = 1;
         }
 
@@ -76,6 +107,13 @@
 
     fnjs_guardar = function (formulario) {
         let err = 0;
+
+        fnjs_mod_bloque_form_mensaje(formulario, '');
+        let chkCampos = $(formulario + ' input[type="checkbox"][name^="chk_"]');
+        if (chkCampos.filter(':checked').length === 0) {
+            fnjs_mod_bloque_form_mensaje(formulario, <?= json_encode(_("Debe marcar al menos un campo a modificar")) ?>);
+            return;
+        }
 
         let chk_f_recibido = $(formulario + ' input[name="chk_f_recibido"]').prop('checked');
         if (chk_f_recibido === true) {
@@ -106,23 +144,30 @@
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,
-                url: 'src/inventario/documentos_guardar',
+                url: <?= json_encode($url_documentos_guardar ?? 'src/inventario/documentos_guardar', JSON_THROW_ON_ERROR) ?>,
                 method: 'POST',
                 dataType: 'json'
             });
             request.done(function (json) {
                 if (json.success !== true) {
-                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+                    fnjs_mod_bloque_form_mensaje(formulario, json.mensaje || <?= json_encode(_("Error desconocido")) ?>);
                 } else {
+                    fnjs_mod_bloque_mensaje(<?= json_encode(_("guardado")) ?>, true);
                     $('#div_modificar').html('');
+                    $('#div_modificar').hide();
                     $('#div_modificar').removeClass('ventana');
                     $('#resto').removeClass('sombra');
-                    <?= isset($oPosicion) ? $oPosicion->jsNavAtras(0) : '' ?>
+                    fnjs_enviar_formulario('#frm_buscar', '#exportar');
                 }
             });
-
+            request.fail(function (xhr) {
+                let mensaje = <?= json_encode(_("Error en la conexión con el servidor")) ?>;
+                if (xhr.responseJSON && xhr.responseJSON.mensaje) {
+                    mensaje = xhr.responseJSON.mensaje;
+                }
+                fnjs_mod_bloque_form_mensaje(formulario, mensaje);
+            });
         }
-        $('#div_modificar').hide();
     }
 
 </script>
