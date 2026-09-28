@@ -235,11 +235,12 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `misas.zona_sacd_datos_get`
 - Controller: `src/misas/infrastructure/ui/http/controllers/zona_sacd_datos_get.php`
 - Entrada: `post.id_zona:integer`, `post.id_sacd:integer`
+- Respuesta: incluye `ctx_put`, cápsula `HashB` para `zona_sacd_datos_put` atada a `{id_zona, id_sacd}` (solo si no hay error)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/zona_sacd_datos_put`
 
 - Id: `misas.zona_sacd_datos_put`
 - Controller: `src/misas/infrastructure/ui/http/controllers/zona_sacd_datos_put.php`
-- Entrada: `post.id_zona:integer`, `post.id_sacd:integer`, `post.propia:string`, `post.dw1:string`, `post.dw2:string`, `post.dw3:string`, `post.dw4:string`, `post.dw5:string`, `post.dw6:string`, `post.dw7:string`
+- Entrada: `post.ctx_put:string` (cápsula `HashB` acción `zona_sacd_datos_put`, contexto `{id_zona, id_sacd}`; emitida por `zona_sacd_datos_get`), `post.propia:string`, `post.dw1:string`, `post.dw2:string`, `post.dw3:string`, `post.dw4:string`, `post.dw5:string`, `post.dw6:string`, `post.dw7:string`
 - Respuesta: `standard_envelope_string_data`

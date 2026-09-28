@@ -6,13 +6,11 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$Qid_zona = (int)filter_input(INPUT_POST, 'id_zona', FILTER_VALIDATE_INT);
-$Qid_sacd = (int)filter_input(INPUT_POST, 'id_sacd', FILTER_VALIDATE_INT);
+$Qctx_put = (string)filter_input(INPUT_POST, 'ctx_put');
 
 header('Content-Type: application/json; charset=UTF-8');
 echo PostRequest::getContent('/src/misas/zona_sacd_datos_put', [
-    'id_zona' => $Qid_zona,
-    'id_sacd' => $Qid_sacd,
+    'ctx_put' => $Qctx_put,
     'propia' => (string)filter_input(INPUT_POST, 'propia'),
     'dw1' => (string)filter_input(INPUT_POST, 'dw1'),
     'dw2' => (string)filter_input(INPUT_POST, 'dw2'),

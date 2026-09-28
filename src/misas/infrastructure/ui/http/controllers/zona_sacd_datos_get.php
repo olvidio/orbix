@@ -3,6 +3,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\misas\application\ZonaSacdDatosGet;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $Qid_zona = (int)\src\shared\domain\helpers\FilterPostGet::post('id_zona', FILTER_VALIDATE_INT);
@@ -12,4 +13,9 @@ $Qid_sacd = (int)\src\shared\domain\helpers\FilterPostGet::post('id_sacd', FILTE
 $useCase = DependencyResolver::get(ZonaSacdDatosGet::class);
 $result = $useCase->execute($Qid_zona, $Qid_sacd);
 
-ContestarJson::enviar($result['error'], $result['payload']);
+$payload = $result['payload'];
+if ($result['error'] === '') {
+    $payload['ctx_put'] = HashB::sign('zona_sacd_datos_put', ['id_zona' => $Qid_zona, 'id_sacd' => $Qid_sacd]);
+}
+
+ContestarJson::enviar($result['error'], $payload);
