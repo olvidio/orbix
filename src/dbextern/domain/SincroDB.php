@@ -493,27 +493,40 @@ class SincroDB
 
     private function guardarTeleco(int $id_orbix, int $id_tipo_teleco, int $id_desc_teleco, string $num_teleco): void
     {
-        $cTelecos = $this->telecoPersonaDlRepository->getTelecosPersona([
+        $deseados = NumerosTelecoListas::partes($num_teleco);
+        if ($deseados === []) {
+            return;
+        }
+
+        $cTelecos = array_values($this->telecoPersonaDlRepository->getTelecosPersona([
             'id_nom' => $id_orbix,
             'id_tipo_teleco' => $id_tipo_teleco,
             'id_desc_teleco' => $id_desc_teleco,
-        ]);
-        if ($cTelecos !== []) {
-            $oTeleco = $cTelecos[0];
-            $oTeleco->setNum_teleco($num_teleco);
-            $oTeleco->setObserv('de listas');
-        } else {
-            $newIdItem = $this->telecoPersonaDlRepository->getNewId();
-            $oTeleco = new TelecoPersona();
-            $oTeleco->setId_item($newIdItem);
-            $oTeleco->setId_nom($id_orbix);
-            $oTeleco->setId_tipo_teleco($id_tipo_teleco);
-            $oTeleco->setId_desc_teleco($id_desc_teleco);
-            $oTeleco->setNum_teleco($num_teleco);
-            $oTeleco->setObserv('de listas');
+        ]));
+        $existentes = [];
+        foreach ($cTelecos as $oTeleco) {
+            $existentes[] = [
+                'num' => $oTeleco->getNum_teleco(),
+                'de_listas' => $oTeleco->getObserv() === 'de listas',
+            ];
         }
-        if ($this->telecoPersonaDlRepository->Guardar($oTeleco) === false) {
-            echo(_("hay un error, no se ha guardado"));
+
+        foreach (NumerosTelecoListas::plan($existentes, $deseados) as $paso) {
+            if ($paso['op'] === 'create') {
+                $oTeleco = new TelecoPersona();
+                $oTeleco->setId_item($this->telecoPersonaDlRepository->getNewId());
+                $oTeleco->setId_nom($id_orbix);
+                $oTeleco->setId_tipo_teleco($id_tipo_teleco);
+                $oTeleco->setId_desc_teleco($id_desc_teleco);
+            } else {
+                $indice = $paso['index'];
+                $oTeleco = $cTelecos[$indice];
+            }
+            $oTeleco->setNum_teleco($paso['num']);
+            $oTeleco->setObserv('de listas');
+            if ($this->telecoPersonaDlRepository->Guardar($oTeleco) === false) {
+                echo(_("hay un error, no se ha guardado"));
+            }
         }
     }
 
