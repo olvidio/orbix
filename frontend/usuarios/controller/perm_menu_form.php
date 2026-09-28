@@ -29,6 +29,7 @@ $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/per
 $nombre = \frontend\shared\helpers\PayloadCoercion::string($data['nombre'] ?? '');
 $menu_perm = \frontend\shared\helpers\PayloadCoercion::int($data['menu_perm'] ?? 0);
 $menu_perm_dl_map = UsuariosPayload::permMenuDlMapFromPayload($data['menu_perm_dl_map'] ?? null);
+$ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? '');
 
 $oHash = new HashF();
 $oHash->setCamposForm('menu_perm');
@@ -36,6 +37,7 @@ $oHash->setArraycamposHidden([
     'id_usuario' => $Qid_usuario,
     'id_item' => $Qid_item,
     'que' => 'perm_menu_update',
+    'ctx_guardar' => $ctx_guardar,
 ]);
 
 $a_campos = [

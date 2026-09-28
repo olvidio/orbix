@@ -4,10 +4,22 @@ use src\shared\infrastructure\DependencyResolver;
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\entity\GrupMenu;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_guardar'),
+        'grupmenu_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $Qgrupmenu = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'grupmenu');
-$Qid_grupmenu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_grupmenu');
+$Qid_grupmenu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_grupmenu');
 $Qorden = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'orden');
 
 $error_txt = '';

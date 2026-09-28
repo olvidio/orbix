@@ -4,12 +4,24 @@ use src\shared\domain\helpers\FilterPostGet;
 
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\entity\PermMenu;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qid_item = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_item');
-$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_guardar'),
+        'perm_menu_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_item');
+$Qid_usuario = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_usuario');
 $Qmenu_perm = (array)\src\shared\domain\helpers\FilterPostGet::post('menu_perm', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $PermMenuRepository = DependencyResolver::get(PermMenuRepositoryInterface::class);

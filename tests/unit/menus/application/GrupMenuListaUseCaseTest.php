@@ -8,9 +8,16 @@ use PHPUnit\Framework\TestCase;
 use src\menus\application\GrupMenuListaUseCase;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\entity\GrupMenu;
+use src\shared\security\HashB;
 
 final class GrupMenuListaUseCaseTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        session_id('test-session-grupmenu-lista');
+    }
+
     public function test_mapea_filas(): void
     {
         $g1 = new GrupMenu();
@@ -31,9 +38,10 @@ final class GrupMenuListaUseCaseTest extends TestCase
 
         $data = (new GrupMenuListaUseCase($repo))();
         $this->assertSame([10 => 'G1', 20 => 'G2'], $data['a_lista']);
-        $this->assertSame([
-            1 => ['sel' => '10#', 1 => 'G1', 2 => 2],
-            2 => ['sel' => '20#', 1 => 'G2', 2 => 1],
-        ], $data['a_valores']);
+        $this->assertSame('10#', $data['a_valores'][1]['sel']);
+        $this->assertSame('G1', $data['a_valores'][1][1]);
+        $this->assertSame(2, $data['a_valores'][1][2]);
+        $this->assertSame(['id_grupmenu' => 10], HashB::open($data['a_valores'][1]['ctx_eliminar'], 'grupmenu_eliminar'));
+        $this->assertSame(['id_grupmenu' => 20], HashB::open($data['a_valores'][2]['ctx_eliminar'], 'grupmenu_eliminar'));
     }
 }

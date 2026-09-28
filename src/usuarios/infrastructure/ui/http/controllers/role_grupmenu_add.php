@@ -4,6 +4,8 @@ use src\shared\domain\helpers\FilterPostGet;
 
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\entity\GrupMenuRole;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
 $a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -13,13 +15,16 @@ $error_txt = '';
 if (!empty($a_sel)) { //vengo de un checkbox
     $GrupMenuRoleRepository = DependencyResolver::get(GrupMenuRoleRepositoryInterface::class);
     foreach ($a_sel as $sel) {
-        if (!is_string($sel)) {
+        if (!is_string($sel) || $sel === '') {
             continue;
         }
-        $tokRole = strtok($sel, "#");
-        $tokGrupmenu = strtok("#");
-        $id_role = is_string($tokRole) ? (int)$tokRole : 0;
-        $id_grupmenu = is_string($tokGrupmenu) ? (int)$tokGrupmenu : 0;
+        try {
+            $ctx = HashB::open($sel, 'role_grupmenu_add');
+        } catch (HashBInvalidException $e) {
+            continue;
+        }
+        $id_role = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_role');
+        $id_grupmenu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_grupmenu');
         $cGrupMenuRoles = $GrupMenuRoleRepository->getGrupMenuRoles(['id_role' => $id_role, 'id_grupmenu' => $id_grupmenu]);
         if (empty($cGrupMenuRoles)) {
             $id_item = $GrupMenuRoleRepository->getNewId();

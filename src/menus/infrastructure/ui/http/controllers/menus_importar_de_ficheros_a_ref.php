@@ -6,6 +6,8 @@ use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
@@ -33,11 +35,22 @@ if ($Qseguro === 2) {
     ContestarJson::enviar('', [
         'estado' => 'confirmacion',
         'puede_importar_todas' => OrbixRuntime::miDele() === 'dlb',
+        'ctx_importar' => HashB::sign('menus_importar_de_ficheros_a_ref'),
     ]);
     return;
 }
 
 if ($Qseguro === 1) {
+    try {
+        HashB::open(
+            \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_importar')
+                ?: \src\shared\domain\helpers\FuncTablasSupport::inputString($_GET, 'ctx_importar'),
+            'menus_importar_de_ficheros_a_ref'
+        );
+    } catch (HashBInvalidException $e) {
+        ContestarJson::enviar(_("Operación no autorizada"), 'none');
+        return;
+    }
     $aEsquemas = [];
     if ($Qtodos === 1) {
         $oDBPropiedades = new DBPropiedades();

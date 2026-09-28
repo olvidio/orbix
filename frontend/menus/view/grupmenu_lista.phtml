@@ -17,8 +17,13 @@ use frontend\shared\security\HashF;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             if (confirm(<?= json_encode(_("¿Está seguro que desea borrar este grupmenu?")) ?>)) {
+                var ctx_eliminar = fnjs_ctx_fila_seleccionada(formulario, 'ctx_eliminar');
+                if (!ctx_eliminar) {
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + <?= json_encode(_("Operación no autorizada")) ?>);
+                    return;
+                }
                 let url = '<?= AppUrlConfig::srcBrowserUrl('/src/menus/grupmenu_eliminar') ?>';
-                let datos = $(formulario).serialize();
+                let datos = 'ctx_eliminar=' + encodeURIComponent(ctx_eliminar);
                 let request = $.ajax({
                     data: datos,
                     url: url,
@@ -48,7 +53,8 @@ use frontend\shared\security\HashF;
 <br>
 <form id="seleccionados" name="seleccionados" action="" method="post">
     <?= $oHashSelect->getCamposHtml() ?>
-    <?= $oTabla->mostrar_tabla() ?>
+    <?php // HTML forzado (no SlickGrid): la fila lleva `ctx_eliminar` en `data-json`. ?>
+    <?= $oTabla->mostrar_tabla_html() ?>
 </form>
 <br>
 <table>

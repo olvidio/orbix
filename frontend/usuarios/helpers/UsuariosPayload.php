@@ -312,6 +312,7 @@ final class UsuariosPayload
             'cabeceras' => $lista['cabeceras'],
             'botones' => $lista['botones'],
             'valores' => $lista['valores'],
+            'ctx_guardar' => PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
         ];
     }
 

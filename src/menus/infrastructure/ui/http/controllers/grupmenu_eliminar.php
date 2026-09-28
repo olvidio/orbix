@@ -4,16 +4,23 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
 $error_txt = '';
-$id_grupmenu = 0;
 
-$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel) && is_string($a_sel[0])) {
-    $token = strtok($a_sel[0], "#");
-    $id_grupmenu = is_numeric($token) ? (int) $token : 0;
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_eliminar'),
+        'grupmenu_eliminar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
 }
+
+$id_grupmenu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_grupmenu');
 /** @var GrupMenuRepositoryInterface $GrupMenuRepository */
 $GrupMenuRepository = DependencyResolver::get(GrupMenuRepositoryInterface::class);
 if ($id_grupmenu < 1) {

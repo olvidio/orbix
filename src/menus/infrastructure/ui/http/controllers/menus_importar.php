@@ -2,7 +2,20 @@
 
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\logging\GestorErrores;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
+
+try {
+    HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_importar'),
+        'menus_importar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $Qid_template_menu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_template_menu');
 
 $oDB = GlobalPdo::get('oDBE');

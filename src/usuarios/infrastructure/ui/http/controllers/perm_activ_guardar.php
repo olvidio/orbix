@@ -6,14 +6,25 @@ use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\entity\PermUsuarioActividad;
 use src\procesos\domain\PermAfectadosBits;
 use src\actividades\domain\value_objects\ActividadTipoIdTxt;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 // FIN de  Cabecera global de URL de controlador **********
 
 $error_txt = '';
 
-$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_guardar'),
+        'perm_activ_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qid_usuario = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_usuario');
 $Qid_tipo_activ = (string)(\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ') ?? '');
-$Qid_item = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_item');
 $Qdl_propia = (string)\src\shared\domain\helpers\FilterPostGet::post('dl_propia');
 $QaFase_ref = (array)\src\shared\domain\helpers\FilterPostGet::post('fase_ref', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $QaPerm_on = (array)\src\shared\domain\helpers\FilterPostGet::post('perm_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

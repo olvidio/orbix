@@ -5,6 +5,7 @@ namespace src\menus\application;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
 use src\menus\domain\PermisoMenuBits;
+use src\shared\security\HashB;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 
 /**
@@ -105,8 +106,9 @@ final class MenusGetPageData
         }
         $txt_ok = "  es ok?<input type='checkbox' name='ok' $chk >";
         $campos_chk = 'ok';
+        $id_menu_int = is_numeric($Qid_menu) ? (int) $Qid_menu : 0;
 
-        return [
+        $edit = [
             'id_menu' => $Qid_menu,
             'nuevo' => $Qnuevo,
             'orden_txt' => $orden_txt,
@@ -117,7 +119,15 @@ final class MenusGetPageData
             'id_grupmenu' => $id_grupmenu,
             'txt_ok' => $txt_ok,
             'campos_chk' => $campos_chk,
+            'ctx_guardar' => HashB::sign('menu_guardar', ['id_menu' => $id_menu_int]),
         ];
+        if ($id_menu_int > 0) {
+            $edit['ctx_eliminar'] = HashB::sign('menu_eliminar', ['id_menu' => $id_menu_int]);
+            $edit['ctx_copiar'] = HashB::sign('menu_copiar', ['id_menu' => $id_menu_int]);
+            $edit['ctx_mover'] = HashB::sign('menu_mover', ['id_menu' => $id_menu_int]);
+        }
+
+        return $edit;
     }
 
     /**
