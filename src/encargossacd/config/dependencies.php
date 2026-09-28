@@ -29,6 +29,7 @@ use src\encargossacd\application\PropuestasAjaxMutations;
 use src\encargossacd\application\PropuestasAprobar;
 use src\encargossacd\application\PropuestasAprobarData;
 use src\encargossacd\application\PropuestasCrearTabla;
+use src\encargossacd\application\PropuestasCrearTablaData;
 use src\encargossacd\application\PropuestasListaEncData;
 use src\encargossacd\application\PropuestasListaSacdData;
 use src\encargossacd\application\ListasComCtrData;
@@ -127,6 +128,7 @@ return [
     PropuestasCrearTabla::class => autowire(PropuestasCrearTabla::class),
     PropuestasAprobar::class => autowire(PropuestasAprobar::class),
     PropuestasAprobarData::class => autowire(PropuestasAprobarData::class),
+    PropuestasCrearTablaData::class => autowire(PropuestasCrearTablaData::class),
     PropuestasListaEncData::class => autowire(PropuestasListaEncData::class),
     PropuestasAjaxGetLista::class => autowire(PropuestasAjaxGetLista::class),
     PropuestasCentrosPorFiltro::class => autowire(PropuestasCentrosPorFiltro::class),

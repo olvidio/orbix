@@ -10,6 +10,12 @@ fnjs_get_texto=function(){
 		data: parametros,
 		onSuccess: function (data) {
 			$('#comunicacion').val(data.text || data.html || '');
+			if (data.ctx_guardar) {
+				var $ctx = $('input[name="ctx_guardar"]');
+				if ($ctx.length) {
+					$ctx.val(data.ctx_guardar);
+				}
+			}
 		}
 	});
 }

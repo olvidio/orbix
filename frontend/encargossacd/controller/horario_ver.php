@@ -116,10 +116,11 @@ $aCamposHidden = [
     'id_enc' => $Qid_enc,
     'id_item_h' => $id_item_h,
     'desc_enc' => $Qdesc_enc,
+    'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? ''),
 ];
 
 $oHash->setUrl($url_actualizar);
-$campos_form = 'desc_enc!dia!dia_inc!dia_num!dia_ref!f_fin!f_ini!h_fin!h_ini!id_enc!id_item_h!mas_menos!mod!n_sacd';
+$campos_form = 'desc_enc!dia!dia_inc!dia_num!dia_ref!f_fin!f_ini!h_fin!h_ini!id_enc!id_item_h!mas_menos!mod!n_sacd!ctx_guardar';
 $oHash->setCamposForm($campos_form);
 $oHash->setcamposNo('lst_ctrs!refresh');
 $oHash->setArrayCamposHidden($aCamposHidden);

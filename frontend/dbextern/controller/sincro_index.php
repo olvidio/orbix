@@ -39,7 +39,7 @@ $h1 = $oHash1->linkSinValParams();
 $url_refrescar = AppUrlConfig::srcBrowserUrl('/src/dbextern/refrescar_bdu');
 $oHash2 = new HashF();
 $oHash2->setUrl($url_refrescar);
-$oHash2->setCamposForm('que');
+$oHash2->setCamposForm('que!ctx_refrescar');
 $h2 = $oHash2->linkSinValParams();
 
 $a_campos = [
@@ -66,6 +66,7 @@ $a_campos = [
     'h1' => $h1,
     'h2' => $h2,
     'ctx_syncro' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_syncro'] ?? ''),
+    'ctx_refrescar' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_refrescar'] ?? ''),
 ];
 
 $oView = new ViewNewPhtml('frontend\dbextern\controller');

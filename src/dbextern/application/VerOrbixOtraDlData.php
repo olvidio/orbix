@@ -4,6 +4,7 @@ namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
 use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
+use src\shared\security\HashB;
 
 class VerOrbixOtraDlData
 {
@@ -56,6 +57,11 @@ class VerOrbixOtraDlData
                 'id_nom_listas' => $id_nom_listas,
                 'ape_nom' => $oPersonaListas?->getApenom() ?? '',
                 'dl' => $dl,
+                'ctx_trasladar_a' => HashB::sign('sincro_trasladar_a', [
+                    'id_nom_orbix' => (int) $id_nom_orbix,
+                    'tipo_persona' => $tipo_persona,
+                    'dl' => $dl,
+                ]),
             ];
         }
 

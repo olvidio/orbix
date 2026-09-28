@@ -23,4 +23,5 @@ AjaxJsonSupport::proxyPostRequest('/src/encargossacd/listas_com_txt_update', [
     'clave' => $Qclave,
     'idioma' => $Qidioma,
     'comunicacion' => $Qcomunicacion,
+    'ctx_guardar' => EncargossacdPostInput::postString('ctx_guardar'),
 ]);

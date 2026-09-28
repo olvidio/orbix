@@ -13,6 +13,7 @@ use src\encargossacd\domain\entity\EncargoHorario;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\encargossacd\domain\services\EncargoDominioService;
 use src\permisos\domain\XPermisos;
+use src\shared\security\HashB;
 
 /**
  * Datos para la ficha de encargos de un SACD
@@ -222,6 +223,7 @@ final class SacdFichaData
             'encargos' => $encargos,
             'opciones_mas' => $opciones_mas,
             'avisos' => $avisos,
+            'ctx_guardar' => HashB::sign('sacd_ficha_update', ['id_nom' => $id_nom]),
         ];
     }
 

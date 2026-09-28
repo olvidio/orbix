@@ -8,6 +8,7 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\shared\security\HashB;
 
 final class PropuestasAjaxMutationsTest extends TestCase
 {
@@ -17,6 +18,7 @@ final class PropuestasAjaxMutationsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        session_id('test-session-propuestas-ajax');
         $this->previousPost = $_POST;
         $_POST = [];
     }
@@ -69,5 +71,6 @@ final class PropuestasAjaxMutationsTest extends TestCase
         $this->assertSame([3 => 'Sacd de prueba'], $out['opciones']);
         $this->assertSame(3, $out['id_sacd']);
         $this->assertArrayNotHasKey('html', $out);
+        $this->assertSame(['id_enc' => 5, 'id_item' => 4], HashB::open($out['ctx_cmb_sacd'], 'propuestas_ajax_cmb_sacd'));
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
 use frontend\shared\FrontBootstrap;
+use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\security\HashF;
+use frontend\shared\helpers\PayloadCoercion;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -22,10 +24,21 @@ $lnk = static function (string $script, array $params = []): string {
     return HashF::link($url);
 };
 
+$ctxData = PostRequest::getDataFromUrl('/src/encargossacd/propuestas_crear_tabla_data', []);
+$ctx_crear_tabla = PayloadCoercion::string($ctxData['ctx_crear_tabla'] ?? '');
+
+$url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';
+$oHashCrear = new HashF();
+$oHashCrear->setUrl($url_ajax);
+$oHashCrear->setCamposForm('que!ctx_crear_tabla');
+$h_crear_tabla = $oHashCrear->linkSinValParams();
+
 $a_campos = [
     'oPosicion' => $oPosicion,
     'url_propuestas' => $lnk('propuestas_lista.php', ['sf' => 0]),
-    'url_new_tabla' => $lnk('propuestas_ajax.php', ['que' => 'crear_tabla']),
+    'url_ajax' => $url_ajax,
+    'h_crear_tabla' => $h_crear_tabla,
+    'ctx_crear_tabla' => $ctx_crear_tabla,
     'url_aprobar' => $lnk('propuestas_aprobar.php', ['sf' => 0]),
     'url_lista_sacd' => $lnk('propuestas_lista_sacd.php', ['sel' => 'nagd']),
     'url_lista_enc' => $lnk('propuestas_lista_enc.php', ['sel' => 'nagd']),

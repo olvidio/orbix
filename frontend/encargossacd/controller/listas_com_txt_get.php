@@ -21,4 +21,7 @@ $data = PostRequest::getDataFromUrl('/src/encargossacd/listas_com_txt_get', [
     'idioma' => $Qidioma,
 ]);
 
-AjaxJsonSupport::response('', ['text' => EncargossacdPayload::listasComTxtResponse($data)]);
+AjaxJsonSupport::response('', [
+    'text' => EncargossacdPayload::listasComTxtResponse($data),
+    'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? ''),
+]);

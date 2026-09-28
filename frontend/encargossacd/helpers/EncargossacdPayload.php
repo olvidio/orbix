@@ -241,6 +241,7 @@ public static function horarioRow(mixed $raw): array
             'f_fin' => '',
             'excep' => '',
             'texto_horario' => '',
+            'ctx_eliminar' => '',
         ];
     }
 
@@ -259,6 +260,7 @@ public static function horarioRow(mixed $raw): array
         'f_fin' => \frontend\shared\helpers\PayloadCoercion::string($raw['f_fin'] ?? ''),
         'excep' => \frontend\shared\helpers\PayloadCoercion::string($raw['excep'] ?? ''),
         'texto_horario' => \frontend\shared\helpers\PayloadCoercion::string($raw['texto_horario'] ?? ''),
+        'ctx_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($raw['ctx_eliminar'] ?? ''),
     ];
 }
 

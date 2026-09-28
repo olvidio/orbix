@@ -60,7 +60,10 @@ $oDesplIdiomas->setAction('fnjs_get_texto()');
 $url_update = 'frontend/encargossacd/controller/listas_com_txt_update.php';
 $oHash = new HashF();
 $oHash->setUrl($url_update);
-$oHash->setCamposForm('comunicacion!clave!idioma');
+$oHash->setCamposForm('comunicacion!clave!idioma!ctx_guardar');
+$oHash->setArrayCamposHidden([
+    'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($datos['ctx_guardar'] ?? ''),
+]);
 
 $url_get = 'frontend/encargossacd/controller/listas_com_txt_get.php';
 $oHashGet = new HashF();

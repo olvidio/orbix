@@ -191,7 +191,7 @@ fnjs_cmb_sacd=function(tipo,id_item,id_enc){
 	var id_sacd_old=$(id_tr).attr("title");
 
 	var url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';
-    var parametros='que=cmb_sacd&tipo='+tipo+'&id_item='+id_item+'&id_enc='+id_enc+'&id_sacd='+id_sacd+'{{ h_cmb|raw }}';
+    var parametros='que=cmb_sacd&tipo='+tipo+'&id_item='+id_item+'&id_enc='+id_enc+'&id_sacd='+id_sacd+'&ctx_cmb_sacd='+encodeURIComponent($('#ctx_cmb_sacd').val() || '')+'{{ h_cmb|raw }}';
     request=$.ajax({
         data: parametros,
         url: url_ajax,

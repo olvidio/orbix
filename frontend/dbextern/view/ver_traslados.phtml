@@ -9,9 +9,9 @@
 $txt_alert = _("se va a poner la fecha de hoy como fecha de traslado. Para cambiarlo ir al a ficha de la persona y al dossier de traslados");
 ?>
 <script>
-    fnjs_trasladar = function (id_orbix, dl, fila) {
+    fnjs_trasladar = function (ctx, fila) {
         var url = '<?= $url_sincro_trasladar ?>';
-        var parametros = 'dl=' + dl + '&id_nom_orbix=' + id_orbix + '&tipo_persona=<?= $tipo_persona ?><?= $h ?>';
+        var parametros = 'ctx_trasladar=' + encodeURIComponent(ctx) + '<?= $h ?>';
 
         alert(<?= json_encode((string)$txt_alert) ?>);
 
@@ -43,11 +43,11 @@ $txt_alert = _("se va a poner la fecha de hoy como fecha de traslado. Para cambi
     foreach ($a_persona_orbix as $persona_orbix) {
         $i++;
         $id_orbix = $persona_orbix['id_nom_orbix'];
-        $dl_orbix = $persona_orbix['dl'];
+        $ctxTrasladar = json_encode((string)($persona_orbix['ctx_trasladar'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES);
         echo "<tr id=fila$i>";
         echo "<td class='titulo'>" . htmlspecialchars($persona_orbix['ape_nom']) . '</td>';
         echo "<td>" . htmlspecialchars($persona_orbix['dl_actual']) . '</td>';
-        echo "<td><span class=link onClick='fnjs_trasladar($id_orbix,\"$dl_orbix\",$i)'>" . _("trasladar") . '</span><td>';
+        echo "<td><span class=link onClick='fnjs_trasladar($ctxTrasladar,$i)'>" . _("trasladar") . '</span><td>';
         echo '</tr>';
     }
     ?>

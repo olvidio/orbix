@@ -195,6 +195,7 @@ class SincroIndexData
                 'dl_listas' => (string) $dl_listas,
                 'tipo_persona' => $tipo_persona,
             ]),
+            'ctx_refrescar' => HashB::sign('refrescar_bdu'),
         ];
     }
 

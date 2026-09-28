@@ -6,9 +6,16 @@ use PHPUnit\Framework\TestCase;
 use src\encargossacd\application\ListasComTxtGet;
 use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoTexto;
+use src\shared\security\HashB;
 
 final class ListasComTxtGetTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        session_id('test-session-listas-com-txt-get');
+    }
+
     public function test_sin_filas_devuelve_texto_vacio(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
@@ -18,7 +25,9 @@ final class ListasComTxtGetTest extends TestCase
             ->willReturn([]);
 
         $useCase = new ListasComTxtGet($repo);
-        $this->assertSame(['texto' => ''], $useCase->execute('c1', 'es_ES.UTF-8'));
+        $out = $useCase->execute('c1', 'es_ES.UTF-8');
+        $this->assertSame('', $out['texto']);
+        $this->assertSame(['clave' => 'c1', 'idioma' => 'es_ES.UTF-8'], HashB::open($out['ctx_guardar'], 'listas_com_txt_update'));
     }
 
     public function test_getEncargoTextos_false_trata_como_vacio(): void
@@ -27,7 +36,9 @@ final class ListasComTxtGetTest extends TestCase
         $repo->method('getEncargoTextos')->willReturn([]);
 
         $useCase = new ListasComTxtGet($repo);
-        $this->assertSame(['texto' => ''], $useCase->execute('k', 'ca_ES.UTF-8'));
+        $out = $useCase->execute('k', 'ca_ES.UTF-8');
+        $this->assertSame('', $out['texto']);
+        $this->assertSame(['clave' => 'k', 'idioma' => 'ca_ES.UTF-8'], HashB::open($out['ctx_guardar'], 'listas_com_txt_update'));
     }
 
     public function test_primera_fila(): void
@@ -39,6 +50,8 @@ final class ListasComTxtGetTest extends TestCase
         $repo->method('getEncargoTextos')->willReturn([$row]);
 
         $useCase = new ListasComTxtGet($repo);
-        $this->assertSame(['texto' => 'Hola'], $useCase->execute('x', 'es_ES.UTF-8'));
+        $out = $useCase->execute('x', 'es_ES.UTF-8');
+        $this->assertSame('Hola', $out['texto']);
+        $this->assertSame(['clave' => 'x', 'idioma' => 'es_ES.UTF-8'], HashB::open($out['ctx_guardar'], 'listas_com_txt_update'));
     }
 }

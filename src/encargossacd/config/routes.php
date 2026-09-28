@@ -159,6 +159,10 @@ return static function ($r) {
         require $base . '/propuestas_aprobar_data.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/encargossacd/propuestas_crear_tabla_data', function () use ($base) {
+        require $base . '/propuestas_crear_tabla_data.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/encargossacd/propuestas_lista_enc_data', function () use ($base) {
         require $base . '/propuestas_lista_enc_data.php';
     });

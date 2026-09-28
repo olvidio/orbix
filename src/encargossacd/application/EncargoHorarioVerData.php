@@ -6,6 +6,7 @@ use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\EncargoConstants;
 use src\encargossacd\domain\entity\EncargoHorario;
 use src\encargossacd\domain\services\EncargoDominioService;
+use src\shared\security\HashB;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 
@@ -27,7 +28,7 @@ final class EncargoHorarioVerData
     public function cargar(string $mod, int $id_enc, int $id_item_h): array
     {
         if ($mod === 'nuevo' || $id_item_h <= 0) {
-            return self::conOpciones([
+            return $this->conCtx($id_enc, 0, self::conOpciones([
                 'id_item_h' => '',
                 'f_ini' => '',
                 'f_fin' => '',
@@ -39,7 +40,7 @@ final class EncargoHorarioVerData
                 'h_fin' => '',
                 'n_sacd' => '',
                 'mes' => '',
-            ]);
+            ]));
         }
 
         $enc = $this->encargoHorarioRepository->findById($id_item_h);
@@ -47,7 +48,21 @@ final class EncargoHorarioVerData
             return $this->cargar('nuevo', $id_enc, 0);
         }
 
-        return self::conOpciones(self::serializeHorario($enc));
+        return $this->conCtx($id_enc, $id_item_h, self::conOpciones(self::serializeHorario($enc)));
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private function conCtx(int $id_enc, int $id_item_h, array $data): array
+    {
+        $data['ctx_guardar'] = HashB::sign('horario_update_data', [
+            'id_enc' => $id_enc,
+            'id_item_h' => $id_item_h,
+        ]);
+
+        return $data;
     }
 
     /**
