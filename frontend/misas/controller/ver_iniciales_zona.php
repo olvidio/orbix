@@ -25,7 +25,7 @@ $id_zona = \frontend\shared\helpers\PayloadCoercion::int($data['id_zona'] ?? $Qi
 $url_update_iniciales = AppUrlConfig::srcBrowserUrl('/src/misas/update_iniciales');
 $oHashIniciales = new HashF();
 $oHashIniciales->setUrl($url_update_iniciales);
-$oHashIniciales->setCamposForm('id_sacd!iniciales!color');
+$oHashIniciales->setCamposForm('ctx_update!iniciales!color');
 $h_iniciales = $oHashIniciales->linkSinValParams();
 
 $a_campos = [

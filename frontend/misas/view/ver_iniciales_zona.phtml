@@ -145,6 +145,7 @@
         <input type="hidden" id="cell_selected" value=""/>
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="id_sacd" value=""/>
+        <input type="hidden" id="ctx_update" value=""/>
 
         <div style="margin-top: 20px;">
             <label for="iniciales"> <?= _("Iniciales") ?>: </label>
@@ -326,11 +327,12 @@
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
         let id_sacd = $('#id_sacd').val();
+        let ctx_update = $('#ctx_update').val();
         let iniciales = $('#iniciales').val();
         var colorRaw = colorDirty ? $('#color_picker').val() : colorOriginal;
         let color = hexToStorage6(colorRaw);
 
-        parametros = 'id_sacd=' + id_sacd + '&iniciales=' + iniciales + '&color=' + encodeURIComponent(color) + '<?= $h_iniciales ?>';
+        parametros = 'ctx_update=' + encodeURIComponent(ctx_update) + '&iniciales=' + iniciales + '&color=' + encodeURIComponent(color) + '<?= $h_iniciales ?>';
 
         // guardar cambios en DB
         var request = $.ajax({
@@ -356,6 +358,7 @@
     function reset_campos_modal() {
         $('#titulo_modal').html('');
         $('#id_sacd').val('');
+        $('#ctx_update').val('');
         $('#iniciales').val('');
         colorOriginal = '';
         colorDirty = false;
@@ -376,6 +379,7 @@
 
         $('#titulo_modal').html(sacd);
         $('#id_sacd').val(id_sacd);
+        $('#ctx_update').val(data[cell.row].ctx_update || '');
         $('#iniciales').val(iniciales);
 
         colorOriginal = (color == null || color === undefined) ? '' : String(color);

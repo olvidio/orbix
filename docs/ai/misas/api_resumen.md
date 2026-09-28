@@ -84,7 +84,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.eliminar_encargo_zona`
 - Controller: `src/misas/infrastructure/ui/http/controllers/eliminar_encargo_zona.php`
-- Entrada: `post.id_enc:integer`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `eliminar_encargo_zona`, contexto `{id_enc}`; emitida por fila en `ver_encargos_zona_data`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/guardar_encargo_centro`
@@ -98,7 +98,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.guardar_encargo_zona`
 - Controller: `src/misas/infrastructure/ui/http/controllers/guardar_encargo_zona.php`
-- Entrada: `post.id_enc:integer`, `post.id_tipo_enc:integer`, `post.id_ubi:integer`, `post.id_zona:integer`, `post.orden:integer`, `post.prioridad:integer`, `post.descripcion_lugar:string`, `post.encargo:string`, `post.idioma_enc:string`, `post.observ:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `guardar_encargo_zona`, contexto `{id_enc}`; emitida por fila o por `ctx_nuevo` en `ver_encargos_zona_data`, `id_enc=0` para alta), `post.id_tipo_enc:integer`, `post.id_ubi:integer`, `post.id_zona:integer`, `post.orden:integer`, `post.prioridad:integer`, `post.descripcion_lugar:string`, `post.encargo:string`, `post.idioma_enc:string`, `post.observ:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/guardar_horario`
@@ -175,7 +175,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.update_iniciales`
 - Controller: `src/misas/infrastructure/ui/http/controllers/update_iniciales.php`
-- Entrada: `post.id_sacd:integer`, `post.iniciales:string`, `post.color:string`
+- Entrada: `post.ctx_update:string` (cápsula `HashB` acción `update_iniciales`, contexto `{id_sacd}`; emitida por fila en `ver_iniciales_zona_data`), `post.iniciales:string`, `post.color:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/ver_cuadricula_zona_data`
@@ -197,6 +197,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `misas.ver_encargos_zona_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_encargos_zona_data.php`
 - Entrada: `post.id_zona:integer`, `post.orden:string`
+- Respuesta: cada fila incluye `ctx_guardar`/`ctx_eliminar` (cápsulas `HashB` atadas a `{id_enc}`); el nivel superior incluye `ctx_nuevo` para el alta
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/ver_iniciales_zona_data`
@@ -204,6 +205,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `misas.ver_iniciales_zona_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_iniciales_zona_data.php`
 - Entrada: `post.id_zona:integer`
+- Respuesta: cada fila incluye `ctx_update`, cápsula `HashB` para `update_iniciales` atada a `{id_sacd}`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/ver_misas_zona_data`

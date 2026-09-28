@@ -77,6 +77,8 @@
         <input type="hidden" id="cell_selected" value=""/>
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
+        <input type="hidden" id="ctx_guardar" value=""/>
+        <input type="hidden" id="ctx_eliminar" value=""/>
         <input type="hidden" id="que" value=""/>
 
         <div class='item-details-label'>
@@ -172,7 +174,7 @@
     }
 
     function commitCurrentEdit() {
-        let id_enc_selected = $('#id_enc_selected').val();
+        let ctx_guardar = $('#ctx_guardar').val();
         let observ = $('#observ').val();
         let encargo = $('#encargo').val();
         let id_tipo_enc = $('#id_tipo_enc').val();
@@ -183,7 +185,7 @@
         let idioma_enc = $('#idioma_enc').val();
         let descripcion_lugar = $('#descripcion_lugar').val();
 
-        let parametros = 'id_enc=' + id_enc_selected
+        let parametros = 'ctx_guardar=' + encodeURIComponent(ctx_guardar)
             + '&id_tipo_enc=' + id_tipo_enc
             + '&id_ubi=' + id_ubi
             + '&id_zona=' + id_zona
@@ -211,8 +213,8 @@
     }
 
     function eliminarCurrentEdit() {
-        let id_enc_selected = $('#id_enc_selected').val();
-        let parametros = 'id_enc=' + id_enc_selected + '<?= $h_eliminar_encargo_zona ?>';
+        let ctx_eliminar = $('#ctx_eliminar').val();
+        let parametros = 'ctx_eliminar=' + encodeURIComponent(ctx_eliminar) + '<?= $h_eliminar_encargo_zona ?>';
 
         var request = $.ajax({
             url: '<?= $url_eliminar_encargo_zona ?>',
@@ -240,9 +242,12 @@
         });
     }
 
+    var ctx_nuevo = <?= json_encode($ctx_nuevo) ?>;
+
     function fnjs_nuevo() {
         $('#que').val('nuevo');
         reset_campos_modal();
+        $('#ctx_guardar').val(ctx_nuevo);
         $('#titulo_modal').html(<?= json_encode(_('nuevo encargo')) ?>);
         showEncargosModal();
     }
@@ -255,6 +260,8 @@
         $('#prioridad').val('');
         $('#id_ubi').val('');
         $('#id_enc_selected').val('');
+        $('#ctx_guardar').val('');
+        $('#ctx_eliminar').val('');
         $('#id_tipo_enc').val('');
         $('#descripcion_lugar').val('');
         $('#idioma_enc').val('');
@@ -282,6 +289,8 @@
         $('#prioridad').val(prioridad);
         $('#encargo').val(encargo);
         $('#id_enc_selected').val(id_enc);
+        $('#ctx_guardar').val(data[cell.row].ctx_guardar || '');
+        $('#ctx_eliminar').val(data[cell.row].ctx_eliminar || '');
         $('#id_tipo_enc').val(id_tipo_enc);
         $('#id_ubi').val(id_ubi);
         $('#descripcion_lugar').val(descripcion_lugar);
