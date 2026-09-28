@@ -5,6 +5,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ConfigMagik;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $error_txt = '';
@@ -39,6 +40,7 @@ $data = [
     'cabeceraB' => $cabeceraB,
     'firma' => $firma,
     'pie' => $pie,
+    'ctx_guardar' => HashB::sign('cabecera_pie_txt_guardar'),
 ];
 
 // envía una Response

@@ -15,13 +15,13 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `pasarela.activacion_default_data`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/activacion_default_data.php`
 - Entrada: ninguna detectada.
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`, cápsula `HashB` sin contexto para `activacion_default_guardar`)
 
 ## `/src/pasarela/activacion_default_guardar`
 
 - Id: `pasarela.activacion_default_guardar`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/activacion_default_guardar.php`
-- Entrada: ``
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `activacion_default_guardar`, sin contexto; emitida por `activacion_default_data`), `post.default:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/pasarela/activacion_excepcion_eliminar`

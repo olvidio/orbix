@@ -15,13 +15,13 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `inventario.cabecera_pie_txt`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/cabecera_pie_txt.php`
 - Entrada: `post.id_equipaje:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`, cápsula `HashB` sin contexto para `cabecera_pie_txt_guardar`)
 
 ## `/src/inventario/cabecera_pie_txt_guardar`
 
 - Id: `inventario.cabecera_pie_txt_guardar`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/cabecera_pie_txt_guardar.php`
-- Entrada: `post.cabecera:string`, `post.cabeceraB:string`, `post.firma:string`, `post.pie:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `cabecera_pie_txt_guardar`, sin contexto; emitida por `cabecera_pie_txt`), `post.cabecera:string`, `post.cabeceraB:string`, `post.firma:string`, `post.pie:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/doc_asignar_ctr_guardar`
