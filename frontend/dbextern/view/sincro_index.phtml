@@ -66,6 +66,10 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
                     var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
                     alert(data.mensaje);
                 }
+            })
+            .fail(function (xhr) {
+                var texto = (xhr.responseText || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + texto.substring(0, 800));
             });
     }
 </script>

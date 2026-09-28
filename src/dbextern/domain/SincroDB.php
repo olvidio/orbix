@@ -378,7 +378,7 @@ class SincroDB
     }
 
     /**
-     * @return string|array{error: string}
+     * @return string|array{error: string, abort?: bool}
      */
     public function syncro(PersonaBDU $oPersonaListas, int $id_orbix): string|array
     {
@@ -470,7 +470,15 @@ class SincroDB
         $oPersona->setId_ctr($id_ubi);
 
         if ($this->guardarPersona($repoPersona, $obj_pau, $oPersona) === false) {
-            exit(_("hay un error, no se ha guardado"));
+            return [
+                'error' => sprintf(
+                    _('sincronización interrumpida en %s (id listas %s, id orbix %s): no se ha guardado. Esta ficha y las siguientes no se han guardado.'),
+                    $ape_nom,
+                    (string) $id_nom_listas,
+                    (string) $id_orbix,
+                ),
+                'abort' => true,
+            ];
         }
 
         if ($Tfno_Movil !== '') {

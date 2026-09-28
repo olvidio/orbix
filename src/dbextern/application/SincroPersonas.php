@@ -47,9 +47,23 @@ class SincroPersonas
                 if ($id_orbix === null) {
                     continue;
                 }
-                $rta = $oSincroDB->syncro($oPersonaListas, $id_orbix);
+                try {
+                    $rta = $oSincroDB->syncro($oPersonaListas, $id_orbix);
+                } catch (\Throwable $e) {
+                    $msg .= ($msg !== '' ? "\n" : '') . sprintf(
+                        _('sincronización interrumpida en %s (id listas %s, id orbix %s): %s. Esta ficha y las siguientes no se han guardado.'),
+                        $oPersonaListas->getApenom(),
+                        (string) $id_nom_listas,
+                        (string) $id_orbix,
+                        $e->getMessage(),
+                    );
+                    break;
+                }
                 if (is_array($rta)) {
                     $msg .= ($msg !== '' ? "\n" : '') . $rta['error'];
+                    if (($rta['abort'] ?? false) === true) {
+                        break;
+                    }
                 } elseif ($rta !== '') {
                     $msg .= ($msg !== '' ? "\n" : '') . $rta;
                 }
