@@ -4,6 +4,7 @@ namespace src\personas\application;
 
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\support\PersonaRepositoryResolver;
+use src\shared\security\HashB;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/stgr_cambio_data`.
@@ -28,6 +29,7 @@ final class StgrCambioData
      *     error?: string,
      *     nom?: string,
      *     nivel_stgr?: string,
+     *     ctx_update?: string,
      *     opciones_nivel_stgr?: array<int,string>
      * }
      */
@@ -62,6 +64,10 @@ final class StgrCambioData
             'nivel_stgr' => (string)($oPersona->getNivel_stgr() ?? ''),
             'id_nom' => $id_nom,
             'id_tabla' => $id_tabla,
+            'ctx_update' => HashB::sign('stgr_update', [
+                'id_nom' => $id_nom,
+                'id_tabla' => $id_tabla,
+            ]),
             'opciones_nivel_stgr' => NivelStgrId::getArrayNivelStgr(),
         ];
     }

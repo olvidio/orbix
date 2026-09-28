@@ -24,8 +24,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 ## Campos Detectados
 
 - `form.nivel_stgr`
-- `post.id_nom`
-- `post.id_tabla`
+- `form.ctx_update`
 - `post.sel`
 
 ## Acciones Detectadas

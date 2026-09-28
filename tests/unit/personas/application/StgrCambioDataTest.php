@@ -16,6 +16,7 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\PersonaN;
+use src\shared\security\HashB;
 
 final class StgrCambioDataTest extends TestCase
 {
@@ -67,6 +68,10 @@ final class StgrCambioDataTest extends TestCase
         $this->assertSame('2', $out['nivel_stgr']);
         $this->assertSame(5, $out['id_nom']);
         $this->assertSame('n', $out['id_tabla']);
+        $this->assertSame(
+            ['id_nom' => 5, 'id_tabla' => 'n'],
+            HashB::open($out['ctx_update'], 'stgr_update')
+        );
         $this->assertIsArray($out['opciones_nivel_stgr']);
     }
 

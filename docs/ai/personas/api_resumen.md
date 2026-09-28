@@ -70,7 +70,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `personas.stgr_update`
 - Controller: `src/personas/infrastructure/ui/http/controllers/stgr_update.php`
-- Entrada: `post.id_nom:integer`, `post.id_tabla:string`, `post.nivel_stgr:string`
+- Entrada: `post.ctx_update:string`, `post.nivel_stgr:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/personas/traslado_form_data`

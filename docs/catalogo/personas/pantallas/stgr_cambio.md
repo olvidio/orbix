@@ -9,7 +9,7 @@ vistas: ["frontend/personas/view/stgr_cambio.phtml"]
 fragmentos_frontend: []
 endpoints: ["/src/personas/stgr_cambio_data", "/src/personas/stgr_update"]
 capacidades: ["personas.stgr.gestionar", "personas.stgr_cambio.gestionar"]
-campos: ["form.nivel_stgr", "post.id_nom", "post.id_tabla", "post.sel"]
+campos: ["form.ctx_update", "form.nivel_stgr", "post.id_nom", "post.id_tabla", "post.sel"]
 acciones: ["fnjs_guardar_stgr"]
 estado_revision: "revisado"
 ---

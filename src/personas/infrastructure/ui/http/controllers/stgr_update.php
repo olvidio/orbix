@@ -7,10 +7,22 @@
 
 use src\personas\application\StgrUpdate;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom');
-$Qid_tabla = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_tabla');
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_update'),
+        'stgr_update'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_nom');
+$Qid_tabla = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'id_tabla');
 $Qnivel_stgr = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nivel_stgr');
 
 /** @var StgrUpdate $useCase */

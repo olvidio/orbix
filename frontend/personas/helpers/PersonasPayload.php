@@ -266,6 +266,7 @@ final class PersonasPayload
      * @return array{
      *     nom: string,
      *     nivel_stgr: string,
+     *     ctx_update: string,
      *     opciones_nivel_stgr: array<int|string, string>,
      * }
      */
@@ -274,6 +275,7 @@ final class PersonasPayload
         return [
             'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
             'nivel_stgr' => PayloadCoercion::string($payload['nivel_stgr'] ?? ''),
+            'ctx_update' => PayloadCoercion::string($payload['ctx_update'] ?? ''),
             'opciones_nivel_stgr' => NotasFormSupport::desplegableOpciones($payload['opciones_nivel_stgr'] ?? []),
         ];
     }
