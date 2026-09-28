@@ -44,7 +44,9 @@ switch ($Qque) {
     case 'nuevo':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qactivacion = (string)filter_input(INPUT_POST, 'activacion');
+        $Qctx_guardar = (string)filter_input(INPUT_POST, 'ctx_guardar');
         AjaxJsonSupport::proxyPostRequest('/src/pasarela/activacion_excepcion_guardar', [
+            'ctx_guardar' => $Qctx_guardar,
             'id_tipo_activ' => $Qid_tipo_activ,
             'valor' => $Qactivacion,
         ]);
@@ -88,6 +90,7 @@ switch ($Qque) {
         ]);
         $tipo_txt = PasarelaPayload::tipoTxtFromPayload($data);
         $ctx_eliminar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_eliminar_activacion'] ?? '');
+        $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar_activacion'] ?? '');
 
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
@@ -98,6 +101,7 @@ switch ($Qque) {
             'id_tipo_activ' => $Qid_tipo_activ,
             'que' => '',
             'ctx_eliminar' => $ctx_eliminar,
+            'ctx_guardar' => $ctx_guardar,
         ]);
 
         $a_campos = [
@@ -125,6 +129,11 @@ switch ($Qque) {
         $oActividadTipo->setNom_tipo($Qsnom_tipo);
         $oActividadTipo->setPara('tipoactiv-tarifas');
 
+        // Solo para obtener ctx_guardar en modo 'nuevo' (sin id_tipo_activ:
+        // el valor real lo compone el propio formulario a partir del selector).
+        $dataNuevo = PostRequest::getDataFromUrl('/src/pasarela/tipo_activ_txt_data', ['id_tipo_activ' => '']);
+        $ctx_guardar_nuevo = \frontend\shared\helpers\PayloadCoercion::string($dataNuevo['ctx_guardar_activacion'] ?? '');
+
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
         $oHash->setCamposForm('extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!activacion');
@@ -132,6 +141,7 @@ switch ($Qque) {
         $oHash->setArrayCamposHidden([
             'id_tipo_activ' => '',
             'que' => '',
+            'ctx_guardar' => $ctx_guardar_nuevo,
         ]);
 
         $a_campos = [

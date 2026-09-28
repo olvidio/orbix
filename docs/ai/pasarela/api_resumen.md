@@ -35,7 +35,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `pasarela.activacion_excepcion_guardar`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/activacion_excepcion_guardar.php`
-- Entrada: ``
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `activacion_excepcion_guardar`, contexto `{modo: 'existing'|'nuevo', id_tipo_activ}`; emitida por `tipo_activ_txt_data` como `ctx_guardar_activacion`; en modo `existing` el `id_tipo_activ` viene del ctx, en modo `nuevo` viene de `post.id_tipo_activ` porque lo compone el propio formulario), `post.id_tipo_activ:string` (solo se usa en modo `nuevo`), `post.valor:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/pasarela/activacion_lista`
@@ -70,7 +70,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `pasarela.contribucion_no_duerme_excepcion_guardar`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/contribucion_no_duerme_excepcion_guardar.php`
-- Entrada: ``
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `contribucion_no_duerme_excepcion_guardar`, contexto `{modo: 'existing'|'nuevo', id_tipo_activ}`; emitida por `tipo_activ_txt_data` como `ctx_guardar_contribucion_no_duerme`), `post.id_tipo_activ:string` (solo modo `nuevo`), `post.valor:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/pasarela/contribucion_no_duerme_lista`
@@ -105,7 +105,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `pasarela.contribucion_reserva_excepcion_guardar`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/contribucion_reserva_excepcion_guardar.php`
-- Entrada: ``
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `contribucion_reserva_excepcion_guardar`, contexto `{modo: 'existing'|'nuevo', id_tipo_activ}`; emitida por `tipo_activ_txt_data` como `ctx_guardar_contribucion_reserva`), `post.id_tipo_activ:string` (solo modo `nuevo`), `post.valor:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/pasarela/contribucion_reserva_lista`
@@ -140,7 +140,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `pasarela.nombre_excepcion_guardar`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/nombre_excepcion_guardar.php`
-- Entrada: ``
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `nombre_excepcion_guardar`, contexto `{modo: 'existing'|'nuevo', id_tipo_activ}`; emitida por `tipo_activ_txt_data` como `ctx_guardar_nombre`), `post.id_tipo_activ:string` (solo modo `nuevo`), `post.valor:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/pasarela/nombre_lista`
@@ -154,5 +154,5 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `pasarela.tipo_activ_txt_data`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/tipo_activ_txt_data.php`
-- Entrada: `post.id_tipo_activ:string`
-- Respuesta: `standard_envelope_string_data` (incluye `tipo_txt` y, por familia, `ctx_eliminar_activacion` / `ctx_eliminar_contribucion_no_duerme` / `ctx_eliminar_contribucion_reserva` / `ctx_eliminar_nombre`, cápsulas `HashB` atadas a `id_tipo_activ`; cada dispatcher `*_ajax.php` solo consume la suya)
+- Entrada: `post.id_tipo_activ:string` (vacío → `form_nuevo` pide solo el `ctx_guardar_*` en modo `nuevo`)
+- Respuesta: `standard_envelope_string_data` (incluye `tipo_txt` y, por familia, `ctx_eliminar_*` / `ctx_guardar_*` — `ctx_eliminar_activacion`, `ctx_guardar_activacion`, y análogos para `contribucion_no_duerme` / `contribucion_reserva` / `nombre` —, cápsulas `HashB`; `ctx_eliminar_*` atada a `{id_tipo_activ}`, `ctx_guardar_*` atada a `{modo, id_tipo_activ}`; cada dispatcher `*_ajax.php` solo consume las suyas)

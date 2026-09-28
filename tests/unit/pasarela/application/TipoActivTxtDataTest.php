@@ -39,4 +39,29 @@ final class TipoActivTxtDataTest extends TestCase
         );
         $this->assertSame($contexto, HashB::open($out['ctx_eliminar_nombre'], 'nombre_excepcion_eliminar'));
     }
+
+    public function test_id_conocido_emite_ctx_guardar_en_modo_existing(): void
+    {
+        $out = (new TipoActivTxtData())->execute('111000');
+
+        $contexto = ['modo' => 'existing', 'id_tipo_activ' => '111000'];
+        $this->assertSame($contexto, HashB::open($out['ctx_guardar_activacion'], 'activacion_excepcion_guardar'));
+        $this->assertSame(
+            $contexto,
+            HashB::open($out['ctx_guardar_contribucion_no_duerme'], 'contribucion_no_duerme_excepcion_guardar')
+        );
+        $this->assertSame(
+            $contexto,
+            HashB::open($out['ctx_guardar_contribucion_reserva'], 'contribucion_reserva_excepcion_guardar')
+        );
+        $this->assertSame($contexto, HashB::open($out['ctx_guardar_nombre'], 'nombre_excepcion_guardar'));
+    }
+
+    public function test_id_vacio_emite_ctx_guardar_en_modo_nuevo(): void
+    {
+        $out = (new TipoActivTxtData())->execute('');
+
+        $contexto = ['modo' => 'nuevo', 'id_tipo_activ' => ''];
+        $this->assertSame($contexto, HashB::open($out['ctx_guardar_activacion'], 'activacion_excepcion_guardar'));
+    }
 }
