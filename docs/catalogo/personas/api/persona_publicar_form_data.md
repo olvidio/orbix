@@ -9,7 +9,7 @@ controller: "src/personas/infrastructure/ui/http/controllers/persona_publicar_fo
 entrada: ["post.id_nom:integer", "post.id_tabla:string", "post.sel:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
+requiere_hashb: true
 errores: ["No se encuentra la persona", "No se puede determinar el esquema de la persona"]
 frontend_referencias: ["frontend/personas/controller/persona_publicar_form.php"]
 casos_uso: ["src\\personas\\application\\PersonaPublicarFormData"]
@@ -48,7 +48,9 @@ Resuelve la persona por `sel` (`id_nom#id_tabla`) o por `id_nom` + `id_tabla`, o
 ## Salida
 
 - Helper: `ContestarJson::enviar` (doble `JSON.parse`).
-- Éxito (`data`): `nom`, `id_nom`, `id_tabla`, `id_schema`, `opciones_dl` (mapa código→código).
+- Éxito (`data`): `nom`, `id_nom`, `id_tabla`, `id_schema`, `ctx_publicar`,
+  `opciones_dl` (mapa código→código).
+- `ctx_publicar` es una cápsula HashB con `id_nom` e `id_schema` para la mutación.
 - Error: `ContestarJson::enviar(error)` sin payload útil.
 
 ## Casos particulares

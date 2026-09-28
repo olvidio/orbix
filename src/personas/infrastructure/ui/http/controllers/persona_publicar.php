@@ -6,10 +6,22 @@
 
 use src\personas\application\PersonaPublicar;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom');
-$Qid_schema = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_schema');
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_publicar'),
+        'persona_publicar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_nom');
+$Qid_schema = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_schema');
 $Qdl = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'dl');
 $aDl = $_POST['dl'] ?? $Qdl;
 if (!is_array($aDl)) {

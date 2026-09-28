@@ -8,6 +8,7 @@ use src\personas\application\services\PersonaFinderService;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\PersonaPublicacion;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 
 /**
@@ -19,6 +20,7 @@ use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
  *     id_nom?: int,
  *     id_tabla?: string,
  *     id_schema?: int,
+ *     ctx_publicar?: string,
  *     opciones_dl?: array<string, string>
  * }
  */
@@ -86,6 +88,10 @@ final class PersonaPublicarFormData
             'id_nom' => $id_nom,
             'id_tabla' => $id_tabla,
             'id_schema' => $id_schema,
+            'ctx_publicar' => HashB::sign('persona_publicar', [
+                'id_nom' => $id_nom,
+                'id_schema' => $id_schema,
+            ]),
             'opciones_dl' => $this->opcionesDlConEsquema(),
         ];
     }

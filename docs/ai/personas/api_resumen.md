@@ -28,7 +28,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `personas.persona_publicar`
 - Controller: `src/personas/infrastructure/ui/http/controllers/persona_publicar.php`
-- Entrada: `post.id_nom:integer`, `post.id_schema:integer`, `post.dl:string|array`
+- Entrada: `post.ctx_publicar:string`, `post.dl:string|array`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/personas/persona_publicar_form_data`

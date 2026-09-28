@@ -286,6 +286,7 @@ final class PersonasPayload
      *     error: string,
      *     nom: string,
      *     id_schema: int,
+     *     ctx_publicar: string,
      *     opciones_dl: array<int|string, string>,
      * }
      */
@@ -295,6 +296,7 @@ final class PersonasPayload
             'error' => PayloadCoercion::string($payload['error'] ?? ''),
             'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
             'id_schema' => (int) ($payload['id_schema'] ?? 0),
+            'ctx_publicar' => PayloadCoercion::string($payload['ctx_publicar'] ?? ''),
             'opciones_dl' => NotasFormSupport::desplegableOpciones($payload['opciones_dl'] ?? []),
         ];
     }
