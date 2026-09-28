@@ -164,6 +164,7 @@ final class PersonasPayload
      *         id_nom: int,
      *         id_tabla: string,
      *         nom: string,
+     *         home_link_spec: array{path: string, query: array<string, scalar>}|null,
      *         nombre_ubi: string,
      *         nivel_stgr: string,
      *         situacion: string,
@@ -199,6 +200,7 @@ final class PersonasPayload
      *     id_nom: int,
      *     id_tabla: string,
      *     nom: string,
+     *     home_link_spec: array{path: string, query: array<string, scalar>}|null,
      *     nombre_ubi: string,
      *     nivel_stgr: string,
      *     situacion: string,
@@ -213,6 +215,7 @@ final class PersonasPayload
                 'id_nom' => 0,
                 'id_tabla' => '',
                 'nom' => '',
+                'home_link_spec' => null,
                 'nombre_ubi' => '',
                 'nivel_stgr' => '',
                 'situacion' => '',
@@ -225,12 +228,37 @@ final class PersonasPayload
             'id_nom' => PayloadCoercion::int($raw['id_nom'] ?? 0),
             'id_tabla' => PayloadCoercion::string($raw['id_tabla'] ?? ''),
             'nom' => PayloadCoercion::string($raw['nom'] ?? ''),
+            'home_link_spec' => self::homeLinkSpec($raw['home_link_spec'] ?? null),
             'nombre_ubi' => PayloadCoercion::string($raw['nombre_ubi'] ?? ''),
             'nivel_stgr' => PayloadCoercion::string($raw['nivel_stgr'] ?? ''),
             'situacion' => PayloadCoercion::string($raw['situacion'] ?? ''),
             'f_situacion' => PayloadCoercion::string($raw['f_situacion'] ?? ''),
             'publicado' => PayloadCoercion::string($raw['publicado'] ?? ''),
         ];
+    }
+
+    /**
+     * @return array{path: string, query: array<string, scalar>}|null
+     */
+    private static function homeLinkSpec(mixed $raw): ?array
+    {
+        if (!is_array($raw)) {
+            return null;
+        }
+        $path = $raw['path'] ?? null;
+        $query = $raw['query'] ?? null;
+        if (!is_string($path) || $path === '' || !is_array($query)) {
+            return null;
+        }
+
+        $normalizedQuery = [];
+        foreach ($query as $key => $value) {
+            if (is_scalar($value)) {
+                $normalizedQuery[(string) $key] = $value;
+            }
+        }
+
+        return ['path' => $path, 'query' => $normalizedQuery];
     }
 
     /**
