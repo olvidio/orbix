@@ -1,4 +1,6 @@
 <script>
+    window.equipaje_ctx_map = <?= json_encode($equipaje_ctx_map, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+
     fnjs_mostrar_error_listado = function (formulario, mensaje) {
         var texto = mensaje || <?= json_encode(_("Error desconocido")) ?>;
         var $err = $(formulario).find('#frm_listado_error');
@@ -68,6 +70,8 @@
         seguro = confirm(<?= json_encode(_("¿Está seguro de borrar este equipaje?")) ?>);
         if (seguro) {
             var url2 = 'frontend/inventario/controller/equipajes_ver.php';
+            var id_equipaje = $('#id_equipaje').val();
+            $('#ctx_eliminar').val((window.equipaje_ctx_map || {})[id_equipaje] || '');
             let parametros = $('#seleccion').serialize();
             let request = $.ajax({
                 url: 'src/inventario/equipajes_eliminar',
@@ -281,6 +285,7 @@
 <div id='seleccionar' class='no_print'>
     <form id=seleccion name=seleccion action="">
         <?= $oHash->getCamposHtml() ?>
+        <input type="hidden" id="ctx_eliminar" name="ctx_eliminar" value="">
         <input type='radio' <?= $chk_hoy ?> name='filtro' value='hoy' onclick="fnjs_actualizar_lista_equipaje();">
         <?= _("desde hoy") ?>
         <input type='radio' <?= $chk_curs ?> name='filtro' value='curs' onclick="fnjs_actualizar_lista_equipaje();">

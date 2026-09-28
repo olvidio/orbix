@@ -37,6 +37,24 @@ public static function desplegableOpciones(mixed $raw): array
 }
 
 /**
+ * @return array<string, string>
+ */
+public static function equipajeCtxMap(mixed $raw): array
+{
+    if (!is_array($raw)) {
+        return [];
+    }
+    $out = [];
+    foreach ($raw as $id_equipaje => $ctx) {
+        if (is_string($ctx)) {
+            $out[(string) $id_equipaje] = $ctx;
+        }
+    }
+
+    return $out;
+}
+
+/**
  * @param array<int|string, mixed> $payload
  * @return array{
  *     a_cabeceras: list<array<string, mixed>|string>,

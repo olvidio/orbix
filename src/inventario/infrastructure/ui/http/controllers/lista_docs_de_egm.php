@@ -7,6 +7,7 @@ use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $Qid_item_egm = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item_egm');
@@ -81,6 +82,11 @@ if (!empty($a_valores)) {
 $data = [
     'a_valores' => $a_valores,
     'nombre_valija' => $nombre_valija,
+    'ctx_del' => HashB::sign('equipajes_del_doc', [
+        'id_item_egm' => $Qid_item_egm,
+        'id_grupo' => (int) $oEgm->getId_grupo(),
+        'id_equipaje' => (int) $oEgm->getId_equipaje(),
+    ]),
 ];
 
 // envía una Response

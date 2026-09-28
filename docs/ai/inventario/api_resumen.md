@@ -56,7 +56,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `inventario.equipajes_del_doc`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/equipajes_del_doc.php`
-- Entrada: `post.id_item_egm:integer`, `post.sel:array`
+- Entrada: `post.ctx_del:string` (cápsula `HashB` acción `equipajes_del_doc`, contexto `{id_item_egm, id_grupo, id_equipaje}` derivado del `Egm` encontrado; emitida por `lista_docs_de_egm`), `post.sel:array`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/equipajes_doc_casa`
@@ -77,7 +77,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `inventario.equipajes_eliminar`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/equipajes_eliminar.php`
-- Entrada: `post.id_equipaje:integer`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `equipajes_eliminar`, contexto `{id_equipaje}`; emitida por elemento en el mapa `equipaje_ctx_map` de `lista_equipajes_desde_fecha`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/equipajes_eliminar_grupo`
@@ -232,7 +232,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `inventario.lista_docs_de_egm`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/lista_docs_de_egm.php`
 - Entrada: `post.id_item_egm:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_del`, cápsula `HashB` para `equipajes_del_doc`)
 
 ## `/src/inventario/lista_docs_de_lugar`
 
@@ -274,7 +274,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `inventario.lista_equipajes_desde_fecha`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/lista_equipajes_desde_fecha.php`
 - Entrada: `post.f_ini_iso:string`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `equipaje_ctx_map`, mapa `id_equipaje => ctx` con cápsulas `HashB` para `equipajes_eliminar`)
 
 ## `/src/inventario/lista_equipajes_posibles_maletas`
 
