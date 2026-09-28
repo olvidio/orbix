@@ -5,6 +5,7 @@ namespace src\usuarios\application;
 use Exception;
 use InvalidArgumentException;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\shared\web\ContestarJson;
@@ -91,7 +92,7 @@ class usuariosLista
                 }
             }
 
-            $a_valores[$i]['sel'] = "$id_usuario#";
+            $a_valores[$i]['sel'] = HashB::sign('usuario_eliminar', ['id_usuario' => $id_usuario]);
             $a_valores[$i][1] = $usuario;
             $a_valores[$i][2] = $nom_usuario;
             $a_valores[$i][3] = $role;

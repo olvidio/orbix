@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\unit\usuarios\application;
 
 use PHPUnit\Framework\TestCase;
+use src\shared\security\HashB;
 use src\usuarios\application\usuariosLista;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -81,7 +82,10 @@ final class UsuariosListaTest extends TestCase
 
         $this->assertTrue($out['success']);
         $this->assertIsArray($out['data']);
-        $this->assertSame('9#', $out['data']['a_valores'][1]['sel']);
+        $this->assertSame(
+            ['id_usuario' => 9],
+            HashB::open($out['data']['a_valores'][1]['sel'], 'usuario_eliminar')
+        );
         $this->assertSame('Admin', $out['data']['a_valores'][1][3]);
         $this->assertSame('p@x.test', $out['data']['a_valores'][1][5]);
     }

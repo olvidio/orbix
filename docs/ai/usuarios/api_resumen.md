@@ -238,7 +238,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.usuario_eliminar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_eliminar.php`
-- Entrada: `post.sel:array`
+- Entrada: `post.sel:array` (elemento 0 = cápsula `HashB` acción `usuario_eliminar`, contexto `{id_usuario}`; emitida por fila en `usuario_lista`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_form`

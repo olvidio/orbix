@@ -12,18 +12,13 @@ class usuarioEliminar
     }
 
     /**
-     * @param list<string> $a_sel
+     * @param int $id_usuario Identidad ya extraída del `ctx_eliminar` (HashB) por el controlador.
      *
      * @return array{error: string, data: string}
      */
-    public function execute(array $a_sel): array
+    public function execute(int $id_usuario): array
     {
         $error_txt = '';
-        $id_usuario = 0;
-
-        if ($a_sel !== []) {
-            $id_usuario = (int)strtok($a_sel[0], '#');
-        }
 
         $oUsuario = $this->usuarioRepository->findById($id_usuario);
         if ($oUsuario === null) {
