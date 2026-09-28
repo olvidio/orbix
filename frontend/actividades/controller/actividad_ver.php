@@ -107,6 +107,7 @@ $Bdl = 't';
 $isfsv = 0;
 $calc_tarifa_inicial = false;
 $dataRender = [];
+$dataEntidad = [];
 
 if (!empty($Qid_activ)) { // caso de modificar
     $alt = _("ver dossiers");
@@ -342,6 +343,15 @@ $a_camposHidden = array(
     'id_activ' => $Qid_activ,
     'ssfsv' => $ssfsv,
 );
+if ($Qmod === 'nuevo') {
+    $a_camposHidden['ctx_nuevo'] = $renderForm['ctx_nuevo'];
+} elseif ($Qmod === 'cambiar_tipo') {
+    $a_camposHidden['ctx_cambiar_tipo'] = $renderForm['ctx_cambiar_tipo'] !== ''
+        ? $renderForm['ctx_cambiar_tipo']
+        : PayloadCoercion::string($dataEntidad['ctx_cambiar_tipo'] ?? '');
+} else {
+    $a_camposHidden['ctx_editar'] = PayloadCoercion::string($dataEntidad['ctx_editar'] ?? $renderForm['ctx_editar']);
+}
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new HashF();

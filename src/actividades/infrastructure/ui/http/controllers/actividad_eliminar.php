@@ -5,12 +5,8 @@ use src\shared\domain\helpers\FilterPostGet;
 /**
  * Endpoint backend AJAX: elimina las actividades indicadas.
  *
- * Acepta dos formas de entrada:
- *  - `sel[]` con los ids (checkboxes de seleccion masiva).
- *  - `id_activ` unico cuando se viene del planning (borrar ficha concreta).
- *
- * Si la app `procesos` esta instalada, valida el permiso `borrar` via
- * `$_SESSION['oPermActividades']`. Responde JSON {success, mensaje?}.
+ * Acepta `sel[]` con cápsulas HashB emitidas por fila en el listado
+ * (`actividad_eliminar`, contexto `{id_activ}`). Ya no acepta `id_activ` plano.
  *
  * Extraido del antiguo dispatcher actividad_update.php (case 'eliminar').
  *
@@ -19,17 +15,22 @@ use src\shared\domain\helpers\FilterPostGet;
  */
 
 use src\actividades\application\ActividadEliminar;
+use src\actividades\application\ActividadMutationCtx;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_activ = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_activ');
-$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel_raw = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = ActividadMutationCtx::openSelIds($a_sel_raw, 'actividad_eliminar');
+if ($a_sel_raw !== [] && $a_sel === []) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 /** @var ActividadEliminar $useCase */
 $useCase = DependencyResolver::get(ActividadEliminar::class);
 $error_txt = $useCase->execute([
     'sel' => $a_sel,
-    'id_activ' => $Qid_activ,
+    'id_activ' => 0,
 ]);
 
 ContestarJson::enviar($error_txt);

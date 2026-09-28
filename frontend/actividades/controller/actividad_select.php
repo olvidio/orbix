@@ -188,7 +188,7 @@ $oTabla->setId_tabla('actividad_select');
 $oTabla->setCabeceras(ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []));
 $oTabla->setBotones(ActividadesListaSupport::botones($data['a_botones'] ?? []));
 $oTabla->setDatos($a_valores);
-$html_tabla = $oTabla->mostrar_tabla();
+$html_tabla = $oTabla->mostrar_tabla_html();
 unset($data['a_cabeceras'], $data['a_botones'], $data['a_valores']);
 $resultado = \frontend\shared\helpers\PayloadCoercion::string($data['resultado'] ?? '');
 $perm_nueva = (bool) ($data['perm_nueva'] ?? false);
@@ -222,7 +222,7 @@ $oHash->setCamposNo('extendida!modo!que!id_tipo_activ!id_ubi!nom_activ!periodo!y
 
 $oHashSel = new HashF();
 $oHashSel->setCamposForm('!mod!queSel!id_dossier');
-$oHashSel->setcamposNo('continuar!sel!scroll_id!fases_on!fases_off!id_sel');
+$oHashSel->setcamposNo('continuar!sel!scroll_id!fases_on!fases_off!id_sel!ctx_eliminar!ctx_publicar!ctx_importar!ctx_duplicar');
 $a_camposHiddenSel = [
     'obj_pau' => $obj_pau,
     'pau' => 'a',

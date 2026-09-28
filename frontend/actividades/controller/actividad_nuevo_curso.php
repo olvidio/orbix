@@ -15,7 +15,9 @@
 
 use frontend\shared\AppInstalled;
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
@@ -24,11 +26,14 @@ require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 
 $url_ejecutar = AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_nuevo_curso_ejecutar');
+$formData = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_nuevo_curso_form_data', []));
+$ctx_ejecutar = PayloadCoercion::string($formData['ctx_ejecutar'] ?? '');
 
 $oHash = new HashF();
 $oHash->setUrl($url_ejecutar);
 $oHash->setCamposForm('year_ref!year');
 $oHash->setCamposNo('ver_lista');
+$oHash->setArraycamposHidden(['ctx_ejecutar' => $ctx_ejecutar]);
 
 $any0 = (int)date('Y');
 $any1 = $any0 - 1;

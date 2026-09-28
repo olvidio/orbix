@@ -11,6 +11,7 @@ use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\security\HashB;
 
 /**
  * Devuelve los datos que el formulario "ver/editar actividad" necesita para
@@ -222,6 +223,13 @@ final class ActividadVerDatos
             } else {
                 $payload['tarifa_inicial'] = null;
             }
+        }
+
+        if ($id_activ > 0) {
+            $payload['ctx_editar'] = HashB::sign('actividad_editar', ['id_activ' => $id_activ]);
+            $payload['ctx_cambiar_tipo'] = HashB::sign('actividad_cambiar_tipo', ['id_activ' => $id_activ]);
+        } else {
+            $payload['ctx_nuevo'] = HashB::sign('actividad_nuevo');
         }
 
         return $payload;

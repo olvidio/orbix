@@ -217,6 +217,42 @@ function fnjs_ctx_fila_seleccionada(formulario, campo) {
 	}
 }
 
+/**
+ * Igual que fnjs_ctx_fila_seleccionada, pero para 1..n filas marcadas.
+ * Devuelve las cápsulas encontradas (puede ser []).
+ */
+function fnjs_ctx_filas_seleccionadas(formulario, campo) {
+	var form = $(formulario).attr('id');
+	var out = [];
+	$('#' + form + ' input.sel:checked').each(function () {
+		var fila = $(this).closest('tr[data-json]');
+		if (!fila.length) {
+			return;
+		}
+		try {
+			var rowData = JSON.parse(fila.attr('data-json'));
+			if (rowData[campo]) {
+				out.push(rowData[campo]);
+			}
+		} catch (e) {}
+	});
+	return out;
+}
+
+/**
+ * Serializa el formulario sustituyendo `sel[]` (ids en claro para navegación)
+ * por las cápsulas HashB del campo `data-json` indicado.
+ */
+function fnjs_sel_ctx_serialize(formulario, campo) {
+	var ctxs = fnjs_ctx_filas_seleccionadas(formulario, campo);
+	var datos = $(formulario).serialize().replace(/(^|&)sel(%5B%5D|\[\])=[^&]*/g, '');
+	datos = datos.replace(/^&/, '');
+	for (var i = 0; i < ctxs.length; i++) {
+		datos += (datos ? '&' : '') + 'sel[]=' + encodeURIComponent(ctxs[i]);
+	}
+	return { datos: datos, count: ctxs.length };
+}
+
 function fnjs_generarNomActiv(formulario) {
 	var ini=$('#f_ini').val();
 	var fin=$('#f_fin').val();

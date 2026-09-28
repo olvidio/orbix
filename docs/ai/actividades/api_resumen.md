@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "actividades"
-endpoints: 32
+endpoints: 33
 estado_revision: "generado"
 ---
 
@@ -14,28 +14,28 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividades.actividad_cambiar_tipo`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_cambiar_tipo.php`
-- Entrada: `post.desc_activ:string`, `post.dl_org:string`, `post.f_fin:string`, `post.f_ini:string`, `post.h_fin:string`, `post.h_ini:string`, `post.iactividad_val:integer`, `post.iasistentes_val:integer`, `post.id_activ:integer`, `post.id_repeticion:integer`, `post.id_tarifa:integer`, `post.id_tipo_activ:integer`, `post.id_ubi:integer`, `post.inom_tipo_val:string`, `post.isfsv_val:integer`, `post.lugar_esp:string`, `post.nivel_stgr:integer`, `post.nom_activ:string`, `post.num_asistentes:integer`, `post.observ:string`, `post.observ_material:string`, `post.plazas:integer`, `post.precio:mixed`, `post.status:integer`
+- Entrada: `post.ctx_cambiar_tipo:string` (HashB `{id_activ}`), más campos de negocio del formulario. `id_activ` plano se ignora.
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/actividad_duplicar`
 
 - Id: `actividades.actividad_duplicar`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_duplicar.php`
-- Entrada: `post.sel:array`
+- Entrada: `post.sel:array` (cápsulas HashB `actividad_duplicar` `{id_activ}` por fila)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/actividad_editar`
 
 - Id: `actividades.actividad_editar`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_editar.php`
-- Entrada: `post.desc_activ:string`, `post.dl_org:string`, `post.f_fin:string`, `post.f_ini:string`, `post.h_fin:string`, `post.h_ini:string`, `post.iactividad_val:integer`, `post.iasistentes_val:integer`, `post.id_activ:integer`, `post.id_repeticion:integer`, `post.id_tarifa:integer`, `post.id_tipo_activ:integer`, `post.id_ubi:integer`, `post.idioma:string`, `post.inom_tipo_val:string`, `post.isfsv_val:integer`, `post.lugar_esp:string`, `post.nivel_stgr:integer`, `post.nom_activ:string`, `post.num_asistentes:integer`, `post.observ:string`, `post.observ_material:string`, `post.plazas:integer`, `post.precio:mixed`, `post.publicado:string`, `post.status:integer`
+- Entrada: `post.ctx_editar:string` (HashB `{id_activ}`), más campos de negocio del formulario. `id_activ` plano se ignora.
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/actividad_eliminar`
 
 - Id: `actividades.actividad_eliminar`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_eliminar.php`
-- Entrada: `post.id_activ:integer`, `post.sel:array`
+- Entrada: `post.sel:array` (cápsulas HashB `actividad_eliminar` `{id_activ}` por fila)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/actividad_fase_completada_datos`
@@ -56,7 +56,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividades.actividad_importar`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_importar.php`
-- Entrada: `post.sel:array`
+- Entrada: `post.sel:array` (cápsulas HashB `actividad_importar` `{id_activ}` por fila)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/actividad_nivel_stgr_default_datos`
@@ -70,15 +70,22 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividades.actividad_nuevo`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_nuevo.php`
-- Entrada: `post.desc_activ:string`, `post.dl_org:string`, `post.f_fin:string`, `post.f_ini:string`, `post.h_fin:string`, `post.h_ini:string`, `post.id_repeticion:integer`, `post.id_tarifa:integer`, `post.id_tipo_activ:integer`, `post.id_ubi:integer`, `post.idioma:string`, `post.inom_tipo_val:string`, `post.lugar_esp:string`, `post.nivel_stgr:string`, `post.nom_activ:string`, `post.num_asistentes:integer`, `post.observ:string`, `post.observ_material:string`, `post.plazas:integer`, `post.precio:mixed`, `post.publicado:string`, `post.status:integer`, `post.tipo_horario:string`
+- Entrada: `post.ctx_nuevo:string` (HashB acción-only), más campos de negocio del formulario.
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/actividad_nuevo_curso_ejecutar`
 
 - Id: `actividades.actividad_nuevo_curso_ejecutar`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_nuevo_curso_ejecutar.php`
-- Entrada: `post.year_ref:integer`, `post.year:integer`, `post.ver_lista:string`
+- Entrada: `post.ctx_ejecutar:string` (HashB acción-only), `post.year_ref:integer`, `post.year:integer`, `post.ver_lista:string`
 - Respuesta: `standard_envelope_string_data`
+
+## `/src/actividades/actividad_nuevo_curso_form_data`
+
+- Id: `actividades.actividad_nuevo_curso_form_data`
+- Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_nuevo_curso_form_data.php`
+- Entrada: ninguna
+- Respuesta: `standard_envelope_string_data` (`ctx_ejecutar`)
 
 ## `/src/actividades/actividad_permiso_crear_datos`
 
@@ -91,7 +98,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividades.actividad_publicar`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_publicar.php`
-- Entrada: `post.sel:array`
+- Entrada: `post.sel:array` (cápsulas HashB `actividad_publicar` `{id_activ}` por fila)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/actividad_que_datos`
@@ -141,7 +148,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `actividades.actividad_ver_datos`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_ver_datos.php`
 - Entrada: `post.Bdl:string`, `post.calc_tarifa_inicial:integer`, `post.dl_org:string`, `post.id_activ:integer`, `post.id_repeticion:integer`, `post.id_tipo_activ:string`, `post.id_ubi:integer`, `post.idioma:string`, `post.isfsv:integer`, `post.lugar_esp:string`, `post.nivel_stgr:mixed`, `post.tarifa:mixed`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (`ctx_editar`/`ctx_cambiar_tipo` si `id_activ`>0; `ctx_nuevo` acción-only en alta)
 
 ## `/src/actividades/calendario_listas_datos`
 

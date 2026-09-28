@@ -263,6 +263,9 @@ final class ListaActividadesSgListado
             $con = ($coincide) ? '*' : '';
 
             $a_valores[$i]['sel'] = "$id_activ#$nom_activ";
+            foreach (ActividadMutationCtx::rowTokens($id_activ, '') as $ctxKey => $ctxVal) {
+                $a_valores[$i][$ctxKey] = $ctxVal;
+            }
             $a_valores[$i][1] = $f_ini;
             $a_valores[$i][2] = $f_fin;
             $a_valores[$i][3] = $con;
