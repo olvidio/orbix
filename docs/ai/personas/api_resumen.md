@@ -21,7 +21,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `personas.persona_eliminar`
 - Controller: `src/personas/infrastructure/ui/http/controllers/persona_eliminar.php`
-- Entrada: `post.id_nom:integer`, `post.obj_pau:string`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `persona_eliminar`, contexto `{id_nom, obj_pau}`; emitida por `personas_editar_data`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/personas/persona_publicar`
@@ -42,7 +42,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `personas.persona_update`
 - Controller: `src/personas/infrastructure/ui/http/controllers/persona_update.php`
-- Entrada: `post.apel_fam:string`, `post.apellido1:string`, `post.apellido2:string`, `post.ce:integer`, `post.ce_fin:integer`, `post.ce_ini:integer`, `post.ce_lugar:string`, `post.dl:string`, `post.eap:string`, `post.edad:string`, `post.f_inc:string`, `post.f_nacimiento:string`, `post.f_situacion:string`, `post.id_ctr:integer`, `post.id_nom:integer`, `post.id_tabla:string`, `post.idioma_preferido:string`, `post.inc:string`, `post.lugar_nacimiento:string`, `post.nivel_stgr:integer`, `post.nom:string`, `post.nx1:string`, `post.nx2:string`, `post.obj_pau:string`, `post.observ:string`, `post.profesion:string`, `post.profesor_stgr:string`, `post.sacd:string`, `post.situacion:string`, `post.trato:string`
+- Entrada: `post.ctx_update:string` (cápsula `HashB` acción `persona_update`, contexto `{id_nom, obj_pau}`; emitida por `personas_editar_data`), `post.apel_fam:string`, `post.apellido1:string`, `post.apellido2:string`, `post.ce:integer`, `post.ce_fin:integer`, `post.ce_ini:integer`, `post.ce_lugar:string`, `post.dl:string`, `post.eap:string`, `post.edad:string`, `post.f_inc:string`, `post.f_nacimiento:string`, `post.f_situacion:string`, `post.id_ctr:integer`, `post.id_tabla:string` (solo relevante para `PersonaEx`: selección del "paso" numerario/agregado/etc.), `post.idioma_preferido:string`, `post.inc:string`, `post.lugar_nacimiento:string`, `post.nivel_stgr:integer`, `post.nom:string`, `post.nx1:string`, `post.nx2:string`, `post.observ:string`, `post.profesion:string`, `post.profesor_stgr:string`, `post.sacd:string`, `post.situacion:string`, `post.trato:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/personas/personas_editar_data`

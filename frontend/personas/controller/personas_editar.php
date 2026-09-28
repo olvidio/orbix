@@ -88,6 +88,8 @@ $form = PersonasPayload::editarFormFromPayload($payload, $Qid_nom, $Qobj_pau);
 
 $Qid_nom = $form['id_nom'];
 $Qobj_pau = $form['Qobj_pau'];
+$ctx_update = $form['ctx_update'];
+$ctx_eliminar = $form['ctx_eliminar'];
 $trato = $form['trato'];
 $nom = $form['nom'];
 $apel_fam = $form['apel_fam'];
@@ -287,6 +289,8 @@ $a_campos = [
     'ir_a_traslado' => $ir_a_traslado,
     'titulo' => $titulo,
     'oHash' => $oHash,
+    'ctx_update' => $ctx_update,
+    'ctx_eliminar' => $ctx_eliminar,
     'id_nom' => $Qid_nom,
     'id_tabla' => $id_tabla,
     'dl' => $dl,

@@ -9,6 +9,7 @@ use src\personas\domain\value_objects\IncCode;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -217,6 +218,12 @@ final class PersonasEditarData
 
         // Opciones: inc.
         $out['opciones_inc'] = IncCode::getArrayIncCode();
+        $context = [
+            'id_nom' => (int)$out['id_nom'],
+            'obj_pau' => $Qobj_pau,
+        ];
+        $out['ctx_update'] = HashB::sign('persona_update', $context);
+        $out['ctx_eliminar'] = HashB::sign('persona_eliminar', $context);
 
         return $out;
     }
