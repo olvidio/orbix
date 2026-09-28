@@ -15,6 +15,7 @@ $post = [
     'empiezamin' => (string)(filter_input(INPUT_POST, 'empiezamin') ?? ''),
     'empiezamax' => (string)(filter_input(INPUT_POST, 'empiezamax') ?? ''),
     'orden' => (string)(filter_input(INPUT_POST, 'orden') ?? ''),
+    'ctx_crear' => (string)filter_input(INPUT_POST, 'ctx_crear'),
 ];
 
 if ($post['orden'] === '') {

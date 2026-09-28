@@ -60,6 +60,7 @@ final class AvisosGenerarListaData
                     'aOpcionesAvisoTipo' => $aOpcionesAvisoTipo,
                     'effective_id_usuario' => $id_usuario,
                     'effective_aviso_tipo' => $aviso_tipo,
+                    'ctx_generar_tabla' => HashB::sign('avisos_generar_tabla'),
                 ],
                 $extra
             );

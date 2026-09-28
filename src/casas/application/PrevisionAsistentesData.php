@@ -7,6 +7,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 
 /**
@@ -139,6 +140,9 @@ final class PrevisionAsistentesData
                 $a_valores[$i] = [
                     'clase' => 'tono2',
                     'id' => $id_activ,
+                    'ctx_update' => HashB::sign('ingreso_plazas_previstas_update', [
+                        'id_activ' => (int) $id_activ,
+                    ]),
                     'actividad' => ['editable' => 'false', 'valor' => $nom_activ],
                     'plazas' => ['editable' => 'false', 'valor' => $plazas],
                     'plazas_min' => ['editable' => 'false', 'valor' => $plazas_min],

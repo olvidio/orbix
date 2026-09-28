@@ -11,6 +11,7 @@ $post = [
     'id_zona' => (int)filter_input(INPUT_POST, 'id_zona'),
     'tipo_plantilla_origen' => (string)filter_input(INPUT_POST, 'tipo_plantilla_origen'),
     'tipo_plantilla_destino' => (string)filter_input(INPUT_POST, 'tipo_plantilla_destino'),
+    'ctx_importar' => (string)filter_input(INPUT_POST, 'ctx_importar'),
 ];
 
 // Endpoint de mutacion: escribe masivamente `EncargoDia`. El frontend no consume

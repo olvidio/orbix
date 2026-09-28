@@ -350,6 +350,7 @@ class ListCtrData
             'a_cabeceras' => $a_cabeceras,
             'a_valores' => $a_valores,
             'a_botones' => $a_botones,
+            'ctx_resincronizar' => HashB::sign('centros_resincronizar'),
         ];
     }
 }

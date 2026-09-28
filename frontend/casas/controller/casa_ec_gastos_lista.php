@@ -38,7 +38,7 @@ if (!$form['ok']) {
 $web = AppUrlConfig::getPublicAppBaseUrl();
 $oHashGuardar = new HashF();
 $oHashGuardar->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/casa_ec_gastos_guardar'));
-$sCamposForm = 'id_ubi!year';
+$sCamposForm = 'id_ubi!year!ctx_guardar';
 for ($m = 1; $m < 13; $m++) {
     $sCamposForm .= "!g$m!ap_sv$m!ap_sf$m";
 }

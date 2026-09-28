@@ -42,7 +42,10 @@ $url_importar_plantilla = 'frontend/misas/controller/importar_plantilla.php';
 $oHashImportarPlantilla = new HashF();
 $oHashImportarPlantilla->setUrl($url_importar_plantilla);
 $oHashImportarPlantilla->setCamposForm('id_zona!tipo_plantilla_origen!tipo_plantilla_destino');
-$h_importar_plantilla = $oHashImportarPlantilla->linkSinValParams();
+$oHashImportarPlantilla->setArrayCamposHidden([
+    'ctx_importar' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_importar'] ?? ''),
+]);
+$h_importar_plantilla = '&' . $oHashImportarPlantilla->getParamAjax();
 
 $url_modificar_cuadricula_zona = 'frontend/misas/controller/modificar_cuadricula_zona.php';
 $oHashZonaTipo = new HashF();
@@ -53,6 +56,9 @@ $h_zona_tipo = $oHashZonaTipo->linkSinValParams();
 $oHash = new HashF();
 $oHash->setUrl('frontend/misas/controller/modificar_plantilla.php');
 $oHash->setCamposForm('id_zona!tipo_plantilla!orden!importar_de_plantilla');
+$oHash->setArrayCamposHidden([
+    'ctx_anadir' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_anadir'] ?? ''),
+]);
 
 $a_campos = [
     'oDesplZonas' => $oDesplZonas,

@@ -24,6 +24,11 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 
 final class AvisosGenerarListaDataTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        session_id('test-session-cambios-avisos-lista');
+    }
+
     private function createUseCase(
         UsuarioRepositoryInterface $usuarioRepository,
         PreferenciaRepositoryInterface $preferenciaRepository,
@@ -66,6 +71,7 @@ final class AvisosGenerarListaDataTest extends TestCase
 
         $this->assertArrayNotHasKey('ctx_eliminar_fecha', $result);
         $this->assertSame('', $result['url_eliminar'] ?? '');
+        $this->assertSame([], HashB::open($result['ctx_generar_tabla'], 'avisos_generar_tabla'));
     }
 
     public function test_con_id_usuario_emite_ctx_eliminar_fecha_accion_only(): void
@@ -85,6 +91,7 @@ final class AvisosGenerarListaDataTest extends TestCase
 
         $this->assertSame([], $result['a_valores']);
         $this->assertSame([], HashB::open($result['ctx_eliminar_fecha'], 'cambio_usuario_eliminar_hasta_fecha'));
+        $this->assertSame([], HashB::open($result['ctx_generar_tabla'], 'avisos_generar_tabla'));
         $this->assertSame('f_fin!ctx_eliminar_fecha', $result['hash_eliminar_fecha']['campos_form']);
     }
 }
