@@ -77,7 +77,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.eliminar_encargo_centro`
 - Controller: `src/misas/infrastructure/ui/http/controllers/eliminar_encargo_centro.php`
-- Entrada: `post.id_item:string`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `eliminar_encargo_centro`, contexto `{id_item}`; emitida por fila en `ver_encargos_centros_data`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/eliminar_encargo_zona`
@@ -91,7 +91,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.guardar_encargo_centro`
 - Controller: `src/misas/infrastructure/ui/http/controllers/guardar_encargo_centro.php`
-- Entrada: `post.id_item:string`, `post.id_enc:integer`, `post.id_ctr:integer`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `guardar_encargo_centro`, contexto `{id_item}`; emitida por fila o por `ctx_nuevo` en `ver_encargos_centros_data`, `id_item` vacío para alta), `post.id_enc:integer`, `post.id_ctr:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/guardar_encargo_zona`
@@ -190,7 +190,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `misas.ver_encargos_centros_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_encargos_centros_data.php`
 - Entrada: `post.id_zona:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (cada fila incluye `ctx_guardar`/`ctx_eliminar`, cápsulas `HashB` atadas a su `id_item`; el nivel superior incluye `ctx_nuevo` para el alta)
 
 ## `/src/misas/ver_encargos_zona_data`
 

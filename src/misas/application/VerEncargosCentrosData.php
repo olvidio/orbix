@@ -4,6 +4,7 @@ namespace src\misas\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\zonassacd\application\services\CentrosDeZona;
@@ -70,12 +71,15 @@ class VerEncargosCentrosData
                         $desc_enc = $descEncVo !== null ? $descEncVo->value() : '';
                     }
 
+                    $uuidItem = $oEncargoCtr->getUuidItemVo()->value();
                     $rows[] = [
-                        'id_item' => $oEncargoCtr->getUuidItemVo()->value(),
+                        'id_item' => $uuidItem,
                         'id_encargo' => (int)$id_enc,
                         'encargo' => $desc_enc,
                         'id_centro' => (int)$id_ubi,
                         'centro' => $nombre_ubi,
+                        'ctx_guardar' => HashB::sign('guardar_encargo_centro', ['id_item' => $uuidItem]),
+                        'ctx_eliminar' => HashB::sign('eliminar_encargo_centro', ['id_item' => $uuidItem]),
                     ];
                 }
             }
@@ -91,6 +95,7 @@ class VerEncargosCentrosData
             'rows' => $rows,
             'a_opciones_zona' => $a_opciones_zona,
             'a_centros_zona' => $centros_zona,
+            'ctx_nuevo' => HashB::sign('guardar_encargo_centro', ['id_item' => '']),
         ];
     }
 }
