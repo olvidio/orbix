@@ -189,6 +189,34 @@ function fnjs_solo_uno(formulario, multiple = false) {
 	return s;
 }
 
+/**
+ * Lee un campo (p.ej. `ctx_eliminar`, cápsula HashB) del `data-json` de la
+ * fila cuyo checkbox `.sel` está marcado. Se usa cuando la propia checkbox
+ * `sel[]` no puede llevar la cápsula porque su valor en claro lo necesita
+ * también otro flujo (p.ej. cargar el formulario de modificación) que vive
+ * en `frontend/`. Solo funciona con tablas `web\Lista` en formato HTML
+ * (`mostrar_tabla_html()`), que son las que escriben `data-json` por fila.
+ * Devuelve '' si no hay exactamente una fila seleccionada o el campo no
+ * está presente.
+ */
+function fnjs_ctx_fila_seleccionada(formulario, campo) {
+	var form = $(formulario).attr('id');
+	var sel = $('#' + form + ' input.sel:checked');
+	if (sel.length !== 1) {
+		return '';
+	}
+	var fila = sel.closest('tr[data-json]');
+	if (!fila.length) {
+		return '';
+	}
+	try {
+		var rowData = JSON.parse(fila.attr('data-json'));
+		return rowData[campo] || '';
+	} catch (e) {
+		return '';
+	}
+}
+
 function fnjs_generarNomActiv(formulario) {
 	var ini=$('#f_ini').val();
 	var fin=$('#f_fin').val();

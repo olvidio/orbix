@@ -28,9 +28,9 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case 'eliminar':
-        $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qctx_eliminar = (string)filter_input(INPUT_POST, 'ctx_eliminar');
         PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_excepcion_eliminar', [
-            'id_tipo_activ' => $Qid_tipo_activ,
+            'ctx_eliminar' => $Qctx_eliminar,
         ]);
         break;
     case 'update':
@@ -83,6 +83,7 @@ switch ($Qque) {
             'id_tipo_activ' => $Qid_tipo_activ,
         ]);
         $tipo_txt = PasarelaPayload::tipoTxtFromPayload($data);
+        $ctx_eliminar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_eliminar_contribucion_no_duerme'] ?? '');
 
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
@@ -91,6 +92,7 @@ switch ($Qque) {
         $oHash->setArrayCamposHidden([
             'id_tipo_activ' => $Qid_tipo_activ,
             'que' => '',
+            'ctx_eliminar' => $ctx_eliminar,
         ]);
 
         $a_campos = [

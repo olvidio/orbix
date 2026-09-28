@@ -28,7 +28,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `pasarela.activacion_excepcion_eliminar`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/activacion_excepcion_eliminar.php`
-- Entrada: ``
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `activacion_excepcion_eliminar`, contexto `{id_tipo_activ}`; emitida por `tipo_activ_txt_data` como `ctx_eliminar_activacion`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/pasarela/activacion_excepcion_guardar`
@@ -63,7 +63,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `pasarela.contribucion_no_duerme_excepcion_eliminar`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/contribucion_no_duerme_excepcion_eliminar.php`
-- Entrada: ``
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `contribucion_no_duerme_excepcion_eliminar`, contexto `{id_tipo_activ}`; emitida por `tipo_activ_txt_data` como `ctx_eliminar_contribucion_no_duerme`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/pasarela/contribucion_no_duerme_excepcion_guardar`
@@ -98,7 +98,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `pasarela.contribucion_reserva_excepcion_eliminar`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/contribucion_reserva_excepcion_eliminar.php`
-- Entrada: ``
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `contribucion_reserva_excepcion_eliminar`, contexto `{id_tipo_activ}`; emitida por `tipo_activ_txt_data` como `ctx_eliminar_contribucion_reserva`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/pasarela/contribucion_reserva_excepcion_guardar`
@@ -133,7 +133,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `pasarela.nombre_excepcion_eliminar`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/nombre_excepcion_eliminar.php`
-- Entrada: ``
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `nombre_excepcion_eliminar`, contexto `{id_tipo_activ}`; emitida por `tipo_activ_txt_data` como `ctx_eliminar_nombre`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/pasarela/nombre_excepcion_guardar`
@@ -154,5 +154,5 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `pasarela.tipo_activ_txt_data`
 - Controller: `src/pasarela/infrastructure/ui/http/controllers/tipo_activ_txt_data.php`
-- Entrada: ``
-- Respuesta: `standard_envelope_string_data`
+- Entrada: `post.id_tipo_activ:string`
+- Respuesta: `standard_envelope_string_data` (incluye `tipo_txt` y, por familia, `ctx_eliminar_activacion` / `ctx_eliminar_contribucion_no_duerme` / `ctx_eliminar_contribucion_reserva` / `ctx_eliminar_nombre`, cápsulas `HashB` atadas a `id_tipo_activ`; cada dispatcher `*_ajax.php` solo consume la suya)

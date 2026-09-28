@@ -2,10 +2,22 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ContribucionNoDuermeExcepcionEliminar;
 
-$id_tipo_activ = (string)\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ');
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_eliminar'),
+        'contribucion_no_duerme_excepcion_eliminar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$id_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'id_tipo_activ');
 
 /** @var ContribucionNoDuermeExcepcionEliminar $useCase */
 $useCase = DependencyResolver::get(ContribucionNoDuermeExcepcionEliminar::class);

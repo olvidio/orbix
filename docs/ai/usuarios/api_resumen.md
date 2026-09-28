@@ -42,7 +42,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.grupo_eliminar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php`
-- Entrada: `post.sel:array`
+- Entrada: `post.sel:array` (elemento 0 = cápsula `HashB` acción `grupo_eliminar`, contexto `{id_usuario}`; `sel` deja de llevar el id en claro, lo emite `grupo_lista` por fila)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/grupo_guardar`
@@ -77,7 +77,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.perm_activ_eliminar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/perm_activ_eliminar.php`
-- Entrada: `post.sel:array`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `perm_activ_eliminar`, contexto `{id_item}`; emitida por fila en `perm_activ_lista`, transportada aparte de `sel` porque `sel` sigue en claro para el flujo de modificar en `frontend/procesos/controller/usuario_perm_activ.php`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/perm_activ_guardar`
@@ -98,7 +98,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.perm_menu_eliminar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php`
-- Entrada: `post.sel:array`
+- Entrada: `post.sel:array` (elemento 0 = cápsula `HashB` acción `perm_menu_eliminar`, contexto `{id_item}`; emitida por fila en `perm_menu_lista`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/perm_menu_guardar`
@@ -154,7 +154,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.role_eliminar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/role_eliminar.php`
-- Entrada: `post.sel:array`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `role_eliminar`, contexto `{id_role}`; emitida por fila en `role_lista`, transportada aparte de `sel` porque `sel` sigue en claro para el flujo de modificar en `frontend/usuarios/controller/role_form.php`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/role_grupmenu_add`

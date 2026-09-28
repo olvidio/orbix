@@ -3,17 +3,22 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$error_txt = '';
-$Qid_item = 0;
-
-$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel) && is_string($a_sel[0])) { //vengo de un checkbox
-    strtok($a_sel[0], "#");
-    $tok = strtok("#");
-    $Qid_item = is_string($tok) ? (int)$tok : 0;
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_eliminar'),
+        'perm_activ_eliminar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
 }
+
+$error_txt = '';
+$Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_item');
 
 $PermUsuarioActividadRepository = DependencyResolver::get(PermUsuarioActividadRepositoryInterface::class);
 $oPermUsuarioActividad = $PermUsuarioActividadRepository->findById($Qid_item);

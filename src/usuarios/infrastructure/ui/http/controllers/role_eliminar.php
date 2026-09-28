@@ -3,16 +3,23 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$error_txt = '';
-$id_role = 0;
-
-$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel) && is_string($a_sel[0])) { //vengo de un checkbox
-    $tok = strtok($a_sel[0], "#");
-    $id_role = is_string($tok) ? (int)$tok : 0;
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_eliminar'),
+        'role_eliminar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
 }
+
+$error_txt = '';
+$id_role = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_role');
+
 $RoleRepository = DependencyResolver::get(RoleRepositoryInterface::class);
 $oRole = $RoleRepository->findById($id_role);
 if ($oRole === null) {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\unit\usuarios\application;
 
 use PHPUnit\Framework\TestCase;
+use src\shared\security\HashB;
 use src\usuarios\application\GruposLista;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\entity\Grupo;
@@ -29,7 +30,10 @@ final class GruposListaTest extends TestCase
         $useCase = new GruposLista($repo);
         $out = $useCase->execute('');
 
-        $this->assertSame('12#', $out['a_valores'][1]['sel']);
+        $this->assertSame(
+            ['id_usuario' => 12],
+            HashB::open($out['a_valores'][1]['sel'], 'grupo_eliminar')
+        );
         $this->assertSame('g1', $out['a_valores'][1][1]);
         $this->assertSame('frontend/usuarios/controller/grupo_form.php', $out['a_valores'][1][2]['link_spec']['path']);
     }

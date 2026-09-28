@@ -2,6 +2,7 @@
 
 namespace src\usuarios\application;
 
+use src\shared\security\HashB;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 
 class GruposLista
@@ -43,7 +44,7 @@ class GruposLista
             $id_usuario = $oGrupo->getId_usuario();
             $usuario = $oGrupo->getUsuarioAsString();
 
-            $a_valores[$i]['sel'] = "$id_usuario#";
+            $a_valores[$i]['sel'] = HashB::sign('grupo_eliminar', ['id_usuario' => $id_usuario]);
             $a_valores[$i][1] = $usuario;
             $a_valores[$i][2] = [
                 'link_spec' => [

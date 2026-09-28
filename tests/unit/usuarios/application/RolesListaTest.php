@@ -9,6 +9,7 @@ use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\entity\GrupMenu;
 use src\menus\domain\entity\GrupMenuRole;
+use src\shared\security\HashB;
 use src\usuarios\application\rolesLista;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -83,6 +84,10 @@ final class RolesListaTest extends TestCase
         $this->assertCount(2, $out['data']['a_botones']);
         $this->assertSame('Menú A', $out['data']['a_valores'][1][6]);
         $this->assertSame('3#', $out['data']['a_valores'][1]['sel']);
+        $this->assertSame(
+            ['id_role' => 3],
+            HashB::open($out['data']['a_valores'][1]['ctx_eliminar'], 'role_eliminar')
+        );
     }
 
     public function test_sin_permiso_lista_vacia_de_botones(): void
@@ -121,5 +126,6 @@ final class RolesListaTest extends TestCase
         $this->assertSame(0, $out['data']['permiso']);
         $this->assertSame([], $out['data']['a_botones']);
         $this->assertArrayNotHasKey('sel', $out['data']['a_valores'][1]);
+        $this->assertArrayNotHasKey('ctx_eliminar', $out['data']['a_valores'][1]);
     }
 }

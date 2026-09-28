@@ -16,7 +16,12 @@
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             if (confirm(<?= json_encode(_("¿Esta seguro que desea borrar este permiso?")) ?>)) {
-                let datos = $(formulario).serialize();
+                var ctx_eliminar = fnjs_ctx_fila_seleccionada(formulario, 'ctx_eliminar');
+                if (!ctx_eliminar) {
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + <?= json_encode(_("Operación no autorizada")) ?>);
+                    return;
+                }
+                let datos = 'ctx_eliminar=' + encodeURIComponent(ctx_eliminar);
                 let request = $.ajax({
                     data: datos,
                     url: 'src/usuarios/perm_activ_eliminar',

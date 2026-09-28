@@ -8,6 +8,7 @@ use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\PermAccionBits;
 use src\procesos\domain\PermAfectadosBits;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 use src\actividades\domain\entity\TiposActividades;
 $Qid_usuario = (string)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
@@ -96,7 +97,12 @@ foreach ($cUsuarioPermArray as $aUsuarioPerm) {
         $a_valores[$i][2] = '';
     } else {
         $dl_propia_flag = \src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia) ? 't' : 'f';
+        // `sel` sigue en claro (id_usuario#id_item#id_tipo_activ_txt#dl_propia_flag):
+        // `frontend/procesos/controller/usuario_perm_activ.php` lo parsea para
+        // cargar el formulario de modificación. `ctx_eliminar` (transportado vía
+        // `data-json`, no por `sel`) protege solo la acción de borrado.
         $a_valores[$i]['sel'] = "$Qid_usuario#$id_item#$id_tipo_activ_txt#$dl_propia_flag";
+        $a_valores[$i]['ctx_eliminar'] = HashB::sign('perm_activ_eliminar', ['id_item' => $id_item]);
         $a_valores[$i][1] = $dl_propia_txt;
         $a_valores[$i][2] = $oTipoActividad->getNom();
     }
