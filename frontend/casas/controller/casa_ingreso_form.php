@@ -45,6 +45,8 @@ if ($form['puede_modificar_tarifa']) {
     <?= _("precio") ?> <input type="text" size="8" name="precio" value="<?= htmlspecialchars($form['precio']) ?>">
     <h3><?= _("Ingreso") ?>:</h3>
     <input type="hidden" name="id_activ" value="<?= $id_activ ?>">
+    <input type="hidden" name="ctx_guardar" value="<?= htmlspecialchars($form['ctx_guardar'], ENT_QUOTES, 'UTF-8') ?>">
+    <input type="hidden" name="ctx_eliminar" value="<?= htmlspecialchars($form['ctx_eliminar'], ENT_QUOTES, 'UTF-8') ?>">
     <?= _("ingresos reales") ?> <input type="text" size="12" name="ingresos" value="<?= htmlspecialchars($form['ingresos']) ?>">
     <?= _("asistentes") ?> <input type="text" size="12" name="num_asistentes" value="<?= htmlspecialchars($form['num_asistentes']) ?>">
     <br>

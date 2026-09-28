@@ -3,6 +3,7 @@
 namespace src\casas\application;
 
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 
 /**
@@ -52,12 +53,15 @@ final class GrupoCasaFormData
             $opciones_casas[is_numeric($id) ? (int) $id : (string) $id] = $nombre;
         }
 
+        $id_item_ctx = $es_nuevo ? 'nuevo' : (string)$id_item_raw;
+
         return [
             'es_nuevo' => $es_nuevo,
-            'id_item' => $es_nuevo ? 'nuevo' : (string)$id_item_raw,
+            'id_item' => $id_item_ctx,
             'id_ubi_padre' => $id_ubi_padre,
             'id_ubi_hijo' => $id_ubi_hijo,
             'opciones_casas' => $opciones_casas,
+            'ctx_guardar' => HashB::sign('grupo_update', ['id_item' => $id_item_ctx]),
         ];
     }
 }

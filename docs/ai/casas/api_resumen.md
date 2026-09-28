@@ -42,7 +42,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `casas.casa_ingreso_eliminar`
 - Controller: `src/casas/infrastructure/ui/http/controllers/casa_ingreso_eliminar.php`
-- Entrada: `post.id_activ:integer`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `casa_ingreso_eliminar`, contexto `{id_activ}`; emitida por `casa_ingreso_form_data`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/casas/casa_ingreso_form_data`
@@ -50,13 +50,13 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `casas.casa_ingreso_form_data`
 - Controller: `src/casas/infrastructure/ui/http/controllers/casa_ingreso_form_data.php`
 - Entrada: `post.id_activ:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`/`ctx_eliminar`, cápsulas `HashB` para `casa_ingreso_update`/`casa_ingreso_eliminar`)
 
 ## `/src/casas/casa_ingreso_update`
 
 - Id: `casas.casa_ingreso_update`
 - Controller: `src/casas/infrastructure/ui/http/controllers/casa_ingreso_update.php`
-- Entrada: `post.id_activ:integer`, `post.id_tarifa:string`, `post.ingresos:string`, `post.num_asistentes:integer`, `post.observ:string`, `post.precio:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `casa_ingreso_update`, contexto `{id_activ}`; emitida por `casa_ingreso_form_data`), `post.id_tarifa:string`, `post.ingresos:string`, `post.num_asistentes:integer`, `post.observ:string`, `post.precio:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/casas/casa_ingresos_lista_data`
@@ -77,7 +77,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `casas.grupo_eliminar`
 - Controller: `src/casas/infrastructure/ui/http/controllers/grupo_eliminar.php`
-- Entrada: `post.id_item:integer`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `grupo_eliminar`, contexto `{id_item}`; emitida por fila en `grupo_lista_data`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/casas/grupo_form_data`
@@ -85,20 +85,20 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `casas.grupo_form_data`
 - Controller: `src/casas/infrastructure/ui/http/controllers/grupo_form_data.php`
 - Entrada: `post.id_item:string`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`, cápsula `HashB` para `grupo_update`)
 
 ## `/src/casas/grupo_lista_data`
 
 - Id: `casas.grupo_lista_data`
 - Controller: `src/casas/infrastructure/ui/http/controllers/grupo_lista_data.php`
 - Entrada: ninguna detectada.
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (cada fila incluye en `script` un `ctx_eliminar`, cápsula `HashB` para `grupo_eliminar`)
 
 ## `/src/casas/grupo_update`
 
 - Id: `casas.grupo_update`
 - Controller: `src/casas/infrastructure/ui/http/controllers/grupo_update.php`
-- Entrada: `post.id_item:string`, `post.id_ubi_hijo:integer`, `post.id_ubi_padre:integer`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `grupo_update`, contexto `{id_item}`; emitida por `grupo_form_data`), `post.id_ubi_hijo:integer`, `post.id_ubi_padre:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/casas/ingreso_plazas_previstas_update`

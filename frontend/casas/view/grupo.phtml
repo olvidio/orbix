@@ -46,12 +46,12 @@
         fnjs_update_div('#div_modificar', URL_FORM + sep + 'id_item=' + encodeURIComponent(id_item));
     };
 
-    fnjs_eliminar = function (id_item) {
+    fnjs_eliminar = function (ctx_eliminar) {
         if (!confirm(TXT_ELIMINAR)) { return; }
         $.ajax({
             url: URL_ELIMINAR,
             type: 'post',
-            data: { id_item: id_item },
+            data: { ctx_eliminar: ctx_eliminar },
             dataType: 'json'
         }).done(function (rta) {
             if (!rta || rta.success !== true) {
