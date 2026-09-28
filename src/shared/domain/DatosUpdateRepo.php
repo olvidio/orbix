@@ -84,7 +84,7 @@ class DatosUpdateRepo
                 $aCampos[$nom_camp] = str_replace(',', '.', is_scalar($decimalValue) ? (string) $decimalValue : '');
             }
 
-            if ($tipo !== 'checks' && empty($aCampos[$nom_camp])) {
+            if ($tipo !== 'check' && $tipo !== 'checks' && empty($aCampos[$nom_camp])) {
                 $aCampos[$nom_camp] = null;
             }
 
@@ -115,12 +115,21 @@ class DatosUpdateRepo
             $NoNewId = true;
         }
 
-        if ($NoNewId === false) {
-            $new_id = $oRepository->getNewId();
+        $primaryKey = $ficha->getPrimary_key();
+        $pkName = is_array($primaryKey) ? (string) array_key_first($primaryKey) : (string) $primaryKey;
+        if ($NoNewId === false && $this->clavePrimariaInformada($aCampos[$pkName] ?? null)) {
+            $new_id = $aCampos[$pkName];
+            $NoNewId = true;
         }
 
-        $primaryKey = $ficha->getPrimary_key();
-        $pkName = is_array($primaryKey) ? (string) array_key_first($primaryKey) : $primaryKey;
+        if ($NoNewId === false) {
+            try {
+                $new_id = $oRepository->getNewId();
+            } catch (\Throwable $e) {
+                return 'Error al obtener id: ' . $e->getMessage();
+            }
+        }
+
         $pks1 = 'set' . ucfirst($pkName);
         $ficha->$pks1($new_id);
 
@@ -289,6 +298,24 @@ class DatosUpdateRepo
         $service = DependencyResolver::get(ModuloInstaladoTablesService::class);
 
         return $service;
+    }
+
+    /**
+     * El formulario ya trae la clave (p. ej. id de asignatura opcional). No pedir secuencia.
+     */
+    private function clavePrimariaInformada(mixed $value): bool
+    {
+        if ($value === null || $value === '' || $value === false) {
+            return false;
+        }
+        if (is_array($value)) {
+            return $value !== [];
+        }
+        if (is_int($value) || is_float($value) || (is_string($value) && is_numeric($value))) {
+            return (int) $value !== 0;
+        }
+
+        return true;
     }
 
     private function modulosConfig(): ModulosConfig

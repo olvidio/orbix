@@ -18,6 +18,15 @@ use frontend\shared\config\AppUrlConfig;
                 <?= $oPosicion->jsNavAtras(1); ?>
             }
         });
+        request.fail(function (xhr) {
+            var mensaje = <?= json_encode(_("Error en la conexión con el servidor")) ?>;
+            if (xhr.responseJSON && xhr.responseJSON.mensaje) {
+                mensaje = xhr.responseJSON.mensaje;
+            } else if (xhr.responseText) {
+                mensaje = xhr.responseText;
+            }
+            alert(mensaje);
+        });
     }
     fnjs_cancelar = function () {
         <?= $oPosicion->jsNavAtras(1); ?>
