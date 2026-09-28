@@ -6,6 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $error_txt = '';
@@ -141,5 +142,9 @@ $data['tipo_apellidos_ap_nom'] = $tipo_apellidos_ap_nom;
 $data['tipo_apellidos_nom_ap'] = $tipo_apellidos_nom_ap;
 $data['idioma'] = $idioma;
 $data['zona_horaria'] = $zona_horaria;
+// id_usuario siempre viene de la sesión (ConfigGlobal::mi_id_usuario()), nunca del POST:
+// el ctx solo prueba que la mutación viene de esta pantalla, no transporta una identidad
+// que pudiera venir manipulada.
+$data['ctx_guardar'] = HashB::sign('preferencias_guardar', ['id_usuario' => $id_usuario]);
 
 ContestarJson::enviar($error_txt, $data);

@@ -18,8 +18,10 @@ if ($id_usuario !== $Qid_usuario) {
     exit();
 }
 
+$Qctx_2fa_update = (string)filter_input(INPUT_POST, 'ctx_2fa_update');
+
 PostRequest::getDataFromUrl('/src/usuarios/usuario_2fa_update', [
-    'id_usuario' => $id_usuario,
+    'ctx_2fa_update' => $Qctx_2fa_update,
     'enable_2fa' => '0',
 ]);
 

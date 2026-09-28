@@ -7,8 +7,11 @@ use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Preferencia;
 use src\usuarios\domain\value_objects\TipoPreferencia;
 use src\usuarios\domain\value_objects\ValorPreferencia;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
+// id_usuario siempre de la sesión, nunca del POST ni del ctx (ver usuario_preferencias.php).
 $id_usuario = ConfigGlobal::mi_id_usuario();
 
 $Qque = (string)\src\shared\domain\helpers\FilterPostGet::post('que');
@@ -17,6 +20,14 @@ $PreferenciaRepository = DependencyResolver::get(PreferenciaRepositoryInterface:
 
 $error_txt = '';
 if ($Qque === "slickGrid") {
+    // Pendiente de HashB: este disparo lo hace `scripts/index.js.php` desde
+    // *cualquier* página con una tabla SlickGrid, firmado con un HashF
+    // calculado una vez en `index.php` al arrancar la sesión (no hay un paso
+    // de lectura por página al que atar una cápsula sin añadir una llamada
+    // a `src/` en cada carga de página). id_usuario ya viene de la sesión,
+    // no del POST, así que no hay IDOR; queda documentado como excepción en
+    // el plan de sweep HashB en vez de forzar aquí un ctx que rompería el
+    // autoguardado de columnas.
     $Qtabla = (string)\src\shared\domain\helpers\FilterPostGet::post('tabla');
     $QsPrefs = (string)\src\shared\domain\helpers\FilterPostGet::post('sPrefs');
     $idioma = ConfigGlobal::mi_Idioma();
@@ -49,6 +60,16 @@ if ($Qque === "slickGrid") {
     }
     ContestarJson::enviar($error_txt, 'ok');
 } else {
+    try {
+        HashB::open(
+            (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_guardar'),
+            'preferencias_guardar'
+        );
+    } catch (HashBInvalidException $e) {
+        ContestarJson::enviar(_("Operación no autorizada"), 'none');
+        return;
+    }
+
     // Guardar Layout:
     $Qlayout = (string)\src\shared\domain\helpers\FilterPostGet::post('layout');
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'layout');

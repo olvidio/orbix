@@ -75,8 +75,11 @@ $url_cambio_password = HashF::cmdConParametros(AppUrlConfig::getPublicAppBaseUrl
 $url_cambio_mail = HashF::cmdConParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_form_mail.php');
 $url_2fa_settings = HashF::cmdConParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_form_2fa.php');
 
+$ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($prefData['ctx_guardar'] ?? '');
+
 $oHash = new HashF();
 $oHash->setCamposForm('layout!inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou!zona_horaria_nou');
+$oHash->setArraycamposHidden(['ctx_guardar' => $ctx_guardar]);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

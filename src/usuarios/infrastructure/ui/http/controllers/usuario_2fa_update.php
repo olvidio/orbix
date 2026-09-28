@@ -5,11 +5,23 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\Secret2FA;
 use src\usuarios\domain\Verify2fa;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
+
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_2fa_update'),
+        'usuario_2fa_update'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 $error_txt = '';
 
-$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+$Qid_usuario = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_usuario');
 $Qsecret_2fa = (string)\src\shared\domain\helpers\FilterPostGet::post('secret_2fa');
 $Qenable_2fa = (bool)\src\shared\domain\helpers\FilterPostGet::post('enable_2fa');
 $Qverification_code = (string)\src\shared\domain\helpers\FilterPostGet::post('verification_code');

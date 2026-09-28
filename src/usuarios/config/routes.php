@@ -123,14 +123,23 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/usuarios/usuario_grupo_lst', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/usuario_grupo_lst.php';
     });
+    $r->addRoute(['GET','POST'], '/src/usuarios/borrar_pwd_form_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/borrar_pwd_form_data.php';
+    });
     $r->addRoute(['GET','POST'], '/src/usuarios/usuario_guardar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/usuario_guardar.php';
     });
     $r->addRoute(['GET','POST'], '/src/usuarios/usuario_guardar_mail', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/usuario_guardar_mail.php';
     });
+    $r->addRoute(['GET','POST'], '/src/usuarios/usuario_guardar_mail_form_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/usuario_guardar_mail_form_data.php';
+    });
     $r->addRoute(['GET','POST'], '/src/usuarios/usuario_guardar_pwd', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/usuario_guardar_pwd.php';
+    });
+    $r->addRoute(['GET','POST'], '/src/usuarios/usuario_guardar_pwd_form_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/usuario_guardar_pwd_form_data.php';
     });
     $r->addRoute(['GET','POST'], '/src/usuarios/usuario_info', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/usuario_info.php';

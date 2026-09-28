@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "usuarios"
-endpoints: 44
+endpoints: 47
 estado_revision: "generado"
 ---
 
@@ -28,7 +28,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.borrar_pwd`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `borrar_pwd`, sin contexto — utilidad de solo-pruebas sin identidad de fila; emitida por `borrar_pwd_form_data`)
+
+## `/src/usuarios/borrar_pwd_form_data`
+
+- Id: `usuarios.borrar_pwd_form_data`
+- Controller: `src/usuarios/infrastructure/ui/http/controllers/borrar_pwd_form_data.php`
+- Entrada: ninguna
+- Respuesta: `ctx_guardar`, cápsula `HashB` para `borrar_pwd`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/check_first_login_2fa`
@@ -133,7 +140,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.preferencias_guardar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php`
-- Entrada: `post.que:string`, `post.tabla:string`, `post.sPrefs:string`, `post.layout:string`, `post.oficina:string`, `post.inicio:string`, `post.tipo_tabla:string`, `post.ordenApellidos:string`, `post.idioma_nou:string`, `post.zona_horaria_nou:string`, `post.estilo_color:string`, `post.tipo_menu:string`
+- Entrada: `post.que:string` (`'slickGrid'` o vacío/otro). Rama `que=''` (preferencias personales, `preferencias.phtml`): `post.ctx_guardar:string` (cápsula `HashB` acción `preferencias_guardar`, contexto `{id_usuario}` — siempre `ConfigGlobal::mi_id_usuario()`, nunca del POST — emitida por `usuario_preferencias`), `post.layout:string`, `post.oficina:string`, `post.inicio:string`, `post.tipo_tabla:string`, `post.ordenApellidos:string`, `post.idioma_nou:string`, `post.zona_horaria_nou:string`, `post.estilo_color:string`, `post.tipo_menu:string`. Rama `que='slickGrid'` (`post.tabla:string`, `post.sPrefs:string`): **pendiente de `HashB`** — la dispara `scripts/index.js.php` desde cualquier página con tabla SlickGrid, firmada con un `HashF` calculado una vez en `index.php`; no hay paso de lectura por página al que atar una cápsula sin añadir una llamada a `src/` en cada carga de página. `id_usuario` ya viene de la sesión en ambas ramas, no hay IDOR.
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/recuperar_2fa_mail`
@@ -203,14 +210,15 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.usuario_2fa_info`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_info.php`
-- Entrada: `post.id_usuario:integer`
+- Entrada: ninguna (el `id_usuario` viene siempre de `ConfigGlobal::mi_id_usuario()`, nunca del POST: 2FA es siempre autoservicio del propio usuario)
+- Respuesta: incluye `ctx_2fa_update`, cápsula `HashB` para `usuario_2fa_update` atada a `{id_usuario}`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_2fa_update`
 
 - Id: `usuarios.usuario_2fa_update`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php`
-- Entrada: `post.id_usuario:integer`, `post.secret_2fa:string`, `post.enable_2fa:boolean`, `post.verification_code:string`
+- Entrada: `post.ctx_2fa_update:string` (cápsula `HashB` acción `usuario_2fa_update`, contexto `{id_usuario}`; emitida por `usuario_2fa_info`), `post.secret_2fa:string`, `post.enable_2fa:boolean`, `post.verification_code:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_2fa_verify`
@@ -287,14 +295,28 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.usuario_guardar_mail`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php`
-- Entrada: `post.id_usuario:integer`, `post.email:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `usuario_guardar_mail`, contexto `{id_usuario}` — siempre el propio usuario; emitida por `usuario_guardar_mail_form_data`), `post.email:string`
+
+## `/src/usuarios/usuario_guardar_mail_form_data`
+
+- Id: `usuarios.usuario_guardar_mail_form_data`
+- Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail_form_data.php`
+- Entrada: ninguna (`id_usuario` siempre de `ConfigGlobal::mi_id_usuario()`)
+- Respuesta: `usuario`, `email`, `ctx_guardar` (cápsula `HashB` para `usuario_guardar_mail`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_guardar_pwd`
 
 - Id: `usuarios.usuario_guardar_pwd`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php`
-- Entrada: `post.id_usuario:integer`, `post.password:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `usuario_guardar_pwd`, contexto `{id_usuario}` — siempre el propio usuario; emitida por `usuario_guardar_pwd_form_data`), `post.password:string`
+
+## `/src/usuarios/usuario_guardar_pwd_form_data`
+
+- Id: `usuarios.usuario_guardar_pwd_form_data`
+- Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd_form_data.php`
+- Entrada: ninguna (`id_usuario` siempre de `ConfigGlobal::mi_id_usuario()`)
+- Respuesta: `ctx_guardar`, cápsula `HashB` para `usuario_guardar_pwd`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_info`
@@ -316,4 +338,5 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `usuarios.usuario_preferencias`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php`
 - Entrada: ninguna detectada.
+- Respuesta: incluye `ctx_guardar`, cápsula `HashB` para `preferencias_guardar` (rama de preferencias personales) atada a `{id_usuario}`
 - Respuesta: `standard_envelope_string_data`
