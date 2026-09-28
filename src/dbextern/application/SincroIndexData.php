@@ -9,6 +9,7 @@ use src\dbextern\application\support\SincroDBFactory;
 use src\permisos\domain\XPermisos;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 
 class SincroIndexData
 {
@@ -189,6 +190,11 @@ class SincroIndexData
                 'path' => 'frontend/dbextern/controller/sincro_index.php',
                 'query' => ['tipo' => $tipo_persona],
             ],
+            'ctx_syncro' => HashB::sign('sincro_syncro', [
+                'region' => $region,
+                'dl_listas' => (string) $dl_listas,
+                'tipo_persona' => $tipo_persona,
+            ]),
         ];
     }
 

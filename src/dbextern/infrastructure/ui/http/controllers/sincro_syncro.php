@@ -2,10 +2,23 @@
 
 use src\dbextern\application\SincroPersonas;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
-$region = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'region');
-$dl_listas = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'dl_listas');
-$tipo_persona = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'tipo_persona');
+
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_syncro'),
+        'sincro_syncro'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$region = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'region');
+$dl_listas = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'dl_listas');
+$tipo_persona = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'tipo_persona');
 
 $result = DependencyResolver::get(SincroPersonas::class)($region, $dl_listas, $tipo_persona);
 

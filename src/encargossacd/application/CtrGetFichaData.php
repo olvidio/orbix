@@ -10,6 +10,7 @@ use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\services\EncargoDominioService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Lectura de la ficha de atencion sacerdotal de un centro.
@@ -162,6 +163,7 @@ final class CtrGetFichaData
             'opciones_sacd_sssc' => $aOpcionesSacdSssc !== null ? self::arrayStringKeyed($aOpcionesSacdSssc) : null,
             'encargos' => $encargos,
             'perm_des' => self::tienePermDes(),
+            'ctx_guardar' => HashB::sign('ctr_ficha_update', ['id_ubi' => $id_ubi]),
         ];
     }
 

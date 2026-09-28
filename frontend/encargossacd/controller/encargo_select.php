@@ -94,6 +94,7 @@ foreach ($filas as $fila) {
         $a_valores[$i]['clase'] = 'tono2';
     }
     $a_valores[$i]['sel'] = $id_enc;
+    $a_valores[$i]['ctx_eliminar'] = $row['ctx_eliminar'];
     $a_valores[$i][1] = $row['seccion'];
     $a_valores[$i][2] = ['ira' => $pagina, 'valor' => $desc_enc];
     $a_valores[$i][3] = $row['nombre_ubi'];
@@ -130,7 +131,7 @@ $h_modificar = $oHashMod->linkSinValParams();
 $url_borrar = AppUrlConfig::srcBrowserUrl('/src/encargossacd/encargo_ver_eliminar');
 $oHashBorrar = new HashF();
 $oHashBorrar->setUrl($url_borrar);
-$oHashBorrar->setCamposForm('que!sel');
+$oHashBorrar->setCamposForm('que!ctx_eliminar');
 $h_borrar = $oHashBorrar->linkSinValParams();
 
 $oHash = new HashF();

@@ -83,6 +83,8 @@ $oHash->setArraycamposHidden([
     'na' => $Qna,
     'sactividad' => $Qsactividad,
     'que' => '',
+    'ctx_guardar' => $payload['ctx_guardar'],
+    'ctx_eliminar' => $payload['ctx_eliminar'],
 ]);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
@@ -94,11 +96,11 @@ $buildHashedUrl = static function (string $url, string $campos): string {
 };
 $url_guardar = $buildHashedUrl(
     AppUrlConfig::srcBrowserUrl('/src/actividadplazas/peticiones_guardar'),
-    'id_nom!sactividad!actividades!actividades_mas!actividades_num'
+    'id_nom!sactividad!actividades!actividades_mas!actividades_num!ctx_guardar!ctx_eliminar'
 );
 $url_eliminar = $buildHashedUrl(
     AppUrlConfig::srcBrowserUrl('/src/actividadplazas/peticiones_eliminar'),
-    'id_nom!sactividad'
+    'id_nom!sactividad!ctx_guardar!ctx_eliminar'
 );
 
 $txt_guardar = _("guardar peticiones");

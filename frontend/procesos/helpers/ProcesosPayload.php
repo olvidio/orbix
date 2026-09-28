@@ -122,6 +122,7 @@ public static function actividadProcesoRow(mixed $raw): array
     if (!is_array($raw)) {
         return [
             'id_item' => 0,
+            'ctx_update' => '',
             'fase' => '',
             'tarea' => '',
             'of_responsable_txt' => '',
@@ -133,6 +134,7 @@ public static function actividadProcesoRow(mixed $raw): array
 
     return [
         'id_item' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_item'] ?? 0),
+        'ctx_update' => \frontend\shared\helpers\PayloadCoercion::string($raw['ctx_update'] ?? ''),
         'fase' => \frontend\shared\helpers\PayloadCoercion::string($raw['fase'] ?? ''),
         'tarea' => \frontend\shared\helpers\PayloadCoercion::string($raw['tarea'] ?? ''),
         'of_responsable_txt' => \frontend\shared\helpers\PayloadCoercion::string($raw['of_responsable_txt'] ?? ''),
@@ -173,6 +175,7 @@ public static function listadoRow(mixed $raw): array
     if (!is_array($raw)) {
         return [
             'id_item' => 0,
+            'ctx_eliminar' => '',
             'status_txt' => '',
             'responsable' => '',
             'fase' => '',
@@ -183,6 +186,7 @@ public static function listadoRow(mixed $raw): array
 
     return [
         'id_item' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_item'] ?? 0),
+        'ctx_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($raw['ctx_eliminar'] ?? ''),
         'status_txt' => \frontend\shared\helpers\PayloadCoercion::string($raw['status_txt'] ?? ''),
         'responsable' => \frontend\shared\helpers\PayloadCoercion::string($raw['responsable'] ?? ''),
         'fase' => \frontend\shared\helpers\PayloadCoercion::string($raw['fase'] ?? ''),

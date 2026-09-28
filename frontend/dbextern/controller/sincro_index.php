@@ -33,7 +33,7 @@ $url_actualizar = DbexternPayload::signedLink($data['link_spec_self'] ?? null);
 $url_sincro_syncro =  AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_syncro');
 $oHash1 = new HashF();
 $oHash1->setUrl($url_sincro_syncro);
-$oHash1->setCamposForm('region!dl_listas!tipo_persona');
+$oHash1->setCamposForm('region!dl_listas!tipo_persona!ctx_syncro');
 $h1 = $oHash1->linkSinValParams();
 
 $url_refrescar = AppUrlConfig::srcBrowserUrl('/src/dbextern/refrescar_bdu');
@@ -65,6 +65,7 @@ $a_campos = [
     'url_refrescar' => $url_refrescar,
     'h1' => $h1,
     'h2' => $h2,
+    'ctx_syncro' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_syncro'] ?? ''),
 ];
 
 $oView = new ViewNewPhtml('frontend\dbextern\controller');

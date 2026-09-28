@@ -4,6 +4,7 @@ namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
 use src\dbextern\application\support\SincroDBFactory;
+use src\shared\security\HashB;
 
 class VerListasData
 {
@@ -63,6 +64,11 @@ class VerListasData
         return [
             'lista' => $a_lista,
             'cont_sync' => $cont_sync,
+            'ctx_crear_todos' => HashB::sign('sincro_crear_todos', [
+                'region' => $region,
+                'dl' => $dl,
+                'tipo_persona' => $tipo_persona,
+            ]),
         ];
     }
 
@@ -85,6 +91,19 @@ class VerListasData
         return [
             'posibles_misma_dl' => $a_lista_orbix,
             'posibles_otra_dl' => $a_lista_orbix_otradl,
+            'ctx_crear' => HashB::sign('sincro_crear', [
+                'id_nom_listas' => $id_nom_bdu,
+                'tipo_persona' => $tipo_persona,
+            ]),
+            'ctx_unir' => HashB::sign('sincro_unir', [
+                'id_nom_listas' => $id_nom_bdu,
+                'tipo_persona' => $tipo_persona,
+            ]),
+            'ctx_crear_todos' => HashB::sign('sincro_crear_todos', [
+                'region' => $region,
+                'dl' => $dl,
+                'tipo_persona' => $tipo_persona,
+            ]),
         ];
     }
 }

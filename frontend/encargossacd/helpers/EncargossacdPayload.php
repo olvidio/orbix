@@ -278,6 +278,7 @@ public static function encargoSelectRow(mixed $raw): array
     if (!is_array($raw)) {
         return [
             'id_enc' => 0,
+            'ctx_eliminar' => '',
             'sf_sv' => 0,
             'desc_enc' => '',
             'seccion' => '',
@@ -289,6 +290,7 @@ public static function encargoSelectRow(mixed $raw): array
 
     return [
         'id_enc' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_enc'] ?? 0),
+        'ctx_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($raw['ctx_eliminar'] ?? ''),
         'sf_sv' => \frontend\shared\helpers\PayloadCoercion::int($raw['sf_sv'] ?? 0),
         'desc_enc' => \frontend\shared\helpers\PayloadCoercion::string($raw['desc_enc'] ?? ''),
         'seccion' => \frontend\shared\helpers\PayloadCoercion::string($raw['seccion'] ?? ''),

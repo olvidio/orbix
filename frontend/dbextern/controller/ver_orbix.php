@@ -38,6 +38,7 @@ $max = count($orbix);
 $a_lista_bdu = [];
 $persona_orbix = [];
 $new_id = 0;
+$ctx_unir = '';
 
 if ($max === 0) {
     $html_reg = _("No hay registros");
@@ -55,7 +56,8 @@ if ($max === 0) {
             'tipo_persona' => $tipo_persona,
             'id_nom_orbix' => $id_nom_orbix,
         ]);
-        $a_lista_bdu = DbexternPayload::listaBduFromMatches($matches);
+        $a_lista_bdu = DbexternPayload::listaBduFromMatches($matches['posibles_bdu'] ?? $matches);
+        $ctx_unir = \frontend\shared\helpers\PayloadCoercion::string($matches['ctx_unir'] ?? '');
     }
 
     $html_reg = sprintf(_("registro %s de %s"), $new_id, $max);
@@ -76,7 +78,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $url_sincro_unir = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_unir');
 $oHash1 = new HashF();
 $oHash1->setUrl($url_sincro_unir);
-$oHash1->setCamposForm('region!dl!id_nom_listas!id!id_orbix!tipo_persona');
+$oHash1->setCamposForm('region!dl!id_nom_listas!id!id_orbix!tipo_persona!ctx_unir');
 $h1 = $oHash1->linkSinValParams();
 
 $a_campos = [
@@ -92,6 +94,7 @@ $a_campos = [
     'url_sincro_ver' => $url_sincro_ver,
     'url_sincro_unir' => $url_sincro_unir,
     'h1' => $h1,
+    'ctx_unir' => $ctx_unir,
 ];
 
 $oView = new ViewNewPhtml('frontend\dbextern\controller');

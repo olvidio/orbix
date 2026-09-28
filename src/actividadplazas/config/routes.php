@@ -34,6 +34,10 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/resumen_plazas_data.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/actividadplazas/peticiones_incorporar_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/peticiones_incorporar_data.php';
+    });
+
     // Mutaciones.
     $r->addRoute(['GET', 'POST'], '/src/actividadplazas/gestion_plazas_update', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/gestion_plazas_update.php';

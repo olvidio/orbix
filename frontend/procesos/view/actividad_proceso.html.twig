@@ -34,12 +34,12 @@ fnjs_actualizar=function(){
 	fnjs_ajax_json_html({ url: url, data: parametros, target: '#div_proceso' });
 }
 
-fnjs_guardar=function(id_item){
+fnjs_guardar=function(id_item, ctx){
 	var force=$('#force').prop("checked");
 	var completado=$('#comp'+id_item).prop('checked');
 	var observ=$('#observ'+id_item).val();
 	var url = "{{ url_update }}";
-	var parametros='id_item='+id_item+'&completado='+completado+'&force='+force+'&observ='+observ+'{{ h_update|raw }}';
+	var parametros='ctx_update='+encodeURIComponent(ctx)+'&completado='+completado+'&force='+force+'&observ='+observ+'{{ h_update|raw }}';
 		 
 	$.ajax({
 		url: url,

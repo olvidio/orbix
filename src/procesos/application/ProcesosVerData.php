@@ -7,6 +7,7 @@ use src\menus\domain\PermisoMenuBits;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Caso de uso: datos para la pantalla `procesos_ver`.
@@ -23,7 +24,7 @@ class ProcesosVerData
     /**
      * @return array<string, mixed>
      */
-    public function execute(string $mod, int $id_item): array
+    public function execute(string $mod, int $id_item, int $id_tipo_proceso = 0): array
     {
         $a_oficinas = PermisoMenuBits::valueToLabel();
         $a_status = StatusId::getArrayStatus();
@@ -85,6 +86,11 @@ class ProcesosVerData
                 'a_tareas_previa' => [],
             ]];
         }
+
+        $data['ctx_update'] = HashB::sign('procesos_update', [
+            'id_item' => $id_item,
+            'id_tipo_proceso' => $id_tipo_proceso,
+        ]);
 
         return $data;
     }

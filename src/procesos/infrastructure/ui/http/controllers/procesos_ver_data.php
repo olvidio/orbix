@@ -9,5 +9,6 @@ $useCase = DependencyResolver::get(ProcesosVerData::class);
 
 $Qmod = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'mod');
 $Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item');
+$Qid_tipo_proceso = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_tipo_proceso');
 
-ContestarJson::enviar('', $useCase->execute($Qmod, $Qid_item));
+ContestarJson::enviar('', $useCase->execute($Qmod, $Qid_item, $Qid_tipo_proceso));

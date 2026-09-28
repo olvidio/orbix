@@ -59,11 +59,11 @@ $url_update = AppUrlConfig::srcBrowserUrl('/src/procesos/procesos_update');
 $url_eliminar = AppUrlConfig::srcBrowserUrl('/src/procesos/procesos_eliminar');
 $url_ver = 'frontend/procesos/controller/procesos_ver.php';
 
-$h_regenerar = ProcesosHashes::formLink($url_regenerar, 'id_tipo_proceso');
+$h_regenerar = ProcesosHashes::formLink($url_regenerar, 'id_tipo_proceso!ctx_regenerar');
 $h_get = ProcesosHashes::formLink($url_get, 'id_tipo_proceso');
 $h_get_listado = ProcesosHashes::formLink($url_get_listado, 'id_tipo_proceso');
-$h_clonar = ProcesosHashes::formLink($url_clonar, 'id_tipo_proceso!id_tipo_proceso_ref');
-$h_eliminar = ProcesosHashes::formLink($url_eliminar, 'id_item');
+$h_clonar = ProcesosHashes::formLink($url_clonar, 'id_tipo_proceso!id_tipo_proceso_ref!ctx_clonar');
+$h_eliminar = ProcesosHashes::formLink($url_eliminar, 'ctx_eliminar');
 $h_nuevo = ProcesosHashes::formLink($url_ver, 'mod!id_tipo_proceso');
 $h_modificar = ProcesosHashes::formLink($url_ver, 'mod!id_item!id_tipo_proceso');
 
@@ -89,6 +89,8 @@ $a_campos = [
     'url_ver' => $url_ver,
     'txt_eliminar' => $txt_eliminar,
     'txt_clonar' => $txt_clonar,
+    'ctx_regenerar' => is_array($data['ctx_regenerar'] ?? null) ? $data['ctx_regenerar'] : [],
+    'ctx_clonar' => is_array($data['ctx_clonar'] ?? null) ? $data['ctx_clonar'] : [],
 ];
 
 $oView = new ViewNewTwig('frontend/procesos/controller');

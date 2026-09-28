@@ -6,6 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
+use src\shared\security\HashB;
 
 /**
  * Data builder de la pantalla resumen de plazas por actividad.
@@ -59,6 +60,7 @@ final class ResumenPlazasData
                 'tot_disponibles' => 0,
                 'tot_ocupadas' => 0,
                 'dl_opciones' => [],
+                'ctx_ceder' => '',
             ];
         }
 
@@ -101,6 +103,7 @@ final class ResumenPlazasData
             'tot_disponibles' => is_numeric($tot['disponibles'] ?? null) ? (int)$tot['disponibles'] : 0,
             'tot_ocupadas' => is_numeric($tot['ocupadas'] ?? null) ? (int)$tot['ocupadas'] : 0,
             'dl_opciones' => $dl_opciones_out,
+            'ctx_ceder' => HashB::sign('plazas_ceder', ['id_activ' => $id_activ]),
         ];
     }
 }

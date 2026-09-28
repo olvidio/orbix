@@ -9,9 +9,16 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\entity\Encargo;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use src\usuarios\domain\entity\Local;
+use src\shared\security\HashB;
 
 final class EncargoSelectDataTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        session_id('test-session-encargo-select');
+    }
+
     public function test_idioma_se_resuelve_por_id_locale(): void
     {
         $encargo = $this->createMock(Encargo::class);
@@ -42,6 +49,10 @@ final class EncargoSelectDataTest extends TestCase
         $out = $useCase->execute('', 0);
 
         $this->assertSame('Castellano', $out['filas'][0]['idioma']);
+        $this->assertSame(
+            ['id_enc' => 10],
+            HashB::open($out['filas'][0]['ctx_eliminar'], 'encargo_ver_eliminar')
+        );
     }
 
     public function test_idioma_legacy_por_columna_idioma(): void

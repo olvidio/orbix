@@ -6,6 +6,7 @@ use src\actividadplazas\application\PeticionesActivData;
 use src\actividadplazas\application\PeticionesEliminar;
 use src\actividadplazas\application\PeticionesGuardar;
 use src\actividadplazas\application\PeticionesIncorporar;
+use src\actividadplazas\application\PeticionesIncorporarData;
 use src\actividadplazas\application\PlazasBalanceData;
 use src\actividadplazas\application\PlazasBalanceQueData;
 use src\actividadplazas\application\PlazasCeder;
@@ -47,6 +48,7 @@ return [
     PeticionesEliminar::class => autowire(PeticionesEliminar::class),
     PeticionesGuardar::class => autowire(PeticionesGuardar::class),
     PeticionesIncorporar::class => autowire(PeticionesIncorporar::class),
+    PeticionesIncorporarData::class => autowire(PeticionesIncorporarData::class),
     PlazasBalanceData::class => autowire(PlazasBalanceData::class),
     PlazasBalanceQueData::class => autowire(PlazasBalanceQueData::class),
     PlazasCeder::class => autowire(PlazasCeder::class),

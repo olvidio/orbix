@@ -88,6 +88,7 @@ foreach ($encargos as $idx => $enc) {
         "id_ubi_$e" => $Qid_ubi,
         "tipo_centro_$e" => $tipo_centro,
         "mod_horario_$e" => $mod_horario_e,
+        'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? ''),
     ]);
     $campos_form = $tipo_centro !== 'of'
         ? 'dedic_ctr_m!dedic_ctr_t!dedic_ctr_v!dedic_m!dedic_t!dedic_v!id_sacd_suplente!id_sacd_titular!observ'

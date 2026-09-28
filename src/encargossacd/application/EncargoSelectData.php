@@ -6,6 +6,7 @@ use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Datos para la lista de encargos (`encargo_select`). El frontend construye
@@ -84,6 +85,9 @@ final class EncargoSelectData
 
                 $filas[] = [
                     'id_enc' => (int)$oEncargo->getId_enc(),
+                    'ctx_eliminar' => HashB::sign('encargo_ver_eliminar', [
+                        'id_enc' => (int)$oEncargo->getId_enc(),
+                    ]),
                     'sf_sv' => $sf_sv,
                     'idioma_enc' => $idioma_enc,
                     'id_ubi' => $id_ubi,

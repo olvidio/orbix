@@ -25,5 +25,6 @@ final class ResumenPlazasDataTest extends TestCase
         $this->assertSame(0, $out['id_activ']);
         $this->assertSame([], $out['a_plazas']);
         $this->assertSame(0, $out['plazas_totales']);
+        $this->assertSame('', $out['ctx_ceder']);
     }
 }
