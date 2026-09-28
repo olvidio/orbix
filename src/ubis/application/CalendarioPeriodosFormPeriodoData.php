@@ -2,6 +2,7 @@
 
 namespace src\ubis\application;
 
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 
 final class CalendarioPeriodosFormPeriodoData
@@ -17,6 +18,8 @@ final class CalendarioPeriodosFormPeriodoData
     {
         $repo = $this->casaPeriodoRepository;
         $oCasaPeriodo = $repo->findById($idItem);
+        $ctx_guardar = HashB::sign('calendario_periodo_guardar', ['id_item' => $idItem, 'id_ubi' => 0]);
+        $ctx_eliminar = HashB::sign('calendario_periodo_eliminar', ['id_item' => $idItem]);
         if ($oCasaPeriodo === null) {
             return [
                 'id_item' => $idItem,
@@ -25,6 +28,8 @@ final class CalendarioPeriodosFormPeriodoData
                 'sel_sv' => '',
                 'sel_sf' => '',
                 'sel_res' => '',
+                'ctx_guardar' => $ctx_guardar,
+                'ctx_eliminar' => $ctx_eliminar,
             ];
         }
         $f_ini = $oCasaPeriodo->getF_ini()?->getFromLocal() ?? '';
@@ -41,6 +46,8 @@ final class CalendarioPeriodosFormPeriodoData
             'sel_sv' => $sel_sv,
             'sel_sf' => $sel_sf,
             'sel_res' => $sel_res,
+            'ctx_guardar' => $ctx_guardar,
+            'ctx_eliminar' => $ctx_eliminar,
         ];
     }
 }

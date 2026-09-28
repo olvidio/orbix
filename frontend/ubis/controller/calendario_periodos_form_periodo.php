@@ -15,7 +15,8 @@ $data = UbisPayload::calendarioPeriodoFields(UbisPayload::postData(PostRequest::
 
 $oHash = new HashF();
 $oHash->setArrayCamposHidden([
-    'id_item' => $Qid_item,
+    'ctx_guardar' => $data['ctx_guardar'],
+    'ctx_eliminar' => $data['ctx_eliminar'],
 ]);
 $oHash->setCamposForm('f_ini!f_fin!sfsv');
 

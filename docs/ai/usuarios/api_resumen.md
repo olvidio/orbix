@@ -49,15 +49,15 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.grupo_guardar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php`
-- Entrada: `post.usuario:string`, `post.id_usuario:integer`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `grupo_guardar`, contexto `{que_user, id_usuario}`; emitida por `grupo_info`), `post.usuario:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/grupo_info`
 
 - Id: `usuarios.grupo_info`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/grupo_info.php`
-- Entrada: `post.id_usuario:integer`
-- Respuesta: `standard_envelope_string_data`
+- Entrada: `post.id_usuario:integer` (`0` o vacío → alta nueva)
+- Respuesta: `standard_envelope_string_data` (incluye `nombre` y `ctx_guardar`, cápsula `HashB` para `grupo_guardar`)
 
 ## `/src/usuarios/grupo_lista`
 

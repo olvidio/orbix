@@ -4,6 +4,7 @@ namespace src\ubis\application;
 
 use DateInterval;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 
 final class CalendarioPeriodosNuevoData
@@ -57,6 +58,7 @@ final class CalendarioPeriodosNuevoData
             'f_next' => $f_next,
             'sf_chk' => $sf_chk,
             'sv_chk' => $sv_chk,
+            'ctx_guardar' => HashB::sign('calendario_periodo_guardar', ['id_item' => 0, 'id_ubi' => $idUbi]),
         ];
     }
 }

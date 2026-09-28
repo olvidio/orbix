@@ -14,7 +14,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.calendario_periodos_eliminar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/calendario_periodos_eliminar.php`
-- Entrada: `post.id_item:integer`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `calendario_periodo_eliminar`, contexto `{id_item}`; emitida por `calendario_periodos_form_periodo_data`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/calendario_periodos_form_periodo_data`
@@ -22,7 +22,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.calendario_periodos_form_periodo_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/calendario_periodos_form_periodo_data.php`
 - Entrada: `post.id_item:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar` y `ctx_eliminar`, cápsulas `HashB` para `calendario_periodos_guardar` / `calendario_periodos_eliminar`)
 
 ## `/src/ubis/calendario_periodos_get2_data`
 
@@ -42,7 +42,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.calendario_periodos_guardar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/calendario_periodos_guardar.php`
-- Entrada: `post.id_item:integer`, `post.id_ubi:integer`, `post.f_ini:string`, `post.f_fin:string`, `post.sfsv:integer`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `calendario_periodo_guardar`, contexto `{id_item, id_ubi}`; emitida por `calendario_periodos_form_periodo_data` o `calendario_periodos_nuevo_data`), `post.f_ini:string`, `post.f_fin:string`, `post.sfsv:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/calendario_periodos_nuevo_data`
@@ -50,7 +50,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.calendario_periodos_nuevo_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/calendario_periodos_nuevo_data.php`
 - Entrada: `post.id_ubi:integer`, `post.year:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`, cápsula `HashB` para `calendario_periodos_guardar`)
 
 ## `/src/ubis/casas_opciones_data`
 

@@ -480,7 +480,7 @@ public static function uploadFileFromPost(mixed $files): array
 
 /**
  * @param array<string, mixed> $payload
- * @return array{f_ini: string, f_fin: string, sel_sv: string, sel_sf: string, sel_res: string, f_next: string, sv_chk: string, sf_chk: string, overlap_error: string, show_nuevo: bool}
+ * @return array{f_ini: string, f_fin: string, sel_sv: string, sel_sf: string, sel_res: string, f_next: string, sv_chk: string, sf_chk: string, overlap_error: string, show_nuevo: bool, ctx_guardar: string, ctx_eliminar: string}
  */
 public static function calendarioPeriodoFields(array $payload): array
 {
@@ -495,6 +495,8 @@ public static function calendarioPeriodoFields(array $payload): array
         'sf_chk' => \frontend\shared\helpers\PayloadCoercion::string($payload['sf_chk'] ?? ''),
         'overlap_error' => \frontend\shared\helpers\PayloadCoercion::string($payload['overlap_error'] ?? ''),
         'show_nuevo' => !empty($payload['show_nuevo']),
+        'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
+        'ctx_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_eliminar'] ?? ''),
     ];
 }
 
