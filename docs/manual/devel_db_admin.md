@@ -244,7 +244,7 @@ Recargar desplegable de delegación al cambiar región en formularios DB.
 
 ### Permisos
 
-- Sin control propio; invocado vía `HashFront` al cambiar región en pantallas DB.
+- Sin control propio; invocado vía `HashF` al cambiar región en pantallas DB.
 
 ### Referencias Internas
 

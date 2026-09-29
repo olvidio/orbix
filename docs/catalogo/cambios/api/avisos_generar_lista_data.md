@@ -69,4 +69,4 @@ válido añade `paths` y `hash_*` para que `AvisosGenerarListaRender` firme las 
 ## Frontend Relacionado
 
 - `frontend/cambios/controller/avisos_generar.php`: carga el listado vía `PostRequest::getDataFromUrl`;
-  `AvisosGenerarListaRender::enrich` firma URLs de borrado con `HashFront`.
+  `AvisosGenerarListaRender::enrich` firma URLs de borrado con `HashF`.

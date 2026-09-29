@@ -48,7 +48,7 @@ Carga el modal de edición de una cama. Si `id_cama` vacío genera UUID nuevo; s
 - Helper: `ContestarJson::enviar` (data serializada como string JSON; el front hace segundo `JSON.parse`).
 - Forma: `standard_envelope_string_data`.
 - Claves en `data` (doble `JSON.parse`):
-  - `hash_form`: config HashFront descripcion/larga/vip
+  - `hash_form`: config HashF descripcion/larga/vip
   - `id_cama`: uuid (nuevo si vacío)
   - `id_habitacion`: uuid habitación
   - `id_ubi`: ubi

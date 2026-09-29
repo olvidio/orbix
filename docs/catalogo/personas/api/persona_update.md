@@ -71,4 +71,4 @@ El controller pasa `$_POST` completo al caso de uso.
 
 ## Frontend Relacionado
 
-- `frontend/personas/view/_persona_form_js.phtml` (`fnjs_guardar` → HashFront)
+- `frontend/personas/view/_persona_form_js.phtml` (`fnjs_guardar` → HashF)

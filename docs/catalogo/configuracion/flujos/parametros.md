@@ -32,7 +32,7 @@ idioma, ámbito territorial, gestión de calendario, etc.).
 
 ### Guardar un parámetro
 
-1. Editar el bloque deseado (cada formulario lleva `parametro` oculto vía HashFront).
+1. Editar el bloque deseado (cada formulario lleva `parametro` oculto vía HashF).
 2. Periodos STGR/CRT: campos `ini_dia`, `ini_mes`, `fin_dia`, `fin_mes` (no `valor`).
 3. Resto: campo `valor` (texto, radio o desplegable).
 4. «Guardar» → `parametros_update` → aviso «se ha guardado correctamente».

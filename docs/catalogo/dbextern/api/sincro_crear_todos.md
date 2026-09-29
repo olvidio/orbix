@@ -54,7 +54,7 @@ recuento intentado y lista de errores.
 
 ## Permisos
 
-- HashFront en `ver_listas.phtml` (`h_crear_todos`).
+- HashF en `ver_listas.phtml` (`h_crear_todos`).
 
 ## Casos De Uso
 

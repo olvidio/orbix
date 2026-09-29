@@ -34,7 +34,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Permisos
 
-- Sin control propio; HashFront en `sincro_index.phtml` (`h2`).
+- Sin control propio; HashF en `sincro_index.phtml` (`h2`).
 
 ### Referencias Internas
 
@@ -64,7 +64,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Permisos
 
-- HashFront en `ver_listas.phtml` (`h_crear`).
+- HashF en `ver_listas.phtml` (`h_crear`).
 
 ### Referencias Internas
 
@@ -92,7 +92,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Permisos
 
-- HashFront en `ver_desaparecidos_de_listas.phtml`.
+- HashF en `ver_desaparecidos_de_listas.phtml`.
 
 ### Referencias Internas
 
@@ -120,7 +120,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Permisos
 
-- HashFront en `ver_listas.phtml` (`h_crear_todos`).
+- HashF en `ver_listas.phtml` (`h_crear_todos`).
 
 ### Referencias Internas
 
@@ -149,7 +149,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Permisos
 
-- HashFront en `ver_desaparecidos_de_orbix.phtml`.
+- HashF en `ver_desaparecidos_de_orbix.phtml`.
 
 ### Referencias Internas
 
@@ -212,7 +212,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Permisos
 
-- HashFront (`h1`) en `sincro_index`; permisos de colectivo ya validados en bootstrap.
+- HashF (`h1`) en `sincro_index`; permisos de colectivo ya validados en bootstrap.
 
 ### Referencias Internas
 
@@ -240,7 +240,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Permisos
 
-- HashFront en `ver_traslados.phtml`.
+- HashF en `ver_traslados.phtml`.
 
 ### Referencias Internas
 
@@ -269,7 +269,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Permisos
 
-- HashFront en `ver_orbix_otradl.phtml`.
+- HashF en `ver_orbix_otradl.phtml`.
 
 ### Referencias Internas
 
@@ -298,7 +298,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Permisos
 
-- HashFront en pantallas `ver_listas` / `ver_orbix`.
+- HashF en pantallas `ver_listas` / `ver_orbix`.
 
 ### Referencias Internas
 

@@ -71,7 +71,7 @@ El controller construye `$input` con `clave`, `idioma` y `texto`.
 
 - Sin control propio en el caso de uso. La pantalla `com_sacd_txt.php` restringe la edición según
   `perm_mod_txt` (proviene de `com_sacd_activ_periodo_page_data`: los usuarios con rol `p-sacd` no
-  pueden modificar). URL firmada con `HashFront`.
+  pueden modificar). URL firmada con `HashF`.
 
 ## Casos De Uso
 

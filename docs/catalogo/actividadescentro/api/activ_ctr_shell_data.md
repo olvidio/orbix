@@ -22,7 +22,7 @@ estado_revision: "revisado"
 
 Resuelve el `tipo` efectivo y devuelve las especificaciones de URL (`path` + `campos_form`) de los
 demás endpoints del módulo, para que la shell frontend `activ_ctr` monte los enlaces AJAX. La firma
-`HashFront::linkSinVal()` se aplica en el controller frontend `frontend\actividadescentro\controller\activ_ctr`,
+`HashF::linkSinVal()` se aplica en el controller frontend `frontend\actividadescentro\controller\activ_ctr`,
 no en `src/`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
@@ -32,7 +32,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 Es el bootstrap de la pantalla: no toca base de datos. Ajusta el `tipo` cuando el usuario opera en el
 semestre de formación (`ConfigGlobal::mi_sfsv() === 2`: `sg`→`sfsg`, `sr`→`sfsr`, `nagd`→`sfnagd`) y
 emite, por cada acción (listar, encargados, disponibles, asignar, reordenar, eliminar), el `path` del
-endpoint y la lista `campos_form` que la firma `HashFront` debe cubrir.
+endpoint y la lista `campos_form` que la firma `HashF` debe cubrir.
 
 ## Endpoint
 
@@ -59,7 +59,7 @@ El controller construye el `$input` con los tres campos vía `FuncTablasSupport:
   - `tipo` (`string`): tipo efectivo tras el remapeo `sf*`.
   - `url_lista`, `url_encargados`, `url_disponibles`, `url_asignar`, `url_reordenar`, `url_eliminar`
     (`array`): cada uno con `path` (ruta del endpoint) y `campos_form` (campos separados por `!` que
-    firma `HashFront`).
+    firma `HashF`).
 
 ## Permisos
 
@@ -73,5 +73,5 @@ El controller construye el `$input` con los tres campos vía `FuncTablasSupport:
 ## Frontend Relacionado
 
 - `frontend/actividadescentro/controller/activ_ctr.php`: llama a este endpoint vía
-  `PostRequest::getDataFromUrl`, firma cada `url_*` con `HashFront::linkSinVal()` y las expone a la
+  `PostRequest::getDataFromUrl`, firma cada `url_*` con `HashF::linkSinVal()` y las expone a la
   vista `activ_ctr.phtml` como variables `URL_LISTA`, `URL_ENCARGADOS`, etc.

@@ -114,7 +114,7 @@ Acciones JavaScript:
 ## Permisos
 
 - Modificar fila: `have_perm_oficina('adl')` y sección del tipo de actividad coincidente.
-- Alta: `adl`, `pr` o `calendario`. Formulario usa `HashFront` (no HashB).
+- Alta: `adl`, `pr` o `calendario`. Formulario usa `HashF` (no HashB).
 
 ## Ruta de menú
 

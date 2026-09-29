@@ -57,7 +57,7 @@ elimina esa fila de la sesión tras éxito.
 
 ## Permisos
 
-- HashFront en pantallas `ver_listas` / `ver_orbix`.
+- HashF en pantallas `ver_listas` / `ver_orbix`.
 
 ## Casos De Uso
 

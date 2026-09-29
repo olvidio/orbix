@@ -188,7 +188,7 @@ $oTabla->setId_tabla('actividad_select');
 $oTabla->setCabeceras(ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []));
 $oTabla->setBotones(ActividadesListaSupport::botones($data['a_botones'] ?? []));
 $oTabla->setDatos($a_valores);
-$html_tabla = $oTabla->mostrar_tabla_html();
+$html_tabla = $oTabla->mostrar_tabla();
 unset($data['a_cabeceras'], $data['a_botones'], $data['a_valores']);
 $resultado = \frontend\shared\helpers\PayloadCoercion::string($data['resultado'] ?? '');
 $perm_nueva = (bool) ($data['perm_nueva'] ?? false);

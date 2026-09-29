@@ -51,7 +51,7 @@ Sin parámetros. El caso de uso no lee `$_POST`.
 ## Permisos
 
 - El formulario se construye con `perm_jefe(true)`. El control de acceso real se resuelve en el
-  frontend (`tipo_activ.php`, firma `HashFront`) y en `$_SESSION['oPerm']`; no inferir permisos aquí.
+  frontend (`tipo_activ.php`, firma `HashF`) y en `$_SESSION['oPerm']`; no inferir permisos aquí.
 
 ## Casos De Uso
 
@@ -59,4 +59,4 @@ Sin parámetros. El caso de uso no lee `$_POST`.
 
 ## Frontend Relacionado
 
-- `frontend/actividades/controller/tipo_activ.php` (emite la URL como `url_form_nuevo`, firmada con `HashFront`).
+- `frontend/actividades/controller/tipo_activ.php` (emite la URL como `url_form_nuevo`, firmada con `HashF`).

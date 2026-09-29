@@ -60,7 +60,7 @@ No se han detectado acciones.
 ## Manual De Usuario
 
 Alta: bloque de búsqueda de tipo de actividad (`actividad_que_datos`) + desplegable de tarifa.
-Edición: muestra nombre del tipo y desplegable de tarifa. Submit firmado con `HashFront`.
+Edición: muestra nombre del tipo y desplegable de tarifa. Submit firmado con `HashF`.
 
 ## Ruta de menú
 

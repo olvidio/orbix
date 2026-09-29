@@ -57,7 +57,7 @@ Si la región destino ≠ región actual, rechaza y pide usar el dossier de tras
 
 ## Permisos
 
-- HashFront en `ver_orbix_otradl.phtml`.
+- HashF en `ver_orbix_otradl.phtml`.
 
 ## Casos De Uso
 

@@ -49,7 +49,7 @@ mensajes de aviso/error por persona. Devuelve recuento y texto resumen.
 
 ## Permisos
 
-- HashFront (`h1`) en `sincro_index`; permisos de colectivo ya validados en bootstrap.
+- HashF (`h1`) en `sincro_index`; permisos de colectivo ya validados en bootstrap.
 
 ## Casos De Uso
 

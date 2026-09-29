@@ -44,7 +44,7 @@ Exige `id_tarifa` e `id_tipo_activ` > 0.
 | `id_tipo_activ` | `integer` | application | Si | Tipo de actividad |
 
 En alta el formulario nuevo también envía campos del bloque `actividad_que_datos`
-(`iactividad_val`, `iasistentes_val`, etc.) firmados con `HashFront`; el caso de uso solo lee los tres anteriores.
+(`iactividad_val`, `iasistentes_val`, etc.) firmados con `HashF`; el caso de uso solo lee los tres anteriores.
 
 ## Salida
 
@@ -70,5 +70,5 @@ En alta el formulario nuevo también envía campos del bloque `actividad_que_dat
 
 ## Frontend Relacionado
 
-- `frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php`: form firmado con `HashFront`
+- `frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php`: form firmado con `HashF`
   (twig `tarifa_tipo_actividad_form*.html.twig`).

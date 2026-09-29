@@ -42,4 +42,29 @@ class ListaSlickgridMetaTest extends TestCase
         $this->assertSame('imp', $out['fila']['clase']);
         $this->assertSame('dato', $out['fila'][1]);
     }
+
+    public function test_lista_paginada_agrupa_y_deja_la_capsula_en_la_fila(): void
+    {
+        $oTabla = new Lista();
+        $oTabla->setGrupos([7 => 'Asignatura']);
+        $oTabla->setCabeceras(['asignatura', 'alumno']);
+        $oTabla->setBotones([['txt' => 'borrar matrícula', 'click' => 'fnjs_borrar(this.form)']]);
+        $oTabla->setDatos([
+            7 => [[
+                'sel' => '10#7',
+                'ctx_eliminar' => 'token-eliminar',
+                1 => 'Mate',
+                2 => 'Ana',
+            ]],
+        ]);
+
+        $html = $oTabla->listaPaginada();
+
+        $this->assertStringContainsString('Asignatura', $html);
+        $this->assertStringContainsString('Ana', $html);
+        $this->assertStringContainsString("name='sel[]'", $html);
+        $this->assertStringContainsString('token-eliminar', $html);
+        $this->assertStringContainsString('borrar matrícula', $html);
+        $this->assertStringContainsString('data-json=', $html);
+    }
 }

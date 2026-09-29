@@ -48,8 +48,8 @@ Prepara el formulario de alta o edición de una habitación en un ubi CDC. Con `
 - Helper: `ContestarJson::enviar` (data serializada como string JSON; el front hace segundo `JSON.parse`).
 - Forma: `standard_envelope_string_data`.
 - Claves en `data` (doble `JSON.parse`):
-  - `hash_form`: config HashFront (campos_form/chk/no/hidden)
-  - `hash_actualizar`: config HashFront para submit habitacion_update
+  - `hash_form`: config HashF (campos_form/chk/no/hidden)
+  - `hash_actualizar`: config HashF para submit habitacion_update
   - `cama_form_hash`: url y campos hacia cama_form
   - `cama_delete_hash`: url y campos hacia cama_delete
   - `id_habitacion`: uuid o vacío en alta

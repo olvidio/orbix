@@ -11,8 +11,8 @@
         "errores": [],
         "salida": {
             "success_data": {
-                "hash_form": "config HashFront (campos_form/chk/no/hidden)",
-                "hash_actualizar": "config HashFront para submit habitacion_update",
+                "hash_form": "config HashF (campos_form/chk/no/hidden)",
+                "hash_actualizar": "config HashF para submit habitacion_update",
                 "cama_form_hash": "url y campos hacia cama_form",
                 "cama_delete_hash": "url y campos hacia cama_delete",
                 "id_habitacion": "uuid o vacío en alta",
@@ -48,7 +48,7 @@
         "errores": [],
         "salida": {
             "success_data": {
-                "hash_form": "config HashFront descripcion/larga/vip",
+                "hash_form": "config HashF descripcion/larga/vip",
                 "id_cama": "uuid (nuevo si vacío)",
                 "id_habitacion": "uuid habitación",
                 "id_ubi": "ubi",

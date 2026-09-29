@@ -21,7 +21,7 @@ estado_revision: "revisado"
 
 Estado del formulario de cabecera de acta (`acta_ver`).
 
-Estado del formulario `acta_ver` (sin HashFront ni vistas).
+Estado del formulario `acta_ver` (sin HashF ni vistas).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

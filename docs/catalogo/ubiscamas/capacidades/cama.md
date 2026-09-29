@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `cama
 
 ## Objetivo Funcional
 
-Gestiona Cama. Datos para frontend/ubiscamas/controller/cama_form.php. La composición de HashFront ocurre en {. Descripcion funcional pendiente de revisar.
+Gestiona Cama. Datos para frontend/ubiscamas/controller/cama_form.php. La composición de HashF ocurre en {. Descripcion funcional pendiente de revisar.
 
 ## Acciones Detectadas
 
@@ -43,7 +43,7 @@ Gestiona Cama. Datos para frontend/ubiscamas/controller/cama_form.php. La compos
 
 ## Pistas Desde Endpoints
 
-- Datos para `frontend/ubiscamas/controller/cama_form.php`. La composición de `HashFront` ocurre en {
+- Datos para `frontend/ubiscamas/controller/cama_form.php`. La composición de `HashF` ocurre en {
 - Descripcion funcional pendiente de revisar.
 
 ## Errores Conocidos

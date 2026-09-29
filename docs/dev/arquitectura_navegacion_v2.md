@@ -81,7 +81,7 @@ final class NavStack
     /** Entrada n posiciones bajo la cima (0 = cima). null si no existe. */
     public function peek(int $n = 0): ?array;
 
-    /** Destino de "atrás": url + parametros firmados (HashFront) + bloque. */
+    /** Destino de "atrás": url + parametros firmados (HashF) + bloque. */
     public function backTarget(int $n = 1): ?array; // ['url','parametros','bloque']
 
     /** Vacía la pila (menú raíz, nav=reset). */
@@ -106,7 +106,7 @@ oro cuando la página destino ejecute su `enter()`. Esto elimina `deleteFroward(
 `goEnd()`, `olvidar()` y toda la contabilidad de índices.
 
 `backTarget()` construye los parámetros como `identity + state` de la entrada destino,
-firmados con `HashFront::add_hash($params, $url)` (no tocar `HashFront`).
+firmados con `HashF::add_hash($params, $url)` (no tocar `HashF`).
 
 ---
 
@@ -221,7 +221,7 @@ y las funciones JS obsoletas de §5.3, y `$_SESSION['position']`.
   ofrece destino (o flecha oculta).
 - **E5 (profundidad):** que → select → hijo → ficha → atrás×3 vuelve exactamente por
   el mismo camino con parámetros correctos (sin "pau desconocido" ni logout por hash).
-- **E6 (hash):** todo POST de vuelta pasa `HashFront::validatePost` (si falla, se ve
+- **E6 (hash):** todo POST de vuelta pasa `HashF::validatePost` (si falla, se ve
   logout: es regresión bloqueante).
 - **E7 (concurrencia):** con la página cargada, dos AJAX simultáneos (p. ej. selección
   slickgrid + abrir hijo) no corrompen la pila.
@@ -231,7 +231,7 @@ y las funciones JS obsoletas de §5.3, y `$_SESSION['position']`.
 ## 9. Reglas para el implementador
 
 1. PHP 8, tipos estrictos, PHPStan al nivel del proyecto sin nuevos errores.
-2. NO tocar: `HashFront`, el mecanismo de sesión/login de `FrontBootstrap`,
+2. NO tocar: `HashF`, el mecanismo de sesión/login de `FrontBootstrap`,
    `fnjs_guardar_estado`/restauración de scroll en sessionStorage.
 3. NO crear helpers específicos de pantalla. NO añadir parámetros "por si acaso".
 4. Commits pequeños: núcleo primero, luego un commit por flujo migrado.

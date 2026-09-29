@@ -58,7 +58,7 @@ situación `A`, y guarda `IdMatchPersona`. Opcionalmente avanza la lista en sesi
 
 ## Permisos
 
-- HashFront en `ver_listas.phtml` (`h_crear`).
+- HashF en `ver_listas.phtml` (`h_crear`).
 
 ## Casos De Uso
 

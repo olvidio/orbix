@@ -17,7 +17,7 @@ paths:
       operationId: "post_actividadescentro_activ_ctr_shell_data"
       summary: "Activ Ctr Shell Data"
       description: |
-        Resuelve el `tipo` efectivo y devuelve las especificaciones de URL (`path` + `campos_form`) de los demás endpoints del módulo, para que la shell frontend `activ_ctr` monte los enlaces AJAX. La firma `HashFront::linkSinVal()` se aplica en el controller frontend `frontend\actividadescentro\controller\activ_ctr`, no en `src/`.
+        Resuelve el `tipo` efectivo y devuelve las especificaciones de URL (`path` + `campos_form`) de los demás endpoints del módulo, para que la shell frontend `activ_ctr` monte los enlaces AJAX. La firma `HashF::linkSinVal()` se aplica en el controller frontend `frontend\actividadescentro\controller\activ_ctr`, no en `src/`.
         
         Operacion: `form_data`.
         

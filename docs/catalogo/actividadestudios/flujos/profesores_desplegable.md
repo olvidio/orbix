@@ -26,7 +26,7 @@ actividad.
 Pantalla `form_asignaturas_de_una_actividad`
 (`frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php`): las
 funciones `fnjs_construir_desplegable` y `fnjs_mas_profes` llaman por AJAX a
-`profesores_desplegable_data` (URLs `h`, `h1`, `h2` del HashFront).
+`profesores_desplegable_data` (URLs `h`, `h1`, `h2` del HashF).
 
 ## Fragmentos O Pantallas Auxiliares
 

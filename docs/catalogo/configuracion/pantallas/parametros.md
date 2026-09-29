@@ -18,7 +18,7 @@ estado_revision: "revisado"
 
 Pantalla de parámetros globales del esquema Orbix: periodos de curso STGR/CRT, jefe de
 calendario, datos de estudios/certificados, notas, idioma, ámbito (dl/región/rstgr) y
-gestión de calendario. Cada bloque es un formulario independiente con HashFront.
+gestión de calendario. Cada bloque es un formulario independiente con HashF.
 
 ## Tipo
 

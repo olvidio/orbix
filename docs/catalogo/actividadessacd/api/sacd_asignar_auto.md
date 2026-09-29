@@ -68,7 +68,7 @@ El controller construye `$input` con `f_ini_iso`.
 
 ## Permisos
 
-- Sin control propio en el caso de uso. La pantalla `asignar_sacd_auto.php` firma la URL con `HashFront`;
+- Sin control propio en el caso de uso. La pantalla `asignar_sacd_auto.php` firma la URL con `HashF`;
   la autorización de acceso se resuelve en el menú/frontend y en `$_SESSION['oPerm']`.
 
 ## Casos De Uso

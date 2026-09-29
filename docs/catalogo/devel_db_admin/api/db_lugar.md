@@ -48,7 +48,7 @@ activas de la región POST. Incluye la opción especial `region` → «para gest
 
 ## Permisos
 
-- Sin control propio; invocado vía `HashFront` al cambiar región en pantallas DB.
+- Sin control propio; invocado vía `HashF` al cambiar región en pantallas DB.
 
 ## Casos De Uso
 

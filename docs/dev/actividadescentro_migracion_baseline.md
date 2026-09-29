@@ -329,7 +329,7 @@ Entrada POST via `input_string` / `input_int`.
 ### Frontend
 
 `frontend/actividadescentro/controller/activ_ctr.php` ya usa solo `PostRequest` +
-`HashFront` (0 `use src\...`).
+`HashF` (0 `use src\...`).
 
 ### Resultado del cierre DI
 

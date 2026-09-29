@@ -59,7 +59,7 @@ Relación tarifa ↔ tipo de actividad (`RelacionTarifaTipoActividad`): listado,
 ## Manual De Usuario
 
 Listado al cargar (`fnjs_ver`). Alta abre formulario con selector de tipo de actividad
-(`actividad_que_datos`) y tarifa; edición solo cambia la tarifa asignada. Mutaciones con `HashFront`
+(`actividad_que_datos`) y tarifa; edición solo cambia la tarifa asignada. Mutaciones con `HashF`
 en el formulario (no HashB).
 
 ## Ruta de menú

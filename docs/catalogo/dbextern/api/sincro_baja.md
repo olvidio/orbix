@@ -54,7 +54,7 @@ No elimina el `id_match`.
 
 ## Permisos
 
-- HashFront en `ver_desaparecidos_de_listas.phtml`.
+- HashF en `ver_desaparecidos_de_listas.phtml`.
 
 ## Casos De Uso
 

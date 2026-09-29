@@ -290,7 +290,7 @@ Al abrir el fragmento de edición de textos, el sistema carga la lista de idioma
 
 ### Permisos
 
-- Sin control propio en el caso de uso. La pantalla `asignar_sacd_auto.php` firma la URL con `HashFront`;
+- Sin control propio en el caso de uso. La pantalla `asignar_sacd_auto.php` firma la URL con `HashF`;
 
 ### Referencias Internas
 

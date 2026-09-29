@@ -119,6 +119,6 @@ echo $oPosicion->mostrarNavAtras(1);
     $oTabla->setCabeceras($a_cabeceras);
     $oTabla->setBotones($a_botones);
     $oTabla->setDatos($a_valores);
-    echo $oTabla->mostrar_tabla_html();
+    echo $oTabla->mostrar_tabla();
     ?>
 </form>

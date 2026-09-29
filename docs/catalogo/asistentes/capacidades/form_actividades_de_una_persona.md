@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `form
 
 ## Objetivo Funcional
 
-Gestiona FormActividadesDeUnaPersona. Dossier actividades de una persona (1301). Datos puros para el formulario; la UI (HashFront, Desplegable) se compone en frontend.
+Gestiona FormActividadesDeUnaPersona. Dossier actividades de una persona (1301). Datos puros para el formulario; la UI (HashF, Desplegable) se compone en frontend.
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ Gestiona FormActividadesDeUnaPersona. Dossier actividades de una persona (1301).
 
 ## Pistas Desde Endpoints
 
-- Dossier actividades de una persona (1301). Datos puros para el formulario; la UI (HashFront, Desplegable) se compone en frontend.
+- Dossier actividades de una persona (1301). Datos puros para el formulario; la UI (HashF, Desplegable) se compone en frontend.
 
 ## Errores Conocidos
 

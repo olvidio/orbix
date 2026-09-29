@@ -77,7 +77,7 @@ El controller pasa `$_POST` completo al caso de uso (`execute($_POST)`).
 
 - Sin control propio de acceso, pero el filtrado por actividad usa
   `$_SESSION['oPermActividades']->havePermisoSacd(...)` (salvo en modo `propuesta`). El rol `p-sacd`
-  limita el listado al propio sacd. URL firmada con `HashFront`.
+  limita el listado al propio sacd. URL firmada con `HashF`.
 
 ## Casos De Uso
 

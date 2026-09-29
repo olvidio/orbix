@@ -53,7 +53,7 @@ Busca `IdMatchPersona` por `id_listas` y lo elimina del repositorio.
 
 ## Permisos
 
-- HashFront en `ver_desaparecidos_de_orbix.phtml`.
+- HashF en `ver_desaparecidos_de_orbix.phtml`.
 
 ## Casos De Uso
 

@@ -66,7 +66,7 @@ El controller construye `$input` con `id_activ`, `id_nom` y `num_orden`. Nota: p
 ## Permisos
 
 - Sin control propio en el caso de uso. Autorización en el frontend (`activ_sacd.php`): permiso de
-  oficina `des` + `perm_modificar` por fila (`$_SESSION['oPermActividades']`), URL firmada con `HashFront`.
+  oficina `des` + `perm_modificar` por fila (`$_SESSION['oPermActividades']`), URL firmada con `HashF`.
 
 ## Casos De Uso
 

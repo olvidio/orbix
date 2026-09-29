@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Controlador frontend sin vista: reenvía el POST firmado (HashFront) a `/src/configuracion/modulos_update` y convierte la respuesta texto plano legacy en JSON para `fnjs_ajax_json`.
+Controlador frontend sin vista: reenvía el POST firmado (HashF) a `/src/configuracion/modulos_update` y convierte la respuesta texto plano legacy en JSON para `fnjs_ajax_json`.
 
 ## Uso En Ayuda
 

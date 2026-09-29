@@ -6,7 +6,7 @@ nombre: "Gestionar Preferencias"
 entidades: ["Preferencias"]
 acciones: ["guardar"]
 endpoints: ["/src/usuarios/preferencias_guardar"]
-pantallas: ["frontend/shared/security/HashFront.php"]
+pantallas: ["frontend/shared/security/HashF.php"]
 casos_uso: []
 tags: ["guardar", "preferencias", "usuarios"]
 estado_revision: "generado"
@@ -30,7 +30,7 @@ Gestiona Preferencias. Descripcion funcional pendiente de revisar.
 
 ## Pantallas Relacionadas
 
-- `frontend/shared/security/HashFront.php`
+- `frontend/shared/security/HashF.php`
 
 ## Casos De Uso Detectados
 

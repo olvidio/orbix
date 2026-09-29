@@ -50,7 +50,7 @@ Al hacer Save en el modal (`commitCurrentEdit` en `modificar_cuadricula_zona.pht
 | `tipo_plantilla` | `p` | Contexto de vista: `p` = plan; `s1`/`s3`/`d1`/`d3`/`m1`/`m3` = plantillas. Afecta colores de estado. |
 | `id_zona` | `3` | Zona activa. |
 
-HashFront firma: `dia!id_enc!key!observ!tend!tstart!uuid_item!tipo_plantilla!id_zona`.
+HashF firma: `dia!id_enc!key!observ!tend!tstart!uuid_item!tipo_plantilla!id_zona`.
 
 **Nota `key`:** el desplegable y el POST usan `iniciales#id_nom`. En `meta` de `ver_cuadricula_zona_data` a veces viene `id_nom#iniciales`; el JS tolera ambas con `resolveSacdSelectedKey` / `sacdKeyToIdNom`. El backend (`CuadriculaUpdate`) toma `id_nom` de la **segunda** parte tras `#` → el POST debe ser `iniciales#id_nom`.
 

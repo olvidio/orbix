@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `habi
 
 ## Objetivo Funcional
 
-Gestiona Habitacion. Datos para frontend/ubiscamas/controller/habitacion_form.php. La composición de HashFront ocurre en {. Descripcion funcional pendiente de revisar.
+Gestiona Habitacion. Datos para frontend/ubiscamas/controller/habitacion_form.php. La composición de HashF ocurre en {. Descripcion funcional pendiente de revisar.
 
 ## Acciones Detectadas
 
@@ -42,7 +42,7 @@ Gestiona Habitacion. Datos para frontend/ubiscamas/controller/habitacion_form.ph
 
 ## Pistas Desde Endpoints
 
-- Datos para `frontend/ubiscamas/controller/habitacion_form.php`. La composición de `HashFront` ocurre en {
+- Datos para `frontend/ubiscamas/controller/habitacion_form.php`. La composición de `HashF` ocurre en {
 - Descripcion funcional pendiente de revisar.
 
 ## Errores Conocidos

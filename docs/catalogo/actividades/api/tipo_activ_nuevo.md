@@ -67,7 +67,7 @@ El id compuesto debe medir exactamente 6 caracteres; si no, devuelve `Id incorre
 ## Permisos
 
 - Sin control de permisos propio. La autorización se resuelve en el frontend (`tipo_activ.php`, firma
-  `HashFront`) y en `$_SESSION['oPerm']`.
+  `HashF`) y en `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 

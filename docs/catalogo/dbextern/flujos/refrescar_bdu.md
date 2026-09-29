@@ -29,7 +29,7 @@ Enlace **refrescar** en `sincro_index` (`fnjs_refrescar`).
 ### Ejecutar
 
 1. Usuario pulsa **refrescar**.
-2. AJAX a `refrescar_bdu` con HashFront (`que=algo`).
+2. AJAX a `refrescar_bdu` con HashF (`que=algo`).
 3. Tras éxito, recarga `sincro_index` en `#main`.
 
 ## Endpoints Del Flujo

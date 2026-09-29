@@ -77,7 +77,7 @@ El controller construye `$input` explícitamente con `id_activ` e `id_nom` (`Fun
 - El caso de uso no aplica control de permisos propio. La autorización se resuelve en el frontend
   (`activ_sacd.php`): la acción solo se ofrece con permiso de oficina `des`
   (`ActividadesPermSupport::havePermOficina('des')`) y con `perm_crear` por fila (calculado en
-  `lista_actividades_sacd_data` vía `$_SESSION['oPermActividades']`). La URL se firma con `HashFront`.
+  `lista_actividades_sacd_data` vía `$_SESSION['oPermActividades']`). La URL se firma con `HashF`.
 
 ## Casos De Uso
 

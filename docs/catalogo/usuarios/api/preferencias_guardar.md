@@ -10,7 +10,7 @@ entrada: ["post.que:string", "post.tabla:string", "post.sPrefs:string", "post.la
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: ["frontend/shared/security/HashFront.php"]
+frontend_referencias: ["frontend/shared/security/HashF.php"]
 casos_uso: []
 tags: ["usuarios", "preferencias", "guardar"]
 estado_revision: "revisado"
@@ -70,4 +70,4 @@ Usuario autenticado; escribe en `web_preferencias` del usuario actual.
 
 ## Frontend Relacionado
 
-- Ver `frontend_referencias` en front matter (`["frontend/shared/security/HashFront.php"]`).
+- Ver `frontend_referencias` en front matter (`["frontend/shared/security/HashF.php"]`).

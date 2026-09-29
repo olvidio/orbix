@@ -40,7 +40,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_menu` | `integer` | Vacío = alta |
 | `txt_menu` | `string` | Etiqueta visible |
 | `id_metamenu` | `integer` | Destino (metamenu) |
-| `parametros` | `string` | Query string extra (HashFront) |
+| `parametros` | `string` | Query string extra (HashF) |
 | `orden` | `string` | Ruta jerárquica CSV, p. ej. `1,2,3` |
 | `perm_menu` | `array` | Bits de permiso |
 | `ok` | `string` | Checkbox activo |

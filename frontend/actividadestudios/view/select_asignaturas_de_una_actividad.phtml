@@ -88,7 +88,7 @@
 <form id="seleccionados" name="seleccionados" action="" method="post">
     <?= $oHashSelect->getCamposHtml(); ?>
     <input type='hidden' id='mod' name='mod' value=''>
-    <?= $oTabla->mostrar_tabla_html(); ?>
+    <?= $oTabla->mostrar_tabla(); ?>
 </form>
 <?php if (!empty($link_insert)) {
     $links_insert_bar_links = [sprintf(_("añadir asignatura")) => $link_insert];

@@ -140,7 +140,7 @@ flowchart LR
 | Naming de casos de uso | Mezcla `FooGuardar`, `ListaFooData`, a veces `*UseCase` |
 | Controllers = scripts | No es MVC de clases; son entrypoints finos |
 | Frontend con `use src\` | Más de las 3 excepciones documentadas; inventario en [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md) (puede estar desfasado) |
-| Hash anti-tamper | `HashB` piloto en algunos módulos; UI sigue en `HashFront` ([`hash_arquitectura.md`](hash_arquitectura.md)) |
+| Hash anti-tamper | `HashB` piloto en algunos módulos; UI sigue en `HashF` ([`hash_arquitectura.md`](hash_arquitectura.md)) |
 | Tests / smoke | Cobertura desigual; scripts `test:report:*` pueden faltar en `tools/qa/` |
 
 **Conclusión práctica:** escribe código **nuevo** como manda `AGENTS.md`. Al tocar legacy, mejora un paso (tests, DI, PHPStan sin baseline del módulo) sin reescribir el mundo.

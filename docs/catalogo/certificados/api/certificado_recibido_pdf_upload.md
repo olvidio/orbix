@@ -58,7 +58,7 @@ Recibe `certificado_pdf` y crea o actualiza un `CertificadoRecibido` con metadat
 
 ## Permisos
 
-- HashFront en formularios frontend.
+- HashF en formularios frontend.
 
 ## Casos De Uso
 

@@ -53,7 +53,7 @@ y `fnjs_guardar(...,'eliminar')`.
 ## Permisos
 
 - Sin control de permisos propio en el caso de uso. La autorización se resuelve en el frontend
-  (`tipo_activ.php`, firma `HashFront` sobre el campo `id_tipo_activ`) y en `$_SESSION['oPerm']`.
+  (`tipo_activ.php`, firma `HashF` sobre el campo `id_tipo_activ`) y en `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 
@@ -61,4 +61,4 @@ y `fnjs_guardar(...,'eliminar')`.
 
 ## Frontend Relacionado
 
-- `frontend/actividades/controller/tipo_activ.php` (emite la URL como `url_form_modificar`, firmada con `HashFront`).
+- `frontend/actividades/controller/tipo_activ.php` (emite la URL como `url_form_modificar`, firmada con `HashF`).

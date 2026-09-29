@@ -67,7 +67,7 @@ Tras `crear_global` ejecuta verificación adicional (`ApptablesVerificarGlobal`)
 
 ## Permisos
 
-- Sin control propio; `HashFront` en `apptables.php` firma el POST.
+- Sin control propio; `HashF` en `apptables.php` firma el POST.
 
 ## Casos De Uso
 

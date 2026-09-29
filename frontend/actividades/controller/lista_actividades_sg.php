@@ -128,7 +128,7 @@ $oTabla->setId_tabla('lista_actividades_sg');
 $oTabla->setCabeceras(ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []));
 $oTabla->setBotones(ActividadesListaSupport::botones($data['a_botones'] ?? []));
 $oTabla->setDatos($a_valores);
-$html_tabla = $oTabla->mostrar_tabla_html();
+$html_tabla = $oTabla->mostrar_tabla();
 unset($data['a_cabeceras'], $data['a_botones'], $data['a_valores']);
 $result_busqueda = PayloadCoercion::string($data['result_busqueda'] ?? '');
 $Qid_tipo_activ = PayloadCoercion::string($data['id_tipo_activ'] ?? '');

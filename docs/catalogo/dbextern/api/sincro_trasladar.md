@@ -55,7 +55,7 @@ advierte que la fecha de traslado será hoy.
 
 ## Permisos
 
-- HashFront en `ver_traslados.phtml`.
+- HashF en `ver_traslados.phtml`.
 
 ## Casos De Uso
 

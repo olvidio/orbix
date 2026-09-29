@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `doss
 
 ## Objetivo Funcional
 
-Gestiona DossiersVerPantalla. Cuerpo de dossiers_ver: datos de cabecera + lista o ficha. El backend NO firma URLs: devuelve *_link_spec ({path, query}) que firma el frontend. En modo ficha, ficha_segmentos mezcla: - Segmentos html ya generados por los Select_* (TODO: refactorizar para que tampoco lleven HTML/HashFront desde src/). - Segmentos datos_tabla con datos puros (action_tabla_link_spec, ins_traslado_link_spec, script_ctx, hash, tabla, permiso) que el frontend compone con HashFront, Lista y el script JS de DatosTablaRepo.
+Gestiona DossiersVerPantalla. Cuerpo de dossiers_ver: datos de cabecera + lista o ficha. El backend NO firma URLs: devuelve *_link_spec ({path, query}) que firma el frontend. En modo ficha, ficha_segmentos mezcla: - Segmentos html ya generados por los Select_* (TODO: refactorizar para que tampoco lleven HTML/HashF desde src/). - Segmentos datos_tabla con datos puros (action_tabla_link_spec, ins_traslado_link_spec, script_ctx, hash, tabla, permiso) que el frontend compone con HashF, Lista y el script JS de DatosTablaRepo.
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ Gestiona DossiersVerPantalla. Cuerpo de dossiers_ver: datos de cabecera + lista 
 
 ## Pistas Desde Endpoints
 
-- Cuerpo de dossiers_ver: datos de cabecera + lista o ficha. El backend NO firma URLs: devuelve `*_link_spec` ({path, query}) que firma el frontend. En modo ficha, `ficha_segmentos` mezcla: - Segmentos `html` ya generados por los `Select_*` (TODO: refactorizar para que tampoco lleven HTML/HashFront desde `src/`). - Segmentos `datos_tabla` con datos puros (`action_tabla_link_spec`, `ins_traslado_link_spec`, `script_ctx`, `hash`, `tabla`, `permiso`) que el frontend compone con HashFront, Lista y el script JS de `DatosTablaRepo`.
+- Cuerpo de dossiers_ver: datos de cabecera + lista o ficha. El backend NO firma URLs: devuelve `*_link_spec` ({path, query}) que firma el frontend. En modo ficha, `ficha_segmentos` mezcla: - Segmentos `html` ya generados por los `Select_*` (TODO: refactorizar para que tampoco lleven HTML/HashF desde `src/`). - Segmentos `datos_tabla` con datos puros (`action_tabla_link_spec`, `ins_traslado_link_spec`, `script_ctx`, `hash`, `tabla`, `permiso`) que el frontend compone con HashF, Lista y el script JS de `DatosTablaRepo`.
 
 ## Errores Conocidos
 

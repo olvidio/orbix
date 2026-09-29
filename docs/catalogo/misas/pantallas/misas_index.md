@@ -16,7 +16,7 @@ estado_revision: "revisado"
 
 # Misas index
 
-Índice de navegación del módulo con enlaces HashFront a las 10 pantallas principales (plan, encargos, plantilla, iniciales, status). Sin backend JSON.
+Índice de navegación del módulo con enlaces HashF a las 10 pantallas principales (plan, encargos, plantilla, iniciales, status). Sin backend JSON.
 
 ## Tipo
 

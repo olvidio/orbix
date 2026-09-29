@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `acta
 
 ## Objetivo Funcional
 
-Gestiona ActaVer. Estado del formulario acta_ver (sin HashFront ni vistas).
+Gestiona ActaVer. Estado del formulario acta_ver (sin HashF ni vistas).
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ Gestiona ActaVer. Estado del formulario acta_ver (sin HashFront ni vistas).
 
 ## Pistas Desde Endpoints
 
-- Estado del formulario `acta_ver` (sin HashFront ni vistas).
+- Estado del formulario `acta_ver` (sin HashF ni vistas).
 
 ## Errores Conocidos
 

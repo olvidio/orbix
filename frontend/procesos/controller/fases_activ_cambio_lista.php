@@ -57,6 +57,6 @@ $oHash->setArraycamposHidden([
 $html = $msg;
 $html .= '<form id="seleccionados" name="seleccionados" action="" method="post">';
 $html .= $oHash->getCamposHtml();
-$html .= $oTabla->mostrar_tabla_html();
+$html .= $oTabla->mostrar_tabla();
 $html .= '</form>';
 AjaxJsonSupport::html($html);

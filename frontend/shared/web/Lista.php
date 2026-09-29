@@ -78,6 +78,27 @@ class Lista
         return ['fila' => $fila, 'meta' => $meta];
     }
 
+    private static function htmlCeldaSel(mixed $valor): string
+    {
+        if ($valor === null) {
+            return '<td></td>';
+        }
+        $chk = '';
+        if (is_array($valor)) {
+            $chk = !empty($valor['select']) ? self::scalarString($valor['select']) : '';
+            $id = self::scalarString($valor['id'] ?? '');
+        } else {
+            $id = self::scalarString($valor);
+        }
+        if ($id === '') {
+            return '<td></td>';
+        }
+
+        return "<td tipo='sel' title='" . _("clic para seleccionar") . "'>"
+            . '<input class=\'sel\' type=\'checkbox\' ' . $chk . " name='sel[]' id='a" . $id . "' value='" . $id . "'>"
+            . '</td>';
+    }
+
     private static function slickgridDimension(mixed $value, ?string $fallback = null): ?string
     {
         $s = self::scalarString($value);
@@ -417,6 +438,17 @@ class Lista
             }
         }
 
+        $showSelCol = false;
+        foreach ($aDatos as $filaSel) {
+            if (is_array($filaSel) && array_key_exists('sel', $filaSel)) {
+                $showSelCol = true;
+                break;
+            }
+        }
+        if ($showSelCol) {
+            $cabecera = "<th class=cabecera tipo='notext' width='20' ></th>\n" . $cabecera;
+        }
+
         $Html = "<table class=\"$clase\"><tr>";
         $Html .= $cabecera . "</tr>";
 
@@ -436,7 +468,12 @@ class Lista
             if (!empty($fila['clase'])) {
                 $clase .= ' ' . self::scalarString($fila['clase']);
             }
-            $tbody .= "<tr class='$clase' >";
+            $filaJson = json_encode($fila, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS);
+            $tbody .= "<tr class='$clase' onclick='fnjs_clic_fila(this, event)' data-json='"
+                . htmlspecialchars($filaJson !== false ? $filaJson : '', ENT_QUOTES, 'UTF-8') . "'>";
+            if ($showSelCol) {
+                $tbody .= self::htmlCeldaSel($fila['sel'] ?? null);
+            }
             $tbody .= self::renderCeldasDatos($fila, $aCabeceras, $aColsVisible, self::resolveStartIcol($fila));
             $tbody .= "</tr>\n";
         }
@@ -454,6 +491,17 @@ class Lista
         $aDatos = $this->aDatos;
         reset($aGrupos);
         $Html = '';
+        if ($this->aBotones !== []) {
+            $botones = '';
+            $b = 0;
+            foreach ($this->aBotones as $a_boton) {
+                $prefix = empty($a_boton['prefix']) ? '' : self::scalarString($a_boton['prefix']) . '_';
+                $btn = $prefix . 'btn' . $b++;
+                $botones .= '<INPUT id="' . $btn . '" name="' . $btn . '" type=button value="' . self::scalarString($a_boton['txt'] ?? '') . '" onClick=\'' . self::scalarString($a_boton['click'] ?? '') . '\'>';
+            }
+            $cab = count($this->aCabeceras) + 1;
+            $Html .= '<table><tr class=botones><td colspan=\'' . $cab . '\'>' . $botones . '</td></tr></table>' . "\n";
+        }
         foreach ($aGrupos as $key => $titulo) {
             $grupoDatos = $aDatos[$key] ?? [];
             $this->aDatos = is_array($grupoDatos) ? $grupoDatos : [];

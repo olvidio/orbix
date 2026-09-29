@@ -38,7 +38,7 @@ Invoca `CopiarBDU::crearTablaTmp()`. Tras éxito el front recarga `sincro_index`
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `que` | `string` | controller | No | El front envía `que=algo` (campo dummy para HashFront) |
+| `que` | `string` | controller | No | El front envía `que=algo` (campo dummy para HashF) |
 
 ## Salida
 
@@ -52,7 +52,7 @@ Invoca `CopiarBDU::crearTablaTmp()`. Tras éxito el front recarga `sincro_index`
 
 ## Permisos
 
-- Sin control propio; HashFront en `sincro_index.phtml` (`h2`).
+- Sin control propio; HashF en `sincro_index.phtml` (`h2`).
 
 ## Casos De Uso
 

@@ -39,7 +39,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `nota_num` | `number` | application | No | Si no numérico → `null` |
 | `nota_max` | `integer` | application | No | Si < 1 → `oConfig->getNotaMax()` |
 
-HashFront en UI: campos form `id_nom!nota_num!nota_max` + hidden `acta`.
+HashF en UI: campos form `id_nom!nota_num!nota_max` + hidden `acta`.
 
 ## Salida
 

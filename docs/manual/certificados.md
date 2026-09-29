@@ -286,7 +286,7 @@ Subir fichero PDF al API de certificados emitidos.
 
 ### Permisos
 
-- Validación HashFront en formularios frontend; sin permisos adicionales en el controller.
+- Validación HashF en formularios frontend; sin permisos adicionales en el controller.
 
 ### Referencias Internas
 
@@ -505,7 +505,7 @@ Subir PDF de certificado recibido.
 
 ### Permisos
 
-- HashFront en formularios frontend.
+- HashF en formularios frontend.
 
 ### Referencias Internas
 

@@ -40,7 +40,7 @@ Formulario para hacer visible una persona en el desplegable de otra DL durante u
 ## Campos Detectados
 
 - `form.dl` (desplegable de DL destino)
-- Hidden HashFront: `id_nom`, `id_tabla`, `id_schema`
+- Hidden HashF: `id_nom`, `id_tabla`, `id_schema`
 
 ## Acciones Detectadas
 

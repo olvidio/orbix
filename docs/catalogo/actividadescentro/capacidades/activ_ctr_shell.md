@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `acti
 
 ## Objetivo Funcional
 
-Gestiona ActivCtrShell. Tipo resuelto y especificaciones de URL para la shell de activ_ctr (sin HashFront en src/). La firma linkSinVal se aplica en {.
+Gestiona ActivCtrShell. Tipo resuelto y especificaciones de URL para la shell de activ_ctr (sin HashF en src/). La firma linkSinVal se aplica en {.
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ Gestiona ActivCtrShell. Tipo resuelto y especificaciones de URL para la shell de
 
 ## Pistas Desde Endpoints
 
-- Tipo resuelto y especificaciones de URL para la shell de `activ_ctr` (sin `HashFront` en `src/`). La firma `linkSinVal` se aplica en {
+- Tipo resuelto y especificaciones de URL para la shell de `activ_ctr` (sin `HashF` en `src/`). La firma `linkSinVal` se aplica en {
 
 ## Errores Conocidos
 

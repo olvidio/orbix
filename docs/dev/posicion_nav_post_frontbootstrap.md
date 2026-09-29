@@ -41,7 +41,7 @@ $oPosicion->recordar();
 | `parametros` | **todo** `$this->aParametros` (copia del POST, incl. `pau`, `queSel`, `sel`, `hh`, …) |
 | `stack` | índice en la pila |
 
-Al pintar la flecha atrás, `mostrar_left_slide(1)` hace `go(1)` (lee la entrada anterior) y `HashFront::add_hash($aParam, $url)`:
+Al pintar la flecha atrás, `mostrar_left_slide(1)` hace `go(1)` (lee la entrada anterior) y `HashF::add_hash($aParam, $url)`:
 
 - elimina meta-hash antiguo (`h`, `hh`, `hhc`, …)
 - recalcula firma nueva con `hpos=1`

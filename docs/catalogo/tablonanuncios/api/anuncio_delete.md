@@ -68,7 +68,7 @@ Se requiere que al menos uno de los dos aporte un `uuid_item` no vacío; el caso
 ## Permisos
 
 - El caso de uso no aplica un control de permisos propio. La autorización se resuelve en el frontend
-  (`public/portada.php`), que monta el listado con `HashFront` y opera bajo la sesión del usuario
+  (`public/portada.php`), que monta el listado con `HashF` y opera bajo la sesión del usuario
   (`$_SESSION['oPerm']`). No inferir permisos concretos aquí.
 
 ## Casos De Uso

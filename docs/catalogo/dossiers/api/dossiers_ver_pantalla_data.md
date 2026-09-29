@@ -79,7 +79,7 @@ El controller pasa `$_POST` completo al caso de uso (`build($_POST)`); la tabla 
     `datos_tabla` (con `titulo`, `script_ctx`, `action_tabla_link_spec`, `hash`, `tabla`, `permiso`,
     `ins_traslado_link_spec`).
   - `aviso` (`string`): presente cuando hay problemas de configuración de región `stgr`.
-- Los link specs se firman en el frontend (`HashFrontSignedLink::tryFromSpec` / `signFilas`).
+- Los link specs se firman en el frontend (`HashFSignedLink::tryFromSpec` / `signFilas`).
 - En error, el controller extrae `error` del resultado y responde `success: false`, `mensaje` con el
   texto, y `data` con el resto del payload (incluye `ficha_segmentos: []`).
 

@@ -57,7 +57,7 @@ Busca el `TipoDeActividad` por `id_tipo_activ` y lo elimina. Al eliminar invalid
 ## Permisos
 
 - Sin control de permisos propio. La autorización se resuelve en el frontend (`tipo_activ.php`, firma
-  `HashFront`) y en `$_SESSION['oPerm']`.
+  `HashF`) y en `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 

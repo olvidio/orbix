@@ -51,7 +51,7 @@ Sin parámetros. El caso de uso ignora `$_POST` y lee todos los tipos del reposi
 ## Permisos
 
 - El caso de uso no aplica control de permisos propio. La autorización de oficina se resuelve en el
-  frontend (`tipo_activ.php`, que firma la llamada con `HashFront`) y en `$_SESSION['oPerm']`. No
+  frontend (`tipo_activ.php`, que firma la llamada con `HashF`) y en `$_SESSION['oPerm']`. No
   inferir permisos concretos aquí.
 
 ## Casos De Uso
@@ -60,4 +60,4 @@ Sin parámetros. El caso de uso ignora `$_POST` y lee todos los tipos del reposi
 
 ## Frontend Relacionado
 
-- `frontend/actividades/controller/tipo_activ.php` (emite la URL como `url_lista`, firmada con `HashFront`).
+- `frontend/actividades/controller/tipo_activ.php` (emite la URL como `url_lista`, firmada con `HashF`).

@@ -58,7 +58,7 @@ en éxito.
 ## Permisos
 
 - Sin control de permisos propio. La autorización se resuelve en el frontend (`tipo_activ.php`, firma
-  `HashFront` sobre `id_tipo_activ`) y en `$_SESSION['oPerm']`.
+  `HashF` sobre `id_tipo_activ`) y en `$_SESSION['oPerm']`.
 
 ## Casos De Uso
 

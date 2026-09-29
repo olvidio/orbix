@@ -62,7 +62,7 @@ registro existente (`uploadTxtFirmado`); en otro caso crea certificado nuevo con
 
 ## Permisos
 
-- Validación HashFront en formularios frontend; sin permisos adicionales en el controller.
+- Validación HashF en formularios frontend; sin permisos adicionales en el controller.
 
 ## Casos De Uso
 

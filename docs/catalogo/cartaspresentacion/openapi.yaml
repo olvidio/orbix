@@ -221,7 +221,7 @@ paths:
       operationId: "post_cartaspresentacion_cartas_presentacion_shell_data"
       summary: "Cartas Presentacion Shell Data"
       description: |
-        Bootstrap de la pantalla principal `cartas_presentacion`: devuelve la delegación del usuario y las rutas relativas de los demás endpoints del módulo, junto con las especificaciones `hash_*` que el frontend firma con `HashFront`.
+        Bootstrap de la pantalla principal `cartas_presentacion`: devuelve la delegación del usuario y las rutas relativas de los demás endpoints del módulo, junto con las especificaciones `hash_*` que el frontend firma con `HashF`.
         
         Operacion: `form_data`.
         

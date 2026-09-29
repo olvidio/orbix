@@ -79,7 +79,7 @@ El controller pasa `$_POST` completo al caso de uso (`execute($_POST)`); los cam
 
 - Sin control propio de acceso en el caso de uso, pero el filtrado por actividad usa
   `$_SESSION['oPermActividades']->havePermisoSacd(...)` (salvo en modo `propuesta`). El rol `p-sacd`
-  fuerza el envío únicamente sobre el propio sacd. URL firmada con `HashFront`.
+  fuerza el envío únicamente sobre el propio sacd. URL firmada con `HashF`.
 
 ## Casos De Uso
 

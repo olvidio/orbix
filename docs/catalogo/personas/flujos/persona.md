@@ -21,7 +21,7 @@ Guardar cambios en la ficha o eliminar un registro de la propia delegación.
 
 ## Punto De Entrada
 
-- `personas_editar` + `_persona_form_js.phtml` (HashFront).
+- `personas_editar` + `_persona_form_js.phtml` (HashF).
 
 ## Escenarios
 

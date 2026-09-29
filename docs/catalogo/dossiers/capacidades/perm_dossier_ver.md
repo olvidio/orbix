@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `perm
 
 ## Objetivo Funcional
 
-Gestiona PermDossierVer. Formulario "permisos de acceso" para un tipo de dossier. El backend devuelve sólo datos: - go_to_link_spec ({path, query}) para que el frontend firme con HashFront. - hash_config (campos_form, campos_no, campos_hidden) para que el frontend componga el bloque hidden con HashFront; el valor de go_to dentro de campos_hidden se inyecta firmado en el borde del frontend. - permiso_dossier_bit_map + enteros permiso_lectura / permiso_escritura; el HTML de checkboxes lo genera el controlador frontend con {.
+Gestiona PermDossierVer. Formulario "permisos de acceso" para un tipo de dossier. El backend devuelve sólo datos: - go_to_link_spec ({path, query}) para que el frontend firme con HashF. - hash_config (campos_form, campos_no, campos_hidden) para que el frontend componga el bloque hidden con HashF; el valor de go_to dentro de campos_hidden se inyecta firmado en el borde del frontend. - permiso_dossier_bit_map + enteros permiso_lectura / permiso_escritura; el HTML de checkboxes lo genera el controlador frontend con {.
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ Gestiona PermDossierVer. Formulario "permisos de acceso" para un tipo de dossier
 
 ## Pistas Desde Endpoints
 
-- Formulario "permisos de acceso" para un tipo de dossier. El backend devuelve sólo datos: - `go_to_link_spec` ({path, query}) para que el frontend firme con HashFront. - `hash_config` (campos_form, campos_no, campos_hidden) para que el frontend componga el bloque hidden con HashFront; el valor de `go_to` dentro de `campos_hidden` se inyecta firmado en el borde del frontend. - `permiso_dossier_bit_map` + enteros `permiso_lectura` / `permiso_escritura`; el HTML de checkboxes lo genera el controlador frontend con {
+- Formulario "permisos de acceso" para un tipo de dossier. El backend devuelve sólo datos: - `go_to_link_spec` ({path, query}) para que el frontend firme con HashF. - `hash_config` (campos_form, campos_no, campos_hidden) para que el frontend componga el bloque hidden con HashF; el valor de `go_to` dentro de `campos_hidden` se inyecta firmado en el borde del frontend. - `permiso_dossier_bit_map` + enteros `permiso_lectura` / `permiso_escritura`; el HTML de checkboxes lo genera el controlador frontend con {
 
 ## Errores Conocidos
 

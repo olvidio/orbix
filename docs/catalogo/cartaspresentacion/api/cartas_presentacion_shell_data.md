@@ -23,7 +23,7 @@ estado_revision: "revisado"
 
 Bootstrap de la pantalla principal `cartas_presentacion`: devuelve la delegación del usuario y las
 rutas relativas de los demás endpoints del módulo, junto con las especificaciones `hash_*` que el
-frontend firma con `HashFront`.
+frontend firma con `HashF`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -31,7 +31,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 No toca base de datos. Emite `mi_dele` (`ConfigGlobal::mi_delef()`) y, para cada acción AJAX de la
 shell (listado de centros, formulario, poblaciones, update, eliminar, ver ficha de centro), el `path`
-relativo y los `campos_form` / `campos_no` que `HashFront` debe cubrir. La firma se aplica en
+relativo y los `campos_form` / `campos_no` que `HashF` debe cubrir. La firma se aplica en
 `CartasPresentacionShellRender`, no en `src/`.
 
 ## Endpoint

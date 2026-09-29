@@ -27,7 +27,7 @@ Enlace **ejecutar** del punto 1 en `sincro_index` (`fnjs_sincronizar`).
 
 ### Ejecutar
 
-1. Envía `region`, `dl_listas`, `tipo_persona` con HashFront.
+1. Envía `region`, `dl_listas`, `tipo_persona` con HashF.
 2. `SincroPersonas` sincroniza cada persona con `id_match`.
 3. Muestra `alert` con mensaje resumen o errores parciales.
 

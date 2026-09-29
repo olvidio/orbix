@@ -21,7 +21,7 @@ del tipo elegido en el menú (`na` / `sg` / `sr` / `sssc` / `sf` / `sf_na` / `sf
 `falta_sacd` / `solape`) y, por cada una, sus sacd encargados, permitiendo asignar, reordenar y
 borrar. El controller solo pinta la barra de filtros (periodo) y contenedores vacíos; el listado y
 las mutaciones se cargan por AJAX contra los endpoints `/src/actividadessacd/*` (URLs firmadas con
-`HashFront`).
+`HashF`).
 
 ## Tipo
 
