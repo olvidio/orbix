@@ -55,10 +55,7 @@ use frontend\shared\security\HashF;
 <br>
 <form id="seleccionados" name="seleccionados" action="" method="post">
     <?= $oHash->getCamposHtml() ?>
-    <?php // HTML forzado (no SlickGrid): la fila lleva `ctx_eliminar` en `data-json`,
-    // y solo `mostrar_tabla_html()` garantiza que una clave extra del array no
-    // desplace las columnas numeradas del grid (ver AGENTS.md / Lista::mostrar_tabla_slickgrid). ?>
-    <?= $oTabla->mostrar_tabla_html() ?>
+    <?= $oTabla->mostrar_tabla() ?>
 </form>
 <br>
 <?php if ($permiso === 1) { ?>

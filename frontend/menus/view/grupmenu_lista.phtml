@@ -53,8 +53,7 @@ use frontend\shared\security\HashF;
 <br>
 <form id="seleccionados" name="seleccionados" action="" method="post">
     <?= $oHashSelect->getCamposHtml() ?>
-    <?php // HTML forzado (no SlickGrid): la fila lleva `ctx_eliminar` en `data-json`. ?>
-    <?= $oTabla->mostrar_tabla_html() ?>
+    <?= $oTabla->mostrar_tabla() ?>
 </form>
 <br>
 <table>

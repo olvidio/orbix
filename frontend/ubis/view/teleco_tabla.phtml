@@ -48,10 +48,7 @@
 <form id='seleccionados' name='seleccionados' action='' method='post'>
     <?= $oHash->getCamposHtml(); ?>
     <input type="hidden" id="mod" name="mod" value="">
-    <?php // HTML forzado (no SlickGrid): la fila lleva `ctx_eliminar` en `data-json`,
-    // y solo `mostrar_tabla_html()` evita que una clave extra desplace las
-    // columnas numeradas del grid (ver AGENTS.md / Lista::mostrar_tabla_slickgrid). ?>
-    <?= $oTabla->mostrar_tabla_html(); ?>
+    <?= $oTabla->mostrar_tabla(); ?>
     <?php if ($botones == 1) { ?>
         <br>
         <table cellspacing=3 class=botones><tr class=botones>

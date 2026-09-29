@@ -50,6 +50,34 @@ class Lista
         return '';
     }
 
+    /**
+     * Separa las cápsulas HashB (`ctx_*`) del resto de la fila.
+     *
+     * SlickGrid asigna las claves numéricas a columnas por posición. Una clave
+     * extra (`ctx_eliminar`, `ctx_trasladar`, …) descuadra esa posición. La
+     * cápsula no es una columna: se reinyecta en el item para que
+     * `fnjs_ctx_fila_seleccionada` la lea de la fila seleccionada.
+     *
+     * @param array<int|string, mixed> $fila
+     * @return array{fila: array<int|string, mixed>, meta: array<string, string>}
+     */
+    public static function extraerMetaSlickgrid(array $fila): array
+    {
+        $meta = [];
+        foreach ($fila as $col => $valor) {
+            if (!is_string($col) || !str_starts_with($col, 'ctx_')) {
+                continue;
+            }
+            unset($fila[$col]);
+            if (is_array($valor)) {
+                continue;
+            }
+            $meta[$col] = ($valor === '' || $valor === null) ? '' : self::scalarString($valor);
+        }
+
+        return ['fila' => $fila, 'meta' => $meta];
+    }
+
     private static function slickgridDimension(mixed $value, ?string $fallback = null): ?string
     {
         $s = self::scalarString($value);
@@ -689,6 +717,8 @@ class Lista
             }
             $f++;
             $id_fila = $f . $ahora;
+            $metaFila = self::extraerMetaSlickgrid($fila);
+            $fila = $metaFila['fila'];
             ksort($fila);
             $icol = 0;
             $aFilas[$num_fila]["id"] = $id_fila;
@@ -777,6 +807,9 @@ class Lista
                         }
                     }
                 }
+            }
+            foreach ($metaFila['meta'] as $metaKey => $metaVal) {
+                $aFilas[$num_fila][$metaKey] = $metaVal;
             }
         }
 

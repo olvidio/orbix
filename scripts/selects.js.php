@@ -190,31 +190,57 @@ function fnjs_solo_uno(formulario, multiple = false) {
 }
 
 /**
- * Lee un campo (p.ej. `ctx_eliminar`, cápsula HashB) del `data-json` de la
- * fila cuyo checkbox `.sel` está marcado. Se usa cuando la propia checkbox
- * `sel[]` no puede llevar la cápsula porque su valor en claro lo necesita
- * también otro flujo (p.ej. cargar el formulario de modificación) que vive
- * en `frontend/`. Solo funciona con tablas `web\Lista` en formato HTML
- * (`mostrar_tabla_html()`), que son las que escriben `data-json` por fila.
- * Devuelve '' si no hay exactamente una fila seleccionada o el campo no
- * está presente.
+ * Cápsulas HashB (`ctx_*`) de las filas seleccionadas en un SlickGrid del formulario.
+ * La cápsula viaja en el item (no como columna). Devuelve [].
+ */
+function fnjs_ctx_desde_grids(formulario, campo) {
+	var out = [];
+	$(formulario).find('[id^="grid_"]').each(function () {
+		var tabla = this.id.substring(5);
+		var grid = window['grid_' + tabla];
+		var dataView = window['dataView_' + tabla];
+		if (!grid || !dataView || typeof grid.getSelectedRows !== 'function') {
+			return;
+		}
+		var selected = grid.getSelectedRows() || [];
+		selected.forEach(function (idx) {
+			var item = dataView.getItem(idx);
+			if (item && item[campo]) {
+				out.push(item[campo]);
+			}
+		});
+	});
+	return out;
+}
+
+/**
+ * Lee un campo (p.ej. `ctx_eliminar`, cápsula HashB) de la fila cuyo checkbox
+ * `.sel` está marcado. Se usa cuando la propia checkbox `sel[]` no puede llevar
+ * la cápsula porque su valor en claro lo necesita también otro flujo (p.ej.
+ * cargar el formulario de modificación) que vive en `frontend/`.
+ * En HTML la cápsula está en `data-json` de la `<tr>`. En SlickGrid está en el
+ * item de la fila seleccionada (`ctx_*` no ocupa columna).
+ * Devuelve '' si no hay exactamente una fila seleccionada o el campo no está.
  */
 function fnjs_ctx_fila_seleccionada(formulario, campo) {
 	var form = $(formulario).attr('id');
 	var sel = $('#' + form + ' input.sel:checked');
-	if (sel.length !== 1) {
-		return '';
+	if (sel.length === 1) {
+		var fila = sel.closest('tr[data-json]');
+		if (fila.length) {
+			try {
+				var rowData = JSON.parse(fila.attr('data-json'));
+				if (rowData[campo]) {
+					return rowData[campo];
+				}
+			} catch (e) {}
+		}
 	}
-	var fila = sel.closest('tr[data-json]');
-	if (!fila.length) {
-		return '';
+	var fromGrid = fnjs_ctx_desde_grids(formulario, campo);
+	if (fromGrid.length === 1) {
+		return fromGrid[0];
 	}
-	try {
-		var rowData = JSON.parse(fila.attr('data-json'));
-		return rowData[campo] || '';
-	} catch (e) {
-		return '';
-	}
+	return '';
 }
 
 /**
@@ -236,7 +262,10 @@ function fnjs_ctx_filas_seleccionadas(formulario, campo) {
 			}
 		} catch (e) {}
 	});
-	return out;
+	if (out.length) {
+		return out;
+	}
+	return fnjs_ctx_desde_grids(formulario, campo);
 }
 
 /**
