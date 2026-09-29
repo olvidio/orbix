@@ -3,6 +3,7 @@
 namespace src\ubis\application;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\CuadrosLaborBits;
 
@@ -33,6 +34,7 @@ final class CentrosFormData
         $base = [
             'id_ubi' => $id_ubi,
             'nombre_ubi' => $oCentro?->getNombre_ubi() ?? '',
+            'ctx_guardar' => HashB::sign('centros_update', ['id_ubi' => $id_ubi]),
         ];
 
         return match ($modo) {

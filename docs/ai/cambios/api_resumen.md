@@ -15,7 +15,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `cambios.avisos_generar_lista_data`
 - Controller: `src/cambios/infrastructure/ui/http/controllers/avisos_generar_lista_data.php`
 - Entrada: `post.aviso_tipo:integer`, `post.id_usuario:integer`, `post.is_admin:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (cada fila incluye `sel` como cápsula `HashB` para `cambio_usuario_eliminar`; incluye además `ctx_eliminar_fecha`, cápsula acción-only para `cambio_usuario_eliminar_hasta_fecha`)
 
 ## `/src/cambios/avisos_generar_tabla`
 
@@ -28,14 +28,15 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `cambios.cambio_usuario_eliminar`
 - Controller: `src/cambios/infrastructure/ui/http/controllers/cambio_usuario_eliminar.php`
-- Entrada: `post.sel:array`
+- Entrada: `post.sel:array` (cada elemento es una cápsula `HashB` acción `cambio_usuario_eliminar`, contexto `{id_item_cambio, id_usuario, sfsv, aviso_tipo}`; emitida por fila en `avisos_generar_lista_data`; las cápsulas inválidas se descartan una a una sin abortar el resto del lote)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/cambios/cambio_usuario_eliminar_hasta_fecha`
 
 - Id: `cambios.cambio_usuario_eliminar_hasta_fecha`
 - Controller: `src/cambios/infrastructure/ui/http/controllers/cambio_usuario_eliminar_hasta_fecha.php`
-- Entrada: `post.f_fin:string`
+- Entrada: `post.ctx_eliminar_fecha:string` (cápsula `HashB` acción-only `cambio_usuario_eliminar_hasta_fecha`, sin contexto; emitida por `avisos_generar_lista_data`), `post.f_fin:string`
+- Notas: mutación global — el repositorio no filtra por `id_usuario` pese a que la pantalla sí filtra la lista por usuario; comportamiento preexistente, no alterado por este cambio.
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/cambios/cambio_usuario_objeto_pref_eliminar`

@@ -10,6 +10,7 @@ use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 
 /**
@@ -96,6 +97,9 @@ final class UsuarioFormAvisosData
             $objeto_txt = $aObjetos[$objeto] ?? $objeto;
 
             $a_valores[$i]['sel'] = "$id_usuario#$id_item_usuario_objeto";
+            $a_valores[$i]['ctx_eliminar'] = HashB::sign('cambio_usuario_objeto_pref_eliminar', [
+                'id_item_usuario_objeto' => $id_item_usuario_objeto,
+            ]);
             $a_valores[$i][1] = $objeto_txt;
             $a_valores[$i][2] = $dl_org;
             $a_valores[$i][3] = $oTipoActividad->getNom();

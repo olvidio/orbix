@@ -11,6 +11,7 @@ use src\actividades\application\ActividadLugar;
 use src\actividades\application\ActividadNueva;
 use src\actividades\application\ActividadNuevoCurso;
 use src\actividades\application\ActividadNuevoCursoEjecutar;
+use src\actividades\application\ActividadNuevoCursoFormData;
 use src\actividades\application\ActividadPublicar;
 use src\actividades\application\ActividadQueDatos;
 use src\actividades\application\ActividadQueFiltrosBloque;
@@ -84,6 +85,7 @@ return [
     ActividadNueva::class => autowire(ActividadNueva::class),
     ActividadNuevoCurso::class => autowire(ActividadNuevoCurso::class),
     ActividadNuevoCursoEjecutar::class => autowire(ActividadNuevoCursoEjecutar::class),
+    ActividadNuevoCursoFormData::class => autowire(ActividadNuevoCursoFormData::class),
     ActividadPublicar::class => autowire(ActividadPublicar::class),
     ActividadQueDatos::class => autowire(ActividadQueDatos::class),
     ActividadQueFiltrosBloque::class => autowire(ActividadQueFiltrosBloque::class),

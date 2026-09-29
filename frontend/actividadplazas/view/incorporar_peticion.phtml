@@ -7,7 +7,8 @@
             type: 'post',
             data: {
                 sactividad: <?= json_encode($sactividad) ?>,
-                sasistentes: <?= json_encode($sasistentes) ?>
+                sasistentes: <?= json_encode($sasistentes) ?>,
+                ctx_incorporar: <?= json_encode($ctx_incorporar) ?>
             },
             dataType: 'json'
         }).done(function (json) {

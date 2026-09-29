@@ -14,7 +14,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.calendario_periodos_eliminar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/calendario_periodos_eliminar.php`
-- Entrada: `post.id_item:integer`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `calendario_periodo_eliminar`, contexto `{id_item}`; emitida por `calendario_periodos_form_periodo_data`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/calendario_periodos_form_periodo_data`
@@ -22,7 +22,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.calendario_periodos_form_periodo_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/calendario_periodos_form_periodo_data.php`
 - Entrada: `post.id_item:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar` y `ctx_eliminar`, cápsulas `HashB` para `calendario_periodos_guardar` / `calendario_periodos_eliminar`)
 
 ## `/src/ubis/calendario_periodos_get2_data`
 
@@ -42,7 +42,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.calendario_periodos_guardar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/calendario_periodos_guardar.php`
-- Entrada: `post.id_item:integer`, `post.id_ubi:integer`, `post.f_ini:string`, `post.f_fin:string`, `post.sfsv:integer`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `calendario_periodo_guardar`, contexto `{id_item, id_ubi}`; emitida por `calendario_periodos_form_periodo_data` o `calendario_periodos_nuevo_data`), `post.f_ini:string`, `post.f_fin:string`, `post.sfsv:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/calendario_periodos_nuevo_data`
@@ -50,7 +50,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.calendario_periodos_nuevo_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/calendario_periodos_nuevo_data.php`
 - Entrada: `post.id_ubi:integer`, `post.year:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`, cápsula `HashB` para `calendario_periodos_guardar`)
 
 ## `/src/ubis/casas_opciones_data`
 
@@ -64,21 +64,21 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.centros_form_labor`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/centros_form_labor.php`
 - Entrada: `post.id_ubi:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`, cápsula `HashB` para `centros_update`)
 
 ## `/src/ubis/centros_form_num`
 
 - Id: `ubis.centros_form_num`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/centros_form_num.php`
 - Entrada: `post.id_ubi:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`, cápsula `HashB` para `centros_update`)
 
 ## `/src/ubis/centros_form_plazas`
 
 - Id: `ubis.centros_form_plazas`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/centros_form_plazas.php`
 - Entrada: `post.id_ubi:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`, cápsula `HashB` para `centros_update`)
 
 ## `/src/ubis/centros_get_labor`
 
@@ -120,7 +120,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.centros_update`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/centros_update.php`
-- Entrada: `post.id_ubi:integer`, `post.labor:string`, `post.tipo_ctr:string`, `post.tipo_labor:string`, `post.n_buzon:integer`, `post.num_pi:integer`, `post.num_cartas:integer`, `post.num_habit_indiv:integer`, `post.plazas:integer`, `post.sede:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `centros_update`, contexto `{id_ubi}`; emitida por `centros_form_num`/`centros_form_labor`/`centros_form_plazas`), `post.labor:string`, `post.tipo_ctr:string`, `post.tipo_labor:string`, `post.n_buzon:integer`, `post.num_pi:integer`, `post.num_cartas:integer`, `post.num_habit_indiv:integer`, `post.plazas:integer`, `post.sede:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/delegacion_que_data`
@@ -141,14 +141,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.direccion_update`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direccion_update.php`
-- Entrada: `post.obj_dir:string`, `post.id_ubi:integer`, `post.idx:string`, `post.id_direccion:string`, `post.nom_sede:string`, `post.direccion:string`, `post.a_p:string`, `post.c_p:string`, `post.poblacion:string`, `post.provincia:string`, `post.pais:string`, `post.observ:string`, `post.f_direccion:string`, `post.latitud:string`, `post.longitud:string`, `post.cp_dcha:string`, `post.propietario:string`, `post.principal:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `direccion_update`, contexto `{obj_dir, id_ubi, idx, id_direccion}`; emitida por `direcciones_editar`), `post.nom_sede:string`, `post.direccion:string`, `post.a_p:string`, `post.c_p:string`, `post.poblacion:string`, `post.provincia:string`, `post.pais:string`, `post.observ:string`, `post.f_direccion:string`, `post.latitud:string`, `post.longitud:string`, `post.cp_dcha:string`, `post.propietario:string`, `post.principal:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/direcciones_asignar`
 
 - Id: `ubis.direcciones_asignar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direcciones_asignar.php`
-- Entrada: `post.id_ubi:integer`, `post.obj_dir:string`, `post.id_direccion:integer`
+- Entrada: `post.ctx_asignar:string` (cápsula `HashB` acción `direcciones_asignar`, contexto `{id_ubi, obj_dir, id_direccion}`; emitida por fila en `direcciones_tabla`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/direcciones_editar`
@@ -156,6 +156,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.direcciones_editar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direcciones_editar.php`
 - Entrada: `post.id_ubi:integer`, `post.mod:string`, `post.obj_dir:string`, `post.id_direccion:string`, `post.idx:integer`, `post.inc:string`
+- Respuesta: incluye `ctx_guardar` / `ctx_quitar`, cápsulas `HashB` para `direccion_update` / `direcciones_quitar` atadas a `{obj_dir, id_ubi, idx, id_direccion}` (ausentes si `sin_direccion` es `true`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/direcciones_que`
@@ -169,7 +170,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.direcciones_quitar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direcciones_quitar.php`
-- Entrada: `post.id_ubi:integer`, `post.idx:integer`, `post.obj_dir:string`, `post.id_direccion:string`
+- Entrada: `post.ctx_quitar:string` (cápsula `HashB` acción `direcciones_quitar`, contexto `{obj_dir, id_ubi, idx, id_direccion}`; emitida por `direcciones_editar`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/direcciones_tabla`
@@ -177,6 +178,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.direcciones_tabla`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direcciones_tabla.php`
 - Entrada: `post.id_ubi:integer`, `post.obj_dir:string`, `post.c_p:string`, `post.ciudad:string`, `post.pais:string`
+- Respuesta: cada fila incluye un `script` `fnjs_asignar_dir(ctx)` con `ctx`, cápsula `HashB` para `direcciones_asignar` atada a `{id_ubi, obj_dir, id_direccion}`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/home_ubis_data`
@@ -207,32 +209,33 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Entrada: `post.id_tipo_teleco:integer`
 - Respuesta: `standard_envelope_string_data`
 
-## `/src/ubis/teleco_editar`
-
-- Id: `ubis.teleco_editar`
-- Controller: `src/ubis/infrastructure/ui/http/controllers/teleco_editar.php`
-- Entrada: `post.obj_pau:string`, `post.mod:string`, `post.id_ubi:integer`, `post.sel:string`, `post.s_pkey:string`
-- Respuesta: `standard_envelope_string_data`
-
 ## `/src/ubis/teleco_eliminar`
 
 - Id: `ubis.teleco_eliminar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/teleco_eliminar.php`
-- Entrada: `post.obj_pau:string`, `post.sel:string`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `teleco_eliminar`, contexto `{obj_pau, pkey}`; emitida por fila en `teleco_tabla`, transportada aparte de `sel` porque `sel` sigue en el formato legado b64+json que `frontend/ubis/controller/teleco_editar.php` necesita para el flujo de modificar)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/teleco_guardar`
 
 - Id: `ubis.teleco_guardar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/teleco_guardar.php`
-- Entrada: `post.obj_pau:string`, `post.id_ubi:integer`, `post.id_tipo_teleco:integer`, `post.id_desc_teleco:integer`, `post.num_teleco:string`, `post.observ:string`, `post.sel:string`, `post.s_pkey:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `teleco_guardar`, contexto `{obj_pau, id_ubi, pkey}`; emitida por `teleco_editar`), `post.id_tipo_teleco:integer`, `post.id_desc_teleco:integer`, `post.num_teleco:string`, `post.observ:string`
 - Respuesta: `standard_envelope_string_data`
+
+## `/src/ubis/teleco_editar`
+
+- Id: `ubis.teleco_editar`
+- Controller: `src/ubis/infrastructure/ui/http/controllers/teleco_editar.php`
+- Entrada: `post.obj_pau:string`, `post.mod:string`, `post.id_ubi:integer`, `post.sel:string`, `post.s_pkey:string`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`, cápsula `HashB` para `teleco_guardar`)
 
 ## `/src/ubis/teleco_tabla`
 
 - Id: `ubis.teleco_tabla`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/teleco_tabla.php`
 - Entrada: `post.obj_pau:string`, `post.id_ubi:integer`
+- Respuesta: cada fila incluye `ctx_eliminar`, cápsula `HashB` para `teleco_eliminar` atada a `{obj_pau, pkey}`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/trasladar_ubis`
@@ -261,7 +264,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.ubis_editar_load_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/ubis_editar_load_data.php`
 - Entrada: `post.id_ubi:integer`, `post.obj_pau:string`, `post.nuevo:string`, `post.tipo_ubi:string`, `post.dl:string`, `post.region:string`, `post.nombre_ubi:string`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `ctx_guardar`/`ctx_eliminar`, cápsulas `HashB` para `ubis_guardar`/`ubis_eliminar`, atadas al `obj_pau`/`id_ubi` ya normalizados por permisos)
 
 ## `/src/ubis/ubis_editar_normalize_dl_data`
 
@@ -274,14 +277,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.ubis_eliminar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/ubis_eliminar.php`
-- Entrada: `post.obj_pau:string`, `post.id_ubi:integer`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `ubis_eliminar`, contexto `{obj_pau, id_ubi}`; emitida por `ubis_editar_load_data`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/ubis_guardar`
 
 - Id: `ubis.ubis_guardar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/ubis_guardar.php`
-- Entrada: `post.obj_pau:string`, `post.id_ubi:integer`, `post.tipo_ubi:string`, `post.nombre_ubi:string`, `post.dl:string`, `post.region:string`, `post.active:string`, `post.sv:string`, `post.sf:string`, `post.tipo_casa:string`, `post.plazas:integer`, `post.plazas_min:integer`, `post.num_sacd:integer`, `post.tipo_ctr:string`, `post.cdc:string`, `post.id_ctr_padre:integer`, `post.tipo_labor:string`, `post.n_buzon:integer`, `post.num_pi:integer`, `post.num_cartas:integer`, `post.num_cartas_mensuales:integer`, `post.num_habit_indiv:integer`, `post.observ:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `ubis_guardar`, contexto `{obj_pau, id_ubi}`; emitida por `ubis_editar_load_data` con el `obj_pau` ya normalizado por permisos), `post.tipo_ubi:string`, `post.nombre_ubi:string`, `post.dl:string`, `post.region:string`, `post.active:string`, `post.sv:string`, `post.sf:string`, `post.tipo_casa:string`, `post.plazas:integer`, `post.plazas_min:integer`, `post.num_sacd:integer`, `post.tipo_ctr:string`, `post.cdc:string`, `post.id_ctr_padre:integer`, `post.tipo_labor:string`, `post.n_buzon:integer`, `post.num_pi:integer`, `post.num_cartas:integer`, `post.num_cartas_mensuales:integer`, `post.num_habit_indiv:integer`, `post.observ:string`
 - Notas: checkbox legado `status` se trata como `active`. CasaEx: si `region`+`dl` (o un valor tipo `H-dlmE`) corresponde a un esquema con `u_cdc_dl`, se mueve de `resto.u_cdc_ex` a ese esquema.
 - Respuesta: `standard_envelope_string_data`
 

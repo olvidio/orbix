@@ -11,6 +11,7 @@ use src\personas\domain\entity\PersonaSacd;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\shared\security\HashB;
 use frontend\shared\web\Periodo;
 
 /**
@@ -36,6 +37,7 @@ final class ComunicacionActividadesSacdData
     {
         $context = $this->resolverContexto($input);
         $que = $context['que'];
+        $id_nom = $context['id_nom'];
         $propuesta = $context['propuesta'];
         $inicioIso = $context['inicioIso'];
         $finIso = $context['finIso'];
@@ -58,6 +60,7 @@ final class ComunicacionActividadesSacdData
                 'sacds_paso' => [],
                 'avisos' => [],
                 'mensaje_periodo' => _("falta determinar un periodo"),
+                'ctx_enviar' => $this->signCtxEnviar($que, $id_nom, $propuesta),
             ];
         }
 
@@ -112,7 +115,17 @@ final class ComunicacionActividadesSacdData
             'sacds' => $this->normalizarSacds($sacds),
             'sacds_paso' => $this->normalizarSacds($sacds_paso),
             'avisos' => array_values(array_unique($avisos)),
+            'ctx_enviar' => $this->signCtxEnviar($que, $id_nom, $propuesta),
         ];
+    }
+
+    private function signCtxEnviar(string $que, int $id_nom, string $propuesta): string
+    {
+        return HashB::sign('comunicacion_activ_sacd_enviar', [
+            'que' => $que,
+            'id_nom' => $id_nom,
+            'propuesta' => $propuesta,
+        ]);
     }
 
     /**

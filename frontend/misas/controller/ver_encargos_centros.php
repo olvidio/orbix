@@ -20,6 +20,7 @@ $data = PostRequest::getDataFromUrl('/src/misas/ver_encargos_centros_data', [
 $columns = $data['columns'] ?? [];
 $rows = $data['rows'] ?? [];
 $a_opciones_zona = $data['a_opciones_zona'] ?? [];
+$ctx_nuevo = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_nuevo'] ?? '');
 
 // Desplegable de zonas para el modal: cambiar la zona recarga el desplegable
 // de encargos via `fnjs_prepara_select_encargo()`.
@@ -32,13 +33,13 @@ $oDesplZonasCtr->setAction('fnjs_prepara_select_encargo()');
 $url_guardar_encargo_centro = AppUrlConfig::srcBrowserUrl('/src/misas/guardar_encargo_centro');
 $oHashGuardar = new HashF();
 $oHashGuardar->setUrl($url_guardar_encargo_centro);
-$oHashGuardar->setCamposForm('id_item!id_enc!id_ctr');
+$oHashGuardar->setCamposForm('ctx_guardar!id_enc!id_ctr');
 $h_guardar_encargo_centro = $oHashGuardar->linkSinValParams();
 
 $url_eliminar_encargo_centro = AppUrlConfig::srcBrowserUrl('/src/misas/eliminar_encargo_centro');
 $oHashEliminar = new HashF();
 $oHashEliminar->setUrl($url_eliminar_encargo_centro);
-$oHashEliminar->setCamposForm('id_item');
+$oHashEliminar->setCamposForm('ctx_eliminar');
 $h_eliminar_encargo_centro = $oHashEliminar->linkSinValParams();
 
 $url_desplegable_encargos = AppUrlConfig::srcBrowserUrl('/src/misas/desplegable_encargos');
@@ -64,6 +65,7 @@ $a_campos = [
     'json_data_cuadricula' => json_encode($rows),
     'oDesplZonasCtr' => $oDesplZonasCtr,
     'id_zona' => $Qid_zona,
+    'ctx_nuevo' => $ctx_nuevo,
     'url_guardar_encargo_centro' => $url_guardar_encargo_centro,
     'h_guardar_encargo_centro' => $h_guardar_encargo_centro,
     'url_eliminar_encargo_centro' => $url_eliminar_encargo_centro,

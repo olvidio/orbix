@@ -6,7 +6,6 @@ use frontend\personas\helpers\PersonasPostInput;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -55,6 +54,7 @@ $view = PersonasPayload::stgrCambioFromPayload($payload);
 
 $nom = $view['nom'];
 $stgr = $view['nivel_stgr'];
+$ctx_update = $view['ctx_update'];
 $opciones = $view['opciones_nivel_stgr'];
 
 $oDespl = new Desplegable();
@@ -63,18 +63,11 @@ $oDespl->setOpciones($opciones);
 $oDespl->setOpcion_sel($stgr);
 $oDespl->setBlanco(true);
 
-$oHash = new HashF();
-$oHash->setCamposForm('nivel_stgr');
-$oHash->setArraycamposHidden([
-    'id_tabla' => $id_tabla,
-    'id_nom' => $id_nom,
-]);
-
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'oHash' => $oHash,
     'nom' => $nom,
     'oDespl' => $oDespl,
+    'ctx_update' => $ctx_update,
 ];
 
 $oView = new ViewNewPhtml('frontend\personas\controller');

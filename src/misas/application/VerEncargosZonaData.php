@@ -4,6 +4,7 @@ namespace src\misas\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
@@ -118,6 +119,8 @@ class VerEncargosZonaData
                     'orden' => $oEncargo->getOrden(),
                     'prioridad' => $oEncargo->getPrioridad(),
                     'observ' => $oEncargo->getObserv(),
+                    'ctx_guardar' => HashB::sign('guardar_encargo_zona', ['id_enc' => (int)$id_enc]),
+                    'ctx_eliminar' => HashB::sign('eliminar_encargo_zona', ['id_enc' => (int)$id_enc]),
                 ];
             }
         }
@@ -145,6 +148,7 @@ class VerEncargosZonaData
             'tipos_encargo' => $posibles_encargo_tipo,
             'centros' => $aCentros,
             'idiomas' => $this->localRepository->getArrayLocales(),
+            'ctx_nuevo' => HashB::sign('guardar_encargo_zona', ['id_enc' => 0]),
         ];
     }
 }

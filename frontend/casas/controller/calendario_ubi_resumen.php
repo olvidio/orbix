@@ -67,7 +67,7 @@ $url_body = $web . '/frontend/casas/controller/calendario_ubi_resumen_body.php' 
 
 $oHashTarifas = new HashF();
 $oHashTarifas->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_update_inc'));
-$oHashTarifas->setCamposForm('id_ubi!year!inc_cantidad');
+$oHashTarifas->setCamposForm('id_ubi!year!inc_cantidad!ctx_inc');
 $url_tarifas = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/tarifa_ubi_update_inc') . $oHashTarifas->linkSinVal();
 
 $oHashForm = new HashF();

@@ -5,6 +5,7 @@ use frontend\encargossacd\helpers\EncargossacdPostInput;
 use frontend\encargossacd\helpers\EncargossacdPayload;
 use frontend\shared\helpers\ListNavSupport;
 
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashF;
@@ -108,6 +109,7 @@ foreach ($filas as $fila) {
 
     $a_valores[$i] = [
         'sel' => $id_item_h,
+        'ctx_eliminar' => $row['ctx_eliminar'],
         1 => ['ira' => $pagina, 'valor' => $id_enc_fila],
         3 => $row['dia_num'],
         4 => $row['dia_ref'],
@@ -133,6 +135,14 @@ $aQuery = [
 array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $pagina_nuevo = HashF::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
+$aQuerySelf = [
+    'id_enc' => $Qid_enc,
+    'desc_enc' => $desc_enc,
+    'origen' => $Qorigen,
+];
+array_walk($aQuerySelf, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+$url_self = HashF::link('frontend/encargossacd/controller/encargo_horario_select.php?' . http_build_query($aQuerySelf));
+
 $oTabla = new Lista();
 $oTabla->setId_tabla('encargo_horario_select');
 $oTabla->setCabeceras($a_cabeceras);
@@ -147,6 +157,12 @@ $oHash->setArrayCamposHidden([
     'desc_enc' => $desc_enc,
 ]);
 
+$url_borrar = AppUrlConfig::srcBrowserUrl('/src/encargossacd/horario_update_data');
+$oHashBorrar = new HashF();
+$oHashBorrar->setUrl($url_borrar);
+$oHashBorrar->setCamposForm('mod!ctx_eliminar');
+$h_borrar = $oHashBorrar->linkSinValParams();
+
 $txt_eliminar = _("¿Está seguro que desea borrar este horario?");
 
 $div_para_nuevo = 'main';
@@ -160,7 +176,10 @@ $a_campos = [
     'oHash' => $oHash,
     'oTabla' => $oTabla,
     'txt_eliminar' => $txt_eliminar,
+    'url_borrar' => $url_borrar,
+    'h_borrar' => $h_borrar,
     'pagina_nuevo' => $pagina_nuevo,
+    'url_self' => $url_self,
     'desc_enc' => $desc_enc,
     'origen' => $Qorigen,
     'div_para_nuevo' => $div_para_nuevo,

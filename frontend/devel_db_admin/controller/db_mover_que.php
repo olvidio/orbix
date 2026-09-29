@@ -31,6 +31,9 @@ $desplTablas = $dbProps['desplTablas'] ?? '';
 
 $oHash = new HashF();
 $oHash->setCamposForm('tabla');
+$oHash->setArrayCamposHidden([
+    'ctx_mover' => (string) ($dbProps['ctx_mover'] ?? ''),
+]);
 
 $msg_falta_tabla = _("debe poner la tabla");
 

@@ -61,7 +61,7 @@ foreach ($aRows as $row) {
     echo "<td>$of_responsable_txt</td>";
     echo $obs;
     if ($puede_editar) {
-        echo "<td><input type='button' name='b_guardar' value='" . _("guardar") . "' onclick='fnjs_guardar($id_item)'></td>";
+        echo "<td><input type='button' name='b_guardar' value='" . _("guardar") . "' onclick='fnjs_guardar(" . (int)$id_item . "," . json_encode((string)($row['ctx_update'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES) . ")'></td>";
     } else {
         echo '<td></td>';
     }

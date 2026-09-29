@@ -15,6 +15,7 @@ $Qdl = (string) filter_input(INPUT_POST, 'dl');
 $data = PostRequest::getDataFromUrl('/src/devel_db_admin/crear_usuarios', [
     'region' => $Qregion,
     'dl' => $Qdl,
+    'ctx_crear_usuarios' => (string) filter_input(INPUT_POST, 'ctx_crear_usuarios'),
 ]);
 
 $archivo_conf = '  (comun.inc, sv.inc, sf.inc)';

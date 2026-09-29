@@ -3,7 +3,21 @@
         return $('input[name="sel[]"]:checked');
     }
 
+    fnjs_migraciones_inject_ctx = function (campo) {
+        var form = '#frm_migraciones';
+        $(form).find('input[name="' + campo + '[]"]').remove();
+        var ctxs = fnjs_ctx_filas_seleccionadas(form, campo);
+        for (var i = 0; i < ctxs.length; i++) {
+            $('<input>').attr({type: 'hidden', name: campo + '[]', value: ctxs[i]}).appendTo(form);
+        }
+        return ctxs.length;
+    }
+
     fnjs_migraciones_enviar = function (modo, prefijoHasta) {
+        if (fnjs_migraciones_inject_ctx('ctx_ejecutar') === 0) {
+            alert(<?= json_encode((string) $msg_sin_seleccion) ?>);
+            return;
+        }
         $('#modo').val(modo);
         $('#prefijo_hasta').val(prefijoHasta || '');
         $('#migraciones_resultado').text(<?= json_encode((string) _("ejecutando...")) ?>);
@@ -51,7 +65,7 @@
             alert(<?= json_encode((string) $msg_hasta_unica) ?>);
             return;
         }
-        fnjs_migraciones_enviar('hasta', checked.val());
+        fnjs_migraciones_enviar('hasta', '');
     }
 
     fnjs_migraciones_quitar_registro = function () {
@@ -61,6 +75,10 @@
             return;
         }
         if (!confirm(<?= json_encode((string) $msg_confirmar_quitar_registro) ?>)) {
+            return;
+        }
+        if (fnjs_migraciones_inject_ctx('ctx_quitar') === 0) {
+            alert(<?= json_encode((string) $msg_sin_seleccion) ?>);
             return;
         }
         $('#migraciones_resultado').text(<?= json_encode((string) _("quitando registro...")) ?>);
@@ -116,7 +134,7 @@
 
 <form id="frm_migraciones" action="" method="post">
     <?= $oHash->getCamposHtml(); ?>
-    <?= $oTabla->mostrar_tabla(); ?>
+    <?= $oTabla->mostrar_tabla_html(); ?>
 </form>
 
 <pre id="migraciones_resultado"></pre>

@@ -4,7 +4,8 @@ use src\shared\domain\helpers\FilterPostGet;
 
 /**
  * Endpoint backend AJAX: crea una nueva actividad a partir de los datos del
- * formulario. Responde JSON {success, mensaje?}.
+ * formulario. Abre `ctx_nuevo` (HashB acción-only) emitido por
+ * `actividad_ver_datos` en alta.
  *
  * Extraido del antiguo dispatcher actividad_update.php (case 'nuevo').
  *
@@ -14,7 +15,19 @@ use src\shared\domain\helpers\FilterPostGet;
 
 use src\actividades\application\ActividadNueva;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
+
+try {
+    HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_nuevo'),
+        'actividad_nuevo'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 $Qinom_tipo_val = (string)\src\shared\domain\helpers\FilterPostGet::post('inom_tipo_val');
 // Puede ser '000' > sin especificar

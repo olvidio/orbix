@@ -40,8 +40,14 @@
                 if (seguir) {
                     $('#mod').val("eliminar");
                     var datos = $(formulario).serialize();
+                    var ctx_eliminar = fnjs_ctx_fila_seleccionada(formulario, 'ctx_eliminar');
+                    if (!ctx_eliminar) {
+                        alert(<?= json_encode(_("respuesta")) ?> + ': ' + <?= json_encode(_("Operación no autorizada")) ?>);
+                        return;
+                    }
+                    datos += (datos ? '&' : '') + 'ctx_eliminar=' + encodeURIComponent(ctx_eliminar);
                     if (confirmarConMatriculas) {
-                        datos += (datos ? '&' : '') + 'confirmar_con_matriculas=1';
+                        datos += '&confirmar_con_matriculas=1';
                     }
                     $.ajax({
                         data: datos,
@@ -82,7 +88,7 @@
 <form id="seleccionados" name="seleccionados" action="" method="post">
     <?= $oHashSelect->getCamposHtml(); ?>
     <input type='hidden' id='mod' name='mod' value=''>
-    <?= $oTabla->mostrar_tabla(); ?>
+    <?= $oTabla->mostrar_tabla_html(); ?>
 </form>
 <?php if (!empty($link_insert)) {
     $links_insert_bar_links = [sprintf(_("añadir asignatura")) => $link_insert];

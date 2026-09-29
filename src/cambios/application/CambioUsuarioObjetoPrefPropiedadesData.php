@@ -5,6 +5,7 @@ namespace src\cambios\application;
 use src\cambios\domain\AvisoObjetoCatalog;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
 
@@ -131,6 +132,12 @@ final class CambioUsuarioObjetoPrefPropiedadesData
         }
 
         $result['propiedades'] = $propiedades;
+        if ($id_item_usuario_objeto > 0) {
+            $result['ctx_guardar_propiedades'] = HashB::sign(
+                'cambio_usuario_propiedad_pref_guardar_todas',
+                ['id_item_usuario_objeto' => $id_item_usuario_objeto]
+            );
+        }
         return $result;
     }
 }

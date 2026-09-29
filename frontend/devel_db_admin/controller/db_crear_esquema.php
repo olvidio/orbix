@@ -23,6 +23,7 @@ $data = PostRequest::getDataFromUrl('/src/devel_db_admin/crear_esquema', [
     'comun' => $Qcomun,
     'sv' => $Qsv,
     'sf' => $Qsf,
+    'ctx_crear' => (string) filter_input(INPUT_POST, 'ctx_crear'),
 ]);
 
 $avisos = DevelDbAdminPayload::avisosList($data['avisos'] ?? []);

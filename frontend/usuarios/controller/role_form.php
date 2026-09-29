@@ -70,7 +70,7 @@ $oTabla->setDatos($roleForm['valores']);
 $oHash = new HashF();
 $oHash->setCamposForm('que!role!sf!sv!pau!dmz');
 $oHash->setcamposNo('sf!sv!dmz!refresh');
-$oHash->setArraycamposHidden(['id_role' => $Qid_role]);
+$oHash->setArraycamposHidden(['id_role' => $Qid_role, 'ctx_guardar' => $roleForm['ctx_guardar']]);
 
 $oHash1 = new HashF();
 $oHash1->setCamposForm('que!sel');

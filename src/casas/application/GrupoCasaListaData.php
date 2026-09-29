@@ -4,6 +4,7 @@ namespace src\casas\application;
 
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\permisos\domain\XPermisos;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 
 /**
@@ -45,12 +46,15 @@ final class GrupoCasaListaData
 
             $a_valores[$i][1] = $casa_padre;
             $a_valores[$i][2] = $casa_hijo;
+            $ctx_eliminar = HashB::sign('grupo_eliminar', ['id_item' => (string) $id_item]);
+            $ctxEliminarJs = json_encode($ctx_eliminar, JSON_UNESCAPED_SLASHES);
+
             $a_valores[$i][3] = [
                 'script' => "fnjs_modificar($id_item)",
                 'valor' => _("editar"),
             ];
             $a_valores[$i][4] = [
-                'script' => "fnjs_eliminar($id_item)",
+                'script' => "fnjs_eliminar($ctxEliminarJs)",
                 'valor' => _("eliminar"),
             ];
         }

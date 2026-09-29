@@ -4,6 +4,7 @@ namespace src\casas\application;
 
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\casas\domain\value_objects\UbiGastoTipo;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 
 /**
@@ -92,6 +93,10 @@ final class CasaEcGastosFormData
                 'suma_g' => $suma_g,
                 'suma_sv' => $suma_sv,
                 'suma_sf' => $suma_sf,
+                'ctx_guardar' => HashB::sign('casa_ec_gastos_guardar', [
+                    'id_ubi' => $id_ubi,
+                    'year' => $year,
+                ]),
             ];
         }
 

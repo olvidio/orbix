@@ -6,6 +6,7 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
+use src\shared\security\HashB;
 
 /**
  * Datos para la ficha de ausencias de un SACD
@@ -120,6 +121,7 @@ final class SacdAusenciasGetData
         return [
             'array_tipo_ausencias' => $array_tipo_ausencias,
             'filas' => $filas,
+            'ctx_guardar' => HashB::sign('sacd_ausencias_update', ['id_nom' => $id_nom]),
         ];
     }
 

@@ -6,10 +6,10 @@ url: "/src/personas/stgr_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/personas/infrastructure/ui/http/controllers/stgr_update.php"
-entrada: ["post.id_nom:integer", "post.id_tabla:string", "post.nivel_stgr:string"]
-entrada_obligatoria: ["post.id_nom", "post.id_tabla", "post.nivel_stgr"]
+entrada: ["post.ctx_update:string", "post.nivel_stgr:string"]
+entrada_obligatoria: ["post.ctx_update", "post.nivel_stgr"]
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
+requiere_hashb: true
 errores: ["No existe la clase de la persona", "No se encuentra la persona", "hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/personas/view/stgr_cambio.phtml"]
 casos_uso: ["src\\personas\\application\\StgrUpdate"]
@@ -39,8 +39,7 @@ Carga persona, asigna `nivel_stgr` y persiste. Linaje: `apps/personas/controller
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_nom` | `integer` | controller | Sí | |
-| `id_tabla` | `string` | controller | Sí | Código tabla persona |
+| `ctx_update` | `string` | controller | Sí | Cápsula HashB con `id_nom` e `id_tabla` |
 | `nivel_stgr` | `string` | controller | Sí | Valor numérico del desplegable |
 
 ## Salida

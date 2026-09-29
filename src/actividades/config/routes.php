@@ -121,6 +121,10 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_nuevo_curso_ejecutar.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_nuevo_curso_form_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_nuevo_curso_form_data.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/actividades/lista_sr_csv_que_datos', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/lista_sr_csv_que_datos.php';
     });

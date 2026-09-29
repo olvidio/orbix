@@ -99,6 +99,8 @@ final class PersonasPayload
      *     situacion: string,
      *     nivel_stgr: string,
      *     edad: string,
+     *     ctx_update: string,
+     *     ctx_eliminar: string,
      *     opciones_dl: array<int|string, string>,
      *     opciones_centros: array<int|string, string>,
      *     opciones_situacion: array<int|string, string>,
@@ -141,6 +143,8 @@ final class PersonasPayload
             'situacion' => PayloadCoercion::string($payload['situacion'] ?? ''),
             'nivel_stgr' => PayloadCoercion::string($payload['nivel_stgr'] ?? ''),
             'edad' => PayloadCoercion::string($payload['edad'] ?? ''),
+            'ctx_update' => PayloadCoercion::string($payload['ctx_update'] ?? ''),
+            'ctx_eliminar' => PayloadCoercion::string($payload['ctx_eliminar'] ?? ''),
             'opciones_dl' => NotasFormSupport::desplegableOpciones($payload['opciones_dl'] ?? []),
             'opciones_centros' => NotasFormSupport::desplegableOpciones($payload['opciones_centros'] ?? []),
             'opciones_situacion' => NotasFormSupport::desplegableOpciones($payload['opciones_situacion'] ?? []),
@@ -164,6 +168,7 @@ final class PersonasPayload
      *         id_nom: int,
      *         id_tabla: string,
      *         nom: string,
+     *         home_link_spec: array{path: string, query: array<string, scalar>}|null,
      *         nombre_ubi: string,
      *         nivel_stgr: string,
      *         situacion: string,
@@ -199,6 +204,7 @@ final class PersonasPayload
      *     id_nom: int,
      *     id_tabla: string,
      *     nom: string,
+     *     home_link_spec: array{path: string, query: array<string, scalar>}|null,
      *     nombre_ubi: string,
      *     nivel_stgr: string,
      *     situacion: string,
@@ -213,6 +219,7 @@ final class PersonasPayload
                 'id_nom' => 0,
                 'id_tabla' => '',
                 'nom' => '',
+                'home_link_spec' => null,
                 'nombre_ubi' => '',
                 'nivel_stgr' => '',
                 'situacion' => '',
@@ -225,6 +232,7 @@ final class PersonasPayload
             'id_nom' => PayloadCoercion::int($raw['id_nom'] ?? 0),
             'id_tabla' => PayloadCoercion::string($raw['id_tabla'] ?? ''),
             'nom' => PayloadCoercion::string($raw['nom'] ?? ''),
+            'home_link_spec' => self::homeLinkSpec($raw['home_link_spec'] ?? null),
             'nombre_ubi' => PayloadCoercion::string($raw['nombre_ubi'] ?? ''),
             'nivel_stgr' => PayloadCoercion::string($raw['nivel_stgr'] ?? ''),
             'situacion' => PayloadCoercion::string($raw['situacion'] ?? ''),
@@ -234,10 +242,35 @@ final class PersonasPayload
     }
 
     /**
+     * @return array{path: string, query: array<string, scalar>}|null
+     */
+    private static function homeLinkSpec(mixed $raw): ?array
+    {
+        if (!is_array($raw)) {
+            return null;
+        }
+        $path = $raw['path'] ?? null;
+        $query = $raw['query'] ?? null;
+        if (!is_string($path) || $path === '' || !is_array($query)) {
+            return null;
+        }
+
+        $normalizedQuery = [];
+        foreach ($query as $key => $value) {
+            if (is_scalar($value)) {
+                $normalizedQuery[(string) $key] = $value;
+            }
+        }
+
+        return ['path' => $path, 'query' => $normalizedQuery];
+    }
+
+    /**
      * @param array<string, mixed> $payload
      * @return array{
      *     nom: string,
      *     nivel_stgr: string,
+     *     ctx_update: string,
      *     opciones_nivel_stgr: array<int|string, string>,
      * }
      */
@@ -246,6 +279,7 @@ final class PersonasPayload
         return [
             'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
             'nivel_stgr' => PayloadCoercion::string($payload['nivel_stgr'] ?? ''),
+            'ctx_update' => PayloadCoercion::string($payload['ctx_update'] ?? ''),
             'opciones_nivel_stgr' => NotasFormSupport::desplegableOpciones($payload['opciones_nivel_stgr'] ?? []),
         ];
     }
@@ -256,6 +290,7 @@ final class PersonasPayload
      *     error: string,
      *     nom: string,
      *     id_schema: int,
+     *     ctx_publicar: string,
      *     opciones_dl: array<int|string, string>,
      * }
      */
@@ -265,6 +300,7 @@ final class PersonasPayload
             'error' => PayloadCoercion::string($payload['error'] ?? ''),
             'nom' => PayloadCoercion::string($payload['nom'] ?? ''),
             'id_schema' => (int) ($payload['id_schema'] ?? 0),
+            'ctx_publicar' => PayloadCoercion::string($payload['ctx_publicar'] ?? ''),
             'opciones_dl' => NotasFormSupport::desplegableOpciones($payload['opciones_dl'] ?? []),
         ];
     }
@@ -280,6 +316,7 @@ final class PersonasPayload
      *     opciones_centros: array<int|string, string>,
      *     opciones_dl: array<int|string, string>,
      *     opciones_situacion: array<int|string, string>,
+     *     ctx_update: string,
      * }
      */
     public static function trasladoFormFromPayload(array $payload): array
@@ -293,6 +330,7 @@ final class PersonasPayload
             'opciones_centros' => NotasFormSupport::desplegableOpciones($payload['opciones_centros'] ?? []),
             'opciones_dl' => NotasFormSupport::desplegableOpciones($payload['opciones_dl'] ?? []),
             'opciones_situacion' => NotasFormSupport::desplegableOpciones($payload['opciones_situacion'] ?? []),
+            'ctx_update' => PayloadCoercion::string($payload['ctx_update'] ?? ''),
         ];
     }
 }

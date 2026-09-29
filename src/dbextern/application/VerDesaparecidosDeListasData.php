@@ -3,6 +3,7 @@
 namespace src\dbextern\application;
 
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\shared\security\HashB;
 
 class VerDesaparecidosDeListasData
 {
@@ -35,6 +36,11 @@ class VerDesaparecidosDeListasData
                 'id_nom_orbix' => $id_nom_orbix,
                 'ape_nom' => $oPersonaDl?->getPrefApellidosNombre() ?? '',
                 'dl' => $oPersonaDl?->getDl() ?? '',
+                'ctx_baja' => HashB::sign('sincro_baja', [
+                    'id_nom_orbix' => $id_nom_orbix,
+                    'tipo_persona' => $tipo_persona,
+                    'dl' => (string) ($oPersonaDl?->getDl() ?? ''),
+                ]),
             ];
         }
 

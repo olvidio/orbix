@@ -48,6 +48,7 @@ ListNavSupport::syncNavStateAt(
 
 $campos = [
     'id_pau' => $id_pau,
+    'obj_pau' => $Qobj_pau,
 ];
 
 $data = PostRequest::getDataFromUrl('/src/personas/traslado_form_data', $campos);
@@ -82,6 +83,7 @@ $oHash->setArraycamposHidden([
     'id_ctr_o' => $id_ctr,
     'ctr_o' => $nombre_ctr,
     'dl' => $dl,
+    'ctx_update' => $view['ctx_update'],
 ]);
 
 $a_parametros = ['pau' => 'p', 'id_nom' => $id_pau, 'obj_pau' => $Qobj_pau];

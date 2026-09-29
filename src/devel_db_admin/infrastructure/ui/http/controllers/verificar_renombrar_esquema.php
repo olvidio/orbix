@@ -12,8 +12,20 @@ use src\shared\domain\helpers\FilterPostGet;
 
 use src\devel_db_admin\application\RenombrarEsquemaVerificacionContexto;
 use src\devel_db_admin\application\VerificarEstadoRenombrarEsquema;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
+
+try {
+    HashB::open(
+        (string) \src\shared\domain\helpers\FilterPostGet::post('ctx_verificar'),
+        'verificar_renombrar_esquema'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 $QEsquemaOrigen = trim((string) \src\shared\domain\helpers\FilterPostGet::post('esquema_origen'));
 if ($QEsquemaOrigen === '') {

@@ -26,7 +26,7 @@
 <script>
     fnjs_crear_todos = function () {
         var url = '<?= $url_sincro_crear_todos ?>';
-        var parametros = 'region=<?= $region ?>&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h_crear_todos ?>';
+        var parametros = 'region=<?= $region ?>&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?>&ctx_crear_todos=' + encodeURIComponent(<?= json_encode($ctx_crear_todos) ?>) + '<?= $h_crear_todos ?>';
 
         $.ajax({
             url: url,
@@ -45,7 +45,7 @@
 
     fnjs_crear = function () {
         var url = '<?= $url_sincro_crear ?>';
-        var parametros = 'region=<?= $region ?>&dl=<?= $dl ?>&id=<?= $new_id ?>&id_nom_listas=<?= $id_nom_bdu ?>&id_orbix=&tipo_persona=<?= $tipo_persona ?><?= $h_crear ?>';
+        var parametros = 'region=<?= $region ?>&dl=<?= $dl ?>&id=<?= $new_id ?>&id_nom_listas=<?= $id_nom_bdu ?>&id_orbix=&tipo_persona=<?= $tipo_persona ?>&ctx_crear=' + encodeURIComponent(<?= json_encode($ctx_crear) ?>) + '<?= $h_crear ?>';
 
         $.ajax({
             url: url,
@@ -64,7 +64,7 @@
 
     fnjs_unir = function (id_orbix) {
         var url = '<?= $url_sincro_unir ?>';
-        var parametros = 'region=<?= $region ?>&dl=<?= $dl ?>&id_orbix=' + id_orbix + '&id=<?= $new_id ?>&id_nom_listas=<?= $id_nom_bdu ?>&tipo_persona=<?= $tipo_persona ?><?= $h_unir ?>';
+        var parametros = 'region=<?= $region ?>&dl=<?= $dl ?>&id_orbix=' + id_orbix + '&id=<?= $new_id ?>&id_nom_listas=<?= $id_nom_bdu ?>&tipo_persona=<?= $tipo_persona ?>&ctx_unir=' + encodeURIComponent(<?= json_encode($ctx_unir) ?>) + '<?= $h_unir ?>';
 
         $.ajax({
             url: url,

@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use src\procesos\application\TipoActivProcesoLstPosibles;
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
 use src\procesos\domain\entity\ProcesoTipo;
+use src\shared\security\HashB;
 
 final class TipoActivProcesoLstPosiblesTest extends TestCase
 {
@@ -18,6 +19,7 @@ final class TipoActivProcesoLstPosiblesTest extends TestCase
     {
         parent::setUp();
         $this->previousSession = $_SESSION ?? [];
+        session_id('test-session-tipo-activ-proceso');
         $_SESSION['session_auth'] = array_merge($_SESSION['session_auth'] ?? [], ['sfsv' => 1]);
     }
 
@@ -49,5 +51,9 @@ final class TipoActivProcesoLstPosiblesTest extends TestCase
         $this->assertSame([
             ['id_tipo_proceso' => 10, 'nom_proceso' => 'P1'],
         ], $out['a_procesos']);
+        $this->assertSame(
+            ['id_tipo_activ' => 111000],
+            HashB::open($out['ctx_asignar'], 'tipo_activ_proceso_asignar')
+        );
     }
 }

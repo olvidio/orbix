@@ -9,7 +9,7 @@ controller: "src/personas/infrastructure/ui/http/controllers/stgr_cambio_data.ph
 entrada: ["post.id_nom:integer", "post.id_tabla:string", "post.sel:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
+requiere_hashb: true
 errores: ["No existe la clase de la persona", "No se encuentra la persona"]
 frontend_referencias: ["frontend/personas/controller/stgr_cambio.php"]
 casos_uso: ["src\\personas\\application\\StgrCambioData"]
@@ -27,7 +27,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 Resuelve persona por `sel` (`id_nom#id_tabla`) o campos sueltos. Usa `repositorioPorIdTabla`
 (`n`, `a`, `s`, `sssc`, `x`, `pn`/`pa`…). Devuelve nombre, `nivel_stgr` actual y mapa
-`opciones_nivel_stgr` (`NivelStgrId::getArrayNivelStgr`).
+`opciones_nivel_stgr` (`NivelStgrId::getArrayNivelStgr`) y `ctx_update` para la mutación.
 
 ## Endpoint
 
@@ -47,7 +47,8 @@ Resuelve persona por `sel` (`id_nom#id_tabla`) o campos sueltos. Usa `repositori
 ## Salida
 
 - Helper: `ContestarJson::enviar` (doble `JSON.parse`).
-- Claves: `nom`, `nivel_stgr`, `id_nom`, `id_tabla`, `opciones_nivel_stgr`.
+- Claves: `nom`, `nivel_stgr`, `id_nom`, `id_tabla`, `opciones_nivel_stgr`, `ctx_update`.
+- `ctx_update` es una cápsula HashB con `{id_nom, id_tabla}` para `stgr_update`.
 
 ## Permisos
 

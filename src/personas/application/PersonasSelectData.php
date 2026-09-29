@@ -259,6 +259,14 @@ final class PersonasSelectData
                     'id_nom' => $id_nom,
                     'id_tabla' => $id_tabla_persona,
                     'nom' => $nom,
+                    'home_link_spec' => [
+                        'path' => 'frontend/personas/controller/home_persona.php',
+                        'query' => [
+                            'id_nom' => $id_nom,
+                            'id_tabla' => $id_tabla_persona,
+                            'obj_pau' => $obj_pau,
+                        ],
+                    ],
                     'nombre_ubi' => $nombre_ubi,
                     'nivel_stgr' => '',
                     'situacion' => '',

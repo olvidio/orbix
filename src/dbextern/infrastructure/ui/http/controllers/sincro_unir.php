@@ -2,10 +2,29 @@
 
 use src\dbextern\application\UnirPersonaUseCase;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
-$id_nom_listas = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom_listas');
-$id_orbix = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_orbix');
-$tipo_persona = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'tipo_persona');
+
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_unir'),
+        'sincro_unir'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$tipo_persona = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'tipo_persona');
+$id_nom_listas = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_nom_listas');
+$id_orbix = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_orbix');
+if ($id_nom_listas <= 0) {
+    $id_nom_listas = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom_listas');
+}
+if ($id_orbix <= 0) {
+    $id_orbix = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_orbix');
+}
 
 $error_txt = DependencyResolver::get(UnirPersonaUseCase::class)($id_nom_listas, $id_orbix, $tipo_persona);
 

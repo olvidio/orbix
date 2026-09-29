@@ -8,6 +8,7 @@ use src\misas\application\support\IdNomJefeResolver;
 use src\misas\domain\value_objects\PlantillaConfig;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Datos comunes para las pantallas preparar / modificar / ver plan de misas
@@ -28,7 +29,10 @@ class PlanDeMisasPantallaData
      *   zonas_opciones: array<int|string, string>,
      *   orden_opciones: array<string, string>,
      *   tipos_plantilla?: array<string, string>,
-     *   plantilla_selected?: string
+     *   plantilla_selected?: string,
+     *   ctx_importar?: string,
+     *   ctx_anadir?: string,
+     *   ctx_crear?: string
      * }
      */
     public function getData(string $pantalla): array
@@ -74,6 +78,14 @@ class PlanDeMisasPantallaData
             }
             $out['tipos_plantilla'] = $tipos;
             $out['plantilla_selected'] = $ultima;
+        }
+
+        if ($pantalla === 'modificar_plantilla') {
+            $out['ctx_importar'] = HashB::sign('importar_plantilla_data');
+            $out['ctx_anadir'] = HashB::sign('anadir_ctr_tarea');
+        }
+        if ($pantalla === 'preparar') {
+            $out['ctx_crear'] = HashB::sign('crear_nuevo_periodo_data');
         }
 
         return $out;

@@ -836,14 +836,14 @@ Funciones expuestas: `fnjs_construir_desplegable` (envelope JSON o payload direc
 
 ### Hash al mover endpoints AJAX (`HashF::getCamposHtml` vs `HashF::linkSinVal`)
 - **`$oHash->getCamposHtml()`**: firma campos del formulario (no la URL), configurados antes con `setCamposForm()` y `setArrayCamposHidden()`. Para **POST** con URL fija.
-- **`$oHash->linkSinVal()`**: firma **URL + nombres de campo**, configurados antes con `setUrl()` y `setCamposForm()`; fragmento GET/AJAX, cuidar `?` vs `&`.
+- **`$oHash` (`HashF`) → `linkSinVal()`**: firma **URL + nombres de campo**, configurados antes con `setUrl()` y `setCamposForm()`; fragmento GET/AJAX, cuidar `?` vs `&`.
 - Una URL nueva suele implicar un **Hash nuevo** (no reaprovechar el del dispatcher monolítico partido).
 - No incluir en `setCamposForm` campos que a veces no viajan.
 - Preferir pasar URLs ya construidas desde PHP a la vista (`$a_campos['url_foo']`) para facilitar `rg` y coherencia.
 - Modos de formulario distintos (`nueva` / `modificar`): generar dos URLs/hashes en PHP y elegir en JS.
 
 #### Checklist URL + AJAX
-1. Nuevo `Hash` en controlador frontend para esa URL.
+1. Nuevo `HashF` en controlador frontend para esa URL.
 2. Pasar `url_xxx` en `$a_campos`.
 3. En JS: `var url_xxx = '<?= $url_xxx ?>';`
 4. `dataType: 'json'` y parseo de `ContestarJson`.

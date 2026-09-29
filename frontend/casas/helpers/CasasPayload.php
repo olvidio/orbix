@@ -99,6 +99,8 @@ public static function calendarioBodyErrorFromPayload(array $payload): array
  *     observ: string,
  *     letra_tarifa: string,
  *     a_opciones_tarifa: array<int|string, string>,
+ *     ctx_guardar: string,
+ *     ctx_eliminar: string,
  * }
  */
 public static function ingresoFormFromPayload(array $payload): array
@@ -115,6 +117,8 @@ public static function ingresoFormFromPayload(array $payload): array
         'observ' => \frontend\shared\helpers\PayloadCoercion::string($payload['observ'] ?? ''),
         'letra_tarifa' => \frontend\shared\helpers\PayloadCoercion::string($payload['letra_tarifa'] ?? ''),
         'a_opciones_tarifa' => NotasFormSupport::desplegableOpciones($payload['a_opciones_tarifa'] ?? []),
+        'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
+        'ctx_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_eliminar'] ?? ''),
     ];
 }
 
@@ -206,6 +210,7 @@ public static function grupoListaFromPayload(array $payload): array
  *     id_ubi_padre: int,
  *     id_ubi_hijo: int,
  *     opciones_casas: array<int|string, string>,
+ *     ctx_guardar: string,
  * }
  */
 public static function grupoFormFromPayload(array $payload): array
@@ -216,6 +221,7 @@ public static function grupoFormFromPayload(array $payload): array
         'id_ubi_padre' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_ubi_padre'] ?? 0),
         'id_ubi_hijo' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_ubi_hijo'] ?? 0),
         'opciones_casas' => NotasFormSupport::desplegableOpciones($payload['opciones_casas'] ?? []),
+        'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
     ];
 }
 

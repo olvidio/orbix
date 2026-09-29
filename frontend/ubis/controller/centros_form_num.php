@@ -18,6 +18,7 @@ $oHash = new HashF();
 $oHash->setUrl($url_update);
 $oHash->setArrayCamposHidden([
     'id_ubi' => $Qid_ubi,
+    'ctx_guardar' => $form['ctx_guardar'],
 ]);
 $oHash->setCamposForm('n_buzon!num_pi!num_cartas');
 

@@ -32,7 +32,7 @@ final class ActividadesMutacionSupport
         $fields = array_merge(
             array_filter(explode('!', self::calendarioFormHashCamposForm())),
             array_filter(explode('!', self::verFormHashCamposForm())),
-            ['id_tipo_activ', 'id_activ', 'id_ubi', 'ssfsv', 'mod', 'id_tarifa'],
+            ['id_tipo_activ', 'id_activ', 'id_ubi', 'ssfsv', 'mod', 'id_tarifa', 'ctx_editar', 'ctx_cambiar_tipo', 'ctx_nuevo'],
             ['h', 'hh', 'hhc', 'hno', 'hchk', 'hnov', 'horig', 'hhorig', 'PHPSESSID'],
         );
 
@@ -50,7 +50,7 @@ final class ActividadesMutacionSupport
     {
         $fields = array_merge(
             array_filter(explode('!', self::calendarioFormHashCamposForm())),
-            ['id_tipo_activ', 'id_activ', 'id_ubi', 'ssfsv', 'mod'],
+            ['id_tipo_activ', 'id_activ', 'id_ubi', 'ssfsv', 'mod', 'ctx_editar', 'ctx_cambiar_tipo', 'ctx_nuevo'],
             ['h', 'hh', 'hhc', 'hno', 'hchk', 'hnov', 'horig', 'hhorig'],
         );
 

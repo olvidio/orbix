@@ -21,6 +21,7 @@ $data = PostRequest::getDataFromUrl('/src/devel_db_admin/eliminar_esquema', [
     'comun' => $Qcomun,
     'sv' => $Qsv,
     'sf' => $Qsf,
+    'ctx_eliminar' => (string) filter_input(INPUT_POST, 'ctx_eliminar'),
 ]);
 
 echo _('Datos pasados a resto (según bloques aplicables), esquemas eliminados y roles borrados en las bases marcadas.');

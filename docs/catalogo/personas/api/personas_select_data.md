@@ -72,8 +72,10 @@ El controller pasa `$_POST` completo al caso de uso.
 - Claves del payload: `tabla`, `obj_pau` (`PersonaN`, `PersonaAgd`, `PersonaS`, `PersonaSSSC`,
   `PersonaNax`, `PersonaEx`), `id_tabla`, `permiso` (1 lectura / 3 edición según oficina),
   `sPrefs` (preferencia usuario `tabla_presentacion`), `total`, `personas[]` con
-  `id_nom`, `id_tabla`, `nom`, `nombre_ubi`, opcional `nivel_stgr`, `situacion`, `f_situacion`,
-  y opcional `aviso` (problemas región STGR).
+  `id_nom`, `id_tabla`, `nom`, `home_link_spec` `{path, query}`, `nombre_ubi`, opcional
+  `nivel_stgr`, `situacion`, `f_situacion`, y opcional `aviso` (problemas región STGR).
+- `home_link_spec` no está firmado en `src`; `frontend/personas/controller/personas_select.php`
+  lo transforma a la URL `HashF` de la ficha al montar la tabla HTML.
 - Errores duros en `mensaje`; avisos suaves de región/persona no válida en `aviso` con listado vacío.
 
 ## Permisos

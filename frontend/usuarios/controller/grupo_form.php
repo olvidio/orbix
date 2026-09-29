@@ -60,11 +60,12 @@ ListNavSupport::syncNavStateAt(
 if (!empty($Qid_usuario)) {
     $infoData = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/grupo_info', ['id_usuario' => $Qid_usuario]));
     $usuario = \frontend\shared\helpers\PayloadCoercion::string($infoData['nombre'] ?? '');
+    $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($infoData['ctx_guardar'] ?? '');
 
     $oHashG = new HashF();
     $oHashG->setCamposForm('que!usuario');
     $oHashG->setcamposNo('id_ctr!id_sacd!casas!refresh');
-    $oHashG->setArraycamposHidden(['id_usuario' => $Qid_usuario]);
+    $oHashG->setArraycamposHidden(['id_usuario' => $Qid_usuario, 'ctx_guardar' => $ctx_guardar]);
 
     $txt_guardar = _("guardar datos grupo");
     $a_camposG = [
@@ -112,10 +113,13 @@ if (!empty($Qid_usuario)) {
         echo PostRequest::getContent($url, $hash_params);
     }
 } else {
+    $infoData = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/grupo_info', ['id_usuario' => 0]));
+    $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($infoData['ctx_guardar'] ?? '');
+
     $oHashG = new HashF();
     $oHashG->setCamposForm('que!usuario');
     $oHashG->setcamposNo('id_ctr!id_sacd!casas!refresh');
-    $oHashG->setArraycamposHidden(['id_usuario' => '']);
+    $oHashG->setArraycamposHidden(['id_usuario' => '', 'ctx_guardar' => $ctx_guardar]);
 
     $txt_guardar = _("guardar datos grupo");
     $a_camposG = [

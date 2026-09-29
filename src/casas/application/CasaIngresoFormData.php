@@ -7,6 +7,7 @@ use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\PermisosActividades;
+use src\shared\security\HashB;
 
 /**
  * Data builder: datos para el formulario de ingreso de una actividad
@@ -82,6 +83,8 @@ final class CasaIngresoFormData
             'ingresos' => $ingresos,
             'num_asistentes' => $num_asistentes,
             'observ' => (string)$observ,
+            'ctx_guardar' => HashB::sign('casa_ingreso_update', ['id_activ' => $id_activ]),
+            'ctx_eliminar' => HashB::sign('casa_ingreso_eliminar', ['id_activ' => $id_activ]),
         ];
     }
 }

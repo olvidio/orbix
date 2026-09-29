@@ -36,12 +36,12 @@ $h_form = $oHashForm->linkSinVal();
 
 $oHashUpdate = new HashF();
 $oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
-$oHashUpdate->setCamposForm('id_item!id_tarifa!id_tipo_activ');
+$oHashUpdate->setCamposForm('id_tarifa!id_tipo_activ!ctx_update');
 $url_update = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update') . $oHashUpdate->linkSinVal();
 
 $oHashEliminar = new HashF();
 $oHashEliminar->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_eliminar'));
-$oHashEliminar->setCamposForm('id_item');
+$oHashEliminar->setCamposForm('ctx_eliminar');
 $url_eliminar = AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_eliminar') . $oHashEliminar->linkSinVal();
 
 $a_campos = [

@@ -28,24 +28,28 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case 'eliminar':
-        $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qctx_eliminar = (string)filter_input(INPUT_POST, 'ctx_eliminar');
         PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_excepcion_eliminar', [
-            'id_tipo_activ' => $Qid_tipo_activ,
+            'ctx_eliminar' => $Qctx_eliminar,
         ]);
         break;
     case 'update':
     case 'nuevo':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qcontribucion = (string)filter_input(INPUT_POST, 'contribucion');
+        $Qctx_guardar = (string)filter_input(INPUT_POST, 'ctx_guardar');
         PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_excepcion_guardar', [
+            'ctx_guardar' => $Qctx_guardar,
             'id_tipo_activ' => $Qid_tipo_activ,
             'valor' => $Qcontribucion,
         ]);
         break;
     case 'update_default':
         $Qdefault = (string)filter_input(INPUT_POST, 'default');
+        $Qctx_guardar = (string)filter_input(INPUT_POST, 'ctx_guardar');
         PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_default_guardar', [
             'default' => $Qdefault,
+            'ctx_guardar' => $Qctx_guardar,
         ]);
         break;
     case 'lista':
@@ -56,12 +60,13 @@ switch ($Qque) {
     case 'form_default':
         $data = PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_default_data');
         $default = \frontend\shared\helpers\PayloadCoercion::string($data['default'] ?? '');
+        $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? '');
         $txt = _('Valor por defecto en %');
 
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
         $oHash->setCamposForm('default');
-        $oHash->setArrayCamposHidden(['que' => 'update_default']);
+        $oHash->setArrayCamposHidden(['que' => 'update_default', 'ctx_guardar' => $ctx_guardar]);
 
         $a_campos = [
             'oPosicion' => $oPosicion,
@@ -83,6 +88,8 @@ switch ($Qque) {
             'id_tipo_activ' => $Qid_tipo_activ,
         ]);
         $tipo_txt = PasarelaPayload::tipoTxtFromPayload($data);
+        $ctx_eliminar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_eliminar_contribucion_no_duerme'] ?? '');
+        $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar_contribucion_no_duerme'] ?? '');
 
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
@@ -91,6 +98,8 @@ switch ($Qque) {
         $oHash->setArrayCamposHidden([
             'id_tipo_activ' => $Qid_tipo_activ,
             'que' => '',
+            'ctx_eliminar' => $ctx_eliminar,
+            'ctx_guardar' => $ctx_guardar,
         ]);
 
         $a_campos = [
@@ -119,6 +128,9 @@ switch ($Qque) {
         $oActividadTipo->setNom_tipo($Qsnom_tipo);
         $oActividadTipo->setPara('tipoactiv-tarifas');
 
+        $dataNuevo = PostRequest::getDataFromUrl('/src/pasarela/tipo_activ_txt_data', ['id_tipo_activ' => '']);
+        $ctx_guardar_nuevo = \frontend\shared\helpers\PayloadCoercion::string($dataNuevo['ctx_guardar_contribucion_no_duerme'] ?? '');
+
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
         $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!contribucion');
@@ -126,6 +138,7 @@ switch ($Qque) {
         $oHash->setArrayCamposHidden([
             'id_tipo_activ' => '',
             'que' => '',
+            'ctx_guardar' => $ctx_guardar_nuevo,
         ]);
 
         $a_campos = [

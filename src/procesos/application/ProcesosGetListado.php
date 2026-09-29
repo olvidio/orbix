@@ -10,6 +10,7 @@ use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Caso de uso: listado estructurado de fases/tareas del proceso.
@@ -98,6 +99,7 @@ class ProcesosGetListado
 
             $aRows[] = [
                 'id_item' => (int)$id_item,
+                'ctx_eliminar' => HashB::sign('procesos_eliminar', ['id_item' => (int)$id_item]),
                 'status_txt' => $status_txt,
                 'responsable' => $responsable,
                 'fase' => $fase,

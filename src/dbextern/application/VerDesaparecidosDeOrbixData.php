@@ -3,6 +3,7 @@
 namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
+use src\shared\security\HashB;
 
 class VerDesaparecidosDeOrbixData
 {
@@ -35,6 +36,10 @@ class VerDesaparecidosDeOrbixData
                 'id_nom_listas' => $id_nom_listas,
                 'ape_nom' => $oPersonaListas?->getApenom() ?? '',
                 'dl' => $oPersonaListas?->getDl() ?? '',
+                'ctx_desunir' => HashB::sign('sincro_desunir', [
+                    'id_nom_listas' => $id_nom_listas,
+                    'tipo_persona' => $tipo_persona,
+                ]),
             ];
         }
 

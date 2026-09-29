@@ -35,7 +35,7 @@ $h = $oHash->linkSinValParams();
 
 $oHash1 = new HashF();
 $oHash1->setUrl($url_ajax);
-$oHash1->setCamposForm('que!tipo!id_item!id_enc!id_sacd');
+$oHash1->setCamposForm('que!tipo!id_item!id_enc!id_sacd!ctx_cmb_sacd');
 $h_cmb = $oHash1->linkSinValParams();
 
 $oHash2 = new HashF();
@@ -45,7 +45,7 @@ $h_info = $oHash2->linkSinValParams();
 
 $oHash3 = new HashF();
 $oHash3->setUrl($url_ajax);
-$oHash3->setCamposForm('que!id_sacd!id_item!id_enc');
+$oHash3->setCamposForm('que!id_sacd!id_item!id_enc!ctx_dedicacion_update');
 $h_dedicacion = $oHash3->linkSinValParams();
 
 $a_campos = [

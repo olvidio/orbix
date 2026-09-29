@@ -66,7 +66,7 @@ Seguimiento de la migracion de `apps/procesos` hacia `frontend/procesos` + `src/
 
 ### Frontend
 
-- `frontend/procesos/controller/procesos_select.php`: `PostRequest::getDataFromUrl('/src/procesos/procesos_select_data', [])`, construye `web\Desplegable`, `web\Hash` y renderiza con `frontend\shared\model\ViewNewTwig('procesos/controller')`.
+- `frontend/procesos/controller/procesos_select.php`: `PostRequest::getDataFromUrl('/src/procesos/procesos_select_data', [])`, construye `frontend\shared\web\Desplegable`, `HashF` y renderiza con `frontend\shared\model\ViewNewTwig('procesos/controller')`.
 - `frontend/procesos/view/procesos_select.html.twig`: copia de la vista legacy; URLs de `url_ver`/`url_ajax` provisionales hasta que caigan los slices 2-6; al terminar todos se cambiaran a rutas `frontend/...`.
 
 ### Compatibilidad legacy
@@ -901,10 +901,10 @@ Retirar las violaciones de capas detectadas al revisar el modulo contra
 6. **`FasesActivCambioLista` → datos crudos + renderer frontend.**
 
    - `src\procesos\application\FasesActivCambioLista::execute` deja de
-     instanciar `web\Lista` y `web\Hash`. Devuelve `['error','msg','num_activ',
+     instanciar `frontend\shared\web\Lista` y `HashF`. Devuelve `['error','msg','num_activ',
      'num_ok','accion','id_fase_nueva','a_cabeceras','a_valores']`.
    - Nuevo controlador frontend `frontend/procesos/controller/fases_activ_cambio_lista.php`
-     que fabrica el formulario (`web\Hash`), la tabla (`web\Lista`) y
+     que fabrica el formulario (`HashF`), la tabla (`frontend\shared\web\Lista`) y
      emite HTML (`text/html`) para `.done(rta_txt)`.
    - `frontend/procesos/controller/fases_activ_cambio.php`: `url_lista`
      apunta al nuevo controlador frontend.
@@ -1032,10 +1032,10 @@ crudo se parten en endpoint JSON + renderer frontend.
    - `frontend/procesos/controller/procesos_select.php`: 7 hashes
      (`h_regenerar`, `h_get`, `h_get_listado`, `h_clonar`, `h_eliminar`,
      `h_nuevo`, `h_modificar`) pasan de ~28 lineas a 7 one-liners y se
-     elimina el `use web\Hash`.
+     elimina el uso de la firma UI antigua.
    - `frontend/procesos/controller/tipo_activ_proceso.php`: 3 hashes
      (`h_asignar`, `h_nuevo`, `h_lista`) colapsados y se elimina el
-     `use web\Hash`.
+     la firma UI antigua.
 
 ### Verificacion
 

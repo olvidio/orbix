@@ -10,6 +10,7 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterfac
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
+use src\shared\security\HashB;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 /**
@@ -172,6 +173,10 @@ class Select_asignaturas_de_una_actividad
                 $editable,
                 $id_schema,
             );
+            $a_valores[$c]['ctx_eliminar'] = HashB::sign('actividad_asignatura_eliminar', [
+                'id_activ' => $id_activ,
+                'id_asignatura' => $id_asignatura,
+            ]);
             $a_valores[$c][1] = $nombre_corto;
             $a_valores[$c][2] = $fila['creditos'];
             $a_valores[$c][3] = $tipo;
@@ -214,7 +219,7 @@ class Select_asignaturas_de_una_actividad
             'segment_tipo' => 'select_asignaturas_de_una_actividad',
             'hash' => [
                 'campos_form' => '',
-                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!confirmar_con_matriculas',
+                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!confirmar_con_matriculas!ctx_eliminar',
                 'campos_hidden' => [
                     'pau' => $this->pau,
                     'id_pau' => $this->id_pau,

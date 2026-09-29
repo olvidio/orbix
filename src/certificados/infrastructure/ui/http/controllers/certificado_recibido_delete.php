@@ -2,18 +2,22 @@
 
 use src\certificados\domain\CertificadoRecibidoDelete;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
+
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_eliminar'),
+        'certificado_recibido_delete'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 /** @var CertificadoRecibidoDelete $useCase */
 $useCase = DependencyResolver::get(CertificadoRecibidoDelete::class);
-
-$a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'sel');
-if ($a_sel !== []) {
-    $Qid_item = (int) strtok($a_sel[0], '#');
-} else {
-    $Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item');
-}
-
-$error_txt = $useCase->delete($Qid_item);
+$error_txt = $useCase->delete(\src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_item'));
 
 ContestarJson::enviar($error_txt, 'ok');

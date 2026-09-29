@@ -27,6 +27,7 @@ $faData = UsuariosPayload::twoFaInfoFromPayload(
 );
 $has_2fa = $faData['has_2fa'];
 $secret_2fa = $faData['secret_2fa'];
+$ctx_2fa_update = $faData['ctx_2fa_update'];
 
 if ($secret_2fa === '') {
     $secret_2fa = generate_secret_key();
@@ -52,6 +53,7 @@ $oHashUpdate->setCamposNo('enable_2fa');
 $oHashUpdate->setArraycamposHidden([
     'id_usuario' => $id_usuario,
     'secret_2fa' => $secret_2fa,
+    'ctx_2fa_update' => $ctx_2fa_update,
 ]);
 
 $oHashVerify = new HashF();
@@ -91,6 +93,7 @@ $a_campos = [
     'usuario' => $usuario,
     'has_2fa' => $has_2fa,
     'secret_2fa' => $secret_2fa,
+    'ctx_2fa_update' => $ctx_2fa_update,
     'qr_url' => $qr_url,
     'oHashUpdate' => $oHashUpdate,
     'h_2fa_verify' => $h_2fa_verify,

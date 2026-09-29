@@ -59,6 +59,7 @@ $oHash = new HashF();
 $oHash->setCamposForm('num_plazas!region_dl');
 $oHash->setArraycamposHidden([
     'id_activ' => $id_activ,
+    'ctx_ceder' => $payload['ctx_ceder'],
 ]);
 
 $oHashActualizar = new HashF();
@@ -72,7 +73,7 @@ $oHashActualizar->setArraycamposHidden($hiddenActualizar);
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $oHashCeder = new HashF();
 $oHashCeder->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadplazas/plazas_ceder'));
-$oHashCeder->setCamposForm('id_activ!num_plazas!region_dl');
+$oHashCeder->setCamposForm('id_activ!num_plazas!region_dl!ctx_ceder');
 $url_ceder = AppUrlConfig::srcBrowserUrl('/src/actividadplazas/plazas_ceder') . $oHashCeder->linkSinVal();
 
 $a_campos = [
@@ -91,6 +92,7 @@ $a_campos = [
     'tot_ocupadas' => $payload['tot_ocupadas'],
     'oDesplDelegaciones' => $oDesplDelegaciones,
     'url_ceder' => $url_ceder,
+    'ctx_ceder' => $payload['ctx_ceder'],
 ];
 
 $oView = new ViewNewPhtml('frontend\\actividadplazas\\controller');

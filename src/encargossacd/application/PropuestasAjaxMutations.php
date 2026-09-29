@@ -9,6 +9,7 @@ use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\encargossacd\domain\entity\PropuestaEncargoSacd;
 use src\encargossacd\domain\value_objects\EncargoModoId;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\shared\security\HashB;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\helpers\FilterPostGet;
 
@@ -58,6 +59,10 @@ final class PropuestasAjaxMutations
             'id_item' => $id_item,
             'id_enc' => $id_enc,
             'tipo' => $tipo,
+            'ctx_cmb_sacd' => HashB::sign('propuestas_ajax_cmb_sacd', [
+                'id_enc' => $id_enc,
+                'id_item' => $id_item,
+            ]),
         ];
     }
 
@@ -160,6 +165,10 @@ final class PropuestasAjaxMutations
             'dedic_m' => $dedic_m,
             'dedic_t' => $dedic_t,
             'dedic_v' => $dedic_v,
+            'ctx_dedicacion_update' => HashB::sign('propuestas_ajax_dedicacion_update', [
+                'id_enc' => $id_enc,
+                'id_item' => $id_item,
+            ]),
         ];
     }
 

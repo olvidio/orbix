@@ -40,6 +40,9 @@ final class ActividadplazasPayload
      *     tot_disponibles: int,
      *     tot_ocupadas: int,
      *     dl_opciones: array<int|string, string>,
+     *     ctx_guardar: string,
+     *     ctx_eliminar: string,
+     *     ctx_ceder: string,
      * }
      */
     public static function gestionPlazasFromPayload(array $payload): array
@@ -72,6 +75,9 @@ final class ActividadplazasPayload
             'tot_disponibles' => \frontend\shared\helpers\PayloadCoercion::int($payload['tot_disponibles'] ?? 0),
             'tot_ocupadas' => \frontend\shared\helpers\PayloadCoercion::int($payload['tot_ocupadas'] ?? 0),
             'dl_opciones' => NotasFormSupport::desplegableOpciones($payload['dl_opciones'] ?? []),
+            'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
+            'ctx_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_eliminar'] ?? ''),
+            'ctx_ceder' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_ceder'] ?? ''),
         ];
     }
 }

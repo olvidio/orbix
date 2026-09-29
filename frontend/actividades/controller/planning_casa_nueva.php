@@ -81,6 +81,7 @@ $a_camposHidden = [
     'id_tipo_activ' => $id_tipo_activ,
     'id_ubi' => $Qid_ubi,
     'ssfsv' => $ssfsv,
+    'ctx_nuevo' => $render['ctx_nuevo'],
 ];
 $oHash->setUrl($urlMutacionAjax);
 $oHash->setArraycamposHidden($a_camposHidden);

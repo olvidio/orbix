@@ -6,6 +6,7 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\shared\web\ContestarJson;
@@ -112,6 +113,10 @@ class rolesLista
             $a_valores[$i][6] = $str_GM;
             if ($permiso > 0) {
                 $a_valores[$i]['sel'] = "$id_role#";
+                // `sel` debe seguir en claro: `frontend/usuarios/controller/role_form.php`
+                // lo parsea para cargar el formulario de modificación. La cápsula solo
+                // protege la acción de borrado, transportada aparte vía `data-json`.
+                $a_valores[$i]['ctx_eliminar'] = HashB::sign('role_eliminar', ['id_role' => $id_role]);
             }
         }
 

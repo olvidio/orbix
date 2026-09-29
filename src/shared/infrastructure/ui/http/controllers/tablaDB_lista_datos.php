@@ -4,6 +4,7 @@ namespace src\shared;
 
 use src\shared\domain\DatosTablaRepo;
 use src\shared\infrastructure\DatosInfoRepoResolver;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
@@ -37,7 +38,22 @@ $id_tabla = 'repo_tabla_sql_' . $id_tabla;
 $error_txt = '';
 $data['a_cabeceras'] = $oDatosTabla->getCabeceras();
 $data['a_botones'] = $oDatosTabla->getBotones();
-$data['a_valores'] = $oDatosTabla->getValores();
+$aValores = $oDatosTabla->getValores();
+if (is_array($aValores)) {
+    foreach ($aValores as $k => $row) {
+        if (!is_array($row) || !isset($row['sel']) || !is_scalar($row['sel'])) {
+            continue;
+        }
+        $aValores[$k]['ctx_eliminar'] = HashB::sign('tablaDB_update', [
+            'clase_info' => $Qclase_info_encoded,
+            'mod' => 'eliminar',
+            's_pkey' => (string) $row['sel'],
+            'id_pau' => (string) $Qid_pau,
+            'obj_pau' => (string) $Qobj_pau,
+        ]);
+    }
+}
+$data['a_valores'] = $aValores;
 $data['id_tabla'] = $id_tabla;
 $data['script'] = $oDatosTabla->getScript();
 $data['titulo'] = $oInfoClase->getTxtTitulo();

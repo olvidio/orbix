@@ -3,10 +3,22 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\misas\application\ZonaSacdDatosPut;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$Qid_zona = (int)\src\shared\domain\helpers\FilterPostGet::post('id_zona', FILTER_VALIDATE_INT);
-$Qid_sacd = (int)\src\shared\domain\helpers\FilterPostGet::post('id_sacd', FILTER_VALIDATE_INT);
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_put'),
+        'zona_sacd_datos_put'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qid_zona = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_zona');
+$Qid_sacd = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_sacd');
 
 /** @var ZonaSacdDatosPut $useCase */
 $useCase = DependencyResolver::get(ZonaSacdDatosPut::class);

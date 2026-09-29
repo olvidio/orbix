@@ -11,6 +11,7 @@ use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
 use src\zonassacd\application\services\CentrosDeZona;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\shared\security\HashB;
 
 final class ZonaCtrLista
 {
@@ -60,7 +61,9 @@ final class ZonaCtrLista
             if ($id_ubi[0] === '2') {
                 $a_valores[$i]['clase'] = 'tono2';
             }
-            $a_valores[$i]['sel'] = $id_ubi;
+            $a_valores[$i]['sel'] = HashB::sign('zona_ctr_update', [
+                'id_ubi' => $id_ubi,
+            ]);
             $a_valores[$i][1] = $oCentro->getNombre_ubi();
             $a_valores[$i][2] = $nombreZona;
         }

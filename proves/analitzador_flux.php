@@ -21,7 +21,7 @@ function analitzar_fitxer($ruta_relativa, &$mapa = [], $visitats = [])
     $contingut = file_get_contents($ruta_completa);
     $connexions = [];
 
-    // 1. Cercar enllaços via Hash::link o rutes hardcoded
+    // 1. Cercar enllaços via HashF::link o rutes hardcoded
     // Patró: cerca cadenes que semblin rutes de l'app (apps/.../controller/....php)
     preg_match_all('/apps\/[a-z0-9_\/]+\.php/i', $contingut, $matches);
     if (!empty($matches[0])) {

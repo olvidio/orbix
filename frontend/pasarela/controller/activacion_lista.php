@@ -40,10 +40,6 @@ $oHashSrcGuardar->setCamposForm('id_tipo_activ!valor');
 $h_src_excepcion_guardar = $oHashSrcGuardar->linkSinValParams();
 
 $url_src_excepcion_eliminar = AppUrlConfig::srcBrowserUrl('/src/pasarela/activacion_excepcion_eliminar');
-$oHashSrcEliminar = new HashF();
-$oHashSrcEliminar->setUrl($url_src_excepcion_eliminar);
-$oHashSrcEliminar->setCamposForm('id_tipo_activ');
-$h_src_excepcion_eliminar = $oHashSrcEliminar->linkSinValParams();
 
 $txt_eliminar = _('¿Está seguro que quiere eliminar esta fila?');
 
@@ -57,7 +53,6 @@ $a_campos = [
     'url_src_excepcion_guardar' => $url_src_excepcion_guardar,
     'url_src_excepcion_eliminar' => $url_src_excepcion_eliminar,
     'h_src_excepcion_guardar' => $h_src_excepcion_guardar,
-    'h_src_excepcion_eliminar' => $h_src_excepcion_eliminar,
     'txt_eliminar' => $txt_eliminar,
 ];
 

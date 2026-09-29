@@ -15,6 +15,7 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\profesores\domain\services\ProfesorStgrService;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * @return array{
@@ -129,6 +130,11 @@ final class FormMatriculasDeUnaPersonaData
             $aCamposHidden['id_asignatura'] = $idAsignatura;
             $aCamposHidden['id_nivel'] = $idNivel;
             $aCamposHidden['mod'] = $mod;
+            $aCamposHidden['ctx_editar'] = HashB::sign('matricula_editar', [
+                'id_activ' => $idActiv,
+                'id_pau' => $idNom,
+                'id_asignatura' => $idAsignatura,
+            ]);
         } elseif ($modo === self::MODO_MATRICULAR_CA) {
             $mod = 'nuevo';
             $altaDesdeCa = true;
@@ -139,6 +145,10 @@ final class FormMatriculasDeUnaPersonaData
             );
             $aCamposHidden['mod'] = $mod;
             $aCamposHidden['modo'] = self::MODO_MATRICULAR_CA;
+            $aCamposHidden['ctx_nueva'] = HashB::sign('matricula_nueva', [
+                'id_activ' => $idActiv,
+                'id_pau' => $idNom,
+            ]);
             $camposForm = 'id_asignatura';
             $condicionJs = 'false';
         } else {
@@ -184,6 +194,10 @@ final class FormMatriculasDeUnaPersonaData
             }
             $oDesplNivelesOpciones = $aFaltan;
             $aCamposHidden['mod'] = $mod;
+            $aCamposHidden['ctx_nueva'] = HashB::sign('matricula_nueva', [
+                'id_activ' => $idActiv,
+                'id_pau' => $idNom,
+            ]);
             $camposForm = 'id_asignatura!id_nivel';
 
             [$aWhereOp, $aOperadorOp] = PlanEstudiosFilter::apply($plan, [

@@ -43,6 +43,8 @@ $a_campos = [
     'letra' => $fields['letra'],
     'observ' => $fields['observ'],
     'oDesplModo' => $oDesplModo,
+    'token_update' => $fields['token_update'],
+    'token_eliminar' => $fields['token_eliminar'],
 ];
 
 $oView = new ViewNewPhtml('frontend\\actividadtarifas\\controller');

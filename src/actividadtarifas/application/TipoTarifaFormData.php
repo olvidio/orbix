@@ -4,6 +4,7 @@ namespace src\actividadtarifas\application;
 
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\actividadtarifas\domain\value_objects\TarifaModoId;
+use src\shared\security\HashB;
 
 /**
  * Data builder para el formulario modificar/nuevo de `TipoTarifa`.
@@ -51,6 +52,13 @@ final class TipoTarifaFormData
             'modo' => $modo,
             'observ' => $observ,
             'opciones_modo' => TarifaModoId::getArrayModo(),
+            'token_update' => HashB::sign(
+                'tipo_tarifa_update',
+                $es_nuevo ? [] : ['id_tarifa' => (int)$id_tarifa]
+            ),
+            'token_eliminar' => $es_nuevo
+                ? ''
+                : HashB::sign('tipo_tarifa_eliminar', ['id_tarifa' => (int)$id_tarifa]),
         ];
     }
 }

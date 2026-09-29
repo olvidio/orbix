@@ -22,6 +22,7 @@ $oHash->setUrl($url_update);
 $oHash->setArrayCamposHidden([
     'labor' => 'si',
     'id_ubi' => $Qid_ubi,
+    'ctx_guardar' => $form['ctx_guardar'],
 ]);
 $oHash->setCamposForm('tipo_ctr!tipo_labor');
 

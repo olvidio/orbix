@@ -81,6 +81,8 @@ foreach ($a_egm as $aEgm) {
         'id_grupo' => $id_grupo,
         'id_equipaje' => $Qid_equipaje,
         'id_item_egm' => $id_item_egm,
+        'ctx_add' => $aEgm['ctx_add'],
+        'ctx_eliminar_grupo' => $aEgm['ctx_eliminar_grupo'],
     ]);
 
     $a_campos = [

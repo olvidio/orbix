@@ -58,6 +58,7 @@ final class CambiosPayload
      *     url_eliminar_fecha: string,
      *     h_eliminar: string,
      *     h_eliminar_fecha: string,
+     *     ctx_eliminar_fecha: string,
      * }
      */
     public static function avisosGenerarFromPayload(array $payload): array
@@ -72,6 +73,7 @@ final class CambiosPayload
             'url_eliminar_fecha' => \frontend\shared\helpers\PayloadCoercion::string($payload['url_eliminar_fecha'] ?? ''),
             'h_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($payload['h_eliminar'] ?? ''),
             'h_eliminar_fecha' => \frontend\shared\helpers\PayloadCoercion::string($payload['h_eliminar_fecha'] ?? ''),
+            'ctx_eliminar_fecha' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_eliminar_fecha'] ?? ''),
         ];
     }
 

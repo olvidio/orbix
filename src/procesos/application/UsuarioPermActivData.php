@@ -11,6 +11,7 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\PermAccionBits;
+use src\shared\security\HashB;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 
 /**
@@ -127,6 +128,9 @@ class UsuarioPermActivData
             'a_acciones' => $a_acciones,
             'a_afecta_a' => $a_afecta_a,
             'aPerm' => $aPerm,
+            'ctx_guardar' => HashB::sign('perm_activ_guardar', [
+                'id_usuario' => $Qid_usuario,
+            ]),
         ];
     }
 }

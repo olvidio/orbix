@@ -88,6 +88,8 @@ $form = PersonasPayload::editarFormFromPayload($payload, $Qid_nom, $Qobj_pau);
 
 $Qid_nom = $form['id_nom'];
 $Qobj_pau = $form['Qobj_pau'];
+$ctx_update = $form['ctx_update'];
+$ctx_eliminar = $form['ctx_eliminar'];
 $trato = $form['trato'];
 $nom = $form['nom'];
 $apel_fam = $form['apel_fam'];
@@ -264,10 +266,14 @@ if ($Qobj_pau === 'PersonaEx') {
 }
 $oHash->setCamposForm($camposForm);
 $oHash->setcamposNo($campos_chk);
+// ctx_* HashB viajan en el serialize hacia src_ajax.php: tienen que
+// estar en hidden HashF. Inputs sueltos rompen el hash y redirigen a HTML.
 $oHash->setArraycamposHidden([
     'campos_chk' => $campos_chk,
     'obj_pau' => $Qobj_pau,
     'id_nom' => $Qid_nom,
+    'ctx_update' => $ctx_update,
+    'ctx_eliminar' => $ctx_eliminar,
 ]);
 
 $a_parametros = ['pau' => 'p', 'id_nom' => $Qid_nom, 'obj_pau' => $Qobj_pau];

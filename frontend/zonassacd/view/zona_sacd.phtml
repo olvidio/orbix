@@ -45,6 +45,7 @@
     <label id="titulo_modal">nom sacd</label><hr/>
     <input type="hidden" id="id_sacd" value=""/>
     <input type="hidden" id="id_zona" value=""/>
+    <input type="hidden" id="ctx_put" value=""/>
     <div style="margin-top: 20px;"><label for="propia"><?= _("propia") ?>:</label><input id="propia" name="propia" type="checkbox"></div>
     <div style="margin-top: 20px;"><label for="dw1"><?= _("Lunes") ?>:</label><input id="dw1" name="dw1" type="checkbox"></div>
     <div style="margin-top: 20px;"><label for="dw2"><?= _("Martes") ?>:</label><input id="dw2" name="dw2" type="checkbox"></div>
@@ -78,8 +79,12 @@
             return;
         }
         $('#acumular').val(n);
-        let datos = $(formulario).serialize();
-        $.ajax({ url: '<?= $url_ajax_update ?>', type: 'post', data: datos, dataType: 'json' }).done(function (json) {
+        let packed = fnjs_sel_ctx_serialize(formulario, 'ctx_update');
+        if (!packed.count) {
+            alert(<?= json_encode(_("respuesta") . ": ") ?> + <?= json_encode(_("Operación no autorizada")) ?>);
+            return;
+        }
+        $.ajax({ url: '<?= $url_ajax_update ?>', type: 'post', data: packed.datos, dataType: 'json' }).done(function (json) {
                 if (!json || json.success !== true) {
                     alert(<?= json_encode(_("respuesta") . ": ") ?> + (json ? json.mensaje : ''));
                 }
@@ -110,7 +115,7 @@
         $.ajax({ url: '<?= $url_zona_sacd_get ?>', method: 'POST', data: parametros, dataType: 'json' }).done(function (json) {
             if (!json || json.success !== true) { alert(<?= json_encode(_("respuesta") . ": ") ?> + (json ? json.mensaje : '')); return; }
             var payload = (typeof json.data === 'string') ? JSON.parse(json.data) : (json.data || {});
-            $('#id_sacd').val(id_sacd); $('#id_zona').val(id_zona); $('#titulo_modal').html(payload.nombre_sacd);
+            $('#id_sacd').val(id_sacd); $('#id_zona').val(id_zona); $('#ctx_put').val(payload.ctx_put || ''); $('#titulo_modal').html(payload.nombre_sacd);
             $('#propia').prop('checked', payload.propia === true);
             $('#dw1').prop('checked', payload.dw1 === true); $('#dw2').prop('checked', payload.dw2 === true); $('#dw3').prop('checked', payload.dw3 === true);
             $('#dw4').prop('checked', payload.dw4 === true); $('#dw5').prop('checked', payload.dw5 === true); $('#dw6').prop('checked', payload.dw6 === true); $('#dw7').prop('checked', payload.dw7 === true);
@@ -119,7 +124,7 @@
     }
 
     function commitCurrentEdit() {
-        let parametros = 'id_zona=' + $('#id_zona').val() + '&id_sacd=' + $('#id_sacd').val();
+        let parametros = 'ctx_put=' + encodeURIComponent($('#ctx_put').val());
         parametros += '&propia=' + $('#propia').is(":checked") + '&dw1=' + $('#dw1').is(":checked") + '&dw2=' + $('#dw2').is(":checked") + '&dw3=' + $('#dw3').is(":checked");
         parametros += '&dw4=' + $('#dw4').is(":checked") + '&dw5=' + $('#dw5').is(":checked") + '&dw6=' + $('#dw6').is(":checked") + '&dw7=' + $('#dw7').is(":checked");
         parametros += '<?= $h_url_put ?>';

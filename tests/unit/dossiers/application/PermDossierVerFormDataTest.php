@@ -115,14 +115,30 @@ final class PermDossierVerFormDataTest extends TestCase
         $this->assertSame($expectedKeys, array_keys($data), 'El contrato de claves del payload no debe cambiar sin aviso.');
 
         $this->assertSame(
-            [
-                'campos_form' => 'id_tipo_dossier!id_tipo_dossier_rel!tabla_from!tabla_to!campo_to!descripcion!app!class!codigo',
-                'campos_no' => 'que!depende_modificar!permiso_lectura!permiso_escritura',
-                'campos_hidden' => [
-                    'campos_chk' => 'depende_modificar!permiso_lectura!permiso_escritura',
-                ],
-            ],
-            $data['hash_config']
+            'id_tipo_dossier!id_tipo_dossier_rel!tabla_from!tabla_to!campo_to!descripcion!app!class!codigo',
+            $data['hash_config']['campos_form']
+        );
+        $this->assertSame(
+            'que!depende_modificar!permiso_lectura!permiso_escritura',
+            $data['hash_config']['campos_no']
+        );
+        $this->assertSame(
+            'depende_modificar!permiso_lectura!permiso_escritura',
+            $data['hash_config']['campos_hidden']['campos_chk']
+        );
+        $this->assertSame(
+            ['id_tipo_dossier' => $id],
+            \src\shared\security\HashB::open(
+                (string)$data['hash_config']['campos_hidden']['ctx_guardar'],
+                'tipo_dossier_guardar'
+            )
+        );
+        $this->assertSame(
+            ['id_tipo_dossier' => $id],
+            \src\shared\security\HashB::open(
+                (string)$data['hash_config']['campos_hidden']['ctx_eliminar'],
+                'tipo_dossier_eliminar'
+            )
         );
 
         $this->assertSame(

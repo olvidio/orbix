@@ -2,20 +2,27 @@
 
 use Ramsey\Uuid\Uuid;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\entity\Cama;
 use src\ubiscamas\domain\value_objects\CamaDescripcion;
 use src\ubiscamas\domain\value_objects\CamaId;
 use src\ubiscamas\domain\value_objects\HabitacionId;
-$a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'sel');
 
-$Qid_cama = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_cama');
-$Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_habitacion');
-
-if ($a_sel !== []) {
-    $Qid_cama = urldecode(strtok($a_sel[0], '#') ?: '');
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_update'),
+        'cama_update'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
 }
+
+$Qid_cama = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'id_cama');
+$Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'id_habitacion');
 
 $Qdescripcion = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'descripcion');
 $Qlarga = \src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'larga'));

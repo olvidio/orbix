@@ -16,10 +16,15 @@ fnjs_cambiar=function(formulario){
 	// segundo parametro permite multiple selección
 	rta=fnjs_solo_uno(formulario,true);
 	if (rta != 0 ) {
+		var packed = fnjs_sel_ctx_serialize(formulario, 'ctx_update');
+		if (!packed.count) {
+			alert({{ txt_no_autorizado|json_encode|raw }});
+			return;
+		}
 		$.ajax({
 			url: url,
 			type: 'post',
-			data: $(formulario).serialize(),
+			data: packed.datos,
 			dataType: 'json'
 		})
 		.done(function (json) {

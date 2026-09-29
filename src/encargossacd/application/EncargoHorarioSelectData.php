@@ -5,6 +5,7 @@ namespace src\encargossacd\application;
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\services\EncargoDominioService;
+use src\shared\security\HashB;
 
 /**
  * Datos para la lista de horarios de un encargo (`encargo_horario_select`).
@@ -72,6 +73,9 @@ final class EncargoHorarioSelectData
                 $filas[] = [
                     'id_enc' => (int)$oH->getId_enc(),
                     'id_item_h' => (int)$oH->getId_item_h(),
+                    'ctx_eliminar' => HashB::sign('horario_update_data', [
+                        'id_item_h' => (int)$oH->getId_item_h(),
+                    ]),
                     'dia_num' => $dia_num,
                     'dia_ref' => $dia_ref,
                     'mas_menos' => $mas_menos,

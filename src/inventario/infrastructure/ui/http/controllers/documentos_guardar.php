@@ -7,6 +7,8 @@ use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\shared\domain\helpers\FuncTablasSupport;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 $Qdocumentos = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'documentos');
 $Qchk_f_recibido = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'chk_f_recibido');
@@ -21,6 +23,16 @@ $Qchk_num_ini = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST
 $Qnum_ini = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'num_ini');
 $Qchk_num_fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'chk_num_fin');
 $Qnum_fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'num_fin');
+
+try {
+    HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_guardar'),
+        'documentos_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 $error_txt = '';
 

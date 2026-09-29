@@ -27,8 +27,8 @@ use frontend\shared\config\AppUrlConfig;
         });
     }
     fnjs_add_dir = function () { fnjs_update_div('#ficha', '<?= $golistadir ?>'); }
-    fnjs_asignar_dir = function (id_ubi, obj_dir, id_direccion) {
-        var parametros = 'id_ubi=' + id_ubi + '&id_direccion=' + id_direccion + '&obj_dir=<?= $obj_dir ?><?= $h_asignar ?>';
+    fnjs_asignar_dir = function (ctx_asignar) {
+        var parametros = 'ctx_asignar=' + encodeURIComponent(ctx_asignar) + '<?= $h_asignar ?>';
         fnjs_ajax_json({
             url: '<?= $url_direcciones_asignar ?>',
             data: parametros,

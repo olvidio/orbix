@@ -53,7 +53,7 @@ $oTabla->setDatos($a_valores);
 
 $oHash = new HashF();
 $oHash->setCamposForm('!sel');
-$oHash->setCamposNo('!scroll_id');
+$oHash->setCamposNo('!scroll_id!ctx_trasladar');
 $oHash->setArrayCamposHidden($tabla['hash_hidden']);
 
 $a_campos = [

@@ -43,6 +43,7 @@ $a_campos = [
     'id_item' => $form['id_item'],
     'oDesplCasaMadre' => $oDesplCasaMadre,
     'oDesplCasaHija' => $oDesplCasaHija,
+    'ctx_guardar' => $form['ctx_guardar'],
 ];
 
 $oView = new ViewNewPhtml('frontend\\casas\\controller');

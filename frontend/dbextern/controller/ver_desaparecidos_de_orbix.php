@@ -23,7 +23,7 @@ $a_persona_listas = $data['personas'] ?? [];
 $url_sincro_desunir = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_desunir');
 $oHash = new HashF();
 $oHash->setUrl($url_sincro_desunir);
-$oHash->setCamposForm('id_nom_listas!tipo_persona');
+$oHash->setCamposForm('ctx_desunir');
 $h = $oHash->linkSinValParams();
 
 $a_campos = [

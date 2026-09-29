@@ -56,12 +56,14 @@ if (!empty($Qid_grupmenu)) {
 
     $grupmenu = $data['grupmenu'];
     $orden = $data['orden'];
+    $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? '');
 
     $oHashG = new HashF();
     $oHashG->setCamposForm('que!grupmenu!orden');
     $oHashG->setcamposNo('refresh');
     $a_camposHidden = array(
         'id_grupmenu' => $Qid_grupmenu,
+        'ctx_guardar' => $ctx_guardar,
     );
     $oHashG->setArraycamposHidden($a_camposHidden);
 
@@ -78,11 +80,15 @@ if (!empty($Qid_grupmenu)) {
     $oView->renderizar('grupmenu_form.phtml', $a_camposG);
 
 } else {
+    $data = PostRequest::getDataFromUrl('/src/menus/grupmenu_info', ['id_grupmenu' => 0]);
+    $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? '');
+
     $oHashG = new HashF();
     $oHashG->setCamposForm('que!grupmenu!orden');
     $oHashG->setcamposNo('refresh');
     $a_camposHidden = array(
         'id_grupmenu' => $Qid_grupmenu,
+        'ctx_guardar' => $ctx_guardar,
     );
     $oHashG->setArraycamposHidden($a_camposHidden);
 

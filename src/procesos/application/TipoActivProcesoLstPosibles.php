@@ -4,6 +4,7 @@ namespace src\procesos\application;
 
 use src\shared\config\ConfigGlobal;
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Caso de uso: procesos posibles asignables a un id_tipo_activ.
@@ -41,6 +42,9 @@ class TipoActivProcesoLstPosibles
             'id_tipo_activ' => $Qid_tipo_activ,
             'propio' => $Qpropio,
             'a_procesos' => $aProcesos,
+            'ctx_asignar' => HashB::sign('tipo_activ_proceso_asignar', [
+                'id_tipo_activ' => $Qid_tipo_activ,
+            ]),
         ];
     }
 }

@@ -10,8 +10,13 @@
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             if (confirm(<?= json_encode(_("¿seguro que desea borrar la habitación?")) ?>)) {
+                var ctx_eliminar = fnjs_ctx_fila_seleccionada(formulario, 'ctx_eliminar');
+                if (!ctx_eliminar) {
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + <?= json_encode(_("Operación no autorizada")) ?>);
+                    return;
+                }
                 let request = $.ajax({
-                    data: $(formulario).serialize(),
+                    data: 'ctx_eliminar=' + encodeURIComponent(ctx_eliminar),
                     url: 'src/ubiscamas/habitacion_delete',
                     type: 'POST',
                     dataType: 'json'
@@ -38,7 +43,7 @@
 <h3 class=subtitulo><?= ucfirst(_("relación de habitaciones")) ?></h3>
 <form id="seleccionados" name="seleccionados" action="" method="post">
     <?= $oHashSelect->getCamposHtml() ?>
-    <?= $oTabla->mostrar_tabla() ?>
+    <?= $oTabla->mostrar_tabla_html() ?>
 </form>
 <br>
 <table class=botones>

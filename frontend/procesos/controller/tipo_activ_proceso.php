@@ -15,7 +15,7 @@ $url_lista = 'frontend/procesos/controller/tipo_activ_proceso_lista.php';
 $url_lst_posibles = 'frontend/procesos/controller/tipo_activ_proceso_lst_posibles.php';
 $url_asignar = AppUrlConfig::srcBrowserUrl('/src/procesos/tipo_activ_proceso_asignar');
 
-$h_asignar = ProcesosHashes::formLink($url_asignar, 'id_tipo_activ!propio!id_tipo_proceso');
+$h_asignar = ProcesosHashes::formLink($url_asignar, 'ctx_asignar!propio!id_tipo_proceso');
 $h_nuevo = ProcesosHashes::formLink($url_lst_posibles, 'id_tipo_activ!propio');
 $h_lista = ProcesosHashes::formLink($url_lista, '');
 

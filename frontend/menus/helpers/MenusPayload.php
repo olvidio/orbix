@@ -63,6 +63,10 @@ final class MenusPayload
             'txt_ok' => \frontend\shared\helpers\PayloadCoercion::string($pageData['txt_ok'] ?? ''),
             'campos_chk' => \frontend\shared\helpers\PayloadCoercion::string($pageData['campos_chk'] ?? 'ok'),
             'menu_rows' => $menuRows,
+            'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($pageData['ctx_guardar'] ?? ''),
+            'ctx_eliminar' => \frontend\shared\helpers\PayloadCoercion::string($pageData['ctx_eliminar'] ?? ''),
+            'ctx_copiar' => \frontend\shared\helpers\PayloadCoercion::string($pageData['ctx_copiar'] ?? ''),
+            'ctx_mover' => \frontend\shared\helpers\PayloadCoercion::string($pageData['ctx_mover'] ?? ''),
         ];
     }
 

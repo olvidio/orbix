@@ -17,9 +17,11 @@ $cabecera = $data['cabecera'];
 $cabeceraB = $data['cabeceraB'];
 $firma = $data['firma'];
 $pie = $data['pie'];
+$ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? '');
 
 $oHash = new HashF();
 $oHash->setCamposForm('cabecera!cabeceraB!firma!pie');
+$oHash->setArraycamposHidden(['ctx_guardar' => $ctx_guardar]);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

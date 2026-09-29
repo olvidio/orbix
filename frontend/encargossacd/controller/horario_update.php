@@ -29,6 +29,8 @@ foreach (
         'h_fin',
         'n_sacd',
         'mes',
+        'ctx_guardar',
+        'ctx_eliminar',
     ] as $k
 ) {
     if (isset($_POST[$k])) {

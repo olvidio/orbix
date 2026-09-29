@@ -2,11 +2,23 @@
 
 use src\menus\application\MenuGuardar;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_guardar'),
+        'menu_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $Qid_grupmenu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'filtro_grupo');
-$Qid_menu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_menu');
+$Qid_menu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_menu');
 $Qok = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ok');
 $Qorden = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'orden');
 $Qtxt_menu = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'txt_menu');

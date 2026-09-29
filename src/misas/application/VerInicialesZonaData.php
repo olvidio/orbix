@@ -4,6 +4,7 @@ namespace src\misas\application;
 
 use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\shared\security\HashB;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 class VerInicialesZonaData
@@ -51,6 +52,7 @@ class VerInicialesZonaData
                 'nombre_sacd' => $sacd,
                 'iniciales' => $iniciales,
                 'color' => InicialesColorHex::normalizeForStorage($color),
+                'ctx_update' => HashB::sign('update_iniciales', ['id_sacd' => (int)$id_nom]),
             ];
         }
 

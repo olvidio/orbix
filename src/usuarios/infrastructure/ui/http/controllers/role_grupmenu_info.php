@@ -6,6 +6,7 @@ use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $Qid_role = (int)\src\shared\domain\helpers\FilterPostGet::post('id_role');
@@ -44,7 +45,10 @@ foreach ($cGM as $oGrupMenu) {
 
     $grup_menu = $oGrupMenu->getGrup_menu($ambito);
 
-    $a_valores[$i]['sel'] = "$Qid_role#$id_grupmenu";
+    $a_valores[$i]['sel'] = HashB::sign('role_grupmenu_add', [
+        'id_role' => $Qid_role,
+        'id_grupmenu' => $id_grupmenu,
+    ]);
     $a_valores[$i][1] = $grup_menu;
 }
 

@@ -8,6 +8,7 @@ use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
 use src\permisos\domain\XPermisos;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Caso de uso: tareas del proceso para un id_activ (estructura + permiso edición).
@@ -86,6 +87,7 @@ class ActividadProcesoGet
 
             $aRows[] = [
                 'id_item' => $id_item,
+                'ctx_update' => HashB::sign('actividad_proceso_update', ['id_item' => $id_item]),
                 'fase' => $fase,
                 'tarea' => $tarea,
                 'of_responsable_txt' => $of_responsable_txt,

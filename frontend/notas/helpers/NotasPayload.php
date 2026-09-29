@@ -133,6 +133,8 @@ final class NotasPayload
             'has_pdf' => !empty($payload['has_pdf']),
             'pendiente_imprimir' => !empty($payload['pendiente_imprimir']),
             'warn_no_id_activ' => !empty($payload['warn_no_id_activ']),
+            'ctx_nuevo' => PayloadCoercion::string($payload['ctx_nuevo'] ?? ''),
+            'ctx_guardar' => PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
         ];
     }
 
@@ -165,6 +167,7 @@ final class NotasPayload
                     'f_acta' => PayloadCoercion::string($row['f_acta'] ?? ''),
                     'id_asignatura' => PayloadCoercion::int($row['id_asignatura'] ?? 0),
                     'has_pdf' => !empty($row['has_pdf']),
+                    'ctx_eliminar' => PayloadCoercion::string($row['ctx_eliminar'] ?? ''),
                 ];
             }
         }

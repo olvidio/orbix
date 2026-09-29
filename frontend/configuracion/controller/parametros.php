@@ -23,6 +23,13 @@ if (!empty($data['error'])) {
 
 $a_campos = ConfiguracionPayload::parametrosViewFromPayload($data);
 $idiomaDespl = ConfiguracionPayload::parametrosIdiomaDesplegable($data);
+$ctxMap = isset($data['ctx_guardar']) && is_array($data['ctx_guardar']) ? $data['ctx_guardar'] : [];
+unset($a_campos['ctx_guardar']);
+
+$ctxGuardar = static function (string $parametro) use ($ctxMap): string {
+    $raw = $ctxMap[$parametro] ?? '';
+    return is_scalar($raw) ? (string)$raw : '';
+};
 
 // añadir url update
 $url = 'src/configuracion/parametros_update';
@@ -34,7 +41,7 @@ $parametro = 'curso_crt';
 $oHashCrt = new HashF();
 $oHashCrt->setUrl($url);
 $oHashCrt->setCamposForm('ini_dia!ini_mes!fin_dia!fin_mes');
-$oHashCrt->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashCrt->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashCrt'] = $oHashCrt;
 
@@ -43,7 +50,7 @@ $parametro = 'curso_stgr';
 $oHashStgr = new HashF();
 $oHashStgr->setUrl($url);
 $oHashStgr->setCamposForm('ini_dia!ini_mes!fin_dia!fin_mes');
-$oHashStgr->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashStgr->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashStgr'] = $oHashStgr;
 
@@ -52,7 +59,7 @@ $parametro = 'jefe_calendario';
 $oHashJC = new HashF();
 $oHashJC->setUrl($url);
 $oHashJC->setCamposForm('valor');
-$oHashJC->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashJC->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashJC'] = $oHashJC;
 
@@ -61,7 +68,7 @@ $parametro = 'ce_lugar';
 $oHashCE = new HashF();
 $oHashCE->setUrl($url);
 $oHashCE->setCamposForm('valor');
-$oHashCE->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashCE->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashCE'] = $oHashCE;
 
@@ -70,7 +77,7 @@ $parametro = 'region_latin';
 $oHashRL = new HashF();
 $oHashRL->setUrl($url);
 $oHashRL->setCamposForm('valor');
-$oHashRL->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashRL->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashRL'] = $oHashRL;
 
@@ -79,7 +86,7 @@ $parametro = 'vstgr';
 $oHashVE = new HashF();
 $oHashVE->setUrl($url);
 $oHashVE->setCamposForm('valor');
-$oHashVE->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashVE->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashVE'] = $oHashVE;
 
@@ -88,7 +95,7 @@ $parametro = 'lugar_firma';
 $oHashLF = new HashF();
 $oHashLF->setUrl($url);
 $oHashLF->setCamposForm('valor');
-$oHashLF->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashLF->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashLF'] = $oHashLF;
 
@@ -97,7 +104,7 @@ $parametro = 'dir_stgr';
 $oHashDir = new HashF();
 $oHashDir->setUrl($url);
 $oHashDir->setCamposForm('valor');
-$oHashDir->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashDir->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashDir'] = $oHashDir;
 
@@ -106,7 +113,7 @@ $parametro = 'nota_corte';
 $oHashNC = new HashF();
 $oHashNC->setUrl($url);
 $oHashNC->setCamposForm('valor');
-$oHashNC->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashNC->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashNC'] = $oHashNC;
 
@@ -116,7 +123,7 @@ $parametro = 'nota_max';
 $oHashN = new HashF();
 $oHashN->setUrl($url);
 $oHashN->setCamposForm('valor');
-$oHashN->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashN->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashN'] = $oHashN;
 
@@ -125,7 +132,7 @@ $parametro = 'caduca_cursada';
 $oHashC = new HashF();
 $oHashC->setUrl($url);
 $oHashC->setCamposForm('valor');
-$oHashC->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashC->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashC'] = $oHashC;
 
@@ -134,7 +141,7 @@ $parametro = 'idioma_default';
 $oHashI = new HashF();
 $oHashI->setUrl($url);
 $oHashI->setCamposForm('valor');
-$oHashI->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashI->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashI'] = $oHashI;
 
@@ -153,7 +160,7 @@ $parametro = 'ambito';
 $oHashDLR = new HashF();
 $oHashDLR->setUrl($url);
 $oHashDLR->setCamposForm('valor');
-$oHashDLR->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashDLR->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashDLR'] = $oHashDLR;
 
@@ -162,7 +169,7 @@ $parametro = 'gesCalendario';
 $oHashCal = new HashF();
 $oHashCal->setUrl($url);
 $oHashCal->setCamposForm('valor');
-$oHashCal->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashCal->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashCal'] = $oHashCal;
 
@@ -171,7 +178,7 @@ $parametro = 'ini_contador_certificados';
 $oHashC1 = new HashF();
 $oHashC1->setUrl($url);
 $oHashC1->setcamposForm('valor');
-$oHashC1->setArrayCamposHidden(['parametro' => $parametro]);
+$oHashC1->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashC1'] = $oHashC1;
 

@@ -5,6 +5,7 @@ namespace src\dbextern\application;
 use src\dbextern\application\support\SincroDBFactory;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
+use src\shared\security\HashB;
 
 class VerTrasladosData
 {
@@ -59,6 +60,11 @@ class VerTrasladosData
                 'ape_nom' => $oPersonaOrbix?->getPrefApellidosNombre() ?? '',
                 'dl' => $oPersonaOrbix?->getDl() ?? '',
                 'dl_actual' => $dl_actual,
+                'ctx_trasladar' => HashB::sign('sincro_trasladar', [
+                    'id_nom_orbix' => $idInt,
+                    'tipo_persona' => $tipo_persona,
+                    'dl' => (string) ($oPersonaOrbix?->getDl() ?? ''),
+                ]),
             ];
 
             $oSincroDB->restaurarConexion($oDB);

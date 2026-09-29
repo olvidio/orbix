@@ -23,7 +23,7 @@ $a_persona_listas = $data['personas'] ?? [];
 $url_sincro_trasladar_a = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_trasladar_a');
 $oHash = new HashF();
 $oHash->setUrl($url_sincro_trasladar_a);
-$oHash->setCamposForm('dl!id_nom_orbix!tipo_persona');
+$oHash->setCamposForm('ctx_trasladar_a');
 $h = $oHash->linkSinValParams();
 
 $a_campos = [

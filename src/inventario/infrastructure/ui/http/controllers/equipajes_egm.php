@@ -4,6 +4,7 @@ use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\ListaDocsGrupo;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 $Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_equipaje');
 $error_txt = '';
@@ -38,6 +39,14 @@ foreach ($cEgm as $oEgm) {
 
     $a_egm[$i]['a_valores'] = $datos['a_valores'];
     $a_egm[$i]['id_item_egm'] = $datos['id_item_egm'];
+    $id_item_egm = (int) ($datos['id_item_egm'] ?? 0);
+    if ($id_item_egm > 0) {
+        $a_egm[$i]['ctx_add'] = HashB::sign('equipajes_add_doc', ['id_item_egm' => $id_item_egm]);
+    }
+    $a_egm[$i]['ctx_eliminar_grupo'] = HashB::sign('equipajes_eliminar_grupo', [
+        'id_grupo' => (int) $id_grupo,
+        'id_equipaje' => $Qid_equipaje,
+    ]);
 }
 
 $data = [

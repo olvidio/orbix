@@ -5,6 +5,7 @@ namespace src\dossiers\application;
 use src\dossiers\domain\PermisoDossierBits;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\permisos\domain\XPermisos;
+use src\shared\security\HashB;
 
 /**
  * Formulario "permisos de acceso" para un tipo de dossier.
@@ -63,6 +64,12 @@ class PermDossierVerFormData
             'campos_no' => 'que!' . $campos_chk,
             'campos_hidden' => [
                 'campos_chk' => $campos_chk,
+                'ctx_guardar' => HashB::sign('tipo_dossier_guardar', [
+                    'id_tipo_dossier' => $Qid_tipo_dossier,
+                ]),
+                'ctx_eliminar' => HashB::sign('tipo_dossier_eliminar', [
+                    'id_tipo_dossier' => $Qid_tipo_dossier,
+                ]),
             ],
         ];
 

@@ -45,9 +45,13 @@ final class SacdsDisponiblesDataTest extends TestCase
         $out = (new \src\actividadessacd\application\SacdsDisponiblesData($this->createMock(\src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface::class), $this->createMock(\src\encargossacd\domain\contracts\EncargoRepositoryInterface::class), $this->createMock(\src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface::class), $repo))->execute(['id_activ' => 99, 'seleccion' => 15]);
         $this->assertSame(99, $out['id_activ']);
         $this->assertSame([], $out['sacds_ctr']);
-        $this->assertSame([
-            ['id_nom' => 10, 'ap_nom' => 'Uno, Persona'],
-        ], $out['sacds_todos']);
+        $this->assertCount(1, $out['sacds_todos']);
+        $this->assertSame(10, $out['sacds_todos'][0]['id_nom']);
+        $this->assertSame('Uno, Persona', $out['sacds_todos'][0]['ap_nom']);
+        $this->assertSame(
+            ['id_activ' => 99, 'id_nom' => 10],
+            \src\shared\security\HashB::open($out['sacds_todos'][0]['ctx_asignar'], 'sacd_asignar')
+        );
     }
 
     /**

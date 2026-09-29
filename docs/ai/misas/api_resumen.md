@@ -36,6 +36,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `misas.cambiar_status_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/cambiar_status_data.php`
 - Entrada: ninguna detectada.
+- Respuesta: incluye `zona_ctx_map` (mapa `id_zona => ctx`), una cápsula `HashB` por zona permitida para `nuevo_status`, atada a `{id_zona}` — `NuevoStatusPeriodo` no vuelve a comprobar permiso sobre `id_zona`, así que la cápsula solo permite operar sobre una de las zonas que `getArrayZonas` ya filtró para este jefe
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/crear_nuevo_periodo_data`
@@ -77,28 +78,28 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.eliminar_encargo_centro`
 - Controller: `src/misas/infrastructure/ui/http/controllers/eliminar_encargo_centro.php`
-- Entrada: `post.id_item:string`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `eliminar_encargo_centro`, contexto `{id_item}`; emitida por fila en `ver_encargos_centros_data`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/eliminar_encargo_zona`
 
 - Id: `misas.eliminar_encargo_zona`
 - Controller: `src/misas/infrastructure/ui/http/controllers/eliminar_encargo_zona.php`
-- Entrada: `post.id_enc:integer`
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `eliminar_encargo_zona`, contexto `{id_enc}`; emitida por fila en `ver_encargos_zona_data`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/guardar_encargo_centro`
 
 - Id: `misas.guardar_encargo_centro`
 - Controller: `src/misas/infrastructure/ui/http/controllers/guardar_encargo_centro.php`
-- Entrada: `post.id_item:string`, `post.id_enc:integer`, `post.id_ctr:integer`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `guardar_encargo_centro`, contexto `{id_item}`; emitida por fila o por `ctx_nuevo` en `ver_encargos_centros_data`, `id_item` vacío para alta), `post.id_enc:integer`, `post.id_ctr:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/guardar_encargo_zona`
 
 - Id: `misas.guardar_encargo_zona`
 - Controller: `src/misas/infrastructure/ui/http/controllers/guardar_encargo_zona.php`
-- Entrada: `post.id_enc:integer`, `post.id_tipo_enc:integer`, `post.id_ubi:integer`, `post.id_zona:integer`, `post.orden:integer`, `post.prioridad:integer`, `post.descripcion_lugar:string`, `post.encargo:string`, `post.idioma_enc:string`, `post.observ:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `guardar_encargo_zona`, contexto `{id_enc}`; emitida por fila o por `ctx_nuevo` en `ver_encargos_zona_data`, `id_enc=0` para alta), `post.id_tipo_enc:integer`, `post.id_ubi:integer`, `post.id_zona:integer`, `post.orden:integer`, `post.prioridad:integer`, `post.descripcion_lugar:string`, `post.encargo:string`, `post.idioma_enc:string`, `post.observ:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/guardar_horario`
@@ -154,7 +155,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.nuevo_status`
 - Controller: `src/misas/infrastructure/ui/http/controllers/nuevo_status.php`
-- Entrada: `post.id_zona:integer`, `post.periodo:string`, `post.empiezamin:string`, `post.empiezamax:string`, `post.estado:integer`
+- Entrada: `post.ctx_nuevo_status:string` (cápsula `HashB` acción `nuevo_status`, contexto `{id_zona}`; emitida por `cambiar_status_data` como una entrada de `zona_ctx_map`), `post.periodo:string`, `post.empiezamin:string`, `post.empiezamax:string`, `post.estado:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/plan_de_misas_pantalla_data`
@@ -175,7 +176,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.update_iniciales`
 - Controller: `src/misas/infrastructure/ui/http/controllers/update_iniciales.php`
-- Entrada: `post.id_sacd:integer`, `post.iniciales:string`, `post.color:string`
+- Entrada: `post.ctx_update:string` (cápsula `HashB` acción `update_iniciales`, contexto `{id_sacd}`; emitida por fila en `ver_iniciales_zona_data`), `post.iniciales:string`, `post.color:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/ver_cuadricula_zona_data`
@@ -190,13 +191,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `misas.ver_encargos_centros_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_encargos_centros_data.php`
 - Entrada: `post.id_zona:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (cada fila incluye `ctx_guardar`/`ctx_eliminar`, cápsulas `HashB` atadas a su `id_item`; el nivel superior incluye `ctx_nuevo` para el alta)
 
 ## `/src/misas/ver_encargos_zona_data`
 
 - Id: `misas.ver_encargos_zona_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_encargos_zona_data.php`
 - Entrada: `post.id_zona:integer`, `post.orden:string`
+- Respuesta: cada fila incluye `ctx_guardar`/`ctx_eliminar` (cápsulas `HashB` atadas a `{id_enc}`); el nivel superior incluye `ctx_nuevo` para el alta
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/ver_iniciales_zona_data`
@@ -204,6 +206,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `misas.ver_iniciales_zona_data`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_iniciales_zona_data.php`
 - Entrada: `post.id_zona:integer`
+- Respuesta: cada fila incluye `ctx_update`, cápsula `HashB` para `update_iniciales` atada a `{id_sacd}`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/ver_misas_zona_data`
@@ -232,11 +235,12 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `misas.zona_sacd_datos_get`
 - Controller: `src/misas/infrastructure/ui/http/controllers/zona_sacd_datos_get.php`
 - Entrada: `post.id_zona:integer`, `post.id_sacd:integer`
+- Respuesta: incluye `ctx_put`, cápsula `HashB` para `zona_sacd_datos_put` atada a `{id_zona, id_sacd}` (solo si no hay error)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/zona_sacd_datos_put`
 
 - Id: `misas.zona_sacd_datos_put`
 - Controller: `src/misas/infrastructure/ui/http/controllers/zona_sacd_datos_put.php`
-- Entrada: `post.id_zona:integer`, `post.id_sacd:integer`, `post.propia:string`, `post.dw1:string`, `post.dw2:string`, `post.dw3:string`, `post.dw4:string`, `post.dw5:string`, `post.dw6:string`, `post.dw7:string`
+- Entrada: `post.ctx_put:string` (cápsula `HashB` acción `zona_sacd_datos_put`, contexto `{id_zona, id_sacd}`; emitida por `zona_sacd_datos_get`), `post.propia:string`, `post.dw1:string`, `post.dw2:string`, `post.dw3:string`, `post.dw4:string`, `post.dw5:string`, `post.dw6:string`, `post.dw7:string`
 - Respuesta: `standard_envelope_string_data`

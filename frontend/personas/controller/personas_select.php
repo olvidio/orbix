@@ -8,6 +8,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashF;
+use frontend\shared\security\HashFSignedLink;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
@@ -232,10 +233,7 @@ foreach ($a_filas as $fila) {
     $a_val['sel'] = "$id_nom#$id_tabla_persona";
     $a_val[1] = $id_tabla_persona;
     if ($sPrefs === 'html') {
-        $pagina_persona = HashF::link(
-            AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?'
-            . http_build_query(['id_nom' => $id_nom, 'id_tabla' => $id_tabla_persona, 'obj_pau' => $obj_pau])
-        );
+        $pagina_persona = HashFSignedLink::tryFromSpec($fila['home_link_spec'] ?? null);
         $a_val[2] = ['ira' => $pagina_persona, 'valor' => $nom];
     } else {
         $a_val[2] = ['script' => 'fnjs_home("#seleccionados")', 'valor' => $nom];

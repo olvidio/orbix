@@ -14,6 +14,7 @@ use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\shared\security\HashB;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
 
@@ -163,5 +164,18 @@ final class UsuarioAvisosPrefFormDataTest extends TestCase
         $this->assertSame((string)_("avisar antes de que esté marcada (off)"), $result['texto_aviso_off']);
         $this->assertSame((string)_("avisar si está marcada (on)"), $result['texto_aviso_on']);
         $this->assertSame($fases, $result['aFases']);
+    }
+
+    public function test_emite_ctx_guardar_atado_a_usuario_e_item(): void
+    {
+        $result = $this->createUseCase()->execute([
+            'id_usuario' => 443,
+            'id_item_usuario_objeto' => 0,
+            'salida' => 'nuevo',
+        ]);
+
+        $ctx = HashB::open($result['hash_main']['campos_hidden']['ctx_guardar'], 'cambio_usuario_objeto_pref_guardar');
+        $this->assertSame(443, $ctx['id_usuario']);
+        $this->assertSame(0, $ctx['id_item_usuario_objeto']);
     }
 }

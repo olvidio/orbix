@@ -38,6 +38,13 @@ final class HabitacionFormDataTest extends TestCase
         $this->assertSame(1, $out['numero_camas_vip']);
         $this->assertSame(8, $out['id_ubi']);
         $this->assertSame('', $out['id_habitacion']);
+        $this->assertSame(
+            ['id_habitacion' => '', 'id_ubi' => 8],
+            \src\shared\security\HashB::open(
+                (string) ($out['hash_form']['campos_hidden']['ctx_update'] ?? ''),
+                'habitacion_update'
+            )
+        );
     }
 
     public function test_nueva_habitacion_incrementa_orden(): void

@@ -19,11 +19,13 @@ $data = PostRequest::getDataFromUrl($url_backend);
 
 $a_opciones = NotasFormSupport::desplegableOpciones($data['a_opciones'] ?? []);
 $oDesplTemplates = new Desplegable('id_template_menu', $a_opciones, '', true);
+$ctx_importar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_importar'] ?? '');
 
 $url = AppUrlConfig::srcBrowserUrl('/src/menus/menus_importar');
 $oHash = new HashF();
 $oHash->setUrl($url);
 $oHash->setCamposForm('id_template_menu');
+$oHash->setArraycamposHidden(['ctx_importar' => $ctx_importar]);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,

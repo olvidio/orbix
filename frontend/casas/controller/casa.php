@@ -144,12 +144,12 @@ $url_form = $web . '/frontend/casas/controller/casa_ingreso_form.php' . $oHashFo
 
 $oHashUpdate = new HashF();
 $oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_update'));
-$oHashUpdate->setCamposForm('id_activ!id_tarifa!precio!ingresos!num_asistentes!observ');
+$oHashUpdate->setCamposForm('ctx_guardar!id_activ!id_tarifa!precio!ingresos!num_asistentes!observ');
 $url_update = AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_update') . $oHashUpdate->linkSinVal();
 
 $oHashEliminar = new HashF();
 $oHashEliminar->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_eliminar'));
-$oHashEliminar->setCamposForm('id_activ');
+$oHashEliminar->setCamposForm('ctx_eliminar!id_activ');
 $url_eliminar = AppUrlConfig::srcBrowserUrl('/src/casas/casa_ingreso_eliminar') . $oHashEliminar->linkSinVal();
 
 $a_campos = [

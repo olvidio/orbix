@@ -3,10 +3,22 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\misas\application\GuardarEncargoZona;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_guardar'),
+        'guardar_encargo_zona'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $input = [
-    'id_enc' => \src\shared\domain\helpers\FilterPostGet::post('id_enc'),
+    'id_enc' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_enc'),
     'id_tipo_enc' => \src\shared\domain\helpers\FilterPostGet::post('id_tipo_enc'),
     'id_ubi' => \src\shared\domain\helpers\FilterPostGet::post('id_ubi'),
     'id_zona' => \src\shared\domain\helpers\FilterPostGet::post('id_zona'),

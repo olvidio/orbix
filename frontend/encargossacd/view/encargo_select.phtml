@@ -38,11 +38,16 @@
         if (rta == 1) {
             seguro = confirm(<?= json_encode((string)$txt_eliminar) ?>);
             if (seguro) {
+                var ctx_eliminar = fnjs_ctx_fila_seleccionada(formulario, 'ctx_eliminar');
+                if (!ctx_eliminar) {
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + <?= json_encode(_("Operación no autorizada")) ?>);
+                    return;
+                }
                 $('#que').val("eliminar");
                 $(formulario).one("submit", function () {
                     var url = '<?= $url_borrar ?>';
                     var hExtra = '<?= $h_borrar ?>';
-                    var parametros = fnjs_eliminar_serialize(this) + hExtra;
+                    var parametros = 'que=' + encodeURIComponent($('#que').val() || '') + '&ctx_eliminar=' + encodeURIComponent(ctx_eliminar) + hExtra;
                     $.ajax({
                         url: url,
                         type: 'post',
@@ -83,7 +88,7 @@
 <form id="seleccionados" name="seleccionados" action="" method="post">
     <input type='Hidden' id='que' name='que' value=''>
     <?= $oHash->getCamposHtml() ?>
-    <?= $oTabla->mostrar_tabla() ?>
+    <?= $oTabla->mostrar_tabla_html() ?>
 </form>
 <br>
 <table class=botones>

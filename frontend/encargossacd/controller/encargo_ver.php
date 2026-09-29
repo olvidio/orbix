@@ -141,6 +141,8 @@ $oHashAct->setArrayCamposHidden([
     'que' => $Qque,
     'id_enc' => $Qid_enc,
     'id_zona' => $Qid_zona,
+    'ctx_nuevo' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_nuevo'] ?? ''),
+    'ctx_editar' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_editar'] ?? ''),
 ]);
 
 $url_zona = AppUrlConfig::srcBrowserUrl('/src/encargossacd/zonas_get_select_data');
@@ -166,13 +168,13 @@ $h_lst_tipo = $oHashLstTipo->linkSinValParams();
 $url_encargo_ver_nuevo = AppUrlConfig::srcBrowserUrl('/src/encargossacd/encargo_ver_nuevo');
 $oHashEncNuevo = new HashF();
 $oHashEncNuevo->setUrl($url_encargo_ver_nuevo);
-$oHashEncNuevo->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!que');
+$oHashEncNuevo->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!que!ctx_nuevo!ctx_editar');
 $h_encargo_ver_nuevo = $oHashEncNuevo->linkSinValParams();
 
 $url_encargo_ver_editar = AppUrlConfig::srcBrowserUrl('/src/encargossacd/encargo_ver_editar');
 $oHashEncEditar = new HashF();
 $oHashEncEditar->setUrl($url_encargo_ver_editar);
-$oHashEncEditar->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!que!id_enc');
+$oHashEncEditar->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!que!id_enc!ctx_nuevo!ctx_editar');
 $h_encargo_ver_editar = $oHashEncEditar->linkSinValParams();
 
 $txt_btn = $Qque === 'nuevo' ? _("crear encargo") : _("guardar encargo");

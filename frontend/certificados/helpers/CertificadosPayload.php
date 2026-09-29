@@ -237,6 +237,7 @@ final class CertificadosPayload
             'firmado' => $payload['firmado'] ?? false,
             'content' => $content,
             'apellidos_nombre' => \frontend\shared\helpers\PayloadCoercion::string($payload['apellidos_nombre'] ?? ''),
+            'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
         ];
     }
 
@@ -250,6 +251,7 @@ final class CertificadosPayload
             'aviso' => \frontend\shared\helpers\PayloadCoercion::string($payload['aviso'] ?? ''),
             'nom' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? ''),
             'f_enviado' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_enviado'] ?? ''),
+            'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
         ];
     }
 
@@ -281,6 +283,7 @@ final class CertificadosPayload
             'f_recibido' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_recibido'] ?? ''),
             'chk_firmado' => \frontend\shared\helpers\PayloadCoercion::string($payload['chk_firmado'] ?? ''),
             'a_locales' => NotasFormSupport::desplegableOpciones($payload['a_locales'] ?? []),
+            'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
         ];
     }
 
@@ -333,6 +336,7 @@ final class CertificadosPayload
             'contador' => \frontend\shared\helpers\PayloadCoercion::string($payload['contador'] ?? ''),
             'f_certificado' => \frontend\shared\helpers\PayloadCoercion::string($payload['f_certificado'] ?? ''),
             'any' => \frontend\shared\helpers\PayloadCoercion::string($payload['any_2digit'] ?? ''),
+            'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
         ];
     }
 

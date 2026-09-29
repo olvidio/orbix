@@ -36,22 +36,26 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case 'eliminar':
-        $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qctx_eliminar = (string)filter_input(INPUT_POST, 'ctx_eliminar');
         AjaxJsonSupport::proxyPostRequest('/src/pasarela/activacion_excepcion_eliminar', [
-            'id_tipo_activ' => $Qid_tipo_activ,
+            'ctx_eliminar' => $Qctx_eliminar,
         ]);
     case 'update':
     case 'nuevo':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qactivacion = (string)filter_input(INPUT_POST, 'activacion');
+        $Qctx_guardar = (string)filter_input(INPUT_POST, 'ctx_guardar');
         AjaxJsonSupport::proxyPostRequest('/src/pasarela/activacion_excepcion_guardar', [
+            'ctx_guardar' => $Qctx_guardar,
             'id_tipo_activ' => $Qid_tipo_activ,
             'valor' => $Qactivacion,
         ]);
     case 'update_default':
         $Qdefault = (string)filter_input(INPUT_POST, 'default');
+        $Qctx_guardar = (string)filter_input(INPUT_POST, 'ctx_guardar');
         AjaxJsonSupport::proxyPostRequest('/src/pasarela/activacion_default_guardar', [
             'default' => $Qdefault,
+            'ctx_guardar' => $Qctx_guardar,
         ]);
     case 'lista':
         $data = PostRequest::getDataFromUrl('/src/pasarela/activacion_lista');
@@ -60,11 +64,12 @@ switch ($Qque) {
     case 'form_default':
         $data = PostRequest::getDataFromUrl('/src/pasarela/activacion_default_data');
         $default = \frontend\shared\helpers\PayloadCoercion::string($data['default'] ?? '');
+        $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? '');
 
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
         $oHash->setCamposForm('default');
-        $oHash->setArrayCamposHidden(['que' => 'update_default']);
+        $oHash->setArrayCamposHidden(['que' => 'update_default', 'ctx_guardar' => $ctx_guardar]);
         $a_campos = [
             'oPosicion' => $oPosicion,
             'oHash' => $oHash,
@@ -84,6 +89,8 @@ switch ($Qque) {
             'id_tipo_activ' => $Qid_tipo_activ,
         ]);
         $tipo_txt = PasarelaPayload::tipoTxtFromPayload($data);
+        $ctx_eliminar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_eliminar_activacion'] ?? '');
+        $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar_activacion'] ?? '');
 
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
@@ -93,6 +100,8 @@ switch ($Qque) {
         $oHash->setArrayCamposHidden([
             'id_tipo_activ' => $Qid_tipo_activ,
             'que' => '',
+            'ctx_eliminar' => $ctx_eliminar,
+            'ctx_guardar' => $ctx_guardar,
         ]);
 
         $a_campos = [
@@ -120,6 +129,11 @@ switch ($Qque) {
         $oActividadTipo->setNom_tipo($Qsnom_tipo);
         $oActividadTipo->setPara('tipoactiv-tarifas');
 
+        // Solo para obtener ctx_guardar en modo 'nuevo' (sin id_tipo_activ:
+        // el valor real lo compone el propio formulario a partir del selector).
+        $dataNuevo = PostRequest::getDataFromUrl('/src/pasarela/tipo_activ_txt_data', ['id_tipo_activ' => '']);
+        $ctx_guardar_nuevo = \frontend\shared\helpers\PayloadCoercion::string($dataNuevo['ctx_guardar_activacion'] ?? '');
+
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
         $oHash->setCamposForm('extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!activacion');
@@ -127,6 +141,7 @@ switch ($Qque) {
         $oHash->setArrayCamposHidden([
             'id_tipo_activ' => '',
             'que' => '',
+            'ctx_guardar' => $ctx_guardar_nuevo,
         ]);
 
         $a_campos = [

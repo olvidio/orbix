@@ -102,6 +102,8 @@
         <input type="hidden" id="id_enc_selected" value=""/>
         <input type="hidden" id="id_ctr_selected" value=""/>
         <input type="hidden" id="id_item" value=""/>
+        <input type="hidden" id="ctx_guardar" value=""/>
+        <input type="hidden" id="ctx_eliminar" value=""/>
         <input type="hidden" id="que" value=""/>
 
         <div class="item-details-field">
@@ -175,7 +177,7 @@
     }
 
     function commitCurrentEdit() {
-        var id_item = $('#id_item').val();
+        var ctx_guardar = $('#ctx_guardar').val();
         var id_enc = $('#id_enc').val();
         var id_ctr = $('#id_ubi').val();
 
@@ -185,7 +187,7 @@
         }
 
         var url = '<?= $url_guardar_encargo_centro ?>';
-        var parametros = 'id_item=' + encodeURIComponent(id_item) +
+        var parametros = 'ctx_guardar=' + encodeURIComponent(ctx_guardar) +
                          '&id_enc=' + encodeURIComponent(id_enc) +
                          '&id_ctr=' + encodeURIComponent(id_ctr) +
                          '<?= $h_guardar_encargo_centro ?>';
@@ -206,14 +208,14 @@
     }
 
     function eliminarCurrentEdit() {
-        var id_item = $('#id_item').val();
-        if (!id_item) {
+        var ctx_eliminar = $('#ctx_eliminar').val();
+        if (!ctx_eliminar) {
             modal.hide();
             return;
         }
 
         var url = '<?= $url_eliminar_encargo_centro ?>';
-        var parametros = 'id_item=' + encodeURIComponent(id_item) +
+        var parametros = 'ctx_eliminar=' + encodeURIComponent(ctx_eliminar) +
                          '<?= $h_eliminar_encargo_centro ?>';
 
         $.ajax({
@@ -312,9 +314,12 @@
         });
     }
 
+    var ctx_nuevo = <?= json_encode($ctx_nuevo) ?>;
+
     function fnjs_nuevo() {
         reset_campos_modal();
         $('#que').val('nuevo');
+        $('#ctx_guardar').val(ctx_nuevo);
         $('#titulo_modal').html(<?= json_encode(_('nuevo encargo visible para un centro')) ?>);
         fnjs_prepara_select_encargo();
         modal.show();
@@ -323,6 +328,8 @@
     function reset_campos_modal() {
         $('#titulo_modal').html('');
         $('#id_item').val('');
+        $('#ctx_guardar').val('');
+        $('#ctx_eliminar').val('');
         $('#id_enc_selected').val('');
         $('#id_ctr_selected').val('');
         $('#id_zona_enc').val('');
@@ -350,6 +357,8 @@
         $('#titulo_modal').html(<?= json_encode(_('modificar encargo visible para un centro')) ?>);
         $('#que').val('modificar');
         $('#id_item').val(id_item);
+        $('#ctx_guardar').val(row.ctx_guardar || '');
+        $('#ctx_eliminar').val(row.ctx_eliminar || '');
         $('#id_enc_selected').val(id_encargo);
         $('#id_ctr_selected').val(id_centro);
         $('#id_zona_enc').val(<?= (int)$id_zona ?>);

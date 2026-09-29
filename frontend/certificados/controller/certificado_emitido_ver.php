@@ -69,6 +69,7 @@ $oHashCertificadoPdf->setArrayCamposHidden([
     'id_item' => $Qid_item,
     'id_nom' => $id_nom,
     'certificado_old' => $certificado,
+    'ctx_guardar' => $ver['ctx_guardar'],
 ]);
 
 $dir_tmp = OrbixRuntime::dir() . '/log/tmp/';

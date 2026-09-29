@@ -77,6 +77,9 @@ fnjs_grabar_todo = function () {
         // Guardar propiedades.
         var form_propiedades = $('#propiedades_obj');
         $('#id_item_usuario_objeto_prop').val(id_item_obj);
+        if (parsed.ctx_guardar_propiedades) {
+            $('#ctx_guardar_propiedades').val(parsed.ctx_guardar_propiedades);
+        }
         $.ajax({
             url: '<?= $url_guardar_propiedades ?>',
             type: 'post',

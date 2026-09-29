@@ -7,11 +7,23 @@
 
 use src\cartaspresentacion\application\CartaPresentacionUpdate;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_update'),
+        'carta_presentacion_update'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $input = [
-    'id_ubi' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi'),
-    'id_direccion' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_direccion'),
+    'id_ubi' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_ubi'),
+    'id_direccion' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_direccion'),
     'pres_nom' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'pres_nom'),
     'pres_telf' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'pres_telf'),
     'pres_mail' => \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'pres_mail'),

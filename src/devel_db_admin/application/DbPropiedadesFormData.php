@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace src\devel_db_admin\application;
 
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\shared\security\HashB;
 use src\ubis\application\services\RegionDropdown;
 
 /**
@@ -49,6 +50,7 @@ final class DbPropiedadesFormData
 
         return [
             'oDesplEsquemas' => $dbp->posibles_esquemas($default, false),
+            'ctx_apptables' => HashB::sign('apptables_update'),
         ];
     }
 
@@ -62,17 +64,30 @@ final class DbPropiedadesFormData
         return [
             'oEsquemaRef' => $dbp->posibles_esquemas(''),
             'a_opciones_regiones' => $this->regionDropdown->activasOrdenNombre(),
+            'ctx_crear' => HashB::sign('crear_esquema'),
+            'ctx_copiar' => HashB::sign('copiar_esquema'),
+            'ctx_eliminar' => HashB::sign('eliminar_esquema'),
+            'ctx_crear_usuarios' => HashB::sign('crear_usuarios'),
         ];
     }
 
     /**
-     * @return array{a_esquemas_union: array<string, string>, a_opciones_regiones: array<string, string>}
+     * @return array{
+     *     a_esquemas_union: array<string, string>,
+     *     a_opciones_regiones: array<string, string>,
+     *     ctx_renombrar: string,
+     *     ctx_verificar: string,
+     *     ctx_corregir: string
+     * }
      */
     private function dbCambiarNombreEsquemas(DBPropiedades $dbp): array
     {
         return [
             'a_esquemas_union' => $dbp->array_esquemas_union_importar(),
             'a_opciones_regiones' => $this->regionDropdown->activasOrdenNombre(),
+            'ctx_renombrar' => HashB::sign('renombrar_esquema'),
+            'ctx_verificar' => HashB::sign('verificar_renombrar_esquema'),
+            'ctx_corregir' => HashB::sign('corregir_renombrar_esquema'),
         ];
     }
 
@@ -98,6 +113,7 @@ final class DbPropiedadesFormData
 
         return [
             'a_posibles_esquemas' => $mapped,
+            'ctx_absorber' => HashB::sign('absorber_esquema'),
         ];
     }
 
@@ -110,6 +126,7 @@ final class DbPropiedadesFormData
 
         return [
             'desplTablas' => $dbp->posibles_tablas(),
+            'ctx_mover' => HashB::sign('mover_tabla'),
         ];
     }
 

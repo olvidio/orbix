@@ -312,6 +312,7 @@ final class UsuariosPayload
             'cabeceras' => $lista['cabeceras'],
             'botones' => $lista['botones'],
             'valores' => $lista['valores'],
+            'ctx_guardar' => PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
         ];
     }
 
@@ -333,6 +334,7 @@ final class UsuariosPayload
      *     tipo_apellidos_nom_ap: string,
      *     idioma: string,
      *     zona_horaria: string,
+     *     ctx_guardar: string,
      * }
      */
     public static function preferenciasFromPayload(array $payload): array
@@ -355,6 +357,7 @@ final class UsuariosPayload
             'tipo_apellidos_nom_ap' => PayloadCoercion::string($payload['tipo_apellidos_nom_ap'] ?? ''),
             'idioma' => PayloadCoercion::string($payload['idioma'] ?? ''),
             'zona_horaria' => PayloadCoercion::string(empty($zona) ? 'UTC' : $zona),
+            'ctx_guardar' => PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
         ];
     }
 
@@ -423,13 +426,14 @@ final class UsuariosPayload
 
     /**
      * @param array<string, mixed> $payload
-     * @return array{has_2fa: bool, secret_2fa: string}
+     * @return array{has_2fa: bool, secret_2fa: string, ctx_2fa_update: string}
      */
     public static function twoFaInfoFromPayload(array $payload): array
     {
         return [
             'has_2fa' => !empty($payload['has_2fa']),
             'secret_2fa' => PayloadCoercion::string($payload['secret_2fa'] ?? ''),
+            'ctx_2fa_update' => PayloadCoercion::string($payload['ctx_2fa_update'] ?? ''),
         ];
     }
 

@@ -7,6 +7,7 @@ use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 
@@ -59,6 +60,7 @@ final class AvisosGenerarListaData
                     'aOpcionesAvisoTipo' => $aOpcionesAvisoTipo,
                     'effective_id_usuario' => $id_usuario,
                     'effective_aviso_tipo' => $aviso_tipo,
+                    'ctx_generar_tabla' => HashB::sign('avisos_generar_tabla'),
                 ],
                 $extra
             );
@@ -74,8 +76,9 @@ final class AvisosGenerarListaData
                 'campos_no' => 'sel',
             ];
             $out['hash_eliminar_fecha'] = [
-                'campos_form' => 'f_fin',
+                'campos_form' => 'f_fin!ctx_eliminar_fecha',
             ];
+            $out['ctx_eliminar_fecha'] = HashB::sign('cambio_usuario_eliminar_hasta_fecha');
 
             return $out;
         };
@@ -139,7 +142,12 @@ final class AvisosGenerarListaData
             }
             $num_orden = $timestamp_orden . (1000 + $i);
             $a_valores[$num_orden] = [
-                'sel' => "$id_item_cmb#$id_usuario#$mi_sfsv#$aviso_tipo",
+                'sel' => HashB::sign('cambio_usuario_eliminar', [
+                    'id_item_cambio' => (int) $id_item_cmb,
+                    'id_usuario' => (int) $id_usuario,
+                    'sfsv' => (int) $mi_sfsv,
+                    'aviso_tipo' => (int) $aviso_tipo,
+                ]),
                 1 => $timestamp_cambio,
                 2 => $quien,
                 3 => $aviso_txt,

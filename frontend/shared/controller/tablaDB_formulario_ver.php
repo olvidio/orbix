@@ -88,6 +88,8 @@ $a_campos_backend = [
         : '',
     'obj_pau' => $Qobj_pau,
     'mod' => $Qmod,
+    'id_pau' => $Qid_pau,
+    's_pkey' => $Qs_pkey,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
@@ -109,7 +111,8 @@ $a_camposHidden = array(
     'id_pau' => $Qid_pau,
     'obj_pau' => $Qobj_pau,
     'mod' => $Qmod,
-    'go_to' => $Qgo_to
+    'go_to' => $Qgo_to,
+    'ctx_update' => is_string($data['ctx_update'] ?? null) ? $data['ctx_update'] : '',
 );
 $oHashSelect->setArraycamposHidden($a_camposHidden);
 

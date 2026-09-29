@@ -15,6 +15,7 @@ use src\zonassacd\application\services\CentrosDeZona;
 use src\zonassacd\domain\contracts\ZonaCtrRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\entity\Zona;
+use src\shared\security\HashB;
 
 final class ZonaCtrListaTest extends TestCase
 {
@@ -64,7 +65,7 @@ final class ZonaCtrListaTest extends TestCase
         $this->assertSame('tabla', $out['tipo']);
         $this->assertCount(1, $out['a_valores']);
         $first = reset($out['a_valores']);
-        $this->assertSame('1042', $first['sel']);
+        $this->assertSame(['id_ubi' => '1042'], HashB::open((string) $first['sel'], 'zona_ctr_update'));
         $this->assertSame('Centro DL', $first[1]);
         $this->assertSame('', $first[2]);
     }
@@ -94,7 +95,7 @@ final class ZonaCtrListaTest extends TestCase
         $this->assertCount(1, $out['a_valores']);
         $first = reset($out['a_valores']);
         $this->assertSame('tono2', $first['clase']);
-        $this->assertSame('2055', $first['sel']);
+        $this->assertSame(['id_ubi' => '2055'], HashB::open((string) $first['sel'], 'zona_ctr_update'));
     }
 
     public function test_default_fusiona_centros_dl_y_sf_de_la_zona(): void
@@ -124,9 +125,9 @@ final class ZonaCtrListaTest extends TestCase
 
         $this->assertCount(2, $out['a_valores']);
         $vals = array_values($out['a_valores']);
-        $this->assertSame('1042', $vals[0]['sel']);
+        $this->assertSame(['id_ubi' => '1042'], HashB::open((string) $vals[0]['sel'], 'zona_ctr_update'));
         $this->assertSame('Zona 9', $vals[0][2]);
-        $this->assertSame('2055', $vals[1]['sel']);
+        $this->assertSame(['id_ubi' => '2055'], HashB::open((string) $vals[1]['sel'], 'zona_ctr_update'));
         $this->assertSame('tono2', $vals[1]['clase']);
     }
 
@@ -167,7 +168,7 @@ final class ZonaCtrListaTest extends TestCase
 
         $this->assertCount(1, $out['a_valores']);
         $first = reset($out['a_valores']);
-        $this->assertSame('1042', $first['sel']);
+        $this->assertSame(['id_ubi' => '1042'], HashB::open((string) $first['sel'], 'zona_ctr_update'));
     }
 
     private function centroDlStub(int $id_ubi, string $nombre): CentroDl

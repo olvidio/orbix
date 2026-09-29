@@ -7,6 +7,7 @@ namespace src\misas\application;
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\misas\application\support\MisasBuildInput;
 use src\shared\domain\value_objects\TimeLocal;
+use src\shared\security\HashB;
 
 /**
  * Datos del horario de una tarea (modal `horario_tarea.phtml`).
@@ -25,7 +26,7 @@ class HorarioTareaData
     }
     /**
      * @param array<string, mixed> $input
-     * @return array{t_start: string, t_end: string}
+     * @return array{t_start: string, t_end: string, ctx_guardar: string, ctx_quitar: string}
      */
     public function getData(array $input): array
     {
@@ -40,6 +41,8 @@ class HorarioTareaData
         return [
             't_start' => $hIni instanceof TimeLocal ? $hIni->format('H:i') : '',
             't_end' => $hFin instanceof TimeLocal ? $hFin->format('H:i') : '',
+            'ctx_guardar' => HashB::sign('guardar_horario', ['id_item_h' => $id_item_h]),
+            'ctx_quitar' => HashB::sign('quitar_horario', ['id_item' => $id_item_h]),
         ];
     }
 }

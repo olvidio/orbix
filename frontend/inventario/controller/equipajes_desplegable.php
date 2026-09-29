@@ -30,6 +30,7 @@ $a_campos_backend = ['f_ini_iso' => $f_ini_iso];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $payload = InventarioPayload::postPayload($data);
 $a_opciones = InventarioPayload::desplegableOpciones($payload['a_opciones'] ?? []);
+$equipaje_ctx_map = InventarioPayload::equipajeCtxMap($payload['equipaje_ctx_map'] ?? []);
 
 $oDesplEquipajes = new Desplegable('id_equipaje', $a_opciones, '', true);
 if ($Qimprimir !== '') {
@@ -42,4 +43,7 @@ if ($Qeliminar !== '') {
     $oDesplEquipajes->setAction('');
 }
 
-AjaxJsonSupport::html($oDesplEquipajes->desplegable());
+$html = $oDesplEquipajes->desplegable();
+$html .= '<script>window.equipaje_ctx_map = ' . json_encode($equipaje_ctx_map, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) . ';</script>';
+
+AjaxJsonSupport::html($html);

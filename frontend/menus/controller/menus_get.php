@@ -94,7 +94,8 @@ if ($page['mode'] === 'edit') {
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
         'filtro_grupo' => $Qfiltro_grupo,
-        'que' => 'guardar'
+        'que' => 'guardar',
+        'ctx_guardar' => $page['ctx_guardar'],
     );
     $oHash->setArraycamposHidden($a_camposHidden);
 
@@ -102,7 +103,8 @@ if ($page['mode'] === 'edit') {
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
         'filtro_grupo' => $Qfiltro_grupo,
-        'que' => 'del'
+        'que' => 'del',
+        'ctx_eliminar' => $page['ctx_eliminar'],
     );
     $oHash2->setArraycamposHidden($a_camposHidden);
 
@@ -117,7 +119,8 @@ if ($page['mode'] === 'edit') {
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
         'filtro_grupo' => $Qfiltro_grupo,
-        'que' => 'move'
+        'que' => 'move',
+        'ctx_mover' => $page['ctx_mover'],
     );
     $oHash5->setArraycamposHidden($a_camposHidden);
 
@@ -126,7 +129,8 @@ if ($page['mode'] === 'edit') {
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
         'filtro_grupo' => $Qfiltro_grupo,
-        'que' => 'copy'
+        'que' => 'copy',
+        'ctx_copiar' => $page['ctx_copiar'],
     );
     $oHash6->setArraycamposHidden($a_camposHidden);
 

@@ -100,9 +100,9 @@
         document.getElementById('overlay').style.display = 'none';
     };
 
-    fnjs_eliminar_cp = function (id_direccion, id_ubi) {
+    fnjs_eliminar_cp = function (ctx) {
         if (!confirm(TXT_CONFIRMAR_ELIMINAR)) { return; }
-        var parametros = 'id_direccion=' + encodeURIComponent(id_direccion) + '&id_ubi=' + encodeURIComponent(id_ubi) + H_ELIMINAR;
+        var parametros = 'ctx_eliminar=' + encodeURIComponent(ctx) + H_ELIMINAR;
         $.ajax({
             url: URL_ELIMINAR,
             type: 'post',

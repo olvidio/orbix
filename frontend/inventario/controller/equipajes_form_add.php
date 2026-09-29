@@ -29,6 +29,7 @@ $oHashForm->setArrayCamposHidden([
     'id_grupo' => $Qid_grupo,
     'id_equipaje' => $Qid_equipaje,
     'id_item_egm' => $Qid_item_egm,
+    'ctx_add' => (string) filter_input(INPUT_POST, 'ctx_add'),
 ]);
 
 $a_campos = [

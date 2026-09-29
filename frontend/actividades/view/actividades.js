@@ -38,7 +38,17 @@ jsForm.refresh = function () {
         rta = 1;
     }
     if (ok == 1 && rta == 1) {
-        var param = $(this.form).serialize();
+        var param;
+        if (this.ctxCampo) {
+            var packed = fnjs_sel_ctx_serialize(this.form, this.ctxCampo);
+            if (packed.count === 0) {
+                alert('Operación no autorizada');
+                return;
+            }
+            param = packed.datos;
+        } else {
+            param = $(this.form).serialize();
+        }
         var url = this.action;
         $(this.form).one("submit", function () {
             $.ajax({
@@ -86,21 +96,25 @@ jsForm.actualizar = function () {
 jsForm.update = function (formulario, que) {
     this.form = formulario;
     this.SoloUno = true;
+    this.ctxCampo = '';
     switch (que) {
         case "publicar":
             this.SoloUno = false;
             $('#mod').val(que);
             this.action = "src/actividades/actividad_publicar";
+            this.ctxCampo = 'ctx_publicar';
             break;
         case "importar":
             this.SoloUno = false;
             $('#mod').val(que);
             this.action = "src/actividades/actividad_importar";
+            this.ctxCampo = 'ctx_importar';
             break;
         case "duplicar":
             this.Aviso = "Seguro que desa duplicar esta actividad";
             $('#mod').val(que);
             this.action = "src/actividades/actividad_duplicar";
+            this.ctxCampo = 'ctx_duplicar';
             break;
     }
     this.refresh();
@@ -109,6 +123,7 @@ jsForm.update = function (formulario, que) {
 jsForm.mandar = function (formulario, que) {
     this.form = formulario;
     this.SoloUno = true;
+    this.ctxCampo = '';
     switch (que) {
         case "proceso":
             this.action = "frontend/procesos/controller/actividad_proceso.php";

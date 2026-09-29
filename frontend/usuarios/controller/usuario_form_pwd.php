@@ -5,6 +5,7 @@ $_POST = (empty($_POST)) ? $_GET : $_POST;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\PostRequest;
 use frontend\shared\web\UrlBaseProject;
 use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
@@ -25,9 +26,14 @@ if (!defined('ORBIX_INDEX_EMBED')) {
     }
 }
 
+$dataCtx = $id_usuario > 0
+    ? \frontend\shared\helpers\PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/usuarios/usuario_guardar_pwd_form_data'))
+    : [];
+$ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($dataCtx['ctx_guardar'] ?? '');
+
 $oHash = new HashF();
 $oHash->setCamposForm('password!password1');
-$oHash->setArraycamposHidden(['id_usuario' => $id_usuario]);
+$oHash->setArraycamposHidden(['id_usuario' => $id_usuario, 'ctx_guardar' => $ctx_guardar]);
 
 $url_usuario_guardar = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_guardar_pwd');
 $url_usuario_chk = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_check_pwd');

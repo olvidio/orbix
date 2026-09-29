@@ -458,6 +458,9 @@ final class ActividadSelectListado
                 }
 
                 $a_valores[$i]['sel'] = "$id_activ#$nom_activ";
+                foreach (ActividadMutationCtx::rowTokens($id_activ, $Qmodo) as $ctxKey => $ctxVal) {
+                    $a_valores[$i][$ctxKey] = $ctxVal;
+                }
                 $con = '';
                 $flag = 0;
                 if (preg_match("/^[12][45]/", $id_tipo_activ_txt)) {

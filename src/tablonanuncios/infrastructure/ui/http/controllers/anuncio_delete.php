@@ -1,6 +1,8 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 use src\tablonanuncios\application\AnuncioDelete;
 
@@ -8,11 +10,19 @@ use src\tablonanuncios\application\AnuncioDelete;
 $useCase = DependencyResolver::get(AnuncioDelete::class);
 
 $a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'sel');
-if ($a_sel !== []) {
-    $Quuid_item = (string) strtok($a_sel[0], '#');
-} else {
-    $Quuid_item = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'uuid_item');
+if ($a_sel === []) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
 }
+
+try {
+    $ctx = HashB::open((string)$a_sel[0], 'anuncio_delete');
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Quuid_item = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'uuid_item');
 
 $error_txt = $useCase->execute($Quuid_item);
 

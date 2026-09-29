@@ -112,7 +112,10 @@ class CuadriculaZonaRenderer
             $oHashUpd = new HashF();
             $oHashUpd->setUrl($url_cuadricula_update);
             $oHashUpd->setCamposForm('dia!id_enc!key!observ!tend!tstart!uuid_item!tipo_plantilla!id_zona');
-            $h_cuadricula_update = $oHashUpd->linkSinValParams();
+            $oHashUpd->setArrayCamposHidden([
+                'ctx_update' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_update'] ?? ''),
+            ]);
+            $h_cuadricula_update = '&' . $oHashUpd->getParamAjax();
 
             $url_desplegable_sacd = AppUrlConfig::srcBrowserUrl('/src/misas/desplegable_sacd');
             $oHashDs = new HashF();

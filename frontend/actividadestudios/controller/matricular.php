@@ -17,7 +17,9 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
+$formCtx = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/matricula_automatica_form_data', []));
 $post = (array)$_POST;
+$post['ctx_auto'] = \frontend\shared\helpers\PayloadCoercion::string($formCtx['ctx_auto'] ?? '');
 $data = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/matricula_automatica', $post));
 $msg = \frontend\shared\helpers\PayloadCoercion::string($data['msg'] ?? '');
 

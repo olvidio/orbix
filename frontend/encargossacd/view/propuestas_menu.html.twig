@@ -20,10 +20,9 @@ fnjs_aprobar_propuestas=function(){
 fnjs_new_tabla=function(){
 	var opcion = confirm("{{ "Elimina la tabla de propuestas actual y crea una nueva"|trans|raw }}");
     if (opcion === true) {
-    	const url = new URL('{{ url_new_tabla|raw }}');
     	request=$.ajax({
-            data: url.search.substring(1),
-            url: url.origin + url.pathname,
+            data: 'que=crear_tabla&ctx_crear_tabla=' + encodeURIComponent({{ ctx_crear_tabla|json_encode|raw }}) + '{{ h_crear_tabla|raw }}',
+            url: '{{ url_ajax|raw }}',
             type: 'post',
             dataType: 'json'
         });

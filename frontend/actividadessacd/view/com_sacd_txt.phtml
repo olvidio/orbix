@@ -12,6 +12,7 @@
  * @var frontend\shared\web\Desplegable $oDesplClaves
  * @var frontend\shared\web\Desplegable $oDesplIdiomas
  * @var string          $comunicacion
+ * @var string          $ctx_guardar
  * @var string          $url_data
  * @var string          $url_guardar
  * @var frontend\shared\web\Posicion    $oPosicion
@@ -30,6 +31,7 @@ $i18n = [
 <script type="text/javascript">
     var URL_TXT_DATA = <?= json_encode($url_data) ?>;
     var URL_TXT_GUARDAR = <?= json_encode($url_guardar) ?>;
+    var CTX_TXT_GUARDAR = <?= json_encode($ctx_guardar) ?>;
     var I18N_TXT = <?= json_encode($i18n, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 
     fnjs_parse_rta_txt = function (rta) {
@@ -57,19 +59,18 @@ $i18n = [
             var data = fnjs_parse_rta_txt(rta);
             if (data === null) { return; }
             $('#comunicacion').val(data.texto || '');
+            CTX_TXT_GUARDAR = data.ctx_guardar || '';
         }).fail(function () {
             alert(I18N_TXT.err_comunicacion);
         });
     };
 
     fnjs_guardar = function () {
-        var clave = $('#clave').val();
-        var idioma = $('#idioma').val();
         var texto = $('#comunicacion').val();
         $.ajax({
             url: URL_TXT_GUARDAR,
             type: 'post',
-            data: { clave: clave, idioma: idioma, texto: texto },
+            data: { ctx_guardar: CTX_TXT_GUARDAR, texto: texto },
             dataType: 'json'
         }).done(function (rta) {
             if (!rta || rta.success !== true) {

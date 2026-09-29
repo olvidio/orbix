@@ -3,6 +3,7 @@
 namespace src\pasarela\application;
 
 use src\pasarela\domain\ContribucionReserva;
+use src\shared\security\HashB;
 
 /**
  * Devuelve solo el valor por defecto del parámetro `contribucion_reserva`,
@@ -16,13 +17,14 @@ final class ContribucionReservaDefaultData
     }
 
     /**
-     * @return array{default: string}
+     * @return array{default: string, ctx_guardar: string}
      */
     public function execute(): array
     {
         
         return [
             'default' => (string)$this->contribucionReserva->getDefault(),
+            'ctx_guardar' => HashB::sign('contribucion_reserva_default_guardar'),
         ];
     }
 }

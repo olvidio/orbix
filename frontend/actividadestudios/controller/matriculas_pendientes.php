@@ -82,9 +82,13 @@ echo $oPosicion->mostrarNavAtras(1);
         if (confirm(mensaje)) {
             $("#mod").val("eliminar");
             let url = '<?= AppUrlConfig::srcBrowserUrl('/src/actividadestudios/matricula_eliminar') ?>';
-            let datos = $(formulario).serialize();
+            let packed = fnjs_sel_ctx_serialize(formulario, 'ctx_eliminar');
+            if (!packed.count) {
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + <?= json_encode(_("Operación no autorizada")) ?>);
+                return;
+            }
             let request = $.ajax({
-                data: datos,
+                data: packed.datos,
                 url: url,
                 method: 'POST',
                 dataType: 'json'
@@ -115,6 +119,6 @@ echo $oPosicion->mostrarNavAtras(1);
     $oTabla->setCabeceras($a_cabeceras);
     $oTabla->setBotones($a_botones);
     $oTabla->setDatos($a_valores);
-    echo $oTabla->mostrar_tabla();
+    echo $oTabla->mostrar_tabla_html();
     ?>
 </form>

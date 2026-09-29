@@ -45,12 +45,13 @@ $oHash = new HashF();
 $oHash->setCamposForm($scamposForm . '!salida!id_item_usuario_objeto_prop');
 $oHash->setArrayCamposHidden(['objeto_prop' => $Qobjeto]);
 $oHash->setCamposChk($Qobjeto);
-$oHash->setCamposNo('casas!test');
+$oHash->setCamposNo('casas!test!ctx_guardar_propiedades');
 
 $a_campos = [
     'Qobjeto' => $Qobjeto,
     'Qid_item_usuario_objeto' => $Qid_item_usuario_objeto,
     'propiedades' => $propiedades,
+    'ctx_guardar_propiedades' => PayloadCoercion::string($data['ctx_guardar_propiedades'] ?? ''),
     'oHash' => $oHash,
 ];
 

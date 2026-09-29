@@ -78,6 +78,7 @@ switch ($Qque) {
         $oHash->setArrayCamposHidden([
             'que' => 'update',
             'id_nom' => $Qid_nom,
+            'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? ''),
         ]);
 
         $a_campos = [

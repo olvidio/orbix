@@ -101,6 +101,9 @@ final class ActividadesPayload
             'snom_tipo' => PayloadCoercion::string($data['snom_tipo'] ?? ''),
             'isfsv' => PayloadCoercion::int($data['isfsv'] ?? 0),
             'tarifa_inicial' => $data['tarifa_inicial'] ?? null,
+            'ctx_editar' => PayloadCoercion::string($data['ctx_editar'] ?? ''),
+            'ctx_cambiar_tipo' => PayloadCoercion::string($data['ctx_cambiar_tipo'] ?? ''),
+            'ctx_nuevo' => PayloadCoercion::string($data['ctx_nuevo'] ?? ''),
         ];
     }
 

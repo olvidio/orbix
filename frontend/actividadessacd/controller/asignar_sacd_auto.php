@@ -16,6 +16,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\actividadessacd\helpers\ActividadessacdSession;
@@ -23,8 +24,9 @@ use frontend\actividadessacd\helpers\ActividadessacdSession;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-$any_final_curs = ActividadessacdSession::anyFinalCurs();
-$oF_inicurs_des = new \DateTime('@' . mktime(0, 0, 0, 9, 2, $any_final_curs));
+$formData = PostRequest::getDataFromUrl('/src/actividadessacd/sacd_asignar_auto_form_data', []);
+$inicurs_des_iso = \frontend\shared\helpers\PayloadCoercion::string($formData['f_ini_iso'] ?? '');
+$ctx_asignar_auto = \frontend\shared\helpers\PayloadCoercion::string($formData['ctx_asignar_auto'] ?? '');
 
 $idioma = ActividadessacdSession::sessionIdioma();
 $a_idioma = explode('.', $idioma);
@@ -33,10 +35,14 @@ $sep = '/';
 $fmtLocal = ($code_lng === 'en_US')
     ? 'n' . $sep . 'j' . $sep . 'Y'
     : 'j' . $sep . 'n' . $sep . 'Y';
-$inicurs_des = $oF_inicurs_des->format($fmtLocal);
-$inicurs_des_iso = $oF_inicurs_des->format('Y-m-d');
+$inicurs_des = $inicurs_des_iso;
+if ($inicurs_des_iso !== '') {
+    $oF = \DateTime::createFromFormat('Y-m-d', $inicurs_des_iso);
+    if ($oF instanceof \DateTime) {
+        $inicurs_des = $oF->format($fmtLocal);
+    }
+}
 
-$api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
     $oHash = new HashF();
     $oHash->setUrl($url);
@@ -46,13 +52,14 @@ $buildHashedUrl = static function (string $url, string $campos): string {
 
 $url_asignar_auto = $buildHashedUrl(
     AppUrlConfig::srcBrowserUrl('/src/actividadessacd/sacd_asignar_auto'),
-    'f_ini_iso'
+    'ctx_asignar_auto'
 );
 
 $a_campos = [
     'oPosicion' => $oPosicion,
     'inicurs_des' => $inicurs_des,
     'inicurs_des_iso' => $inicurs_des_iso,
+    'ctx_asignar_auto' => $ctx_asignar_auto,
     'url_asignar_auto' => $url_asignar_auto,
 ];
 

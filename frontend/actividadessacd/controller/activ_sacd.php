@@ -84,15 +84,15 @@ $url_disponibles = $buildHashedUrl(
 );
 $url_asignar = $buildHashedUrl(
     AppUrlConfig::srcBrowserUrl('/src/actividadessacd/sacd_asignar'),
-    'id_activ!id_nom'
+    'ctx_asignar'
 );
 $url_reordenar = $buildHashedUrl(
     AppUrlConfig::srcBrowserUrl('/src/actividadessacd/sacd_reordenar'),
-    'id_activ!id_nom!num_orden'
+    'ctx_reordenar!num_orden'
 );
 $url_eliminar = $buildHashedUrl(
     AppUrlConfig::srcBrowserUrl('/src/actividadessacd/sacd_eliminar'),
-    'id_activ!id_nom!id_cargo'
+    'ctx_eliminar'
 );
 
 // Hash para los campos del form de filtros (input hidden `hash` del form).

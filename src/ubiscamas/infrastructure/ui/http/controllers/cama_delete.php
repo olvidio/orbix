@@ -1,10 +1,23 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\CamaId;
-$Qid_cama = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_cama');
+
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_delete'),
+        'cama_delete'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qid_cama = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'id_cama');
 
 /** @var CamaDlRepositoryInterface $camaRepository */
 $camaRepository = DependencyResolver::get(CamaDlRepositoryInterface::class);

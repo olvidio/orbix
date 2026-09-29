@@ -4,6 +4,7 @@ namespace src\certificados\application;
 
 use src\personas\application\services\PersonaFinderService;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
 use src\ubis\domain\RegionStgrAviso;
 
 /**
@@ -17,7 +18,7 @@ final class CertificadoEmitidoAdjuntarFormData
     }
 
     /**
-     * @return array{nom: string, f_enviado: string}
+     * @return array{nom: string, f_enviado: string, ctx_guardar: string}
      */
     public function execute(int $id_nom): array
     {
@@ -32,6 +33,11 @@ final class CertificadoEmitidoAdjuntarFormData
         return [
             'nom' => $oPersona->getApellidosNombre(),
             'f_enviado' => (new DateTimeLocal())->getFromLocal(),
+            'ctx_guardar' => HashB::sign('certificado_emitido_guardar', [
+                'nuevo' => 1,
+                'id_item' => 0,
+                'id_nom' => $id_nom,
+            ]),
         ];
     }
 }

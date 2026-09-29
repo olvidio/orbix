@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use src\certificados\application\CertificadoRecibidoAdjuntarFormData;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaPub;
+use src\shared\security\HashB;
 
 final class CertificadoRecibidoAdjuntarFormDataTest extends TestCase
 {
@@ -56,5 +57,9 @@ final class CertificadoRecibidoAdjuntarFormDataTest extends TestCase
         $data = $useCase->execute(7);
         $this->assertSame('García, Ana', $data['nom']);
         $this->assertNotSame('', $data['f_recibido']);
+        $ctx = HashB::open($data['ctx_guardar'], 'certificado_recibido_guardar');
+        $this->assertSame(1, $ctx['nuevo']);
+        $this->assertSame(0, $ctx['id_item']);
+        $this->assertSame(7, $ctx['id_nom']);
     }
 }

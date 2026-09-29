@@ -35,10 +35,12 @@ $oDesplOrden->setOpciones(MisasDesplegableSupport::opciones($data['orden_opcione
 $oDesplOrden->setNombre('orden');
 $oDesplOrden->setAction('fnjs_ver_cuadricula_zona()');
 
+$zona_ctx_map = $data['zona_ctx_map'] ?? [];
+
 $url_nuevo_status = '/src/misas/nuevo_status';
 $oHashNuevoStatus = new HashF();
 $oHashNuevoStatus->setUrl($url_nuevo_status);
-$oHashNuevoStatus->setCamposForm('id_zona!periodo!estado!empiezamin!empiezamax');
+$oHashNuevoStatus->setCamposForm('ctx_nuevo_status!periodo!estado!empiezamin!empiezamax');
 $h_nuevo_status = $oHashNuevoStatus->linkSinValParams();
 
 $url_ver_cuadricula_zona = 'frontend/misas/controller/ver_cuadricula_zona.php';
@@ -61,6 +63,7 @@ $a_campos = [
     'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,
     'h_zona_status' => $h_zona_status,
     'oHash' => $oHash,
+    'zona_ctx_map' => $zona_ctx_map,
 ];
 
 AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', 'cambiar_status.phtml', $a_campos);

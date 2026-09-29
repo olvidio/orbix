@@ -63,6 +63,9 @@ if (!empty($data['sin_direccion'])) {
     return;
 }
 
+$ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? '');
+$ctx_quitar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_quitar'] ?? '');
+
 $oHash = new HashF();
 $campos_chk = 'cp_dcha!propietario!principal';
 $oHash->setCamposForm('a_p!c_p!direccion!f_direccion!latitud!longitud!nom_sede!observ!pais!poblacion!provincia!que');
@@ -75,6 +78,8 @@ $oHash->setArraycamposHidden([
     'idx' => $data['idx'],
     'inc' => $Qinc,
     'id_ubi' => $Qid_ubi,
+    'ctx_guardar' => $ctx_guardar,
+    'ctx_quitar' => $ctx_quitar,
 ]);
 
 $goInfo = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/ubis/controller/info_ubis.php?' . http_build_query(['id_item' => 1]));
@@ -96,7 +101,7 @@ $go_dir = 'frontend/ubis/controller/direcciones_editar.php?'.$h;
 
 $oHashPlano = new HashF();
 $oHashPlano->setUrl('frontend/ubis/controller/direcciones_asignar.php');
-$oHashPlano->setCamposForm('obj_dir!id_ubi!id_direccion');
+$oHashPlano->setCamposForm('ctx_asignar');
 $h_asignar = $oHashPlano->linkSinValParams();
 
 $oHashPlano2 = new HashF();

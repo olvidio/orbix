@@ -100,6 +100,8 @@ $oHashNotas->setArraycamposHidden([
     'id_schema' => $id_schema,
     'id_nivel' => (int)filter_input(INPUT_POST, 'id_nivel'),
     'matriculados' => $matriculados,
+    'ctx_guardar' => $datos['ctx_guardar'],
+    'ctx_definitivas' => $datos['ctx_definitivas'],
 ]);
 
 if ($msg_err !== '') {

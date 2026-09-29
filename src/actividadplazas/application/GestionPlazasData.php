@@ -10,6 +10,7 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\security\HashB;
 
 /**
  * Data builder de la pantalla principal `gestion_plazas`.
@@ -180,6 +181,9 @@ final class GestionPlazasData
                 $a_valores[$i]['clase'] = 'tono2';
             }
             $a_valores[$i]['id'] = $id_activ;
+            $a_valores[$i]['ctx_update'] = HashB::sign('gestion_plazas_update', [
+                'id_activ' => (int) $id_activ,
+            ]);
             $a_valores[$i]['actividad'] = $nom;
             $a_valores[$i]['dlorg'] = $dl_org;
             $a_valores[$i]['tot'] = [

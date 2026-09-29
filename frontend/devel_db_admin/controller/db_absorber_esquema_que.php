@@ -31,6 +31,9 @@ $oDesplDel->setOpciones($a_posibles_esquemas);
 
 $oHashAbsorber = new HashF();
 $oHashAbsorber->setCamposForm('esquema_matriz!esquema_del');
+$oHashAbsorber->setArrayCamposHidden([
+    'ctx_absorber' => (string) ($dbProps['ctx_absorber'] ?? ''),
+]);
 
 $msg_falta_esquemas = _("Debe elegir el esquema matriz y el esquema a disolver.");
 

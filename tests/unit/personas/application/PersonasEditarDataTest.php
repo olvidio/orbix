@@ -19,6 +19,7 @@ use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaN;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -117,6 +118,33 @@ final class PersonasEditarDataTest extends TestCase
             ['bcn' => 'bcn', 'xyz' => 'xyz', 'abc' => 'abc'],
             $out['opciones_dl'],
         );
+    }
+
+    public function test_edicion_persona_emite_ctx_update_y_ctx_eliminar_con_id_nom_y_obj_pau(): void
+    {
+        $persona = new PersonaN();
+        $persona->setId_nom(21);
+        $persona->setId_tabla('n');
+        $persona->setApellido1('Garcia');
+        $persona->setSituacion('A');
+
+        $repo = $this->createMock(PersonaNRepositoryInterface::class);
+        $repo->method('findById')->with(21)->willReturn($persona);
+
+        $useCase = $this->makeUseCase(
+            $this->makeResolver([PersonaNRepositoryInterface::class => $repo]),
+        );
+
+        $out = $useCase->execute([
+            'nuevo' => 0,
+            'obj_pau' => 'PersonaN',
+            'id_nom' => 21,
+        ]);
+
+        $this->assertArrayNotHasKey('error', $out);
+        $expectedContext = ['id_nom' => 21, 'obj_pau' => 'PersonaN'];
+        $this->assertSame($expectedContext, HashB::open($out['ctx_update'], 'persona_update'));
+        $this->assertSame($expectedContext, HashB::open($out['ctx_eliminar'], 'persona_eliminar'));
     }
 
     /**

@@ -15,17 +15,21 @@ $id_usuario = UsuariosPostInput::sessionAuthInt('id_usuario');
 $usuario = UsuariosPostInput::sessionAuthString('username');
 $email = UsuariosPostInput::sessionAuthString('mail');
 
-if ($usuario === '' && $id_usuario > 0) {
-    $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_info', ['id_usuario' => $id_usuario]));
+$data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_guardar_mail_form_data'));
+if ($usuario === '') {
     $usuario = \frontend\shared\helpers\PayloadCoercion::string($data['usuario'] ?? '');
+}
+if ($email === '') {
     $email = \frontend\shared\helpers\PayloadCoercion::string($data['email'] ?? '');
 }
+$ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? '');
 
 $oHash = new HashF();
 $oHash->setCamposForm('email');
 $oHash->setArraycamposHidden([
     'id_usuario' => $id_usuario,
     'quien' => 'usuario',
+    'ctx_guardar' => $ctx_guardar,
 ]);
 
 $txt_guardar = _("guardar datos");

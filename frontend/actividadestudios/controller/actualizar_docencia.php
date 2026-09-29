@@ -56,7 +56,11 @@ if (empty($continuar)) {
     $oHashPeriodo = new HashF();
     $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
     $oHashPeriodo->setCamposNo('!refresh');
-    $oHashPeriodo->setArraycamposHidden(['continuar' => 1]);
+    $formCtx = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/docencia_actualizar_form_data', []));
+    $oHashPeriodo->setArraycamposHidden([
+        'continuar' => 1,
+        'ctx_actualizar' => \frontend\shared\helpers\PayloadCoercion::string($formCtx['ctx_actualizar'] ?? ''),
+    ]);
 
     $a_campos = [
         'mod' => 'inicio',
@@ -70,6 +74,7 @@ if (empty($continuar)) {
         'periodo' => $Qperiodo,
         'empiezamin' => $Qempiezamin,
         'empiezamax' => $Qempiezamax,
+        'ctx_actualizar' => \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'ctx_actualizar')),
     ]));
     $a_campos = [
         'mod' => 'fin',

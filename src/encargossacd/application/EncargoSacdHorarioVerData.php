@@ -11,6 +11,7 @@ use src\encargossacd\domain\services\EncargoDominioService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
+use src\shared\security\HashB;
 
 /**
  * Datos del formulario horario sacd (ficha tareas).
@@ -70,7 +71,7 @@ final class EncargoSacdHorarioVerData
                 $desc_enc = $enc !== null ? (string)($enc->getDesc_enc() ?? '') : $desc_enc_post;
                 $tiene = $this->encargoSacdHorarioRepository->countExcepcionesByHorarioId($id_item) > 0;
 
-                return self::conOpciones(array_merge(
+                return $this->conCtx($id_nom, $id_enc, $id_item, self::conOpciones(array_merge(
                     [
                         'ap_nom' => $ap_nom,
                         'titulo' => _('horario de') . ': ' . $desc_enc,
@@ -81,7 +82,7 @@ final class EncargoSacdHorarioVerData
                         'tiene_excepciones' => $tiene,
                     ],
                     self::serializeHorarioCampos($h),
-                ));
+                )));
             }
         }
 
@@ -99,7 +100,7 @@ final class EncargoSacdHorarioVerData
         $enc = $this->encargoRepository->findById($id_enc);
         $desc_default = $enc !== null ? (string)($enc->getDesc_enc() ?? '') : '';
 
-        return self::conOpciones(array_merge(
+        return $this->conCtx($id_nom, $id_enc, 0, self::conOpciones(array_merge(
             [
                 'ap_nom' => $ap_nom,
                 'titulo' => _('horario de') . ': ' . ($desc_enc_post !== '' ? $desc_enc_post : $desc_default),
@@ -111,7 +112,25 @@ final class EncargoSacdHorarioVerData
             ],
             $emptyDia,
             ['encabezado_desc' => $desc_default !== '' ? $desc_default : $desc_enc_post],
-        ));
+        )));
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private function conCtx(int $id_nom, int $id_enc, int $id_item, array $data): array
+    {
+        $data['ctx_guardar'] = HashB::sign('horario_sacd_update_data', [
+            'id_nom' => $id_nom,
+            'id_enc' => $id_enc,
+            'id_item' => $id_item,
+        ]);
+        $data['ctx_eliminar'] = $id_item > 0
+            ? HashB::sign('horario_sacd_update_data', ['id_item' => $id_item])
+            : '';
+
+        return $data;
     }
 
     /**

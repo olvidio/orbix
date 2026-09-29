@@ -3,9 +3,21 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\misas\application\EliminarEncargoCentro;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$Qid_item = (string)\src\shared\domain\helpers\FilterPostGet::post('id_item');
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_eliminar'),
+        'eliminar_encargo_centro'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'id_item');
 
 /** @var EliminarEncargoCentro $useCase */
 $useCase = DependencyResolver::get(EliminarEncargoCentro::class);

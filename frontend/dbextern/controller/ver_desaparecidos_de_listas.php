@@ -23,7 +23,7 @@ $a_persona_orbix = $data['personas'] ?? [];
 $url_sincro_baja = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_baja');
 $oHash = new HashF();
 $oHash->setUrl($url_sincro_baja);
-$oHash->setCamposForm('id_nom_orbix!tipo_persona');
+$oHash->setCamposForm('ctx_baja');
 $h = $oHash->linkSinValParams();
 
 $a_campos = [

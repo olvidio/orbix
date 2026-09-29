@@ -112,7 +112,7 @@ apps/personas/
 
 - `frontend/personas/controller/personas_que.php` + `view/personas_que.phtml` (quitar rama muerta `$Qque === 'telf'`).
 - `src/personas/application/PersonasBuscarData.php` para devolver la lista de personas segun filtros (puede exponer tabla, cabeceras, valores). **Quitar el base64 de `sWhere`/`sOperador`** — recomputar en backend a partir de los filtros originales.
-- `frontend/personas/controller/personas_select.php` delgado: `PostRequest` + construccion de `web\Lista` + `web\Hash` en vista.
+- `frontend/personas/controller/personas_select.php` delgado: `PostRequest` + construccion de `frontend\shared\web\Lista` + `HashF` en vista.
 - Extraer los `fnjs_*` condicionales a `frontend/personas/support/SeleccionScripts.php` o emitirlos desde un helper uniforme.
 - Actualizar paths hardcodeados (`apps/personas/...` → `frontend/personas/...`) en consumidores frontales (`asig_faltan_*`, `dossiers_ver`, `planning_persona_select`, `activ_pendientes_select`).
 
@@ -146,7 +146,7 @@ apps/personas/
 
 ## Riesgos y consideraciones
 
-- Muchos consumidores externos apuntan a `home_persona.php` y `traslado_form.php` — la convivencia con wrappers tiene que ser sostenida al menos hasta actualizar todos los `Hash::link` emitidos en otros modulos.
+- Muchos consumidores externos apuntan a `home_persona.php` y `traslado_form.php` — la convivencia con wrappers tiene que ser sostenida al menos hasta actualizar todos los `HashF::link` emitidos en otros modulos.
 - Hay tests probablemente dependientes de los paths legacy; comprobar `proves/` y `test/` antes de eliminar wrappers.
 - `personas_editar.php` usa `DBPropiedades` para filtrar dl disponibles en caso `PersonaEx` nuevo — mantener ese comportamiento al mover la logica.
 - El campo `edad` de `persona_de_paso.phtml` no aparece en `$a_campos` del controller (posible bug latente heredado).
@@ -185,7 +185,7 @@ y al contenedor via `$GLOBALS['container']`, en contra del patron de
 - Ruta `/src/personas/personas_select_data` anadida a `src/personas/config/routes.php`.
 - `frontend/personas/controller/personas_select.php` queda delgado:
   `PostRequest::getDataFromUrl('/src/personas/personas_select_data', $campos)`
-  + construccion de `web\Lista`, `web\Hash`, botones/scripts y render. Ya
+  + construccion de `frontend\shared\web\Lista`, `HashF`, botones/scripts y render. Ya
   **no** importa `use src\...` ni toca el contenedor.
 
 ### Slice 4c — Completar separacion de los 4 controllers restantes
@@ -203,7 +203,7 @@ libre de imports `src\` y de acceso al contenedor.
   - `src/personas/infrastructure/ui/http/controllers/stgr_cambio_data.php`
     expone `/src/personas/stgr_cambio_data`.
   - `frontend/personas/controller/stgr_cambio.php` construye el
-    `web\Desplegable` + `web\Hash` con lo recibido.
+    `frontend\shared\web\Desplegable` + `HashF` con lo recibido.
 - **`traslado_form`**:
   - `src/personas/application/TrasladoFormData.php` localiza la persona con
     `Persona::findPersonaEnGlobal`, bloquea `PersonaPub`, y devuelve
@@ -213,7 +213,7 @@ libre de imports `src\` y de acceso al contenedor.
   - `src/personas/infrastructure/ui/http/controllers/traslado_form_data.php`
     expone `/src/personas/traslado_form_data`.
   - `frontend/personas/controller/traslado_form.php` solo construye
-    `web\Desplegable` / `web\Hash` / links.
+    `frontend\shared\web\Desplegable` / `HashF` / links.
 - **`personas_editar`**:
   - `src/personas/application/PersonasEditarData.php` gestiona los dos modos
     (`nuevo=1` y edicion): en alta genera `id_nom` via
@@ -230,8 +230,8 @@ libre de imports `src\` y de acceso al contenedor.
   - `frontend/personas/controller/personas_editar.php` conserva unicamente
     la logica dependiente del frontend: `Posicion`/`stack`, el
     `switch($Qobj_pau)` que decide `presentacion` y `botones` segun
-    `$_SESSION['oPerm']`, construccion de `web\Desplegable` / `web\Hash` y
-    generacion de links con `AppUrlConfig` + `Hash::link`.
+    `$_SESSION['oPerm']`, construccion de `frontend\shared\web\Desplegable` / `HashF` y
+    generacion de links con `AppUrlConfig` + `HashF::link`.
 - **`home_persona`**:
   - `src/personas/application/HomePersonaData.php` resuelve el repositorio,
     carga la persona, traduce `nivel_stgr` a su etiqueta, consulta los

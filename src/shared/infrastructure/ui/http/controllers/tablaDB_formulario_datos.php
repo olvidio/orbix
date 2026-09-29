@@ -2,6 +2,7 @@
 
 use src\shared\domain\DatosFormRepo;
 use src\shared\infrastructure\DatosInfoRepoResolver;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
@@ -73,5 +74,14 @@ $error_txt = '';
 $data = $formData;
 $data['explicacion_txt'] = $explicacion_txt;
 $data['tit_txt'] = $tit_txt;
+$Qid_pau = (string)FilterPostGet::post('id_pau');
+$Qs_pkey = (string)FilterPostGet::post('s_pkey');
+$data['ctx_update'] = HashB::sign('tablaDB_update', [
+    'clase_info' => is_string($Qclase_info_encoded) ? $Qclase_info_encoded : '',
+    'mod' => $mod,
+    's_pkey' => $Qs_pkey,
+    'id_pau' => $Qid_pau,
+    'obj_pau' => is_string($Qobj_pau) ? $Qobj_pau : '',
+]);
 
 ContestarJson::enviar($error_txt, $data);

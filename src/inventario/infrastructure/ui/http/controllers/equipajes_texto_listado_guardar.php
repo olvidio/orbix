@@ -5,13 +5,25 @@ use src\shared\infrastructure\DependencyResolver;
 // grabar la cabecera, pie o texto en las maletas.
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_guardar'),
+        'equipajes_texto_listado_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $Qtexto = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'texto');
 $Qloc = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'loc');
-$Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_equipaje');
+$Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_equipaje');
 
 try {
     /** @var EquipajeRepositoryInterface $EquipajeRepository */

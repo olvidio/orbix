@@ -15,6 +15,7 @@ use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\notas\domain\entity\Acta;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 
 /**
  * Estado del formulario `acta_ver` (sin HashF ni vistas).
@@ -242,6 +243,14 @@ final class ActaVerFormData
 
         $id_schema = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_schema_scope');
 
+        $ctxNuevo = '';
+        $ctxGuardar = '';
+        if ($Qmod === 'nueva' || $notas === 'nuevo') {
+            $ctxNuevo = HashB::sign('acta_nueva');
+        } elseif ($acta_actual !== '') {
+            $ctxGuardar = HashB::sign('acta_modificar', ['acta' => $acta_actual]);
+        }
+
         return [
             'notas' => $notas,
             'permiso' => $permiso,
@@ -269,6 +278,8 @@ final class ActaVerFormData
             'has_pdf' => $has_pdf,
             'pendiente_imprimir' => $pendiente_imprimir,
             'warn_no_id_activ' => $warn_no_id_activ,
+            'ctx_nuevo' => $ctxNuevo,
+            'ctx_guardar' => $ctxGuardar,
         ];
     }
 }

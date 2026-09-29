@@ -10,6 +10,7 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Datos para la pantalla `encargo_ver` (nuevo / editar encargo).
@@ -120,6 +121,10 @@ final class EncargoVerData
             'opciones_seccion' => $this->arrayStringKeyed($opciones_seccion),
             'opciones_zonas' => $this->arrayStringKeyed($aOpciones_zonas),
             'opciones_locales' => $this->arrayStringKeyed($a_locales),
+            'ctx_nuevo' => HashB::sign('encargo_ver_nuevo'),
+            'ctx_editar' => $id_enc > 0
+                ? HashB::sign('encargo_ver_editar', ['id_enc' => $id_enc])
+                : '',
         ];
     }
 

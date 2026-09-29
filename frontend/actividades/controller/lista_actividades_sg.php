@@ -128,7 +128,7 @@ $oTabla->setId_tabla('lista_actividades_sg');
 $oTabla->setCabeceras(ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []));
 $oTabla->setBotones(ActividadesListaSupport::botones($data['a_botones'] ?? []));
 $oTabla->setDatos($a_valores);
-$html_tabla = $oTabla->mostrar_tabla();
+$html_tabla = $oTabla->mostrar_tabla_html();
 unset($data['a_cabeceras'], $data['a_botones'], $data['a_valores']);
 $result_busqueda = PayloadCoercion::string($data['result_busqueda'] ?? '');
 $Qid_tipo_activ = PayloadCoercion::string($data['id_tipo_activ'] ?? '');
@@ -171,7 +171,7 @@ $oHash->setCamposNo('modo!id_tipo_activ!id_ubi!periodo!year!dl_org!status!empiez
 
 $oHashSel = new HashF();
 $oHashSel->setCamposForm('!sel!mod!queSel');
-$oHashSel->setcamposNo('continuar!scroll_id');
+$oHashSel->setcamposNo('continuar!scroll_id!ctx_eliminar!ctx_duplicar');
 $a_camposHiddenSel = [
     'pau' => 'a',
     'permiso' => '3',

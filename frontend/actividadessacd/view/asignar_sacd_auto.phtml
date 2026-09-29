@@ -8,6 +8,7 @@
  *
  * @var string $inicurs_des      Inicio de curso des (formato local).
  * @var string $inicurs_des_iso  Inicio de curso des (YYYY-MM-DD).
+ * @var string $ctx_asignar_auto Cápsula HashB de la mutación.
  * @var string $url_asignar_auto URL firmada del endpoint.
  */
 
@@ -25,7 +26,7 @@ $i18n = [
 ?>
 <script>
     var URL_ASIGNAR_AUTO = <?= json_encode($url_asignar_auto) ?>;
-    var F_INI_ISO = <?= json_encode($inicurs_des_iso) ?>;
+    var CTX_ASIGNAR_AUTO = <?= json_encode($ctx_asignar_auto) ?>;
     var I18N_ASAUTO = <?= json_encode($i18n, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 
     fnjs_esc_asauto = function (txt) {
@@ -45,7 +46,7 @@ $i18n = [
         $.ajax({
             url: URL_ASIGNAR_AUTO,
             type: 'post',
-            data: { f_ini_iso: F_INI_ISO },
+            data: { ctx_asignar_auto: CTX_ASIGNAR_AUTO },
             dataType: 'json'
         }).done(function (rta) {
             if (!rta || rta.success !== true) {

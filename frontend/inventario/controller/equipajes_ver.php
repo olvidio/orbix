@@ -39,6 +39,8 @@ $a_campos_backend = ['f_ini_iso' => $f_ini_iso];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $payload = InventarioPayload::postPayload($data);
 $a_opciones = InventarioPayload::desplegableOpciones($payload['a_opciones'] ?? []);
+$equipaje_ctx_map = InventarioPayload::equipajeCtxMap($payload['equipaje_ctx_map'] ?? []);
+$equipaje_ctx_texto_map = InventarioPayload::equipajeCtxMap($payload['equipaje_ctx_texto_map'] ?? []);
 
 $oDesplEquipajes = new Desplegable('id_equipaje', $a_opciones, '', true);
 
@@ -53,12 +55,12 @@ if ($Qeliminar !== '') {
 }
 
 $oHash = new HashF();
-$oHash->setCamposForm('filtro!id_equipaje');
+$oHash->setCamposForm('filtro!id_equipaje!ctx_eliminar');
 $oHash->setArrayCamposHidden(['eliminar' => $Qeliminar, 'imprimir' => $Qimprimir]);
 
 $oHash1 = new HashF();
 $oHash1->setUrl('frontend/inventario/controller/equipajes_form_texto_listado.php');
-$oHash1->setCamposForm('loc!id_equipaje!texto');
+$oHash1->setCamposForm('loc!id_equipaje!texto!ctx_guardar');
 $h_mod_txt = $oHash1->linkSinValParams();
 
 $a_campos = [
@@ -70,6 +72,8 @@ $a_campos = [
     'chk_curs' => $chk_curs,
     'chk_tot' => $chk_tot,
     'h_mod_txt' => $h_mod_txt,
+    'equipaje_ctx_map' => $equipaje_ctx_map,
+    'equipaje_ctx_texto_map' => $equipaje_ctx_texto_map,
 ];
 
 $oView = new ViewNewPhtml('frontend\inventario\controller');

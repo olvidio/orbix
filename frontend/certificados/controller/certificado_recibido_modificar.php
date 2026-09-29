@@ -37,6 +37,7 @@ $oHashCertificadoPdf->setArrayCamposHidden([
     'id_nom' => $form['id_nom'],
     'id_item' => $form['id_item'],
     'refresh' => 1,
+    'ctx_guardar' => $form['ctx_guardar'],
 ]);
 
 $basePublic = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');

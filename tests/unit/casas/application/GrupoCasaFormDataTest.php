@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use src\casas\application\GrupoCasaFormData;
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\casas\domain\entity\GrupoCasa;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 
 final class GrupoCasaFormDataTest extends TestCase
@@ -24,6 +25,7 @@ final class GrupoCasaFormDataTest extends TestCase
         $this->assertSame('nuevo', $rta['id_item']);
         $this->assertSame(0, $rta['id_ubi_padre']);
         $this->assertSame(['1' => 'Casa A'], $rta['opciones_casas']);
+        $this->assertSame(['id_item' => 'nuevo'], HashB::open($rta['ctx_guardar'], 'grupo_update'));
     }
 
     public function test_edita_grupo_existente(): void
@@ -44,6 +46,7 @@ final class GrupoCasaFormDataTest extends TestCase
         $this->assertSame('5', $rta['id_item']);
         $this->assertSame(10, $rta['id_ubi_padre']);
         $this->assertSame(20, $rta['id_ubi_hijo']);
+        $this->assertSame(['id_item' => '5'], HashB::open($rta['ctx_guardar'], 'grupo_update'));
     }
 
     public function test_id_inexistente_trata_como_nuevo(): void
@@ -58,5 +61,6 @@ final class GrupoCasaFormDataTest extends TestCase
 
         $this->assertTrue($rta['es_nuevo']);
         $this->assertSame('nuevo', $rta['id_item']);
+        $this->assertSame(['id_item' => 'nuevo'], HashB::open($rta['ctx_guardar'], 'grupo_update'));
     }
 }

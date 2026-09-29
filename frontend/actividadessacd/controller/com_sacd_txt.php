@@ -65,6 +65,7 @@ $initial = PostRequest::getDataFromUrl('/src/actividadessacd/texto_comunicacion_
     'idioma' => 'es_ES.UTF-8',
 ]);
 $comunicacion = ActividadessacdPayload::textoFromPayload($initial);
+$ctx_guardar = ActividadessacdPayload::ctxGuardarFromPayload($initial);
 
 $buildHashedUrl = static function (string $url, string $campos): string {
     $oHash = new HashF();
@@ -79,7 +80,7 @@ $url_data = $buildHashedUrl(
 );
 $url_guardar = $buildHashedUrl(
     AppUrlConfig::srcBrowserUrl('/src/actividadessacd/texto_comunicacion_guardar'),
-    'clave!idioma!texto'
+    'ctx_guardar!texto'
 );
 
 $a_campos = [
@@ -87,6 +88,7 @@ $a_campos = [
     'oDesplClaves' => $oDesplClaves,
     'oDesplIdiomas' => $oDesplIdiomas,
     'comunicacion' => $comunicacion,
+    'ctx_guardar' => $ctx_guardar,
     'url_data' => $url_data,
     'url_guardar' => $url_guardar,
 ];

@@ -3,6 +3,7 @@
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
@@ -40,6 +41,11 @@ if ($error_txt === '') {
         $oHoy = new DateTimeLocal();
         $data['f_certificado'] = $oHoy->getFromLocal();
         $data['any_2digit'] = $oHoy->format('y');
+        $data['ctx_guardar'] = HashB::sign('certificado_emitido_guardar', [
+            'nuevo' => 1,
+            'id_item' => 0,
+            'id_nom' => $id_nom,
+        ]);
     }
 }
 

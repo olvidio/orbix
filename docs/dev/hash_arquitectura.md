@@ -217,7 +217,7 @@ $oValidator->validatePost($aData);
 
 ### 7.2 Rutas legacy ya retiradas
 
-`apps/web/Hash.php`, `apps/web/Posicion.php` y `src/layouts/*` no existen en el árbol actual. La firma de UI y su navegación viven bajo `frontend/`:
+Los antiguos ficheros de firma y navegación de `apps/` ya no existen en el árbol actual. La firma de UI y su navegación viven bajo `frontend/`:
 
 - `frontend/shared/security/HashF.php` implementa la firma de UI.
 - `frontend/shared/web/Posicion.php` y `frontend/shared/web/NavStack.php` gestionan navegación y estado.

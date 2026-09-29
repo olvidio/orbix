@@ -7610,27 +7610,27 @@ msgstr ""
 msgid "tiene que ser un array"
 msgstr ""
 
-#: web/hash.class.php:144
+#: frontend/shared/security/HashF.php:144
 msgid "llegan campos hidden modificados"
 msgstr ""
 
-#: web/hash.class.php:175
+#: frontend/shared/security/HashF.php:175
 msgid "llegan distinto número o nombre de los campos que se dice que se envian"
 msgstr ""
 
-#: web/hash.class.php:219
+#: frontend/shared/security/HashF.php:219
 msgid "url modificada"
 msgstr ""
 
-#: web/hash.class.php:230 web/hash.class.php:235
+#: frontend/shared/security/HashF.php:230 frontend/shared/security/HashF.php:235
 msgid "problema general de seguridad"
 msgstr ""
 
-#: web/hash.class.php:236
+#: frontend/shared/security/HashF.php:236
 msgid "para ver más detalles activa el mode debug en core\\confgiGlobal"
 msgstr ""
 
-#: web/hash.class.php:266
+#: frontend/shared/security/HashF.php:266
 msgid "página con seguridad desactivada"
 msgstr ""
 

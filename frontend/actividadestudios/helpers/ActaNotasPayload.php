@@ -26,6 +26,8 @@ final class ActaNotasPayload
      *     msg_err: string,
      *     hay_alumnos_sin_nota: bool,
      *     puede_nueva_convocatoria: bool,
+     *     ctx_guardar: string,
+     *     ctx_definitivas: string,
      * }
      */
     public static function fromPayload(array $payload): array
@@ -44,6 +46,8 @@ final class ActaNotasPayload
             'msg_err' => \frontend\shared\helpers\PayloadCoercion::string($payload['msg_err'] ?? ''),
             'hay_alumnos_sin_nota' => !empty($payload['hay_alumnos_sin_nota']),
             'puede_nueva_convocatoria' => !empty($payload['puede_nueva_convocatoria']),
+            'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
+            'ctx_definitivas' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_definitivas'] ?? ''),
         ];
     }
 }

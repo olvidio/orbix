@@ -9,8 +9,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/ubis_eliminar', [
-    'obj_pau' => (string)filter_input(INPUT_POST, 'obj_pau'),
-    'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),
+    'ctx_eliminar' => (string)filter_input(INPUT_POST, 'ctx_eliminar'),
 ]));
 $error = UbisPayload::apiError($data);
 if ($error !== '') {

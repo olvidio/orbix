@@ -136,6 +136,7 @@ $i18n = [
 <script type="text/javascript">
     var URL_COM_DATA = <?= json_encode($url_data) ?>;
     var URL_COM_ENVIAR = <?= json_encode($url_enviar) ?>;
+    var CTX_ENVIAR = '';
     var I18N_COM = <?= json_encode($i18n, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
     var AUTO_CARGAR = <?= !empty($auto_cargar) ? 'true' : 'false' ?>;
 
@@ -272,6 +273,7 @@ $i18n = [
                 alert(data.mensaje_periodo);
                 return;
             }
+            CTX_ENVIAR = data.ctx_enviar || '';
             $('#exportar').html(fnjs_construir_listado(data));
         }).fail(function () {
             alert(I18N_COM.err_comunicacion);
@@ -281,19 +283,45 @@ $i18n = [
     fnjs_enviar_mails = function () {
         var msg = I18N_COM.aviso1 + "\r\n" + I18N_COM.aviso2 + "\r\n" + I18N_COM.aviso3 + "\r\n";
         alert(msg);
-        var parametros = $('#seleccion').serialize();
+        var go = function (ctx) {
+            var parametros = $('#seleccion').serialize();
+            if (ctx) {
+                parametros += '&ctx_enviar=' + encodeURIComponent(ctx);
+            }
+            $.ajax({
+                url: URL_COM_ENVIAR,
+                type: 'post',
+                data: parametros,
+                dataType: 'json'
+            }).done(function (rta) {
+                if (!rta || rta.success !== true) {
+                    var m = (rta && rta.mensaje) ? rta.mensaje : I18N_COM.err_desconocido;
+                    alert(I18N_COM.respuesta + ': ' + m);
+                    return;
+                }
+                alert(I18N_COM.ok_mails);
+            }).fail(function () {
+                alert(I18N_COM.err_comunicacion);
+            });
+        };
+        if (CTX_ENVIAR) {
+            go(CTX_ENVIAR);
+            return;
+        }
         $.ajax({
-            url: URL_COM_ENVIAR,
+            url: URL_COM_DATA,
             type: 'post',
-            data: parametros,
+            data: $('#seleccion').serialize(),
             dataType: 'json'
         }).done(function (rta) {
-            if (!rta || rta.success !== true) {
-                var m = (rta && rta.mensaje) ? rta.mensaje : I18N_COM.err_desconocido;
-                alert(I18N_COM.respuesta + ': ' + m);
+            var data = fnjs_parse_rta_txt(rta);
+            if (data === null) { return; }
+            if (data.mensaje_periodo) {
+                alert(data.mensaje_periodo);
                 return;
             }
-            alert(I18N_COM.ok_mails);
+            CTX_ENVIAR = data.ctx_enviar || '';
+            go(CTX_ENVIAR);
         }).fail(function () {
             alert(I18N_COM.err_comunicacion);
         });

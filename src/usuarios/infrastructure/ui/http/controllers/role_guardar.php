@@ -6,10 +6,22 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
 use src\usuarios\domain\value_objects\RoleName;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_guardar'),
+        'role_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $Qrole = (string)\src\shared\domain\helpers\FilterPostGet::post('role');
-$Qid_role = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_role');
+$Qid_role = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_role');
 $Qsf = (integer)\src\shared\domain\helpers\FilterPostGet::post('sf');
 $Qsv = (integer)\src\shared\domain\helpers\FilterPostGet::post('sv');
 $Qpau = (string)\src\shared\domain\helpers\FilterPostGet::post('pau');

@@ -41,6 +41,8 @@ y ámbito (`rstgr` simplifica botones).
 - `fnjs_publicar` → publicar hacia otra DL (`est`/`sm`/`agd`) → pantalla `persona_publicar_form`
 
 Token fila: `sel = id_nom#id_tabla`.
+La API devuelve `home_link_spec` por persona; el controlador frontend lo firma con
+`HashFSignedLink` al construir la celda de ficha.
 
 ## Manual De Usuario
 

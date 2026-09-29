@@ -32,12 +32,12 @@ $h_form = $oHashForm->linkSinVal();
 
 $oHashUpdate = new HashF();
 $oHashUpdate->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/grupo_update'));
-$oHashUpdate->setCamposForm('id_item!id_ubi_padre!id_ubi_hijo');
+$oHashUpdate->setCamposForm('ctx_guardar!id_item!id_ubi_padre!id_ubi_hijo');
 $url_update = AppUrlConfig::srcBrowserUrl('/src/casas/grupo_update') . $oHashUpdate->linkSinVal();
 
 $oHashEliminar = new HashF();
 $oHashEliminar->setUrl(AppUrlConfig::srcBrowserUrl('/src/casas/grupo_eliminar'));
-$oHashEliminar->setCamposForm('id_item');
+$oHashEliminar->setCamposForm('ctx_eliminar');
 $url_eliminar = AppUrlConfig::srcBrowserUrl('/src/casas/grupo_eliminar') . $oHashEliminar->linkSinVal();
 
 $a_campos = [

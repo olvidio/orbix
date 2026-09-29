@@ -6,10 +6,10 @@ url: "/src/personas/persona_publicar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/personas/infrastructure/ui/http/controllers/persona_publicar.php"
-entrada: ["post.id_nom:integer", "post.id_schema:integer", "post.dl:string|array"]
-entrada_obligatoria: ["post.id_nom", "post.id_schema", "post.dl"]
+entrada: ["post.ctx_publicar:string", "post.dl:string|array"]
+entrada_obligatoria: ["post.ctx_publicar", "post.dl"]
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
+requiere_hashb: true
 errores: ["Datos de persona no válidos", "Debe indicar al menos una delegación destino", "No se puede publicar hacia la propia delegación", "No se ha podido publicar la persona"]
 frontend_referencias: ["frontend/personas/view/persona_publicar.phtml"]
 casos_uso: ["src\\personas\\application\\PersonaPublicar"]
@@ -41,11 +41,10 @@ sin caducidad (`hasta=null`). Resto: TTL `PersonaPublicacion::fechaHastaDefault(
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_nom` | `integer` | controller | Sí | Debe ser > 0 |
-| `id_schema` | `integer` | controller | Sí | Debe ser ≥ 1 |
+| `ctx_publicar` | `string` | controller | Sí | Cápsula HashB con `id_nom` e `id_schema` |
 | `dl` | `string` o `array` | controller | Sí | Una o más DL destino; el form FE envía una |
 
-HashFront en UI: campo form `dl` + hidden `id_tabla`, `id_nom`, `id_schema`.
+HashF en UI: campo form `dl` + hidden opaco `ctx_publicar`.
 
 ## Salida
 

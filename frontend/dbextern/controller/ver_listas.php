@@ -20,6 +20,9 @@ $mov = (string)filter_input(INPUT_POST, 'mov');
 
 $cont_sync = 0;
 $first_load = $id === '';
+$ctx_crear = '';
+$ctx_unir = '';
+$ctx_crear_todos = '';
 
 if ($first_load) {
     $id = '1';
@@ -31,6 +34,7 @@ if ($first_load) {
     ]);
     $a_lista = DbexternPayload::listaFromBackend($data['lista'] ?? []);
     $cont_sync = \frontend\shared\helpers\PayloadCoercion::int($data['cont_sync'] ?? 0);
+    $ctx_crear_todos = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_crear_todos'] ?? '');
 
     session_start();
     $_SESSION['DBListas'] = $a_lista;
@@ -62,6 +66,9 @@ if ($new_id > 0 && isset($listas[$new_id])) {
     ]);
     $a_lista_orbix = DbexternPayload::listaFromBackend($matches['posibles_misma_dl'] ?? []);
     $a_lista_orbix_otradl = DbexternPayload::listaFromBackend($matches['posibles_otra_dl'] ?? []);
+    $ctx_crear = \frontend\shared\helpers\PayloadCoercion::string($matches['ctx_crear'] ?? '');
+    $ctx_unir = \frontend\shared\helpers\PayloadCoercion::string($matches['ctx_unir'] ?? '');
+    $ctx_crear_todos = \frontend\shared\helpers\PayloadCoercion::string($matches['ctx_crear_todos'] ?? $ctx_crear_todos);
 }
 
 $url_sincro_ver = AppUrlConfig::getApiBaseUrl() . '/frontend/dbextern/controller/ver_listas.php';
@@ -79,19 +86,19 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $url_sincro_crear = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_crear');
 $oHash1 = new HashF();
 $oHash1->setUrl($url_sincro_crear);
-$oHash1->setCamposForm('id_nom_listas!id_orbix!region!dl!id!tipo_persona');
+$oHash1->setCamposForm('id_nom_listas!id_orbix!region!dl!id!tipo_persona!ctx_crear');
 $h_crear = $oHash1->linkSinValParams();
 
 $url_sincro_unir = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_unir');
 $oHash2 = new HashF();
 $oHash2->setUrl($url_sincro_unir);
-$oHash2->setCamposForm('id_nom_listas!id_orbix!region!dl!id!tipo_persona');
+$oHash2->setCamposForm('id_nom_listas!id_orbix!region!dl!id!tipo_persona!ctx_unir');
 $h_unir = $oHash2->linkSinValParams();
 
 $url_sincro_crear_todos = AppUrlConfig::srcBrowserUrl('/src/dbextern/sincro_crear_todos');
 $oHash3 = new HashF();
 $oHash3->setUrl($url_sincro_crear_todos);
-$oHash3->setCamposForm('region!dl!tipo_persona');
+$oHash3->setCamposForm('region!dl!tipo_persona!ctx_crear_todos');
 $h_crear_todos = $oHash3->linkSinValParams();
 
 $html_reg = sprintf(_("registro %s de %s"), $new_id, $max);
@@ -118,6 +125,9 @@ $a_campos = [
     'h_crear' => $h_crear,
     'h_unir' => $h_unir,
     'h_crear_todos' => $h_crear_todos,
+    'ctx_crear' => $ctx_crear,
+    'ctx_unir' => $ctx_unir,
+    'ctx_crear_todos' => $ctx_crear_todos,
 ];
 
 $oView = new ViewNewPhtml('frontend\dbextern\controller');

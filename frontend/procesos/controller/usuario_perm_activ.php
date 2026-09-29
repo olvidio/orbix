@@ -78,6 +78,7 @@ $a_camposHidden = [
     'id_usuario' => $Qid_usuario,
     'quien' => $Qquien,
     'extendida' => true,
+    'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? ''),
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 

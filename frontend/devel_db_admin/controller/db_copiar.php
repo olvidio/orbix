@@ -25,6 +25,7 @@ $data = PostRequest::getDataFromUrl('/src/devel_db_admin/copiar_esquema', [
     'comun' => $Qcomun,
     'sv' => $Qsv,
     'sf' => $Qsf,
+    'ctx_copiar' => (string) filter_input(INPUT_POST, 'ctx_copiar'),
 ]);
 
 echo '<br>';

@@ -58,7 +58,11 @@ $destino = '';
 $oHashCertificadoPdf = new HashF();
 $oHashCertificadoPdf->setCamposForm('certificado!firmado!f_certificado!idioma!destino');
 $oHashCertificadoPdf->setCamposNo('firmado');
-$oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $id_nom, 'nuevo' => 1]);
+$oHashCertificadoPdf->setArrayCamposHidden([
+    'id_nom' => $id_nom,
+    'nuevo' => 1,
+    'ctx_guardar' => $personaData['ctx_guardar'],
+]);
 
 $pag_certificado_2_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/certificados/controller/certificado_emitido_2_mpdf.php';
 $oHash = new HashF();

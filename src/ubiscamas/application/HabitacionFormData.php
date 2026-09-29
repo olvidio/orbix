@@ -2,6 +2,7 @@
 
 namespace src\ubiscamas\application;
 
+use src\shared\security\HashB;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\HabitacionId;
@@ -73,6 +74,9 @@ final class HabitacionFormData
                         'descripcion' => $oCama->getDescripcion(),
                         'larga' => (bool)$oCama->isLarga(),
                         'vip' => (bool)$oCama->isVip(),
+                        'ctx_delete' => HashB::sign('cama_delete', [
+                            'id_cama' => $oCama->getIdCama(),
+                        ]),
                     ];
                 }
             }
@@ -110,6 +114,10 @@ final class HabitacionFormData
                     'id_habitacion' => $Qid_habitacion,
                     'id_ubi' => $Qid_ubi,
                     'nuevo' => $Qnuevo,
+                    'ctx_update' => HashB::sign('habitacion_update', [
+                        'id_habitacion' => $Qid_habitacion,
+                        'id_ubi' => $Qid_ubi,
+                    ]),
                 ],
             ],
             'hash_actualizar' => [
@@ -125,7 +133,7 @@ final class HabitacionFormData
             ],
             'cama_delete_hash' => [
                 'url' => 'src/ubiscamas/cama_delete',
-                'campos_form' => 'id_ubi!id_cama!id_habitacion',
+                'campos_form' => 'ctx_delete',
             ],
             'id_habitacion' => $Qid_habitacion,
             'id_ubi' => $Qid_ubi,

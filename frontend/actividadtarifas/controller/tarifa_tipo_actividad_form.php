@@ -53,22 +53,19 @@ $api = AppUrlConfig::getApiBaseUrl();
 
 // Hash para el form (campos que se serializan en el submit):
 $oHash = new HashF();
-$a_camposHidden = [];
-if ($es_nuevo) {
-    $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
-    $oHash->setCamposForm('id_item!id_tarifa!id_tipo_activ!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
     $a_camposHidden = [
-        'id_item' => 'nuevo',
-        'id_tipo_activ' => '',
+        'ctx_update' => $fields['token_update'],
     ];
-} else {
-    $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
-    $oHash->setCamposForm('id_item!id_tarifa!id_tipo_activ');
-    $a_camposHidden = [
-        'id_item' => $id_item,
-        'id_tipo_activ' => (string)$id_tipo_activ,
-    ];
-}
+    if ($es_nuevo) {
+        $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
+        $oHash->setCamposForm('id_tarifa!id_tipo_activ!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
+        $a_camposHidden['id_tipo_activ'] = '';
+    } else {
+        $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
+        $oHash->setCamposForm('id_tarifa!id_tipo_activ');
+        $a_camposHidden['ctx_eliminar'] = $fields['token_eliminar'];
+        $a_camposHidden['id_tipo_activ'] = (string)$id_tipo_activ;
+    }
 $oHash->setArraycamposHidden($a_camposHidden);
 
 if (!$es_nuevo) {

@@ -1,15 +1,22 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
-$a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'sel');
 
-$Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'id_habitacion');
-
-if ($a_sel !== []) {
-    $Qid_habitacion = urldecode(strtok($a_sel[0], '#') ?: '');
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_eliminar'),
+        'habitacion_delete'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
 }
+
+$Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'id_habitacion');
 
 /** @var HabitacionDlRepositoryInterface $habitacionRepository */
 $habitacionRepository = DependencyResolver::get(HabitacionDlRepositoryInterface::class);

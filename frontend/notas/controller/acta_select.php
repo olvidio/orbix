@@ -106,6 +106,7 @@ foreach ($cActasData as $oActa) {
     $pdf_signed_urls[$acta_2] = SignedDownloadToken::urlNotasActa($acta);
     $pagina = HashF::link('frontend/notas/controller/acta_ver.php?' . http_build_query(array('acta' => $acta)));
     $a_valores[$i]['sel'] = $acta_2;
+    $a_valores[$i]['ctx_eliminar'] = PayloadCoercion::string($oActa['ctx_eliminar'] ?? '');
     if (SessionPerm::havePermOficina('est')) {
         $a_valores[$i][1] = array('ira' => $pagina, 'valor' => $acta);
     } else {
@@ -127,7 +128,7 @@ $oHash->setCamposForm('acta');
 
 $oHash1 = new HashF();
 $oHash1->setCamposForm('sel!mod');
-$oHash1->setCamposNo('sel!scroll_id!mod!refresh!id_sel');
+$oHash1->setCamposNo('sel!scroll_id!mod!refresh!id_sel!ctx_eliminar');
 
 $url_acta_eliminar = AppUrlConfig::srcBrowserUrl('/src/notas/acta_eliminar');
 

@@ -10,6 +10,7 @@ use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Data builder de la pantalla `peticiones_activ`: lista de actividades
@@ -180,6 +181,11 @@ final class PeticionesActivData
             $sid_activ .= $sid_activ === '' ? $id_activ_pet : ',' . $id_activ_pet;
         }
 
+        $ctxIdentity = [
+            'id_nom' => $id_nom,
+            'sactividad' => $sactividad,
+        ];
+
         return [
             'id_nom' => $id_nom,
             'ap_nom' => $ap_nom,
@@ -188,6 +194,8 @@ final class PeticionesActivData
             'sid_activ' => $sid_activ,
             'opciones' => $aOpciones,
             'tipo' => $sactividad,
+            'ctx_guardar' => HashB::sign('peticiones_guardar', $ctxIdentity),
+            'ctx_eliminar' => HashB::sign('peticiones_eliminar', $ctxIdentity),
         ];
     }
 }

@@ -9,6 +9,7 @@ use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $Qid_role = (int)\src\shared\domain\helpers\FilterPostGet::post('id_role');
@@ -88,7 +89,7 @@ if (!empty($Qid_role)) {
 
         $grup_menu = $oGrupMenu->getGrup_menu($ambito);
 
-        $a_valores[$i]['sel'] = "$id_item";
+        $a_valores[$i]['sel'] = HashB::sign('role_grupmenu_del', ['id_item' => $id_item]);
         $a_valores[$i][1] = $grup_menu;
     }
 } else {
@@ -119,6 +120,7 @@ $data['a_cabeceras'] = $a_cabeceras;
 $data['a_botones'] = $a_botones;
 $data['a_valores'] = $a_valores;
 $data['aOpcionesPau'] = PauType::getArrayPau();
+$data['ctx_guardar'] = HashB::sign('role_guardar', ['id_role' => $Qid_role]);
 
 ContestarJson::enviar($error_txt, $data);
 

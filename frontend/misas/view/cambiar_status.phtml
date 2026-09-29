@@ -66,16 +66,19 @@
         }
     };
 
+    var zona_ctx_map = <?= json_encode($zona_ctx_map) ?>;
+
     fnjs_nuevo_estado = function () {
         let id_zona = $('#id_zona').val();
         let estado = $('#estado').val();
-        if (id_zona) {
+        let ctx_nuevo_status = zona_ctx_map[id_zona] || '';
+        if (id_zona && ctx_nuevo_status) {
             let url = '<?= $url_nuevo_status ?>';
 
             var periodo = $('#periodo').val();
             var empiezamax = $('#empiezamax').val();
             var empiezamin = $('#empiezamin').val();
-            let parametros = 'id_zona=' + encodeURIComponent(id_zona)
+            let parametros = 'ctx_nuevo_status=' + encodeURIComponent(ctx_nuevo_status)
                 + '&estado=' + encodeURIComponent(estado)
                 + '&periodo=' + encodeURIComponent(periodo)
                 + '&empiezamax=' + encodeURIComponent(empiezamax)

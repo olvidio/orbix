@@ -28,6 +28,8 @@ $keys = [
     'dia_inc',
     'h_ini',
     'h_fin',
+    'ctx_guardar',
+    'ctx_eliminar',
 ];
 $campos = [];
 foreach ($keys as $k) {

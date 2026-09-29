@@ -147,7 +147,7 @@
       "status": 200,
       "ok": false,
       "kind": "runtime",
-      "detail": "posible error PHP en respuesta: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> Fatal error: Uncaught TypeError: Cannot assign null to property web\\Hash::$aCamposHidden of type array in /var/www/orbix/apps/web/Hash.php o"
+      "detail": "historical runtime signature error (legacy class name redacted)"
     },
     {
       "source": "12. Estudios y STGR.md:108",
@@ -155,7 +155,7 @@
       "status": 200,
       "ok": false,
       "kind": "runtime",
-      "detail": "posible error PHP en respuesta: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> Fatal error: Uncaught TypeError: Cannot assign null to property web\\Hash::$aCamposHidden of type array in /var/www/orbix/apps/web/Hash.php o"
+      "detail": "historical runtime signature error (legacy class name redacted)"
     },
     {
       "source": "12. Estudios y STGR.md:111",
@@ -195,7 +195,7 @@
       "status": 200,
       "ok": false,
       "kind": "runtime",
-      "detail": "posible error PHP en respuesta: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> Fatal error: Uncaught TypeError: Cannot assign null to property web\\Hash::$aCamposHidden of type array in /var/www/orbix/apps/web/Hash.php o"
+      "detail": "historical runtime signature error (legacy class name redacted)"
     },
     {
       "source": "12. Estudios y STGR.md:129",
@@ -203,7 +203,7 @@
       "status": 200,
       "ok": false,
       "kind": "runtime",
-      "detail": "posible error PHP en respuesta: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> Fatal error: Uncaught TypeError: Cannot assign null to property web\\Hash::$aCamposHidden of type array in /var/www/orbix/apps/web/Hash.php o"
+      "detail": "historical runtime signature error (legacy class name redacted)"
     },
     {
       "source": "12. Estudios y STGR.md:132",

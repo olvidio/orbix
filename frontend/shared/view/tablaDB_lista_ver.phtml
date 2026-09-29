@@ -9,7 +9,7 @@
     <form id='seleccionados' name='seleccionados' action='' method='post'>
         <?= $oHashSelect->getCamposHtml() ?>
         <input type='hidden' id='mod' name='mod' value=''>
-            <?= $oTabla->mostrar_tabla() ?>
+            <?= $oTabla->mostrar_tabla_html() ?>
 
             <?php if ($permiso === 3) { ?>
             <br>

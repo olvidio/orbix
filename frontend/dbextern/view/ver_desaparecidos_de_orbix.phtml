@@ -7,9 +7,9 @@
  */
 ?>
 <script>
-    fnjs_desunir = function (id_listas, fila) {
+    fnjs_desunir = function (ctx, fila) {
         var url = '<?= $url_sincro_desunir ?>';
-        var parametros = 'id_nom_listas=' + id_listas + '&tipo_persona=<?= $tipo_persona ?><?= $h ?>';
+        var parametros = 'ctx_desunir=' + encodeURIComponent(ctx) + '<?= $h ?>';
 
         var request = $.ajax({
             url: url,
@@ -40,10 +40,11 @@
         $i++;
         $id_listas = $persona_listas['id_nom_listas'];
         $dl_listas = $persona_listas['dl'];
+        $ctxDesunir = json_encode((string)($persona_listas['ctx_desunir'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES);
         echo "<tr id=fila$i>";
         echo "<td class='titulo'>" . htmlspecialchars($persona_listas['ape_nom']) . '</td>';
         echo "<td>" . htmlspecialchars($dl_listas) . '</td>';
-        echo "<td><span class=link onClick='fnjs_desunir($id_listas, $i)'>" . _("desunir") . '</span><td>';
+        echo "<td><span class=link onClick='fnjs_desunir($ctxDesunir, $i)'>" . _("desunir") . '</span><td>';
         echo '</tr>';
     }
     ?>

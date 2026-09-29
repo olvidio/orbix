@@ -7,7 +7,6 @@ use frontend\personas\helpers\PersonasPostInput;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashF;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
@@ -60,7 +59,7 @@ if (($view['error'] ?? '') !== '') {
 }
 
 $nom = $view['nom'];
-$id_schema = $view['id_schema'];
+$ctx_publicar = $view['ctx_publicar'];
 $opciones = $view['opciones_dl'];
 
 $oDespl = new Desplegable();
@@ -68,19 +67,11 @@ $oDespl->setNombre('dl');
 $oDespl->setOpciones($opciones);
 $oDespl->setBlanco(true);
 
-$oHash = new HashF();
-$oHash->setCamposForm('dl');
-$oHash->setArraycamposHidden([
-    'id_tabla' => $id_tabla,
-    'id_nom' => $id_nom,
-    'id_schema' => $id_schema,
-]);
-
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'oHash' => $oHash,
     'nom' => $nom,
     'oDespl' => $oDespl,
+    'ctx_publicar' => $ctx_publicar,
 ];
 
 $oView = new ViewNewPhtml('frontend\personas\controller');

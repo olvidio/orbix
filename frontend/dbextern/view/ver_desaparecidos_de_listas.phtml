@@ -9,9 +9,9 @@
 $txt_alert = _("se va a poner la fecha de hoy como fecha de baja. Para cambiarlo ir al a ficha de la persona");
 ?>
 <script>
-    fnjs_baja = function (id_orbix, fila) {
+    fnjs_baja = function (ctx, fila) {
         var url = '<?= $url_sincro_baja ?>';
-        var parametros = 'id_nom_orbix=' + id_orbix + '&tipo_persona=<?= $tipo_persona ?><?= $h ?>';
+        var parametros = 'ctx_baja=' + encodeURIComponent(ctx) + '<?= $h ?>';
 
         alert(<?= json_encode((string)$txt_alert) ?>);
 
@@ -47,10 +47,11 @@ $txt_alert = _("se va a poner la fecha de hoy como fecha de baja. Para cambiarlo
         $i++;
         $id_orbix = $persona_orbix['id_nom_orbix'];
         $dl_orbix = $persona_orbix['dl'];
+        $ctxBaja = json_encode((string)($persona_orbix['ctx_baja'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES);
         echo "<tr id=fila$i>";
         echo "<td class='titulo'>" . htmlspecialchars($persona_orbix['ape_nom']) . '</td>';
         echo "<td>" . htmlspecialchars($dl_orbix) . '</td>';
-        echo "<td><span class=link onClick='fnjs_baja($id_orbix,$i)'>" . _("baja") . '</span><td>';
+        echo "<td><span class=link onClick='fnjs_baja($ctxBaja,$i)'>" . _("baja") . '</span><td>';
         echo "<td><span class=link onClick='fnjs_traslado($id_orbix,$i)'>" . _("fallecido o traslado a otra r") . '</span><td>';
         echo '</tr>';
     }

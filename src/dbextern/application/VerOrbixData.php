@@ -5,6 +5,7 @@ namespace src\dbextern\application;
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
 use src\dbextern\application\support\SincroDBFactory;
 use src\personas\application\support\PersonaRepositoryResolver;
+use src\shared\security\HashB;
 
 class VerOrbixData
 {
@@ -64,7 +65,7 @@ class VerOrbixData
     }
 
     /**
-     * @return list<array<string, mixed>>
+     * @return array{posibles_bdu: list<array<string, mixed>>, ctx_unir: string}
      */
     public function getPosiblesMatches(string $tipo_persona, string $region, string $dl, int $id_nom_orbix): array
     {
@@ -73,6 +74,12 @@ class VerOrbixData
         $oSincroDB->setRegion($region);
         $oSincroDB->setDlListas($dl);
 
-        return $oSincroDB->posiblesBDU($id_nom_orbix);
+        return [
+            'posibles_bdu' => $oSincroDB->posiblesBDU($id_nom_orbix),
+            'ctx_unir' => HashB::sign('sincro_unir', [
+                'id_orbix' => $id_nom_orbix,
+                'tipo_persona' => $tipo_persona,
+            ]),
+        ];
     }
 }

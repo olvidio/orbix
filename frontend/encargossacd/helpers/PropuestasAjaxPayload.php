@@ -48,8 +48,10 @@ final class PropuestasAjaxPayload
         $idEnc = self::int($data['id_enc'] ?? 0);
         $oDesplegable = new Desplegable('prop_sacd', $opciones, self::string($data['id_sacd'] ?? ''));
         $oDesplegable->setAction("fnjs_cmb_sacd('$tipo',$idItem,$idEnc);");
+        $ctx = htmlspecialchars(self::string($data['ctx_cmb_sacd'] ?? ''), ENT_QUOTES, 'UTF-8');
 
-        return self::closeButton() . '<br><br>' . $oDesplegable->desplegable();
+        return self::closeButton() . '<br><br><input type="hidden" id="ctx_cmb_sacd" value="' . $ctx . '">'
+            . $oDesplegable->desplegable();
     }
 
     /** @param array<string, mixed> $data */
@@ -63,6 +65,7 @@ final class PropuestasAjaxPayload
             'id_sacd' => self::int($data['id_sacd'] ?? 0),
             'id_item' => self::int($data['id_item'] ?? 0),
             'id_enc' => self::int($data['id_enc'] ?? 0),
+            'ctx_dedicacion_update' => self::string($data['ctx_dedicacion_update'] ?? ''),
         ]);
         $oHash->setCamposForm('dedic_m!dedic_t!dedic_v');
 

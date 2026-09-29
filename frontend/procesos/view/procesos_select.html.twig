@@ -2,12 +2,14 @@
 <script>
 fnjs_regenerar=function(){
 	var id_tipo_proceso=$('#k_buscar').val();
+	var ctxMap = {{ ctx_regenerar|json_encode|raw }};
+	var ctx = (ctxMap && ctxMap[id_tipo_proceso]) ? ctxMap[id_tipo_proceso] : '';
 
 	if (!id_tipo_proceso) {
 		alert ("{{ txt_clonar }}");
 	} else {
         var url="{{ url_regenerar }}";
-        var parametros='id_tipo_proceso='+id_tipo_proceso+'{{ h_regenerar|raw }}';
+        var parametros='id_tipo_proceso='+id_tipo_proceso+'&ctx_regenerar='+encodeURIComponent(ctx)+'{{ h_regenerar|raw }}';
              
         $.ajax({
             url: url,
@@ -29,12 +31,14 @@ fnjs_regenerar=function(){
 fnjs_clonar=function(){
 	var id_tipo_proceso=$('#k_buscar').val();
 	var id_tipo_proceso_ref=$('#k_clonar').val();
+	var ctxMap = {{ ctx_clonar|json_encode|raw }};
+	var ctx = (ctxMap && ctxMap[id_tipo_proceso]) ? ctxMap[id_tipo_proceso] : '';
 
 	if (!id_tipo_proceso) {
 		alert ("{{ txt_clonar }}");
 	} else {
         var url="{{ url_clonar }}";
-        var parametros='id_tipo_proceso='+id_tipo_proceso+'&id_tipo_proceso_ref='+id_tipo_proceso_ref+'{{ h_clonar|raw }}';
+        var parametros='id_tipo_proceso='+id_tipo_proceso+'&id_tipo_proceso_ref='+id_tipo_proceso_ref+'&ctx_clonar='+encodeURIComponent(ctx)+'{{ h_clonar|raw }}';
              
         $.ajax({
             url: url,
@@ -113,10 +117,10 @@ fnjs_listado=function(){
 	});
 }
 
-fnjs_eliminar=function(id_item){
+fnjs_eliminar=function(ctx){
 	if (confirm("{{ txt_eliminar }}")) {
         var url="{{ url_eliminar }}";
-		var parametros='id_item='+id_item+'{{ h_eliminar|raw }}';
+		var parametros='ctx_eliminar='+encodeURIComponent(ctx)+'{{ h_eliminar|raw }}';
         $.ajax({
             url: url,
             type: 'post',

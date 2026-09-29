@@ -76,6 +76,7 @@ $aCamposHidden = [
     "enc_num" => $enc_num,
     "id_nom" => $Qid_nom,
     "filtro_sacd" => $Qfiltro_sacd,
+    "ctx_guardar" => \frontend\shared\helpers\PayloadCoercion::string($datos['ctx_guardar'] ?? ''),
 ];
 $oHash->setUrl($url_update);
 $oHash->setCamposForm('id_item!id_enc!fin!inicio');

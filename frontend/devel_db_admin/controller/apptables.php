@@ -31,10 +31,19 @@ $oDeslpApps = new Desplegable([], ['_ordre' => 'id_app']);
 $oDeslpApps->setNombre('id_app');
 $oDeslpApps->setOpciones($a_apps);
 
+$esquema = OrbixRuntime::miRegionDl();
+$dbProps = PostRequest::getDataFromUrl('/src/devel_db_admin/db_propiedades_data', [
+    'op' => 'apptables_esquemas',
+    'default_esquema' => $esquema,
+]);
+
 $oHash = new HashF();
 $oHash->setCamposForm('id_app!esquema');
 $oHash->setcamposNo('accion');
-$oHash->setArraycamposHidden(['accion' => 'x']);
+$oHash->setArraycamposHidden([
+    'accion' => 'x',
+    'ctx_apptables' => (string) ($dbProps['ctx_apptables'] ?? ''),
+]);
 
 $alerta = _("ojo es un modulo principal");
 $a_campos = [
@@ -42,14 +51,8 @@ $a_campos = [
     'oDesplApps' => $oDeslpApps,
     'alerta' => $alerta,
     'oPosicion' => $oPosicion,
+    'oDesplEsquemas' => $dbProps['oDesplEsquemas'] ?? '',
 ];
-
-$esquema = OrbixRuntime::miRegionDl();
-$dbProps = PostRequest::getDataFromUrl('/src/devel_db_admin/db_propiedades_data', [
-    'op' => 'apptables_esquemas',
-    'default_esquema' => $esquema,
-]);
-$a_campos['oDesplEsquemas'] = $dbProps['oDesplEsquemas'] ?? '';
 
 $oView = new ViewNewPhtml('frontend\devel_db_admin\controller');
 $oView->renderizar('apptables.phtml', $a_campos);

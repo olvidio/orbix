@@ -11,7 +11,19 @@ use src\shared\domain\helpers\FilterPostGet;
 
 use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\CopiarEsquema;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 
+
+try {
+    HashB::open(
+        (string) \src\shared\domain\helpers\FilterPostGet::post('ctx_copiar'),
+        'copiar_esquema'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 $QEsquemaRef = (string) \src\shared\domain\helpers\FilterPostGet::post('esquema');
 $Qregion = (string) \src\shared\domain\helpers\FilterPostGet::post('region');

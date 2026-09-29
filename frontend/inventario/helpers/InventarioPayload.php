@@ -37,6 +37,24 @@ public static function desplegableOpciones(mixed $raw): array
 }
 
 /**
+ * @return array<string, string>
+ */
+public static function equipajeCtxMap(mixed $raw): array
+{
+    if (!is_array($raw)) {
+        return [];
+    }
+    $out = [];
+    foreach ($raw as $id_equipaje => $ctx) {
+        if (is_string($ctx)) {
+            $out[(string) $id_equipaje] = $ctx;
+        }
+    }
+
+    return $out;
+}
+
+/**
  * @param array<int|string, mixed> $payload
  * @return array{
  *     a_cabeceras: list<array<string, mixed>|string>,
@@ -60,19 +78,21 @@ public static function listaDocsFromPayload(array $payload): array
  * @return array{
  *     a_valores: array<int|string, mixed>,
  *     nombreDoc: string,
- *     isNumerado: bool,
- *     sCamposForm: string,
- * }
- */
-public static function docAsignarFromPayload(array $payload): array
-{
-    return [
-        'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
-        'nombreDoc' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombreDoc'] ?? ''),
-        'isNumerado' => !empty($payload['isNumerado']),
-        'sCamposForm' => \frontend\shared\helpers\PayloadCoercion::string($payload['sCamposForm'] ?? ''),
-    ];
-}
+     *     isNumerado: bool,
+     *     sCamposForm: string,
+     *     ctx_guardar: string,
+     * }
+     */
+    public static function docAsignarFromPayload(array $payload): array
+    {
+        return [
+            'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
+            'nombreDoc' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombreDoc'] ?? ''),
+            'isNumerado' => !empty($payload['isNumerado']),
+            'sCamposForm' => \frontend\shared\helpers\PayloadCoercion::string($payload['sCamposForm'] ?? ''),
+            'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
+        ];
+    }
 
 /**
  * @param array<int|string, mixed> $payload
@@ -177,6 +197,8 @@ public static function egmRow(mixed $raw): array
             'id_item_egm' => 0,
             'texto' => '',
             'a_valores' => [],
+            'ctx_add' => '',
+            'ctx_eliminar_grupo' => '',
         ];
     }
 
@@ -187,6 +209,8 @@ public static function egmRow(mixed $raw): array
         'id_item_egm' => \frontend\shared\helpers\PayloadCoercion::int($raw['id_item_egm'] ?? 0),
         'texto' => \frontend\shared\helpers\PayloadCoercion::string($raw['texto'] ?? ''),
         'a_valores' => ActividadesListaSupport::datos($raw['a_valores'] ?? []),
+        'ctx_add' => \frontend\shared\helpers\PayloadCoercion::string($raw['ctx_add'] ?? ''),
+        'ctx_eliminar_grupo' => \frontend\shared\helpers\PayloadCoercion::string($raw['ctx_eliminar_grupo'] ?? ''),
     ];
 }
 
@@ -259,17 +283,18 @@ public static function posiblesMaletasFromPayload(array $payload): array
 
 /**
  * @param array<int|string, mixed> $payload
- * @return array{nombre_ubi: string, ini: string, fin: string, ids_activ: string}
- */
-public static function equipajesFormNuevoFromPayload(array $payload): array
-{
-    return [
-        'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
-        'ini' => \frontend\shared\helpers\PayloadCoercion::string($payload['ini'] ?? ''),
-        'fin' => \frontend\shared\helpers\PayloadCoercion::string($payload['fin'] ?? ''),
-        'ids_activ' => \frontend\shared\helpers\PayloadCoercion::string($payload['ids_activ'] ?? ''),
-    ];
-}
+     * @return array{nombre_ubi: string, ini: string, fin: string, ids_activ: string, ctx_nuevo: string}
+     */
+    public static function equipajesFormNuevoFromPayload(array $payload): array
+    {
+        return [
+            'nombre_ubi' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombre_ubi'] ?? ''),
+            'ini' => \frontend\shared\helpers\PayloadCoercion::string($payload['ini'] ?? ''),
+            'fin' => \frontend\shared\helpers\PayloadCoercion::string($payload['fin'] ?? ''),
+            'ids_activ' => \frontend\shared\helpers\PayloadCoercion::string($payload['ids_activ'] ?? ''),
+            'ctx_nuevo' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_nuevo'] ?? ''),
+        ];
+    }
 
 /**
  * @return array<string, array<int|string, mixed>>

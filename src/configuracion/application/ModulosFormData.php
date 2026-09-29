@@ -4,6 +4,7 @@ namespace src\configuracion\application;
 
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\ModulosConfig;
+use src\shared\security\HashB;
 
 /**
  * Formulario de módulo (`frontend/configuracion/controller/modulos_form.php`).
@@ -65,6 +66,7 @@ final class ModulosFormData
         }
 
         $campos_chk = 'sel_mods!sel_apps';
+        $modGuardar = $Qmod === 'nuevo' ? 'nuevo' : '';
 
         return [
             'hash_main' => [
@@ -74,6 +76,10 @@ final class ModulosFormData
                     'campos_chk' => $campos_chk,
                     'id_mod' => $Qid_mod,
                     'mod' => $Qmod,
+                    'ctx_guardar' => HashB::sign('modulos_guardar', [
+                        'id_mod' => $Qid_mod,
+                        'mod' => $modGuardar,
+                    ]),
                 ],
             ],
             'hash_actualizar' => [

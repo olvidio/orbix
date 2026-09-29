@@ -3,6 +3,7 @@
 namespace src\cartaspresentacion\application;
 
 use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterface;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
@@ -214,8 +215,12 @@ final class CartasPresentacionUbisListaData
             'valor' => $nombre_ubi,
         ];
         if ($activo) {
+            $ctxEliminar = HashB::sign('carta_presentacion_eliminar', [
+                'id_ubi' => $id_ubi,
+                'id_direccion' => $id_direccion,
+            ]);
             $fila[3] = [
-                'script3' => "fnjs_eliminar_cp($id_direccion,$id_ubi)",
+                'script3' => 'fnjs_eliminar_cp(' . json_encode($ctxEliminar, JSON_THROW_ON_ERROR) . ')',
                 'valor' => $pres . ', ' . _("quitar"),
             ];
         } else {

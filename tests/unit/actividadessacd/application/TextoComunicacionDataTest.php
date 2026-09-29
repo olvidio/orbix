@@ -7,6 +7,7 @@ use src\actividadessacd\application\TextoComunicacionData;
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
 use src\actividadessacd\domain\entity\ActividadSacdTexto;
 use src\actividadessacd\domain\value_objects\SacdTextoTexto;
+use src\shared\security\HashB;
 
 /**
  * Unitarios del use case {@see TextoComunicacionData}: helpers de
@@ -35,14 +36,18 @@ final class TextoComunicacionDataTest extends TestCase
     public function test_texto_inexistente_devuelve_cadena_vacia(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
         $repo->method('getActividadSacdTextos')
-            ->with(['clave' => 'com_sacd', 'idioma' => 'es'])
+            ->with(['clave' => 'com_sacd', 'idioma' => 'es_ES.UTF-8'])
             ->willReturn([]);
 
         $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'es_ES.UTF-8',
         ]);
-        $this->assertSame(['texto' => ''], $out);
+        $this->assertSame('', $out['texto']);
+        $this->assertSame(
+            ['clave' => 'com_sacd', 'idioma' => 'es_ES.UTF-8'],
+            HashB::open($out['ctx_guardar'], 'texto_comunicacion_guardar')
+        );
     }
 
     public function test_texto_existente_se_devuelve_tal_cual(): void {
@@ -52,14 +57,18 @@ final class TextoComunicacionDataTest extends TestCase
 
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
         $repo->method('getActividadSacdTextos')
-            ->with(['clave' => 'com_sacd', 'idioma' => 'ca'])
+            ->with(['clave' => 'com_sacd', 'idioma' => 'ca_ES.UTF-8'])
             ->willReturn([$oTexto]);
 
         $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'ca_ES.UTF-8',
         ]);
-        $this->assertSame(['texto' => 'hola sacd'], $out);
+        $this->assertSame('hola sacd', $out['texto']);
+        $this->assertSame(
+            ['clave' => 'com_sacd', 'idioma' => 'ca_ES.UTF-8'],
+            HashB::open($out['ctx_guardar'], 'texto_comunicacion_guardar')
+        );
     }
 
     public function test_repo_devuelve_lista_vacia_se_trata_como_vacio(): void {
@@ -70,27 +79,10 @@ final class TextoComunicacionDataTest extends TestCase
             'clave' => 'com_sacd',
             'idioma' => 'ca',
         ]);
-        $this->assertSame(['texto' => ''], $out);
-    }
-
-    /**
-     * @param class-string $iface
-     */
-    private function containerOne(string $iface, object $service): object
-    {
-        return new class($iface, $service) {
-            public function __construct(
-                private readonly string $iface,
-                private readonly object $service
-            ) {}
-
-            public function get(string $id): object
-            {
-                if ($id !== $this->iface) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->service;
-            }
-        };
+        $this->assertSame('', $out['texto']);
+        $this->assertSame(
+            ['clave' => 'com_sacd', 'idioma' => 'ca'],
+            HashB::open($out['ctx_guardar'], 'texto_comunicacion_guardar')
+        );
     }
 }

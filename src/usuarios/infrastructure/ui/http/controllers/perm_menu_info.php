@@ -5,6 +5,7 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\permisos\domain\MenuDlPermissionBits;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $Qid_usuario = (int)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
@@ -30,5 +31,9 @@ $error_txt = '';
 $data['nombre'] = $nombre;
 $data['menu_perm'] = $menu_perm;
 $data['menu_perm_dl_map'] = MenuDlPermissionBits::map();
+$data['ctx_guardar'] = HashB::sign('perm_menu_guardar', [
+    'id_usuario' => $Qid_usuario,
+    'id_item' => $Qid_item,
+]);
 
 ContestarJson::enviar($error_txt, $data);

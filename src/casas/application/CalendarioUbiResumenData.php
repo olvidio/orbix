@@ -7,6 +7,7 @@ use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
@@ -289,6 +290,14 @@ final class CalendarioUbiResumenData
             $inc_pt = $r_tia > 0 ? (int)round(($p_ip / $r_tia - 1) * 100) : 0;
         }
 
+        $idItemsInc = [];
+        foreach ($a_tarifas_prev as $aTarifaPrev) {
+            $idItemPrev = (int)($aTarifaPrev['id_item'] ?? 0);
+            if ($idItemPrev > 0) {
+                $idItemsInc[] = $idItemPrev;
+            }
+        }
+
         return [
             'ok' => true,
             'error' => '',
@@ -305,6 +314,10 @@ final class CalendarioUbiResumenData
             'p_df' => $p_df,
             'a_tarifas_actual' => $a_tarifas_actual,
             'a_tarifas_prev' => $a_tarifas_prev,
+            'ctx_inc' => HashB::sign('tarifa_ubi_update_inc', [
+                'id_ubi' => $id_ubi,
+                'id_items' => $idItemsInc,
+            ]),
             'r_it' => $r_it,
             'r_idl' => $r_idl,
             'r_idef' => 0.0,

@@ -253,7 +253,7 @@ $a_valores = tablaDB_lista_ver_datos($data['a_valores'] ?? null);
 
 $oHashSelect = new HashF();
 $oHashSelect->setCamposForm('sel');
-$oHashSelect->setCamposNo('mod!sel!scroll_id!refresh');
+$oHashSelect->setCamposNo('mod!sel!scroll_id!refresh!ctx_eliminar');
 $a_camposHiddenSelect = array(
     'clase_info' => $Qclase_info_encoded,
     'aSerieBuscar' => $QaSerieBuscar,

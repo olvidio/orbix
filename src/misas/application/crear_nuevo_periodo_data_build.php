@@ -26,6 +26,7 @@ use src\misas\domain\value_objects\EncargoDiaTstart;
 use src\misas\domain\value_objects\PlantillaConfig;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * @see \src\misas\application\CrearNuevoPeriodoData::build()
@@ -807,6 +808,10 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
             'periodo' => $Qperiodo,
             'empieza_min' => $Qempiezamin,
             'empieza_max' => $Qempiezamax,
+            'ctx_update' => HashB::sign('cuadricula_update', [
+                'id_zona' => $Qid_zona,
+                'tipo_plantilla' => $QTipoPlantilla,
+            ]),
         ];
     }
 
@@ -821,5 +826,9 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
         'periodo' => $Qperiodo,
         'empieza_min' => $Qempiezamin,
         'empieza_max' => $Qempiezamax,
+        'ctx_update' => HashB::sign('cuadricula_update', [
+            'id_zona' => $Qid_zona,
+            'tipo_plantilla' => $QTipoPlantilla,
+        ]),
     ];
 }

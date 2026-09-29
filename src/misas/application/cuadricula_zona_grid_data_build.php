@@ -29,13 +29,23 @@ use src\usuarios\domain\value_objects\TipoPreferencia;
 use src\usuarios\domain\value_objects\ValorPreferencia;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\security\HashB;
+
+/**
+ * Cápsula HashB de la zona/plantilla que autoriza `cuadricula_update`.
+ */
+function misas_cuadricula_ctx_update(int $id_zona, string $tipo_plantilla): string
+{
+    return HashB::sign('cuadricula_update', [
+        'id_zona' => $id_zona,
+        'tipo_plantilla' => $tipo_plantilla,
+    ]);
+}
 
 /**
  * @param array<string, mixed> $in
  * @return array<string, mixed>
  * @see \src\misas\application\CuadriculaZonaGridData::build()
- * @param array<string, mixed> $in
- * @return array<string, mixed>
  */
 function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\CuadriculaZonaGridData $self): array
 {
@@ -946,6 +956,7 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
             'empieza_max' => $Qempiezamax,
             'fila' => $Qfila,
             'columna' => $Qcolumna,
+            'ctx_update' => misas_cuadricula_ctx_update($Qid_zona, $QTipoPlantilla),
         ];
     }
 
@@ -963,5 +974,6 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
         'empieza_max' => $Qempiezamax,
         'fila' => $Qfila,
         'columna' => $Qcolumna,
+        'ctx_update' => misas_cuadricula_ctx_update($Qid_zona, $QTipoPlantilla),
     ];
 }

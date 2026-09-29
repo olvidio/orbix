@@ -90,12 +90,12 @@
             return;
         }
         var $f = $(formulario);
-        var idTipo = $f.find('[name="id_tipo_activ"]').val();
-        if (!idTipo) {
+        var ctxEliminar = $f.find('[name="ctx_eliminar"]').val();
+        if (!ctxEliminar) {
             alert("{{ "Tipo no válido"|trans|raw }}");
             return;
         }
-        var data = 'id_tipo_activ=' + encodeURIComponent(idTipo) + '{{ h_src_excepcion_eliminar|raw }}';
+        var data = 'ctx_eliminar=' + encodeURIComponent(ctxEliminar);
         window.fnjs_activacion_mutacion_ajax('{{ url_src_excepcion_eliminar|raw }}', data);
     }
 

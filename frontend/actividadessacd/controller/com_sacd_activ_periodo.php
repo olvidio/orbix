@@ -114,7 +114,7 @@ $url_data = $buildHashedUrl(
 );
 $url_enviar = $buildHashedUrl(
     AppUrlConfig::srcBrowserUrl('/src/actividadessacd/comunicacion_activ_sacd_enviar'),
-    $camposForm
+    $camposForm . '!ctx_enviar'
 );
 $url_com_txt = HashF::link('frontend/actividadessacd/controller/com_sacd_txt.php');
 

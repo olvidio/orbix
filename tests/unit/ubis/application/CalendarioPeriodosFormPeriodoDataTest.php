@@ -6,6 +6,7 @@ namespace Tests\unit\ubis\application;
 
 use PHPUnit\Framework\TestCase;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
 use src\ubis\application\CalendarioPeriodosFormPeriodoData;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\domain\entity\CasaPeriodo;
@@ -20,7 +21,25 @@ final class CalendarioPeriodosFormPeriodoDataTest extends TestCase
         $useCase = new CalendarioPeriodosFormPeriodoData($this->repoConPeriodo($this->periodoStub(2, '2024-01-10', '2024-02-01')));
         $data = $useCase->execute(99);
 
-        $this->assertSame(['id_item', 'f_ini', 'f_fin', 'sel_sv', 'sel_sf', 'sel_res'], array_keys($data));
+        $this->assertSame(
+            ['id_item', 'f_ini', 'f_fin', 'sel_sv', 'sel_sf', 'sel_res', 'ctx_guardar', 'ctx_eliminar'],
+            array_keys($data)
+        );
+    }
+
+    public function test_execute_emite_ctx_guardar_y_ctx_eliminar_atados_al_id_item(): void
+    {
+        $useCase = new CalendarioPeriodosFormPeriodoData($this->repoConPeriodo($this->periodoStub(1, 'a', 'b')));
+        $data = $useCase->execute(42);
+
+        $this->assertSame(
+            ['id_item' => 42, 'id_ubi' => 0],
+            HashB::open($data['ctx_guardar'], 'calendario_periodo_guardar')
+        );
+        $this->assertSame(
+            ['id_item' => 42],
+            HashB::open($data['ctx_eliminar'], 'calendario_periodo_eliminar')
+        );
     }
 
     public function test_execute_sv_marca_sel_sv(): void

@@ -36,7 +36,8 @@ foreach ($aRows as $row) {
 
     $tarea_txt = $tarea === '' ? '' : "($tarea)";
     $mod = '<span class="link" onclick="fnjs_modificar(' . $id_item . ')" title="' . _("modificar") . '">' . _("modificar") . '</span>';
-    $drop = '<span class="link" onclick="fnjs_eliminar(' . $id_item . ')" title="' . _("eliminar") . '">' . _("eliminar") . '</span>';
+    $ctxEliminar = json_encode((string)($row['ctx_eliminar'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES);
+    $drop = '<span class="link" onclick="fnjs_eliminar(' . $ctxEliminar . ')" title="' . _("eliminar") . '">' . _("eliminar") . '</span>';
 
     echo "<tr class=\"$clase\"><td>($status_txt)</td><td>$responsable</td><td colspan=3>$fase $tarea_txt</td><td>$mod</td><td>$drop</td></tr>";
     echo '<tr><td></td><td></td><td>&nbsp;&nbsp;&nbsp;' . _("requisito") . ':</td><td>' . $fase_previa . '</td></tr>';

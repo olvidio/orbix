@@ -41,7 +41,10 @@ $url_crear_nuevo_periodo = 'frontend/misas/controller/crear_nuevo_periodo.php';
 $oHashNuevoPeriodo = new HashF();
 $oHashNuevoPeriodo->setUrl($url_crear_nuevo_periodo);
 $oHashNuevoPeriodo->setCamposForm('id_zona!tipoplantilla!periodo!empiezamin!empiezamax');
-$h_nuevo_periodo = $oHashNuevoPeriodo->linkSinValParams();
+$oHashNuevoPeriodo->setArrayCamposHidden([
+    'ctx_crear' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_crear'] ?? ''),
+]);
+$h_nuevo_periodo = '&' . $oHashNuevoPeriodo->getParamAjax();
 
 $url_ver_cuadricula_zona = 'frontend/misas/controller/ver_cuadricula_zona.php';
 $oHashZonaPeriodo = new HashF();

@@ -3,6 +3,7 @@
 namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Lectura del texto de comunicacion para un par (clave, idioma).
@@ -19,7 +20,7 @@ final class ListasComTxtGet
     }
 
     /**
-     * @return array{texto: string}
+     * @return array{texto: string, ctx_guardar: string}
      */
     public function execute(string $clave, string $idioma): array
     {
@@ -33,6 +34,12 @@ final class ListasComTxtGet
             $texto = (string)$cEncargoTextos[0]->getTexto();
         }
 
-        return ['texto' => $texto];
+        return [
+            'texto' => $texto,
+            'ctx_guardar' => HashB::sign('listas_com_txt_update', [
+                'clave' => $clave,
+                'idioma' => $idioma,
+            ]),
+        ];
     }
 }

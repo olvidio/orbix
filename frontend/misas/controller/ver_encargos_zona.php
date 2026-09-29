@@ -27,6 +27,7 @@ $rows = $data['rows'] ?? [];
 $tipos_encargo = $data['tipos_encargo'] ?? [];
 $centros = $data['centros'] ?? [];
 $idiomas = $data['idiomas'] ?? [];
+$ctx_nuevo = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_nuevo'] ?? '');
 
 $oDesplNoms = new Desplegable();
 $oDesplNoms->setNombre('id_tipo_enc');
@@ -39,18 +40,18 @@ $oDesplCentros->setOpciones(MisasDesplegableSupport::opciones($centros));
 
 $oDesplIdiomas = new Desplegable('idioma_enc', MisasDesplegableSupport::opciones($idiomas), '', true);
 
-// URL absoluta del endpoint backend: web\Hash genera el hash a partir de la
+// URL absoluta del endpoint backend: HashF genera el hash a partir de la
 // URL; el JS posteara contra la misma ruta para que el hash coincida.
 $url_guardar_encargo_zona = AppUrlConfig::srcBrowserUrl('/src/misas/guardar_encargo_zona');
 $oHashGuardar = new HashF();
 $oHashGuardar->setUrl($url_guardar_encargo_zona);
-$oHashGuardar->setCamposForm('id_enc!id_tipo_enc!id_ubi!id_zona!descripcion_lugar!encargo!idioma_enc!observ!orden!prioridad');
+$oHashGuardar->setCamposForm('ctx_guardar!id_tipo_enc!id_ubi!descripcion_lugar!encargo!idioma_enc!observ!orden!prioridad');
 $h_guardar_encargo_zona = $oHashGuardar->linkSinValParams();
 
 $url_eliminar_encargo_zona = AppUrlConfig::srcBrowserUrl('/src/misas/eliminar_encargo_zona');
 $oHashEliminar = new HashF();
 $oHashEliminar->setUrl($url_eliminar_encargo_zona);
-$oHashEliminar->setCamposForm('id_enc');
+$oHashEliminar->setCamposForm('ctx_eliminar');
 $h_eliminar_encargo_zona = $oHashEliminar->linkSinValParams();
 
 $url_ver_encargos_zona = 'frontend/misas/controller/ver_encargos_zona.php';
@@ -66,6 +67,7 @@ $a_campos = [
     'oDesplCentros' => $oDesplCentros,
     'oDesplIdiomas' => $oDesplIdiomas,
     'id_zona' => $Qid_zona,
+    'ctx_nuevo' => $ctx_nuevo,
     'url_guardar_encargo_zona' => $url_guardar_encargo_zona,
     'h_guardar_encargo_zona' => $h_guardar_encargo_zona,
     'url_eliminar_encargo_zona' => $url_eliminar_encargo_zona,

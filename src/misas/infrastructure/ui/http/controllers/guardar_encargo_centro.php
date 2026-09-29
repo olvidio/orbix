@@ -3,9 +3,21 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\misas\application\GuardarEncargoCentro;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$Qid_item = (string)\src\shared\domain\helpers\FilterPostGet::post('id_item');
+try {
+    $ctx = HashB::open(
+        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_guardar'),
+        'guardar_encargo_centro'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'id_item');
 $Qid_enc = (int)\src\shared\domain\helpers\FilterPostGet::post('id_enc', FILTER_VALIDATE_INT);
 $Qid_ctr = (int)\src\shared\domain\helpers\FilterPostGet::post('id_ctr', FILTER_VALIDATE_INT);
 

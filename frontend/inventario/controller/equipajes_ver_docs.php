@@ -21,7 +21,7 @@ $Qid_lugar = (int)filter_input(INPUT_POST, $Qnom_grupo);
 
 
 $url_backend = '/src/inventario/lista_docs_de_lugar';
-$a_campos_backend = [ 'id_lugar' => $Qid_lugar];
+$a_campos_backend = [ 'id_lugar' => $Qid_lugar, 'id_grupo' => $Qid_grupo, 'id_equipaje' => $Qid_equipaje];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $payload = InventarioPayload::postPayload($data);
 
@@ -48,6 +48,7 @@ $oHash->setArrayCamposHidden([
     'id_equipaje' => $Qid_equipaje,
     'id_lugar' => $Qid_lugar,
     'id_item_egm' => '',
+    'ctx_update_grupo' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_update_grupo'] ?? ''),
 ]);
 
 

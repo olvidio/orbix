@@ -25,6 +25,7 @@ $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $payload = InventarioPayload::postPayload($data);
 
 $a_valores = ActividadesListaSupport::datos($payload['a_valores'] ?? []);
+$ctx_del = \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_del'] ?? '');
 
 
 $a_cabeceras = [ucfirst(_("sigla")),
@@ -48,6 +49,7 @@ $oHashForm->setArrayCamposHidden([
     'id_grupo' => $Qid_grupo,
     'id_equipaje' => $Qid_equipaje,
     'id_item_egm' => $Qid_item_egm,
+    'ctx_del' => $ctx_del,
 ]);
 
 $a_campos = [

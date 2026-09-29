@@ -10,6 +10,7 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\shared\security\HashB;
 
 /**
  * Data builder del grid comparativo A vs B de plazas concedidas y
@@ -150,6 +151,9 @@ final class PlazasBalanceData
             $nom = $oActividad->getNom_activ();
             $dl_org = $oActividad->getDl_org();
             $a_valores[$i]['id'] = $id_activ;
+            $a_valores[$i]['ctx_update'] = HashB::sign('gestion_plazas_update', [
+                'id_activ' => (int) $id_activ,
+            ]);
             $a_valores[$i]['actividad'] = $nom;
             $a_valores[$i]['dlorg'] = $dl_org;
 

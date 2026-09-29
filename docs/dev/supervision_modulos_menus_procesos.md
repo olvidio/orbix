@@ -83,7 +83,7 @@ flowchart TB
 | Backend devuelve JSON `{ success, mensaje, data }` | Backend pinta HTML de tablas o `<select>` |
 | Un endpoint por acción (`_lista`, `_guardar`, `_eliminar`) | Dispatcher `switch ($que)` en código nuevo |
 | SQL solo en `Pg*Repository` | SQL en application o en la vista |
-| Enlaces a UI como `link_spec` (path + query) | `Hash::link` dentro de domain/application |
+| Enlaces a UI como `link_spec` (path + query) | `HashF::link` dentro de domain/application |
 | Fechas/JSON de PG con `ConverterDate` / `ConverterJson` | `format()` / `json_encode` sueltos al persistir |
 
 ### 2.2 Añadir una pantalla nueva (pasos de producto)

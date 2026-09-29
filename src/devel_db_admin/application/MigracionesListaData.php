@@ -6,11 +6,13 @@ namespace src\devel_db_admin\application;
 
 use src\devel_db_admin\domain\contracts\MigracionAplicadaRepositoryInterface;
 use src\devel_db_admin\domain\entity\MigracionAplicada;
+use src\shared\security\HashB;
 
 final class MigracionesListaData
 {
     public function __construct(
         private readonly MigracionAplicadaRepositoryInterface $repository,
+        private readonly ?string $migrationsDir = null,
     ) {
     }
 
@@ -19,7 +21,7 @@ final class MigracionesListaData
      */
     public function build(): array
     {
-        $scan = (new MigracionesEscanear($this->repository))->escanear();
+        $scan = (new MigracionesEscanear($this->repository, $this->migrationsDir))->escanear();
         $rows = [];
 
         foreach ($scan['migraciones'] as $migracion) {
@@ -31,6 +33,8 @@ final class MigracionesListaData
                 // Sin prefijo '#': Lista/SlickGrid añaden el separador; si el id ya lleva '#',
                 // el value del checkbox queda '#id' y el backend no coincide con migraciones[id].
                 'sel' => $id,
+                'ctx_ejecutar' => HashB::sign('migraciones_ejecutar', ['id' => $id]),
+                'ctx_quitar' => HashB::sign('migraciones_quitar_registro', ['id' => $id]),
                 'fichero' => $this->resumenArchivos($files),
                 'prefijo' => $this->toScalarString($migracion['prefijo'] ?? null),
                 'descripcion' => $this->toScalarString($migracion['descripcion'] ?? null),

@@ -3,6 +3,7 @@
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 /** @var CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository */
@@ -35,5 +36,10 @@ $apellidos_nombre = $oPersona !== null ? $oPersona->getApellidosNombre() : '';
 $data['nom'] = $nom === '' ? $apellidos_nombre : $nom;
 $data['apellidos_nombre'] = $apellidos_nombre;
 $data['id_nom'] = $id_nom;
+$data['ctx_guardar'] = HashB::sign('certificado_emitido_guardar', [
+    'nuevo' => 0,
+    'id_item' => $Qid_item,
+    'id_nom' => $id_nom,
+]);
 
 ContestarJson::enviar($error_txt, $data);

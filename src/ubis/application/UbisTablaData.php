@@ -4,6 +4,7 @@ namespace src\ubis\application;
 
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\ubis\application\services\UbiRepositoryResolver;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\Centro;
@@ -660,6 +661,7 @@ final class UbisTablaData
 
             $a_valores[$i] = [
                 'sel' => $id_ubi,
+                'ctx_trasladar' => HashB::sign('trasladar_ubis', ['id_ubi' => (int) $id_ubi]),
                 1 => [
                     'link_spec' => [
                         'path' => 'frontend/ubis/controller/home_ubis.php',

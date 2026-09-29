@@ -43,7 +43,7 @@ use InvalidArgumentException;
 final class HashB
 {
     /**
-     * Salt distinta de la que usa `\web\Hash` / `HashF` internamente
+     * Salt distinta de la firma de UI internamente
      * (`"a+a+"`), para que compartir el `session_id()` no implique
      * compartir firmas entre capas.
      */

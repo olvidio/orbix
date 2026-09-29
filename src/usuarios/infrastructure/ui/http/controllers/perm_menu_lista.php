@@ -4,6 +4,7 @@ use src\shared\domain\helpers\FilterPostGet;
 
 use src\permisos\domain\MenuDlPermissionBits;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
+use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $Qid_usuario = (string)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
@@ -22,7 +23,7 @@ foreach ($oGrupoGrupoPermMenu as $oPermMenu) {
     $id_item = $oPermMenu->getId_item();
     $menu_perm = $oPermMenu->getMenu_perm();
 
-    $a_valores[$i]['sel'] = "$Qid_usuario#$id_item";
+    $a_valores[$i]['sel'] = HashB::sign('perm_menu_eliminar', ['id_item' => $id_item]);
     $a_valores[$i][1] = MenuDlPermissionBits::listaTxt((int)$menu_perm);
 }
 

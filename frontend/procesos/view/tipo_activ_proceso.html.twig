@@ -32,9 +32,9 @@ p.tres:hover {
 }
 </style>
 <script>
-fnjs_asignar_proceso=function(evt,id_tipo_activ,propio,id_tipo_proceso){
+fnjs_asignar_proceso=function(evt,ctx,propio,id_tipo_proceso){
 	var url='{{ url_asignar|raw }}';
-	var parametros='id_tipo_activ='+id_tipo_activ+'&propio='+propio+'&id_tipo_proceso='+id_tipo_proceso+'{{ h_asignar|raw }}';
+	var parametros='ctx_asignar='+encodeURIComponent(ctx)+'&propio='+propio+'&id_tipo_proceso='+id_tipo_proceso+'{{ h_asignar|raw }}';
 
 	evt.preventDefault(); // que no siga pasanmdo el evento a submit.
 	evt.stopPropagation();

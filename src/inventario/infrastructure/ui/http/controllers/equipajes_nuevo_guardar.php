@@ -5,9 +5,21 @@ use src\shared\infrastructure\DependencyResolver;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\entity\Equipaje;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$Qid_ubi_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi_activ');
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_nuevo'),
+        'equipajes_nuevo_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$Qid_ubi_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_ubi_activ');
 $Qnom_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nom_equipaje');
 $Qids_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ids_activ');
 $Qf_ini = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_ini');

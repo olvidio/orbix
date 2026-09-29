@@ -4,6 +4,7 @@ namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
+use src\shared\security\HashB;
 
 /**
  * Datos para la pantalla de textos de comunicacion
@@ -22,7 +23,7 @@ final class ListasComTxtData
     }
 
     /**
-     * @return array{ a_locales: array<string, string>, texto_inicial: string }
+     * @return array{ a_locales: array<string, string>, texto_inicial: string, ctx_guardar: string }
      */
     public function execute(): array
     {
@@ -40,6 +41,10 @@ final class ListasComTxtData
         return [
             'a_locales' => $a_locales,
             'texto_inicial' => $texto_inicial,
+            'ctx_guardar' => HashB::sign('listas_com_txt_update', [
+                'clave' => 'com_sacd',
+                'idioma' => 'es',
+            ]),
         ];
     }
 

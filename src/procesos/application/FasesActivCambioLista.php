@@ -8,6 +8,7 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use src\shared\security\HashB;
 use frontend\shared\web\Periodo;
 
 /**
@@ -180,6 +181,11 @@ class FasesActivCambioLista
                 $num_ok++;
             }
             $a_valores[$i]['sel'] = $id_activ;
+            $a_valores[$i]['ctx_update'] = HashB::sign('fases_activ_cambio_update', [
+                'id_activ' => (int) $id_activ,
+                'id_fase_nueva' => $Qid_fase_nueva,
+                'accion' => $Qaccion,
+            ]);
             $a_valores[$i][1] = $nom_activ;
             $a_valores[$i][2] = $mensaje;
         }

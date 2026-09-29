@@ -28,4 +28,4 @@ $oTabla->setCabeceras($lista['a_cabeceras']);
 $oTabla->setBotones($lista['a_botones']);
 $oTabla->setConSel($lista['con_sel']);
 $oTabla->setDatos($lista['a_valores']);
-AjaxJsonSupport::html($oTabla->mostrar_tabla());
+AjaxJsonSupport::html($oTabla->mostrar_tabla_html());

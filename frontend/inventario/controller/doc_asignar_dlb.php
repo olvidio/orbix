@@ -45,6 +45,7 @@ $a_valores = $view['a_valores'];
 $nombreDoc = $view['nombreDoc'];
 $isNumerado = $view['isNumerado'];
 $sCamposForm = $view['sCamposForm'];
+$ctx_guardar = $view['ctx_guardar'];
 
 if ($isNumerado) {
     $num_txt = _('número de registro');
@@ -68,6 +69,7 @@ $oHash->setArrayCamposHidden([
     'id_tipo_doc' => $Qid_tipo_doc,
     'numerado' => $isNumerado,
     'str_selected_id' => $str_selected_id,
+    'ctx_guardar' => $ctx_guardar,
 ]);
 
 $a_campos = [

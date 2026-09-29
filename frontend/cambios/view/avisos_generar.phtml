@@ -35,7 +35,7 @@
             url: cfg.url_eliminar_fecha || '',
             type: 'post',
             dataType: 'json',
-            data: 'f_fin=' + encodeURIComponent(f_fin) + (cfg.h_eliminar_fecha || '')
+            data: 'f_fin=' + encodeURIComponent(f_fin) + '&ctx_eliminar_fecha=' + encodeURIComponent(cfg.ctx_eliminar_fecha || '') + (cfg.h_eliminar_fecha || '')
         }).done(function (rta) {
             if (!rta || rta.success !== true) {
                 alert(<?= json_encode(_("respuesta") . ": ") ?> + (rta && rta.mensaje ? rta.mensaje : ''));

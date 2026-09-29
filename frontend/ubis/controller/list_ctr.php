@@ -73,7 +73,7 @@ $oHash->setCamposForm('loc!que_lista');
 
 $oHash1 = new HashF();
 $oHash1->setCamposForm('sel');
-$oHash1->setcamposNo('scroll_id!dl_dst');
+$oHash1->setcamposNo('scroll_id!dl_dst!ctx_trasladar');
 $a_camposHidden1 = [
     'que_lista' => $Qque_lista,
     'dl_dst' => '',

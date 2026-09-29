@@ -6,6 +6,7 @@ use src\actividadtarifas\application\services\TipoTarifaDropdown;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 
 /**
  * Data builder para el formulario modificar/nuevo de
@@ -55,6 +56,13 @@ final class RelacionTarifaFormData
         }
 
         $opciones_tarifa = $this->tipoTarifaDropdown->opciones($isfsv);
+        $token_update = HashB::sign(
+            'relacion_tarifa_update',
+            $es_nuevo ? [] : ['id_item' => (int)$id_item]
+        );
+        $token_eliminar = $es_nuevo
+            ? ''
+            : HashB::sign('relacion_tarifa_eliminar', ['id_item' => (int)$id_item]);
 
         return [
             'es_nuevo' => $es_nuevo,
@@ -64,6 +72,8 @@ final class RelacionTarifaFormData
             'isfsv' => $isfsv,
             'id_tarifa_sel' => $id_tarifa_sel,
             'opciones_tarifa' => $opciones_tarifa,
+            'token_update' => $token_update,
+            'token_eliminar' => $token_eliminar,
         ];
     }
 }

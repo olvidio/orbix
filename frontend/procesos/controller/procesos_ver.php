@@ -19,6 +19,7 @@ $Qid_tipo_proceso = ProcesosPostInput::postInt('id_tipo_proceso');
 $data = PostRequest::getDataFromUrl('/src/procesos/procesos_ver_data', [
     'mod' => $Qmod,
     'id_item' => $Qid_item,
+    'id_tipo_proceso' => $Qid_tipo_proceso,
 ]);
 $ver = ProcesosPayload::verFromPayload($data);
 
@@ -84,6 +85,7 @@ $oHash->setCamposChk('id_tarea_previa');
 $a_camposHidden = [
     'id_item' => $Qid_item,
     'id_tipo_proceso' => $Qid_tipo_proceso,
+    'ctx_update' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_update'] ?? ''),
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 

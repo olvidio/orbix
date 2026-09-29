@@ -128,7 +128,7 @@ condicionales.
 3. **`src/actividadessacd/infrastructure/ui/http/controllers/`** — 7
    controllers finos que hacen `ContestarJson::enviar($err, $data)`.
 4. **`frontend/actividadessacd/controller/activ_sacd.php`** — entrada del
-   menu; construye las URLs firmadas con `Hash::linkSinVal` y las pasa
+   menu; construye las URLs firmadas con `HashF::linkSinVal` y las pasa
    al view.
 5. **`frontend/actividadessacd/view/activ_sacd.phtml`** — migrado desde
    twig; JS JSON-aware (`dataType: 'json'`, helpers que construyen las
@@ -391,7 +391,7 @@ El controlador hace 2 cosas en un mismo endpoint:
    `/src/actividadessacd/sacd_asignar_auto` (POST).
 4. **`frontend/actividadessacd/controller/asignar_sacd_auto.php`** —
    calcula la fecha de inicio de curso localmente (para mostrarla en la
-   pagina), construye URL firmada con `Hash::linkSinVal`, pasa al view.
+   pagina), construye URL firmada con `HashF::linkSinVal`, pasa al view.
 5. **`frontend/actividadessacd/view/asignar_sacd_auto.phtml`** — pagina
    de confirmacion con boton "continuar" que llama al endpoint por AJAX
    y pinta el mensaje resultado en el propio div.
@@ -488,7 +488,7 @@ apps/actividadessacd/
 7. **Borrar** `apps/actividadessacd/controller/com_sacd_txt_ajax.php` y
    `apps/actividadessacd/view/com_sacd_txt.html.twig`.
 8. **Actualizar caller** `apps/actividadessacd/controller/com_sacd_activ_periodo.php`
-   para que `$url_com_txt` apunte al frontend (Hash::link sobre la
+   para que `$url_com_txt` apunte al frontend (HashF::link sobre la
    nueva ruta). Este fichero sera migrado integramente en el slice 4,
    pero ya necesita la URL nueva.
 9. **Documentacion**: `mapa_com_sacd_activ_periodo.md` (el link aun

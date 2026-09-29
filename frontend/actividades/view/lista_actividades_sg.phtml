@@ -27,9 +27,14 @@
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
             if (confirm(<?= json_encode(_("¿Está seguro que desea borrar esta actividad?")) ?>)) {
+                var packed = fnjs_sel_ctx_serialize(formulario, 'ctx_eliminar');
+                if (packed.count === 0) {
+                    alert(<?= json_encode(_("Operación no autorizada")) ?>);
+                    return;
+                }
                 $('#mod').val(que_val);
                 let url = "src/actividades/actividad_eliminar";
-                let datos = $(formulario).serialize();
+                let datos = packed.datos;
 
                 let request = $.ajax({
                     data: datos,

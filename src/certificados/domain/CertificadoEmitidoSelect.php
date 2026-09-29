@@ -5,6 +5,7 @@ namespace src\certificados\domain;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 class CertificadoEmitidoSelect
@@ -96,6 +97,7 @@ class CertificadoEmitidoSelect
             $nom_alumno = ($nom === null || $nom === '') ? $nom_db : $nom;
 
             $a_valores[$i]['sel'] = $id_item;
+            $a_valores[$i]['ctx_eliminar'] = HashB::sign('certificado_emitido_delete', ['id_item' => (int) $id_item]);
             $a_valores[$i][1] = $certificadoTxt;
             $a_valores[$i][2] = $f_certificado;
             $a_valores[$i][3] = $nom_alumno;
