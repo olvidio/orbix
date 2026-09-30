@@ -155,8 +155,14 @@ final class ListaAsisConjuntoActivData
                 $aOperOt['dl_org'] = '!=';
             }
 
-            /** @var ListaPlazasConjuntoActividades $oListaPlazasOtras */
-            $oListaPlazasOtras = $this->container->get(ListaPlazasConjuntoActividades::class);
+            if ($oListaPlazasDl !== null) {
+                // PHP-DI cachea get(): sin clonar, el filtro de otras dl/r pisa el de la propia.
+                $oListaPlazasOtras = clone $oListaPlazasDl;
+                $oListaPlazasOtras->setSacd(false);
+            } else {
+                /** @var ListaPlazasConjuntoActividades $oListaPlazasOtras */
+                $oListaPlazasOtras = $this->container->get(ListaPlazasConjuntoActividades::class);
+            }
             $oListaPlazasOtras->setMi_dele($mi_dele);
             $oListaPlazasOtras->setWhere($aWhereOt);
             $oListaPlazasOtras->setOperador($aOperOt);
@@ -165,12 +171,12 @@ final class ListaAsisConjuntoActivData
 
         $html = '';
         if ($oListaPlazasDl !== null) {
-            $html .= '<h3>' . ucfirst(_('actividades de la dl')) . '</h3>';
+            $html .= '<h3>' . ucfirst(_('actividades de la dl/r')) . '</h3>';
             $oListaDl = $oListaPlazasDl->getLista();
             $html .= $oListaDl->listaPaginada();
         }
         if ($oListaPlazasOtras !== null) {
-            $html .= '<h3>' . ucfirst(_('actividades de otras dl')) . '</h3>';
+            $html .= '<h3>' . ucfirst(_('actividades de otras dl/r')) . '</h3>';
             $oListaOtras = $oListaPlazasOtras->getLista();
             $html .= $oListaOtras->listaPaginada();
         }

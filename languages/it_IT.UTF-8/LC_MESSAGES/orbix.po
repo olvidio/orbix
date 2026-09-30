@@ -4887,12 +4887,12 @@ msgid "No se encontró el asistente para esta actividad."
 msgstr "Impossibile trovare la fase %s per questa attività %s(%s)"
 
 #: src/asistentes/application/ListaAsisConjuntoActivData.php:168
-msgid "actividades de la dl"
-msgstr "attività dl"
+msgid "actividades de la dl/r"
+msgstr "attività dl/r"
 
 #: src/asistentes/application/ListaAsisConjuntoActivData.php:173
-msgid "actividades de otras dl"
-msgstr "altre attività dl"
+msgid "actividades de otras dl/r"
+msgstr "altre attività dl/r"
 
 #: src/asistentes/application/ListaAsistentesData.php:106 src/asistentes/application/ListaAsistentesData.php:110
 #: src/asistentes/application/ListaAsistentesData.php:111 src/asistentes/application/ListaAsistentesData.php:161

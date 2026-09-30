@@ -5331,12 +5331,12 @@ msgid "No se encontró el asistente para esta actividad."
 msgstr "this charge already exists for this activity"
 
 #: src/asistentes/application/ListaAsisConjuntoActivData.php:168
-msgid "actividades de la dl"
-msgstr "dl activities"
+msgid "actividades de la dl/r"
+msgstr "dl/r activities"
 
 #: src/asistentes/application/ListaAsisConjuntoActivData.php:173
-msgid "actividades de otras dl"
-msgstr "other activities dl"
+msgid "actividades de otras dl/r"
+msgstr "other dl/r activities"
 
 #: src/asistentes/application/ListaAsistentesData.php:106 src/asistentes/application/ListaAsistentesData.php:110
 #: src/asistentes/application/ListaAsistentesData.php:111 src/asistentes/application/ListaAsistentesData.php:161

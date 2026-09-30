@@ -2490,11 +2490,11 @@ msgid "pendiente de solicitar"
 msgstr ""
 
 #: asistentes/controller/lista_asis_conjunto_activ.php:156
-msgid "actividades de la dl"
+msgid "actividades de la dl/r"
 msgstr ""
 
 #: asistentes/controller/lista_asis_conjunto_activ.php:162
-msgid "actividades de otras dl"
+msgid "actividades de otras dl/r"
 msgstr ""
 
 #: asistentes/controller/lista_asistentes.php:180

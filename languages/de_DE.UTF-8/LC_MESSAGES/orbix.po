@@ -4927,12 +4927,12 @@ msgid "No se encontró el asistente para esta actividad."
 msgstr "Für diese Aktivität gibt es bereits dieses Amt"
 
 #: src/asistentes/application/ListaAsisConjuntoActivData.php:168
-msgid "actividades de la dl"
-msgstr "Aktivitäten der dl"
+msgid "actividades de la dl/r"
+msgstr "Aktivitäten der dl/r"
 
 #: src/asistentes/application/ListaAsisConjuntoActivData.php:173
-msgid "actividades de otras dl"
-msgstr "Aktivitäten anderer dl"
+msgid "actividades de otras dl/r"
+msgstr "Aktivitäten anderer dl/r"
 
 #: src/asistentes/application/ListaAsistentesData.php:106 src/asistentes/application/ListaAsistentesData.php:110 src/asistentes/application/ListaAsistentesData.php:111
 #: src/asistentes/application/ListaAsistentesData.php:161 src/asistentes/application/ListaAsistentesData.php:165 src/asistentes/application/ListaAsistentesData.php:166
