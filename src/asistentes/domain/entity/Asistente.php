@@ -344,12 +344,13 @@ class Asistente extends Entity implements AggregateRoot
     public function setPlazaComprobando(
         ?int $plaza = null,
         ?PlazaPropietarioAsignacionInterface $plazaPropietario = null,
+        bool $permitirSinPlazaLibre = false,
     ): string {
         $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
         $plaza = (int) $plaza;
         $this->plaza = PlazaId::fromNullableInt($plaza);
 
-        return $plazaPropietario?->asegurar($this, $plaza_actual, $plaza) ?? '';
+        return $plazaPropietario?->asegurar($this, $plaza_actual, $plaza, $permitirSinPlazaLibre) ?? '';
     }
 
     /**
@@ -360,6 +361,7 @@ class Asistente extends Entity implements AggregateRoot
     public function setPlazaVoComprobando(
         PlazaId|int|null $oPlazaId = null,
         ?PlazaPropietarioAsignacionInterface $plazaPropietario = null,
+        bool $permitirSinPlazaLibre = false,
     ): string {
         $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
         $iplaza = $oPlazaId instanceof PlazaId
@@ -368,7 +370,7 @@ class Asistente extends Entity implements AggregateRoot
         $iplaza = (int) $iplaza;
         $this->plaza = PlazaId::fromNullableInt($iplaza);
 
-        return $plazaPropietario?->asegurar($this, $plaza_actual, $iplaza) ?? '';
+        return $plazaPropietario?->asegurar($this, $plaza_actual, $iplaza, $permitirSinPlazaLibre) ?? '';
     }
 
     /**

@@ -10,7 +10,14 @@ use src\asistentes\domain\entity\Asistente;
 interface PlazaPropietarioAsignacionInterface
 {
     /**
+     * @param bool $permitirSinPlazaLibre Incorporar 1ª petición: mantiene el propietario ya
+     *        elegido aunque su cupo esté lleno. El resto de altas debe dejarlo en false.
      * @return string vacio si ok, mensaje de error si no hay propiedad posible
      */
-    public function asegurar(Asistente $asistente, int $plazaActual, int $plazaNueva): string;
+    public function asegurar(
+        Asistente $asistente,
+        int $plazaActual,
+        int $plazaNueva,
+        bool $permitirSinPlazaLibre = false,
+    ): string;
 }

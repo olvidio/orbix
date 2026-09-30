@@ -18,8 +18,12 @@ final class PlazaPropietarioAsignacion implements PlazaPropietarioAsignacionInte
     ) {
     }
 
-    public function asegurar(Asistente $asistente, int $plazaActual, int $plazaNueva): string
-    {
+    public function asegurar(
+        Asistente $asistente,
+        int $plazaActual,
+        int $plazaNueva,
+        bool $permitirSinPlazaLibre = false,
+    ): string {
         if (!ConfigGlobal::is_app_installed('actividadplazas')) {
             return '';
         }
@@ -35,7 +39,10 @@ final class PlazaPropietarioAsignacion implements PlazaPropietarioAsignacionInte
 
         $propietario = $asistente->getPropietarioVo()?->value() ?? '';
         if ($propietario !== '' && $propietario !== 'xxx') {
-            if (!$this->resumenPlazasService->esPropiedadClaveDisponible($propietario, $dl_de_paso)) {
+            if (
+                !$permitirSinPlazaLibre
+                && !$this->resumenPlazasService->esPropiedadClaveDisponible($propietario, $dl_de_paso)
+            ) {
                 return (string) _('Ya están todas las plazas ocupadas');
             }
 

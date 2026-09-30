@@ -22,6 +22,7 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
  * o 'pedida' (si es de otra dl).
  * No incorpora a personas que ya tienen una asistencia marcada como
  * propia en una actividad del listado.
+ * Si el cupo ya está lleno, igual se apunta (excepción de esta acción).
  *
  * Sucesor de `apps/actividadplazas/controller/incorporar_peticion.php`.
  */
@@ -153,7 +154,12 @@ final class PeticionesIncorporar
             $oAsistenteNew->setId_nom($id_nom);
             $oAsistenteNew->setPropio(true);
             $oAsistenteNew->setPropietarioVo("$dl>$mi_dele");
-            $err_plaza = $oAsistenteNew->setPlazaComprobando(PlazaId::ASIGNADA, $this->plazaPropietarioAsignacion);
+            // Excepción de incorporar: se apunta aunque el cupo de esa actividad ya esté lleno.
+            $err_plaza = $oAsistenteNew->setPlazaComprobando(
+                PlazaId::ASIGNADA,
+                $this->plazaPropietarioAsignacion,
+                true,
+            );
             if ($err_plaza !== '') {
                 $msg_err = $err_plaza;
                 continue;

@@ -177,6 +177,28 @@ class AsistenteTest extends myTest
         }
     }
 
+    public function test_setPlazaVoComprobando_sin_plazas_permite_incorporar_peticion(): void
+    {
+        $configBackup = $this->instalarAppActividadPlazas();
+
+        $resumenSvc = $this->createMock(ResumenPlazasService::class);
+        $resumenSvc->expects($this->never())->method('esPropiedadClaveDisponible');
+        $resumenSvc->expects($this->never())->method('getPrimeraPropiedadLibre');
+        $asignacion = new PlazaPropietarioAsignacion($resumenSvc, $this->createStub(PersonaFinderService::class));
+
+        try {
+            $this->Asistente->setId_activ(10);
+            $this->Asistente->setPropietarioVo('dlA>dlB');
+            $err = $this->Asistente->setPlazaVoComprobando(PlazaId::ASIGNADA, $asignacion, true);
+
+            $this->assertSame('', $err);
+            $this->assertSame(PlazaId::ASIGNADA, $this->Asistente->getPlazaVo()->value());
+            $this->assertSame('dlA>dlB', $this->Asistente->getPropietarioVo()->value());
+        } finally {
+            $this->restaurarConfigApps($configBackup);
+        }
+    }
+
     public function test_setPlazaVoComprobando_con_propietario_sin_plazas_devuelve_error(): void
     {
         $configBackup = $this->instalarAppActividadPlazas();
