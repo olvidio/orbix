@@ -8,6 +8,36 @@ final class EncargoDiaStatus
     public const STATUS_COMUNICADO_SACD = 2;
     public const STATUS_COMUNICADO_CTR = 3;
 
+    /**
+     * @return array<int, string>
+     */
+    public static function getArrayStatus(): array
+    {
+        return [
+            self::STATUS_PROPUESTA => _('propuesta'),
+            self::STATUS_COMUNICADO_SACD => _('visible sacd'),
+            self::STATUS_COMUNICADO_CTR => _('visible ctr'),
+        ];
+    }
+
+    /**
+     * Estado a persistir cuando la celda no trae uno válido. Por defecto, propuesta.
+     */
+    public static function valueOrPropuesta(?int $status): int
+    {
+        if ($status !== null && array_key_exists($status, self::getArrayStatus())) {
+            return $status;
+        }
+
+        return self::STATUS_PROPUESTA;
+    }
+
+    /** Celda del plan que no se borra al pulsar «preparar» en nuevo plan. */
+    public static function preserveWhenPreparingPlan(?int $status): bool
+    {
+        return $status === self::STATUS_COMUNICADO_CTR;
+    }
+
     private int $value;
 
     public function __construct(int $value)
@@ -16,25 +46,13 @@ final class EncargoDiaStatus
         $this->value = $value;
     }
 
-    /**
-     * @return list<int>
-     */
-    private static function validStatuses(): array
-    {
-        return [
-            self::STATUS_PROPUESTA,
-            self::STATUS_COMUNICADO_SACD,
-            self::STATUS_COMUNICADO_CTR,
-        ];
-    }
-
     private function validate(int $value): void
     {
-        if (!in_array($value, self::validStatuses(), true)) {
+        if (!array_key_exists($value, self::getArrayStatus())) {
             throw new \InvalidArgumentException(
                 sprintf('Invalid status value: %d. Valid values are: %s',
                     $value,
-                    implode(', ', self::validStatuses())
+                    implode(', ', array_keys(self::getArrayStatus()))
                 )
             );
         }
@@ -43,6 +61,11 @@ final class EncargoDiaStatus
     public function value(): int
     {
         return $this->value;
+    }
+
+    public function getDescripcion(): string
+    {
+        return self::getArrayStatus()[$this->value];
     }
 
     public function __toString(): string

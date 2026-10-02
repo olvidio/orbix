@@ -185,7 +185,7 @@ La tabla tiene encargos en filas, días en columnas, y en cada celda las **inici
 
 El que solo consulta **no ve el borrador**. Mientras el plan de la zona está en **propuesta**, esas celdas no salen aquí.
 
-Cuando quien organiza pasa el estado a **comunicado sacerdotes** o **comunicado centros**, sí aparecen.
+Cuando quien organiza pasa el estado a **visible sacd** o **visible ctr**, sí aparecen.
 
 (El jefe de zona, al consultar, sí ve también las propuestas de su zona.)
 
@@ -282,7 +282,7 @@ La plantilla es el **modelo repetible** (una semana tipo, con o sin tratamiento 
 1. Elegir **zona**, **tipo de plantilla** (la que se usará como origen) y **periodo** (próxima semana, próximo mes, u **otro** con fechas).
 2. Pulsar **preparar**.
 
-Copia la plantilla a esas fechas reales. **Borra todo lo que ya hubiera en ese periodo para esa zona.** No usarlo para un retoque puntual: para eso está **Modificar plan**.
+Copia la plantilla a esas fechas reales. **Borra todo lo que ya hubiera en ese periodo para esa zona**, salvo las celdas que ya estén en **visible ctr** (esas se mantienen como están). No usarlo para un retoque puntual: para eso está **Modificar plan**.
 
 Tras preparar, se ve la cuadrícula del plan generado. Suele quedar en estado **propuesta** (los sacerdotes que solo consultan **aún no lo ven**).
 
@@ -320,10 +320,10 @@ Estados:
 | Estado | Efecto |
 |--------|--------|
 | **propuesta** | Borrador. El sacerdote que solo consulta **no lo ve**. |
-| **comunicado sacerdotes** | Ya sale en **Plan sacerdote**. |
-| **comunicado centros** | También sale en **Plan ctr** para los centros. |
+| **visible sacd** | Ya sale en **Plan sacerdote**. |
+| **visible ctr** | También sale en **Plan ctr** para los centros. |
 
-Secuencia habitual: trabajar en propuesta → comunicar a sacerdotes → cuando esté cerrado, comunicar a centros.
+Secuencia habitual: trabajar en propuesta → visible sacd → cuando esté cerrado, visible ctr.
 
 ### 5.4. Si no sale lo esperado (organización)
 
@@ -348,4 +348,4 @@ Secuencia habitual: trabajar en propuesta → comunicar a sacerdotes → cuando 
 
 **Quien consulta:** **Plan sacerdote** (y si quiere **Plan ctr**). Solo ve lo **comunicado**.
 
-**Quien organiza:** debe ser **jefe de la zona**. Encargos e iniciales → plantilla → **nuevo plan** → **modificar plan** → **cambiar estado** a comunicado sacerdotes (y luego centros).
+**Quien organiza:** debe ser **jefe de la zona**. Encargos e iniciales → plantilla → **nuevo plan** → **modificar plan** → **cambiar estado** a visible sacd (y luego visible ctr).

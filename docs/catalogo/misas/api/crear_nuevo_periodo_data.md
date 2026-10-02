@@ -50,7 +50,7 @@ Crea asignaciones EncargoDia para un nuevo periodo de plan de misas a partir de 
 
 ### Flujo web (botón preparar)
 
-`preparar_plan_de_misas.phtml` → `fnjs_nuevo_periodo()` → `crear_nuevo_periodo.php` → este endpoint. **Borra** los `EncargoDia` del periodo en la zona y los recrea desde la plantilla. Luego el front recarga la cuadrícula con `tipo_plantilla=p`.
+`preparar_plan_de_misas.phtml` → `fnjs_nuevo_periodo()` → `crear_nuevo_periodo.php` → este endpoint. **Borra** los `EncargoDia` del periodo en la zona (excepto los que ya están en estado **visible ctr**, que se mantienen tal cual) y recrea el resto desde la plantilla. Luego el front recarga la cuadrícula con `tipo_plantilla=p`.
 
 Ejemplo POST:
 

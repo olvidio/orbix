@@ -115,4 +115,47 @@ class EncargoDiaStatusTest extends myTest
         $status = new EncargoDiaStatus(EncargoDiaStatus::STATUS_PROPUESTA);
         $this->assertEquals('1', (string)$status);
     }
+
+    public function test_getArrayStatus_etiquetas()
+    {
+        $this->assertSame(
+            [
+                EncargoDiaStatus::STATUS_PROPUESTA => 'propuesta',
+                EncargoDiaStatus::STATUS_COMUNICADO_SACD => 'visible sacd',
+                EncargoDiaStatus::STATUS_COMUNICADO_CTR => 'visible ctr',
+            ],
+            EncargoDiaStatus::getArrayStatus()
+        );
+    }
+
+    public function test_preserveWhenPreparingPlan_solo_visible_ctr()
+    {
+        $this->assertTrue(
+            EncargoDiaStatus::preserveWhenPreparingPlan(EncargoDiaStatus::STATUS_COMUNICADO_CTR)
+        );
+        $this->assertFalse(
+            EncargoDiaStatus::preserveWhenPreparingPlan(EncargoDiaStatus::STATUS_PROPUESTA)
+        );
+        $this->assertFalse(
+            EncargoDiaStatus::preserveWhenPreparingPlan(EncargoDiaStatus::STATUS_COMUNICADO_SACD)
+        );
+        $this->assertFalse(EncargoDiaStatus::preserveWhenPreparingPlan(null));
+    }
+
+    public function test_valueOrPropuesta_usa_propuesta_si_falta_o_no_es_valido()
+    {
+        $this->assertSame(EncargoDiaStatus::STATUS_PROPUESTA, EncargoDiaStatus::valueOrPropuesta(null));
+        $this->assertSame(EncargoDiaStatus::STATUS_PROPUESTA, EncargoDiaStatus::valueOrPropuesta(9));
+        $this->assertSame(
+            EncargoDiaStatus::STATUS_COMUNICADO_CTR,
+            EncargoDiaStatus::valueOrPropuesta(EncargoDiaStatus::STATUS_COMUNICADO_CTR)
+        );
+    }
+
+    public function test_getDescripcion_devuelve_la_etiqueta_del_estado()
+    {
+        $this->assertSame('propuesta', EncargoDiaStatus::propuesta()->getDescripcion());
+        $this->assertSame('visible sacd', EncargoDiaStatus::comunicadoSacd()->getDescripcion());
+        $this->assertSame('visible ctr', EncargoDiaStatus::comunicadoCtr()->getDescripcion());
+    }
 }

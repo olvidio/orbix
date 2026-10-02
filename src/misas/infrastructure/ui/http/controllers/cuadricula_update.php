@@ -26,6 +26,8 @@ $Qid_enc = (int)\src\shared\domain\helpers\FilterPostGet::post('id_enc');
 $Qdia_iso = (string)\src\shared\domain\helpers\FilterPostGet::post('dia');
 $QTipoPlantilla = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'tipo_plantilla');
 $Qid_zona = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_zona');
+$QstatusRaw = \src\shared\domain\helpers\FilterPostGet::post('status');
+$Qstatus = ($QstatusRaw === null || $QstatusRaw === '') ? null : (int)$QstatusRaw;
 
 /** @var CuadriculaUpdate $useCase */
 $useCase = DependencyResolver::get(CuadriculaUpdate::class);
@@ -39,6 +41,7 @@ $result = $useCase->execute(
     $Qdia_iso,
     $QTipoPlantilla,
     $Qid_zona,
+    $Qstatus,
 );
 
 ContestarJson::enviar($result['error'], ['meta' => $result['meta']]);

@@ -63,6 +63,7 @@ class CuadriculaUpdate
         string $dia_iso,
         string $tipo_plantilla,
         int $id_zona,
+        ?int $status = null,
     ): array {
         if (empty($uuid_item)) {
             return ['error' => _('Falta el id_item'), 'meta' => []];
@@ -76,21 +77,6 @@ class CuadriculaUpdate
             $oEncargoDia->setId_enc($id_enc);
         }
         $id_sacd_anterior = $oEncargoDia->getId_nom();
-        $estado = $oEncargoDia->getStatus();
-
-        // Color de la celda (misa) segun estado, solo en vista `plan de misas`.
-        $color_misa = '';
-        if (trim($tipo_plantilla) === PlantillaConfig::PLAN_DE_MISAS) {
-            if ($estado === EncargoDiaStatus::STATUS_PROPUESTA) {
-                $color_misa = 'rojoclaro';
-            }
-            if ($estado === EncargoDiaStatus::STATUS_COMUNICADO_SACD) {
-                $color_misa = 'amarilloclaro';
-            }
-            if ($estado === EncargoDiaStatus::STATUS_COMUNICADO_CTR) {
-                $color_misa = 'verdeclaro';
-            }
-        }
 
         $error_txt = '';
         $id_nom_int = null;
@@ -108,11 +94,18 @@ class CuadriculaUpdate
             $oEncargoDia->setTstart(new EncargoDiaTstart($dia_iso, $tstart));
             $oEncargoDia->setTend(new EncargoDiaTend($dia_iso, $tend));
             $oEncargoDia->setObserv($observ);
+            if (trim($tipo_plantilla) === PlantillaConfig::PLAN_DE_MISAS) {
+                $oEncargoDia->setStatusVo(EncargoDiaStatus::fromInt(
+                    EncargoDiaStatus::valueOrPropuesta($status)
+                ));
+            }
 
             if ($this->encargoDiaRepository->Guardar($oEncargoDia) === false) {
                 $error_txt .= $this->encargoDiaRepository->getErrorTxt();
             }
         }
+
+        $color_misa = self::colorMisa($oEncargoDia->getStatus(), $tipo_plantilla);
 
         // Datos de la zona: sacds y en que dias de la semana estan.
         $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_zona' => $id_zona], []);
@@ -179,6 +172,7 @@ class CuadriculaUpdate
             'error' => '',
             'meta' => [
                 'color_misa' => $color_misa,
+                'status' => $oEncargoDia->getStatus(),
                 'id_sacd_anterior' => $id_sacd_anterior,
                 'texto_anterior' => $texto_anterior,
                 'color_fondo_anterior' => $color_fondo_anterior,
@@ -395,5 +389,19 @@ class CuadriculaUpdate
             . 'MDZ:' . $misas_dia_zona . 'Z:' . ($esta_en_zona_flag ? '1' : '0');
 
         return [$texto, $color_fondo, $texto_sacd, $comprobacion];
+    }
+
+    private static function colorMisa(?int $estado, string $tipo_plantilla): string
+    {
+        if (trim($tipo_plantilla) !== PlantillaConfig::PLAN_DE_MISAS) {
+            return '';
+        }
+
+        return match ($estado) {
+            EncargoDiaStatus::STATUS_PROPUESTA => 'rojoclaro',
+            EncargoDiaStatus::STATUS_COMUNICADO_SACD => 'amarilloclaro',
+            EncargoDiaStatus::STATUS_COMUNICADO_CTR => 'verdeclaro',
+            default => '',
+        };
     }
 }

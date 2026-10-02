@@ -23,7 +23,9 @@ use src\misas\domain\entity\EncargoDia;
 use src\misas\domain\value_objects\EncargoDiaId;
 use src\misas\domain\value_objects\EncargoDiaTend;
 use src\misas\domain\value_objects\EncargoDiaTstart;
+use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\misas\domain\value_objects\PlantillaConfig;
+use src\shared\domain\helpers\OpcionesDesplegable;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\shared\security\HashB;
@@ -434,6 +436,9 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
         $EncargoDiaRepository = $self->getEncargoDiaRepository();
         $cEncargosaBorrar = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
         foreach ($cEncargosaBorrar as $oEncargoaBorrar) {
+            if (EncargoDiaStatus::preserveWhenPreparingPlan($oEncargoaBorrar->getStatus())) {
+                continue;
+            }
             $EncargoDiaRepository->Eliminar($oEncargoaBorrar);
         }
 
@@ -695,7 +700,33 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
                         }
                     }
                 }
-                if ($ok_encargo) {
+                $inicio_dia_periodo = $num_dia . ' 00:00:00';
+                $fin_dia_periodo = $num_dia . ' 23:59:59';
+                $aWherePeriodo = [
+                    'id_enc' => $id_enc,
+                    'tstart' => "'$inicio_dia_periodo', '$fin_dia_periodo'",
+                ];
+                $aOperadorPeriodo = [
+                    'tstart' => 'BETWEEN',
+                ];
+                $cEncargoDiaPeriodo = $EncargoDiaRepository->getEncargoDias($aWherePeriodo, $aOperadorPeriodo);
+                $celdaVisibleCtr = count($cEncargoDiaPeriodo) === 1
+                    && EncargoDiaStatus::preserveWhenPreparingPlan($cEncargoDiaPeriodo[0]->getStatus());
+
+                if ($celdaVisibleCtr) {
+                    $id_nom_preservado = $cEncargoDiaPeriodo[0]->getId_nom();
+                    if ($id_nom_preservado !== null && isset($contador_sacd[$id_nom_preservado])) {
+                        if (($id_tipo >= 8100) && ($id_tipo < 8200)) {
+                            $contador_1a_sacd[$id_nom_preservado][$num_dia]++;
+                            $contador_total_sacd[$id_nom_preservado][$num_dia]++;
+                        }
+                        if (($id_tipo >= 8200) && ($id_tipo < 8300)) {
+                            $contador_total_sacd[$id_nom_preservado][$num_dia]++;
+                        }
+                    }
+                }
+
+                if ($ok_encargo && !$celdaVisibleCtr) {
                     $oEncargoDia = new EncargoDia();
                     $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
                     $oEncargoDia->setUuid_item($Uuid);
@@ -740,6 +771,7 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
                     "tstart" => '',
                     "tend" => '',
                     "observ" => '',
+                    "status" => EncargoDiaStatus::STATUS_PROPUESTA,
                     "id_enc" => $id_enc,
                 ];
 
@@ -782,6 +814,7 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
                         "tstart" => EncargoDiaTimeHelper::hora($oEncargoDia->getTstart()),
                         "tend" => EncargoDiaTimeHelper::hora($oEncargoDia->getTend()),
                         "observ" => $oEncargoDia->getObserv(),
+                        "status" => EncargoDiaStatus::valueOrPropuesta($oEncargoDia->getStatus()),
                         "id_enc" => $id_enc,
                     ];
 
@@ -812,6 +845,8 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
                 'id_zona' => $Qid_zona,
                 'tipo_plantilla' => $QTipoPlantilla,
             ]),
+            'estados_opciones' => OpcionesDesplegable::enOrden(EncargoDiaStatus::getArrayStatus()),
+            'status_propuesta' => EncargoDiaStatus::STATUS_PROPUESTA,
         ];
     }
 
@@ -830,5 +865,7 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
             'id_zona' => $Qid_zona,
             'tipo_plantilla' => $QTipoPlantilla,
         ]),
+        'estados_opciones' => OpcionesDesplegable::enOrden(EncargoDiaStatus::getArrayStatus()),
+        'status_propuesta' => EncargoDiaStatus::STATUS_PROPUESTA,
     ];
 }

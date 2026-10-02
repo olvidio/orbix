@@ -29,6 +29,7 @@ use src\usuarios\domain\value_objects\TipoPreferencia;
 use src\usuarios\domain\value_objects\ValorPreferencia;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\domain\helpers\OpcionesDesplegable;
 use src\shared\security\HashB;
 
 /**
@@ -40,6 +41,17 @@ function misas_cuadricula_ctx_update(int $id_zona, string $tipo_plantilla): stri
         'id_zona' => $id_zona,
         'tipo_plantilla' => $tipo_plantilla,
     ]);
+}
+
+/**
+ * @return array{estados_opciones: list<array{0: string, 1: string}>, status_propuesta: int}
+ */
+function misas_estados_plan(): array
+{
+    return [
+        'estados_opciones' => OpcionesDesplegable::enOrden(EncargoDiaStatus::getArrayStatus()),
+        'status_propuesta' => EncargoDiaStatus::STATUS_PROPUESTA,
+    ];
 }
 
 /**
@@ -392,6 +404,7 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
                 "tstart" => '',
                 "tend" => '',
                 "observ" => '',
+                "status" => EncargoDiaStatus::STATUS_PROPUESTA,
                 "id_enc" => $id_enc,
                 "dia" => $num_dia,
                 "tipo" => 'misas',
@@ -455,6 +468,7 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
                     "tstart" => EncargoDiaTimeHelper::hora($oEncargoDia->getTstart()),
                     "tend" => EncargoDiaTimeHelper::hora($oEncargoDia->getTend()),
                     "observ" => $oEncargoDia->getObserv(),
+                    "status" => EncargoDiaStatus::valueOrPropuesta($oEncargoDia->getStatus()),
                     "id_enc" => $id_enc,
                     "dia" => $num_dia,
                     "tipo" => 'misas',
@@ -957,7 +971,7 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
             'fila' => $Qfila,
             'columna' => $Qcolumna,
             'ctx_update' => misas_cuadricula_ctx_update($Qid_zona, $QTipoPlantilla),
-        ];
+        ] + misas_estados_plan();
     }
 
     return [
@@ -975,5 +989,5 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
         'fila' => $Qfila,
         'columna' => $Qcolumna,
         'ctx_update' => misas_cuadricula_ctx_update($Qid_zona, $QTipoPlantilla),
-    ];
+    ] + misas_estados_plan();
 }

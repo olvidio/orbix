@@ -6,7 +6,7 @@ url: "/src/misas/cuadricula_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/cuadricula_update.php"
-entrada: ["post.uuid_item:string", "post.key:string", "post.tstart:string", "post.tend:string", "post.observ:string", "post.id_enc:integer", "post.dia:string", "post.tipo_plantilla:string", "post.id_zona:integer"]
+entrada: ["post.uuid_item:string", "post.key:string", "post.tstart:string", "post.tend:string", "post.observ:string", "post.status:integer", "post.id_enc:integer", "post.dia:string", "post.tipo_plantilla:string", "post.id_zona:integer"]
 entrada_obligatoria: ["uuid_item"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_CuadriculaUpdateData"
@@ -47,6 +47,7 @@ Asigna, actualiza o borra un EncargoDia en una celda de la cuadrícula y recalcu
 | `tstart` | `string` | application | No | Hora inicio, p. ej. `08:00` (puede vacío). |
 | `tend` | `string` | application | No | Hora fin, p. ej. `08:30`. |
 | `observ` | `string` | application | No | Observaciones; la UI marca `*` en iniciales si no vacío. |
+| `status` | `integer` | application | No | Estado del encargo del día. Solo se guarda si `tipo_plantilla` es `p`. Vacío o inválido → propuesta (`1`). |
 | `id_enc` | `integer` | application | No | Id del encargo (fila de misa). |
 | `dia` | `string` | application | No | Día ISO `Y-m-d` (p. ej. `2026-08-10`). |
 | `tipo_plantilla` | `string` | application | No | `p` (plan) o plantilla `s1`/`s3`/`d1`/`d3`/`m1`/`m3`. Condiciona colores de estado. |
@@ -62,6 +63,7 @@ uuid_item=a1b2c3d4-e5f6-7890-abcd-ef1234567890
 &tstart=08%3A00
 &tend=08%3A30
 &observ=con%20organista
+&status=1
 &tipo_plantilla=p
 &id_zona=3
 ```
@@ -73,7 +75,7 @@ Origen web: `modificar_cuadricula_zona.phtml` → `commitCurrentEdit`. Flujo nar
 - Helper: `ContestarJson::enviar`.
 - Forma: `standard_envelope_string_data`.
 - Exito: payload en `data`:
-  - `meta`: {"color_misa":"string","id_sacd_anterior":"int|null","texto_anterior":"string","color_fondo_anterior":"string","texto_sacd_anterior":"string","texto":"string","color_fondo":"string","texto_sacd":"string","comprobacion":"string"}
+  - `meta`: {"color_misa":"string","status":"int|null","id_sacd_anterior":"int|null","texto_anterior":"string","color_fondo_anterior":"string","texto_sacd_anterior":"string","texto":"string","color_fondo":"string","texto_sacd":"string","comprobacion":"string"}
 
 ## Errores conocidos
 - `Falta el id_item`

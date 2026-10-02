@@ -50,7 +50,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `misas.cuadricula_update`
 - Controller: `src/misas/infrastructure/ui/http/controllers/cuadricula_update.php`
-- Entrada: `post.uuid_item:string`, `post.key:string`, `post.tstart:string`, `post.tend:string`, `post.observ:string`, `post.id_enc:integer`, `post.dia:string`, `post.tipo_plantilla:string`, `post.id_zona:integer`
+- Entrada: `post.uuid_item:string`, `post.key:string`, `post.tstart:string`, `post.tend:string`, `post.observ:string`, `post.status:integer` (solo se persiste si `tipo_plantilla=p`; vacío o inválido → propuesta), `post.id_enc:integer`, `post.dia:string`, `post.tipo_plantilla:string`, `post.id_zona:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/desplegable_centros_zona`

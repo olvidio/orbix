@@ -54,16 +54,10 @@ class CambiarStatusPantallaData
             'desc_enc' => 'alfabético',
         ];
 
-        $estados = [
-            EncargoDiaStatus::STATUS_PROPUESTA => 'propuesta',
-            EncargoDiaStatus::STATUS_COMUNICADO_SACD => 'comunicado sacerdotes',
-            EncargoDiaStatus::STATUS_COMUNICADO_CTR => 'comunicado centros',
-        ];
-
         return [
             'zonas_opciones' => $zonas,
             'orden_opciones' => $orden,
-            'estados_opciones' => $estados,
+            'estados_opciones' => EncargoDiaStatus::getArrayStatus(),
             'zona_ctx_map' => $zona_ctx_map,
         ];
     }

@@ -105,13 +105,15 @@ class CuadriculaZonaRenderer
             'url_cuadricula_update' => '',
             'url_desplegable_sacd' => '',
             'h_desplegable_sacd' => '',
+            'estados_opciones' => is_array($data['estados_opciones'] ?? null) ? $data['estados_opciones'] : [],
+            'status_propuesta' => (string)($data['status_propuesta'] ?? '1'),
         ];
 
         if ($editable) {
             $url_cuadricula_update = AppUrlConfig::srcBrowserUrl('/src/misas/cuadricula_update');
             $oHashUpd = new HashF();
             $oHashUpd->setUrl($url_cuadricula_update);
-            $oHashUpd->setCamposForm('dia!id_enc!key!observ!tend!tstart!uuid_item!tipo_plantilla!id_zona');
+            $oHashUpd->setCamposForm('dia!id_enc!key!observ!status!tend!tstart!uuid_item!tipo_plantilla!id_zona');
             $oHashUpd->setArrayCamposHidden([
                 'ctx_update' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_update'] ?? ''),
             ]);

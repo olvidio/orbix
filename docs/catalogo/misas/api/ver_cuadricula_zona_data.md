@@ -87,6 +87,7 @@ Cada elemento de `data_cuadricula` incluye:
   "tstart": "08:00",
   "tend": "08:30",
   "observ": "",
+  "status": 1,
   "id_enc": 42,
   "dia": "2026-08-10",
   "tipo": "misas",

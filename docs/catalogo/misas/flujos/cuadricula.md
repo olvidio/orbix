@@ -47,10 +47,11 @@ Al hacer Save en el modal (`commitCurrentEdit` en `modificar_cuadricula_zona.pht
 | `tstart` | `08:00` | Hora inicio (texto del clockpicker; puede ir vacío). |
 | `tend` | `08:30` | Hora fin. |
 | `observ` | `con organista` | Observaciones; en UI se muestra `*` junto a iniciales si no vacío. |
+| `status` | `1` | Estado de la celda en el plan (`p`). Vacío → propuesta. En plantilla viaja pero no se persiste. |
 | `tipo_plantilla` | `p` | Contexto de vista: `p` = plan; `s1`/`s3`/`d1`/`d3`/`m1`/`m3` = plantillas. Afecta colores de estado. |
 | `id_zona` | `3` | Zona activa. |
 
-HashF firma: `dia!id_enc!key!observ!tend!tstart!uuid_item!tipo_plantilla!id_zona`.
+HashF firma: `dia!id_enc!key!observ!status!tend!tstart!uuid_item!tipo_plantilla!id_zona`.
 
 **Nota `key`:** el desplegable y el POST usan `iniciales#id_nom`. En `meta` de `ver_cuadricula_zona_data` a veces viene `id_nom#iniciales`; el JS tolera ambas con `resolveSacdSelectedKey` / `sacdKeyToIdNom`. El backend (`CuadriculaUpdate`) toma `id_nom` de la **segunda** parte tras `#` → el POST debe ser `iniciales#id_nom`.
 
@@ -81,7 +82,7 @@ Ficha: [`api/desplegable_sacd.md`](../api/desplegable_sacd.md).
 
 ## 3. Preparar periodo → `POST /src/misas/crear_nuevo_periodo_data`
 
-Botón **preparar** en `preparar_plan_de_misas.phtml` → `crear_nuevo_periodo.php` (mapea `tipoplantilla` → `tipo_plantilla`) → API.
+Botón **preparar** en `preparar_plan_de_misas.phtml` → `crear_nuevo_periodo.php` (mapea `tipoplantilla` → `tipo_plantilla`) → API. Borra asignaciones del periodo salvo celdas con estado **visible ctr** (se conservan sin sobrescribir desde plantilla).
 
 | Campo | Obligatorio | Ejemplo / valores |
 |-------|-------------|-------------------|
