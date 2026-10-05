@@ -56,7 +56,7 @@ Sustituye los cases `nuevo`, `editar` y `mover` del legacy `update_3101.php`:
 | `cfi` | `string` | application | No | |
 | `falta` | `string` | application | No | |
 | `cfi_con` | `integer` | application | No | |
-| `propietario` | `string` | application | No | `xxx` se normaliza a vacío; en `mover` puede autocalcularse |
+| `propietario` | `string` | application | No | `xxx` se normaliza a vacío. En `mover` se ignora y se calcula siempre como `dl_org` de la actividad destino > mi dl |
 | `plaza` | `integer` | application | No | Validada con `setPlazaVoComprobando` si `actividadplazas` |
 
 \* Al menos uno de los pares `id_activ`/`id_nom` debe resolverse distinto de 0.

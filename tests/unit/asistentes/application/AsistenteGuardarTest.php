@@ -174,6 +174,56 @@ final class AsistenteGuardarTest extends TestCase
         ]));
     }
 
+    public function test_mover_usa_propietario_de_la_actividad_destino(): void
+    {
+        $destino = new ActividadAll();
+        $destino->setDl_org('bcnf');
+
+        $actividadRepo = $this->createMock(ActividadAllRepositoryInterface::class);
+        $actividadRepo->method('findById')->with(20)->willReturn($destino);
+
+        $app = $this->createMock(AsistenteApplicationService::class);
+        $app->method('findById')->with(20, 10)->willReturn(null);
+        $guardado = null;
+        $app->expects($this->once())->method('guardar')->willReturnCallback(function (Asistente $a) use (&$guardado) {
+            $guardado = $a;
+
+            return true;
+        });
+
+        $plaza = $this->createMock(PlazaPropietarioAsignacionInterface::class);
+        $plaza->expects($this->once())->method('asegurar')->willReturnCallback(function (Asistente $a) {
+            $prop = $a->getPropietarioVo()?->value() ?? '';
+
+            return $prop === 'bcn>dl' ? '' : 'Ya están todas las plazas ocupadas';
+        });
+
+        $oOrigen = $this->createMock(Asistente::class);
+        $oOrigen->method('perm_modificar')->willReturn(true);
+        $elimApp = $this->createMock(AsistenteApplicationService::class);
+        $elimApp->method('findById')->with(5, 10)->willReturn($oOrigen);
+        $elimApp->method('eliminar')->willReturn(true);
+        $eliminar = new AsistenteEliminar(
+            $elimApp,
+            $this->createMock(MatriculaRepositoryInterface::class),
+            $this->createMock(DossierRepositoryInterface::class),
+        );
+
+        $sut = $this->createSut($app, $actividadRepo, null, $eliminar, $plaza);
+
+        $this->assertSame('', $sut->execute([
+            'mod' => 'mover',
+            'id_activ' => 20,
+            'id_nom' => 10,
+            'id_activ_old' => 5,
+            'plaza' => 4,
+            // Cupo de la actividad origen (dl ajena). No debe usarse en el destino.
+            'propietario' => 'mad>dl',
+        ]));
+        $this->assertInstanceOf(Asistente::class, $guardado);
+        $this->assertSame('bcn>dl', $guardado->getPropietarioVo()?->value());
+    }
+
     public function test_mover_no_elimina_si_falla_guardar(): void
     {
         $o = $this->createMock(Asistente::class);

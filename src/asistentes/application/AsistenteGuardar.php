@@ -143,7 +143,11 @@ final class AsistenteGuardar
         if ($Qpropietario === 'xxx') {
             $Qpropietario = '';
         }
-        if ($mod === 'mover' && $Qpropietario === '' && ConfigGlobal::is_app_installed('actividadplazas')) {
+        if ($mod === 'mover' && ConfigGlobal::is_app_installed('actividadplazas')) {
+            // El cupo es el de la actividad destino (dl_org destino > mi dl), el mismo
+            // que muestra el desplegable. Un propietario calculado con la dl_org de
+            // origen no existe en el destino cuando esa dl no es la propia, y la
+            // comprobación responde «Ya están todas las plazas ocupadas».
             $Qpropietario = $this->resolverPropietarioMover($id_activ);
         }
         $oAsistente->setPropietarioVo($Qpropietario);

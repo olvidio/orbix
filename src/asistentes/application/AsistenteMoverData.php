@@ -106,8 +106,9 @@ final class AsistenteMoverData
             if ($oActividad !== null) {
             $id_tipo = $oActividad->getId_tipo_activ();
 
-            $dl = preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');
-            $propietario = "$dl>$mi_dele";
+            // El destino se elige en el desplegable. El propietario del cupo
+            // (dl_org destino > mi dl) lo resuelve AsistenteGuardar al guardar.
+            $propietario = '';
 
             $oTipoActiv = new TiposActividades($id_tipo);
             $sactividad = $oTipoActiv->getActividadText();
