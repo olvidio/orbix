@@ -16,14 +16,28 @@ final class PgResiduoOtraRegionConsulta implements ResiduoOtraRegionConsultaInte
 {
     private PDO $pdo;
 
+    /** @var list<string>|null */
+    private ?array $esquemasLegibles = null;
+
+    /** @var list<string>|null */
+    private ?array $esquemasSinPermiso = null;
+
     public function __construct()
     {
         $this->pdo = GlobalPdo::get('oDBP');
     }
 
+    public function esquemasSinPermiso(): array
+    {
+        $this->clasificarEsquemasResiduo();
+
+        return $this->esquemasSinPermiso ?? [];
+    }
+
     public function listar(): array
     {
-        $esquemas = $this->esquemasConResiduo();
+        $this->clasificarEsquemasResiduo();
+        $esquemas = $this->esquemasLegibles ?? [];
         if ($esquemas === []) {
             return [];
         }
@@ -59,14 +73,7 @@ final class PgResiduoOtraRegionConsulta implements ResiduoOtraRegionConsultaInte
                     ORDER BY CASE WHEN g.situacion = 'A' THEN 0 ELSE 1 END, g.f_situacion DESC NULLS LAST
                     LIMIT 1
                 ), '') AS nombre,
-                EXISTS (
-                    SELECT 1
-                    FROM e_notas a
-                    JOIN pg_class ca ON ca.oid = a.tableoid
-                    WHERE ca.relname = 'e_notas_dl'
-                      AND a.id_nom = r.id_nom
-                      AND a.id_asignatura = r.id_asignatura
-                ) AS hay_acta_dl
+                {$this->sqlHayActaDl()}
             FROM (" . implode(' UNION ALL ', $partes) . ") r
             ORDER BY r.id_nom, r.id_asignatura";
 
@@ -108,55 +115,113 @@ final class PgResiduoOtraRegionConsulta implements ResiduoOtraRegionConsultaInte
         return $filas;
     }
 
-    /**
-     * @return list<string>
-     */
-    private function esquemasConResiduo(): array
+    private function clasificarEsquemasResiduo(): void
     {
+        if ($this->esquemasLegibles !== null && $this->esquemasSinPermiso !== null) {
+            return;
+        }
+
         $stmt = $this->pdo->query(
-            "SELECT n.nspname
+            "SELECT n.nspname AS esquema,
+                    (has_schema_privilege(n.oid, 'USAGE') AND has_table_privilege(c.oid, 'SELECT')) AS puede
              FROM pg_class c
              JOIN pg_namespace n ON n.oid = c.relnamespace
              WHERE c.relname = 'e_notas_otra_region_stgr'
                AND c.relkind = 'r'
                AND n.nspname NOT LIKE 'pg_%'
+               AND n.nspname <> 'information_schema'
              ORDER BY n.nspname"
         );
         if ($stmt === false) {
             throw new \RuntimeException(_('No se pudo leer el residuo de notas de otras regiones.'));
         }
 
-        $esquemas = [];
-        foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) as $nombre) {
+        $legibles = [];
+        $sinPermiso = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $nombre = $row['esquema'] ?? null;
             if (!is_string($nombre) || preg_match('/^[A-Za-z0-9_-]+$/', $nombre) !== 1) {
                 continue;
             }
-            $esquemas[] = $nombre;
+            if ($this->esCierto($row['puede'] ?? false)) {
+                $legibles[] = $nombre;
+            } else {
+                $sinPermiso[] = $nombre;
+            }
+        }
+
+        $this->esquemasLegibles = $legibles;
+        $this->esquemasSinPermiso = $sinPermiso;
+    }
+
+    private function sqlHayActaDl(): string
+    {
+        $esquemas = $this->esquemasConTablaLegible('e_notas_dl');
+        if ($esquemas === []) {
+            return 'false AS hay_acta_dl';
+        }
+
+        $partes = [];
+        foreach ($esquemas as $esquema) {
+            $partes[] = 'SELECT id_nom, id_asignatura FROM ONLY '
+                . $this->quoteIdent($esquema) . '.e_notas_dl';
+        }
+
+        return 'EXISTS (
+            SELECT 1 FROM (' . implode(' UNION ALL ', $partes) . ') a
+            WHERE a.id_nom = r.id_nom AND a.id_asignatura = r.id_asignatura
+        ) AS hay_acta_dl';
+    }
+
+    private function esquemaDePaso(): ?string
+    {
+        $esquemas = $this->esquemasConTablaLegible('p_de_paso_ex');
+        foreach ($esquemas as $nombre) {
+            if (str_starts_with($nombre, 'resto')) {
+                return $nombre;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function esquemasConTablaLegible(string $relname): array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT n.nspname
+             FROM pg_class c
+             JOIN pg_namespace n ON n.oid = c.relnamespace
+             WHERE c.relname = :relname
+               AND c.relkind = 'r'
+               AND n.nspname NOT LIKE 'pg_%'
+               AND n.nspname <> 'information_schema'
+               AND has_schema_privilege(n.oid, 'USAGE')
+               AND has_table_privilege(c.oid, 'SELECT')
+             ORDER BY n.nspname"
+        );
+        if ($stmt === false || $stmt->execute(['relname' => $relname]) === false) {
+            return [];
+        }
+
+        $esquemas = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) as $nombre) {
+            if (is_string($nombre) && preg_match('/^[A-Za-z0-9_-]+$/', $nombre) === 1) {
+                $esquemas[] = $nombre;
+            }
         }
 
         return $esquemas;
     }
 
-    private function esquemaDePaso(): ?string
+    private function quoteIdent(string $nombre): string
     {
-        $stmt = $this->pdo->query(
-            "SELECT n.nspname
-             FROM pg_class c
-             JOIN pg_namespace n ON n.oid = c.relnamespace
-             WHERE c.relname = 'p_de_paso_ex'
-               AND n.nspname LIKE 'resto%'
-             ORDER BY n.nspname
-             LIMIT 1"
-        );
-        if ($stmt === false) {
-            return null;
-        }
-        $nombre = $stmt->fetchColumn();
-        if (!is_string($nombre) || preg_match('/^[A-Za-z0-9_-]+$/', $nombre) !== 1) {
-            return null;
-        }
-
-        return $nombre;
+        return '"' . str_replace('"', '""', $nombre) . '"';
     }
 
     /**
@@ -164,9 +229,17 @@ final class PgResiduoOtraRegionConsulta implements ResiduoOtraRegionConsultaInte
      */
     private function certificadosEnModulo(): array
     {
-        $stmt = $this->pdo->query(
-            "SELECT DISTINCT certificado FROM e_certificados_emitidos WHERE certificado IS NOT NULL AND certificado <> ''"
-        );
+        $partes = [];
+        foreach (['e_certificados_emitidos', 'e_certificados_rstgr'] as $relname) {
+            foreach ($this->esquemasConTablaLegible($relname) as $esquema) {
+                $partes[] = 'SELECT certificado FROM ONLY ' . $this->quoteIdent($esquema) . '.' . $relname
+                    . " WHERE certificado IS NOT NULL AND certificado <> ''";
+            }
+        }
+        if ($partes === []) {
+            return [];
+        }
+        $stmt = $this->pdo->query('SELECT DISTINCT certificado FROM (' . implode(' UNION ALL ', $partes) . ') c');
         if ($stmt === false) {
             return [];
         }

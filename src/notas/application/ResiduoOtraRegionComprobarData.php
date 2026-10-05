@@ -30,6 +30,7 @@ final class ResiduoOtraRegionComprobarData
         /** @var array<int, string> $nombresAsignatura */
         $nombresAsignatura = $this->asignaturaRepository->getArrayAsignaturas();
         $filas = $this->consulta->listar();
+        $sinPermiso = $this->consulta->esquemasSinPermiso();
 
         $dePaso = [];
         $conActa = [];
@@ -50,7 +51,7 @@ final class ResiduoOtraRegionComprobarData
 
         return [
             'pasos' => [
-                $this->pasoInventario($filas),
+                $this->pasoInventario($filas, $sinPermiso),
                 $this->pasoDePaso($dePaso, $nombresAsignatura),
                 $this->pasoConActa($conActa, $nombresAsignatura),
                 $this->pasoSinActa($sinActa, $nombresAsignatura),
@@ -61,9 +62,10 @@ final class ResiduoOtraRegionComprobarData
 
     /**
      * @param list<array<string, mixed>> $filas
+     * @param list<string> $sinPermiso
      * @return array{numero: int, titulo: string, texto: string, tablas: list<array{titulo: string, cabeceras: list<string>, filas: list<list<string>>}>}
      */
-    private function pasoInventario(array $filas): array
+    private function pasoInventario(array $filas, array $sinPermiso): array
     {
         /** @var array<string, array{filas: int, personas: array<int, true>, paso: int, resto: int, con_acta: int, sin_acta: int, con_json: int}> $porEsquema */
         $porEsquema = [];
@@ -112,24 +114,39 @@ final class ResiduoOtraRegionComprobarData
             ];
         }
 
+        $tablas = [[
+            'titulo' => '',
+            'cabeceras' => [
+                _('esquema'),
+                _('filas'),
+                _('personas'),
+                _('de paso'),
+                _('resto'),
+                _('con acta pareja'),
+                _('sin acta pareja'),
+                _('con json'),
+            ],
+            'filas' => $tabla,
+        ]];
+        $texto = _('Filas de e_notas_otra_region_stgr en los esquemas que esta sesión puede leer.');
+        if ($sinPermiso !== []) {
+            $texto .= ' ' . _('Estos esquemas tienen la tabla, pero el usuario de la sesión no puede leerlos y no entran en las cifras.');
+            $filasSinPermiso = [];
+            foreach ($sinPermiso as $esquema) {
+                $filasSinPermiso[] = [$esquema];
+            }
+            $tablas[] = [
+                'titulo' => _('Sin permiso de lectura'),
+                'cabeceras' => [_('esquema')],
+                'filas' => $filasSinPermiso,
+            ];
+        }
+
         return [
             'numero' => 1,
             'titulo' => _('Inventario'),
-            'texto' => _('Filas que siguen en e_notas_otra_region_stgr de los esquemas cargados en esta base.'),
-            'tablas' => [[
-                'titulo' => '',
-                'cabeceras' => [
-                    _('esquema'),
-                    _('filas'),
-                    _('personas'),
-                    _('de paso'),
-                    _('resto'),
-                    _('con acta pareja'),
-                    _('sin acta pareja'),
-                    _('con json'),
-                ],
-                'filas' => $tabla,
-            ]],
+            'texto' => $texto,
+            'tablas' => $tablas,
         ];
     }
 
@@ -234,7 +251,7 @@ final class ResiduoOtraRegionComprobarData
         return [
             'numero' => 4,
             'titulo' => _('Resto sin acta pareja'),
-            'texto' => _('Es la única fila de esa persona y asignatura en los e_notas_dl cargados. Borrarla la quita del expediente.'),
+            'texto' => _('Es la única fila de esa persona y asignatura en los e_notas_dl que esta sesión puede leer. Borrarla la quita del expediente.'),
             'tablas' => [
                 [
                     'titulo' => _('Por prefijo del acta'),

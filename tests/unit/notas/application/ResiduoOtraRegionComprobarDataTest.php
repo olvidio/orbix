@@ -44,6 +44,22 @@ final class ResiduoOtraRegionComprobarDataTest extends TestCase
         $this->assertSame(_('sí'), $json[0][5]);
     }
 
+    public function test_inventario_lista_esquemas_sin_permiso(): void
+    {
+        $consulta = $this->createMock(ResiduoOtraRegionConsultaInterface::class);
+        $consulta->method('listar')->willReturn([]);
+        $consulta->method('esquemasSinPermiso')->willReturn(['H-Hv']);
+
+        $asignaturas = $this->createMock(AsignaturaRepositoryInterface::class);
+        $asignaturas->method('getArrayAsignaturas')->willReturn([]);
+
+        $out = (new ResiduoOtraRegionComprobarData($consulta, $asignaturas))->execute();
+        $tablas = $out['pasos'][0]['tablas'];
+
+        $this->assertSame(_('Sin permiso de lectura'), $tablas[1]['titulo']);
+        $this->assertSame([['H-Hv']], $tablas[1]['filas']);
+    }
+
     /**
      * @param list<string> $certificados
      * @return array<string, mixed>

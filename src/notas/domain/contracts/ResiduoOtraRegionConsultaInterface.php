@@ -26,4 +26,11 @@ interface ResiduoOtraRegionConsultaInterface
      * }>
      */
     public function listar(): array;
+
+    /**
+     * Esquemas que tienen la tabla y el usuario de la sesión no puede leer.
+     *
+     * @return list<string>
+     */
+    public function esquemasSinPermiso(): array;
 }
