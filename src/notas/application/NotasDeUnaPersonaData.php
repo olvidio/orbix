@@ -7,6 +7,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\notas\application\support\HuecoOpcionalDePlan;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
 use src\shared\security\HashB;
@@ -96,7 +97,7 @@ final class NotasDeUnaPersonaData
             }
             $nombre_corto = $oAsignatura->getNombre_corto();
 
-            if ($id_asignatura > 3000) {
+            if (HuecoOpcionalDePlan::esOpcionalConcreta($id_asignatura)) {
                 $plan = $this->planEstudiosDePersona->resolve($id_pau);
                 [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, ['id_nivel' => $id_nivel]);
                 $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);

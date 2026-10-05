@@ -7,6 +7,7 @@ use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\asignaturas\domain\value_objects\PlanEstudios;
+use src\notas\application\support\HuecoOpcionalDePlan;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -110,7 +111,7 @@ final class AsignaturasPendientesResumenData
                     continue;
                 }
 
-                if ($id_asignatura > 3000) {
+                if (HuecoOpcionalDePlan::esOpcionalConcreta($id_asignatura)) {
                     $id_nivel_asig = $id_nivel;
                 } else {
                     $id_nivel_asig = $a_Asig_nivel[$id_asignatura];

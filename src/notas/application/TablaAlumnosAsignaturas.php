@@ -5,6 +5,7 @@ namespace src\notas\application;
 
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\application\support\HuecoOpcionalDePlan;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaSituacion;
@@ -28,8 +29,9 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
  *     para todo el colectivo, en vez de dos consultas por persona (legacy
  *     hacia `2 * N` queries: una para `fin_bienio/cuadrienio` y otra para
  *     todas las notas de la persona).
- *   - Los magic numbers (`3000`, `9990`, `9998`, `9999`, `2000`, `1100`,
- *     `2500`) pasan a ser constantes nombradas.
+ *   - Los magic numbers (`9990`, `9998`, `9999`, `2000`, `1100`,
+ *     `2500`) pasan a ser constantes nombradas. Las opcionales concretas
+ *     se distinguen con {@see HuecoOpcionalDePlan}.
  */
 final class TablaAlumnosAsignaturas
 {
@@ -56,8 +58,6 @@ final class TablaAlumnosAsignaturas
     private const ID_ASIG_FIN_BIENIO = 9999;
     /** `id_asignatura` de la marca "cuadrienio completado". */
     private const ID_ASIG_FIN_CUADRIENIO = 9998;
-    /** `id_asignatura > 3000` = asignatura opcional: tomamos el `id_nivel` de la propia nota. */
-    private const ID_ASIG_OPCIONAL_UMBRAL = 3000;
 
     /**
      * Variante `ambito = rstgr`: filtra por una lista de delegaciones (`id_dl`)
@@ -308,7 +308,7 @@ final class TablaAlumnosAsignaturas
         foreach ($notasPersona as $oNota) {
             $idAsig = (int)$oNota->getId_asignatura();
             $idSit = (int)$oNota->getId_situacion();
-            $idNivelAsig = ($idAsig > self::ID_ASIG_OPCIONAL_UMBRAL)
+            $idNivelAsig = HuecoOpcionalDePlan::esOpcionalConcreta($idAsig)
                 ? (int)$oNota->getIdNivelVo()->value()
                 : ($mapAsigNivel[$idAsig] ?? null);
             if ($idNivelAsig === null) {

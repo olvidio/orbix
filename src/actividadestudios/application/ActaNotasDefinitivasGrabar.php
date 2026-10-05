@@ -12,6 +12,7 @@ use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\actividadestudios\application\support\MatriculaNotaEstado;
 use src\notas\application\EditarPersonaNota;
 use src\notas\application\support\ActaFirmadaPolicy;
+use src\notas\application\support\HuecoOpcionalDePlan;
 use src\notas\application\support\LiberarHuecoNivelNota;
 use src\notas\application\support\NivelCatalogoAsignaturaEnPlan;
 use src\notas\domain\contracts\ActaRepositoryInterface;
@@ -52,6 +53,7 @@ final class ActaNotasDefinitivasGrabar
         private PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
         private LiberarHuecoNivelNota $liberarHuecoNivelNota,
         private NivelCatalogoAsignaturaEnPlan $nivelCatalogoAsignaturaEnPlan,
+        private HuecoOpcionalDePlan $huecoOpcionalDePlan,
         private ActaFirmadaPolicy $firmadaPolicy,
     ) {
     }
@@ -77,10 +79,6 @@ final class ActaNotasDefinitivasGrabar
         $nota_corte = $oConfig->getNotaCorte();
         $nota_max_default = $oConfig->getNotaMax();
 
-        // plan97
-        //$aNivelOpcionales = [1230, 1231, 1232, 2430, 2431, 2432, 2433, 2434];
-        // actual
-        $aNivelOpcionales = [1230, 1231, 2430, 2431, 2432];
         $error = '';
         $msg_err = '';
 
@@ -183,44 +181,22 @@ final class ActaNotasDefinitivasGrabar
                 $id_preceptor = null;
             }
 
-            if ($Qid_asignatura > 3000) {
-                $aWhere = ['id_nivel' => '^(12|24)3.', '_ordre' => 'id_nivel DESC'];
-                $aOperador = ['id_nivel' => '~'];
-                $op_min = 0;
-                $op_max = count($aNivelOpcionales) - 1;
-                $aWhere['id_nom'] = $id_nom;
-                $cPersonaNotas = $this->personaNotaRepository->getPersonaNotas($aWhere, $aOperador);
-                $aOpSuperadas = [];
-                $j = 0;
-                $id_nivel = 0;
-                foreach ($cPersonaNotas as $oPersonaNota1) {
-                    $j++;
-                    $id_op = $oPersonaNota1->getIdNivelVo()->value();
-                    $id_asignatura_tmp = $oPersonaNota1->getId_asignatura();
-                    if ($id_asignatura_tmp === $Qid_asignatura) {
-                        $id_nivel = $id_op;
-                        break;
-                    }
-                    if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($oPersonaNota1->isAprobada())) {
-                        $aOpSuperadas[$j] = $id_op;
-                    }
+            if (HuecoOpcionalDePlan::esOpcionalConcreta($Qid_asignatura)) {
+                $notasNivel = [];
+                foreach ($this->personaNotaRepository->getPersonaNotas(['id_nom' => $id_nom]) as $oPersonaNota1) {
+                    $notasNivel[] = [
+                        'id_asignatura' => (int) $oPersonaNota1->getId_asignatura(),
+                        'id_nivel' => (int) $oPersonaNota1->getIdNivelVo()->value(),
+                    ];
                 }
-                if (empty($id_nivel)) {
-                    for ($op = $op_min; $op <= $op_max; $op++) {
-                        if (!array_key_exists($op, $aNivelOpcionales)) {
-                            break;
-                        }
-                        $id_nivel = $aNivelOpcionales[$op];
-                        if (!in_array($id_nivel, $aOpSuperadas, true)) {
-                            break;
-                        }
-                    }
-                }
-                $maxNivelOpcional = $aNivelOpcionales[count($aNivelOpcionales) - 1];
-                if ($id_nivel > $maxNivelOpcional) {
+                $idNivelOpcional = $this->huecoOpcionalDePlan->idNivelPara($id_nom, $Qid_asignatura, $notasNivel);
+                if ($idNivelOpcional === null) {
                     $error .= sprintf(_('ha cursado una opcional que no tocaba (id_nom=%s)') . "\n", $id_nom);
                     continue;
                 }
+                $id_nivel = $idNivelOpcional;
+            } elseif (HuecoOpcionalDePlan::esMarcadorFinCiclo($Qid_asignatura)) {
+                $id_nivel = $Qid_asignatura;
             } else {
                 $id_nivel = $this->nivelCatalogoAsignaturaEnPlan->resolve($id_nom, $Qid_asignatura);
             }

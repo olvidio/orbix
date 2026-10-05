@@ -7,6 +7,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\asignaturas\domain\value_objects\PlanEstudios;
+use src\notas\application\support\HuecoOpcionalDePlan;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
@@ -31,8 +32,8 @@ use src\shared\domain\value_objects\DateTimeLocal;
  *     devuelve un array neutro y la PHTML monta el HTML (separacion
  *     datos / UI, `refactor.md`).
  *   - Magic numbers encapsulados como constantes nombradas
- *     (`ID_NIVEL_ASIG_DESDE/HASTA`, `ID_ASIG_OPCIONAL_UMBRAL`,
- *     `ID_ASIG_OPCIONAL_MAX`, `PLAN_NUEVO`, `PLAN_VIEJO`).
+ *     (`ID_NIVEL_ASIG_DESDE/HASTA`, `PLAN_NUEVO`, `PLAN_VIEJO`).
+ *     El rango de opcionales concretas vive en {@see HuecoOpcionalDePlan}.
  *   - La merge de `cAsignaturas` + `aAprobadas` esta saneada para
  *     no acceder fuera de rango de `cAsignaturas` (bug latente del
  *     modelo legacy cuando la ultima asignatura era pendiente).
@@ -53,10 +54,6 @@ final class Tesera
     /** Rango de `id_nivel` de asignaturas de bienio+cuadrienio. */
     private const ID_NIVEL_ASIG_DESDE = 1100;
     private const ID_NIVEL_ASIG_HASTA = 2500;
-    /** `id_asignatura > 3000` = asignatura opcional (se usa `id_nivel` de la nota). */
-    private const ID_ASIG_OPCIONAL_UMBRAL = 3000;
-    /** Rango de `id_asignatura` que se consideran "opcionales" visibles en la tessera. */
-    private const ID_ASIG_OPCIONAL_MAX = 9000;
 
     /** Plan de estudios vigente (por defecto). */
     public const PLAN_NUEVO = PlanEstudios::PLAN_2026;
@@ -153,9 +150,12 @@ final class Tesera
             }
 
             $idAsig = (int)$oNota->getId_asignatura();
+            if (HuecoOpcionalDePlan::esMarcadorFinCiclo($idAsig)) {
+                continue;
+            }
 
             $oAsig = $asignaturaRepo->findById($idAsig, $plan);
-            if ($idAsig > self::ID_ASIG_OPCIONAL_UMBRAL) {
+            if (HuecoOpcionalDePlan::esOpcionalConcreta($idAsig)) {
                 // El hueco es el id_nivel de la nota (2430–2434), no el id_nivel
                 // de la asignatura concreta. Esa puede existir solo en el plan 1997.
                 if ($oAsig === null) {
@@ -304,7 +304,7 @@ final class Tesera
                     $fechaLocal = $fecha->getFromLocal();
                 }
                 $acta = (string) ($row['acta'] ?? '');
-                if ($idAsig > self::ID_ASIG_OPCIONAL_UMBRAL && $idAsig < self::ID_ASIG_OPCIONAL_MAX) {
+                if (HuecoOpcionalDePlan::esOpcionalConcreta($idAsig)) {
                     $opcional = true;
                     $nombre .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . (string) $row['nombre_asignatura'];
                 }
@@ -433,7 +433,7 @@ final class Tesera
     {
         $idAsig = (int) $row['id_asignatura'];
         $nombreCortoRow = (string) $row['nombre_corto'];
-        if ($idAsig > self::ID_ASIG_OPCIONAL_UMBRAL && $idAsig < self::ID_ASIG_OPCIONAL_MAX) {
+        if (HuecoOpcionalDePlan::esOpcionalConcreta($idAsig)) {
             $asignatura = $oAsig->getNombre_corto() . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $nombreCortoRow;
         } else {
             $asignatura = (string)$oAsig->getNombre_corto();

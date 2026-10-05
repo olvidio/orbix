@@ -183,14 +183,14 @@ final class AsignaturasPendientes
               AND a.id_nivel IN ($inNiveles)
         ";
 
-        // Opcionales: se contabilizan por nivel (id_asignatura > 3000).
+        // Opcionales concretas: por nivel. 9998/9999 (fin de ciclo) no ocupan hueco.
         $sqlOpcionales = "
             SELECT a.nombre_corto, notas.id_nivel
             FROM {$this->tablaAsignaturasTemp} a
             LEFT JOIN (
                 SELECT id_nivel
                 FROM {$this->tablaNotas}
-                WHERE id_nom = :id_nom AND id_asignatura > 3000
+                WHERE id_nom = :id_nom AND id_asignatura > 3000 AND id_asignatura < 9000
             ) notas USING (id_nivel)
             WHERE a.id_tipo = 8
               AND notas.id_nivel IS NULL

@@ -14,12 +14,12 @@ use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
  * No se puede usar el `id_nivel` almacenado en `e_notas`: tras el remap 2026
  * el mismo número de nivel significa asignaturas distintas (p. ej. Latín III
  * 1997 y Latín IV 2026 comparten el 2212). Igual que {@see \src\notas\application\Tesera}:
- * obligatorias → nivel del catálogo del plan; opcionales (`id_asignatura > 3000`)
- * → nivel de la nota (slot genérico).
+ * obligatorias → nivel del catálogo del plan; opcionales concretas
+ * (`id_asignatura` entre 3000 y 9000) → nivel de la nota (slot genérico).
+ * Las marcas de fin de ciclo (9998/9999) no ocupan hueco de opcional.
  */
 final class NivelesOcupadosEnPlan
 {
-    private const ID_ASIG_OPCIONAL_UMBRAL = 3000;
 
     /**
      * @param iterable<PersonaNota|PersonaNotaOtraRegionStgr> $notas
@@ -48,7 +48,10 @@ final class NivelesOcupadosEnPlan
         AsignaturaRepositoryInterface $asignaturaRepository,
     ): ?int {
         $idAsignatura = $nota->getId_asignatura();
-        if ($idAsignatura > self::ID_ASIG_OPCIONAL_UMBRAL) {
+        if (HuecoOpcionalDePlan::esMarcadorFinCiclo($idAsignatura)) {
+            return null;
+        }
+        if (HuecoOpcionalDePlan::esOpcionalConcreta($idAsignatura)) {
             $nivelNota = $nota->getId_nivel();
 
             return $nivelNota > 0 ? $nivelNota : null;

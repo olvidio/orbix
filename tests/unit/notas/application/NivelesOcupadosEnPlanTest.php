@@ -66,6 +66,20 @@ final class NivelesOcupadosEnPlanTest extends TestCase
         $this->assertSame([2430 => true], $ocupados);
     }
 
+    public function test_fin_bienio_no_ocupa_hueco_de_opcional(): void
+    {
+        $repo = $this->createMock(AsignaturaRepositoryInterface::class);
+        $repo->expects($this->never())->method('findById');
+
+        $ocupados = NivelesOcupadosEnPlan::ocupados(
+            [$this->nota(9999, 2430)],
+            PlanEstudios::PLAN_2026,
+            $repo,
+        );
+
+        $this->assertSame([], $ocupados);
+    }
+
     public function test_asignatura_solo_del_otro_plan_no_ocupa_hueco(): void
     {
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);

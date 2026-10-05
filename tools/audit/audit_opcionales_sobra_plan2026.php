@@ -6,8 +6,9 @@ declare(strict_types=1);
 /**
  * Auditoría (solo lectura): opcionales «de sobra» en alumnos plan 2026 y huecos libres 2430–2434.
  *
- * Criterio alineado con NotasDeUnaPersonaData y la migración
- * 202609141200_e_notas_opcional_sobra_plan2026__sv.sql / __sf.sql.
+ * Criterio: opcionales concretas (3000 < id_asignatura < 9000) fuera de
+ * los huecos del plan 2026 (2430–2434), o aún en 1230–1232. No incluye
+ * las marcas 9998/9999. El primer hueco libre puede no ser consecutivo.
  *
  * Uso:
  *   php tools/audit/audit_opcionales_sobra_plan2026.php
@@ -15,7 +16,7 @@ declare(strict_types=1);
  *   php tools/audit/audit_opcionales_sobra_plan2026.php --json
  *
  * Aplicar corrección: devel_db_admin → Migraciones →
- *   202609141200_e_notas_opcional_sobra_plan2026__sv.sql (o __sf).
+ *   202610051000_e_notas_huecos_opcional_plan__sv.sql (o __sf).
  *
  * @see docs/manual/CambiosStgr2026.md
  */
@@ -54,17 +55,16 @@ $pdo = (new DBConnection($configDB->getEsquema($publicSchema)))->getPDO();
 $sqlCandidatas = <<<SQL
 SELECT n.id_nom, n.id_asignatura, n.id_nivel, n.tipo_acta, n.acta, n.nota
 FROM {$publicSchema}.e_notas AS n
-WHERE (
-    n.id_nivel IN (1230, 1231, 1232)
-    OR (n.id_asignatura > 3000 AND NOT (n.id_nivel BETWEEN 2430 AND 2434))
-)
+WHERE n.id_asignatura > 3000
+  AND n.id_asignatura < 9000
+  AND NOT (n.id_nivel BETWEEN 2430 AND 2434)
   AND NOT EXISTS (
       SELECT 1
       FROM {$publicSchema}.e_notas AS fin
       WHERE fin.id_nom = n.id_nom
         AND fin.id_asignatura = 9998
         AND fin.f_acta IS NOT NULL
-        AND fin.f_acta < DATE '2026-09-30'
+                AND fin.f_acta < DATE '2026-03-30'
   )
 ORDER BY n.id_nom, n.id_nivel, n.id_asignatura
 SQL;
@@ -85,7 +85,7 @@ $detalle = [];
 foreach ($porNom as $idNom => $notas) {
     $ocupados = [];
     $stmtOcc = $pdo->prepare(
-        "SELECT id_nivel FROM {$publicSchema}.e_notas WHERE id_nom = :id_nom AND id_nivel BETWEEN 2430 AND 2434"
+        "SELECT id_nivel FROM {$publicSchema}.e_notas WHERE id_nom = :id_nom AND id_nivel BETWEEN 2430 AND 2434 AND id_asignatura NOT IN (9998, 9999)"
     );
     $stmtOcc->execute(['id_nom' => $idNom]);
     foreach ($stmtOcc->fetchAll(PDO::FETCH_COLUMN) as $nivel) {
@@ -163,4 +163,4 @@ if ($detalle !== []) {
     }
 }
 
-echo "\nAplicar: devel_db_admin → Migraciones → 202609141200_e_notas_opcional_sobra_plan2026__{$database}.sql\n";
+echo "\nAplicar: devel_db_admin → Migraciones → 202610051000_e_notas_huecos_opcional_plan__{$database}.sql\n";

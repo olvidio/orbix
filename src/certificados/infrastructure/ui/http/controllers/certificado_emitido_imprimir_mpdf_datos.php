@@ -5,6 +5,7 @@ use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\application\PlanEstudiosDePersona;
+use src\notas\application\support\HuecoOpcionalDePlan;
 use src\certificados\application\support\CertificadosSession;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
@@ -186,7 +187,10 @@ if ($error_txt === '') {
         if ($oAsignatura === null) {
             throw new \Exception(sprintf(_('No se ha encontrado la asignatura con id: %s'), $id_asignatura));
         }
-        if ($id_asignatura > 3000) {
+        if (HuecoOpcionalDePlan::esMarcadorFinCiclo($id_asignatura)) {
+            continue;
+        }
+        if (HuecoOpcionalDePlan::esOpcionalConcreta($id_asignatura)) {
             $id_nivel_asig = $id_nivel;
         } else {
             if (!$oAsignatura->isActive()) {
