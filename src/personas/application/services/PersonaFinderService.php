@@ -212,6 +212,94 @@ class PersonaFinderService
     }
 
     /**
+     * id_nom con ficha en algún esquema Aquinate presente en esta base
+     * (`personas_dl`), salvo `resto`. Cualquier situación.
+     *
+     * Solo cuentan los esquemas cargados: en una instalación parcial no se
+     * supone el resto de regiones.
+     *
+     * @param list<int> $idNoms
+     * @return array<int, true>
+     */
+    public function idNomsEnEsquemasAquinate(array $idNoms): array
+    {
+        $ids = [];
+        foreach ($idNoms as $idNom) {
+            $idNom = (int) $idNom;
+            if ($idNom > 0) {
+                $ids[$idNom] = $idNom;
+            }
+        }
+        if ($ids === []) {
+            return [];
+        }
+
+        $esquemas = $this->esquemasConPersonasDl();
+        if ($esquemas === []) {
+            return [];
+        }
+
+        $in = implode(',', $ids);
+        $unions = [];
+        foreach ($esquemas as $esquema) {
+            $quoted = '"' . str_replace('"', '""', $esquema) . '"';
+            $unions[] = "SELECT id_nom FROM {$quoted}.personas_dl WHERE id_nom IN ($in)";
+        }
+
+        $sql = 'SELECT DISTINCT id_nom FROM (' . implode(' UNION ALL ', $unions) . ') u';
+        $stmt = $this->oDBR()->query($sql);
+        if ($stmt === false) {
+            throw new \RuntimeException(_('No se pudo consultar las fichas de los esquemas cargados'));
+        }
+
+        $presentes = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            if (!is_array($row) || !isset($row['id_nom'])) {
+                continue;
+            }
+            $presentes[(int) $row['id_nom']] = true;
+        }
+
+        return $presentes;
+    }
+
+    /**
+     * Esquemas de esta base que tienen `personas_dl`, excepto resto.
+     *
+     * @return list<string>
+     */
+    private function esquemasConPersonasDl(): array
+    {
+        $stmt = $this->oDBR()->query(
+            "SELECT n.nspname
+             FROM pg_class c
+             JOIN pg_namespace n ON n.oid = c.relnamespace
+             WHERE c.relname = 'personas_dl'
+               AND c.relkind = 'r'
+               AND n.nspname NOT LIKE 'resto%'
+               AND n.nspname NOT LIKE 'pg_%'
+             ORDER BY n.nspname"
+        );
+        if ($stmt === false) {
+            throw new \RuntimeException(_('No se pudo consultar las fichas de los esquemas cargados'));
+        }
+
+        $esquemas = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $nombre = $row['nspname'] ?? null;
+            if (!is_string($nombre) || $nombre === '' || preg_match('/^[A-Za-z0-9_-]+$/', $nombre) !== 1) {
+                continue;
+            }
+            $esquemas[] = $nombre;
+        }
+
+        return $esquemas;
+    }
+
+    /**
      * @return list<string>
      */
     private function getPosiblesEsquemas(): array
