@@ -197,10 +197,12 @@ $i18n = [
             var id_activ = fila.id_activ;
             var txt_ctr = fnjs_construir_celda_ctrs(fila);
             var nuevo_txt = '';
-            if (fila.perm_crear_ctr === true) {
+            var tipoCentros = (fila.tipo_centros || TIPO || '');
+            if (fila.perm_crear_ctr === true && tipoCentros !== '') {
                 var onclickNuevo = 'fnjs_nuevo_ctr(event,' + id_activ
                     + ',' + JSON.stringify(fila.f_ini || '')
-                    + ',' + JSON.stringify(fila.f_fin || '') + ')';
+                    + ',' + JSON.stringify(fila.f_fin || '')
+                    + ',' + JSON.stringify(tipoCentros) + ')';
                 nuevo_txt = '<span class="link" onclick="' + fnjs_esc(onclickNuevo) + '">'
                     + fnjs_esc(I18N.nuevo) + '</span>';
             }
@@ -250,9 +252,10 @@ $i18n = [
     };
 
     // ------------------------------------------------------- NUEVO: candidatos
-    fnjs_nuevo_ctr = function (evt, id_activ, f_ini, f_fin) {
+    fnjs_nuevo_ctr = function (evt, id_activ, f_ini, f_fin, tipo_centros) {
         evt.preventDefault();
         evt.stopPropagation();
+        var tipo = (tipo_centros && tipo_centros !== '') ? tipo_centros : TIPO;
         var $anchor = $(evt.currentTarget).closest('td');
         if (!$anchor.length) {
             $anchor = $('#' + id_activ).children('td').eq(2);
@@ -261,7 +264,7 @@ $i18n = [
             url: URL_DISPONIBLES,
             type: 'post',
             data: {
-                tipo: TIPO,
+                tipo: tipo,
                 id_activ: id_activ,
                 inicio: INICIO_ISO,
                 fin: FIN_ISO,

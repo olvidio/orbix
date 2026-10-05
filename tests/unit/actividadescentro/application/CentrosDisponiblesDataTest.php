@@ -36,6 +36,30 @@ final class CentrosDisponiblesDataTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @dataProvider provider_tipo_desde_id_tipo_activ
+     */
+    public function test_tipo_desde_id_tipo_activ(string $id_tipo_activ, ?string $esperado): void
+    {
+        $this->assertSame($esperado, CentrosDisponiblesData::tipoDesdeIdTipoActiv($id_tipo_activ));
+    }
+
+    /**
+     * @return iterable<string, array{0: string, 1: ?string}>
+     */
+    public static function provider_tipo_desde_id_tipo_activ(): iterable
+    {
+        yield 'sg sv' => ['141000', 'sg'];
+        yield 'sr sv' => ['170000', 'sr'];
+        yield 'nagd sv' => ['110000', 'nagd'];
+        yield 'sssc' => ['160000', 'sssc'];
+        yield 'sfsg' => ['241000', 'sfsg'];
+        yield 'sfsr' => ['270000', 'sfsr'];
+        yield 'sfnagd' => ['210000', 'sfnagd'];
+        yield 'desconocido' => ['990000', null];
+        yield 'vacio' => ['', null];
+    }
+
     public function test_tipo_invalido_devuelve_error(): void
     {
         $useCase = new CentrosDisponiblesData(
@@ -50,6 +74,39 @@ final class CentrosDisponiblesDataTest extends TestCase
         $this->assertSame(1, $out['id_activ']);
         $this->assertSame([], $out['centros']);
         $this->assertNotSame('', (string) $out['error']);
+    }
+
+    public function test_resuelve_tipo_desde_id_tipo_activ_cuando_tipo_vacio(): void
+    {
+        $c = new class {
+            public function getId_ubi(): int
+            {
+                return 2;
+            }
+            public function getNombre_ubi(): string
+            {
+                return 'DL2';
+            }
+        };
+
+        $ellas = $this->createStub(CentroEllasRepositoryInterface::class);
+        $ellas->method('getCentros')->willReturn([$c]);
+
+        $useCase = new CentrosDisponiblesData(
+            $this->createStub(CentroEncargadoRepositoryInterface::class),
+            $this->createStub(CentroDlRepositoryInterface::class),
+            $ellas,
+        );
+
+        $out = $useCase->execute([
+            'tipo' => '',
+            'id_activ' => 5,
+            'id_tipo_activ' => '270000',
+        ]);
+
+        $this->assertSame('sfsr', $out['tipo']);
+        $this->assertArrayNotHasKey('error', $out);
+        $this->assertSame([['id_ubi' => 2, 'nombre_ubi' => 'DL2']], $out['centros']);
     }
 
     public function test_sr_mapea_centros_desde_dl(): void

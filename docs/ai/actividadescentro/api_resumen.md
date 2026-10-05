@@ -42,7 +42,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadescentro.centros_disponibles_data`
 - Controller: `src/actividadescentro/infrastructure/ui/http/controllers/centros_disponibles_data.php`
-- Entrada: `post.f_ini_act:string`, `post.fin:string`, `post.id_activ:integer`, `post.inicio:string`, `post.tipo:string`
+- Entrada: `post.f_ini_act:string`, `post.fin:string`, `post.id_activ:integer`, `post.inicio:string`, `post.tipo:string`, `post.id_tipo_activ:string` (opcional; si `tipo` no es válido, se deduce de `id_tipo_activ`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadescentro/centros_encargados_data`
@@ -57,4 +57,4 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `actividadescentro.lista_actividades_ctr_data`
 - Controller: `src/actividadescentro/infrastructure/ui/http/controllers/lista_actividades_ctr_data.php`
 - Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.periodo:string`, `post.tipo:string`, `post.year:string`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data`; cada fila incluye `tipo_centros` (`sg`/`sfsg`/… según `id_tipo_activ`) para el desplegable de centros cuando el menú no fija `tipo`

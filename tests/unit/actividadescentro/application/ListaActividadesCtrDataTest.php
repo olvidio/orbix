@@ -138,6 +138,7 @@ final class ListaActividadesCtrDataTest extends TestCase
         $row = $out['filas'][0];
         $this->assertSame(10, $row['id_activ']);
         $this->assertSame('Act test', $row['nom_activ']);
+        $this->assertSame('sg', $row['tipo_centros']);
         $this->assertTrue($row['perm_modificar_ctr']);
         $this->assertTrue($row['perm_crear_ctr']);
         $this->assertSame([['id_ubi' => 99, 'nombre_ubi' => 'Enc']], $row['centros']);

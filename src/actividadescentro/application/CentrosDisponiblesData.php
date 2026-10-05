@@ -37,10 +37,44 @@ final class CentrosDisponiblesData
      *
      * @return array<string, mixed>
      */
+    /**
+     * Tipo de filtro de centros (`sg`, `sfsg`, …) a partir del `id_tipo_activ` de la actividad.
+     * Alineado con los regex de {@see ListaActividadesCtrData::regexPorTipo}.
+     */
+    public static function tipoDesdeIdTipoActiv(string $id_tipo_activ): ?string
+    {
+        if ($id_tipo_activ === '') {
+            return null;
+        }
+        $map = [
+            'sssc' => '/^16/',
+            'sr' => '/^17/',
+            'sfsr' => '/^27/',
+            'sg' => '/^1[45]/',
+            'nagd' => '/^1[13]/',
+            'sfsg' => '/^2[45]/',
+            'sfnagd' => '/^2[123]/',
+        ];
+        foreach ($map as $tipo => $regex) {
+            if (preg_match($regex, $id_tipo_activ) === 1) {
+                return $tipo;
+            }
+        }
+
+        return null;
+    }
+
     public function execute(array $input): array
     {
         $tipo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo');
         $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
+        if (!in_array($tipo, self::TIPOS_VALIDOS, true)) {
+            $id_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ');
+            $resuelto = self::tipoDesdeIdTipoActiv($id_tipo_activ);
+            if ($resuelto !== null) {
+                $tipo = $resuelto;
+            }
+        }
         if (!in_array($tipo, self::TIPOS_VALIDOS, true)) {
             return [
                 'tipo' => $tipo,

@@ -123,11 +123,14 @@ final class ListaActividadesCtrData
             }
 
             $idx = count($filas);
+            $tipoCentros = CentrosDisponiblesData::tipoDesdeIdTipoActiv($id_tipo_activ);
+
             $filas[] = [
                 'id_activ' => $id_activ,
                 'nom_activ' => $nom_activ,
                 'f_ini' => $f_ini,
                 'f_fin' => $f_fin,
+                'tipo_centros' => $tipoCentros ?? '',
                 'perm_modificar_ctr' => $oPermCtr->have_perm_activ('modificar') === true,
                 'perm_crear_ctr' => $oPermCtr->have_perm_activ('crear') === true,
                 'centros' => $centros,
