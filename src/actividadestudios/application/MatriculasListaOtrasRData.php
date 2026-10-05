@@ -4,11 +4,12 @@ namespace src\actividadestudios\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\application\support\HuecoOpcionalDePlan;
 use src\notas\domain\contracts\ActaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\shared\config\ConfigGlobal;
-use src\shared\infrastructure\DependencyResolver;
-use src\personas\application\services\PersonaFinderService;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
@@ -31,7 +32,8 @@ final class MatriculasListaOtrasRData
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private ActaRepositoryInterface $actaRepository,
         private DelegacionRepositoryInterface $delegacionRepository,
-        private PersonaFinderService $personaFinderService,
+        private PersonaNotaRepositoryInterface $personaNotaRepository,
+        private PersonaExRepositoryInterface $personaExRepository,
     ) {
     }
 
@@ -82,35 +84,27 @@ final class MatriculasListaOtrasRData
                 $aNombre[$i] = $apellidosNombre;
             }
         } else {
-            $aWhere = ['json_certificados' => 'x', '_ordre' => 'id_nom'];
-            $aOperador = ['json_certificados' => 'IS NULL'];
-            $personaNotaOtraRepo = DependencyResolver::make(
-                PersonaNotaOtraRegionStgrRepositoryInterface::class,
-                ['esquema_region_stgr' => $esquemaRegionStgr],
-            );
-            if (!$personaNotaOtraRepo instanceof PersonaNotaOtraRegionStgrRepositoryInterface) {
-                throw new \RuntimeException(_('No se pudo resolver el repositorio de notas de otras regiones'));
-            }
-            // json_certificados vacío solo marca que el envío documental no se anotó.
-            // Quien ya tiene ficha en un esquema Aquinate cargado no necesita certificado.
-            $aNotasOtrasRegiones = $personaNotaOtraRepo->getPersonaNotas($aWhere, $aOperador);
+            $aNotasDePaso = $this->personaNotaRepository->getNotasPersonasDePasoDeRegion($esquemaRegionStgr);
 
             $aAsignaturas = $this->asignaturaRepository->getArrayAsignaturas();
 
-            $titulo = _('Alumnos sin ficha en los esquemas Aquinate cargados');
+            $titulo = _('Personas de paso pendientes de certificado');
             /** @var array<int, array{alert: string, asignaturas: string}> $grupos */
             $grupos = [];
-            foreach ($aNotasOtrasRegiones as $oPersonaNotaOtraRegionDB) {
-                $idNom = $oPersonaNotaOtraRegionDB->getId_nom();
+            foreach ($aNotasDePaso as $oPersonaNota) {
+                $idAsignatura = $oPersonaNota->getId_asignatura();
+                if (HuecoOpcionalDePlan::esMarcadorFinCiclo($idAsignatura)) {
+                    continue;
+                }
+                $idNom = $oPersonaNota->getId_nom();
                 if (!isset($grupos[$idNom])) {
                     $grupos[$idNom] = ['alert' => '', 'asignaturas' => ''];
                 }
                 $alert = $grupos[$idNom]['alert'];
                 $strAsignaturas = $grupos[$idNom]['asignaturas'];
 
-                $idAsignatura = $oPersonaNotaOtraRegionDB->getId_asignatura();
-                $idActiv = $oPersonaNotaOtraRegionDB->getId_activ();
-                $acta = $oPersonaNotaOtraRegionDB->getActa();
+                $idActiv = $oPersonaNota->getId_activ();
+                $acta = $oPersonaNota->getActa();
                 if ($acta !== null && $acta !== '') {
                     $Acta = $this->actaRepository->findById($acta);
                     if ($Acta !== null && ($Acta->getPdfVo() === null)) {
@@ -133,18 +127,19 @@ final class MatriculasListaOtrasRData
                 $grupos[$idNom] = ['alert' => $alert, 'asignaturas' => $strAsignaturas];
             }
 
-            $enAquinate = $this->personaFinderService->idNomsEnEsquemasAquinate(array_keys($grupos));
+            $fichas = $this->fichasDePaso(array_keys($grupos));
             $i = 0;
             foreach ($grupos as $idNom => $grupo) {
-                if (isset($enAquinate[$idNom])) {
-                    continue;
-                }
                 $i++;
-                $apellidosNombre = sprintf(_('sin ficha (%d)'), $idNom);
+                $ficha = $fichas[$idNom] ?? null;
+                $apellidosNombre = $ficha !== null
+                    ? $ficha->getPrefApellidosNombre()
+                    : sprintf(_('sin ficha (%d)'), $idNom);
+                $dl = $ficha?->getDl() ?? '';
                 $aValores[$i]['sel'] = (string) $idNom;
                 $aValores[$i][5] = $idNom;
                 $aValores[$i][1] = $apellidosNombre;
-                $aValores[$i][2] = '';
+                $aValores[$i][2] = $dl;
                 $aValores[$i][3] = $grupo['alert'];
                 $aValores[$i][4] = $grupo['asignaturas'];
                 $aNombre[$i] = $apellidosNombre;
@@ -162,6 +157,31 @@ final class MatriculasListaOtrasRData
             'aviso' => RegionStgrAviso::formatear($problemasRegionStgr),
             'a_valores' => $aValores,
         ];
+    }
+
+    /**
+     * @param list<int> $idNoms
+     * @return array<int, PersonaEx>
+     */
+    private function fichasDePaso(array $idNoms): array
+    {
+        $ids = [];
+        foreach ($idNoms as $idNom) {
+            $idNom = (int) $idNom;
+            if ($idNom < 0) {
+                $ids[] = $idNom;
+            }
+        }
+        if ($ids === []) {
+            return [];
+        }
+
+        $fichas = [];
+        foreach ($this->personaExRepository->getPersonas(['id_nom' => $ids], ['id_nom' => 'IN']) as $persona) {
+            $fichas[$persona->getId_nom()] = $persona;
+        }
+
+        return $fichas;
     }
 
     public static function esAvisoRegionStgr(\Throwable $e): bool

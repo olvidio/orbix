@@ -30,6 +30,14 @@ interface PersonaNotaRepositoryInterface
      */
     public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array;
 
+    /**
+     * Notas de acta de personas de paso (`id_nom` < 0) en los `e_notas_dl`
+     * de la región STGR indicada (p. ej. `H-Hv` → esquemas `H-%v`).
+     *
+     * @return list<\src\notas\domain\entity\PersonaNota>
+     */
+    public function getNotasPersonasDePasoDeRegion(string $esquemaRegionStgr): array;
+
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(PersonaNota $PersonaNota): bool;

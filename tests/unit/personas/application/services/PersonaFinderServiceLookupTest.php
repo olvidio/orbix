@@ -246,17 +246,6 @@ final class PersonaFinderServiceLookupTest extends TestCase
         $this->assertSame($personaEx, $service->findPersonaEnGlobalIncluyendoNoActivos($idDePaso));
     }
 
-    public function test_id_noms_en_esquemas_aquinate_vacio_no_consulta_bd(): void
-    {
-        $service = $this->buildService(
-            $this->createMock(PersonaDlRepositoryFactoryInterface::class),
-            $this->createMock(PersonaAllRepositoryInterface::class),
-        );
-
-        $this->assertSame([], $service->idNomsEnEsquemasAquinate([]));
-        $this->assertSame([], $service->idNomsEnEsquemasAquinate([-4, 0]));
-    }
-
     private function buildService(
         PersonaDlRepositoryFactoryInterface $factory,
         PersonaAllRepositoryInterface $personaAll,

@@ -51,7 +51,6 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $PersonaNotaSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -104,6 +103,48 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $this->entidadesDesdeFilas(is_array($filas) ? $filas : []);
+    }
+
+    public function getNotasPersonasDePasoDeRegion(string $esquemaRegionStgr): array
+    {
+        if (preg_match('/^([A-Za-z0-9]+)-.+([vf])$/', $esquemaRegionStgr, $coincidencias) !== 1) {
+            throw new \RuntimeException(_('No se pudo determinar la región para las personas de paso.'));
+        }
+        $patron = $coincidencias[1] . '-%' . $coincidencias[2];
+
+        $sql = "SELECT n.*
+            FROM e_notas n
+            JOIN pg_class c ON c.oid = n.tableoid
+            JOIN pg_namespace ns ON ns.oid = c.relnamespace
+            WHERE n.id_nom < 0
+              AND c.relname = 'e_notas_dl'
+              AND ns.nspname LIKE :patron
+              AND n.id_asignatura NOT IN (9998, 9999)
+              AND COALESCE(n.tipo_acta, 1) = 1
+            ORDER BY n.id_nom, n.id_asignatura";
+
+        $stmt = $this->getoDbl()->prepare($sql);
+        if ($stmt === false || $stmt->execute(['patron' => $patron]) === false) {
+            throw new \RuntimeException(_('No se pudieron leer las notas de las personas de paso.'));
+        }
+
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        /** @var list<PersonaNota> $items */
+        $items = $this->entidadesDesdeFilas(is_array($filas) ? $filas : []);
+
+        return $items;
+    }
+
+    /**
+     * @param list<mixed> $filas
+     * @return list<PersonaNota|PersonaNotaOtraRegionStgr>
+     */
+    private function entidadesDesdeFilas(array $filas): array
+    {
+        $PersonaNotaSet = new Set();
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
@@ -112,18 +153,21 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
             foreach ($aDatos as $key => $value) {
                 $normalized[(string) $key] = $value;
             }
-            // para las fechas del postgres (texto iso)
-            $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta']))->fromPg();
+            $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta'] ?? null))->fromPg();
             $normalized['tipo_acta'] = TipoActa::fromPg($normalized['tipo_acta'] ?? null)->value();
-            $a_pkey = array('id_nom' => $normalized['id_nom'],
+            $a_pkey = [
+                'id_nom' => $normalized['id_nom'],
                 'id_nivel' => $normalized['id_nivel'],
-                'tipo_acta' => $normalized['tipo_acta']);
+                'tipo_acta' => $normalized['tipo_acta'],
+            ];
             $PersonaNota = $this->chooseNewObject($a_pkey);
             $PersonaNota->setAllAttributes($normalized);
             $PersonaNotaSet->add($PersonaNota);
         }
+
         /** @var list<PersonaNota|PersonaNotaOtraRegionStgr> $items */
         $items = array_values($PersonaNotaSet->getTot());
+
         return $items;
     }
 

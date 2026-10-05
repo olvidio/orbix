@@ -4,68 +4,49 @@ declare(strict_types=1);
 
 namespace Tests\unit\actividadestudios\application;
 
-use DI\ContainerBuilder;
 use PHPUnit\Framework\TestCase;
-use function DI\factory;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\application\MatriculasListaOtrasRData;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
-use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
-use src\personas\application\services\PersonaFinderService;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\entity\PersonaNota;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
+use src\personas\domain\entity\PersonaEx;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 final class MatriculasListaOtrasRDataTest extends TestCase
 {
-    private mixed $containerPrevio = null;
-
-    protected function setUp(): void
+    public function test_lista_personas_de_paso_con_nombre_y_omite_fin_de_ciclo(): void
     {
-        $this->containerPrevio = $GLOBALS['container'] ?? null;
-    }
+        $paso = $this->nota(-5, 2222);
+        $finBienio = $this->nota(-5, 9999);
+        $sinFicha = $this->nota(-7, 1111);
 
-    protected function tearDown(): void
-    {
-        if ($this->containerPrevio === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->containerPrevio;
-        }
-    }
+        $notas = $this->createMock(PersonaNotaRepositoryInterface::class);
+        $notas->expects($this->once())
+            ->method('getNotasPersonasDePasoDeRegion')
+            ->with('H-Hv')
+            ->willReturn([$paso, $finBienio, $sinFicha]);
 
-    public function test_omite_quien_esta_en_esquema_y_lista_quien_no_tiene_ficha(): void
-    {
-        $enEsquema = $this->nota(10, 1111);
-        $otraDelMismo = $this->nota(10, 2222);
-        $fuera = $this->nota(20, 2222);
+        $ficha = $this->createMock(PersonaEx::class);
+        $ficha->method('getId_nom')->willReturn(-5);
+        $ficha->method('getPrefApellidosNombre')->willReturn('Burgos, Jesús');
+        $ficha->method('getDl')->willReturn('dlal');
 
-        $repo = $this->createMock(PersonaNotaOtraRegionStgrRepositoryInterface::class);
-        $repo->method('getPersonaNotas')->willReturn([$enEsquema, $otraDelMismo, $fuera]);
-
-        $builder = new ContainerBuilder();
-        $builder->addDefinitions([
-            PersonaNotaOtraRegionStgrRepositoryInterface::class => factory(static fn () => $repo),
-        ]);
-        $GLOBALS['container'] = $builder->build();
+        $personasEx = $this->createMock(PersonaExRepositoryInterface::class);
+        $personasEx->expects($this->once())
+            ->method('getPersonas')
+            ->with(['id_nom' => [-5, -7]], ['id_nom' => 'IN'])
+            ->willReturn([$ficha]);
 
         $asignaturas = $this->createMock(AsignaturaRepositoryInterface::class);
         $asignaturas->method('getArrayAsignaturas')->willReturn([
             1111 => 'Latín',
             2222 => 'Griego',
+            9999 => 'fin bienio',
         ]);
-
-        $finder = $this->createMock(PersonaFinderService::class);
-        $finder->expects($this->once())
-            ->method('idNomsEnEsquemasAquinate')
-            ->with($this->callback(static function (array $ids): bool {
-                $copia = array_map(intval(...), $ids);
-                sort($copia);
-
-                return $copia === [10, 20];
-            }))
-            ->willReturn([10 => true]);
 
         $useCase = new MatriculasListaOtrasRData(
             $this->createMock(PersonaPubRepositoryInterface::class),
@@ -73,7 +54,8 @@ final class MatriculasListaOtrasRDataTest extends TestCase
             $this->createMock(ActividadAllRepositoryInterface::class),
             $this->createMock(ActaRepositoryInterface::class),
             $this->createMock(DelegacionRepositoryInterface::class),
-            $finder,
+            $notas,
+            $personasEx,
         );
 
         $out = $useCase->execute([
@@ -82,18 +64,22 @@ final class MatriculasListaOtrasRDataTest extends TestCase
         ]);
 
         $this->assertSame('', $out['msg_err']);
-        $this->assertSame(_('Alumnos sin ficha en los esquemas Aquinate cargados'), $out['titulo']);
-        $this->assertCount(1, $out['a_valores']);
-        $fila = array_values($out['a_valores'])[0];
-        $this->assertSame(20, $fila[5]);
-        $this->assertSame(sprintf(_('sin ficha (%d)'), 20), $fila[1]);
-        $this->assertSame('Griego', $fila[4]);
-        $this->assertSame('', $fila[2]);
+        $this->assertSame(_('Personas de paso pendientes de certificado'), $out['titulo']);
+
+        $porId = [];
+        foreach ($out['a_valores'] as $fila) {
+            $porId[$fila[5]] = $fila;
+        }
+        $this->assertSame(['Burgos, Jesús', 'dlal', 'Griego'], [$porId[-5][1], $porId[-5][2], $porId[-5][4]]);
+        $this->assertSame(sprintf(_('sin ficha (%d)'), -7), $porId[-7][1]);
+        $this->assertSame('Latín', $porId[-7][4]);
+        $this->assertArrayNotHasKey(10, $porId);
+        $this->assertCount(2, $porId);
     }
 
-    private function nota(int $idNom, int $idAsignatura): PersonaNotaOtraRegionStgr
+    private function nota(int $idNom, int $idAsignatura): PersonaNota
     {
-        $nota = $this->createMock(PersonaNotaOtraRegionStgr::class);
+        $nota = $this->createMock(PersonaNota::class);
         $nota->method('getId_nom')->willReturn($idNom);
         $nota->method('getId_asignatura')->willReturn($idAsignatura);
         $nota->method('getId_activ')->willReturn(null);

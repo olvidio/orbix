@@ -42,7 +42,7 @@
 
 <h2 class=titulo><?= $titulo ?></h2>
 <?php if ($titulo !== '') : ?>
-    <p><?= _("Solo salen alumnos que no tienen ficha en los esquemas Aquinate cargados. Si ya están en un esquema, el certificado no se envía.") ?></p>
+    <p><?= _("Salen las personas de paso con notas en las delegaciones de esta región. Quien ya tiene ficha en un esquema de Aquinate no necesita este envío.") ?></p>
 <?php endif; ?>
 <?php if (!empty($aviso)) : ?>
 <div class="certificado-aviso-config" role="alert" style="max-width: 42rem; padding: 1rem 1.25rem; margin: 1rem 0; border: 1px solid #c9a227; background: #fffbea; color: #3d3500; line-height: 1.5;">
