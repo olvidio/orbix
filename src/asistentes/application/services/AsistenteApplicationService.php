@@ -38,7 +38,21 @@ class AsistenteApplicationService
      */
     public function findById(int $id_activ, int $id_nom): ?Asistente
     {
-        return $this->repository->findById($id_activ, $id_nom);
+        $encontrado = $this->repository->findById($id_activ, $id_nom);
+        if ($encontrado !== null) {
+            return $encontrado;
+        }
+
+        // La lista del dossier lee d_asistentes_all. La fila puede estar solo en
+        // una hija (p. ej. d_asistentes_out si la actividad no es de la dl) que
+        // la vista de sesión no devuelve. Sin este barrido, cambiar actividad
+        // responde «no se encuentra el asistente».
+        $sonda = new Asistente();
+        $sonda->setId_activ($id_activ);
+        $sonda->setId_nom($id_nom);
+        $repo = $this->resolverRepositorioDeAsistente($sonda);
+
+        return $repo?->findById($id_activ, $id_nom);
     }
 
     /**

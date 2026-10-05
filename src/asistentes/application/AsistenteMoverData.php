@@ -2,7 +2,6 @@
 
 namespace src\asistentes\application;
 
-use Psr\Container\ContainerInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
@@ -14,7 +13,7 @@ use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
-use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\asistentes\application\services\AsistenteApplicationService;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 
@@ -26,8 +25,8 @@ use src\shared\config\ConfigGlobal;
 final class AsistenteMoverData
 {
     public function __construct(
-        private ContainerInterface $container,
         private AsistenteActividadService $asistenteActividadService,
+        private AsistenteApplicationService $asistenteApplicationService,
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private ActividadRepositoryInterface $actividadRepository,
         private ResumenPlazasService $resumenPlazasService,
@@ -56,7 +55,9 @@ final class AsistenteMoverData
         $Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau', $Qid_nom);
 
         try {
-            $AsistenteRepositoryInterface = $this->asistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ_old);
+            // Valida persona, actividad y que no sea una dl ajena. La fila puede
+            // no estar en el repositorio que predice (dl vs out).
+            $this->asistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ_old);
         } catch (\RuntimeException $e) {
             return [
                 'aviso_txt' => $e->getMessage(),
@@ -66,9 +67,7 @@ final class AsistenteMoverData
                 ],
             ];
         }
-        /** @var AsistenteRepositoryInterface $AsistenteRepository */
-        $AsistenteRepository = $this->container->get($AsistenteRepositoryInterface);
-        $oAsistente = $AsistenteRepository->findById($Qid_activ_old, $Qid_nom);
+        $oAsistente = $this->asistenteApplicationService->findById($Qid_activ_old, $Qid_nom);
         if ($oAsistente === null) {
             return [
                 'aviso_txt' => sprintf(_('no se encuentra el asistente (id_nom: %s, id_activ: %s)'), $Qid_nom, $Qid_activ_old),
