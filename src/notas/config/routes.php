@@ -154,4 +154,8 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/notas/comprobar_notas_page_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/comprobar_notas_page_data.php';
     });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/residuo_otra_region_stgr_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/residuo_otra_region_stgr_data.php';
+    });
 };

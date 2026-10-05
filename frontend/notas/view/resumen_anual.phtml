@@ -48,3 +48,11 @@
     <input type="button" onclick="fnjs_update_div('#main','<?= $go['filtro'] ?>');"
            value="<?= _("filtrar por delegaciones") ?>">
 <?php } ?>
+<?php if ($_SESSION['oPerm']->have_perm_oficina('est')) { ?>
+    <h2 class="titulo"><?= _("Residuo de notas de otras regiones") ?></h2>
+    <ul>
+        <li><span class="link"
+                  onclick="fnjs_update_div('#main','<?= $go['residuo_otra_region'] ?>');"><?= _("comprobar e_notas_otra_region_stgr antes de borrarlo") ?></span>
+        </li>
+    </ul>
+<?php } ?>

@@ -89,6 +89,7 @@ $go['profesores_numeros'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/
 $go['profesores_listado'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_listado));
 $go['asig_faltan'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/asig_faltan_que.php');
 $go['filtro'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/resumen_anual.php?' . http_build_query(['filtro' => 1]));
+$go['residuo_otra_region'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/residuo_otra_region_stgr.php');
 
 $mostrarResumen = !$rstgr || $Qfiltro !== 1 || $Qdl !== [];
 if ($mostrarResumen) {

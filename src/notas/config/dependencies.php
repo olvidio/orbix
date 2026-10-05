@@ -15,8 +15,10 @@ use src\notas\domain\contracts\PersonaNotaCertificadoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\contracts\ResiduoOtraRegionConsultaInterface;
 
 use src\notas\application\ActaEliminar;
+use src\notas\application\ResiduoOtraRegionComprobarData;
 use src\notas\application\ActaImprimirPresentacionData;
 use src\notas\application\ActaMarcarImpresa;
 use src\notas\application\ActaModificar;
@@ -81,6 +83,7 @@ use src\notas\infrastructure\persistence\postgresql\PgPersonaNotaCertificadoRepo
 use src\notas\infrastructure\persistence\postgresql\PgPersonaNotaDlRepository;
 use src\notas\infrastructure\persistence\postgresql\PgPersonaNotaOtraRegionStgrRepository;
 use src\notas\infrastructure\persistence\postgresql\PgPersonaNotaRepository;
+use src\notas\infrastructure\persistence\postgresql\PgResiduoOtraRegionConsulta;
 
 return [
 
@@ -94,6 +97,8 @@ return [
     PersonaNotaDlRepositoryInterface::class => autowire(PgPersonaNotaDlRepository::class),
     PersonaNotaCertificadoRepositoryInterface::class => autowire(PgPersonaNotaCertificadoRepository::class),
     PersonaNotaRepositoryInterface::class => autowire(PgPersonaNotaRepository::class),
+    ResiduoOtraRegionConsultaInterface::class => autowire(PgResiduoOtraRegionConsulta::class),
+    ResiduoOtraRegionComprobarData::class => autowire(ResiduoOtraRegionComprobarData::class),
     PersonaNotaOtraRegionStgrRepositoryInterface::class => autowire(PgPersonaNotaOtraRegionStgrRepository::class),
     MapaPrefijoActaEsquemaRepositoryInterface::class => autowire(PgMapaPrefijoActaEsquemaRepository::class),
     ActaEliminar::class => autowire(ActaEliminar::class),

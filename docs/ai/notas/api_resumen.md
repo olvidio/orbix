@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "notas"
-endpoints: 36
+endpoints: 37
 estado_revision: "generado"
 ---
 
@@ -254,6 +254,13 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Controller: `src/notas/infrastructure/ui/http/controllers/tessera_imprimir_data.php`
 - Entrada: `post.id_nom:integer` (acepta `id_nom` negativo: persona / asistente de paso)
 - Respuesta: `standard_envelope_string_data`
+
+## `/src/notas/residuo_otra_region_stgr_data`
+
+- Id: `notas.residuo_otra_region_stgr_data`
+- Controller: `src/notas/infrastructure/ui/http/controllers/residuo_otra_region_stgr_data.php`
+- Entrada: sin parámetros
+- Respuesta: `standard_envelope_string_data` con `pasos` (inventario, personas de paso, resto con acta pareja, resto sin acta, json_certificados)
 
 ## `/src/notas/tessera_ver_data`
 
