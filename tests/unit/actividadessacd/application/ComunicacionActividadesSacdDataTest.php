@@ -191,6 +191,8 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
             $centroDlRepo,
             $this->createMock(TelecoPersonaService::class),
             $this->createMock(ColaMailRepositoryInterface::class),
+            $this->createMock(\src\encargossacd\domain\contracts\EncargoRepositoryInterface::class),
+            $this->createMock(\src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface::class),
         );
 
         $out = (new ComunicacionActividadesSacdData(
@@ -235,6 +237,8 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
             $this->createMock(CentroDlRepositoryInterface::class),
             $this->createMock(TelecoPersonaService::class),
             $this->createMock(ColaMailRepositoryInterface::class),
+            $this->createMock(\src\encargossacd\domain\contracts\EncargoRepositoryInterface::class),
+            $this->createMock(\src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface::class),
         );
 
         return new ComunicacionActividadesSacdData(

@@ -20,7 +20,12 @@ use src\personas\domain\services\TelecoPersonaService;
 use src\personas\domain\value_objects\PersonaApellido1Text;
 use src\personas\domain\value_objects\PersonaTablaCode;
 use src\personas\domain\value_objects\SituacionCode;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\encargossacd\domain\entity\Encargo;
+use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 
@@ -70,6 +75,40 @@ final class ComunicarActividadesSacdServiceTest extends TestCase
         $service->setPersonas([$this->personaPub(4411)]);
 
         $this->assertSame([], $service->getArrayComunicacion());
+    }
+
+    public function test_incluye_ausencias_del_periodo_en_la_tabla(): void
+    {
+        $horario = $this->createStub(EncargoSacdHorario::class);
+        $horario->method('getId_enc')->willReturn(7010);
+        $horario->method('getF_ini')->willReturn(new DateTimeLocal('2030-03-01'));
+        $horario->method('getF_fin')->willReturn(new DateTimeLocal('2030-03-10'));
+        $horario->method('getH_ini')->willReturn(null);
+        $horario->method('getH_fin')->willReturn(null);
+
+        $encargo = $this->createStub(Encargo::class);
+        $encargo->method('getId_tipo_enc')->willReturn(7010);
+        $encargo->method('getDesc_enc')->willReturn('Retiro');
+
+        $horarioRepo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
+        $horarioRepo->method('getEncargoSacdHorarios')->willReturn([$horario]);
+
+        $encargoRepo = $this->createMock(EncargoRepositoryInterface::class);
+        $encargoRepo->method('findById')->with(7010)->willReturn($encargo);
+
+        $service = $this->makeService(
+            encargoRepo: $encargoRepo,
+            horarioRepo: $horarioRepo,
+        );
+        $service->setInicioIso('2030-01-01');
+        $service->setFinIso('2030-12-31');
+        $service->setPersonas([$this->personaSacd(4411)]);
+
+        $out = $service->getArrayComunicacion();
+
+        $this->assertCount(1, $out[4411]['actividades']);
+        $this->assertSame('Retiro', $out[4411]['actividades'][0]['nom_tipo']);
+        $this->assertSame(7010, $out[4411]['actividades'][0]['id_activ']);
     }
 
     public function test_cada_actividad_se_evalua_con_su_tipo_y_la_ocultada_deja_aviso(): void
@@ -124,6 +163,8 @@ final class ComunicarActividadesSacdServiceTest extends TestCase
     private function makeService(
         ?ActividadAllRepositoryInterface $actividadRepo = null,
         ?ActividadCargoRepositoryInterface $actividadCargoRepo = null,
+        ?EncargoRepositoryInterface $encargoRepo = null,
+        ?EncargoSacdHorarioRepositoryInterface $horarioRepo = null,
     ): ComunicarActividadesSacdService {
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->willReturn([]);
@@ -131,6 +172,11 @@ final class ComunicarActividadesSacdServiceTest extends TestCase
         if ($actividadCargoRepo === null) {
             $actividadCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
             $actividadCargoRepo->method('getAsistenteCargoDeActividad')->willReturn([]);
+        }
+
+        if ($horarioRepo === null) {
+            $horarioRepo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
+            $horarioRepo->method('getEncargoSacdHorarios')->willReturn([]);
         }
 
         $helper = new ActividadesSacdHelper(
@@ -150,6 +196,8 @@ final class ComunicarActividadesSacdServiceTest extends TestCase
             $this->createMock(CentroDlRepositoryInterface::class),
             $this->createMock(TelecoPersonaService::class),
             $this->createMock(ColaMailRepositoryInterface::class),
+            $encargoRepo ?? $this->createMock(EncargoRepositoryInterface::class),
+            $horarioRepo ?? $this->createMock(EncargoSacdHorarioRepositoryInterface::class),
         );
     }
 

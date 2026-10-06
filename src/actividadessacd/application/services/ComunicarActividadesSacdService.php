@@ -23,6 +23,9 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\permisos\domain\PermisosActividades;
 
 /**
@@ -59,6 +62,8 @@ final class ComunicarActividadesSacdService
         private CentroDlRepositoryInterface $centroDlRepository,
         private TelecoPersonaService $telecoPersonaService,
         private ColaMailRepositoryInterface $colaMailRepository,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdHorarioRepositoryInterface $encargoSacdHorarioRepository,
     ) {
     }
 
@@ -272,6 +277,8 @@ final class ComunicarActividadesSacdService
                 $ord_activ[$f_ord] = $array_act;
             }
 
+            $this->anadirAusenciasDelPeriodo($id_nom, $ord_activ);
+
             if (!empty($ord_activ)) {
                 ksort($ord_activ);
                 $array_actividades[$id_nom]['actividades'] = array_values($ord_activ);
@@ -484,6 +491,76 @@ final class ComunicarActividadesSacdService
             }
         }
         return '';
+    }
+
+    /**
+     * Ausencias SACD (encargos tipo 4/7) con solape en el periodo de comunicacion.
+     *
+     * @param array<int, array<string, mixed>> $ord_activ
+     */
+    private function anadirAusenciasDelPeriodo(int $id_nom, array &$ord_activ): void
+    {
+        $aWhereE = [
+            'id_nom' => $id_nom,
+            'f_ini' => $this->finIso,
+            'f_fin' => $this->inicioIso,
+        ];
+        $aOperadorE = [
+            'f_ini' => '<=',
+            'f_fin' => '>=',
+        ];
+        $cAusencias = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
+        foreach ($cAusencias as $oTareaHorarioSacd) {
+            if (!$oTareaHorarioSacd instanceof EncargoSacdHorario) {
+                continue;
+            }
+            $id_enc = $oTareaHorarioSacd->getId_enc();
+            $oEncargo = $this->encargoRepository->findById($id_enc);
+            if ($oEncargo === null) {
+                continue;
+            }
+            $id_tipo_enc = (string)$oEncargo->getId_tipo_enc();
+            if ($id_tipo_enc === '' || ($id_tipo_enc[0] !== '4' && $id_tipo_enc[0] !== '7')) {
+                continue;
+            }
+            $oF_ini = $oTareaHorarioSacd->getF_ini();
+            $oF_fin = $oTareaHorarioSacd->getF_fin();
+            if ($oF_ini === null || $oF_fin === null) {
+                continue;
+            }
+
+            $f_ini = $oF_ini->formatRoman();
+            $f_fin = $oF_fin->formatRoman();
+            $h_ini = $oTareaHorarioSacd->getH_ini();
+            $h_fin = $oTareaHorarioSacd->getH_fin();
+            if ($h_ini instanceof TimeLocal) {
+                $f_ini .= ' (' . $h_ini->format('H:i') . ')';
+            }
+            if ($h_fin instanceof TimeLocal) {
+                $f_fin .= ' (' . $h_fin->format('H:i') . ')';
+            }
+
+            $desc_enc = (string)($oEncargo->getDesc_enc() ?? '');
+            $array_act = [
+                'propio' => false,
+                'f_ini' => $f_ini,
+                'f_fin' => $f_fin,
+                'nombre_ubi' => '',
+                'id_activ' => $id_enc,
+                'sfsv' => '',
+                'asistentes' => '',
+                'actividad' => _('ausencias/tareas'),
+                'nom_tipo' => $desc_enc,
+                'observ' => '',
+                'cargo' => '',
+                'encargado' => '',
+            ];
+            $f_ord = (int)$oF_ini->format('Ymd');
+            while (array_key_exists($f_ord, $ord_activ)) {
+                $f_ord++;
+            }
+            $ord_activ[$f_ord] = $array_act;
+        }
     }
 
     private function mixedToString(mixed $value): string
