@@ -70,7 +70,7 @@
 242	{140,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	64	10	t
 921	{20,50}	resumen pendientes	\N	174	16	12	t
 188	{100,30}	tipo de casa	clase_info=ubis\\model\\infotipocasa	160	32	19	t
-38	{60,110}	solapes	tipo=solape	39	8	8	t
+38	{60,90,110}	solapes	tipo=solape	39	8	8	t
 800	{10,30}	meta menus	clase_info=menus\\model\\infometamenus	160	33554432	13	t
 142	{35,75}	estudios x ctr	lista=list_est&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
 831	{1,95}	Informar de un bug	\N	167	33816575	1	t
@@ -434,7 +434,7 @@
 329	{85,40}	por casas	tipo=planning_cdc&ssfsv=sv	194	2176	2	t
 951	{10,10}	Planing Casas	tipo=planning_cdc	194	1	7	t
 1329	{100,40}	por casas	tipo=planning_cdc&ssfsv=sv	194	2	3	t
-37	{60,100}	falta sacd	tipo=falta_sacd	39	8	8	t
+37	{60,90,100}	falta sacd	tipo=falta_sacd	39	8	8	t
 39	{5,90}	Actualizar datos desde BDU	tipo=sssc	176	8	8	t
 40	{20,80}	ver docencia	\N	15	16	12	t
 41	{20,90}	asitencia a congresos	\N	196	16	12	t
