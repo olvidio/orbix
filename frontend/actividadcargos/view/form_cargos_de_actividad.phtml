@@ -1,17 +1,23 @@
 <script>
     /**
-     * Refleja ActividadCargoNuevo/Editar::execute (ids obligatorios positivos).
-     * validamos en cliente para no enviar el POST y recibir el error del servidor.
+     * Refleja ActividadCargoNuevo/Editar::execute.
+     * Actividad y tipo de cargo son ids positivos; id_nom puede ser negativo
+     * (persona de paso). Validamos en cliente para no enviar el POST y
+     * recibir el error del servidor.
      */
     fnjs_cargo_de_actividad_datos_ok = function ($f) {
-        var n = function (v) {
+        var positivo = function (v) {
             var i = parseInt(String(v == null ? '' : v), 10);
             return (isNaN(i) || i < 1) ? 0 : i;
         };
-        var idActiv = n($f.find('[name="id_activ"]').first().val());
-        var idNom = n($f.find('[name="id_nom"]').first().val());
-        var idCargo = n($f.find('[name="id_cargo"]').val());
-        if (idActiv < 1 || idNom < 1 || idCargo < 1) {
+        var idNomPresente = function (v) {
+            var i = parseInt(String(v == null ? '' : v), 10);
+            return !isNaN(i) && i !== 0;
+        };
+        var idActiv = positivo($f.find('[name="id_activ"]').first().val());
+        var idNom = idNomPresente($f.find('[name="id_nom"]').first().val());
+        var idCargo = positivo($f.find('[name="id_cargo"]').val());
+        if (idActiv < 1 || !idNom || idCargo < 1) {
             alert(<?= json_encode(_("faltan datos obligatorios: actividad, asistente y tipo de cargo."), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
             return false;
         }
