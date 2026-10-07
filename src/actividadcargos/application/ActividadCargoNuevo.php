@@ -48,7 +48,8 @@ final class ActividadCargoNuevo
         $puede_agd = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'puede_agd');
         $asis = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'asis');
 
-        if ($id_activ <= 0 || $id_nom <= 0 || $id_cargo <= 0) {
+        // id_nom negativo: persona de paso (p_de_paso_ex).
+        if ($id_activ <= 0 || $id_nom === 0 || $id_cargo <= 0) {
             return _("faltan parametros id_activ / id_nom / id_cargo");
         }
 
