@@ -24,6 +24,7 @@ final class CertificadosPostInput
 
     /**
      * Extrae id_nom de un valor sel/id_sel (id_nom, id_nom#id_tabla, #id_nom, checked#id_nom).
+     * Un id negativo es una persona de paso.
      */
     public static function parseIdNomFromSelValue(mixed $raw): int
     {
@@ -57,20 +58,26 @@ final class CertificadosPostInput
     public static function idNomFromSelPost(): int
     {
         $a_sel_raw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        if (!is_array($a_sel_raw) && isset($_POST['sel']) && is_array($_POST['sel'])) {
+            $a_sel_raw = $_POST['sel'];
+        }
         if (is_array($a_sel_raw) && $a_sel_raw !== []) {
             $idNom = self::parseIdNomFromSelValue($a_sel_raw[0]);
-            if ($idNom > 0) {
+            if ($idNom !== 0) {
                 return $idNom;
             }
         }
 
         $idNom = self::parseIdNomFromSelValue($_POST['id_sel'] ?? null);
-        if ($idNom > 0) {
+        if ($idNom !== 0) {
             return $idNom;
         }
 
         $idRaw = filter_input(INPUT_POST, 'id_nom', FILTER_VALIDATE_INT);
+        if (!is_int($idRaw) && isset($_POST['id_nom']) && is_scalar($_POST['id_nom']) && is_numeric($_POST['id_nom'])) {
+            $idRaw = (int) $_POST['id_nom'];
+        }
 
-        return is_int($idRaw) && $idRaw > 0 ? $idRaw : 0;
+        return is_int($idRaw) && $idRaw !== 0 ? $idRaw : 0;
     }
 }
