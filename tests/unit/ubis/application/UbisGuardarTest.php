@@ -34,6 +34,7 @@ use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
 use src\ubis\domain\contracts\TrasladoUbiRepositoryInterface;
 use src\ubis\domain\entity\Casa;
+use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\Delegacion;
 
 final class UbisGuardarTest extends TestCase
@@ -126,11 +127,45 @@ final class UbisGuardarTest extends TestCase
         $this->assertSame('', $msg);
     }
 
-    private function resolver(?CasaExRepositoryInterface $casaEx = null): UbiRepositoryResolver
+    public function test_centro_dl_sin_sv_sf_en_el_formulario_conserva_las_marcas(): void
+    {
+        $centro = $this->createMock(CentroDl::class);
+        $centro->method('getId_ubi')->willReturn(10018264);
+        $centro->method('getDl')->willReturn('dlb');
+        $centro->method('getRegion')->willReturn('H');
+        $centro->expects($this->once())->method('setActive')->with(true);
+        $centro->expects($this->never())->method('setSv');
+        $centro->expects($this->never())->method('setSf');
+
+        $repo = $this->createMock(CentroDlRepositoryInterface::class);
+        $repo->method('findById')->with(10018264)->willReturn($centro);
+        $repo->expects($this->once())->method('Guardar')->with($centro)->willReturn(true);
+
+        $guardar = new UbisGuardar(
+            $this->resolver(null, $repo),
+            $this->createMock(DelegacionRepositoryInterface::class),
+            $this->createMock(TrasladoUbiRepositoryInterface::class),
+        );
+        $msg = $guardar->execute([
+            'obj_pau' => 'CentroDl',
+            'id_ubi' => 10018264,
+            'tipo_ubi' => 'ctrdl',
+            'nombre_ubi' => 'agdAragó',
+            'dl' => 'dlb',
+            'region' => 'H',
+            'active' => 'on',
+        ]);
+        $this->assertSame('', $msg);
+    }
+
+    private function resolver(
+        ?CasaExRepositoryInterface $casaEx = null,
+        ?CentroDlRepositoryInterface $centroDl = null,
+    ): UbiRepositoryResolver
     {
         return new UbiRepositoryResolver(
             $this->createMock(CentroRepositoryInterface::class),
-            $this->createMock(CentroDlRepositoryInterface::class),
+            $centroDl ?? $this->createMock(CentroDlRepositoryInterface::class),
             $this->createMock(CentroExRepositoryInterface::class),
             $this->createMock(CasaRepositoryInterface::class),
             $this->createMock(CasaDlRepositoryInterface::class),

@@ -212,7 +212,8 @@ final class UbisGuardar
         $active = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'active');
         $sv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sv');
         $sf = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sf');
-        if ($oUbi === null) {
+        $esNuevo = $oUbi === null;
+        if ($esNuevo) {
             $oUbi = new CentroDl();
             $id = $repo->getNewId();
             $oUbi->setId_auto($id);
@@ -229,7 +230,7 @@ final class UbisGuardar
         $oUbi->setObserv(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'observ'));
         $oUbi->setNum_habit_indiv(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'num_habit_indiv'));
         $oUbi->setPlazas(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'plazas'));
-        $this->aplicarCamposComunes($oUbi, $input, $active, $sv, $sf);
+        $this->aplicarCamposComunes($oUbi, $input, $active, $sv, $sf, !$this->debeConservarSvSf($input, $esNuevo));
 
         if ($repo->Guardar($oUbi) === false) {
             return _("hay un error, no se ha guardado") . "\n" . $repo->getErrorTxt();
@@ -253,7 +254,8 @@ final class UbisGuardar
         $active = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'active');
         $sv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sv');
         $sf = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sf');
-        if ($oUbi === null) {
+        $esNuevo = $oUbi === null;
+        if ($esNuevo) {
             $oUbi = new CentroEx();
             $id = $repo->getNewId();
             $oUbi->setId_auto($id);
@@ -264,7 +266,7 @@ final class UbisGuardar
         }
 
         $this->aplicarCamposCentro($oUbi, $input);
-        $this->aplicarCamposComunes($oUbi, $input, $active, $sv, $sf);
+        $this->aplicarCamposComunes($oUbi, $input, $active, $sv, $sf, !$this->debeConservarSvSf($input, $esNuevo));
 
         if ($repo->Guardar($oUbi) === false) {
             return _("hay un error, no se ha guardado") . "\n" . $repo->getErrorTxt();
@@ -323,6 +325,17 @@ final class UbisGuardar
     }
 
     /**
+     * La ficha de centro no envía sv/sf. Ponerlos a false saca el centro de la
+     * búsqueda, que filtra siempre por sv o por sf, esté o no «en uso».
+     *
+     * @param array<string, mixed> $input
+     */
+    private function debeConservarSvSf(array $input, bool $esNuevo): bool
+    {
+        return !$esNuevo && !array_key_exists('sv', $input) && !array_key_exists('sf', $input);
+    }
+
+    /**
      * @param array<string, mixed> $input
      */
     private function aplicarCamposComunes(
@@ -331,12 +344,17 @@ final class UbisGuardar
         ?string $active = null,
         ?string $sv = null,
         ?string $sf = null,
+        bool $actualizarSvSf = true,
     ): void {
         $oUbi->setTipo_ubi(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'tipo_ubi'));
         $oUbi->setNombre_ubi(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'nombre_ubi'));
         $oUbi->setDl(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl'));
         $oUbi->setRegion(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'region'));
         $oUbi->setActive(\src\shared\domain\helpers\FuncTablasSupport::isTrue($active ?? \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'active')) ?? false);
+
+        if (!$actualizarSvSf) {
+            return;
+        }
 
         $svVal = $sv ?? \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sv');
         $sfVal = $sf ?? \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sf');
