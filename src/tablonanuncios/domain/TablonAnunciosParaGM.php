@@ -42,7 +42,7 @@ class TablonAnunciosParaGM
             $t_anotado = $Anuncio->getT_anotado();
 
             $a_valores[$i]['sel'] = HashB::sign('anuncio_delete', [
-                'uuid_item' => $uuid_item,
+                'uuid_item' => $uuid_item->value(),
             ]);
             $a_valores[$i][1] = $esquema_emisor;
             $a_valores[$i][2] = $t_anotado instanceof DateTimeLocal ? $t_anotado->getFromLocal() : '';
