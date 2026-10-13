@@ -334,8 +334,10 @@ class DBView
     }
 
     /**
-     * Excluye el esquema agregado de región STGR (p. ej. H-Hv, M-Mv, H-crHv).
-     * Es destino de las materialized views, no fuente de filas por DL.
+     * Excluye el esquema agregado de región STGR, destino de las materialized views.
+     *
+     * En la mayoría de regiones ese esquema es `Region-crRegion` (p. ej. Aut-crAutv).
+     * En H y M el agregado es `H-Hv` / `M-Mv`; `H-crHv` y `M-crMv` son el CR y sí aportan filas.
      *
      * @param list<string> $a_schemas
      * @return list<string>
@@ -348,9 +350,11 @@ class DBView
         ));
     }
 
-    private function isRegionStgrAggregateSchema(string $schema): bool
+    /**
+     * ¿Este esquema es el agregado de la región (destino de las MVs), no una DL/CR fuente?
+     */
+    public static function esEsquemaAgregadoRegionStgr(string $schema, string $region): bool
     {
-        $region = $this->sRegionStgr;
         if ($region === '') {
             return false;
         }
@@ -365,7 +369,21 @@ class DBView
             $dlPart = substr($dlPart, 0, -1);
         }
 
-        return $dlPart === $region || $dlPart === 'cr' . $region;
+        if ($dlPart === $region) {
+            return true;
+        }
+
+        // H-Hv / M-Mv son el agregado. crH y crM son esquemas fuente.
+        if ($region === 'H' || $region === 'M') {
+            return false;
+        }
+
+        return $dlPart === 'cr' . $region;
+    }
+
+    private function isRegionStgrAggregateSchema(string $schema): bool
+    {
+        return self::esEsquemaAgregadoRegionStgr($schema, $this->sRegionStgr);
     }
 
     private function getDefView(string $view, bool $comun = false): string

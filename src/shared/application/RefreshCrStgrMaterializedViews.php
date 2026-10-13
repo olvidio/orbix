@@ -98,9 +98,9 @@ final class RefreshCrStgrMaterializedViews
             return;
         }
 
-        if ($userSfsv == 1) {
+        if ($userSfsv === 1) {
             $schema_vf = $esquemav;
-        } elseif ($userSfsv == 2) {
+        } elseif ($userSfsv === 2) {
             $schema_vf = $esquemaf;
         } else {
             return;
