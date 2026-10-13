@@ -3,7 +3,9 @@
 namespace src\notas\application;
 
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\application\support\ActaFirmadaPolicy;
+use src\notas\application\support\HuecoOpcionalDePlan;
 use src\notas\application\support\LiberarHuecoNivelNota;
 use src\notas\application\support\PersonaNotaInputParser;
 use src\notas\domain\contracts\MapaPrefijoActaEsquemaRepositoryInterface;
@@ -29,6 +31,7 @@ final class PersonaNotaNueva
         private readonly MapaPrefijoActaEsquemaRepositoryInterface $mapaPrefijoActaEsquemaRepository,
         private readonly LiberarHuecoNivelNota $liberarHuecoNivelNota,
         private readonly ActaFirmadaPolicy $firmadaPolicy,
+        private readonly HuecoOpcionalDePlan $huecoOpcionalDePlan,
     ) {
     }
 
@@ -40,6 +43,10 @@ final class PersonaNotaNueva
     {
         try {
             $oPersonaNota = $this->personaNotaInputParser->parse($input);
+            $mod = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'mod');
+            if ($mod !== 'editar') {
+                $this->reubicarOpcionalDeSobra($oPersonaNota);
+            }
             $firmada = $this->firmadaPolicy->mensajeSiFirmada($oPersonaNota->getActa());
             if ($firmada !== '') {
                 return ['error' => $firmada, 'mensaje' => '', 'esquema' => ''];
@@ -69,5 +76,33 @@ final class PersonaNotaNueva
                 'esquema' => '',
             ];
         }
+    }
+
+    private function reubicarOpcionalDeSobra(\src\notas\domain\entity\PersonaNota $oPersonaNota): void
+    {
+        $idAsignatura = (int) $oPersonaNota->getId_asignatura();
+        if (!HuecoOpcionalDePlan::esOpcionalConcreta($idAsignatura)) {
+            return;
+        }
+
+        $idNom = (int) $oPersonaNota->getId_nom();
+        $notas = [];
+        foreach ($this->personaNotaRepository->getPersonaNotas(['id_nom' => $idNom]) as $nota) {
+            $notas[] = [
+                'id_asignatura' => (int) $nota->getId_asignatura(),
+                'id_nivel' => (int) $nota->getIdNivelVo()->value(),
+            ];
+        }
+
+        $nivel = $this->huecoOpcionalDePlan->nivelAlGuardar(
+            $idNom,
+            $idAsignatura,
+            (int) $oPersonaNota->getId_nivel(),
+            $notas,
+        );
+        if ($nivel === null) {
+            throw new \RuntimeException(_('No hay hueco de opcional libre.'));
+        }
+        $oPersonaNota->setIdNivelVo(NivelId::fromNullableInt($nivel));
     }
 }

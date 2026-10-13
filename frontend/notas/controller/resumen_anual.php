@@ -93,9 +93,11 @@ $go['residuo_otra_region'] = HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '
 
 $mostrarResumen = !$rstgr || $Qfiltro !== 1 || $Qdl !== [];
 if ($mostrarResumen) {
+    $idRole = OrbixRuntime::miIdRole();
     $a_campos = [
         'go' => $go,
         'rstgr' => $rstgr,
+        'es_admin' => $idRole === 1 || $idRole === 2,
     ];
 
     $oView = new ViewNewPhtml('frontend\\notas\\controller');

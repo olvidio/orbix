@@ -8,6 +8,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\NivelId;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\notas\application\support\HuecoOpcionalDePlan;
 use src\notas\application\support\LiberarHuecoNivelNota;
 use src\notas\application\support\NivelCatalogoAsignaturaEnPlan;
 use src\notas\domain\contracts\ActaRepositoryInterface;
@@ -38,6 +39,7 @@ final class ActaVerAddPersona
         private readonly MapaPrefijoActaEsquemaRepositoryInterface $mapaPrefijoActaEsquemaRepository,
         private readonly LiberarHuecoNivelNota $liberarHuecoNivelNota,
         private readonly NivelCatalogoAsignaturaEnPlan $nivelCatalogoAsignaturaEnPlan,
+        private readonly HuecoOpcionalDePlan $huecoOpcionalDePlan,
     ) {
     }
 
@@ -80,7 +82,20 @@ final class ActaVerAddPersona
         }
         $nota_corte = (float) $oConfig->getNotaCorte();
 
-        if ($this->nivelCatalogoAsignaturaEnPlan->esObligatoria($id_asignatura)) {
+        if (HuecoOpcionalDePlan::esOpcionalConcreta($id_asignatura)) {
+            $notasNivel = [];
+            foreach ($this->personaNotaRepository->getPersonaNotas(['id_nom' => $id_nom]) as $oPersonaNota1) {
+                $notasNivel[] = [
+                    'id_asignatura' => (int) $oPersonaNota1->getId_asignatura(),
+                    'id_nivel' => (int) $oPersonaNota1->getIdNivelVo()->value(),
+                ];
+            }
+            $idNivelOpcional = $this->huecoOpcionalDePlan->idNivelPara($id_nom, $id_asignatura, $notasNivel);
+            if ($idNivelOpcional === null) {
+                return ['success' => false, 'mensaje' => _('No hay hueco de opcional libre.')];
+            }
+            $id_nivel = $idNivelOpcional;
+        } elseif ($this->nivelCatalogoAsignaturaEnPlan->esObligatoria($id_asignatura)) {
             $id_nivel = $this->nivelCatalogoAsignaturaEnPlan->resolve($id_nom, $id_asignatura);
         } else {
             $id_nivel = 0;

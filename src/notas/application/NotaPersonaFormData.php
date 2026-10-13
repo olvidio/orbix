@@ -7,6 +7,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\application\PlanEstudiosDePersona;
 use src\notas\application\support\ActaPersonaFormListas;
+use src\notas\application\support\HuecoOpcionalDePlan;
 use src\notas\application\support\NivelesOcupadosEnPlan;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaEpoca;
@@ -36,6 +37,7 @@ final class NotaPersonaFormData
         private readonly ProfesorStgrRepositoryInterface $rofesorStgrRepository,
         private readonly PlanEstudiosDePersona $planEstudiosDePersona,
         private readonly ActaPersonaFormListas $actaPersonaFormListas,
+        private readonly HuecoOpcionalDePlan $huecoOpcionalDePlan,
     ) {
     }
 
@@ -186,6 +188,13 @@ final class NotaPersonaFormData
             }
             $aFaltan[$id_nivel] = $oAsig->getNombre_corto();
         }
+        $sobra = HuecoOpcionalDePlan::siguienteSobra(
+            $this->huecoOpcionalDePlan->nivelesDelPlan($plan),
+            $this->notasParaHueco($id_pau),
+        );
+        if ($sobra !== null) {
+            $aFaltan[$sobra] = _('opcional de sobra');
+        }
         $aFaltan[9997] = '---------';
         $aFaltan[9998] = _("fin cuadrienio");
         $aFaltan[9999] = _("fin bienio");
@@ -331,9 +340,38 @@ final class NotaPersonaFormData
         foreach ($cGenericas as $oOpcional) {
             $condicion .= 'id==' . $oOpcional->getId_nivel() . ' || ';
         }
+        $slots = $this->huecoOpcionalDePlan->nivelesDelPlan($plan);
+        $paraElegir = $slots;
+        if ($idNom !== null && $idNom > 0) {
+            $sobra = HuecoOpcionalDePlan::siguienteSobra($slots, $this->notasParaHueco($idNom));
+            if ($sobra !== null) {
+                $paraElegir[] = $sobra;
+                $condicion .= 'id==' . $sobra . ' || ';
+            }
+        }
+
         return [
             'condicion_js' => substr($condicion, 0, -4),
-            'op_genericas_json' => $repo->getListaOpGenericas('json'),
+            'op_genericas_json' => json_encode(
+                array_map(static fn (int $nivel): string => (string) $nivel, $paraElegir),
+                JSON_THROW_ON_ERROR,
+            ),
         ];
+    }
+
+    /**
+     * @return list<array{id_asignatura: int, id_nivel: int}>
+     */
+    private function notasParaHueco(int $idNom): array
+    {
+        $notas = [];
+        foreach ($this->personaNotaRepository->getPersonaNotas(['id_nom' => $idNom]) as $nota) {
+            $notas[] = [
+                'id_asignatura' => (int) $nota->getId_asignatura(),
+                'id_nivel' => (int) $nota->getIdNivelVo()->value(),
+            ];
+        }
+
+        return $notas;
     }
 }

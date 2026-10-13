@@ -259,7 +259,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.residuo_otra_region_stgr_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/residuo_otra_region_stgr_data.php`
-- Entrada: sin parámetros
+- Entrada: sin parámetros. Solo roles Admin y SuperAdmin (`id_role` 2 y 1); el resto recibe error.
 - Respuesta: `standard_envelope_string_data` con `pasos` (inventario, personas de paso, resto con acta pareja, resto sin acta, json_certificados). El inventario omite los esquemas sin permiso de lectura y los lista aparte.
 
 ## `/src/notas/tessera_ver_data`

@@ -83,15 +83,22 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
                     $(id_epoca).prop("checked", true);
                     if (id_asignatura > 3000) {
                         op_todas = <?= $op_genericas ?>;
-                        niveles = $('#id_nivel option');
-                        niveles.each(function () {
-                            idNivel = $(this).val();
-                            if (op_todas.includes(idNivel)) {
+                        var colocado = false;
+                        $('#id_nivel option').each(function () {
+                            var idNivel = String($(this).val());
+                            if (idNivel !== '' && op_todas.indexOf(idNivel) !== -1) {
                                 $('#id_nivel').val(idNivel);
                                 fnjs_cmb_opcional(id_asignatura);
+                                colocado = true;
                                 return false;
                             }
                         });
+                        if (!colocado) {
+                            $('#lst_opcionales').html(
+                                '<input type="hidden" id="id_asignatura" name="id_asignatura" value="'
+                                + parseInt(id_asignatura, 10) + '">'
+                            );
+                        }
                     } else {
                         id_nivel = rta_json.id_nivel;
                         $('#id_nivel').val(id_nivel);

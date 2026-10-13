@@ -113,14 +113,84 @@ final class HuecoOpcionalDePlanTest extends TestCase
         );
     }
 
-    public function test_sin_hueco_libre_devuelve_null(): void
+    public function test_catalogo_lleno_sigue_en_2435_y_no_en_1230(): void
     {
         $notas = [];
         foreach ($this->slots2026 as $i => $nivel) {
             $notas[] = ['id_asignatura' => 3400 + $i, 'id_nivel' => $nivel];
         }
 
-        $this->assertNull(HuecoOpcionalDePlan::resolver(3601, $this->slots2026, $notas));
+        $this->assertSame(2435, HuecoOpcionalDePlan::resolver(3601, $this->slots2026, $notas));
+    }
+
+    public function test_sobra_ocupada_pasa_a_la_siguiente(): void
+    {
+        $notas = [];
+        foreach ($this->slots2026 as $i => $nivel) {
+            $notas[] = ['id_asignatura' => 3400 + $i, 'id_nivel' => $nivel];
+        }
+        $notas[] = ['id_asignatura' => 3501, 'id_nivel' => 2435];
+
+        $this->assertSame(2436, HuecoOpcionalDePlan::resolver(3601, $this->slots2026, $notas));
+    }
+
+    public function test_una_nota_en_1230_no_empuja_la_sobra_al_bienio(): void
+    {
+        $notas = [
+            ['id_asignatura' => 3411, 'id_nivel' => 1230],
+        ];
+        foreach ($this->slots2026 as $i => $nivel) {
+            $notas[] = ['id_asignatura' => 3400 + $i, 'id_nivel' => $nivel];
+        }
+
+        $this->assertSame(2435, HuecoOpcionalDePlan::resolver(3601, $this->slots2026, $notas));
+    }
+
+    public function test_plan_1997_con_catalogo_lleno_tambien_sigue_en_2435(): void
+    {
+        $slots = [1230, 1231, 1232, 2430, 2431, 2432, 2433, 2434];
+        $notas = [];
+        foreach ($slots as $i => $nivel) {
+            $notas[] = ['id_asignatura' => 3400 + $i, 'id_nivel' => $nivel];
+        }
+
+        $this->assertSame(2435, HuecoOpcionalDePlan::resolver(3601, $slots, $notas));
+    }
+
+    public function test_alta_en_1230_del_plan_2026_se_reubica_a_2435(): void
+    {
+        $notas = [];
+        foreach ($this->slots2026 as $i => $nivel) {
+            $notas[] = ['id_asignatura' => 3400 + $i, 'id_nivel' => $nivel];
+        }
+
+        $this->assertSame(
+            2435,
+            HuecoOpcionalDePlan::aceptarOReubicar(1230, 3601, $this->slots2026, $notas),
+        );
+    }
+
+    public function test_alta_conserva_el_hueco_de_catalogo_que_eligio_el_formulario(): void
+    {
+        $notas = [
+            ['id_asignatura' => 3411, 'id_nivel' => 2430],
+        ];
+
+        $this->assertSame(
+            2432,
+            HuecoOpcionalDePlan::aceptarOReubicar(2432, 3601, $this->slots2026, $notas),
+        );
+    }
+
+    public function test_conserva_la_sobra_si_la_asignatura_ya_esta_ahi(): void
+    {
+        $notas = [];
+        foreach ($this->slots2026 as $i => $nivel) {
+            $notas[] = ['id_asignatura' => 3400 + $i, 'id_nivel' => $nivel];
+        }
+        $notas[] = ['id_asignatura' => 3601, 'id_nivel' => 2436];
+
+        $this->assertSame(2436, HuecoOpcionalDePlan::resolver(3601, $this->slots2026, $notas));
     }
 
     public function test_plan_1997_puede_usar_el_hueco_de_bienio(): void
