@@ -143,16 +143,33 @@ BEGIN
     INSERT INTO tmp_latin_i_ins (id_nom, dest_esquema, dest_tabla, id_schema, acta, f_acta)
     SELECT
         c.id_nom,
-        coalesce(d.esquema, d2.esquema, d3.esquema),
-        coalesce(d.tabla, d2.tabla, d3.tabla),
+        coalesce(d.esquema, d2.esquema, n.esquema),
+        coalesce(d.tabla, d2.tabla, n.tabla),
         db.id,
         n.acta,
         n.f_acta
     FROM tmp_latin_i_conv AS c
-    JOIN publicf.e_notas AS n
-      ON n.id_nom = c.id_nom
-     AND n.id_asignatura = 1111
-     AND n.id_nivel = 1113
+    JOIN LATERAL (
+        SELECT
+            a.id_nom,
+            a.acta,
+            a.f_acta,
+            ns.nspname AS esquema,
+            pc.relname AS tabla
+        FROM publicf.e_notas AS a
+        JOIN pg_class AS pc ON pc.oid = a.tableoid
+        JOIN pg_namespace AS ns ON ns.oid = pc.relnamespace
+        WHERE a.id_nom = c.id_nom
+          AND a.id_asignatura = 1111
+          AND a.id_nivel = 1113
+        ORDER BY
+            (pc.relname = 'e_notas_dl') DESC,
+            a.f_acta DESC NULLS LAST,
+            a.tipo_acta,
+            ns.nspname,
+            pc.relname
+        LIMIT 1
+    ) AS n ON true
     LEFT JOIN LATERAL (
         SELECT ns.nspname AS esquema, pc.relname AS tabla
         FROM publicf.e_notas AS a
@@ -176,19 +193,9 @@ BEGIN
         ORDER BY a.f_acta DESC NULLS LAST
         LIMIT 1
     ) AS d2 ON d.esquema IS NULL
-    LEFT JOIN LATERAL (
-        SELECT ns.nspname AS esquema, pc.relname AS tabla
-        FROM publicf.e_notas AS a
-        JOIN pg_class AS pc ON pc.oid = a.tableoid
-        JOIN pg_namespace AS ns ON ns.oid = pc.relnamespace
-        WHERE a.id_nom = c.id_nom
-          AND a.id_asignatura = 1111
-          AND a.id_nivel = 1113
-        LIMIT 1
-    ) AS d3 ON coalesce(d.esquema, d2.esquema) IS NULL
     JOIN public.db_idschema AS db
-      ON db.schema = coalesce(d.esquema, d2.esquema, d3.esquema)
-    WHERE coalesce(d.tabla, d2.tabla, d3.tabla) IS NOT NULL
+      ON db.schema = coalesce(d.esquema, d2.esquema, n.esquema)
+    WHERE coalesce(d.tabla, d2.tabla, n.tabla) IS NOT NULL
       AND NOT EXISTS (
           SELECT 1
           FROM publicf.e_notas AS x
