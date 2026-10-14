@@ -80,18 +80,18 @@ Así no se pierde el trabajo hecho: al menos una lengua bíblica cubre Primeros 
 
 ---
 
-## 4. Pendiente: Latín I-1 / Latín I-2 → «Latín I»
+## 4. Latín I-1 / Latín I-2 → «Latín I» (plan 2026)
 
-En el plan antiguo el latín inicial podía ir en **dos partes** (Latín I-1 y Latín I-2). En el plan **2026** el hueco curricular es **«Latín I»** (una sola asignatura).
+En el plan antiguo el latín inicial iba en **dos partes** (Latín I-1 e I-2). En el plan **2026** el hueco es **«Latín I»** (`id_asignatura` 1113, `id_nivel` 1111).
 
-**Aún está pendiente** acordar y aplicar cómo se convalida a quien:
+**Migraciones:** [`202610141200_xa_asignaturas_latin_i_plan2026__comun.sql`](../../db/migrations/202610141200_xa_asignaturas_latin_i_plan2026__comun.sql) (catálogo: I-1/I-2 solo 1997, alta 1113 en 2026) y [`202610141300_e_notas_latin_i_convalidada_plan2026__sv.sql`](../../db/migrations/202610141300_e_notas_latin_i_convalidada_plan2026__sv.sql) / [`__sf`](../../db/migrations/202610141300_e_notas_latin_i_convalidada_plan2026__sf.sql) (notas).
 
-- solo tiene **Latín I-1**, o  
-- solo tiene **Latín I-2**,  
+**Regla aplicada:** quien **superó ambas** (I-1 e I-2) y usa tessera **2026**:
+- la nota de **I-1** se **aparca** en `id_nivel` **1113** (fin del 1.er curso; sigue siendo `id_asignatura` 1111);
+- se **inserta** **Latin I** (`id_asignatura` 1113) en el hueco **1111**, situación **convalidada**, detalle «convalidada por Latin I-1 y Latin I-2»;
+- **I-2** no se toca (solo catálogo 1997).
 
-para dar por cubierta la asignatura **Latín I** del plan 2026 (¿basta una de las dos?, ¿hace falta nota numérica?, ¿convalidada?, ¿exigir ambas?, etc.).
-
-Hasta entonces, esas notas parciales del plan 1997 **no aparecen** como “Latín I” en la tessera 2026.
+**Sin migración automática:** solo I-1 o solo I-2; alumnos con cuadrienio cerrado en plan 1997 (9998 antes del 2026-03-30).
 
 ---
 
@@ -125,4 +125,4 @@ Hasta entonces, esas notas parciales del plan 1997 **no aparecen** como “Latí
 
 ## 7. Resumen en una frase
 
-**Plan 2026 + modelo acta:** la tessera y el expediente siguen el plan vigente (Latín III/IV y Primeros Cristianos reordenados; hebreo/griego → Primeros Cristianos / opcional según regla acordada); las notas viven en la DL del acta y **ya no hace falta certificado interno entre Orbix**; queda por definir la convalidación **Latín I-1 / I-2 → Latín I**.
+**Plan 2026 + modelo acta:** la tessera y el expediente siguen el plan vigente (Latín III/IV y Primeros Cristianos reordenados; hebreo/griego → Primeros Cristianos / opcional según regla acordada); las notas viven en la DL del acta y **ya no hace falta certificado interno entre Orbix**; la convalidación **Latín I-1 + I-2 → Latín I** está en §4 (solo ambas partes superadas).
