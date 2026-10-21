@@ -27,7 +27,7 @@ $Qpassword = (string)\src\shared\domain\helpers\FilterPostGet::post('password');
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);
 if ($oUsuario === null) {
-    ContestarJson::enviar(_('Usuario no encontrado'), 'none');
+    ContestarJson::enviar(_("Usuario no encontrado"), 'none');
     return;
 }
 $usuario = $oUsuario->getUsuarioVo();

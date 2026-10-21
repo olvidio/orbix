@@ -19,7 +19,7 @@ $error_txt = '';
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 if ($oMiUsuario === null) {
-    ContestarJson::enviar(_('Usuario no encontrado'), 'none');
+    ContestarJson::enviar(_("Usuario no encontrado"), 'none');
     return;
 }
 $miRole = $oMiUsuario->getId_role();
@@ -42,7 +42,7 @@ if (!empty($Qid_role)) {
     $RoleRepository =  DependencyResolver::get(RoleRepositoryInterface::class);
     $oRole = $RoleRepository->findById($Qid_role);
     if ($oRole === null) {
-        ContestarJson::enviar(_('Rol no encontrado'), 'none');
+        ContestarJson::enviar(_("Rol no encontrado"), 'none');
         return;
     }
     $role = $oRole->getRoleAsString();

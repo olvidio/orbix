@@ -112,10 +112,10 @@ final class ListaActividadesSgListado
         $ActividadRepository = $this->actividadRepository;
 
         $a_botones = [
-            ['txt' => _('cargos'), 'click' => "jsForm.mandar(\"#seleccionados\",\"carg\")"],
-            ['txt' => _('asistentes'), 'click' => "jsForm.mandar(\"#seleccionados\",\"asis\")"],
-            ['txt' => _('lista'), 'click' => "jsForm.mandar(\"#seleccionados\",\"list\")"],
-            ['txt' => _('ctrs org'), 'click' => "jsForm.mandar(\"#seleccionados\",\"ctrs\")"],
+            ['txt' => _("cargos"), 'click' => "jsForm.mandar(\"#seleccionados\",\"carg\")"],
+            ['txt' => _("asistentes"), 'click' => "jsForm.mandar(\"#seleccionados\",\"asis\")"],
+            ['txt' => _("lista"), 'click' => "jsForm.mandar(\"#seleccionados\",\"list\")"],
+            ['txt' => _("ctrs org"), 'click' => "jsForm.mandar(\"#seleccionados\",\"ctrs\")"],
         ];
 
         $a_cabeceras = [];
@@ -212,7 +212,7 @@ final class ListaActividadesSgListado
             }
             if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) {
                 $a_valores[$i]['sel'] = '';
-                $a_valores[$i][1] = sprintf(_('ocupado %s (%s-%s)'), $ssfsv, $f_ini, $f_fin);
+                $a_valores[$i][1] = sprintf(_("ocupado %s (%s-%s)"), $ssfsv, $f_ini, $f_fin);
                 $a_valores[$i][2] = '';
                 $a_valores[$i][3] = '';
                 $a_valores[$i][4] = '';

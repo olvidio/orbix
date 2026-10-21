@@ -110,7 +110,7 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
     public function getNotasPersonasDePasoDeRegion(string $esquemaRegionStgr): array
     {
         if (preg_match('/^([A-Za-z0-9]+)-.+([vf])$/', $esquemaRegionStgr, $coincidencias) !== 1) {
-            throw new \RuntimeException(_('No se pudo determinar la región para las personas de paso.'));
+            throw new \RuntimeException(_("No se pudo determinar la región para las personas de paso."));
         }
         $patron = $coincidencias[1] . '-%' . $coincidencias[2];
 
@@ -127,7 +127,7 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
 
         $stmt = $this->getoDbl()->prepare($sql);
         if ($stmt === false || $stmt->execute(['patron' => $patron]) === false) {
-            throw new \RuntimeException(_('No se pudieron leer las notas de las personas de paso.'));
+            throw new \RuntimeException(_("No se pudieron leer las notas de las personas de paso."));
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);

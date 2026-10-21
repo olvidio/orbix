@@ -110,7 +110,7 @@ class DBTrasvase extends DBAbstract
         $this->avisosConexion[] = ConfigDB::mensajeAvisoEsquemaConexionFaltante(
             $base,
             $esquema,
-            ' ' . _('La operación continúa con el usuario de importar.'),
+            ' ' . _("La operación continúa con el usuario de importar."),
         );
 
         $oConfigImportar = new ConfigDB('importar');
@@ -180,7 +180,7 @@ class DBTrasvase extends DBAbstract
             $rol = self::stringConfigValue($config['user'] ?? null);
             $schema = self::stringConfigValue($config['schema'] ?? $esquema);
             $this->avisosConexion[] = sprintf(
-                _('El rol «%1$s» no existe; la operación continúa con el usuario de importar (esquema «%2$s»).'),
+                _("El rol «%1\$s» no existe; la operación continúa con el usuario de importar (esquema «%2\$s»)."),
                 $rol,
                 $schema,
             );
@@ -240,7 +240,7 @@ class DBTrasvase extends DBAbstract
     private function avisoOmiteTrasladoDl2resto(string $esquema, string $tabla, string $bloque): void
     {
         $this->avisosConexion[] = sprintf(
-            _('No existe «%1$s.%2$s»; se omite el traslado %3$s a resto.'),
+            _("No existe «%1\$s.%2\$s»; se omite el traslado %3\$s a resto."),
             $esquema,
             $tabla,
             $bloque,
@@ -254,7 +254,7 @@ class DBTrasvase extends DBAbstract
     {
         if (!$this->esquemaExiste($oDbl, $esquema)) {
             $this->avisosConexion[] = sprintf(
-                _('No existe el esquema «%1$s»; se omite el traslado %2$s a resto.'),
+                _("No existe el esquema «%1\$s»; se omite el traslado %2\$s a resto."),
                 $esquema,
                 $bloque,
             );
@@ -328,14 +328,14 @@ class DBTrasvase extends DBAbstract
             $entero = (int) trim($id);
         } else {
             throw new \InvalidArgumentException(sprintf(
-                _('Identificador de ubicación no válido%1$s: %2$s'),
+                _("Identificador de ubicación no válido%1\$s: %2\$s"),
                 $contexto !== '' ? " ($contexto)" : '',
                 is_scalar($id) ? (string) $id : get_debug_type($id),
             ));
         }
         if ($entero === 0) {
             throw new \InvalidArgumentException(sprintf(
-                _('Identificador de ubicación no válido%1$s: %2$s'),
+                _("Identificador de ubicación no válido%1\$s: %2\$s"),
                 $contexto !== '' ? " ($contexto)" : '',
                 (string) $entero,
             ));
@@ -400,7 +400,7 @@ class DBTrasvase extends DBAbstract
         }
 
         throw new \RuntimeException(sprintf(
-            _('La tabla map_id no existe en el esquema «%s» y no hay plantilla en «resto». Vuelva a ejecutar «crear esquema» (comun) con un esquema de referencia que la incluya.'),
+            _("La tabla map_id no existe en el esquema «%s» y no hay plantilla en «resto». Vuelva a ejecutar «crear esquema» (comun) con un esquema de referencia que la incluya."),
             $esquemaDestino,
         ));
     }
@@ -434,7 +434,7 @@ class DBTrasvase extends DBAbstract
         $oDblOrigen = $this->getoDblComunDlAdministrador();
         if (!$this->esquemaExiste($oDblOrigen, $esquemaComun)) {
             $this->avisosConexion[] = sprintf(
-                _('No existe el esquema «%s»; se omiten operaciones con map_id.'),
+                _("No existe el esquema «%s»; se omiten operaciones con map_id."),
                 $esquemaComun,
             );
 
@@ -500,7 +500,7 @@ class DBTrasvase extends DBAbstract
             }
         } catch (\Throwable $e) {
             $this->avisosConexion[] = sprintf(
-                _('Aviso: no se pudo refrescar la suscripción tras crear map_id en réplica: %s'),
+                _("Aviso: no se pudo refrescar la suscripción tras crear map_id en réplica: %s"),
                 $e->getMessage(),
             );
         }
@@ -564,7 +564,7 @@ class DBTrasvase extends DBAbstract
             return;
         }
 
-        throw new \InvalidArgumentException(sprintf(_('Tipo de permiso no válido: %s'), $permisoDb));
+        throw new \InvalidArgumentException(sprintf(_("Tipo de permiso no válido: %s"), $permisoDb));
     }
 
     public function getEsquema(): string

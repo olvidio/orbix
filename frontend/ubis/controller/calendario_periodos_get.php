@@ -45,11 +45,11 @@ foreach ($rows as $row) {
     $txt .= "<input type=hidden id=\"$form_id_ubi\" name=\"id_ubi\" value=\"\" > ";
     $txt .= "<input type=hidden id=\"$form_que\" name=\"que\" value=\"\" > ";
     $txt .= "<input type=hidden name=id_item value=\"$id_item\" > ";
-    $txt .= _('de') . "<input type=text size=12 name=f_ini value=\"$f_ini\">   " . _('hasta') . " <input type=text size=12 name=f_fin value=\"$f_fin\">";
-    $txt .= _('asignado a') . " <select name=sfsv><option value=1 $sel_sv>" . _('sv') . "</option>";
-    $txt .= "<option value=2 $sel_sf>" . _('sf') . "</option>";
-    $txt .= "<option value=3 $sel_res>" . _('reservado') . "</option></select>";
-    $txt .= "  <span class=link onclick=fnjs_grabar($id_ubi,$i,'update')>" . _('grabar') . "</span>";
-    $txt .= "  <span class=link onclick=fnjs_grabar($id_ubi,$i,'borrar')>" . _('borrar') . "</span></form>";
+    $txt .= _("de") . "<input type=text size=12 name=f_ini value=\"$f_ini\">   " . _("hasta") . " <input type=text size=12 name=f_fin value=\"$f_fin\">";
+    $txt .= _("asignado a") . " <select name=sfsv><option value=1 $sel_sv>" . _("sv") . "</option>";
+    $txt .= "<option value=2 $sel_sf>" . _("sf") . "</option>";
+    $txt .= "<option value=3 $sel_res>" . _("reservado") . "</option></select>";
+    $txt .= "  <span class=link onclick=fnjs_grabar($id_ubi,$i,'update')>" . _("grabar") . "</span>";
+    $txt .= "  <span class=link onclick=fnjs_grabar($id_ubi,$i,'borrar')>" . _("borrar") . "</span></form>";
 }
 UbisPayload::jsonEcho(['que' => $Qque, 'txt' => $txt]);

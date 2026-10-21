@@ -49,7 +49,7 @@ public static function construirOtrosSacd(
 
         $html .= "<tr><td>sacd $s:</td><td colspan=3 class=contenido><select name=id_sacd[$s]>";
         $html .= $oDespl->options();
-        $html .= '</td></tr><tr><td class=etiqueta >' . ucfirst(_('dedicación')) . '</td>';
+        $html .= '</td></tr><tr><td class=etiqueta >' . ucfirst(_("dedicación")) . '</td>';
 
         if ($mod_horario_e === 3) {
             $txtHorario = \frontend\shared\helpers\PayloadCoercion::string($dedicSacd[$s] ?? '');
@@ -58,9 +58,9 @@ public static function construirOtrosSacd(
             $m = \frontend\shared\helpers\PayloadCoercion::string($dedicM[$s] ?? '');
             $t = \frontend\shared\helpers\PayloadCoercion::string($dedicT[$s] ?? '');
             $v = \frontend\shared\helpers\PayloadCoercion::string($dedicV[$s] ?? '');
-            $html .= "<td><input type=text size=1 name=dedic_m[$s] value=$m>" . _('mañanas');
-            $html .= "</td><td><input type=text size=1 name=dedic_t[$s] value=$t>" . _('tarde 1ª hora');
-            $html .= "</td><td><input type=text size=1 name=dedic_v[$s] value=$v>" . _('tarde 2ª hora');
+            $html .= "<td><input type=text size=1 name=dedic_m[$s] value=$m>" . _("mañanas");
+            $html .= "</td><td><input type=text size=1 name=dedic_t[$s] value=$t>" . _("tarde 1ª hora");
+            $html .= "</td><td><input type=text size=1 name=dedic_v[$s] value=$v>" . _("tarde 2ª hora");
             $html .= '</td></tr><tr>';
         }
     }

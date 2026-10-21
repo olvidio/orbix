@@ -279,7 +279,7 @@ final class CalendarioListasDatos
 
                 if (!$oPermActiv->have_perm_action('ver')) {
                     $a_ubi_activ[$key][$a]['sfsv'] = $ssfsv;
-                    $a_ubi_activ[$key][$a]['tipo_activ'] = _('ocupado');
+                    $a_ubi_activ[$key][$a]['tipo_activ'] = _("ocupado");
                     if ($tipo === 'oficina') {
                         $a_ubi_activ[$key][$a]['cdc'] = "$nombre_ubi";
                     }
@@ -327,27 +327,27 @@ final class CalendarioListasDatos
         switch ($tipo) {
             case 'casa':
                 $aCabeceras = [
-                    ['name' => _('sv/sf'), 'field' => 'sfsv'],
-                    ['name' => _('tipo actividad'), 'field' => 'tipo_activ'],
-                    ['name' => _('fechas'), 'field' => 'fechas'],
-                    ['name' => _('hora inicio'), 'field' => 'h_ini'],
-                    ['name' => _('hora fin'), 'field' => 'h_fin'],
-                    ['name' => _('asistentes previstos'), 'field' => 'num_asistentes'],
-                    ['name' => _('id_tarifa'), 'field' => 'id_tarifa'],
-                    ['name' => _('centros encargados'), 'field' => 'ctr_encargados'],
+                    ['name' => _("sv/sf"), 'field' => 'sfsv'],
+                    ['name' => _("tipo actividad"), 'field' => 'tipo_activ'],
+                    ['name' => _("fechas"), 'field' => 'fechas'],
+                    ['name' => _("hora inicio"), 'field' => 'h_ini'],
+                    ['name' => _("hora fin"), 'field' => 'h_fin'],
+                    ['name' => _("asistentes previstos"), 'field' => 'num_asistentes'],
+                    ['name' => _("id_tarifa"), 'field' => 'id_tarifa'],
+                    ['name' => _("centros encargados"), 'field' => 'ctr_encargados'],
                 ];
                 break;
             case 'oficina':
                 $aCabeceras = [
-                    ['name' => _('sv/sf'), 'field' => 'sfsv'],
-                    ['name' => _('tipo actividad'), 'field' => 'tipo_activ'],
-                    ['name' => _('cdc'), 'field' => 'cdc'],
-                    ['name' => _('fechas'), 'field' => 'fechas'],
-                    ['name' => _('hora inicio'), 'field' => 'h_ini'],
-                    ['name' => _('hora fin'), 'field' => 'h_fin'],
-                    ['name' => _('asistentes previstos'), 'field' => 'num_asistentes'],
-                    ['name' => _('id_tarifa'), 'field' => 'id_tarifa'],
-                    ['name' => _('centros encargados'), 'field' => 'ctr_encargados'],
+                    ['name' => _("sv/sf"), 'field' => 'sfsv'],
+                    ['name' => _("tipo actividad"), 'field' => 'tipo_activ'],
+                    ['name' => _("cdc"), 'field' => 'cdc'],
+                    ['name' => _("fechas"), 'field' => 'fechas'],
+                    ['name' => _("hora inicio"), 'field' => 'h_ini'],
+                    ['name' => _("hora fin"), 'field' => 'h_fin'],
+                    ['name' => _("asistentes previstos"), 'field' => 'num_asistentes'],
+                    ['name' => _("id_tarifa"), 'field' => 'id_tarifa'],
+                    ['name' => _("centros encargados"), 'field' => 'ctr_encargados'],
                 ];
                 break;
             default:

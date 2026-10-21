@@ -18,12 +18,12 @@ $a_sacd = $data['sacd_opciones'] ?? [];
 $sacd_selected = \frontend\shared\helpers\PayloadCoercion::string($data['sacd_selected'] ?? '');
 
 $periodo_td_html = PeriodoTdHelper::build([
-    'esta_semana' => _('esta semana'),
-    'este_mes' => _('este mes'),
-    'proxima_semana' => _('próxima semana de lunes a domingo'),
-    'proximo_mes' => _('próximo mes natural'),
+    'esta_semana' => _("esta semana"),
+    'este_mes' => _("este mes"),
+    'proxima_semana' => _("próxima semana de lunes a domingo"),
+    'proximo_mes' => _("próximo mes natural"),
     'separador' => '---------',
-    'otro' => _('otro'),
+    'otro' => _("otro"),
 ], 'esta_semana');
 
 $oDesplSacd = new Desplegable();
@@ -36,7 +36,7 @@ if ($sacd_selected !== '') {
 }
 $msg = '';
 if (empty($a_sacd)) {
-    $msg = _('No hay SACD disponibles porque: Usuario sin csv_id_pau, que no es jefe de zona, ni p-sacd, ni Oficial_dl, ni jefe de calendario');
+    $msg = _("No hay SACD disponibles porque: Usuario sin csv_id_pau, que no es jefe de zona, ni p-sacd, ni Oficial_dl, ni jefe de calendario");
 }
 
 $url_ver_plan_sacd = 'frontend/misas/controller/ver_plan_sacd.php';

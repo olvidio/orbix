@@ -47,7 +47,7 @@ final class CentrosSListaData
             $a_valores[$i][2] = $num_s;
         }
 
-        $a_cabeceras = [ucfirst(_('centro')), _('num s')];
+        $a_cabeceras = [ucfirst(_("centro")), _("num s")];
 
         return [
             'a_cabeceras' => $a_cabeceras,

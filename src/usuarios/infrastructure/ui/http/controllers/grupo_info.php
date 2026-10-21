@@ -13,7 +13,7 @@ if ($Qid_usuario > 0) {
     $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
     $oGrupo = $GrupoRepository->findById($Qid_usuario);
     if ($oGrupo === null) {
-        ContestarJson::enviar(_('Grupo no encontrado'), []);
+        ContestarJson::enviar(_("Grupo no encontrado"), []);
         return;
     }
     $nombre = $oGrupo->getUsuarioAsString();

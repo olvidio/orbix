@@ -48,7 +48,7 @@ if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qnuevo)) {
 } else {
     $oCertificadoRecibido = $certificadoRecibidoRepository->findById($Qid_item);
     if ($oCertificadoRecibido === null) {
-        ContestarJson::enviar(_('No se encuentra el certificado'), 'ok');
+        ContestarJson::enviar(_("No se encuentra el certificado"), 'ok');
         return;
     }
 }

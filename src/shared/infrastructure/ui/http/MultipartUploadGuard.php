@@ -52,7 +52,7 @@ final class MultipartUploadGuard
 
     public static function textPostMaxExceededPhp(): string
     {
-        return _('El tamaño total de la petición supera el límite configurado en el servidor (post_max_size).');
+        return _("El tamaño total de la petición supera el límite configurado en el servidor (post_max_size).");
     }
 
     /**
@@ -87,12 +87,12 @@ final class MultipartUploadGuard
         return match ($errorCode) {
             UPLOAD_ERR_INI_SIZE,
             UPLOAD_ERR_FORM_SIZE => self::textFileExceedsServerLimit(),
-            UPLOAD_ERR_PARTIAL => sprintf(_('El archivo %s se subió solo en parte.'), $fileName),
-            UPLOAD_ERR_NO_FILE => _('No se ha seleccionado ningún archivo.'),
-            UPLOAD_ERR_NO_TMP_DIR => _('Error del servidor: falta el directorio temporal para subidas.'),
-            UPLOAD_ERR_CANT_WRITE => sprintf(_('No se pudo guardar el archivo %s en disco.'), $fileName),
-            UPLOAD_ERR_EXTENSION => _('La subida fue bloqueada por una extensión de PHP.'),
-            default => sprintf(_('Error al subir el archivo %s.'), $fileName),
+            UPLOAD_ERR_PARTIAL => sprintf(_("El archivo %s se subió solo en parte."), $fileName),
+            UPLOAD_ERR_NO_FILE => _("No se ha seleccionado ningún archivo."),
+            UPLOAD_ERR_NO_TMP_DIR => _("Error del servidor: falta el directorio temporal para subidas."),
+            UPLOAD_ERR_CANT_WRITE => sprintf(_("No se pudo guardar el archivo %s en disco."), $fileName),
+            UPLOAD_ERR_EXTENSION => _("La subida fue bloqueada por una extensión de PHP."),
+            default => sprintf(_("Error al subir el archivo %s."), $fileName),
         };
     }
 
@@ -102,7 +102,7 @@ final class MultipartUploadGuard
         $maxMb = $maxBytes > 0 ? round((float) $maxBytes / 1048576, 1) : 0.0;
 
         return sprintf(
-            _('El archivo supera el tamaño máximo permitido por el servidor (aprox. %s MB).'),
+            _("El archivo supera el tamaño máximo permitido por el servidor (aprox. %s MB)."),
             (string) $maxMb
         );
     }
@@ -132,7 +132,7 @@ final class MultipartUploadGuard
             http_response_code(200);
             echo json_encode([
                 'success' => false,
-                'mensaje' => _('No se ha recibido el archivo.'),
+                'mensaje' => _("No se ha recibido el archivo."),
             ], JSON_THROW_ON_ERROR);
             exit;
         }
@@ -142,7 +142,7 @@ final class MultipartUploadGuard
             http_response_code(200);
             echo json_encode([
                 'success' => false,
-                'mensaje' => _('No se ha recibido el archivo.'),
+                'mensaje' => _("No se ha recibido el archivo."),
             ], JSON_THROW_ON_ERROR);
             exit;
         }

@@ -56,8 +56,8 @@ $a_valores = ActividadesListaSupport::datos($payload['a_valores'] ?? []);
 $a_cabeceras[] = ucfirst(_("documento"));
 $a_cabeceras[] = ucfirst(_("observaciones"));
 
-$a_botones[] = array('txt' => _('marcar todos'), 'click' => "fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"all\")");
-$a_botones[] = array('txt' => _('desmarcar todos'), 'click' => "fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"none\")");
+$a_botones[] = array('txt' => _("marcar todos"), 'click' => "fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"all\")");
+$a_botones[] = array('txt' => _("desmarcar todos"), 'click' => "fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"none\")");
 
 
 $oLista = new Lista();

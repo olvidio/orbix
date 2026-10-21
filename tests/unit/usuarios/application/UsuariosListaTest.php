@@ -50,7 +50,7 @@ final class UsuariosListaTest extends TestCase
         $out = $useCase->execute('');
 
         $this->assertFalse($out['success']);
-        $this->assertSame(_('no tiene permisos para ver esto'), $out['mensaje']);
+        $this->assertSame(_("no tiene permisos para ver esto"), $out['mensaje']);
     }
 
     public function test_superadmin_lista_usuario_con_role_sv(): void

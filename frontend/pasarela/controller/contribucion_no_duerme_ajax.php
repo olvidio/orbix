@@ -61,7 +61,7 @@ switch ($Qque) {
         $data = PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_default_data');
         $default = \frontend\shared\helpers\PayloadCoercion::string($data['default'] ?? '');
         $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($data['ctx_guardar'] ?? '');
-        $txt = _('Valor por defecto en %');
+        $txt = _("Valor por defecto en %");
 
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
@@ -80,7 +80,7 @@ switch ($Qque) {
         $oView->renderizar('contribucion_x_default_form.html.twig', $a_campos);
         break;
     case 'form_modificar':
-        $txt = _('Contribución si no duerme en % para');
+        $txt = _("Contribución si no duerme en % para");
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qcontribucion = (string)filter_input(INPUT_POST, 'contribucion');
 
@@ -115,7 +115,7 @@ switch ($Qque) {
         $oView->renderizar('contribucion_x_form.html.twig', $a_campos);
         break;
     case 'form_nuevo':
-        $txt = _('Contribución si no duerme en %');
+        $txt = _("Contribución si no duerme en %");
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
         $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');

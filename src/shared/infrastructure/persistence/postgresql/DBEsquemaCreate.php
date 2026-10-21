@@ -174,7 +174,7 @@ class DBEsquemaCreate
             }
         }
 
-        throw new \RuntimeException(_('Faltan región y dl del esquema (setRegionNew / setDlNew).'));
+        throw new \RuntimeException(_("Faltan región y dl del esquema (setRegionNew / setDlNew)."));
     }
 
     private function aplicarSufijoEsquemaPorDb(string $base): string
@@ -221,7 +221,7 @@ class DBEsquemaCreate
     {
         if ($this->sRegionRef === null || $this->sDlRef === null
             || $this->sRegionRef === '' || $this->sDlRef === '') {
-            throw new \RuntimeException(_('Faltan región y dl de referencia (setRegionRef / setDlRef).'));
+            throw new \RuntimeException(_("Faltan región y dl de referencia (setRegionRef / setDlRef)."));
         }
 
         $this->sRef = $this->sRegionRef . '-' . $this->sDlRef;
@@ -351,7 +351,7 @@ class DBEsquemaCreate
     {
         $dump = file_get_contents($this->getFileRef());
         if ($dump === false) {
-            throw new \RuntimeException(sprintf(_('No se pudo leer %s'), $this->getFileRef()));
+            throw new \RuntimeException(sprintf(_("No se pudo leer %s"), $this->getFileRef()));
         }
 
         $dump_nou = $this->renombrarEsquemaEnVolcado($dump, $this->getRef(), $this->getNew());
@@ -655,7 +655,7 @@ class DBEsquemaCreate
         $sqlPath = $this->getFileNew();
         if (!is_readable($sqlPath)) {
             throw new \RuntimeException(sprintf(
-                _('No se encuentra el volcado SQL para importar en réplica: %s'),
+                _("No se encuentra el volcado SQL para importar en réplica: %s"),
                 $sqlPath,
             ));
         }
@@ -710,7 +710,7 @@ class DBEsquemaCreate
         $tablas = $this->contarTablasEsquemaMantenimiento();
         if ($tablas === 0) {
             throw new \RuntimeException(sprintf(
-                _('Tras importar en réplica (%1$s / %2$s) el esquema «%3$s» no tiene tablas. Revise %4$s y pruebas-importar.conn.inc (dbname de public_select).'),
+                _("Tras importar en réplica (%1\$s / %2\$s) el esquema «%3\$s» no tiene tablas. Revise %4\$s y pruebas-importar.conn.inc (dbname de public_select)."),
                 $this->claveEsquemaImportar(),
                 self::stringConfigValue($this->config['dbname'] ?? null),
                 $this->getNew(),
@@ -902,7 +902,7 @@ class DBEsquemaCreate
 
         if ($this->existeEsquemaTrasIntentoEliminar($esquema, $config, $host)) {
             throw new \RuntimeException(sprintf(
-                _('El esquema «%1$s» sigue existiendo en %2$s (%3$s) tras DROP SCHEMA. Revise propietario (p. ej. orbix_admindb) y %4$s.'),
+                _("El esquema «%1\$s» sigue existiendo en %2\$s (%3\$s) tras DROP SCHEMA. Revise propietario (p. ej. orbix_admindb) y %4\$s."),
                 $esquema,
                 $this->claveEsquemaImportar(),
                 self::stringConfigValue($config['dbname'] ?? null),
@@ -937,7 +937,7 @@ class DBEsquemaCreate
         } catch (\PDOException $e) {
             if (!$this->esErrorPropietarioEsquema($e)) {
                 throw new \RuntimeException(sprintf(
-                    _('No se pudo eliminar el esquema «%1$s»: %2$s'),
+                    _("No se pudo eliminar el esquema «%1\$s»: %2\$s"),
                     $esquema,
                     $e->getMessage(),
                 ), 0, $e);
@@ -955,7 +955,7 @@ class DBEsquemaCreate
         $sshUser = self::stringConfigValue($config['ssh_user'] ?? $this->getSsh_user());
         if ($sshUser === '') {
             throw new \RuntimeException(sprintf(
-                _('Falta ssh_user para eliminar el esquema en el servidor interior («%s»).'),
+                _("Falta ssh_user para eliminar el esquema en el servidor interior («%s»)."),
                 $this->claveEsquemaImportar(),
             ));
         }
@@ -963,7 +963,7 @@ class DBEsquemaCreate
         $dbname = self::stringConfigValue($config['dbname'] ?? null);
         if ($dbname === '') {
             throw new \RuntimeException(sprintf(
-                _('Falta dbname en la conexión de mantenimiento «%s».'),
+                _("Falta dbname en la conexión de mantenimiento «%s»."),
                 $this->claveEsquemaImportar(),
             ));
         }
@@ -990,7 +990,7 @@ class DBEsquemaCreate
     private function sqlReasignarPropietarioYBorrarEsquema(string $esquema): string
     {
         if ($esquema === '' || preg_match('/[^A-Za-z0-9._-]/', $esquema)) {
-            throw new \InvalidArgumentException(_('Nombre de esquema no válido.'));
+            throw new \InvalidArgumentException(_("Nombre de esquema no válido."));
         }
 
         $qEsquema = '"' . str_replace('"', '""', $esquema) . '"';
@@ -1130,7 +1130,7 @@ class DBEsquemaCreate
 
         $detalle = trim((string) file_get_contents($logFile));
         $msg = sprintf(
-            _('Error pg_dump/psql (comando %1$d). Log: %2$s.%3$s'),
+            _("Error pg_dump/psql (comando %1\$d). Log: %2\$s.%3\$s"),
             $numeroComando,
             $logFile,
             $detalle !== '' ? ' ' . $detalle : ' ' . $command,
@@ -1139,7 +1139,7 @@ class DBEsquemaCreate
             && str_contains($detalle, 'NOT NULL')
             && str_contains($detalle, 'syntax error')) {
             $msg .= ' ' . _(
-                'Suele deberse a pg_dump y psql de versiones distintas; tras desplegar, el cliente debe coincidir con la major del servidor (p. ej. /usr/lib/postgresql/15/bin/).',
+                "Suele deberse a pg_dump y psql de versiones distintas; tras desplegar, el cliente debe coincidir con la major del servidor (p. ej. /usr/lib/postgresql/15/bin/).",
             );
         }
 

@@ -22,10 +22,10 @@ class usuarioEliminar
 
         $oUsuario = $this->usuarioRepository->findById($id_usuario);
         if ($oUsuario === null) {
-            return ['error' => _('Usuario no encontrado'), 'data' => 'ok'];
+            return ['error' => _("Usuario no encontrado"), 'data' => 'ok'];
         }
         if ($this->usuarioRepository->Eliminar($oUsuario) === false) {
-            $error_txt .= _('hay un error, no se ha eliminado');
+            $error_txt .= _("hay un error, no se ha eliminado");
             $error_txt .= "\n" . $this->usuarioRepository->getErrorTxt();
         }
 

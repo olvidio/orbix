@@ -269,7 +269,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $sql = "SELECT COALESCE(MAX(id), 2999) + 1 FROM $nom_tabla";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
-            throw new \RuntimeException(_('Error obteniendo nuevo id de db_idschema.'));
+            throw new \RuntimeException(_("Error obteniendo nuevo id de db_idschema."));
         }
         return (int) $stmt->fetchColumn();
     }
@@ -310,7 +310,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
                 $this->setoDbl($oDB);
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf(_('Base de datos no soportada: %s'), $database));
+                throw new \InvalidArgumentException(sprintf(_("Base de datos no soportada: %s"), $database));
         }
         return $oDB;
     }
@@ -360,7 +360,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
             }
         }
         if ($lastId === null) {
-            throw new \RuntimeException(_('No se encuentra ningún id_schema en el rango 3000-4000'));
+            throw new \RuntimeException(_("No se encuentra ningún id_schema en el rango 3000-4000"));
         }
         return $lastId;
     }

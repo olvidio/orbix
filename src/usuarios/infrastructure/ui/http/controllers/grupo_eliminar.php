@@ -26,7 +26,7 @@ $id_usuario = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_u
 $Gruporepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 $oGrupo = $Gruporepository->findById($id_usuario);
 if ($oGrupo === null) {
-    ContestarJson::enviar(_('Grupo no encontrado'), 'ok');
+    ContestarJson::enviar(_("Grupo no encontrado"), 'ok');
     return;
 }
 if ($Gruporepository->Eliminar($oGrupo) === false) {

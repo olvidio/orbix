@@ -52,9 +52,9 @@ final class ListasBData
         $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt')->getFromLocal();
         $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->getFromLocal();
 
-        $cabecera_left = sprintf(_('Curso:  %s - %s'), $inicurs, $fincurs);
+        $cabecera_left = sprintf(_("Curso:  %s - %s"), $inicurs, $fincurs);
         $cabecera_right = ConfigGlobal::mi_delef();
-        $cabecera_right_2 = _('ref. cr 1/14, 10, b)');
+        $cabecera_right_2 = _("ref. cr 1/14, 10, b)");
 
         $poblacion = $oService->getLugar_dl();
         $oDateLocal = new DateTimeLocal();
@@ -67,19 +67,19 @@ final class ListasBData
         foreach ($tipos_de_ctr as $tipo_ctr_que) {
             switch ($tipo_ctr_que) {
                 case 'igl':
-                    $txt_tipo_ctr = $sf === 0 ? ('1. ' . _('Iglesias')) : '';
+                    $txt_tipo_ctr = $sf === 0 ? ('1. ' . _("Iglesias")) : '';
                     $Html .= "<div><table><tr><td class=grupo colspan=2>$txt_tipo_ctr</td></tr>";
                     break;
                 case 'cgioc':
                     if ($sf !== 0) {
-                        $Html .= '<div><table><tr><td class=grupo colspan=2>1. ' . _('oc') . '</td></tr>';
+                        $Html .= '<div><table><tr><td class=grupo colspan=2>1. ' . _("oc") . '</td></tr>';
                     } else {
-                        $Html .= '<div class=salta_pag ><table><tr><td class=grupo colspan=2>2. ' . _('oc') . '</td></tr>';
+                        $Html .= '<div class=salta_pag ><table><tr><td class=grupo colspan=2>2. ' . _("oc") . '</td></tr>';
                     }
                     break;
                 case '^cgi$':
                     $prefijo = $sf !== 0 ? '2. ' : '3. ';
-                    $Html .= '<div><table><tr><td class=grupo colspan=2>' . $prefijo . _('lp') . '</td></tr>';
+                    $Html .= '<div><table><tr><td class=grupo colspan=2>' . $prefijo . _("lp") . '</td></tr>';
                     break;
             }
 
@@ -140,9 +140,9 @@ final class ListasBData
                             case 2:
                             case 3:
                                 $parentesis = match ($tipo_ctr) {
-                                    'igloc' => ucfirst(_('rector')),
-                                    'igl' => ucfirst(_('encargado')),
-                                    default => _('capellán'),
+                                    'igloc' => ucfirst(_("rector")),
+                                    'igl' => ucfirst(_("encargado")),
+                                    default => _("capellán"),
                                 };
                                 $sacd_titular = $sf === 1
                                     ? $nom_ap

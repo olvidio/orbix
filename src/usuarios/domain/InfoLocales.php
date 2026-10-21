@@ -13,9 +13,9 @@ class InfoLocales extends DatosInfoRepo
     public function __construct(
         private LocalRepositoryInterface $localRepository,
     ) {
-        $this->setTxtTitulo(_('idiomas posibles para la aplicación'));
+        $this->setTxtTitulo(_("idiomas posibles para la aplicación"));
         $this->setTxtEliminar();
-        $this->setTxtBuscar(_('idioma a buscar'));
+        $this->setTxtBuscar(_("idioma a buscar"));
         $this->setTxtExplicacion();
 
         $this->setClase('src\\usuarios\\domain\\entity\\Local');

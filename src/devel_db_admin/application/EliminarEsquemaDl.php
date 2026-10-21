@@ -186,7 +186,7 @@ final class EliminarEsquemaDl
                 $oDBEsquemaCreate->eliminar($nombreEsquema);
             } catch (\Throwable $e) {
                 $avisos[] = sprintf(
-                    _('No se pudo eliminar el esquema «%1$s» en %2$s: %3$s'),
+                    _("No se pudo eliminar el esquema «%1\$s» en %2\$s: %3\$s"),
                     $nombreEsquema,
                     $clave,
                     $e->getMessage(),
@@ -234,7 +234,7 @@ final class EliminarEsquemaDl
         string $rol,
     ): array {
         if (!$this->rolExisteEnAlgunaClave($oConfigDB, $clavesDropOwned, $rol)) {
-            return [sprintf(_('El rol «%s» ya no existía; no se intentó borrarlo.'), $rol)];
+            return [sprintf(_("El rol «%s» ya no existía; no se intentó borrarlo."), $rol)];
         }
 
         $pdo = (new DBConnection($oConfigDB->getConexionMantenimiento($claveDropRole)))->getPDO();
@@ -243,7 +243,7 @@ final class EliminarEsquemaDl
         $error = $oDBRol->intentarEliminarUsuario($clavesDropOwned);
         if ($error !== null) {
             return [sprintf(
-                _('Aviso: no se pudo eliminar el rol «%1$s» (los esquemas ya se borraron): %2$s'),
+                _("Aviso: no se pudo eliminar el rol «%1\$s» (los esquemas ya se borraron): %2\$s"),
                 $rol,
                 $error,
             )];

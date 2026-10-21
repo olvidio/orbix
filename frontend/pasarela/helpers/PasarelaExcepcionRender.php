@@ -15,7 +15,7 @@ final class PasarelaExcepcionRender
     {
         $default = htmlspecialchars($data['default'], ENT_QUOTES, 'UTF-8');
         $html = '<table>';
-        $html .= '<tr><td>' . _('por defecto') . '</td><td>';
+        $html .= '<tr><td>' . _("por defecto") . '</td><td>';
         $html .= '<span class="link" onclick="' . $defaultOnclick . '">' . $default . '</span></td></tr>';
         $html .= '</table><table>';
         foreach ($data['excepciones'] as $row) {

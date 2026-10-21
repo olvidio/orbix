@@ -41,7 +41,7 @@ final class ResiduoOtraRegionComprobarDataTest extends TestCase
         $json = $pasos[4]['tablas'][0]['filas'];
         $this->assertCount(1, $json);
         $this->assertSame('Galbel 1/26', $json[0][4]);
-        $this->assertSame(_('sí'), $json[0][5]);
+        $this->assertSame(_("sí"), $json[0][5]);
     }
 
     public function test_inventario_lista_esquemas_sin_permiso(): void
@@ -56,7 +56,7 @@ final class ResiduoOtraRegionComprobarDataTest extends TestCase
         $out = (new ResiduoOtraRegionComprobarData($consulta, $asignaturas))->execute();
         $tablas = $out['pasos'][0]['tablas'];
 
-        $this->assertSame(_('Sin permiso de lectura'), $tablas[1]['titulo']);
+        $this->assertSame(_("Sin permiso de lectura"), $tablas[1]['titulo']);
         $this->assertSame([['H-Hv']], $tablas[1]['filas']);
     }
 

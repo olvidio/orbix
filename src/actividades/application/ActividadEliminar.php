@@ -54,7 +54,7 @@ final class ActividadEliminar
         if (ConfigGlobal::is_app_installed('procesos')) {
             $oPermSesion = $_SESSION['oPermActividades'] ?? null;
             if (!($oPermSesion instanceof PermisosActividades)) {
-                return _('sesión de permisos no disponible');
+                return _("sesión de permisos no disponible");
             }
             $oPermSesion->setActividad($id_activ, (string) $id_tipo_activ, $dl_org);
             $oPermActiv = $oPermSesion->getPermisoActual('datos');

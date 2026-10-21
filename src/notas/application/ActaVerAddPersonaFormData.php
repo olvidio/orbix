@@ -53,12 +53,12 @@ final class ActaVerAddPersonaFormData
     {
         $acta = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'acta');
         if ($acta === '') {
-            return ['error' => _('Falta el acta'), 'puede_anadir' => false];
+            return ['error' => _("Falta el acta"), 'puede_anadir' => false];
         }
 
         $oActa = $this->actaRepository->findById($acta);
         if (!$oActa instanceof Acta) {
-            return ['error' => _('No se encuentra el acta'), 'puede_anadir' => false];
+            return ['error' => _("No se encuentra el acta"), 'puede_anadir' => false];
         }
 
         $id_asignatura = (int) ($oActa->getId_asignatura() ?? 0);
@@ -66,7 +66,7 @@ final class ActaVerAddPersonaFormData
         $f_acta = $oActa->getF_acta()?->getFromLocal() ?? '';
 
         if ($id_asignatura < 1) {
-            return ['error' => _('El acta no tiene asignatura'), 'puede_anadir' => false];
+            return ['error' => _("El acta no tiene asignatura"), 'puede_anadir' => false];
         }
 
         $id_nivel = 0;
@@ -138,7 +138,7 @@ final class ActaVerAddPersonaFormData
             }
         } catch (\Throwable $e) {
             throw new \RuntimeException(
-                _('No se han podido cargar las personas publicadas') . ': ' . $e->getMessage(),
+                _("No se han podido cargar las personas publicadas") . ': ' . $e->getMessage(),
                 0,
                 $e
             );

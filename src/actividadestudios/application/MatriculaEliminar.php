@@ -130,7 +130,7 @@ final class MatriculaEliminar
             return '';
         }
         if ($this->matriculaDlRepository->Eliminar($oMatricula) === false) {
-            return _('hay un error, no se ha borrado');
+            return _("hay un error, no se ha borrado");
         }
 
         $this->cerrarDossier('p', $id_nom, 1303);

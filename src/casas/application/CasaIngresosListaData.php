@@ -174,7 +174,7 @@ final class CasaIngresosListaData
                             $precio_txt = round($factor_dias * $cantidad, 2) . $flag;
                             $precio_pr = round($factor_dias * $cantidad, 2);
                         } else {
-                            $precio_txt = sprintf(_('%s %s días x %s ~= %s'), $flag, $num_dias_ajust, $cantidad, ($num_dias_ajust * $cantidad));
+                            $precio_txt = sprintf(_("%s %s días x %s ~= %s"), $flag, $num_dias_ajust, $cantidad, ($num_dias_ajust * $cantidad));
                             $precio_pr = round($num_dias_ajust * $cantidad, 2);
                         }
                     } else {
@@ -249,7 +249,7 @@ final class CasaIngresosListaData
             $a_valores[$id_ubi][$a] = [
                 1 => $oF_ini_periodo->getFromLocal(),
                 2 => $oF_fin_periodo->getFromLocal(),
-                3 => _('totales sv'),
+                3 => _("totales sv"),
                 4 => '',
                 5 => $tot_asis_pr[1],
                 6 => $tot_asis[1],
@@ -264,7 +264,7 @@ final class CasaIngresosListaData
             $a_valores[$id_ubi][$a + 1] = [
                 1 => $oF_ini_periodo->getFromLocal(),
                 2 => $oF_fin_periodo->getFromLocal(),
-                3 => _('totales sf'),
+                3 => _("totales sf"),
                 4 => '',
                 5 => $tot_asis_pr[2],
                 6 => $tot_asis[2],
@@ -279,7 +279,7 @@ final class CasaIngresosListaData
             $a_valores[$id_ubi][$a + 2] = [
                 1 => $oF_ini_periodo->getFromLocal(),
                 2 => $oF_fin_periodo->getFromLocal(),
-                3 => _('totales'),
+                3 => _("totales"),
                 4 => '',
                 5 => $tot_asis_pr['tot'],
                 6 => $tot_asis['tot'],

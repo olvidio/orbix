@@ -36,17 +36,17 @@ final class IngresoPlazasPrevistasUpdate
         }
 
         if ($id_activ === 0) {
-            return (string)_('no se encuentra el ingreso');
+            return (string)_("no se encuentra el ingreso");
         }
 
         $oIngreso = $this->ingresoRepository->findById($id_activ);
         if ($oIngreso === null) {
-            return (string)_('no se encuentra el ingreso');
+            return (string)_("no se encuentra el ingreso");
         }
 
         $oIngreso->setNumAsistentesPrevistosVo($plazas);
         if ($this->ingresoRepository->Guardar($oIngreso) === false) {
-            return (string)_('Hay un error, no se ha guardado')
+            return (string)_("Hay un error, no se ha guardado")
                 . "\n" . $this->ingresoRepository->getErrorTxt();
         }
 

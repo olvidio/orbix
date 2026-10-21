@@ -26,7 +26,7 @@ final class CuadriculaZonaHtmlTable
             return '';
         }
 
-        $encargoHeader = $headers[0] ?? _('Encargo');
+        $encargoHeader = $headers[0] ?? _("Encargo");
         $html = '<table class="cuadricula_zona">';
         $html .= '<thead><tr><th>' . self::e($encargoHeader) . '</th>';
         $dayCount = count($dayFields);
@@ -84,7 +84,7 @@ final class CuadriculaZonaHtmlTable
                 $dayFields[] = $field;
             }
             usort($dayFields, 'strcmp');
-            $sortedHeaders = [_('Encargo')];
+            $sortedHeaders = [_("Encargo")];
             foreach ($dayFields as $field) {
                 $sortedHeaders[] = \frontend\shared\helpers\PayloadCoercion::string($row[$field] ?? $field);
             }
@@ -100,7 +100,7 @@ final class CuadriculaZonaHtmlTable
         foreach ($rows as $row) {
             $dayFields = self::dayFieldsFromRow($row);
             if ($dayFields !== []) {
-                $headers = [_('Encargo')];
+                $headers = [_("Encargo")];
                 foreach ($dayFields as $field) {
                     $headers[] = $field;
                 }
@@ -151,9 +151,9 @@ final class CuadriculaZonaHtmlTable
         }
 
         if ($headers === [] || $headers[0] === '') {
-            array_unshift($headers, _('Encargo'));
+            array_unshift($headers, _("Encargo"));
         } elseif (count($headers) === count($dayFields)) {
-            array_unshift($headers, _('Encargo'));
+            array_unshift($headers, _("Encargo"));
         }
 
         return [$headers, $dayFields];

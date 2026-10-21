@@ -18,7 +18,7 @@ if (is_string($errorVal) && $errorVal !== '') {
     if (RegionStgrAviso::esMensajeSuave($errorVal)) {
         $result['aviso'] = RegionStgrAviso::combinarAvisos(
             is_string($result['aviso'] ?? null) ? $result['aviso'] : '',
-            str_contains($errorVal, _('persona no válida'))
+            str_contains($errorVal, _("persona no válida"))
                 ? RegionStgrAviso::mensajePersonaNoValida()
                 : $errorVal,
         );

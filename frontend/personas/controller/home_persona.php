@@ -69,9 +69,9 @@ $aviso = '';
 if (!empty($data['error'])) {
     $errorHtml = PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($data['error']));
     if (
-        str_contains($errorHtml, _('persona no válida'))
+        str_contains($errorHtml, _("persona no válida"))
         || str_contains($errorHtml, 'persona no válida')
-        || str_contains($errorHtml, _('Delegaciones no dadas de alta'))
+        || str_contains($errorHtml, _("Delegaciones no dadas de alta"))
         || str_contains($errorHtml, 'Delegaciones no dadas de alta')
     ) {
         $aviso = $errorHtml;

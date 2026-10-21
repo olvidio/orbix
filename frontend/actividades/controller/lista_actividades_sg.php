@@ -134,16 +134,16 @@ $result_busqueda = PayloadCoercion::string($data['result_busqueda'] ?? '');
 $Qid_tipo_activ = PayloadCoercion::string($data['id_tipo_activ'] ?? '');
 
 $aOpciones = [
-    'tot_any' => _('todo el año'),
-    'trimestre_1' => _('primer trimestre'),
-    'trimestre_2' => _('segundo trimestre'),
-    'trimestre_3' => _('tercer trimestre'),
-    'trimestre_4' => _('cuarto trimestre'),
+    'tot_any' => _("todo el año"),
+    'trimestre_1' => _("primer trimestre"),
+    'trimestre_2' => _("segundo trimestre"),
+    'trimestre_3' => _("tercer trimestre"),
+    'trimestre_4' => _("cuarto trimestre"),
     'separador' => '---------',
-    'curso_ca' => _('curso ca'),
-    'curso_crt' => _('curso crt'),
+    'curso_ca' => _("curso ca"),
+    'curso_crt' => _("curso crt"),
     'separador1' => '---------',
-    'otro' => _('otro'),
+    'otro' => _("otro"),
 ];
 
 $oFormP = new PeriodoQue();

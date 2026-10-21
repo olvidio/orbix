@@ -41,7 +41,7 @@ final class CrearEsquema
 
         $esquemaBase = RenombrarEsquemaVerificacionContexto::baseDesdeCampoOrigen($esquemaRef);
         if ($esquemaBase === '' || !str_contains($esquemaBase, '-')) {
-            throw new \InvalidArgumentException(_('Esquema de referencia no válido.'));
+            throw new \InvalidArgumentException(_("Esquema de referencia no válido."));
         }
         [$RegionRef, $DlRef] = explode('-', $esquemaBase, 2);
 

@@ -14,7 +14,7 @@ final class PropuestasCrearTabla
         try {
             (new DBPropuestas())->createAll();
         } catch (\RuntimeException) {
-            return ['success' => false, 'mensaje' => _('No se puede crear la tabla')];
+            return ['success' => false, 'mensaje' => _("No se puede crear la tabla")];
         }
 
         return ['success' => true];

@@ -258,7 +258,7 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
                 WHERE id_tipo_proceso = $id_tipo_proceso AND json_fases_previas::text = '[]'::text ";
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
-            throw new \RuntimeException(sprintf(_('PDO query failed for proceso %s'), $id_tipo_proceso));
+            throw new \RuntimeException(sprintf(_("PDO query failed for proceso %s"), $id_tipo_proceso));
         }
 
         $i = 0;

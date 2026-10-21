@@ -491,7 +491,7 @@ abstract class DBAbstract
     {
         $oDbl = $this->oDbl;
         if ($oDbl === null) {
-            throw new \RuntimeException(_('Sin conexión a base de datos para ejecutar SQL.'));
+            throw new \RuntimeException(_("Sin conexión a base de datos para ejecutar SQL."));
         }
 
         $oDbl->beginTransaction();
@@ -502,7 +502,7 @@ abstract class DBAbstract
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
                 }
                 $oDbl->rollback();
-                throw new \RuntimeException(_('Error ejecutando SQL en base de datos.'));
+                throw new \RuntimeException(_("Error ejecutando SQL en base de datos."));
             }
         }
         $oDbl->commit();
@@ -515,7 +515,7 @@ abstract class DBAbstract
     private function conectarImportarReplica(string $claveImportar): void
     {
         if ($claveImportar !== 'public_select' && $claveImportar !== 'publicv-e_select') {
-            throw new \InvalidArgumentException(sprintf(_('Clave de réplica no soportada: %s'), $claveImportar));
+            throw new \InvalidArgumentException(sprintf(_("Clave de réplica no soportada: %s"), $claveImportar));
         }
         $oConfigDB = new ConfigDB('importar');
         $config = $oConfigDB->getConexionImportarReplica($claveImportar);
@@ -559,7 +559,7 @@ abstract class DBAbstract
         $datosTabla = $this->infoTable($tabla_sin_esquema);
         $nom_tabla = $datosTabla['nom_tabla'];
         if (!is_string($nom_tabla) || $nom_tabla === '') {
-            throw new \RuntimeException(sprintf(_('No se pudo resolver nombre de tabla para: %s'), $tabla_sin_esquema));
+            throw new \RuntimeException(sprintf(_("No se pudo resolver nombre de tabla para: %s"), $tabla_sin_esquema));
         }
 
         $this->addPermisoGlobal('sfsv-e_select');
@@ -577,7 +577,7 @@ abstract class DBAbstract
      */
     protected function infoTable(string $tabla): array
     {
-        throw new \RuntimeException(sprintf(_('infoTable no implementado para la tabla: %s'), $tabla));
+        throw new \RuntimeException(sprintf(_("infoTable no implementado para la tabla: %s"), $tabla));
     }
 
     /**

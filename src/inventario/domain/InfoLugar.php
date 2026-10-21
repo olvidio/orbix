@@ -13,8 +13,8 @@ class InfoLugar extends DatosInfoRepo
     public function __construct(
         private LugarRepositoryInterface $lugarRepository,
     ) {
-        $this->setTxtTitulo(_('centro o casa'));
-        $this->setTxtEliminar(_('¿Está seguro que desea eliminar esta casa/centro?'));
+        $this->setTxtTitulo(_("centro o casa"));
+        $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta casa/centro?"));
         $this->setTxtBuscar();
         $this->setTxtExplicacion();
 

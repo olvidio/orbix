@@ -654,16 +654,16 @@ public static function telecoFromPayload(array $payload): array
 public static function buscarNomUbi(string $tipo): string
 {
     return match ($tipo) {
-        'ctrdl' => ucfirst(_('nombre del centro')),
-        'vu_ex' => ucfirst(_('nombre del centro o casa')),
-        'ctrex' => ucfirst(_('nombre del centro')),
-        'cdcdl' => ucfirst(_('nombre de la casa')),
-        'cdcex' => ucfirst(_('nombre de la casa')),
-        'mail' => ucfirst(_('nombre del centro')),
-        'ctrsf' => ucfirst(_('nombre del centro')),
-        'ctr' => ucfirst(_('nombre del centro')),
-        'cdc' => ucfirst(_('nombre de la casa')),
-        default => ucfirst(_('nombre de la casa o centro')),
+        'ctrdl' => ucfirst(_("nombre del centro")),
+        'vu_ex' => ucfirst(_("nombre del centro o casa")),
+        'ctrex' => ucfirst(_("nombre del centro")),
+        'cdcdl' => ucfirst(_("nombre de la casa")),
+        'cdcex' => ucfirst(_("nombre de la casa")),
+        'mail' => ucfirst(_("nombre del centro")),
+        'ctrsf' => ucfirst(_("nombre del centro")),
+        'ctr' => ucfirst(_("nombre del centro")),
+        'cdc' => ucfirst(_("nombre de la casa")),
+        default => ucfirst(_("nombre de la casa o centro")),
     };
 }
 }

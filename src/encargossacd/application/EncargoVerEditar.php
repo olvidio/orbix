@@ -34,12 +34,12 @@ final class EncargoVerEditar
         $Qid_tipo_enc = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_enc');
 
         if ($Qdesc_enc === '') {
-            return ['error' => _('Debe llenar el campo descripción')];
+            return ['error' => _("Debe llenar el campo descripción")];
         }
 
         $oEncargo = $this->encargoRepository->findById($Qid_enc);
         if ($oEncargo === null) {
-            return ['error' => sprintf(_('No se encuentra el encargo %d'), $Qid_enc)];
+            return ['error' => sprintf(_("No se encuentra el encargo %d"), $Qid_enc)];
         }
 
         $oEncargo->setId_tipo_enc((int)$Qid_tipo_enc);
@@ -51,7 +51,7 @@ final class EncargoVerEditar
         $oEncargo->setDesc_lugar($Qdesc_lugar);
         $oEncargo->setObserv($Qobserv);
         if ($this->encargoRepository->Guardar($oEncargo) === false) {
-            return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoRepository->getErrorTxt()];
+            return ['error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoRepository->getErrorTxt()];
         }
 
         return ['error' => ''];

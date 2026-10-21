@@ -24,11 +24,11 @@ $data = PostRequest::getDataFromUrl('/src/devel_db_admin/eliminar_esquema', [
     'ctx_eliminar' => (string) filter_input(INPUT_POST, 'ctx_eliminar'),
 ]);
 
-echo _('Datos pasados a resto (según bloques aplicables), esquemas eliminados y roles borrados en las bases marcadas.');
+echo _("Datos pasados a resto (según bloques aplicables), esquemas eliminados y roles borrados en las bases marcadas.");
 
 $avisos = DevelDbAdminPayload::avisosList($data['avisos'] ?? []);
 if ($avisos !== []) {
-    echo '<br><strong>' . _('Avisos') . ':</strong><ul>';
+    echo '<br><strong>' . _("Avisos") . ':</strong><ul>';
     foreach ($avisos as $aviso) {
         echo '<li>' . htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') . '</li>';
     }

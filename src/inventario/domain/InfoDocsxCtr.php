@@ -17,8 +17,8 @@ class InfoDocsxCtr extends DatosInfoRepo
         private UbiInventarioRepositoryInterface $ubiInventarioRepository,
         private LugarRepositoryInterface $lugarRepository,
     ) {
-        $this->setTxtTitulo(_('documentos'));
-        $this->setTxtEliminar(_('¿Está seguro que desea eliminar este documento?'));
+        $this->setTxtTitulo(_("documentos"));
+        $this->setTxtEliminar(_("¿Está seguro que desea eliminar este documento?"));
         $this->setTxtBuscar();
         $this->setTxtExplicacion();
 

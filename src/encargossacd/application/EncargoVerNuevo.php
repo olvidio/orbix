@@ -46,7 +46,7 @@ final class EncargoVerNuevo
             if (!str_contains((string)$condta, '.')) {
                 $id_tipo_enc = $condta;
             } else {
-                return ['error' => _('Debe seleccionar un tipo de encargo')];
+                return ['error' => _("Debe seleccionar un tipo de encargo")];
             }
         }
 
@@ -55,7 +55,7 @@ final class EncargoVerNuevo
         }
 
         if ($Qdesc_enc === '') {
-            return ['error' => _('Debe llenar el campo descripción')];
+            return ['error' => _("Debe llenar el campo descripción")];
         }
 
         $newId = $this->encargoRepository->getNewId();
@@ -64,7 +64,7 @@ final class EncargoVerNuevo
         $oEncargo->setId_tipo_enc((int)$id_tipo_enc);
         $grupo = EncargoGrupo::fromNullableInt($Qsf_sv);
         if ($grupo === null) {
-            return ['error' => _('grupo de encargo no valido')];
+            return ['error' => _("grupo de encargo no valido")];
         }
         $oEncargo->setGrupoEncargoVo($grupo);
         $oEncargo->setId_ubi($Qid_ubi);
@@ -74,7 +74,7 @@ final class EncargoVerNuevo
         $oEncargo->setDesc_lugar($Qdesc_lugar);
         $oEncargo->setObserv($Qobserv);
         if ($this->encargoRepository->Guardar($oEncargo) === false) {
-            return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoRepository->getErrorTxt()];
+            return ['error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoRepository->getErrorTxt()];
         }
 
         return ['error' => ''];

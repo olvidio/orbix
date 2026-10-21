@@ -69,7 +69,7 @@ final readonly class MatriculasPendientesData
 
             $nombreCorto = $this->nombreAsignatura($idAsignatura, $asignaturasCache);
             if ($nombreCorto === null) {
-                throw new RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string) $idAsignatura));
+                throw new RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), (string) $idAsignatura));
             }
 
             $apellidosNombre = $oPersona->getPrefApellidosNombre();

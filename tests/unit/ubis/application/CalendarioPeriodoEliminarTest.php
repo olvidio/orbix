@@ -13,12 +13,12 @@ final class CalendarioPeriodoEliminarTest extends TestCase
     public function test_id_cero_devuelve_mensaje_error(): void
     {
         $useCase = new CalendarioPeriodoEliminar($this->createMock(CasaPeriodoRepositoryInterface::class));
-        $this->assertSame(_('no sé cuál he de borar'), $useCase->execute(0));
+        $this->assertSame(_("no sé cuál he de borar"), $useCase->execute(0));
     }
 
     public function test_id_negativo_devuelve_mensaje_error(): void
     {
         $useCase = new CalendarioPeriodoEliminar($this->createMock(CasaPeriodoRepositoryInterface::class));
-        $this->assertSame(_('no sé cuál he de borar'), $useCase->execute(-5));
+        $this->assertSame(_("no sé cuál he de borar"), $useCase->execute(-5));
     }
 }

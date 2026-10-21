@@ -31,7 +31,7 @@ try {
             'aviso' => RegionStgrAviso::combinarAvisos(
                 RegionStgrAviso::formatear($problemas),
                 RegionStgrAviso::esMensajeSuave($msg) && !RegionStgrAviso::esDlSinRegion($e)
-                    ? (str_contains($msg, _('persona no válida')) ? RegionStgrAviso::mensajePersonaNoValida() : $msg)
+                    ? (str_contains($msg, _("persona no válida")) ? RegionStgrAviso::mensajePersonaNoValida() : $msg)
                     : '',
             ),
         ];
@@ -47,7 +47,7 @@ if (is_string($errorVal) && $errorVal !== '') {
         $avisoPrev = $result['aviso'] ?? '';
         $result['aviso'] = RegionStgrAviso::combinarAvisos(
             is_string($avisoPrev) ? $avisoPrev : '',
-            str_contains($errorVal, _('persona no válida'))
+            str_contains($errorVal, _("persona no válida"))
                 ? RegionStgrAviso::mensajePersonaNoValida()
                 : $errorVal,
         );

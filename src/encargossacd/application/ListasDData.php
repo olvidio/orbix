@@ -65,9 +65,9 @@ final class ListasDData
         $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt')->getFromLocal();
         $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->getFromLocal();
 
-        $cabecera_left = sprintf(_('Curso:  %s - %s'), $inicurs, $fincurs);
+        $cabecera_left = sprintf(_("Curso:  %s - %s"), $inicurs, $fincurs);
         $cabecera_right = ConfigGlobal::mi_delef();
-        $cabecera_right_2 = _('ref. cr 9/20, 10)');
+        $cabecera_right_2 = _("ref. cr 9/20, 10)");
 
         $permiso_sf = '';
         $oPerm = $_SESSION['oPerm'] ?? null;
@@ -109,8 +109,8 @@ final class ListasDData
                         $nom_ap = $oPersonaNAgd->getNombreApellidosCrSin();
                         $nom_orden = $oPersonaNAgd->getPrefApellidosNombre();
                         $poblacion = !empty($id_grupo)
-                            ? ($array_grupos[$id_grupo] ?? _('otros'))
-                            : _('otros');
+                            ? ($array_grupos[$id_grupo] ?? _("otros"))
+                            : _("otros");
                         $a_dedicacion = [];
 
                         $aWhereT = [

@@ -181,20 +181,20 @@ class PostRequest
     private static function dispatchInProcess(string $url, array $postParams): string
     {
         if (self::$inProcessDepth >= self::MAX_IN_PROCESS_DEPTH) {
-            throw new \RuntimeException(_('Demasiadas llamadas internas anidadas a /src/'));
+            throw new \RuntimeException(_("Demasiadas llamadas internas anidadas a /src/"));
         }
 
         $srcRoute = self::normalizeSrcRoutePath($url);
         if ($srcRoute === null) {
             throw new \RuntimeException(sprintf(
-                _('No se pudo resolver ruta /src en llamada interna: %s'),
+                _("No se pudo resolver ruta /src en llamada interna: %s"),
                 $url
             ));
         }
         $controller = self::resolveSrcControllerFile($srcRoute);
         if ($controller === null) {
             throw new \RuntimeException(sprintf(
-                _('No existe controlador para la ruta %s'),
+                _("No existe controlador para la ruta %s"),
                 $srcRoute
             ));
         }
@@ -518,7 +518,7 @@ class PostRequest
             return substr($errorHtml, 0, $pos);
         }
 
-        $needle = '<br><strong>' . _('Procedencia') . ':';
+        $needle = '<br><strong>' . _("Procedencia") . ':';
         $pos = strpos($errorHtml, $needle);
         if ($pos === false) {
             return $errorHtml;
@@ -755,11 +755,11 @@ class PostRequest
         if (json_last_error() !== JSON_ERROR_NONE) {
             if (self::looksLikeLoginHtml($content)) {
                 $msg = sprintf(
-                    _('Sesión no autenticada en llamada interna a %s (status %d).'),
+                    _("Sesión no autenticada en llamada interna a %s (status %d)."),
                     $urlLimpia,
                     $code
                 );
-                $msg .= '<br>' . _('El backend ha devuelto el formulario de login en lugar de JSON. Vuelve a entrar en Orbix.');
+                $msg .= '<br>' . _("El backend ha devuelto el formulario de login en lugar de JSON. Vuelve a entrar en Orbix.");
 
                 return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($urlLimpia)];
             }
@@ -819,11 +819,11 @@ class PostRequest
             $response2 = $client->request('POST', $url_limpia, $reqOpts);
         } catch (ConnectException) {
             $msg = sprintf(
-                _('No se pudo conectar en llamada interna a %s.'),
+                _("No se pudo conectar en llamada interna a %s."),
                 $url_limpia
             );
             $msg .= '<br>' . _(
-                'Comprueba que el servidor web escucha en localhost; si `web_server` usa la IP LAN del propio equipo, la conexión debe poder hacerse vía 127.0.0.1.'
+                "Comprueba que el servidor web escucha en localhost; si `web_server` usa la IP LAN del propio equipo, la conexión debe poder hacerse vía 127.0.0.1."
             );
 
             return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
@@ -836,7 +836,7 @@ class PostRequest
                 _("Redirección inesperada en llamada interna a %s (status %d → %s)"),
                 $url_limpia,
                 $code,
-                $location !== '' ? $location : _('sin Location')
+                $location !== '' ? $location : _("sin Location")
             );
             $msg .= '<br>' . _("Probable causa: validación de hash/sesión. Revisa que el endpoint no requiera firma que no se está generando igual server-to-server.");
 
@@ -925,11 +925,11 @@ class PostRequest
     private static function sufijoDiagnosticoLlamadaInterna(string $urlLimpia): string
     {
         $s = self::DIAGNOSTIC_MARKER;
-        $s .= '<br><strong>' . _('Endpoint') . ':</strong> <code>'
+        $s .= '<br><strong>' . _("Endpoint") . ':</strong> <code>'
             . htmlspecialchars($urlLimpia, ENT_QUOTES, 'UTF-8') . '</code>';
         $requestUri = $_SERVER['REQUEST_URI'] ?? null;
         if (is_string($requestUri) && $requestUri !== '') {
-            $s .= '<br><strong>' . _('Página') . ':</strong> <code>'
+            $s .= '<br><strong>' . _("Página") . ':</strong> <code>'
                 . htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8') . '</code>';
         }
         $s .= self::procedenciaLlamadaInternaGetData();
@@ -943,8 +943,8 @@ class PostRequest
      */
     private static function procedenciaLlamadaInternaGetData(): string
     {
-        return '<br><strong>' . _('Procedencia') . ':</strong> '
+        return '<br><strong>' . _("Procedencia") . ':</strong> '
             . '<code>' . htmlspecialchars(self::class . '::getData', ENT_QUOTES, 'UTF-8') . '</code>'
-            . ' — ' . _('POST interno firmado (HashF) con PHPSESSID (cookie o session_id()).');
+            . ' — ' . _("POST interno firmado (HashF) con PHPSESSID (cookie o session_id()).");
     }
 }

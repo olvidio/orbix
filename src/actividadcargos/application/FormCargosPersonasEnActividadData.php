@@ -76,7 +76,7 @@ final class FormCargosPersonasEnActividadData
         if ($Qid_item !== '') {
             $oActividadCargo = $this->actividadCargoRepository->findById($Qid_item);
             if ($oActividadCargo === null) {
-                return ['error' => _('no encuentro el cargo')];
+                return ['error' => _("no encuentro el cargo")];
             }
             $id_activ = $oActividadCargo->getId_activ();
             $id_cargo = $oActividadCargo->getId_cargo();
@@ -85,7 +85,7 @@ final class FormCargosPersonasEnActividadData
 
             $oActividad = $this->actividadRepository->findById($id_activ);
             if ($oActividad === null) {
-                return ['error' => _('actividad no encontrada')];
+                return ['error' => _("actividad no encontrada")];
             }
             $nom_activ = $oActividad->getNom_activ();
             $id_activ_real = $id_activ;

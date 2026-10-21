@@ -68,13 +68,13 @@ if (!$view['permitido']) {
 }
 
 $aOpciones = [
-    'tot_any' => _('todo el año'),
-    'trimestre_1' => _('primer trimestre'),
-    'trimestre_2' => _('segundo trimestre'),
-    'trimestre_3' => _('tercer trimestre'),
-    'trimestre_4' => _('cuarto trimestre'),
+    'tot_any' => _("todo el año"),
+    'trimestre_1' => _("primer trimestre"),
+    'trimestre_2' => _("segundo trimestre"),
+    'trimestre_3' => _("tercer trimestre"),
+    'trimestre_4' => _("cuarto trimestre"),
     'separador' => '-------',
-    'otro' => _('otro...'),
+    'otro' => _("otro..."),
 ];
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('que');
@@ -99,7 +99,7 @@ if (SessionConfig::getGestionCalendario() === 'central') {
     $oDesplOficinas->setOpciones($aOficinas);
     $oDesplOficinas->setOpcion_sel($view['mi_of']);
     $oDesplOficinas->setBlanco('1');
-    $oFormP->setAntes(_('oficina') . '</td><td>' . $oDesplOficinas->desplegable());
+    $oFormP->setAntes(_("oficina") . '</td><td>' . $oDesplOficinas->desplegable());
 }
 
 $web = AppUrlConfig::getPublicAppBaseUrl();

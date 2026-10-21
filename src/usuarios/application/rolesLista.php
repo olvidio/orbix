@@ -30,7 +30,7 @@ class rolesLista
 
         $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         if ($oMiUsuario === null) {
-            return ContestarJson::respuestaPhp(_('Usuario no encontrado'), '');
+            return ContestarJson::respuestaPhp(_("Usuario no encontrado"), '');
         }
         $miRole = $oMiUsuario->getId_role();
         $miSfsv = ConfigGlobal::mi_sfsv();
@@ -58,14 +58,14 @@ class rolesLista
 
         $a_cabeceras = ['role', 'sf', 'sv', 'pau', 'dmz', 'grup menu'];
         $a_botones[] = [
-            'txt' => _('modificar'),
+            'txt' => _("modificar"),
             'click' => 'fnjs_modificar("#seleccionados")',
         ];
 
         if ($permiso > 0) {
             if ($permiso === 1) {
                 $a_botones[] = [
-                    'txt' => _('borrar'),
+                    'txt' => _("borrar"),
                     'click' => 'fnjs_eliminar(this.form)',
                 ];
             }

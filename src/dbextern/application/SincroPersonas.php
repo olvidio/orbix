@@ -51,7 +51,7 @@ class SincroPersonas
                     $rta = $oSincroDB->syncro($oPersonaListas, $id_orbix);
                 } catch (\Throwable $e) {
                     $msg .= ($msg !== '' ? "\n" : '') . sprintf(
-                        _('sincronización interrumpida en %s (id listas %s, id orbix %s): %s. Esta ficha y las siguientes no se han guardado.'),
+                        _("sincronización interrumpida en %s (id listas %s, id orbix %s): %s. Esta ficha y las siguientes no se han guardado."),
                         $oPersonaListas->getApenom(),
                         (string) $id_nom_listas,
                         (string) $id_orbix,

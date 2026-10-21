@@ -19,16 +19,16 @@ $titulo = '';
 $texto = htmlspecialchars_decode($Qtexto);
 switch ($Qloc) {
     case 'cabecera':
-        $titulo = _('cabecera');
+        $titulo = _("cabecera");
         break;
     case 'cabeceraB':
-        $titulo = _('cabecera B)');
+        $titulo = _("cabecera B)");
         break;
     case 'pie':
-        $titulo = _('pie');
+        $titulo = _("pie");
         break;
     default:
-        $titulo = _('texto a añadir en las maletas');
+        $titulo = _("texto a añadir en las maletas");
         $id_grupo = InventarioPayload::grupoIdFromLoc($Qloc);
 
         $url_backend = '/src/inventario/texto_de_egm';

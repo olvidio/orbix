@@ -74,7 +74,7 @@ final class EncargoSacdHorarioVerData
                 return $this->conCtx($id_nom, $id_enc, $id_item, self::conOpciones(array_merge(
                     [
                         'ap_nom' => $ap_nom,
-                        'titulo' => _('horario de') . ': ' . $desc_enc,
+                        'titulo' => _("horario de") . ': ' . $desc_enc,
                         'id_item' => $id_item,
                         'desc_enc' => $desc_enc_post !== '' ? $desc_enc_post : $desc_enc,
                         'f_ini_iso' => self::fmtDate($h->getF_ini()),
@@ -103,7 +103,7 @@ final class EncargoSacdHorarioVerData
         return $this->conCtx($id_nom, $id_enc, 0, self::conOpciones(array_merge(
             [
                 'ap_nom' => $ap_nom,
-                'titulo' => _('horario de') . ': ' . ($desc_enc_post !== '' ? $desc_enc_post : $desc_default),
+                'titulo' => _("horario de") . ': ' . ($desc_enc_post !== '' ? $desc_enc_post : $desc_default),
                 'id_item' => 0,
                 'desc_enc' => $desc_enc_post !== '' ? $desc_enc_post : $desc_default,
                 'f_ini_iso' => $f_ini,

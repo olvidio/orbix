@@ -20,7 +20,7 @@ final class PropuestasListaEncData
     public function execute(int $filtro_ctr): array
     {
         if (!$this->propuestaEncargoSacdRepository->existenLasTablas()) {
-            return ['html' => '', 'error' => _('Debe crear la tabla de propuestas')];
+            return ['html' => '', 'error' => _("Debe crear la tabla de propuestas")];
         }
 
         $html = '';

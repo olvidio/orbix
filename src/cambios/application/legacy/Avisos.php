@@ -80,7 +80,7 @@ class Avisos
                     if (PHP_SAPI === 'cli') {
                         exit;
                     }
-                    throw new \RuntimeException(_('Ya hay un proceso de generación de avisos en marcha'));
+                    throw new \RuntimeException(_("Ya hay un proceso de generación de avisos en marcha"));
                 }
                 $f_iso = $matches[1];
 
@@ -100,7 +100,7 @@ class Avisos
                     if (PHP_SAPI === 'cli') {
                         exit;
                     }
-                    throw new \RuntimeException(_('Ya hay un proceso de generación de avisos en marcha'));
+                    throw new \RuntimeException(_("Ya hay un proceso de generación de avisos en marcha"));
                 }
             }
         }

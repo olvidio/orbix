@@ -38,7 +38,7 @@ $oHashSrcGuardar->setUrl($url_src_contrib_guardar);
 $oHashSrcGuardar->setCamposForm('id_tipo_activ!valor');
 $h_src_contrib_guardar = $oHashSrcGuardar->linkSinValParams();
 
-$txt_eliminar = _('¿Está seguro que quiere eliminar esta fila?');
+$txt_eliminar = _("¿Está seguro que quiere eliminar esta fila?");
 
 $a_campos = [
     'oPosicion' => $oPosicion,

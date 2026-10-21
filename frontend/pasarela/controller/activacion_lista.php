@@ -41,7 +41,7 @@ $h_src_excepcion_guardar = $oHashSrcGuardar->linkSinValParams();
 
 $url_src_excepcion_eliminar = AppUrlConfig::srcBrowserUrl('/src/pasarela/activacion_excepcion_eliminar');
 
-$txt_eliminar = _('¿Está seguro que quiere eliminar esta fila?');
+$txt_eliminar = _("¿Está seguro que quiere eliminar esta fila?");
 
 $a_campos = [
     'oPosicion' => $oPosicion,

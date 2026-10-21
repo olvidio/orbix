@@ -48,7 +48,7 @@ final class ListaClasesCaData
         $oActividad = $this->actividadAllRepository->findById($idActiv);
         if ($oActividad === null) {
             return [
-                'msg_err' => sprintf(_('No encuentro actividad con id: %d'), $idActiv),
+                'msg_err' => sprintf(_("No encuentro actividad con id: %d"), $idActiv),
                 'nom_activ' => '',
                 'nom_director_est' => '',
                 'datos_asignatura' => [],
@@ -66,7 +66,7 @@ final class ListaClasesCaData
         }
 
         if ($idNomDtorEst <= 0) {
-            $nomDirectorEst = '<span class=no_print>' . _('para nombrarlo, ir al dossier de cargos de la actividad') . '</span>';
+            $nomDirectorEst = '<span class=no_print>' . _("para nombrarlo, ir al dossier de cargos de la actividad") . '</span>';
         } else {
             $oPersona = Persona::findPersonaEnGlobal($idNomDtorEst);
             if (!is_object($oPersona)) {
@@ -88,7 +88,7 @@ final class ListaClasesCaData
 
             $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
             if ($oAsignatura === null) {
-                throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura));
+                throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura));
             }
             $nombreCorto = $oAsignatura->getNombre_corto();
             if (!empty($idProfesor)) {
@@ -103,9 +103,9 @@ final class ListaClasesCaData
                 $nomProfesor = '';
             }
             if (!empty($tipo) && $tipo === 'p') {
-                $tipoProfesor = ucfirst(_('preceptor'));
+                $tipoProfesor = ucfirst(_("preceptor"));
             } else {
-                $tipoProfesor = ucfirst(_('profesor'));
+                $tipoProfesor = ucfirst(_("profesor"));
             }
 
             $cMatriculas = $this->matriculaRepository->getMatriculas(['id_activ' => $idActiv, 'id_asignatura' => $idAsignatura]);

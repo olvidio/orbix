@@ -30,11 +30,11 @@ if (!empty($resp['success']) && $resp['success'] === true) {
     echo '<div class="mails-region">';
     $esAgregado = str_contains($Qregion, ',');
     if ($esAgregado) {
-        $titulo = _('Contactos de todas las regiones');
+        $titulo = _("Contactos de todas las regiones");
     } elseif ($Qregion === '') {
-        $titulo = _('Contactos');
+        $titulo = _("Contactos");
     } else {
-        $titulo = _('Contactos de') . ' ' . htmlspecialchars($Qregion, ENT_QUOTES, 'UTF-8');
+        $titulo = _("Contactos de") . ' ' . htmlspecialchars($Qregion, ENT_QUOTES, 'UTF-8');
     }
     echo '<h3>' . $titulo . '</h3>';
     if ($aContactos === []) {

@@ -49,12 +49,12 @@ if ($standalone) {
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title><?= _('Preguntar a la documentación') ?> — Orbix</title>
+    <title><?= _("Preguntar a la documentación") ?> — Orbix</title>
     <?php include_once OrbixRuntime::dirEstilos() . '/todo_en_uno.css.php'; ?>
 </head>
 <body class="otro">
 <?php if ($pruebas === 1) { ?>
-    <p><strong><?= _('Entorno de pruebas') ?></strong></p>
+    <p><strong><?= _("Entorno de pruebas") ?></strong></p>
 <?php } ?>
 <?php
 }

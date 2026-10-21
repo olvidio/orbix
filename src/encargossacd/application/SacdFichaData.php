@@ -168,7 +168,7 @@ final class SacdFichaData
                     $dedic_sacd .= $texto;
                 }
                 if ($dedic_sacd === '') {
-                    $dedic_sacd = _('horario del ctr') . ': ' . $dedic_ctr;
+                    $dedic_sacd = _("horario del ctr") . ': ' . $dedic_ctr;
                 }
             } else {
                 foreach ($cHorariosSacd as $oH) {
@@ -184,7 +184,7 @@ final class SacdFichaData
                             break;
                         default:
                             $avisos[] = sprintf(
-                                _('Se debería haber borrado el encargo "%s" porque no tenía definido el dia de ref.'),
+                                _("Se debería haber borrado el encargo \"%s\" porque no tenía definido el dia de ref."),
                                 $desc_enc,
                             );
                     }

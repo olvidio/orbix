@@ -51,15 +51,15 @@ $chk_firmado = \src\shared\domain\helpers\FuncTablasSupport::isTrue($firmado) ? 
 
 $oConfig = $_SESSION['oConfig'] ?? null;
 if (!$oConfig instanceof ConfigSnapshot) {
-    ContestarJson::enviar(_('Configuración de sesión no disponible'), $data);
+    ContestarJson::enviar(_("Configuración de sesión no disponible"), $data);
     return;
 }
 
 $error_txt .= $oConfig->formatMissingParametersMessage([
-    _('nombre región en latín') => $oConfig->regionLatin,
-    _('vstgr') => $oConfig->vstgr,
-    _('direccion stgr') => $oConfig->dirStgr,
-    _('lugar firma') => $oConfig->lugarFirma,
+    _("nombre región en latín") => $oConfig->regionLatin,
+    _("vstgr") => $oConfig->vstgr,
+    _("direccion stgr") => $oConfig->dirStgr,
+    _("lugar firma") => $oConfig->lugarFirma,
 ]);
 
 $oPersona = Persona::findPersonaEnGlobal($id_nom);
@@ -96,7 +96,7 @@ if ($idioma !== '') {
     $filename_textos = $dir . '/textos_certificados.php';
     if (!file_exists($filename_textos)) {
         $error_txt .= sprintf(
-            _('No existe un fichero con las traducciones para %s. Deje el idioma en blanco para latín o elija un idioma disponible (p. ej. es_ES.UTF-8).'),
+            _("No existe un fichero con las traducciones para %s. Deje el idioma en blanco para latín o elija un idioma disponible (p. ej. es_ES.UTF-8)."),
             $idioma,
         );
         ContestarJson::enviar($error_txt, $data);
@@ -153,7 +153,7 @@ $a_mi_region_stgr = $delegacionRepository->mi_region_stgr($mi_dl);
 $region_stgr = is_string($a_mi_region_stgr['region_stgr'] ?? null) ? $a_mi_region_stgr['region_stgr'] : '';
 $a_id_schemas_rstgr = $delegacionRepository->getArrayIdSchemaRegionStgr($region_stgr, ConfigGlobal::mi_sfsv());
 if ($a_id_schemas_rstgr === []) {
-    $error_txt .= "\n" . _('Debe definir la región del stgr a la que pertenece');
+    $error_txt .= "\n" . _("Debe definir la región del stgr a la que pertenece");
 }
 
 if ($error_txt === '') {
@@ -185,7 +185,7 @@ if ($error_txt === '') {
         $id_nivel = $idNivelVo->value();
         $oAsignatura = $asignaturaRepository->findById($id_asignatura);
         if ($oAsignatura === null) {
-            throw new \Exception(sprintf(_('No se ha encontrado la asignatura con id: %s'), $id_asignatura));
+            throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
         }
         if (HuecoOpcionalDePlan::esMarcadorFinCiclo($id_asignatura)) {
             continue;

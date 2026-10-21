@@ -360,7 +360,7 @@ class DBEsquema extends DBAbstract
         }
 
         if ($oDbl === null) {
-            throw new \RuntimeException(_('No hay conexión a la base de datos para importar zonas.'));
+            throw new \RuntimeException(_("No hay conexión a la base de datos para importar zonas."));
         }
 
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
@@ -407,7 +407,7 @@ class DBEsquema extends DBAbstract
         }
 
         if ($oDbl === null) {
-            throw new \RuntimeException(_('No hay conexión a la base de datos para importar zonas_grupos.'));
+            throw new \RuntimeException(_("No hay conexión a la base de datos para importar zonas_grupos."));
         }
 
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
@@ -446,7 +446,7 @@ class DBEsquema extends DBAbstract
         }
 
         if ($oDbl === null) {
-            throw new \RuntimeException(_('No hay conexión a la base de datos para importar zonas_sacd.'));
+            throw new \RuntimeException(_("No hay conexión a la base de datos para importar zonas_sacd."));
         }
 
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);

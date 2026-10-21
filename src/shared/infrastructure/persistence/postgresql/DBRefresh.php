@@ -77,7 +77,7 @@ class DBRefresh
         }
 
         return sprintf(
-            _('Aviso: no se pudo refrescar la suscripción «%1$s» en %2$s (%3$s). La estructura del esquema puede estar creada igualmente. Detalle: %4$s'),
+            _("Aviso: no se pudo refrescar la suscripción «%1\$s» en %2\$s (%3\$s). La estructura del esquema puede estar creada igualmente. Detalle: %4\$s"),
             $subNombre,
             $nombreBd,
             $db,

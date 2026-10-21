@@ -27,12 +27,12 @@ class usuariosLista
 
         $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         if ($oMiUsuario === null) {
-            return ContestarJson::respuestaPhp(_('Usuario no encontrado'), '');
+            return ContestarJson::respuestaPhp(_("Usuario no encontrado"), '');
         }
         $miRole = $oMiUsuario->getId_role();
 
         if ($miRole > 3) {
-            $error_txt = _('no tiene permisos para ver esto');
+            $error_txt = _("no tiene permisos para ver esto");
 
             return ContestarJson::respuestaPhp($error_txt, '');
         }
@@ -54,19 +54,19 @@ class usuariosLista
         try {
             $cUsuarios = $this->usuarioRepository->getUsuarios($aWhere, $aOperador);
         } catch (InvalidArgumentException $e) {
-            $error_txt .= _('Error (no debería ocurrir): Se capturó una InvalidArgumentException: ');
+            $error_txt .= _("Error (no debería ocurrir): Se capturó una InvalidArgumentException: ");
             $error_txt .= $e->getMessage() . "\n\n";
 
             return ContestarJson::respuestaPhp($error_txt, '');
         } catch (Exception $e) {
-            $error_txt .= _('Error: Se capturó una excepción genérica: ');
+            $error_txt .= _("Error: Se capturó una excepción genérica: ");
             $error_txt .= $e->getMessage() . "\n\n";
 
             return ContestarJson::respuestaPhp($error_txt, '');
         }
 
         $a_cabeceras = ['usuario', 'nombre a mostrar', 'role', 'email', ['name' => 'accion', 'formatter' => 'clickFormatter']];
-        $a_botones[] = ['txt' => _('borrar'), 'click' => 'fnjs_eliminar()'];
+        $a_botones[] = ['txt' => _("borrar"), 'click' => 'fnjs_eliminar()'];
 
         $a_valores = [];
         $i = 0;

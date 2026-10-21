@@ -639,7 +639,7 @@ class PermisosActividades
     public function motivoSinPermisoSacd(?int $id_cargo, bool $propio): ?string
     {
         if ($this->getPermisoActual('datos')->have_perm_activ('ver') === false) {
-            return _('sin permiso de ver los datos en la fase actual');
+            return _("sin permiso de ver los datos en la fase actual");
         }
 
         $sacd = $this->diagnosticoPermisoOn('sacd');
@@ -650,9 +650,9 @@ class PermisosActividades
             if ($sacd === 'ok' || ($propioSi && $asis === 'ok')) {
                 return null;
             }
-            $motivo = _('tiene cargo y ') . $this->textoDiagnosticoPermiso($sacd, _('fase sacd'));
+            $motivo = _("tiene cargo y ") . $this->textoDiagnosticoPermiso($sacd, _("fase sacd"));
             if ($propioSi) {
-                $motivo .= '; ' . $this->textoDiagnosticoPermiso($asis, _('fase asistentes sacd'));
+                $motivo .= '; ' . $this->textoDiagnosticoPermiso($asis, _("fase asistentes sacd"));
             }
 
             return $motivo;
@@ -662,7 +662,7 @@ class PermisosActividades
             return null;
         }
 
-        return _('solo asiste y ') . $this->textoDiagnosticoPermiso($asis, _('fase asistentes sacd'));
+        return _("solo asiste y ") . $this->textoDiagnosticoPermiso($asis, _("fase asistentes sacd"));
     }
 
     /**
@@ -699,9 +699,9 @@ class PermisosActividades
     private function textoDiagnosticoPermiso(string $diagnostico, string $fase): string
     {
         return match ($diagnostico) {
-            'fase_no_completada' => sprintf(_('la %s no está completada'), $fase),
-            'sin_fase' => sprintf(_('no hay %s definida para este tipo'), $fase),
-            default => sprintf(_('la %s está completada pero no hay permiso de ver'), $fase),
+            'fase_no_completada' => sprintf(_("la %s no está completada"), $fase),
+            'sin_fase' => sprintf(_("no hay %s definida para este tipo"), $fase),
+            default => sprintf(_("la %s está completada pero no hay permiso de ver"), $fase),
         };
     }
 

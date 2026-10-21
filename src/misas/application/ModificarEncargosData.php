@@ -44,9 +44,9 @@ class ModificarEncargosData
         $a_opciones_zona = $this->zonaRepository->getArrayZonas($jefe['id_nom_jefe']);
 
         $a_orden = [
-            'orden' => _('orden'),
-            'prioridad' => _('prioridad'),
-            'desc_enc' => _('alfabético'),
+            'orden' => _("orden"),
+            'prioridad' => _("prioridad"),
+            'desc_enc' => _("alfabético"),
         ];
 
         return [

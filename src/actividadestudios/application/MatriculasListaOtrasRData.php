@@ -52,7 +52,7 @@ final class MatriculasListaOtrasRData
     {
         $apellido1 = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apellido1');
         $esquemaRegionStgr = $this->resolveEsquemaRegionStgr(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'esquema_region_stgr'));
-        $tituloBusqueda = _('búsqueda por apellidos');
+        $tituloBusqueda = _("búsqueda por apellidos");
         $titulo = '';
         $msgErr = '';
         /** @var array<string, array<int|string, string>> $problemasRegionStgr */
@@ -88,7 +88,7 @@ final class MatriculasListaOtrasRData
 
             $aAsignaturas = $this->asignaturaRepository->getArrayAsignaturas();
 
-            $titulo = _('Personas de paso pendientes de certificado');
+            $titulo = _("Personas de paso pendientes de certificado");
             /** @var array<int, array{alert: string, asignaturas: string}> $grupos */
             $grupos = [];
             foreach ($aNotasDePaso as $oPersonaNota) {
@@ -134,7 +134,7 @@ final class MatriculasListaOtrasRData
                 $ficha = $fichas[$idNom] ?? null;
                 $apellidosNombre = $ficha !== null
                     ? $ficha->getPrefApellidosNombre()
-                    : sprintf(_('sin ficha (%d)'), $idNom);
+                    : sprintf(_("sin ficha (%d)"), $idNom);
                 $dl = $ficha?->getDl() ?? '';
                 $aValores[$i]['sel'] = (string) $idNom;
                 $aValores[$i][5] = $idNom;
@@ -211,6 +211,6 @@ final class MatriculasListaOtrasRData
             return $esquemaSesion;
         }
 
-        throw new \RuntimeException(_('No se pudo determinar el esquema región STGR de la sesión.'));
+        throw new \RuntimeException(_("No se pudo determinar el esquema región STGR de la sesión."));
     }
 }

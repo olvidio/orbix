@@ -66,7 +66,7 @@ class CuadriculaUpdate
         ?int $status = null,
     ): array {
         if (empty($uuid_item)) {
-            return ['error' => _('Falta el id_item'), 'meta' => []];
+            return ['error' => _("Falta el id_item"), 'meta' => []];
         }
 
         $Uuid = new EncargoDiaId($uuid_item);
@@ -352,18 +352,18 @@ class CuadriculaUpdate
         $texto = '';
 
         if ($misas_dia > 2) {
-            $texto = _('Este día tiene más de dos Misas');
+            $texto = _("Este día tiene más de dos Misas");
             $color_fondo = 'rojo';
         } elseif ($misas_dia === 2) {
-            $texto = _('Este día tiene dos Misas');
+            $texto = _("Este día tiene dos Misas");
             $color_fondo = 'amarillo';
         } elseif ($misas_dia === 0) {
-            $texto = _('Este día no tiene ninguna Misa');
+            $texto = _("Este día no tiene ninguna Misa");
             $color_fondo = $esta_en_zona_flag ? 'verde' : 'azulclaro';
         }
 
         if ($misas_1a_hora === 2) {
-            $texto = _('Tiene dos Misas a primera hora');
+            $texto = _("Tiene dos Misas a primera hora");
             $color_fondo = 'rojo';
         }
 
@@ -372,7 +372,7 @@ class CuadriculaUpdate
         } else {
             if ($misas_1a_hora_zona > 0) {
                 $color_fondo = 'rojo';
-                $texto = _('No está en la zona y tiene Misa a primera hora');
+                $texto = _("No está en la zona y tiene Misa a primera hora");
             }
             $texto_sacd = 'NO';
         }
@@ -381,7 +381,7 @@ class CuadriculaUpdate
             if ($misas_1a_hora_zona > 0) {
                 $color_fondo = 'rojo';
             }
-            $texto = _('Está en ') . $donde_esta_sacd;
+            $texto = _("Está en ") . $donde_esta_sacd;
             $texto_sacd = '--';
         }
 

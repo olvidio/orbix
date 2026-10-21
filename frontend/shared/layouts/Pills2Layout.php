@@ -52,13 +52,13 @@ class Pills2Layout implements LayoutInterface
         $html_shell .= '<div class="pills2-user-wrap">';
         $html_shell .= '<button type="button" class="pills2-user-trigger" id="pills2UserTrigger"'
             . ' aria-expanded="false" aria-controls="pills2UserPanel" onclick="pills2ToggleUserPanel(event);">'
-            . _('Utilidades')
+            . _("Utilidades")
             . '</button>';
         $html_shell .= '<div class="pills2-user-panel" id="pills2UserPanel" hidden>';
         $html_shell .= '<ul class="pills2-user-panel__list">';
         $html_shell .= $user_menus;
         $html_shell .= '<li class="pills2-user-panel__divider" role="separator"></li>';
-        $html_shell .= '<li><a href="#" onclick="fnjs_logout();">' . ucfirst(_('salir'))
+        $html_shell .= '<li><a href="#" onclick="fnjs_logout();">' . ucfirst(_("salir"))
             . ' <span class="pills2-user-meta">(' . $usuario . '[' . $region . '])</span></a></li>';
         $html_shell .= '</ul></div></div></nav></div>';
         $html_shell .= '</header>';

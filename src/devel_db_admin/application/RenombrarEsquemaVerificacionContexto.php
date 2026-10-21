@@ -66,7 +66,7 @@ final class RenombrarEsquemaVerificacionContexto
         $campo = trim($esquemaOrigenCampo);
         if ($campo === '') {
             return self::errorParametros(
-                _('Falta el esquema de origen (nombre base antiguo).'),
+                _("Falta el esquema de origen (nombre base antiguo)."),
                 '',
                 trim($region),
                 trim($dl),
@@ -76,7 +76,7 @@ final class RenombrarEsquemaVerificacionContexto
         $esquema_old = self::baseDesdeCampoOrigen($campo);
         if ($esquema_old === '') {
             return self::errorParametros(
-                _('El esquema de origen no es válido.'),
+                _("El esquema de origen no es válido."),
                 '',
                 trim($region),
                 trim($dl),
@@ -87,7 +87,7 @@ final class RenombrarEsquemaVerificacionContexto
         $dlIn = trim($dl);
         if ($regionIn === '' || $dlIn === '') {
             return self::errorParametros(
-                _('Debe indicar región y delegación de destino (no se deducen del nombre de origen).'),
+                _("Debe indicar región y delegación de destino (no se deducen del nombre de origen)."),
                 $esquema_old,
                 $regionIn,
                 $dlIn,
@@ -142,7 +142,7 @@ final class RenombrarEsquemaVerificacionContexto
         $dlIn = trim($dl);
         if ($regionIn === '' || $dlIn === '') {
             return self::errorParametros(
-                _('Para comprobar o corregir solo defaults sin esquema de origen debe indicar región y delegación de destino.'),
+                _("Para comprobar o corregir solo defaults sin esquema de origen debe indicar región y delegación de destino."),
                 '',
                 $regionIn,
                 $dlIn,
@@ -185,11 +185,11 @@ final class RenombrarEsquemaVerificacionContexto
             'resumen' => $resumen,
             'bloques' => [
                 [
-                    'nombre' => _('Parámetros'),
+                    'nombre' => _("Parámetros"),
                     'items' => [
                         [
                             'texto' => sprintf(
-                                _('Origen (base): «%s». Región: «%s». Delegación: «%s». Indique esquema de origen, región y delegación (salvo comprobar solo destino: región y delegación sin origen).'),
+                                _("Origen (base): «%s». Región: «%s». Delegación: «%s». Indique esquema de origen, región y delegación (salvo comprobar solo destino: región y delegación sin origen)."),
                                 $origenBase !== '' ? $origenBase : '—',
                                 $region !== '' ? $region : '—',
                                 $dl !== '' ? $dl : '—',

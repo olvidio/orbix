@@ -85,7 +85,7 @@
 </head>
 <div style="position:relative">
 
-    <input type=button name="nuevo" value="<?= _('nuevo') ?>" onclick="fnjs_nuevo();">
+    <input type=button name="nuevo" value="<?= _("nuevo") ?>" onclick="fnjs_nuevo();">
 
     <div class="encargos-centros-grid-wrap">
         <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
@@ -107,25 +107,25 @@
         <input type="hidden" id="que" value=""/>
 
         <div class="item-details-field">
-            <label for="id_zona_enc"><?= _('Zona del encargo: ') ?></label>
+            <label for="id_zona_enc"><?= _("Zona del encargo: ") ?></label>
             <?= $oDesplZonasCtr->desplegable() ?>
         </div>
 
         <div class="item-details-field">
-            <label for="id_enc"><?= _('Encargo: ') ?></label>
+            <label for="id_enc"><?= _("Encargo: ") ?></label>
             <span id="desplegable_encargo"></span>
         </div>
 
         <div class="item-details-field">
-            <label for="id_ubi"><?= _('Centro: ') ?></label>
+            <label for="id_ubi"><?= _("Centro: ") ?></label>
             <span id="desplegable_centro"></span>
         </div>
 
         <hr/>
         <div class='item-details-form-buttons'>
-            <button data-action='save' class='slick-btn slick-btn-primary'><?= _('Grabar') ?></button>
-            <button data-action='eliminar_encargo' class='slick-btn slick-btn-primary'><?= _('Eliminar encargo') ?></button>
-            <button data-action='cancel' class='slick-btn slick-btn-default'><?= _('Cancelar') ?></button>
+            <button data-action='save' class='slick-btn slick-btn-primary'><?= _("Grabar") ?></button>
+            <button data-action='eliminar_encargo' class='slick-btn slick-btn-primary'><?= _("Eliminar encargo") ?></button>
+            <button data-action='cancel' class='slick-btn slick-btn-default'><?= _("Cancelar") ?></button>
         </div>
     </div>
 
@@ -182,7 +182,7 @@
         var id_ctr = $('#id_ubi').val();
 
         if (!id_enc || !id_ctr) {
-            alert(<?= json_encode(_('Falta encargo o centro')) ?>);
+            alert(<?= json_encode(_("Falta encargo o centro")) ?>);
             return;
         }
 
@@ -199,7 +199,7 @@
             dataType: 'json'
         }).done(function (json) {
             if (!json || json.success !== true) {
-                alert(<?= json_encode(_('respuesta') . ": ") ?> + (json && json.mensaje ? json.mensaje : ''));
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + (json && json.mensaje ? json.mensaje : ''));
                 return;
             }
             modal.hide();
@@ -225,7 +225,7 @@
             dataType: 'json'
         }).done(function (json) {
             if (!json || json.success !== true) {
-                alert(<?= json_encode(_('respuesta') . ": ") ?> + (json && json.mensaje ? json.mensaje : ''));
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + (json && json.mensaje ? json.mensaje : ''));
                 return;
             }
             modal.hide();
@@ -320,7 +320,7 @@
         reset_campos_modal();
         $('#que').val('nuevo');
         $('#ctx_guardar').val(ctx_nuevo);
-        $('#titulo_modal').html(<?= json_encode(_('nuevo encargo visible para un centro')) ?>);
+        $('#titulo_modal').html(<?= json_encode(_("nuevo encargo visible para un centro")) ?>);
         fnjs_prepara_select_encargo();
         modal.show();
     }
@@ -354,7 +354,7 @@
         var id_encargo = row.id_encargo;
         var id_centro = row.id_centro;
 
-        $('#titulo_modal').html(<?= json_encode(_('modificar encargo visible para un centro')) ?>);
+        $('#titulo_modal').html(<?= json_encode(_("modificar encargo visible para un centro")) ?>);
         $('#que').val('modificar');
         $('#id_item').val(id_item);
         $('#ctx_guardar').val(row.ctx_guardar || '');

@@ -65,7 +65,7 @@ class CertificadoEmitidoEnviar
         $nombre_apellidos = $cPersonas[0]['persona']->getApellidosNombre();
         $dlVo = $cPersonas[0]['persona']->getDlVo();
         if ($dlVo === null) {
-            return _('No se puede determinar la delegación destino');
+            return _("No se puede determinar la delegación destino");
         }
         $dl_destino = (string) $dlVo->value();
 
@@ -100,7 +100,7 @@ class CertificadoEmitidoEnviar
         }
 
         if (!$is_dl_in_orbix) {
-            return $error_txt . _('Hay que enviar manualmente el certificado. Esta persona no está en aquinate');
+            return $error_txt . _("Hay que enviar manualmente el certificado. Esta persona no está en aquinate");
         }
 
         $oHoy = new DateTimeLocal();
@@ -109,7 +109,7 @@ class CertificadoEmitidoEnviar
         $this->trasladar->copiar_certificados_a_dl($oCertificadoEmitido);
         $error_txt .= $this->trasladar->getError();
 
-        $texto_anuncio = sprintf(_('se ha recibido el certificado %s para %s.'), $certificado, $nombre_apellidos);
+        $texto_anuncio = sprintf(_("se ha recibido el certificado %s para %s."), $certificado, $nombre_apellidos);
         $Anuncio = new Anuncio();
         $Anuncio->setUuid_item(AnuncioId::random());
         $Anuncio->setUsuarioCreadorVo(ConfigGlobal::mi_usuario());

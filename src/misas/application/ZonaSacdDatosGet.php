@@ -24,7 +24,7 @@ class ZonaSacdDatosGet
         $aWhere = ['id_zona' => $id_zona, 'id_nom' => $id_sacd];
         $cZonaSacd = $this->zonaSacdRepository->getZonasSacds($aWhere);
         if (empty($cZonaSacd)) {
-            $error_txt = _('No existe');
+            $error_txt = _("No existe");
         } else {
             $oPersona = $this->personaSacdRepository->findById($id_sacd);
             $nom = ($oPersona === null) ? '' : (string)$oPersona->getNombreApellidos();

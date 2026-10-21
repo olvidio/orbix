@@ -50,7 +50,7 @@ class ProcesosUpdate
 
         $oTareaProceso = $this->tareaProcesoRepository->findById($Qid_item);
         if ($oTareaProceso === null) {
-            return _('no se encuentra la tarea del proceso');
+            return _("no se encuentra la tarea del proceso");
         }
         $oTareaProceso->setId_tipo_proceso($Qid_tipo_proceso);
         $oTareaProceso->setStatus($Qstatus);

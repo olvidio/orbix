@@ -80,8 +80,8 @@ final class NotasPayload
     public static function botonesModificarTessera(): array
     {
         return [
-            ['txt' => _('modificar stgr'), 'click' => 'fnjs_modificar("#seleccionados")'],
-            ['txt' => _('ver tessera'), 'click' => 'fnjs_tesera("#seleccionados")'],
+            ['txt' => _("modificar stgr"), 'click' => 'fnjs_modificar("#seleccionados")'],
+            ['txt' => _("ver tessera"), 'click' => 'fnjs_tesera("#seleccionados")'],
         ];
     }
 

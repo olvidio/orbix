@@ -95,7 +95,7 @@ require_once 'src/shared/global_object.inc';
 
 if (ConfigGlobal::is_dmz()) {
     define('COPIAS_RESYNC_ATENDIDO', true);
-    fwrite(STDERR, _('Sólo se puede resincronizar desde el interior (esta instalación es DMZ)') . "\n");
+    fwrite(STDERR, _("Sólo se puede resincronizar desde el interior (esta instalación es DMZ)") . "\n");
     exit(1);
 }
 
@@ -105,7 +105,7 @@ if ($aplicar) {
         $edad = time() - (int) filemtime($pid);
         if ($edad < 45 * 60) {
             define('COPIAS_RESYNC_ATENDIDO', true);
-            fwrite(STDERR, _('Ya hay una resincronización de copias en marcha') . "\n");
+            fwrite(STDERR, _("Ya hay una resincronización de copias en marcha") . "\n");
             exit(1);
         }
     }

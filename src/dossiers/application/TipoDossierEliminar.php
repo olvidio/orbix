@@ -24,16 +24,16 @@ final class TipoDossierEliminar
     {
         $Qid_tipo_dossier = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tipo_dossier');
         if ($Qid_tipo_dossier <= 0) {
-            return _('falta id_tipo_dossier');
+            return _("falta id_tipo_dossier");
         }
 
         $oTipoDossier = $this->tipoDossierRepository->findById($Qid_tipo_dossier);
         if ($oTipoDossier === null) {
-            return sprintf(_('No se encuentra el dossier: %s'), $Qid_tipo_dossier);
+            return sprintf(_("No se encuentra el dossier: %s"), $Qid_tipo_dossier);
         }
 
         if ($this->tipoDossierRepository->Eliminar($oTipoDossier) === false) {
-            return _('Hay un error, no se ha eliminado.');
+            return _("Hay un error, no se ha eliminado.");
         }
         return '';
     }

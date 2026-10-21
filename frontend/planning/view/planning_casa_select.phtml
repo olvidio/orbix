@@ -65,7 +65,7 @@ use frontend\shared\config\AppUrlConfig;
                 document.getElementById("overlay").style.display = "none";
             },
             error: function () {
-                alert(<?= json_encode(_('Error de página devuelta'), JSON_UNESCAPED_UNICODE) ?>);
+                alert(<?= json_encode(_("Error de página devuelta"), JSON_UNESCAPED_UNICODE) ?>);
                 document.getElementById("overlay").style.display = "none";
             }
         });

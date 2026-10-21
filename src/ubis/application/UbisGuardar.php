@@ -102,7 +102,7 @@ final class UbisGuardar
     {
         $repo = $this->ubiRepositoryResolver->getRepository('CasaDl');
         if (!$repo instanceof CasaDlRepositoryInterface) {
-            return _('No existe la clase del ubi');
+            return _("No existe la clase del ubi");
         }
 
         return $this->guardarCasaConRepo($repo, $input);
@@ -115,7 +115,7 @@ final class UbisGuardar
     {
         $repo = $this->ubiRepositoryResolver->getRepository('CasaEx');
         if (!$repo instanceof CasaExRepositoryInterface) {
-            return _('No existe la clase del ubi');
+            return _("No existe la clase del ubi");
         }
 
         return $this->guardarCasaConRepo($repo, $input);
@@ -128,12 +128,12 @@ final class UbisGuardar
     {
         $repo = $this->ubiRepositoryResolver->getRepository('Casa');
         if (!$repo instanceof CasaRepositoryInterface) {
-            return _('No existe la clase del ubi');
+            return _("No existe la clase del ubi");
         }
 
         $oUbi = $repo->findById(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi'));
         if ($oUbi === null) {
-            return _('no se encuentra el ubi');
+            return _("no se encuentra el ubi");
         }
 
         $this->aplicarCamposComunes($oUbi, $input);
@@ -204,7 +204,7 @@ final class UbisGuardar
     {
         $repo = $this->ubiRepositoryResolver->getRepository('CentroDl');
         if (!$repo instanceof CentroDlRepositoryInterface) {
-            return _('No existe la clase del ubi');
+            return _("No existe la clase del ubi");
         }
 
         $idUbi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
@@ -246,7 +246,7 @@ final class UbisGuardar
     {
         $repo = $this->ubiRepositoryResolver->getRepository('CentroEx');
         if (!$repo instanceof CentroExRepositoryInterface) {
-            return _('No existe la clase del ubi');
+            return _("No existe la clase del ubi");
         }
 
         $idUbi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
@@ -282,12 +282,12 @@ final class UbisGuardar
     {
         $repo = $this->ubiRepositoryResolver->getRepository('Centro');
         if (!$repo instanceof CentroRepositoryInterface) {
-            return _('No existe la clase del ubi');
+            return _("No existe la clase del ubi");
         }
 
         $oUbi = $repo->findById(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi'));
         if ($oUbi === null) {
-            return _('no se encuentra el ubi');
+            return _("no se encuentra el ubi");
         }
 
         $this->aplicarCamposComunes($oUbi, $input);

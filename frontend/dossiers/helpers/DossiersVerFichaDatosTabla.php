@@ -48,7 +48,7 @@ class DossiersVerFichaDatosTabla
             $insTrasladoUrl = $parsed['ins_traslado_url'];
             $html .= "<br><table class=botones><tr class=botones>\n"
                 . "\t\t\t\t\t<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
-            $html .= _('nuevo');
+            $html .= _("nuevo");
             if ($insTrasladoUrl !== '') {
                 $html .= '" onclick="fnjs_update_div(\'#main\',\'' . $insTrasladoUrl . '\');"></td></tr></table>';
             } else {

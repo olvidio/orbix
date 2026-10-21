@@ -7,7 +7,7 @@ use src\shared\web\ContestarJson;
 
 $idRole = ConfigGlobal::mi_id_role();
 if ($idRole !== 1 && $idRole !== 2) {
-    ContestarJson::enviar(_('No tiene permiso para ver el residuo de notas.'), []);
+    ContestarJson::enviar(_("No tiene permiso para ver el residuo de notas."), []);
     return;
 }
 

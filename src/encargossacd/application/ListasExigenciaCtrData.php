@@ -53,9 +53,9 @@ final class ListasExigenciaCtrData
         $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt')->getFromLocal();
         $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->getFromLocal();
 
-        $cabecera_left = sprintf(_('Curso:  %s - %s'), $inicurs, $fincurs);
+        $cabecera_left = sprintf(_("Curso:  %s - %s"), $inicurs, $fincurs);
         $cabecera_right = ConfigGlobal::mi_delef();
-        $cabecera_right_2 = _('ref. cr 1/14, 10, d)');
+        $cabecera_right_2 = _("ref. cr 1/14, 10, d)");
 
         $poblacion = $oService->getLugar_dl();
         $oDateLocal = new DateTimeLocal();
@@ -75,13 +75,13 @@ final class ListasExigenciaCtrData
         $Html = '';
         foreach ($tipos_de_ctr as $tipo_ctr_que) {
             $txt_tipo_ctr = match ($tipo_ctr_que) {
-                'n' => _('1. ctr de n'),
-                'a[jm$]' => _('2. ctr de agd'),
-                's[jm]' => _('3. ctr de sg'),
-                'ss' => _('4. ctr de sss+'),
-                'igl' => '1. ' . _('Iglesias'),
-                'cgioc' => '2. ' . _('oc'),
-                '^cgi$' => '3. ' . _('lp'),
+                'n' => _("1. ctr de n"),
+                'a[jm$]' => _("2. ctr de agd"),
+                's[jm]' => _("3. ctr de sg"),
+                'ss' => _("4. ctr de sss+"),
+                'igl' => '1. ' . _("Iglesias"),
+                'cgioc' => '2. ' . _("oc"),
+                '^cgi$' => '3. ' . _("lp"),
                 default => '',
             };
             $clase_div = match ($tipo_ctr_que) {
@@ -155,9 +155,9 @@ final class ListasExigenciaCtrData
                             case 2:
                             case 3:
                                 $parentesis = match ($tipo_ctr) {
-                                    'igloc' => ucfirst(_('rector')),
-                                    'igl' => ucfirst(_('encargado')),
-                                    default => _('capellán'),
+                                    'igloc' => ucfirst(_("rector")),
+                                    'igl' => ucfirst(_("encargado")),
+                                    default => _("capellán"),
                                 };
                                 $sacd_titular = $sf === 1
                                     ? $nom_ap

@@ -9,7 +9,7 @@ try {
     $inicioIso = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'inicioIso');
     $finIso = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'finIso');
     if ($inicioIso === '' || $finIso === '') {
-        throw new \InvalidArgumentException(_('Se requieren inicioIso y finIso'));
+        throw new \InvalidArgumentException(_("Se requieren inicioIso y finIso"));
     }
     /** @var MatriculasListaData $useCase */
     $useCase = DependencyResolver::get(MatriculasListaData::class);

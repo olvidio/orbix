@@ -161,7 +161,7 @@ final class ActaVerFormData
                         if ($id_profesor !== null) {
                             $oPersonaDl = $this->personaDlRepository->findById($id_profesor);
                             $examinador_pral = $oPersonaDl === null
-                                ? _('No encuentro el profesor.')
+                                ? _("No encuentro el profesor.")
                                 : $oPersonaDl->getTituloNombre();
                         }
                     }
@@ -197,7 +197,7 @@ final class ActaVerFormData
             }
         }
         if (!empty($ult_acta)) {
-            $ult_acta = sprintf(_('(última= %s)'), $ult_acta);
+            $ult_acta = sprintf(_("(última= %s)"), $ult_acta);
         }
 
         $cTribunal = [];

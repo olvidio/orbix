@@ -142,15 +142,15 @@ final class ListaEstCtrData
 
                     $oF_ini = $oActividad->getF_ini();
                     if ($oF_ini < $oHoy) {
-                        $nom_activ = _('ya lo ha hecho');
+                        $nom_activ = _("ya lo ha hecho");
                         $asignaturas = '';
                     } else {
                         switch ($nivelVal) {
                             case NivelStgrId::N:
-                                $asignaturas = _('plan de formación');
+                                $asignaturas = _("plan de formación");
                                 break;
                             case NivelStgrId::R:
-                                $asignaturas = _('repaso');
+                                $asignaturas = _("repaso");
                                 break;
                             default:
                                 $asignaturas = '';
@@ -161,7 +161,7 @@ final class ListaEstCtrData
                                     $id_preceptor = $oMatricula->getId_preceptor();
                                     $oAsignatura = $this->asignaturaRepository->findById($id_asignatura);
                                     if ($oAsignatura === null) {
-                                        throw new \Exception(sprintf(_('No se ha encontrado la asignatura con id: %s'), $id_asignatura));
+                                        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
                                     }
                                     $nombre_corto = $oAsignatura->getNombre_corto();
                                     $creditos = $oAsignatura->getCreditos();
@@ -182,7 +182,7 @@ final class ListaEstCtrData
                                     } else {
                                         $preceptor = '';
                                     }
-                                    $asignaturas .= "$nombre_corto ($creditos " . _('créditos') . ')' . $preceptor . '<br>';
+                                    $asignaturas .= "$nombre_corto ($creditos " . _("créditos") . ')' . $preceptor . '<br>';
                                 }
                         }
                     }
@@ -193,10 +193,10 @@ final class ListaEstCtrData
         }
 
         $a_cabeceras = [];
-        $a_cabeceras[] = _('nº');
-        $a_cabeceras[] = _('nombre');
-        $a_cabeceras[] = _('actividad');
-        $a_cabeceras[] = _('asignaturas');
+        $a_cabeceras[] = _("nº");
+        $a_cabeceras[] = _("nombre");
+        $a_cabeceras[] = _("actividad");
+        $a_cabeceras[] = _("asignaturas");
 
         asort($aGrupos);
 
@@ -204,7 +204,7 @@ final class ListaEstCtrData
         $oLista->setGrupos($aGrupos);
         $oLista->setCabeceras($a_cabeceras);
         $oLista->setDatos($a_valores);
-        $oLista->setPie(_('(*) El preceptor no asiste al ca'));
+        $oLista->setPie(_("(*) El preceptor no asiste al ca"));
 
         return ['lista_html' => $oLista->listaPaginada()];
     }

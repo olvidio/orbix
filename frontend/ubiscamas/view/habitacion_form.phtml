@@ -40,7 +40,7 @@
             <td><input type="text" name="new_camas_desc[${rowIdx}]" required></td>
             <td><input type="checkbox" name="new_camas_larga[${rowIdx}]" value="1"></td>
             <td><input type="checkbox" name="new_camas_vip[${rowIdx}]" value="1"></td>
-            <td><button type="button" onclick="$(this).closest('tr').remove()"><?= _('Quitar') ?></button></td>
+            <td><button type="button" onclick="$(this).closest('tr').remove()"><?= _("Quitar") ?></button></td>
         </tr>`;
         $('#tabla_nuevas_camas tbody').append(html);
         $('#contenedor_nuevas_camas').show();

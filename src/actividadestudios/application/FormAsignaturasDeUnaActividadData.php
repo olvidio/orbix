@@ -93,7 +93,7 @@ final class FormAsignaturasDeUnaActividadData
             $mod = 'editar';
             $oActividadAsignatura = $this->actividadAsignaturaDlRepository->findById($idActiv, $idAsignatura);
             if ($oActividadAsignatura === null) {
-                throw new \RuntimeException(_('no encuentro la asignatura de actividad'));
+                throw new \RuntimeException(_("no encuentro la asignatura de actividad"));
             }
 
             $aOpciones = $this->profesorAsignaturaService->getArrayTodosProfesoresAsignatura(new AsignaturaId($idAsignatura));
@@ -114,7 +114,7 @@ final class FormAsignaturasDeUnaActividadData
 
             $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
             if ($oAsignatura === null) {
-                throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura));
+                throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura));
             }
             $nombreCorto = $oAsignatura->getNombre_corto() ?? '';
             $primaryKeyS = "id_activ=$idActiv AND id_asignatura=$idAsignatura";
@@ -133,7 +133,7 @@ final class FormAsignaturasDeUnaActividadData
             $fIni = '';
             $fFin = '';
             if (empty($idActiv)) {
-                throw new \InvalidArgumentException(_('debería haber un nombre de asignatura'));
+                throw new \InvalidArgumentException(_("debería haber un nombre de asignatura"));
             }
             $oDesplAsignaturasOpciones = $this->asignaturaRepository->getArrayAsignaturasConSeparador(
                 false,

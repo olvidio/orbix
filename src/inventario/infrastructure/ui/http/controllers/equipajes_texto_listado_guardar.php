@@ -84,9 +84,9 @@ $EgmRepository = DependencyResolver::get(EgmRepositoryInterface::class);
 } catch (\InvalidArgumentException $e) {
     if (str_contains($e->getMessage(), 'must be at most')) {
         $error_txt = match ($Qloc) {
-            'pie' => _('El texto no puede superar 1000 caracteres'),
-            'cabecera' => _('El texto no puede superar 400 caracteres'),
-            default => _('El texto no puede superar 255 caracteres'),
+            'pie' => _("El texto no puede superar 1000 caracteres"),
+            'cabecera' => _("El texto no puede superar 400 caracteres"),
+            default => _("El texto no puede superar 255 caracteres"),
         };
     } else {
         $error_txt = _("hay un error, no se ha guardado");

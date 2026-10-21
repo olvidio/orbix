@@ -22,7 +22,7 @@
             dataType: 'json'
         }).done(function (json) {
             if (!json || json.success !== true) {
-                alert(json && json.mensaje ? json.mensaje : <?= json_encode((string) _('Error al procesar la solicitud.')) ?>);
+                alert(json && json.mensaje ? json.mensaje : <?= json_encode((string) _("Error al procesar la solicitud.")) ?>);
                 return;
             }
             <?php
@@ -34,7 +34,7 @@
             }
             ?>
         }).fail(function (xhr) {
-            var msg = <?= json_encode((string) _('Error al procesar la solicitud.')) ?>;
+            var msg = <?= json_encode((string) _("Error al procesar la solicitud.")) ?>;
             if (xhr.responseText) {
                 try {
                     var json = JSON.parse(xhr.responseText);

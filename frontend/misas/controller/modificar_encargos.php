@@ -16,9 +16,9 @@ $data = PostRequest::getDataFromUrl('/src/misas/modificar_encargos_data');
 
 $a_opciones_zona = $data['a_opciones_zona'] ?? [];
 $a_orden = $data['a_orden'] ?? [
-    'orden' => _('orden'),
-    'prioridad' => _('prioridad'),
-    'desc_enc' => _('alfabético'),
+    'orden' => _("orden"),
+    'prioridad' => _("prioridad"),
+    'desc_enc' => _("alfabético"),
 ];
 
 $oDesplZonas = new Desplegable();

@@ -16,16 +16,16 @@ $Qempiezamin = (int)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (int)filter_input(INPUT_POST, 'empiezamax');
 
 $aOpciones = [
-    'tot_any' => _('todo el año'),
-    'trimestre_1' => _('primer trimestre'),
-    'trimestre_2' => _('segundo trimestre'),
-    'trimestre_3' => _('tercer trimestre'),
-    'trimestre_4' => _('cuarto trimestre'),
+    'tot_any' => _("todo el año"),
+    'trimestre_1' => _("primer trimestre"),
+    'trimestre_2' => _("segundo trimestre"),
+    'trimestre_3' => _("tercer trimestre"),
+    'trimestre_4' => _("cuarto trimestre"),
     'separador' => '---------',
-    'curso_ca' => _('curso ca'),
-    'curso_crt' => _('curso crt'),
+    'curso_ca' => _("curso ca"),
+    'curso_crt' => _("curso crt"),
     'separador1' => '---------',
-    'otro' => _('otro'),
+    'otro' => _("otro"),
 ];
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('modifica');
@@ -34,7 +34,7 @@ $oFormP->setDesplPeriodosOpcion_sel(InventarioPayload::periodoSelString($Qperiod
 $oFormP->setDesplAnysOpcion_sel(InventarioPayload::periodoSelString($Qyear));
 $oFormP->setEmpiezaMin(InventarioPayload::periodoSelString($Qempiezamin));
 $oFormP->setEmpiezaMax(InventarioPayload::periodoSelString($Qempiezamax));
-$oFormP->setTitulo(_('periodo de selección de actividades'));
+$oFormP->setTitulo(_("periodo de selección de actividades"));
 
 $oHash = new HashF();
 $sCamposForm = 'empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val!id_cdc';

@@ -81,9 +81,10 @@ final class MenusBurgerLayoutDataUseCase
             }
 
             $parametros = $itemObject->getParametros();
+            $nombreMenu = (string) ($itemObject->getMenu() ?? '');
 
             $indexedNodes[$pathKey] = [
-                'name' => _((string) ($itemObject->getMenu() ?? '')),
+                'name' => _($nombreMenu),
                 'submenu' => [],
                 'link_spec' => self::navigationLinkSpec($url, $parametros),
                 'client_action' => str_contains($url, 'fnjs') ? $url : '',
@@ -160,9 +161,10 @@ final class MenusBurgerLayoutDataUseCase
                 $url = $oMetamenu->getUrl() ?? '';
             }
             $parametros = $itemObject->getParametros();
+            $nombreMenu = (string) ($itemObject->getMenu() ?? '');
 
             $indexedNodes[$pathKey] = [
-                'name' => _((string) ($itemObject->getMenu() ?? '')),
+                'name' => _($nombreMenu),
                 'submenu' => [],
                 'indice' => count($orden),
                 'link_spec' => self::navigationLinkSpec($url, $parametros),

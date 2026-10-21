@@ -17,22 +17,22 @@ final class RegionStgrAviso
         $mensaje = self::stripHtml($mensaje);
 
         return self::esTextoConfiguracionDl($mensaje)
-            || str_contains($mensaje, _('persona no válida'))
+            || str_contains($mensaje, _("persona no válida"))
             || str_contains($mensaje, 'persona no válida')
-            || str_contains($mensaje, _('persona no encontrada'))
+            || str_contains($mensaje, _("persona no encontrada"))
             || str_contains($mensaje, 'persona no encontrada')
-            || str_contains($mensaje, _('Personas del listado sin id_schema válido'))
+            || str_contains($mensaje, _("Personas del listado sin id_schema válido"))
             || str_contains($mensaje, 'Personas del listado sin id_schema válido');
     }
 
     public static function mensajePersonaNoValida(): string
     {
-        return _('persona no válida') . '<br>' . _(
-            'No se ha podido identificar la persona seleccionada (falta id_nom o la dl no tiene esquema válido).'
+        return _("persona no válida") . '<br>' . _(
+            "No se ha podido identificar la persona seleccionada (falta id_nom o la dl no tiene esquema válido)."
         ) . '<br>' . _(
-            'Consecuencias: no se pueden abrir tessera, certificados ni otras operaciones entre regiones para esa fila.'
+            "Consecuencias: no se pueden abrir tessera, certificados ni otras operaciones entre regiones para esa fila."
         ) . '<br>' . _(
-            'Cómo corregirlo: seleccione de nuevo la persona en el listado y, si la dl aparece en el aviso de configuración, corríjala en Ubis.'
+            "Cómo corregirlo: seleccione de nuevo la persona en el listado y, si la dl aparece en el aviso de configuración, corríjala en Ubis."
         );
     }
 
@@ -82,13 +82,13 @@ final class RegionStgrAviso
         }
         $msg = $e->getMessage();
 
-        return str_contains($msg, _('falta indicar a que región del stgr pertenece la dl:'))
+        return str_contains($msg, _("falta indicar a que región del stgr pertenece la dl:"))
             || str_contains($msg, 'región del stgr pertenece la dl')
-            || str_contains($msg, _('No se encuentra información de la dl:'))
+            || str_contains($msg, _("No se encuentra información de la dl:"))
             || str_contains($msg, 'No se encuentra información de la dl')
-            || str_contains($msg, _('No se encuentra el id del esquema:'))
+            || str_contains($msg, _("No se encuentra el id del esquema:"))
             || str_contains($msg, 'No se encuentra el id del esquema')
-            || str_contains($msg, _('Delegaciones no dadas de alta'))
+            || str_contains($msg, _("Delegaciones no dadas de alta"))
             || str_contains($msg, 'Delegaciones no dadas de alta');
     }
 
@@ -134,7 +134,7 @@ final class RegionStgrAviso
             $personas = array_values($problemas[self::TIPO_PERSONA_SIN_ID_SCHEMA]);
             sort($personas);
             $lineaPersonas = sprintf(
-                _('Personas del listado sin id_schema válido: %s.'),
+                _("Personas del listado sin id_schema válido: %s."),
                 self::listaEtiquetas($personas)
             );
             if ($texto === '') {
@@ -155,24 +155,24 @@ final class RegionStgrAviso
         sort($personas);
 
         return sprintf(
-            _('Personas del listado sin id_schema válido: %s.'),
+            _("Personas del listado sin id_schema válido: %s."),
             self::listaEtiquetas($personas)
         ) . '<br>' . _(
-            'Sin id_schema no se pueden enlazar notas, certificados ni traslados entre regiones del stgr.'
+            "Sin id_schema no se pueden enlazar notas, certificados ni traslados entre regiones del stgr."
         ) . '<br>' . _(
-            'Consecuencias: la fila aparece en el listado, pero tessera, certificados y traslados fallarán para esas personas.'
+            "Consecuencias: la fila aparece en el listado, pero tessera, certificados y traslados fallarán para esas personas."
         ) . '<br>' . _(
-            'Cómo corregirlo: corrija la configuración de la dl de cada persona en Ubis (véase el aviso de delegaciones si también aparece).'
+            "Cómo corregirlo: corrija la configuración de la dl de cada persona en Ubis (véase el aviso de delegaciones si también aparece)."
         );
     }
 
     private static function esTextoConfiguracionDl(string $mensaje): bool
     {
-        return str_contains($mensaje, _('Delegaciones no dadas de alta'))
+        return str_contains($mensaje, _("Delegaciones no dadas de alta"))
             || str_contains($mensaje, 'Delegaciones no dadas de alta')
-            || str_contains($mensaje, _('Delegaciones sin región del stgr'))
+            || str_contains($mensaje, _("Delegaciones sin región del stgr"))
             || str_contains($mensaje, 'Delegaciones sin región del stgr')
-            || str_contains($mensaje, _('Delegaciones cuyo esquema no está'))
+            || str_contains($mensaje, _("Delegaciones cuyo esquema no está"))
             || str_contains($mensaje, 'Delegaciones cuyo esquema no está');
     }
 
@@ -197,14 +197,14 @@ final class RegionStgrAviso
         sort($dls);
 
         return sprintf(
-            _('Delegaciones no dadas de alta en xu_dl: %s.'),
+            _("Delegaciones no dadas de alta en xu_dl: %s."),
             self::listaDls($dls)
         ) . '<br>' . _(
-            'Se consultan región y región del stgr para obtener el id_schema de cada persona de paso.'
+            "Se consultan región y región del stgr para obtener el id_schema de cada persona de paso."
         ) . '<br>' . _(
-            'Consecuencias: las personas se listan, pero no se enlazarán notas, certificados ni traslados entre regiones.'
+            "Consecuencias: las personas se listan, pero no se enlazarán notas, certificados ni traslados entre regiones."
         ) . '<br>' . _(
-            'Cómo corregirlo: en Ubis, dé de alta cada dl con región y región del stgr, y compruebe que el esquema exista en db_idschema.'
+            "Cómo corregirlo: en Ubis, dé de alta cada dl con región y región del stgr, y compruebe que el esquema exista en db_idschema."
         );
     }
 
@@ -216,14 +216,14 @@ final class RegionStgrAviso
         sort($dls);
 
         return sprintf(
-            _('Delegaciones sin región del stgr (region_stgr en xu_dl): %s.'),
+            _("Delegaciones sin región del stgr (region_stgr en xu_dl): %s."),
             self::listaDls($dls)
         ) . '<br>' . _(
-            'Sin ese dato no se puede calcular el esquema de base de datos (id_schema).'
+            "Sin ese dato no se puede calcular el esquema de base de datos (id_schema)."
         ) . '<br>' . _(
-            'Consecuencias: operaciones entre regiones del stgr (notas ajenas, certificados, traslados) fallarán para esas personas.'
+            "Consecuencias: operaciones entre regiones del stgr (notas ajenas, certificados, traslados) fallarán para esas personas."
         ) . '<br>' . _(
-            'Cómo corregirlo: en Ubis, edite cada dl y asigne la región del stgr correspondiente.'
+            "Cómo corregirlo: en Ubis, edite cada dl y asigne la región del stgr correspondiente."
         );
     }
 
@@ -235,14 +235,14 @@ final class RegionStgrAviso
         sort($dls);
 
         return sprintf(
-            _('Delegaciones cuyo esquema no está en db_idschema: %s.'),
+            _("Delegaciones cuyo esquema no está en db_idschema: %s."),
             self::listaDls($dls)
         ) . '<br>' . _(
-            'Se necesita ese registro para localizar el id_schema usado en notas y certificados entre regiones.'
+            "Se necesita ese registro para localizar el id_schema usado en notas y certificados entre regiones."
         ) . '<br>' . _(
-            'Consecuencias: las personas aparecen en listados, pero las acciones que crucen regiones del stgr no funcionarán.'
+            "Consecuencias: las personas aparecen en listados, pero las acciones que crucen regiones del stgr no funcionarán."
         ) . '<br>' . _(
-            'Cómo corregirlo: verifique en Ubis región y región del stgr de cada dl, y que el esquema esté dado de alta en db_idschema (sufijo v o f según el ámbito de sesión).'
+            "Cómo corregirlo: verifique en Ubis región y región del stgr de cada dl, y que el esquema esté dado de alta en db_idschema (sufijo v o f según el ámbito de sesión)."
         );
     }
 
@@ -268,10 +268,10 @@ final class RegionStgrAviso
 
     private static function inferirTipoLegacy(string $msg): string
     {
-        if (str_contains($msg, _('No se encuentra el id del esquema:')) || str_contains($msg, 'No se encuentra el id del esquema')) {
+        if (str_contains($msg, _("No se encuentra el id del esquema:")) || str_contains($msg, 'No se encuentra el id del esquema')) {
             return self::TIPO_ESQUEMA_NO_ENCONTRADO;
         }
-        if (str_contains($msg, _('falta indicar a que región del stgr pertenece la dl:')) || str_contains($msg, 'región del stgr pertenece la dl')) {
+        if (str_contains($msg, _("falta indicar a que región del stgr pertenece la dl:")) || str_contains($msg, 'región del stgr pertenece la dl')) {
             return self::TIPO_REGION_STGR_FALTA;
         }
 

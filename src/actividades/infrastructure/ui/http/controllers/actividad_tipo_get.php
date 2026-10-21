@@ -89,7 +89,7 @@ switch ($Qsalida) {
         $content = $useCase->execute($_POST);
         break;
     default:
-        ContestarJson::enviar(sprintf(_('opción no definida: salida=%s'), $Qsalida));
+        ContestarJson::enviar(sprintf(_("opción no definida: salida=%s"), $Qsalida));
         exit;
 }
 

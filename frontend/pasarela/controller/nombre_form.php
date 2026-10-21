@@ -25,7 +25,7 @@ $web = AppUrlConfig::getPublicAppBaseUrl();
 $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
 
 if ($Qid_item !== 'nuevo') {
-    $txt_eliminar = _('¿Está seguro que desea quitar esta id_tarifa?');
+    $txt_eliminar = _("¿Está seguro que desea quitar esta id_tarifa?");
 
     $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
     $oTipoActiv = new src\actividades\domain\entity\TiposActividades($Qid_tipo_activ);
@@ -61,7 +61,7 @@ if ($Qid_item !== 'nuevo') {
 } else {
     $miSfsv = \src\shared\config\ConfigGlobal::mi_sfsv();
 
-    $txt_eliminar = _('¿Está seguro que desea borrar este nombre?');
+    $txt_eliminar = _("¿Está seguro que desea borrar este nombre?");
 
     $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
     $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');

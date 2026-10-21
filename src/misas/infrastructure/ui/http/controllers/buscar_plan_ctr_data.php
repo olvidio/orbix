@@ -11,7 +11,7 @@ $Qid_zona = (int)\src\shared\domain\helpers\FilterPostGet::post('id_zona', FILTE
 $useCase = DependencyResolver::get(BuscarPlanCtrData::class);
 $result = $useCase->getData($Qid_zona);
 if ($result['view'] === 'none') {
-    ContestarJson::enviar(_('No tiene permiso para ver esta página'));
+    ContestarJson::enviar(_("No tiene permiso para ver esta página"));
 } else {
     ContestarJson::enviar('', $result);
 }

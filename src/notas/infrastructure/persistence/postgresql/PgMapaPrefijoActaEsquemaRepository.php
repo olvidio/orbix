@@ -35,9 +35,9 @@ final class PgMapaPrefijoActaEsquemaRepository implements MapaPrefijoActaEsquema
         } catch (\PDOException $e) {
             if (str_contains($e->getMessage(), 'mapa_prefijo_acta_esquema')) {
                 throw new \RuntimeException(
-                    _('Falta public.mapa_prefijo_acta_esquema en BD comun.')
+                    _("Falta public.mapa_prefijo_acta_esquema en BD comun.")
                     . ' '
-                    . _('Aplicar la migración 202607211100_mapa_prefijo_acta_esquema__comun.sql (devel_db_admin → Migraciones, destino comun).'),
+                    . _("Aplicar la migración 202607211100_mapa_prefijo_acta_esquema__comun.sql (devel_db_admin → Migraciones, destino comun)."),
                     0,
                     $e
                 );

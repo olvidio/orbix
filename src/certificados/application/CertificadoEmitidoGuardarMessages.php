@@ -16,8 +16,8 @@ final class CertificadoEmitidoGuardarMessages
     {
         if (self::isDuplicatePersonaFecha($raw)) {
             return _(
-                'Ya existe un certificado emitido para esta persona con la misma fecha de certificado. '
-                . 'Cambie la fecha o consulte el listado de certificados ya emitidos.'
+                "Ya existe un certificado emitido para esta persona con la misma fecha de certificado. "
+                . "Cambie la fecha o consulte el listado de certificados ya emitidos."
             );
         }
 

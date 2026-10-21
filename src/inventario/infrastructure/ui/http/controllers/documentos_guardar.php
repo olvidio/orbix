@@ -45,7 +45,7 @@ $anyFieldToUpdate = FuncTablasSupport::isTrue($Qchk_f_recibido) === true
 
 if (!empty($Qdocumentos)) {
     if (!$anyFieldToUpdate) {
-        $error_txt = _('Debe marcar al menos un campo a modificar');
+        $error_txt = _("Debe marcar al menos un campo a modificar");
     } else {
     $a_documentos = explode('#', $Qdocumentos);
     /** @var DocumentoRepositoryInterface $Repository */
@@ -113,7 +113,7 @@ if (!empty($Qdocumentos)) {
         }
     }
     if ($error_txt === '' && $processed === 0) {
-        $error_txt = _('No se pudo aplicar la modificación a los documentos seleccionados');
+        $error_txt = _("No se pudo aplicar la modificación a los documentos seleccionados");
     }
     }
 } else {

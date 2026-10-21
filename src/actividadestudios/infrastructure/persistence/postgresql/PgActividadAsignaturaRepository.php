@@ -214,7 +214,7 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
             $sid = ConfigGlobal::mi_id_schema();
             $idSchema = $sid;
             if ($idSchema < 1) {
-                throw new \RuntimeException(_('Falta id_schema de sesión (mi_id_schema) para persistir actividad-asignatura.'));
+                throw new \RuntimeException(_("Falta id_schema de sesión (mi_id_schema) para persistir actividad-asignatura."));
             }
             $aDatos['id_schema'] = $idSchema;
         }

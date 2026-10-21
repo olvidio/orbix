@@ -24,7 +24,7 @@ $dl_propia = !($Qdl === 'f' || $Qdl === '0' || strcasecmp($Qdl, 'false') === 0);
 
 $oPermActividades = $_SESSION['oPermActividades'] ?? null;
 if (!($oPermActividades instanceof PermisosActividades)) {
-    ContestarJson::enviar(_('Sesión sin permisos de actividades'), []);
+    ContestarJson::enviar(_("Sesión sin permisos de actividades"), []);
 
     return;
 }

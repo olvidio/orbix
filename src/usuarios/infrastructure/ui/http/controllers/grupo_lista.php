@@ -14,13 +14,13 @@ $error_txt = '';
 $usuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 if ($oMiUsuario === null) {
-    ContestarJson::enviar(_('Usuario no encontrado'), []);
+    ContestarJson::enviar(_("Usuario no encontrado"), []);
     return;
 }
 $miRole = $oMiUsuario->getId_role();
 
 if ($miRole > 3) {
-    $error_txt = _('no tiene permisos para ver esto');
+    $error_txt = _("no tiene permisos para ver esto");
 }
 
 /** @var GruposLista $useCase */

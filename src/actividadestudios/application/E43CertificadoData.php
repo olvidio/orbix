@@ -69,7 +69,7 @@ final class E43CertificadoData
         $oActividad = $this->actividadAllRepository->findById($idActiv);
         if ($oActividad === null) {
             return [
-                'msg_err' => $msgErr . sprintf(_('No encuentro actividad con id: %d'), $idActiv),
+                'msg_err' => $msgErr . sprintf(_("No encuentro actividad con id: %d"), $idActiv),
                 'nom' => $nom,
                 'txt_nacimiento' => $txtNacimiento,
                 'dl_origen' => $dlOrigen,
@@ -113,7 +113,7 @@ final class E43CertificadoData
                 ];
             }
         } else {
-            $msgErr .= _('no hay ninguna matrícula de esta persona');
+            $msgErr .= _("no hay ninguna matrícula de esta persona");
         }
 
         if ($appendBlankFooter) {

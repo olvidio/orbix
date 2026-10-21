@@ -420,7 +420,7 @@ $planOtro = $Qplan === PlanEstudios::PLAN_2026 ? PlanEstudios::PLAN_1997 : PlanE
 $goPlanOtro = $comprobarNotasUrl(['plan_estudios' => $planOtro]);
 $pagPlanOtro = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$goPlanOtro');\">$planOtro</span>";
 echo '<p>' . sprintf(
-    _('Plan de estudios: %1$d (cambiar a %2$s). Umbral bienio: %3$d asignaturas; cuadrienio: %4$d.'),
+    _("Plan de estudios: %1\$d (cambiar a %2\$s). Umbral bienio: %3\$d asignaturas; cuadrienio: %4\$d."),
     $Qplan,
     $pagPlanOtro,
     $tramoBienio['count'],
@@ -518,7 +518,7 @@ $a_asignaturas_map = $dAsigMap['a_asignaturas'];
 $nombreAsignatura = static function (int|string $idAsignatura) use ($a_asignaturas_map): string {
     $nombre = $a_asignaturas_map[$idAsignatura] ?? null;
     if ($nombre === null || $nombre === '') {
-        return sprintf(_('(asignatura %s desconocida)'), (string) $idAsignatura);
+        return sprintf(_("(asignatura %s desconocida)"), (string) $idAsignatura);
     }
 
     return $nombre;
@@ -587,21 +587,21 @@ $renderListaC1C2 = static function (
     echo '<tr><td colspan=7><hr>';
     echo '</table>';
     $go = $comprobarNotasUrl(['actualizar' => $destino]);
-    $pag = '<span class="link" onclick="fnjs_update_div(\'#main\',\'' . $go . '\');">' . _('clic aquí') . '</span>';
+    $pag = '<span class="link" onclick="fnjs_update_div(\'#main\',\'' . $go . '\');">' . _("clic aquí") . '</span>';
     echo '<p class=action>';
     printf($destino === 'c1'
-        ? _('para poner c1 a todos los de la lista, hacer %s')
-        : _('para poner c2 a todos los de la lista, hacer %s'), $pag);
+        ? _("para poner c1 a todos los de la lista, hacer %s")
+        : _("para poner c2 a todos los de la lista, hacer %s"), $pag);
     echo '</p>';
 };
 
 $renderListaC1C2(
     'c1',
-    _('5. %1$s con "c1" mal puesto (plan %2$d, umbral %4$d): %3$d')
+    _("5. %1\$s con \"c1\" mal puesto (plan %2\$d, umbral %4\$d): %3\$d")
 );
 $renderListaC1C2(
     'c2',
-    _('6. %1$s con "c2" mal puesto (plan %2$d, umbral %4$d): %3$d')
+    _("6. %1\$s con \"c2\" mal puesto (plan %2\$d, umbral %4\$d): %3\$d")
 );
 
 // 7. Comprobar que los han terminado tienen pueso r

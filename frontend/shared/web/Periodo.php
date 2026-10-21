@@ -112,7 +112,7 @@ class Periodo
         if (SessionConfig::isPresent()) {
             return SessionConfig::getMesFinStgr();
         }
-        throw new \RuntimeException(_('Falta calendario escolar: use Periodo::conCalendarioDesdeBackend() o sesión oConfig.'));
+        throw new \RuntimeException(_("Falta calendario escolar: use Periodo::conCalendarioDesdeBackend() o sesión oConfig."));
     }
 
     private function mesFinCrt(): int
@@ -123,7 +123,7 @@ class Periodo
         if (SessionConfig::isPresent()) {
             return SessionConfig::getMesFinCrt();
         }
-        throw new \RuntimeException(_('Falta calendario escolar: use Periodo::conCalendarioDesdeBackend() o sesión oConfig.'));
+        throw new \RuntimeException(_("Falta calendario escolar: use Periodo::conCalendarioDesdeBackend() o sesión oConfig."));
     }
 
     /** @return array<string, int>|null */
@@ -209,7 +209,7 @@ class Periodo
     public function getF_ini(): DateTimeLocal
     {
         if ($this->sf_ini === null || $this->sf_ini === '') {
-            throw new \RuntimeException(_('Fecha de inicio no establecida: llame a setPeriodo() antes.'));
+            throw new \RuntimeException(_("Fecha de inicio no establecida: llame a setPeriodo() antes."));
         }
 
         return new DateTimeLocal($this->sf_ini);
@@ -218,7 +218,7 @@ class Periodo
     public function getF_fin(): DateTimeLocal
     {
         if ($this->sf_fin === null || $this->sf_fin === '') {
-            throw new \RuntimeException(_('Fecha de fin no establecida: llame a setPeriodo() antes.'));
+            throw new \RuntimeException(_("Fecha de fin no establecida: llame a setPeriodo() antes."));
         }
 
         return new DateTimeLocal($this->sf_fin);
@@ -228,7 +228,7 @@ class Periodo
     {
         $timestamp = mktime(0, 0, 0, $month, $day, $year);
         if ($timestamp === false) {
-            throw new \RuntimeException(sprintf(_('Fecha inválida: %d-%02d-%02d'), $year, $month, $day));
+            throw new \RuntimeException(sprintf(_("Fecha inválida: %d-%02d-%02d"), $year, $month, $day));
         }
 
         return date($format, $timestamp);

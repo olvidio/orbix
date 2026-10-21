@@ -50,12 +50,12 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         }
         $aDades = $qRs->fetch(PDO::FETCH_ASSOC);
         if (!is_array($aDades)) {
-            return _('Actividad Eliminada');
+            return _("Actividad Eliminada");
         }
         $valorOld = $aDades['valor_old'] ?? '';
         $valorOldStr = is_string($valorOld) || is_numeric($valorOld) ? (string) $valorOld : '';
 
-        return $valorOldStr . "(" . _('Eliminado') . ")";
+        return $valorOldStr . "(" . _("Eliminado") . ")";
     }
 
     /**

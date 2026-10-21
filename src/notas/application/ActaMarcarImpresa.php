@@ -24,11 +24,11 @@ final class ActaMarcarImpresa
     {
         $acta = trim($acta);
         if ($acta === '') {
-            return _('Falta el acta');
+            return _("Falta el acta");
         }
         $oActa = $this->actaRepository->findById($acta);
         if ($oActa === null) {
-            return sprintf(_('No se encuentra el acta: %s'), $acta);
+            return sprintf(_("No se encuentra el acta: %s"), $acta);
         }
         if ($this->firmadaPolicy->estaFirmada($oActa)) {
             return '';

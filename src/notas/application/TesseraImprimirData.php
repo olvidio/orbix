@@ -29,7 +29,7 @@ final class TesseraImprimirData
         $problemasRegionStgr = [];
         $oPersona = Persona::findPersonaEnGlobal($id_nom, $problemasRegionStgr);
         if ($oPersona === null) {
-            return ['aviso' => sprintf(_('No encuentro persona con id_nom: %s'), (string)$id_nom)];
+            return ['aviso' => sprintf(_("No encuentro persona con id_nom: %s"), (string)$id_nom)];
         }
         if ($oPersona->getId_schema() === 0 && !DestinoNotaExterno::esExternoPorIdNom($id_nom)) {
             RegionStgrAviso::registrarPersonaSinSchema(

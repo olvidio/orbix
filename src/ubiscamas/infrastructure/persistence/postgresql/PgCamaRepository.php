@@ -204,7 +204,7 @@ public function getArrayCamas(string $sCondicion = ''): array
         if ($bInsert) {
             $idSchema = ConfigGlobal::mi_id_schema();
             if ($idSchema < 1) {
-                throw new \RuntimeException(_('Falta id_schema de sesión (mi_id_schema) para persistir en du_camas.'));
+                throw new \RuntimeException(_("Falta id_schema de sesión (mi_id_schema) para persistir en du_camas."));
             }
             $aDatos['id_schema'] = $idSchema;
         }

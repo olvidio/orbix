@@ -24,7 +24,7 @@ final class PersonaPublicar
     public function execute(int $id_nom, int $id_schema, array|string $dls): string
     {
         if ($id_nom <= 0 || $id_schema < 1) {
-            return _('Datos de persona no válidos');
+            return _("Datos de persona no válidos");
         }
 
         $lista = is_array($dls) ? $dls : [$dls];
@@ -34,7 +34,7 @@ final class PersonaPublicar
         ), static fn(string $v): bool => $v !== ''));
 
         if ($lista === []) {
-            return _('Debe indicar al menos una delegación destino');
+            return _("Debe indicar al menos una delegación destino");
         }
 
         $propia = \src\shared\config\ConfigGlobal::mi_dele();
@@ -43,15 +43,15 @@ final class PersonaPublicar
             $dl = PersonaPublicacion::normalizarDl($dlRaw);
             if ($dl === PersonaPublicacion::DL_TODAS) {
                 if (!$this->personaAllRepository->marcarPublicadoPara($id_nom, $id_schema, $dl, null)) {
-                    return _('No se ha podido publicar la persona');
+                    return _("No se ha podido publicar la persona");
                 }
                 continue;
             }
             if ($propia !== '' && $dl === $propia) {
-                return _('No se puede publicar hacia la propia delegación');
+                return _("No se puede publicar hacia la propia delegación");
             }
             if (!$this->personaAllRepository->marcarPublicadoPara($id_nom, $id_schema, $dl, $hasta)) {
-                return _('No se ha podido publicar la persona');
+                return _("No se ha podido publicar la persona");
             }
         }
 

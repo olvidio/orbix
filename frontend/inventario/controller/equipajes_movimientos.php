@@ -42,11 +42,11 @@ foreach ($aCambios as $id_equipaje => $aGrupos) {
             $nom_lugar = $aLugaresPorEgm[$id_item_egm] ?? '';
             $html_g = '<tr><td></td><td colspan=3>' . $nom_lugar . '</td></tr>';
             if ($html_in !== '') {
-                $html_g .= '<tr><td></td><td><td colspan=2>' . _('añadir') . '</td></tr>';
+                $html_g .= '<tr><td></td><td><td colspan=2>' . _("añadir") . '</td></tr>';
                 $html_g .= $html_in;
             }
             if ($html_out !== '') {
-                $html_g .= '<tr><td></td><td><td colspan=2>' . _('quitar') . '</td></tr>';
+                $html_g .= '<tr><td></td><td><td colspan=2>' . _("quitar") . '</td></tr>';
                 $html_g .= $html_out;
             }
         }

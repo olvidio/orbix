@@ -22,7 +22,7 @@ class BurgerLayout implements LayoutInterface
             <button class=\"mobile-toggle\" id=\"mobileToggle\"  onclick=\"toggleSidebar()\">
             ☰
                 <div class=\"sidebar-header\">
-                    <h2 id =\"sidebar-header-h2\">" . htmlspecialchars(_('Oficinas'), ENT_QUOTES, 'UTF-8') . "</h2>
+                    <h2 id =\"sidebar-header-h2\">" . htmlspecialchars(_("Oficinas"), ENT_QUOTES, 'UTF-8') . "</h2>
                 </div>
             </button>
 
@@ -42,7 +42,7 @@ class BurgerLayout implements LayoutInterface
             }
         }
 
-        $html_exit = '<li><a href="#" onclick="fnjs_logout();" >' . ucfirst(_('salir'))
+        $html_exit = '<li><a href="#" onclick="fnjs_logout();" >' . ucfirst(_("salir"))
             . ' (' . OrbixRuntime::miUsuario() . '[' . OrbixRuntime::miRegionDl() . '])'
             . '</a></li>';
         $html_aside .= $html_exit;
@@ -118,7 +118,7 @@ class BurgerLayout implements LayoutInterface
                             <ul>
                                 <?= $user_menus ?>
                                 <hr>
-                                <li><a href="#" onclick="fnjs_logout();"><?= ucfirst(_('salir')) ?>
+                                <li><a href="#" onclick="fnjs_logout();"><?= ucfirst(_("salir")) ?>
                                         <?= '(' . htmlspecialchars(OrbixRuntime::miUsuario(), ENT_QUOTES, 'UTF-8') . '[' . htmlspecialchars(OrbixRuntime::miRegionDl(), ENT_QUOTES, 'UTF-8') . '])' ?>
                                     </a></li>
                             </ul>

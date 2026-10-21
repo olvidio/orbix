@@ -189,13 +189,13 @@ class PlanningRenderer
 
                     if (empty($ini)) {
                         $html .= _("PREMIO: Ha conseguido crear una actividad sin fecha de inicio.") . '<br>';
-                        $html .= sprintf(_('id_activ: %s, nombre: %s %s'), (string)$id_activ[$a], $nom_curt[$a], $nom[$a]) . '<br>';
+                        $html .= sprintf(_("id_activ: %s, nombre: %s %s"), (string)$id_activ[$a], $nom_curt[$a], $nom[$a]) . '<br>';
                         unset($actividad[$a]);
                         continue;
                     }
                     if (empty($fi)) {
                         $html .= _("PREMIO: Ha conseguido crear una actividad sin fecha finalización.") . '<br>';
-                        $html .= sprintf(_('id_activ: %s, nombre: %s %s'), (string)$id_activ[$a], $nom_curt[$a], $nom[$a]) . '<br>';
+                        $html .= sprintf(_("id_activ: %s, nombre: %s %s"), (string)$id_activ[$a], $nom_curt[$a], $nom[$a]) . '<br>';
                         unset($actividad[$a]);
                         continue;
                     }

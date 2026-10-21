@@ -28,11 +28,11 @@ final class EncargoSacdHorarioUpdate
         if ($mod === 'eliminar') {
             $id_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($post, 'id_item');
             if ($id_item <= 0) {
-                return ['_error' => _('acción no válida')];
+                return ['_error' => _("acción no válida")];
             }
             $o = $this->encargoSacdHorarioRepository->findById($id_item);
             if ($o === null) {
-                return ['_error' => _('registro no encontrado')];
+                return ['_error' => _("registro no encontrado")];
             }
             if ($this->encargoSacdHorarioRepository->eliminarExcepcionesPorHorarioId($id_item) === false) {
                 return ['_error' => $this->encargoSacdHorarioRepository->getErrorTxt()];
@@ -68,7 +68,7 @@ final class EncargoSacdHorarioUpdate
 
         if ($mod === '1' || $mod === '3') {
             if ($Qf_ini === '' || $Qdia === '') {
-                return ['_error' => _('Debe llenar todos los campos que tengan un (*)')];
+                return ['_error' => _("Debe llenar todos los campos que tengan un (*)")];
             }
 
             $newId = $this->encargoSacdHorarioRepository->getNewId();
@@ -85,7 +85,7 @@ final class EncargoSacdHorarioUpdate
             $o->setH_ini($oH_ini);
             $o->setH_fin($oH_fin);
             if ($this->encargoSacdHorarioRepository->Guardar($o) === false) {
-                return ['_error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoSacdHorarioRepository->getErrorTxt()];
+                return ['_error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoSacdHorarioRepository->getErrorTxt()];
             }
 
             return ['ok' => true];
@@ -93,15 +93,15 @@ final class EncargoSacdHorarioUpdate
 
         if ($mod === '2') {
             if ($Qf_ini === '' || $Qdia === '') {
-                return ['_error' => _('Debe llenar todos los campos que tengan un (*)')];
+                return ['_error' => _("Debe llenar todos los campos que tengan un (*)")];
             }
             if ($Qid_item <= 0) {
-                return ['_error' => _('acción no válida')];
+                return ['_error' => _("acción no válida")];
             }
 
             $o = $this->encargoSacdHorarioRepository->findById($Qid_item);
             if ($o === null) {
-                return ['_error' => _('registro no encontrado')];
+                return ['_error' => _("registro no encontrado")];
             }
 
             $o->setF_ini($oF_ini);
@@ -114,12 +114,12 @@ final class EncargoSacdHorarioUpdate
             $o->setH_fin($oH_fin);
 
             if ($this->encargoSacdHorarioRepository->Guardar($o) === false) {
-                return ['_error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoSacdHorarioRepository->getErrorTxt()];
+                return ['_error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoSacdHorarioRepository->getErrorTxt()];
             }
 
             return ['ok' => true];
         }
 
-        return ['_error' => _('acción no válida')];
+        return ['_error' => _("acción no válida")];
     }
 }

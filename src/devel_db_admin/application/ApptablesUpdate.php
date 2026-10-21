@@ -31,21 +31,21 @@ final class ApptablesUpdate
         $configSession = $_SESSION['config'] ?? null;
         $sessionApps = is_array($configSession) ? ($configSession['a_apps'] ?? null) : null;
         if (!is_array($sessionApps)) {
-            throw new \RuntimeException(_('No hay aplicaciones configuradas en la sesión.'));
+            throw new \RuntimeException(_("No hay aplicaciones configuradas en la sesión."));
         }
         /** @var array<string, int|string> $aTodasApps */
         $aTodasApps = $sessionApps;
         $nomApp = array_search($idApp, $aTodasApps, true);
         if ($nomApp === false || $nomApp === '') {
-            throw new \RuntimeException(_('Aplicación no válida.'));
+            throw new \RuntimeException(_("Aplicación no válida."));
         }
 
         if ($accion === '') {
-            throw new \RuntimeException(_('Acción no indicada.'));
+            throw new \RuntimeException(_("Acción no indicada."));
         }
 
         if (in_array($accion, self::ACCIONES_ESQUEMA, true) && $esquema === '') {
-            throw new \RuntimeException(_('Debe elegir un esquema.'));
+            throw new \RuntimeException(_("Debe elegir un esquema."));
         }
 
         $claseGlobal = "$nomApp\\db\\DB";
@@ -59,12 +59,12 @@ final class ApptablesUpdate
             'crear_esquema' => $this->ejecutarEsquema($claseEsquema, $claseEsquemaSrc, $esquema, 'createAll'),
             'eliminar_esquema' => $this->ejecutarEsquema($claseEsquema, $claseEsquemaSrc, $esquema, 'dropAll'),
             'llenar_esquema' => $this->ejecutarEsquema($claseEsquema, $claseEsquemaSrc, $esquema, 'llenarAll'),
-            default => throw new \RuntimeException(_('Acción no reconocida.')),
+            default => throw new \RuntimeException(_("Acción no reconocida.")),
         };
 
         if (!$ejecutado) {
             throw new \RuntimeException(
-                sprintf(_('La aplicación %s no define clases DB para esta operación.'), (string) $nomApp)
+                sprintf(_("La aplicación %s no define clases DB para esta operación."), (string) $nomApp)
             );
         }
 
@@ -146,12 +146,12 @@ final class ApptablesUpdate
     private function mensajeExito(string $accion, string $nomApp, string $esquema): string
     {
         return match ($accion) {
-            'crear_global' => sprintf(_('Tablas globales de %s creadas correctamente.'), $nomApp),
-            'eliminar_global' => sprintf(_('Tablas globales de %s eliminadas correctamente.'), $nomApp),
-            'crear_esquema' => sprintf(_('Tablas de esquema de %s creadas correctamente (%s).'), $nomApp, $esquema),
-            'eliminar_esquema' => sprintf(_('Tablas de esquema de %s eliminadas correctamente (%s).'), $nomApp, $esquema),
-            'llenar_esquema' => sprintf(_('Tablas de esquema de %s rellenadas correctamente (%s).'), $nomApp, $esquema),
-            default => _('Operación completada correctamente.'),
+            'crear_global' => sprintf(_("Tablas globales de %s creadas correctamente."), $nomApp),
+            'eliminar_global' => sprintf(_("Tablas globales de %s eliminadas correctamente."), $nomApp),
+            'crear_esquema' => sprintf(_("Tablas de esquema de %s creadas correctamente (%s)."), $nomApp, $esquema),
+            'eliminar_esquema' => sprintf(_("Tablas de esquema de %s eliminadas correctamente (%s)."), $nomApp, $esquema),
+            'llenar_esquema' => sprintf(_("Tablas de esquema de %s rellenadas correctamente (%s)."), $nomApp, $esquema),
+            default => _("Operación completada correctamente."),
         };
     }
 }

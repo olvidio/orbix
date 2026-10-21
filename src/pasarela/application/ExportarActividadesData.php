@@ -88,7 +88,7 @@ final class ExportarActividadesData
                 'a_cabeceras' => [],
                 'a_botones' => [],
                 'a_valores' => [],
-                'errores' => _('Periodo no válido'),
+                'errores' => _("Periodo no válido"),
             ];
         }
         $aWhere['f_ini'] = "'$inicioIso','$finIso'";
@@ -115,26 +115,26 @@ final class ExportarActividadesData
         $cActividades = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
 
         $a_cabeceras = [
-            _('activada'),
-            _('casa'),
-            _('perfil'),
-            _('nombre'),
-            _('tipo'),
-            _('fecha inicio'),
-            _('hora inicio'),
-            _('fecha fin'),
-            _('hora fin'),
-            _('activación'),
-            _('plazas max.'),
-            _('organizador 1'),
-            _('organizador 2'),
-            _('organizador 3'),
-            _('texto aviso'),
-            _('contribución obligatoria'),
-            _('contribución reserva'),
-            _('contribución general'),
-            _('contribución estudiante'),
-            _('contribución no duerme'),
+            _("activada"),
+            _("casa"),
+            _("perfil"),
+            _("nombre"),
+            _("tipo"),
+            _("fecha inicio"),
+            _("hora inicio"),
+            _("fecha fin"),
+            _("hora fin"),
+            _("activación"),
+            _("plazas max."),
+            _("organizador 1"),
+            _("organizador 2"),
+            _("organizador 3"),
+            _("texto aviso"),
+            _("contribución obligatoria"),
+            _("contribución reserva"),
+            _("contribución general"),
+            _("contribución estudiante"),
+            _("contribución no duerme"),
         ];
 
         $aConversion_nombre = $this->conversiones->getArrayNombre();
@@ -183,7 +183,7 @@ final class ExportarActividadesData
                     $asistentes = $oTipoActividad->getAsistentesText();
                     $actividad = $oTipoActividad->getActividadText();
                     $tipo_txt = "$svsf $asistentes $actividad";
-                    $err .= sprintf(_('valor no válido para la activación del tipo de actividad %s'), $tipo_txt);
+                    $err .= sprintf(_("valor no válido para la activación del tipo de actividad %s"), $tipo_txt);
                     $err .= '<br>';
                     $f_activacion = '?';
                 }
@@ -214,7 +214,7 @@ final class ExportarActividadesData
                 }
             }
 
-            $contribucion_obligatoria = ($id_tipo_activ < 200000) ? _('NO') : _('SÍ');
+            $contribucion_obligatoria = ($id_tipo_activ < 200000) ? _("NO") : _("SÍ");
             $numero_de_dias = $oActividad->getDuracion();
             $id_tarifa = $oActividad->getTarifa();
             if (empty($id_tarifa)) {
@@ -222,7 +222,7 @@ final class ExportarActividadesData
                 if ($cTipoActivTarifas === []) {
                     $oTipoActivdad = new TiposActividades($id_tipo_activ);
                     $nom_tipo_actividad = $oTipoActivdad->getNom();
-                    $err .= sprintf(_('No está definido el tipo tarifa para el tipo de actividad: %s'), $nom_tipo_actividad);
+                    $err .= sprintf(_("No está definido el tipo tarifa para el tipo de actividad: %s"), $nom_tipo_actividad);
                     $err .= '<br>';
                     $id_tarifa = 0;
                 } else {
@@ -242,7 +242,7 @@ final class ExportarActividadesData
             if ($cTarifas === []) {
                 $oTipoTarifa = $this->tipoTarifaRepository->findById($id_tarifa);
                 $nombre_tarifa = $oTipoTarifa?->getLetra() ?? '?';
-                $err .= sprintf(_('No está definida la id_tarifa %s para la casa %s'), $nombre_tarifa, $nombre_ubi);
+                $err .= sprintf(_("No está definida la id_tarifa %s para la casa %s"), $nombre_tarifa, $nombre_ubi);
                 $err .= '<br>';
             } else {
                 foreach ($cTarifas as $oTarifa) {
@@ -265,7 +265,7 @@ final class ExportarActividadesData
                 $contribucion_no_duerme = '?';
             }
 
-            $a_valores[$i][1] = _('Sí');
+            $a_valores[$i][1] = _("Sí");
             $a_valores[$i][2] = $nombre_ubi;
             $a_valores[$i][3] = $aConversion_perfil[$id_tipo_activ] ?? '';
             $a_valores[$i][4] = ucfirst((string)($aConversion_nombre[$id_tipo_activ] ?? ''));

@@ -65,7 +65,7 @@ final class ActividadCambiarTipo
 
         $oActividad = $this->actividadDlRepository->findById($Qid_activ);
         if ($oActividad === null) {
-            return ['error_txt' => _('actividad no encontrada')];
+            return ['error_txt' => _("actividad no encontrada")];
         }
 
         $oActividad->setId_tipo_activ($valor_id_tipo_activ);

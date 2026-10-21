@@ -14,7 +14,7 @@ FrontBootstrap::boot();
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 
 if ($Qid_equipaje === 0) {
-    AjaxJsonSupport::html('', _('debe seleccionar un equipaje'));
+    AjaxJsonSupport::html('', _("debe seleccionar un equipaje"));
 }
 
 $url_backend = '/src/inventario/equipajes_doc_casa';
@@ -27,12 +27,12 @@ $a_valores = $docCasa['a_valores'];
 $nombre_ubi = $docCasa['nombre_ubi'];
 
 $a_cabeceras = [
-    ['id' => 'nombre', 'name' => ucfirst(_('nombre'))],
-    ['id' => 'identificador', 'name' => ucfirst(_('identificador'))],
-    ['id' => 'lugar', 'name' => ucfirst(_('lugar'))],
+    ['id' => 'nombre', 'name' => ucfirst(_("nombre"))],
+    ['id' => 'identificador', 'name' => ucfirst(_("identificador"))],
+    ['id' => 'lugar', 'name' => ucfirst(_("lugar"))],
 ];
 
-$a_botones = [['txt' => _('seleccionar'), 'click' => 'fnjs_ver_equipaje()']];
+$a_botones = [['txt' => _("seleccionar"), 'click' => 'fnjs_ver_equipaje()']];
 
 $oListaDocsCasa = new Lista();
 $oListaDocsCasa->setId_tabla('doc_activ_tabla');
@@ -61,8 +61,8 @@ $oView->renderizar('equipajes_doc_casa.phtml', $a_campos);
 echo "<div id='grupos'>";
 
 $a_cabeceras = [
-    ['id' => 'nombre', 'name' => ucfirst(_('sigla'))],
-    ['id' => 'identificador', 'name' => ucfirst(_('identificador'))],
+    ['id' => 'nombre', 'name' => ucfirst(_("sigla"))],
+    ['id' => 'identificador', 'name' => ucfirst(_("identificador"))],
 ];
 foreach ($a_egm as $aEgm) {
     $id_grupo = $aEgm['id_grupo'];

@@ -108,7 +108,7 @@ final class FormAsistentesAUnaActividadData
 
             $cAsistentes = $this->asistenteRepository->getAsistentes(['id_activ' => $Qid_activ, 'id_nom' => $Qid_nom]);
             if ($cAsistentes === []) {
-                return ['error' => _('No se encontró el asistente para esta actividad.')];
+                return ['error' => _("No se encontró el asistente para esta actividad.")];
             }
             $oAsistente = $cAsistentes[0];
             $propio = $oAsistente->isPropio();
@@ -125,7 +125,7 @@ final class FormAsistentesAUnaActividadData
                 if ($obj_pau !== 'PersonaEx' && $child !== '' && $child !== ConfigGlobal::mi_delef()) {
                     return [
                         'error' => sprintf(
-                            _('los datos de asistencia los modifica el propietario de la plaza: %s'),
+                            _("los datos de asistencia los modifica el propietario de la plaza: %s"),
                             $child
                         ),
                     ];

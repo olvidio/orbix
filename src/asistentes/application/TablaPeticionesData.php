@@ -65,8 +65,8 @@ final class TablaPeticionesData
             }
         }
 
-        $a_cabeceras = [_('nombre'),
-            _('peticiones (libres/concedidas)'),
+        $a_cabeceras = [_("nombre"),
+            _("peticiones (libres/concedidas)"),
         ];
 
         $a_botones = [];

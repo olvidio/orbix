@@ -74,12 +74,12 @@ final class CambioUsuarioObjetoPrefPropiedadesData
 
         $oMiUsuario = ConfigGlobal::MiUsuario();
         if ($oMiUsuario === null) {
-            $result['error'] = (string)_('Usuario no encontrado');
+            $result['error'] = (string)_("Usuario no encontrado");
             return $result;
         }
         $idRole = $oMiUsuario->getId_role();
         if ($idRole === null) {
-            $result['error'] = (string)_('Usuario sin rol asignado');
+            $result['error'] = (string)_("Usuario sin rol asignado");
             return $result;
         }
         $oRole = new Role();

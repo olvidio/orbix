@@ -25,7 +25,7 @@ final class PropuestasAjaxDispatch
             'get_lista' => $this->getLista->execute((int) (\src\shared\domain\helpers\FilterPostGet::post('filtro_ctr') ?? \src\shared\domain\helpers\FilterPostGet::get('filtro_ctr') ?? 0)),
             'crear_tabla' => $this->crearTabla->execute(),
             'lista_sacd', 'dedicacion_update', 'dedicacion', 'info', 'cmb_sacd' => $this->mutations->execute($que),
-            default => ['success' => false, 'mensaje' => _('Operación no soportada')],
+            default => ['success' => false, 'mensaje' => _("Operación no soportada")],
         };
     }
 }

@@ -62,7 +62,7 @@
 </head>
 <div style="position:relative">
 
-    <input type="button" name="nuevo" value="<?= _('nuevo') ?>" onclick="fnjs_nuevo();">
+    <input type="button" name="nuevo" value="<?= _("nuevo") ?>" onclick="fnjs_nuevo();">
 
     <div style="width:100%;">
         <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
@@ -82,44 +82,44 @@
         <input type="hidden" id="que" value=""/>
 
         <div class='item-details-label'>
-            <label for="encargo"> <?= _('Encargo') ?>: </label>
+            <label for="encargo"> <?= _("Encargo") ?>: </label>
             <input id="encargo" type="text" class="form-control" size="20" value="">&nbsp;&nbsp;&nbsp;
-            <span class=link onclick="fnjs_generarNomEnc();"><?= _('generar') ?></span>
+            <span class=link onclick="fnjs_generarNomEnc();"><?= _("generar") ?></span>
         </div>
 
         <div style="margin-top: 20px;">
-            <label for="id_tipo_enc"><?= _('Tipo de encargo') ?>:</label>
+            <label for="id_tipo_enc"><?= _("Tipo de encargo") ?>:</label>
             <?= $oDesplNoms->desplegable() ?>
         </div>
 
         <div style="margin-top: 20px;">
-            <label for="id_ubi"> <?= _('Lugar') ?>: </label>
+            <label for="id_ubi"> <?= _("Lugar") ?>: </label>
             <?= $oDesplCentros->desplegable() ?>&nbsp;&nbsp;&nbsp;&nbsp;
-            <label for="descripcion_lugar"> <?= _('Descripción lugar') ?>: </label>
+            <label for="descripcion_lugar"> <?= _("Descripción lugar") ?>: </label>
             <input id="descripcion_lugar" type="text" class="form-control" size="20" value="">
         </div>
 
         <div style="margin-top: 20px;">
-            <label for="orden"> <?= _('Orden') ?>: </label>
+            <label for="orden"> <?= _("Orden") ?>: </label>
             <input id="orden" type="text" class="form-control" size="20" value="">
         </div>
 
         <div style="margin-top: 20px;">
-            <label for="prioridad"> <?= _('Prioridad') ?>: </label>
+            <label for="prioridad"> <?= _("Prioridad") ?>: </label>
             <input id="prioridad" type="text" class="form-control" size="20" value="">&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
 
         <div style="margin-top: 20px;">
-            <label for="observ"> <?= _('Observaciones') ?>: </label>
+            <label for="observ"> <?= _("Observaciones") ?>: </label>
             <input id="observ" type="text" class="form-control" size="20" value="">&nbsp;&nbsp;&nbsp;&nbsp;
-            <label for="idioma"> <?= _('Idioma') ?>: </label>
+            <label for="idioma"> <?= _("Idioma") ?>: </label>
             <?= $oDesplIdiomas->desplegable() ?>
         </div>
         <hr/>
         <div class='item-details-form-buttons'>
-            <button data-action='save' class='slick-btn slick-btn-primary'><?= _('Grabar') ?></button>
-            <button data-action='eliminar_encargo' class='slick-btn slick-btn-primary'><?= _('Eliminar encargo') ?></button>
-            <button data-action='cancel' class='slick-btn slick-btn-default'><?= _('Cancel') ?></button>
+            <button data-action='save' class='slick-btn slick-btn-primary'><?= _("Grabar") ?></button>
+            <button data-action='eliminar_encargo' class='slick-btn slick-btn-primary'><?= _("Eliminar encargo") ?></button>
+            <button data-action='cancel' class='slick-btn slick-btn-default'><?= _("Cancel") ?></button>
         </div>
     </div>
 
@@ -248,7 +248,7 @@
         $('#que').val('nuevo');
         reset_campos_modal();
         $('#ctx_guardar').val(ctx_nuevo);
-        $('#titulo_modal').html(<?= json_encode(_('nuevo encargo')) ?>);
+        $('#titulo_modal').html(<?= json_encode(_("nuevo encargo")) ?>);
         showEncargosModal();
     }
 

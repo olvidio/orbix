@@ -27,7 +27,7 @@ final class CertificadoRecibidoAdjuntarFormData
         }
         $oPersona = $this->personaFinderService->findPersonaEnGlobal($id_nom);
         if ($oPersona === null) {
-            throw new \RuntimeException(_('persona no encontrada'));
+            throw new \RuntimeException(_("persona no encontrada"));
         }
 
         return [

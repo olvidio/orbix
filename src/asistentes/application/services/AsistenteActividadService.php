@@ -361,7 +361,7 @@ class AsistenteActividadService
         $ActividadAllRepository = $this->actividadAllRepository;
         $oActividad = $ActividadAllRepository->findById($id_activ);
         if ($oActividad === null) {
-            throw new \RuntimeException(sprintf(_('No se ha encontrado la actividad con id: %s'), $id_activ));
+            throw new \RuntimeException(sprintf(_("No se ha encontrado la actividad con id: %s"), $id_activ));
         }
         // si es de la sf quito la 'f'
         $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');

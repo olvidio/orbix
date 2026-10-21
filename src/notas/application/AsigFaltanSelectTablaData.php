@@ -53,7 +53,7 @@ final class AsigFaltanSelectTablaData
         };
 
         if (!$isTrue($Qpersonas_n) && !$isTrue($Qpersonas_agd)) {
-            throw new \RuntimeException(_('Debe marcar un grupo de personas (n o agd)'));
+            throw new \RuntimeException(_("Debe marcar un grupo de personas (n o agd)"));
         }
 
         if ($Qb_c === 'b') {
@@ -104,7 +104,7 @@ final class AsigFaltanSelectTablaData
             : $Pendientes->contarFaltantesPorPersona($Qnumero, $curso);
 
         $titulo = sprintf(
-            _('lista de %s a los que faltan %d o menos asignaturas para finalizar el %s'),
+            _("lista de %s a los que faltan %d o menos asignaturas para finalizar el %s"),
             $gente,
             $Qnumero,
             $curso_txt

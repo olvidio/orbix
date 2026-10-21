@@ -76,13 +76,13 @@ final class PropuestasAjaxPayload
         $html .= "<table style='width: 400px;' class='tono2'><tr><td colspan=3>"
             . self::escape(self::string($data['desc_enc'] ?? '')) . '</td></tr>';
         $html .= "<td><input type='text' size='1' name='dedic_m' value='"
-            . self::escape(self::string($data['dedic_m'] ?? '')) . "'>" . _('mañanas') . '</td>';
+            . self::escape(self::string($data['dedic_m'] ?? '')) . "'>" . _("mañanas") . '</td>';
         $html .= "<td><input type='text' size='1' name='dedic_t' value='"
-            . self::escape(self::string($data['dedic_t'] ?? '')) . "'>" . _('tarde 1ª hora') . '</td>';
+            . self::escape(self::string($data['dedic_t'] ?? '')) . "'>" . _("tarde 1ª hora") . '</td>';
         $html .= "<td><input type='text' size='1' name='dedic_v' value='"
-            . self::escape(self::string($data['dedic_v'] ?? '')) . "'>" . _('tarde 2ª hora') . '</td></tr>';
+            . self::escape(self::string($data['dedic_v'] ?? '')) . "'>" . _("tarde 2ª hora") . '</td></tr>';
         $html .= "<tr><td colspan=3><input type='button' onClick='fnjs_guardar_horario();' value='"
-            . self::escape(_('ok')) . "'></td></tr></table></form>";
+            . self::escape(_("ok")) . "'></td></tr></table></form>";
 
         return $html;
     }
@@ -117,7 +117,7 @@ final class PropuestasAjaxPayload
             $idEnc = self::int($row['id_enc'] ?? 0);
             $idSacd = self::int($row['id_sacd'] ?? 0);
             return '<tr id="tr_colaborador' . $idItem . '" class="sf" title="' . $idSacd . '"><td>'
-                . _('colaborador') . '</td><td>-</td>'
+                . _("colaborador") . '</td><td>-</td>'
                 . self::proposalCells([
                     'encargo_tipo' => 'colaborador',
                     'id_item' => $idItem,
@@ -149,14 +149,14 @@ final class PropuestasAjaxPayload
         return ($nomTipo === '' ? '' : '<td>' . $nomTipo . '</td><td>-</td>')
             . '<td><span class="link" id="' . self::escape($tipo . '_' . $idItem) . '" title="' . $idSacd
             . '" onClick="' . $verSacd . '">' . $nombre . '</span></td>'
-            . '<td><span class="link" onClick="' . $info . '">' . _('+ info') . '</span></td>'
+            . '<td><span class="link" onClick="' . $info . '">' . _("+ info") . '</span></td>'
             . '<td><span class="link" onClick="' . $dedicacion . '">?</span></td><td id="td_' . $idItem . '"></td>';
     }
 
     private static function closeButton(): string
     {
         return '<span class="x" onClick="fnjs_cerrar_propuesta_popup(); return false;" title="'
-            . self::escape(_('cerrar')) . '">[x]</span>';
+            . self::escape(_("cerrar")) . '">[x]</span>';
     }
 
     private static function int(mixed $value): int

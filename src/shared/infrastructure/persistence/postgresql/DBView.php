@@ -74,7 +74,7 @@ class DBView
                 break;
         }
         if ($config === null) {
-            throw new \InvalidArgumentException(sprintf(_('Conexión DBView no válida: %s'), $db));
+            throw new \InvalidArgumentException(sprintf(_("Conexión DBView no válida: %s"), $db));
         }
         $oConexion = new DBConnection($config);
         if ($replicaSelect) {

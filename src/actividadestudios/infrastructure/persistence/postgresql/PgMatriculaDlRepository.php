@@ -95,7 +95,7 @@ class PgMatriculaDlRepository extends PgMatriculaRepository implements Matricula
     {
         $schema = $this->resolveSchemaForMatricula($Matricula);
         if ($schema === null) {
-            throw new RuntimeException(_('Falta id_dl para modificar la matrícula en esquema región STGR.'));
+            throw new RuntimeException(_("Falta id_dl para modificar la matrícula en esquema región STGR."));
         }
 
         return $schema;

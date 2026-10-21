@@ -70,7 +70,7 @@ final class AsistenteMoverData
         $oAsistente = $this->asistenteApplicationService->findById($Qid_activ_old, $Qid_nom);
         if ($oAsistente === null) {
             return [
-                'aviso_txt' => sprintf(_('no se encuentra el asistente (id_nom: %s, id_activ: %s)'), $Qid_nom, $Qid_activ_old),
+                'aviso_txt' => sprintf(_("no se encuentra el asistente (id_nom: %s, id_activ: %s)"), $Qid_nom, $Qid_activ_old),
                 'observ' => '',
                 'paths' => [
                     'guardar' => 'src/asistentes/asistente_guardar',
@@ -80,7 +80,7 @@ final class AsistenteMoverData
 
         if ($oAsistente->perm_modificar() === false) {
             return [
-                'aviso_txt' => _('los datos de asistencia los modifica la dl del asistente'),
+                'aviso_txt' => _("los datos de asistencia los modifica la dl del asistente"),
                 'observ' => '',
                 'paths' => [
                     'guardar' => 'src/asistentes/asistente_guardar',
@@ -185,14 +185,14 @@ final class AsistenteMoverData
                     $concedidas = $plazas['concedidas'];
                     $libres = $plazas['libres'];
                     if ($concedidas > 0) {
-                        $txt_plazas = sprintf(_('plazas libres/concedidas: %s/%s'), $libres, $concedidas);
+                        $txt_plazas = sprintf(_("plazas libres/concedidas: %s/%s"), $libres, $concedidas);
                     }
                 }
                 $aAsignaturasCa = $this->actividadAsignaturaDlRepository->getAsignaturasCa($id_activ);
                 $result = $oPosiblesCa->contar_creditos($Qid_nom, $aAsignaturasCa);
                 $creditos = $result['suma'];
                 if (!empty($creditos)) {
-                    $txt_creditos = sprintf(_('créditos: %s'), $creditos);
+                    $txt_creditos = sprintf(_("créditos: %s"), $creditos);
                 }
             }
             $aOpciones[$id_activ] = "$nom_activ $txt_plazas  $txt_creditos";

@@ -31,10 +31,10 @@ final class EncargoVerEliminar
 
         $oEncargo = $this->encargoRepository->findById($id_enc);
         if ($oEncargo === null) {
-            return ['error' => sprintf(_('No se encuentra el encargo %d'), $id_enc)];
+            return ['error' => sprintf(_("No se encuentra el encargo %d"), $id_enc)];
         }
         if ($this->encargoRepository->Eliminar($oEncargo) === false) {
-            return ['error' => _('hay un error, no se ha eliminado') . "\n" . $this->encargoRepository->getErrorTxt()];
+            return ['error' => _("hay un error, no se ha eliminado") . "\n" . $this->encargoRepository->getErrorTxt()];
         }
 
         return ['error' => ''];

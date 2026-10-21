@@ -13,8 +13,8 @@ class InfoUbiInventario extends DatosInfoRepo
     public function __construct(
         private UbiInventarioRepositoryInterface $ubiInventarioRepository,
     ) {
-        $this->setTxtTitulo(_('ubis'));
-        $this->setTxtEliminar(_('¿Está seguro que desea eliminar esta casa/centro?'));
+        $this->setTxtTitulo(_("ubis"));
+        $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta casa/centro?"));
         $this->setTxtBuscar();
         $this->setTxtExplicacion();
 

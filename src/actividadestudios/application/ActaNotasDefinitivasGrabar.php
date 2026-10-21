@@ -71,7 +71,7 @@ final class ActaNotasDefinitivasGrabar
             $idSchema = ConfigGlobal::mi_id_schema();
         }
         if ($idSchema !== ConfigGlobal::mi_id_schema()) {
-            return ['success' => false, 'mensaje' => _('No puede modificar un acta de otra dl')];
+            return ['success' => false, 'mensaje' => _("No puede modificar un acta de otra dl")];
         }
 
         /** @var ConfigSnapshot $oConfig */
@@ -89,7 +89,7 @@ final class ActaNotasDefinitivasGrabar
         ]);
         $oActividad = $this->actividadAllRepository->findById($Qid_activ);
         if ($oActividad === null) {
-            return ['success' => false, 'mensaje' => _('no encuentro la actividad')];
+            return ['success' => false, 'mensaje' => _("no encuentro la actividad")];
         }
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $iepoca = NotaEpoca::EPOCA_CA;
@@ -134,35 +134,35 @@ final class ActaNotasDefinitivasGrabar
                         $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom";
                         continue;
                     }
-                    $error .= sprintf(_('nota no guardada para %s porque la nota (%s) no llega al mínimo: 6'), $oPersona->getNombreApellidos(), $nn) . "\n";
+                    $error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"), $oPersona->getNombreApellidos(), $nn) . "\n";
                     continue;
                 }
                 if ((int) $acta === NotaSituacion::CURSADA) {
-                    return ['success' => false, 'mensaje' => _('no se puede definir cursada con preceptor')];
+                    return ['success' => false, 'mensaje' => _("no se puede definir cursada con preceptor")];
                 }
 
                 $oActa = $this->actaRepository->findById((string) $acta);
                 if ($oActa === null) {
-                    return ['success' => false, 'mensaje' => _('no encuentro el acta')];
+                    return ['success' => false, 'mensaje' => _("no encuentro el acta")];
                 }
                 $oF_acta = $oActa->getF_acta();
                 if (empty($acta) || empty($oF_acta)) {
-                    return ['success' => false, 'mensaje' => _('debe introducir los datos del acta. No se ha guardado nada.')];
+                    return ['success' => false, 'mensaje' => _("debe introducir los datos del acta. No se ha guardado nada.")];
                 }
             } else {
                 if ($id_situacion === NotaSituacion::CURSADA || $id_situacion === NotaSituacion::EXAMINADO || empty($id_situacion)) {
                     $oF_acta = $cActas[0]->getF_acta();
                 } else {
                     if (empty($acta)) {
-                        return ['success' => false, 'mensaje' => _('falta definir el acta para alguna nota')];
+                        return ['success' => false, 'mensaje' => _("falta definir el acta para alguna nota")];
                     }
                     $oActa = $this->actaRepository->findById((string) $acta);
                     if ($oActa === null) {
-                        return ['success' => false, 'mensaje' => _('no encuentro el acta')];
+                        return ['success' => false, 'mensaje' => _("no encuentro el acta")];
                     }
                     $oF_acta = $oActa->getF_acta();
                     if (empty($oF_acta)) {
-                        return ['success' => false, 'mensaje' => _('debe introducir los datos del acta. No se ha guardado nada.')];
+                        return ['success' => false, 'mensaje' => _("debe introducir los datos del acta. No se ha guardado nada.")];
                     }
                 }
             }
@@ -174,7 +174,7 @@ final class ActaNotasDefinitivasGrabar
             if ($preceptor) {
                 $oActividadAsignatura = $this->actividadAsignaturaDlRepository->findById($Qid_activ, $Qid_asignatura);
                 if ($oActividadAsignatura === null) {
-                    return ['success' => false, 'mensaje' => _('no encuentro la asignatura de actividad')];
+                    return ['success' => false, 'mensaje' => _("no encuentro la asignatura de actividad")];
                 }
                 $id_preceptor = $oActividadAsignatura->getId_profesor();
             } else {
@@ -191,7 +191,7 @@ final class ActaNotasDefinitivasGrabar
                 }
                 $idNivelOpcional = $this->huecoOpcionalDePlan->idNivelPara($id_nom, $Qid_asignatura, $notasNivel);
                 if ($idNivelOpcional === null) {
-                    $error .= sprintf(_('ha cursado una opcional que no tocaba (id_nom=%s)') . "\n", $id_nom);
+                    $error .= sprintf(_("ha cursado una opcional que no tocaba (id_nom=%s)") . "\n", $id_nom);
                     continue;
                 }
                 $id_nivel = $idNivelOpcional;
@@ -214,7 +214,7 @@ final class ActaNotasDefinitivasGrabar
                 $apellidos_nombre_dl = ($oAlumno === null)
                     ? "id_nom=$id_nom"
                     : $oAlumno->getApellidosNombre() . ' (' . $oAlumno->getDl() . ')';
-                $error .= sprintf(_('está intentando poner una nota que ya existe para: %s') . "\n", $apellidos_nombre_dl);
+                $error .= sprintf(_("está intentando poner una nota que ya existe para: %s") . "\n", $apellidos_nombre_dl);
                 continue;
             }
 

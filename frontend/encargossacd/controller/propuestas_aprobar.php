@@ -12,4 +12,4 @@ $ctxData = PostRequest::getDataFromUrl('/src/encargossacd/propuestas_aprobar_dat
 $data = PostRequest::getDataFromUrl('/src/encargossacd/propuestas_aprobar', [
     'ctx_aprobar' => PayloadCoercion::string($ctxData['ctx_aprobar'] ?? ''),
 ]);
-echo \frontend\shared\helpers\PayloadCoercion::string($data['text'] ?? _('Hecho!'));
+echo \frontend\shared\helpers\PayloadCoercion::string($data['text'] ?? _("Hecho!"));

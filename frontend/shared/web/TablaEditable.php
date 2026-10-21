@@ -869,8 +869,8 @@ class TablaEditable
         $fnjs = '';
         $url = $this->getUpdateUrl();
         if (!empty($url)) {
-            $txtRespuesta = _('respuesta');
-            $txtError = _('hay un error, no se ha guardado');
+            $txtRespuesta = _("respuesta");
+            $txtError = _("hay un error, no se ha guardado");
             $urlJs = self::jsStringLiteral($url);
             $txtRespuestaJs = self::jsStringLiteral($txtRespuesta);
             $txtErrorJs = self::jsStringLiteral($txtError);

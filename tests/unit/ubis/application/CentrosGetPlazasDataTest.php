@@ -42,7 +42,7 @@ final class CentrosGetPlazasDataTest extends TestCase
         );
         $this->assertSame(2, $out['a_valores'][1][2]);
         $this->assertSame(10, $out['a_valores'][1][3]);
-        $this->assertSame(_('si'), $out['a_valores'][1][4]);
-        $this->assertSame(_('no'), $out['a_valores'][2][4]);
+        $this->assertSame(_("si"), $out['a_valores'][1][4]);
+        $this->assertSame(_("no"), $out['a_valores'][2][4]);
     }
 }

@@ -39,6 +39,6 @@ class ProcesosEliminarTest extends myTest
     public function test_id_inexistente_devuelve_mensaje_error(): void
     {
         $msg = DependencyResolver::get(ProcesosEliminar::class)->execute(['id_item' => 99999999]);
-        $this->assertSame(_('no se encuentra la tarea a borrar'), $msg);
+        $this->assertSame(_("no se encuentra la tarea a borrar"), $msg);
     }
 }

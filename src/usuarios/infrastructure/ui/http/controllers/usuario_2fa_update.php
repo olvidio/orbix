@@ -29,7 +29,7 @@ $Qverification_code = (string)\src\shared\domain\helpers\FilterPostGet::post('ve
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);
 if ($oUsuario === null) {
-    ContestarJson::enviar(_('Usuario no encontrado'), []);
+    ContestarJson::enviar(_("Usuario no encontrado"), []);
     return;
 }
 

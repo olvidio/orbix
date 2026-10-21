@@ -13,8 +13,8 @@ class InfoColeccion extends DatosInfoRepo
     public function __construct(
         private ColeccionRepositoryInterface $coleccionRepository,
     ) {
-        $this->setTxtTitulo(_('colecciones'));
-        $this->setTxtEliminar(_('¿Está seguro que desea eliminar esta colección?'));
+        $this->setTxtTitulo(_("colecciones"));
+        $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta colección?"));
         $this->setTxtBuscar(_("buscar en 'nombre colección'"));
         $this->setTxtExplicacion();
 

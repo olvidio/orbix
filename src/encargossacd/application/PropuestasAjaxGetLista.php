@@ -20,7 +20,7 @@ final class PropuestasAjaxGetLista
     public function execute(int $filtro_ctr): array
     {
         if (!$this->propuestaEncargoSacdRepository->existenLasTablas()) {
-            return ['success' => false, 'mensaje' => _('Debe crear la tabla de propuestas')];
+            return ['success' => false, 'mensaje' => _("Debe crear la tabla de propuestas")];
         }
 
         $html = '';

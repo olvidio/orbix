@@ -34,7 +34,7 @@ if ($Qrole) {
     if (!empty($Qid_role)) {
         $oRole = $RoleRepository->findById($Qid_role);
         if ($oRole === null) {
-            ContestarJson::enviar(_('Rol no encontrado'), 'none');
+            ContestarJson::enviar(_("Rol no encontrado"), 'none');
             return;
         }
     } else {

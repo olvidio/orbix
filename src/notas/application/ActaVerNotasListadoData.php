@@ -53,7 +53,7 @@ final class ActaVerNotasListadoData
             $oPersona = $this->personaFinderService->findPersonaEnGlobalODePaso($id_nom);
             if ($oPersona === null) {
                 $avisos[] = sprintf(
-                    _('existe una nota de la que no se tiene acceso al nombre (id_nom = %s)'),
+                    _("existe una nota de la que no se tiene acceso al nombre (id_nom = %s)"),
                     $id_nom
                 );
                 continue;

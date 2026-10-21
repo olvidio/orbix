@@ -9,14 +9,14 @@ try {
     $opened = HashB::open($ctxRaw, 'update_cama_asistente');
 } catch (HashBInvalidException $e) {
     header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'mensaje' => _('Operación no autorizada')]);
+    echo json_encode(['success' => false, 'mensaje' => _("Operación no autorizada")]);
     exit;
 }
 
 $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($opened, 'id_activ');
 if ($Qid_activ <= 0) {
     header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'mensaje' => _('Operación no autorizada')]);
+    echo json_encode(['success' => false, 'mensaje' => _("Operación no autorizada")]);
     exit;
 }
 
@@ -25,7 +25,7 @@ $Qid_cama = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'i
 // id_nom negativo: asistente de paso (d_asistentes_ex). Cero no es un id válido.
 if ($Qid_nom === 0) {
     header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'mensaje' => _('Operación no autorizada')]);
+    echo json_encode(['success' => false, 'mensaje' => _("Operación no autorizada")]);
     exit;
 }
 

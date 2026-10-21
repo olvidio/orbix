@@ -18,10 +18,10 @@ final class NombreExcepcionGuardar
     public function execute(string $id_tipo_activ, string $valor): string
     {
         if ($id_tipo_activ === '') {
-            return _('Falta id_tipo_activ');
+            return _("Falta id_tipo_activ");
         }
         if ($valor === '') {
-            return _('Falta nombre');
+            return _("Falta nombre");
         }
         
         $this->nombre->addNombre($id_tipo_activ, $valor);

@@ -52,7 +52,7 @@ final class FormActividadesDeUnaPersonaData
             $mod = 'editar';
             $oActividad = $this->actividadAllRepository->findById($id_activ_edit);
             if ($oActividad === null) {
-                return ['error' => sprintf(_('No se ha encontrado la actividad con id: %s'), $id_activ_edit)];
+                return ['error' => sprintf(_("No se ha encontrado la actividad con id: %s"), $id_activ_edit)];
             }
             $nom_activ = $oActividad->getNom_activ();
 
@@ -65,7 +65,7 @@ final class FormActividadesDeUnaPersonaData
             $AsistenteRepository = $this->container->get($AsistenteRepositoryInterface);
             $oAsistente = $AsistenteRepository->findById($id_activ_edit, $Qid_nom);
             if ($oAsistente === null) {
-                return ['error' => sprintf(_('No se ha encontrado el asistente (id_nom: %s, id_activ: %s)'), $Qid_nom, $id_activ_edit)];
+                return ['error' => sprintf(_("No se ha encontrado el asistente (id_nom: %s, id_activ: %s)"), $Qid_nom, $id_activ_edit)];
             }
             $obj = get_class($oAsistente);
 
@@ -83,7 +83,7 @@ final class FormActividadesDeUnaPersonaData
                 if ($obj_pau !== 'PersonaEx' && $child !== ConfigGlobal::mi_delef()) {
                     return [
                         'error' => sprintf(
-                            _('los datos de asistencia los modifica el propietario de la plaza: %s'),
+                            _("los datos de asistencia los modifica el propietario de la plaza: %s"),
                             $child
                         ),
                     ];

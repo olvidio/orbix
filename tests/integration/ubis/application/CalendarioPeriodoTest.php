@@ -73,13 +73,13 @@ class CalendarioPeriodoTest extends myTest
     public function test_eliminar_id_cero_devuelve_mensaje_de_error(): void
     {
         $msg = CalendarioPeriodoEliminar::execute(0);
-        $this->assertSame(_('no sé cuál he de borar'), $msg);
+        $this->assertSame(_("no sé cuál he de borar"), $msg);
     }
 
     public function test_eliminar_id_inexistente_devuelve_mensaje_de_error(): void
     {
         $msg = CalendarioPeriodoEliminar::execute(99999999);
-        $this->assertSame(_('no se encuentra el periodo a borrar'), $msg);
+        $this->assertSame(_("no se encuentra el periodo a borrar"), $msg);
     }
 
     public function test_eliminar_borra_un_periodo_existente(): void

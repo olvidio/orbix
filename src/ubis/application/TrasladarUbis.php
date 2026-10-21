@@ -25,7 +25,7 @@ final class TrasladarUbis
         }
 
         if (empty($a_sel)) {
-            return _('No se han seleccionado ubis.');
+            return _("No se han seleccionado ubis.");
         }
 
         $mi_region_dl = ConfigGlobal::mi_region_dl();

@@ -146,7 +146,7 @@ final class CasaActividadesListaData
                     $ssfsv = $oTipoActiv->getSfsvText();
                     $sasistentes = '';
                     $sactividad = '';
-                    $snom_tipo = (string)_('ocupado');
+                    $snom_tipo = (string)_("ocupado");
                     $observ = '';
                 } else {
                     $ssfsv = $oTipoActiv->getSfsvText();

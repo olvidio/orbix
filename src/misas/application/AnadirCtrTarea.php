@@ -40,12 +40,12 @@ class AnadirCtrTarea
             case 'quitar':
                 $id_item = MisasBuildInput::int($input, 'id_item');
                 if ($id_item === 0) {
-                    $error_txt = _('Error: falta el id_item');
+                    $error_txt = _("Error: falta el id_item");
                     break;
                 }
                 $oPlantilla = $this->plantillaRepository->findById($id_item);
                 if ($oPlantilla === null) {
-                    $error_txt = sprintf(_('No se encuentra la plantilla %d'), $id_item);
+                    $error_txt = sprintf(_("No se encuentra la plantilla %d"), $id_item);
                     break;
                 }
                 if ($this->plantillaRepository->Eliminar($oPlantilla) === false) {
@@ -54,7 +54,7 @@ class AnadirCtrTarea
                 break;
 
             default:
-                $error_txt = sprintf(_('opción no definida en switch en %s, linea %s'), __FILE__, __LINE__);
+                $error_txt = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
                 break;
         }
 

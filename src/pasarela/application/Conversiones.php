@@ -166,21 +166,21 @@ class Conversiones
                 $oTiposActividades = new TiposActividades($id_tipo_activ, true);
                 switch ($oTiposActividades->getAsistentesText()) {
                     case 'sg':
-                        $a_tipos[$id_tipo_activ] = _('CP/AMIG');
+                        $a_tipos[$id_tipo_activ] = _("CP/AMIG");
                         break;
                     case 'sss+':
-                        $a_tipos[$id_tipo_activ] = _('SACD');
+                        $a_tipos[$id_tipo_activ] = _("SACD");
                         break;
                     case 'sr':
                     case 'sr-nax':
                     case 'sr-agd':
-                        $a_tipos[$id_tipo_activ] = _('SR');
+                        $a_tipos[$id_tipo_activ] = _("SR");
                         $nom_asistentes = $oTiposActividades->getActividad2DigitosText();
                         if (strpos($nom_asistentes, 'univ') !== false) {
-                            $a_tipos[$id_tipo_activ] = _('SR-UNIV');
+                            $a_tipos[$id_tipo_activ] = _("SR-UNIV");
                         }
                         if (strpos($nom_asistentes, 'bach') !== false) {
-                            $a_tipos[$id_tipo_activ] = _('SR-BACH');
+                            $a_tipos[$id_tipo_activ] = _("SR-BACH");
                         }
                         break;
                     default:
@@ -203,9 +203,9 @@ class Conversiones
                 $id_tipo_activ = $oTipo->getId_tipo_activ();
                 $oTiposActividades = new TiposActividades($id_tipo_activ);
                 if ($oTiposActividades->getActividadText() === 'crt') {
-                    $a_tipos[$id_tipo_activ] = _('curso retiro');
+                    $a_tipos[$id_tipo_activ] = _("curso retiro");
                 } else {
-                    $a_tipos[$id_tipo_activ] = _('convivencia');
+                    $a_tipos[$id_tipo_activ] = _("convivencia");
                 }
             }
             $this->a_tipos_activ1 = $a_tipos;

@@ -34,8 +34,8 @@ $a_valores = $view['a_valores'];
 $nombre_valija = $view['nombre_valija'];
 
 $a_cabeceras = [];
-$a_cabeceras[] = ucfirst(_('sigla'));
-$a_cabeceras[] = ucfirst(_('identificador'));
+$a_cabeceras[] = ucfirst(_("sigla"));
+$a_cabeceras[] = ucfirst(_("identificador"));
 
 $oLista = new Lista();
 $oLista->setId_tabla('docs_' . $Qid_grupo);

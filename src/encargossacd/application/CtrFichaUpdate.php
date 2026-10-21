@@ -145,7 +145,7 @@ final class CtrFichaUpdate
         int $num_alum,
     ): array {
         if ($tipo_centro !== 'of' && $id_sacd_titular === 0) {
-            return ['error' => _('Debe nombrar un sacerdote tirular') . '<br>'];
+            return ['error' => _("Debe nombrar un sacerdote tirular") . '<br>'];
         }
 
         $id_ubi_txt = (string)$id_ubi;
@@ -190,14 +190,14 @@ final class CtrFichaUpdate
         $oEncargo->setId_tipo_enc($id_tipo_enc);
         $grupo = EncargoGrupo::fromNullableInt($sf_sv);
         if ($grupo === null) {
-            return ['error' => _('grupo de encargo no valido') . "\n"];
+            return ['error' => _("grupo de encargo no valido") . "\n"];
         }
         $oEncargo->setGrupoEncargoVo($grupo);
         $oEncargo->setId_ubi($id_ubi);
         $oEncargo->setDesc_enc($desc_enc);
         $oEncargo->setObserv($observ);
         if ($this->encargoRepository->Guardar($oEncargo) === false) {
-            return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoRepository->getErrorTxt()];
+            return ['error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoRepository->getErrorTxt()];
         }
 
         $id_enc = (int)$oEncargo->getId_enc();
@@ -286,18 +286,18 @@ final class CtrFichaUpdate
                     return ['error' => ''];
                 }
 
-                return ['error' => _('Debe nombrar un sacerdote titular') . "\n"];
+                return ['error' => _("Debe nombrar un sacerdote titular") . "\n"];
             }
 
             if ($id_sacd_titular === $id_sacd_suplente) {
-                return ['error' => _('El sacd titular y suplente deben ser distintos')];
+                return ['error' => _("El sacd titular y suplente deben ser distintos")];
             }
 
             $oEncargo = $this->encargoRepository->findById($id_enc);
             if ($oEncargo !== null) {
                 $oEncargo->setObserv($observ);
                 if ($this->encargoRepository->Guardar($oEncargo) === false) {
-                    return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoRepository->getErrorTxt()];
+                    return ['error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoRepository->getErrorTxt()];
                 }
             }
 
@@ -313,7 +313,7 @@ final class CtrFichaUpdate
         foreach ($cEncargosSacd as $oEncargoSacd) {
             $oEncargoSacd->setF_fin($oF_fin);
             if ($this->encargoSacdRepository->Guardar($oEncargoSacd) === false) {
-                return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoSacdRepository->getErrorTxt()];
+                return ['error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoSacdRepository->getErrorTxt()];
             }
             $id_nom = (int)$oEncargoSacd->getId_nom();
             $oEncargoFunciones->finalizar_horario_sacd($id_enc, $id_nom, $oF_fin);
@@ -359,12 +359,12 @@ final class CtrFichaUpdate
                     ]);
                     foreach ($cExistente as $oEx) {
                         if ($this->encargoSacdRepository->Eliminar($oEx) === false) {
-                            return ['error' => _('hay un error, no se ha eliminado') . "\n" . $this->encargoSacdRepository->getErrorTxt()];
+                            return ['error' => _("hay un error, no se ha eliminado") . "\n" . $this->encargoSacdRepository->getErrorTxt()];
                         }
                     }
                     $oActualTitular->setModo($modo);
                     if ($this->encargoSacdRepository->Guardar($oActualTitular) === false) {
-                        return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoSacdRepository->getErrorTxt()];
+                        return ['error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoSacdRepository->getErrorTxt()];
                     }
                 }
                 $Aid_sacd[0] = $id_sacd_titular;
@@ -405,7 +405,7 @@ final class CtrFichaUpdate
                     if ($actual_id_sacd_suplente !== $id_sacd_suplente) {
                         $oS->setF_fin($oF_fin);
                         if ($this->encargoSacdRepository->Guardar($oS) === false) {
-                            return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoSacdRepository->getErrorTxt()];
+                            return ['error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoSacdRepository->getErrorTxt()];
                         }
                         $oEncargoFunciones->insert_sacd($id_enc, $id_sacd_suplente, 4);
                     }
@@ -416,7 +416,7 @@ final class CtrFichaUpdate
             foreach ($cSupl as $oS) {
                 $oS->setF_fin($oF_fin);
                 if ($this->encargoSacdRepository->Guardar($oS) === false) {
-                    return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoSacdRepository->getErrorTxt()];
+                    return ['error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoSacdRepository->getErrorTxt()];
                 }
             }
         }

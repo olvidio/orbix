@@ -17,7 +17,7 @@ if ($parsed !== null && $parsed['s'] === SignedDownloadToken::SCOPE_NOTAS_ACTA) 
 if ($Qacta === '') {
     header('Content-Type: text/plain; charset=UTF-8');
     http_response_code(400);
-    echo _('Enlace de descarga no válido o caducado.');
+    echo _("Enlace de descarga no válido o caducado.");
     exit;
 }
 
@@ -27,7 +27,7 @@ $oActa = $ActaRepository->findById($Qacta);
 if ($oActa === null) {
     header('Content-Type: text/plain; charset=UTF-8');
     http_response_code(404);
-    echo _('No se encuentra el acta.');
+    echo _("No se encuentra el acta.");
     exit;
 }
 
@@ -35,7 +35,7 @@ $doc = $oActa->getPdf();
 if ($doc === null || $doc === '') {
     header('Content-Type: text/plain; charset=UTF-8');
     http_response_code(404);
-    echo _('No hay PDF asociado a este acta.');
+    echo _("No hay PDF asociado a este acta.");
     exit;
 }
 

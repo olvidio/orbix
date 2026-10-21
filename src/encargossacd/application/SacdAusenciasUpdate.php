@@ -63,12 +63,12 @@ final class SacdAusenciasUpdate
         $mensajes = '';
         $oEncargoSacd = $this->encargoSacdRepository->findById($id_item);
         if ($oEncargoSacd === null) {
-            return _('no se ha encontrado el encargo del sacd') . "\n";
+            return _("no se ha encontrado el encargo del sacd") . "\n";
         }
 
         if ($f_ini === '' && $f_fin === '') {
             if ($this->encargoSacdRepository->Eliminar($oEncargoSacd) === false) {
-                $mensajes .= _('hay un error, no se ha eliminado') . "\n"
+                $mensajes .= _("hay un error, no se ha eliminado") . "\n"
                     . $this->encargoSacdRepository->getErrorTxt() . "\n";
             }
 
@@ -78,7 +78,7 @@ final class SacdAusenciasUpdate
         $oEncargoSacd->setF_ini($this->toDate($f_ini));
         $oEncargoSacd->setF_fin($this->toDate($f_fin));
         if ($this->encargoSacdRepository->Guardar($oEncargoSacd) === false) {
-            $mensajes .= _('hay un error, no se ha guardado') . "\n"
+            $mensajes .= _("hay un error, no se ha guardado") . "\n"
                 . $this->encargoSacdRepository->getErrorTxt() . "\n";
         }
 
@@ -91,7 +91,7 @@ final class SacdAusenciasUpdate
             $oHorario->setF_ini($this->toDate($f_ini));
             $oHorario->setF_fin($this->toDate($f_fin));
             if ($this->encargoSacdHorarioRepository->Guardar($oHorario) === false) {
-                $mensajes .= _('hay un error, no se ha guardado') . "\n"
+                $mensajes .= _("hay un error, no se ha guardado") . "\n"
                     . $this->encargoSacdHorarioRepository->getErrorTxt() . "\n";
             }
         }
@@ -112,7 +112,7 @@ final class SacdAusenciasUpdate
         $oEncargoSacd->setF_ini($this->toDate($f_ini));
         $oEncargoSacd->setF_fin($this->toDate($f_fin));
         if ($this->encargoSacdRepository->Guardar($oEncargoSacd) === false) {
-            $mensajes .= _('hay un error, no se ha guardado') . "\n"
+            $mensajes .= _("hay un error, no se ha guardado") . "\n"
                 . $this->encargoSacdRepository->getErrorTxt() . "\n";
         }
         $id_item_tarea_sacd = (int) $oEncargoSacd->getId_item();
@@ -129,7 +129,7 @@ final class SacdAusenciasUpdate
         $oHorario->setF_ini($this->toDate($f_ini));
         $oHorario->setF_fin($this->toDate($f_fin));
         if ($this->encargoSacdHorarioRepository->Guardar($oHorario) === false) {
-            $mensajes .= _('hay un error, no se ha guardado') . "\n"
+            $mensajes .= _("hay un error, no se ha guardado") . "\n"
                 . $this->encargoSacdHorarioRepository->getErrorTxt() . "\n";
         }
 

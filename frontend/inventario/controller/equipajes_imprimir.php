@@ -14,7 +14,7 @@ $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 
 $html = '';
 if ($Qid_equipaje === 0) {
-    AjaxJsonSupport::html('', _('debe seleccionar un equipaje'));
+    AjaxJsonSupport::html('', _("debe seleccionar un equipaje"));
 }
 
 $url_backend = '/src/inventario/cabecera_pie_txt';
@@ -67,7 +67,7 @@ foreach ($a_egm as $aEgm) {
 
     $html_g .= "<span id='grupo_$id_grupo'>";
     $html_g .= '<h3>';
-    $html_g .= _('valija') . $id_grupo . ':  ';
+    $html_g .= _("valija") . $id_grupo . ':  ';
     $html_g .= $nom_lugar;
     $html_g .= '</h3>';
 
@@ -77,27 +77,27 @@ foreach ($a_egm as $aEgm) {
     $html_g .= '</span>';
 }
 
-$html .= "<h1>$nombre_ubi: " . _('Inventario de publicaciones internas');
+$html .= "<h1>$nombre_ubi: " . _("Inventario de publicaciones internas");
 $html .= '</h1>';
 $html .= "<p>$html_actividades</p>";
 $html .= '<br />';
 $html .= '<div class="no_print" style="margin-bottom: 10px">';
 $html .= "<img class=\"no_print\" style=\"float: left; margin-right: 10px; height:22px;\" src=\"$pencil\" 
-        title='" . _('modificar texto') . "''
-        alt='" . _('modificar texto') . "'
+        title='" . _("modificar texto") . "''
+        alt='" . _("modificar texto") . "'
        onClick=\"fnjs_mod_texto_equipaje('cabecera')\" >";
-$html .= $cabecera === '' ? _('introducir texto') : '';
+$html .= $cabecera === '' ? _("introducir texto") : '';
 $html .= '</div>';
 $html .= "<span id='cabecera'>";
 $html .= $cabecera;
 $html .= '</span>';
 if ($html_docs_ubi !== '') {
     $html .= '<br /><h3>';
-    $html .= _('A) Documentación que pertenece a la casa y se queda siempre allí.');
+    $html .= _("A) Documentación que pertenece a la casa y se queda siempre allí.");
     $html .= '</h3>';
 
     $html .= "<span id='ubi_$id_ubi'>";
-    $html .= '<h2>' . _('documentos en') . " $nombre_ubi</h2>";
+    $html .= '<h2>' . _("documentos en") . " $nombre_ubi</h2>";
     $html .= "<span id='docs_ubi_$id_ubi'>";
     $html .= $html_docs_ubi;
     $html .= '</span>';
@@ -106,14 +106,14 @@ if ($html_docs_ubi !== '') {
 }
 if ($html_docs_ubi !== '' && $html_g !== '') {
     $html .= '<br /><h3>';
-    $html .= _('B) Documentación que envía la Delegación.');
+    $html .= _("B) Documentación que envía la Delegación.");
     $html .= '</h3>';
     $html .= '<div class="no_print" style="margin-bottom: 10px">';
     $html .= "<img class=\"no_print\" style=\"float: left; margin-right: 10px; height:22px;\" src=\"$pencil\" 
-        title='" . _('modificar texto') . "''
-        alt='" . _('modificar texto') . "'
+        title='" . _("modificar texto") . "''
+        alt='" . _("modificar texto") . "'
        onClick=\"fnjs_mod_texto_equipaje('cabeceraB')\" >";
-    $html .= $cabeceraB === '' ? _('introducir texto') : '';
+    $html .= $cabeceraB === '' ? _("introducir texto") : '';
     $html .= '</div>';
     $html .= "<span id='cabeceraB'>";
     $html .= $cabeceraB;
@@ -124,10 +124,10 @@ $html .= $html_g;
 $html .= '<hr>';
 $html .= '<div class="no_print" style="margin-bottom: 10px">';
 $html .= "<img class=\"no_print\" style=\"float: left; margin-right: 10px; height:22px;\" src=\"$pencil\" 
-        title='" . _('modificar texto') . "''
-        alt='" . _('modificar texto') . "'
+        title='" . _("modificar texto") . "''
+        alt='" . _("modificar texto") . "'
        onClick=\"fnjs_mod_texto_equipaje('pie')\" >";
-$html .= $pie === '' ? _('introducir texto') : '';
+$html .= $pie === '' ? _("introducir texto") : '';
 $html .= '</div>';
 $html .= "<span class='salta_pag' id='pie' >";
 $html .= "<p>$pie</p>";

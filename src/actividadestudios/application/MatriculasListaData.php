@@ -58,7 +58,7 @@ final class MatriculasListaData
         $oFfin = new DateTimeLocal($finIso);
         $QfinLocal = $oFfin->getFromLocal();
         $titulo = _(sprintf(
-            _('Lista de matrículas en el periodo: %s - %s.'),
+            _("Lista de matrículas en el periodo: %s - %s."),
             $QinicioLocal,
             $QfinLocal,
         ));
@@ -112,7 +112,7 @@ final class MatriculasListaData
 
             $oActividad = $this->actividadAllRepository->findById($idActiv);
             if ($oActividad === null) {
-                $msgErr .= "<br>" . sprintf(_('No encuentro actividad con id: %d'), $idActiv);
+                $msgErr .= "<br>" . sprintf(_("No encuentro actividad con id: %d"), $idActiv);
                 continue;
             }
             $nomActiv = $oActividad->getNom_activ();
@@ -136,7 +136,7 @@ final class MatriculasListaData
             $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
             if ($oAsignatura === null) {
                 throw new \RuntimeException(
-                    sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura),
+                    sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura),
                 );
             }
             $nombreCorto = $oAsignatura->getNombre_corto();

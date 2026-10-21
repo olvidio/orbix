@@ -14,9 +14,9 @@ FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/misas/cambiar_status_data');
 
 $periodo_td_html = PeriodoTdHelper::build([
-    'proxima_semana' => _('próxima semana de lunes a domingo'),
-    'proximo_mes' => _('próximo mes natural'),
-    'otro' => _('otro'),
+    'proxima_semana' => _("próxima semana de lunes a domingo"),
+    'proximo_mes' => _("próximo mes natural"),
+    'otro' => _("otro"),
 ], 'proxima_semana');
 
 $oDesplZonas = new Desplegable();

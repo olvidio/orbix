@@ -17,7 +17,7 @@ final class NombreExcepcionEliminar
     public function execute(string $id_tipo_activ): string
     {
         if ($id_tipo_activ === '') {
-            return _('Falta id_tipo_activ');
+            return _("Falta id_tipo_activ");
         }
         
         $this->nombre->delNombre($id_tipo_activ);

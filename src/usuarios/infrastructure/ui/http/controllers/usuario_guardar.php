@@ -70,7 +70,7 @@ if (empty($Qid_usuario)) {
 } else {
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
     if ($oUsuario === null) {
-        ContestarJson::enviar(_('Usuario no encontrado'), 'none');
+        ContestarJson::enviar(_("Usuario no encontrado"), 'none');
         return;
     }
 }
@@ -87,7 +87,7 @@ if (!empty($Qpassword)) {
 }
 $oRole = $RoleRepository->findById($Qid_role);
 if ($oRole === null) {
-    ContestarJson::enviar(_('Rol no encontrado'), 'none');
+    ContestarJson::enviar(_("Rol no encontrado"), 'none');
     return;
 }
 $pau = $oRole->getPauAsString();

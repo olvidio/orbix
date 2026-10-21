@@ -65,7 +65,7 @@ class DireccionUpdateTest extends myTest
             'id_ubi' => 99999999,
             'idx' => 'nuevo',
         ]);
-        $this->assertSame(_('no se encuentra el ubi'), $msg);
+        $this->assertSame(_("no se encuentra el ubi"), $msg);
     }
 
     public function test_direccion_inexistente_en_indice_devuelve_mensaje(): void
@@ -76,7 +76,7 @@ class DireccionUpdateTest extends myTest
             'idx' => '0',
             'id_direccion' => '99999998,99999999',
         ]);
-        $this->assertSame(_('no se encuentra la dirección'), $msg);
+        $this->assertSame(_("no se encuentra la dirección"), $msg);
     }
 
     public function test_idx_nuevo_crea_direccion_y_establece_propietario_y_principal(): void

@@ -50,7 +50,7 @@ if (empty($Qid_usuario)) {
 } else {
     $oGrupo = $GrupoRepository->findById($Qid_usuario);
     if ($oGrupo === null) {
-        ContestarJson::enviar(_('Grupo no encontrado'), 'none');
+        ContestarJson::enviar(_("Grupo no encontrado"), 'none');
         return;
     }
 }

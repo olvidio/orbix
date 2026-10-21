@@ -90,7 +90,7 @@ final class FormMatriculasDeUnaPersonaData
 
         $oActividad = $this->actividadAllRepository->findById($idActiv);
         if ($oActividad === null) {
-            throw new \RuntimeException(sprintf(_('No se ha encontrado actividad con id: %s'), (string) $idActiv));
+            throw new \RuntimeException(sprintf(_("No se ha encontrado actividad con id: %s"), (string) $idActiv));
         }
         $nomActiv = $oActividad->getNom_activ();
 
@@ -112,13 +112,13 @@ final class FormMatriculasDeUnaPersonaData
             $mod = 'editar';
             $oMatricula = $this->matriculaRepository->findById($idActiv, $idAsignaturaReal, $idNom);
             if ($oMatricula === null) {
-                throw new \RuntimeException(_('no encuentro la matricula'));
+                throw new \RuntimeException(_("no encuentro la matricula"));
             }
             $preceptor = $oMatricula->isPreceptor();
             $idPreceptor = $oMatricula->getId_preceptor() ?? 0;
             $oAsignatura = $this->asignaturaRepository->findById($idAsignaturaReal);
             if ($oAsignatura === null) {
-                throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignaturaReal));
+                throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignaturaReal));
             }
             $nombreCorto = $oAsignatura->getNombre_corto() ?? '';
             $idNivel = $idAsignaturaReal;

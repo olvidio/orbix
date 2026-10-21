@@ -18,8 +18,8 @@ class InfoDocsxSigla extends DatosInfoRepo
         private TipoDocRepositoryInterface $tipoDocRepository,
         private LugarRepositoryInterface $lugarRepository,
     ) {
-        $this->setTxtTitulo(_('documentos'));
-        $this->setTxtEliminar(_('¿Está seguro que desea eliminar este documento?'));
+        $this->setTxtTitulo(_("documentos"));
+        $this->setTxtEliminar(_("¿Está seguro que desea eliminar este documento?"));
         $this->setTxtBuscar();
         $this->setTxtExplicacion();
 

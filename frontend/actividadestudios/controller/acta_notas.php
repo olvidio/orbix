@@ -109,10 +109,10 @@ if ($msg_err !== '') {
 }
 
 if ($matriculados === 0) {
-    echo _('no hay ninguna persona matriculada de esta asignatura');
+    echo _("no hay ninguna persona matriculada de esta asignatura");
 }
 
-$txt_alert_acta = _('primero debe guadar los datos del acta');
+$txt_alert_acta = _("primero debe guadar los datos del acta");
 
 // Form del acta (dossier notas). Comparte las variables de scope como antes.
 include_once 'frontend/notas/controller/acta_ver.php';

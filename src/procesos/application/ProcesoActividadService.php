@@ -92,7 +92,7 @@ class ProcesoActividadService
         $id_fase = $ActividadProcesoTarea->getId_fase();
         $id_tarea = $ActividadProcesoTarea->getId_tarea();
         if ($id_fase === null || $id_tarea === null) {
-            $this->abort(_('Fase o tarea no definida en el proceso'));
+            $this->abort(_("Fase o tarea no definida en el proceso"));
         }
 
         $completado = $ActividadProcesoTarea->isCompletado();
@@ -102,7 +102,7 @@ class ProcesoActividadService
         $permitido = TRUE;
         $oActividad = $this->actividadAllRepository->findById($id_activ);
         if ($oActividad === null) {
-            $this->abort(sprintf(_('Actividad %s no encontrada'), $id_activ));
+            $this->abort(sprintf(_("Actividad %s no encontrada"), $id_activ));
         }
         $statusActividad = $oActividad->getStatusVo()->value();
         $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase, 'id_tarea' => $id_tarea]);

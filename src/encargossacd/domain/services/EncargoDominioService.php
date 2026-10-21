@@ -81,19 +81,19 @@ class EncargoDominioService
         $diaNumKey = (string) $dia_num;
         if ($mas_menos === '') {
             if ($dia_num !== '' && $dia_num !== 0) {
-                $dia_txt = _('el') . ' ' . EncargoConstants::OPCIONES_ORDINALES[$diaNumKey] . ' ';
+                $dia_txt = _("el") . ' ' . EncargoConstants::OPCIONES_ORDINALES[$diaNumKey] . ' ';
             }
             $dia_txt .= EncargoConstants::OPCIONES_DIA_SEMANA[$diaKey] ?? '';
         } else {
             if ($mas_menos === '-') {
                 $dia_txt = (EncargoConstants::OPCIONES_DIA_SEMANA[$diaKey] ?? '')
-                    . ' ' . _('antes del') . ' '
+                    . ' ' . _("antes del") . ' '
                     . (EncargoConstants::OPCIONES_ORDINALES[$diaNumKey] ?? '') . ' '
                     . (EncargoConstants::OPCIONES_DIA_REF[$diaRefKey] ?? '');
             }
             if ($mas_menos === '+') {
                 $dia_txt = (EncargoConstants::OPCIONES_DIA_SEMANA[$diaKey] ?? '')
-                    . ' ' . _('después del') . ' '
+                    . ' ' . _("después del") . ' '
                     . (EncargoConstants::OPCIONES_ORDINALES[$diaNumKey] ?? '') . ' '
                     . (EncargoConstants::OPCIONES_DIA_REF[$diaRefKey] ?? '');
             }
@@ -123,16 +123,16 @@ class EncargoDominioService
     ): string {
         if ($mes !== '' && $mes !== 0) {
             $mesKey = (string) $mes;
-            $txt = sprintf(_('excepto el mes de %s'), EncargoConstants::OPCIONES_MES[$mesKey] ?? '');
+            $txt = sprintf(_("excepto el mes de %s"), EncargoConstants::OPCIONES_MES[$mesKey] ?? '');
         } else {
-            $txt = sprintf(_('excpeto del %s al %s'), $f_ini, $f_fin);
+            $txt = sprintf(_("excpeto del %s al %s"), $f_ini, $f_fin);
         }
 
         if ($horario === 't') {
             $texto_h = $this->texto_horario($mas_menos, $dia_ref, $dia_inc, $dia_num, $h_ini, $h_fin, $n_sacd);
-            $txt .= ' ' . _('que se cambia a') . ': ' . $texto_h;
+            $txt .= ' ' . _("que se cambia a") . ': ' . $texto_h;
         } else {
-            $txt .= ' ' . _('que se anula');
+            $txt .= ' ' . _("que se anula");
         }
 
         return $txt;
@@ -161,7 +161,7 @@ class EncargoDominioService
             $h_fin = is_scalar($row_h['h_fin'] ?? null) ? (string) $row_h['h_fin'] : '';
             $n_sacd = $this->mixedToIntOrString($row_h['n_sacd'] ?? '');
             if ($h > 1) {
-                $txt .= ' ' . _('y') . ' ';
+                $txt .= ' ' . _("y") . ' ';
             }
             $txt .= $this->texto_horario($mas_menos, $dia_ref, $dia_inc, $dia_num, $h_ini, $h_fin, $n_sacd);
         }

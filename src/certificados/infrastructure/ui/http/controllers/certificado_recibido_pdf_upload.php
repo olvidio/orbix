@@ -19,17 +19,17 @@ $error_txt = '';
 $jsondata = ['success' => true];
 
 if ($tmpFilePath === '') {
-    $error_txt = sprintf(_('No se puede subir el archivo %s'), $fileName);
+    $error_txt = sprintf(_("No se puede subir el archivo %s"), $fileName);
 } else {
     $fp = fopen($tmpFilePath, 'rb');
     if ($fp === false) {
-        $error_txt = sprintf(_('No se puede abrir el archivo %s'), $fileName);
+        $error_txt = sprintf(_("No se puede abrir el archivo %s"), $fileName);
     } else {
         $fileSize = filesize($tmpFilePath);
         $contenido_doc = $fileSize > 0 ? fread($fp, $fileSize) : '';
         fclose($fp);
         if ($contenido_doc === false) {
-            $error_txt = sprintf(_('No se puede leer el archivo %s'), $fileName);
+            $error_txt = sprintf(_("No se puede leer el archivo %s"), $fileName);
         } else {
             $oF_certificado = DateTimeLocal::createFromLocal(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_certificado'));
             $oF_recibido = DateTimeLocal::createFromLocal(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_recibido'));

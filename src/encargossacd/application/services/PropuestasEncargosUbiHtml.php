@@ -123,13 +123,13 @@ final class PropuestasEncargosUbiHtml
         $id_enc = $oEncargo->getId_enc();
 
         $html = '<table><tr><td>';
-        $html .= _('nombre del encargo');
+        $html .= _("nombre del encargo");
         $html .= '</td><td colspan=4>';
         $html .= $desc_encargo;
         $html .= '</td></tr>';
 
-        $html .= $this->filaEditable('titular', $slots['titular'], $id_enc, _('titular'), true);
-        $html .= $this->filaEditable('suplente', $slots['suplente'], $id_enc, _('suplente'), false);
+        $html .= $this->filaEditable('titular', $slots['titular'], $id_enc, _("titular"), true);
+        $html .= $this->filaEditable('suplente', $slots['suplente'], $id_enc, _("suplente"), false);
 
         $s = 0;
         foreach ($slots['colaboradores'] as $col) {
@@ -141,11 +141,11 @@ final class PropuestasEncargosUbiHtml
         $id_sacd = 1;
         $id_sacd_new = 1;
         $nom_col = '';
-        $nom_sacd_new = _('nuevo');
+        $nom_sacd_new = _("nuevo");
         $class = '';
         if ($s < 1) {
             $html .= "<tr id=\"tr_colaborador$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
-            $html .= _('colaboradores');
+            $html .= _("colaboradores");
         } else {
             $html .= "<tr id=\"tr_colaborador$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
         }
@@ -155,7 +155,7 @@ final class PropuestasEncargosUbiHtml
         $html .= "<span class=\"link\" id=\"colaborador_$id_item\" title=\"$id_sacd_new\" onClick=\"fnjs_ver_sacd_posibles('colaborador',$id_item,$id_enc)\">";
         $html .= "$nom_sacd_new</span>";
         $html .= '</td><td>';
-        $html .= "<span class=\"link\" onClick=\"fnjs_info('colaborador',$id_item)\">" . _('+ info') . '</span>';
+        $html .= "<span class=\"link\" onClick=\"fnjs_info('colaborador',$id_item)\">" . _("+ info") . '</span>';
         $html .= '</td><td>';
         $html .= "<span class=\"link\" onClick=\"fnjs_dedicacion('colaborador',$id_item,$id_enc)\">";
         $html .= $this->horarioTexto->propuestaTxt($id_enc, $id_sacd_new);
@@ -179,7 +179,7 @@ final class PropuestasEncargosUbiHtml
         $nom_actual = $this->nombreSacd($id_sacd);
         $nom_actual = $nom_actual === '' ? '-' : $nom_actual;
         $nom_nuevo = $this->nombreSacd($id_sacd_new);
-        $nom_nuevo = $nom_nuevo === '' ? _('nuevo') : $nom_nuevo;
+        $nom_nuevo = $nom_nuevo === '' ? _("nuevo") : $nom_nuevo;
 
         $class = ($id_sacd !== $id_sacd_new) ? 'sf' : '';
         $html = "<tr id=\"tr_{$tipo}$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
@@ -193,7 +193,7 @@ final class PropuestasEncargosUbiHtml
         $html .= "<span class=\"link\" id=\"{$tipo}_$id_item\" title=\"$id_sacd_new\" onClick=\"fnjs_ver_sacd_posibles('$tipo',$id_item,$id_enc)\">";
         $html .= "$nom_nuevo</span>";
         $html .= '</td><td>';
-        $html .= "<span class=\"link\" onClick=\"fnjs_info('$tipo',$id_item)\">" . _('+ info') . '</span>';
+        $html .= "<span class=\"link\" onClick=\"fnjs_info('$tipo',$id_item)\">" . _("+ info") . '</span>';
         $html .= '</td><td>';
         if ($conHorarioActual) {
             $html .= "<span class=\"link\" onClick=\"fnjs_dedicacion('$tipo',$id_item,$id_enc)\">";
@@ -217,12 +217,12 @@ final class PropuestasEncargosUbiHtml
 
         $nom_col = $this->nombreSacd($id_sacd);
         $nom_sacd_new = $this->nombreSacd($id_sacd_new);
-        $nom_sacd_new = $nom_sacd_new === '' ? _('nuevo') : $nom_sacd_new;
+        $nom_sacd_new = $nom_sacd_new === '' ? _("nuevo") : $nom_sacd_new;
 
         $class = ($id_sacd !== $id_sacd_new) ? 'sf' : '';
         $html = "<tr id=\"tr_colaborador$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
         if ($mostrarEtiqueta) {
-            $html .= _('colaboradores');
+            $html .= _("colaboradores");
         }
         $html .= '</td><td>';
         $html .= $nom_col;
@@ -233,7 +233,7 @@ final class PropuestasEncargosUbiHtml
         $html .= "<span class=\"link\" id=\"colaborador_$id_item\" title=\"$id_sacd_new\" onClick=\"fnjs_ver_sacd_posibles('colaborador',$id_item,$id_enc)\">";
         $html .= "$nom_sacd_new</span>";
         $html .= '</td><td>';
-        $html .= "<span class=\"link\" onClick=\"fnjs_info('colaborador',$id_item)\">" . _('+ info') . '</span>';
+        $html .= "<span class=\"link\" onClick=\"fnjs_info('colaborador',$id_item)\">" . _("+ info") . '</span>';
         $html .= '</td><td>';
         $html .= "<span class=\"link\" onClick=\"fnjs_dedicacion('colaborador',$id_item,$id_enc)\">";
         $html .= $this->horarioTexto->propuestaTxt($id_enc, $id_sacd_new);
@@ -265,8 +265,8 @@ final class PropuestasEncargosUbiHtml
         $html .= "<b>$desc_encargo</b>";
         $html .= '</td></tr>';
 
-        $html .= $this->filaSimple('titular', $slots['titular'], $id_enc, _('titular'), 'warning');
-        $html .= $this->filaSimple('suplente', $slots['suplente'], $id_enc, _('suplente'), 'sf');
+        $html .= $this->filaSimple('titular', $slots['titular'], $id_enc, _("titular"), 'warning');
+        $html .= $this->filaSimple('suplente', $slots['suplente'], $id_enc, _("suplente"), 'sf');
 
         $s = 0;
         foreach ($slots['colaboradores'] as $col) {
@@ -328,7 +328,7 @@ final class PropuestasEncargosUbiHtml
         $class = ($id_sacd !== $id_sacd_new) ? 'sf' : '';
         $html = "<tr id=\"tr_colaborador$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
         if ($mostrarEtiqueta) {
-            $html .= _('colaboradores');
+            $html .= _("colaboradores");
         }
         $html .= '</td><td>';
         $html .= $nom_col;

@@ -40,9 +40,9 @@ $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/devel_db_admin/db_lugar'));
 $oHash1->setCamposForm('region');
 $h = $oHash1->linkSinValParams();
 
-$msg_falta_dl = _('debe elegir la delegación de destino');
-$msg_falta_region = _('debe elegir la región de destino');
-$msg_falta_origen = _('debe elegir el esquema de origen (nombre base antiguo)');
+$msg_falta_dl = _("debe elegir la delegación de destino");
+$msg_falta_region = _("debe elegir la región de destino");
+$msg_falta_origen = _("debe elegir el esquema de origen (nombre base antiguo)");
 
 $oHashVerificar = new HashF();
 $oHashVerificar->setUrl(OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/db_verificar_renombrar_esquema.php');

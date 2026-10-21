@@ -26,7 +26,7 @@ final class EncargoZonasSelectData
         $aOpciones = $this->zonaRepository->getArrayZonas();
 
         return [
-            'label_prefix' => _('zona') . ': ',
+            'label_prefix' => _("zona") . ': ',
             'id' => 'id_zona_sel',
             'name' => 'id_zona_sel',
             'opciones' => OpcionesDesplegable::enOrden($aOpciones),

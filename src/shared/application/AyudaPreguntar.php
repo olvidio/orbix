@@ -62,7 +62,7 @@ final class AyudaPreguntar
         if ($pregunta === '') {
             return [
                 'pregunta' => '',
-                'respuesta' => _('Escriba una pregunta sobre Orbix (por ejemplo: «cómo crear un acta»).'),
+                'respuesta' => _("Escriba una pregunta sobre Orbix (por ejemplo: «cómo crear un acta»)."),
                 'modo' => 'busqueda_local',
                 'resultados' => [],
             ];
@@ -72,7 +72,7 @@ final class AyudaPreguntar
         if ($tokens === []) {
             return [
                 'pregunta' => $pregunta,
-                'respuesta' => _('No hay términos suficientes para buscar. Pruebe con otras palabras.'),
+                'respuesta' => _("No hay términos suficientes para buscar. Pruebe con otras palabras."),
                 'modo' => 'busqueda_local',
                 'resultados' => [],
             ];
@@ -82,7 +82,7 @@ final class AyudaPreguntar
         if ($root === null) {
             return [
                 'pregunta' => $pregunta,
-                'respuesta' => _('No se encuentra la carpeta de documentación en el servidor.'),
+                'respuesta' => _("No se encuentra la carpeta de documentación en el servidor."),
                 'modo' => 'busqueda_local',
                 'resultados' => [],
             ];
@@ -354,13 +354,13 @@ final class AyudaPreguntar
     {
         if ($hits === []) {
             return sprintf(
-                _('No se han encontrado pasajes claros para «%s». Pruebe con el nombre del módulo o de la pantalla (acta, planning, encargos…).'),
+                _("No se han encontrado pasajes claros para «%s». Pruebe con el nombre del módulo o de la pantalla (acta, planning, encargos…)."),
                 $pregunta
             );
         }
 
         $lineas = [];
-        $lineas[] = _('Según la documentación local (sin IA generativa):');
+        $lineas[] = _("Según la documentación local (sin IA generativa):");
         $n = 0;
         foreach ($hits as $hit) {
             $n++;
@@ -368,11 +368,11 @@ final class AyudaPreguntar
                 break;
             }
             $donde = $hit['tipo'] === 'manual'
-                ? sprintf(_('Manual · %s'), $hit['modulo'])
-                : sprintf(_('Ayuda · %s'), $hit['modulo']);
+                ? sprintf(_("Manual · %s"), $hit['modulo'])
+                : sprintf(_("Ayuda · %s"), $hit['modulo']);
             $lineas[] = sprintf('%d. [%s] %s — %s', $n, $donde, $hit['titulo'], $hit['excerpt']);
         }
-        $lineas[] = _('Abra el manual del módulo o refine la pregunta para más detalle.');
+        $lineas[] = _("Abra el manual del módulo o refine la pregunta para más detalle.");
 
         return implode("\n", $lineas);
     }

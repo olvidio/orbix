@@ -14,9 +14,9 @@ final class EncargoDiaStatus
     public static function getArrayStatus(): array
     {
         return [
-            self::STATUS_PROPUESTA => _('propuesta'),
-            self::STATUS_COMUNICADO_SACD => _('visible sacd'),
-            self::STATUS_COMUNICADO_CTR => _('visible ctr'),
+            self::STATUS_PROPUESTA => _("propuesta"),
+            self::STATUS_COMUNICADO_SACD => _("visible sacd"),
+            self::STATUS_COMUNICADO_CTR => _("visible ctr"),
         ];
     }
 

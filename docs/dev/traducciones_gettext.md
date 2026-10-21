@@ -5,6 +5,8 @@ Guía para añadir o actualizar un idioma de la interfaz web usando **Poedit** y
 **Alcance:** ficheros `languages/<locale>/LC_MESSAGES/orbix.po` y `orbix.mo`.  
 **Fuera de alcance:** textos de certificados PHP (`languages/es_ES.UTF-8/textos_certificados.php`), que son un catálogo aparte.
 
+**Tras cada cambio de cadenas de interfaz** (PHP, `.phtml`, `.inc` o Twig `|trans`) hay que cerrar el ciclo en el mismo cambio: regenerar `languages/es_ES.pot`, sincronizar los catálogos reales (`ca_ES.UTF-8`, `en_US.UTF-8`, `de_DE.UTF-8`, `it_IT.UTF-8`) y dejar las cadenas nuevas traducidas, no fuzzy. El checklist está en [`AGENTS.md`](../../AGENTS.md), sección «Textos de interfaz (gettext)». No editar `languages/es_ES.po`: es una copia antigua; el español de la interfaz es el `msgid`.
+
 ---
 
 ## Estructura de carpetas
@@ -25,7 +27,7 @@ languages/
 | Catálogo del idioma destino | `languages/<locale>/LC_MESSAGES/orbix.po` |
 | Binario en runtime | `languages/<locale>/LC_MESSAGES/orbix.mo` |
 
-Los `msgid` están en **español** (texto que aparece en el código con `_('…')`). El script de IA rellena `msgstr` en el idioma destino.
+Los `msgid` están en **español**. En el código la forma pedida es `_("…")` (comillas dobles). Si el texto lleva comillas, se escapan (`\"` o `\'`). Los apóstrofos del catalán (`l'`, `d'`, `n'`) van en el `msgstr` del `.po`, que ya usa comillas dobles: no hace falta escribir `\'`. El script de IA rellena `msgstr` en el idioma destino.
 
 ### Idiomas configurados
 
@@ -72,13 +74,13 @@ Si aparece `ModuleNotFoundError: polib`, ejecuta `deactivate` y activa de nuevo 
 
 ### 1. Actualizar la plantilla maestra (`es_ES.pot`)
 
-Solo cuando hay **cadenas nuevas en el código** (nuevos `_('…')` en `frontend/`, `src/` o `public/`).
+Solo cuando hay **cadenas nuevas en el código** (nuevos `_("…")` en `frontend/`, `src/`, `public/`, `scripts/` o `{{ "…"|trans }}` en Twig).
 
-1. Abrir en Poedit `languages/es_ES.po` (o la plantilla si trabajas directamente sobre el `.pot`).
-2. Menú **Catálogo → Actualizar desde el código fuente**.
-   - Rutas de búsqueda (ya configuradas en el proyecto): `frontend`, `src`, `public`.
-   - Palabra clave: `_`.
-3. Guardar. Poedit actualiza `languages/es_ES.pot` y `languages/es_ES.po`.
+```bash
+php tools/i18n/actualizar_es_pot.php
+```
+
+Poedit, con «Actualizar desde el código fuente», no extrae `{{ "…"|trans }}`. El script usa `xgettext` sobre el PHP y añade esas cadenas de Twig. No toca los `.po` de cada idioma: eso es el paso 2.
 
 Este paso **se hace una vez** por tanda de cambios en el código; la misma plantilla sirve para catalán, italiano, inglés, etc.
 
@@ -190,16 +192,29 @@ python3 traduir_groq.py --idioma it_IT.UTF-8 --idioma-nom italiano
 
 ---
 
-## Auditoría de cadenas no envueltas en `_()`
+## Auditoría
 
-Para detectar textos en PHP/JS que **aún no están** en el catálogo:
+Textos de PHP/JS que parecen de interfaz y no pasan por `_()`:
 
 ```bash
 php tools/audit/audit_untranslated_strings.php
 php tools/audit/audit_untranslated_strings.php --path=frontend/usuarios
 ```
 
-Tras corregir el código, volver al paso 1 (actualizar plantilla).
+Comillas de las llamadas (`_("…")`, escapes, argumentos no literales):
+
+```bash
+php tools/audit/audit_gettext_comillas.php
+php tools/audit/audit_gettext_comillas.php --list-single
+```
+
+Cobertura de `es_ES.pot` y de ca/en/de/it (vacías, fuzzy, placeholders):
+
+```bash
+php tools/audit/audit_po_cobertura.php
+```
+
+Tras corregir el código, volver al paso 1 (actualizar plantilla). Poedit tiene que incluir también las plantillas Twig (`*.html.twig`): si no, `{{ "…"|trans }}` no entra en el `.pot`.
 
 ---
 

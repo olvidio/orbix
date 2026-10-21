@@ -399,7 +399,7 @@ class DBRol
                 ) {
                     $this->eliminarRolConflicto($this->sUser);
                     $msgAviso = sprintf(
-                        _('El rol "%s" ya existía en esta base de datos; se ha eliminado (DROP OWNED + DROP ROLE) y se ha aplicado el renombre desde "%s".'),
+                        _("El rol \"%s\" ya existía en esta base de datos; se ha eliminado (DROP OWNED + DROP ROLE) y se ha aplicado el renombre desde \"%s\"."),
                         $this->sUser,
                         $usuario_old
                     );
@@ -556,7 +556,7 @@ class DBRol
     public function intentarEliminarUsuario(?array $clavesImportar = null): ?string
     {
         if ($this->sUser === '' || preg_match('/[^A-Za-z0-9._-]/', $this->sUser)) {
-            return _('Nombre de rol no válido.');
+            return _("Nombre de rol no válido.");
         }
 
         $claves = $clavesImportar ?? self::clavesImportarParaDropOwned();
@@ -586,7 +586,7 @@ class DBRol
                 return $detalle . ' (' . implode('; ', $erroresDrop) . ')';
             }
 
-            return sprintf(_('El rol sigue en: %s'), $detalle);
+            return sprintf(_("El rol sigue en: %s"), $detalle);
         }
 
         if ($erroresDrop !== []) {

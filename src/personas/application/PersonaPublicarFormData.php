@@ -48,7 +48,7 @@ final class PersonaPublicarFormData
         }
 
         if ($id_nom <= 0) {
-            return ['error' => _('No se encuentra la persona')];
+            return ['error' => _("No se encuentra la persona")];
         }
 
         $nom = '';
@@ -70,7 +70,7 @@ final class PersonaPublicarFormData
         if ($nom === '') {
             $oPersona = $this->personaFinderService->findPersonaEnGlobal($id_nom);
             if ($oPersona === null) {
-                return ['error' => _('No se encuentra la persona')];
+                return ['error' => _("No se encuentra la persona")];
             }
             $nom = (string) $oPersona->getNombreApellidos();
             $id_schema = (int) $oPersona->getId_schema();
@@ -80,7 +80,7 @@ final class PersonaPublicarFormData
         }
 
         if ($id_schema < 1) {
-            return ['error' => _('No se puede determinar el esquema de la persona')];
+            return ['error' => _("No se puede determinar el esquema de la persona")];
         }
 
         return [

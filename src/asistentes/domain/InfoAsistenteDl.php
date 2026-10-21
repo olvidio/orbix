@@ -23,8 +23,8 @@ class InfoAsistenteDl extends DatosInfoRepo
         private AsistenteActividadService $asistenteActividadService,
         private AsistenteDlRepositoryInterface $asistenteDlRepository,
     ) {
-        $this->setTxtTitulo(_('actividades como asistente'));
-        $this->setTxtEliminar(_('¿Está seguro que desea borrar a esta persona de esta actividad?'));
+        $this->setTxtTitulo(_("actividades como asistente"));
+        $this->setTxtEliminar(_("¿Está seguro que desea borrar a esta persona de esta actividad?"));
         $this->setTxtBuscar();
         $this->setTxtExplicacion();
 

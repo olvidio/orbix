@@ -171,12 +171,12 @@ final class ListaAsisConjuntoActivData
 
         $html = '';
         if ($oListaPlazasDl !== null) {
-            $html .= '<h3>' . ucfirst(_('actividades de la dl/r')) . '</h3>';
+            $html .= '<h3>' . ucfirst(_("actividades de la dl/r")) . '</h3>';
             $oListaDl = $oListaPlazasDl->getLista();
             $html .= $oListaDl->listaPaginada();
         }
         if ($oListaPlazasOtras !== null) {
-            $html .= '<h3>' . ucfirst(_('actividades de otras dl/r')) . '</h3>';
+            $html .= '<h3>' . ucfirst(_("actividades de otras dl/r")) . '</h3>';
             $oListaOtras = $oListaPlazasOtras->getLista();
             $html .= $oListaOtras->listaPaginada();
         }

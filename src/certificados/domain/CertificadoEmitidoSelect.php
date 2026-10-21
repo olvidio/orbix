@@ -52,22 +52,22 @@ class CertificadoEmitidoSelect
 
         $a_botones = [];
         if ($this->delegacionRepository->soy_region_stgr()) {
-            $a_botones[] = ['txt' => _('eliminar'), 'click' => 'fnjs_eliminar("#seleccionados")'];
-            $a_botones[] = ['txt' => _('modificar'), 'click' => 'fnjs_modificar("#seleccionados")'];
-            $a_botones[] = ['txt' => _('subir pdf firmado'), 'click' => 'fnjs_upload_certificado("#seleccionados")'];
-            $a_botones[] = ['txt' => _('enviar'), 'click' => 'fnjs_enviar_certificado("#seleccionados")'];
+            $a_botones[] = ['txt' => _("eliminar"), 'click' => 'fnjs_eliminar("#seleccionados")'];
+            $a_botones[] = ['txt' => _("modificar"), 'click' => 'fnjs_modificar("#seleccionados")'];
+            $a_botones[] = ['txt' => _("subir pdf firmado"), 'click' => 'fnjs_upload_certificado("#seleccionados")'];
+            $a_botones[] = ['txt' => _("enviar"), 'click' => 'fnjs_enviar_certificado("#seleccionados")'];
         }
-        $a_botones[] = ['txt' => _('descargar pdf'), 'click' => 'fnjs_descargar_pdf("#seleccionados")'];
+        $a_botones[] = ['txt' => _("descargar pdf"), 'click' => 'fnjs_descargar_pdf("#seleccionados")'];
 
         $a_cabeceras = [
-            ['name' => ucfirst(_('certificado')), 'formatter' => 'clickFormatter'],
-            ['name' => ucfirst(_('fecha')), 'class' => 'fecha'],
-            _('alumno'),
-            _('firmado digitalmente'),
-            _('adjunto'),
-            _('idioma'),
-            _('destino'),
-            _('enviado'),
+            ['name' => ucfirst(_("certificado")), 'formatter' => 'clickFormatter'],
+            ['name' => ucfirst(_("fecha")), 'class' => 'fecha'],
+            _("alumno"),
+            _("firmado digitalmente"),
+            _("adjunto"),
+            _("idioma"),
+            _("destino"),
+            _("enviado"),
         ];
 
         $a_valores = [];
@@ -101,8 +101,8 @@ class CertificadoEmitidoSelect
             $a_valores[$i][1] = $certificadoTxt;
             $a_valores[$i][2] = $f_certificado;
             $a_valores[$i][3] = $nom_alumno;
-            $a_valores[$i][4] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($firmado) ? _('Sí') : _('No');
-            $a_valores[$i][5] = ($pdf === null || $pdf === '') ? '' : _('Sí');
+            $a_valores[$i][4] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($firmado) ? _("Sí") : _("No");
+            $a_valores[$i][5] = ($pdf === null || $pdf === '') ? '' : _("Sí");
             $a_valores[$i][6] = $idioma;
             $a_valores[$i][7] = $destino;
             $a_valores[$i][8] = $fecha;

@@ -68,12 +68,12 @@ class ListaDocsGrupo
                         throw new \Exception('Lugar no encontrado con ID: ' . $id_lugar_doc);
                     }
                     $lugar = $oLugar->getNom_lugar();
-                    $identificador = _('de') . " $lugar: $identificador";
+                    $identificador = _("de") . " $lugar: $identificador";
                 }
 
                 if (!empty($num_ejemplares) && $num_ejemplares > 1) {
                     $a_valores[$d]['ejemplares'] = $num_ejemplares;
-                    $a_valores[$d]['nombre'] = $num_ejemplares . ' ' . _('ejemplares de') . ' ';
+                    $a_valores[$d]['nombre'] = $num_ejemplares . ' ' . _("ejemplares de") . ' ';
                 } else {
                     $a_valores[$d]['ejemplares'] = '';
                     $a_valores[$d]['nombre'] = '';

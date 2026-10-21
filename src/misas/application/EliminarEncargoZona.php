@@ -20,7 +20,7 @@ class EliminarEncargoZona
 
         $oEncargo = $this->encargoRepository->findById($id_enc);
         if ($oEncargo === null) {
-            return sprintf(_('No se encuentra el encargo %d'), $id_enc);
+            return sprintf(_("No se encuentra el encargo %d"), $id_enc);
         }
 
         if ($this->encargoRepository->Eliminar($oEncargo) === false) {

@@ -50,7 +50,7 @@ final class ListasAData
         $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt')->getFromLocal();
         $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->getFromLocal();
 
-        $cabecera_left = sprintf(_('Curso:  %s - %s'), $inicurs, $fincurs);
+        $cabecera_left = sprintf(_("Curso:  %s - %s"), $inicurs, $fincurs);
         $cabecera_right = ConfigGlobal::mi_delef();
         $cabecera_right_2 = 'ref. cr 1/14, 10, a)';
 
@@ -66,12 +66,12 @@ final class ListasAData
 
         $Html = '';
         $labels = [
-            'n' => _('1. ctr de n'),
-            'a[jm$]' => _('2. ctr de agd'),
-            's[jm]' => _('3. ctr de sg'),
+            'n' => _("1. ctr de n"),
+            'a[jm$]' => _("2. ctr de agd"),
+            's[jm]' => _("3. ctr de sg"),
         ];
         if ($sf !== 1) {
-            $labels['ss'] = _('4. ctr de sss+');
+            $labels['ss'] = _("4. ctr de sss+");
         }
         foreach ($tipos_de_ctr as $tipo_ctr_que) {
             $txt_tipo_ctr = $labels[$tipo_ctr_que] ?? '';
@@ -127,16 +127,16 @@ final class ListasAData
                             switch ((int)$modo) {
                                 case 2:
                                     if ($tipo_ctr === '^njce') {
-                                        $sacd_titular = sprintf('%s (%s)', $nom_ap, _('dre'));
+                                        $sacd_titular = sprintf('%s (%s)', $nom_ap, _("dre"));
                                     } else {
                                         $sacd_titular = $nom_ap;
                                     }
                                     break;
                                 case 3:
-                                    $parentesis = $tipo_ctr === '^ss' ? _('confesor') : _('no cl');
+                                    $parentesis = $tipo_ctr === '^ss' ? _("confesor") : _("no cl");
                                     if ($sf === 1) {
                                         if ($tipo_ctr === '^njce') {
-                                            $sacd_titular = sprintf('%s (%s)', $nom_ap, _('dre'));
+                                            $sacd_titular = sprintf('%s (%s)', $nom_ap, _("dre"));
                                         } else {
                                             $sacd_titular = $nom_ap;
                                         }

@@ -25,9 +25,9 @@ foreach ($a_opciones as $id_equipaje => $nom_equipaje) {
     $a_valores[$e]['sel'] = ['id' => $id_equipaje, 'select' => 'checked'];
     $a_valores[$e][1] = $nom_equipaje;
 }
-$a_cabeceras = [ucfirst(_('equipaje'))];
+$a_cabeceras = [ucfirst(_("equipaje"))];
 
-$a_botones = [['txt' => _('seleccionar'), 'click' => 'fnjs_ver_movimientos()']];
+$a_botones = [['txt' => _("seleccionar"), 'click' => 'fnjs_ver_movimientos()']];
 
 $oLista = new Lista();
 $oLista->setId_tabla('tabla_equipajes');

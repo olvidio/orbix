@@ -73,7 +73,7 @@ final class ActaNotasMatriculaGuardar
             $notaMaxRaw = self::scalarFloat($Qnota_max[$n] ?? 0);
             $nn = str_replace(',', '.', $notaNumRaw);
             if ($notaNumRaw !== '' && $notaMaxRaw > 0 && (float) $notaNumRaw / $notaMaxRaw > 1) {
-                return _('Hay una nota mayor que el máximo') . "\n";
+                return _("Hay una nota mayor que el máximo") . "\n";
             }
             $oMatricula->setNota_num($notaNumRaw !== '' ? (float) $nn : null);
             $oMatricula->setNota_max($notaMaxRaw > 0 ? (int) $notaMaxRaw : null);
@@ -97,7 +97,7 @@ final class ActaNotasMatriculaGuardar
                 }
             } else {
                 if ($actaInt === NotaSituacion::CURSADA) {
-                    return _('no se puede definir cursada con preceptor') . "\n";
+                    return _("no se puede definir cursada con preceptor") . "\n";
                 }
                 if ($notaNumRaw === '') {
                     $oMatricula->setId_situacion(0);
@@ -106,7 +106,7 @@ final class ActaNotasMatriculaGuardar
                 }
             }
             if ($this->matriculaRepository->Guardar($oMatricula) === false) {
-                return _('hay un error, no se ha guardado') . "\n" . $this->matriculaRepository->getErrorTxt();
+                return _("hay un error, no se ha guardado") . "\n" . $this->matriculaRepository->getErrorTxt();
             }
         }
         return '';

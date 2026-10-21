@@ -64,14 +64,14 @@ final class MatriculasListaOtrasRDataTest extends TestCase
         ]);
 
         $this->assertSame('', $out['msg_err']);
-        $this->assertSame(_('Personas de paso pendientes de certificado'), $out['titulo']);
+        $this->assertSame(_("Personas de paso pendientes de certificado"), $out['titulo']);
 
         $porId = [];
         foreach ($out['a_valores'] as $fila) {
             $porId[$fila[5]] = $fila;
         }
         $this->assertSame(['Burgos, Jesús', 'dlal', 'Griego'], [$porId[-5][1], $porId[-5][2], $porId[-5][4]]);
-        $this->assertSame(sprintf(_('sin ficha (%d)'), -7), $porId[-7][1]);
+        $this->assertSame(sprintf(_("sin ficha (%d)"), -7), $porId[-7][1]);
         $this->assertSame('Latín', $porId[-7][4]);
         $this->assertArrayNotHasKey(10, $porId);
         $this->assertCount(2, $porId);

@@ -37,7 +37,7 @@ final class PropuestasAjaxMutations
             'dedicacion' => $this->dedicacion(),
             'info' => $this->info(),
             'cmb_sacd' => $this->cmbSacd(),
-            default => ['success' => false, 'mensaje' => _('Operación no reconocida')],
+            default => ['success' => false, 'mensaje' => _("Operación no reconocida")],
         };
     }
 
@@ -86,7 +86,7 @@ final class PropuestasAjaxMutations
             if (count($cEncargosSacd) === 1) {
                 $id_item = $cEncargosSacd[0]->getId_item();
             } else {
-                return ['success' => false, 'mensaje' => _('No se puede guardar. Vuelva a cargar la vista')];
+                return ['success' => false, 'mensaje' => _("No se puede guardar. Vuelva a cargar la vista")];
             }
         }
 
@@ -231,17 +231,17 @@ final class PropuestasAjaxMutations
         } else {
             $oPropuesta = $this->propuestaEncargoSacdRepository->findById($id_item);
             if ($oPropuesta === null) {
-                return ['success' => false, 'mensaje' => _('Registro no encontrado')];
+                return ['success' => false, 'mensaje' => _("Registro no encontrado")];
             }
             $id_sacd_old = $oPropuesta->getId_nom();
             $id_sacd_prop = (int) ($oPropuesta->getId_nom_new() ?? 0);
             if ($id_sacd_old === 0 && $id_sacd === 0) {
-                $nombre = _('nuevo');
+                $nombre = _("nuevo");
                 if ($tipo === 'colaborador') {
                     $row = ['tipo' => 'borrar'];
                     $this->propuestaEncargoSacdRepository->Eliminar($oPropuesta);
                 } else {
-                    $nom_tipo = $tipo === 'titular' ? _('titular') : _('suplente');
+                    $nom_tipo = $tipo === 'titular' ? _("titular") : _("suplente");
                     $row = [
                         'tipo' => 'celdas',
                         'encargo_tipo' => $tipo,
@@ -269,7 +269,7 @@ final class PropuestasAjaxMutations
         }
 
         $nombre = $this->apellidosNombre($id_sacd);
-        $nombre = $nombre === '' ? _('nuevo') : $nombre;
+        $nombre = $nombre === '' ? _("nuevo") : $nombre;
 
         if ($row === null && $id_item === $id_enc) {
             $row = [

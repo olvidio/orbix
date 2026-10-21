@@ -37,8 +37,8 @@ $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/devel_db_admin/db_lugar'));
 $oHash1->setCamposForm('region');
 $h = $oHash1->linkSinValParams();
 
-$msg_falta_dl = _('debe elegir la delegación');
-$msg_confirmar = _('¿Confirma pasar los datos a resto y eliminar los esquemas marcados? Esta acción no se puede deshacer.');
+$msg_falta_dl = _("debe elegir la delegación");
+$msg_confirmar = _("¿Confirma pasar los datos a resto y eliminar los esquemas marcados? Esta acción no se puede deshacer.");
 
 $a_campos = [
     'oHash' => $oHash,

@@ -74,7 +74,7 @@ final class PersonasSelectData
             $sessionAuth = $_SESSION['session_auth'] ?? null;
             $oMiUsuario = is_array($sessionAuth) ? ($sessionAuth['MiUsuario'] ?? null) : null;
             if (!is_object($oMiUsuario) || !method_exists($oMiUsuario, 'getCsv_id_pau')) {
-                return ['error' => _('No se encuentra el usuario')];
+                return ['error' => _("No se encuentra el usuario")];
             }
             $id_nom = (int) $oMiUsuario->getCsv_id_pau();
             $aWhere = ['id_nom' => $id_nom];

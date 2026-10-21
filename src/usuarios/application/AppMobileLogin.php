@@ -36,7 +36,7 @@ final class AppMobileLogin
                 return [
                     'ok' => false,
                     'code' => 'invalid_schema_env',
-                    'mensaje' => sprintf(_('No existe este equema: %s'), $esquema_web),
+                    'mensaje' => sprintf(_("No existe este equema: %s"), $esquema_web),
                 ];
             }
         }
@@ -50,7 +50,7 @@ final class AppMobileLogin
             return [
                 'ok' => false,
                 'code' => 'missing_credentials',
-                'mensaje' => _('Usuario y contraseña obligatorios'),
+                'mensaje' => _("Usuario y contraseña obligatorios"),
             ];
         }
 
@@ -61,7 +61,7 @@ final class AppMobileLogin
             return [
                 'ok' => false,
                 'code' => 'missing_schema',
-                'mensaje' => _('Esquema no indicado'),
+                'mensaje' => _("Esquema no indicado"),
             ];
         }
 
@@ -72,7 +72,7 @@ final class AppMobileLogin
             return [
                 'ok' => false,
                 'code' => 'invalid_schema',
-                'mensaje' => _('Esquema no válido'),
+                'mensaje' => _("Esquema no válido"),
             ];
         }
 
@@ -82,12 +82,12 @@ final class AppMobileLogin
         if ($oDBSt === false) {
             self::logPdoError($oDB_Select, 'app_login.prepare');
 
-            return ['ok' => false, 'code' => 'server_error', 'mensaje' => _('Error de servidor')];
+            return ['ok' => false, 'code' => 'server_error', 'mensaje' => _("Error de servidor")];
         }
         if ($oDBSt->execute($aWhere) === false) {
             self::logPdoError($oDB_Select, 'app_login.execute');
 
-            return ['ok' => false, 'code' => 'server_error', 'mensaje' => _('Error de servidor')];
+            return ['ok' => false, 'code' => 'server_error', 'mensaje' => _("Error de servidor")];
         }
 
         $password_db = null;
@@ -97,7 +97,7 @@ final class AppMobileLogin
             return [
                 'ok' => false,
                 'code' => 'invalid_credentials',
-                'mensaje' => _('Usuario o contraseña incorrectos'),
+                'mensaje' => _("Usuario o contraseña incorrectos"),
             ];
         }
         $row['password'] = $password_db;
@@ -112,7 +112,7 @@ final class AppMobileLogin
             return [
                 'ok' => false,
                 'code' => 'invalid_credentials',
-                'mensaje' => _('Usuario o contraseña incorrectos'),
+                'mensaje' => _("Usuario o contraseña incorrectos"),
             ];
         }
 
@@ -135,7 +135,7 @@ final class AppMobileLogin
             return [
                 'ok' => false,
                 'code' => 'need_2fa_setup',
-                'mensaje' => _('Debe completar la configuración 2FA'),
+                'mensaje' => _("Debe completar la configuración 2FA"),
                 'data' => ['ayuda_url' => $ayuda_url],
             ];
         }
@@ -145,14 +145,14 @@ final class AppMobileLogin
                 return [
                     'ok' => false,
                     'code' => 'need_2fa',
-                    'mensaje' => _('Código 2FA requerido'),
+                    'mensaje' => _("Código 2FA requerido"),
                 ];
             }
             if (!Verify2fa::verify_2fa_code($verification_code, $secret2fa)) {
                 return [
                     'ok' => false,
                     'code' => 'invalid_2fa',
-                    'mensaje' => _('Código 2FA inválido'),
+                    'mensaje' => _("Código 2FA inválido"),
                 ];
             }
         }
@@ -169,11 +169,11 @@ final class AppMobileLogin
         if ($oDBPSt === false) {
             self::logPdoError($oDBCP_Select, 'app_login.role');
 
-            return ['ok' => false, 'code' => 'server_error', 'mensaje' => _('Error de servidor')];
+            return ['ok' => false, 'code' => 'server_error', 'mensaje' => _("Error de servidor")];
         }
         $row2 = $oDBPSt->fetch(\PDO::FETCH_ASSOC);
         if (!is_array($row2)) {
-            return ['ok' => false, 'code' => 'server_error', 'mensaje' => _('Rol no encontrado')];
+            return ['ok' => false, 'code' => 'server_error', 'mensaje' => _("Rol no encontrado")];
         }
         $role_pau = is_scalar($row2['pau'] ?? null) ? (string) $row2['pau'] : '';
 
@@ -183,7 +183,7 @@ final class AppMobileLogin
                 return [
                     'ok' => false,
                     'code' => 'dmz_denied',
-                    'mensaje' => _('Acceso no permitido'),
+                    'mensaje' => _("Acceso no permitido"),
                 ];
             }
         }

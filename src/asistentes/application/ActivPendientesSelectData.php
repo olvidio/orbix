@@ -166,12 +166,12 @@ final class ActivPendientesSelectData
         }
         uksort($aFaltan, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
 
-        $titulo = ucfirst(sprintf(_('lista de %s sin %s en el curso %s'), $Qtipo_personas, $Qsactividad, $txt_curso));
+        $titulo = ucfirst(sprintf(_("lista de %s sin %s en el curso %s"), $Qtipo_personas, $Qsactividad, $txt_curso));
 
-        $a_cabeceras = [_('nº'),
-            ['name' => ucfirst(_('nombre de la persona')), 'formatter' => 'clickFormatter'],
+        $a_cabeceras = [_("nº"),
+            ['name' => ucfirst(_("nombre de la persona")), 'formatter' => 'clickFormatter'],
             'ctr',
-            _('nivel stgr'),
+            _("nivel stgr"),
         ];
         $i = 0;
         $a_valores = [];

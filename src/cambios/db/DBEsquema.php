@@ -642,7 +642,7 @@ class DBEsquema extends DBAbstract
         $oDbl = $this->oDbl;
 
         if ($oDbl === null) {
-            throw new \RuntimeException(_('No hay conexión a la base de datos.'));
+            throw new \RuntimeException(_("No hay conexión a la base de datos."));
         }
 
         $a_sql = [];
@@ -695,7 +695,7 @@ class DBEsquema extends DBAbstract
         $oDbl = $this->oDbl;
 
         if ($oDbl === null) {
-            throw new \RuntimeException(_('No hay conexión a la base de datos.'));
+            throw new \RuntimeException(_("No hay conexión a la base de datos."));
         }
 
         /* Se borra con la primera.

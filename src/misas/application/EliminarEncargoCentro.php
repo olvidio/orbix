@@ -19,12 +19,12 @@ class EliminarEncargoCentro
     public function execute(string $id_item): string
     {
         if (empty($id_item)) {
-            return _('Falta el identificador del encargo-centro a eliminar');
+            return _("Falta el identificador del encargo-centro a eliminar");
         }
 
         $EncargoCtr = $this->encargoCtrRepository->findById(new EncargoCtrId($id_item));
         if ($EncargoCtr === null) {
-            return sprintf(_('No se encuentra el encargo-centro %s'), $id_item);
+            return sprintf(_("No se encuentra el encargo-centro %s"), $id_item);
         }
 
         if ($this->encargoCtrRepository->Eliminar($EncargoCtr) === false) {

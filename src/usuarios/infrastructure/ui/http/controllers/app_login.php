@@ -46,7 +46,7 @@ if ($result['ok']) {
 }
 
 $code = (string)($result['code'] ?? 'error');
-$mensaje = (string)($result['mensaje'] ?? _('Error de autenticación'));
+$mensaje = (string)($result['mensaje'] ?? _("Error de autenticación"));
 $data = array_merge(['code' => $code], $result['data'] ?? []);
 
 ContestarJson::enviar($mensaje, $data);

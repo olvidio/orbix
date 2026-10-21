@@ -24,7 +24,7 @@ foreach (DevelDbAdminPayload::avisosList($data['lines'] ?? []) as $line) {
 
 $errores = DevelDbAdminPayload::avisosList($data['errores'] ?? []);
 if ($errores !== []) {
-    echo '<br><strong>' . htmlspecialchars(_('Errores durante la absorción')) . ':</strong><br>';
+    echo '<br><strong>' . htmlspecialchars(_("Errores durante la absorción")) . ':</strong><br>';
     foreach ($errores as $error) {
         echo '<br>' . htmlspecialchars($error) . '<br>';
     }

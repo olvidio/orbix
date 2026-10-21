@@ -16,7 +16,7 @@ if ($parsed !== null && $parsed['s'] === SignedDownloadToken::SCOPE_CERT_RECIBID
 if ($Qid_item <= 0) {
     header('Content-Type: text/plain; charset=UTF-8');
     http_response_code(400);
-    echo _('Enlace de descarga no válido o caducado.');
+    echo _("Enlace de descarga no válido o caducado.");
     exit;
 }
 
@@ -27,7 +27,7 @@ $oCertificadoRecibido = $certificadoRecibidoRepository->findById($Qid_item);
 if ($oCertificadoRecibido === null) {
     header('Content-Type: text/plain; charset=UTF-8');
     http_response_code(404);
-    echo _('No se encuentra el certificado.');
+    echo _("No se encuentra el certificado.");
     exit;
 }
 
@@ -35,7 +35,7 @@ $doc = $oCertificadoRecibido->getDocumento();
 if ($doc === null || $doc === '') {
     header('Content-Type: text/plain; charset=UTF-8');
     http_response_code(404);
-    echo _('No hay PDF asociado a este certificado.');
+    echo _("No hay PDF asociado a este certificado.");
     exit;
 }
 

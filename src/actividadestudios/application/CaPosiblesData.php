@@ -102,7 +102,7 @@ final class CaPosiblesData
             $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'empiezamax');
 
             if (empty($QidCtrAgd) && empty($QidCtrN)) {
-                throw new \InvalidArgumentException(_('debe seleccionar un centro o grupo de centros'));
+                throw new \InvalidArgumentException(_("debe seleccionar un centro o grupo de centros"));
             }
             if ($Qperiodo === '') {
                 $Qperiodo = 'curso_ca';
@@ -160,7 +160,7 @@ final class CaPosiblesData
                 $aOperadorActividad['id_tipo_activ'] = '~';
                 break;
             default:
-                throw new \InvalidArgumentException(_('Parámetro na no válido'));
+                throw new \InvalidArgumentException(_("Parámetro na no válido"));
         }
 
         $aWhere = [];
@@ -261,7 +261,7 @@ final class CaPosiblesData
                     $nomActiv = trim($nomActiv);
                 }
                 if (empty($nivelStgr)) {
-                    $msgTxt .= sprintf(_('el ca: %s no tiene puesto el nivel de stgr.') . '<br>', $nomActiv);
+                    $msgTxt .= sprintf(_("el ca: %s no tiene puesto el nivel de stgr.") . '<br>', $nomActiv);
                     $nivelStgr = NivelStgrId::generarNivelStgr($idTipoActiv);
                 }
                 if ($nivelStgr === 4 || $nivelStgr === 9 || $nivelStgr === 8 || $nivelStgr === 7) {
@@ -269,7 +269,7 @@ final class CaPosiblesData
                 } else {
                     $aAsignaturasCa = $this->actividadAsignaturaRepository->getAsignaturasCa($idActiv);
                     if (count($aAsignaturasCa) === 0 && $nivelStgr) {
-                        $msgTxt .= sprintf(_('el ca: %s no tiene puesta ninguna asignatura.') . '<br>', $nomActiv);
+                        $msgTxt .= sprintf(_("el ca: %s no tiene puesta ninguna asignatura.") . '<br>', $nomActiv);
                         continue;
                     }
                 }
@@ -449,14 +449,14 @@ final class CaPosiblesData
             ];
 
             if (count($cuadro) > 1) {
-                throw new \RuntimeException(_('sólo debebería haber uno'));
+                throw new \RuntimeException(_("sólo debebería haber uno"));
             }
             $titulo = '';
             $aActividadesLista = [];
             foreach ($cuadro as $ctr => $datosPersona) {
                 $nom = (string)array_key_first($datosPersona);
                 $datos = $datosPersona[$nom];
-                $titulo = sprintf(_('posibles ca de %s (%s)'), $nom, $ctr);
+                $titulo = sprintf(_("posibles ca de %s (%s)"), $nom, $ctr);
                 $stgr = $datos['stgr'];
                 $aActividadesLista = $datos['aActividades'];
             }
@@ -529,26 +529,26 @@ final class CaPosiblesData
         if ($idCtr > 1) {
             $oCentro = $this->centroDlRepository->findById($idCtr);
             $nomCentro = $oCentro !== null ? $oCentro->getNombre_ubi() : (string) $idCtr;
-            $partes[] = sprintf(_('Centro: %s.'), $nomCentro);
+            $partes[] = sprintf(_("Centro: %s."), $nomCentro);
         }
         if ($numPersonas === 0) {
             if ($na === 'n') {
                 $partes[] = _(
-                    'No hay numerarios activos en ese centro con nivel de estudios bienio o cuadrienio.'
+                    "No hay numerarios activos en ese centro con nivel de estudios bienio o cuadrienio."
                 );
             } else {
-                $partes[] = _('No hay agregados activos en ese centro.');
+                $partes[] = _("No hay agregados activos en ese centro.");
             }
         }
         if ($numActividades === 0 && $inicioIso !== '' && $finIso !== '') {
             $partes[] = sprintf(
-                _('No hay actividades de centro de estudios en el periodo %s — %s (compruebe fechas y tipo de CA).'),
+                _("No hay actividades de centro de estudios en el periodo %s — %s (compruebe fechas y tipo de CA)."),
                 $inicioIso,
                 $finIso,
             );
         }
         if ($partes === []) {
-            $partes[] = _('No hay datos para generar el cuadro.');
+            $partes[] = _("No hay datos para generar el cuadro.");
         }
 
         return implode('<br>', $partes) . '<br>';
@@ -571,16 +571,16 @@ final class CaPosiblesData
         }
 
         if (empty($idUbi)) {
-            $nombreCentro = _('sin centro');
-            $aviso = _('hay personas sin centro asignado');
+            $nombreCentro = _("sin centro");
+            $aviso = _("hay personas sin centro asignado");
         } else {
             $oCentroDl = $centroDlRepository->findById($idUbi);
             if ($oCentroDl !== null) {
                 return $centrosNombre[$key] = $oCentroDl->getNombre_ubi();
             }
 
-            $nombreCentro = sprintf(_('centro desconocido (%s)'), (string)$idUbi);
-            $aviso = sprintf(_('no se encuentra el centro con id: %s'), (string)$idUbi);
+            $nombreCentro = sprintf(_("centro desconocido (%s)"), (string)$idUbi);
+            $aviso = sprintf(_("no se encuentra el centro con id: %s"), (string)$idUbi);
         }
 
         if (!isset($avisosCentro[$key])) {

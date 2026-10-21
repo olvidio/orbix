@@ -18,7 +18,7 @@ $oPosicion->nav()->enter(
 
 $idRole = OrbixRuntime::miIdRole();
 if ($idRole !== 1 && $idRole !== 2) {
-    echo '<p>' . htmlspecialchars(_('No tiene permiso para ver el residuo de notas.'), ENT_QUOTES, 'UTF-8') . '</p>';
+    echo '<p>' . htmlspecialchars(_("No tiene permiso para ver el residuo de notas."), ENT_QUOTES, 'UTF-8') . '</p>';
     return;
 }
 

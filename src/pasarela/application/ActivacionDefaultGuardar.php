@@ -17,7 +17,7 @@ final class ActivacionDefaultGuardar
     public function execute(string $default): string
     {
         if ($default === '') {
-            return _('Falta valor por defecto');
+            return _("Falta valor por defecto");
         }
         
         $this->activacion->setDefault($default);

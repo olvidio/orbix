@@ -61,7 +61,7 @@ $payload = PostRequest::getDataFromUrl(
 );
 
 if (!isset($payload['html']) || !is_string($payload['html'])) {
-    exit(_('No se pudo cargar la comprobación de notas.'));
+    exit(_("No se pudo cargar la comprobación de notas."));
 }
 
 $linkSpecs = isset($payload['link_specs']) && is_array($payload['link_specs'])

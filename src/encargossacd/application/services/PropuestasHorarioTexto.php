@@ -92,13 +92,13 @@ final class PropuestasHorarioTexto
         $v = $dedicacion['v'];
 
         $html = '';
-        $html .= _('m') . ':';
+        $html .= _("m") . ':';
         $html .= "[$m]";
         $html .= '; ';
-        $html .= _('t1') . ':';
+        $html .= _("t1") . ':';
         $html .= "[$t]";
         $html .= '; ';
-        $html .= _('t2') . ':';
+        $html .= _("t2") . ':';
         $html .= "[$v]";
 
         return $html;

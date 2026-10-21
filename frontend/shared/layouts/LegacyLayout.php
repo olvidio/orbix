@@ -82,7 +82,7 @@ class LegacyLayout implements LayoutInterface
             : '';
 
         if ($gm < 2) {
-            $html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| " . ucfirst(_('salir')) . '</a></li>';
+            $html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| " . ucfirst(_("salir")) . '</a></li>';
             $html_exit .= '<li><a class="nohref"> (login as: ' . $usuarioLabel . '[' . OrbixRuntime::miRegionDl() . '])</a></li>';
 
             $li_submenus .= $html_exit;
@@ -99,7 +99,7 @@ class LegacyLayout implements LayoutInterface
             }
         }
 
-        $html_exit = '<li onclick="fnjs_logout();" >' . ucfirst(_('salir'));
+        $html_exit = '<li onclick="fnjs_logout();" >' . ucfirst(_("salir"));
         $html_exit .= ' (login as: ' . $usuarioLabel . '[' . OrbixRuntime::miRegionDl() . '])</li>';
         $html_barra .= $html_exit;
         $html_barra .= '</ul>';

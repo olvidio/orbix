@@ -31,9 +31,9 @@ final class ListasClData
     {
         $oDB = GlobalPdo::get('oDB');
         $any = (int) date('Y');
-        $cabecera_left = sprintf(_('Curso %s'), '');
+        $cabecera_left = sprintf(_("Curso %s"), '');
         $cabecera_right = (string)ConfigGlobal::mi_delef();
-        $cabecera_right_2 = _('ref. cr 1/14, 10,c)');
+        $cabecera_right_2 = _("ref. cr 1/14, 10,c)");
 
         $oService = $this->aplicacionService;
         $poblacion = $oService->getLugar_dl();

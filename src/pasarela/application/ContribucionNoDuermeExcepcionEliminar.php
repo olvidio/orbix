@@ -18,7 +18,7 @@ final class ContribucionNoDuermeExcepcionEliminar
     public function execute(string $id_tipo_activ): string
     {
         if ($id_tipo_activ === '') {
-            return _('Falta id_tipo_activ');
+            return _("Falta id_tipo_activ");
         }
         
         $this->contribucionNoDuerme->delContribucionNoDuerme($id_tipo_activ);

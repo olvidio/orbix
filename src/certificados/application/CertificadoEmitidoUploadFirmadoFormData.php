@@ -20,7 +20,7 @@ final class CertificadoEmitidoUploadFirmadoFormData
     {
         $oCertificadoEmitido = $this->certificadoEmitidoRepository->findById($id_item);
         if ($oCertificadoEmitido === null) {
-            throw new \RuntimeException(_('No se encuentra el certificado'));
+            throw new \RuntimeException(_("No se encuentra el certificado"));
         }
 
         $id_nom = (int) ($oCertificadoEmitido->getId_nom() ?? 0);

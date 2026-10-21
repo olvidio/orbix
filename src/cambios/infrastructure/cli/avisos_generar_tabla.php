@@ -78,7 +78,7 @@ try {
 
 if ($isWeb) {
     if ($resultado['bucle_infinito']) {
-        ContestarJson::enviar(_('Algo falla'), '');
+        ContestarJson::enviar(_("Algo falla"), '');
         return;
     }
 

@@ -19,10 +19,10 @@ final class ActivacionExcepcionGuardar
     {
         $error_txt = '';
         if ($id_tipo_activ === '') {
-            return _('Falta id_tipo_activ');
+            return _("Falta id_tipo_activ");
         }
         if ($valor === '') {
-            return _('Falta valor de activación');
+            return _("Falta valor de activación");
         }
         
         $this->activacion->addActivacion($id_tipo_activ, $valor);

@@ -48,11 +48,11 @@ $sCamposForm = $view['sCamposForm'];
 $ctx_guardar = $view['ctx_guardar'];
 
 if ($isNumerado) {
-    $num_txt = _('número de registro');
+    $num_txt = _("número de registro");
 } else {
-    $num_txt = _('número de ejemplares');
+    $num_txt = _("número de ejemplares");
 }
-$a_cabeceras = [ucfirst(_('delegación')), $num_txt];
+$a_cabeceras = [ucfirst(_("delegación")), $num_txt];
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('doc_num_tabla');

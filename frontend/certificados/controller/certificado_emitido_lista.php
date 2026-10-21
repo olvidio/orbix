@@ -59,10 +59,10 @@ $inicurs_ca_iso = $oInicurs_ca->getIso();
 $fincurs_ca_iso = $oFincurs_ca->getIso();
 $inicurs_ca_local = $oInicurs_ca->getFromLocal();
 $fincurs_ca_local = $oFincurs_ca->getFromLocal();
-$titulo = ucfirst(sprintf(_('lista de certificados emitidos entre %s y %s y no enviados'), $inicurs_ca_local, $fincurs_ca_local));
+$titulo = ucfirst(sprintf(_("lista de certificados emitidos entre %s y %s y no enviados"), $inicurs_ca_local, $fincurs_ca_local));
 
 if (!(OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r')) {
-    exit(_('Solamente lo pueden ver las regiones del stgr'));
+    exit(_("Solamente lo pueden ver las regiones del stgr"));
 }
 
 $data = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_lista_datos', [
@@ -105,7 +105,7 @@ foreach ($a_valores as $idx => $row) {
     $pdf_signed_urls[(string) $id] = SignedDownloadToken::urlCertificadoEmitido($id);
 }
 
-$txt_eliminar = _('¿Está seguro que quiere eliminar el certificado?');
+$txt_eliminar = _("¿Está seguro que quiere eliminar el certificado?");
 
 $a_campos = [
     'oHash' => $oHash,

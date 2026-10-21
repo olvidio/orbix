@@ -83,13 +83,13 @@ $aviso = '';
 if (!empty($data['error'])) {
     $errorHtml = PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($data['error']));
     if (
-        str_contains($errorHtml, _('persona no válida'))
+        str_contains($errorHtml, _("persona no válida"))
         || str_contains($errorHtml, 'persona no válida')
-        || str_contains($errorHtml, _('Delegaciones no dadas de alta'))
+        || str_contains($errorHtml, _("Delegaciones no dadas de alta"))
         || str_contains($errorHtml, 'Delegaciones no dadas de alta')
-        || str_contains($errorHtml, _('Delegaciones sin región del stgr'))
+        || str_contains($errorHtml, _("Delegaciones sin región del stgr"))
         || str_contains($errorHtml, 'Delegaciones sin región del stgr')
-        || str_contains($errorHtml, _('Personas del listado sin id_schema válido'))
+        || str_contains($errorHtml, _("Personas del listado sin id_schema válido"))
         || str_contains($errorHtml, 'Personas del listado sin id_schema válido')
     ) {
         $aviso = $errorHtml;
@@ -115,29 +115,29 @@ $a_botones = [];
 $script = [];
 
 if (PersonasPayload::havePermOficina('sm')) {
-    $a_botones[] = ['txt' => _('cambio de ctr'), 'click' => 'fnjs_modificar_ctr("#seleccionados")'];
+    $a_botones[] = ['txt' => _("cambio de ctr"), 'click' => 'fnjs_modificar_ctr("#seleccionados")'];
 }
 $script['fnjs_modificar_ctr'] = 1;
-$a_botones[] = ['txt' => _('ver dossiers'), 'click' => 'fnjs_dossiers("#seleccionados")'];
+$a_botones[] = ['txt' => _("ver dossiers"), 'click' => 'fnjs_dossiers("#seleccionados")'];
 $script['fnjs_dossiers'] = 1;
-$a_botones[] = ['txt' => _('ficha'), 'click' => 'fnjs_ficha("#seleccionados")'];
+$a_botones[] = ['txt' => _("ficha"), 'click' => 'fnjs_ficha("#seleccionados")'];
 $script['fnjs_ficha'] = 1;
 
 if (AppInstalled::is('asistentes')) {
-    $a_botones[] = ['txt' => _('ver actividades'), 'click' => 'fnjs_actividades("#seleccionados")'];
+    $a_botones[] = ['txt' => _("ver actividades"), 'click' => 'fnjs_actividades("#seleccionados")'];
     $script['fnjs_actividades'] = 1;
 }
 if (AppInstalled::is('notas')) {
     if ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex') {
-        $a_botones[] = ['txt' => _('ver tessera'), 'click' => 'fnjs_tessera("#seleccionados")'];
+        $a_botones[] = ['txt' => _("ver tessera"), 'click' => 'fnjs_tessera("#seleccionados")'];
         $script['fnjs_tessera'] = 1;
     }
     if (PersonasPayload::havePermOficina('est')) {
-        $a_botones[] = ['txt' => _('modificar stgr'), 'click' => 'fnjs_modificar("#seleccionados")'];
+        $a_botones[] = ['txt' => _("modificar stgr"), 'click' => 'fnjs_modificar("#seleccionados")'];
         $script['fnjs_modificar'] = 1;
-        $a_botones[] = ['txt' => _('imprimir tessera'), 'click' => 'fnjs_imp_tessera("#seleccionados")'];
+        $a_botones[] = ['txt' => _("imprimir tessera"), 'click' => 'fnjs_imp_tessera("#seleccionados")'];
         $script['fnjs_imp_tessera'] = 1;
-        $a_botones[] = ['txt' => _('ver notas'), 'click' => 'fnjs_notas("#seleccionados")'];
+        $a_botones[] = ['txt' => _("ver notas"), 'click' => 'fnjs_notas("#seleccionados")'];
         $script['fnjs_notas'] = 1;
     }
 }
@@ -146,43 +146,43 @@ if (
     && (PersonasPayload::havePermOficina('sm') || PersonasPayload::havePermOficina('est'))
     && ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex')
 ) {
-    $a_botones[] = ['txt' => _('posibles ca'), 'click' => 'fnjs_posibles_ca("#seleccionados")'];
+    $a_botones[] = ['txt' => _("posibles ca"), 'click' => 'fnjs_posibles_ca("#seleccionados")'];
     $script['fnjs_posibles_ca'] = 1;
 }
 if (AppInstalled::is('actividadplazas')) {
     if ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex') {
-        $a_botones[] = ['txt' => _('petición ca'), 'click' => 'fnjs_peticion_activ("#seleccionados","ca")'];
-        $a_botones[] = ['txt' => _('petición crt'), 'click' => 'fnjs_peticion_activ("#seleccionados","crt")'];
+        $a_botones[] = ['txt' => _("petición ca"), 'click' => 'fnjs_peticion_activ("#seleccionados","ca")'];
+        $a_botones[] = ['txt' => _("petición crt"), 'click' => 'fnjs_peticion_activ("#seleccionados","crt")'];
         $script['fnjs_posibles_activ'] = 1;
     }
 }
 if (PersonasPayload::havePermOficina('est')) {
     if (AppInstalled::is('actividadestudios')) {
-        $a_botones[] = ['txt' => _('plan estudios'), 'click' => 'fnjs_matriculas("#seleccionados")'];
+        $a_botones[] = ['txt' => _("plan estudios"), 'click' => 'fnjs_matriculas("#seleccionados")'];
         $script['fnjs_matriculas'] = 1;
     }
     if (AppInstalled::is('profesores')) {
-        $a_botones[] = ['txt' => _('ficha profesor stgr'), 'click' => 'fnjs_ficha_profe("#seleccionados")'];
+        $a_botones[] = ['txt' => _("ficha profesor stgr"), 'click' => 'fnjs_ficha_profe("#seleccionados")'];
         $script['fnjs_ficha_profe'] = 1;
     }
-    $a_botones[] = ['txt' => _('copiar tessera'), 'click' => 'fnjs_copiar_tessera("#seleccionados")'];
+    $a_botones[] = ['txt' => _("copiar tessera"), 'click' => 'fnjs_copiar_tessera("#seleccionados")'];
     $script['fnjs_copiar_tessera'] = 1;
 
     if (OrbixRuntime::miAmbito() === 'r') {
-        $a_botones[] = ['txt' => _('imprimir certificado'), 'click' => 'fnjs_imp_certificado("#seleccionados")'];
+        $a_botones[] = ['txt' => _("imprimir certificado"), 'click' => 'fnjs_imp_certificado("#seleccionados")'];
         $script['fnjs_imp_certificado'] = 1;
-        $a_botones[] = ['txt' => _('adjuntar certificado'), 'click' => 'fnjs_upload_certificado("#seleccionados")'];
+        $a_botones[] = ['txt' => _("adjuntar certificado"), 'click' => 'fnjs_upload_certificado("#seleccionados")'];
         $script['fnjs_upload_certificado'] = 1;
     }
 }
 
 if (OrbixRuntime::miAmbito() === 'rstgr') {
     $a_botones = [
-        ['txt' => _('ver tessera'), 'click' => 'fnjs_tessera("#seleccionados")'],
-        ['txt' => _('imprimir tessera'), 'click' => 'fnjs_imp_tessera("#seleccionados")'],
-        ['txt' => _('imprimir certificado'), 'click' => 'fnjs_imp_certificado("#seleccionados")'],
-        ['txt' => _('adjuntar certificado'), 'click' => 'fnjs_upload_certificado("#seleccionados")'],
-        ['txt' => _('ficha profesor stgr'), 'click' => 'fnjs_ficha_profe("#seleccionados")'],
+        ['txt' => _("ver tessera"), 'click' => 'fnjs_tessera("#seleccionados")'],
+        ['txt' => _("imprimir tessera"), 'click' => 'fnjs_imp_tessera("#seleccionados")'],
+        ['txt' => _("imprimir certificado"), 'click' => 'fnjs_imp_certificado("#seleccionados")'],
+        ['txt' => _("adjuntar certificado"), 'click' => 'fnjs_upload_certificado("#seleccionados")'],
+        ['txt' => _("ficha profesor stgr"), 'click' => 'fnjs_ficha_profe("#seleccionados")'],
     ];
     $script = [
         'fnjs_tessera' => 1,
@@ -194,30 +194,30 @@ if (OrbixRuntime::miAmbito() === 'rstgr') {
 }
 
 if (PersonasPayload::havePermOficina('est') || PersonasPayload::havePermOficina('sm') || PersonasPayload::havePermOficina('agd')) {
-    $a_botones[] = ['txt' => _('publicar'), 'click' => 'fnjs_publicar("#seleccionados")'];
+    $a_botones[] = ['txt' => _("publicar"), 'click' => 'fnjs_publicar("#seleccionados")'];
     $script['fnjs_publicar'] = 1;
 }
 
 if (AppInstalled::is('actividadessacd') && PersonasPayload::havePermOficina('des')) {
-    $a_botones[] = ['txt' => _('atención actividades'), 'click' => 'fnjs_lista_activ("#seleccionados")'];
+    $a_botones[] = ['txt' => _("atención actividades"), 'click' => 'fnjs_lista_activ("#seleccionados")'];
     $script['fnjs_lista_activ'] = 1;
 }
 
 $a_cabeceras = [
-    ucfirst(_('tabla')),
-    ['name' => _('nombre y apellidos'), 'width' => 250, 'formatter' => 'clickFormatter'],
+    ucfirst(_("tabla")),
+    ['name' => _("nombre y apellidos"), 'width' => 250, 'formatter' => 'clickFormatter'],
 ];
 if ($tabla === 'p_sssc') {
-    $a_cabeceras[] = ucfirst(_('socio'));
+    $a_cabeceras[] = ucfirst(_("socio"));
 }
-$a_cabeceras[] = ucfirst(_('centro'));
+$a_cabeceras[] = ucfirst(_("centro"));
 if ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex') {
-    $a_cabeceras[] = ucfirst(_('stgr'));
+    $a_cabeceras[] = ucfirst(_("stgr"));
 }
-$a_cabeceras[] = ucfirst(_('publicado'));
+$a_cabeceras[] = ucfirst(_("publicado"));
 if ($Qcmb !== '') {
-    $a_cabeceras[] = ucfirst(_('situación'));
-    $a_cabeceras[] = ['name' => ucfirst(_('fecha cambio situación')), 'class' => 'fecha'];
+    $a_cabeceras[] = ucfirst(_("situación"));
+    $a_cabeceras[] = ['name' => ucfirst(_("fecha cambio situación")), 'class' => 'fecha'];
 }
 
 $a_valores = [];
@@ -290,7 +290,7 @@ $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'script' => $script,
-    'resultado' => sprintf(_('%s personas encontradas'), $total),
+    'resultado' => sprintf(_("%s personas encontradas"), $total),
     'oTabla' => $oTabla,
     'pagina' => $pagina,
     'permiso' => $permiso,

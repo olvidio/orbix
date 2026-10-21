@@ -73,7 +73,7 @@ class PermDossierVerFormData
             ],
         ];
 
-        $txt_eliminar = _('¿Está seguro que desea eliminar este dossier?');
+        $txt_eliminar = _("¿Está seguro que desea eliminar este dossier?");
 
         return [
             'hash_config' => $hashConfig,

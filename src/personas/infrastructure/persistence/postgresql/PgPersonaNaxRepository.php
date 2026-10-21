@@ -106,7 +106,7 @@ class PgPersonaNaxRepository extends PgPersonaDlRepositoryBase implements Person
         if ($bInsert) {
             $idSchema = ConfigGlobal::mi_id_schema();
             if ($idSchema < 1) {
-                throw new \RuntimeException(_('Falta id_schema de sesión (mi_id_schema) para persistir persona nax.'));
+                throw new \RuntimeException(_("Falta id_schema de sesión (mi_id_schema) para persistir persona nax."));
             }
             $aDatos['id_schema'] = $idSchema;
         }

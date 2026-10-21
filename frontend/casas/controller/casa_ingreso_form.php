@@ -52,7 +52,7 @@ if ($form['puede_modificar_tarifa']) {
     <br>
     <?= _("observaciones") ?> <input type="text" size="40" name="observ" value="<?= htmlspecialchars($form['observ']) ?>">
     <br><br>
-    <input type="button" value="<?= _('guardar') ?>" onclick="fnjs_guardar('#frm_ingreso','guardar');">
-    <input type="button" value="<?= _('eliminar') ?>" onclick="fnjs_guardar('#frm_ingreso','eliminar');">
-    <input type="button" value="<?= _('cancel') ?>" onclick="fnjs_cerrar();">
+    <input type="button" value="<?= _("guardar") ?>" onclick="fnjs_guardar('#frm_ingreso','guardar');">
+    <input type="button" value="<?= _("eliminar") ?>" onclick="fnjs_guardar('#frm_ingreso','eliminar');">
+    <input type="button" value="<?= _("cancel") ?>" onclick="fnjs_cerrar();">
 </form>

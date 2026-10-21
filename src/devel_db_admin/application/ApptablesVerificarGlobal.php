@@ -38,7 +38,7 @@ final class ApptablesVerificarGlobal
         $this->assertTablas(
             $this->pdoPrincipal($importar),
             $expect['principal'],
-            _('comun (principal)'),
+            _("comun (principal)"),
         );
         $diag['principal'] = $expect['principal'];
 
@@ -54,7 +54,7 @@ final class ApptablesVerificarGlobal
             $this->pdoReplica($cfgReplica),
             $expect['replica'],
             sprintf(
-                _('comun_select (%s / %s)'),
+                _("comun_select (%s / %s)"),
                 $diag['replica_host'],
                 $diag['replica_dbname'],
             ),
@@ -97,7 +97,7 @@ final class ApptablesVerificarGlobal
 
         if ($faltan !== []) {
             throw new \RuntimeException(sprintf(
-                _('Tras crear_global faltan tablas en %1$s: %2$s'),
+                _("Tras crear_global faltan tablas en %1\$s: %2\$s"),
                 $destino,
                 implode(', ', $faltan),
             ));

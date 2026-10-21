@@ -521,7 +521,7 @@ class Asistente extends Entity implements AggregateRoot
         $c->setNom_camp('id_activ');
         $c->setMetodoGet('getId_activ');
         $c->setMetodoSet('setId_activ');
-        $c->setEtiqueta(_('nombre actividad'));
+        $c->setEtiqueta(_("nombre actividad"));
         $c->setTipo('opciones');
         $c->setArgument(ActividadAllRepositoryInterface::class);
         $c->setArgument2('getNom_activ');
@@ -535,7 +535,7 @@ class Asistente extends Entity implements AggregateRoot
         $c->setNom_camp('propio');
         $c->setMetodoGet('isPropio');
         $c->setMetodoSet('setPropio');
-        $c->setEtiqueta(_('propio'));
+        $c->setEtiqueta(_("propio"));
         $c->setTipo('check');
 
         return $c;
@@ -547,7 +547,7 @@ class Asistente extends Entity implements AggregateRoot
         $c->setNom_camp('est_ok');
         $c->setMetodoGet('isEst_ok');
         $c->setMetodoSet('setEst_ok');
-        $c->setEtiqueta(_('est. ok'));
+        $c->setEtiqueta(_("est. ok"));
         $c->setTipo('check');
 
         return $c;
@@ -559,7 +559,7 @@ class Asistente extends Entity implements AggregateRoot
         $c->setNom_camp('falta');
         $c->setMetodoGet('isFalta');
         $c->setMetodoSet('setFalta');
-        $c->setEtiqueta(_('falta'));
+        $c->setEtiqueta(_("falta"));
         $c->setTipo('check');
 
         return $c;
@@ -571,7 +571,7 @@ class Asistente extends Entity implements AggregateRoot
         $c->setNom_camp('observ');
         $c->setMetodoGet('getObserv');
         $c->setMetodoSet('setObserv');
-        $c->setEtiqueta(_('observ.'));
+        $c->setEtiqueta(_("observ."));
         $c->setTipo('texto');
         $c->setArgument('40');
 

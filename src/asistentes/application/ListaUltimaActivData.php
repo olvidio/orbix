@@ -96,7 +96,7 @@ final class ListaUltimaActivData
         $QfinIso = $oDateFin->getIso();
         $fecha_ini = $oDateIni->getFromLocal('-');
         $fecha_fin = $oDateFin->getFromLocal('-');
-        $titulo_fecha = sprintf(_('entre %s y %s'), $fecha_ini, $fecha_fin);
+        $titulo_fecha = sprintf(_("entre %s y %s"), $fecha_ini, $fecha_fin);
 
         $alert = '';
         switch ($Qque) {
@@ -104,15 +104,15 @@ final class ListaUltimaActivData
                 $aWhereA['id_tipo_activ'] = '^1[45]1';
                 $aOperadorA['id_tipo_activ'] = '~';
                 if (empty($nombre_ubi)) {
-                    $titulo_actividad = _('s que todavía no han asistido a crt-s o crt-sg');
+                    $titulo_actividad = _("s que todavía no han asistido a crt-s o crt-sg");
                 } else {
-                    $titulo_actividad = sprintf(_('s de %s que todavía no han asistido a crt-s o crt-sg'), $nombre_ubi);
+                    $titulo_actividad = sprintf(_("s de %s que todavía no han asistido a crt-s o crt-sg"), $nombre_ubi);
                 }
                 break;
             case 'crt_s':
                 $aWhereA['id_tipo_activ'] = '^141';
                 $aOperadorA['id_tipo_activ'] = '~';
-                $titulo_actividad = sprintf(_('s no celadores que NO han asistido al crt interno'));
+                $titulo_actividad = sprintf(_("s no celadores que NO han asistido al crt interno"));
                 $alert = '*' . sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
                 $aWhereP['eap'] = "COALESCE(eap,'x') !~* 'C\d\d'";
                 $aOperadorP['eap'] = 'TXT';
@@ -120,7 +120,7 @@ final class ListaUltimaActivData
             case 'crt_cel':
                 $aWhereA['id_tipo_activ'] = '^141';
                 $aOperadorA['id_tipo_activ'] = '~';
-                $titulo_actividad = sprintf(_('s celadores que NO han asistido a un crt interno'));
+                $titulo_actividad = sprintf(_("s celadores que NO han asistido a un crt interno"));
                 $alert = '*' . sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
                 $aWhereP['eap'] = "COALESCE(eap,'x') ~* 'C\d\d'";
                 $aOperadorP['eap'] = 'TXT';
@@ -129,14 +129,14 @@ final class ListaUltimaActivData
                 $aWhereA['id_tipo_activ'] = '^143';
                 $aOperadorA['id_tipo_activ'] = '~';
                 if (empty($nombre_ubi)) {
-                    $titulo_actividad = _('s que no han asistido a cv de s');
+                    $titulo_actividad = _("s que no han asistido a cv de s");
                 } else {
-                    $titulo_actividad = sprintf(_('s de %s que todavía no han asistido a cv de s'), $nombre_ubi);
+                    $titulo_actividad = sprintf(_("s de %s que todavía no han asistido a cv de s"), $nombre_ubi);
                 }
                 break;
             case 'cv_s_ad':
                 $aWhereA['id_tipo_activ'] = '1431';
-                $titulo_actividad = sprintf(_('s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión del año- que todavía no han asistido a cv de ad'));
+                $titulo_actividad = sprintf(_("s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión del año- que todavía no han asistido a cv de ad"));
                 $anyCv = (int)date('Y');
                 $fin_d = $oConfig->getDiaFinCrt();
                 $fin_m = $oConfig->getMesFinCrt();
@@ -157,17 +157,17 @@ final class ListaUltimaActivData
                     $nom_activ = $oActividadU->getNom_activ();
                 } else {
                     $oFini = new DateTimeLocal();
-                    $nom_activ = _('No hay');
+                    $nom_activ = _("No hay");
                 }
                 $iso_fin = $oFini->sub(new DateInterval('P6M'))->getIso();
                 $iso_ini = $oFini->sub(new DateInterval('P12M'))->getIso();
                 $aWhereP['inc'] = 'ad';
                 $aWhereP['f_inc'] = "'$iso_ini','$iso_fin'";
                 $aOperadorP['f_inc'] = 'BETWEEN';
-                $alert = '*' . sprintf(_('última cv: %s'), $nom_activ);
+                $alert = '*' . sprintf(_("última cv: %s"), $nom_activ);
                 break;
             case 'cv_jovenes':
-                $titulo_actividad = _('s jóvenes (<30) que no han asistido a cv de s');
+                $titulo_actividad = _("s jóvenes (<30) que no han asistido a cv de s");
                 $f_joven = date('Y-m-d', (int) mktime(0, 0, 0, 1, 1, $any - 30));
                 $aWhereP['f_nacimiento'] = $f_joven;
                 $aOperadorP['f_nacimiento'] = '>';
@@ -177,7 +177,7 @@ final class ListaUltimaActivData
                 $aOperadorP['ce_fin'] = 'IS NULL';
                 break;
             default:
-                exit(_('No sé en que tipo de actividad hay que mirar las asistencias'));
+                exit(_("No sé en que tipo de actividad hay que mirar las asistencias"));
         }
 
         $aWhereA['_ordre'] = 'f_ini DESC';
@@ -213,15 +213,15 @@ final class ListaUltimaActivData
                 $id_activ = $oAsistente->getId_activ();
                 $oActividad = $this->actividadAllRepository->findById($id_activ);
                 if ($oActividad === null) {
-                    $msg = _('No hay datos');
-                    $f_ini = _('No consta');
+                    $msg = _("No hay datos");
+                    $f_ini = _("No consta");
                     $a_valores[$i]['clase'] = 'tono2';
                 } else {
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
                 $oFini = $oActividad->getF_ini();
                 if (!$oFini instanceof DateTimeLocal) {
-                    $msg = _('No hay datos');
-                    $f_ini = _('No consta');
+                    $msg = _("No hay datos");
+                    $f_ini = _("No consta");
                     $a_valores[$i]['clase'] = 'tono2';
                 } else {
                 $f_ini_iso = $oFini->getIso();
@@ -239,8 +239,8 @@ final class ListaUltimaActivData
                 }
                 }
             } else {
-                $msg = _('No hay datos');
-                $f_ini = _('No consta');
+                $msg = _("No hay datos");
+                $f_ini = _("No consta");
                 $a_valores[$i]['clase'] = 'tono2';
             }
             $falta++;
@@ -251,17 +251,17 @@ final class ListaUltimaActivData
             $a_valores[$i][4] = $msg;
         }
 
-        $a_cabeceras = [ucfirst(_('apellidos, nombre')),
-            ucfirst(_('centro')),
-            ucfirst(_('fecha última asistencia')),
-            ucfirst(_('tipo actividad')),
+        $a_cabeceras = [ucfirst(_("apellidos, nombre")),
+            ucfirst(_("centro")),
+            ucfirst(_("fecha última asistencia")),
+            ucfirst(_("tipo actividad")),
         ];
 
         $oTabla = new Lista();
         $oTabla->setCabeceras($a_cabeceras);
         $oTabla->setDatos($a_valores);
 
-        $stats_html = sprintf(_('número de personas: %s de %s'), $falta, $i);
+        $stats_html = sprintf(_("número de personas: %s de %s"), $falta, $i);
 
         return [
             'alert_html' => $alert,

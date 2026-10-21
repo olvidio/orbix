@@ -275,7 +275,7 @@ class Select_asistentes_a_una_actividad
     {
         $oActividad = $this->actividadAllRepository->findById($this->id_pau);
         if ($oActividad === null) {
-            $this->msg_err = sprintf(_('No se ha encontrado la actividad con id: %s'), $this->id_pau);
+            $this->msg_err = sprintf(_("No se ha encontrado la actividad con id: %s"), $this->id_pau);
 
             return;
         }
@@ -323,7 +323,7 @@ class Select_asistentes_a_una_actividad
     {
         $oActividad = $this->actividadAllRepository->findById($this->id_pau);
         if ($oActividad === null) {
-            $this->msg_err = sprintf(_('No se ha encontrado la actividad con id: %s'), $this->id_pau);
+            $this->msg_err = sprintf(_("No se ha encontrado la actividad con id: %s"), $this->id_pau);
 
             return;
         }

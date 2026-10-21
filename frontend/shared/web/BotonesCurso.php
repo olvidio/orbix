@@ -77,11 +77,11 @@ class BotonesCurso
     public function getRadioHtml(): string
     {
         $html = "<input type='Radio' id='modo_curso_1' name='modo_curso' value=1 $this->chk_1 onclick=fnjs_actualizar(this.form)>";
-        $html .= ucfirst(_('actuales'));
+        $html .= ucfirst(_("actuales"));
         $html .= "<input type='Radio' id='modo_curso_2' name='modo_curso' value=2 $this->chk_2 onclick=fnjs_actualizar(this.form)>";
-        $html .= ucfirst(_('todas las de este curso'));
+        $html .= ucfirst(_("todas las de este curso"));
         $html .= "<input type='Radio' id='modo_curso_3' name='modo_curso' value=3 $this->chk_3 onclick=fnjs_actualizar(this.form)>";
-        $html .= ucfirst(_('todos los cursos'));
+        $html .= ucfirst(_("todos los cursos"));
 
         return $html;
     }

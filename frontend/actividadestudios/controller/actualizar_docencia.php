@@ -32,21 +32,21 @@ $Qempiezamax = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INP
 $continuar = (int) filter_input(INPUT_POST, 'continuar');
 
 if (empty($continuar)) {
-    $boton = "<input type='button' value='" . _('buscar') . "' onclick='fnjs_buscar()' >";
+    $boton = "<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >";
     $aOpciones = [
-        'tot_any' => _('todo el año'),
-        'trimestre_1' => _('primer trimestre'),
-        'trimestre_2' => _('segundo trimestre'),
-        'trimestre_3' => _('tercer trimestre'),
-        'trimestre_4' => _('cuarto trimestre'),
+        'tot_any' => _("todo el año"),
+        'trimestre_1' => _("primer trimestre"),
+        'trimestre_2' => _("segundo trimestre"),
+        'trimestre_3' => _("tercer trimestre"),
+        'trimestre_4' => _("cuarto trimestre"),
         'separador' => '---------',
-        'curso_ca' => _('curso ca'),
+        'curso_ca' => _("curso ca"),
         'separador1' => '---------',
-        'otro' => _('otro'),
+        'otro' => _("otro"),
     ];
     $oFormP = new PeriodoQue();
     $oFormP->setFormName('que');
-    $oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_('periodo de selección de actividades')));
+    $oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de selección de actividades")));
     $oFormP->setPosiblesPeriodos($aOpciones);
     $oFormP->setDesplAnysOpcion_sel($Qyear);
     $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);

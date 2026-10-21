@@ -32,7 +32,7 @@ if (empty($Qid_item)) {
 } else {
     $oUsuarioPerm = $PermMenuRepository->findById($Qid_item);
     if ($oUsuarioPerm === null) {
-        ContestarJson::enviar(_('Permiso de menú no encontrado'), 'none');
+        ContestarJson::enviar(_("Permiso de menú no encontrado"), 'none');
         return;
     }
 }

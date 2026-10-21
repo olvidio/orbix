@@ -22,7 +22,7 @@ $Qquien = (string)\src\shared\domain\helpers\FilterPostGet::post('quien');
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 if ($oMiUsuario === null) {
-    $jsondata = ['success' => false, 'mensaje' => _('Usuario no encontrado')];
+    $jsondata = ['success' => false, 'mensaje' => _("Usuario no encontrado")];
     ContestarJson::send($jsondata);
     return;
 }
@@ -78,7 +78,7 @@ if ($miRole < 4) { // es administrador
         $que_user = 'guardar';
         $oUsuario = $UsuarioRepository->findById($Qid_usuario);
         if ($oUsuario === null) {
-            $error_txt = _('Usuario no encontrado');
+            $error_txt = _("Usuario no encontrado");
         } else {
 
         $seccion = $miSfsv;
@@ -92,7 +92,7 @@ if ($miRole < 4) { // es administrador
         $id_role = $oUsuario->getId_role();
         $oRole = $RoleRepository->findById($id_role ?? 0);
         if ($oRole === null) {
-            $error_txt = _('Rol no encontrado');
+            $error_txt = _("Rol no encontrado");
         } else {
         $pau = $oRole->getPauAsString();
         $isSv = $oRole->isSv();

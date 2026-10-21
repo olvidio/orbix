@@ -63,12 +63,12 @@ final class PersonaListadoLookup
     {
         $sufijo = $etiqueta !== '' ? " ($etiqueta)" : '';
 
-        return sprintf(_('No encuentro a nadie con id_nom: %d%s'), $idNom, $sufijo);
+        return sprintf(_("No encuentro a nadie con id_nom: %d%s"), $idNom, $sufijo);
     }
 
     public static function mensajeActividadNoEncontrada(int $idActiv, int $idNom): string
     {
-        return sprintf(_('No encuentro ninguna actividad con id: %d (alumno id_nom: %d)'), $idActiv, $idNom);
+        return sprintf(_("No encuentro ninguna actividad con id: %d (alumno id_nom: %d)"), $idActiv, $idNom);
     }
 
     /**
@@ -86,7 +86,7 @@ final class PersonaListadoLookup
             );
         } catch (\InvalidArgumentException $e) {
             throw new \InvalidArgumentException(sprintf(
-                _('Error al validar nombre o apellidos de persona (id_nom=%1$d): %2$s'),
+                _("Error al validar nombre o apellidos de persona (id_nom=%1\$d): %2\$s"),
                 $idNom,
                 $e->getMessage(),
             ), 0, $e);

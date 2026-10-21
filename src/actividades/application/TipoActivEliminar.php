@@ -26,7 +26,7 @@ class TipoActivEliminar
         $TipoDeActividadRepository = $this->tipoDeActividadRepository;
         $oTipoDeActividad = $TipoDeActividadRepository->findById($Qid_tipo_activ);
         if ($oTipoDeActividad === null) {
-            return _('tipo de actividad no encontrado');
+            return _("tipo de actividad no encontrado");
         }
         if ($TipoDeActividadRepository->Eliminar($oTipoDeActividad) === false) {
             return _("hay un error, no se ha eliminado");

@@ -38,7 +38,7 @@ final class PersonaNotaInputParser
         if (!empty($a_sel)) {
             $sel0 = $a_sel[0] ?? null;
             if (!is_scalar($sel0)) {
-                throw new \RuntimeException(_('Selección de nota no válida.'));
+                throw new \RuntimeException(_("Selección de nota no válida."));
             }
             $id_nivel = (int)strtok((string) $sel0, '#');
             $id_asignatura = (int)strtok('#');
@@ -142,7 +142,7 @@ final class PersonaNotaInputParser
         if ($acta === '' && $actaNum !== '') {
             if (preg_match('/^\d+\/\d{2}$/', $actaNum) !== 1) {
                 throw new \RuntimeException(
-                    _('El número de acta debe tener el formato num/aa (ej. 12/26).')
+                    _("El número de acta debe tener el formato num/aa (ej. 12/26).")
                 );
             }
             $acta = $sigla . ' ' . $actaNum;
@@ -152,7 +152,7 @@ final class PersonaNotaInputParser
             ActaPrefijosDeEsquema::prefijoDeActa($acta)
         )) {
             throw new \RuntimeException(
-                _('Para actas de otra delegación o región use el formato certificado.')
+                _("Para actas de otra delegación o región use el formato certificado.")
             );
         }
 

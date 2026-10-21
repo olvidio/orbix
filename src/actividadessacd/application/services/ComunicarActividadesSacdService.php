@@ -199,7 +199,7 @@ final class ComunicarActividadesSacdService
                     $oFIniAviso = $oActividad->getF_ini();
                     $fecha = $oFIniAviso !== null ? $oFIniAviso->getFromLocal() : '';
                     $this->avisos[] = sprintf(
-                        _('La actividad «%s» (id %d%s) del sacd %s no tiene permiso: %s.'),
+                        _("La actividad «%s» (id %d%s) del sacd %s no tiene permiso: %s."),
                         $oActividad->getNom_activ(),
                         $id_activ,
                         $fecha !== '' ? ', ' . $fecha : '',
@@ -549,7 +549,7 @@ final class ComunicarActividadesSacdService
                 'id_activ' => $id_enc,
                 'sfsv' => '',
                 'asistentes' => '',
-                'actividad' => _('ausencias/tareas'),
+                'actividad' => _("ausencias/tareas"),
                 'nom_tipo' => $desc_enc,
                 'observ' => '',
                 'cargo' => '',

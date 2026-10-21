@@ -113,6 +113,69 @@ Al mapear PDO → entidad/array, convertir fechas y json/jsonb **en el mismo blo
 - Evitar métodos estáticos en aplicación salvo utilidades puras.
 - Mantener tipado estricto en firmas y retornos.
 
+## Textos de interfaz (gettext)
+
+Al crear o modificar un fichero con textos que ve el usuario, cerrar gettext en el mismo cambio. El idioma fuente es el español: el `msgid` del catálogo. El procedimiento largo está en [`docs/dev/traducciones_gettext.md`](docs/dev/traducciones_gettext.md).
+
+**Alcance:** literales de interfaz en PHP, `.phtml` y `.inc`, y cadenas Twig con `|trans`, bajo `frontend/`, `src/`, `public/` y `scripts/` (lo que extrae `php tools/i18n/actualizar_es_pot.php`). Los mensajes que solo salen en logs o en CLI se dejan fuera, salvo que ese código ya use gettext.
+
+### Forma de la cadena
+
+- En PHP la forma es `_("...")`, con comillas dobles. Las traducciones al catalán llevan apóstrofos (`l'`, `d'`, `n'`): un literal PHP entre comillas simples es inseguro con ese carácter, así que no se escribe `_('...')`.
+- Si el texto contiene comilla doble, dólar o barra invertida, escapar para que el valor PHP no cambie: `\"`, `\$`, `\\`.
+- El argumento de `_()` es un literal. xgettext no cataloga variables ni concatenaciones.
+- En Twig, la forma ya documentada es `{{ "..."|trans }}`, también con comillas dobles.
+- Estilo de comillas: `php tools/audit/audit_gettext_comillas.php`. Listado de comillas simples: `--list-single`. Fallar si quedan: `--strict`.
+
+### Tras el cambio de código
+
+Poedit, al actualizar desde el código fuente, no extrae `{{ "..."|trans }}` ni los `.php` de `scripts/`. Regenerar la plantilla con el script del repo:
+
+```bash
+php tools/i18n/actualizar_es_pot.php
+```
+
+Sincronizar los cuatro catálogos reales con `msgmerge`. Los ficheros son `languages/<locale>/LC_MESSAGES/orbix.po` de `ca_ES.UTF-8`, `en_US.UTF-8`, `de_DE.UTF-8` e `it_IT.UTF-8`. Los enlaces `languages/ca`, `languages/en`, `languages/de` y `languages/it` apuntan a esas carpetas: no son un destino distinto. `languages/es_ES.po` (raíz de `languages/`) no se edita: es una copia antigua; el español de la interfaz es el `msgid`.
+
+```bash
+msgmerge --update --backup=none languages/ca_ES.UTF-8/LC_MESSAGES/orbix.po languages/es_ES.pot
+msgmerge --update --backup=none languages/en_US.UTF-8/LC_MESSAGES/orbix.po languages/es_ES.pot
+msgmerge --update --backup=none languages/de_DE.UTF-8/LC_MESSAGES/orbix.po languages/es_ES.pot
+msgmerge --update --backup=none languages/it_IT.UTF-8/LC_MESSAGES/orbix.po languages/es_ES.pot
+```
+
+Traducir las cadenas nuevas o con `msgstr` vacío. Desde `tools/i18n/` (venv y `GROQ_API_KEY` en `.env`; detalle en la guía):
+
+```bash
+python3 traduir_groq.py --idioma ca_ES.UTF-8 --idioma-nom catalán
+python3 traduir_groq.py --idioma en_US.UTF-8 --idioma-nom inglés
+python3 traduir_groq.py --idioma de_DE.UTF-8 --idioma-nom alemán
+python3 traduir_groq.py --idioma it_IT.UTF-8 --idioma-nom italiano
+```
+
+El modelo del script es `qwen/qwen3.8-27b`. `--lot` fija las frases por petición (por defecto 12). Sin `--fuzzy` solo rellena `msgstr` vacíos. Con `--fuzzy` retraduce las entradas fuzzy y les quita la marca al guardar.
+
+Una entrada fuzzy no entra en el `.mo` y en runtime no se usa: el usuario ve el `msgid` en español. Las cadenas nuevas tienen que quedar traducidas, con `msgstr` real.
+
+Compilar cada catálogo:
+
+```bash
+msgfmt --check -o languages/ca_ES.UTF-8/LC_MESSAGES/orbix.mo languages/ca_ES.UTF-8/LC_MESSAGES/orbix.po
+```
+
+El mismo comando para `en_US.UTF-8`, `de_DE.UTF-8` e `it_IT.UTF-8`.
+
+Cobertura (vacías, fuzzy, placeholders frente a `es_ES.pot`): `php tools/audit/audit_po_cobertura.php`.
+
+### Checklist
+
+- [ ] Cada texto de interfaz va en `_("...")` (Twig: `{{ "..."|trans }}`). Comilla doble, dólar y barra invertida escapados (`\"`, `\$`, `\\`) si aparecen en el texto.
+- [ ] `php tools/audit/audit_gettext_comillas.php` sin comillas simples nuevas en el código tocado.
+- [ ] `languages/es_ES.pot` regenerado con `php tools/i18n/actualizar_es_pot.php`.
+- [ ] `msgmerge` sobre `ca_ES.UTF-8`, `en_US.UTF-8`, `de_DE.UTF-8` e `it_IT.UTF-8` (`LC_MESSAGES/orbix.po`). Destino: esas carpetas, no los enlaces `ca`/`en`/`de`/`it` ni `languages/es_ES.po`.
+- [ ] Cadenas nuevas traducidas en los cuatro `.po`: vacías con `traduir_groq.py`; las que `msgmerge` haya dejado fuzzy, con `--fuzzy`. Ninguna cadena nueva queda fuzzy ni vacía.
+- [ ] `.mo` generado con `msgfmt --check` en cada locale.
+
 ## Compatibilidad con legado
 - No propagar patrones legacy al código nuevo.
 - Si un caso de uso necesita integrarse con legacy:
@@ -136,6 +199,7 @@ Al mapear PDO → entidad/array, convertir fechas y json/jsonb **en el mismo blo
 - [ ] ¿Los endpoints AJAX de desplegables devuelven `opciones` como array de pares `[value, label]` (no mapa) y el JS usa el helper compartido `fnjs_construir_desplegable`?
 - [ ] ¿Columnas `date`/`time`/`timestamp` leídas con `ConverterDate::fromPg` y escritas con `toPg` (mismo `$type`; converters en `toArrayForDatabase`; sin fallback Hydratable ni `format` manual)?
 - [ ] ¿Columnas `json`/`jsonb` vía `ConverterJson` (no `json_encode`/`json_decode` sueltos para persistencia)?
+- [ ] Si el cambio añade o modifica textos de interfaz, ¿siguen la sección «Textos de interfaz (gettext)» (`_("...")`, `es_ES.pot`, ca/en/de/it traducidos y `.mo`)?
 
 ## Scripts y herramientas offline
 

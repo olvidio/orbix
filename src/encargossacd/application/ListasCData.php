@@ -58,9 +58,9 @@ final class ListasCData
         $inicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt')->getFromLocal();
         $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->getFromLocal();
 
-        $cabecera_left = sprintf(_('Curso:  %s - %s'), $inicurs, $fincurs);
+        $cabecera_left = sprintf(_("Curso:  %s - %s"), $inicurs, $fincurs);
         $cabecera_right = ConfigGlobal::mi_delef();
-        $cabecera_right_2 = _('ref. cr 1/14, 10, d)');
+        $cabecera_right_2 = _("ref. cr 1/14, 10, d)");
 
         $permiso_sf = '';
         $oPerm = $_SESSION['oPerm'] ?? null;
@@ -200,24 +200,24 @@ final class ListasCData
                             $c3 = (int)($sf_cgi[3] ?? 0);
                             $c4 = (int)($sf_cgi[4] ?? 0);
                             if ($n3 === 1) {
-                                $sf_txt .= ', ' . sprintf(_('%s centro sf'), $n3);
+                                $sf_txt .= ', ' . sprintf(_("%s centro sf"), $n3);
                             } elseif ($n3 > 1) {
-                                $sf_txt .= ', ' . sprintf(_('%s centros sf'), $n3);
+                                $sf_txt .= ', ' . sprintf(_("%s centros sf"), $n3);
                             }
                             if ($n4 === 1) {
-                                $sf_txt .= ', ' . sprintf(_('suplente de %s centro sf'), $n4);
+                                $sf_txt .= ', ' . sprintf(_("suplente de %s centro sf"), $n4);
                             } elseif ($n4 > 1) {
-                                $sf_txt .= ', ' . sprintf(_('suplente de %s centros sf'), $n4);
+                                $sf_txt .= ', ' . sprintf(_("suplente de %s centros sf"), $n4);
                             }
                             if ($c3 === 1) {
-                                $sf_txt .= ', ' . sprintf(_('atiende %s colegio sf'), $c3);
+                                $sf_txt .= ', ' . sprintf(_("atiende %s colegio sf"), $c3);
                             } elseif ($c3 > 1) {
-                                $sf_txt .= ', ' . sprintf(_('atiende %s colegios sf'), $c3);
+                                $sf_txt .= ', ' . sprintf(_("atiende %s colegios sf"), $c3);
                             }
                             if ($c4 === 1) {
-                                $sf_txt .= ', ' . sprintf(_('colabora con %s colegio sf'), $c4);
+                                $sf_txt .= ', ' . sprintf(_("colabora con %s colegio sf"), $c4);
                             } elseif ($c4 > 1) {
-                                $sf_txt .= ', ' . sprintf(_('colabora con %s colegios sf'), $c4);
+                                $sf_txt .= ', ' . sprintf(_("colabora con %s colegios sf"), $c4);
                             }
                             $sf_txt = substr($sf_txt, 2);
                         }
@@ -227,7 +227,7 @@ final class ListasCData
             }
             uksort($a_sacd, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
 
-            $poblacion = !empty($id_grupo) ? ($array_grupos[$id_grupo] ?? _('otros')) : _('otros');
+            $poblacion = !empty($id_grupo) ? ($array_grupos[$id_grupo] ?? _("otros")) : _("otros");
             $titulo_2 = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb($poblacion);
             if ($titulo_2 !== '') {
                 $Html_all .= "<tr><td class=poblacion colspan=2>$titulo_2</td></tr>";

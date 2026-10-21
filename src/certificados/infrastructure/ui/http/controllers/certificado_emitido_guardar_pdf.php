@@ -21,7 +21,7 @@ $error_txt = '';
 
 $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
 if ($oCertificadoEmitido === null) {
-    $error_txt .= '<br>' . sprintf(_('No encuentro certificado emitido con id_item: %d'), $Qid_item);
+    $error_txt .= '<br>' . sprintf(_("No encuentro certificado emitido con id_item: %d"), $Qid_item);
     ContestarJson::enviar($error_txt, []);
     return;
 }

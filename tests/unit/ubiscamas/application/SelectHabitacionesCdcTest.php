@@ -71,7 +71,7 @@ final class SelectHabitacionesCdcTest extends TestCase
         $this->assertCount(1, $data['tabla']['valores']);
         $this->assertSame("$hid#12#10", $data['tabla']['valores'][1]['sel']);
         $this->assertSame('Norte', $data['tabla']['valores'][1][1]);
-        $this->assertSame(_('NO'), $data['tabla']['valores'][1][7]);
+        $this->assertSame(_("NO"), $data['tabla']['valores'][1][7]);
         $this->assertSame(['nuevo' => 1, 'id_ubi' => 12], $data['url_nuevo_spec']['query']);
     }
 }

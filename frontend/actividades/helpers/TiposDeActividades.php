@@ -230,27 +230,27 @@ class TiposDeActividades
         $txt_svsf = $this->getSfsvText();
         $txt_asistentes = '';
         if ($this->getAsistentesText() === 'n') {
-            $txt_asistentes = $txt_svsf === 'sv' ? _('numerarios') : _('numerarias');
+            $txt_asistentes = $txt_svsf === 'sv' ? _("numerarios") : _("numerarias");
         }
         if ($this->getAsistentesText() === 'nax') {
-            $txt_asistentes = _('numerarias auxiliares');
+            $txt_asistentes = _("numerarias auxiliares");
         }
         if ($this->getAsistentesText() === 'agd') {
-            $txt_asistentes = $txt_svsf === 'sv' ? _('agregados') : _('agregadas');
+            $txt_asistentes = $txt_svsf === 'sv' ? _("agregados") : _("agregadas");
         }
         if ($this->getAsistentesText() === 'sg') {
-            $txt_asistentes = $txt_svsf === 'sv' ? _('coperadores') : _('coperadoras');
+            $txt_asistentes = $txt_svsf === 'sv' ? _("coperadores") : _("coperadoras");
         }
 
         $txt_actividad = 'Actividad';
         if ($this->getActividadText() === 'crt') {
-            $txt_actividad = _('curso de retiro');
+            $txt_actividad = _("curso de retiro");
         }
         if ($this->getActividadText() === 'ca') {
-            $txt_actividad = _('curso anual');
+            $txt_actividad = _("curso anual");
         }
         if ($this->getActividadText() === 'cv' || $this->getActividadText() === 'cve') {
-            $txt_actividad = _('convivencia');
+            $txt_actividad = _("convivencia");
         }
 
         return $txt_actividad . ' ' . $txt_asistentes;

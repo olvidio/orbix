@@ -23,7 +23,7 @@ final class PlanningCasaQueFormData
         $sessionAuth = $_SESSION['session_auth'] ?? null;
         $oMiUsuario = is_array($sessionAuth) ? ($sessionAuth['MiUsuario'] ?? null) : null;
         if (!is_object($oMiUsuario) || !method_exists($oMiUsuario, 'getId_role')) {
-            throw new \RuntimeException(_('No se encuentra el usuario'));
+            throw new \RuntimeException(_("No se encuentra el usuario"));
         }
 
         $oRole = new Role();

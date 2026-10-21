@@ -189,7 +189,7 @@ class ActividadNuevoCurso
         $oFini = $oActividadOrigen->getF_ini();
         $oFfin = $oActividadOrigen->getF_fin();
         if (!($oFini instanceof DateTimeLocal) || !($oFfin instanceof DateTimeLocal)) {
-            return $txt . _('fechas de actividad no válidas') . '<br>';
+            return $txt . _("fechas de actividad no válidas") . '<br>';
         }
         switch ($tipo) {
             case 1: // por dia de la semana

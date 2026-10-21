@@ -117,10 +117,10 @@ function sacd_resincronizar_motivo_no_ejecutable(): string
     $ubicacion = getenv('UBICACION');
     $ubicacion = is_string($ubicacion) ? strtolower(trim($ubicacion)) : '';
     if ($ubicacion !== 'sv') {
-        return sprintf(_('Sólo se puede resincronizar desde el interior sv (UBICACION=%s)'), $ubicacion ?: '?');
+        return sprintf(_("Sólo se puede resincronizar desde el interior sv (UBICACION=%s)"), $ubicacion ?: '?');
     }
     if (ConfigGlobal::is_dmz()) {
-        return _('Sólo se puede resincronizar desde el interior (esta instalación es DMZ)');
+        return _("Sólo se puede resincronizar desde el interior (esta instalación es DMZ)");
     }
 
     return '';
@@ -133,7 +133,7 @@ function sacd_resincronizar_tomar_pid(): string
     if (file_exists($filename)) {
         $edad = time() - (int) filemtime($filename);
         if ($edad < 15 * 60) {
-            return _('Ya hay una resincronización de cp_sacd en marcha');
+            return _("Ya hay una resincronización de cp_sacd en marcha");
         }
     }
     file_put_contents($filename, sprintf("%s -- pid %d\n", date('c'), getmypid()));
@@ -191,7 +191,7 @@ if ($aplicar) {
 $totales = $resultado['totales'];
 $resumen = sprintf(
     '%s: %d esquema(s), altas=%d cambios=%d bajas=%d errores=%d',
-    $aplicar ? _('aplicado') : _('informe'),
+    $aplicar ? _("aplicado") : _("informe"),
     $totales['esquemas'],
     $totales['altas'],
     $totales['cambios'],
@@ -204,7 +204,7 @@ if ($isWeb) {
     $html .= '<pre>' . htmlspecialchars(implode("\n", $resultado['lineas']), ENT_QUOTES, 'UTF-8') . '</pre>';
     if (!$aplicar) {
         $html .= '<p class="comentario">'
-            . _('Informe sin cambios en la base de datos. Para aplicar, repita con «aplicar».')
+            . _("Informe sin cambios en la base de datos. Para aplicar, repita con «aplicar».")
             . '</p>';
     }
     ContestarJson::enviar('', ['html' => $html, 'totales' => $totales]);

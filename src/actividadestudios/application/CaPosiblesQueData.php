@@ -53,7 +53,7 @@ final class CaPosiblesQueData
                 }
             }
         } else {
-            $miGrupo = _('no encuentro el grupo de estudios al que pertenece la dl');
+            $miGrupo = _("no encuentro el grupo de estudios al que pertenece la dl");
         }
 
         $aListaCtr = $this->personaNRepository->getArrayIdCentros();
@@ -72,7 +72,7 @@ final class CaPosiblesQueData
         }
         uksort($aCentrosOrden, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
         $aCentrosNExt = [];
-        $aCentrosNExt[1] = _('todos los ctr');
+        $aCentrosNExt[1] = _("todos los ctr");
         $aCentrosNExt[2] = '----------';
         foreach ($aCentrosOrden as $aCentro) {
             $key = key($aCentro);
@@ -96,7 +96,7 @@ final class CaPosiblesQueData
         }
         uksort($aCentrosOrden, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
         $aCentrosAgdExt = [];
-        $aCentrosAgdExt[1] = _('todos los ctr');
+        $aCentrosAgdExt[1] = _("todos los ctr");
         $aCentrosAgdExt[2] = '----------';
         foreach ($aCentrosOrden as $aCentro) {
             $key = key($aCentro);

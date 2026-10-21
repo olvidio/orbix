@@ -29,14 +29,14 @@ final class NivelCatalogoAsignaturaEnPlan
     public function resolve(int $idNom, int $idAsignatura): int
     {
         if ($idAsignatura < 1) {
-            throw new \RuntimeException(_('Asignatura no válida.'));
+            throw new \RuntimeException(_("Asignatura no válida."));
         }
 
         $plan = $this->planEstudiosDePersona->resolve($idNom);
         $asignatura = $this->asignaturaRepository->findById($idAsignatura, $plan);
         if ($asignatura === null || !$asignatura->isActive()) {
             throw new \RuntimeException(sprintf(
-                _('No se encuentra la asignatura %s en el plan de estudios del alumno.'),
+                _("No se encuentra la asignatura %s en el plan de estudios del alumno."),
                 (string) $idAsignatura,
             ));
         }

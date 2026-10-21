@@ -34,7 +34,7 @@ $endpoints = [
 ];
 
 if (!isset($endpoints[$mod])) {
-    AjaxJsonSupport::response(_('modo no válido'));
+    AjaxJsonSupport::response(_("modo no válido"));
 }
 
 /** @var array<string, mixed> $campos */
@@ -46,7 +46,7 @@ if (!empty($data['error'])) {
     $msg = html_entity_decode(strip_tags($msg), ENT_QUOTES | ENT_HTML5, 'UTF-8');
     $msg = trim(preg_replace('/\s+/', ' ', $msg) ?? '');
 
-    AjaxJsonSupport::response($msg !== '' ? $msg : _('Error al guardar'));
+    AjaxJsonSupport::response($msg !== '' ? $msg : _("Error al guardar"));
 }
 
 AjaxJsonSupport::response();

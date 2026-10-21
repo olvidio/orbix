@@ -9,14 +9,14 @@ try {
     $opened = HashB::open($ctxRaw, 'update_solo_vip');
 } catch (HashBInvalidException $e) {
     header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'mensaje' => _('Operación no autorizada')]);
+    echo json_encode(['success' => false, 'mensaje' => _("Operación no autorizada")]);
     exit;
 }
 
 $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($opened, 'id_activ');
 if ($Qid_activ <= 0) {
     header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'mensaje' => _('Operación no autorizada')]);
+    echo json_encode(['success' => false, 'mensaje' => _("Operación no autorizada")]);
     exit;
 }
 

@@ -90,13 +90,13 @@ final class ActividadQueFiltrosBloque
                 'value' => $publicado,
             ],
             'labels' => [
-                'lugar_pais_dl' => (string) _('lugar según país o dl'),
-                'lugar' => (string) _('lugar'),
-                'organiza' => (string) _('organiza'),
-                'publicada' => (string) _('publicada'),
-                'si' => (string) _('si'),
-                'no' => (string) _('no'),
-                'todas' => (string) _('todas'),
+                'lugar_pais_dl' => (string) _("lugar según país o dl"),
+                'lugar' => (string) _("lugar"),
+                'organiza' => (string) _("organiza"),
+                'publicada' => (string) _("publicada"),
+                'si' => (string) _("si"),
+                'no' => (string) _("no"),
+                'todas' => (string) _("todas"),
             ],
         ];
     }

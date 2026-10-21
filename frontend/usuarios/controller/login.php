@@ -73,7 +73,7 @@ function orbix_responder_login_api_sin_sesion(): void
 {
     header('Content-Type: application/json; charset=UTF-8');
     orbix_marcar_respuesta_ajax_sin_sesion();
-    UsuariosAuthBridge::contestarJson(_('Sesión no autenticada'), ['code' => 'auth_required']);
+    UsuariosAuthBridge::contestarJson(_("Sesión no autenticada"), ['code' => 'auth_required']);
 }
 
 $esquema_web = getenv('ESQUEMA');
@@ -88,7 +88,7 @@ $private_str = is_string($private) ? $private : '';
 
 if ($esquema_web_str !== '') {
     if (!in_array($esquema_web_str, UsuariosAuthBridge::posiblesEsquemasWeb(), true)) {
-        $msg = sprintf(_('No existe este equema: %s'), $esquema_web_str);
+        $msg = sprintf(_("No existe este equema: %s"), $esquema_web_str);
         die($msg);
     }
 }

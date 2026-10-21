@@ -36,7 +36,7 @@ final class TelecoGuardar
             $pkey = is_int($firstKey) ? $firstKey : (int) $firstKey;
             $TelecoUbi = $Repository->findById($pkey);
             if ($TelecoUbi === null) {
-                throw new \RuntimeException(sprintf(_('No se encuentra teleco id %s'), (string) $pkey));
+                throw new \RuntimeException(sprintf(_("No se encuentra teleco id %s"), (string) $pkey));
             }
         }
 

@@ -286,11 +286,11 @@ final class AbsorberEsquema
         $DelegacionRepository = $this->delegacionRepository;
         $oDelegacion = $DelegacionRepository->findById($id_dl_old);
         if ($oDelegacion === null) {
-            $errores[] = _('Delegación origen no encontrada.');
+            $errores[] = _("Delegación origen no encontrada.");
         } else {
             $oDelegacion->setActive(false);
             if ($DelegacionRepository->Guardar($oDelegacion) === false) {
-                $errores[] = _('hay un error, no se ha guardado') . ': ' . $DelegacionRepository->getErrorTxt();
+                $errores[] = _("hay un error, no se ha guardado") . ': ' . $DelegacionRepository->getErrorTxt();
             }
         }
 

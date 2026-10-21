@@ -31,7 +31,7 @@ final class PlanningCasaVerData
         $f_ini_iso = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_ini_iso');
         $f_fin_iso = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'f_fin_iso');
         if ($f_ini_iso === '' || $f_fin_iso === '') {
-            throw new \RuntimeException(_('Faltan fechas de periodo (f_ini_iso / f_fin_iso).'));
+            throw new \RuntimeException(_("Faltan fechas de periodo (f_ini_iso / f_fin_iso)."));
         }
 
         $aIdCdc = null;

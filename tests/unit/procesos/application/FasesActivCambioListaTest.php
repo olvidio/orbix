@@ -35,7 +35,7 @@ final class FasesActivCambioListaTest extends TestCase
     {
         $data = $this->useCase()->execute([]);
         $this->assertIsArray($data);
-        $this->assertSame(_('Debe poner la fase nueva'), $data['error']);
+        $this->assertSame(_("Debe poner la fase nueva"), $data['error']);
     }
 
     public function test_id_fase_nueva_vacia_devuelve_mensaje_error(): void
@@ -45,7 +45,7 @@ final class FasesActivCambioListaTest extends TestCase
             'accion' => 'marcar',
         ]);
         $this->assertIsArray($data);
-        $this->assertSame(_('Debe poner la fase nueva'), $data['error']);
+        $this->assertSame(_("Debe poner la fase nueva"), $data['error']);
         $this->assertSame('marcar', $data['accion']);
     }
 }

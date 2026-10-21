@@ -56,7 +56,7 @@ final class PropuestasAprobarService
 
         (new DBPropuestas())->eliminarAll();
 
-        return _('Hecho!');
+        return _("Hecho!");
     }
 
     private function comprobarHorario(int $id_item, DateTimeLocal $f_ini): void

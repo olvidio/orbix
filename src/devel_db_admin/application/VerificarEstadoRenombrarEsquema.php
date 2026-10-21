@@ -64,7 +64,7 @@ final class VerificarEstadoRenombrarEsquema
         $oImportar = new ConfigDB('importar');
 
         $bloques[] = $this->bloqueBd(
-            _('comun (principal)'),
+            _("comun (principal)"),
             $this->pdoDesdeImportar($oImportar, 'public'),
             $esquema_old,
             $esquema_new,
@@ -76,7 +76,7 @@ final class VerificarEstadoRenombrarEsquema
 
         if (!$isDocker) {
             $bloques[] = $this->bloqueBd(
-                _('comun (réplica / select)'),
+                _("comun (réplica / select)"),
                 $this->pdoDesdeImportar($oImportar, 'public_select'),
                 $esquema_old,
                 $esquema_new,
@@ -88,7 +88,7 @@ final class VerificarEstadoRenombrarEsquema
         }
 
         $bloques[] = $this->bloqueBd(
-            _('sv'),
+            _("sv"),
             $this->pdoDesdeImportar($oImportar, 'publicv'),
             $esquema_oldv,
             $esquema_newv,
@@ -99,7 +99,7 @@ final class VerificarEstadoRenombrarEsquema
         );
 
         $bloques[] = $this->bloqueBd(
-            _('sv-e'),
+            _("sv-e"),
             $this->pdoDesdeImportar($oImportar, 'publicv-e'),
             $esquema_oldv,
             $esquema_newv,
@@ -111,7 +111,7 @@ final class VerificarEstadoRenombrarEsquema
 
         if (!$isDocker) {
             $bloques[] = $this->bloqueBd(
-                _('sv-e (réplica / select)'),
+                _("sv-e (réplica / select)"),
                 $this->pdoDesdeImportar($oImportar, 'publicv-e_select'),
                 $esquema_oldv,
                 $esquema_newv,
@@ -124,7 +124,7 @@ final class VerificarEstadoRenombrarEsquema
 
         if ($sf !== 0) {
             $bloques[] = $this->bloqueBd(
-                _('sf'),
+                _("sf"),
                 $this->pdoDesdeImportar($oImportar, 'publicf'),
                 $esquema_oldf,
                 $esquema_newf,
@@ -138,14 +138,14 @@ final class VerificarEstadoRenombrarEsquema
         if ($comun !== 0) {
             $specComun = RenombrarEsquemaDefaultsCatalog::comun($esquema_new, $region, $dl);
             $bloques[] = $this->bloqueDefaultsColumnas(
-                _('Defaults de columnas (comun)'),
+                _("Defaults de columnas (comun)"),
                 $this->pdoDesdeImportar($oImportar, 'public'),
                 $esquema_new,
                 $specComun,
             );
             if (!$isDocker) {
                 $bloques[] = $this->bloqueDefaultsColumnas(
-                    _('Defaults de columnas (comun_select)'),
+                    _("Defaults de columnas (comun_select)"),
                     $this->pdoDesdeImportar($oImportar, 'public_select'),
                     $esquema_new,
                     $specComun,
@@ -157,20 +157,20 @@ final class VerificarEstadoRenombrarEsquema
             $specSv = RenombrarEsquemaDefaultsCatalog::sv($esquema_newv, $region, $dl);
             $specSve = RenombrarEsquemaDefaultsCatalog::svE($esquema_newv, $dl);
             $bloques[] = $this->bloqueDefaultsColumnas(
-                _('Defaults de columnas (sv)'),
+                _("Defaults de columnas (sv)"),
                 $this->pdoDesdeImportar($oImportar, 'publicv'),
                 $esquema_newv,
                 $specSv,
             );
             $bloques[] = $this->bloqueDefaultsColumnas(
-                _('Defaults de columnas (sv-e)'),
+                _("Defaults de columnas (sv-e)"),
                 $this->pdoDesdeImportar($oImportar, 'publicv-e'),
                 $esquema_newv,
                 $specSve,
             );
             if (!$isDocker) {
                 $bloques[] = $this->bloqueDefaultsColumnas(
-                    _('Defaults de columnas (sv-e_select)'),
+                    _("Defaults de columnas (sv-e_select)"),
                     $this->pdoDesdeImportar($oImportar, 'publicv-e_select'),
                     $esquema_newv,
                     $specSve,
@@ -179,7 +179,7 @@ final class VerificarEstadoRenombrarEsquema
         }
 
         $bloques[] = $this->bloqueInc(
-            _('Ficheros de contraseña (.inc)'),
+            _("Ficheros de contraseña (.inc)"),
             $isDocker,
             $esquema_old,
             $esquema_new,
@@ -195,19 +195,19 @@ final class VerificarEstadoRenombrarEsquema
         $listo = $this->calcularListo($bloques);
         if ($listo) {
             if ($soloDestino) {
-                $resumen = _('Todo cuadra con la instalación del esquema destino (comprobación sin nombre de origen: no se valida que un nombre antiguo haya desaparecido).');
+                $resumen = _("Todo cuadra con la instalación del esquema destino (comprobación sin nombre de origen: no se valida que un nombre antiguo haya desaparecido).");
             } elseif ($sinRenombreEfectivo) {
-                $resumen = _('Todo cuadra con la instalación actual (comprobación frente al propio esquema, sin cambio de nombre de destino): esquemas/roles, db_idschema, claves .inc y defaults según el catálogo.');
+                $resumen = _("Todo cuadra con la instalación actual (comprobación frente al propio esquema, sin cambio de nombre de destino): esquemas/roles, db_idschema, claves .inc y defaults según el catálogo.");
             } else {
-                $resumen = _('Todo cuadra con el objetivo: nombres nuevos presentes, viejos ausentes, claves e idschema coherentes, y defaults de columnas según el catálogo del renombre.');
+                $resumen = _("Todo cuadra con el objetivo: nombres nuevos presentes, viejos ausentes, claves e idschema coherentes, y defaults de columnas según el catálogo del renombre.");
             }
         } else {
             if ($soloDestino) {
-                $resumen = _('Hay pendientes o incoherencias en el esquema destino (defaults, .inc, db_idschema, etc.); no se ha contrastado un nombre antiguo concreto.');
+                $resumen = _("Hay pendientes o incoherencias en el esquema destino (defaults, .inc, db_idschema, etc.); no se ha contrastado un nombre antiguo concreto.");
             } elseif ($sinRenombreEfectivo) {
-                $resumen = _('Hay pendientes o incoherencias respecto al esquema actual (incluidos defaults ALTER COLUMN); revise la lista.');
+                $resumen = _("Hay pendientes o incoherencias respecto al esquema actual (incluidos defaults ALTER COLUMN); revise la lista.");
             } else {
-                $resumen = _('Hay pendientes o incoherencias (incluidos defaults ALTER COLUMN); revise la lista y puede volver a ejecutar el renombre para completar.');
+                $resumen = _("Hay pendientes o incoherencias (incluidos defaults ALTER COLUMN); revise la lista y puede volver a ejecutar el renombre para completar.");
             }
         }
 
@@ -241,29 +241,29 @@ final class VerificarEstadoRenombrarEsquema
         /** @var list<array{texto: string, estado: string}> $items */
         $items = [];
         $items[] = [
-            'texto' => _('Esta comprobación revisa esquemas/roles, db_idschema, ficheros .inc y los ALTER COLUMN SET DEFAULT del renombre (réplicas omitidas en docker; bloques de defaults de comun/sv solo si los checkboxes correspondientes están marcados).'),
+            'texto' => _("Esta comprobación revisa esquemas/roles, db_idschema, ficheros .inc y los ALTER COLUMN SET DEFAULT del renombre (réplicas omitidas en docker; bloques de defaults de comun/sv solo si los checkboxes correspondientes están marcados)."),
             'estado' => 'ok',
         ];
         if ($soloDestinoComprobacion) {
             $items[] = [
-                'texto' => _('Modo solo destino: no hay esquema de origen en el formulario; se comprueba únicamente la coherencia del nombre región–delegación elegido (no si un nombre antiguo sigue o ha desaparecido). «Corregir» sin origen solo reaplica defaults en ese nombre, no sincroniza .inc ni db_idschema. Para la transición origen→destino rellene el origen o use «Cambiar nombre» con ambos datos.'),
+                'texto' => _("Modo solo destino: no hay esquema de origen en el formulario; se comprueba únicamente la coherencia del nombre región–delegación elegido (no si un nombre antiguo sigue o ha desaparecido). «Corregir» sin origen solo reaplica defaults en ese nombre, no sincroniza .inc ni db_idschema. Para la transición origen→destino rellene el origen o use «Cambiar nombre» con ambos datos."),
                 'estado' => 'ok',
             ];
         } else {
             $items[] = [
-                'texto' => _('Con esquema de origen y destino definidos se valida también la transición (ausencia del viejo / presencia del nuevo donde aplique).'),
+                'texto' => _("Con esquema de origen y destino definidos se valida también la transición (ausencia del viejo / presencia del nuevo donde aplique)."),
                 'estado' => 'ok',
             ];
         }
         if ($sinRenombreEfectivo && !$soloDestinoComprobacion) {
             $items[] = [
-                'texto' => _('Objetivo de nombre igual al esquema actual: se comprueba coherencia de la instalación (no el estado intermedio de un renombre).'),
+                'texto' => _("Objetivo de nombre igual al esquema actual: se comprueba coherencia de la instalación (no el estado intermedio de un renombre)."),
                 'estado' => 'ok',
             ];
         }
         $items[] = [
             'texto' => sprintf(
-                _('Checkboxes actuales (solo afectan al paso ALTER de defaults al ejecutar el renombre): comun=%s, sv=%s, sf=%s'),
+                _("Checkboxes actuales (solo afectan al paso ALTER de defaults al ejecutar el renombre): comun=%s, sv=%s, sf=%s"),
                 $comun !== 0 ? '1' : '0',
                 $sv !== 0 ? '1' : '0',
                 $sf !== 0 ? '1' : '0',
@@ -271,7 +271,7 @@ final class VerificarEstadoRenombrarEsquema
             'estado' => 'ok',
         ];
 
-        return ['nombre' => _('Alcance de la comprobación'), 'items' => $items];
+        return ['nombre' => _("Alcance de la comprobación"), 'items' => $items];
     }
 
     /**
@@ -295,7 +295,7 @@ final class VerificarEstadoRenombrarEsquema
         /** @var list<array{texto: string, estado: string}> $items */
         $items = [];
         if ($pdo === null) {
-            $items[] = ['texto' => _('No se ha podido conectar a esta base (revisar importar.inc / red).'), 'estado' => 'error'];
+            $items[] = ['texto' => _("No se ha podido conectar a esta base (revisar importar.inc / red)."), 'estado' => 'error'];
 
             return ['nombre' => $nombre, 'items' => $items];
         }
@@ -308,7 +308,7 @@ final class VerificarEstadoRenombrarEsquema
         if ($so && !$sn) {
             $items[] = [
                 'texto' => sprintf(
-                    _('Renombre a medias en esta instancia: sigue el esquema «%1$s» y aún no existe «%2$s». Suele ocurrir si «Cambiar nombre del esquema» se interrumpió antes de terminar en esta base (p. ej. comun vs sv).'),
+                    _("Renombre a medias en esta instancia: sigue el esquema «%1\$s» y aún no existe «%2\$s». Suele ocurrir si «Cambiar nombre del esquema» se interrumpió antes de terminar en esta base (p. ej. comun vs sv)."),
                     $schemaOld,
                     $schemaNew,
                 ),
@@ -318,7 +318,7 @@ final class VerificarEstadoRenombrarEsquema
         if ($ro && !$rn) {
             $items[] = [
                 'texto' => sprintf(
-                    _('Renombre de rol a medias: el rol «%1$s» sigue existiendo y no existe «%2$s».'),
+                    _("Renombre de rol a medias: el rol «%1\$s» sigue existiendo y no existe «%2\$s»."),
                     $roleOld,
                     $roleNew,
                 ),
@@ -327,39 +327,39 @@ final class VerificarEstadoRenombrarEsquema
         }
 
         $items[] = $this->itemEsperado(
-            sprintf(_('Esquema antiguo «%s»'), $schemaOld),
+            sprintf(_("Esquema antiguo «%s»"), $schemaOld),
             !$so,
-            _('Ya no existe en esta BD (correcto tras el renombre).'),
-            _('Sigue existiendo: falta completar el renombre o eliminarlo manualmente.'),
+            _("Ya no existe en esta BD (correcto tras el renombre)."),
+            _("Sigue existiendo: falta completar el renombre o eliminarlo manualmente."),
         );
         $items[] = $this->itemEsperado(
-            sprintf(_('Esquema nuevo «%s»'), $schemaNew),
+            sprintf(_("Esquema nuevo «%s»"), $schemaNew),
             $sn,
-            _('Existe en esta BD.'),
-            _('No existe: el renombre no ha llegado a crear este esquema en esta instancia.'),
+            _("Existe en esta BD."),
+            _("No existe: el renombre no ha llegado a crear este esquema en esta instancia."),
         );
         $items[] = $this->itemEsperado(
-            sprintf(_('Rol antiguo «%s»'), $roleOld),
+            sprintf(_("Rol antiguo «%s»"), $roleOld),
             !$ro,
-            _('Ya no existe (correcto tras el renombre).'),
-            _('Sigue existiendo: falta renombrar el rol o queda huérfano.'),
+            _("Ya no existe (correcto tras el renombre)."),
+            _("Sigue existiendo: falta renombrar el rol o queda huérfano."),
         );
         $items[] = $this->itemEsperado(
-            sprintf(_('Rol nuevo «%s»'), $roleNew),
+            sprintf(_("Rol nuevo «%s»"), $roleNew),
             $rn,
-            _('Existe en esta instancia.'),
-            _('No existe: falta crear/renombrar el usuario en esta instancia.'),
+            _("Existe en esta instancia."),
+            _("No existe: falta crear/renombrar el usuario en esta instancia."),
         );
 
         if ($so && $sn) {
             $items[] = [
-                'texto' => _('Incoherencia: coexisten esquema antiguo y nuevo en la misma BD.'),
+                'texto' => _("Incoherencia: coexisten esquema antiguo y nuevo en la misma BD."),
                 'estado' => 'error',
             ];
         }
         if ($ro && $rn) {
             $items[] = [
-                'texto' => _('Incoherencia: coexisten rol antiguo y nuevo (misma instancia PostgreSQL).'),
+                'texto' => _("Incoherencia: coexisten rol antiguo y nuevo (misma instancia PostgreSQL)."),
                 'estado' => 'error',
             ];
         }
@@ -369,7 +369,7 @@ final class VerificarEstadoRenombrarEsquema
             if (!$sn && $propO === $roleNew) {
                 $items[] = [
                     'texto' => sprintf(
-                        _('Propietario del esquema antiguo «%1$s»: ya es el rol nuevo «%2$s»; falta ALTER SCHEMA «%1$s» RENAME TO «%3$s» (use «Corregir» o «Cambiar nombre»).'),
+                        _("Propietario del esquema antiguo «%1\$s»: ya es el rol nuevo «%2\$s»; falta ALTER SCHEMA «%1\$s» RENAME TO «%3\$s» (use «Corregir» o «Cambiar nombre»)."),
                         $schemaOld,
                         $roleNew,
                         $schemaNew,
@@ -378,12 +378,12 @@ final class VerificarEstadoRenombrarEsquema
                 ];
             } else {
                 $items[] = $this->itemEsperado(
-                    sprintf(_('Propietario del esquema antiguo «%s» (= rol homónimo)'), $schemaOld),
+                    sprintf(_("Propietario del esquema antiguo «%s» (= rol homónimo)"), $schemaOld),
                     $propO !== null && $propO === $schemaOld,
-                    sprintf(_('Coincide («%s»).'), (string) $propO),
+                    sprintf(_("Coincide («%s»)."), (string) $propO),
                     sprintf(
-                        _('No coincide: el propietario es «%s». Use «Corregir» o ALTER SCHEMA … OWNER TO «%s».'),
-                        $propO ?? _('desconocido'),
+                        _("No coincide: el propietario es «%s». Use «Corregir» o ALTER SCHEMA … OWNER TO «%s»."),
+                        $propO ?? _("desconocido"),
                         $schemaOld,
                     ),
                 );
@@ -392,23 +392,23 @@ final class VerificarEstadoRenombrarEsquema
         if ($sn) {
             $propN = $this->propietarioEsquema($pdo, $schemaNew);
             $items[] = $this->itemEsperado(
-                sprintf(_('Propietario del esquema nuevo «%s» (= rol homónimo)'), $schemaNew),
+                sprintf(_("Propietario del esquema nuevo «%s» (= rol homónimo)"), $schemaNew),
                 $propN !== null && $propN === $schemaNew,
-                sprintf(_('Coincide («%s»).'), (string) $propN),
+                sprintf(_("Coincide («%s»)."), (string) $propN),
                 sprintf(
-                    _('No coincide: el propietario es «%s». Use «Corregir» o ALTER SCHEMA … OWNER TO «%s».'),
-                    $propN ?? _('desconocido'),
+                    _("No coincide: el propietario es «%s». Use «Corregir» o ALTER SCHEMA … OWNER TO «%s»."),
+                    $propN ?? _("desconocido"),
                     $schemaNew,
                 ),
             );
             $duAu = $this->duenyoRelacion($pdo, $schemaNew, 'aux_usuarios');
             if ($duAu !== null) {
                 $items[] = $this->itemEsperado(
-                    sprintf(_('Dueño de «%s.aux_usuarios» (= rol «%s»)'), $schemaNew, $schemaNew),
+                    sprintf(_("Dueño de «%s.aux_usuarios» (= rol «%s»)"), $schemaNew, $schemaNew),
                     $duAu === $schemaNew,
-                    sprintf(_('Correcto («%s»).'), $duAu),
+                    sprintf(_("Correcto («%s»)."), $duAu),
                     sprintf(
-                        _('El dueño es «%s»: la sesión del rol puede dar error 42501 en aux_usuarios. Use «Corregir».'),
+                        _("El dueño es «%s»: la sesión del rol puede dar error 42501 en aux_usuarios. Use «Corregir»."),
                         $duAu,
                     ),
                 );
@@ -419,7 +419,7 @@ final class VerificarEstadoRenombrarEsquema
             $items[] = $line;
         }
 
-        return ['nombre' => $nombre . ' — ' . _('tabla db_idschema') . ' (' . $dbIdschemaLabel . ')', 'items' => $items];
+        return ['nombre' => $nombre . ' — ' . _("tabla db_idschema") . ' (' . $dbIdschemaLabel . ')', 'items' => $items];
     }
 
     /**
@@ -439,7 +439,7 @@ final class VerificarEstadoRenombrarEsquema
         /** @var list<array{texto: string, estado: string}> $items */
         $items = [];
         if ($pdo === null) {
-            $items[] = ['texto' => _('No se ha podido conectar a esta base (revisar importar.inc / red).'), 'estado' => 'error'];
+            $items[] = ['texto' => _("No se ha podido conectar a esta base (revisar importar.inc / red)."), 'estado' => 'error'];
 
             return ['nombre' => $nombre, 'items' => $items];
         }
@@ -447,38 +447,38 @@ final class VerificarEstadoRenombrarEsquema
         $se = $this->existeEsquema($pdo, $schema);
         $re = $this->existeRol($pdo, $role);
         $items[] = $this->itemEsperado(
-            sprintf(_('Esquema «%s» (debe existir en esta BD)'), $schema),
+            sprintf(_("Esquema «%s» (debe existir en esta BD)"), $schema),
             $se,
-            _('Existe.'),
-            _('No existe en esta BD. Si pretendía comprobar un renombre hacia otro nombre (origen ≠ destino), rellene región y delegación objetivo en el formulario; si van vacíos, el objetivo se deduce del desplegable y puede coincidir con el origen.'),
+            _("Existe."),
+            _("No existe en esta BD. Si pretendía comprobar un renombre hacia otro nombre (origen ≠ destino), rellene región y delegación objetivo en el formulario; si van vacíos, el objetivo se deduce del desplegable y puede coincidir con el origen."),
         );
         $items[] = $this->itemEsperado(
-            sprintf(_('Rol «%s» (debe existir en esta instancia)'), $role),
+            sprintf(_("Rol «%s» (debe existir en esta instancia)"), $role),
             $re,
-            _('Existe.'),
-            _('No existe en esta instancia.'),
+            _("Existe."),
+            _("No existe en esta instancia."),
         );
 
         if ($se && $re) {
             $p = $this->propietarioEsquema($pdo, $schema);
             $items[] = $this->itemEsperado(
-                sprintf(_('Propietario del esquema «%s» (= rol homónimo)'), $schema),
+                sprintf(_("Propietario del esquema «%s» (= rol homónimo)"), $schema),
                 $p !== null && $p === $schema,
-                sprintf(_('Coincide («%s»).'), (string) $p),
+                sprintf(_("Coincide («%s»)."), (string) $p),
                 sprintf(
-                    _('No coincide: el propietario es «%s». Use «Corregir» o ALTER SCHEMA … OWNER TO «%s».'),
-                    $p ?? _('desconocido'),
+                    _("No coincide: el propietario es «%s». Use «Corregir» o ALTER SCHEMA … OWNER TO «%s»."),
+                    $p ?? _("desconocido"),
                     $schema,
                 ),
             );
             $duAu = $this->duenyoRelacion($pdo, $schema, 'aux_usuarios');
             if ($duAu !== null) {
                 $items[] = $this->itemEsperado(
-                    sprintf(_('Dueño de «%s.aux_usuarios» (= rol «%s»)'), $schema, $schema),
+                    sprintf(_("Dueño de «%s.aux_usuarios» (= rol «%s»)"), $schema, $schema),
                     $duAu === $schema,
-                    sprintf(_('Correcto («%s»).'), $duAu),
+                    sprintf(_("Correcto («%s»)."), $duAu),
                     sprintf(
-                        _('El dueño es «%s»: la sesión del rol puede dar error 42501 en aux_usuarios. Use «Corregir».'),
+                        _("El dueño es «%s»: la sesión del rol puede dar error 42501 en aux_usuarios. Use «Corregir»."),
                         $duAu,
                     ),
                 );
@@ -490,7 +490,7 @@ final class VerificarEstadoRenombrarEsquema
             $items[] = $line;
         }
 
-        return ['nombre' => $nombre . ' — ' . _('tabla db_idschema') . ' (' . $dbIdschemaLabel . ')', 'items' => $items];
+        return ['nombre' => $nombre . ' — ' . _("tabla db_idschema") . ' (' . $dbIdschemaLabel . ')', 'items' => $items];
     }
 
     /**
@@ -516,7 +516,7 @@ final class VerificarEstadoRenombrarEsquema
                 }
             }
         } catch (Throwable) {
-            $items[] = ['texto' => _('No se pudo leer public.db_idschema (¿tabla ausente o sin permisos?).'), 'estado' => 'aviso'];
+            $items[] = ['texto' => _("No se pudo leer public.db_idschema (¿tabla ausente o sin permisos?)."), 'estado' => 'aviso'];
 
             return $items;
         }
@@ -529,12 +529,12 @@ final class VerificarEstadoRenombrarEsquema
         }
         foreach ($missing as $s) {
             $items[] = [
-                'texto' => sprintf(_('db_idschema: falta fila para esquema "%s".'), $s),
+                'texto' => sprintf(_("db_idschema: falta fila para esquema \"%s\"."), $s),
                 'estado' => 'falta',
             ];
         }
         if ($missing === []) {
-            $items[] = ['texto' => _('db_idschema: trío de esquemas registrado.'), 'estado' => 'ok'];
+            $items[] = ['texto' => _("db_idschema: trío de esquemas registrado."), 'estado' => 'ok'];
         }
 
         return $items;
@@ -559,7 +559,7 @@ final class VerificarEstadoRenombrarEsquema
                 }
             }
         } catch (Throwable) {
-            $items[] = ['texto' => _('No se pudo leer public.db_idschema (¿tabla ausente o sin permisos?).'), 'estado' => 'aviso'];
+            $items[] = ['texto' => _("No se pudo leer public.db_idschema (¿tabla ausente o sin permisos?)."), 'estado' => 'aviso'];
 
             return $items;
         }
@@ -571,20 +571,20 @@ final class VerificarEstadoRenombrarEsquema
 
         foreach ($oldPresent as $s) {
             $items[] = [
-                'texto' => sprintf(_('db_idschema: sigue fila con esquema antiguo "%s" — falta UPDATE o quedó a medias.'), $s),
+                'texto' => sprintf(_("db_idschema: sigue fila con esquema antiguo \"%s\" — falta UPDATE o quedó a medias."), $s),
                 'estado' => 'falta',
             ];
         }
         foreach ($newTrio as $s) {
             if (!in_array($s, $newPresent, true)) {
                 $items[] = [
-                    'texto' => sprintf(_('db_idschema: falta fila para esquema nuevo "%s".'), $s),
+                    'texto' => sprintf(_("db_idschema: falta fila para esquema nuevo \"%s\"."), $s),
                     'estado' => 'falta',
                 ];
             }
         }
         if ($oldPresent === [] && count($newPresent) === 3) {
-            $items[] = ['texto' => _('db_idschema: trío nuevo completo, sin filas del trío antiguo.'), 'estado' => 'ok'];
+            $items[] = ['texto' => _("db_idschema: trío nuevo completo, sin filas del trío antiguo."), 'estado' => 'ok'];
         }
 
         return $items;
@@ -629,8 +629,8 @@ final class VerificarEstadoRenombrarEsquema
                 $has = in_array($clave, $keys, true);
                 $items[] = [
                     'texto' => $has
-                        ? sprintf(_('%s: clave "%s" presente.'), $archivo, $clave)
-                        : sprintf(_('%s: falta la clave "%s".'), $archivo, $clave),
+                        ? sprintf(_("%s: clave \"%s\" presente."), $archivo, $clave)
+                        : sprintf(_("%s: falta la clave \"%s\"."), $archivo, $clave),
                     'estado' => $has ? 'ok' : 'falta',
                 ];
 
@@ -640,17 +640,17 @@ final class VerificarEstadoRenombrarEsquema
             $hasNew = in_array($new, $keys, true);
             if ($hasNew && !$hasOld) {
                 $items[] = [
-                    'texto' => sprintf(_('%s: clave nueva "%s" presente, antigua "%s" ausente.'), $archivo, $new, $old),
+                    'texto' => sprintf(_("%s: clave nueva \"%s\" presente, antigua \"%s\" ausente."), $archivo, $new, $old),
                     'estado' => 'ok',
                 ];
             } elseif ($hasOld && !$hasNew) {
                 $items[] = [
-                    'texto' => sprintf(_('%s: sigue la clave antigua "%s"; falta "%s".'), $archivo, $old, $new),
+                    'texto' => sprintf(_("%s: sigue la clave antigua \"%s\"; falta \"%s\"."), $archivo, $old, $new),
                     'estado' => 'falta',
                 ];
             } else {
                 $items[] = [
-                    'texto' => sprintf(_('%s: coexisten "%s" y "%s" (limpiar la antigua al terminar).'), $archivo, $old, $new),
+                    'texto' => sprintf(_("%s: coexisten \"%s\" y \"%s\" (limpiar la antigua al terminar)."), $archivo, $old, $new),
                     'estado' => 'error',
                 ];
             }
@@ -734,7 +734,7 @@ final class VerificarEstadoRenombrarEsquema
     private function bloqueDefaultsColumnas(string $titulo, ?PDO $pdo, string $schema, array $specs): array
     {
         if ($pdo === null) {
-            return ['nombre' => $titulo, 'items' => [['texto' => _('No hay conexión a la BD.'), 'estado' => 'error']]];
+            return ['nombre' => $titulo, 'items' => [['texto' => _("No hay conexión a la BD."), 'estado' => 'error']]];
         }
 
         $o = new DBAlterSchema();
@@ -765,8 +765,8 @@ final class VerificarEstadoRenombrarEsquema
             $cur = $this->leerDefaultColumna($pdo, $schema, $tabla, $campo);
             $exp = $row['valor'];
             if (!$this->expresionDefaultEquivale($cur, $exp)) {
-                $dbTxt = $cur === null ? _('(sin default en catálogo)') : $cur;
-                $failures[] = $tabla . '.' . $campo . ': ' . sprintf(_('no coincide; en BD: %s'), $dbTxt);
+                $dbTxt = $cur === null ? _("(sin default en catálogo)") : $cur;
+                $failures[] = $tabla . '.' . $campo . ': ' . sprintf(_("no coincide; en BD: %s"), $dbTxt);
             } else {
                 $ok++;
             }
@@ -775,7 +775,7 @@ final class VerificarEstadoRenombrarEsquema
         $items = [];
         $items[] = [
             'texto' => sprintf(
-                _('Defaults ALTER: %d columnas coinciden con el objetivo; tablas omitidas (no existen en el esquema): %d.'),
+                _("Defaults ALTER: %d columnas coinciden con el objetivo; tablas omitidas (no existen en el esquema): %d."),
                 $ok,
                 $skipTabla,
             ),
@@ -787,7 +787,7 @@ final class VerificarEstadoRenombrarEsquema
         }
         if (count($failures) > $max) {
             $items[] = [
-                'texto' => sprintf(_('… y %d desajustes más de defaults.'), count($failures) - $max),
+                'texto' => sprintf(_("… y %d desajustes más de defaults."), count($failures) - $max),
                 'estado' => 'falta',
             ];
         }

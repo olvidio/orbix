@@ -101,7 +101,7 @@ final class ActividadNuevoCursoEjecutar
         }
         $avisosProceso = $oNuevoCurso->consumirAvisosProceso();
         if ($avisosProceso !== []) {
-            $html .= '<h3>' . _('avisos') . '</h3>';
+            $html .= '<h3>' . _("avisos") . '</h3>';
             $html .= '<ul class="avisos">';
             foreach ($avisosProceso as $aviso) {
                 $html .= '<li>' . htmlspecialchars((string) $aviso, ENT_QUOTES, 'UTF-8') . '</li>';

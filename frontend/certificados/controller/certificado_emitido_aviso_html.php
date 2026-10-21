@@ -6,7 +6,7 @@
 function certificado_emitido_echo_aviso_y_salir(string $mensaje, string $titulo = ''): never
 {
     if ($titulo === '') {
-        $titulo = _('Antes de generar el certificado');
+        $titulo = _("Antes de generar el certificado");
     }
     header('Content-Type: text/html; charset=utf-8');
     ?>
@@ -14,7 +14,7 @@ function certificado_emitido_echo_aviso_y_salir(string $mensaje, string $titulo 
     <html lang="es">
     <head>
         <meta charset="utf-8">
-        <title><?= htmlspecialchars(_('Certificado'), ENT_QUOTES, 'UTF-8') ?></title>
+        <title><?= htmlspecialchars(_("Certificado"), ENT_QUOTES, 'UTF-8') ?></title>
     </head>
     <body style="font-family: sans-serif; margin: 1.5rem;">
     <div class="certificado-aviso-config" role="alert"

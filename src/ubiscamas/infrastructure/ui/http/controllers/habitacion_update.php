@@ -55,7 +55,7 @@ try {
     } else {
         $uuid_habitacion = HabitacionId::fromNullableString($Qid_habitacion);
         if ($uuid_habitacion === null) {
-            throw new Exception(_('Habitación no válida'));
+            throw new Exception(_("Habitación no válida"));
         }
         $oHabitacion = $habitacionRepository->findById($uuid_habitacion->value());
         if ($oHabitacion === null) {

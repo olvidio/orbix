@@ -74,19 +74,19 @@ if ($Qperiodo === 'no') {
     if ($Qtipo_lista === 'datosEc') {
         $oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("resumen económico")));
     }
-    $oForm->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "' onclick='fnjs_ver();'>");
+    $oForm->setBoton("<input type='button' name='buscar' value='" . _("buscar") . "' onclick='fnjs_ver();'>");
 } else {
     if ($Qperiodo === 'ninguno') {
-        $aOpciones = ['ninguno' => _('ninguno')];
+        $aOpciones = ['ninguno' => _("ninguno")];
     } else {
         $aOpciones = [
-            'tot_any' => _('todo el año'),
-            'trimestre_1' => _('primer trimestre'),
-            'trimestre_2' => _('segundo trimestre'),
-            'trimestre_3' => _('tercer trimestre'),
-            'trimestre_4' => _('cuarto trimestre'),
+            'tot_any' => _("todo el año"),
+            'trimestre_1' => _("primer trimestre"),
+            'trimestre_2' => _("segundo trimestre"),
+            'trimestre_3' => _("tercer trimestre"),
+            'trimestre_4' => _("cuarto trimestre"),
             'separador' => '---------',
-            'otro' => _('otro'),
+            'otro' => _("otro"),
         ];
     }
     $oFormP = new PeriodoQue();
@@ -97,7 +97,7 @@ if ($Qperiodo === 'no') {
         $oFormP->setDesplAnysOpcion_sel(CasasPayload::periodoYearSel($Qyear));
     }
     $oFormP->setAntes($oSelects->ListaSelects());
-    $oFormP->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "' onclick='fnjs_ver();'>");
+    $oFormP->setBoton("<input type='button' name='buscar' value='" . _("buscar") . "' onclick='fnjs_ver();'>");
 }
 
 $web = AppUrlConfig::getPublicAppBaseUrl();

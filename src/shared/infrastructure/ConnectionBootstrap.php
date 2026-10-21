@@ -225,7 +225,7 @@ final class ConnectionBootstrap
             $connections['oDBListas'] = 'error';
         } catch (\PDOException $e) {
             echo '/*';
-            echo _('No puedo conectar con la base de datos de listas') . ':<br>';
+            echo _("No puedo conectar con la base de datos de listas") . ':<br>';
             echo $e->getMessage();
             echo '*/';
             $connections['oDBListas'] = 'error';

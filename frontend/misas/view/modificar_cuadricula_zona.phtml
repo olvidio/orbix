@@ -153,7 +153,7 @@
 
         <div style="margin-top: 40px; clear: both;">
             <?php if (($tipo_plantilla ?? '') === 'p'): ?>
-                <label for="status"><?= _('Estado') ?>:</label>
+                <label for="status"><?= _("Estado") ?>:</label>
                 <select id="status" class="form-control">
                     <?php foreach ((array)($estados_opciones ?? []) as $opcion): ?>
                         <?php
@@ -436,7 +436,7 @@
             + '&seleccion=' + encodeURIComponent(seleccion)
             + '&dia=' + encodeURIComponent(dia)
             + '<?= $h_desplegable_sacd ?>';
-        $('#desplegable').html('<span>' + <?= json_encode(_('Cargando...')) ?> + '</span>');
+        $('#desplegable').html('<span>' + <?= json_encode(_("Cargando...")) ?> + '</span>');
           let request = $.ajax({
 		    url: url_desplegable_sacd,
 		    data: parametros,
@@ -446,7 +446,7 @@
 
         request.done(function (json) {
             if (!json || json.success !== true) {
-                var msg = (json && json.mensaje) ? json.mensaje : <?= json_encode(_('No se pudo cargar el desplegable de sacerdotes')) ?>;
+                var msg = (json && json.mensaje) ? json.mensaje : <?= json_encode(_("No se pudo cargar el desplegable de sacerdotes")) ?>;
                 $('#desplegable').html($('<span></span>').text(msg).prop('outerHTML'));
                 return;
             }
@@ -454,7 +454,7 @@
             try {
                 payload = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
             } catch (e) {
-                $('#desplegable').html($('<span></span>').text(<?= json_encode(_('Respuesta inválida del servidor')) ?>).prop('outerHTML'));
+                $('#desplegable').html($('<span></span>').text(<?= json_encode(_("Respuesta inválida del servidor")) ?>).prop('outerHTML'));
                 return;
             }
             var pre = ($('#id_sacd_key_preselect').val() || '').trim();
@@ -467,7 +467,7 @@
             $('#id_sacd_key_preselect').val(chosen);
         });
         request.fail(function () {
-            $('#desplegable').html($('<span></span>').text(<?= json_encode(_('Error de comunicación al cargar sacerdotes')) ?>).prop('outerHTML'));
+            $('#desplegable').html($('<span></span>').text(<?= json_encode(_("Error de comunicación al cargar sacerdotes")) ?>).prop('outerHTML'));
         });
 
         showItemDetailsModal();

@@ -51,7 +51,7 @@ class GuardarEncargoZona
             $oEncargo = $this->encargoRepository->findById($id_enc);
             if ($oEncargo === null) {
                 return [
-                    'error' => sprintf(_('No se encuentra el encargo %d'), $id_enc),
+                    'error' => sprintf(_("No se encuentra el encargo %d"), $id_enc),
                     'data' => ['id_enc' => $id_enc, 'lugar' => ''],
                 ];
             }

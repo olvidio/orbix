@@ -56,15 +56,15 @@ final class ActaVerAddPersona
         $nota_max = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'nota_max');
 
         if ($acta === '' || $id_nom <= 0) {
-            return ['success' => false, 'mensaje' => _('Faltan acta o persona')];
+            return ['success' => false, 'mensaje' => _("Faltan acta o persona")];
         }
 
         $oActa = $this->actaRepository->findById($acta);
         if (!$oActa instanceof Acta) {
-            return ['success' => false, 'mensaje' => _('No se encuentra el acta')];
+            return ['success' => false, 'mensaje' => _("No se encuentra el acta")];
         }
         if ($oActa->tienePdfFirmado()) {
-            return ['success' => false, 'mensaje' => _('El acta está firmada y no se puede modificar')];
+            return ['success' => false, 'mensaje' => _("El acta está firmada y no se puede modificar")];
         }
 
         $id_asignatura = (int) ($oActa->getId_asignatura() ?? 0);
@@ -72,7 +72,7 @@ final class ActaVerAddPersona
         $f_acta = $oActa->getF_acta();
 
         if ($id_asignatura < 1) {
-            return ['success' => false, 'mensaje' => _('El acta no tiene asignatura')];
+            return ['success' => false, 'mensaje' => _("El acta no tiene asignatura")];
         }
 
         /** @var ConfigSnapshot $oConfig */
@@ -92,7 +92,7 @@ final class ActaVerAddPersona
             }
             $idNivelOpcional = $this->huecoOpcionalDePlan->idNivelPara($id_nom, $id_asignatura, $notasNivel);
             if ($idNivelOpcional === null) {
-                return ['success' => false, 'mensaje' => _('No hay hueco de opcional libre.')];
+                return ['success' => false, 'mensaje' => _("No hay hueco de opcional libre.")];
             }
             $id_nivel = $idNivelOpcional;
         } elseif ($this->nivelCatalogoAsignaturaEnPlan->esObligatoria($id_asignatura)) {

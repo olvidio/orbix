@@ -26,7 +26,7 @@ class ActividadProcesoUpdate
 
         $oFicha = $this->actividadProcesoTareaRepository->findById($Qid_item);
         if ($oFicha === null) {
-            return _('no se encuentra la tarea del proceso');
+            return _("no se encuentra la tarea del proceso");
         }
         $oFicha->setCompletado(\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qcompletado));
         $oFicha->setObserv($Qobserv);

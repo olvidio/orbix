@@ -40,8 +40,8 @@ $oHash1->setUrl(AppUrlConfig::srcBrowserUrl('/src/devel_db_admin/db_lugar'));
 $oHash1->setCamposForm('region');
 $h = $oHash1->linkSinValParams();
 
-$msg_falta_dl = _('debe poner la delegación');
-$msg_falta_esquema = _('debe elegir el esquema de referencia');
+$msg_falta_dl = _("debe poner la delegación");
+$msg_falta_esquema = _("debe elegir el esquema de referencia");
 
 $a_campos = [
     'oHash' => $oHash,

@@ -26,7 +26,7 @@ class IdNomJefeResolver
     {
         $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         if ($oMiUsuario === null) {
-            return ['id_nom_jefe' => null, 'error' => _('Usuario no encontrado')];
+            return ['id_nom_jefe' => null, 'error' => _("Usuario no encontrado")];
         }
 
         $id_role = $oMiUsuario->getId_role();
@@ -49,7 +49,7 @@ class IdNomJefeResolver
         $csvIdPau = $oMiUsuario->getCsvIdPauAsString();
         $id_nom_jefe = is_numeric($csvIdPau) ? (int) $csvIdPau : 0;
         if ($id_nom_jefe === 0) {
-            return ['id_nom_jefe' => null, 'error' => _('No tiene permiso para ver esta página')];
+            return ['id_nom_jefe' => null, 'error' => _("No tiene permiso para ver esta página")];
         }
 
         return ['id_nom_jefe' => $id_nom_jefe, 'error' => ''];

@@ -35,7 +35,7 @@ $error_txt = '';
 try {
     $uuid_habitacion = HabitacionId::fromNullableString($Qid_habitacion);
     if ($uuid_habitacion === null) {
-        throw new Exception(_('Habitación no válida'));
+        throw new Exception(_("Habitación no válida"));
     }
 
     if ($Qid_cama === '') {
@@ -46,7 +46,7 @@ try {
     } else {
         $uuid_cama = CamaId::fromNullableString($Qid_cama);
         if ($uuid_cama === null) {
-            throw new Exception(_('Cama no válida'));
+            throw new Exception(_("Cama no válida"));
         }
         $oCama = $camaRepository->findById($uuid_cama->value());
         if ($oCama === null) {

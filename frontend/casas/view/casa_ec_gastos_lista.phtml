@@ -22,10 +22,10 @@ fnjs_gastos_guardar = function (id_form) {
         <h3><?= sprintf((string)_("gastos y aportaciones %s para %s"), (int)$year, htmlspecialchars((string)$casa['titulo'])) ?></h3>
         <table width="690">
             <tr>
-                <th><?= _('mes') ?></th>
-                <th><?= _('gasto') ?></th>
-                <th><?= _('aportación sv') ?></th>
-                <th><?= _('aportación sf') ?></th>
+                <th><?= _("mes") ?></th>
+                <th><?= _("gasto") ?></th>
+                <th><?= _("aportación sv") ?></th>
+                <th><?= _("aportación sf") ?></th>
             </tr>
             <?php foreach ((array)$casa['meses'] as $fila): ?>
                 <?php $m = (int)$fila['mes']; ?>
@@ -34,30 +34,30 @@ fnjs_gastos_guardar = function (id_form) {
                     <td class="derecha">
                         <input type="text" class="derecha" id="g<?= $m ?>" name="g<?= $m ?>" size="8"
                                value="<?= (float)$fila['g'] ?>"
-                               onblur="fnjs_comprobar_dinero('#g<?= $m ?>');"> <?= _('€') ?>
+                               onblur="fnjs_comprobar_dinero('#g<?= $m ?>');"> <?= _("€") ?>
                     </td>
                     <td class="derecha">
                         <input type="text" class="derecha" id="ap_sv<?= $m ?>" name="ap_sv<?= $m ?>" size="8"
                                value="<?= (float)$fila['ap_sv'] ?>"
-                               onblur="fnjs_comprobar_dinero('#ap_sv<?= $m ?>');"> <?= _('€') ?>
+                               onblur="fnjs_comprobar_dinero('#ap_sv<?= $m ?>');"> <?= _("€") ?>
                     </td>
                     <td class="derecha">
                         <input type="text" class="derecha" id="ap_sf<?= $m ?>" name="ap_sf<?= $m ?>" size="8"
                                value="<?= (float)$fila['ap_sf'] ?>"
-                               onblur="fnjs_comprobar_dinero('#ap_sf<?= $m ?>');"> <?= _('€') ?>
+                               onblur="fnjs_comprobar_dinero('#ap_sf<?= $m ?>');"> <?= _("€") ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
             <tr class="titulo">
                 <td><?= _("suma") ?>:</td>
-                <td class="derecha"><?= (float)$casa['suma_g'] ?> <?= _('€') ?></td>
-                <td class="derecha"><?= (float)$casa['suma_sv'] ?> <?= _('€') ?></td>
-                <td class="derecha"><?= (float)$casa['suma_sf'] ?> <?= _('€') ?></td>
+                <td class="derecha"><?= (float)$casa['suma_g'] ?> <?= _("€") ?></td>
+                <td class="derecha"><?= (float)$casa['suma_sv'] ?> <?= _("€") ?></td>
+                <td class="derecha"><?= (float)$casa['suma_sf'] ?> <?= _("€") ?></td>
             </tr>
         </table>
         <br><br>
-        <input type="button" value="<?= _('guardar') ?>"
+        <input type="button" value="<?= _("guardar") ?>"
                onclick="fnjs_gastos_guardar('<?= $id_form ?>');">
-        <input type="button" value="<?= _('cancel') ?>" onclick="fnjs_ver();">
+        <input type="button" value="<?= _("cancel") ?>" onclick="fnjs_ver();">
     </form>
 <?php endforeach; ?>

@@ -42,7 +42,7 @@ echo "<span id='grupo_$new_id_grupo'>";
 echo "<form id='$nom_form'>";
 echo $oHash->getCamposHtml();
 echo '<br>';
-echo _('valija') . $new_id_grupo;
+echo _("valija") . $new_id_grupo;
 echo $oDespl->desplegable();
 echo '</form>';
 echo "<span id='docs_grupo_$new_id_grupo'>";

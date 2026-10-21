@@ -48,7 +48,7 @@ final class RegionStgrAvisoTest extends TestCase
 
     public function test_es_mensaje_suave_reconoce_persona_no_valida(): void
     {
-        $this->assertTrue(RegionStgrAviso::esMensajeSuave(_('persona no válida')));
+        $this->assertTrue(RegionStgrAviso::esMensajeSuave(_("persona no válida")));
         $this->assertTrue(RegionStgrAviso::esMensajeSuave(RegionStgrAviso::mensajePersonaNoValida()));
     }
 }

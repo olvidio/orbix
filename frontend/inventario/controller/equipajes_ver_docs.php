@@ -31,7 +31,7 @@ $a_cabeceras[] = ucfirst(_("sigla"));
 $a_cabeceras[] = ucfirst(_("identificador"));
 $a_cabeceras[] = ucfirst(_("num reg"));
 
-$a_botones[] = array('txt' => _('seleccionar'), 'click' => "fnjs_update_grupo($Qid_grupo)");
+$a_botones[] = array('txt' => _("seleccionar"), 'click' => "fnjs_update_grupo($Qid_grupo)");
 
 $oLista = new Lista();
 $oLista->setId_tabla('docs_' . $Qid_grupo);
@@ -57,7 +57,7 @@ echo "<form id='form_$Qid_grupo'>";
 echo $oHash->getCamposHtml();
 if ($Qid_lugar === 1) { // nuevo.
     echo "<br>";
-    echo "<input type='button' name=crear value=\"" . _('crear valija') . "\" onclick='fnjs_update_grupo($Qid_grupo)'>";
+    echo "<input type='button' name=crear value=\"" . _("crear valija") . "\" onclick='fnjs_update_grupo($Qid_grupo)'>";
     echo "<br>";
 }
 echo $oLista->mostrar_tabla_html();

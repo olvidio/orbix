@@ -60,7 +60,7 @@ final class ActividadEditar
 
         $oPermSesion = $_SESSION['oPermActividades'] ?? null;
         if (!($oPermSesion instanceof PermisosActividades)) {
-            return ['error_txt' => _('sesión de permisos no disponible')];
+            return ['error_txt' => _("sesión de permisos no disponible")];
         }
 
         $oPermSesion->setActividad($Qid_activ, $Qid_tipo_activ !== 0 ? (string) $Qid_tipo_activ : null, $Qdl_org !== '' ? $Qdl_org : null);
@@ -83,7 +83,7 @@ final class ActividadEditar
 
         $oActividad = $this->actividadAllRepository->findById($Qid_activ);
         if ($oActividad === null) {
-            return ['error_txt' => _('actividad no encontrada')];
+            return ['error_txt' => _("actividad no encontrada")];
         }
 
         $plazas_old = $oActividad->getPlazas();

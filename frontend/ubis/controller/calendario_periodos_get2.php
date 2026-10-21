@@ -26,6 +26,6 @@ if ($fields['overlap_error'] !== '') {
     $html .= "<span class='alert'>{$fields['overlap_error']}</span>";
 }
 if ($fields['show_nuevo']) {
-    $html .= "<br><input type='button' value='" . _('nuevo') . "' onclick=\"fnjs_modificar();\" >";
+    $html .= "<br><input type='button' value='" . _("nuevo") . "' onclick=\"fnjs_modificar();\" >";
 }
 AjaxJsonSupport::html($html);

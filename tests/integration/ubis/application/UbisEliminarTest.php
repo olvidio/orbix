@@ -40,7 +40,7 @@ class UbisEliminarTest extends myTest
     {
         $eliminar = new UbisEliminar();
         $msg = $eliminar->execute('CentroDl', 99999999);
-        $this->assertSame(_('no se encuentra el ubi a borrar'), $msg);
+        $this->assertSame(_("no se encuentra el ubi a borrar"), $msg);
     }
 
     public function test_obj_pau_desconocido_lanza_excepcion(): void

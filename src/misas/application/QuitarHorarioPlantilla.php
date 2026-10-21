@@ -22,11 +22,11 @@ class QuitarHorarioPlantilla
     {
         $id_item = MisasBuildInput::int($input, 'id_item');
         if ($id_item === 0) {
-            return ['error' => _('Error: falta el id_item')];
+            return ['error' => _("Error: falta el id_item")];
         }
         $oPlantilla = $this->plantillaRepository->findById($id_item);
         if ($oPlantilla === null) {
-            return ['error' => sprintf(_('No se encuentra la plantilla %d'), $id_item)];
+            return ['error' => sprintf(_("No se encuentra la plantilla %d"), $id_item)];
         }
 
         $oPlantilla->setT_start(null);

@@ -48,13 +48,13 @@ final class UbisEditarLoadData
         }
 
         if ($Qobj_pau === '') {
-            throw new \RuntimeException(_('falta definir obj_pau'));
+            throw new \RuntimeException(_("falta definir obj_pau"));
         }
 
         $repo = $this->repositoryFor($Qobj_pau);
         $oUbi = $repo->findById($Qid_ubi);
         if ($oUbi === null) {
-            throw new \RuntimeException(sprintf(_('No se encuentra ubi id %s'), (string)$Qid_ubi));
+            throw new \RuntimeException(sprintf(_("No se encuentra ubi id %s"), (string)$Qid_ubi));
         }
 
         $tipo_ubi = (string)$oUbi->getTipo_ubi();
@@ -95,16 +95,16 @@ final class UbisEditarLoadData
             'ctrdl', 'ctrsf' => array_merge($base, match (true) {
                 $oUbi instanceof CentroDl => self::serializeCentroDlFields($oUbi),
                 $oUbi instanceof Centro => self::serializeCentroFields($oUbi),
-                default => throw new \RuntimeException(_('tipo de entidad inesperado para centro dl')),
+                default => throw new \RuntimeException(_("tipo de entidad inesperado para centro dl")),
             }, ['tipo_labor_bit_map' => $laborMap]),
             'ctrex' => array_merge($base, match (true) {
                 $oUbi instanceof CentroEx => self::serializeCentroExFields($oUbi),
                 $oUbi instanceof CentroDl => self::serializeCentroDlFields($oUbi),
                 $oUbi instanceof Centro => self::serializeCentroFields($oUbi),
-                default => throw new \RuntimeException(_('tipo de entidad inesperado para centro ex')),
+                default => throw new \RuntimeException(_("tipo de entidad inesperado para centro ex")),
             }, ['tipo_labor_bit_map' => $laborMap]),
             'cdcdl', 'cdcex' => array_merge($base, self::serializeCasaFields(
-                $oUbi instanceof Casa ? $oUbi : throw new \RuntimeException(_('tipo de entidad inesperado para casa'))
+                $oUbi instanceof Casa ? $oUbi : throw new \RuntimeException(_("tipo de entidad inesperado para casa"))
             )),
             default => throw new \RuntimeException('tipo_ubi no soportado: ' . $tipo_ubi),
         };
@@ -127,7 +127,7 @@ final class UbisEditarLoadData
             };
         }
         if ($Qobj_pau === '') {
-            throw new \RuntimeException(_('falta definir obj_pau'));
+            throw new \RuntimeException(_("falta definir obj_pau"));
         }
 
         $dl = \src\shared\domain\helpers\FuncTablasSupport::inputString($post, 'dl');

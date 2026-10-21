@@ -204,7 +204,7 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         if ($bInsert && $requiere_id_schema) {
             $idSchema = ConfigGlobal::mi_id_schema();
             if ($idSchema < 1) {
-                throw new \RuntimeException(_('Falta id_schema de sesión (mi_id_schema) para persistir el asistente.'));
+                throw new \RuntimeException(_("Falta id_schema de sesión (mi_id_schema) para persistir el asistente."));
             }
             $aDatos['id_schema'] = $idSchema;
         }

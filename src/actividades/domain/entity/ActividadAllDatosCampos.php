@@ -49,7 +49,7 @@ trait ActividadAllDatosCampos
     private function datosCampoIdTipoActiv(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'id_tipo_activ']);
-        $c->setEtiqueta(_('id_tipo_activ'));
+        $c->setEtiqueta(_("id_tipo_activ"));
         $c->setAviso(false);
 
         return $c;
@@ -58,7 +58,7 @@ trait ActividadAllDatosCampos
     private function datosCampoDlOrg(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'dl_org']);
-        $c->setEtiqueta(_('dl_org'));
+        $c->setEtiqueta(_("dl_org"));
         $c->setAviso(false);
 
         return $c;
@@ -67,7 +67,7 @@ trait ActividadAllDatosCampos
     private function datosCampoNomActiv(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'nom_activ']);
-        $c->setEtiqueta(_('nombre actividad'));
+        $c->setEtiqueta(_("nombre actividad"));
 
         return $c;
     }
@@ -75,7 +75,7 @@ trait ActividadAllDatosCampos
     private function datosCampoIdUbi(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'id_ubi']);
-        $c->setEtiqueta(_('id del Lugar'));
+        $c->setEtiqueta(_("id del Lugar"));
 
         return $c;
     }
@@ -83,7 +83,7 @@ trait ActividadAllDatosCampos
     private function datosCampoFIni(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'f_ini']);
-        $c->setEtiqueta(_('fecha inicio'));
+        $c->setEtiqueta(_("fecha inicio"));
         $c->setTipo('fecha');
 
         return $c;
@@ -92,7 +92,7 @@ trait ActividadAllDatosCampos
     private function datosCampoHIni(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'h_ini']);
-        $c->setEtiqueta(_('hora inicio'));
+        $c->setEtiqueta(_("hora inicio"));
 
         return $c;
     }
@@ -100,7 +100,7 @@ trait ActividadAllDatosCampos
     private function datosCampoFFin(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'f_fin']);
-        $c->setEtiqueta(_('fecha fin'));
+        $c->setEtiqueta(_("fecha fin"));
         $c->setTipo('fecha');
 
         return $c;
@@ -109,7 +109,7 @@ trait ActividadAllDatosCampos
     private function datosCampoHFin(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'h_fin']);
-        $c->setEtiqueta(_('hora fin'));
+        $c->setEtiqueta(_("hora fin"));
 
         return $c;
     }
@@ -117,15 +117,15 @@ trait ActividadAllDatosCampos
     private function datosCampoPrecio(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'precio']);
-        $c->setEtiqueta(_('precio'));
+        $c->setEtiqueta(_("precio"));
         $c->setRegExp('/^(\d+)[,.]?\d{0,2}$/');
-        $txt = _('tiene un formato no válido.');
+        $txt = _("tiene un formato no válido.");
         $txt .= "\n";
-        $txt .= _('se admite un separador para los decimales (máximo 2)');
+        $txt .= _("se admite un separador para los decimales (máximo 2)");
         $txt .= "\n";
-        $txt .= _('no se admite separador para los miles');
+        $txt .= _("no se admite separador para los miles");
         $txt .= "\n";
-        $txt .= _('ejemplo: 1254.56');
+        $txt .= _("ejemplo: 1254.56");
         $c->setRegExpText($txt);
 
         return $c;
@@ -134,7 +134,7 @@ trait ActividadAllDatosCampos
     private function datosCampoNumAsistentes(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'num_asistentes']);
-        $c->setEtiqueta(_('número de asistentes'));
+        $c->setEtiqueta(_("número de asistentes"));
         $c->setAviso(false);
 
         return $c;
@@ -143,7 +143,7 @@ trait ActividadAllDatosCampos
     private function datosCampoStatus(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'status']);
-        $c->setEtiqueta(_('status'));
+        $c->setEtiqueta(_("status"));
         $c->setTipo('array');
         $c->setLista(StatusId::getArrayStatus(true));
 
@@ -153,7 +153,7 @@ trait ActividadAllDatosCampos
     private function datosCampoObserv(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'observ']);
-        $c->setEtiqueta(_('observaciones'));
+        $c->setEtiqueta(_("observaciones"));
 
         return $c;
     }
@@ -161,7 +161,7 @@ trait ActividadAllDatosCampos
     private function datosCampoNivelStgr(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'nivel_stgr']);
-        $c->setEtiqueta(_('nivel de stgr'));
+        $c->setEtiqueta(_("nivel de stgr"));
 
         return $c;
     }
@@ -169,7 +169,7 @@ trait ActividadAllDatosCampos
     private function datosCampoObservMaterial(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'observ_material']);
-        $c->setEtiqueta(_('observaciones material'));
+        $c->setEtiqueta(_("observaciones material"));
 
         return $c;
     }
@@ -177,7 +177,7 @@ trait ActividadAllDatosCampos
     private function datosCampoLugarEsp(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'lugar_esp']);
-        $c->setEtiqueta(_('lugar especial'));
+        $c->setEtiqueta(_("lugar especial"));
 
         return $c;
     }
@@ -185,7 +185,7 @@ trait ActividadAllDatosCampos
     private function datosCampoTarifa(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'tarifa']);
-        $c->setEtiqueta(_('tarifa'));
+        $c->setEtiqueta(_("tarifa"));
 
         return $c;
     }
@@ -193,7 +193,7 @@ trait ActividadAllDatosCampos
     private function datosCampoIdRepeticion(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'id_repeticion']);
-        $c->setEtiqueta(_('id repeticion'));
+        $c->setEtiqueta(_("id repeticion"));
 
         return $c;
     }
@@ -201,7 +201,7 @@ trait ActividadAllDatosCampos
     private function datosCampoIdTabla(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'id_tabla']);
-        $c->setEtiqueta(_('id_tabla'));
+        $c->setEtiqueta(_("id_tabla"));
         $c->setAviso(false);
 
         return $c;
@@ -210,7 +210,7 @@ trait ActividadAllDatosCampos
     private function datosCampoPlazas(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'plazas']);
-        $c->setEtiqueta(_('plazas'));
+        $c->setEtiqueta(_("plazas"));
 
         return $c;
     }
@@ -218,7 +218,7 @@ trait ActividadAllDatosCampos
     private function datosCampoPublicado(): DatosCampo
     {
         $c = new DatosCampo(['nom_tabla' => $this->actividadAllNomTabla(), 'nom_camp' => 'publicado']);
-        $c->setEtiqueta(_('publicado'));
+        $c->setEtiqueta(_("publicado"));
 
         return $c;
     }

@@ -220,7 +220,7 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
             $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
             if (count($cEncargosDia) > 1) {
-                throw new \RuntimeException(_('solo deberia haber uno'));
+                throw new \RuntimeException(_("solo deberia haber uno"));
             }
 
             if (count($cEncargosDia) === 1) {

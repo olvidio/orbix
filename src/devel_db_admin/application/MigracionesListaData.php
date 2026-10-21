@@ -47,13 +47,13 @@ final class MigracionesListaData
 
         return [
             'a_cabeceras' => [
-                ['id' => 'fichero', 'name' => _('fichero'), 'field' => 'fichero', 'width' => 320],
-                ['id' => 'prefijo', 'name' => _('prefijo'), 'field' => 'prefijo', 'width' => 120],
-                ['id' => 'descripcion', 'name' => _('descripcion'), 'field' => 'descripcion', 'width' => 260],
-                ['id' => 'bds', 'name' => _('bases de datos'), 'field' => 'bds', 'width' => 220],
-                ['id' => 'tipo', 'name' => _('tipo'), 'field' => 'tipo', 'width' => 100],
-                ['id' => 'estado', 'name' => _('estado'), 'field' => 'estado', 'width' => 110],
-                ['id' => 'fecha', 'name' => _('fecha'), 'field' => 'fecha', 'width' => 170],
+                ['id' => 'fichero', 'name' => _("fichero"), 'field' => 'fichero', 'width' => 320],
+                ['id' => 'prefijo', 'name' => _("prefijo"), 'field' => 'prefijo', 'width' => 120],
+                ['id' => 'descripcion', 'name' => _("descripcion"), 'field' => 'descripcion', 'width' => 260],
+                ['id' => 'bds', 'name' => _("bases de datos"), 'field' => 'bds', 'width' => 220],
+                ['id' => 'tipo', 'name' => _("tipo"), 'field' => 'tipo', 'width' => 100],
+                ['id' => 'estado', 'name' => _("estado"), 'field' => 'estado', 'width' => 110],
+                ['id' => 'fecha', 'name' => _("fecha"), 'field' => 'fecha', 'width' => 170],
             ],
             'a_valores' => $rows,
             'warnings' => $scan['warnings'],

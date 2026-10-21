@@ -41,7 +41,7 @@ class CertificadoRecibidoUpload
     ): string|CertificadoRecibido {
         $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
         if ($oPersona === null) {
-            return sprintf(_('No se encuentra la persona con id_nom: %d'), $Qid_nom);
+            return sprintf(_("No se encuentra la persona con id_nom: %d"), $Qid_nom);
         }
 
         $nom = $oPersona->getApellidosNombre();

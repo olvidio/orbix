@@ -31,11 +31,11 @@ class GruposLista
         $cGrupos = $this->grupoRepository->getGrupos($aWhere, $aOperador);
 
         $a_cabeceras = [
-            _('grupo'),
+            _("grupo"),
             ['name' => 'accion', 'formatter' => 'clickFormatter'],
         ];
 
-        $a_botones[] = ['txt' => _('borrar'), 'click' => 'fnjs_eliminar(this.form)'];
+        $a_botones[] = ['txt' => _("borrar"), 'click' => 'fnjs_eliminar(this.form)'];
 
         $a_valores = [];
         $i = 0;

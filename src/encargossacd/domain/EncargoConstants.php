@@ -11,10 +11,10 @@ class EncargoConstants
         $combined = array_combine(
             ['5020', '5030', '1110', '6000'],
             [
-                (string) _('estudio'),
-                (string) _('descanso'),
-                (string) _('retiro'),
-                (string) _('otros'),
+                (string) _("estudio"),
+                (string) _("descanso"),
+                (string) _("retiro"),
+                (string) _("otros"),
             ],
         );
 

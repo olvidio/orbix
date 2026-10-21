@@ -193,7 +193,7 @@ final class NotaPersonaFormData
             $this->notasParaHueco($id_pau),
         );
         if ($sobra !== null) {
-            $aFaltan[$sobra] = _('opcional de sobra');
+            $aFaltan[$sobra] = _("opcional de sobra");
         }
         $aFaltan[9997] = '---------';
         $aFaltan[9998] = _("fin cuadrienio");

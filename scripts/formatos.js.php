@@ -21,10 +21,10 @@ function fnjs_comprobar_dinero(id) {
     }
 
     if (!/^(\d+)[,.]?\d{0,2}$/.test(num) && num.length) {
-        var txt1 = <?= $js(_('formato no válido')) ?>;
-        var txt2 = <?= $js(_('se adminte un separador para los decimales (máximo 2)')) ?>;
-        var txt3 = <?= $js(_('No se admite separador para los miles')) ?>;
-        var txt4 = <?= $js(_('ejemplo: 1254.56')) ?>;
+        var txt1 = <?= $js(_("formato no válido")) ?>;
+        var txt2 = <?= $js(_("se adminte un separador para los decimales (máximo 2)")) ?>;
+        var txt3 = <?= $js(_("No se admite separador para los miles")) ?>;
+        var txt4 = <?= $js(_("ejemplo: 1254.56")) ?>;
         alert(txt1 + '\n' + txt2 + '\n' + txt3 + '\n' + txt4);
     }
 }

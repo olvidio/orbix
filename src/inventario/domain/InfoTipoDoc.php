@@ -13,8 +13,8 @@ class InfoTipoDoc extends DatosInfoRepo
     public function __construct(
         private TipoDocRepositoryInterface $tipoDocRepository,
     ) {
-        $this->setTxtTitulo(_('tipo de documentos'));
-        $this->setTxtEliminar(_('¿Está seguro que desea eliminar esta tipo de documento?'));
+        $this->setTxtTitulo(_("tipo de documentos"));
+        $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta tipo de documento?"));
         $this->setTxtBuscar(_("buscar en 'detalle'"));
         $this->setTxtExplicacion();
 

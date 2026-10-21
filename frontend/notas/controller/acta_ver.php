@@ -146,7 +146,7 @@ $a_actas = is_array($a_actasRaw) ? $a_actasRaw : [];
 $has_pdf = !empty($form['has_pdf']);
 $pendiente_imprimir = !empty($form['pendiente_imprimir']);
 if ($form['warn_no_id_activ']) {
-    echo _('no se guardará el ca/cv donde se cursó la asignatura');
+    echo _("no se guardará el ca/cv donde se cursó la asignatura");
 }
 
 $obj = 'notas\\model\\entity\\ActaDl';
@@ -194,7 +194,7 @@ $oHashActaPdf->setCamposForm('acta_pdf');
 $oHashActaPdf->setCamposNo('acta_pdf');
 $oHashActaPdf->setArrayCamposHidden(['acta_num' => $acta_actual]);
 
-$titulo = strtoupper(_('datos del acta'));
+$titulo = strtoupper(_("datos del acta"));
 
 $url_examinadores = AppUrlConfig::srcBrowserUrl('/src/notas/examinadores_search');
 $oHashExaminadores = new HashF();

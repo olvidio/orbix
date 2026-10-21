@@ -5,26 +5,26 @@
             <thead>
             <tr>
                 <th class="titulo_inv" colspan="12">
-                    <?= ucfirst(_('Modificar plantilla')) ?>
+                    <?= ucfirst(_("Modificar plantilla")) ?>
                 </th>
             </tr>
             <tr>
-                <th class="titulo_inv" colspan="4"><?= ucfirst(_('Plantilla de la zona')) ?>:&nbsp;&nbsp;&nbsp;
+                <th class="titulo_inv" colspan="4"><?= ucfirst(_("Plantilla de la zona")) ?>:&nbsp;&nbsp;&nbsp;
                     <?= $oDesplZonas->desplegable() ?>
                 </th>
-                <th class="titulo_inv" colspan="4"><?= ucfirst(_('Tipo de plantilla')) ?>:&nbsp;&nbsp;&nbsp;
+                <th class="titulo_inv" colspan="4"><?= ucfirst(_("Tipo de plantilla")) ?>:&nbsp;&nbsp;&nbsp;
                     <?= $oDesplTipoPlantilla->desplegable() ?>
                 </th>
-                <th class="titulo_inv" colspan="4"><?= ucfirst(_('Orden')) ?>:&nbsp;&nbsp;&nbsp;
+                <th class="titulo_inv" colspan="4"><?= ucfirst(_("Orden")) ?>:&nbsp;&nbsp;&nbsp;
                     <?= $oDesplOrden->desplegable() ?>
                 </th>
             </tr>
             <tr>
-                <th class="titulo_inv" colspan="4"><?= ucfirst(_('Importar de la plantilla')) ?>:&nbsp;&nbsp;&nbsp;
+                <th class="titulo_inv" colspan="4"><?= ucfirst(_("Importar de la plantilla")) ?>:&nbsp;&nbsp;&nbsp;
                     <?= $oDesplImportarDePlantilla->desplegable() ?>
 
                     <input type="button" name="importar" value="importar" onclick="fnjs_importar_de_plantilla_zona();"><br>
-                    <?= _('Borrará todos los datos introducidos en la plantilla que ves!!') ?>
+                    <?= _("Borrará todos los datos introducidos en la plantilla que ves!!") ?>
                 </th>
             </tr>
             </thead>

@@ -34,7 +34,7 @@ final class TesseraVerData
         );
         if ($oPersona === null) {
             return $this->respuestaConAviso(sprintf(
-                _('No encuentro persona con id_nom: %s'),
+                _("No encuentro persona con id_nom: %s"),
                 (string)$id_nom
             ));
         }

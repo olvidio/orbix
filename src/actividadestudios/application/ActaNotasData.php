@@ -68,7 +68,7 @@ final class ActaNotasData
 
         $msgErr = '';
         $empty = [
-            'msg_err' => _('no encuentro la asignatura en la actividad'),
+            'msg_err' => _("no encuentro la asignatura en la actividad"),
             'permiso' => 1,
             'nom_activ' => '',
             'matriculados' => 0,

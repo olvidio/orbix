@@ -83,7 +83,7 @@ class ActividadNueva
         if (ConfigGlobal::is_app_installed('procesos')) {
             $oPermActividades = $_SESSION['oPermActividades'] ?? null;
             if (!($oPermActividades instanceof PermisosActividades)) {
-                throw new \RuntimeException(_('sesión de permisos no disponible'));
+                throw new \RuntimeException(_("sesión de permisos no disponible"));
             }
             $oPermActividades->setId_tipo_activ($Qid_tipo_activ);
             if ($oPermActividades->getPermisoCrear($dl_propia) === false) {

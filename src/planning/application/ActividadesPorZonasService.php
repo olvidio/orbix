@@ -64,7 +64,7 @@ class ActividadesPorZonasService
         $oIniPlanning = DateTimeLocal::createFromFormat('Y/m/d', $inicio_iso);
         $oFinPlanning = DateTimeLocal::createFromFormat('Y/m/d', $fin_iso);
         if ($oIniPlanning === false || $oFinPlanning === false) {
-            throw new \RuntimeException(_('Rango de fechas de planning no válido'));
+            throw new \RuntimeException(_("Rango de fechas de planning no válido"));
         }
         $inicio_local = $oIniPlanning->getFromLocal();
 

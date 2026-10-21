@@ -24,7 +24,8 @@ $useCase = DependencyResolver::get(SacdAusenciasUpdate::class);
 
 $resultado = $useCase->execute($input);
 
+$errorTxt = $resultado['error'] ? ($resultado['mensajes'] ?: _("hay un error, no se ha guardado")) : '';
 ContestarJson::enviar(
-    (string)$resultado['error'],
+    $errorTxt,
     (string)$resultado['mensajes'],
 );

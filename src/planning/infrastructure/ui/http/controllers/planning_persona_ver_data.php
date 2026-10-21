@@ -35,7 +35,7 @@ try {
     $inicio_iso = $oPeriodo->getF_ini_iso() ?? '';
     $fin_iso = $oPeriodo->getF_fin_iso() ?? '';
     if ($inicio_iso === '' || $fin_iso === '') {
-        throw new \RuntimeException(_('Faltan fechas de periodo'));
+        throw new \RuntimeException(_("Faltan fechas de periodo"));
     }
     $oIniPlanning = new DateTimeLocal($inicio_iso);
     $inicio_local = $oIniPlanning->getFromLocal();

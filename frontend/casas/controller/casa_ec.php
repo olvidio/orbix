@@ -57,7 +57,7 @@ $oSelects = $oForm->getSelects();
 $oSelects->setAction('');
 
 $oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("resumen económico")));
-$oForm->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "' onclick='fnjs_ver();'>");
+$oForm->setBoton("<input type='button' name='buscar' value='" . _("buscar") . "' onclick='fnjs_ver();'>");
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 $url_ajax = $web . '/frontend/casas/controller/casas_resumen_lista.php';

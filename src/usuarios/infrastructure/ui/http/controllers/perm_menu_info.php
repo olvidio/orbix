@@ -14,7 +14,7 @@ $Qid_item = (int)\src\shared\domain\helpers\FilterPostGet::post('id_item');
 $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada
 if ($oUsuario === null) {
-    ContestarJson::enviar(_('Grupo no encontrado'), 'none');
+    ContestarJson::enviar(_("Grupo no encontrado"), 'none');
     return;
 }
 $nombre = $oUsuario->getUsuarioAsString();

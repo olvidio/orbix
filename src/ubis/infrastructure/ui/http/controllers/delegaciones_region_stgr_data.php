@@ -9,7 +9,7 @@ $data = [];
 try {
     $region = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'region_stgr');
     if ($region === '') {
-        throw new \RuntimeException(_('Se requiere region_stgr'));
+        throw new \RuntimeException(_("Se requiere region_stgr"));
     }
     $data = DependencyResolver::get(DelegacionesRegionStgrData::class)->execute($region);
 } catch (\Throwable $e) {

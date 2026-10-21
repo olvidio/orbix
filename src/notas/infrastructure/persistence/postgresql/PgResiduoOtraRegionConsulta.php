@@ -79,7 +79,7 @@ final class PgResiduoOtraRegionConsulta implements ResiduoOtraRegionConsultaInte
 
         $stmt = $this->pdo->query($sql);
         if ($stmt === false) {
-            throw new \RuntimeException(_('No se pudo leer el residuo de notas de otras regiones.'));
+            throw new \RuntimeException(_("No se pudo leer el residuo de notas de otras regiones."));
         }
 
         $enModulo = $this->certificadosEnModulo();
@@ -133,7 +133,7 @@ final class PgResiduoOtraRegionConsulta implements ResiduoOtraRegionConsultaInte
              ORDER BY n.nspname"
         );
         if ($stmt === false) {
-            throw new \RuntimeException(_('No se pudo leer el residuo de notas de otras regiones.'));
+            throw new \RuntimeException(_("No se pudo leer el residuo de notas de otras regiones."));
         }
 
         $legibles = [];

@@ -63,9 +63,9 @@ $raw = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl(
 ], false));
 if (!empty($raw['error'])) {
     $errorHtml = PostRequest::stripInternalCallProvenance(\frontend\shared\helpers\PayloadCoercion::string($raw['error']));
-    if (str_contains($errorHtml, _('Delegaciones no dadas de alta'))
+    if (str_contains($errorHtml, _("Delegaciones no dadas de alta"))
         || str_contains($errorHtml, 'Delegaciones no dadas de alta')
-        || str_contains($errorHtml, _('Delegaciones sin región del stgr'))
+        || str_contains($errorHtml, _("Delegaciones sin región del stgr"))
         || str_contains($errorHtml, 'Delegaciones sin región del stgr')) {
         $aviso = $errorHtml;
     } else {

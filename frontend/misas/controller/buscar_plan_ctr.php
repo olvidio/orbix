@@ -19,12 +19,12 @@ $data = PostRequest::getDataFromUrl('/src/misas/buscar_plan_ctr_data', ['id_zona
 $view = $data['view'] ?? 'none';
 
 $periodo_td_html = PeriodoTdHelper::build([
-    'esta_semana' => _('esta semana'),
-    'este_mes' => _('este mes'),
-    'proxima_semana' => _('próxima semana de lunes a domingo'),
-    'proximo_mes' => _('próximo mes natural'),
+    'esta_semana' => _("esta semana"),
+    'este_mes' => _("este mes"),
+    'proxima_semana' => _("próxima semana de lunes a domingo"),
+    'proximo_mes' => _("próximo mes natural"),
     'separador' => '---------',
-    'otro' => _('otro'),
+    'otro' => _("otro"),
 ], 'esta_semana');
 
 $oDesplZonas = new Desplegable();

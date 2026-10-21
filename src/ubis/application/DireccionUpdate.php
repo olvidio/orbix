@@ -33,7 +33,7 @@ final class DireccionUpdate
 
         $oUbi = $UbiRepository->findById($Qid_ubi);
         if ($oUbi === null) {
-            return _('no se encuentra el ubi');
+            return _("no se encuentra el ubi");
         }
 
         if ($Qidx === 'nuevo') {
@@ -43,7 +43,7 @@ final class DireccionUpdate
                 && !$DireccionRepository instanceof DireccionCasaDlRepositoryInterface
                 && !$DireccionRepository instanceof DireccionCasaExRepositoryInterface
             ) {
-                return _('operación no soportada para este tipo de dirección');
+                return _("operación no soportada para este tipo de dirección");
             }
             $id_auto = $DireccionRepository->getNewId();
             $id_direccion = $DireccionRepository->getNewIdDireccion($id_auto);
@@ -61,7 +61,7 @@ final class DireccionUpdate
             }
             $oDireccion = $DireccionRepository->findById($id_direccion);
             if ($oDireccion === null) {
-                return _('no se encuentra la dirección');
+                return _("no se encuentra la dirección");
             }
         }
 

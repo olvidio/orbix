@@ -55,7 +55,7 @@ if ($standalone) {
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title><?= _('Ayuda') ?> — Orbix</title>
+    <title><?= _("Ayuda") ?> — Orbix</title>
     <?php include_once OrbixRuntime::dirEstilos() . '/todo_en_uno.css.php'; ?>
 </head>
 <body class="otro">

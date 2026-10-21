@@ -139,6 +139,6 @@ final class DocenciaActualizar
             }
         }
 
-        return sprintf(_('Se ha actualizado la docencia para el periodo: %s'), $txt_curso);
+        return sprintf(_("Se ha actualizado la docencia para el periodo: %s"), $txt_curso);
     }
 }

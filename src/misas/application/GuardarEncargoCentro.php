@@ -33,7 +33,7 @@ class GuardarEncargoCentro
         } else {
             $EncargoCtr = $this->encargoCtrRepository->findById(new EncargoCtrId($id_item));
             if ($EncargoCtr === null) {
-                return sprintf(_('No se encuentra el encargo-centro %s'), $id_item);
+                return sprintf(_("No se encuentra el encargo-centro %s"), $id_item);
             }
         }
 

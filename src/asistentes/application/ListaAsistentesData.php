@@ -103,18 +103,18 @@ final readonly class ListaAsistentesData
                     $observ = $cAsistente[0]->getObserv();
 
                     if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($propio)) {
-                        $chk_propio = _('sí');
+                        $chk_propio = _("sí");
                     } else {
-                        $chk_propio = _('no');
+                        $chk_propio = _("no");
                     }
-                    \src\shared\domain\helpers\FuncTablasSupport::isTrue($falta) ? $chk_falta = _('sí') : $chk_falta = _('no');
-                    \src\shared\domain\helpers\FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = _('sí') : $chk_est_ok = _('no');
+                    \src\shared\domain\helpers\FuncTablasSupport::isTrue($falta) ? $chk_falta = _("sí") : $chk_falta = _("no");
+                    \src\shared\domain\helpers\FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
                     $asis = 't';
                     $a_valores[$c][3] = $chk_propio;
                     $a_valores[$c][4] = $chk_est_ok;
                     $a_valores[$c][5] = $chk_falta;
                 } else {
-                    $a_valores[$c][3] = ['span' => 3, 'valor' => _('no asiste')];
+                    $a_valores[$c][3] = ['span' => 3, 'valor' => _("no asiste")];
                     $observ = '';
                     $num--;
                     $asis = 'f';
@@ -158,12 +158,12 @@ final readonly class ListaAsistentesData
                 }
             }
             if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($propio)) {
-                $chk_propio = _('sí');
+                $chk_propio = _("sí");
             } else {
-                $chk_propio = _('no');
+                $chk_propio = _("no");
             }
-            \src\shared\domain\helpers\FuncTablasSupport::isTrue($falta) ? $chk_falta = _('sí') : $chk_falta = _('no');
-            \src\shared\domain\helpers\FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = _('sí') : $chk_est_ok = _('no');
+            \src\shared\domain\helpers\FuncTablasSupport::isTrue($falta) ? $chk_falta = _("sí") : $chk_falta = _("no");
+            \src\shared\domain\helpers\FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
 
             $a_val[2] = "$nom  ($ctr_dl)";
             $a_val[3] = $chk_propio;

@@ -16,7 +16,7 @@ $error_txt = '';
 $RoleRepository = DependencyResolver::get(RoleRepositoryInterface::class);
 $oRole = $RoleRepository->findById($Qid_role);
 if ($oRole === null) {
-    ContestarJson::enviar(_('Rol no encontrado'), 'none');
+    ContestarJson::enviar(_("Rol no encontrado"), 'none');
     return;
 }
 $role = $oRole->getRoleAsString();

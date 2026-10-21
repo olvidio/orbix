@@ -57,7 +57,7 @@ final class ActividadesPayload
     {
         $entidadRaw = $dataEntidad['entidad'] ?? null;
         if (!is_array($entidadRaw)) {
-            die(_('No se encuentra la actividad'));
+            die(_("No se encuentra la actividad"));
         }
 
         return [

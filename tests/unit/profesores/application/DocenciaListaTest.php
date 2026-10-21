@@ -68,7 +68,7 @@ final class DocenciaListaTest extends TestCase
         $this->assertSame('López, Ana', $out['a_valores'][1][2]);
         $this->assertSame(2023, $out['a_valores'][1][3]);
         $this->assertSame('ALG', $out['a_valores'][1][4]);
-        $this->assertSame(_('ca/cv'), $out['a_valores'][1][5]);
+        $this->assertSame(_("ca/cv"), $out['a_valores'][1][5]);
         $this->assertSame('9', $out['a_valores'][1][6]);
     }
 

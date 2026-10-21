@@ -12,7 +12,7 @@ use src\shared\web\ContestarJson;
 $useCase = DependencyResolver::get(ActaVerAddPersona::class);
 $result = $useCase->execute($_POST);
 
-$error = ($result['success'] ?? false) ? '' : (string) ($result['mensaje'] ?? _('error'));
+$error = ($result['success'] ?? false) ? '' : (string) ($result['mensaje'] ?? _("error"));
 ContestarJson::enviar($error, [
     'mensaje' => (string) ($result['mensaje'] ?? ''),
 ]);

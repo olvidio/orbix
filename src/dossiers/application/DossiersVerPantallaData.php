@@ -219,8 +219,8 @@ class DossiersVerPantallaData
 
         $top_data = [
             'web_icons' => ConfigGlobal::getWeb_icons(),
-            'alt_dossiers' => _('ver dossiers'),
-            'txt_dossiers' => _('dossiers'),
+            'alt_dossiers' => _("ver dossiers"),
+            'txt_dossiers' => _("dossiers"),
             'nom_cabecera' => $nom_cabecera,
             'go_dossiers_link_spec' => $goDossiersLinkSpec,
             'go_home_link_spec' => $goHomeLinkSpec,
@@ -453,8 +453,8 @@ class DossiersVerPantallaData
             'aviso' => RegionStgrAviso::formatear($problemasRegionStgr),
             'top_data' => [
                 'web_icons' => ConfigGlobal::getWeb_icons(),
-                'alt_dossiers' => _('ver dossiers'),
-                'txt_dossiers' => _('dossiers'),
+                'alt_dossiers' => _("ver dossiers"),
+                'txt_dossiers' => _("dossiers"),
                 'nom_cabecera' => '',
                 'go_dossiers_link_spec' => [
                     'path' => 'frontend/dossiers/controller/dossiers_ver.php',

@@ -72,18 +72,18 @@ $msg_err = $lista['msg_err'];
 $a_valores = ActividadestudiosListaSupport::valores($lista['a_valores'], $Qid_sel, $Qscroll_id);
 
 $a_cabeceras = [
-    _('alumno'),
-    _('ctr'),
-    _('dl'),
-    _('actividad'),
-    _('asignatura'),
-    _('preceptor'),
-    _('nota'),
+    _("alumno"),
+    _("ctr"),
+    _("dl"),
+    _("actividad"),
+    _("asignatura"),
+    _("preceptor"),
+    _("nota"),
 ];
 
 $a_botones = [
-    ['txt' => _('ver asignaturas ca'), 'click' => 'fnjs_ver_ca(this.form)'],
-    ['txt' => _('borrar matrícula'), 'click' => 'fnjs_borrar(this.form)'],
+    ['txt' => _("ver asignaturas ca"), 'click' => 'fnjs_ver_ca(this.form)'],
+    ['txt' => _("borrar matrícula"), 'click' => 'fnjs_borrar(this.form)'],
 ];
 
 $oHash = new HashF();
@@ -106,23 +106,23 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$txt_eliminar = _('¿Está seguro que desea borrar todas las matrículas seleccionadas?');
+$txt_eliminar = _("¿Está seguro que desea borrar todas las matrículas seleccionadas?");
 
-$boton = "<input type='button' value='" . _('buscar') . "' onclick='fnjs_buscar()' >";
+$boton = "<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >";
 $aOpciones = [
-    'tot_any' => _('todo el año'),
-    'trimestre_1' => _('primer trimestre'),
-    'trimestre_2' => _('segundo trimestre'),
-    'trimestre_3' => _('tercer trimestre'),
-    'trimestre_4' => _('cuarto trimestre'),
+    'tot_any' => _("todo el año"),
+    'trimestre_1' => _("primer trimestre"),
+    'trimestre_2' => _("segundo trimestre"),
+    'trimestre_3' => _("tercer trimestre"),
+    'trimestre_4' => _("cuarto trimestre"),
     'separador' => '---------',
-    'curso_ca' => _('curso ca'),
+    'curso_ca' => _("curso ca"),
     'separador1' => '---------',
-    'otro' => _('otro'),
+    'otro' => _("otro"),
 ];
 $oFormP = new frontend\shared\web\PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_('periodo de selección de actividades')));
+$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de selección de actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setEmpiezaMax($Qempiezamax);

@@ -36,9 +36,9 @@ final class CalendarioPeriodosGet2Data
         }
 
         $a_cabeceras = [];
-        $a_cabeceras[] = _('desde');
-        $a_cabeceras[] = _('hasta');
-        $a_cabeceras[] = _('asignado a');
+        $a_cabeceras[] = _("desde");
+        $a_cabeceras[] = _("hasta");
+        $a_cabeceras[] = _("asignado a");
 
         $i = 0;
         $a_valores = [];

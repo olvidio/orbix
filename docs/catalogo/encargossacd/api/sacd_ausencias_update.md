@@ -6,12 +6,12 @@ url: "/src/encargossacd/sacd_ausencias_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/encargossacd/infrastructure/ui/http/controllers/sacd_ausencias_update.php"
-entrada: []
-entrada_obligatoria: []
+entrada: ["ctx_guardar: string", "id_nom: int", "enc_num: int", "inicio[]: string", "fin[]: string", "id_enc[]: int", "id_item[]: int"]
+entrada_obligatoria: ["ctx_guardar", "enc_num"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "encargossacd_SacdAusenciasUpdateData"
 respuesta_data: ["error:bool, mensajes: string"]
-requiere_hashb: false
+requiere_hashb: true
 errores: ["no se ha encontrado el encargo del sacd", "hay un error, no se ha eliminado", "hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/encargossacd/controller/sacd_ausencias_update.php"]
 casos_uso: ["src\\encargossacd\\application\\SacdAusenciasUpdate"]

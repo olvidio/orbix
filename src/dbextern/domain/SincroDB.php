@@ -472,7 +472,7 @@ class SincroDB
         if ($this->guardarPersona($repoPersona, $obj_pau, $oPersona) === false) {
             return [
                 'error' => sprintf(
-                    _('sincronización interrumpida en %s (id listas %s, id orbix %s): no se ha guardado. Esta ficha y las siguientes no se han guardado.'),
+                    _("sincronización interrumpida en %s (id listas %s, id orbix %s): no se ha guardado. Esta ficha y las siguientes no se han guardado."),
                     $ape_nom,
                     (string) $id_nom_listas,
                     (string) $id_orbix,

@@ -35,13 +35,13 @@ class PillsLayout implements LayoutInterface
         $html_shell .= '<nav class="pills-appbar__user" aria-label="utilidades">';
         $html_shell .= '<div class="pills-user-wrap">';
         $html_shell .= '<button type="button" class="pills-user-trigger" id="pillsUserTrigger" aria-expanded="false" aria-controls="pillsUserPanel" onclick="pillsToggleUserPanel(event);">'
-            . '<span class="pills-user-trigger__icon">&#9679;</span> ' . _('Utilidades')
+            . '<span class="pills-user-trigger__icon">&#9679;</span> ' . _("Utilidades")
             . '</button>';
         $html_shell .= '<div class="pills-user-panel" id="pillsUserPanel" hidden>';
         $html_shell .= '<ul class="pills-user-panel__list">';
         $html_shell .= $user_menus;
         $html_shell .= '<li class="pills-user-panel__divider" role="separator"></li>';
-        $html_shell .= '<li><a href="#" onclick="fnjs_logout();">' . ucfirst(_('salir'))
+        $html_shell .= '<li><a href="#" onclick="fnjs_logout();">' . ucfirst(_("salir"))
             . ' <span class="pills-user-meta">(' . htmlspecialchars(OrbixRuntime::miUsuario(), ENT_QUOTES, 'UTF-8')
             . '[' . htmlspecialchars(OrbixRuntime::miRegionDl(), ENT_QUOTES, 'UTF-8') . '])</span></a></li>';
         $html_shell .= '</ul></div></div></nav>';

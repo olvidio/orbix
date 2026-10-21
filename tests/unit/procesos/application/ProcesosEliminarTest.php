@@ -19,28 +19,28 @@ final class ProcesosEliminarTest extends TestCase
     {
         $useCase = new ProcesosEliminar($this->createMock(TareaProcesoRepositoryInterface::class));
         $msg = $useCase->execute([]);
-        $this->assertSame(_('no sé cuál he de borar'), $msg);
+        $this->assertSame(_("no sé cuál he de borar"), $msg);
     }
 
     public function test_id_item_cero_devuelve_mensaje_error(): void
     {
         $useCase = new ProcesosEliminar($this->createMock(TareaProcesoRepositoryInterface::class));
         $msg = $useCase->execute(['id_item' => 0]);
-        $this->assertSame(_('no sé cuál he de borar'), $msg);
+        $this->assertSame(_("no sé cuál he de borar"), $msg);
     }
 
     public function test_id_item_negativo_devuelve_mensaje_error(): void
     {
         $useCase = new ProcesosEliminar($this->createMock(TareaProcesoRepositoryInterface::class));
         $msg = $useCase->execute(['id_item' => -3]);
-        $this->assertSame(_('no sé cuál he de borar'), $msg);
+        $this->assertSame(_("no sé cuál he de borar"), $msg);
     }
 
     public function test_id_item_no_numerico_se_trata_como_cero(): void
     {
         $useCase = new ProcesosEliminar($this->createMock(TareaProcesoRepositoryInterface::class));
         $msg = $useCase->execute(['id_item' => 'abc']);
-        $this->assertSame(_('no sé cuál he de borar'), $msg);
+        $this->assertSame(_("no sé cuál he de borar"), $msg);
     }
 
     public function test_tarea_no_encontrada(): void
@@ -49,7 +49,7 @@ final class ProcesosEliminarTest extends TestCase
         $repo->method('findById')->with(5)->willReturn(null);
 
         $this->assertSame(
-            _('no se encuentra la tarea a borrar'),
+            _("no se encuentra la tarea a borrar"),
             (new ProcesosEliminar($repo))->execute(['id_item' => 5])
         );
     }

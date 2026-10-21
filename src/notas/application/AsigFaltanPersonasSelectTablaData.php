@@ -43,7 +43,7 @@ final class AsigFaltanPersonasSelectTablaData
         };
 
         if (!$isTrue($Qpersonas_n) && !$isTrue($Qpersonas_agd)) {
-            throw new \RuntimeException(_('Debe marcar un grupo de personas (n o agd)'));
+            throw new \RuntimeException(_("Debe marcar un grupo de personas (n o agd)"));
         }
 
         if ($Qb_c === 'b') {
@@ -90,7 +90,7 @@ final class AsigFaltanPersonasSelectTablaData
         $AsignaturaRepository = $this->asignaturaRepository;
         $oAsignatura = $AsignaturaRepository->findById($Qid_asignatura);
         if ($oAsignatura === null) {
-            throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), $Qid_asignatura));
+            throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), $Qid_asignatura));
         }
         $nom_asignatura = $oAsignatura->getNombre_corto();
         $id_tipo_asignatura = (int) ($oAsignatura->getId_tipo() ?? 0);
@@ -146,7 +146,7 @@ final class AsigFaltanPersonasSelectTablaData
             ];
         }
 
-        $titulo = sprintf(_('lista de %s de %s a los que falta la asignatura %s (%s)'), $gente, $curso_txt, $nom_asignatura, $i);
+        $titulo = sprintf(_("lista de %s de %s a los que falta la asignatura %s (%s)"), $gente, $curso_txt, $nom_asignatura, $i);
 
         return [
             'titulo' => $titulo,

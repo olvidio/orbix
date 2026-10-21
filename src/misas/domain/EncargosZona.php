@@ -85,7 +85,7 @@ class EncargosZona
                 foreach ($cEncargoHorario as $oEncargoHorario) {
                     $dia_ref = strtolower($oEncargoHorario->getDia_ref() ?? '');
                     if ($dia_ref === $a_dia_semana) {
-                        $a_ctr_enc[$id_ubi][$id_tipo_enc][$id_enc][$dia_num_semana] = _('sin sacd');
+                        $a_ctr_enc[$id_ubi][$id_tipo_enc][$id_enc][$dia_num_semana] = _("sin sacd");
                     }
                 }
                 $oFecha->add(new DateInterval('P1D'));

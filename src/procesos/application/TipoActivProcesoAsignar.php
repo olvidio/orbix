@@ -26,7 +26,7 @@ class TipoActivProcesoAsignar
 
         $oTipoDeActividad = $this->tipoDeActividadRepository->findById($Qid_tipo_activ);
         if ($oTipoDeActividad === null) {
-            return _('tipo de actividad no encontrado');
+            return _("tipo de actividad no encontrado");
         }
         if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpropio)) {
             $oTipoDeActividad->setId_tipo_proceso($Qid_tipo_proceso, ConfigGlobal::mi_sfsv());

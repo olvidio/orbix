@@ -28,7 +28,7 @@ $Qdl_org = (string)\src\shared\domain\helpers\FilterPostGet::post('dl_org');
 $Qisfsv = (int)\src\shared\domain\helpers\FilterPostGet::post('isfsv');
 
 if ($Qtipo !== 'freq' && $Qtipo !== 'region') {
-    ContestarJson::enviar(sprintf(_('opción no definida: tipo=%s'), $Qtipo));
+    ContestarJson::enviar(sprintf(_("opción no definida: tipo=%s"), $Qtipo));
     exit;
 }
 
@@ -53,7 +53,7 @@ switch ($Qtipo) {
     case 'freq':
         $payload['id'] = 'id_ubi_1';
         if ($Qdl_org === '') {
-            $payload['mensaje'] = _('falta saber quien organiza');
+            $payload['mensaje'] = _("falta saber quien organiza");
             break;
         }
         $payload['opciones'] = $data['opcionesFreq'];

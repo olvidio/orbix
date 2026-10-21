@@ -36,7 +36,7 @@ $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qsfsv = (string)filter_input(INPUT_POST, 'sfsv');
 
 $oForm = new CasasQue();
-$oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_('búsqueda de casas cuyo resumen económico interesa')));
+$oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("búsqueda de casas cuyo resumen económico interesa")));
 $filtro = ['active' => true];
 $miSfsv = OrbixRuntime::miSfsv();
 $miRolePau = OrbixRuntime::miRolePau();
@@ -61,21 +61,21 @@ $oSelects = $oForm->getSelects();
 $oSelects->setAction('');
 
 $aOpciones = [
-    'tot_any' => _('todo el año'),
-    'trimestre_1' => _('primer trimestre'),
-    'trimestre_2' => _('segundo trimestre'),
-    'trimestre_3' => _('tercer trimestre'),
-    'trimestre_4' => _('cuarto trimestre'),
+    'tot_any' => _("todo el año"),
+    'trimestre_1' => _("primer trimestre"),
+    'trimestre_2' => _("segundo trimestre"),
+    'trimestre_3' => _("tercer trimestre"),
+    'trimestre_4' => _("cuarto trimestre"),
     'separador' => '---------',
-    'otro' => _('otro'),
+    'otro' => _("otro"),
 ];
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('seleccion');
-$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_('periodo para el resumen económico')));
+$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("periodo para el resumen económico")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel(CasasPayload::periodoYearSel((int)date('Y')));
 $oFormP->setAntes($oSelects->ListaSelects());
-$oFormP->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "' onclick='fnjs_ver();'>");
+$oFormP->setBoton("<input type='button' name='buscar' value='" . _("buscar") . "' onclick='fnjs_ver();'>");
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 $url_ajax = $web . '/frontend/casas/controller/casas_resumen_lista.php';

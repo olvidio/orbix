@@ -27,7 +27,7 @@ class TipoActivUpdate
         $TipoDeActividadRepository = $this->tipoDeActividadRepository;
         $oTipoDeActividad = $TipoDeActividadRepository->findById($Qid_tipo_activ);
         if ($oTipoDeActividad === null) {
-            return _('tipo de actividad no encontrado');
+            return _("tipo de actividad no encontrado");
         }
         $oTipoDeActividad->setNombre($Qnom_tipo_activ);
         if ($TipoDeActividadRepository->Guardar($oTipoDeActividad) === false) {

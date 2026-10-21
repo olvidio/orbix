@@ -14,12 +14,12 @@ FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/misas/plan_de_misas_pantalla_data', ['pantalla' => 'ver']);
 
 $periodo_td_html = PeriodoTdHelper::build([
-    'esta_semana' => _('esta semana'),
-    'este_mes' => _('este mes'),
-    'proxima_semana' => _('próxima semana de lunes a domingo'),
-    'proximo_mes' => _('próximo mes natural'),
+    'esta_semana' => _("esta semana"),
+    'este_mes' => _("este mes"),
+    'proxima_semana' => _("próxima semana de lunes a domingo"),
+    'proximo_mes' => _("próximo mes natural"),
     'separador' => '---------',
-    'otro' => _('otro'),
+    'otro' => _("otro"),
 ], 'este_mes');
 
 $oDesplZonas = new Desplegable();

@@ -28,20 +28,20 @@ $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $a_Claves = [
-    'com_sacd' => _('comunicación a los sacerdotes'),
-    'com_ctr' => _('comunicación a los centros'),
-    't_titular' => _('titulo: titular'),
-    't_secc' => _('titulo: sección'),
-    't_mañana' => _('titulo: mañana'),
-    't_tarde1' => _('titulo: tarde 1ª hora'),
-    't_tarde2' => _('titulo: tarde 2ª hora'),
-    't_mañanas' => _('titulo (plural): mañanas'),
-    't_tardes1' => _('titulo (plural): tardes 1ª hora'),
-    't_tardes2' => _('titulo (plural): tardes 2ª hora'),
-    't_suplente' => _('titulo: suplente'),
-    't_colaborador' => _('titulo: colaborador'),
-    't_otros' => _('titulo: otros'),
-    't_observ' => _('titulo: observaciones'),
+    'com_sacd' => _("comunicación a los sacerdotes"),
+    'com_ctr' => _("comunicación a los centros"),
+    't_titular' => _("titulo: titular"),
+    't_secc' => _("titulo: sección"),
+    't_mañana' => _("titulo: mañana"),
+    't_tarde1' => _("titulo: tarde 1ª hora"),
+    't_tarde2' => _("titulo: tarde 2ª hora"),
+    't_mañanas' => _("titulo (plural): mañanas"),
+    't_tardes1' => _("titulo (plural): tardes 1ª hora"),
+    't_tardes2' => _("titulo (plural): tardes 2ª hora"),
+    't_suplente' => _("titulo: suplente"),
+    't_colaborador' => _("titulo: colaborador"),
+    't_otros' => _("titulo: otros"),
+    't_observ' => _("titulo: observaciones"),
 ];
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_com_txt_data', []);

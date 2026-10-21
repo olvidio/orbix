@@ -20,7 +20,7 @@ class ZonaSacdDatosPut
         $aWhere = ['id_zona' => $id_zona, 'id_nom' => $id_sacd];
         $cZonaSacd = $this->zonaSacdRepository->getZonasSacds($aWhere);
         if (empty($cZonaSacd)) {
-            return ['error' => _('No existe')];
+            return ['error' => _("No existe")];
         }
 
         $oZonaSacd = $cZonaSacd[0];

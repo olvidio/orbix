@@ -28,7 +28,7 @@ final class CopiarEsquema
         $region = trim($region);
         $dl = trim($dl);
         if ($region === '' || $dl === '') {
-            throw new \InvalidArgumentException(_('Faltan región o delegación destino para copiar datos.'));
+            throw new \InvalidArgumentException(_("Faltan región o delegación destino para copiar datos."));
         }
 
         $esquema = "$region-$dl";
@@ -37,7 +37,7 @@ final class CopiarEsquema
 
         $esquemaBaseRef = RenombrarEsquemaVerificacionContexto::baseDesdeCampoOrigen($esquemaRefPost);
         if ($esquemaBaseRef === '' || !str_contains($esquemaBaseRef, '-')) {
-            throw new \InvalidArgumentException(_('Esquema de referencia no válido.'));
+            throw new \InvalidArgumentException(_("Esquema de referencia no válido."));
         }
         [$RegionRef, $DlRef] = explode('-', $esquemaBaseRef, 2);
 
@@ -48,7 +48,7 @@ final class CopiarEsquema
         $oConfigDB = new ConfigDB('importar');
 
         if ($comun !== 0) {
-            $config = $this->configImportar($oConfigDB, 'public', _('comun'), $avisos);
+            $config = $this->configImportar($oConfigDB, 'public', _("comun"), $avisos);
             if ($config !== null) {
                 /**
                  * lista de tablas de las que hay que copiar los valores.
@@ -83,7 +83,7 @@ final class CopiarEsquema
         }
 
         if ($sv !== 0) {
-            $config = $this->configImportar($oConfigDB, 'publicv-e', _('sv (sv-e)'), $avisos);
+            $config = $this->configImportar($oConfigDB, 'publicv-e', _("sv (sv-e)"), $avisos);
             if ($config !== null) {
                 $aTablas = [
                     'aux_cross_usuarios_grupos' => ['id_schema' => 'yes'],
@@ -116,7 +116,7 @@ final class CopiarEsquema
         }
 
         if ($sf !== 0) {
-            $config = $this->configImportar($oConfigDB, 'publicf-e', _('sf (sf-e)'), $avisos);
+            $config = $this->configImportar($oConfigDB, 'publicf-e', _("sf (sf-e)"), $avisos);
             if ($config !== null) {
                 $aTablas = [
                     'aux_cross_usuarios_grupos' => ['id_schema' => 'yes'],
@@ -161,7 +161,7 @@ final class CopiarEsquema
             return $oConfigDB->getEsquema($claveEsquema);
         }
 
-        $avisos[] = _('Se omitió') . ' ' . $etiquetaBloque . ': '
+        $avisos[] = _("Se omitió") . ' ' . $etiquetaBloque . ': '
             . ConfigDB::mensajeAvisoEsquemaConexionFaltante('importar', $claveEsquema);
 
         return null;

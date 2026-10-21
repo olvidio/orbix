@@ -23,9 +23,9 @@ $oTabla->setId_tabla('devel_db_admin_migraciones');
 $oTabla->setCabeceras(ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []));
 $oTabla->setDatos(ActividadesListaSupport::datos($data['a_valores'] ?? []));
 $oTabla->setBotones([
-    ['txt' => _('ejecutar seleccionadas'), 'click' => 'fnjs_migraciones_ejecutar_seleccion()'],
-    ['txt' => _('ejecutar hasta la marcada'), 'click' => 'fnjs_migraciones_ejecutar_hasta()'],
-    ['txt' => _('quitar registro de seleccionadas'), 'click' => 'fnjs_migraciones_quitar_registro()'],
+    ['txt' => _("ejecutar seleccionadas"), 'click' => 'fnjs_migraciones_ejecutar_seleccion()'],
+    ['txt' => _("ejecutar hasta la marcada"), 'click' => 'fnjs_migraciones_ejecutar_hasta()'],
+    ['txt' => _("quitar registro de seleccionadas"), 'click' => 'fnjs_migraciones_quitar_registro()'],
 ]);
 
 $oHash = new HashF();
@@ -43,10 +43,10 @@ $a_campos = [
     'serie' => PayloadCoercion::string($data['serie'] ?? ''),
     'url_ejecutar' => OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/migraciones_ejecutar.php',
     'url_quitar_registro' => OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/migraciones_quitar_registro.php',
-    'msg_sin_seleccion' => _('debe seleccionar una migracion'),
-    'msg_confirmar_quitar_registro' => _('Esto solo borra el registro de control en migracion_aplicada; no revierte cambios en la base de datos. ¿Continuar?'),
-    'msg_hasta_unica' => _('debe marcar una sola migracion para ejecutar hasta esa'),
-    'msg_error_respuesta' => _('No se puede interpretar la respuesta del servidor'),
+    'msg_sin_seleccion' => _("debe seleccionar una migracion"),
+    'msg_confirmar_quitar_registro' => _("Esto solo borra el registro de control en migracion_aplicada; no revierte cambios en la base de datos. ¿Continuar?"),
+    'msg_hasta_unica' => _("debe marcar una sola migracion para ejecutar hasta esa"),
+    'msg_error_respuesta' => _("No se puede interpretar la respuesta del servidor"),
 ];
 
 $oView = new ViewNewPhtml('frontend\devel_db_admin\controller');

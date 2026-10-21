@@ -110,7 +110,7 @@ final class HabitacionesCamaListaTest extends TestCase
         $this->assertArrayHasKey($hid, $out['habitaciones_con_camas']);
         $this->assertCount(1, $out['a_valores']);
         $this->assertSame("$hid#$cid", $out['a_valores'][1]['sel']);
-        $this->assertSame(_('completo'), $out['a_valores'][1][4]);
+        $this->assertSame(_("completo"), $out['a_valores'][1][4]);
     }
 
     public function test_asistente_sin_cama_recibe_contexto_firmado_sin_id_nom_plano(): void

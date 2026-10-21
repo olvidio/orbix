@@ -80,7 +80,7 @@ final class MenusGetPageData
         if (!empty($Qid_menu)) {
             $oMenuDb = $this->menuDbRepository->findById((int) $Qid_menu);
             if ($oMenuDb === null) {
-                throw new \RuntimeException(_('No encuentro el menu'));
+                throw new \RuntimeException(_("No encuentro el menu"));
             }
             $oMenuDb->setId_menu((int)$Qid_menu);
 

@@ -146,7 +146,7 @@ final class RefreshCrStgrMaterializedViews
             $this->refreshExteriorRegionViews($schema_vf, $userSfsvInt);
 
             if (!$this->allViewsReady($schema_vf, $esquema, $userSfsvInt)) {
-                throw new PDOException(_('Tras el refresh siguen faltando vistas materializadas por poblar.'));
+                throw new PDOException(_("Tras el refresh siguen faltando vistas materializadas por poblar."));
             }
 
             $_SESSION['Refresh'] = 'ok';
@@ -185,7 +185,7 @@ final class RefreshCrStgrMaterializedViews
             return '';
         }
 
-        $titulo = _('Actualización de datos de región');
+        $titulo = _("Actualización de datos de región");
 
         return '<div class="refresh-mv-aviso" role="alert" style="margin:1em 0;padding:0.75em 1em;border:2px solid #c0392b;background:#fdecea;color:#922b21;">'
             . '<strong>' . htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') . ':</strong> '
@@ -247,8 +247,8 @@ final class RefreshCrStgrMaterializedViews
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('X-Accel-Buffering: no');
 
-        $titulo = htmlspecialchars(_('Orbix'), ENT_QUOTES, 'UTF-8');
-        $mensaje = htmlspecialchars(_('Actualizando vistas materializadas…'), ENT_QUOTES, 'UTF-8');
+        $titulo = htmlspecialchars(_("Orbix"), ENT_QUOTES, 'UTF-8');
+        $mensaje = htmlspecialchars(_("Actualizando vistas materializadas…"), ENT_QUOTES, 'UTF-8');
 
         echo '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>'
             . $titulo
@@ -309,12 +309,12 @@ final class RefreshCrStgrMaterializedViews
 
     private function reportRefreshFailureOnOverlay(PDOException $e): never
     {
-        $message = _('No puedo refrescar las vistas') . ': ' . $e->getMessage();
+        $message = _("No puedo refrescar las vistas") . ': ' . $e->getMessage();
         error_log('[RefreshCrStgrMaterializedViews] ' . $message);
         $_SESSION['Refresh_error'] = $message;
         $_SESSION['Refresh'] = 'error';
 
-        $titulo = htmlspecialchars(_('Actualización de datos de región'), ENT_QUOTES, 'UTF-8');
+        $titulo = htmlspecialchars(_("Actualización de datos de región"), ENT_QUOTES, 'UTF-8');
         $detalle = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
 
         echo '<script>document.querySelector(".refresh-mv-spinner")?.remove();</script>'
@@ -385,7 +385,7 @@ final class RefreshCrStgrMaterializedViews
 
         if (!$oMatView->create($comun)) {
             throw new PDOException(sprintf(
-                _('No puedo crear la vista materializada %s'),
+                _("No puedo crear la vista materializada %s"),
                 $view,
             ));
         }
@@ -397,7 +397,7 @@ final class RefreshCrStgrMaterializedViews
     {
         if (!$oMatView->Refresh()) {
             throw new PDOException(sprintf(
-                _('No puedo refrescar la vista materializada %s'),
+                _("No puedo refrescar la vista materializada %s"),
                 $view,
             ));
         }
@@ -409,7 +409,7 @@ final class RefreshCrStgrMaterializedViews
     {
         if (!$oMatView->exists() || !$oMatView->isPopulated()) {
             throw new PDOException(sprintf(
-                _('La vista materializada %s sigue sin poblar tras REFRESH'),
+                _("La vista materializada %s sigue sin poblar tras REFRESH"),
                 $view,
             ));
         }
@@ -417,7 +417,7 @@ final class RefreshCrStgrMaterializedViews
 
     private function reportRefreshFailure(PDOException $e): void
     {
-        $message = _('No puedo refrescar las vistas') . ': ' . $e->getMessage();
+        $message = _("No puedo refrescar las vistas") . ': ' . $e->getMessage();
         error_log('[RefreshCrStgrMaterializedViews] ' . $message);
         $_SESSION['Refresh_error'] = $message;
         $_SESSION['Refresh'] = 'error';

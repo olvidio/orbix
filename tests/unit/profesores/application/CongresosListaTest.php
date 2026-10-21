@@ -57,10 +57,10 @@ final class CongresosListaTest extends TestCase
 
         $this->assertSame('tabla_congreso', $out['id_tabla']);
         $this->assertArrayNotHasKey(1, $out['a_cabeceras']);
-        $this->assertSame(_('apellidos, nombre'), $out['a_cabeceras'][2]);
+        $this->assertSame(_("apellidos, nombre"), $out['a_cabeceras'][2]);
         $this->assertCount(1, $out['a_valores']);
         $this->assertSame('García, Juan', $out['a_valores'][1][2]);
-        $this->assertSame(_('congreso'), $out['a_valores'][1][3]);
+        $this->assertSame(_("congreso"), $out['a_valores'][1][3]);
         $this->assertSame('BCN', $out['a_valores'][1][4]);
         $this->assertSame('01/06/2024', $out['a_valores'][1][5]);
         $this->assertSame('03/06/2024', $out['a_valores'][1][6]);
@@ -94,7 +94,7 @@ final class CongresosListaTest extends TestCase
         $useCase = new CongresosLista($svc, $repoCongreso);
         $out = $useCase->getTablaData();
 
-        $this->assertSame(_('dl'), $out['a_cabeceras'][1]);
+        $this->assertSame(_("dl"), $out['a_cabeceras'][1]);
         $this->assertSame('reg_dl', $out['a_valores'][1][1]);
     }
 

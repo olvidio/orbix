@@ -279,14 +279,14 @@ class DBTabla extends DBAbstract
         $partesRef = explode('-', $this->getRef(), 2);
         $partesNew = explode('-', $this->getNew(), 2);
         if (count($partesRef) < 2 || count($partesNew) < 2) {
-            throw new \InvalidArgumentException(_('Esquema ref o destino con formato región-dl no válido.'));
+            throw new \InvalidArgumentException(_("Esquema ref o destino con formato región-dl no válido."));
         }
         [$crRef, $dlRef] = $partesRef;
         [$crNew, $dlNew] = $partesNew;
 
         $dump = file_get_contents($this->getFileRef());
         if ($dump === false) {
-            throw new \RuntimeException(sprintf(_('No se pudo leer el volcado de referencia: %s'), $this->getFileRef()));
+            throw new \RuntimeException(sprintf(_("No se pudo leer el volcado de referencia: %s"), $this->getFileRef()));
         }
 
         $dump_nou = str_replace($this->getRef(), $this->getNew(), $dump);
@@ -298,7 +298,7 @@ class DBTabla extends DBAbstract
 
         $sqlPath = $this->rutaVolcadoNuevo();
         if (file_put_contents($sqlPath, $dump_nou) === false) {
-            throw new \RuntimeException(sprintf(_('No se pudo escribir %s'), $sqlPath));
+            throw new \RuntimeException(sprintf(_("No se pudo escribir %s"), $sqlPath));
         }
     }
 
@@ -418,8 +418,8 @@ class DBTabla extends DBAbstract
 
         if (ConfigGlobal::is_debug_mode()) {
             $error = (string) file_get_contents($logFile);
-            echo sprintf(_('PSQL ERROR IN COMMAND(2): %1$s<br><br> mirar en: %2$s'), $command, $logFile);
-            echo '<br>' . _('Si sólo salen números, son las filas que se ha insertado: Está bien.');
+            echo sprintf(_("PSQL ERROR IN COMMAND(2): %1\$s<br><br> mirar en: %2\$s"), $command, $logFile);
+            echo '<br>' . _("Si sólo salen números, son las filas que se ha insertado: Está bien.");
             echo '<pre>' . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . '</pre>';
         }
 
@@ -451,7 +451,7 @@ class DBTabla extends DBAbstract
     {
         if (!is_readable($sqlPath)) {
             throw new \RuntimeException(sprintf(
-                _('No existe el volcado para importar: %s (origen «%s» → destino «%s»).'),
+                _("No existe el volcado para importar: %s (origen «%s» → destino «%s»)."),
                 $sqlPath,
                 $this->getRef(),
                 $this->getNew(),
@@ -462,7 +462,7 @@ class DBTabla extends DBAbstract
         $destino = $this->getNew();
         if ($destino !== '' && !str_contains($muestra, '"' . $destino . '"')) {
             throw new \RuntimeException(sprintf(
-                _('El fichero %1$s no contiene el esquema destino «%2$s» (¿volcado antiguo dbNewEu-crEu u otro?). Regenerar el paso 3.'),
+                _("El fichero %1\$s no contiene el esquema destino «%2\$s» (¿volcado antiguo dbNewEu-crEu u otro?). Regenerar el paso 3."),
                 $sqlPath,
                 $destino,
             ));
@@ -470,11 +470,11 @@ class DBTabla extends DBAbstract
 
         $sql = file_get_contents($sqlPath);
         if ($sql === false) {
-            throw new \RuntimeException(sprintf(_('No se pudo leer %s'), $sqlPath));
+            throw new \RuntimeException(sprintf(_("No se pudo leer %s"), $sqlPath));
         }
         $sql = DBEsquemaCreate::normalizarVolcadoPgDumpParaPsql($sql);
         if (file_put_contents($sqlPath, $sql) === false) {
-            throw new \RuntimeException(sprintf(_('No se pudo reescribir %s'), $sqlPath));
+            throw new \RuntimeException(sprintf(_("No se pudo reescribir %s"), $sqlPath));
         }
     }
 
@@ -666,7 +666,7 @@ class DBTabla extends DBAbstract
 
         $detalle = trim((string) file_get_contents($logFile));
         throw new \RuntimeException(sprintf(
-            _('Error %1$s (comando %2$d). Origen «%3$s» → destino «%4$s». SQL: %5$s. Log: %6$s.%7$s'),
+            _("Error %1\$s (comando %2\$d). Origen «%3\$s» → destino «%4\$s». SQL: %5\$s. Log: %6\$s.%7\$s"),
             $herramienta,
             $numeroComando,
             $this->getRef(),

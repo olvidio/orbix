@@ -38,7 +38,7 @@ final class ActaImprimirPresentacionData
     public function execute(string $acta, string $mode): array
     {
         if ($acta === '') {
-            throw new \InvalidArgumentException(_('Falta el acta'));
+            throw new \InvalidArgumentException(_("Falta el acta"));
         }
 
         $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
@@ -52,11 +52,11 @@ final class ActaImprimirPresentacionData
         $ActaRepository = $this->actaRepository;
         $oActa = $ActaRepository->findById($acta);
         if ($oActa === null) {
-            throw new \RuntimeException(sprintf(_('No se encuentra el acta: %s'), $acta));
+            throw new \RuntimeException(sprintf(_("No se encuentra el acta: %s"), $acta));
         }
         $id_asignatura = $oActa->getId_asignatura();
         if ($id_asignatura === null) {
-            throw new \RuntimeException(_('El acta no tiene asignatura asociada'));
+            throw new \RuntimeException(_("El acta no tiene asignatura asociada"));
         }
         $id_activ = $oActa->getId_activ();
         $oF_acta = $oActa->getF_acta();
@@ -69,7 +69,7 @@ final class ActaImprimirPresentacionData
         $AsignaturaRepository = $this->asignaturaRepository;
         $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
         if ($oAsignatura === null) {
-            throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), $id_asignatura));
+            throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
         }
         $nombre_corto = $oAsignatura->getNombre_corto();
         $nombre_asignatura = strtr((string)$oAsignatura->getNombre_asignatura(), $replace);
@@ -85,11 +85,11 @@ final class ActaImprimirPresentacionData
 
         $id_tipo = $oAsignatura->getId_tipo();
         if ($id_tipo === null) {
-            throw new \RuntimeException(_('La asignatura no tiene tipo'));
+            throw new \RuntimeException(_("La asignatura no tiene tipo"));
         }
         $oAsignaturaTipo = $this->asignaturaTipoRepository->findById($id_tipo);
         if ($oAsignaturaTipo === null) {
-            throw new \RuntimeException(sprintf(_('No se ha encontrado el tipo de asignatura con id: %s'), $id_tipo));
+            throw new \RuntimeException(sprintf(_("No se ha encontrado el tipo de asignatura con id: %s"), $id_tipo));
         }
         $curso = strtr((string) ($oAsignaturaTipo->getTipoLatinVo()?->value() ?? ''), $replace);
 
@@ -100,8 +100,8 @@ final class ActaImprimirPresentacionData
             $id_nom = $oPersonaNota->getId_nom();
             $oPersona = $this->personaFinderService->findPersonaEnGlobalODePaso($id_nom);
             if ($oPersona === null) {
-                $errores .= '<br>' . sprintf(_('existe una nota de la que no se tiene acceso al nombre (id_nom = %s): es de otra dl o \'de paso\' borrado.'), $id_nom);
-                $errores .= ' ' . _('no aparece en la lista');
+                $errores .= '<br>' . sprintf(_("existe una nota de la que no se tiene acceso al nombre (id_nom = %s): es de otra dl o 'de paso' borrado."), $id_nom);
+                $errores .= ' ' . _("no aparece en la lista");
                 continue;
             }
             $nom = $oPersona->getApellidosUpperNombre();

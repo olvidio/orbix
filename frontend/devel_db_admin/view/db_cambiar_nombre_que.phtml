@@ -42,17 +42,17 @@ require __DIR__ . '/_db_dl_desplegable_ajax.phtml';
         $('#cf_sf').val($('input[name=sf]').is(':checked') ? '1' : '0');
     }
     fnjs_html_verificacion = function (d) {
-        var html = '<h4>' + <?= json_encode(_('Resultado de la comprobación')) ?> + '</h4>';
-        html += '<p><strong>' + <?= json_encode(_('Resumen')) ?> + ':</strong> ' + (d.resumen || '') + '</p>';
-        html += '<p><strong>' + <?= json_encode(_('Estado')) ?> + ':</strong> ' + (d.listo ? <?= json_encode(_('coherente con el objetivo')) ?> : <?= json_encode(_('hay pendientes o errores')) ?>) + '</p>';
+        var html = '<h4>' + <?= json_encode(_("Resultado de la comprobación")) ?> + '</h4>';
+        html += '<p><strong>' + <?= json_encode(_("Resumen")) ?> + ':</strong> ' + (d.resumen || '') + '</p>';
+        html += '<p><strong>' + <?= json_encode(_("Estado")) ?> + ':</strong> ' + (d.listo ? <?= json_encode(_("coherente con el objetivo")) ?> : <?= json_encode(_("hay pendientes o errores")) ?>) + '</p>';
         if (d.meta) {
             if (d.meta.comprobacion_solo_destino) {
-                html += '<p><small><em>' + <?= json_encode(_('Comprobación solo destino (sin nombre de origen): no se valida la desaparición de un esquema antiguo.')) ?> + '</em></small></p>';
+                html += '<p><small><em>' + <?= json_encode(_("Comprobación solo destino (sin nombre de origen): no se valida la desaparición de un esquema antiguo.")) ?> + '</em></small></p>';
             }
-            html += '<p><small>' + <?= json_encode(_('Origen (base)')) ?> + ': ' + (d.meta.comprobacion_solo_destino ? '—' : (d.meta.origen_base || '')) +
-                ' → ' + <?= json_encode(_('Objetivo (base)')) ?> + ': ' + (d.meta.objetivo_base || '') + '</small></p>';
+            html += '<p><small>' + <?= json_encode(_("Origen (base)")) ?> + ': ' + (d.meta.comprobacion_solo_destino ? '—' : (d.meta.origen_base || '')) +
+                ' → ' + <?= json_encode(_("Objetivo (base)")) ?> + ': ' + (d.meta.objetivo_base || '') + '</small></p>';
             if (d.meta.region_efectiva !== undefined && d.meta.dl_efectiva !== undefined) {
-                html += '<p><small>' + <?= json_encode(_('Región / delegación usadas en la comprobación')) ?> + ': ' +
+                html += '<p><small>' + <?= json_encode(_("Región / delegación usadas en la comprobación")) ?> + ': ' +
                     (d.meta.region_efectiva || '') + ' / ' + (d.meta.dl_efectiva || '') + '</small></p>';
             }
         }
@@ -98,14 +98,14 @@ require __DIR__ . '/_db_dl_desplegable_ajax.phtml';
         })
             .done(function (rta) {
                 if (!rta || !rta.success || !rta.data) {
-                    alert(<?= json_encode(_('Respuesta inesperada del servidor.')) ?>);
+                    alert(<?= json_encode(_("Respuesta inesperada del servidor.")) ?>);
                     return;
                 }
                 var d = rta.data;
                 $('#verif_result').html(fnjs_html_verificacion(d));
             })
             .fail(function (xhr) {
-                var msg = <?= json_encode(_('Error al comprobar.')) ?>;
+                var msg = <?= json_encode(_("Error al comprobar.")) ?>;
                 if (xhr.responseText) {
                     msg += '\n' + xhr.responseText.substring(0, 500);
                 }
@@ -137,22 +137,22 @@ require __DIR__ . '/_db_dl_desplegable_ajax.phtml';
         })
             .done(function (rta) {
                 if (!rta || !rta.success || !rta.data) {
-                    alert(<?= json_encode(_('Respuesta inesperada del servidor.')) ?>);
+                    alert(<?= json_encode(_("Respuesta inesperada del servidor.")) ?>);
                     return;
                 }
                 var p = rta.data;
-                var html = '<h4>' + <?= json_encode(_('Corrección automática')) ?> + '</h4>';
+                var html = '<h4>' + <?= json_encode(_("Corrección automática")) ?> + '</h4>';
                 if (p.acciones && p.acciones.length) {
-                    html += '<p><strong>' + <?= json_encode(_('Acciones realizadas')) ?> + ':</strong></p><ul style="text-align:left">';
+                    html += '<p><strong>' + <?= json_encode(_("Acciones realizadas")) ?> + ':</strong></p><ul style="text-align:left">';
                     for (var i = 0; i < p.acciones.length; i++) {
                         html += '<li>' + (p.acciones[i] || '') + '</li>';
                     }
                     html += '</ul>';
                 } else {
-                    html += '<p><em>' + <?= json_encode(_('No se ejecutó ninguna acción de corrección (condiciones no cumplidas o ya estaba alineado).')) ?> + '</em></p>';
+                    html += '<p><em>' + <?= json_encode(_("No se ejecutó ninguna acción de corrección (condiciones no cumplidas o ya estaba alineado).")) ?> + '</em></p>';
                 }
                 if (p.avisos && p.avisos.length) {
-                    html += '<p><strong>' + <?= json_encode(_('Avisos / errores parciales')) ?> + ':</strong></p><ul style="text-align:left;color:#a00">';
+                    html += '<p><strong>' + <?= json_encode(_("Avisos / errores parciales")) ?> + ':</strong></p><ul style="text-align:left;color:#a00">';
                     for (var k = 0; k < p.avisos.length; k++) {
                         html += '<li>' + (p.avisos[k] || '') + '</li>';
                     }
@@ -165,7 +165,7 @@ require __DIR__ . '/_db_dl_desplegable_ajax.phtml';
                 $('#verif_result').html(html);
             })
             .fail(function (xhr) {
-                var msg = <?= json_encode(_('Error al corregir.')) ?>;
+                var msg = <?= json_encode(_("Error al corregir.")) ?>;
                 if (xhr.responseText) {
                     msg += '\n' + xhr.responseText.substring(0, 500);
                 }
@@ -179,7 +179,7 @@ require __DIR__ . '/_db_dl_desplegable_ajax.phtml';
 <form id="frm" action="" method="post">
     <?= $oHash->getCamposHtml(); ?>
     <h2 style="margin-top:0"><?= htmlspecialchars(_("Origen (nombre base antiguo)")) ?></h2>
-    <p style="text-align:left;margin:0 0 1em 0;max-width:900px"><?= htmlspecialchars(_('Lista unida de esquemas vistos en comun, sv, sv-e y sf (y réplicas si aplica). Si el nombre antiguo ya no aparece, puede dejar el origen vacío: «Comprobar» valida solo el destino (región + delegación); «Corregir» reaplica solo los defaults (ALTER COLUMN) en ese nombre. Para contrastar o corregir la transición completa (incl. .inc y db_idschema) o para «Cambiar nombre», indique el esquema de origen cuando lo tenga.')) ?></p>
+    <p style="text-align:left;margin:0 0 1em 0;max-width:900px"><?= htmlspecialchars(_("Lista unida de esquemas vistos en comun, sv, sv-e y sf (y réplicas si aplica). Si el nombre antiguo ya no aparece, puede dejar el origen vacío: «Comprobar» valida solo el destino (región + delegación); «Corregir» reaplica solo los defaults (ALTER COLUMN) en ese nombre. Para contrastar o corregir la transición completa (incl. .inc y db_idschema) o para «Cambiar nombre», indique el esquema de origen cuando lo tenga.")) ?></p>
     <table>
         <tr style="vertical-align:top; text-align:left">
             <td><?= htmlspecialchars(_("esquema de origen")) ?>:</td>
@@ -189,7 +189,7 @@ require __DIR__ . '/_db_dl_desplegable_ajax.phtml';
     <br>
 
     <h2><?= htmlspecialchars(_("Destino (nuevo nombre región–dl)")) ?></h2>
-    <p style="text-align:left;margin:0 0 1em 0;max-width:900px"><?= htmlspecialchars(_('Si no sale en la lista, hay que ir a "Global > Ubis > delegaciones" y añadir la dl, o cambiar el nombre a una existente (idem con la región).')) ?></p>
+    <p style="text-align:left;margin:0 0 1em 0;max-width:900px"><?= htmlspecialchars(_("Si no sale en la lista, hay que ir a \"Global > Ubis > delegaciones\" y añadir la dl, o cambiar el nombre a una existente (idem con la región).")) ?></p>
     <table>
         <tr style="vertical-align:top; text-align:left">
             <td><?= htmlspecialchars(_("región")) ?>:</td>
@@ -233,7 +233,7 @@ require __DIR__ . '/_db_dl_desplegable_ajax.phtml';
     <hr style="margin:1.25em 0;max-width:900px;border:0;border-top:1px solid #ccc">
 
     <p style="text-align:left;margin:0 0 1em 0;max-width:900px">
-        <?= htmlspecialchars(_('Si tras el cambio algo no cuadra (esquemas, roles, db_idschema o ficheros .inc), puede comprobar el estado y, si procede, intentar las correcciones automáticas:')) ?>
+        <?= htmlspecialchars(_("Si tras el cambio algo no cuadra (esquemas, roles, db_idschema o ficheros .inc), puede comprobar el estado y, si procede, intentar las correcciones automáticas:")) ?>
     </p>
     <table>
         <tr>
@@ -242,7 +242,7 @@ require __DIR__ . '/_db_dl_desplegable_ajax.phtml';
                        value="<?= htmlspecialchars(_("Comprobar estado del renombre")) ?>">
             </td>
             <td style="text-align:left">
-                <?= htmlspecialchars(_('Comprueba esquemas/roles, db_idschema y ficheros .inc frente al nombre objetivo (sin modificar). Origen vacío: solo destino (región + delegación). Con origen relleno: también la transición desde ese nombre antiguo.')) ?>
+                <?= htmlspecialchars(_("Comprueba esquemas/roles, db_idschema y ficheros .inc frente al nombre objetivo (sin modificar). Origen vacío: solo destino (región + delegación). Con origen relleno: también la transición desde ese nombre antiguo.")) ?>
             </td>
         </tr>
         <tr>
@@ -251,7 +251,7 @@ require __DIR__ . '/_db_dl_desplegable_ajax.phtml';
                        value="<?= htmlspecialchars(_("Intentar correcciones automáticas")) ?>">
             </td>
             <td style="text-align:left">
-                <?= htmlspecialchars(_('Reaplica ALTER COLUMN (defaults) según el catálogo en el nombre destino. Origen vacío: solo defaults (no sincroniza .inc ni db_idschema). Con origen y renombre ya hecho en PostgreSQL, también alinea .inc y db_idschema. Vuelve a comprobar al final.')) ?>
+                <?= htmlspecialchars(_("Reaplica ALTER COLUMN (defaults) según el catálogo en el nombre destino. Origen vacío: solo defaults (no sincroniza .inc ni db_idschema). Con origen y renombre ya hecho en PostgreSQL, también alinea .inc y db_idschema. Vuelve a comprobar al final.")) ?>
             </td>
         </tr>
     </table>

@@ -101,7 +101,7 @@ final class PersonaNotaNueva
             $notas,
         );
         if ($nivel === null) {
-            throw new \RuntimeException(_('No hay hueco de opcional libre.'));
+            throw new \RuntimeException(_("No hay hueco de opcional libre."));
         }
         $oPersonaNota->setIdNivelVo(NivelId::fromNullableInt($nivel));
     }

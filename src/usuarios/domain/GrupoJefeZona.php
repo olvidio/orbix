@@ -53,7 +53,7 @@ class GrupoJefeZona
         $oUsuarioGrupo->setId_usuario($id_usuario);
         $oUsuarioGrupo->setId_grupo($id_grupo);
         if ($this->usuarioGrupoRepository->Guardar($oUsuarioGrupo) === false) {
-            $error_txt .= _('hay un error, no se ha guardado');
+            $error_txt .= _("hay un error, no se ha guardado");
             $error_txt .= "\n" . $this->usuarioGrupoRepository->getErrorTxt();
         }
 
@@ -70,7 +70,7 @@ class GrupoJefeZona
         if ($cUsuarioGrupo !== []) {
             $oUsuarioGrupo = $cUsuarioGrupo[0];
             if ($this->usuarioGrupoRepository->Eliminar($oUsuarioGrupo) === false) {
-                $error_txt .= _('hay un error, no se ha eliminado');
+                $error_txt .= _("hay un error, no se ha eliminado");
                 $error_txt .= "\n" . $this->usuarioGrupoRepository->getErrorTxt();
             }
         }

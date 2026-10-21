@@ -63,12 +63,12 @@ class TablonAnunciosParaGM
 
     public function getTabla(string $tablon): Lista
     {
-        $a_botones[] = ['txt' => _('borrar'), 'click' => 'fnjs_borrar("#seleccionados")'];
+        $a_botones[] = ['txt' => _("borrar"), 'click' => 'fnjs_borrar("#seleccionados")'];
 
         $a_cabeceras = [
-            _('origen'),
-            ['name' => ucfirst(_('fecha')), 'class' => 'fecha'],
-            _('aviso'),
+            _("origen"),
+            ['name' => ucfirst(_("fecha")), 'class' => 'fecha'],
+            _("aviso"),
         ];
         $a_valores = $this->getArray($tablon);
 

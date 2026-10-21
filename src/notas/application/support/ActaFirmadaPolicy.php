@@ -43,6 +43,6 @@ final class ActaFirmadaPolicy
             return '';
         }
 
-        return _('El acta está firmada y no se puede modificar');
+        return _("El acta está firmada y no se puede modificar");
     }
 }

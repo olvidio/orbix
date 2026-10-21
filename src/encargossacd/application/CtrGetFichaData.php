@@ -310,7 +310,7 @@ final class CtrGetFichaData
                 }
                 $txt .= $parcial;
             }
-            $encargo['dedic_sacd'] = self::assignAtIndex($encargo['dedic_sacd'], 0, $txt === '' ? _('crear horario') : $txt);
+            $encargo['dedic_sacd'] = self::assignAtIndex($encargo['dedic_sacd'], 0, $txt === '' ? _("crear horario") : $txt);
 
             return;
         }
@@ -378,7 +378,7 @@ final class CtrGetFichaData
                 }
                 $txt .= $parcial;
             }
-            $out['dedic_sacd'] = $txt === '' ? _('crear horario') : $txt;
+            $out['dedic_sacd'] = $txt === '' ? _("crear horario") : $txt;
 
             return $out;
         }

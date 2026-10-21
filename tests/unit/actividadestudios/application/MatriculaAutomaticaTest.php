@@ -58,7 +58,7 @@ final class MatriculaAutomaticaTest extends TestCase
         ]);
 
         $this->assertFalse($out['success']);
-        $this->assertSame(_('está de repaso'), $out['msg']);
+        $this->assertSame(_("está de repaso"), $out['msg']);
     }
 
     public function test_nivel_stgr_vacio_no_es_repaso_y_matricula(): void
@@ -118,7 +118,7 @@ final class MatriculaAutomaticaTest extends TestCase
         $this->assertTrue($out['success']);
         $this->assertStringContainsString('Alarcón Torres', $out['msg']);
         $this->assertStringContainsString('1', $out['msg']);
-        $this->assertStringNotContainsString(_('está de repaso'), $out['msg']);
+        $this->assertStringNotContainsString(_("está de repaso"), $out['msg']);
     }
 
     /**

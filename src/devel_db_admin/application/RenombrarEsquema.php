@@ -327,13 +327,13 @@ final class RenombrarEsquema
                 $oConSf = $this->pdoDesdeImportar($oConfigDB, 'publicf');
                 $this->renombrarSoloRolDelegacionSf($oDBRol, $oConSf, $esquema_oldf, $esquemaf, $pwdSf);
                 $avisos[] = sprintf(
-                    _('Aviso: en sf solo existía el rol «%1$s»/«%2$s», no el esquema (no se marcó sf al «crear esquema»). Se renombró el rol y las claves .inc; no se tocó la BD sf-e.'),
+                    _("Aviso: en sf solo existía el rol «%1\$s»/«%2\$s», no el esquema (no se marcó sf al «crear esquema»). Se renombró el rol y las claves .inc; no se tocó la BD sf-e."),
                     $esquema_oldf,
                     $esquemaf,
                 );
             } else {
                 $avisos[] = sprintf(
-                    _('Aviso: sf marcado en el formulario pero no hay esquema ni rol «%1$s»/«%2$s» en PostgreSQL; solo se actualizaron los .inc si existían.'),
+                    _("Aviso: sf marcado en el formulario pero no hay esquema ni rol «%1\$s»/«%2\$s» en PostgreSQL; solo se actualizaron los .inc si existían."),
                     $esquema_oldf,
                     $esquemaf,
                 );
@@ -366,7 +366,7 @@ final class RenombrarEsquema
             if ($this->leerPasswordEsquema($cfg, $row['old'], $row['new']) === null) {
                 return [
                     'error' => sprintf(
-                        _('El esquema «%1$s» no tiene entrada de conexión en «%2$s.inc» (ni con el nombre antiguo ni con el nuevo «%3$s»). El listado de origen sale de PostgreSQL; hace falta la misma clave en el fichero de passwords (p. ej. tras «Crear esquema») para poder renombrar.'),
+                        _("El esquema «%1\$s» no tiene entrada de conexión en «%2\$s.inc» (ni con el nombre antiguo ni con el nuevo «%3\$s»). El listado de origen sale de PostgreSQL; hace falta la misma clave en el fichero de passwords (p. ej. tras «Crear esquema») para poder renombrar."),
                         $row['old'],
                         $row['db'],
                         $row['new'],

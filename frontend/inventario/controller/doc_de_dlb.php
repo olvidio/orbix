@@ -50,16 +50,16 @@ $url_doc_mod = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/contr
 $url_imprimir = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_imprimir_dlb.php?';
 
 if (empty($Qinventario)) {
-    $a_botones[] = ['txt' => _('Asignar'), 'click' => "fnjs_go(\"$url_doc_mod\")"];
+    $a_botones[] = ['txt' => _("Asignar"), 'click' => "fnjs_go(\"$url_doc_mod\")"];
 } else {
-    $a_botones[] = ['txt' => _('Imprimir dl'), 'click' => " $(\"#dl\").val(\"true\"); fnjs_go(\"$url_imprimir\")"];
-    $a_botones[] = ['txt' => _('Imprimir'), 'click' => "fnjs_go(\"$url_imprimir\")"];
+    $a_botones[] = ['txt' => _("Imprimir dl"), 'click' => " $(\"#dl\").val(\"true\"); fnjs_go(\"$url_imprimir\")"];
+    $a_botones[] = ['txt' => _("Imprimir"), 'click' => "fnjs_go(\"$url_imprimir\")"];
 }
 
-$a_cabeceras = [ucfirst(_('centro - lugar'))];
-$a_botones[] = ['txt' => _('marcar/desmarcar todos'), 'click' => 'fnjs_selectAll("#seleccionados","sel[]","toggle")'];
-$a_botones[] = ['txt' => _('marcar todos'), 'click' => 'fnjs_selectAll("#seleccionados","sel[]","all")'];
-$a_botones[] = ['txt' => _('desmarcar todos'), 'click' => 'fnjs_selectAll("#seleccionados","sel[]","none")'];
+$a_cabeceras = [ucfirst(_("centro - lugar"))];
+$a_botones[] = ['txt' => _("marcar/desmarcar todos"), 'click' => 'fnjs_selectAll("#seleccionados","sel[]","toggle")'];
+$a_botones[] = ['txt' => _("marcar todos"), 'click' => 'fnjs_selectAll("#seleccionados","sel[]","all")'];
+$a_botones[] = ['txt' => _("desmarcar todos"), 'click' => 'fnjs_selectAll("#seleccionados","sel[]","none")'];
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('doc_dlb_tabla');

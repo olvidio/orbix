@@ -97,7 +97,7 @@ class ConfigDB
         $encontrado = self::localizarEsquemaEnFicheros($esquema);
         if ($encontrado !== null && $encontrado !== $rutaSugerida) {
             return sprintf(
-                _('El esquema «%1$s» está en %2$s pero no se cargó en la configuración «%3$s»; unifique la entrada en %4$s o corrija el formato (user/password).'),
+                _("El esquema «%1\$s» está en %2\$s pero no se cargó en la configuración «%3\$s»; unifique la entrada en %4\$s o corrija el formato (user/password)."),
                 $esquema,
                 $encontrado,
                 $ficheroBase,
@@ -106,7 +106,7 @@ class ConfigDB
         }
 
         $msg = sprintf(
-            _('Hay que añadir los parámetros de conexión para el esquema «%1$s» en %2$s'),
+            _("Hay que añadir los parámetros de conexión para el esquema «%1\$s» en %2\$s"),
             $esquema,
             $rutaSugerida,
         );
@@ -115,11 +115,11 @@ class ConfigDB
         if (self::usaFormatoPartido($baseMono)) {
             $mono = self::dirPwd() . '/' . $baseMono . '.inc';
             if ($mono !== $rutaSugerida && is_readable($mono)) {
-                $msg .= ' ' . sprintf(_('(si ya está en %s, se incorporará al recargar)'), $mono);
+                $msg .= ' ' . sprintf(_("(si ya está en %s, se incorporará al recargar)"), $mono);
             }
         }
         if (preg_match('/^[A-Za-z0-9]+-[A-Za-z0-9]+[vf]?$/', $esquema) === 1) {
-            $msg .= ' ' . _('(suele hacerlo el paso «1º crear usuarios»).');
+            $msg .= ' ' . _("(suele hacerlo el paso «1º crear usuarios»).");
         }
 
         return $msg;
@@ -133,7 +133,7 @@ class ConfigDB
         string $esquema,
         string $sufijo = '',
     ): string {
-        return _('Aviso:') . ' ' . self::mensajeEsquemaConexionFaltante($ficheroBase, $esquema) . $sufijo;
+        return _("Aviso:") . ' ' . self::mensajeEsquemaConexionFaltante($ficheroBase, $esquema) . $sufijo;
     }
 
     /**
@@ -166,7 +166,7 @@ class ConfigDB
     {
         $default = $this->data['default'] ?? null;
         if (!is_array($default)) {
-            throw new RuntimeException(sprintf(_('Falta el bloque default en %s.'), $this->baseLogico));
+            throw new RuntimeException(sprintf(_("Falta el bloque default en %s."), $this->baseLogico));
         }
         $data = $default;
         $data['schema'] = $esquema;
@@ -208,7 +208,7 @@ class ConfigDB
         }
         if (!is_array($default)) {
             throw new RuntimeException(sprintf(
-                _('Falta el bloque default en la configuración importar (%s).'),
+                _("Falta el bloque default en la configuración importar (%s)."),
                 $this->baseLogico,
             ));
         }
@@ -236,7 +236,7 @@ class ConfigDB
 
         if (!isset($out['user'], $out['password']) || $out['user'] === '' || $out['password'] === '') {
             throw new RuntimeException(sprintf(
-                _('Faltan user/password de mantenimiento en importar (%1$s, plantilla «%2$s»). Revise default y %3$s.'),
+                _("Faltan user/password de mantenimiento en importar (%1\$s, plantilla «%2\$s»). Revise default y %3\$s."),
                 $this->baseLogico,
                 $claveImportar,
                 self::ficheroConnNombre($this->baseLogico),

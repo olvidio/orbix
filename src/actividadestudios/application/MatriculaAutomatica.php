@@ -78,13 +78,13 @@ final class MatriculaAutomatica
             if ($oPersona === null) {
                 return [
                     'success' => false,
-                    'msg' => sprintf(_('No se ha encontrado a la persona con id: %s'), $Qid_nom),
+                    'msg' => sprintf(_("No se ha encontrado a la persona con id: %s"), $Qid_nom),
                 ];
             }
             if ($oPersona->getNivel_stgr() === NivelStgrId::R) {
                 return [
                     'success' => false,
-                    'msg' => _('está de repaso'),
+                    'msg' => _("está de repaso"),
                 ];
             }
             $cAlumnos = [$oPersona];
@@ -131,25 +131,25 @@ final class MatriculaAutomatica
 
             switch (count($cAsistencias)) {
                 case 0:
-                    $msg .= sprintf(_('no se ha hecho nada con %s no tiene asignado ca'), $oPersonaDl->getPrefApellidosNombre()) . "\n";
+                    $msg .= sprintf(_("no se ha hecho nada con %s no tiene asignado ca"), $oPersonaDl->getPrefApellidosNombre()) . "\n";
                     break;
                 case 1:
                     $oAsistenteDl = current($cAsistencias);
                     if ($oAsistenteDl === null) {
-                        $msg .= sprintf(_('no se ha hecho nada con %s no tiene asignado ca'), $oPersonaDl->getPrefApellidosNombre()) . "\n";
+                        $msg .= sprintf(_("no se ha hecho nada con %s no tiene asignado ca"), $oPersonaDl->getPrefApellidosNombre()) . "\n";
                         break;
                     }
                     $id_activ_1 = $oAsistenteDl->getId_activ();
                     $est_ok = $oAsistenteDl->isEst_ok();
                     if ($est_ok) {
-                        $msg .= sprintf(_('no se ha hecho nada com %s. ya tiene el plan de estudios confirmado'), $oPersonaDl->getPrefApellidosNombre()) . "\n";
+                        $msg .= sprintf(_("no se ha hecho nada com %s. ya tiene el plan de estudios confirmado"), $oPersonaDl->getPrefApellidosNombre()) . "\n";
                         break;
                     }
 
                     $cMatriculas = $this->matriculaDlRepository->getMatriculas(['id_nom' => $id_nom, 'id_activ' => $id_activ_1]);
                     foreach ($cMatriculas as $oMatricula) {
                         if ($this->matriculaDlRepository->Eliminar($oMatricula) === false) {
-                            $msg .= _('hay un error, no se ha eliminado') . "\n" . $this->matriculaDlRepository->getErrorTxt() . "\n";
+                            $msg .= _("hay un error, no se ha eliminado") . "\n" . $this->matriculaDlRepository->getErrorTxt() . "\n";
                         }
                     }
 
@@ -181,7 +181,7 @@ final class MatriculaAutomatica
                                 $preceptor
                             );
                             if ($guardado === 'error') {
-                                $msg .= _('error al guardar la matrícula') . "\n";
+                                $msg .= _("error al guardar la matrícula") . "\n";
                             } elseif ($guardado === 'ok') {
                                 $m++;
                             }
@@ -192,21 +192,21 @@ final class MatriculaAutomatica
                             $oMatricula->setId_nom($id_nom);
                             $oMatricula->setPreceptor($preceptor);
                             if ($this->matriculaDlRepository->Guardar($oMatricula) === false) {
-                                $msg .= _('error al guardar la matrícula') . "\n";
+                                $msg .= _("error al guardar la matrícula") . "\n";
                             }
                             $m++;
                         }
                     }
-                    $msg .= sprintf(_('%s se ha matriculado de %s asignaturas'), $oPersonaDl->getPrefApellidosNombre(), $m) . "\n";
+                    $msg .= sprintf(_("%s se ha matriculado de %s asignaturas"), $oPersonaDl->getPrefApellidosNombre(), $m) . "\n";
                     $success = true;
                     break;
                 default:
-                    $msg .= sprintf(_('no se ha hecho nada con %s, tiene asignado más de un ca'), $oPersonaDl->getPrefApellidosNombre()) . "\n";
+                    $msg .= sprintf(_("no se ha hecho nada con %s, tiene asignado más de un ca"), $oPersonaDl->getPrefApellidosNombre()) . "\n";
             }
         }
 
         if (empty($msg)) {
-            $msg = _('no se ha hecho nada');
+            $msg = _("no se ha hecho nada");
         }
 
         return ['success' => $success, 'msg' => $msg];

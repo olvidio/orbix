@@ -53,7 +53,7 @@ final class PlanEstudiosCaData
         $oActividad = $this->actividadAllRepository->findById($idActiv);
         if ($oActividad === null) {
             return [
-                'msg_err' => sprintf(_('No encuentro actividad con id: %d'), $idActiv),
+                'msg_err' => sprintf(_("No encuentro actividad con id: %d"), $idActiv),
                 'nom_activ' => '',
                 'nom_director_est' => '',
                 'aPreceptores' => [],
@@ -72,7 +72,7 @@ final class PlanEstudiosCaData
         }
 
         if ($idNomDtorEst <= 0) {
-            $nomDirectorEst = _('para nombrarlo, ir al dossier de cargos de la actividad');
+            $nomDirectorEst = _("para nombrarlo, ir al dossier de cargos de la actividad");
         } else {
             $oPersona = Persona::findPersonaEnGlobal($idNomDtorEst);
             if (!is_object($oPersona)) {
@@ -95,7 +95,7 @@ final class PlanEstudiosCaData
 
             $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
             if ($oAsignatura === null) {
-                throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura));
+                throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura));
             }
             $nombreCorto = $oAsignatura->getNombre_corto();
             $creditos = $oAsignatura->getCreditos();
@@ -149,10 +149,10 @@ final class PlanEstudiosCaData
             if (count($cMatriculas) === 0) {
                 switch ($stgr) {
                     case 'r':
-                        $est = _('repaso');
+                        $est = _("repaso");
                         break;
                     case 'n':
-                        $est = _('plan de formación');
+                        $est = _("plan de formación");
                         break;
                     default:
                         $est = '???';
@@ -173,11 +173,11 @@ final class PlanEstudiosCaData
 
                     $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
                     if ($oAsignatura === null) {
-                        throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura));
+                        throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura));
                     }
                     $nombreCorto = $oAsignatura->getNombre_corto();
                     $creditos = $oAsignatura->getCreditos();
-                    $preceptorTxt = \src\shared\domain\helpers\FuncTablasSupport::isTrue($preceptor) ? '(' . _('preceptor') . ')' : '';
+                    $preceptorTxt = \src\shared\domain\helpers\FuncTablasSupport::isTrue($preceptor) ? '(' . _("preceptor") . ')' : '';
 
                     $aAsignaturas[$i] = [
                         'nombre_corto' => $nombreCorto,

@@ -28,7 +28,7 @@ final class EncargoHorarioUpdate
         if ($mod === 'eliminar') {
             $selNom = $post['sel_nom'];
             if (!is_array($selNom) || !array_key_exists(0, $selNom)) {
-                return ['_error' => _('acción no válida')];
+                return ['_error' => _("acción no válida")];
             }
             $first = $selNom[0];
             $token = is_scalar($first) ? (string) $first : '';
@@ -67,7 +67,7 @@ final class EncargoHorarioUpdate
 
         if ($mod === 'nuevo') {
             if ($Qf_ini === '' || $Qdia === '') {
-                return ['_error' => _('Debe llenar todos los campos que tengan un (*)')];
+                return ['_error' => _("Debe llenar todos los campos que tengan un (*)")];
             }
 
             $newId = $this->encargoHorarioRepository->getNewId();
@@ -85,7 +85,7 @@ final class EncargoHorarioUpdate
             $o->setN_sacd($Qn_sacd);
             $o->setMes($Qmes);
             if ($this->encargoHorarioRepository->Guardar($o) === false) {
-                return ['_error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoHorarioRepository->getErrorTxt()];
+                return ['_error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoHorarioRepository->getErrorTxt()];
             }
 
             return ['ok' => true];
@@ -93,12 +93,12 @@ final class EncargoHorarioUpdate
 
         if ($mod === 'editar') {
             if ($Qf_ini === '' || $Qdia === '') {
-                return ['_error' => _('Debe llenar todos los campos que tengan un (*)')];
+                return ['_error' => _("Debe llenar todos los campos que tengan un (*)")];
             }
 
             $o = $this->encargoHorarioRepository->findById($Qid_item_h);
             if ($o === null) {
-                return ['_error' => _('registro no encontrado')];
+                return ['_error' => _("registro no encontrado")];
             }
 
             $o->setF_ini($oF_ini);
@@ -112,12 +112,12 @@ final class EncargoHorarioUpdate
             $o->setN_sacd($Qn_sacd);
             $o->setMes($Qmes);
             if ($this->encargoHorarioRepository->Guardar($o) === false) {
-                return ['_error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoHorarioRepository->getErrorTxt()];
+                return ['_error' => _("hay un error, no se ha guardado") . "\n" . $this->encargoHorarioRepository->getErrorTxt()];
             }
 
             return ['ok' => true];
         }
 
-        return ['_error' => _('acción no válida')];
+        return ['_error' => _("acción no válida")];
     }
 }

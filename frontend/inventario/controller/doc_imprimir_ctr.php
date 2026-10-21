@@ -33,13 +33,13 @@ $a_ubi_valores = InventarioPayload::ubiValoresMap($payload['a_valores'] ?? []);
 
 $a_cabeceras = [];
 $a_cabeceras[] = '';
-$a_cabeceras[] = ucfirst(_('documento'));
-$a_cabeceras[] = ucfirst(_('observaciones'));
+$a_cabeceras[] = ucfirst(_("documento"));
+$a_cabeceras[] = ucfirst(_("observaciones"));
 if ($dl) {
-    $a_cabeceras[] = ucfirst(_('observaciones dl'));
+    $a_cabeceras[] = ucfirst(_("observaciones dl"));
 }
 
-$a_botones = [['txt' => _('seleccionar'), 'click' => 'fnjs_ver_equipaje()']];
+$a_botones = [['txt' => _("seleccionar"), 'click' => 'fnjs_ver_equipaje()']];
 
 $data_css = PostRequest::getDataFromUrl('/src/inventario/inventario_css_inline_data', []);
 $cssPayload = InventarioPayload::postPayload($data_css);
@@ -56,7 +56,7 @@ foreach ($a_ubi_valores as $nombre_ubi => $a_valores) {
     $html_header = "<table> 
 			   <thead> 
 				<tr> 
-				 <th style=\"width:100%\">" . _('Inventario de documentos de') . " $nombre_ubi</th> 
+				 <th style=\"width:100%\">" . _("Inventario de documentos de") . " $nombre_ubi</th> 
 			   </tr> 
 			   <tr> 
 				<th><hr style=\"color:#000080\"/></th> 
@@ -69,7 +69,7 @@ foreach ($a_ubi_valores as $nombre_ubi => $a_valores) {
 				 <table> 
 				   <tr> 
 					 <td colspan=\"4\">
-						<div class=pie>" . _('(*) Se guarda bajo llave') . ".</div>
+						<div class=pie>" . _("(*) Se guarda bajo llave") . ".</div>
 					</td>
 				  </tr> 
 				</table> 
@@ -89,8 +89,8 @@ foreach ($a_ubi_valores as $nombre_ubi => $a_valores) {
     $html .= $html_header;
     $html .= $html_footer;
     $html .= $html_body;
-    $html .= '<div class="pageFooter">' . _('Total de páginas') . ': </div>';
-    $html .= _('Conforme (firma)');
+    $html .= '<div class="pageFooter">' . _("Total de páginas") . ': </div>';
+    $html .= _("Conforme (firma)");
     $html .= '</div>';
 
     $html_total .= $html;

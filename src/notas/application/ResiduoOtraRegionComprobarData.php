@@ -117,34 +117,34 @@ final class ResiduoOtraRegionComprobarData
         $tablas = [[
             'titulo' => '',
             'cabeceras' => [
-                _('esquema'),
-                _('filas'),
-                _('personas'),
-                _('de paso'),
-                _('resto'),
-                _('con acta pareja'),
-                _('sin acta pareja'),
-                _('con json'),
+                _("esquema"),
+                _("filas"),
+                _("personas"),
+                _("de paso"),
+                _("resto"),
+                _("con acta pareja"),
+                _("sin acta pareja"),
+                _("con json"),
             ],
             'filas' => $tabla,
         ]];
-        $texto = _('Filas de e_notas_otra_region_stgr en los esquemas que esta sesión puede leer.');
+        $texto = _("Filas de e_notas_otra_region_stgr en los esquemas que esta sesión puede leer.");
         if ($sinPermiso !== []) {
-            $texto .= ' ' . _('Estos esquemas tienen la tabla, pero el usuario de la sesión no puede leerlos y no entran en las cifras.');
+            $texto .= ' ' . _("Estos esquemas tienen la tabla, pero el usuario de la sesión no puede leerlos y no entran en las cifras.");
             $filasSinPermiso = [];
             foreach ($sinPermiso as $esquema) {
                 $filasSinPermiso[] = [$esquema];
             }
             $tablas[] = [
-                'titulo' => _('Sin permiso de lectura'),
-                'cabeceras' => [_('esquema')],
+                'titulo' => _("Sin permiso de lectura"),
+                'cabeceras' => [_("esquema")],
                 'filas' => $filasSinPermiso,
             ];
         }
 
         return [
             'numero' => 1,
-            'titulo' => _('Inventario'),
+            'titulo' => _("Inventario"),
             'texto' => $texto,
             'tablas' => $tablas,
         ];
@@ -159,8 +159,8 @@ final class ResiduoOtraRegionComprobarData
     {
         return [
             'numero' => 2,
-            'titulo' => _('Personas de paso'),
-            'texto' => _('id_nom negativo. Si no hay filas, el residuo no contiene personas de paso: sus notas están en e_notas_dl.'),
+            'titulo' => _("Personas de paso"),
+            'texto' => _("id_nom negativo. Si no hay filas, el residuo no contiene personas de paso: sus notas están en e_notas_dl."),
             'tablas' => [[
                 'titulo' => '',
                 'cabeceras' => $this->cabecerasFila(),
@@ -178,8 +178,8 @@ final class ResiduoOtraRegionComprobarData
     {
         return [
             'numero' => 3,
-            'titulo' => _('Resto que ya tiene la asignatura en un acta'),
-            'texto' => _('Misma persona y misma asignatura en algún e_notas_dl. La fila del residuo no aporta la calificación.'),
+            'titulo' => _("Resto que ya tiene la asignatura en un acta"),
+            'texto' => _("Misma persona y misma asignatura en algún e_notas_dl. La fila del residuo no aporta la calificación."),
             'tablas' => [[
                 'titulo' => '',
                 'cabeceras' => $this->cabecerasFila(),
@@ -250,22 +250,22 @@ final class ResiduoOtraRegionComprobarData
 
         return [
             'numero' => 4,
-            'titulo' => _('Resto sin acta pareja'),
-            'texto' => _('Es la única fila de esa persona y asignatura en los e_notas_dl que esta sesión puede leer. Borrarla la quita del expediente.'),
+            'titulo' => _("Resto sin acta pareja"),
+            'texto' => _("Es la única fila de esa persona y asignatura en los e_notas_dl que esta sesión puede leer. Borrarla la quita del expediente."),
             'tablas' => [
                 [
-                    'titulo' => _('Por prefijo del acta'),
-                    'cabeceras' => [_('prefijo'), _('filas')],
+                    'titulo' => _("Por prefijo del acta"),
+                    'cabeceras' => [_("prefijo"), _("filas")],
                     'filas' => $tablaPrefijo,
                 ],
                 [
-                    'titulo' => _('Por situación'),
-                    'cabeceras' => [_('situación'), _('filas')],
+                    'titulo' => _("Por situación"),
+                    'cabeceras' => [_("situación"), _("filas")],
                     'filas' => $tablaSituacion,
                 ],
                 [
-                    'titulo' => _('Por persona'),
-                    'cabeceras' => [_('id'), _('nombre'), _('filas'), _('asignaturas'), _('actas')],
+                    'titulo' => _("Por persona"),
+                    'cabeceras' => [_("id"), _("nombre"), _("filas"), _("asignaturas"), _("actas")],
                     'filas' => $tablaPersona,
                 ],
             ],
@@ -288,17 +288,17 @@ final class ResiduoOtraRegionComprobarData
                 (string) $fila['nombre'],
                 $this->nombreAsignatura((int) $fila['id_asignatura'], $nombresAsignatura),
                 $numeros,
-                $fila['certificado_en_modulo'] === true ? _('sí') : _('no'),
+                $fila['certificado_en_modulo'] === true ? _("sí") : _("no"),
             ];
         }
 
         return [
             'numero' => 5,
-            'titulo' => _('json_certificados'),
-            'texto' => _('Sello de envío en la fila. Si el número ya está en certificados emitidos, el json no aporta el documento.'),
+            'titulo' => _("json_certificados"),
+            'texto' => _("Sello de envío en la fila. Si el número ya está en certificados emitidos, el json no aporta el documento."),
             'tablas' => [[
                 'titulo' => '',
-                'cabeceras' => [_('esquema'), _('id'), _('nombre'), _('asignatura'), _('certificado'), _('en el módulo')],
+                'cabeceras' => [_("esquema"), _("id"), _("nombre"), _("asignatura"), _("certificado"), _("en el módulo")],
                 'filas' => $tabla,
             ]],
         ];
@@ -310,15 +310,15 @@ final class ResiduoOtraRegionComprobarData
     private function cabecerasFila(): array
     {
         return [
-            _('esquema'),
-            _('id'),
-            _('nombre'),
-            _('asignatura'),
-            _('situación'),
-            _('acta'),
-            _('fecha'),
-            _('detalle'),
-            _('acta en dl'),
+            _("esquema"),
+            _("id"),
+            _("nombre"),
+            _("asignatura"),
+            _("situación"),
+            _("acta"),
+            _("fecha"),
+            _("detalle"),
+            _("acta en dl"),
         ];
     }
 
@@ -340,7 +340,7 @@ final class ResiduoOtraRegionComprobarData
                 (string) $fila['acta'],
                 (string) $fila['f_acta'],
                 $this->recortar((string) $fila['detalle']),
-                $fila['hay_acta_dl'] === true ? _('sí') : _('no'),
+                $fila['hay_acta_dl'] === true ? _("sí") : _("no"),
             ];
         }
 
@@ -366,7 +366,7 @@ final class ResiduoOtraRegionComprobarData
     {
         $acta = trim($acta);
         if ($acta === '') {
-            return _('(vacío)');
+            return _("(vacío)");
         }
         $partes = preg_split('/\s+/', $acta);
 

@@ -29,7 +29,7 @@ $data = PostRequest::getDataFromUrl('/src/devel_db_admin/crear_esquema', [
 $avisos = DevelDbAdminPayload::avisosList($data['avisos'] ?? []);
 if (($data['ok'] ?? true) === false) {
     echo '<br>';
-    echo '<strong>' . _('Avisos') . ':</strong><ul>';
+    echo '<strong>' . _("Avisos") . ':</strong><ul>';
     foreach ($avisos as $aviso) {
         echo '<li>' . htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') . '</li>';
     }
@@ -40,7 +40,7 @@ if (($data['ok'] ?? true) === false) {
 echo '<br>';
 echo sprintf(_("se ha creado la estructura de los esquemas."));
 if ($avisos !== []) {
-    echo '<br><strong>' . _('Avisos') . ':</strong><ul>';
+    echo '<br><strong>' . _("Avisos") . ':</strong><ul>';
     foreach ($avisos as $aviso) {
         echo '<li>' . htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') . '</li>';
     }

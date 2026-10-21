@@ -71,13 +71,13 @@ $dataTipoHtml = PostRequest::getDataFromUrl('/src/pasarela/exportar_que_activida
 $html_actividad_tipo = \frontend\shared\helpers\PayloadCoercion::string($dataTipoHtml['html'] ?? '');
 
 $aOpciones = [
-    'tot_any' => _('todo el año'),
-    'trimestre_1' => _('primer trimestre'),
-    'trimestre_2' => _('segundo trimestre'),
-    'trimestre_3' => _('tercer trimestre'),
-    'trimestre_4' => _('cuarto trimestre'),
+    'tot_any' => _("todo el año"),
+    'trimestre_1' => _("primer trimestre"),
+    'trimestre_2' => _("segundo trimestre"),
+    'trimestre_3' => _("tercer trimestre"),
+    'trimestre_4' => _("cuarto trimestre"),
     'separador' => '---------',
-    'otro' => _('otro'),
+    'otro' => _("otro"),
 ];
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('modifica');

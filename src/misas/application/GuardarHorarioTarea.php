@@ -24,11 +24,11 @@ class GuardarHorarioTarea
         $t_end = MisasBuildInput::string($input, 't_end');
 
         if ($id_item_h === 0) {
-            return ['error' => _('Error: falta el id_item')];
+            return ['error' => _("Error: falta el id_item")];
         }
         $oEncargoHorario = $this->encargoHorarioRepository->findById($id_item_h);
         if ($oEncargoHorario === null) {
-            return ['error' => sprintf(_('No se encuentra el horario %d'), $id_item_h)];
+            return ['error' => sprintf(_("No se encuentra el horario %d"), $id_item_h)];
         }
 
         if ($t_start !== '') {

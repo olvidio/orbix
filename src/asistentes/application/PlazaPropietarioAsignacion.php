@@ -43,7 +43,7 @@ final class PlazaPropietarioAsignacion implements PlazaPropietarioAsignacionInte
                 !$permitirSinPlazaLibre
                 && !$this->resumenPlazasService->esPropiedadClaveDisponible($propietario, $dl_de_paso)
             ) {
-                return (string) _('Ya están todas las plazas ocupadas');
+                return (string) _("Ya están todas las plazas ocupadas");
             }
 
             return '';
@@ -51,7 +51,7 @@ final class PlazaPropietarioAsignacion implements PlazaPropietarioAsignacionInte
 
         $prop = $this->resumenPlazasService->getPrimeraPropiedadLibre($dl_de_paso);
         if ($prop === null) {
-            return (string) _('Ya están todas las plazas ocupadas');
+            return (string) _("Ya están todas las plazas ocupadas");
         }
 
         $asistente->setPropietarioVo($prop);

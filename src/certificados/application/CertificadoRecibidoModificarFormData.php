@@ -22,7 +22,7 @@ final class CertificadoRecibidoModificarFormData
     {
         $oCertificadoRecibido = $this->certificadoRecibidoRepository->findById($id_item);
         if ($oCertificadoRecibido === null) {
-            throw new \RuntimeException(_('No se encuentra el certificado'));
+            throw new \RuntimeException(_("No se encuentra el certificado"));
         }
 
         $id_nom = (int) ($oCertificadoRecibido->getId_nom() ?? 0);

@@ -42,7 +42,7 @@ $a_cabeceras[] = ucfirst(_("termina"));
 $a_cabeceras[] = ucfirst(_("actividad"));
 $a_cabeceras[] = ucfirst(_("observaciones"));
 
-$a_botones[] = array('txt' => _('seleccionar'), 'click' => "fnjs_nombrar_equipaje()");
+$a_botones[] = array('txt' => _("seleccionar"), 'click' => "fnjs_nombrar_equipaje()");
 
 $oLista = new Lista();
 $oLista->setId_tabla('doc_activ_tabla');

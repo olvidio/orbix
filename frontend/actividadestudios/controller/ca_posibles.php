@@ -137,7 +137,7 @@ if ($caPosibles['modo'] === 'lista') {
         echo "<div class='no_print'>" . $caPosibles['msg_txt'] . '</div>';
     }
     if ($caPosibles['filas'] === []) {
-        echo '<p class="comentario">' . _('No hay datos para mostrar.') . '</p>';
+        echo '<p class="comentario">' . _("No hay datos para mostrar.") . '</p>';
     }
     foreach ($caPosibles['filas'] as $fila) {
         $a_campos = ['oPosicion' => $oPosicion,

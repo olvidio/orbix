@@ -33,7 +33,7 @@ echo sprintf(_("esquema: %s. Se han pasado los datos que se tenían (según bloq
 
 $avisos = DevelDbAdminPayload::avisosList($data['avisos'] ?? []);
 if ($avisos !== []) {
-    echo '<br><strong>' . _('Avisos') . ':</strong><ul>';
+    echo '<br><strong>' . _("Avisos") . ':</strong><ul>';
     foreach ($avisos as $aviso) {
         echo '<li>' . htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') . '</li>';
     }

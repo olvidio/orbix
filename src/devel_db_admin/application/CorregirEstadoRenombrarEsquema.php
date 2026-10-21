@@ -47,13 +47,13 @@ final class CorregirEstadoRenombrarEsquema
         if (is_array($ctx)) {
             return [
                 'acciones' => [],
-                'avisos' => [_('No se aplicó ninguna corrección: parámetros inválidos.')],
+                'avisos' => [_("No se aplicó ninguna corrección: parámetros inválidos.")],
                 'verificacion' => $ctx,
             ];
         }
 
         if ($ctx->soloDestinoComprobacion) {
-            $acciones[] = _('Modo solo destino: se reaplican solo los defaults (ALTER COLUMN) en los esquemas del nombre región–delegación; no se sincronizan .inc ni db_idschema sin nombre de origen.');
+            $acciones[] = _("Modo solo destino: se reaplican solo los defaults (ALTER COLUMN) en los esquemas del nombre región–delegación; no se sincronizan .inc ni db_idschema sin nombre de origen.");
         }
 
         if (!$ctx->sinRenombreEfectivo && !$ctx->soloDestinoComprobacion) {
@@ -61,29 +61,29 @@ final class CorregirEstadoRenombrarEsquema
                 foreach ($this->renombrarEsquema->reanudarRenombrePostgreSQL($ctx) as $av) {
                     $avisos[] = $av;
                 }
-                $acciones[] = _('Renombre PostgreSQL reanudado donde faltaba (esquemas/roles/.inc).');
+                $acciones[] = _("Renombre PostgreSQL reanudado donde faltaba (esquemas/roles/.inc).");
             } catch (Throwable $e) {
-                $avisos[] = sprintf(_('Renombre PostgreSQL: %s'), $e->getMessage());
+                $avisos[] = sprintf(_("Renombre PostgreSQL: %s"), $e->getMessage());
             }
         }
 
         try {
             $this->aplicarDefaultsAlter($ctx, $acciones);
         } catch (Throwable $e) {
-            $avisos[] = sprintf(_('Defaults: %s'), $e->getMessage());
+            $avisos[] = sprintf(_("Defaults: %s"), $e->getMessage());
         }
 
         try {
             $this->alinearPropietariosEsquema($ctx, $acciones, $avisos);
         } catch (Throwable $e) {
-            $avisos[] = sprintf(_('Propietario de esquema: %s'), $e->getMessage());
+            $avisos[] = sprintf(_("Propietario de esquema: %s"), $e->getMessage());
         }
 
         if (!$ctx->sinRenombreEfectivo) {
             try {
                 $this->sincronizarIncYDbIdschemaTrasRenamePg($ctx, $acciones, $avisos);
             } catch (Throwable $e) {
-                $avisos[] = sprintf(_('Sincronización .inc/db_idschema: %s'), $e->getMessage());
+                $avisos[] = sprintf(_("Sincronización .inc/db_idschema: %s"), $e->getMessage());
             }
         }
 
@@ -118,7 +118,7 @@ final class CorregirEstadoRenombrarEsquema
                     $ctx->esquemaNew,
                     RenombrarEsquemaDefaultsCatalog::comun($ctx->esquemaNew, $ctx->region, $ctx->dl),
                     $acciones,
-                    _('comun (principal)'),
+                    _("comun (principal)"),
                 );
             }
             if (!$ctx->isDocker) {
@@ -129,7 +129,7 @@ final class CorregirEstadoRenombrarEsquema
                         $ctx->esquemaNew,
                         RenombrarEsquemaDefaultsCatalog::comun($ctx->esquemaNew, $ctx->region, $ctx->dl),
                         $acciones,
-                        _('comun_select'),
+                        _("comun_select"),
                     );
                 }
             }
@@ -143,7 +143,7 @@ final class CorregirEstadoRenombrarEsquema
                     $ctx->esquemaNewv,
                     RenombrarEsquemaDefaultsCatalog::sv($ctx->esquemaNewv, $ctx->region, $ctx->dl),
                     $acciones,
-                    _('sv'),
+                    _("sv"),
                 );
             }
             $pdoE = $this->pdoDesdeImportar($oImportar, 'publicv-e');
@@ -153,7 +153,7 @@ final class CorregirEstadoRenombrarEsquema
                     $ctx->esquemaNewv,
                     RenombrarEsquemaDefaultsCatalog::svE($ctx->esquemaNewv, $ctx->dl),
                     $acciones,
-                    _('sv-e'),
+                    _("sv-e"),
                 );
             }
             if (!$ctx->isDocker) {
@@ -164,7 +164,7 @@ final class CorregirEstadoRenombrarEsquema
                         $ctx->esquemaNewv,
                         RenombrarEsquemaDefaultsCatalog::svE($ctx->esquemaNewv, $ctx->dl),
                         $acciones,
-                        _('sv-e_select'),
+                        _("sv-e_select"),
                     );
                 }
             }
@@ -180,20 +180,20 @@ final class CorregirEstadoRenombrarEsquema
         $oImportar = new ConfigDB('importar');
         $pares = [];
         if ($ctx->comun !== 0) {
-            $pares[] = [$this->pdoDesdeImportar($oImportar, 'public'), $ctx->esquemaNew, _('comun (principal)')];
+            $pares[] = [$this->pdoDesdeImportar($oImportar, 'public'), $ctx->esquemaNew, _("comun (principal)")];
             if (!$ctx->isDocker) {
-                $pares[] = [$this->pdoDesdeImportar($oImportar, 'public_select'), $ctx->esquemaNew, _('comun_select')];
+                $pares[] = [$this->pdoDesdeImportar($oImportar, 'public_select'), $ctx->esquemaNew, _("comun_select")];
             }
         }
         if ($ctx->sv !== 0) {
-            $pares[] = [$this->pdoDesdeImportar($oImportar, 'publicv'), $ctx->esquemaNewv, _('sv')];
-            $pares[] = [$this->pdoDesdeImportar($oImportar, 'publicv-e'), $ctx->esquemaNewv, _('sv-e')];
+            $pares[] = [$this->pdoDesdeImportar($oImportar, 'publicv'), $ctx->esquemaNewv, _("sv")];
+            $pares[] = [$this->pdoDesdeImportar($oImportar, 'publicv-e'), $ctx->esquemaNewv, _("sv-e")];
             if (!$ctx->isDocker) {
-                $pares[] = [$this->pdoDesdeImportar($oImportar, 'publicv-e_select'), $ctx->esquemaNewv, _('sv-e_select')];
+                $pares[] = [$this->pdoDesdeImportar($oImportar, 'publicv-e_select'), $ctx->esquemaNewv, _("sv-e_select")];
             }
         }
         if ($ctx->sf !== 0) {
-            $pares[] = [$this->pdoDesdeImportar($oImportar, 'publicf'), $ctx->esquemaNewf, _('sf')];
+            $pares[] = [$this->pdoDesdeImportar($oImportar, 'publicf'), $ctx->esquemaNewf, _("sf")];
         }
 
         foreach ($pares as [$pdo, $schema, $tag]) {
@@ -201,7 +201,7 @@ final class CorregirEstadoRenombrarEsquema
                 continue;
             }
             if (!$this->existeRol($pdo, $schema)) {
-                $avisos[] = sprintf(_('Propietario (%s): no se repara «%s»: no existe un rol con ese nombre en esta BD.'), $tag, $schema);
+                $avisos[] = sprintf(_("Propietario (%s): no se repara «%s»: no existe un rol con ese nombre en esta BD."), $tag, $schema);
 
                 continue;
             }
@@ -209,7 +209,7 @@ final class CorregirEstadoRenombrarEsquema
             $oRol->setDbConexion($pdo);
             if (!$oRol->repararEsquemaPostRenombre($schema)) {
                 $avisos[] = sprintf(
-                    _('Reparación de esquema «%s» (%s): no se pudo alinear dueños/privilegios (revisar log o permisos del superusuario de importar).'),
+                    _("Reparación de esquema «%s» (%s): no se pudo alinear dueños/privilegios (revisar log o permisos del superusuario de importar)."),
                     $schema,
                     $tag,
                 );
@@ -243,18 +243,18 @@ final class CorregirEstadoRenombrarEsquema
                 try {
                     (new ConfigDB('comun'))->renombrarListaEsquema('comun', $ctx->esquemaOld, $ctx->esquemaNew);
                     $acciones[] = sprintf(
-                        _('%s: claves de esquema alineadas con el nuevo nombre.'),
+                        _("%s: claves de esquema alineadas con el nuevo nombre."),
                         ConfigDB::ficheroIncNombre('comun'),
                     );
                 } catch (Throwable $e) {
-                    $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('comun'), $e->getMessage());
+                    $avisos[] = sprintf(_("%s: %s"), ConfigDB::ficheroIncNombre('comun'), $e->getMessage());
                 }
             }
             try {
                 $repo->cambiarNombre($ctx->esquemaOld, $ctx->esquemaNew, 'comun');
-                $acciones[] = _('db_idschema (comun): sincronizado (UPDATE nombres de esquema).');
+                $acciones[] = _("db_idschema (comun): sincronizado (UPDATE nombres de esquema).");
             } catch (Throwable $e) {
-                $avisos[] = sprintf(_('db_idschema (comun): %s'), $e->getMessage());
+                $avisos[] = sprintf(_("db_idschema (comun): %s"), $e->getMessage());
             }
         }
 
@@ -264,9 +264,9 @@ final class CorregirEstadoRenombrarEsquema
                 if ($this->incDebeRenombrarClave('comun_select', $ctx->esquemaOld, $ctx->esquemaNew)) {
                     try {
                         (new ConfigDB('comun'))->renombrarListaEsquema('comun_select', $ctx->esquemaOld, $ctx->esquemaNew);
-                        $acciones[] = sprintf(_('%s: claves alineadas.'), ConfigDB::ficheroIncNombre('comun_select'));
+                        $acciones[] = sprintf(_("%s: claves alineadas."), ConfigDB::ficheroIncNombre('comun_select'));
                     } catch (Throwable $e) {
-                        $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('comun_select'), $e->getMessage());
+                        $avisos[] = sprintf(_("%s: %s"), ConfigDB::ficheroIncNombre('comun_select'), $e->getMessage());
                     }
                 }
             }
@@ -277,16 +277,16 @@ final class CorregirEstadoRenombrarEsquema
             if ($this->incDebeRenombrarClave('sv', $ctx->esquemaOldv, $ctx->esquemaNewv)) {
                 try {
                     (new ConfigDB('sv'))->renombrarListaEsquema('sv', $ctx->esquemaOldv, $ctx->esquemaNewv);
-                    $acciones[] = sprintf(_('%s: claves alineadas.'), ConfigDB::ficheroIncNombre('sv'));
+                    $acciones[] = sprintf(_("%s: claves alineadas."), ConfigDB::ficheroIncNombre('sv'));
                 } catch (Throwable $e) {
-                    $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('sv'), $e->getMessage());
+                    $avisos[] = sprintf(_("%s: %s"), ConfigDB::ficheroIncNombre('sv'), $e->getMessage());
                 }
             }
             try {
                 $repo->cambiarNombre($ctx->esquemaOld, $ctx->esquemaNew, 'sv');
-                $acciones[] = _('db_idschema (sv): sincronizado.');
+                $acciones[] = _("db_idschema (sv): sincronizado.");
             } catch (Throwable $e) {
-                $avisos[] = sprintf(_('db_idschema (sv): %s'), $e->getMessage());
+                $avisos[] = sprintf(_("db_idschema (sv): %s"), $e->getMessage());
             }
         }
 
@@ -295,16 +295,16 @@ final class CorregirEstadoRenombrarEsquema
             if ($this->incDebeRenombrarClave('sv-e', $ctx->esquemaOldv, $ctx->esquemaNewv)) {
                 try {
                     (new ConfigDB('sv-e'))->renombrarListaEsquema('sv-e', $ctx->esquemaOldv, $ctx->esquemaNewv);
-                    $acciones[] = sprintf(_('%s: claves alineadas.'), ConfigDB::ficheroIncNombre('sv-e'));
+                    $acciones[] = sprintf(_("%s: claves alineadas."), ConfigDB::ficheroIncNombre('sv-e'));
                 } catch (Throwable $e) {
-                    $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('sv-e'), $e->getMessage());
+                    $avisos[] = sprintf(_("%s: %s"), ConfigDB::ficheroIncNombre('sv-e'), $e->getMessage());
                 }
             }
             try {
                 $repo->cambiarNombre($ctx->esquemaOld, $ctx->esquemaNew, 'sv-e');
-                $acciones[] = _('db_idschema (sv-e): sincronizado.');
+                $acciones[] = _("db_idschema (sv-e): sincronizado.");
             } catch (Throwable $e) {
-                $avisos[] = sprintf(_('db_idschema (sv-e): %s'), $e->getMessage());
+                $avisos[] = sprintf(_("db_idschema (sv-e): %s"), $e->getMessage());
             }
         }
 
@@ -313,9 +313,9 @@ final class CorregirEstadoRenombrarEsquema
                 if ($this->incDebeRenombrarClave('sv-e_select', $ctx->esquemaOldv, $ctx->esquemaNewv)) {
                     try {
                         (new ConfigDB('sv-e'))->renombrarListaEsquema('sv-e_select', $ctx->esquemaOldv, $ctx->esquemaNewv);
-                        $acciones[] = sprintf(_('%s: claves alineadas.'), ConfigDB::ficheroIncNombre('sv-e_select'));
+                        $acciones[] = sprintf(_("%s: claves alineadas."), ConfigDB::ficheroIncNombre('sv-e_select'));
                     } catch (Throwable $e) {
-                        $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('sv-e_select'), $e->getMessage());
+                        $avisos[] = sprintf(_("%s: %s"), ConfigDB::ficheroIncNombre('sv-e_select'), $e->getMessage());
                     }
                 }
             }
@@ -327,16 +327,16 @@ final class CorregirEstadoRenombrarEsquema
                 if ($this->incDebeRenombrarClave('sf', $ctx->esquemaOldf, $ctx->esquemaNewf)) {
                     try {
                         (new ConfigDB('sf'))->renombrarListaEsquema('sf', $ctx->esquemaOldf, $ctx->esquemaNewf);
-                        $acciones[] = sprintf(_('%s: claves alineadas.'), ConfigDB::ficheroIncNombre('sf'));
+                        $acciones[] = sprintf(_("%s: claves alineadas."), ConfigDB::ficheroIncNombre('sf'));
                     } catch (Throwable $e) {
-                        $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('sf'), $e->getMessage());
+                        $avisos[] = sprintf(_("%s: %s"), ConfigDB::ficheroIncNombre('sf'), $e->getMessage());
                     }
                 }
                 try {
                     $repo->cambiarNombre($ctx->esquemaOld, $ctx->esquemaNew, 'sf');
-                    $acciones[] = _('db_idschema (sf): sincronizado.');
+                    $acciones[] = _("db_idschema (sf): sincronizado.");
                 } catch (Throwable $e) {
-                    $avisos[] = sprintf(_('db_idschema (sf): %s'), $e->getMessage());
+                    $avisos[] = sprintf(_("db_idschema (sf): %s"), $e->getMessage());
                 }
             }
         }
@@ -367,7 +367,7 @@ final class CorregirEstadoRenombrarEsquema
         $o->setDbConexion($pdo);
         $o->setSchema($schema);
         $o->setDefaults($defs);
-        $acciones[] = sprintf(_('Defaults ALTER reaplicados (%s).'), $etiqueta);
+        $acciones[] = sprintf(_("Defaults ALTER reaplicados (%s)."), $etiqueta);
     }
 
 
