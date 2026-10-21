@@ -177,6 +177,39 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 		border-width: 1px 1px 1px 1px;
 	}
 
+	/* La shell de pantalla (flex, 100vh, overflow) recorta la impresión a una página: aquí fluye. */
+	html, body#body {
+		height: auto !important;
+		overflow: visible !important;
+	}
+	#contenido_sin_menus {
+		display: block !important;
+		height: auto !important;
+		overflow: visible !important;
+		padding: 0 !important;
+	}
+	#main, #exportar {
+		display: block !important;
+		height: auto !important;
+		max-height: none !important;
+		overflow: visible !important;
+		border: none !important;
+		box-shadow: none !important;
+	}
+	#left_slide {
+		display: none !important;
+	}
+	/* Menús/cabeceras de la shell (según layout) ocupan espacio encima del contenido al imprimir. */
+	body#body > *:not(#contenido_sin_menus) {
+		display: none !important;
+	}
+	@page {
+		margin: 0.8cm 1.2cm;
+	}
+	#exportar > h1:first-child, #main > h1:first-child {
+		margin-top: 0;
+	}
+
 }
 
 @media screen {
