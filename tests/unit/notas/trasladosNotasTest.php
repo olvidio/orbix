@@ -339,6 +339,7 @@ class trasladosNotasTest extends myTest
      */
     public function test_traslado_de_crA_a_crB(): void
     {
+        $this->requiereEsquemaEnBd('Nig-crNigv');
         $this->generarNotas('Nig-crNig');
         $_SESSION['session_auth']['esquema'] = 'Nig-crNigv';
         $_SESSION['session_auth']['mi_id_schema'] = 1024;
@@ -653,6 +654,19 @@ class trasladosNotasTest extends myTest
         $oConexion = new DBConnection($config);
 
         return $oConexion->getPDO();
+    }
+
+    /**
+     * Salta el test si el esquema está en la configuración pero no creado en la BD
+     * (BD de pruebas parcial): sin él `e_notas_dl` no se resuelve.
+     */
+    private function requiereEsquemaEnBd(string $esquema): void
+    {
+        $stmt = $this->setConexion($esquema)->prepare('SELECT 1 FROM pg_namespace WHERE nspname = :esquema');
+        $stmt->execute(['esquema' => $esquema]);
+        if ($stmt->fetchColumn() === false) {
+            $this->markTestSkipped("El esquema $esquema no existe en la BD de pruebas");
+        }
     }
 
     public function generarNotas(string $esquema): void
