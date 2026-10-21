@@ -9,6 +9,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
 use src\shared\config\ConfigGlobal;
 
@@ -212,7 +213,7 @@ final readonly class ListaAsistentesData
     /**
      * @return array{estudios: string, profesion: string, edad: string, inc_f_inc: string, eap: string, observ: string|null}
      */
-    private function datosPersona(PersonaDl|PersonaPub $oPersona): array
+    private function datosPersona(PersonaDl|PersonaPub|PersonaEx $oPersona): array
     {
         $estudios = '';
         $profesion = '';
