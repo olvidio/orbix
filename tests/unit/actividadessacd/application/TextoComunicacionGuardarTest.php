@@ -155,7 +155,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $this->assertNotNull($guardada);
         $this->assertSame(4242, $guardada->getId_item());
         $this->assertSame('com_sacd', $guardada->getClave());
-        $this->assertSame('es', $guardada->getIdioma());
+        $this->assertSame('es_ES.UTF-8', $guardada->getIdioma());
         $this->assertNotNull($guardada->getTextoVo());
         $this->assertSame('hola sacd', $guardada->getTextoVo()->value());
     }

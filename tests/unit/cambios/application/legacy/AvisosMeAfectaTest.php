@@ -449,7 +449,6 @@ final class AvisosMeAfectaTest extends myTest
             $this->createMock(CambioUsuarioRepositoryInterface::class),
             $this->createMock(CambioAnotadoRepositoryInterface::class),
             $usuarioRepo,
-            $actividadRepo,
             new ActividadParaAvisoLookup($actividadRepo, $exRepository),
             $zonaRepo,
             $zonaSacdRepo,

@@ -28,13 +28,13 @@ final class PersonaPublicarTest extends TestCase
             ->with(
                 10,
                 3,
-                'dlb',
+                'dlz',
                 $this->callback(static fn($hasta): bool => $hasta instanceof \DateTimeInterface),
             )
             ->willReturn(true);
 
         $uc = new PersonaPublicar($repo);
-        $this->assertSame('', $uc->execute(10, 3, 'dlbv'));
+        $this->assertSame('', $uc->execute(10, 3, 'dlzv'));
     }
 
     public function test_publica_todas_sin_ttl(): void

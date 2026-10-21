@@ -6,6 +6,8 @@ namespace Tests\unit\cambios\application\legacy;
 
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadExRepositoryInterface;
+use src\cambios\application\ActividadParaAvisoLookup;
 use src\cambios\application\legacy\Avisos;
 use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
@@ -26,7 +28,10 @@ final class AvisosCompararTest extends myTest
             $this->createMock(CambioUsuarioRepositoryInterface::class),
             $this->createMock(CambioAnotadoRepositoryInterface::class),
             $this->createMock(UsuarioRepositoryInterface::class),
-            $this->createMock(ActividadAllRepositoryInterface::class),
+            new ActividadParaAvisoLookup(
+                $this->createMock(ActividadAllRepositoryInterface::class),
+                $this->createMock(ActividadExRepositoryInterface::class),
+            ),
             $this->createMock(ZonaRepositoryInterface::class),
             $this->createMock(ZonaSacdRepositoryInterface::class),
             $this->createMock(ActividadCargoRepositoryInterface::class),

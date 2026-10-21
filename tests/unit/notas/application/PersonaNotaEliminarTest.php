@@ -10,6 +10,7 @@ use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\notas\application\PersonaNotaEliminar;
 use src\notas\application\PlanEstudiosDePersona;
 use src\notas\application\support\ActaFirmadaPolicy;
+use src\notas\application\support\NivelCatalogoAsignaturaEnPlan;
 use src\notas\application\support\PersonaNotaInputParser;
 use src\notas\application\support\SiglaActaPermitida;
 use src\notas\domain\contracts\ActaRepositoryInterface;
@@ -103,10 +104,13 @@ final class PersonaNotaEliminarTest extends TestCase
         $planRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
         $planRepo->method('getPersonaNotas')->willReturn([]);
 
+        $asignaturaRepo = $this->createMock(AsignaturaRepositoryInterface::class);
+        $planEstudios = new PlanEstudiosDePersona($planRepo);
         $parser = new PersonaNotaInputParser(
-            $this->createMock(AsignaturaRepositoryInterface::class),
-            new PlanEstudiosDePersona($planRepo),
+            $asignaturaRepo,
+            $planEstudios,
             $this->createMock(SiglaActaPermitida::class),
+            new NivelCatalogoAsignaturaEnPlan($asignaturaRepo, $planEstudios),
         );
 
         return new PersonaNotaEliminar(

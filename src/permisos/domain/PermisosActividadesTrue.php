@@ -18,6 +18,8 @@ class PermisosActividadesTrue extends PermisosActividades
     public function __construct(int $idUsuario)
     {
         $this->idUsuario = $idUsuario;
+        // Permisos totales por defecto: sin setActividad() no hay dl de la actividad que lo limite.
+        $this->bpropia = true;
     }
 
     /**
@@ -55,6 +57,16 @@ class PermisosActividadesTrue extends PermisosActividades
     public function getPermisoOn(int|string $iAfecta): PermAccion
     {
         return new PermAccion(15);
+    }
+
+    public function havePermisoSacd(?int $id_cargo, bool $propio): bool
+    {
+        return true;
+    }
+
+    public function motivoSinPermisoSacd(?int $id_cargo, bool $propio): ?string
+    {
+        return null;
     }
 
     /**
