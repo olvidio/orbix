@@ -72,6 +72,8 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
 
     private int $idActiv = 0;
 
+    private string $nomActiv = '';
+
     private bool $actividadExCreada = false;
 
     private bool $cambioPublicCreado = false;
@@ -97,6 +99,7 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
         $this->propiedadPrefsCreados = [];
         $this->cambioCreado = null;
         $this->idActiv = 0;
+        $this->nomActiv = '';
         $this->actividadExCreada = false;
         $this->cambioPublicCreado = false;
         $this->importadasCreadas = [];
@@ -469,6 +472,7 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
         $idTipo = 271000;
         $dlOrg = ConfigGlobal::mi_delef(substr((string) $idTipo, 0, 1));
         $nom = 'avisos_it_' . uniqid('', true);
+        $this->nomActiv = $nom;
 
         $this->idActiv = (int) DependencyResolver::get(ActividadNueva::class)->actividadNueva([
             'dl_org' => $dlOrg,
@@ -790,6 +794,7 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
         $dlOrg = $this->otraDlOrgParaTest();
         $statusActividad = StatusId::ACTUAL;
         $nom = 'avisos_ex_' . uniqid('', true);
+        $this->nomActiv = $nom;
 
         /** @var ActividadExRepositoryInterface $exRepository */
         $exRepository = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
@@ -1077,6 +1082,41 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
                     $actividadRepository->Eliminar($actividad);
                 }
             }
+            $this->eliminarCambiosGeneradosPorLaActividad();
+        }
+    }
+
+    /**
+     * Alta y baja de la actividad registran sus propios cambios (el de baja con id_activ = 0 y el nombre
+     * en valor_old), y AvisosGenerarTabla puede haber anotado o generado avisos para ellos.
+     */
+    private function eliminarCambiosGeneradosPorLaActividad(): void
+    {
+        /** @var CambioRepositoryInterface $cambioRepository */
+        $cambioRepository = $GLOBALS['container']->get(CambioRepositoryInterface::class);
+        /** @var CambioAnotadoRepositoryInterface $anotadoRepository */
+        $anotadoRepository = $GLOBALS['container']->get(CambioAnotadoRepositoryInterface::class);
+        /** @var CambioUsuarioRepositoryInterface $avisoRepository */
+        $avisoRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
+        $anotadoRepository->setTabla((string) getenv('UBICACION'));
+
+        $cambios = $cambioRepository->getCambios(['id_activ' => $this->idActiv]);
+        if ($this->nomActiv !== '') {
+            $cambios = array_merge($cambios, $cambioRepository->getCambios(['valor_old' => $this->nomActiv]));
+        }
+
+        foreach ($cambios as $cambio) {
+            $criterios = [
+                'id_item_cambio' => $cambio->getId_item_cambio(),
+                'id_schema_cambio' => $cambio->getId_schema(),
+            ];
+            foreach ($avisoRepository->getCambiosUsuario($criterios) as $aviso) {
+                $avisoRepository->Eliminar($aviso);
+            }
+            foreach ($anotadoRepository->getCambiosAnotados($criterios) as $anotado) {
+                $anotadoRepository->Eliminar($anotado);
+            }
+            $cambioRepository->Eliminar($cambio);
         }
     }
 
