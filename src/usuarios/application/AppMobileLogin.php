@@ -417,7 +417,7 @@ final class AppMobileLogin
         $ajsonStr = is_scalar($ajson) ? (string) $ajson : '';
         if (preg_match('/^{(.*)}$/', $ajsonStr, $matches)) {
             if ($matches[1] !== '') {
-                $mod_in = str_getcsv($matches[1]);
+                $mod_in = str_getcsv($matches[1], ",", "\"", "\\");
                 foreach ($mod_in as $mod) {
                     if (!is_string($mod) || $mod === '') {
                         continue;
@@ -447,7 +447,7 @@ final class AppMobileLogin
         $ajson = $a_mods[$id_mod]['apps_req'];
         $ajsonStr = is_scalar($ajson) ? (string) $ajson : '';
         if (preg_match('/^{(.*)}$/', $ajsonStr, $matches)) {
-            $app_in = str_getcsv($matches[1]);
+            $app_in = str_getcsv($matches[1], ",", "\"", "\\");
             foreach ($app_in as $app) {
                 if (is_string($app) && $app !== '') {
                     $apps[] = $app;
