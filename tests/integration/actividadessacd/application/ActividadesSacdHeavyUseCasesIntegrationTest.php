@@ -190,7 +190,7 @@ class ActividadesSacdHeavyUseCasesIntegrationTest extends myTest
         $this->assertSame([], $out['sacds_paso']);
     }
 
-    public function test_comunicacion_actividades_sacd_data_resolver_contexto_un_sacd_aplica_periodo_cruzado(): void
+    public function test_comunicacion_actividades_sacd_data_resolver_contexto_un_sacd_sin_periodo_usa_el_año_completo(): void
     {
         $ctx = DependencyResolver::get(ComunicacionActividadesSacdData::class)->resolverContexto([
             'que' => 'un_sacd',
@@ -203,8 +203,8 @@ class ActividadesSacdHeavyUseCasesIntegrationTest extends myTest
         ]);
 
         $this->assertSame('un_sacd', $ctx['que']);
-        $this->assertSame('2029-07-01', $ctx['inicioIso']);
-        $this->assertSame('2031-06-30', $ctx['finIso']);
+        $this->assertSame('2030-01-01', $ctx['inicioIso']);
+        $this->assertSame('2030-12-31', $ctx['finIso']);
         $this->assertIsString($ctx['periodo_txt']);
     }
 

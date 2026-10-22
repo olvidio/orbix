@@ -50,7 +50,7 @@ class CentrosFormDataTest extends myTest
 
     public function test_modo_labor_devuelve_campos_labor(): void
     {
-        $result = CentrosFormData::execute($this->id_ubi, CentrosFormData::MODO_LABOR);
+        $result = $GLOBALS['container']->get(CentrosFormData::class)->execute($this->id_ubi, CentrosFormData::MODO_LABOR);
 
         $this->assertSame($this->id_ubi, $result['id_ubi']);
         $this->assertArrayHasKey('nombre_ubi', $result);
@@ -62,7 +62,7 @@ class CentrosFormDataTest extends myTest
 
     public function test_modo_num_devuelve_campos_num(): void
     {
-        $result = CentrosFormData::execute($this->id_ubi, CentrosFormData::MODO_NUM);
+        $result = $GLOBALS['container']->get(CentrosFormData::class)->execute($this->id_ubi, CentrosFormData::MODO_NUM);
 
         $this->assertSame($this->id_ubi, $result['id_ubi']);
         $this->assertSame(9, (int)$result['n_buzon']);
@@ -73,7 +73,7 @@ class CentrosFormDataTest extends myTest
 
     public function test_modo_plazas_devuelve_campos_plazas(): void
     {
-        $result = CentrosFormData::execute($this->id_ubi, CentrosFormData::MODO_PLAZAS);
+        $result = $GLOBALS['container']->get(CentrosFormData::class)->execute($this->id_ubi, CentrosFormData::MODO_PLAZAS);
 
         $this->assertSame($this->id_ubi, $result['id_ubi']);
         $this->assertSame(1, (int)$result['num_habit_indiv']);
@@ -85,12 +85,12 @@ class CentrosFormDataTest extends myTest
     public function test_modo_desconocido_lanza_excepcion(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        CentrosFormData::execute($this->id_ubi, 'xxx');
+        $GLOBALS['container']->get(CentrosFormData::class)->execute($this->id_ubi, 'xxx');
     }
 
     public function test_id_inexistente_devuelve_defaults(): void
     {
-        $result = CentrosFormData::execute(99999999, CentrosFormData::MODO_LABOR);
+        $result = $GLOBALS['container']->get(CentrosFormData::class)->execute(99999999, CentrosFormData::MODO_LABOR);
 
         $this->assertSame(99999999, $result['id_ubi']);
         $this->assertSame('', $result['nombre_ubi']);

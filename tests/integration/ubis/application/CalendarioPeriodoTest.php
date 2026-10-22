@@ -41,7 +41,7 @@ class CalendarioPeriodoTest extends myTest
         $fIni = '01/01/2030';
         $fFin = '02/01/2030';
 
-        $msg = CalendarioPeriodoGuardar::execute(0, $idUbi, $fIni, $fFin, 1);
+        $msg = $GLOBALS['container']->get(CalendarioPeriodoGuardar::class)->execute(0, $idUbi, $fIni, $fFin, 1);
         $this->assertSame('', $msg);
 
         $arr = $this->repository->getCasaPeriodos(['id_ubi' => $idUbi]);
@@ -61,7 +61,7 @@ class CalendarioPeriodoTest extends myTest
         $this->repository->Guardar($oPeriodo);
         $this->idsCreadosParaLimpiar[] = $id;
 
-        $msg = CalendarioPeriodoGuardar::execute($id, 999003, '10/05/2030', '20/05/2030', 2);
+        $msg = $GLOBALS['container']->get(CalendarioPeriodoGuardar::class)->execute($id, 999003, '10/05/2030', '20/05/2030', 2);
         $this->assertSame('', $msg);
 
         $oActualizado = $this->repository->findById($id);
@@ -72,13 +72,13 @@ class CalendarioPeriodoTest extends myTest
 
     public function test_eliminar_id_cero_devuelve_mensaje_de_error(): void
     {
-        $msg = CalendarioPeriodoEliminar::execute(0);
+        $msg = $GLOBALS['container']->get(CalendarioPeriodoEliminar::class)->execute(0);
         $this->assertSame(_("no sé cuál he de borar"), $msg);
     }
 
     public function test_eliminar_id_inexistente_devuelve_mensaje_de_error(): void
     {
-        $msg = CalendarioPeriodoEliminar::execute(99999999);
+        $msg = $GLOBALS['container']->get(CalendarioPeriodoEliminar::class)->execute(99999999);
         $this->assertSame(_("no se encuentra el periodo a borrar"), $msg);
     }
 
@@ -88,7 +88,7 @@ class CalendarioPeriodoTest extends myTest
         $id = $oPeriodo->getId_item();
         $this->repository->Guardar($oPeriodo);
 
-        $msg = CalendarioPeriodoEliminar::execute($id);
+        $msg = $GLOBALS['container']->get(CalendarioPeriodoEliminar::class)->execute($id);
         $this->assertSame('', $msg, "Eliminar no fue OK: $msg");
 
         $this->assertNull(

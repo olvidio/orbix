@@ -18,7 +18,7 @@ class DataReadersTest extends myTest
 {
     public function test_CentrosSListaData_devuelve_estructura_correcta(): void
     {
-        $result = CentrosSListaData::execute();
+        $result = $GLOBALS['container']->get(CentrosSListaData::class)->execute();
 
         $this->assertArrayHasKey('a_cabeceras', $result);
         $this->assertArrayHasKey('a_valores', $result);
@@ -32,7 +32,7 @@ class DataReadersTest extends myTest
 
     public function test_DelegacionQueData_devuelve_opciones(): void
     {
-        $result = DelegacionQueData::execute();
+        $result = $GLOBALS['container']->get(DelegacionQueData::class)->execute();
 
         $this->assertArrayHasKey('opciones_dl_destino', $result);
         $this->assertIsArray($result['opciones_dl_destino']);
@@ -48,7 +48,7 @@ class DataReadersTest extends myTest
         $repo->Guardar($oCentro);
 
         try {
-            $result = DireccionesQueData::execute($id);
+            $result = $GLOBALS['container']->get(DireccionesQueData::class)->execute($id);
             $this->assertArrayHasKey('tipo_ubi', $result);
             $this->assertArrayHasKey('titulo', $result);
             $this->assertIsString($result['titulo']);

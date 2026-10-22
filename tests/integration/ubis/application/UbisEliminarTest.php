@@ -29,7 +29,7 @@ class UbisEliminarTest extends myTest
         $this->repository->Guardar($oCentro);
         $this->assertNotNull($this->repository->findById($id));
 
-        $eliminar = new UbisEliminar();
+        $eliminar = $GLOBALS['container']->get(UbisEliminar::class);
         $msg = $eliminar->execute('CentroDl', $id);
         $this->assertSame('', $msg);
 
@@ -38,7 +38,7 @@ class UbisEliminarTest extends myTest
 
     public function test_id_inexistente_devuelve_mensaje_de_error(): void
     {
-        $eliminar = new UbisEliminar();
+        $eliminar = $GLOBALS['container']->get(UbisEliminar::class);
         $msg = $eliminar->execute('CentroDl', 99999999);
         $this->assertSame(_("no se encuentra el ubi a borrar"), $msg);
     }
@@ -47,7 +47,7 @@ class UbisEliminarTest extends myTest
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $eliminar = new UbisEliminar();
+        $eliminar = $GLOBALS['container']->get(UbisEliminar::class);
         $eliminar->execute('NoExiste', 1);
     }
 }

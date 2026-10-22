@@ -134,6 +134,8 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
         $bInsert = $this->isNew($objeto, $id_resto);
 
         $aDatos = $MapId->toArrayForDatabase();
+        // Hydratable excluye `id_dl` (nombre reservado de otras entidades), pero aquí es una columna normal.
+        $aDatos['id_dl'] = $MapId->getId_dl();
         if ($bInsert === false) {
             unset($aDatos['objeto']);
             unset($aDatos['id_resto']);

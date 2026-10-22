@@ -62,7 +62,7 @@ class DireccionesAsignarQuitarTest extends myTest
             'La relación no debería existir antes de asignar.'
         );
 
-        $result = DireccionesAsignar::execute($this->id_ubi, 'DireccionCentroDl', $this->id_direccion);
+        $result = $GLOBALS['container']->get(DireccionesAsignar::class)->execute($this->id_ubi, 'DireccionCentroDl', $this->id_direccion);
         $this->assertSame(['ok' => true], $result);
 
         $this->assertTrue(
@@ -71,7 +71,7 @@ class DireccionesAsignarQuitarTest extends myTest
         );
 
         $csv = (string)$this->id_direccion;
-        $result = DireccionesQuitar::execute($this->id_ubi, 0, 'DireccionCentroDl', $csv);
+        $result = $GLOBALS['container']->get(DireccionesQuitar::class)->execute($this->id_ubi, 0, 'DireccionCentroDl', $csv);
         $this->assertSame(['ok' => true], $result);
 
         $this->assertFalse(
@@ -82,10 +82,10 @@ class DireccionesAsignarQuitarTest extends myTest
 
     public function test_quitar_con_idx_fuera_de_rango_no_toca_relaciones_existentes(): void
     {
-        DireccionesAsignar::execute($this->id_ubi, 'DireccionCentroDl', $this->id_direccion);
+        $GLOBALS['container']->get(DireccionesAsignar::class)->execute($this->id_ubi, 'DireccionCentroDl', $this->id_direccion);
 
         $csv = '11111,22222';
-        $result = DireccionesQuitar::execute($this->id_ubi, 5, 'DireccionCentroDl', $csv);
+        $result = $GLOBALS['container']->get(DireccionesQuitar::class)->execute($this->id_ubi, 5, 'DireccionCentroDl', $csv);
         $this->assertSame(['ok' => true], $result);
 
         $this->assertTrue(
@@ -97,12 +97,12 @@ class DireccionesAsignarQuitarTest extends myTest
     public function test_asignar_con_obj_dir_desconocido_lanza_excepcion(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        DireccionesAsignar::execute($this->id_ubi, 'NoExiste', $this->id_direccion);
+        $GLOBALS['container']->get(DireccionesAsignar::class)->execute($this->id_ubi, 'NoExiste', $this->id_direccion);
     }
 
     public function test_quitar_con_obj_dir_desconocido_lanza_excepcion(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        DireccionesQuitar::execute($this->id_ubi, 0, 'NoExiste', '1');
+        $GLOBALS['container']->get(DireccionesQuitar::class)->execute($this->id_ubi, 0, 'NoExiste', '1');
     }
 }

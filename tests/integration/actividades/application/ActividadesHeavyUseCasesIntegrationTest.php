@@ -325,7 +325,7 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
 
     public function test_actividad_nuevo_curso_comprobar_solapes_devuelve_string(): void
     {
-        $uc = new ActividadNuevoCurso();
+        $uc = $GLOBALS['container']->get(ActividadNuevoCurso::class);
         $txt = $uc->comprobar_solapes('2090-01-01', '2090-12-31');
         $this->assertIsString($txt);
     }
@@ -342,7 +342,7 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
         $this->assertSame($procesosInstalado, ConfigGlobal::is_app_installed('procesos'));
 
         try {
-            $out = (new ActividadNuevoCursoEjecutar())->ejecutar([
+            $out = ($GLOBALS['container']->get(ActividadNuevoCursoEjecutar::class))->ejecutar([
                 'year_ref' => 2089,
                 'year' => 2090,
                 'ver_lista' => false,

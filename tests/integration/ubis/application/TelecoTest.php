@@ -37,7 +37,7 @@ class TelecoTest extends myTest
     public function test_guardar_crea_un_teleco_nuevo(): void
     {
         $idUbi = 200001;
-        $result = TelecoGuardar::execute(
+        $result = $GLOBALS['container']->get(TelecoGuardar::class)->execute(
             'CentroDl',
             $idUbi,
             [],
@@ -61,13 +61,13 @@ class TelecoTest extends myTest
     public function test_guardar_actualiza_un_teleco_existente(): void
     {
         $idUbi = 200002;
-        TelecoGuardar::execute('CentroDl', $idUbi, [], 1, 0, '600000002', 'inicial');
+        $GLOBALS['container']->get(TelecoGuardar::class)->execute('CentroDl', $idUbi, [], 1, 0, '600000002', 'inicial');
         $cOriginal = $this->repository->getTelecos(['id_ubi' => $idUbi]);
         $this->assertNotEmpty($cOriginal);
         $pkey = $cOriginal[0]->getId_item();
         $this->idsCreadosParaLimpiar[] = $pkey;
 
-        $result = TelecoGuardar::execute('CentroDl', $idUbi, [$pkey], 2, 5, '600000999', 'actualizado');
+        $result = $GLOBALS['container']->get(TelecoGuardar::class)->execute('CentroDl', $idUbi, [$pkey], 2, 5, '600000999', 'actualizado');
         $this->assertSame(['ok' => true], $result);
 
         $oActualizado = $this->repository->findById($pkey);
@@ -81,12 +81,12 @@ class TelecoTest extends myTest
     public function test_eliminar_borra_los_telecos_indicados(): void
     {
         $idUbi = 200003;
-        TelecoGuardar::execute('CentroDl', $idUbi, [], 1, 0, '600000003', 'para borrar');
+        $GLOBALS['container']->get(TelecoGuardar::class)->execute('CentroDl', $idUbi, [], 1, 0, '600000003', 'para borrar');
         $telecos = $this->repository->getTelecos(['id_ubi' => $idUbi]);
         $ids = array_map(fn($t) => $t->getId_item(), $telecos);
         $this->assertNotEmpty($ids);
 
-        $result = TelecoEliminar::execute('CentroDl', $ids);
+        $result = $GLOBALS['container']->get(TelecoEliminar::class)->execute('CentroDl', $ids);
         $this->assertSame(['ok' => true], $result);
 
         foreach ($ids as $id) {
@@ -99,7 +99,7 @@ class TelecoTest extends myTest
 
     public function test_eliminar_con_array_vacio_no_falla(): void
     {
-        $result = TelecoEliminar::execute('CentroDl', []);
+        $result = $GLOBALS['container']->get(TelecoEliminar::class)->execute('CentroDl', []);
         $this->assertSame(['ok' => true], $result);
     }
 }

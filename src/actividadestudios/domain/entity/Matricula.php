@@ -282,8 +282,8 @@ class Matricula
         return $this->id_schema ?? 0;
     }
 
-    public function setId_schema(int $id_schema): void
+    public function setId_schema(?int $id_schema = null): void
     {
-        $this->id_schema = $id_schema > 0 ? $id_schema : null;
+        $this->id_schema = ($id_schema !== null && $id_schema > 0) ? $id_schema : null;
     }
 }

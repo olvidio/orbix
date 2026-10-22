@@ -18,19 +18,19 @@ class TrasladarUbisTest extends myTest
 {
     public function test_sin_seleccion_devuelve_mensaje_de_error(): void
     {
-        $msg = TrasladarUbis::execute(['dl_dst' => 'cr', 'sel' => []]);
+        $msg = $GLOBALS['container']->get(TrasladarUbis::class)->execute(['dl_dst' => 'cr', 'sel' => []]);
         $this->assertSame(_("No se han seleccionado ubis."), $msg);
     }
 
     public function test_sel_no_array_se_considera_vacio(): void
     {
-        $msg = TrasladarUbis::execute(['dl_dst' => 'cr', 'sel' => 'no-array']);
+        $msg = $GLOBALS['container']->get(TrasladarUbis::class)->execute(['dl_dst' => 'cr', 'sel' => 'no-array']);
         $this->assertSame(_("No se han seleccionado ubis."), $msg);
     }
 
     public function test_seleccion_con_ids_que_no_resuelven_a_ubi_no_falla(): void
     {
-        $msg = TrasladarUbis::execute([
+        $msg = $GLOBALS['container']->get(TrasladarUbis::class)->execute([
             'dl_dst' => 'cr',
             'sel' => [99999998, 99999999],
         ]);

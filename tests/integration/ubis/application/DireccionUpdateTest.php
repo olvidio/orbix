@@ -54,13 +54,13 @@ class DireccionUpdateTest extends myTest
 
     public function test_obj_dir_desconocido_devuelve_mensaje(): void
     {
-        $msg = DireccionUpdate::execute(['obj_dir' => 'Foo']);
+        $msg = $GLOBALS['container']->get(DireccionUpdate::class)->execute(['obj_dir' => 'Foo']);
         $this->assertSame('obj_dir desconocido: Foo', $msg);
     }
 
     public function test_ubi_inexistente_devuelve_mensaje(): void
     {
-        $msg = DireccionUpdate::execute([
+        $msg = $GLOBALS['container']->get(DireccionUpdate::class)->execute([
             'obj_dir' => 'DireccionCentroDl',
             'id_ubi' => 99999999,
             'idx' => 'nuevo',
@@ -70,7 +70,7 @@ class DireccionUpdateTest extends myTest
 
     public function test_direccion_inexistente_en_indice_devuelve_mensaje(): void
     {
-        $msg = DireccionUpdate::execute([
+        $msg = $GLOBALS['container']->get(DireccionUpdate::class)->execute([
             'obj_dir' => 'DireccionCentroDl',
             'id_ubi' => $this->id_ubi,
             'idx' => '0',
@@ -81,7 +81,7 @@ class DireccionUpdateTest extends myTest
 
     public function test_idx_nuevo_crea_direccion_y_establece_propietario_y_principal(): void
     {
-        $msg = DireccionUpdate::execute([
+        $msg = $GLOBALS['container']->get(DireccionUpdate::class)->execute([
             'obj_dir' => 'DireccionCentroDl',
             'id_ubi' => $this->id_ubi,
             'idx' => 'nuevo',
@@ -126,7 +126,7 @@ class DireccionUpdateTest extends myTest
         $this->relacionRepo->asociarDireccion($this->id_ubi, $idDireccion, false);
         $this->idsDireccionesParaLimpiar[] = $idDireccion;
 
-        $msg = DireccionUpdate::execute([
+        $msg = $GLOBALS['container']->get(DireccionUpdate::class)->execute([
             'obj_dir' => 'DireccionCentroDl',
             'id_ubi' => $this->id_ubi,
             'idx' => '0',
