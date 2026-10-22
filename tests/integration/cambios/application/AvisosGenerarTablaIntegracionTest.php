@@ -796,7 +796,8 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
         $newId = (int) $exRepository->getNewId();
         $this->assertGreaterThan(0, $newId);
         $this->idActiv = (int) $exRepository->getNewIdActividad($newId);
-        $this->assertGreaterThan(0, $this->idActiv);
+        // Las actividades ex (esquema resto) tienen id negativo.
+        $this->assertLessThan(0, $this->idActiv);
 
         $actividad = new \src\actividades\domain\entity\ActividadAll();
         $actividad->setId_activ($this->idActiv);

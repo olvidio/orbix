@@ -69,7 +69,7 @@ class CambioFactory
         $oCambio->setId_item_cambio($faker->numberBetween(1, 1000));
         $oCambio->setTipoCambioVo(new TipoCambioId($faker->numberBetween(1, 2)));
         $oCambio->setId_activ($faker->numberBetween(30011, 300000));
-        $oCambio->setIdTipoActivVo(new ActividadTipoId($faker->numerify('######')));
+        $oCambio->setIdTipoActivVo(new ActividadTipoId($faker->numberBetween(100000, 999999)));
         $oCambio->setJson_fases_sv($faker->shuffleArray([1, 16, 3]));
         $oCambio->setJson_fases_sf($faker->shuffleArray([1, 16, 3]));
         $oCambio->setIdStatusVo(new StatusId($faker->randomKey(StatusId::getArrayStatus())));
