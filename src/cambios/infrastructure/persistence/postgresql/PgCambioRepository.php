@@ -86,8 +86,6 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
     private function borrarCambiosUsuario(): bool
     {
         $oDbl = GlobalPdo::get('oDBC');
-        $this->setoDbl($oDbl);
-        $this->setNomTabla('av_cambios');
 
         $sQry = "DELETE FROM av_cambios_usuario u USING av_cambios_usuario a
                 LEFT JOIN public.av_cambios c
@@ -108,8 +106,6 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
     private function borrarCambiosAnotados(): bool
     {
         $oDbl = GlobalPdo::get('oDBC');
-        $this->setoDbl($oDbl);
-        $this->setNomTabla('av_cambios');
 
         if (getenv('UBICACION') === 'sv') {
             $nom_tabla_anotados = 'av_cambios_anotados_dl';

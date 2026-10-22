@@ -108,7 +108,7 @@ class AvisosGenerarTabla
                 $id_activ = $oCambio->getId_activ();
                 $oF_cmb = $oCambio->getTimestamp_cambio();
 
-                if ($id_activ > 0 && $ActividadParaAvisoLookup->find($id_activ) === null) {
+                if ($id_activ !== 0 && $ActividadParaAvisoLookup->find($id_activ) === null) {
                     $this->registrarCambioNoProcesado(
                         $oCambio,
                         sprintf('actividad %d no encontrada', $id_activ),
@@ -428,7 +428,7 @@ class AvisosGenerarTabla
         int $id_activ,
         int $id_status_cmb,
     ): ?int {
-        if ($id_activ > 0) {
+        if ($id_activ !== 0) {
             $oActividad = $this->actividadParaAvisoLookup->find($id_activ);
             if ($oActividad !== null) {
                 return $oActividad->getStatus();

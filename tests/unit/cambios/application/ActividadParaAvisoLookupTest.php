@@ -44,6 +44,22 @@ final class ActividadParaAvisoLookupTest extends TestCase
         $this->assertSame($actividad, $lookup->find(99));
     }
 
+    public function test_find_resuelve_actividad_ex_con_id_negativo(): void
+    {
+        $actividad = new ActividadAll();
+        $actividad->setId_activ(-300194);
+
+        $allRepository = $this->createMock(ActividadAllRepositoryInterface::class);
+        $allRepository->method('findById')->willReturn(null);
+
+        $exRepository = $this->createMock(ActividadExRepositoryInterface::class);
+        $exRepository->expects($this->once())->method('findById')->with(-300194)->willReturn($actividad);
+
+        $lookup = new ActividadParaAvisoLookup($allRepository, $exRepository);
+
+        $this->assertSame($actividad, $lookup->find(-300194));
+    }
+
     public function test_find_devuelve_null_para_id_invalido(): void
     {
         $allRepository = $this->createMock(ActividadAllRepositoryInterface::class);

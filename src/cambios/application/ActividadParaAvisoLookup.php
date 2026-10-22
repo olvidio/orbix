@@ -22,7 +22,9 @@ final class ActividadParaAvisoLookup
 
     public function find(int $id_activ): ?ActividadAll
     {
-        if ($id_activ <= 0) {
+        // 0 = sin actividad (p. ej. cambio de una actividad eliminada). Las actividades ex (importadas)
+        // tienen id negativo.
+        if ($id_activ === 0) {
             return null;
         }
 

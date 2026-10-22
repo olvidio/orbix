@@ -1065,7 +1065,7 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
             }
         }
 
-        if ($this->idActiv > 0) {
+        if ($this->idActiv !== 0) {
             if ($this->actividadExCreada) {
                 $actividad = $actividadExRepository->findById($this->idActiv);
                 if ($actividad !== null) {
