@@ -1643,7 +1643,7 @@ class Lista
                     $a_valores_simple[] = $fechaIso ?? $text;
                 }
             }
-            fputcsv($fp, $a_valores_simple, "\t", '"');
+            fputcsv($fp, $a_valores_simple, "\t", '"', "\\");
         }
         fclose($fp);
     }

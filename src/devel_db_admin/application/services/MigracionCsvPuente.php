@@ -156,7 +156,7 @@ final class MigracionCsvPuente
             foreach (array_values($row) as $value) {
                 $csvRow[] = is_scalar($value) ? (string) $value : null;
             }
-            fputcsv($handle, $csvRow);
+            fputcsv($handle, $csvRow, ",", "\"", "\\");
             $rows++;
         }
         fclose($handle);
@@ -208,7 +208,7 @@ final class MigracionCsvPuente
         }
 
         $rows = 0;
-        while (($data = fgetcsv($handle)) !== false) {
+        while (($data = fgetcsv($handle, null, ",", "\"", "\\")) !== false) {
             if ($data === [null]) {
                 continue;
             }
