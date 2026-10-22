@@ -25,7 +25,7 @@ final class TipoCentroCode
             throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('TipoCentroCode must be at most 5 characters', $value));
         }
         // Allow letters, numbers, underscore and hyphen, and comma
-        if (!preg_match('/^[A-Za-z0-9_-|,]+$/u', $value)) {
+        if (!preg_match('/^[A-Za-z0-9_|,-]+$/u', $value)) {
             throw new \InvalidArgumentException('TipoCentroCode has invalid characters');
         }
     }

@@ -71,7 +71,7 @@ class EncargoFactory
         $oEncargo->setId_ubi($faker->numberBetween(3001231, 3000000));
         $oEncargo->setId_zona($faker->numberBetween(1, 100));
         $oEncargo->setDescEncVo(new EncargoDescText($faker->text(150)));
-        $oEncargo->setIdiomaEncVo(new LocaleCode($faker->locale() . ".UTF-8"));
+        $oEncargo->setIdiomaEncVo(new LocaleCode($faker->randomElement(['es_ES', 'ca_ES', 'en_US', 'de_DE', 'it_IT']) . '.UTF-8'));
         $oEncargo->setDescLugarVo(new LugarDescText($faker->text(150)));
         $oEncargo->setObservVo(new ObservText($faker->text));
         $oEncargo->setOrdenVo(new EncargoOrden($faker->numberBetween(1, 10)));

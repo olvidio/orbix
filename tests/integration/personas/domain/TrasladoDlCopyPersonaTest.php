@@ -17,7 +17,7 @@ use Tests\myTest;
 class TrasladoDlCopyPersonaTest extends myTest
 {
     private string $schemaOrg = 'H-dlbv';
-    private string $schemaDst = 'Ch-crChv';
+    private string $schemaDst = 'Galbel-crGalbelv';
     private int $idNom;
 
     public function setUp(): void
@@ -51,18 +51,18 @@ class TrasladoDlCopyPersonaTest extends myTest
         $originRepo->Guardar($persona);
         $this->insertPersonaDl($oDBorg, $this->idNom, 'n', 'dlb', 'Apellido', 'A');
 
-        $traslado = new Trasladar();
+        $traslado = $GLOBALS['container']->get(Trasladar::class);
         $traslado->setId_nom($this->idNom);
         $traslado->setReg_dl_org($this->schemaOrg);
         $traslado->setReg_dl_dst($this->schemaDst);
         $traslado->setF_traslado(new DateTimeLocal());
 
         $result = $traslado->copiarPersona();
-        $this->assertTrue($result, $traslado->getError() ?? 'copyPersona devolvió false');
+        $this->assertTrue($result, $traslado->getError());
 
         $copied = $destRepo->findById($this->idNom);
         $this->assertInstanceOf(PersonaN::class, $copied);
-        $this->assertSame('crCh', $copied->getDl());
+        $this->assertSame('crGalbel', $copied->getDl());
         $this->assertSame('A', $copied->getSituacion());
 
         $this->cleanupPersona($originRepo, $this->idNom);

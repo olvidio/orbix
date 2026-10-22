@@ -56,7 +56,7 @@ class PersonaNaxFactory
 
         $oPersonaNax->setId_nom(2001);
         $oPersonaNax->setIdTablaVo(new PersonaTablaCode('nax'));
-        $oPersonaNax->setApellido1Vo(new PersonaApellido1Text('test_apellido1vo'));
+        $oPersonaNax->setApellido1Vo(new PersonaApellido1Text('testapellido'));
         $oPersonaNax->setSituacionVo(new SituacionCode('A'));
 
         return $oPersonaNax;
@@ -86,7 +86,7 @@ class PersonaNaxFactory
         $oPersonaNax->setNx2Vo(new PersonaNx2Text(substr($faker->word, 0, 7)));
         $oPersonaNax->setApellido2Vo(new PersonaApellido2Text($faker->lastName));
         $oPersonaNax->setF_nacimiento(new DateTimeLocal($faker->date()));
-        $oPersonaNax->setIdiomaPreferidoVo(new LocaleCode($faker->locale() . ".UTF-8"));
+        $oPersonaNax->setIdiomaPreferidoVo(new LocaleCode($faker->randomElement(['es_ES', 'ca_ES', 'en_US', 'de_DE', 'it_IT']) . '.UTF-8'));
         $oPersonaNax->setSituacionVo(new SituacionCode(strtoupper($faker->randomLetter())));
         $oPersonaNax->setF_situacion(new DateTimeLocal($faker->date()));
         $oPersonaNax->setApelFamVo(new ApelFamText($faker->word));

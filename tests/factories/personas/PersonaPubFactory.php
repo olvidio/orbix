@@ -53,7 +53,7 @@ class PersonaPubFactory
 
         $oPersonaPub->setId_nom(10021);
         $oPersonaPub->setIdTablaVo(new PersonaTablaCode('pa'));
-        $oPersonaPub->setApellido1Vo(new PersonaApellido1Text('test_apellido1vo'));
+        $oPersonaPub->setApellido1Vo(new PersonaApellido1Text('testapellido'));
         $oPersonaPub->setSituacionVo(new SituacionCode('A'));
 
         return $oPersonaPub;
@@ -83,7 +83,7 @@ class PersonaPubFactory
         $oPersonaPub->setNx2Vo(new PersonaNx2Text(substr($faker->word, 0, 7)));
         $oPersonaPub->setApellido2Vo(new PersonaApellido2Text($faker->lastName));
         $oPersonaPub->setF_nacimiento(new DateTimeLocal($faker->date()));
-        $oPersonaPub->setIdiomaPreferidoVo(new LocaleCode($faker->locale() . ".UTF-8"));
+        $oPersonaPub->setIdiomaPreferidoVo(new LocaleCode($faker->randomElement(['es_ES', 'ca_ES', 'en_US', 'de_DE', 'it_IT']) . '.UTF-8'));
         $oPersonaPub->setSituacionVo(new SituacionCode(strtoupper($faker->randomLetter())));
         $oPersonaPub->setF_situacion(new DateTimeLocal($faker->date()));
         $oPersonaPub->setApelFamVo(new ApelFamText($faker->word));

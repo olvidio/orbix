@@ -53,7 +53,7 @@ class PersonaSSSCFactory
 
         $oPersonaSSSC->setId_nom(2001);
         $oPersonaSSSC->setIdTablaVo(new PersonaTablaCode('sssc'));
-        $oPersonaSSSC->setApellido1Vo(new PersonaApellido1Text('test_apellido1vo'));
+        $oPersonaSSSC->setApellido1Vo(new PersonaApellido1Text('testapellido'));
         $oPersonaSSSC->setSituacionVo(new SituacionCode('A'));
 
         return $oPersonaSSSC;
@@ -83,7 +83,7 @@ class PersonaSSSCFactory
         $oPersonaSSSC->setNx2Vo(new PersonaNx2Text(substr($faker->word, 0, 7)));
         $oPersonaSSSC->setApellido2Vo(new PersonaApellido2Text($faker->lastName));
         $oPersonaSSSC->setF_nacimiento(new DateTimeLocal($faker->date()));
-        $oPersonaSSSC->setIdiomaPreferidoVo(new LocaleCode($faker->locale() . ".UTF-8"));
+        $oPersonaSSSC->setIdiomaPreferidoVo(new LocaleCode($faker->randomElement(['es_ES', 'ca_ES', 'en_US', 'de_DE', 'it_IT']) . '.UTF-8'));
         $oPersonaSSSC->setSituacionVo(new SituacionCode(strtoupper($faker->randomLetter())));
         $oPersonaSSSC->setF_situacion(new DateTimeLocal($faker->date()));
         $oPersonaSSSC->setApelFamVo(new ApelFamText($faker->word));

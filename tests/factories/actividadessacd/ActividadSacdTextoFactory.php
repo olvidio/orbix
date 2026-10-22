@@ -55,7 +55,7 @@ class ActividadSacdTextoFactory
         $oActividadSacdTexto = new ActividadSacdTexto();
         $oActividadSacdTexto->setId_item($id);
 
-        $oActividadSacdTexto->setIdiomaVo(new LocaleCode($faker->locale() . ".UTF-8"));
+        $oActividadSacdTexto->setIdiomaVo(new LocaleCode($faker->randomElement(['es_ES', 'ca_ES', 'en_US', 'de_DE', 'it_IT']) . '.UTF-8'));
         $oActividadSacdTexto->setClaveVo(new SacdTextoClave($faker->word));
         $oActividadSacdTexto->setTextoVo(new SacdTextoTexto($faker->word));
 

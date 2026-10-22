@@ -95,7 +95,7 @@ class ActividadAllFactory
         $oActividadAll->setPublicado($faker->boolean);
         $oActividadAll->setIdTablaVo(new IdTablaCode($faker->randomElement(['dl', 'ex'])));
         $oActividadAll->setPlazasVo(new Plazas($faker->numberBetween(1, 100)));
-        $oActividadAll->setIdiomaVo(new IdLocale($faker->locale().'.UTF-8'));
+        $oActividadAll->setIdiomaVo(new IdLocale($faker->randomElement(['es_ES', 'ca_ES', 'en_US', 'de_DE', 'it_IT']) . '.UTF-8'));
 
         return $oActividadAll;
     }

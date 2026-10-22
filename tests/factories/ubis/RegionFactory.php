@@ -28,16 +28,24 @@ class RegionFactory
     }
 
     /**
+     * El código de región es la clave primaria de xu_region: un `$faker->word` puede repetir
+     * el de una región real o el de una fila sobrante de otra ejecución.
+     */
+    private function codigoRegionUnico(): string
+    {
+        return 'tst' . substr(bin2hex(random_bytes(2)), 0, 3);
+    }
+
+    /**
      * Crea una instancia simple de Region con datos mínimos
      * Útil para tests que no requieren datos complejos
      */
-    public function createSimple(): Region
+    public function createSimple(?int $id = null): Region
     {
-        $id = 9000 + random_int(1000, 9999);
-        $faker = Factory::create('es_ES');
+        $id ??= 9000 + random_int(1000, 9999);
         $oRegion = new Region();
         $oRegion->setId_region($id);
-        $oRegion->setRegionVo(RegionCode::fromNullableString(substr($faker->word, 0, 6)));
+        $oRegion->setRegionVo(RegionCode::fromNullableString($this->codigoRegionUnico()));
 
 
         return $oRegion;
@@ -54,7 +62,7 @@ class RegionFactory
         $id = 9000 + random_int(1000, 9999);
 
         $oRegion = new Region();
-        $oRegion->setRegionVo(new RegionCode($faker->word));
+        $oRegion->setRegionVo(new RegionCode($this->codigoRegionUnico()));
 
         $oRegion->setId_region($id);
         $oRegion->setNombreRegionVo(new RegionNameText($faker->name));

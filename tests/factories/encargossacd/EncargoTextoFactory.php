@@ -55,7 +55,7 @@ class EncargoTextoFactory
         $oEncargoTexto = new EncargoTexto();
         $oEncargoTexto->setId_item($id);
 
-        $oEncargoTexto->setIdiomaVo(new LocaleCode($faker->locale() . ".UTF-8"));
+        $oEncargoTexto->setIdiomaVo(new LocaleCode($faker->randomElement(['es_ES', 'ca_ES', 'en_US', 'de_DE', 'it_IT']) . '.UTF-8'));
         $oEncargoTexto->setClaveVo(new EncargoTextClave($faker->word));
         $oEncargoTexto->setTextoVo(new EncargoText($faker->text));
 

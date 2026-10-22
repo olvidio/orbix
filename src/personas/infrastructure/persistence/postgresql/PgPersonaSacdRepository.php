@@ -224,6 +224,8 @@ class PgPersonaSacdRepository extends ClaseRepository implements PersonaSacdRepo
             'f_situacion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
             'f_inc' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
+        // `cp_sacd` no tiene estas columnas; el SQL no las enlaza.
+        unset($aDatos['edad'], $aDatos['profesor_stgr'], $aDatos['publicado_para']);
 
         if ($bInsert === false) {
             //UPDATE

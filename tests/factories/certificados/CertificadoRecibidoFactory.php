@@ -55,7 +55,7 @@ class CertificadoRecibidoFactory
 
         $oCertificadoRecibido->setId_nom($faker->numberBetween(10011, 100000));
         $oCertificadoRecibido->setNom($faker->name);
-        $oCertificadoRecibido->setIdioma($faker->locale() . ".UTF-8");
+        $oCertificadoRecibido->setIdioma($faker->randomElement(['es_ES', 'ca_ES', 'en_US', 'de_DE', 'it_IT']) . '.UTF-8');
         $oCertificadoRecibido->setDestino($faker->text);
         $oCertificadoRecibido->setCertificado($faker->text(50));
         $oCertificadoRecibido->setF_certificado(new DateTimeLocal($faker->date()));

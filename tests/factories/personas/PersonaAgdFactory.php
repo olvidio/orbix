@@ -56,7 +56,7 @@ class PersonaAgdFactory
 
         $oPersonaAgd->setId_nom(2001);
         $oPersonaAgd->setIdTablaVo(new PersonaTablaCode('a'));
-        $oPersonaAgd->setApellido1Vo(new PersonaApellido1Text('test_apellido1vo'));
+        $oPersonaAgd->setApellido1Vo(new PersonaApellido1Text('testapellido'));
         $oPersonaAgd->setSituacionVo(new SituacionCode('A'));
 
         return $oPersonaAgd;
@@ -86,7 +86,7 @@ class PersonaAgdFactory
         $oPersonaAgd->setNx2Vo(new PersonaNx2Text(substr($faker->word, 0, 7)));
         $oPersonaAgd->setApellido2Vo(new PersonaApellido2Text($faker->lastName));
         $oPersonaAgd->setF_nacimiento(new DateTimeLocal($faker->date()));
-        $oPersonaAgd->setIdiomaPreferidoVo(new LocaleCode($faker->locale() . ".UTF-8"));
+        $oPersonaAgd->setIdiomaPreferidoVo(new LocaleCode($faker->randomElement(['es_ES', 'ca_ES', 'en_US', 'de_DE', 'it_IT']) . '.UTF-8'));
         $oPersonaAgd->setSituacionVo(new SituacionCode(strtoupper($faker->randomLetter())));
         $oPersonaAgd->setF_situacion(new DateTimeLocal($faker->date()));
         $oPersonaAgd->setApelFamVo(new ApelFamText($faker->word));

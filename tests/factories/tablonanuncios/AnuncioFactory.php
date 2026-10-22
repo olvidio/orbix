@@ -63,7 +63,7 @@ class AnuncioFactory
     {
         $faker = Factory::create('es_ES');
         $uuid_itemVo = $id ?? AnuncioId::random();
-        $idiomaTest = $faker->locale() . '.UTF-8';
+        $idiomaTest = $faker->randomElement(['es_ES', 'ca_ES', 'en_US', 'de_DE', 'it_IT']) . '.UTF-8';
 
         $oAnuncio = new Anuncio();
         $oAnuncio->setUuid_item($uuid_itemVo);
