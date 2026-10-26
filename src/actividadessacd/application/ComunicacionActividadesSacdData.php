@@ -114,7 +114,8 @@ final class ComunicacionActividadesSacdData
             'periodo_txt' => $periodo_txt,
             'sacds' => $this->normalizarSacds($sacds),
             'sacds_paso' => $this->normalizarSacds($sacds_paso),
-            'avisos' => array_values(array_unique($avisos)),
+            // En la DMZ no se muestran los avisos de permisos.
+            'avisos' => ConfigGlobal::is_dmz() ? [] : array_values(array_unique($avisos)),
             'ctx_enviar' => $this->signCtxEnviar($que, $id_nom, $propuesta),
         ];
     }
