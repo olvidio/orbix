@@ -711,7 +711,7 @@ class PermisosActividades
         $id_tipo_activ_txt = $this->completarId($id_tipo_activ_txt);
         $PermIdTipo = $this->findXResto($id_tipo_activ_txt);
         if ($PermIdTipo !== null) {
-            if ($this->bpropia !== true || $PermIdTipo->hasAfecta($iAfecta)) {
+            if ($PermIdTipo->hasAfecta($iAfecta)) {
                 return $PermIdTipo;
             }
 

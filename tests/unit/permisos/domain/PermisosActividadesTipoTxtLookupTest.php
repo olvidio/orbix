@@ -71,6 +71,25 @@ final class PermisosActividadesTipoTxtLookupTest extends TestCase
         $this->assertSame('17....', ActividadTipoIdTxt::canonicalize('17'));
     }
 
+    public function test_otra_dl_tipo_especifico_sin_afecta_cae_al_tipo_padre(): void
+    {
+        // '11....' solo define asistentesSacd; 'datos' debe resolverse en '1.....'.
+        $padre = new XResto('1.....');
+        $padre->setOmplir(PermisosActividades::AFECTA['datos'], 2, 31, 31);
+        $hijo = new XResto('11....');
+        $hijo->setOmplir(PermisosActividades::AFECTA['asistentesSacd'], 16, 7, 0);
+
+        $perm = new PermisosActividadesHarness();
+        $perm->replaceDlMap(['1.....' => $padre, '11....' => $hijo]);
+
+        $perm->setActividad(42, '111008', 'dlmE');
+        $perm->setFasesCompletadas([2, 16]);
+        $perm->forcePropia(false);
+
+        $this->assertTrue($perm->getPermisoActual('datos')->have_perm_activ('ver'));
+        $this->assertTrue($perm->getPermisoActual('asistentesSacd')->have_perm_activ('ver'));
+    }
+
     private function harnessWithSacdAt(string $tipoKey): PermisosActividadesHarness
     {
         $resto = new XResto($tipoKey);
