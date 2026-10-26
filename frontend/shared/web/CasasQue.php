@@ -346,7 +346,7 @@ class CasasQue
                 $campos[$k] = $filtro[$k] ? '1' : '0';
             }
         }
-        if (!empty($filtro['id_ubi_in']) && is_array($filtro['id_ubi_in'])) {
+        if (isset($filtro['id_ubi_in']) && is_array($filtro['id_ubi_in'])) {
             $ids = [];
             foreach ($filtro['id_ubi_in'] as $id) {
                 if (!is_int($id) && !(is_string($id) && is_numeric($id))) {
@@ -357,9 +357,8 @@ class CasasQue
                     $ids[] = $v;
                 }
             }
-            if ($ids !== []) {
-                $campos['id_ubi_in'] = implode(',', $ids);
-            }
+            // Lista vacía = usuario acotado sin ubis: '-1' no coincide con ninguno (y no es "vacío" en PHP).
+            $campos['id_ubi_in'] = $ids !== [] ? implode(',', $ids) : '-1';
         }
         return $campos;
     }

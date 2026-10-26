@@ -44,7 +44,7 @@ final class CentrosDropdown
             $aWhere[] = "sf = 't'";
         }
 
-        if (!empty($filtro['id_ubi_in']) && is_array($filtro['id_ubi_in'])) {
+        if (isset($filtro['id_ubi_in']) && is_array($filtro['id_ubi_in'])) {
             $ids = [];
             foreach ($filtro['id_ubi_in'] as $idRaw) {
                 if (!is_int($idRaw) && !is_string($idRaw) && !is_float($idRaw) && !is_bool($idRaw) && $idRaw !== null) {
@@ -55,9 +55,8 @@ final class CentrosDropdown
                     $ids[] = $id;
                 }
             }
-            if (!empty($ids)) {
-                $aWhere[] = 'id_ubi IN (' . implode(',', $ids) . ')';
-            }
+            // Filtro pedido pero sin ids válidos: no mostrar nada (nunca todo).
+            $aWhere[] = empty($ids) ? 'FALSE' : 'id_ubi IN (' . implode(',', $ids) . ')';
         }
 
         if (!empty($filtro['tipo_ctr'])) {

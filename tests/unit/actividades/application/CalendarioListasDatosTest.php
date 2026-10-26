@@ -15,6 +15,8 @@ use src\shared\domain\value_objects\TimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 
 final class CalendarioListasDatosTest extends TestCase
@@ -48,6 +50,8 @@ final class CalendarioListasDatosTest extends TestCase
             $this->createMock(CasaRepositoryInterface::class),
             $this->createMock(CentroRepositoryInterface::class),
             $this->createMock(CentroDlRepositoryInterface::class),
+            $this->createMock(CentroEllosRepositoryInterface::class),
+            $this->createMock(CentroEllasRepositoryInterface::class),
             $this->createMock(AsistenteActividadService::class),
         ))->ejecutar(['que' => '__no_existe__']);
         $this->assertArrayHasKey('html', $out);
