@@ -12,7 +12,7 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\application\services\CentroNombreResolver;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
 use src\personas\domain\entity\PersonaEx;
@@ -35,7 +35,7 @@ final class CasaActividadesListaData
         private ActividadRepositoryInterface $actividadRepository,
         private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
         private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
-        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroNombreResolver $centroNombreResolver,
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
     ) {
     }
@@ -161,8 +161,7 @@ final class CasaActividadesListaData
                 if ($oPermCtr->have_perm_action('ver')) {
                     foreach ($this->centroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oCentroEncargado) {
                         $id_ctr = $oCentroEncargado->getId_ubi();
-                        $oCentroDl = $this->centroDlRepository->findById($id_ctr);
-                        $nombre_ctr = $oCentroDl?->getNombre_ubi() ?? '';
+                        $nombre_ctr = $this->centroNombreResolver->nombre($id_ctr);
                         $txt_ctr .= $txt_ctr === '' ? $nombre_ctr : "; $nombre_ctr";
                     }
                 }

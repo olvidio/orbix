@@ -13,6 +13,7 @@ use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\permisos\domain\PermisosActividadesTrue;
 use src\shared\config\ConfigGlobal;
+use src\ubis\application\services\CentroNombreResolver;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -85,9 +86,7 @@ final class CalendarioListasDatosDmzTest extends myTest
             $encargados,
             $this->createMock(CasaRepositoryInterface::class),
             $this->createMock(CentroRepositoryInterface::class),
-            $centroDl,
-            $centroEllos,
-            $centroEllas,
+            new CentroNombreResolver($centroDl, $centroEllos, $centroEllas),
             $this->createMock(AsistenteActividadService::class),
         ))->ejecutar([
             'que' => 'lista_cdc',

@@ -13,9 +13,7 @@ use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
-use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
+use src\ubis\application\services\CentroNombreResolver;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
@@ -41,9 +39,7 @@ final class CalendarioListasDatos
         private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
         private CasaRepositoryInterface $casaRepository,
         private CentroRepositoryInterface $centroRepository,
-        private CentroDlRepositoryInterface $centroDlRepository,
-        private CentroEllosRepositoryInterface $centroEllosRepository,
-        private CentroEllasRepositoryInterface $centroEllasRepository,
+        private CentroNombreResolver $centroNombreResolver,
         private AsistenteActividadService $asistenteActividadService,
     ) {
     }
@@ -179,7 +175,6 @@ final class CalendarioListasDatos
         $CentroEncargadoRepository = $this->centroEncargadoRepository;
         $CasaRepository = $this->casaRepository;
         $CentroRepository = $this->centroRepository;
-        $CentroDlRepository = $this->centroDlRepository;
         $AsistenteActividadService = $this->asistenteActividadService;
 
         foreach (array_keys($aGrupos) as $key) {
@@ -319,15 +314,7 @@ final class CalendarioListasDatos
                     $txt_ctr = '';
                     foreach ($cCtrsEncargados as $oCentroEncargado) {
                         $id_ubi_ctr = $oCentroEncargado->getId_ubi();
-                        // En DMZ no existe u_centros_dl: centros vía comun (ellos/ellas).
-                        if (ConfigGlobal::is_dmz()) {
-                            $oCentroEnc = (int) substr((string) $id_ubi_ctr, 0, 1) === 2
-                                ? $this->centroEllasRepository->findById($id_ubi_ctr)
-                                : $this->centroEllosRepository->findById($id_ubi_ctr);
-                        } else {
-                            $oCentroEnc = $CentroDlRepository->findById($id_ubi_ctr);
-                        }
-                        $nombre_ctr = $oCentroEnc?->getNombre_ubi() ?? '';
+                        $nombre_ctr = $this->centroNombreResolver->nombre($id_ubi_ctr);
                         $txt_ctr .= empty($txt_ctr) ? $nombre_ctr : "; $nombre_ctr";
                     }
                     $a_ubi_activ[$key][$a]['ctr_encargados'] = $txt_ctr;
