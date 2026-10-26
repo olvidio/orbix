@@ -43,12 +43,10 @@ class LegacyLayout implements LayoutInterface
             }
 
             if ($indice == $indice_old) {
-                if ($full_url !== '') {
-                    if ($url !== '' && str_contains($url, 'fnjs')) {
-                        $li_submenus .= "<li><a class=\"nohref dropdown\" onclick=\"$url;\"  >" . _($menu) . '</a>';
-                    } else {
-                        $li_submenus .= "<li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . '</a>';
-                    }
+                if ($url !== '' && str_contains($url, 'fnjs')) {
+                    $li_submenus .= "<li><a class=\"nohref dropdown\" onclick=\"$url;\"  >" . _($menu) . '</a>';
+                } elseif ($full_url !== '') {
+                    $li_submenus .= "<li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . '</a>';
                 } else {
                     $li_submenus .= "<li><a class=\"nohref dropdown\" >" . _($menu) . '</a>';
                 }
