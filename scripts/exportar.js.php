@@ -275,7 +275,15 @@ function fnjs_convert(node){
 			} else {
 				clas="";
 			}
-			if (rta1) {
+			// td con texto propio mezclado con <br>/<span> (ej: "actividad <span class=alert>[en espera]</span><br>otra"):
+			// los hijos solos pierden el texto huerfano, así que se pasa el html del td tal cual.
+			var tdMixto = $(node).contents().filter(function(){ return this.nodeType === 3 && $.trim(this.nodeValue) !== ''; }).length > 0
+				&& $(node).children('table,div,p,h1,h2,h3,ul,input,select,textarea').length === 0;
+			if (tdMixto) {
+				colSpan=$(node).attr("colspan");
+				if (colSpan== undefined) { Span="";} else {Span=" colspan='"+colSpan+"'"}
+				rta="<td"+Span+clas+">"+$(node).html()+"</td>";
+			} else if (rta1) {
 				rr='';
 				//rr=$(node).contents().not($(node).children()).text();
 				//if (rec<30) alert(tag+" con hijos\n"+rta1);

@@ -267,6 +267,25 @@ You should have received a copy of the GNU General Public License along with thi
 				<xsl:value-of select="node()"/>
 			</text:h>
 		</xsl:when>
+		<xsl:when test="br|span[@class='alert']">
+			<!-- texto mezclado con <br> y avisos (ej: "actividad <span class=alert>[en espera]</span>") -->
+			<xsl:for-each select="node()">
+				<xsl:choose>
+					<xsl:when test="self::br">
+						<text:line-break/>
+					</xsl:when>
+					<xsl:when test="self::span[@class='alert']">
+						<xsl:text> </xsl:text>
+						<text:span text:style-name="T2">
+							<xsl:value-of select="normalize-space(string(.))"/>
+						</text:span>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="normalize-space(string(.))"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+		</xsl:when>
 		<xsl:when test="text()">
 			<xsl:value-of select="normalize-space(string(.))"/>
 		</xsl:when>
