@@ -291,6 +291,20 @@ You should have received a copy of the GNU General Public License along with thi
 				<xsl:value-of select="current()"/>
 			</text:p>
 		</xsl:when>
+		<xsl:when test="br">
+			<!-- un parrafo por cada trozo separado por <br> (si no, las lineas quedan pegadas) -->
+			<xsl:for-each select="node()[not(self::br) and (position()=1 or preceding-sibling::node()[1][self::br])]">
+				<xsl:variable name="n" select="count(preceding-sibling::br)"/>
+				<text:p>
+					<xsl:for-each select=". | following-sibling::node()[not(self::br)][count(preceding-sibling::br)=$n]">
+						<xsl:if test="position() > 1">
+							<xsl:text> </xsl:text>
+						</xsl:if>
+						<xsl:value-of select="normalize-space(string(.))"/>
+					</xsl:for-each>
+				</text:p>
+			</xsl:for-each>
+		</xsl:when>
 		<xsl:when test="span">
 			<text:p>
 				<xsl:value-of select="current()"/>
