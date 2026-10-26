@@ -13,6 +13,7 @@
  * `tarifa_ajax.php` (dispatcher legacy) siguiendo `refactor.md`.
  */
 
+use frontend\casas\helpers\CasasPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
@@ -29,7 +30,12 @@ $miSfsv = OrbixRuntime::miSfsv();
 
 $oForm = new CasasQue();
 $filtro = ['active' => true];
-if (SessionPerm::havePermOficina('des') || SessionPerm::havePermOficina('vcsd')) {
+// PauType::PAU_CDC (literal 'cdc'): usuario de casa, solo ve su(s) casa(s).
+if (OrbixRuntime::miRolePau() === 'cdc') {
+    $id_pau = CasasPayload::miUsuarioCsvIdPau();
+    $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
+    $oForm->setCasas('casa');
+} elseif (SessionPerm::havePermOficina('des') || SessionPerm::havePermOficina('vcsd')) {
     $oForm->setCasas('all');
 } elseif ($miSfsv === 1) {
     $oForm->setCasas('sv');
