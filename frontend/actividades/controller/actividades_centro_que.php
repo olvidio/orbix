@@ -52,8 +52,8 @@ $filtro = ['active' => true];
 if ($miRolePau === 'ctr') { // PauType::PAU_CTR
     $sessionAuth = $_SESSION['session_auth'] ?? null;
     $oMiUsuario = is_array($sessionAuth) ? ($sessionAuth['MiUsuario'] ?? null) : null;
-    $id_pau = is_object($oMiUsuario) && method_exists($oMiUsuario, 'getCsv_id_pau')
-        ? PayloadCoercion::string($oMiUsuario->getCsv_id_pau())
+    $id_pau = is_object($oMiUsuario) && method_exists($oMiUsuario, 'getCsvIdPauAsString')
+        ? PayloadCoercion::string($oMiUsuario->getCsvIdPauAsString())
         : '';
     $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
     $oForm->setCentros('centro');

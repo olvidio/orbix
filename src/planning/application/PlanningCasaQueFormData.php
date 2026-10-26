@@ -33,7 +33,7 @@ final class PlanningCasaQueFormData
         $filtro = ['active' => true];
 
         if ($oRole->isRolePau(PauType::PAU_CDC)) {
-            $id_pau = method_exists($oMiUsuario, 'getCsv_id_pau') ? $oMiUsuario->getCsv_id_pau() : '';
+            $id_pau = method_exists($oMiUsuario, 'getCsvIdPauAsString') ? $oMiUsuario->getCsvIdPauAsString() : '';
             $filtro['id_ubi_in'] = array_values(array_filter(
                 array_map('intval', explode(',', (string)$id_pau)),
                 static fn ($v) => $v > 0

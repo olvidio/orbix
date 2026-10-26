@@ -20,11 +20,11 @@ public static function miUsuarioCsvIdPau(): string
 {
     $sessionAuth = $_SESSION['session_auth'] ?? null;
     $oMiUsuario = is_array($sessionAuth) ? ($sessionAuth['MiUsuario'] ?? null) : null;
-    if (!is_object($oMiUsuario) || !method_exists($oMiUsuario, 'getCsv_id_pau')) {
+    if (!is_object($oMiUsuario) || !method_exists($oMiUsuario, 'getCsvIdPauAsString')) {
         return '';
     }
 
-    return \frontend\shared\helpers\PayloadCoercion::string($oMiUsuario->getCsv_id_pau());
+    return \frontend\shared\helpers\PayloadCoercion::string($oMiUsuario->getCsvIdPauAsString());
 }
 
 /**

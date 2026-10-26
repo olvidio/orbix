@@ -73,10 +73,10 @@ final class PersonasSelectData
         if (ConfigGlobal::mi_role_pau() === PauType::PAU_NOM) {
             $sessionAuth = $_SESSION['session_auth'] ?? null;
             $oMiUsuario = is_array($sessionAuth) ? ($sessionAuth['MiUsuario'] ?? null) : null;
-            if (!is_object($oMiUsuario) || !method_exists($oMiUsuario, 'getCsv_id_pau')) {
+            if (!is_object($oMiUsuario) || !method_exists($oMiUsuario, 'getCsvIdPauAsString')) {
                 return ['error' => _("No se encuentra el usuario")];
             }
-            $id_nom = (int) $oMiUsuario->getCsv_id_pau();
+            $id_nom = (int) $oMiUsuario->getCsvIdPauAsString();
             $aWhere = ['id_nom' => $id_nom];
             $PersonaDlrepository = $this->personaDlRepository;
             $oPersona = $PersonaDlrepository->findById($id_nom);
