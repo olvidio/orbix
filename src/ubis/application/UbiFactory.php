@@ -27,13 +27,14 @@ final class UbiFactory
 
     public function newUbi(int|string $id_ubi): Casa|Centro|CentroDl|CentroEx|CentroEllas|CentroEllos|null
     {
-        // En DMZ (SV) no hay oDB/oDBP/oDBR: centros solo vía comun (ellos/ellas).
+        // En DMZ (SV) no hay oDB/oDBP/oDBR: centros solo vía comun (ellos/ellas); si no es un centro, es una casa.
         if (ConfigGlobal::is_dmz()) {
             $centroRepository = $this->centroEllosRepository;
             if ((int)substr((string)$id_ubi, 0, 1) === 2) {
                 $centroRepository = $this->centroEllasRepository;
             }
-            return $centroRepository->findById((int)$id_ubi);
+            return $centroRepository->findById((int)$id_ubi)
+                ?? DependencyResolver::get(CasaRepositoryInterface::class)->findById((int)$id_ubi);
         }
 
         if ((int)substr((string)$id_ubi, 0, 1) === 2) {
