@@ -7,6 +7,10 @@ use src\actividades\domain\value_objects\StatusId;
 use src\cambios\domain\AvisoObjetoCatalog;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
+use src\cambios\domain\criteria\CambioUsuarioObjetoPrefField;
+use src\cambios\domain\criteria\CambioUsuarioPropiedadPrefField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\shared\config\ConfigGlobal;
@@ -68,8 +72,13 @@ final class UsuarioFormAvisosData
 
         $a_status = StatusId::getArrayStatus();
 
-        $aWhere = ['id_usuario' => $id_usuario, '_ordre' => 'objeto, dl_org, id_tipo_activ_txt'];
-        $cListaTablas = $this->cambioUsuarioObjetoPrefRepository->getCambioUsuarioObjetoPrefs($aWhere, []);
+        $cListaTablas = $this->cambioUsuarioObjetoPrefRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(CambioUsuarioObjetoPrefField::IdUsuario, $id_usuario))
+                ->orderBy(CambioUsuarioObjetoPrefField::Objeto)
+                ->addOrderBy(CambioUsuarioObjetoPrefField::DlOrg)
+                ->addOrderBy(CambioUsuarioObjetoPrefField::IdTipoActivTxt)
+        );
 
         $aTipos_aviso = AvisoTipoId::getArrayAvisoTipo();
         $aObjetos = AvisoObjetoCatalog::getArrayObjetosPosibles();
@@ -119,9 +128,7 @@ final class UsuarioFormAvisosData
             $a_valores[$i][7] = $aviso_outdate;
             $a_valores[$i][8] = $aTipos_aviso[$aviso_tipo] ?? '';
 
-            $cListaPropiedades = $this->cambioUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadPrefs(
-                ['id_item_usuario_objeto' => $id_item_usuario_objeto]
-            );
+            $cListaPropiedades = $this->cambioUsuarioPropiedadPrefRepository->matching(Criteria::create()->where(Filter::eq(CambioUsuarioPropiedadPrefField::IdItemUsuarioObjeto, $id_item_usuario_objeto)));
             $txt_cambio = '';
             $txt_propiedades = '';
             $c = 0;

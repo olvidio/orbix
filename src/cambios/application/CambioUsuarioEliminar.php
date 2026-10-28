@@ -3,6 +3,9 @@
 namespace src\cambios\application;
 
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
+use src\cambios\domain\criteria\CambioUsuarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Caso de uso: elimina `CambioUsuario` por la clave compuesta seleccionada
@@ -38,13 +41,13 @@ final class CambioUsuarioEliminar
             if ($id_item_cmb === false || $id_usuario === false || $sfsv === false || $aviso_tipo === false) {
                 continue;
             }
-            $aWhere = [
-                'id_item_cambio' => (int)$id_item_cmb,
-                'id_usuario' => (int)$id_usuario,
-                'sfsv' => (int)$sfsv,
-                'aviso_tipo' => (int)$aviso_tipo,
-            ];
-            $cCambiosUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
+            $cCambiosUsuario = $this->cambioUsuarioRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(CambioUsuarioField::IdItemCambio, (int)$id_item_cmb))
+                    ->andWhere(Filter::eq(CambioUsuarioField::IdUsuario, (int)$id_usuario))
+                    ->andWhere(Filter::eq(CambioUsuarioField::Sfsv, (int)$sfsv))
+                    ->andWhere(Filter::eq(CambioUsuarioField::AvisoTipo, (int)$aviso_tipo))
+            );
             foreach ($cCambiosUsuario as $oCambioUsuario) {
                 if ($this->cambioUsuarioRepository->Eliminar($oCambioUsuario) === false) {
                     $errores[] = $this->cambioUsuarioRepository->getErrorTxt();

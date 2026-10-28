@@ -2,6 +2,7 @@
 
 namespace src\cambios\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
 
 
@@ -20,6 +21,12 @@ interface CambioUsuarioPropiedadPrefRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * @return list<CambioUsuarioPropiedadPref>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<CambioUsuarioPropiedadPref>

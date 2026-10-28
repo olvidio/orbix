@@ -2,6 +2,7 @@
 
 namespace src\cambios\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\cambios\domain\entity\CambioUsuarioObjetoPref;
 
 
@@ -20,11 +21,25 @@ interface CambioUsuarioObjetoPrefRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * @return list<CambioUsuarioObjetoPref>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<CambioUsuarioObjetoPref>
      */
     public function getCambioUsuarioObjetoPrefs(array $aWhere = [], array $aOperators = []): array;
+
+    /**
+     * Preferencias de aviso de un objeto y dl cuyo patrón `id_tipo_activ_txt` (regex en la columna)
+     * encaja con el id de tipo de actividad dado. Orden: `aviso_tipo, id_usuario, id_tipo_activ_txt DESC`.
+     *
+     * @return list<CambioUsuarioObjetoPref>
+     */
+    public function findPorTipoActividad(string $objeto, string $dlOrg, string $idTipoActiv): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

@@ -6,6 +6,9 @@ use DateInvalidTimeZoneException;
 use DateTimeZone;
 use frontend\shared\web\Lista;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
+use src\cambios\domain\criteria\CambioUsuarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\cambios\domain\entity\Cambio;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\shared\config\ConfigGlobal;
@@ -71,13 +74,14 @@ class AvisosEncolarMails
         $aviso_tipo = AvisoTipoId::TIPO_MAIL;
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-        $aWhere = [
-            '_ordre' => 'id_usuario,id_item_cambio',
-            'aviso_tipo' => $aviso_tipo,
-            'avisado' => 'false',
-            'sfsv' => $mi_sfsv,
-        ];
-        $cCambiosUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
+        $cCambiosUsuario = $this->cambioUsuarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(CambioUsuarioField::AvisoTipo, $aviso_tipo))
+                ->andWhere(Filter::eq(CambioUsuarioField::Avisado, false))
+                ->andWhere(Filter::eq(CambioUsuarioField::Sfsv, $mi_sfsv))
+                ->orderBy(CambioUsuarioField::IdUsuario)
+                ->addOrderBy(CambioUsuarioField::IdItemCambio)
+        );
 
         $encolados = 0;
         $sinEmail = 0;
@@ -235,14 +239,13 @@ class AvisosEncolarMails
             if (count($ids) < 4) {
                 continue;
             }
-            $aWhere = [
-                'id_item_cambio' => (int) $ids[0],
-                'id_usuario' => (int) $ids[1],
-                'sfsv' => (int) $ids[2],
-                'aviso_tipo' => (int) $ids[3],
-            ];
-
-            $cCambiosUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
+            $cCambiosUsuario = $this->cambioUsuarioRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(CambioUsuarioField::IdItemCambio, (int) $ids[0]))
+                    ->andWhere(Filter::eq(CambioUsuarioField::IdUsuario, (int) $ids[1]))
+                    ->andWhere(Filter::eq(CambioUsuarioField::Sfsv, (int) $ids[2]))
+                    ->andWhere(Filter::eq(CambioUsuarioField::AvisoTipo, (int) $ids[3]))
+            );
             foreach ($cCambiosUsuario as $oCambioUsuario) {
                 if ($this->cambioUsuarioRepository->Eliminar($oCambioUsuario) === false) {
                     $errores[] = _("Hay un error, no se ha eliminado")

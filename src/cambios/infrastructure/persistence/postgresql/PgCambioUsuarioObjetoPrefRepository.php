@@ -3,13 +3,16 @@
 namespace src\cambios\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\cambios\domain\criteria\CambioUsuarioObjetoPrefField;
 use PDO;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioObjetoPref;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
+use src\shared\traits\RunsCriteriaQueries;
 
 /**
  * Clase que adapta la tabla av_cambios_usuario_objeto_pref a la interfaz del repositorio
@@ -23,6 +26,10 @@ use src\shared\traits\HandlesPdoErrors;
 class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements CambioUsuarioObjetoPrefRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
@@ -34,76 +41,62 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * CambioUsuarioObjetoPref que cumplen el criterio.
+     *
+     * @return list<CambioUsuarioObjetoPref>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(CambioUsuarioObjetoPrefField::class, self::COLUMNAS);
+        $result = [];
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
+            $result[] = CambioUsuarioObjetoPref::fromArray($this->normalizeAssocRow($aDatos));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<CambioUsuarioObjetoPref>
      */
     public function getCambioUsuarioObjetoPrefs(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl_Select();
+        $adapter = new LegacyWhereAdapter(CambioUsuarioObjetoPrefField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
+    }
+
+    /**
+     * @return list<CambioUsuarioObjetoPref>
+     */
+    public function findPorTipoActividad(string $objeto, string $dlOrg, string $idTipoActiv): array
+    {
         $nom_tabla = $this->getNomTabla();
-        $CambioUsuarioObjetoPrefSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla WHERE objeto = :objeto AND dl_org = :dl_org"
+            . " AND :id_tipo_activ::text ~ id_tipo_activ_txt"
+            . " ORDER BY aviso_tipo,id_usuario,id_tipo_activ_txt DESC";
+        $stmt = $this->prepareAndExecute(
+            $this->getoDbl_Select(),
+            $sQry,
+            ['objeto' => $objeto, 'dl_org' => $dlOrg, 'id_tipo_activ' => $idTipoActiv],
+            __METHOD__,
+            __FILE__,
+            __LINE__
+        );
         if ($stmt === false) {
             return [];
         }
 
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {
+        $result = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $aDatos = $this->normalizeAssocRow($aDatos);
-            $CambioUsuarioObjetoPref = CambioUsuarioObjetoPref::fromArray($aDatos);
-            $CambioUsuarioObjetoPrefSet->add($CambioUsuarioObjetoPref);
+            $result[] = CambioUsuarioObjetoPref::fromArray($this->normalizeAssocRow($aDatos));
         }
-        /** @var list<CambioUsuarioObjetoPref> $result */
-        $result = array_values($CambioUsuarioObjetoPrefSet->getTot());
+
         return $result;
     }
 

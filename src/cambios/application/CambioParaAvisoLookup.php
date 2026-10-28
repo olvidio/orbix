@@ -4,6 +4,9 @@ namespace src\cambios\application;
 
 use src\cambios\domain\contracts\CambioDlRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
+use src\cambios\domain\criteria\CambioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\cambios\domain\entity\Cambio;
 
 /**
@@ -22,17 +25,16 @@ final class CambioParaAvisoLookup
 
     public function find(int $id_schema_cambio, int $id_item_cambio): ?Cambio
     {
-        $aWhere = [
-            'id_schema' => $id_schema_cambio,
-            'id_item_cambio' => $id_item_cambio,
-        ];
+        $criteria = Criteria::create()
+            ->where(Filter::eq(CambioField::IdSchema, $id_schema_cambio))
+            ->andWhere(Filter::eq(CambioField::IdItemCambio, $id_item_cambio));
 
-        $cCambios = $this->cambioDlRepository->getCambios($aWhere);
+        $cCambios = $this->cambioDlRepository->matching($criteria);
         if ($cCambios !== []) {
             return $cCambios[0];
         }
 
-        $cCambios = $this->cambioRepository->getCambios($aWhere);
+        $cCambios = $this->cambioRepository->matching($criteria);
         if ($cCambios !== []) {
             return $cCambios[0];
         }

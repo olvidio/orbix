@@ -9,6 +9,10 @@ use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\cambios\application\ActividadParaAvisoLookup;
 use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
+use src\cambios\domain\criteria\CambioAnotadoField;
+use src\cambios\domain\criteria\CambioUsuarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\cambios\domain\entity\CambioAnotado;
 use src\cambios\domain\entity\CambioUsuario;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -134,15 +138,14 @@ class Avisos
     {
         $sfsv = ConfigGlobal::mi_sfsv();
 
-        $aWhere = [
-            'id_schema_cambio' => $this->id_schema_cmb,
-            'id_item_cambio' => $this->id_item_cmb,
-            'sfsv' => $sfsv,
-            'id_usuario' => $this->id_usuario,
-            'aviso_tipo' => $aviso_tipo,
-        ];
-
-        $cCambioUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
+        $cCambioUsuario = $this->cambioUsuarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(CambioUsuarioField::IdSchemaCambio, $this->id_schema_cmb))
+                ->andWhere(Filter::eq(CambioUsuarioField::IdItemCambio, $this->id_item_cmb))
+                ->andWhere(Filter::eq(CambioUsuarioField::Sfsv, $sfsv))
+                ->andWhere(Filter::eq(CambioUsuarioField::IdUsuario, $this->id_usuario))
+                ->andWhere(Filter::eq(CambioUsuarioField::AvisoTipo, $aviso_tipo))
+        );
 
         $err_fila = '';
         if (count($cCambioUsuario) > 0) {
@@ -179,13 +182,13 @@ class Avisos
         $server = is_numeric($serverRaw) ? (int) $serverRaw : 0;
 
         // marcar como apuntado
-        $aWhere = [
-            'id_schema_cambio' => $this->id_schema_cmb,
-            'id_item_cambio' => $this->id_item_cmb,
-            'server' => $server,
-        ];
         $this->cambioAnotadoRepository->setTabla((string) $ubicacion);
-        $cCambiosAnotados = $this->cambioAnotadoRepository->getCambiosAnotados($aWhere);
+        $cCambiosAnotados = $this->cambioAnotadoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(CambioAnotadoField::IdSchemaCambio, $this->id_schema_cmb))
+                ->andWhere(Filter::eq(CambioAnotadoField::IdItemCambio, $this->id_item_cmb))
+                ->andWhere(Filter::eq(CambioAnotadoField::Server, $server))
+        );
         // deberia ser unico
         if (count($cCambiosAnotados) > 0) {
             $oCambioAnotado = $cCambiosAnotados[0];

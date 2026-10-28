@@ -5,6 +5,9 @@ namespace Tests\unit\cambios\application;
 use PHPUnit\Framework\TestCase;
 use src\cambios\application\CambioUsuarioEliminar;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
+use src\cambios\domain\criteria\CambioUsuarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\cambios\domain\entity\CambioUsuario;
 
 final class CambioUsuarioEliminarTest extends TestCase
@@ -24,13 +27,12 @@ final class CambioUsuarioEliminarTest extends TestCase
     {
         $repo = $this->createMock(CambioUsuarioRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getCambiosUsuario')
-            ->with([
-                'id_item_cambio' => 10,
-                'id_usuario' => 20,
-                'sfsv' => 1,
-                'aviso_tipo' => 3,
-            ])
+            ->method('matching')
+            ->with(Criteria::create()
+                ->where(Filter::eq(CambioUsuarioField::IdItemCambio, 10))
+                ->andWhere(Filter::eq(CambioUsuarioField::IdUsuario, 20))
+                ->andWhere(Filter::eq(CambioUsuarioField::Sfsv, 1))
+                ->andWhere(Filter::eq(CambioUsuarioField::AvisoTipo, 3)))
             ->willReturn([]);
 
         $useCase = new CambioUsuarioEliminar($repo);
@@ -46,7 +48,7 @@ final class CambioUsuarioEliminarTest extends TestCase
         $o = $this->createMock(CambioUsuario::class);
 
         $repo = $this->createMock(CambioUsuarioRepositoryInterface::class);
-        $repo->method('getCambiosUsuario')->willReturn([$o]);
+        $repo->method('matching')->willReturn([$o]);
         $repo->method('Eliminar')->with($o)->willReturn(true);
 
         $useCase = new CambioUsuarioEliminar($repo);
@@ -62,7 +64,7 @@ final class CambioUsuarioEliminarTest extends TestCase
         $o = $this->createMock(CambioUsuario::class);
 
         $repo = $this->createMock(CambioUsuarioRepositoryInterface::class);
-        $repo->method('getCambiosUsuario')->willReturn([$o]);
+        $repo->method('matching')->willReturn([$o]);
         $repo->method('Eliminar')->with($o)->willReturn(false);
         $repo->method('getErrorTxt')->willReturn('fallo sql');
 

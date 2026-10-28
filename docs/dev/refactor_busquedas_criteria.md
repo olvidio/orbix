@@ -431,7 +431,11 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - Migrados los 10 llamantes del módulo (`SincroDB`, `VincularIdMatch` —`primerMatch` recibe ahora un `Criteria`— y 7 casos de uso/data). `VincularIdMatchTest` compara el `Criteria` recibido con `==`.
     - Se quedan fuera: `PgPersonaBDURepository::getIdMatchPersonas` (tabla temporal `tmp_bdu`, sin llamantes) y `OdbcDlListasRepository::getDlListas` (acceso ODBC a una BD externa, sin `RunsCriteriaQueries`; su única llamada no pasa filtros). `SincroDB` sigue llamando a `getPersonas` de `personas` con arrays (4.3.personas).
     - Test: `PgIdMatchPersonaMatchingTest` (2 tests, equivalencia con legacy). Suites verdes: unit e integration de `dbextern`.
-  - [ ] **4.3.cambios** (`~INV`)
+  - [x] **4.3.cambios** (`~INV`) Decisiones:
+    - Cinco enums en `src/cambios/domain/criteria/` (`CambioField` sin los jsonb `json_fases_*`, `CambioUsuarioField`, `CambioAnotadoField`, `CambioUsuarioObjetoPrefField`, `CambioUsuarioPropiedadPrefField`); `COLUMNAS = []`. `matching()` en las 5 interfaces y repos (`PgCambioDlRepository` hereda el de `PgCambioRepository`, que conserva `hydrateCambioRowFromPg`); `getCambios`/`getCambiosUsuario`/`getCambiosAnotados`/`getCambioUsuarioObjetoPrefs`/`getCambioUsuarioPropiedadPrefs` `@deprecated` como envoltorios.
+    - `~INV` (patrón en la columna): método con nombre `CambioUsuarioObjetoPrefRepository::findPorTipoActividad(objeto, dlOrg, idTipoActiv)` con su propio SQL (`:id::text ~ id_tipo_activ_txt`), usado por `AvisosGenerarTabla`. `'avisado' => 'false'` pasa a `Filter::eq(Avisado, false)`.
+    - Migrados todos los llamantes de `src/cambios/application/` (incl. `legacy/Avisos`). Fuera del módulo no había llamantes. Tests unitarios (`AvisosEncolarMails`, `CambioParaAvisoLookup`, `CambioUsuarioEliminar`, `UsuarioFormAvisosData`, `AvisosGenerarListaData`) mockean `matching`; los de integración que usan `getXxx` quedan como caracterización sin cambios.
+    - Test: `PgCambiosMatchingTest` (5 tests, equivalencia con legacy incl. `findPorTipoActividad` frente a `~INV`). Suites verdes: unit e integration de `cambios` (72 tests; con `stopOnFailure` el directorio aborta de forma intermitente por la inestabilidad conocida, pasa completo sin él).
   - [ ] **4.3.actividades**
   - [ ] **4.3.procesos**
   - [ ] **4.3.actividadessacd**

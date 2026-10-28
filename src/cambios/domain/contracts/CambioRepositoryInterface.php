@@ -2,6 +2,7 @@
 
 namespace src\cambios\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use JsonException;
 use src\cambios\domain\entity\Cambio;
 
@@ -30,6 +31,12 @@ interface CambioRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * @return list<Cambio>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<Cambio>

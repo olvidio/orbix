@@ -4,6 +4,9 @@ namespace src\cambios\application;
 
 use DateTimeZone;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
+use src\cambios\domain\criteria\CambioUsuarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -104,13 +107,13 @@ final class AvisosGenerarListaData
         /** @var array<int, string> $aSecciones */
         $aSecciones = [1 => $dele, 2 => $dele . 'f'];
 
-        $aWhere = [
-            'id_usuario' => $id_usuario,
-            'sfsv' => $mi_sfsv,
-            'aviso_tipo' => $aviso_tipo,
-            'avisado' => 'false',
-        ];
-        $cCambiosUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
+        $cCambiosUsuario = $this->cambioUsuarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(CambioUsuarioField::IdUsuario, $id_usuario))
+                ->andWhere(Filter::eq(CambioUsuarioField::Sfsv, $mi_sfsv))
+                ->andWhere(Filter::eq(CambioUsuarioField::AvisoTipo, $aviso_tipo))
+                ->andWhere(Filter::eq(CambioUsuarioField::Avisado, false))
+        );
 
         $i = 0;
         foreach ($cCambiosUsuario as $oCambioUsuario) {

@@ -12,6 +12,9 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
+use src\cambios\domain\criteria\CambioUsuarioPropiedadPrefField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\cambios\domain\entity\Cambio;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
@@ -164,14 +167,11 @@ class AvisosGenerarTabla
                     }
                 }
 
-                $aWhere = [];
-                $aOperador = [];
-                $aWhere['objeto'] = $sObjeto;
-                $aWhere['dl_org'] = (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)) ? 'x' : $dl_org;
-                $aWhere['id_tipo_activ_txt'] = $id_tipo_activ;
-                $aOperador['id_tipo_activ_txt'] = '~INV';
-                $aWhere['_ordre'] = 'aviso_tipo,id_usuario,id_tipo_activ_txt DESC';
-                $cCambiosUsuarioObjeto = $CambioUsuarioObjetoPrefRepository->getCambioUsuarioObjetoPrefs($aWhere, $aOperador);
+                $cCambiosUsuarioObjeto = $CambioUsuarioObjetoPrefRepository->findPorTipoActividad(
+                    (string) $sObjeto,
+                    (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($dl_propia)) ? 'x' : (string) $dl_org,
+                    (string) $id_tipo_activ
+                );
                 if ($cCambiosUsuarioObjeto === []) {
                     $oAvisos->anotado();
                     continue;
@@ -321,7 +321,7 @@ class AvisosGenerarTabla
                     }
 
                     if ($fase_correcta === 1) {
-                        $cListaPropiedades = $CambiosUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadPrefs(['id_item_usuario_objeto' => $id_item_usuario_objeto]);
+                        $cListaPropiedades = $CambiosUsuarioPropiedadPrefRepository->matching(Criteria::create()->where(Filter::eq(CambioUsuarioPropiedadPrefField::IdItemUsuarioObjeto, $id_item_usuario_objeto)));
                         if ($cListaPropiedades === []) {
                             if ($oAvisos->me_afecta($propiedad_cmb ?? '', $id_activ, $valor_old_cmb, $valor_new_cmb, $id_pau, (string) $sObjeto)) {
                                 $apuntar = true;

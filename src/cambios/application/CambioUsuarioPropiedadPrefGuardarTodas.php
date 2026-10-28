@@ -3,6 +3,9 @@
 namespace src\cambios\application;
 
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
+use src\cambios\domain\criteria\CambioUsuarioPropiedadPrefField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
 
 /**
@@ -111,9 +114,7 @@ final class CambioUsuarioPropiedadPrefGuardarTodas
             }
         }
 
-        $cLista = $this->cambioUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadPrefs(
-            ['id_item_usuario_objeto' => $id_item_usuario_objeto]
-        );
+        $cLista = $this->cambioUsuarioPropiedadPrefRepository->matching(Criteria::create()->where(Filter::eq(CambioUsuarioPropiedadPrefField::IdItemUsuarioObjeto, $id_item_usuario_objeto)));
         $a_item_tot = [];
         $a_propiedades_tot = [];
         $c = 0;

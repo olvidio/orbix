@@ -57,13 +57,8 @@ final class AvisosEncolarMailsTest extends TestCase
 
         $cambioUsuarioRepo = $this->createMock(CambioUsuarioRepositoryInterface::class);
         $cambioUsuarioRepo->expects($this->exactly(2))
-            ->method('getCambiosUsuario')
-            ->willReturnCallback(static function (array $aWhere) use ($cambioUsuario): array {
-                if (isset($aWhere['id_item_cambio'])) {
-                    return [$cambioUsuario];
-                }
-                return [$cambioUsuario];
-            });
+            ->method('matching')
+            ->willReturn([$cambioUsuario]);
         $cambioUsuarioRepo->expects($this->once())
             ->method('Eliminar')
             ->with($cambioUsuario)
@@ -91,9 +86,9 @@ final class AvisosEncolarMailsTest extends TestCase
         $cambio->setDl_org('dlb');
 
         $dlRepo = $this->createMock(CambioDlRepositoryInterface::class);
-        $dlRepo->method('getCambios')->willReturn([$cambio]);
+        $dlRepo->method('matching')->willReturn([$cambio]);
         $publicRepo = $this->createMock(CambioRepositoryInterface::class);
-        $publicRepo->method('getCambios')->willReturn([]);
+        $publicRepo->method('matching')->willReturn([]);
         $cambioLookup = new CambioParaAvisoLookup($publicRepo, $dlRepo);
 
         $personaNombre = $this->createMock(PersonaNombreParaAvisoInterface::class);
@@ -158,7 +153,7 @@ final class AvisosEncolarMailsTest extends TestCase
         $cambioUsuario->setAvisado(false);
 
         $cambioUsuarioRepo = $this->createMock(CambioUsuarioRepositoryInterface::class);
-        $cambioUsuarioRepo->method('getCambiosUsuario')->willReturn([$cambioUsuario]);
+        $cambioUsuarioRepo->method('matching')->willReturn([$cambioUsuario]);
         $cambioUsuarioRepo->expects($this->never())->method('Eliminar');
 
         $usuario = $this->createMock(Usuario::class);

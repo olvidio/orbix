@@ -4,6 +4,9 @@ namespace src\cambios\application;
 
 use src\cambios\domain\AvisoObjetoCatalog;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
+use src\cambios\domain\criteria\CambioUsuarioPropiedadPrefField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\config\ConfigGlobal;
 use src\shared\security\HashB;
 use src\usuarios\domain\entity\Role;
@@ -52,9 +55,7 @@ final class CambioUsuarioObjetoPrefPropiedadesData
         $a_condicion_sel = [];
         $a_cambio_propiedad_sel = [];
         if ($id_item_usuario_objeto > 0) {
-            $cListaCampos = $this->cambioUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadPrefs(
-                ['id_item_usuario_objeto' => $id_item_usuario_objeto]
-            );
+            $cListaCampos = $this->cambioUsuarioPropiedadPrefRepository->matching(Criteria::create()->where(Filter::eq(CambioUsuarioPropiedadPrefField::IdItemUsuarioObjeto, $id_item_usuario_objeto)));
             $c = 0;
             foreach ($cListaCampos as $oProp) {
                 $c++;

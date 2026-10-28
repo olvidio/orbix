@@ -85,10 +85,10 @@ final class UsuarioFormAvisosDataTest extends TestCase
         $pref->method('isAviso_outdate')->willReturn(false);
 
         $objetoRepo = $this->createMock(CambioUsuarioObjetoPrefRepositoryInterface::class);
-        $objetoRepo->method('getCambioUsuarioObjetoPrefs')->willReturn([$pref]);
+        $objetoRepo->method('matching')->willReturn([$pref]);
 
         $propiedadRepo = $this->createMock(CambioUsuarioPropiedadPrefRepositoryInterface::class);
-        $propiedadRepo->method('getCambioUsuarioPropiedadPrefs')->willReturn([]);
+        $propiedadRepo->method('matching')->willReturn([]);
 
         $useCase = new UsuarioFormAvisosData(
             $usuarioRepository,

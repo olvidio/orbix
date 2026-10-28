@@ -83,7 +83,7 @@ final class AvisosGenerarListaDataTest extends TestCase
         $preferenciaRepository->method('findById')->willReturn(null);
 
         $cambioUsuarioRepository = $this->createMock(CambioUsuarioRepositoryInterface::class);
-        $cambioUsuarioRepository->method('getCambiosUsuario')->willReturn([]);
+        $cambioUsuarioRepository->method('matching')->willReturn([]);
 
         $useCase = $this->createUseCase($usuarioRepository, $preferenciaRepository, $cambioUsuarioRepository);
 

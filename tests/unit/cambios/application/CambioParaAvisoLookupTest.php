@@ -8,7 +8,10 @@ use PHPUnit\Framework\TestCase;
 use src\cambios\application\CambioParaAvisoLookup;
 use src\cambios\domain\contracts\CambioDlRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
+use src\cambios\domain\criteria\CambioField;
 use src\cambios\domain\entity\Cambio;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 final class CambioParaAvisoLookupTest extends TestCase
 {
@@ -20,14 +23,14 @@ final class CambioParaAvisoLookupTest extends TestCase
 
         $dlRepository = $this->createMock(CambioDlRepositoryInterface::class);
         $dlRepository->expects($this->once())
-            ->method('getCambios')
-            ->with(['id_schema' => 3000, 'id_item_cambio' => 42])
+            ->method('matching')
+            ->with(Criteria::create()->where(Filter::eq(CambioField::IdSchema, 3000))->andWhere(Filter::eq(CambioField::IdItemCambio, 42)))
             ->willReturn([]);
 
         $publicRepository = $this->createMock(CambioRepositoryInterface::class);
         $publicRepository->expects($this->once())
-            ->method('getCambios')
-            ->with(['id_schema' => 3000, 'id_item_cambio' => 42])
+            ->method('matching')
+            ->with(Criteria::create()->where(Filter::eq(CambioField::IdSchema, 3000))->andWhere(Filter::eq(CambioField::IdItemCambio, 42)))
             ->willReturn([$cambioPublic]);
 
         $lookup = new CambioParaAvisoLookup($publicRepository, $dlRepository);
@@ -43,12 +46,12 @@ final class CambioParaAvisoLookupTest extends TestCase
 
         $dlRepository = $this->createMock(CambioDlRepositoryInterface::class);
         $dlRepository->expects($this->once())
-            ->method('getCambios')
-            ->with(['id_schema' => 3001, 'id_item_cambio' => 7])
+            ->method('matching')
+            ->with(Criteria::create()->where(Filter::eq(CambioField::IdSchema, 3001))->andWhere(Filter::eq(CambioField::IdItemCambio, 7)))
             ->willReturn([$cambioDl]);
 
         $publicRepository = $this->createMock(CambioRepositoryInterface::class);
-        $publicRepository->expects($this->never())->method('getCambios');
+        $publicRepository->expects($this->never())->method('matching');
 
         $lookup = new CambioParaAvisoLookup($publicRepository, $dlRepository);
 
@@ -58,10 +61,10 @@ final class CambioParaAvisoLookupTest extends TestCase
     public function test_find_devuelve_null_si_no_hay_cambio(): void
     {
         $dlRepository = $this->createMock(CambioDlRepositoryInterface::class);
-        $dlRepository->method('getCambios')->willReturn([]);
+        $dlRepository->method('matching')->willReturn([]);
 
         $publicRepository = $this->createMock(CambioRepositoryInterface::class);
-        $publicRepository->method('getCambios')->willReturn([]);
+        $publicRepository->method('matching')->willReturn([]);
 
         $lookup = new CambioParaAvisoLookup($publicRepository, $dlRepository);
 
