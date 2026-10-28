@@ -3,6 +3,7 @@
 namespace src\menus\domain\contracts;
 
 use src\menus\domain\entity\GrupMenuRole;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase GrupMenuRole y su Repositorio
@@ -19,8 +20,16 @@ interface GrupMenuRoleRepositoryInterface
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
+	 * Relaciones grupo de menú - role que cumplen el criterio.
+	 *
+	 * @return list<GrupMenuRole>
+	 */
+	public function matching(Criteria $criteria): array;
+
+	/**
 	 * devuelve una colección (array) de objetos de tipo GrupMenuRole
 	 *
+	 * @deprecated usar matching(Criteria)
 	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
 	 * @return list<GrupMenuRole> Una colección de objetos de tipo GrupMenuRole

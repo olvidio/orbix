@@ -52,7 +52,7 @@ final class MenuLinkSpecUseCasesTest extends TestCase
     {
         $repository = $this->createMock(MenuDbRepositoryInterface::class);
         $repository->expects($this->exactly(2))
-            ->method('getMenuDbs')
+            ->method('matching')
             ->willReturnOnConsecutiveCalls([], [$this->menu()]);
         $useCase = new MenusBurgerLayoutDataUseCase($repository, $this->metaMenuRepository());
 
@@ -89,7 +89,7 @@ final class MenuLinkSpecUseCasesTest extends TestCase
     {
         $repository = $this->createMock(MenuDbRepositoryInterface::class);
         $repository->expects($this->once())
-            ->method('getMenuDbs')
+            ->method('matching')
             ->willReturn($menus);
 
         return $repository;

@@ -10,6 +10,7 @@ use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\GrupMenu;
+use src\shared\domain\criteria\Criteria;
 use src\menus\domain\entity\GrupMenuRole;
 use src\menus\domain\entity\MenuDb;
 
@@ -49,7 +50,7 @@ final class GrupMenuColeccionUseCaseTest extends TestCase
         $_SESSION['session_auth']['id_role'] = 5;
 
         $gmRoleRepo = $this->createMock(GrupMenuRoleRepositoryInterface::class);
-        $gmRoleRepo->method('getGrupMenuRoles')->willReturn([]);
+        $gmRoleRepo->method('matching')->willReturn([]);
 
         $useCase = new GrupMenuColeccionUseCase(
             $gmRoleRepo,
@@ -73,13 +74,12 @@ final class GrupMenuColeccionUseCaseTest extends TestCase
         $stubMenu->setId_menu(1);
 
         $gmRoleRepo = $this->createMock(GrupMenuRoleRepositoryInterface::class);
-        $gmRoleRepo->method('getGrupMenuRoles')->willReturn([$r1, $r2]);
+        $gmRoleRepo->method('matching')->willReturn([$r1, $r2]);
 
         $menuRepo = $this->createMock(MenuDbRepositoryInterface::class);
-        $menuRepo->method('getMenuDbs')->willReturnMap([
-            [['id_grupmenu' => 1], [$stubMenu]],
-            [['id_grupmenu' => 2], []],
-        ]);
+        $menuRepo->method('matching')->willReturnCallback(
+            static fn (Criteria $c): array => $c->filters()[0]->value === 1 ? [$stubMenu] : []
+        );
 
         $gA = new GrupMenu();
         $gA->setId_grupmenu(1);
@@ -112,10 +112,10 @@ final class GrupMenuColeccionUseCaseTest extends TestCase
         $m->setId_menu(1);
 
         $gmRoleRepo = $this->createMock(GrupMenuRoleRepositoryInterface::class);
-        $gmRoleRepo->method('getGrupMenuRoles')->willReturn([$r1, $r2]);
+        $gmRoleRepo->method('matching')->willReturn([$r1, $r2]);
 
         $menuRepo = $this->createMock(MenuDbRepositoryInterface::class);
-        $menuRepo->method('getMenuDbs')->willReturn([$m]);
+        $menuRepo->method('matching')->willReturn([$m]);
 
         $gLate = new GrupMenu();
         $gLate->setId_grupmenu(1);

@@ -5,7 +5,10 @@ namespace src\menus\domain;
 /* No vale el underscore en el nombre */
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuField;
 use src\menus\domain\entity\GrupMenu;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoGrupMenus extends DatosInfoRepo
@@ -30,13 +33,12 @@ class InfoGrupMenus extends DatosInfoRepo
     public function getColeccion(): array
     {
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'orden'];
-            $aOperador = [];
+            $criteria = Criteria::create()->orderBy(GrupMenuField::Orden);
         } else {
-            $aWhere = ['descripcion' => $this->k_buscar];
-            $aOperador = ['descripcion' => 'sin_acentos'];
+            // La tabla no tiene columna `descripcion` (la consulta legacy fallaba): se busca por el nombre del grupo.
+            $criteria = Criteria::create()->where(Filter::matchesUnaccented(GrupMenuField::GrupMenu, $this->k_buscar));
         }
 
-        return $this->grupMenuRepository->getGrupMenus($aWhere, $aOperador);
+        return $this->grupMenuRepository->matching($criteria);
     }
 }

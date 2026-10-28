@@ -3,6 +3,8 @@
 namespace src\menus\application;
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuField;
+use src\shared\domain\criteria\Criteria;
 use src\shared\security\HashB;
 
 class GrupMenuListaUseCase
@@ -15,7 +17,7 @@ class GrupMenuListaUseCase
     /** @return array{a_lista: array<int, string>, a_valores: array<int, array{sel: string, ctx_eliminar: string, 1: string, 2: int|null}>} */
     public function __invoke(): array
     {
-        $cGrupMenus = $this->grupMenuRepository->getGrupMenus(['_ordre' => 'orden']);
+        $cGrupMenus = $this->grupMenuRepository->matching(Criteria::create()->orderBy(GrupMenuField::Orden));
 
         $a_lista = [];
         $a_valores = [];

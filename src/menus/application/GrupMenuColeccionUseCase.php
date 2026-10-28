@@ -5,6 +5,10 @@ namespace src\menus\application;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuRoleField;
+use src\menus\domain\criteria\MenuDbField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Grupmenus visibles para el usuario actual, mismo criterio que el menú lateral en {@see \index.php}:
@@ -30,7 +34,9 @@ class GrupMenuColeccionUseCase
             return [];
         }
 
-        $cGrupMenuRoles = $this->grupMenuRoleRepository->getGrupMenuRoles(['id_role' => $id_role]);
+        $cGrupMenuRoles = $this->grupMenuRoleRepository->matching(
+            Criteria::create()->where(Filter::eq(GrupMenuRoleField::IdRole, $id_role))
+        );
 
         $out = [];
         foreach ($cGrupMenuRoles as $oGrupMenuRole) {
@@ -39,7 +45,9 @@ class GrupMenuColeccionUseCase
                 continue;
             }
 
-            $cMenuDbs = $this->menuDbRepository->getMenuDbs(['id_grupmenu' => $id_gm]);
+            $cMenuDbs = $this->menuDbRepository->matching(
+                Criteria::create()->where(Filter::eq(MenuDbField::IdGrupmenu, $id_gm))
+            );
             if (count($cMenuDbs) < 1) {
                 continue;
             }

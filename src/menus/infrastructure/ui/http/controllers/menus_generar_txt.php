@@ -16,10 +16,18 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\config\ServerConf;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
+use src\menus\domain\criteria\MenuDbField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /** @var MenuDbRepositoryInterface $MenusRepository */
 $MenusRepository = DependencyResolver::get(MenuDbRepositoryInterface::class);
-$cMenus = $MenusRepository->getMenuDbs(['ok' => 't', '_ordre' => 'id_grupmenu,orden']);
+$cMenus = $MenusRepository->matching(
+    Criteria::create()
+        ->where(Filter::eq(MenuDbField::Ok, true))
+        ->orderBy(MenuDbField::IdGrupmenu)
+        ->addOrderBy(MenuDbField::Orden)
+);
 
 $texto = "<?php\n //Menus interiores\n";
 

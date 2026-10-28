@@ -4,7 +4,10 @@ namespace src\menus\application;
 
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
+use src\menus\domain\criteria\MenuDbField;
 use src\menus\domain\entity\MenuDb;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\config\ConfigGlobal;
 
 /**
@@ -26,18 +29,19 @@ final class MenusBurgerLayoutDataUseCase
     public function __invoke(array $listaGrupMenu): array
     {
 
-        $aWhere = [
-            'id_grupmenu' => 1,
-            '_ordre' => 'id_grupmenu,orden',
-        ];
-        $cMenusUtilidades = $this->menuDbRepository->getMenuDbs($aWhere, []);
+        $cMenusUtilidades = $this->menuDbRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(MenuDbField::IdGrupmenu, 1))
+                ->orderBy(MenuDbField::IdGrupmenu)
+                ->addOrderBy(MenuDbField::Orden)
+        );
 
-        $aWhere = [
-            'id_grupmenu' => 1,
-            '_ordre' => 'id_grupmenu,orden',
-        ];
-        $aOperador = ['id_grupmenu' => '!='];
-        $cMenuDbs = $this->menuDbRepository->getMenuDbs($aWhere, $aOperador);
+        $cMenuDbs = $this->menuDbRepository->matching(
+            Criteria::create()
+                ->where(Filter::neq(MenuDbField::IdGrupmenu, 1))
+                ->orderBy(MenuDbField::IdGrupmenu)
+                ->addOrderBy(MenuDbField::Orden)
+        );
 
         $userMenuNodes = $this->buildUserMenuNodes($cMenusUtilidades);
         $menuConfig = $this->buildMenuStructure($cMenuDbs, $listaGrupMenu);

@@ -401,7 +401,12 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - `CartaPresentacionField` (7 campos); `COLUMNAS = []`. `matching()` en interfaz y `PgCartaPresentacionRepository`; `getCartasPresentacion` `@deprecated` como envoltorio. Las subclases `Dl` y `Ex` fijan también su conexión de selección (`oDB`, `oDBR`).
     - Migrados `CartasPresentacionListaData` (3 llamadas; `sin_acentos` → `matchesUnaccented`) y `CartaPresentacionUpdate::sanear`. Siguen con arrays `getCentros`/`getDirecciones` (módulo `ubis`, 4.4).
     - Test: `test_matching_por_ubi_equivale_a_legacy` en `PgCartaPresentacionRepositoryTest`. Suites verdes: unit e integration de `cartaspresentacion`.
-  - [ ] **4.2.menus**
+  - [x] **4.2.menus** Decisiones:
+    - Cinco enums en `src/menus/domain/criteria/` (`MenuDbField`, `GrupMenuField`, `GrupMenuRoleField`, `MetaMenuField`, `TemplateMenuField`); `COLUMNAS = []` en todos. `matching()` en las 5 interfaces y repos; `getMenuDbs`/`getGrupMenus`/`getGrupMenuRoles`/`getMetaMenus`/`getTemplatesMenus` `@deprecated` como envoltorios. `PgTemplateMenuRepository` solo tenía `oDbl`: ahora fija también la de selección. `MenuDb::orden` conserva su hidratación del array PG.
+    - Migrados: los 3 casos de uso de layout, `MenusGetPageData`, `GrupMenuColeccionUseCase`, `GrupMenuListaUseCase`, `InfoGrupMenus`, `InfoMetaMenus` y `menus_generar_txt`. El regex `~ '^1$|^N$'` de `MenusLegacyLayoutItemsUseCase` pasa a `Filter::in(IdGrupmenu, [1, N])` (mismas filas, `id_grupmenu` es entero).
+    - Cambio de comportamiento menor: `InfoGrupMenus` buscaba por una columna `descripcion` que `aux_grupmenu` no tiene (la consulta fallaba y devolvía vacío); ahora busca por `grup_menu`, que era la intención.
+    - Siguen por el envoltorio los llamantes de `usuarios` (`rolesLista`, `role_grupmenu_*`, `usuario_preferencias`, `role_info`) y sus mocks, que migran en 4.3.
+    - Tests: `PgMenusMatchingTest` (3 tests, equivalencia con legacy) y los unitarios de `menus` mockean ahora `matching`. Suites verdes: unit e integration de `menus`; unit de `usuarios`.
   - [ ] **4.2.configuracion**
   - [ ] **4.2.casas**
   - [ ] **4.2.zonassacd**

@@ -3,6 +3,7 @@
 namespace src\menus\domain\contracts;
 
 use src\menus\domain\entity\MetaMenu;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase MetaMenu y su Repositorio
@@ -25,8 +26,16 @@ interface MetaMenuRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * Metamenús que cumplen el criterio.
+     *
+     * @return list<MetaMenu>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
      * devuelve una colección (array) de objetos de tipo MetaMenu
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<MetaMenu> Una colección de objetos de tipo MetaMenu

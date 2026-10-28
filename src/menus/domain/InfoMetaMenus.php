@@ -5,7 +5,10 @@ namespace src\menus\domain;
 /* No vale el underscore en el nombre */
 
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
+use src\menus\domain\criteria\MetaMenuField;
 use src\menus\domain\entity\MetaMenu;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoMetaMenus extends DatosInfoRepo
@@ -30,13 +33,11 @@ class InfoMetaMenus extends DatosInfoRepo
     public function getColeccion(): array
     {
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'url'];
-            $aOperador = [];
+            $criteria = Criteria::create()->orderBy(MetaMenuField::Url);
         } else {
-            $aWhere = ['descripcion' => $this->k_buscar];
-            $aOperador = ['descripcion' => 'sin_acentos'];
+            $criteria = Criteria::create()->where(Filter::matchesUnaccented(MetaMenuField::Descripcion, $this->k_buscar));
         }
 
-        return $this->metaMenuRepository->getMetamenus($aWhere, $aOperador);
+        return $this->metaMenuRepository->matching($criteria);
     }
 }

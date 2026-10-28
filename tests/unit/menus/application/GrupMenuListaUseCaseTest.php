@@ -7,7 +7,9 @@ namespace Tests\unit\menus\application;
 use PHPUnit\Framework\TestCase;
 use src\menus\application\GrupMenuListaUseCase;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuField;
 use src\menus\domain\entity\GrupMenu;
+use src\shared\domain\criteria\Criteria;
 use src\shared\security\HashB;
 
 final class GrupMenuListaUseCaseTest extends TestCase
@@ -32,8 +34,8 @@ final class GrupMenuListaUseCaseTest extends TestCase
 
         $repo = $this->createMock(GrupMenuRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getGrupMenus')
-            ->with(['_ordre' => 'orden'])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->orderBy(GrupMenuField::Orden)))
             ->willReturn([$g1, $g2]);
 
         $data = (new GrupMenuListaUseCase($repo))();

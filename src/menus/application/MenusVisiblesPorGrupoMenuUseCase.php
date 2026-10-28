@@ -4,6 +4,9 @@ namespace src\menus\application;
 
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
+use src\menus\domain\criteria\MenuDbField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\menus\domain\PermisoMenu;
 use src\shared\config\ConfigGlobal;
 
@@ -28,11 +31,9 @@ final class MenusVisiblesPorGrupoMenuUseCase
 
         $oPermisoMenu = new PermisoMenu();
 
-        $aWhere = [
-            'id_grupmenu' => $id_grupmenu,
-            '_ordre' => 'orden',
-        ];
-        $cMenuDbs = $this->menuDbRepository->getMenuDbs($aWhere);
+        $cMenuDbs = $this->menuDbRepository->matching(
+            Criteria::create()->where(Filter::eq(MenuDbField::IdGrupmenu, $id_grupmenu))->orderBy(MenuDbField::Orden)
+        );
 
         $menuData = [];
         $num_menu_1 = 0;

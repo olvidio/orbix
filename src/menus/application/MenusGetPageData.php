@@ -3,7 +3,10 @@
 namespace src\menus\application;
 
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
+use src\menus\domain\criteria\MenuDbField;
 use src\menus\domain\entity\MenuDb;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\menus\domain\PermisoMenuBits;
 use src\shared\security\HashB;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
@@ -52,8 +55,9 @@ final class MenusGetPageData
 
         $menu_rows = [];
         if ($Qfiltro_grupo !== '') {
-            $aWhere = ['id_grupmenu' => $Qfiltro_grupo, '_ordre' => 'orden'];
-            $oMenuDbs = $this->menuDbRepository->getMenuDbs($aWhere);
+            $oMenuDbs = $this->menuDbRepository->matching(
+                Criteria::create()->where(Filter::eq(MenuDbField::IdGrupmenu, $Qfiltro_grupo))->orderBy(MenuDbField::Orden)
+            );
             foreach ($oMenuDbs as $oMenuDb) {
                 $menu_rows[] = $this->serializeMenuDb($oMenuDb);
             }

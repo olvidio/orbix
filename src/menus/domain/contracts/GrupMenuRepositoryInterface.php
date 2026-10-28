@@ -3,6 +3,7 @@
 namespace src\menus\domain\contracts;
 
 use src\menus\domain\entity\GrupMenu;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase GrupMenu y su Repositorio
@@ -30,8 +31,16 @@ interface GrupMenuRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * Grupos de menú que cumplen el criterio.
+     *
+     * @return list<GrupMenu>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
      * devuelve una colección (array) de objetos de tipo GrupMenu
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<GrupMenu> Una colección de objetos de tipo GrupMenu
