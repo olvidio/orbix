@@ -17,7 +17,7 @@
  *
  * Opciones:
  *   --plan=RUTA          plan a ejecutar (def. docs/dev/refactor_busquedas_criteria.md)
- *   --fase=N             solo pasos que empiezan por "N." (def. todos)
+ *   --fase=N             solo la fase N (pasos "N.x") o un paso concreto (p. ej. --fase=2.1); def. todos
  *   --max-pasos=N        máximo de pasos en esta ejecución
  *   --usado=PCT          % semanal ya usado ahora (lo guarda en el estado)
  *   --anotar-uso=PCT     solo guarda el % y sale
@@ -300,7 +300,7 @@ function siguientePaso(string $plan, ?string $fase): ?array
 {
     foreach (file($plan, FILE_IGNORE_NEW_LINES) ?: [] as $i => $l) {
         if (preg_match('/^- \[ \] \*\*(\d+(?:\.\d+)+)[ *.:]/', $l, $m) === 1) {
-            if ($fase === null || str_starts_with($m[1], $fase . '.')) {
+            if ($fase === null || $m[1] === $fase || str_starts_with($m[1], $fase . '.')) {
                 return ['id' => $m[1], 'texto' => trim(substr($l, 6)), 'linea' => $i + 1];
             }
         }
