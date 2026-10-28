@@ -14,10 +14,13 @@ use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\PersonaSacd;
 use src\planning\application\ActividadesPorZonasService;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 use src\zonassacd\domain\entity\Zona;
 
 /**
@@ -66,7 +69,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $zonaRepo->method('findById')->with(55)->willReturn($oZona);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([]);
+        $zonaSacdRepo->method('matching')->willReturn([]);
 
         $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
@@ -86,8 +89,8 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $zonaRepo->expects($this->never())->method('findById');
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')
-            ->with(['propia' => 't'])
+        $zonaSacdRepo->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(ZonaSacdField::Propia, true))))
             ->willReturn([]);
 
         $out = $this->createService([
@@ -107,7 +110,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $zonaRepo->method('findById')->willReturn($oZona);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([]);
+        $zonaSacdRepo->method('matching')->willReturn([]);
 
         $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
@@ -126,7 +129,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $zonaRepo->method('findById')->willReturn($oZona);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([]);
+        $zonaSacdRepo->method('matching')->willReturn([]);
 
         $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
@@ -145,7 +148,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $zonaRepo->method('findById')->willReturn($oZona);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([]);
+        $zonaSacdRepo->method('matching')->willReturn([]);
 
         $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
@@ -168,7 +171,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
             public function getId_zona(): int { return 99; }
         };
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([$zonaSacd]);
+        $zonaSacdRepo->method('matching')->willReturn([$zonaSacd]);
 
         $sacdRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
         $sacdRepo->method('findById')->with(9999)->willReturn(null);
@@ -194,7 +197,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
             public function getId_zona(): int { return 99; }
         };
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([$zonaSacd]);
+        $zonaSacdRepo->method('matching')->willReturn([$zonaSacd]);
 
         $oSacd = $this->createStub(PersonaSacd::class);
         $oSacd->method('getSituacion')->willReturn('B'); // baja
@@ -224,7 +227,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
             public function getId_zona(): int { return 99; }
         };
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([$zonaSacd]);
+        $zonaSacdRepo->method('matching')->willReturn([$zonaSacd]);
 
         $oSacd = $this->createStub(PersonaSacd::class);
         $oSacd->method('getSituacion')->willReturn('A');
@@ -269,7 +272,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
             public function getId_zona(): int { return 99; }
         };
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([$zonaSacd]);
+        $zonaSacdRepo->method('matching')->willReturn([$zonaSacd]);
 
         $oSacd = $this->createStub(PersonaSacd::class);
         $oSacd->method('getSituacion')->willReturn('A');
@@ -313,7 +316,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
             public function getId_zona(): int { return 99; }
         };
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([$zonaSacd]);
+        $zonaSacdRepo->method('matching')->willReturn([$zonaSacd]);
 
         $oSacd = $this->createStub(PersonaSacd::class);
         $oSacd->method('getSituacion')->willReturn('A');
@@ -369,7 +372,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $zonaRepo->method('findById')->willReturn($oZona);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([]);
+        $zonaSacdRepo->method('matching')->willReturn([]);
 
         $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,

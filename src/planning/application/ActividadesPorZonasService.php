@@ -14,9 +14,12 @@ use src\permisos\domain\PermisosActividadesTrue;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\planning\domain\value_objects\PlanningStyle;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 
 /**
  * Devuelve las actividades agrupadas por zona sacd en un periodo dado.
@@ -78,7 +81,9 @@ class ActividadesPorZonasService
             $z++;
             $id_zona = $a_zonas['id_zona'];
             $nombre_zona = $a_zonas['nombre_zona'];
-            $cZonasSacd = $this->zonaSacdRepository->getZonasSacds(['id_zona' => $id_zona]);
+            $cZonasSacd = $this->zonaSacdRepository->matching(
+                Criteria::create()->where(Filter::eq(ZonaSacdField::IdZona, $id_zona))
+            );
             $p = 0;
             $actividades = [];
             $persona = [];
@@ -171,7 +176,9 @@ class ActividadesPorZonasService
     private function zonasAIterar(string $Qid_zona, ?int $id_nom_jefe): array
     {
         if ($Qid_zona === 'todo_propias') {
-            $cZonasSacd = $this->zonaSacdRepository->getZonasSacds(['propia' => 't']);
+            $cZonasSacd = $this->zonaSacdRepository->matching(
+                Criteria::create()->where(Filter::eq(ZonaSacdField::Propia, true))
+            );
             $a_zonas = [];
             $a_zonas_o = [];
             foreach ($cZonasSacd as $oZonaSacd) {

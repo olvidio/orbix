@@ -389,7 +389,7 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - `PasarelaConfigField` (solo `nom_parametro`; `json_valor` es jsonb y no se filtra); `COLUMNAS = []`. `matching()` en interfaz y `PgPasarelaConfigRepository`, con la hidratación de `json_valor` por `ConverterJson`; `getPasarelaConfigs` `@deprecated` como envoltorio (sin llamantes fuera del repo).
     - Migrado `ExportarActividadesData` solo en su llamada a `getCentrosEncargados` (`num_orden DESC` → `matching`). Quedan con arrays por ser de otros módulos: `getActividades` (`actividades`, 4.3) en `ExportarActividadesData` y `getTiposDeActividades` en `Conversiones`.
     - Se crean `tests/factories/pasarela/PasarelaConfigFactory.php` y `PgPasarelaConfigMatchingTest` (1 test, equivalencia con legacy y JSON decodificado). Suites verdes: unit e integration de `pasarela`; unit de `actividadescentro`.
-- [ ] **4.2 Pequeños (6–16):** troceado en un commit por módulo (cada casilla se marca al terminar).
+- [x] **4.2 Pequeños (6–16):** troceado en un commit por módulo (cada casilla se marca al terminar). Mismo patrón que 4.1: enum `<Entidad>Field` en `domain/criteria/`, `matching()` en interfaz y repo (`RunsCriteriaQueries`; los repos que solo tenían `oDbl` fijan también la de selección), `getXxx(array, array)` `@deprecated` como envoltorio y llamantes del propio módulo migrados; los de otros módulos siguen por el envoltorio. `tools/qa/criteria_legacy_baseline.json` baja de 467 a 454 ficheros en el bloque (17 repositorios migrados en 6 módulos; `devel_db_admin` y `planning` no tienen repositorios con `$aWhere`).
   - [x] **4.2.devel_db_admin** Decisiones:
     - Módulo sin repositorios propios con `$aWhere`. Migrada `MigracionesEjecutar` (`getDbSchemas(['_ordre' => 'schema'])` → `matching(orderBy(DbSchemaField::Schema))`). `DbLugarDropdown` llama a `getDelegaciones` (módulo `ubis`, 4.4) y sigue por el envoltorio.
     - Suites verdes: unit e integration de `devel_db_admin`.
@@ -421,7 +421,10 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - Migrados: `ZonaSacdUpdate` (helper privado `buscarZonaSacd`), `ZonaSacdLista`, `ZonaSacdListaTot`, `InfoZona` e `InfoZonaGrupo`. Cambio de comportamiento menor: `InfoZona` buscaba por una columna `nom` que `zonas` no tiene (la consulta fallaba); ahora busca por `nombre_zona`, que era la intención.
     - Siguen por el envoltorio los llamantes de otros módulos (`misas`, `planning`, `encargossacd`, `usuarios`, `cambios`) y sus mocks, que migran con sus módulos. `ZonaCtrLista` recibe el par `[$where, $operators]` de un filtro de `ubis` y se queda con arrays hasta 4.4.
     - Test: `PgZonassacdMatchingTest` (equivalencia con legacy); los unitarios de `zonassacd` mockean ahora `matching`. Suites verdes: unit e integration de `zonassacd`; unit de `misas`, `planning`, `encargossacd` y `usuarios`.
-  - [ ] **4.2.planning**
+  - [x] **4.2.planning** Decisiones:
+    - Módulo sin repositorios propios: solo migra las dos llamadas a `getZonasSacds` de `ActividadesPorZonasService` (`id_zona` y `propia = 't'` → `Filter::eq(..., true)`), ya disponibles tras `zonassacd`. `ActividadesPorZonasServiceTest` mockea ahora `matching`.
+    - Siguen por el envoltorio las llamadas a repositorios de otros módulos: `getActividades`/`getUbis` (`actividades`, 4.3), `getCentros`/`getCasas` (`ubis`, 4.4), `getPersonas` (`personas`, 4.3) y `getEncargoSacdHorarios` (`encargossacd`, 4.5).
+    - Suites verdes: unit de `planning` y `zonassacd`; `planning` no tiene tests de integración (sin repositorios).
 - [ ] **4.3 Medianos (20–34):** `dbextern`, `cambios` (`~INV`), `actividades`, `procesos`, `actividadessacd`, `profesores`, `personas` (`TXT`, `OR`), `usuarios`
 - [ ] **4.4 Grandes (39–60):** `actividadplazas`, `ubis` (38 interfaces), `inventario`, `actividadestudios`, `notas`
 - [ ] **4.5 Los más usados (73+):** `misas`, `encargossacd` (127 llamadas)
