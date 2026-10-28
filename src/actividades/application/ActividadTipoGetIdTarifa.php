@@ -3,6 +3,9 @@
 namespace src\actividades\application;
 
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
+use src\actividadtarifas\domain\criteria\RelacionTarifaTipoActividadField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Devuelve el id_tarifa asociado a un id_tipo_activ. Portado del case
@@ -26,13 +29,12 @@ class ActividadTipoGetIdTarifa
     public function execute(array $input = []): string
     {
         $id_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'entrada');
-        $aWhere = [
-            'id_tipo_activ' => $id_tipo_activ,
-            '_ordre' => 'id_serie',
-        ];
-
         $RelacionTarifaTipoActividadRepository = $this->relacionTarifaTipoActividadRepository;
-        $cActiTipoTarifa = $RelacionTarifaTipoActividadRepository->getTipoActivTarifas($aWhere);
+        $cActiTipoTarifa = $RelacionTarifaTipoActividadRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(RelacionTarifaTipoActividadField::IdTipoActiv, $id_tipo_activ))
+                ->orderBy(RelacionTarifaTipoActividadField::IdSerie)
+        );
 
         if ($cActiTipoTarifa !== []) {
             return (string) $cActiTipoTarifa[0]->getId_tarifa();

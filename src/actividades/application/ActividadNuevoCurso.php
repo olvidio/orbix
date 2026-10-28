@@ -5,6 +5,11 @@ namespace src\actividades\application;
 use DateInterval;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\NullsPosition;
+use src\shared\domain\criteria\OrderDirection;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\value_objects\IdTablaCode;
 use src\actividades\domain\value_objects\StatusId;
@@ -59,7 +64,7 @@ class ActividadNuevoCurso
     {
         if ($this->aRepeticion === []) {
             $RepeticionRepository = $this->repeticionRepository;
-            $cRepeticiones = $RepeticionRepository->getRepeticiones();
+            $cRepeticiones = $RepeticionRepository->matching(Criteria::create());
             foreach ($cRepeticiones as $oRepeticion) {
                 $id_repeticion = $oRepeticion->getId_repeticion();
                 $TipoRepeticion = $oRepeticion->getTipoRepeticion();
@@ -75,17 +80,14 @@ class ActividadNuevoCurso
     {
         $txt = '';
         $ActividadDlRepository = $this->actividadDlRepository;
-        $aWhere = [
-            'dl_org' => ConfigGlobal::mi_delef(),
-            'f_ini' => "'$inicio','$fin'",
-            'status' => 4,
-            '_ordre' => 'f_ini, h_ini NULLS LAST',
-        ];
-        $aOperador = [
-            'f_ini' => 'BETWEEN',
-            'status' => '<',
-        ];
-        $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $ActividadDlRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ActividadAllField::DlOrg, ConfigGlobal::mi_delef()))
+                ->andWhere(Filter::between(ActividadAllField::FIni, $inicio, $fin))
+                ->andWhere(Filter::lt(ActividadAllField::Status, 4))
+                ->orderBy(ActividadAllField::FIni)
+                ->addOrderBy(ActividadAllField::HIni, OrderDirection::Asc, NullsPosition::Last)
+        );
         $num_act = count($cActividades);
         for ($i = 0; $i < ($num_act - 1); $i++) {
             $id_ubi1 = $cActividades[$i]->getId_ubi();

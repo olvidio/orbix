@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace src\actividades\application;
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\criteria\TipoDeActividadField;
+use src\shared\domain\criteria\Criteria;
 use src\actividades\domain\entity\TiposActividades;
 
 /**
@@ -59,7 +61,9 @@ final class TipoActivMetadata
     private function cargarFilas(): array
     {
         $repository = $this->tipoDeActividadRepository;
-        $cTiposDeActividades = $repository->getTiposDeActividades(['_ordre' => 'id_tipo_activ']);
+        $cTiposDeActividades = $repository->matching(
+            Criteria::create()->orderBy(TipoDeActividadField::IdTipoActiv)
+        );
 
         $filas = [];
         foreach ($cTiposDeActividades as $oTipo) {

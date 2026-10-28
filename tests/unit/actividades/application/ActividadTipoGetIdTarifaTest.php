@@ -11,7 +11,7 @@ final class ActividadTipoGetIdTarifaTest extends TestCase
     public function test_sin_resultados_devuelve_cadena_vacia(): void
     {
         $repo = $this->createMock(RelacionTarifaTipoActividadRepositoryInterface::class);
-        $repo->method('getTipoActivTarifas')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $this->assertSame('', (new ActividadTipoGetIdTarifa($repo))->execute(['entrada' => '123456']));
     }
@@ -26,7 +26,7 @@ final class ActividadTipoGetIdTarifaTest extends TestCase
         };
 
         $repo = $this->createMock(RelacionTarifaTipoActividadRepositoryInterface::class);
-        $repo->method('getTipoActivTarifas')->willReturn([$rel]);
+        $repo->method('matching')->willReturn([$rel]);
 
         $this->assertSame('42', (new ActividadTipoGetIdTarifa($repo))->execute(['entrada' => '123456']));
     }

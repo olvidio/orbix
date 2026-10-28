@@ -2,6 +2,7 @@
 
 namespace src\actividades\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\actividades\domain\entity\Repeticion;
 use src\actividades\domain\value_objects\RepeticionId;
 
@@ -25,6 +26,12 @@ interface RepeticionRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * @return list<Repeticion>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * devuelve una colección (array) de objetos de tipo Repeticion
      *
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.

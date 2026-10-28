@@ -12,6 +12,7 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
+use src\actividades\domain\criteria\TipoDeActividadField;
 use src\cambios\domain\criteria\CambioUsuarioPropiedadPrefField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -258,7 +259,9 @@ class AvisosGenerarTabla
                     } elseif (empty($aFases_cmb)) {
                         // Si el id_fase es NULL, hay que mirar el id_status (solo con procesos).
                         $status_de_fase = 0;
-                        $cTiposActividad = $TipoDeActividadRepository->getTiposDeActividades(['id_tipo_activ' => $id_tipo_activ]);
+                        $cTiposActividad = $TipoDeActividadRepository->matching(
+                            Criteria::create()->where(Filter::eq(TipoDeActividadField::IdTipoActiv, $id_tipo_activ))
+                        );
                         if (!empty($cTiposActividad)) {
                             $id_tipo_proceso = $cTiposActividad[0]->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
                             $cTareasProceso = $TareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase_ref]);
@@ -404,7 +407,9 @@ class AvisosGenerarTabla
             return 0;
         }
 
-        $cTiposActividad = $tipoDeActividadRepository->getTiposDeActividades(['id_tipo_activ' => $id_tipo_activ]);
+        $cTiposActividad = $tipoDeActividadRepository->matching(
+                            Criteria::create()->where(Filter::eq(TipoDeActividadField::IdTipoActiv, $id_tipo_activ))
+                        );
         if ($cTiposActividad === []) {
             return $id_fase_ref;
         }

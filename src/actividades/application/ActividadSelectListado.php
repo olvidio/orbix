@@ -9,6 +9,9 @@ use src\permisos\domain\XPermisos;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\contracts\ImportadaRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
@@ -103,10 +106,9 @@ final class ActividadSelectListado
         }
         $Qstatus = empty($Qstatus) ? StatusId::ACTUAL : $Qstatus;
 
-        $aWhere = [];
-        $aOperador = [];
+        $criteria = Criteria::create();
         if ($Qstatus !== 9) {
-            $aWhere['status'] = $Qstatus;
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Status, $Qstatus));
         }
         $extendida = FALSE;
         if (empty($Qid_tipo_activ)) {
@@ -141,15 +143,17 @@ final class ActividadSelectListado
             $Qid_tipo_activ = $canonTipo;
         }
         if ($Qid_tipo_activ !== '......') {
-            $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
-            $aOperador['id_tipo_activ'] = '~';
+            $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, "^$Qid_tipo_activ"));
         }
         if (!empty($Qid_ubi)) {
-            $aWhere['id_ubi'] = $Qid_ubi;
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::IdUbi, $Qid_ubi));
         }
         if (!empty($Qnom_activ)) {
-            $aWhere['nom_activ'] = '%' . $Qnom_activ . '%';
-            $aOperador['nom_activ'] = 'ILIKE';
+            // Subcadena sin distinguir mayúsculas (antes ILIKE '%texto%'): se escapan los metacaracteres de la regex.
+            $criteria = $criteria->andWhere(Filter::matchesInsensitive(
+                ActividadAllField::NomActiv,
+                preg_replace('/[.^$*+?()\[\]{}|\\\\]/', '\\\\$0', (string) $Qnom_activ)
+            ));
         }
 
         $oPeriodo = new Periodo();
@@ -161,20 +165,19 @@ final class ActividadSelectListado
 
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
-        $aWhere['f_ini'] = "'$inicioIso','$finIso'";
-        $aOperador['f_ini'] = 'BETWEEN';
+        $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso));
 
         if (!empty($Qdl_org)) {
-            $aWhere['dl_org'] = $Qdl_org;
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::DlOrg, $Qdl_org));
         }
         if (!empty($Qmodo) && $Qmodo === 'publicar') {
-            $aWhere['publicado'] = 'f';
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Publicado, false));
         } elseif (!empty($Qpublicado)) {
             if ($Qpublicado === 1) {
-                $aWhere['publicado'] = 't';
+                $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Publicado, true));
             }
             if ($Qpublicado === 2) {
-                $aWhere['publicado'] = 'f';
+                $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Publicado, false));
             }
         }
 
@@ -262,8 +265,7 @@ final class ActividadSelectListado
             $mod = 'importar';
             $ActividadRepository = $this->actividadPubRepository;
             if (empty($Qdl_org)) {
-                $aWhere['dl_org'] = $mi_dele;
-                $aOperador['dl_org'] = '!=';
+                $criteria = $criteria->andWhere(Filter::neq(ActividadAllField::DlOrg, $mi_dele));
             }
             $obj_pau = 'ActividadPub';
         } else {
@@ -272,8 +274,7 @@ final class ActividadSelectListado
             $obj_pau = 'Actividad';
         }
 
-        $aWhere['_ordre'] = 'f_ini';
-        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $ActividadRepository->matching($criteria->orderBy(ActividadAllField::FIni));
         $num_activ = count($cActividades);
         if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
             return [

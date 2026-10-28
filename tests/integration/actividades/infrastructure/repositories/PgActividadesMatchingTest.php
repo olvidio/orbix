@@ -1,0 +1,82 @@
+<?php
+
+namespace Tests\integration\actividades\infrastructure\repositories;
+
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\contracts\ImportadaRepositoryInterface;
+use src\actividades\domain\contracts\RepeticionRepositoryInterface;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\actividades\domain\criteria\ImportadaField;
+use src\actividades\domain\criteria\RepeticionField;
+use src\actividades\domain\criteria\TipoDeActividadField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\NullsPosition;
+use src\shared\domain\criteria\OrderDirection;
+use Tests\myTest;
+
+/**
+ * `matching()` de los repositorios de `actividades` (paso 4.3 de docs/dev/refactor_busquedas_criteria.md).
+ * Comparan con el método legacy sobre los datos existentes.
+ */
+class PgActividadesMatchingTest extends myTest
+{
+    public function test_actividades_de_la_vista_equivalen_a_legacy(): void
+    {
+        $repo = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+        $anyo = (int) date('Y');
+        $this->assertEquals(
+            $repo->getActividades(
+                ['f_ini' => "'$anyo-1-1','$anyo-12-31'", 'status' => 4, '_ordre' => 'f_ini, h_ini NULLS LAST', '_limit' => 30],
+                ['f_ini' => 'BETWEEN', 'status' => '<']
+            ),
+            $repo->matching(
+                Criteria::create()
+                    ->where(Filter::between(ActividadAllField::FIni, "$anyo-1-1", "$anyo-12-31"))
+                    ->andWhere(Filter::lt(ActividadAllField::Status, 4))
+                    ->orderBy(ActividadAllField::FIni)
+                    ->addOrderBy(ActividadAllField::HIni, OrderDirection::Asc, NullsPosition::Last)
+                    ->limit(30)
+            )
+        );
+    }
+
+    public function test_actividades_dl_con_regex_de_tipo_equivalen_a_legacy(): void
+    {
+        $repo = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $this->assertEquals(
+            $repo->getActividades(['id_tipo_activ' => '^1(124)|^1(.41)', '_ordre' => 'id_activ', '_limit' => 30], ['id_tipo_activ' => '~']),
+            $repo->matching(
+                Criteria::create()
+                    ->where(Filter::matches(ActividadAllField::IdTipoActiv, '^1(124)|^1(.41)'))
+                    ->orderBy(ActividadAllField::IdActiv)
+                    ->limit(30)
+            )
+        );
+    }
+
+    public function test_importadas_repeticiones_y_tipos_equivalen_a_legacy(): void
+    {
+        $importadas = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
+        $this->assertEquals(
+            $importadas->getImportadas(['_ordre' => 'id_activ', '_limit' => 20]),
+            $importadas->matching(Criteria::create()->orderBy(ImportadaField::IdActiv)->limit(20))
+        );
+
+        $repeticiones = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
+        $this->assertEquals(
+            $repeticiones->getRepeticiones(['_ordre' => 'temporada, repeticion']),
+            $repeticiones->matching(
+                Criteria::create()->orderBy(RepeticionField::Temporada)->addOrderBy(RepeticionField::Repeticion)
+            )
+        );
+
+        $tipos = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $this->assertEquals(
+            $tipos->getTiposDeActividades(['_ordre' => 'id_tipo_activ']),
+            $tipos->matching(Criteria::create()->orderBy(TipoDeActividadField::IdTipoActiv))
+        );
+    }
+}

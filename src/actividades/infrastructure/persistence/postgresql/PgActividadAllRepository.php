@@ -4,8 +4,11 @@ namespace src\actividades\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\shared\infrastructure\persistence\ConverterDate;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use DateInterval;
 use PDO;
 use src\planning\domain\value_objects\PlanningStyle;
@@ -32,6 +35,9 @@ use src\actividades\domain\entity\TiposActividades;
 class PgActividadAllRepository extends ClaseRepository implements ActividadAllRepositoryInterface
 {
     use HandlesPdoErrors;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     private TiposActividades $tiposActividades;
 
@@ -390,84 +396,64 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * ActividadAll que cumplen el criterio.
+     *
+     * @return list<ActividadAll>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(ActividadAllField::class, self::COLUMNAS);
+        $q = $conv->convert($criteria);
+        // Se lee de `getNomTablaSelect()` (en `PgActividadRepository` es la vista `av_actividades`), no de la tabla de escritura.
+        $stmt = $this->prepareAndExecute(
+            $this->getoDbl_Select(),
+            'SELECT * FROM ' . $this->getNomTablaSelect() . $q['sql'],
+            $q['params'],
+            __METHOD__,
+            __FILE__,
+            __LINE__
+        );
+        if ($stmt === false) {
+            return [];
+        }
+
+        $result = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $result[] = ActividadAll::fromArray($this->hidratarFilaPg($aDatos));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Fechas y horas de PG (texto iso) a sus tipos PHP.
+     *
+     * @param array<string, mixed> $aDatos
+     * @return array<string, mixed>
+     */
+    private function hidratarFilaPg(array $aDatos): array
+    {
+        $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
+        $aDatos['h_ini'] = (new ConverterDate('time', $aDatos['h_ini']))->fromPg();
+        $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
+        $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
+
+        return $aDatos;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<ActividadAll>
      */
     public function getActividades(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTablaSelect();
-        $ActividadAllSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        /** @var list<ActividadAll> $items */
-        $items = [];
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            // para las fechas del postgres (texto iso)
-            $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
-            $aDatos['h_ini'] = (new ConverterDate('time', $aDatos['h_ini']))->fromPg();
-            $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
-            $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $items[] = ActividadAll::fromArray($normalized);
-        }
-        return $items;
+        $adapter = new LegacyWhereAdapter(ActividadAllField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -3,6 +3,9 @@
 namespace src\actividades\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadtarifas\domain\criteria\RelacionTarifaTipoActividadField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
@@ -213,11 +216,11 @@ final class ActividadVerDatos
         }
 
         if ($calcTarifaInicial && $id_tipo_activ !== '') {
-            $aWhereT = [
-                'id_tipo_activ' => $id_tipo_activ,
-                '_ordre' => 'id_serie',
-            ];
-            $cActiTipoTarifa = $this->relacionTarifaTipoActividadRepository->getTipoActivTarifas($aWhereT);
+            $cActiTipoTarifa = $this->relacionTarifaTipoActividadRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(RelacionTarifaTipoActividadField::IdTipoActiv, $id_tipo_activ))
+                    ->orderBy(RelacionTarifaTipoActividadField::IdSerie)
+            );
             if ($cActiTipoTarifa !== []) {
                 $payload['tarifa_inicial'] = $cActiTipoTarifa[0]->getId_tarifa();
             } else {

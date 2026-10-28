@@ -3,6 +3,8 @@
 namespace src\actividades\application;
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\criteria\TipoDeActividadField;
+use src\shared\domain\criteria\Criteria;
 use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
 
@@ -22,9 +24,10 @@ class TipoActivLista
      */
     public function execute(array $input = []): string
     {
-        $aWhere = ['_ordre' => 'id_tipo_activ'];
         $TipoDeActividadRepository = $this->tipoDeActividadRepository;
-        $cTiposDeActividades = $TipoDeActividadRepository->getTiposDeActividades($aWhere);
+        $cTiposDeActividades = $TipoDeActividadRepository->matching(
+            Criteria::create()->orderBy(TipoDeActividadField::IdTipoActiv)
+        );
 
         $a_cabeceras = [
             _("id_tipo_activ"),

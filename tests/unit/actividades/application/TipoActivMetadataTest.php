@@ -15,7 +15,7 @@ final class TipoActivMetadataTest extends TestCase
     public function test_maps_coinciden_con_tipos_actividades(): void
     {
         $repo = $this->createStub(TipoDeActividadRepositoryInterface::class);
-        $repo->method('getTiposDeActividades')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $out = (new TipoActivMetadata($repo))->execute();
 
@@ -41,7 +41,7 @@ final class TipoActivMetadataTest extends TestCase
         $b->setNombre('Tipo B');
 
         $repo = $this->createStub(TipoDeActividadRepositoryInterface::class);
-        $repo->method('getTiposDeActividades')->willReturn([$a, $b]);
+        $repo->method('matching')->willReturn([$a, $b]);
 
         $out = (new TipoActivMetadata($repo))->execute();
 
@@ -54,7 +54,7 @@ final class TipoActivMetadataTest extends TestCase
     public function test_filas_vacias_si_repositorio_devuelve_no_array(): void
     {
         $repo = $this->createStub(TipoDeActividadRepositoryInterface::class);
-        $repo->method('getTiposDeActividades')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $out = (new TipoActivMetadata($repo))->execute();
 

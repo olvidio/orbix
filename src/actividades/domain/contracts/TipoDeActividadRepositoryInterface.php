@@ -2,6 +2,7 @@
 
 namespace src\actividades\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\actividades\domain\entity\TipoDeActividad;
 
 
@@ -59,6 +60,12 @@ interface TipoDeActividadRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * @return list<TipoDeActividad>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * devuelve una colección (array) de objetos de tipo TipoDeActividad
      *
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.

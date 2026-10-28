@@ -9,6 +9,9 @@ use src\permisos\domain\XPermisos;
 
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
@@ -62,10 +65,9 @@ final class ListaActividadesSgListado
 
         $Qstatus = empty($Qstatus) ? StatusId::ACTUAL : $Qstatus;
 
-        $aWhere = [];
-        $aOperador = [];
+        $criteria = Criteria::create();
         if ($Qstatus !== 5) {
-            $aWhere['status'] = $Qstatus;
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Status, $Qstatus));
         }
 
         if (empty($Qtipo_activ_sg)) {
@@ -81,11 +83,10 @@ final class ListaActividadesSgListado
             default:
                 $Qid_tipo_activ = '1[45]1';
         }
-        $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
-        $aOperador['id_tipo_activ'] = '~';
+        $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, "^$Qid_tipo_activ"));
 
         if (!empty($Qid_ubi)) {
-            $aWhere['id_ubi'] = $Qid_ubi;
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::IdUbi, $Qid_ubi));
         }
 
         $oPeriodo = new Periodo();
@@ -98,15 +99,13 @@ final class ListaActividadesSgListado
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
         if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
-            $aWhere['f_fin'] = "'$inicioIso','$finIso'";
-            $aOperador['f_fin'] = 'BETWEEN';
+            $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FFin, $inicioIso, $finIso));
         } else {
-            $aWhere['f_ini'] = "'$inicioIso','$finIso'";
-            $aOperador['f_ini'] = 'BETWEEN';
+            $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso));
         }
 
         if (!empty($Qdl_org)) {
-            $aWhere['dl_org'] = $Qdl_org;
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::DlOrg, $Qdl_org));
         }
 
         $ActividadRepository = $this->actividadRepository;
@@ -129,8 +128,7 @@ final class ListaActividadesSgListado
         $a_cabeceras[] = ucfirst(_("sacd"));
         $a_cabeceras[] = ucfirst(_("precio"));
 
-        $aWhere['_ordre'] = 'f_ini';
-        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $ActividadRepository->matching($criteria->orderBy(ActividadAllField::FIni));
         $num_activ = count($cActividades);
 
         if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {

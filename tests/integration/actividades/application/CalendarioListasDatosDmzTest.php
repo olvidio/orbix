@@ -70,7 +70,7 @@ final class CalendarioListasDatosDmzTest extends myTest
         $actividad->method('getId_ubi')->willReturn(1001);
         $actividad->method('getLugar_esp')->willReturn('');
         $actividades = $this->createMock(ActividadRepositoryInterface::class);
-        $actividades->method('getActividades')->willReturn([$actividad]);
+        $actividades->method('matching')->willReturn([$actividad]);
 
         $encargado = $this->createMock(CentroEncargado::class);
         $encargado->method('getId_ubi')->willReturn($idCtr);

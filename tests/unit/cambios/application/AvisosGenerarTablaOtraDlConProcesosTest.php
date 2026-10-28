@@ -54,7 +54,7 @@ final class AvisosGenerarTablaOtraDlConProcesosTest extends TestCase
         $tipoRepo = $this->createMock(TipoDeActividadRepositoryInterface::class);
         $tipoActividad = $this->createMock(\src\actividades\domain\entity\TipoDeActividad::class);
         $tipoActividad->method('getId_tipo_proceso')->willReturn(99);
-        $tipoRepo->method('getTiposDeActividades')->willReturn([$tipoActividad]);
+        $tipoRepo->method('matching')->willReturn([$tipoActividad]);
 
         $tareaRepo = $this->createMock(TareaProcesoRepositoryInterface::class);
         $tarea = $this->createMock(\src\procesos\domain\entity\TareaProceso::class);

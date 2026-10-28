@@ -7,6 +7,7 @@ namespace Tests\unit\actividades\domain\entity;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\entity\TipoDeActividad;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 
 final class TiposActividadesTest extends myTest
@@ -45,6 +46,11 @@ final class TiposActividadesTest extends myTest
             }
 
             public function getSfsvPosibles(array $aText): array
+            {
+                return [];
+            }
+
+            public function matching(Criteria $criteria): array
             {
                 return [];
             }

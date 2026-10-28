@@ -4,6 +4,9 @@ namespace src\actividades\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
@@ -88,18 +91,12 @@ final class ListaSrCsvListado
             $pref_error = _("hay un error, no se ha guardado la preferencia") . "\n" . $PreferenciaRepository->getErrorTxt();
         }
 
-        $aWhere = [];
-        $aOperador = [];
         if ($Qa_status !== []) {
-            if (count($Qa_status) > 1) {
-                $aWhere['status'] = '[' . implode('', $Qa_status) . ']';
-            } else {
-                $aWhere['status'] = $Qa_status[0];
-            }
+            $condStatus = count($Qa_status) > 1 ? '[' . implode('', $Qa_status) . ']' : $Qa_status[0];
         } else {
-            $aWhere['status'] = '.';
+            $condStatus = '.';
         }
-        $aOperador['status'] = '~';
+        $criterio = Criteria::create()->where(Filter::matches(ActividadAllField::Status, $condStatus));
 
         $cv_crt = '';
         if ($Qa_activ !== []) {
@@ -116,9 +113,6 @@ final class ListaSrCsvListado
         } else {
             $condicion = '^2[789]' . $cond_act;
         }
-        $aWhere['id_tipo_activ'] = $condicion;
-        $aOperador['id_tipo_activ'] = '~';
-
         $oPeriodo = new Periodo();
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($Qyear);
@@ -131,19 +125,19 @@ final class ListaSrCsvListado
         $inicioIsoStr = is_string($inicioIso) ? $inicioIso : date('Y-m-d');
         $finIsoStr = is_string($finIso) ? $finIso : date('Y-m-d');
         if ($Qperiodo === 'desdeHoy') {
-            $aWhere['f_fin'] = "'$inicioIsoStr','$finIsoStr'";
-            $aOperador['f_fin'] = 'BETWEEN';
+            $criterio = $criterio->andWhere(Filter::between(ActividadAllField::FFin, $inicioIsoStr, $finIsoStr));
         } else {
-            $aWhere['f_ini'] = "'$inicioIsoStr','$finIsoStr'";
-            $aOperador['f_ini'] = 'BETWEEN';
+            $criterio = $criterio->andWhere(Filter::between(ActividadAllField::FIni, $inicioIsoStr, $finIsoStr));
         }
         if (!empty($Qdl_org)) {
-            $aWhere['dl_org'] = $Qdl_org;
+            $criterio = $criterio->andWhere(Filter::eq(ActividadAllField::DlOrg, $Qdl_org));
         }
-        $aWhere['_ordre'] = 'f_ini';
+        $criterio = $criterio->orderBy(ActividadAllField::FIni);
 
         $ActividadRepository = $this->actividadRepository;
-        $cActividades_1 = $ActividadRepository->getActividades($aWhere, $aOperador);
+        $cActividades_1 = $ActividadRepository->matching(
+            $criterio->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $condicion))
+        );
         $cActividadesxTipo = [];
         foreach ($cActividades_1 as $oActividad) {
             $key = 's' . $oActividad->getId_activ();
@@ -152,12 +146,9 @@ final class ListaSrCsvListado
 
         $cActividadesxUbi = [];
         if ($Qa_id_cdc !== []) {
-            unset($aWhere['id_tipo_activ']);
-            unset($aOperador['id_tipo_activ']);
-            $cond_ubis = '{' . implode(', ', $Qa_id_cdc) . '}';
-            $aWhere['id_ubi'] = $cond_ubis;
-            $aOperador['id_ubi'] = 'ANY';
-            $cActividades_2 = $ActividadRepository->getActividades($aWhere, $aOperador);
+            $cActividades_2 = $ActividadRepository->matching(
+                $criterio->andWhere(Filter::in(ActividadAllField::IdUbi, array_map('intval', $Qa_id_cdc)))
+            );
             foreach ($cActividades_2 as $oActividad) {
                 $key = 's' . $oActividad->getId_activ();
                 $cActividadesxUbi[$key] = $oActividad;

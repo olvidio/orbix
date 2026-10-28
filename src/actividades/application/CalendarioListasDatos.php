@@ -8,6 +8,9 @@ use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
@@ -178,35 +181,35 @@ final class CalendarioListasDatos
         $AsistenteActividadService = $this->asistenteActividadService;
 
         foreach (array_keys($aGrupos) as $key) {
-            $aWhere = [];
-            $aOperador = [];
-            $aWhere['f_ini'] = "'$inicioIso','$finIso'";
-            $aOperador['f_ini'] = 'BETWEEN';
-            $aWhere['status'] = 4;
-            $aOperador['status'] = '<';
+            $criterioBase = Criteria::create()
+                ->where(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso))
+                ->andWhere(Filter::lt(ActividadAllField::Status, 4));
 
             $cActividades = [];
             switch ($tipo) {
                 case 'casa':
-                    $aWhere['id_ubi'] = $key;
-                    $aWhere['_ordre'] = 'id_ubi,f_ini';
-                    $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
+                    $cActividades = $ActividadRepository->matching(
+                        $criterioBase
+                            ->andWhere(Filter::eq(ActividadAllField::IdUbi, $key))
+                            ->orderBy(ActividadAllField::IdUbi)
+                            ->addOrderBy(ActividadAllField::FIni)
+                    );
                     break;
                 case 'oficina':
-                    $aWhere['_ordre'] = 'f_ini';
+                    $criterioBase = $criterioBase->orderBy(ActividadAllField::FIni);
                     if ($mi_of === 'des') {
-                        $aWhere['id_tipo_activ'] = '^16';
-                        $aOperador['id_tipo_activ'] = '~';
-                        $cActividadesSSSC = $ActividadRepository->getActividades($aWhere, $aOperador);
-                        $aWhere['id_tipo_activ'] = '^1(124)|^1(.41)';
-                        $aOperador['id_tipo_activ'] = '~';
-                        $cActividadesOtros = $ActividadRepository->getActividades($aWhere, $aOperador);
+                        $cActividadesSSSC = $ActividadRepository->matching(
+                            $criterioBase->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^16'))
+                        );
+                        $cActividadesOtros = $ActividadRepository->matching(
+                            $criterioBase->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^1(124)|^1(.41)'))
+                        );
                         $cActividades = array_merge($cActividadesOtros, $cActividadesSSSC);
                     } elseif ($oTiposActividades !== null) {
                         $oTiposActividades->setAsistentesId($key);
-                        $aWhere['id_tipo_activ'] = $oTiposActividades->getNom_tipoRegexp();
-                        $aOperador['id_tipo_activ'] = '~';
-                        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
+                        $cActividades = $ActividadRepository->matching(
+                            $criterioBase->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $oTiposActividades->getNom_tipoRegexp()))
+                        );
                     }
                     break;
             }

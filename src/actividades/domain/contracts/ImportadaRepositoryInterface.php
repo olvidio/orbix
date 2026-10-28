@@ -3,6 +3,7 @@
 namespace src\actividades\domain\contracts;
 
 use src\actividades\domain\entity\Importada;
+use src\shared\domain\criteria\Criteria;
 
 
 /**
@@ -20,6 +21,12 @@ interface ImportadaRepositoryInterface
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
+	 * @return list<Importada>
+	 */
+	public function matching(Criteria $criteria): array;
+
+	/**
+	 * @deprecated usar matching(Criteria)
 	 * devuelve una colección (array) de objetos de tipo Importada
 	 *
 	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.

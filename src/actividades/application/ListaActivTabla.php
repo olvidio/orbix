@@ -5,6 +5,9 @@ namespace src\actividades\application;
 use src\shared\config\ConfigGlobal;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
@@ -75,17 +78,15 @@ class ListaActivTabla
         $perm_admin = (bool)($opts['perm_admin'] ?? false);
         $is_dmz = (bool)($opts['is_dmz'] ?? false);
 
-        $aWhere = [];
-        $aOperador = [];
+        $criteria = Criteria::create();
         if (is_array($Qstatus)) {
             $cond_status = '';
             foreach ($Qstatus as $status) {
                 $cond_status .= is_scalar($status) ? (string) $status : '';
             }
-            $aWhere['status'] = $cond_status;
-            $aOperador['status'] = '~';
+            $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::Status, $cond_status));
         } elseif (!empty($Qstatus)) {
-            $aWhere['status'] = $Qstatus;
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Status, $Qstatus));
         }
 
         if (empty($Qid_tipo_activ)) {
@@ -102,8 +103,7 @@ class ListaActivTabla
                     }
                 }
                 $condicion = implode('|', $codi_activ_v);
-                $aWhere['id_tipo_activ'] = "^($condicion)";
-                $aOperador['id_tipo_activ'] = '~';
+                $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, "^($condicion)"));
             } else {
                 if (empty($Qssfsv)) {
                     if ($mi_sfsv === 1) {
@@ -121,17 +121,15 @@ class ListaActivTabla
                 $oTipoActiv->setActividadText($sactividad);
                 $id_tipo_activ = $oTipoActiv->getId_tipo_activ();
                 if ($id_tipo_activ !== '......') {
-                    $aWhere['id_tipo_activ'] = "^$id_tipo_activ";
-                    $aOperador['id_tipo_activ'] = '~';
+                    $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, "^$id_tipo_activ"));
                 }
             }
         } elseif ($Qid_tipo_activ !== '......') {
-            $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
-            $aOperador['id_tipo_activ'] = '~';
+            $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, "^$Qid_tipo_activ"));
         }
 
         if (!empty($Qid_ubi)) {
-            $aWhere['id_ubi'] = $Qid_ubi;
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::IdUbi, $Qid_ubi));
         }
 
         $oPeriodo = new Periodo();
@@ -149,20 +147,17 @@ class ListaActivTabla
         $finIso = $oPeriodo->getF_fin_iso();
 
         if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
-            $aWhere['f_fin'] = "'$inicioIso','$finIso'";
-            $aOperador['f_fin'] = 'BETWEEN';
+            $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FFin, $inicioIso, $finIso));
         } else {
-            $aWhere['f_ini'] = "'$inicioIso','$finIso'";
-            $aOperador['f_ini'] = 'BETWEEN';
+            $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso));
         }
 
         if (!empty($Qdl_org)) {
-            $aWhere['dl_org'] = $Qdl_org;
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::DlOrg, $Qdl_org));
         }
 
-        $aWhere['_ordre'] = 'f_ini';
         $ActividadRepository = $this->actividadRepository;
-        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $ActividadRepository->matching($criteria->orderBy(ActividadAllField::FIni));
 
         if ($Qque === 'list_active_inv_sg' || $Qque === 'list_activ_sr') {
             // El titulo lo suele enviar el formulario que_lista_activ_sg / que_lista_activ_sr.

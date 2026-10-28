@@ -5,6 +5,9 @@ namespace src\actividades\application;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 
@@ -55,17 +58,14 @@ final class ActividadNuevoCursoEjecutar
         $inicio_org = $Qyear_ref . '-1-1';
         $fin_org = $Qyear_ref . '-12-31';
         $ActividadDlRepository = $this->actividadDlRepository;
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['dl_org'] = "'" . ConfigGlobal::mi_dele() . "','" . ConfigGlobal::mi_dele() . "f'";
-        $aOperador['dl_org'] = 'IN';
         // No las de proyecto(1) ni borrables(4) => 2 y 3
-        $aWhere['status'] = "2,3";
-        $aOperador['status'] = 'IN';
-        $aWhere['f_ini'] = "'$inicio_org','$fin_org'";
-        $aOperador['f_ini'] = 'BETWEEN';
-        $aWhere['_ordre'] = 'f_ini';
-        $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $ActividadDlRepository->matching(
+            Criteria::create()
+                ->where(Filter::in(ActividadAllField::DlOrg, [ConfigGlobal::mi_dele(), ConfigGlobal::mi_dele() . 'f']))
+                ->andWhere(Filter::in(ActividadAllField::Status, [2, 3]))
+                ->andWhere(Filter::between(ActividadAllField::FIni, $inicio_org, $fin_org))
+                ->orderBy(ActividadAllField::FIni)
+        );
 
         $html = '';
         if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($ver_lista)) {

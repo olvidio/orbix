@@ -5,6 +5,9 @@ namespace  src\actividades\domain;
 /* No vale el underscore en el nombre */
 
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
+use src\actividades\domain\criteria\RepeticionField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoTipoRepeticion extends DatosInfoRepo
@@ -28,17 +31,16 @@ class InfoTipoRepeticion extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        $aWhere = [];
-        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
+        $criteria = Criteria::create();
         if (!empty($this->k_buscar)) {
-            $aWhere['repeticion'] = $this->k_buscar;
-            $aOperador['repeticion'] = 'sin_acentos';
+            $criteria = $criteria->where(Filter::matchesUnaccented(RepeticionField::Repeticion, $this->k_buscar));
         }
-        $aWhere['_ordre'] = 'temporada, repeticion';
-        $Coleccion = $this->repeticionRepository->getRepeticiones($aWhere, $aOperador);
+        $criteria = $criteria
+            ->orderBy(RepeticionField::Temporada)
+            ->addOrderBy(RepeticionField::Repeticion);
 
-        return $Coleccion;
+        return $this->repeticionRepository->matching($criteria);
     }
 }

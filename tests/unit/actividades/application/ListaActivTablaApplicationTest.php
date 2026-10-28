@@ -5,6 +5,10 @@ namespace Tests\unit\actividades\application;
 use PHPUnit\Framework\TestCase;
 use src\actividades\application\ListaActivTabla;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Operator;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
@@ -35,7 +39,7 @@ final class ListaActivTablaApplicationTest extends TestCase
     public function test_sin_actividades_devuelve_estructura_sin_html(): void
     {
         $actRepo = $this->createMock(ActividadRepositoryInterface::class);
-        $actRepo->method('getActividades')->willReturn([]);
+        $actRepo->method('matching')->willReturn([]);
 
         $out = (new ListaActivTabla(
             $actRepo,
@@ -114,7 +118,7 @@ final class ListaActivTablaApplicationTest extends TestCase
         };
 
         $actRepo = $this->createMock(ActividadRepositoryInterface::class);
-        $actRepo->method('getActividades')->willReturn([$activ]);
+        $actRepo->method('matching')->willReturn([$activ]);
 
         $casaRepo = $this->createMock(CasaRepositoryInterface::class);
         $casaRepo->method('findById')->with(99999)->willReturn(null);
@@ -157,15 +161,19 @@ final class ListaActivTablaApplicationTest extends TestCase
     {
         $actRepo = $this->createMock(ActividadRepositoryInterface::class);
         $actRepo->expects($this->once())
-            ->method('getActividades')
-            ->with(
-                $this->callback(static function (array $where): bool {
-                    return $where['f_ini'] === "'2026-05-01','2026-05-31'";
-                }),
-                $this->callback(static function (array $operador): bool {
-                    return ($operador['f_ini'] ?? '') === 'BETWEEN';
-                }),
-            )
+            ->method('matching')
+            ->with($this->callback(static function (Criteria $criteria): bool {
+                foreach ($criteria->filters() as $filter) {
+                    if ($filter instanceof Filter
+                        && $filter->field === ActividadAllField::FIni
+                        && $filter->operator === Operator::Between
+                    ) {
+                        return $filter->value === ['2026-05-01', '2026-05-31'];
+                    }
+                }
+
+                return false;
+            }))
             ->willReturn([]);
 
         (new ListaActivTabla(
