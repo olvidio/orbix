@@ -3,6 +3,7 @@
 namespace src\actividadcargos\domain\contracts;
 
 use src\actividadcargos\domain\entity\ActividadCargo;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase ActividadCargo y su Repositorio
@@ -46,6 +47,14 @@ interface ActividadCargoRepositoryInterface
     public function getCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array;
 
     /**
+     * ActividadCargo que cumplen el criterio.
+     *
+     * @return list<ActividadCargo>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<ActividadCargo>

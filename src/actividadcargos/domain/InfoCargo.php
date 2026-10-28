@@ -5,7 +5,10 @@ namespace src\actividadcargos\domain;
 /* No vale el underscore en el nombre */
 
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\domain\criteria\CargoField;
 use src\actividadcargos\domain\entity\Cargo;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoCargo extends DatosInfoRepo
@@ -29,14 +32,13 @@ class InfoCargo extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'cargo'];
-            $aOperador = [];
+            $criteria = $criteria->orderBy(CargoField::Cargo);
         } else {
-            $aWhere = ['cargo' => $this->k_buscar];
-            $aOperador = ['cargo' => 'sin_acentos'];
+            $criteria = $criteria->where(Filter::matchesUnaccented(CargoField::Cargo, (string) $this->k_buscar));
         }
 
-        return $this->cargoRepository->getCargos($aWhere, $aOperador);
+        return $this->cargoRepository->matching($criteria);
     }
 }

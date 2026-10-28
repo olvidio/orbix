@@ -7,6 +7,9 @@ use src\dossiers\application\PermDossier;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\domain\criteria\ActividadCargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
@@ -140,7 +143,9 @@ class Select_cargos_de_actividad
         }
 
         $mi_sfsv = ConfigGlobal::mi_sfsv();
-        $cCargosEnActividad = $this->actividadCargoRepository->getActividadCargos(['id_activ' => $this->id_pau]);
+        $cCargosEnActividad = $this->actividadCargoRepository->matching(
+            Criteria::create()->where(Filter::eq(ActividadCargoField::IdActiv, $this->id_pau))
+        );
 
         $result = SelectCargosDeActividadTableData::buildValorRows(
             $elim_asis_default,

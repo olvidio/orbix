@@ -4,6 +4,9 @@ namespace src\actividadcargos\application;
 
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\domain\criteria\ActividadCargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
@@ -75,10 +78,11 @@ final class FormCargosDeActividadData
         $personas_select = null;
 
         if ($Qid_item !== '') {
-            $cActividadCargo = $this->actividadCargoRepository->getActividadCargos([
-                'id_item' => $Qid_item,
-                'id_schema' => $Qid_schema,
-            ]);
+            $cActividadCargo = $this->actividadCargoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(ActividadCargoField::IdItem, $Qid_item))
+                    ->andWhere(Filter::eq(ActividadCargoField::IdSchema, $Qid_schema))
+            );
             $oActividadCargo = $cActividadCargo[0];
             $Qid_cargo = $oActividadCargo->getId_cargo();
             $Qid_nom = (int) ($oActividadCargo->getId_nom() ?? 0);

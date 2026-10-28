@@ -356,7 +356,11 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - `PermDossierVerFormDataTest` tiene un repo anónimo que implementa la interfaz: se le añade `matching()`.
     - Test: `PgDossiersMatchingTest` (3 tests, incl. equivalencia con legacy). Suites verdes: unit e integration de `dossiers`.
   - [x] **4.1.permisos** Sin cambios de código: el módulo no tiene repositorios ni interfaces con `$aWhere`. Su única llamada (`PermisosActividades:141`, `getUsuariosGrupos(['id_usuario' => …])`) es a un repositorio de `usuarios`, así que migra con `usuarios` (4.3). No se ejecutan suites.
-  - [ ] **4.1.actividadcargos**
+  - [x] **4.1.actividadcargos** Decisiones:
+    - `CargoField` (6 campos) y `ActividadCargoField` (7) en `src/actividadcargos/domain/criteria/`; `COLUMNAS = []`. `matching()` en ambas interfaces y repos; `getCargos`/`getActividadCargos` `@deprecated` como envoltorios.
+    - Migrados: `FormCargosDeActividadData`, `Select_cargos_de_actividad`, `InfoCargo::getColeccion` (`sin_acentos` → `matchesUnaccented`; `_ordre` → `orderBy`) y las dos llamadas internas por `id_nom` de `PgActividadCargoDlRepository`.
+    - Se queda con arrays: `getActividadCargosDeAsistente($aWhereNom, …)` (recibe arrays de `asistentes`/`actividades`; migra con la fase 4 de esos módulos junto a `getActividadesDeAsistente`). Los llamantes de otros módulos (`actividadestudios`, `actividadessacd`, `asistentes`) siguen por el envoltorio; sus tests mockean `getActividadCargos`.
+    - Test: `PgActividadCargosMatchingTest` (3 tests, equivalencia con legacy). Suites verdes: unit/integration de `actividadcargos` y `actividadessacd`, unit de `actividadestudios` y `asistentes`.
   - [ ] **4.1.actividadtarifas**
   - [ ] **4.1.ubiscamas**
   - [ ] **4.1.actividadescentro**
