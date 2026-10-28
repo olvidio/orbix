@@ -6,9 +6,13 @@ use DateInterval;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadescentro\domain\criteria\CentroEncargadoField;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -200,10 +204,11 @@ final class ExportarActividadesData
                 $plazas_totales = $plazas_max;
             }
 
-            $aWhereCentros = [];
-            $aWhereCentros['id_activ'] = $id_activ;
-            $aWhereCentros['_ordre'] = 'num_orden DESC';
-            $cCentrosEncargados = $this->centroEncargadoRepository->getCentrosEncargados($aWhereCentros);
+            $cCentrosEncargados = $this->centroEncargadoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(CentroEncargadoField::IdActiv, $id_activ))
+                    ->orderBy(CentroEncargadoField::NumOrden, OrderDirection::Desc)
+            );
             $aCentrosEncargados = [0 => '', 1 => '', 2 => ''];
             if ($cCentrosEncargados !== []) {
                 for ($n = 0; $n < 4; $n++) {

@@ -8,13 +8,21 @@ use src\pasarela\domain\entity\PasarelaConfig;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConverterJson;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\pasarela\domain\criteria\PasarelaConfigField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 
 class PgPasarelaConfigRepository extends ClaseRepository implements PasarelaConfigRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
@@ -24,67 +32,34 @@ class PgPasarelaConfigRepository extends ClaseRepository implements PasarelaConf
     }
 
     /**
+     * Configuraciones de pasarela que cumplen el criterio.
+     *
+     * @return list<PasarelaConfig>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(PasarelaConfigField::class, self::COLUMNAS);
+        $result = [];
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
+            $aDatos['json_valor'] = (new ConverterJson($aDatos['json_valor'], false))->fromPg();
+            $result[] = PasarelaConfig::fromArray($aDatos);
+        }
+
+        return $result;
+    }
+
+    /**
+     * devuelve una colección (array) de objetos de tipo ConfigSchema
+     *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<PasarelaConfig>
      */
     public function getPasarelaConfigs(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
-        $ConfigSchemaSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre' || $camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN' || $sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = ' WHERE ' . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        if (isset($aWhere['_ordre']) && is_string($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        if (isset($aWhere['_limit']) && (is_string($aWhere['_limit']) || is_int($aWhere['_limit'])) && (string)$aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {
-            $aDatos['json_valor'] = (new ConverterJson($aDatos['json_valor'], false))->fromPg();
-            $ConfigSchema = PasarelaConfig::fromArray($aDatos);
-            $ConfigSchemaSet->add($ConfigSchema);
-        }
-
-        /** @var list<PasarelaConfig> $result */
-        $result = $ConfigSchemaSet->getTot();
-
-        return $result;
+        $adapter = new LegacyWhereAdapter(PasarelaConfigField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function Eliminar(PasarelaConfig $PasarelaConfig): bool

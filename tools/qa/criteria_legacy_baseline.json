@@ -268,7 +268,7 @@
     "src/pasarela/application/Conversiones.php": 2,
     "src/pasarela/application/ExportarActividadesData.php": 5,
     "src/pasarela/domain/contracts/PasarelaConfigRepositoryInterface.php": 4,
-    "src/pasarela/infrastructure/persistence/postgresql/PgPasarelaConfigRepository.php": 22,
+    "src/pasarela/infrastructure/persistence/postgresql/PgPasarelaConfigRepository.php": 6,
     "src/personas/application/PersonasSelectData.php": 23,
     "src/personas/application/services/PersonaFinderService.php": 6,
     "src/personas/domain/InfoSituacion.php": 3,

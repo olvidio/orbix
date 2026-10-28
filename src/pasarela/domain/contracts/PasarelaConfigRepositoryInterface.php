@@ -3,6 +3,7 @@
 namespace src\pasarela\domain\contracts;
 
 use src\pasarela\domain\entity\PasarelaConfig;
+use src\shared\domain\criteria\Criteria;
 
 interface PasarelaConfigRepositoryInterface
 {
@@ -10,8 +11,16 @@ interface PasarelaConfigRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * Configuraciones de pasarela que cumplen el criterio.
+     *
+     * @return list<PasarelaConfig>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
      * devuelve una colección (array) de objetos de tipo ConfigSchema
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<PasarelaConfig>
