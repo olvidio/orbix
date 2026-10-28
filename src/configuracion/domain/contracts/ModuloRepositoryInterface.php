@@ -3,6 +3,7 @@
 namespace src\configuracion\domain\contracts;
 
 use src\configuracion\domain\entity\Modulo;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Modulo y su Repositorio
@@ -27,8 +28,16 @@ interface ModuloRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * Módulos que cumplen el criterio.
+     *
+     * @return list<Modulo>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
      * devuelve una colección (array) de objetos de tipo Modulo
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<Modulo> Una colección de objetos de tipo Modulo

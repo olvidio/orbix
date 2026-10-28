@@ -5,7 +5,10 @@ namespace src\configuracion\domain;
 /* No vale el underscore en el nombre */
 
 use src\configuracion\domain\contracts\ModuloInstaladoRepositoryInterface;
+use src\configuracion\domain\criteria\ModuloInstaladoField;
 use src\configuracion\domain\entity\ModuloInstalado;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoModsInstalled extends DatosInfoRepo
@@ -30,13 +33,11 @@ class InfoModsInstalled extends DatosInfoRepo
     public function getColeccion(): array
     {
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'id_mod'];
-            $aOperador = [];
+            $criteria = Criteria::create()->orderBy(ModuloInstaladoField::IdMod);
         } else {
-            $aWhere = ['id_mod' => $this->k_buscar];
-            $aOperador = [];
+            $criteria = Criteria::create()->where(Filter::eq(ModuloInstaladoField::IdMod, $this->k_buscar));
         }
 
-        return $this->moduloInstaladoRepository->getModuloInstalados($aWhere, $aOperador);
+        return $this->moduloInstaladoRepository->matching($criteria);
     }
 }

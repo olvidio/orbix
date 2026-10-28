@@ -4,6 +4,8 @@ namespace src\configuracion\application;
 
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
+use src\configuracion\domain\criteria\ModuloField;
+use src\shared\domain\criteria\Criteria;
 use src\shared\security\HashB;
 
 /**
@@ -40,9 +42,7 @@ final class ModulosSelectData
             }
         }
 
-        $aWhere = ['_ordre' => 'nom'];
-        $aOperador = [];
-        $cModulos = $this->moduloRepository->getModulos($aWhere, $aOperador);
+        $cModulos = $this->moduloRepository->matching(Criteria::create()->orderBy(ModuloField::Nom));
 
         $a_botones = [
             ['txt' => _("modificar"), 'click' => 'fnjs_modificar("#seleccionados")'],
@@ -56,7 +56,7 @@ final class ModulosSelectData
             _("aplicaciones requeridas"),
         ];
 
-        $cMods = $this->moduloRepository->getModulos();
+        $cMods = $this->moduloRepository->matching(Criteria::create());
         $a_mods_todos = [];
         foreach ($cMods as $oMod) {
             $id_mod = $oMod->getId_mod();
@@ -64,7 +64,7 @@ final class ModulosSelectData
             $a_mods_todos[$id_mod] = $nom_mod;
         }
 
-        $cApps = $this->appRepository->getApps();
+        $cApps = $this->appRepository->matching(Criteria::create());
         $a_apps_todas = [];
         foreach ($cApps as $oApp) {
             $id_app = $oApp->getIdAppVo()->value();

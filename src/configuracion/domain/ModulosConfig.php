@@ -8,6 +8,7 @@ use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\entity\App;
 use src\configuracion\domain\entity\Modulo;
 use src\configuracion\domain\entity\ModuloInstalado;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Description of modulosconfig
@@ -39,8 +40,8 @@ class ModulosConfig
         private AppRepositoryInterface $appRepository,
         private ModuloInstaladoRepositoryInterface $moduloInstaladoRepository,
     ) {
-        $this->cMods = $this->moduloRepository->getModulos();
-        $this->cApps = $this->appRepository->getApps();
+        $this->cMods = $this->moduloRepository->matching(Criteria::create());
+        $this->cApps = $this->appRepository->matching(Criteria::create());
     }
 
     /**
@@ -82,7 +83,7 @@ class ModulosConfig
      */
     public function getModsInstalados(): array
     {
-        $this->cModsInstalados = $this->moduloInstaladoRepository->getModuloInstalados();
+        $this->cModsInstalados = $this->moduloInstaladoRepository->matching(Criteria::create());
         $a_mods = $this->getModsAll();
         $this->a_mods_installed = [];
         foreach ($this->cModsInstalados as $oMod) {
@@ -102,7 +103,7 @@ class ModulosConfig
     {
         $a_mods = $this->getModsAll();
         $activos = [];
-        foreach ($this->moduloInstaladoRepository->getModuloInstalados() as $oMod) {
+        foreach ($this->moduloInstaladoRepository->matching(Criteria::create()) as $oMod) {
             if ($oMod->isActive() !== true) {
                 continue;
             }

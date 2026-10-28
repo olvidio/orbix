@@ -3,6 +3,7 @@
 namespace src\configuracion\domain\contracts;
 
 use src\configuracion\domain\entity\App;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase App y su Repositorio
@@ -19,8 +20,16 @@ interface AppRepositoryInterface
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * Apps que cumplen el criterio.
+     *
+     * @return list<App>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
      * devuelve una colección (array) de objetos de tipo App
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<App> Una colección de objetos de tipo App

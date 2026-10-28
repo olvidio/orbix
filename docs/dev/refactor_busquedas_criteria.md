@@ -407,7 +407,10 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - Cambio de comportamiento menor: `InfoGrupMenus` buscaba por una columna `descripcion` que `aux_grupmenu` no tiene (la consulta fallaba y devolvía vacío); ahora busca por `grup_menu`, que era la intención.
     - Siguen por el envoltorio los llamantes de `usuarios` (`rolesLista`, `role_grupmenu_*`, `usuario_preferencias`, `role_info`) y sus mocks, que migran en 4.3.
     - Tests: `PgMenusMatchingTest` (3 tests, equivalencia con legacy) y los unitarios de `menus` mockean ahora `matching`. Suites verdes: unit e integration de `menus`; unit de `usuarios`.
-  - [ ] **4.2.configuracion**
+  - [x] **4.2.configuracion** Decisiones:
+    - `AppField`, `ConfigSchemaField`, `ModuloField` y `ModuloInstaladoField` en `src/configuracion/domain/criteria/`; `COLUMNAS = []`. `matching()` en las 4 interfaces y repos; `getApps`/`getConfigSchemas`/`getModulos`/`getModuloInstalados` `@deprecated` como envoltorios. `PgModuloRepository` solo tenía `oDbl`: fija también la conexión de selección. `matching()` de módulos conserva la hidratación de `mods_req`/`apps_req` (arrays enteros PG).
+    - Migrados: `ModulosSelectData`, `ModulosConfig`, `InfoApps`, `InfoModsInstalled` y `ApptablesAppsData` (de `devel_db_admin`). `getConfigSchemas` no tiene llamantes fuera del repo. `ModulosConfigTest` mockea ahora `matching`.
+    - Test: `PgConfiguracionMatchingTest` (3 tests, equivalencia con legacy). Suites verdes: unit e integration de `configuracion` y `devel_db_admin`; unit de `usuarios`.
   - [ ] **4.2.casas**
   - [ ] **4.2.zonassacd**
   - [ ] **4.2.planning**

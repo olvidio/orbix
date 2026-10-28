@@ -5,7 +5,10 @@ namespace src\configuracion\domain;
 /* No vale el underscore en el nombre */
 
 use src\configuracion\domain\contracts\AppRepositoryInterface;
+use src\configuracion\domain\criteria\AppField;
 use src\configuracion\domain\entity\App;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoApps extends DatosInfoRepo
@@ -30,13 +33,11 @@ class InfoApps extends DatosInfoRepo
     public function getColeccion(): array
     {
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'nom'];
-            $aOperador = [];
+            $criteria = Criteria::create()->orderBy(AppField::Nom);
         } else {
-            $aWhere = ['nom' => $this->k_buscar];
-            $aOperador = ['nom' => 'sin_acentos'];
+            $criteria = Criteria::create()->where(Filter::matchesUnaccented(AppField::Nom, $this->k_buscar));
         }
 
-        return $this->appRepository->getApps($aWhere, $aOperador);
+        return $this->appRepository->matching($criteria);
     }
 }

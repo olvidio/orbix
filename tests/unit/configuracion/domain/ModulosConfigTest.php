@@ -34,13 +34,13 @@ class ModulosConfigTest extends myTest
         $cambios->setAppsReqVo(new AppsReq([200]));
 
         $moduloRepository = $this->createMock(ModuloRepositoryInterface::class);
-        $moduloRepository->method('getModulos')->willReturn([$procesos, $cambios]);
+        $moduloRepository->method('matching')->willReturn([$procesos, $cambios]);
 
         $appRepository = $this->createMock(AppRepositoryInterface::class);
-        $appRepository->method('getApps')->willReturn([]);
+        $appRepository->method('matching')->willReturn([]);
 
         $moduloInstaladoRepository = $this->createMock(ModuloInstaladoRepositoryInterface::class);
-        $moduloInstaladoRepository->method('getModuloInstalados')->willReturn($instalados);
+        $moduloInstaladoRepository->method('matching')->willReturn($instalados);
 
         return new ModulosConfig($moduloRepository, $appRepository, $moduloInstaladoRepository);
     }

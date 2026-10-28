@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace src\devel_db_admin\application;
 
 use src\configuracion\domain\contracts\AppRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Lista de aplicaciones para el formulario {@see frontend\devel_db_admin\controller\apptables}.
@@ -22,7 +23,7 @@ final class ApptablesAppsData
     public function build(): array
     {
         $a_apps = [];
-        foreach ($this->appRepository->getApps() as $oApp) {
+        foreach ($this->appRepository->matching(Criteria::create()) as $oApp) {
             $id = $oApp->getIdAppVo()->value();
             $a_apps[$id] = $oApp->getNomVo()->value();
         }
