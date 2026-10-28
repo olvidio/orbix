@@ -14,8 +14,13 @@ $oPosicion = FrontBootstrap::boot();
 $Qactualizar = (int)filter_input(INPUT_POST, 'actualizar');
 
 $campos = array_merge($_GET, $_POST);
+$data = PostRequest::getDataFromUrl('/src/asistentes/form_asistentes_a_una_actividad_data', $campos, false);
+if (!empty($data['error'])) {
+    // Error de negocio (p. ej. «los datos los modifica el propietario de la plaza»): sin el bloque técnico.
+    exit(PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error'])));
+}
 /** @var array<string, mixed> $payload */
-$payload = AsistentesPayload::postData(PostRequest::getDataFromUrl('/src/asistentes/form_asistentes_a_una_actividad_data', $campos));
+$payload = AsistentesPayload::postData($data);
 $payload = FormAsistentesAUnaActividadRender::enrich($payload);
 
 $idActiv = \frontend\shared\helpers\PayloadCoercion::int($payload['id_activ'] ?? filter_input(INPUT_POST, 'id_activ', FILTER_VALIDATE_INT));
