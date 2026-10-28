@@ -403,3 +403,42 @@ Los tests de la fase 1 prueban el adaptador sobre una **tabla temporal con un en
 1. **Test de caracterización** (2.0): expectativas fijadas a mano sobre datos sembrados, independientes de la implementación; verde antes y después del cambio.
 2. **Ejecutar las suites de los módulos dependientes** tras 2.1 (`tests/unit` e `integration` de `asistentes`, `actividades`, `planning`, `actividadcargos`, `personas`, `misas`, `pasarela`), no solo `asistentes`.
 3. **Revisar con `rg`** los `$aOperators` de los 8 ficheros de `application/` y los de módulos ajenos que llaman a `getAsistentes()`: cualquier operador fuera de la tabla 3.6 se detecta antes de ejecutar nada.
+
+---
+
+## 11. Ejecución automática por tandas (añadido 2026-10-28)
+
+`php tools/qa/ejecutar_plan_ia.php` ejecuta los pasos `- [ ] **N.M**` pendientes de este plan, uno a uno, lanzando `claude -p`, hasta que se acaba el plan, el presupuesto o el cupo.
+
+**Primera vez (piloto, con terminal):**
+
+```bash
+php tools/qa/ejecutar_plan_ia.php --dry-run --fase=2      # ver qué haría, sin gastar
+php tools/qa/ejecutar_plan_ia.php --fase=2                # pregunta el % semanal usado y, tras cada paso, el % nuevo
+```
+
+Las respuestas «% antes / % después» de cada paso son lo que calibra la conversión **u.eq. → % de semana**. Con 2–3 pasos medidos ya hay calibración; a partir de ahí el script decide solo si el siguiente paso cabe (`estimación × 1,3 ≤ cupo libre − reserva del 5 %`).
+
+**Cron (martes 14:30; el cupo semanal del plan Pro se renueva el martes a las 16:00):**
+
+```cron
+30 14 * * 2 PATH=/home/dani/.local/bin:/usr/local/bin:/usr/bin:/bin cd /home/dani/orbix_local/orbix && php tools/qa/ejecutar_plan_ia.php --fase=2 >> docs/dev/reports/ejecutar_plan_ia.log 2>&1
+```
+
+Sin terminal el script no puede preguntar. Usa, por orden: `--usado=NN`, el último `% anotado` de esta semana (`php tools/qa/ejecutar_plan_ia.php --anotar-uso=63`, válido si es posterior al último reset) o, si no hay dato, trabaja hasta que `claude` avise de que se agotó el cupo. Consejo: anotar el % el martes por la mañana.
+
+**Qué hace y qué no:**
+
+- Trabaja en la rama `refactor/criteria-auto` (la crea desde la rama actual). **No hace push, merge ni toca `main`**; el resultado se revisa y se fusiona a mano.
+- Cada paso tiene que acabar con commit nuevo, árbol limpio y casilla marcada; si `claude` dice «OK» pero no se cumple, se registra `INCONSISTENTE` y se para.
+- Si queda trabajo sin commitear (paso cortado por el límite), la siguiente ejecución se niega a continuar hasta que se revise (`--reanudar` para que `claude` lo complete).
+- No empieza pasos después de la hora límite (por defecto, el próximo reset): un paso que cruza el reset sigue, porque ya gasta cupo nuevo.
+- En los bloques de la fase 4 pide a `claude` que primero los trocee en un paso por módulo y que pare cuando el siguiente módulo no quepa en el presupuesto restante: así un presupuesto pequeño se aprovecha módulo a módulo.
+- Registro: `docs/dev/reports/consumo_ia.jsonl` (un registro por paso: u.eq., coste USD, turnos, duración, % antes/después, resultado, commit). Estado: `docs/dev/reports/consumo_ia_estado.json`. Las estimaciones por paso se corrigen con el cociente real/estimado de lo ya medido.
+
+**Pendiente de verificar con la primera ejecución real** (probado con un `claude` simulado sobre un repo temporal, no con el real):
+
+1. Que `modelUsage` del JSON es el total de la ejecución: el registro guarda también `ueq_transcripcion` (leída de la transcripción) para contrastarlo.
+2. Que el texto real del aviso de límite coincide con la expresión que lo detecta; si no, el paso quedará como `ERROR`/`INCONSISTENTE` con el texto en `detalle` y se ajusta.
+3. Que la lista de herramientas permitidas basta (el registro cuenta `denegaciones`); si no, `--permisos=bypass` o ampliar la lista.
+4. El plan Pro tiene además un límite por ventana de 5 horas: si se alcanza, el script lo ve como límite agotado y para, aunque quede cupo semanal.
