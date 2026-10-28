@@ -3,10 +3,19 @@
 namespace src\certificados\domain\contracts;
 
 use src\certificados\domain\entity\CertificadoEmitido;
+use src\shared\domain\criteria\Criteria;
 
 interface CertificadoEmitidoRepositoryInterface
 {
     /**
+     * Certificados que cumplen el criterio.
+     *
+     * @return list<CertificadoEmitido>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<CertificadoEmitido>

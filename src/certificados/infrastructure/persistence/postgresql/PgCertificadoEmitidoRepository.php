@@ -8,7 +8,11 @@ use src\certificados\domain\entity\CertificadoEmitido;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConverterDate;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\certificados\domain\criteria\CertificadoEmitidoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\HandlesPgBytea;
@@ -17,79 +21,48 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
 {
     use HandlesPdoErrors;
     use HandlesPgBytea;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
         $this->setoDbl(GlobalPdo::get('oDB'));
+        $this->setoDbl_select(GlobalPdo::get('oDB'));
         $this->setNomTabla('e_certificados_rstgr');
     }
 
     /**
+     * Certificados que cumplen el criterio.
+     *
+     * @return list<CertificadoEmitido>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(CertificadoEmitidoField::class, self::COLUMNAS);
+        /** @var list<CertificadoEmitido> $certificados */
+        $certificados = [];
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
+            $aDatos['documento'] = $this->normalizeBytea($this->readByteaField($aDatos['documento'] ?? null));
+            $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado'] ?? null))->fromPg();
+            $aDatos['f_enviado'] = (new ConverterDate('date', $aDatos['f_enviado'] ?? null))->fromPg();
+            $certificados[] = CertificadoEmitido::fromArray($aDatos);
+        }
+
+        return $certificados;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<CertificadoEmitido>
      */
     public function getCertificados(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $CertificadoSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre' || $camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN' || $sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = ' WHERE ' . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        if (isset($aWhere['_ordre']) && is_scalar($aWhere['_ordre']) && (string) $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . (string) $aWhere['_ordre'];
-        }
-        unset($aWhere['_ordre']);
-        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && (string) $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . (string) $aWhere['_limit'];
-        }
-        unset($aWhere['_limit']);
-
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        /** @var list<CertificadoEmitido> $certificados */
-        $certificados = [];
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $aDatos['documento'] = $this->normalizeBytea($this->readByteaField($aDatos['documento'] ?? null));
-            $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado'] ?? null))->fromPg();
-            $aDatos['f_enviado'] = (new ConverterDate('date', $aDatos['f_enviado'] ?? null))->fromPg();
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $certificados[] = CertificadoEmitido::fromArray($normalized);
-        }
-
-        return $certificados;
+        $adapter = new LegacyWhereAdapter(CertificadoEmitidoField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function Eliminar(CertificadoEmitido $Certificado): bool

@@ -3,8 +3,12 @@
 namespace src\certificados\domain;
 
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\certificados\domain\criteria\CertificadoEmitidoField;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
@@ -22,33 +26,30 @@ class CertificadoEmitidoSelect
      */
     public function getCamposVista(string $certificado, string $inicurs_ca_iso, string $fincurs_ca_iso): array
     {
-        $aWhere = [];
-        $aOperador = [];
         if ($certificado !== '') {
-            $aWhere['certificado'] = $certificado;
-            $aOperador['certificado'] = '~';
-            $aWhere['_ordre'] = 'f_certificado DESC, certificado DESC';
-            $aWhere['esquema_emisor'] = ConfigGlobal::mi_region_dl();
-
+            $patron = $certificado;
             $matches = [];
             preg_match('/^(\d*)(\/)?(\d*)/', $certificado, $matches);
             if (($matches[1] ?? '') !== '') {
                 $region = ConfigGlobal::mi_region();
-                $Qcertificado_region = $matches[3] !== ''
+                $patron = $matches[3] !== ''
                     ? "$region $certificado"
                     : "$region " . $matches[1] . '/' . date('y');
-                $aWhere['certificado'] = $Qcertificado_region;
             }
+            $criteria = Criteria::create()
+                ->where(Filter::matches(CertificadoEmitidoField::Certificado, $patron))
+                ->andWhere(Filter::eq(CertificadoEmitidoField::EsquemaEmisor, ConfigGlobal::mi_region_dl()));
         } else {
-            $aWhere['f_certificado'] = "'$inicurs_ca_iso','$fincurs_ca_iso'";
-            $aOperador['f_certificado'] = 'BETWEEN';
-            $aWhere['_ordre'] = 'f_certificado DESC, certificado DESC';
-            $aWhere['esquema_emisor'] = ConfigGlobal::mi_region_dl();
-            $aWhere['f_enviado'] = 'x';
-            $aOperador['f_enviado'] = 'IS NULL';
+            $criteria = Criteria::create()
+                ->where(Filter::between(CertificadoEmitidoField::FCertificado, $inicurs_ca_iso, $fincurs_ca_iso))
+                ->andWhere(Filter::eq(CertificadoEmitidoField::EsquemaEmisor, ConfigGlobal::mi_region_dl()))
+                ->andWhere(Filter::isNull(CertificadoEmitidoField::FEnviado));
         }
+        $criteria = $criteria
+            ->orderBy(CertificadoEmitidoField::FCertificado, OrderDirection::Desc)
+            ->addOrderBy(CertificadoEmitidoField::Certificado, OrderDirection::Desc);
 
-        $cCertificados = $this->certificadoEmitidoRepository->getCertificados($aWhere, $aOperador);
+        $cCertificados = $this->certificadoEmitidoRepository->matching($criteria);
 
         $a_botones = [];
         if ($this->delegacionRepository->soy_region_stgr()) {

@@ -3,7 +3,10 @@
 namespace src\certificados\domain;
 
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
+use src\certificados\domain\criteria\CertificadoRecibidoField;
 use src\personas\domain\entity\Persona;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 
 /**
@@ -83,13 +86,12 @@ class Select_certificados_de_una_persona
                 "<br>No encuentro a ninguna persona con id_nom: $this->id_pau en  " . __FILE__ . ': line ' . __LINE__
             );
         }
-        $aWhere = [
-            'id_nom' => $this->id_pau,
-            //'firmado' => true,           mejor que se vean todos
-            '_ordre' => 'f_certificado'
-        ];
-
-        $cCertificados = $this->certificadoRecibidoRepository->getCertificados($aWhere);
+        // Sin filtro por 'firmado': mejor que se vean todos.
+        $cCertificados = $this->certificadoRecibidoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(CertificadoRecibidoField::IdNom, $this->id_pau))
+                ->orderBy(CertificadoRecibidoField::FCertificado)
+        );
 
         $i = 0;
         $a_valores = [];
