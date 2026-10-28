@@ -3,6 +3,9 @@
 namespace src\profesores\domain\services;
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorStgrField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -70,9 +73,10 @@ class ProfesorAsignaturaService
             return [];
         }
 
-        $gesProfesores = $this->profesorStgrRepository->getProfesoresStgr(
-            ['id_departamento' => $id_departamento, 'f_cese' => ''],
-            ['f_cese' => 'IS NULL']
+        $gesProfesores = $this->profesorStgrRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ProfesorStgrField::IdDepartamento, $id_departamento))
+                ->andWhere(Filter::isNull(ProfesorStgrField::FCese))
         );
         $aProfesores = [];
         foreach ($gesProfesores as $oProfesor) {

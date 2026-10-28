@@ -2,6 +2,7 @@
 
 namespace src\profesores\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\profesores\domain\entity\ProfesorTipo;
 
 /**
@@ -24,6 +25,12 @@ interface ProfesorTipoRepositoryInterface
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
+	 * @return list<ProfesorTipo>
+	 */
+	public function matching(Criteria $criteria): array;
+
+	/**
+	 * @deprecated usar matching(Criteria)
 	 * devuelve una colección (array) de objetos de tipo ProfesorTipo
 	 *
 	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.

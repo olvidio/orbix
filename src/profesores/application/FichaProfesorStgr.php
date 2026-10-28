@@ -2,6 +2,16 @@
 
 namespace src\profesores\application;
 
+use src\profesores\domain\criteria\ProfesorPublicacionField;
+use src\profesores\domain\criteria\ProfesorJuramentoField;
+use src\profesores\domain\criteria\ProfesorDocenciaStgrField;
+use src\profesores\domain\criteria\ProfesorAmpliacionField;
+use src\profesores\domain\criteria\ProfesorDirectorField;
+use src\profesores\domain\criteria\ProfesorStgrField;
+use src\profesores\domain\criteria\ProfesorCongresoField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\ProfesorTituloEstField;
 use src\shared\config\ConfigGlobal;
 use src\dossiers\application\PermDossier;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
@@ -96,12 +106,17 @@ final class FichaProfesorStgr
             );
         }
 
-        $aWhere = ['id_nom' => $id_nom, '_ordre' => 'f_nombramiento'];
-        $aOperador = [];
+        $criteriaStgr = Criteria::create()->where(Filter::eq(ProfesorStgrField::IdNom, $id_nom));
+        $criteriaAmpliacion = Criteria::create()->where(Filter::eq(ProfesorAmpliacionField::IdNom, $id_nom));
+        $criteriaDirector = Criteria::create()->where(Filter::eq(ProfesorDirectorField::IdNom, $id_nom));
         if ($print) {
-            $aWhere['f_cese'] = 'NULL';
-            $aOperador['f_cese'] = 'IS NULL';
+            $criteriaStgr = $criteriaStgr->andWhere(Filter::isNull(ProfesorStgrField::FCese));
+            $criteriaAmpliacion = $criteriaAmpliacion->andWhere(Filter::isNull(ProfesorAmpliacionField::FCese));
+            $criteriaDirector = $criteriaDirector->andWhere(Filter::isNull(ProfesorDirectorField::FCese));
         }
+        $criteriaStgr = $criteriaStgr->orderBy(ProfesorStgrField::FNombramiento);
+        $criteriaAmpliacion = $criteriaAmpliacion->orderBy(ProfesorAmpliacionField::FNombramiento);
+        $criteriaDirector = $criteriaDirector->orderBy(ProfesorDirectorField::FNombramiento);
 
         $num_txt = '';
         $agd_txt = '';
@@ -127,7 +142,7 @@ final class FichaProfesorStgr
         $latin = $this->profesorLatinRepository->findById($id_nom)?->isLatin();
         $latin_txt = \src\shared\domain\helpers\FuncTablasSupport::isTrue($latin) ? 'si' : '';
 
-        $cProfesores = $this->profesorStgrRepository->getProfesoresStgr($aWhere, $aOperador);
+        $cProfesores = $this->profesorStgrRepository->matching($criteriaStgr);
 
         $a_nombramientos = [];
         $dep = '';
@@ -155,7 +170,7 @@ final class FichaProfesorStgr
             }
         }
 
-        $cTitulosEst = $this->profesorTituloEstRepository->getProfesorTitulosEst(['id_nom' => $id_nom, '_ordre' => 'year']);
+        $cTitulosEst = $this->profesorTituloEstRepository->matching(Criteria::create()->where(Filter::eq(ProfesorTituloEstField::IdNom, $id_nom))->orderBy(ProfesorTituloEstField::Year));
         $a_curriculum = [];
         foreach ($cTitulosEst as $oProfesorTituloEst) {
             $a_curriculum[] = [
@@ -166,7 +181,7 @@ final class FichaProfesorStgr
             ];
         }
 
-        $cProfesorAmpliaciones = $this->profesorAmpliacionRepository->getProfesorAmpliaciones($aWhere, $aOperador);
+        $cProfesorAmpliaciones = $this->profesorAmpliacionRepository->matching($criteriaAmpliacion);
         $a_ampliacion = [];
         foreach ($cProfesorAmpliaciones as $oProfesorAmpliacion) {
             $id_asignatura = $oProfesorAmpliacion->getId_asignatura();
@@ -183,7 +198,7 @@ final class FichaProfesorStgr
             ];
         }
 
-        $cProfesorCongresos = $this->profesorCongresoRepository->getProfesorCongresos(['id_nom' => $id_nom, '_ordre' => 'f_ini']);
+        $cProfesorCongresos = $this->profesorCongresoRepository->matching(Criteria::create()->where(Filter::eq(ProfesorCongresoField::IdNom, $id_nom))->orderBy(ProfesorCongresoField::FIni));
         $a_tipos_congreso = CongresoTipo::getArrayTiposCongreso();
         $a_congresos = [];
         foreach ($cProfesorCongresos as $oProfesorCongreso) {
@@ -198,7 +213,7 @@ final class FichaProfesorStgr
             ];
         }
 
-        $cDocencias = $this->profesorDocenciaStgrRepository->getProfesorDocenciasStgr(['id_nom' => $id_nom, '_ordre' => 'curso_inicio,id_asignatura']);
+        $cDocencias = $this->profesorDocenciaStgrRepository->matching(Criteria::create()->where(Filter::eq(ProfesorDocenciaStgrField::IdNom, $id_nom))->orderBy(ProfesorDocenciaStgrField::CursoInicio)->addOrderBy(ProfesorDocenciaStgrField::IdAsignatura));
         $a_tipos_docencia = TipoActividadAsignatura::getTiposActividad();
         $a_docencias = [];
         foreach ($cDocencias as $oDocencia) {
@@ -222,7 +237,7 @@ final class FichaProfesorStgr
         $a_director = [];
         $a_publicaciones = [];
         if (!$print) {
-            $cDirectores = $this->profesorDirectorRepository->getProfesoresDirectores($aWhere, $aOperador);
+            $cDirectores = $this->profesorDirectorRepository->matching($criteriaDirector);
             foreach ($cDirectores as $oProfesorDirector) {
                 $id_departamento = $oProfesorDirector->getId_departamento();
                 $oDepDirector = $this->departamentoRepository->findById($id_departamento);
@@ -235,12 +250,12 @@ final class FichaProfesorStgr
                 ];
             }
 
-            $cJuramento = $this->profesorJuramentoRepository->getProfesorJuramentos(['id_nom' => $id_nom]);
+            $cJuramento = $this->profesorJuramentoRepository->matching(Criteria::create()->where(Filter::eq(ProfesorJuramentoField::IdNom, $id_nom)));
             if (!empty($cJuramento[0])) {
                 $f_juramento = $cJuramento[0]->getF_juramento()->getFromLocal();
             }
 
-            $cProfesorPublicaciones = $this->profesorPublicacionRepository->getProfesorPublicaciones(['id_nom' => $id_nom, '_ordre' => 'f_publicacion']);
+            $cProfesorPublicaciones = $this->profesorPublicacionRepository->matching(Criteria::create()->where(Filter::eq(ProfesorPublicacionField::IdNom, $id_nom))->orderBy(ProfesorPublicacionField::FPublicacion));
             foreach ($cProfesorPublicaciones as $oProfesorPublicacion) {
                 $a_publicaciones[] = [
                     'pendiente' => $oProfesorPublicacion->isPendiente(),

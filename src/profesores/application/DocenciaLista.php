@@ -2,6 +2,9 @@
 
 namespace src\profesores\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\ProfesorDocenciaStgrField;
 use src\shared\config\ConfigGlobal;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -46,7 +49,7 @@ final class DocenciaLista
         foreach ($a_nomProfesor as $id_nom => $aClave) {
             $ap_nom = $aClave['ap_nom'];
             $dl = $aClave['dl'];
-            $cProfesorDocenciaStgr = $this->profesorDocenciaStgrRepository->getProfesorDocenciasStgr(['id_nom' => $id_nom]);
+            $cProfesorDocenciaStgr = $this->profesorDocenciaStgrRepository->matching(Criteria::create()->where(Filter::eq(ProfesorDocenciaStgrField::IdNom, $id_nom)));
             foreach ($cProfesorDocenciaStgr as $oProfesorDocenciaStgr) {
                 $p++;
                 $id_asignatura = $oProfesorDocenciaStgr->getIdAsignaturaVo()->value();

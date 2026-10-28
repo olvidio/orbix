@@ -5,6 +5,10 @@ namespace src\profesores\domain;
 
 /* No vale el underscore en el nombre */
 
+use src\shared\domain\criteria\OrderDirection;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\ProfesorDocenciaStgrField;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
@@ -36,20 +40,16 @@ class InfoProfesorDocenciaStgr extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        $aWhere = [];
-        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
+        $criteria = Criteria::create();
         if (!empty($this->id_pau)) {
-            $aWhere['id_nom'] = $this->id_pau;
+            $criteria = $criteria->andWhere(Filter::eq(ProfesorDocenciaStgrField::IdNom, $this->id_pau));
         }
         if (empty($this->k_buscar)) {
-            $aWhere['_ordre'] = 'curso_inicio DESC';
-            $aOperador = [];
-        } else {
-            //$aWhere['congreso'] = $this->k_buscar;
-            //$aOperador['congreso'] ='sin_acentos';
+            $criteria = $criteria->orderBy(ProfesorDocenciaStgrField::CursoInicio, OrderDirection::Desc);
         }
-        return $this->profesorDocenciaStgrRepository->getProfesorDocenciasStgr($aWhere, $aOperador);
+
+        return $this->profesorDocenciaStgrRepository->matching($criteria);
     }
 }

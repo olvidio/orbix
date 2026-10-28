@@ -45,7 +45,7 @@ final class CongresosListaTest extends TestCase
         $oCongreso->method('getOrganiza')->willReturn('ACME');
 
         $repoCongreso = $this->createMock(ProfesorCongresoRepositoryInterface::class);
-        $repoCongreso->method('getProfesorCongresos')->willReturn([$oCongreso]);
+        $repoCongreso->method('matching')->willReturn([$oCongreso]);
 
         $svc = $this->createMock(ProfesorStgrService::class);
         $svc->method('getArrayProfesoresConDl')->willReturn([
@@ -84,7 +84,7 @@ final class CongresosListaTest extends TestCase
         $oCongreso->method('getOrganiza')->willReturn('O');
 
         $repoCongreso = $this->createMock(ProfesorCongresoRepositoryInterface::class);
-        $repoCongreso->method('getProfesorCongresos')->willReturn([$oCongreso]);
+        $repoCongreso->method('matching')->willReturn([$oCongreso]);
 
         $svc = $this->createMock(ProfesorStgrService::class);
         $svc->method('getArrayProfesoresConDl')->willReturn([

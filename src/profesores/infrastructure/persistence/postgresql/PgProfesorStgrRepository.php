@@ -4,13 +4,16 @@ namespace src\profesores\infrastructure\persistence\postgresql;
 use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\profesores\domain\criteria\ProfesorStgrField;
 use src\shared\infrastructure\persistence\ConverterDate;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorStgr;
 use src\shared\traits\HandlesPdoErrors;
+use src\shared\traits\RunsCriteriaQueries;
 
 
 /**
@@ -26,93 +29,61 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
 {
 
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
         $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
+        $this->setoDbl_select($oDbl);
         $this->setNomTabla('d_profesor_stgr');
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ProfesorStgr
+     * ProfesorStgr que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<ProfesorStgr> Una colección de objetos de tipo ProfesorStgr
+     * @return list<ProfesorStgr>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(ProfesorStgrField::class, self::COLUMNAS);
+        $result = [];
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
+            $result[] = ProfesorStgr::fromArray($this->hidratarFila($aDatos));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Fechas de PG (texto iso) a sus tipos PHP.
+     *
+     * @param array<string, mixed> $aDatos
+     * @return array<string, mixed>
+     */
+    private function hidratarFila(array $aDatos): array
+    {
+        $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();
+        $aDatos['f_cese'] = (new ConverterDate('date', $aDatos['f_cese']))->fromPg();
+
+        return $aDatos;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<ProfesorStgr>
      */
     public function getProfesoresStgr(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $ProfesorStgrSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $aDatos = $this->normalizeAssocRow($aDatos);
-            // para las fechas del postgres (texto iso)
-            $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();
-            $aDatos['f_cese'] = (new ConverterDate('date', $aDatos['f_cese']))->fromPg();
-            $ProfesorStgr = ProfesorStgr::fromArray($aDatos);
-            $ProfesorStgrSet->add($ProfesorStgr);
-        }
-        /** @var list<ProfesorStgr> $result */
-        $result = array_values($ProfesorStgrSet->getTot());
-        return $result;
+        $adapter = new LegacyWhereAdapter(ProfesorStgrField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

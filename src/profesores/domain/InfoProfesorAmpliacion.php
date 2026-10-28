@@ -2,6 +2,10 @@
 
 namespace  src\profesores\domain;
 
+use src\shared\domain\criteria\OrderDirection;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\ProfesorAmpliacionField;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
@@ -34,20 +38,16 @@ class InfoProfesorAmpliacion extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        $aWhere = [];
-        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
+        $criteria = Criteria::create();
         if (!empty($this->id_pau)) {
-            $aWhere['id_nom'] = $this->id_pau;
+            $criteria = $criteria->andWhere(Filter::eq(ProfesorAmpliacionField::IdNom, $this->id_pau));
         }
         if (empty($this->k_buscar)) {
-            $aWhere['_ordre'] = 'f_nombramiento DESC';
-            $aOperador = [];
-        } else {
-            //$aWhere['congreso'] = $this->k_buscar;
-            //$aOperador['congreso'] ='sin_acentos';
+            $criteria = $criteria->orderBy(ProfesorAmpliacionField::FNombramiento, OrderDirection::Desc);
         }
-        return $this->profesorAmpliacionRepository->getProfesorAmpliaciones($aWhere, $aOperador);
+
+        return $this->profesorAmpliacionRepository->matching($criteria);
     }
 }

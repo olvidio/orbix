@@ -5,6 +5,10 @@ namespace src\profesores\domain;
 
 /* No vale el underscore en el nombre */
 
+use src\shared\domain\criteria\OrderDirection;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\ProfesorDirectorField;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
@@ -36,20 +40,16 @@ class InfoProfesorDirector extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        $aWhere = [];
-        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
+        $criteria = Criteria::create();
         if (!empty($this->id_pau)) {
-            $aWhere['id_nom'] = $this->id_pau;
+            $criteria = $criteria->andWhere(Filter::eq(ProfesorDirectorField::IdNom, $this->id_pau));
         }
         if (empty($this->k_buscar)) {
-            $aWhere['_ordre'] = 'f_nombramiento DESC';
-            $aOperador = [];
-        } else {
-            //$aWhere['congreso'] = $this->k_buscar;
-            //$aOperador['congreso'] ='sin_acentos';
+            $criteria = $criteria->orderBy(ProfesorDirectorField::FNombramiento, OrderDirection::Desc);
         }
-        return $this->profesorDirectorRepository->getProfesoresDirectores($aWhere, $aOperador);
+
+        return $this->profesorDirectorRepository->matching($criteria);
     }
 }

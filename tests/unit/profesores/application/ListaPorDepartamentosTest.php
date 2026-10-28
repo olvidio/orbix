@@ -68,7 +68,7 @@ final class ListaPorDepartamentosTest extends TestCase
         $this->stubOConfigAmbito('dl');
 
         $oTipoRepo = $this->createMock(ProfesorTipoRepositoryInterface::class);
-        $oTipoRepo->method('getProfesorTipos')->willReturn([]);
+        $oTipoRepo->method('matching')->willReturn([]);
 
         $oDept = $this->createMock(Departamento::class);
         $oDept->method('getId_departamento')->willReturn(10);

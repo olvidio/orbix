@@ -53,7 +53,7 @@ final class DocenciaListaTest extends TestCase
         $oDoc->method('getActaVo')->willReturn($actaVo);
 
         $repoDoc = $this->createMock(ProfesorDocenciaStgrRepositoryInterface::class);
-        $repoDoc->method('getProfesorDocenciasStgr')->willReturn([$oDoc]);
+        $repoDoc->method('matching')->willReturn([$oDoc]);
 
         $svc = $this->createMock(ProfesorStgrService::class);
         $svc->method('getArrayProfesoresConDl')->willReturn([

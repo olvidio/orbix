@@ -3,6 +3,9 @@
 namespace src\profesores\domain\services;
 
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorStgrField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 
@@ -47,7 +50,7 @@ class ProfesorStgrService
      */
     public function getArrayProfesoresConDl(): array
     {
-        $gesProfesores = $this->profesorStgrRepository->getProfesoresStgr(['f_cese' => ''], ['f_cese' => 'IS NULL']);
+        $gesProfesores = $this->profesorStgrRepository->matching(Criteria::create()->where(Filter::isNull(ProfesorStgrField::FCese)));
         $aProfesores = [];
         $aAp1 = [];
         $aAp2 = [];
@@ -95,7 +98,7 @@ class ProfesorStgrService
      */
     public function getArrayProfesoresDl(): array
     {
-        $gesProfesores = $this->profesorStgrRepository->getProfesoresStgr(['f_cese' => ''], ['f_cese' => 'IS NULL']);
+        $gesProfesores = $this->profesorStgrRepository->matching(Criteria::create()->where(Filter::isNull(ProfesorStgrField::FCese)));
         $aFilas = [];
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();

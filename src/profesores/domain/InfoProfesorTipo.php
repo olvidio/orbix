@@ -4,6 +4,9 @@ namespace src\profesores\domain;
 
 /* No vale el underscore en el nombre */
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\ProfesorTipoField;
 use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
@@ -29,17 +32,15 @@ class InfoProfesorTipo extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        $aWhere = [];
-        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'tipo_profesor');
-            $aOperador = [];
+            $criteria = $criteria->orderBy(ProfesorTipoField::TipoProfesor);
         } else {
-            $aWhere = array('tipo_profesor' => $this->k_buscar);
-            $aOperador = array('tipo_profesor' => 'sin_acentos');
+            $criteria = $criteria->andWhere(Filter::matchesUnaccented(ProfesorTipoField::TipoProfesor, $this->k_buscar));
         }
-        return $this->profesorTipoRepository->getProfesorTipos($aWhere, $aOperador);
+
+        return $this->profesorTipoRepository->matching($criteria);
     }
 }

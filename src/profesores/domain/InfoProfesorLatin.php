@@ -2,6 +2,9 @@
 
 namespace src\profesores\domain;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\ProfesorLatinField;
 use src\profesores\domain\contracts\ProfesorLatinRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
@@ -34,20 +37,13 @@ class InfoProfesorLatin extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        $aWhere = [];
-        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
+        $criteria = Criteria::create();
         if (!empty($this->id_pau)) {
-            $aWhere['id_nom'] = $this->id_pau;
+            $criteria = $criteria->andWhere(Filter::eq(ProfesorLatinField::IdNom, $this->id_pau));
         }
-        if (empty($this->k_buscar)) {
-            //$aWhere['_ordre'] = 'f_ini DESC';
-            $aOperador = [];
-        } else {
-            //$aWhere['congreso'] = $this->k_buscar;
-            //$aOperador['congreso'] ='sin_acentos';
-        }
-        return $this->profesorLatinRepository->getProfesoresLatin($aWhere, $aOperador);
+
+        return $this->profesorLatinRepository->matching($criteria);
     }
 }

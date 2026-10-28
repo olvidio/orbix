@@ -4,6 +4,10 @@ namespace src\profesores\domain;
 
 /* No vale el underscore en el nombre */
 
+use src\shared\domain\criteria\OrderDirection;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\ProfesorPublicacionField;
 use src\profesores\domain\contracts\ProfesorPublicacionRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
@@ -35,20 +39,18 @@ class InfoProfesorPublicacion extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        $aWhere = [];
-        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
+        $criteria = Criteria::create();
         if (!empty($this->id_pau)) {
-            $aWhere['id_nom'] = $this->id_pau;
+            $criteria = $criteria->andWhere(Filter::eq(ProfesorPublicacionField::IdNom, $this->id_pau));
         }
         if (empty($this->k_buscar)) {
-            $aWhere['_ordre'] = 'f_publicacion DESC';
-            $aOperador = [];
+            $criteria = $criteria->orderBy(ProfesorPublicacionField::FPublicacion, OrderDirection::Desc);
         } else {
-            $aWhere['titulo'] = $this->k_buscar;
-            $aOperador['titulo'] = 'sin_acentos';
+            $criteria = $criteria->andWhere(Filter::matchesUnaccented(ProfesorPublicacionField::Titulo, $this->k_buscar));
         }
-        return $this->profesorPublicacionRepository->getProfesorPublicaciones($aWhere, $aOperador);
+
+        return $this->profesorPublicacionRepository->matching($criteria);
     }
 }

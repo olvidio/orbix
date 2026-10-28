@@ -3,6 +3,7 @@
 namespace src\profesores\application;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
@@ -42,7 +43,7 @@ final class ListaPorDepartamentos
             ];
         }
 
-        $cProfesorTipo = $this->profesorTipoRepository->getProfesorTipos();
+        $cProfesorTipo = $this->profesorTipoRepository->matching(Criteria::create());
         $cTipoProfesor = [];
         foreach ($cProfesorTipo as $oProfesorTipo) {
             $cTipoProfesor[$oProfesorTipo->getId_tipo_profesor()] = $oProfesorTipo->getTipo_profesor();

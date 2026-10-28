@@ -47,7 +47,7 @@ final class ProfesoresAsignaturaListaTest extends TestCase
         $oPersonaRepo->method('findById')->with(200)->willReturn($oPersona);
 
         $oDocRepo = $this->createMock(ProfesorDocenciaStgrRepositoryInterface::class);
-        $oDocRepo->method('getProfesorDocenciasStgr')->willReturn([]);
+        $oDocRepo->method('matching')->willReturn([]);
 
         $oTelecoRepo = $this->createMock(TelecoPersonaDlRepositoryInterface::class);
 

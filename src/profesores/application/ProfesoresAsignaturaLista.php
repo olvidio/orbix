@@ -2,6 +2,10 @@
 
 namespace src\profesores\application;
 
+use src\shared\domain\criteria\OrderDirection;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\ProfesorDocenciaStgrField;
 use src\shared\config\ConfigGlobal;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -50,12 +54,7 @@ final class ProfesoresAsignaturaLista
                 $centro = $oPersonaDl->getDl() . " - " . $centro;
             }
 
-            $aWhere = [
-                'id_nom' => $id_nom,
-                'id_asignatura' => $id_asignatura,
-                '_ordre' => 'curso_inicio DESC',
-            ];
-            $cDocencia = $this->profesorDocenciaStgrRepository->getProfesorDocenciasStgr($aWhere);
+            $cDocencia = $this->profesorDocenciaStgrRepository->matching(Criteria::create()->where(Filter::eq(ProfesorDocenciaStgrField::IdNom, $id_nom))->andWhere(Filter::eq(ProfesorDocenciaStgrField::IdAsignatura, $id_asignatura))->orderBy(ProfesorDocenciaStgrField::CursoInicio, OrderDirection::Desc));
             $txt_docencia = $this->buildTextoDocencia($cDocencia);
 
             $mails = $this->telecoPersonaService->getTelecosPorTipo($id_nom, 'e-mail', ' / ');
@@ -76,12 +75,7 @@ final class ProfesoresAsignaturaLista
             if ($oPersonaDl === null) {
                 continue;
             }
-            $aWhere = [
-                'id_nom' => $id_nom,
-                'id_asignatura' => $id_asignatura,
-                '_ordre' => 'curso_inicio DESC',
-            ];
-            $cDocencia = $this->profesorDocenciaStgrRepository->getProfesorDocenciasStgr($aWhere);
+            $cDocencia = $this->profesorDocenciaStgrRepository->matching(Criteria::create()->where(Filter::eq(ProfesorDocenciaStgrField::IdNom, $id_nom))->andWhere(Filter::eq(ProfesorDocenciaStgrField::IdAsignatura, $id_asignatura))->orderBy(ProfesorDocenciaStgrField::CursoInicio, OrderDirection::Desc));
             $txt_docencia = $this->buildTextoDocencia($cDocencia);
 
             $telfs = '';

@@ -2,6 +2,9 @@
 
 namespace src\profesores\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\ProfesorCongresoField;
 use src\shared\config\ConfigGlobal;
 use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
 use src\profesores\domain\services\ProfesorStgrService;
@@ -39,7 +42,7 @@ final class CongresosLista
         foreach ($a_nomProfesor as $id_nom => $aClave) {
             $ap_nom = $aClave['ap_nom'];
             $dl = $aClave['dl'];
-            $cProfesorCongreso = $this->profesorCongresoRepository->getProfesorCongresos(['id_nom' => $id_nom]);
+            $cProfesorCongreso = $this->profesorCongresoRepository->matching(Criteria::create()->where(Filter::eq(ProfesorCongresoField::IdNom, $id_nom)));
             foreach ($cProfesorCongreso as $oProfesorCongreso) {
                 $p++;
                 $tipo = empty($a_tiposCong[$oProfesorCongreso->getTipo()]) ? '' : $a_tiposCong[$oProfesorCongreso->getTipo()];

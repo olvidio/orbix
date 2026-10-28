@@ -2,6 +2,7 @@
 
 namespace src\profesores\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\profesores\domain\entity\ProfesorStgr;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 
@@ -21,6 +22,12 @@ interface ProfesorStgrRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * @return list<ProfesorStgr>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * devuelve una colección (array) de objetos de tipo ProfesorStgr
      *
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
