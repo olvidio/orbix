@@ -1,6 +1,6 @@
 # Refactor: búsquedas en repositorio con objetos de consulta (Criteria)
 
-> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fase 1 completa. Siguiente: paso 2.1.
+> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fase 1 completa. Siguiente: paso 2.0 (red de seguridad), después 2.1. Presupuesto de IA en la sección 10.
 > **Fecha:** 2026-10-28
 > **Cómo retomar:** leer las secciones 3–5, buscar en la sección 7 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese paso. Cada paso termina con tests en verde y un commit propio.
 
@@ -285,6 +285,7 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
 
 ### Fase 2 — Piloto `asistentes`
 
+- [ ] **2.0** Red de seguridad **antes** de tocar `PgAsistenteRepository` (ver sección 10.2): test de caracterización de `getAsistentes()` sobre datos sembrados (con `AsistenteFactory`, limpiando al final) que cubra las formas de `$aWhere`/`$aOperators` que usan los llamantes reales. Debe pasar en verde con el código actual; en 2.1 se ejecuta sin cambios tras el envoltorio. Incluir también una pasada por las formas de `getConjunt()`.
 - [ ] **2.1** `AsistenteField` en `src/asistentes/domain/criteria/`; `PgAsistenteRepository`: añadir `matching()`, convertir `getAsistentes()` en envoltorio. Test de integración.
 - [ ] **2.2** Resto de repositorios del módulo (`Dl`, `Ex`, `Out`, `Pub`) y `getConjunt`.
 - [ ] **2.3** Migrar los llamantes de `src/asistentes/application/` a `matching()`.
@@ -350,3 +351,55 @@ Informe completo: [`reports/criteria_inventario.md`](reports/criteria_inventario
 
 - `Order` debería admitir `NULLS FIRST/LAST` (ya hay un uso real). Decidir en 1.1.
 - Los llamantes en `tests/` son ~27 % del total: migrarlos con su módulo (fase 4), no al final.
+
+---
+
+## 10. Presupuesto de IA y red de seguridad (añadido 2026-10-28)
+
+### 10.1 Medición
+
+`php tools/qa/medir_consumo_ia.php` lee las transcripciones de Claude Code (`~/.claude/projects/<proyecto>/*.jsonl`) y muestra, por turno de usuario, llamadas a la API, tokens de entrada, escritura y lectura de caché, salida y **u.eq.** (unidades equivalentes de entrada = ent + 1,25·escritura + 0,1·lectura + 5·salida). Opciones: `--session=<uuid>`, `--all`, `--json`.
+
+**Limitación:** u.eq. es una referencia *relativa* para comparar pasos entre sí; no es el cupo real del plan, que no se publica en tokens. Para calibrar: anotar el porcentaje de `/usage` antes y después de un paso y dividir por sus u.eq.
+
+Medido en esta sesión (2026-10-28):
+
+| Paso | u.eq. | Llamadas API | Notas |
+|---|---:|---:|---|
+| 0.1 inventario | 144.000 | 6 | solo lectura y documento |
+| 1.1 clases base | 212.000 | 9 | incluye decisión sobre el prototipo |
+| 1.2 conversor | 140.000 | 5 | |
+| 1.3 adaptador + equivalencia | 291.000 | 9 | el más caro de la fase 1 |
+| 1.4 trait de ejecución | 255.000 | 11 | |
+
+Mediana de los pasos de código (1.1–1.4): ~230.000 u.eq.; máximo medido: 291.000.
+
+### 10.2 Estimación de la fase 2 (aproximada)
+
+Tamaño real del piloto: 5 repositorios (`PgAsistenteRepository` 293 líneas + 4 subclases de 32–66), 20 llamadas en 8 ficheros de `src/asistentes/application/`, 5 llamadas a `getConjunt()` en un servicio. Pero el envoltorio hace que **los ~45 ficheros de otros módulos que llaman a `getAsistentes()` pasen por el adaptador desde 2.1**, aunque solo se migren 8: ahí está el riesgo.
+
+| Paso | Estimación (u.eq.) | Comentario |
+|---|---:|---|
+| 2.0 red de seguridad | 250.000–350.000 | leer el repo, la factory y los llamantes; escribir y ejecutar los tests |
+| 2.1 `AsistenteField` + `matching()` + envoltorio | 250.000–400.000 | toca un repositorio de producción; ejecutar suites de módulos dependientes |
+| 2.2 subclases + `getConjunt` | 150.000–250.000 | mayormente mecánico |
+| 2.3 llamantes de `application/` | 300.000–500.000 | 8 ficheros; **dividir en dos pasos de 4** si el primero supera 300.000 |
+| 2.4 revisión + `AGENTS.md` | 100.000–150.000 | |
+| **Total fase 2** | **~1,0–1,6 M** | unas 4–7 veces un paso medio de la fase 1 |
+
+Son estimaciones mías a partir de cinco mediciones: tratarlas como orden de magnitud, no como compromiso.
+
+### 10.3 Cómo asegurar que la fase termina
+
+- Cada paso termina con tests en verde y un commit propio; parar entre pasos siempre deja el repositorio consistente (el envoltorio mantiene la compatibilidad).
+- **Antes de cada paso:** ejecutar `php tools/qa/medir_consumo_ia.php` y comprobar que lo que queda de cupo supera ~1,5 × el máximo medido para ese tipo de paso (≈ 450.000 u.eq.). Si no, esperar al siguiente periodo.
+- Orden recomendado para una semana con poco margen: 2.0 → 2.1 (el par que da valor: la red de seguridad y el primer repositorio migrado), y dejar 2.2–2.4 para otra tanda. No hay que acabar la fase de una vez.
+- No empezar 2.1 sin 2.0: sin la red de seguridad, un fallo del adaptador se descubriría en producción por cualquiera de los ~45 llamantes.
+
+### 10.4 Por qué hace falta el paso 2.0
+
+Los tests de la fase 1 prueban el adaptador sobre una **tabla temporal con un enum de prueba**. No prueban: la tabla real `d_asistentes_all`, el mapa real campo→columna, ni las formas concretas de `$aWhere` que usan los llamantes (fechas `DateTimeLocal`, booleanos `'t'`, `BETWEEN` con fechas entrecomilladas, `~` con regex, `TXT` de `ListaUltimaActivData`…). Con el envoltorio, cualquiera de esas formas que el adaptador no entienda lanza una excepción en tiempo de ejecución en un módulo ajeno. Red mínima:
+
+1. **Test de caracterización** (2.0): expectativas fijadas a mano sobre datos sembrados, independientes de la implementación; verde antes y después del cambio.
+2. **Ejecutar las suites de los módulos dependientes** tras 2.1 (`tests/unit` e `integration` de `asistentes`, `actividades`, `planning`, `actividadcargos`, `personas`, `misas`, `pasarela`), no solo `asistentes`.
+3. **Revisar con `rg`** los `$aOperators` de los 8 ficheros de `application/` y los de módulos ajenos que llaman a `getAsistentes()`: cualquier operador fuera de la tabla 3.6 se detecta antes de ejecutar nada.
