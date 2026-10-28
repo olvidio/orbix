@@ -375,7 +375,12 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - Migrados: `CentroEncargadoAsignar` (`num_orden DESC`), `CentroEncargadoReordenar` e `Info3010::getColeccion`. Sus tests unitarios mockean ahora `matching`.
     - Se quedan con arrays por pertenecer a otros módulos: `CentrosDisponiblesData` (`CentroDl`/`CentroEllas::getCentros`, con `~` y `&` → 4.4 `ubis`) y `ListaActividadesCtrData` (`getActividades` → 4.3 `actividades`). Los llamantes de `getCentrosEncargados` en `actividades`, `asistentes`, `actividadessacd` y `pasarela` siguen por el envoltorio.
     - Test: `PgCentroEncargadoMatchingTest` (2 tests, equivalencia con legacy). Suites verdes: unit/integration de `actividadescentro`; unit de `cambios`, `actividades`, `actividadessacd`, `pasarela`, `asistentes`.
-  - [ ] **4.1.asignaturas**
+  - [x] **4.1.asignaturas** Decisiones:
+    - Cuatro enums en `src/asignaturas/domain/criteria/`: `AsignaturaField` (valor = columna, p. ej. `nombre_asignatura`, porque la propiedad privada de la entidad se llama `nombre_signatura`; `plan_estudios` se filtra con `Filter::arrayContains`, que sustituye el `IN_ARRAY` legacy), `AsignaturaTipoField` (sin `year`: su columna es `año`), `SectorField` y `DepartamentoField` con mapa campo → columna (`nombre_sector` → `sector`, `nombre_departamento` → `departamento`) en `COLUMNAS` de sus repos.
+    - `matching()` en las 4 interfaces y repos; `getAsignaturas`/`getAsignaturaTipos`/`getSectores`/`getDepartamentos` `@deprecated` como envoltorios. `PgAsignaturaRepository::matching` conserva la hidratación con `normalizeRowFromDb` (array `plan_estudios`).
+    - Migrados: las 5 clases `Info*` (`sin_acentos` → `matchesUnaccented`, `<`/`>` → `lt`/`gt`, `_ordre` → `orderBy`); `InfoAsignaturasTest` pasa a esperar `matching` con `equalTo(Criteria)`.
+    - Se quedan con arrays: `getAsignaturasAsJson` y `getJsonAsignaturas` (consultas JSON específicas, no son `getXxx` genéricos), y `PlanEstudiosFilter` (devuelve el par `[$where, $operators]` que consumen ~10 llamantes de `notas`, `actividadestudios` y `profesores`; migra con ellos).
+    - Test: `PgAsignaturasMatchingTest` (5 tests, equivalencia con legacy, incl. `arrayContains` y las columnas remapeadas). Suites verdes: unit e integration de `asignaturas`; unit de `profesores`, `notas`, `actividadestudios`; integration de `profesores`, `actividadestudios`.
   - [ ] **4.1.certificados**
   - [ ] **4.1.pasarela**
 - [ ] **4.2 Pequeños (6–16):** `devel_db_admin`, `shared`, `cartaspresentacion`, `menus`, `configuracion`, `casas`, `zonassacd`, `planning`

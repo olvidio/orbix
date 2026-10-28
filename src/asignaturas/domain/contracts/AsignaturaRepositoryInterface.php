@@ -3,6 +3,7 @@
 namespace src\asignaturas\domain\contracts;
 
 use src\asignaturas\domain\entity\Asignatura;
+use src\shared\domain\criteria\Criteria;
 use src\asignaturas\domain\value_objects\PlanEstudios;
 
 /**
@@ -42,6 +43,14 @@ interface AsignaturaRepositoryInterface
     public function getAsignaturasAsJson(array $aWhere = [], array $aOperators = []): string;
 
     /**
+     * Asignatura que cumplen el criterio.
+     *
+     * @return list<Asignatura>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<Asignatura>

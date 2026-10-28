@@ -3,6 +3,7 @@
 namespace src\asignaturas\domain\contracts;
 
 use src\asignaturas\domain\entity\AsignaturaTipo;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase AsignaturaTipo y su Repositorio
@@ -15,6 +16,14 @@ interface AsignaturaTipoRepositoryInterface
     public function getArrayAsignaturaTipos(): array;
 
     /**
+     * AsignaturaTipo que cumplen el criterio.
+     *
+     * @return list<AsignaturaTipo>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<AsignaturaTipo>

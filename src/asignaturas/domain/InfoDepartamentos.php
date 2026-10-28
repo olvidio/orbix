@@ -6,6 +6,9 @@ namespace src\asignaturas\domain;
 
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\asignaturas\domain\entity\Departamento;
+use src\asignaturas\domain\criteria\DepartamentoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoDepartamentos extends DatosInfoRepo
@@ -29,14 +32,13 @@ class InfoDepartamentos extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'departamento'];
-            $aOperador = [];
+            $criteria = $criteria->orderBy(DepartamentoField::NombreDepartamento);
         } else {
-            $aWhere = ['departamento' => $this->k_buscar];
-            $aOperador = ['departamento' => 'sin_acentos'];
+            $criteria = $criteria->where(Filter::matchesUnaccented(DepartamentoField::NombreDepartamento, (string) $this->k_buscar));
         }
 
-        return $this->departamentoRepository->getDepartamentos($aWhere, $aOperador);
+        return $this->departamentoRepository->matching($criteria);
     }
 }

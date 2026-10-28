@@ -4,6 +4,9 @@ namespace src\asignaturas\domain;
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
+use src\asignaturas\domain\criteria\AsignaturaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -29,16 +32,14 @@ class InfoOpcionales extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        $aWhere = [];
-        $aOperador = [];
+        $criteria = Criteria::create();
         if (!empty($this->k_buscar)) {
-            $aWhere['nombre_asignatura'] = $this->k_buscar;
-            $aOperador['nombre_asignatura'] = 'sin_acentos';
+            $criteria = $criteria->where(Filter::matchesUnaccented(AsignaturaField::NombreAsignatura, (string) $this->k_buscar));
         }
-        $aWhere['id_asignatura'] = 3000;
-        $aOperador['id_asignatura'] = '>';
-        $aWhere['_ordre'] = 'nombre_corto';
+        $criteria = $criteria
+            ->andWhere(Filter::gt(AsignaturaField::IdAsignatura, 3000))
+            ->orderBy(AsignaturaField::NombreCorto);
 
-        return $this->asignaturaRepository->getAsignaturas($aWhere, $aOperador);
+        return $this->asignaturaRepository->matching($criteria);
     }
 }

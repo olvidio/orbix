@@ -6,7 +6,10 @@ namespace Tests\unit\asignaturas\domain;
 
 use PHPUnit\Framework\TestCase;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\criteria\AsignaturaField;
 use src\asignaturas\domain\InfoAsignaturas;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 final class InfoAsignaturasTest extends TestCase
 {
@@ -24,11 +27,12 @@ final class InfoAsignaturasTest extends TestCase
     {
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getAsignaturas')
-            ->with(
-                ['id_asignatura' => 3000, '_ordre' => 'id_nivel'],
-                ['id_asignatura' => '<'],
-            )
+            ->method('matching')
+            ->with($this->equalTo(
+                Criteria::create()
+                    ->where(Filter::lt(AsignaturaField::IdAsignatura, 3000))
+                    ->orderBy(AsignaturaField::IdNivel)
+            ))
             ->willReturn([]);
 
         $info = new InfoAsignaturas($repo);
@@ -40,18 +44,13 @@ final class InfoAsignaturasTest extends TestCase
     {
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getAsignaturas')
-            ->with(
-                [
-                    'nombre_asignatura' => 'calc',
-                    'id_asignatura' => 3000,
-                    '_ordre' => 'id_nivel',
-                ],
-                [
-                    'nombre_asignatura' => 'sin_acentos',
-                    'id_asignatura' => '<',
-                ],
-            )
+            ->method('matching')
+            ->with($this->equalTo(
+                Criteria::create()
+                    ->where(Filter::matchesUnaccented(AsignaturaField::NombreAsignatura, 'calc'))
+                    ->andWhere(Filter::lt(AsignaturaField::IdAsignatura, 3000))
+                    ->orderBy(AsignaturaField::IdNivel)
+            ))
             ->willReturn(['asig-1']);
 
         $info = new InfoAsignaturas($repo);

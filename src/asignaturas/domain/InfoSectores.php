@@ -6,6 +6,9 @@ namespace src\asignaturas\domain;
 
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use src\asignaturas\domain\entity\Sector;
+use src\asignaturas\domain\criteria\SectorField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoSectores extends DatosInfoRepo
@@ -29,14 +32,13 @@ class InfoSectores extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'sector'];
-            $aOperador = [];
+            $criteria = $criteria->orderBy(SectorField::NombreSector);
         } else {
-            $aWhere = ['sector' => $this->k_buscar];
-            $aOperador = ['sector' => 'sin_acentos'];
+            $criteria = $criteria->where(Filter::matchesUnaccented(SectorField::NombreSector, (string) $this->k_buscar));
         }
 
-        return $this->sectorRepository->getSectores($aWhere, $aOperador);
+        return $this->sectorRepository->matching($criteria);
     }
 }

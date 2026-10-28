@@ -3,6 +3,7 @@
 namespace src\asignaturas\domain\contracts;
 
 use src\asignaturas\domain\entity\Sector;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Sector y su Repositorio
@@ -20,6 +21,14 @@ interface SectorRepositoryInterface
     public function getArraySectores(): array;
 
     /**
+     * Sector que cumplen el criterio.
+     *
+     * @return list<Sector>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<Sector>

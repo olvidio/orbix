@@ -6,6 +6,9 @@ namespace src\asignaturas\domain;
 
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
 use src\asignaturas\domain\entity\AsignaturaTipo;
+use src\asignaturas\domain\criteria\AsignaturaTipoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoAsignaturaTipo extends DatosInfoRepo
@@ -29,14 +32,13 @@ class InfoAsignaturaTipo extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'tipo_asignatura'];
-            $aOperador = [];
+            $criteria = $criteria->orderBy(AsignaturaTipoField::TipoAsignatura);
         } else {
-            $aWhere = ['tipo_asignatura' => $this->k_buscar];
-            $aOperador = ['tipo_asignatura' => 'sin_acentos'];
+            $criteria = $criteria->where(Filter::matchesUnaccented(AsignaturaTipoField::TipoAsignatura, (string) $this->k_buscar));
         }
 
-        return $this->asignaturaTipoRepository->getAsignaturaTipos($aWhere, $aOperador);
+        return $this->asignaturaTipoRepository->matching($criteria);
     }
 }
