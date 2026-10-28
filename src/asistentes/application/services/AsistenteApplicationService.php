@@ -10,6 +10,7 @@ use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\shared\domain\contracts\UnitOfWorkInterface;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Servicio de aplicación para gestionar Asistentes
@@ -60,7 +61,7 @@ class AsistenteApplicationService
      *
      * @return list<Asistente>
      */
-    public function matching(\src\shared\domain\criteria\Criteria $criteria): array
+    public function matching(Criteria $criteria): array
     {
         return $this->repository->matching($criteria);
     }

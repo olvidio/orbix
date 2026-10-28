@@ -89,10 +89,14 @@ final readonly class ListaAsistentesData
                 $observ_c = $oActividadCargo->getObserv();
                 $ctr_dl = $oPersona->getCentro_o_dl();
 
-                $criteria = Criteria::create()
-                    ->where(Filter::eq(AsistenteField::IdActiv, $id_pau))
-                    ->andWhere(Filter::eq(AsistenteField::IdNom, $id_nom));
-                if ($id_nom !== 0 && ($cAsistente = $this->asistenteRepository->matching($criteria)) !== []) {
+                $cAsistente = $id_nom !== 0
+                    ? $this->asistenteRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(AsistenteField::IdActiv, $id_pau))
+                            ->andWhere(Filter::eq(AsistenteField::IdNom, $id_nom))
+                    )
+                    : [];
+                if ($cAsistente !== []) {
                     if (count($cAsistente) > 1) {
                         $tabla = '';
                         foreach ($cAsistente as $Asistente) {

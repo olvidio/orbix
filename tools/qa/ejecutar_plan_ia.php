@@ -318,6 +318,48 @@ function pasoMarcado(string $plan, string $id): bool
     return true;   // la línea ya no existe (p. ej. bloque de la fase 4 troceado en módulos)
 }
 
+/**
+ * Tests citados con backticks (`FooTest`, `tests/.../FooTest.php`) en la nota de un paso del plan
+ * que no existen en el repo. Evita dar por bueno un «OK» con una nota que afirma tests inventados.
+ *
+ * @return list<string>
+ */
+function testsCitadosInexistentes(string $plan, string $id, string $repo): array
+{
+    $lineas = file($plan, FILE_IGNORE_NEW_LINES) ?: [];
+    $bloque = [];
+    $dentro = false;
+    foreach ($lineas as $l) {
+        if (preg_match('/^- \[.\] \*\*' . preg_quote($id, '/') . '[ *.:]/', $l) === 1) {
+            $dentro = true;
+        } elseif ($dentro && preg_match('/^(- \[.\] |#{1,3} |---)/', $l) === 1) {
+            break;
+        }
+        if ($dentro) {
+            $bloque[] = $l;
+        }
+    }
+    if (preg_match_all('/`([A-Za-z0-9_\/\\.]*Test)(?:\.php)?`/', implode("\n", $bloque), $m) < 1) {
+        return [];
+    }
+    $ficheros = explode("\n", trim(git($repo, 'ls-files', 'tests')));
+    $faltan = [];
+    foreach (array_unique($m[1]) as $nombre) {
+        $base = basename(str_replace('\\', '/', $nombre));
+        $existe = false;
+        foreach ($ficheros as $f) {
+            if (basename($f, '.php') === $base) {
+                $existe = true;
+                break;
+            }
+        }
+        if (!$existe) {
+            $faltan[] = $nombre;
+        }
+    }
+    return $faltan;
+}
+
 function uuid4(): string
 {
     $b = random_bytes(16);
@@ -590,9 +632,15 @@ TXT;
     } elseif (preg_match('/RESULTADO:\s*(OK|PARCIAL|BLOQUEADO)\s*:?\s*(.*)\s*$/u', $texto, $m) === 1) {
         $detalle = trim($m[2]);
         if ($m[1] === 'OK') {
-            $res = $avanzo && $limpio && $marcado ? 'OK' : 'INCONSISTENTE';
+            $faltan = $avanzo ? testsCitadosInexistentes($plan, $id, $repo) : [];
+            $res = $avanzo && $limpio && $marcado && $faltan === [] ? 'OK' : 'INCONSISTENTE';
             if ($res === 'INCONSISTENTE') {
-                $detalle = 'dijo OK pero: ' . implode(', ', array_filter([!$avanzo ? 'no hay commit nuevo' : '', !$limpio ? 'quedan cambios sin commitear' : '', !$marcado ? 'casilla sin marcar' : '']));
+                $detalle = 'dijo OK pero: ' . implode(', ', array_filter([
+                    !$avanzo ? 'no hay commit nuevo' : '',
+                    !$limpio ? 'quedan cambios sin commitear' : '',
+                    !$marcado ? 'casilla sin marcar' : '',
+                    $faltan !== [] ? 'la nota cita tests que no existen: ' . implode(', ', $faltan) : '',
+                ]));
             }
         } else {
             $res = $m[1];

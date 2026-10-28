@@ -6,11 +6,14 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\criteria\NullsPosition;
 use src\shared\domain\criteria\Order;
 use src\shared\domain\criteria\OrderDirection;
 use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
+use DateTimeInterface;
+use InvalidArgumentException;
 use PDO;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
@@ -81,48 +84,92 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
 
     /**
      * Une los resultados de varios repositorios de asistentes (Dl, Out, Ex…) para un mismo criterio.
-     * Cada repositorio se consulta sin orden; el orden se aplica después sobre el conjunto
-     * (los repositorios que van antes mantienen su prioridad en caso de empate).
+     * Cada repositorio se consulta solo con los filtros; el orden y la paginación (limit/offset)
+     * se aplican después sobre el conjunto, en memoria, así que:
+     *  - solo se admiten órdenes por campo de {@see AsistenteField} (otro tipo lanza InvalidArgumentException);
+     *  - los números se comparan como números, los textos sin distinguir mayúsculas y los nulos
+     *    como PostgreSQL (al final en ASC, al principio en DESC) salvo que el orden indique otra cosa;
+     *  - en caso de empate manda el orden de `$repos`.
      *
      * @param list<class-string<AsistenteRepositoryInterface>> $repos
      * @return list<Asistente>
+     * @throws InvalidArgumentException si un repositorio no es de asistentes o el orden no se puede aplicar
      */
     public function matchingConjunto(array $repos, Criteria $criteria): array
     {
-        $sinOrden = Criteria::create()->limit($criteria->getLimit())->offset($criteria->getOffset());
+        $orders = [];
+        foreach ($criteria->orders() as $order) {
+            if (!$order instanceof Order || !$order->field instanceof AsistenteField) {
+                throw new InvalidArgumentException('matchingConjunto solo admite órdenes por campo de AsistenteField');
+            }
+            $orders[] = $order;
+        }
+
+        $soloFiltros = Criteria::create();
         foreach ($criteria->filters() as $filter) {
-            $sinOrden = $sinOrden->andWhere($filter);
+            $soloFiltros = $soloFiltros->andWhere($filter);
         }
 
         $todos = [];
         foreach ($repos as $repoInterface) {
             $repo = DependencyResolver::get($repoInterface);
             if (!$repo instanceof AsistenteRepositoryInterface) {
-                continue;
+                throw new InvalidArgumentException($repoInterface . ' no es un AsistenteRepositoryInterface');
             }
-            $todos = array_merge($todos, $repo->matching($sinOrden));
+            $todos = array_merge($todos, $repo->matching($soloFiltros));
         }
 
-        $orders = array_values(array_filter($criteria->orders(), static fn($o): bool => $o instanceof Order));
-        if ($orders === []) {
-            return $todos;
+        if ($orders !== []) {
+            usort($todos, static function (Asistente $a, Asistente $b) use ($orders): int {
+                foreach ($orders as $order) {
+                    $va = self::valorParaOrdenar($a, $order->field);
+                    $vb = self::valorParaOrdenar($b, $order->field);
+                    if ($va === null || $vb === null) {
+                        if ($va === $vb) {
+                            continue;
+                        }
+                        $nulosPrimero = $order->nulls !== null
+                            ? $order->nulls === NullsPosition::First
+                            : $order->direction === OrderDirection::Desc;
+                        return ($va === null) === $nulosPrimero ? -1 : 1;
+                    }
+                    $cmp = (is_int($va) || is_float($va)) && (is_int($vb) || is_float($vb))
+                        ? $va <=> $vb
+                        : strcmp((string) $va, (string) $vb);
+                    if ($cmp !== 0) {
+                        return $order->direction === OrderDirection::Desc ? -$cmp : $cmp;
+                    }
+                }
+                return 0;
+            });
         }
-        usort($todos, static function (Asistente $a, Asistente $b) use ($orders): int {
-            foreach ($orders as $order) {
-                $getter = 'get' . ucfirst($order->field->value);
-                if (!method_exists($a, $getter)) {
-                    continue;
-                }
-                $va = strtolower((string) ($a->$getter() ?? ''));
-                $vb = strtolower((string) ($b->$getter() ?? ''));
-                $cmp = strcmp($va, $vb);
-                if ($cmp !== 0) {
-                    return $order->direction === OrderDirection::Desc ? -$cmp : $cmp;
-                }
-            }
-            return 0;
-        });
-        return $todos;
+
+        $offset = $criteria->getOffset() ?? 0;
+        $limit = $criteria->getLimit();
+        return $offset > 0 || $limit !== null ? array_values(array_slice($todos, $offset, $limit)) : $todos;
+    }
+
+    /** Valor del campo en la entidad (`getXxx()` o `isXxx()`), normalizado para compararlo. */
+    private static function valorParaOrdenar(Asistente $a, AsistenteField $field): int|float|string|null
+    {
+        $base = ucfirst($field->value);
+        if (method_exists($a, 'get' . $base)) {
+            $v = $a->{'get' . $base}();
+        } elseif (method_exists($a, 'is' . $base)) {
+            $v = $a->{'is' . $base}();
+        } else {
+            throw new InvalidArgumentException('Asistente no tiene getter para el campo ' . $field->value);
+        }
+        if ($v instanceof DateTimeInterface) {
+            return $v->getTimestamp();
+        }
+        if (is_object($v) && method_exists($v, 'value')) {
+            $v = $v->value();
+        }
+        if (is_bool($v)) {
+            return (int) $v;
+        }
+        return is_string($v) ? strtolower($v) : (is_int($v) || is_float($v) ? $v : ($v === null ? null : (string) $v));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

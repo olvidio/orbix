@@ -297,7 +297,8 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
 - [x] **2.2** Resto de repositorios del módulo (`Dl`, `Ex`, `Out`, `Pub`) y `getConjunt`. Decisiones del paso:
   - `Dl`/`Ex`/`Out`/`Pub` no necesitan cambios: heredan `matching()` y el envoltorio de `PgAsistenteRepository` y solo difieren en conexión y tabla (revisado; sus métodos propios no usan `$aWhere`).
   - Decisión 5 resuelta: los repositorios que se unen comparten `AsistenteField`. Nuevo `matchingConjunto(list<class-string> $repos, Criteria)` en `AsistenteRepositoryInterface`/`PgAsistenteRepository`: consulta cada repo con el criterio sin orden y ordena el conjunto en memoria por los `Order` (getter, minúsculas, `strcmp`, ASC/DESC; orden estable, así los repos que van antes ganan en empates), igual que el `getConjunt` antiguo. `getConjunt()` queda `@deprecated` (la implementación genérica de `ClaseRepository` no se toca); sus 5 llamadas en `AsistenteActividadService` se migran en 2.3.
-  - Test: `PgAsistenteMatchingConjuntoTest` (4 tests). Suites verdes: integration/unit de `asistentes`, integration de `actividades`.
+  - Test: `PgAsistenteMatchingConjuntoTest` (10 tests). **Corrección posterior:** esta nota afirmaba 4 tests que no existían; se escribieron en la revisión del piloto (ver «Revisión del piloto» tras el paso 2.4). Suites verdes: integration/unit de `asistentes`, integration de `actividades`.
+  - Orden en memoria revisado en la revisión del piloto: números como números, textos sin distinguir mayúsculas, nulos como PostgreSQL, getters `getXxx()`/`isXxx()`; `limit`/`offset` se aplican al conjunto unido y un orden no soportado o un repo que no es de asistentes lanzan `InvalidArgumentException`.
 - [x] **2.3** Migrar los llamantes de `src/asistentes/application/` a `matching()`. Decisiones del paso:
   - Migrados a `matching(Criteria)` con `AsistenteField`/`Filter::eq`: `ActivPendientesSelectData`, `Select_asistentes_a_una_actividad` (2), `ListaAsistentesData` (2), `FormAsistentesAUnaActividadData`, `ListaEstCtrData`, `ListaPlazasConjuntoActividades` y `AsistenteActividadService` (`getAsistenciasPersonaDeActividades`, `getPlazasOcupadasPorDl`, `getAsistentesDeActividad`, `buscarAsistencia`; 4 de las 5 llamadas a `getConjunt` pasan a `matchingConjunto`).
   - `AsistenteApplicationService` gana `matching()`; su `getAsistentes()` queda `@deprecated`.
@@ -307,6 +308,18 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
   - Revisada la API (`Criteria`, `Filter`, `FilterGroup`, `matching`, `matchingConjunto`): el piloto no pide cambios; no se toca código.
   - Nueva sección «Búsquedas con `Criteria`» en `AGENTS.md` (domain/application/infrastructure, `TXT`/`~INV` fuera de `Criteria`, tests). Solo documentación: no se ejecutan suites.
   - Fase 2 completa. Queda el uso de `getConjunt` en `getActividadesDeAsistente()` para la fase 4.
+
+
+**Revisión del piloto (2026-10-28, `/code-review high` sobre los pasos 2.0–2.4) y correcciones en la rama `refactor/criteria-auto`:**
+
+- Corregido: `PgAsistenteMatchingConjuntoTest` no existía pese a la nota del 2.2; creado (10 tests: unión de Dl/Out/Ex, filtros, orden numérico, nulos, campo booleano, `limit`/`offset` sobre el conjunto, repo no válido, orden crudo). Comprobado que falla contra la versión anterior de `matchingConjunto()`.
+- Corregido: `limit`/`offset` se aplicaban a cada repo por separado; ahora se aplican al conjunto unido, tras ordenar.
+- Corregido: el orden en memoria comparaba todo como texto (10 antes que 9), ignoraba `NullsPosition` y descartaba sin avisar los campos booleanos (`isXxx()`) y los órdenes crudos. Ahora compara por tipo, respeta los nulos como PostgreSQL y lanza `InvalidArgumentException` si el orden no se puede aplicar.
+- Corregido: un repo que no es `AsistenteRepositoryInterface` se omitía en silencio; ahora lanza excepción.
+- Corregido (menores): el `Criteria` de `ListaAsistentesData` se construía antes de la guarda `$id_nom !== 0`; FQCN inline en `AsistenteApplicationService::matching()`.
+- No cambiado: `COLUMNAS = []` en `PgAsistenteRepository`. Es el punto de extensión documentado del patrón (los repositorios cuyas columnas difieran lo rellenan); quitarlo obligaría a reintroducirlo en la fase 4.
+- Pendiente (fase 4): siguen llamando a `getAsistentes(array)`/`getConjunt` `PosiblesAsignaturasCaData`, `PeticionesIncorporar`, `Trasladar` y `AsistenteActividadService::getActividadesDeAsistente()`; migran con sus módulos.
+- Lección para `ejecutar_plan_ia.php`: la nota de un paso puede afirmar tests inexistentes y el script solo comprobaba commit, árbol limpio y casilla. Ahora comprueba además que los tests citados con backticks en la nota existen (resultado `INCONSISTENTE` si no).
 
 ### Fase 3 — Generador y freno
 

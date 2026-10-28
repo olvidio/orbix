@@ -41,10 +41,12 @@ interface AsistenteRepositoryInterface
 
     /**
      * Une los resultados de varios repositorios de asistentes (Dl, Out, Ex…) para un criterio.
-     * El orden de `$criteria` se aplica sobre el conjunto.
+     * El orden y la paginación (limit/offset) de `$criteria` se aplican sobre el conjunto ya unido,
+     * en memoria: solo se admiten órdenes por campo de AsistenteField.
      *
      * @param list<class-string<AsistenteRepositoryInterface>> $repos
      * @return list<Asistente>
+     * @throws \InvalidArgumentException si un repositorio no es de asistentes o el orden no se puede aplicar
      */
     public function matchingConjunto(array $repos, Criteria $criteria): array;
 

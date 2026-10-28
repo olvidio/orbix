@@ -102,7 +102,7 @@ Clase: `src\shared\infrastructure\persistence\ConverterDate` (delega en `PgTimes
 Al mapear PDO → entidad/array, convertir fechas y json/jsonb **en el mismo bloque**. La entidad recibe tipos PHP (`DateTimeLocal` / `TimeLocal` / array / `null`), no el string crudo de PG.
 
 ### Búsquedas con `Criteria` (en lugar de `$aWhere` / `$aOperators`)
-Plan y estado de la migración: [`docs/dev/refactor_busquedas_criteria.md`](docs/dev/refactor_busquedas_criteria.md). Módulo piloto ya migrado: `asistentes` (referencia: `AsistenteField`, `PgAsistenteRepository::matching()`, `AsistenteActividadService`).
+Plan y estado de la migración: [`docs/dev/refactor_busquedas_criteria.md`](docs/dev/refactor_busquedas_criteria.md). Módulo piloto ya migrado: `asistentes` (referencia: `AsistenteField`, `PgAsistenteRepository::matching()`, `AsistenteActividadService`); sus llamantes de `src/asistentes/application/` usan `matching()`, y quedan algunas llamadas legacy a `getAsistentes(array)` en otros módulos que migran con ellos (ver el plan).
 
 - **Código nuevo o tocado:** buscar con `matching(Criteria)`; **no** escribir llamadas nuevas a `getXxx(array $aWhere, array $aOperators)` (están `@deprecated` y son envoltorios sobre `matching()` vía `LegacyWhereAdapter`).
 - **Domain:** cada entidad consultable tiene un enum `src/<modulo>/domain/criteria/<Entidad>Field.php` (`implements CriteriaField`, valor = nombre del campo de la entidad). Las piezas genéricas (`Criteria`, `Filter`, `FilterGroup`, `Order`, `Operator`) viven en `src/shared/domain/criteria/` y no tienen SQL.
