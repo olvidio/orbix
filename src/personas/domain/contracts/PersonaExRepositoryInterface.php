@@ -2,6 +2,7 @@
 
 namespace src\personas\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 
 use src\personas\domain\entity\PersonaEx;
 
@@ -43,6 +44,12 @@ interface PersonaExRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * @return list<PersonaEx>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * devuelve una colección (array) de objetos de tipo PersonaDl
      *
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.

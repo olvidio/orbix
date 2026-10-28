@@ -10,8 +10,10 @@ use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalLists
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConverterDate;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
+use src\personas\domain\criteria\PersonaField;
+use src\personas\infrastructure\persistence\postgresql\traits\PersonaCriteriaTrait;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 
 
 /**
@@ -26,6 +28,7 @@ use src\shared\infrastructure\persistence\postgresql\Set;
 class PgPersonaSacdRepository extends ClaseRepository implements PersonaSacdRepositoryInterface
 {
     use PersonaGlobalListsTrait;
+    use PersonaCriteriaTrait;
 
     public function __construct()
     {
@@ -116,86 +119,31 @@ class PgPersonaSacdRepository extends ClaseRepository implements PersonaSacdRepo
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo PersonaDl
+     * Personas que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<PersonaSacd> Una colección de objetos de tipo PersonaSacd
+     * @return list<PersonaSacd>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $result = [];
+        foreach ($this->filasPersonasMatching($criteria) as $aDatos) {
+            // Cada repositorio hijo crea su tipo específico
+            $result[] = $this->createEntityFromArray($aDatos);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<PersonaSacd>
      */
     public function getPersonas(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $PersonaDlSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $aDatos = $this->normalizeAssocRow($aDatos);
-            // para las fechas del postgres (texto iso)
-            $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
-            $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
-            $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
-            $aDatos = PersonaPublicacion::hydrateRow($aDatos);
-
-            // Cada repositorio hijo crea su tipo específico
-            $Persona = $this->createEntityFromArray($aDatos);
-            $PersonaDlSet->add($Persona);
-        }
-        /** @var list<PersonaSacd> $result */
-        $result = array_values($PersonaDlSet->getTot());
-        return $result;
+        $adapter = new LegacyWhereAdapter(PersonaField::class, []);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Tests\unit\personas\application\services;
 
 use PHPUnit\Framework\TestCase;
+use src\personas\domain\criteria\PersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\contracts\PersonaAllRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
@@ -23,7 +26,7 @@ final class PersonaFinderServiceLookupTest extends TestCase
         $local = $this->createMock(PersonaDl::class);
 
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
-        $dlRepo->method('getPersonas')->willReturn([$local]);
+        $dlRepo->method('matching')->willReturn([$local]);
 
         $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
         $factory->method('create')->willReturn($dlRepo);
@@ -39,7 +42,7 @@ final class PersonaFinderServiceLookupTest extends TestCase
     public function test_find_persona_en_global_fallback_a_global_personas(): void
     {
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
-        $dlRepo->method('getPersonas')->willReturn([]);
+        $dlRepo->method('matching')->willReturn([]);
 
         $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
         $factory->method('create')->willReturn($dlRepo);
@@ -68,7 +71,7 @@ final class PersonaFinderServiceLookupTest extends TestCase
     public function test_find_persona_en_global_descarta_situacion_no_activa(): void
     {
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
-        $dlRepo->method('getPersonas')->willReturn([]);
+        $dlRepo->method('matching')->willReturn([]);
 
         $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
         $factory->method('create')->willReturn($dlRepo);
@@ -89,10 +92,12 @@ final class PersonaFinderServiceLookupTest extends TestCase
         $local = $this->createMock(PersonaDl::class);
 
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
-        $dlRepo->method('getPersonas')->willReturnCallback(
-            static function (array $aWhere) use ($local): array {
-                if (($aWhere['situacion'] ?? null) === 'A') {
-                    return [];
+        $dlRepo->method('matching')->willReturnCallback(
+            static function (Criteria $criteria) use ($local): array {
+                foreach ($criteria->filters() as $filter) {
+                    if ($filter instanceof Filter && $filter->field === PersonaField::Situacion && $filter->value === 'A') {
+                        return [];
+                    }
                 }
 
                 return [$local];
@@ -113,7 +118,7 @@ final class PersonaFinderServiceLookupTest extends TestCase
     public function test_incluyendo_no_activos_acepta_global_no_activo(): void
     {
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
-        $dlRepo->method('getPersonas')->willReturn([]);
+        $dlRepo->method('matching')->willReturn([]);
 
         $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
         $factory->method('create')->willReturn($dlRepo);
@@ -133,7 +138,7 @@ final class PersonaFinderServiceLookupTest extends TestCase
     public function test_find_persona_en_global_pasa_id_schema_si_se_indica(): void
     {
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
-        $dlRepo->method('getPersonas')->willReturn([]);
+        $dlRepo->method('matching')->willReturn([]);
 
         $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
         $factory->method('create')->willReturn($dlRepo);
@@ -165,7 +170,7 @@ final class PersonaFinderServiceLookupTest extends TestCase
             ->willReturn($personaEx);
 
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
-        $dlRepo->expects($this->never())->method('getPersonas');
+        $dlRepo->expects($this->never())->method('matching');
 
         $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
         $factory->expects($this->never())->method('create');
@@ -183,7 +188,7 @@ final class PersonaFinderServiceLookupTest extends TestCase
         $local = $this->createMock(PersonaDl::class);
 
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
-        $dlRepo->method('getPersonas')->willReturn([$local]);
+        $dlRepo->method('matching')->willReturn([$local]);
 
         $factory = $this->createMock(PersonaDlRepositoryFactoryInterface::class);
         $factory->method('create')->willReturn($dlRepo);

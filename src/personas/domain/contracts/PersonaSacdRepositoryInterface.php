@@ -2,6 +2,7 @@
 
 namespace src\personas\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\personas\domain\entity\PersonaSacd;
 
 
@@ -52,6 +53,12 @@ interface PersonaSacdRepositoryInterface
 
 
     /**
+     * @return list<PersonaSacd>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<PersonaSacd>

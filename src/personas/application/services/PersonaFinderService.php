@@ -3,6 +3,9 @@
 namespace src\personas\application\services;
 
 use src\shared\config\ConfigGlobal;
+use src\personas\domain\criteria\PersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PDO;
 use src\personas\domain\contracts\PersonaAllRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
@@ -48,15 +51,19 @@ class PersonaFinderService
         return $this->oDBR ??= GlobalPdo::get('oDBR');
     }
 
-    /**
-     * @param array<string, mixed> $aWhere
-     */
-    private function findFirstPersonaDl(array $aWhere): ?PersonaDl
+    private function findFirstPersonaDl(Criteria $criteria): ?PersonaDl
     {
         $personaDlRepository = $this->personaDlRepositoryFactory->create();
-        $cPersonas = $personaDlRepository->getPersonas($aWhere);
+        $cPersonas = $personaDlRepository->matching($criteria);
 
         return $cPersonas[0] ?? null;
+    }
+
+    private function criterioPersonaActiva(int $id_nom): Criteria
+    {
+        return Criteria::create()
+            ->where(Filter::eq(PersonaField::IdNom, $id_nom))
+            ->andWhere(Filter::eq(PersonaField::Situacion, 'A'));
     }
 
     /**
@@ -64,7 +71,7 @@ class PersonaFinderService
      */
     public function findPersonaEnDl(int $id_nom): PersonaDl|PersonaPub|null
     {
-        return $this->findFirstPersonaDl(['id_nom' => $id_nom, 'situacion' => 'A']);
+        return $this->findFirstPersonaDl($this->criterioPersonaActiva($id_nom));
     }
 
     /**
@@ -75,7 +82,7 @@ class PersonaFinderService
      */
     public function findPersonaEnGlobal(int $id_nom, array &$problemasRegionStgr = [], ?int $id_schema = null): PersonaDl|PersonaPub|null
     {
-        $persona = $this->findFirstPersonaDl(['id_nom' => $id_nom, 'situacion' => 'A']);
+        $persona = $this->findFirstPersonaDl($this->criterioPersonaActiva($id_nom));
         if ($persona !== null) {
             return $persona;
         }
@@ -134,7 +141,7 @@ class PersonaFinderService
             return $persona;
         }
 
-        $persona = $this->findFirstPersonaDl(['id_nom' => $id_nom]);
+        $persona = $this->findFirstPersonaDl(Criteria::create()->where(Filter::eq(PersonaField::IdNom, $id_nom)));
         if ($persona !== null) {
             return $persona;
         }
@@ -178,10 +185,7 @@ class PersonaFinderService
      */
     public function buscarEnTodasRegiones(int $id_nom): array
     {
-        $aWhere = [
-            'situacion' => 'A',
-            'id_nom' => $id_nom,
-        ];
+        $criteria = $this->criterioPersonaActiva($id_nom);
 
         $aResultados = [];
 
@@ -191,10 +195,10 @@ class PersonaFinderService
 
             try {
                 if ($esquema === 'restov') {
-                    $resultado = $this->personaExRepository->getPersonas($aWhere);
+                    $resultado = $this->personaExRepository->matching($criteria);
                 } else {
                     $personaDlRepository = $this->personaDlRepositoryFactory->createWithConnection($oDB);
-                    $resultado = $personaDlRepository->getPersonas($aWhere);
+                    $resultado = $personaDlRepository->matching($criteria);
                 }
 
                 foreach ($resultado as $persona) {
