@@ -240,6 +240,7 @@ $guardar_fechas = "";
 $guardar_json = "";
 $err_bool = "";
 $a_auto = [];
+$a_campos_criteria = [];
 // una primera vuelta para cargar excepciones...
 foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
     $nomcamp = $row['field'];
@@ -297,7 +298,10 @@ foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
     }
     $NomCamp = ucwords($nomcamp);
     $tipo = $row['type'];
-    $null = (\src\shared\domain\helpers\FuncTablasSupport::isTrue($row['notnull'])) ? 'null' : '';
+    if ($tipo !== 'bytea') {
+        $a_campos_criteria[] = $nomcamp;
+    }
+    $null =(\src\shared\domain\helpers\FuncTablasSupport::isTrue($row['notnull'])) ? 'null' : '';
     $tip = 's';
     $tipo_db = 'string';
     $tip_val = '';
@@ -878,6 +882,7 @@ $txt_interface = "<?php
 namespace src\\$grupo\\domain\\contracts;
 
 use src\\$grupo\\domain\\entity\\$Q_clase;
+use src\\shared\\domain\\criteria\\Criteria;
 ";
 $txt_interface .= "\n" . $use_txt;
 $txt_interface .= "
@@ -899,8 +904,12 @@ $txt_pgRepositorio = "<?php
 namespace src\\$grupo\\infrastructure\\repositories;
 
 use src\\shared\\infrastructure\\persistence\\ClaseRepository;
-use src\\shared\\infrastructure\\persistence\\postgresql\\Condicion;
 use src\\shared\\infrastructure\\persistence\\postgresql\\Set;
+use src\\shared\\infrastructure\\persistence\\postgresql\\LegacyWhereAdapter;
+use src\\shared\\infrastructure\\persistence\\postgresql\\PgCriteriaConverter;
+use src\\shared\\domain\\criteria\\Criteria;
+use src\\shared\\traits\\RunsCriteriaQueries;
+use src\\$grupo\\domain\\criteria\\{$Q_clase}Field;
 use PDO;
 use PDOException;
 ";
@@ -933,6 +942,11 @@ class $pg_clase extends ClaseRepository implements $clase_interface
 
 $txt_pgRepositorio .= '
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo de {@see ' . $Q_clase . 'Field} => columna, solo cuando difieren. */
+    private const COLUMNAS = [];
+
     public function __construct()
     {
         $oDbl = $GLOBALS[\'' . $oDB_txt . '\'];
@@ -974,8 +988,20 @@ $txt_interface .= '/* --------------------  BASiC SEARCH -----------------------
 $txt_interface .= "\n";
 $txt_interface .= '
 	/**
+	 * devuelve una colección (array) de objetos de tipo ' . $Q_clase . ' que cumplen el criterio
+	 *
+	 * @return list<' . $Q_clase . '>';
+if (!empty($a_use_txt['JsonException'])) {
+    $txt_interface .= "\n\t" . ' * @throws JsonException';
+}
+$txt_interface .= "\n\t" . '
+	 */
+	public function matching(Criteria $criteria): array;
+
+	/**
 	 * devuelve una colección (array) de objetos de tipo ' . $Q_clase . '
 	 *
+	 * @deprecated usar matching(Criteria)
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
 	 * @return array|bool Una colección de objetos de tipo ' . $Q_clase;
@@ -993,55 +1019,19 @@ $txt_pgRepositorio .= "\n";
 
 $txt_pgRepositorio .= '
 	/**
-	 * devuelve una colección (array) de objetos de tipo ' . $Q_clase . '
+	 * devuelve una colección (array) de objetos de tipo ' . $Q_clase . ' que cumplen el criterio
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|bool Una colección de objetos de tipo ' . $Q_clase;
+	 * @return list<' . $Q_clase . '>';
 if (!empty($a_use_txt['JsonException'])) {
     $txt_pgRepositorio .= "\n\t" . ' * @throws JsonException';
 }
 $txt_pgRepositorio .= "\n\t" . '
 	 */
-	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|bool
-	{';
-if ($Q_db === 'sv-e' || $Q_db === 'comun') {
-    $txt_pgRepositorio .= '
-        $oDbl = $this->getoDbl_Select();';
-} else {
-    $txt_pgRepositorio .= '
-        $oDbl = $this->getoDbl();';
-}
-$txt_pgRepositorio .= '
-		$nom_tabla = $this->getNomTabla();
+	public function matching(Criteria $criteria): array
+	{
 		$' . $Q_clase . 'Set = new Set();
-		$oCondicion = new Condicion();
-		$aCondicion = [];';
-$txt_pgRepositorio .= '
-		foreach ($aWhere as $camp => $val) {
-			if ($camp === \'_ordre\') { continue; }
-			if ($camp === \'_limit\') { continue; }
-			$sOperador = $aOperators[$camp] ?? \'\';
-			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) { $aCondicion[]=$a; }
-			// operadores que no requieren valores
-			if ($sOperador === \'BETWEEN\' || $sOperador === \'IS NULL\' || $sOperador === \'IS NOT NULL\' || $sOperador === \'OR\') { unset($aWhere[$camp]); }
-            if ($sOperador === \'IN\' || $sOperador === \'NOT IN\') { unset($aWhere[$camp]); }
-            if ($sOperador === \'TXT\') { unset($aWhere[$camp]); }
-		}';
-
-$txt_pgRepositorio .= "\n\t\t" . '$sCondicion = implode(\' AND \',$aCondicion);
-		if ($sCondicion !==\'\') { $sCondicion = " WHERE ".$sCondicion; }
-		$sOrdre = \'\';
-        $sLimit = \'\';
-		if (isset($aWhere[\'_ordre\']) && $aWhere[\'_ordre\'] !== \'\') { $sOrdre = \' ORDER BY \'.$aWhere[\'_ordre\']; }
-		if (isset($aWhere[\'_ordre\'])) { unset($aWhere[\'_ordre\']); }
-		if (isset($aWhere[\'_limit\']) && $aWhere[\'_limit\'] !== \'\') { $sLimit = \' LIMIT \'.$aWhere[\'_limit\']; }
-		if (isset($aWhere[\'_limit\'])) { unset($aWhere[\'_limit\']); }
-		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		$stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
-		
-		$filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {';
+		$conv = new PgCriteriaConverter(' . $Q_clase . 'Field::class, self::COLUMNAS);
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {';
 
 if (!empty($bytea_dades)) {
     $txt_pgRepositorio .= "\n\t\t\t// para los bytea: (resources)";
@@ -1066,6 +1056,24 @@ $txt_pgRepositorio .= '
 			$' . $Q_clase . 'Set->add($' . $Q_clase . ');
 		}
 		return $' . $Q_clase . 'Set->getTot();
+	}
+
+	/**
+	 * devuelve una colección (array) de objetos de tipo ' . $Q_clase . '
+	 *
+	 * @deprecated usar matching(Criteria)
+	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return array|bool Una colección de objetos de tipo ' . $Q_clase;
+if (!empty($a_use_txt['JsonException'])) {
+    $txt_pgRepositorio .= "\n\t" . ' * @throws JsonException';
+}
+$txt_pgRepositorio .= "\n\t" . '
+	 */
+	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|bool
+	{
+		$adapter = new LegacyWhereAdapter(' . $Q_clase . 'Field::class, self::COLUMNAS);
+		return $this->matching($adapter->toCriteria($aWhere, $aOperators));
 	}
 ';
 
@@ -1434,6 +1442,17 @@ if (fwrite($handle, $txt_interface) === false) {
 }
 echo "<br>Success, wrote (somecontent) to file ($filename)";
 fclose($handle);
+/* ESCRIURE L'ENUM DE CAMPS PER CRITERIA  --------------------------------- */
+$dir_criteria = OrbixRuntime::dir() . '/src/' . $grupo . '/domain/criteria';
+if (!is_dir($dir_criteria) && !mkdir($dir_criteria, 0777, true) && !is_dir($dir_criteria)) {
+    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_criteria));
+}
+$filename = $dir_criteria . '/' . $Q_clase . 'Field.php';
+if (file_put_contents($filename, DevelCodegenSupport::criteriaFieldEnumSource($grupo, $Q_clase, $a_campos_criteria)) === false) {
+    echo "Cannot write to file ($filename)";
+    die();
+}
+echo "<br>Success, wrote enum to file ($filename)";
 /* ESCRIURE VALUE OBJECTS  --------------------------------- */
 $dir_value = OrbixRuntime::dir() . '/src/' . $grupo . '/domain/value_objects';
 if (!is_dir($dir_value) && !mkdir($dir_value, 0777, true) && !is_dir($dir_value)) {

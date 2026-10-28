@@ -62,6 +62,54 @@ final class DevelCodegenSupport
     }
 
     /**
+     * Nombre de `case` de enum (PascalCase) para un campo: `id_activ` → `IdActiv`.
+     */
+    public static function criteriaCaseName(string $campo): string
+    {
+        $partes = preg_split('/[^A-Za-z0-9]+/', $campo, -1, PREG_SPLIT_NO_EMPTY);
+        $nombre = '';
+        foreach ($partes !== false ? $partes : [] as $parte) {
+            $nombre .= ucfirst($parte);
+        }
+        if ($nombre === '' || ctype_digit($nombre[0])) {
+            $nombre = 'Campo' . $nombre;
+        }
+
+        return $nombre;
+    }
+
+    /**
+     * Código fuente del enum `<Entidad>Field` (campos consultables con Criteria).
+     *
+     * @param list<string> $campos nombres de campo de la entidad (= columna)
+     */
+    public static function criteriaFieldEnumSource(string $grupo, string $clase, array $campos): string
+    {
+        $cases = '';
+        $vistos = [];
+        foreach ($campos as $campo) {
+            $case = self::criteriaCaseName($campo);
+            if (isset($vistos[$case])) {
+                continue;
+            }
+            $vistos[$case] = true;
+            $cases .= "    case $case = '$campo';\n";
+        }
+
+        return "<?php\n\n"
+            . "namespace src\\$grupo\\domain\\criteria;\n\n"
+            . "use src\\shared\\domain\\criteria\\CriteriaField;\n\n"
+            . "/**\n"
+            . " * Campos de {@see \\src\\$grupo\\domain\\entity\\$clase} por los que se puede buscar u ordenar.\n"
+            . " * El valor es el nombre del campo en la entidad; el mapa a columna vive en el repositorio.\n"
+            . " */\n"
+            . "enum {$clase}Field: string implements CriteriaField\n"
+            . "{\n"
+            . $cases
+            . "}\n";
+    }
+
+    /**
      * @return array{schema: string, tabla: string, schema_sql: string}
      */
     public static function schemaTableParts(string $qTabla): array

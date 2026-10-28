@@ -1,6 +1,6 @@
 # Refactor: búsquedas en repositorio con objetos de consulta (Criteria)
 
-> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fases 1 y 2 completas. Siguiente: paso 3.1. Presupuesto de IA en la sección 10.
+> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fases 1 y 2 completas. Siguiente: paso 3.2. Presupuesto de IA en la sección 10.
 > **Fecha:** 2026-10-28
 > **Cómo retomar:** leer las secciones 3–5, buscar en la sección 7 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese paso. Cada paso termina con tests en verde y un commit propio.
 
@@ -323,7 +323,13 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
 
 ### Fase 3 — Generador y freno
 
-- [ ] **3.1** `devel_codegen` genera `matching()` y el enum `<Entidad>Field` en repositorios nuevos.
+- [x] **3.1** `devel_codegen` genera `matching()` y el enum `<Entidad>Field` en repositorios nuevos. Decisiones del paso:
+  - El generador es `frontend/devel_codegen/controller/factory.php` (no hay código en `src/devel_codegen`, solo config). La lógica pura va a `DevelCodegenSupport::criteriaCaseName()` y `criteriaFieldEnumSource()` para poder probarla; test: `tests/unit/frontend/devel_codegen/DevelCodegenSupportCriteriaTest.php` (4 tests, incluye `php -l` del enum generado).
+  - Enum escrito en `src/<grupo>/domain/criteria/<Clase>Field.php` con todas las columnas salvo `id_schema` y los `bytea`.
+  - Interfaz generada: `matching(Criteria)` y `get<Plural>(array, array)` marcado `@deprecated`.
+  - `Pg<Clase>Repository` generado: usa `RunsCriteriaQueries`, `COLUMNAS = []`, `matching()` con la hidratación de fechas/json/arrays de siempre y `get<Plural>()` como envoltorio de `LegacyWhereAdapter`. Se quita el bucle con `Condicion`.
+  - No se ha podido ejecutar el generador (es una pantalla web que escribe ficheros y toca `dependencies.php`); se comprueba `php -l` del controlador y la salida del enum. Los repositorios ya existentes no se regeneran.
+  - Suites verdes: unit de `frontend/devel_codegen`, `shared` y `devel`.
 - [ ] **3.2** Aviso en CI/PHPStan para usos nuevos de `$aWhere`/`$aOperators`.
 
 ### Fase 4 — Resto de módulos
