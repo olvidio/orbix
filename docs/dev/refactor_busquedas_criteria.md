@@ -1,6 +1,6 @@
 # Refactor: búsquedas en repositorio con objetos de consulta (Criteria)
 
-> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fases 1 y 2 completas. Siguiente: paso 3.2. Presupuesto de IA en la sección 10.
+> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fases 1 y 2 completas; fase 3 completa. Siguiente: fase 4. Presupuesto de IA en la sección 10.
 > **Fecha:** 2026-10-28
 > **Cómo retomar:** leer las secciones 3–5, buscar en la sección 7 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese paso. Cada paso termina con tests en verde y un commit propio.
 
@@ -330,7 +330,10 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
   - `Pg<Clase>Repository` generado: usa `RunsCriteriaQueries`, `COLUMNAS = []`, `matching()` con la hidratación de fechas/json/arrays de siempre y `get<Plural>()` como envoltorio de `LegacyWhereAdapter`. Se quita el bucle con `Condicion`.
   - No se ha podido ejecutar el generador (es una pantalla web que escribe ficheros y toca `dependencies.php`); se comprueba `php -l` del controlador y la salida del enum. Los repositorios ya existentes no se regeneran.
   - Suites verdes: unit de `frontend/devel_codegen`, `shared` y `devel`.
-- [ ] **3.2** Aviso en CI/PHPStan para usos nuevos de `$aWhere`/`$aOperators`.
+- [x] **3.2** Aviso en CI/PHPStan para usos nuevos de `$aWhere`/`$aOperators`. Decisiones del paso:
+  - Se elige el `grep` en CI (opción de la sección 5) en vez de una regla PHPStan: `tools/qa/check_criteria_legacy.php` cuenta por fichero `$aWhere`/`$aOperators`/`$aOperador(es)` en `src/` y `frontend/` y compara con `tools/qa/criteria_legacy_baseline.json` (477 ficheros hoy).
+  - Avisa si un fichero sube su contador o aparece uno nuevo; `--strict` sale con 1 (CI, `composer qa:criteria-legacy`), `--update` regenera la línea base tras migrar un módulo (en la fase 4 debe ir bajando).
+  - No hay carpeta de CI en el repo, así que no se cablea a ningún workflow. Sin test PHPUnit propio (herramienta CLI en `tools/`); comprobado a mano que con la línea base actual sale OK. No se toca código de `src/`: no se ejecutan suites.
 
 ### Fase 4 — Resto de módulos
 
