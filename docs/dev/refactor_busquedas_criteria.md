@@ -1,6 +1,6 @@
 # Refactor: búsquedas en repositorio con objetos de consulta (Criteria)
 
-> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fase 1 completa. Siguiente: paso 2.4. Presupuesto de IA en la sección 10.
+> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fases 1 y 2 completas. Siguiente: paso 3.1. Presupuesto de IA en la sección 10.
 > **Fecha:** 2026-10-28
 > **Cómo retomar:** leer las secciones 3–5, buscar en la sección 7 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese paso. Cada paso termina con tests en verde y un commit propio.
 
@@ -303,7 +303,10 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
   - `AsistenteApplicationService` gana `matching()`; su `getAsistentes()` queda `@deprecated`.
   - Pendiente (se queda con arrays legacy): `AsistenteActividadService::getActividadesDeAsistente()` (última llamada a `getConjunt`). Recibe `$aWhereNom`/`$aOperadorNom` y los de actividad desde 8 llamantes de otros módulos (actividadcargos, actividadestudios, `InfoAsistenteDl`…), así que se migra con ellos en la fase 4.
   - Suites verdes: integration/unit de `asistentes`, integration de `actividades` y `actividadcargos`, unit de `ubiscamas`, `actividadcargos` y `actividadestudios`. No se añaden tests nuevos: el comportamiento está cubierto por la caracterización de 2.0 y los tests de `matching`/`matchingConjunto`.
-- [ ] **2.4** Revisión: ajustar la API si el piloto lo pide y documentar el patrón en `AGENTS.md`.
+- [x] **2.4** Revisión: ajustar la API si el piloto lo pide y documentar el patrón en `AGENTS.md`. Decisiones del paso:
+  - Revisada la API (`Criteria`, `Filter`, `FilterGroup`, `matching`, `matchingConjunto`): el piloto no pide cambios; no se toca código.
+  - Nueva sección «Búsquedas con `Criteria`» en `AGENTS.md` (domain/application/infrastructure, `TXT`/`~INV` fuera de `Criteria`, tests). Solo documentación: no se ejecutan suites.
+  - Fase 2 completa. Queda el uso de `getConjunt` en `getActividadesDeAsistente()` para la fase 4.
 
 ### Fase 3 — Generador y freno
 

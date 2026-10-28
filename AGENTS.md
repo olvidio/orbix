@@ -101,6 +101,16 @@ Clase: `src\shared\infrastructure\persistence\ConverterDate` (delega en `PgTimes
 #### Hidratación en repositorio
 Al mapear PDO → entidad/array, convertir fechas y json/jsonb **en el mismo bloque**. La entidad recibe tipos PHP (`DateTimeLocal` / `TimeLocal` / array / `null`), no el string crudo de PG.
 
+### Búsquedas con `Criteria` (en lugar de `$aWhere` / `$aOperators`)
+Plan y estado de la migración: [`docs/dev/refactor_busquedas_criteria.md`](docs/dev/refactor_busquedas_criteria.md). Módulo piloto ya migrado: `asistentes` (referencia: `AsistenteField`, `PgAsistenteRepository::matching()`, `AsistenteActividadService`).
+
+- **Código nuevo o tocado:** buscar con `matching(Criteria)`; **no** escribir llamadas nuevas a `getXxx(array $aWhere, array $aOperators)` (están `@deprecated` y son envoltorios sobre `matching()` vía `LegacyWhereAdapter`).
+- **Domain:** cada entidad consultable tiene un enum `src/<modulo>/domain/criteria/<Entidad>Field.php` (`implements CriteriaField`, valor = nombre del campo de la entidad). Las piezas genéricas (`Criteria`, `Filter`, `FilterGroup`, `Order`, `Operator`) viven en `src/shared/domain/criteria/` y no tienen SQL.
+- **Application:** construir el criterio con `Criteria::create()->where(Filter::eq(F::IdActiv, $id))->andWhere(...)->orderBy(F::IdNom)->limit(n)`. Valores PHP nativos o VO; nunca strings con formato (`"a,b"`, `"{1,2}"`). OR entre campos con `FilterGroup::anyOf(...)` / `allOf(...)`.
+- **Infrastructure:** el repositorio `Pg*` implementa `matching()` (con el trait `RunsCriteriaQueries` y el mapa campo → columna si difieren) y solo acepta su propio enum. Si hay que unir varios repositorios, usar un método tipo `matchingConjunto()` en lugar de `getConjunt()`.
+- **Sin equivalente genérico** (`TXT`, `~INV`): método específico del repositorio, no ampliar `Criteria` con SQL.
+- **Tests:** un `matching()` nuevo lleva test de integración; al migrar, el test de caracterización del `getXxx` antiguo debe seguir en verde sin cambios.
+
 ### Config
 - `dependencies.php`: mapear interfaces de dominio a implementaciones de `infrastructure`.
 - `routes.php`: declarar rutas hacia controladores existentes. No dejar rutas huérfanas.
