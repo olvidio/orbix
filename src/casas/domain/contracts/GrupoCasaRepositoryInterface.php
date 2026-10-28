@@ -3,10 +3,19 @@
 namespace src\casas\domain\contracts;
 
 use src\casas\domain\entity\GrupoCasa;
+use src\shared\domain\criteria\Criteria;
 
 interface GrupoCasaRepositoryInterface
 {
     /**
+     * Grupos de casas que cumplen el criterio.
+     *
+     * @return list<GrupoCasa>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<GrupoCasa>

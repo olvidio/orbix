@@ -4,6 +4,9 @@ namespace src\casas\application;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\actividadtarifas\domain\criteria\TipoTarifaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -66,7 +69,9 @@ final class CalendarioUbiResumenData
         $plazas_min = (int)$oCasa->getPlazas_min();
 
         // Tarifas
-        $cTipoTarifas = $this->tipoTarifaRepository->getTipoTarifas(['sfsv' => $isfsv]);
+        $cTipoTarifas = $this->tipoTarifaRepository->matching(
+            Criteria::create()->where(Filter::eq(TipoTarifaField::Sfsv, $isfsv))
+        );
         $a_tarifas_actual = [];
         $a_tarifas_prev = [];
         $ultimo_id_tarifa = 0;

@@ -4,6 +4,7 @@ namespace src\casas\application;
 
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\permisos\domain\XPermisos;
+use src\shared\domain\criteria\Criteria;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 
@@ -30,7 +31,7 @@ final class GrupoCasaListaData
      */
     public function execute(): array
     {
-        $cGrupoCasas = $this->grupoCasaRepository->getGrupoCasas();
+        $cGrupoCasas = $this->grupoCasaRepository->matching(Criteria::create());
 
         $a_valores = [];
         $i = 0;

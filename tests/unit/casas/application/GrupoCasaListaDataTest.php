@@ -43,7 +43,7 @@ final class GrupoCasaListaDataTest extends TestCase
         $grupo->method('getId_ubi_hijo')->willReturn(20);
 
         $repoGrupo = $this->createMock(GrupoCasaRepositoryInterface::class);
-        $repoGrupo->method('getGrupoCasas')->willReturn([$grupo]);
+        $repoGrupo->method('matching')->willReturn([$grupo]);
 
         $casa = $this->createMock(Casa::class);
         $casa->method('getNombre_ubi')->willReturn('Casa X');

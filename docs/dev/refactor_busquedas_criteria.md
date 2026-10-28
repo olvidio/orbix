@@ -411,7 +411,11 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - `AppField`, `ConfigSchemaField`, `ModuloField` y `ModuloInstaladoField` en `src/configuracion/domain/criteria/`; `COLUMNAS = []`. `matching()` en las 4 interfaces y repos; `getApps`/`getConfigSchemas`/`getModulos`/`getModuloInstalados` `@deprecated` como envoltorios. `PgModuloRepository` solo tenía `oDbl`: fija también la conexión de selección. `matching()` de módulos conserva la hidratación de `mods_req`/`apps_req` (arrays enteros PG).
     - Migrados: `ModulosSelectData`, `ModulosConfig`, `InfoApps`, `InfoModsInstalled` y `ApptablesAppsData` (de `devel_db_admin`). `getConfigSchemas` no tiene llamantes fuera del repo. `ModulosConfigTest` mockea ahora `matching`.
     - Test: `PgConfiguracionMatchingTest` (3 tests, equivalencia con legacy). Suites verdes: unit e integration de `configuracion` y `devel_db_admin`; unit de `usuarios`.
-  - [ ] **4.2.casas**
+  - [x] **4.2.casas** Decisiones:
+    - `GrupoCasaField`, `IngresoField` y `UbiGastoField` en `src/casas/domain/criteria/`; `COLUMNAS = []`. `matching()` en las 3 interfaces y repos (ya tenían conexión de selección); `getGrupoCasas`/`getIngresos`/`getUbisGastos` `@deprecated` como envoltorios. `UbiGasto::matching` conserva `f_gasto` con `ConverterDate('date')`.
+    - Migrados: `CasasResumenData` (grupos padre/hijo), `GrupoCasaListaData`, `CasaEcGastosFormData` (el `BETWEEN` con strings `'Y/1/1','Y/12/31'` pasa a `Filter::between` con fechas ISO) y `CalendarioUbiResumenData::getTipoTarifas` (pendiente de 4.1 `actividadtarifas`).
+    - Siguen con arrays por ser de otros módulos: `getActividades` (`actividades`, 4.3), `getCasas`/`getCentros` (`ubis`, 4.4) y `getTarifaUbis` (`ubis`, 4.4).
+    - Test: `PgCasasMatchingTest` (2 tests, incl. `BETWEEN` de fechas y equivalencia con legacy); `GrupoCasaListaDataTest` y `CasaEcGastosFormDataTest` mockean `matching`. Suites verdes: unit e integration de `casas`; unit de `actividadtarifas` y `ubis`.
   - [ ] **4.2.zonassacd**
   - [ ] **4.2.planning**
 - [ ] **4.3 Medianos (20–34):** `dbextern`, `cambios` (`~INV`), `actividades`, `procesos`, `actividadessacd`, `profesores`, `personas` (`TXT`, `OR`), `usuarios`

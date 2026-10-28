@@ -3,7 +3,10 @@
 namespace src\casas\application;
 
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
+use src\casas\domain\criteria\UbiGastoField;
 use src\casas\domain\value_objects\UbiGastoTipo;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 
@@ -50,13 +53,12 @@ final class CasaEcGastosFormData
         $casas = [];
         foreach ($aGrupos as $id_ubi => $titulo) {
             $id_ubi = (int)$id_ubi;
-            $aWhere = [
-                'id_ubi' => $id_ubi,
-                'f_gasto' => "'$year/1/1','$year/12/31'",
-                '_ordre' => 'f_gasto',
-            ];
-            $aOperador = ['f_gasto' => 'BETWEEN'];
-            $cGastos = $this->ubiGastoRepository->getUbisGastos($aWhere, $aOperador);
+            $cGastos = $this->ubiGastoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(UbiGastoField::IdUbi, $id_ubi))
+                    ->andWhere(Filter::between(UbiGastoField::FGasto, "$year-01-01", "$year-12-31"))
+                    ->orderBy(UbiGastoField::FGasto)
+            );
             /** @var array<int, array<int, float>> $aGastos */
             $aGastos = [];
             foreach ($cGastos as $oUbiGasto) {

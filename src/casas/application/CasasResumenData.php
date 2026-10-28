@@ -7,6 +7,9 @@ use src\casas\application\services\CasasResumenOcupacion;
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
+use src\casas\domain\criteria\GrupoCasaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -189,8 +192,12 @@ final class CasasResumenData
         $nombre_ubi = $oCasaDl->getNombre_ubi();
         $avisos = [];
 
-        $cGrupoCasas1 = $this->grupoCasaRepository->getGrupoCasas(['id_ubi_padre' => $id_ubi]) ?: [];
-        $cGrupoCasas2 = $this->grupoCasaRepository->getGrupoCasas(['id_ubi_hijo' => $id_ubi]) ?: [];
+        $cGrupoCasas1 = $this->grupoCasaRepository->matching(
+            Criteria::create()->where(Filter::eq(GrupoCasaField::IdUbiPadre, $id_ubi))
+        );
+        $cGrupoCasas2 = $this->grupoCasaRepository->matching(
+            Criteria::create()->where(Filter::eq(GrupoCasaField::IdUbiHijo, $id_ubi))
+        );
         $cGrupoCasas = array_merge($cGrupoCasas1, $cGrupoCasas2);
         $id_ubi_padre = 0;
         $id_ubi_hijo = 0;

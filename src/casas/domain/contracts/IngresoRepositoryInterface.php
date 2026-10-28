@@ -3,10 +3,19 @@
 namespace src\casas\domain\contracts;
 
 use src\casas\domain\entity\Ingreso;
+use src\shared\domain\criteria\Criteria;
 
 interface IngresoRepositoryInterface
 {
     /**
+     * Ingresos de actividad que cumplen el criterio.
+     *
+     * @return list<Ingreso>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<Ingreso>

@@ -41,7 +41,7 @@ final class CasaEcGastosFormDataTest extends TestCase
         $casaRepo->method('findById')->with(12)->willReturn($casa);
 
         $gastoRepo = $this->createMock(UbiGastoRepositoryInterface::class);
-        $gastoRepo->method('getUbisGastos')->willReturn([]);
+        $gastoRepo->method('matching')->willReturn([]);
 
         $rta = (new CasaEcGastosFormData($casaRepo, $gastoRepo))->execute([
             'year' => 2026,
