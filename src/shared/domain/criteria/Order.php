@@ -7,7 +7,7 @@ namespace src\shared\domain\criteria;
 /**
  * Criterio de ordenación: campo + dirección (+ posición de nulos opcional). Inmutable.
  */
-final class Order
+final class Order implements OrderExpression
 {
     public function __construct(
         public readonly CriteriaField $field,

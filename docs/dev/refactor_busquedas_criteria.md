@@ -1,6 +1,6 @@
 # Refactor: búsquedas en repositorio con objetos de consulta (Criteria)
 
-> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Siguiente: paso 1.3.
+> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Siguiente: paso 1.4.
 > **Fecha:** 2026-10-28
 > **Cómo retomar:** leer las secciones 3–5, buscar en la sección 7 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese paso. Cada paso termina con tests en verde y un commit propio.
 
@@ -260,7 +260,12 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
   - `IN`/`ANY`/`OR` → siempre `IN (:p0, :p1…)`; lista vacía → `FALSE` (`NOT IN` → `TRUE`). `HasBits` usa dos parámetros con el mismo valor.
   - Las columnas del mapa se validan con regex (`col` o `alias.col`); sin comillas, igual que el código antiguo.
   - Eliminado `QueryBindContext` (restos del prototipo, sin usos).
-- [ ] **1.3** `LegacyWhereAdapter` + `LegacyRawFilter` + tests que comparen, para cada operador de `Condicion`, el resultado del adaptador con el SQL antiguo (mismas filas).
+- [x] **1.3** `LegacyWhereAdapter` + `LegacyRawFilter` + tests. Unit: `LegacyWhereAdapterTest` (29, estructura/SQL generado). Integración: `tests/integration/shared/infrastructure/persistence/postgresql/LegacyWhereAdapterEquivalenciaTest.php` (38 casos sobre tabla temporal; compara filas y orden del SQL antiguo —bucle de repositorio + `Condicion`— con adaptador + conversor). Decisiones del paso:
+  - Uso: `(new LegacyWhereAdapter(AsistenteField::class, ['plaza' => 'plaza_id']))->toCriteria($aWhere, $aOperators)` (instancia, no estático: necesita la clase del enum y el mapa de columnas).
+  - Clases auxiliares `@internal` en `src/shared/infrastructure/persistence/postgresql/`: `LegacyRawFilter` (SQL crudo con `?` enlazados: `TXT`, `~INV`, `LIKE`/`ILIKE`, `FALSE`), `LegacyColumnFilter` (operador sobre una columna sin campo en el enum; solo se valida como identificador) y `LegacyRawOrder` (trozo de `_ordre` no reducible a `columna [ASC|DESC]`).
+  - Cambios en el dominio: `OrderExpression` (interfaz; `Order` la implementa), `Criteria::addOrder()` y `Filter::of()` (constructor genérico validado).
+  - Compatibilidad conservada: un operador con valor `null` daba `c = NULL` (nunca coincide) → `FALSE`. Diferencia aceptada: `IN` con lista vacía ya no lanza excepción, da `FALSE`.
+  - `LIKE`/`ILIKE`/`NOT LIKE`/`NOT ILIKE` pasan por filtro crudo; reescribir con `matches*` al migrar cada uso (sección 9).
 - [ ] **1.4** Trait o método en `ClaseRepository` que ejecute un `Criteria` (prepara, ejecuta, devuelve filas) para no repetirlo en cada repositorio.
 
 ### Fase 2 — Piloto `asistentes`

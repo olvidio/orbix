@@ -16,6 +16,7 @@ use src\shared\domain\criteria\LogicalOperator;
 use src\shared\domain\criteria\NullsPosition;
 use src\shared\domain\criteria\Operator;
 use src\shared\domain\criteria\Order;
+use src\shared\domain\criteria\OrderExpression;
 use src\shared\domain\criteria\OrderDirection;
 
 /**
@@ -74,7 +75,7 @@ final class PgCriteriaConverter
         $this->reset();
         $sql = $this->where($criteria);
 
-        $orders = array_map(fn (Order $o): string => $this->order($o), $criteria->orders());
+        $orders = array_map(fn (OrderExpression $o): string => $this->order($o), $criteria->orders());
         if ($orders !== []) {
             $sql .= ' ORDER BY ' . implode(', ', $orders);
         }
@@ -107,17 +108,37 @@ final class PgCriteriaConverter
             return '(' . implode($glue, $partes) . ')';
         }
         if ($e instanceof Filter) {
-            return $this->filter($e);
+            return $this->operatorSql($this->column($e->field), $e->operator, $e->value);
+        }
+        if ($e instanceof LegacyColumnFilter) {
+            self::validarColumna($e->column);
+            return $this->operatorSql($e->column, $e->operator, $e->value);
+        }
+        if ($e instanceof LegacyRawFilter) {
+            return $this->raw($e);
         }
         throw new InvalidArgumentException('Expresión de filtro no soportada: ' . get_debug_type($e));
     }
 
-    private function filter(Filter $f): string
+    private function raw(LegacyRawFilter $f): string
     {
-        $c = $this->column($f->field);
-        $v = $f->value;
+        if ($f->values === []) {
+            return '(' . $f->sql . ')';
+        }
+        $partes = explode('?', $f->sql);
+        if (count($partes) - 1 !== count($f->values)) {
+            throw new InvalidArgumentException('LegacyRawFilter: número de ? distinto del de valores');
+        }
+        $sql = $partes[0];
+        foreach ($f->values as $i => $valor) {
+            $sql .= $this->bind($valor) . $partes[$i + 1];
+        }
+        return '(' . $sql . ')';
+    }
 
-        switch ($f->operator) {
+    private function operatorSql(string $c, Operator $operator, mixed $v): string
+    {
+        switch ($operator) {
             case Operator::Eq:
                 return "$c = " . $this->bind($v);
             case Operator::Neq:
@@ -139,10 +160,10 @@ final class PgCriteriaConverter
                 $lista = is_array($v) ? $v : [];
                 if ($lista === []) {
                     // IN () no existe en SQL: nada coincide / todo coincide.
-                    return $f->operator === Operator::In ? 'FALSE' : 'TRUE';
+                    return $operator === Operator::In ? 'FALSE' : 'TRUE';
                 }
                 $marcas = array_map(fn (mixed $x): string => $this->bind($x), $lista);
-                $kw = $f->operator === Operator::In ? 'IN' : 'NOT IN';
+                $kw = $operator === Operator::In ? 'IN' : 'NOT IN';
                 return "$c $kw (" . implode(', ', $marcas) . ')';
             case Operator::Between:
                 $par = is_array($v) ? array_values($v) : [];
@@ -165,8 +186,14 @@ final class PgCriteriaConverter
         }
     }
 
-    private function order(Order $o): string
+    private function order(OrderExpression $o): string
     {
+        if ($o instanceof LegacyRawOrder) {
+            return $o->sql;
+        }
+        if (!$o instanceof Order) {
+            throw new InvalidArgumentException('Ordenación no soportada: ' . get_debug_type($o));
+        }
         $sql = $this->column($o->field) . ($o->direction === OrderDirection::Desc ? ' DESC' : ' ASC');
         if ($o->nulls !== null) {
             $sql .= $o->nulls === NullsPosition::First ? ' NULLS FIRST' : ' NULLS LAST';

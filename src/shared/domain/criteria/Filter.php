@@ -25,6 +25,12 @@ final class Filter implements FilterExpression
         $this->validar();
     }
 
+    /** Constructor genérico: el valor se valida igual que en los métodos con nombre. */
+    public static function of(CriteriaField $field, Operator $operator, mixed $value = null): self
+    {
+        return new self($field, $operator, $value);
+    }
+
     public static function eq(CriteriaField $field, mixed $value): self
     {
         return new self($field, Operator::Eq, $value);

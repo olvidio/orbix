@@ -16,7 +16,7 @@ final class Criteria
 {
     /**
      * @param list<FilterExpression> $filters
-     * @param list<Order> $orders
+     * @param list<OrderExpression> $orders
      */
     private function __construct(
         private readonly array $filters = [],
@@ -64,6 +64,12 @@ final class Criteria
         );
     }
 
+    /** Añade un elemento de ordenación ya construido. */
+    public function addOrder(OrderExpression $order): self
+    {
+        return new self($this->filters, [...$this->orders, $order], $this->limit, $this->offset);
+    }
+
     public function limit(?int $limit): self
     {
         if ($limit !== null && $limit < 0) {
@@ -86,7 +92,7 @@ final class Criteria
         return $this->filters;
     }
 
-    /** @return list<Order> */
+    /** @return list<OrderExpression> */
     public function orders(): array
     {
         return $this->orders;
