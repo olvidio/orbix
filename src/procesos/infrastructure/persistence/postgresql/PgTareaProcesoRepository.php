@@ -4,15 +4,18 @@ namespace src\procesos\infrastructure\persistence\postgresql;
 use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\procesos\domain\criteria\TareaProcesoField;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\ConverterJson;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use JsonException;
 use PDO;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\procesos\domain\entity\TareaProceso;
 use src\shared\traits\HandlesPdoErrors;
+use src\shared\traits\RunsCriteriaQueries;
 
 /**
  * Clase que adapta la tabla a_tareas_proceso a la interfaz del repositorio
@@ -26,6 +29,10 @@ use src\shared\traits\HandlesPdoErrors;
 class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     /** @var array<string, list<array<string, string>>> */
     /** @var array<string, list<array<string, string>>> */
@@ -296,87 +303,46 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo TareaProceso
+     * TareaProceso que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<TareaProceso> Una colección de objetos de tipo TareaProceso
-     * @throws JsonException
+     * @return list<TareaProceso>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(TareaProcesoField::class, self::COLUMNAS);
+        $result = [];
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
+            $result[] = TareaProceso::fromArray($this->hidratarFila($aDatos));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array<string, mixed> $aDatos
+     * @return array<string, mixed>
+     */
+    private function hidratarFila(array $aDatos): array
+    {
+        $jsonFasesPrevias = $aDatos['json_fases_previas'] ?? null;
+        if (!is_string($jsonFasesPrevias) && !is_array($jsonFasesPrevias) && !($jsonFasesPrevias instanceof \stdClass)) {
+            $jsonFasesPrevias = null;
+        }
+        $aDatos['json_fases_previas'] = (new ConverterJson($jsonFasesPrevias, true))->fromPg();
+
+        return $aDatos;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<TareaProceso>
      */
     public function getTareasProceso(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
-        /** @var list<TareaProceso> $items */
-        $items = [];
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            // para los json
-            $jsonFasesPrevias = $aDatos['json_fases_previas'] ?? null;
-            if (!is_string($jsonFasesPrevias) && !is_array($jsonFasesPrevias) && !($jsonFasesPrevias instanceof \stdClass)) {
-                $jsonFasesPrevias = null;
-            }
-            $aDatos['json_fases_previas'] = (new ConverterJson($jsonFasesPrevias, true))->fromPg();
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $items[] = TareaProceso::fromArray($normalized);
-        }
-        return $items;
+        $adapter = new LegacyWhereAdapter(TareaProcesoField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

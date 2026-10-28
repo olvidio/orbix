@@ -6,6 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Caso de uso: listado de tipos de actividad con proceso propio / no-propio.
@@ -29,7 +30,7 @@ class TipoActivProcesoLista
         $aWhere = ['_ordre' => 'id_tipo_activ'];
         $cTiposDeActividades = $this->tipoDeActividadRepository->getTiposDeActividades($aWhere);
 
-        $cProcesosTipo = $this->procesoTipoRepository->getProcesoTipos();
+        $cProcesosTipo = $this->procesoTipoRepository->matching(Criteria::create());
         $a_procesos_tipo = [];
         foreach ($cProcesosTipo as $oProcesoTipo) {
             $id_tipo = $oProcesoTipo->getId_tipo_proceso();

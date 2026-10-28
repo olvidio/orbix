@@ -3,6 +3,9 @@
 namespace src\procesos\domain;
 
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\procesos\domain\criteria\ActividadFaseField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -29,13 +32,11 @@ class InfoFases extends DatosInfoRepo
     public function getColeccion(): array
     {
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'desc_fase'];
-            $aOperador = [];
+            $criteria = Criteria::create()->orderBy(ActividadFaseField::DescFase);
         } else {
-            $aWhere = ['nom' => $this->k_buscar];
-            $aOperador = ['nom' => 'sin_acentos'];
+            $criteria = Criteria::create()->where(Filter::matchesUnaccented(ActividadFaseField::DescFase, $this->k_buscar));
         }
 
-        return $this->actividadFaseRepository->getActividadFases($aWhere, $aOperador);
+        return $this->actividadFaseRepository->matching($criteria);
     }
 }

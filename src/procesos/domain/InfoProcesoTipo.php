@@ -3,6 +3,9 @@
 namespace src\procesos\domain;
 
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
+use src\procesos\domain\criteria\ProcesoTipoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -29,13 +32,11 @@ class InfoProcesoTipo extends DatosInfoRepo
     public function getColeccion(): array
     {
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'nom_proceso'];
-            $aOperador = [];
+            $criteria = Criteria::create()->orderBy(ProcesoTipoField::NomProceso);
         } else {
-            $aWhere = ['nom' => $this->k_buscar];
-            $aOperador = ['nom' => 'sin_acentos'];
+            $criteria = Criteria::create()->where(Filter::matchesUnaccented(ProcesoTipoField::NomProceso, $this->k_buscar));
         }
 
-        return $this->procesoTipoRepository->getProcesoTipos($aWhere, $aOperador);
+        return $this->procesoTipoRepository->matching($criteria);
     }
 }

@@ -4,6 +4,8 @@ namespace Tests\unit\actividades\domain\value_objects;
 
 use InvalidArgumentException;
 use src\actividades\domain\value_objects\ActividadTipoIdTxt;
+use src\procesos\domain\criteria\PermUsuarioActividadField;
+use src\shared\domain\criteria\Operator;
 use Tests\myTest;
 
 class ActividadTipoIdTxtTest extends myTest
@@ -101,6 +103,17 @@ class ActividadTipoIdTxtTest extends myTest
         $this->assertSame('17....', ActividadTipoIdTxt::fromFormParts('1', '7', '', ''));
         $this->assertSame('171001', ActividadTipoIdTxt::fromFormParts('1', '7', '1', '001'));
         $this->assertSame('......', ActividadTipoIdTxt::fromFormParts('', '', '', ''));
+    }
+
+    public function test_filter_for_repository_usa_in_para_alias_y_eq_para_canonico(): void
+    {
+        $alias = ActividadTipoIdTxt::filterForRepository(PermUsuarioActividadField::IdTipoActivTxt, '17');
+        $this->assertSame(Operator::In, $alias->operator);
+        $this->assertSame(['17....', '17', '000017'], $alias->value);
+
+        $canonico = ActividadTipoIdTxt::filterForRepository(PermUsuarioActividadField::IdTipoActivTxt, '171001');
+        $this->assertSame(Operator::Eq, $canonico->operator);
+        $this->assertSame('171001', $canonico->value);
     }
 
     public function test_apply_to_repository_where_uses_in_for_aliases(): void

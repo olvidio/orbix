@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace src\actividades\domain\value_objects;
 
+use src\shared\domain\criteria\CriteriaField;
+use src\shared\domain\criteria\Filter;
+
 /**
  * Identificador de tipo de actividad con comodines (puntos) para permisos.
  *
@@ -102,6 +105,7 @@ final class ActividadTipoIdTxt
     /**
      * Condición de repositorio que encuentra el canónico y alias truncados ('17', '000017').
      *
+     * @deprecated usar {@see self::filterForRepository()} con `matching(Criteria)`
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperador
      * @return array{0: array<string, mixed>, 1: array<string, string>}
@@ -127,6 +131,23 @@ final class ActividadTipoIdTxt
         $aOperador[$field] = 'IN';
 
         return [$aWhere, $aOperador];
+    }
+
+    /**
+     * Filtro de criterio que encuentra el canónico y alias truncados ('17', '000017').
+     * Equivale a {@see self::applyToRepositoryWhere()} para `Criteria`.
+     */
+    public static function filterForRepository(CriteriaField $field, string $value): Filter
+    {
+        $keys = self::lookupKeys($value);
+        if ($keys === []) {
+            return Filter::eq($field, $value);
+        }
+        if (count($keys) === 1) {
+            return Filter::eq($field, $keys[0]);
+        }
+
+        return Filter::in($field, $keys);
     }
 
     private function validate(string $str): void

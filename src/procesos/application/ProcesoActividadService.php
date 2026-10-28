@@ -2,6 +2,10 @@
 
 namespace src\procesos\application;
 
+use src\procesos\domain\criteria\ActividadProcesoTareaField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\procesos\domain\criteria\TareaProcesoField;
 use src\shared\config\ConfigGlobal;
 use src\menus\domain\PermisoMenuBits;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -105,7 +109,7 @@ class ProcesoActividadService
             $this->abort(sprintf(_("Actividad %s no encontrada"), $id_activ));
         }
         $statusActividad = $oActividad->getStatusVo()->value();
-        $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase, 'id_tarea' => $id_tarea]);
+        $cTareasProceso = $this->tareaProcesoRepository->matching(Criteria::create()->where(Filter::eq(TareaProcesoField::IdTipoProceso, $id_tipo_proceso))->andWhere(Filter::eq(TareaProcesoField::IdFase, $id_fase))->andWhere(Filter::eq(TareaProcesoField::IdTarea, $id_tarea)));
         if ($cTareasProceso === []) {
             $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"), $id_tipo_proceso, $id_fase, $id_tarea);
             $this->abort($msg_err);
@@ -191,12 +195,7 @@ class ProcesoActividadService
         $id_fase = strtok($fase_tarea, '#');
         $id_tarea = strtok('#');
 
-        $aWhere = [
-            'id_activ' => $id_activ,
-            'id_fase' => $id_fase,
-            'id_tarea' => $id_tarea,
-        ];
-        $cActividadProcesoTarea = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
+        $cActividadProcesoTarea = $this->actividadProcesoTareaRepository->matching(Criteria::create()->where(Filter::eq(ActividadProcesoTareaField::IdActiv, $id_activ))->andWhere(Filter::eq(ActividadProcesoTareaField::IdFase, $id_fase))->andWhere(Filter::eq(ActividadProcesoTareaField::IdTarea, $id_tarea)));
         $oActividadProcesoTarea = $cActividadProcesoTarea[0];
 
         $oActividadProcesoTarea->setCompletado(false);
@@ -227,12 +226,7 @@ class ProcesoActividadService
         $id_fase = strtok($fase_tarea, '#');
         $id_tarea = strtok('#');
 
-        $aWhere = [
-            'id_activ' => $id_activ,
-            'id_fase' => $id_fase,
-            'id_tarea' => $id_tarea,
-        ];
-        $cActividadProcesoTarea = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
+        $cActividadProcesoTarea = $this->actividadProcesoTareaRepository->matching(Criteria::create()->where(Filter::eq(ActividadProcesoTareaField::IdActiv, $id_activ))->andWhere(Filter::eq(ActividadProcesoTareaField::IdFase, $id_fase))->andWhere(Filter::eq(ActividadProcesoTareaField::IdTarea, $id_tarea)));
         if (empty($cActividadProcesoTarea[0])) {
             // Daba error, no sé exactamente...
         } else {
@@ -320,12 +314,7 @@ class ProcesoActividadService
         $id_fase = strtok($fase_tarea, '#');
         $id_tarea = strtok('#');
 
-        $aWhere = [
-            'id_tipo_proceso' => $id_tipo_proceso,
-            'id_fase' => $id_fase,
-            'id_tarea' => $id_tarea,
-        ];
-        $cTareaProceso = $this->tareaProcesoRepository->getTareasProceso($aWhere);
+        $cTareaProceso = $this->tareaProcesoRepository->matching(Criteria::create()->where(Filter::eq(TareaProcesoField::IdTipoProceso, $id_tipo_proceso))->andWhere(Filter::eq(TareaProcesoField::IdFase, $id_fase))->andWhere(Filter::eq(TareaProcesoField::IdTarea, $id_tarea)));
         if (empty($cTareaProceso)) {
             // la fase de la que depende no está en el proceso
             $msg = sprintf(_("Proceso mal diseñado. La fase %s, con tarea %s no está en el proceso"), $id_fase, $id_tarea);
@@ -460,7 +449,7 @@ class ProcesoActividadService
                 $this->actividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sv');
             }
 
-            $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->getActividadProcesoTareas(['id_activ' => $id_activ]);
+            $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->matching(Criteria::create()->where(Filter::eq(ActividadProcesoTareaField::IdActiv, $id_activ)));
 
             // Puede ser que el proceso no exista (para sfsv=2):
             if (empty($cActividadProcesoTareas)) {
@@ -472,8 +461,7 @@ class ProcesoActividadService
              */
             if ($statusActividad == 1 && $statusProceso == 2) {
                 $id_fase = FaseId::FASE_APROBADA;
-                $aWhere = ['id_activ' => $id_activ, 'id_fase' => $id_fase];
-                $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
+                $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->matching(Criteria::create()->where(Filter::eq(ActividadProcesoTareaField::IdActiv, $id_activ))->andWhere(Filter::eq(ActividadProcesoTareaField::IdFase, $id_fase)));
                 if (!empty($cActividadProcesoTareas)) {
                     $oActividadProcessorTarea = $cActividadProcesoTareas[0];
                     $oActividadProcessorTarea->setCompletado(true);
@@ -482,8 +470,7 @@ class ProcesoActividadService
             }
             if ($statusActividad > $statusProceso) {
                 $id_fase = FaseId::FASE_APROBADA;
-                $aWhere = ['id_activ' => $id_activ, 'id_fase' => $id_fase];
-                $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
+                $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->matching(Criteria::create()->where(Filter::eq(ActividadProcesoTareaField::IdActiv, $id_activ))->andWhere(Filter::eq(ActividadProcesoTareaField::IdFase, $id_fase)));
                 if (!empty($cActividadProcesoTareas)) {
                     $oActividadProcessorTarea = $cActividadProcesoTareas[0];
                     $oActividadProcessorTarea->setCompletado(false);

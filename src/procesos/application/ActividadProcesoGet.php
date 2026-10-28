@@ -2,6 +2,10 @@
 
 namespace src\procesos\application;
 
+use src\procesos\domain\criteria\ActividadProcesoTareaField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\procesos\domain\criteria\TareaProcesoField;
 use src\shared\config\ConfigGlobal;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
@@ -31,11 +35,7 @@ class ActividadProcesoGet
     {
         $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
 
-        $aWhere = [
-            'id_activ' => $Qid_activ,
-            '_ordre' => 'id_fase',
-        ];
-        $oLista = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
+        $oLista = $this->actividadProcesoTareaRepository->matching(Criteria::create()->where(Filter::eq(ActividadProcesoTareaField::IdActiv, $Qid_activ))->orderBy(ActividadProcesoTareaField::IdFase));
 
         $aRows = [];
         foreach ($oLista as $oActividadProcesoTarea) {
@@ -63,11 +63,7 @@ class ActividadProcesoGet
             }
             $tarea = $oTarea->getDesc_tarea();
 
-            $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso([
-                'id_tipo_proceso' => $id_tipo_proceso,
-                'id_fase' => $id_fase,
-                'id_tarea' => $id_tarea,
-            ]);
+            $cTareasProceso = $this->tareaProcesoRepository->matching(Criteria::create()->where(Filter::eq(TareaProcesoField::IdTipoProceso, $id_tipo_proceso))->andWhere(Filter::eq(TareaProcesoField::IdFase, $id_fase))->andWhere(Filter::eq(TareaProcesoField::IdTarea, $id_tarea)));
             if ($cTareasProceso === []) {
                 return [
                     'error' => sprintf(

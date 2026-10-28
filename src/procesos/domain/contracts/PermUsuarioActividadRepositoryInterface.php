@@ -2,6 +2,7 @@
 
 namespace src\procesos\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\procesos\domain\entity\PermUsuarioActividad;
 
 
@@ -20,6 +21,12 @@ interface PermUsuarioActividadRepositoryInterface
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
+	 * @return list<PermUsuarioActividad>
+	 */
+	public function matching(Criteria $criteria): array;
+
+	/**
+	 * @deprecated usar matching(Criteria)
 	 * devuelve una colección (array) de objetos de tipo PermUsuarioActividad
 	 *
 	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.

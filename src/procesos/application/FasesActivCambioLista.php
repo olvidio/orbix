@@ -2,10 +2,14 @@
 
 namespace src\procesos\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\procesos\domain\criteria\TareaProcesoField;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\shared\security\HashB;
@@ -61,24 +65,20 @@ class FasesActivCambioLista
             $Qperiodo = 'actual';
         }
 
-        $aWhere = [];
-        $aOperador = [];
+        $criteria = Criteria::create();
         $isfsv = 0;
         if ($Qid_tipo_activ !== '......') {
-            $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
-            $aOperador['id_tipo_activ'] = '~';
+            $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, "^$Qid_tipo_activ"));
             $isfsv = (int)$Qid_tipo_activ[0];
         }
         if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qdl_propia)) {
-            $aWhere['dl_org'] = ConfigGlobal::mi_delef((string) $isfsv);
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::DlOrg, ConfigGlobal::mi_delef((string) $isfsv)));
             $ActividadRepository = $this->actividadDlRepository;
         } else {
-            $aWhere['dl_org'] = ConfigGlobal::mi_delef((string) $isfsv);
-            $aOperador['dl_org'] = '!=';
+            $criteria = $criteria->andWhere(Filter::neq(ActividadAllField::DlOrg, ConfigGlobal::mi_delef((string) $isfsv)));
             $ActividadRepository = $this->actividadRepository;
         }
-        $aWhere['status'] = 4;
-        $aOperador['status'] = '<';
+        $criteria = $criteria->andWhere(Filter::lt(ActividadAllField::Status, 4));
 
         $oPeriodo = new Periodo();
         $oPeriodo->setDefaultAny('next');
@@ -90,18 +90,15 @@ class FasesActivCambioLista
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
         if ($Qperiodo === 'desdeHoy') {
-            $aWhere['f_fin'] = "'$inicioIso','$finIso'";
-            $aOperador['f_fin'] = 'BETWEEN';
+            $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FFin, $inicioIso, $finIso));
         } else {
-            $aWhere['f_ini'] = "'$inicioIso','$finIso'";
-            $aOperador['f_ini'] = 'BETWEEN';
+            $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso));
         }
 
         $a_cabeceras = [_("nom"), _("cumple requisito")];
 
         $a_valores = [];
-        $aWhere['_ordre'] = 'f_ini';
-        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $ActividadRepository->matching($criteria->orderBy(ActividadAllField::FIni));
         $num_activ = count($cActividades);
         $num_ok = 0;
 
@@ -119,11 +116,7 @@ class FasesActivCambioLista
             if ($id_tipo_proceso === null) {
                 continue;
             }
-            $aWhereTP = [
-                'id_tipo_proceso' => $id_tipo_proceso,
-                'id_fase' => $Qid_fase_nueva,
-            ];
-            $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso($aWhereTP);
+            $cTareasProceso = $this->tareaProcesoRepository->matching(Criteria::create()->where(Filter::eq(TareaProcesoField::IdTipoProceso, $id_tipo_proceso))->andWhere(Filter::eq(TareaProcesoField::IdFase, $Qid_fase_nueva)));
             if ($cTareasProceso === []) {
                 continue;
             }

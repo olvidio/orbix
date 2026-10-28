@@ -2,6 +2,9 @@
 
 namespace src\procesos\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\procesos\domain\criteria\TareaProcesoField;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 
@@ -23,7 +26,7 @@ class ProcesosRegenerar
     {
         $Qid_tipo_proceso = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tipo_proceso');
 
-        $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso]);
+        $cTareasProceso = $this->tareaProcesoRepository->matching(Criteria::create()->where(Filter::eq(TareaProcesoField::IdTipoProceso, $Qid_tipo_proceso)));
         $id_fase = 0;
         $id_tarea = 0;
         foreach ($cTareasProceso as $oTareaProceso) {

@@ -10,6 +10,9 @@ use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
+use src\procesos\domain\criteria\PermUsuarioActividadField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\procesos\domain\PermAccionBits;
 use src\shared\security\HashB;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
@@ -74,22 +77,16 @@ class UsuarioPermActivData
 
         $aPerm = [];
         foreach ($a_afecta_a as $afecta_a_txt => $num) {
-            $aWhere = [
-                'id_usuario' => $Qid_usuario,
-                'dl_propia' => $Qdl_propia,
-                'afecta_a' => $num,
-            ];
-            $aOperador = [];
-            [$aWhere, $aOperador] = ActividadTipoIdTxt::applyToRepositoryWhere(
-                $aWhere,
-                $aOperador,
-                $Qid_tipo_activ_txt,
-            );
+            $criteria = Criteria::create()
+                ->where(Filter::eq(PermUsuarioActividadField::IdUsuario, $Qid_usuario))
+                ->andWhere(Filter::eq(PermUsuarioActividadField::DlPropia, \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qdl_propia)))
+                ->andWhere(Filter::eq(PermUsuarioActividadField::AfectaA, $num))
+                ->andWhere(ActividadTipoIdTxt::filterForRepository(PermUsuarioActividadField::IdTipoActivTxt, $Qid_tipo_activ_txt));
             $fase_ref = '';
             $perm_on = '';
             $perm_off = '';
             $afecta_a_match = '';
-            $cPermUsuarioActividad = $this->permUsuarioActividadRepository->getPermUsuarioActividades($aWhere, $aOperador);
+            $cPermUsuarioActividad = $this->permUsuarioActividadRepository->matching($criteria);
             foreach ($cPermUsuarioActividad as $oPermiso) {
                 $fase_ref = (string)$oPermiso->getFase_ref();
                 $afecta_a_match = (string)$oPermiso->getAfecta_a();

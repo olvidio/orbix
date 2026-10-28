@@ -2,6 +2,7 @@
 
 namespace src\cambios\application;
 
+use src\procesos\domain\criteria\TareaProcesoField;
 use src\shared\config\ConfigGlobal;
 use src\cambios\application\legacy\Avisos;
 use src\permisos\domain\PermisosActividades;
@@ -264,7 +265,7 @@ class AvisosGenerarTabla
                         );
                         if (!empty($cTiposActividad)) {
                             $id_tipo_proceso = $cTiposActividad[0]->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
-                            $cTareasProceso = $TareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase_ref]);
+                            $cTareasProceso = $TareaProcesoRepository->matching(Criteria::create()->where(Filter::eq(TareaProcesoField::IdTipoProceso, $id_tipo_proceso))->andWhere(Filter::eq(TareaProcesoField::IdFase, $id_fase_ref)));
                             if (!empty($cTareasProceso)) {
                                 $status_de_fase = $cTareasProceso[0]->getStatus();
                             }
@@ -415,10 +416,7 @@ class AvisosGenerarTabla
         }
 
         $id_tipo_proceso = $cTiposActividad[0]->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
-        $cTareasProceso = $tareaProcesoRepository->getTareasProceso([
-            'id_tipo_proceso' => $id_tipo_proceso,
-            'id_fase' => $id_fase_ref,
-        ]);
+        $cTareasProceso = $tareaProcesoRepository->matching(Criteria::create()->where(Filter::eq(TareaProcesoField::IdTipoProceso, $id_tipo_proceso))->andWhere(Filter::eq(TareaProcesoField::IdFase, $id_fase_ref)));
         if ($cTareasProceso === []) {
             return $id_fase_ref;
         }

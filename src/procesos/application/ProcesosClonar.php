@@ -2,6 +2,9 @@
 
 namespace src\procesos\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\procesos\domain\criteria\TareaProcesoField;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 
 /**
@@ -26,11 +29,11 @@ class ProcesosClonar
             return _("no se ha indicado el proceso a clonar");
         }
 
-        $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso]);
+        $cTareasProceso = $this->tareaProcesoRepository->matching(Criteria::create()->where(Filter::eq(TareaProcesoField::IdTipoProceso, $Qid_tipo_proceso)));
         foreach ($cTareasProceso as $oTareaProceso) {
             $this->tareaProcesoRepository->Eliminar($oTareaProceso);
         }
-        $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso_ref]);
+        $cTareasProceso = $this->tareaProcesoRepository->matching(Criteria::create()->where(Filter::eq(TareaProcesoField::IdTipoProceso, $Qid_tipo_proceso_ref)));
         foreach ($cTareasProceso as $oTareaProceso) {
             $oTareaProceso->setId_tipo_proceso($Qid_tipo_proceso);
             $newId_item = $this->tareaProcesoRepository->getNewId();

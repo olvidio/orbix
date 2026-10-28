@@ -2,6 +2,9 @@
 
 namespace src\procesos\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\procesos\domain\criteria\TareaProcesoField;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\value_objects\StatusId;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
@@ -30,10 +33,7 @@ class ProcesosGet
     {
         $Qid_tipo_proceso = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tipo_proceso');
 
-        $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso([
-            'id_tipo_proceso' => $Qid_tipo_proceso,
-            '_ordre' => 'status,id_of_responsable',
-        ]);
+        $cTareasProceso = $this->tareaProcesoRepository->matching(Criteria::create()->where(Filter::eq(TareaProcesoField::IdTipoProceso, $Qid_tipo_proceso))->orderBy(TareaProcesoField::Status)->addOrderBy(TareaProcesoField::IdOfResponsable));
 
         StatusId::getArrayStatus();
 

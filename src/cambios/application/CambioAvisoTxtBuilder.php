@@ -2,6 +2,9 @@
 
 namespace src\cambios\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\procesos\domain\criteria\ActividadFaseField;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
@@ -210,7 +213,7 @@ final class CambioAvisoTxtBuilder
 
                 if (!$bEliminada) {
                     if ($sPropiedad !== '-') {
-                        $cFases = $this->actividadFaseRepository->getActividadFases(['id_fase' => $id_fase]);
+                        $cFases = $this->actividadFaseRepository->matching(Criteria::create()->where(Filter::eq(ActividadFaseField::IdFase, $id_fase)));
                         $sFase = $cFases[0]->getDesc_fase();
 
                         if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($sValor_new)) {

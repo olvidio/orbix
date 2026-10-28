@@ -2,6 +2,7 @@
 
 namespace src\procesos\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\actividades\domain\entity\ActividadAll;
 use src\procesos\domain\entity\ActividadProcesoTarea;
 
@@ -47,6 +48,12 @@ interface ActividadProcesoTareaRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * @return list<ActividadProcesoTarea>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * devuelve una colección (array) de objetos de tipo ActividadProcesoTarea
      *
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.

@@ -4,6 +4,9 @@ namespace src\procesos\application;
 
 use src\shared\config\ConfigGlobal;
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
+use src\procesos\domain\criteria\ProcesoTipoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 
 /**
@@ -26,9 +29,11 @@ class TipoActivProcesoLstPosibles
         $Qpropio = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'propio');
 
         $mi_sfsv = ConfigGlobal::mi_sfsv();
-        $aWhere = ['sfsv' => $mi_sfsv, '_ordre' => 'nom_proceso'];
-
-        $cProcesosTipo = $this->procesoTipoRepository->getProcesoTipos($aWhere);
+        $cProcesosTipo = $this->procesoTipoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ProcesoTipoField::Sfsv, $mi_sfsv))
+                ->orderBy(ProcesoTipoField::NomProceso)
+        );
 
         $aProcesos = [];
         foreach ($cProcesosTipo as $oProcesoTipo) {

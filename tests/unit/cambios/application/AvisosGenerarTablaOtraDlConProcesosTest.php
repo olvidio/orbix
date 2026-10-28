@@ -59,7 +59,7 @@ final class AvisosGenerarTablaOtraDlConProcesosTest extends TestCase
         $tareaRepo = $this->createMock(TareaProcesoRepositoryInterface::class);
         $tarea = $this->createMock(\src\procesos\domain\entity\TareaProceso::class);
         $tarea->method('getStatus')->willReturn(StatusId::ACTUAL);
-        $tareaRepo->method('getTareasProceso')->willReturn([$tarea]);
+        $tareaRepo->method('matching')->willReturn([$tarea]);
 
         $useCase = $this->createUseCase();
         $statusDeFase = new ReflectionMethod(AvisosGenerarTabla::class, 'statusDeFaseReferencia');

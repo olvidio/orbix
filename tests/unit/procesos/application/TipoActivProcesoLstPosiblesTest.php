@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Tests\unit\procesos\application;
 
 use PHPUnit\Framework\TestCase;
+use src\procesos\domain\criteria\ProcesoTipoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\procesos\application\TipoActivProcesoLstPosibles;
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
 use src\procesos\domain\entity\ProcesoTipo;
@@ -37,8 +40,8 @@ final class TipoActivProcesoLstPosiblesTest extends TestCase
 
         $repo = $this->createMock(ProcesoTipoRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getProcesoTipos')
-            ->with(['sfsv' => 1, '_ordre' => 'nom_proceso'])
+            ->method('matching')
+            ->with(Criteria::create()->where(Filter::eq(ProcesoTipoField::Sfsv, 1))->orderBy(ProcesoTipoField::NomProceso))
             ->willReturn([$p1]);
 
         $out = (new TipoActivProcesoLstPosibles($repo))->execute([
