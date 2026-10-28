@@ -350,7 +350,11 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - `AnuncioField` (10 campos de la entidad), `COLUMNAS = []`; `matching()` en interfaz y repo, `getAnuncios` `@deprecated` como envoltorio. El repo solo tenía `oDbl`: se añade `setoDbl_select(oDBPC_Select)` porque `RunsCriteriaQueries` lee de la conexión de selección.
     - Única llamada migrada: `TablonAnunciosParaGM::getArray` (`tablon ~*` → `matchesInsensitive`, `t_eliminado IS NULL` → `isNull`; el `'x'` del legacy era valor ficticio).
     - Test: `PgAnuncioMatchingTest` (2 tests, incl. equivalencia con `getAnuncios`). Suites verdes: unit e integration de `tablonanuncios`.
-  - [ ] **4.1.dossiers**
+  - [x] **4.1.dossiers** Decisiones:
+    - `TipoDossierField` (13 campos; `class` → caso `Class_`, ya que `Class` es palabra reservada) y `DossierField` (7 campos) en `src/dossiers/domain/criteria/`; `COLUMNAS = []`. `matching()` en ambas interfaces y repos; `getTiposDossiers`/`getDossieres` `@deprecated` como envoltorios. `PgDossierRepository` no tenía conexión de selección: se añade `setoDbl_select(oDB)`.
+    - Migrados: `PermDossiersListaData`, `DossiersListaFichasData` y `PgTipoDossierRepository::findByCodigo`. `getDossieres` no tenía llamantes.
+    - `PermDossierVerFormDataTest` tiene un repo anónimo que implementa la interfaz: se le añade `matching()`.
+    - Test: `PgDossiersMatchingTest` (3 tests, incl. equivalencia con legacy). Suites verdes: unit e integration de `dossiers`.
   - [ ] **4.1.permisos**
   - [ ] **4.1.actividadcargos**
   - [ ] **4.1.actividadtarifas**

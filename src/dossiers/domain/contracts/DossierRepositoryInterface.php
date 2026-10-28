@@ -3,6 +3,7 @@
 namespace src\dossiers\domain\contracts;
 
 use src\dossiers\domain\entity\Dossier;
+use src\shared\domain\criteria\Criteria;
 use src\dossiers\domain\value_objects\DossierPk as DossierPkAlias;
 
 
@@ -23,8 +24,16 @@ interface DossierRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * Dossiers que cumplen el criterio.
+     *
+     * @return list<Dossier>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
      * devuelve una colección (array) de objetos de tipo Dossier
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<Dossier> Una colección de objetos de tipo Dossier

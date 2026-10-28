@@ -3,6 +3,9 @@
 namespace src\dossiers\application;
 
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\dossiers\domain\criteria\TipoDossierField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Listado de tipos de dossier para pantalla de permisos.
@@ -20,8 +23,10 @@ class PermDossiersListaData
      */
     public function build(string $tipo): array
     {
-        $cTipoDossiers = $this->tipoDossierRepository->getTiposDossiers(
-            ['tabla_from' => $tipo, '_ordre' => 'id_tipo_dossier']
+        $cTipoDossiers = $this->tipoDossierRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(TipoDossierField::TablaFrom, $tipo))
+                ->orderBy(TipoDossierField::IdTipoDossier)
         );
         $a_filas = [];
         foreach ($cTipoDossiers as $oTipoDossier) {

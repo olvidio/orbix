@@ -4,7 +4,12 @@ namespace src\dossiers\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\shared\traits\RunsCriteriaQueries;
+use src\dossiers\domain\criteria\TipoDossierField;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
@@ -24,6 +29,10 @@ use src\shared\traits\HandlesPdoErrors;
 class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
@@ -35,77 +44,28 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * Tipos de dossier que cumplen el criterio.
+     *
+     * @return list<TipoDossier>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(TipoDossierField::class, self::COLUMNAS);
+        return array_map(TipoDossier::fromArray(...), $this->rowsMatching($criteria, $conv));
+    }
+
+    /**
      * devuelve una colección (array) de objetos de tipo TipoDossier
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<TipoDossier> Una colección de objetos de tipo TipoDossier
      */
     public function getTiposDossiers(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        if (isset($aWhere['_ordre']) && is_scalar($aWhere['_ordre']) && (string) $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . (string) $aWhere['_ordre'];
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && (string) $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . (string) $aWhere['_limit'];
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $tiposDossiers = [];
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $tiposDossiers[] = TipoDossier::fromArray($normalized);
-        }
-        return $tiposDossiers;
+        $adapter = new LegacyWhereAdapter(TipoDossierField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -230,7 +190,7 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
         if ($codigo === '') {
             return null;
         }
-        $a = $this->getTiposDossiers(['codigo' => $codigo], ['codigo' => '=']);
+        $a = $this->matching(Criteria::create()->where(Filter::eq(TipoDossierField::Codigo, $codigo)));
         if ($a === []) {
             return null;
         }

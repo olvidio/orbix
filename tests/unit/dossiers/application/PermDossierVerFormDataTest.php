@@ -203,6 +203,11 @@ final class PermDossierVerFormDataTest extends TestCase
                 return false;
             }
 
+            public function matching(\src\shared\domain\criteria\Criteria $criteria): array
+            {
+                return [];
+            }
+
             public function getTiposDossiers(array $aWhere = [], array $aOperators = []): array
             {
                 return [];

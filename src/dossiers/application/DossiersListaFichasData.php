@@ -4,7 +4,10 @@ namespace src\dossiers\application;
 
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\dossiers\domain\criteria\TipoDossierField;
 use src\dossiers\domain\entity\TipoDossier;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\dossiers\domain\value_objects\DossierPk;
 use src\shared\config\ConfigGlobal;
 
@@ -26,11 +29,11 @@ class DossiersListaFichasData
      */
     public function build(string $pau, int $id_pau, string $Qobj_pau): array
     {
-        $aWhere = [
-            'tabla_from' => $pau,
-            '_ordre' => 'descripcion',
-        ];
-        $cTipoDossier = $this->tipoDossierRepository->getTiposDossiers($aWhere);
+        $cTipoDossier = $this->tipoDossierRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(TipoDossierField::TablaFrom, $pau))
+                ->orderBy(TipoDossierField::Descripcion)
+        );
         $i = 0;
         $a_filas = [];
 
