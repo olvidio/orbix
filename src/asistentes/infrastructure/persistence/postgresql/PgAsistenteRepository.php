@@ -5,6 +5,9 @@ namespace src\asistentes\infrastructure\persistence\postgresql;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\criteria\Order;
+use src\shared\domain\criteria\OrderDirection;
 use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
@@ -74,6 +77,52 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
     {
         $adapter = new LegacyWhereAdapter(AsistenteField::class, self::COLUMNAS);
         return $this->matching($adapter->toCriteria($aWhere, $aOperators));
+    }
+
+    /**
+     * Une los resultados de varios repositorios de asistentes (Dl, Out, Ex…) para un mismo criterio.
+     * Cada repositorio se consulta sin orden; el orden se aplica después sobre el conjunto
+     * (los repositorios que van antes mantienen su prioridad en caso de empate).
+     *
+     * @param list<class-string<AsistenteRepositoryInterface>> $repos
+     * @return list<Asistente>
+     */
+    public function matchingConjunto(array $repos, Criteria $criteria): array
+    {
+        $sinOrden = Criteria::create()->limit($criteria->getLimit())->offset($criteria->getOffset());
+        foreach ($criteria->filters() as $filter) {
+            $sinOrden = $sinOrden->andWhere($filter);
+        }
+
+        $todos = [];
+        foreach ($repos as $repoInterface) {
+            $repo = DependencyResolver::get($repoInterface);
+            if (!$repo instanceof AsistenteRepositoryInterface) {
+                continue;
+            }
+            $todos = array_merge($todos, $repo->matching($sinOrden));
+        }
+
+        $orders = array_values(array_filter($criteria->orders(), static fn($o): bool => $o instanceof Order));
+        if ($orders === []) {
+            return $todos;
+        }
+        usort($todos, static function (Asistente $a, Asistente $b) use ($orders): int {
+            foreach ($orders as $order) {
+                $getter = 'get' . ucfirst($order->field->value);
+                if (!method_exists($a, $getter)) {
+                    continue;
+                }
+                $va = strtolower((string) ($a->$getter() ?? ''));
+                $vb = strtolower((string) ($b->$getter() ?? ''));
+                $cmp = strcmp($va, $vb);
+                if ($cmp !== 0) {
+                    return $order->direction === OrderDirection::Desc ? -$cmp : $cmp;
+                }
+            }
+            return 0;
+        });
+        return $todos;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

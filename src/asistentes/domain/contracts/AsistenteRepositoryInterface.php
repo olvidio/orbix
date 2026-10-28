@@ -40,8 +40,18 @@ interface AsistenteRepositoryInterface
     public function getAsistentes(array $aWhere = [], array $aOperators = []): array;
 
     /**
+     * Une los resultados de varios repositorios de asistentes (Dl, Out, Ex…) para un criterio.
+     * El orden de `$criteria` se aplica sobre el conjunto.
+     *
+     * @param list<class-string<AsistenteRepositoryInterface>> $repos
+     * @return list<Asistente>
+     */
+    public function matchingConjunto(array $repos, Criteria $criteria): array;
+
+    /**
      * Une colecciones de varios repositorios de asistentes (Dl, Out, Ex…).
      *
+     * @deprecated usar matchingConjunto(array, Criteria)
      * @param list<array{repo: class-string, get: string}> $a_Clases
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
