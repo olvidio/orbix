@@ -341,7 +341,21 @@ Un bloque por módulo, siguiendo el inventario de la fase 0 (de menor a mayor). 
 
 Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llamantes → tests. Se marca al terminar.
 
-- [ ] **4.1 Triviales (≤ 5 llamadas):** `utils_database`, `tablonanuncios`, `dossiers`, `permisos`, `actividadcargos`, `actividadtarifas`, `ubiscamas`, `actividadescentro`, `asignaturas`, `certificados`, `pasarela`
+- [ ] **4.1 Triviales (≤ 5 llamadas):** troceado en un commit por módulo (cada casilla se marca al terminar):
+  - [x] **4.1.utils_database** Decisiones:
+    - `DbSchemaField` (`schema`, `id`) y `MapIdField` (`objeto`, `id_resto`, `id_dl`) en `src/utils_database/domain/criteria/`; `COLUMNAS = []`. `matching()` en ambas interfaces y repos (con `RunsCriteriaQueries`); `getDbSchemas`/`getMapIdes` quedan `@deprecated` como envoltorios de `LegacyWhereAdapter`.
+    - Migrada la única llamada interna (`PgDbSchemaRepository::getNext`). Los llamantes de otros módulos (`notas`, `actividadestudios`, `shared`, `devel_db_admin`) siguen con arrays por el envoltorio y migran con sus módulos (sus tests unitarios mockean `getDbSchemas`).
+    - Test: `PgUtilsDatabaseMatchingTest` (3 tests, incl. equivalencia con el método legacy). Suites verdes: unit/integration de `utils_database`, unit de `notas`, `shared`, `devel_db_admin`, unit/integration de `actividadestudios`. `tests/integration/notas` aborta por entorno (logger `log/errores.log` y memoria en `PgActaRepository`), ajeno al cambio.
+  - [ ] **4.1.tablonanuncios**
+  - [ ] **4.1.dossiers**
+  - [ ] **4.1.permisos**
+  - [ ] **4.1.actividadcargos**
+  - [ ] **4.1.actividadtarifas**
+  - [ ] **4.1.ubiscamas**
+  - [ ] **4.1.actividadescentro**
+  - [ ] **4.1.asignaturas**
+  - [ ] **4.1.certificados**
+  - [ ] **4.1.pasarela**
 - [ ] **4.2 Pequeños (6–16):** `devel_db_admin`, `shared`, `cartaspresentacion`, `menus`, `configuracion`, `casas`, `zonassacd`, `planning`
 - [ ] **4.3 Medianos (20–34):** `dbextern`, `cambios` (`~INV`), `actividades`, `procesos`, `actividadessacd`, `profesores`, `personas` (`TXT`, `OR`), `usuarios`
 - [ ] **4.4 Grandes (39–60):** `actividadplazas`, `ubis` (38 interfaces), `inventario`, `actividadestudios`, `notas`

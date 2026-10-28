@@ -3,7 +3,12 @@
 namespace src\utils_database\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\shared\traits\RunsCriteriaQueries;
+use src\utils_database\domain\criteria\DbSchemaField;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use PDO;
@@ -26,6 +31,10 @@ use src\utils_database\domain\value_objects\DbSchemaId;
 class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
@@ -88,78 +97,32 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * DbSchema que cumplen el criterio.
+     *
+     * @return list<DbSchema>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(DbSchemaField::class, self::COLUMNAS);
+        $dbSchemas = [];
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
+            $dbSchemas[] = DbSchema::fromArray($aDatos);
+        }
+        return $dbSchemas;
+    }
+
+    /**
      * devuelve una colección (array) de objetos de tipo DbSchema
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<DbSchema>
      */
     public function getDbSchemas(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        if (isset($aWhere['_ordre']) && is_string($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && (string) $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $dbSchemas = [];
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $dbSchemas[] = DbSchema::fromArray($normalized);
-        }
-
-        return $dbSchemas;
+        $adapter = new LegacyWhereAdapter(DbSchemaField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -325,7 +288,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     private function getNext(string $schema): int
     {
         // comprobar si existe
-        $cSchema = $this->getDbSchemas(['schema' => $schema]);
+        $cSchema = $this->matching(Criteria::create()->where(Filter::eq(DbSchemaField::Schema, $schema)));
         if (empty($cSchema)) {
             $netxId = $this->getLast() + 1;
         }

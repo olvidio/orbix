@@ -2,6 +2,7 @@
 
 namespace src\utils_database\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\utils_database\domain\entity\DbSchema;
 
 /**
@@ -23,8 +24,16 @@ interface DbSchemaRepositoryInterface
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
+	 * DbSchema que cumplen el criterio.
+	 *
+	 * @return list<DbSchema>
+	 */
+	public function matching(Criteria $criteria): array;
+
+	/**
 	 * devuelve una colección (array) de objetos de tipo DbSchema
 	 *
+	 * @deprecated usar matching(Criteria)
 	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
 	 * @return list<DbSchema>

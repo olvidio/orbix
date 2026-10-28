@@ -3,7 +3,11 @@
 namespace src\utils_database\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\shared\traits\RunsCriteriaQueries;
+use src\utils_database\domain\criteria\MapIdField;
 use PDO;
 use PDOException;
 use src\shared\infrastructure\GlobalPdo;
@@ -23,6 +27,10 @@ use src\utils_database\domain\entity\MapId;
 class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
@@ -36,78 +44,32 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * MapId que cumplen el criterio.
+     *
+     * @return list<MapId>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(MapIdField::class, self::COLUMNAS);
+        $mapIdes = [];
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
+            $mapIdes[] = MapId::fromArray($aDatos);
+        }
+        return $mapIdes;
+    }
+
+    /**
      * devuelve una colección (array) de objetos de tipo MapId
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<MapId>
      */
     public function getMapIdes(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        if (isset($aWhere['_ordre']) && is_string($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && (string) $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $mapIdes = [];
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $mapIdes[] = MapId::fromArray($normalized);
-        }
-
-        return $mapIdes;
+        $adapter = new LegacyWhereAdapter(MapIdField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
