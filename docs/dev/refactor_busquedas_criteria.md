@@ -1,6 +1,6 @@
 # Refactor: búsquedas en repositorio con objetos de consulta (Criteria)
 
-> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fase 1 completa. Siguiente: paso 2.1. Presupuesto de IA en la sección 10.
+> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fase 1 completa. Siguiente: paso 2.2. Presupuesto de IA en la sección 10.
 > **Fecha:** 2026-10-28
 > **Cómo retomar:** leer las secciones 3–5, buscar en la sección 7 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese paso. Cada paso termina con tests en verde y un commit propio.
 
@@ -289,7 +289,11 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
   - Hecho en `tests/integration/asistentes/infrastructure/persistence/postgresql/PgAsistenteGetAsistentesCaracterizacionTest.php` (26 tests). Siembra 5 filas con `AsistenteFactory` en `d_asistentes_dl`/`out`/`ex` (ids `99880000x`), limpia en `setUp`/`tearDown`. Cubre: igualdad implícita y `=`, `!=`, `<`, `>`, `BETWEEN` (cadena `a,b`), `IS NULL`/`IS NOT NULL`, `IN`/`NOT IN`, `~`/`~*`/`!~`, booleanos `'t'`/`'f'`, `_ordre` (simple, `DESC`, dos columnas, vacío), `_limit`, clave inexistente, hidratación de la entidad, tabla `all` frente a las hijas y cinco formas de `getConjunt()` (unión por orden de repos, subconjunto, por persona, `_ordre` que reordena, vacío).
   - Decisión: `TXT` no se incluye, porque en el módulo solo lo usa `ListaUltimaActivData` sobre tablas de personas (`$aWhereP`), no sobre asistentes. Tampoco `sin_acentos` ni fechas (los llamantes de asistentes no las usan sobre estas columnas).
   - Las expectativas están escritas a mano y pasan con el código actual; en 2.1 deben pasar sin cambios.
-- [ ] **2.1** `AsistenteField` en `src/asistentes/domain/criteria/`; `PgAsistenteRepository`: añadir `matching()`, convertir `getAsistentes()` en envoltorio. Test de integración.
+- [x] **2.1** `AsistenteField` en `src/asistentes/domain/criteria/`; `PgAsistenteRepository`: añadir `matching()`, convertir `getAsistentes()` en envoltorio. Test de integración. Decisiones del paso:
+  - `AsistenteField` con los 15 campos de la entidad; `COLUMNAS = []` (campo = columna). Las subclases `Dl`/`Ex`/`Out`/`Pub` heredan `matching()` y el envoltorio sin cambios (solo cambian la tabla); su revisión queda para 2.2.
+  - `matching()` añadido a `AsistenteRepositoryInterface`; `getAsistentes()` marcado `@deprecated` y reducido a `LegacyWhereAdapter` + `matching()` (usa `RunsCriteriaQueries`). `getConjunt()` no se toca (2.2).
+  - Test: `tests/integration/asistentes/infrastructure/persistence/postgresql/PgAsistenteMatchingTest.php` (7 tests, incl. equivalencia con `getAsistentes`). La caracterización de 2.0 (26 tests) pasa sin cambios.
+  - Suites verdes: unit e integration de `asistentes`, `actividades`, `planning`, `actividadcargos`, `misas`, `pasarela`; unit de `personas`. `tests/integration/personas` aborta con y sin este cambio (`log/errores.log` inexistente en el contenedor): fallo de entorno previo.
 - [ ] **2.2** Resto de repositorios del módulo (`Dl`, `Ex`, `Out`, `Pub`) y `getConjunt`.
 - [ ] **2.3** Migrar los llamantes de `src/asistentes/application/` a `matching()`.
 - [ ] **2.4** Revisión: ajustar la API si el piloto lo pide y documentar el patrón en `AGENTS.md`.

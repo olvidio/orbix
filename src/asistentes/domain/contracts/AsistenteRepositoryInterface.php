@@ -4,6 +4,7 @@ namespace src\asistentes\domain\contracts;
 
 use src\asistentes\domain\entity\Asistente;
 use src\asistentes\domain\value_objects\AsistentePk;
+use src\shared\domain\criteria\Criteria;
 
 
 /**
@@ -22,8 +23,16 @@ interface AsistenteRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * Asistentes que cumplen el criterio.
+     *
+     * @return list<Asistente>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
      * devuelve una colección (array) de objetos de tipo Asistente
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<Asistente>
