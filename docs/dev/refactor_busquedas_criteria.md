@@ -416,7 +416,11 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - Migrados: `CasasResumenData` (grupos padre/hijo), `GrupoCasaListaData`, `CasaEcGastosFormData` (el `BETWEEN` con strings `'Y/1/1','Y/12/31'` pasa a `Filter::between` con fechas ISO) y `CalendarioUbiResumenData::getTipoTarifas` (pendiente de 4.1 `actividadtarifas`).
     - Siguen con arrays por ser de otros módulos: `getActividades` (`actividades`, 4.3), `getCasas`/`getCentros` (`ubis`, 4.4) y `getTarifaUbis` (`ubis`, 4.4).
     - Test: `PgCasasMatchingTest` (2 tests, incl. `BETWEEN` de fechas y equivalencia con legacy); `GrupoCasaListaDataTest` y `CasaEcGastosFormDataTest` mockean `matching`. Suites verdes: unit e integration de `casas`; unit de `actividadtarifas` y `ubis`.
-  - [ ] **4.2.zonassacd**
+  - [x] **4.2.zonassacd** Decisiones:
+    - `ZonaField`, `ZonaGrupoField` y `ZonaSacdField` en `src/zonassacd/domain/criteria/`; `COLUMNAS = []`. `matching()` en las 3 interfaces y repos (ya tenían conexión de selección); `getZonas`/`getZonasGrupo`/`getZonasSacds` `@deprecated` como envoltorios.
+    - Migrados: `ZonaSacdUpdate` (helper privado `buscarZonaSacd`), `ZonaSacdLista`, `ZonaSacdListaTot`, `InfoZona` e `InfoZonaGrupo`. Cambio de comportamiento menor: `InfoZona` buscaba por una columna `nom` que `zonas` no tiene (la consulta fallaba); ahora busca por `nombre_zona`, que era la intención.
+    - Siguen por el envoltorio los llamantes de otros módulos (`misas`, `planning`, `encargossacd`, `usuarios`, `cambios`) y sus mocks, que migran con sus módulos. `ZonaCtrLista` recibe el par `[$where, $operators]` de un filtro de `ubis` y se queda con arrays hasta 4.4.
+    - Test: `PgZonassacdMatchingTest` (equivalencia con legacy); los unitarios de `zonassacd` mockean ahora `matching`. Suites verdes: unit e integration de `zonassacd`; unit de `misas`, `planning`, `encargossacd` y `usuarios`.
   - [ ] **4.2.planning**
 - [ ] **4.3 Medianos (20–34):** `dbextern`, `cambios` (`~INV`), `actividades`, `procesos`, `actividadessacd`, `profesores`, `personas` (`TXT`, `OR`), `usuarios`
 - [ ] **4.4 Grandes (39–60):** `actividadplazas`, `ubis` (38 interfaces), `inventario`, `actividadestudios`, `notas`

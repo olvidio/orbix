@@ -2,8 +2,11 @@
 
 namespace src\zonassacd\domain;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaField;
 use src\zonassacd\domain\entity\Zona;
 
 /* No vale el underscore en el nombre */
@@ -30,13 +33,12 @@ class InfoZona extends DatosInfoRepo
     public function getColeccion(): array
     {
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'orden'];
-            $aOperador = [];
+            $criteria = Criteria::create()->orderBy(ZonaField::Orden);
         } else {
-            $aWhere = ['nom' => $this->k_buscar];
-            $aOperador = ['nom' => 'sin_acentos'];
+            // La tabla no tiene columna `nom` (la consulta legacy fallaba): se busca por el nombre de la zona.
+            $criteria = Criteria::create()->where(Filter::matchesUnaccented(ZonaField::NombreZona, $this->k_buscar));
         }
 
-        return $this->zonaRepository->getZonas($aWhere, $aOperador);
+        return $this->zonaRepository->matching($criteria);
     }
 }

@@ -447,12 +447,10 @@
     "src/zonassacd/application/ZonaCtrLista.php": 3,
     "src/zonassacd/application/ZonaSacdLista.php": 2,
     "src/zonassacd/application/ZonaSacdListaTot.php": 2,
-    "src/zonassacd/domain/InfoZona.php": 3,
-    "src/zonassacd/domain/InfoZonaGrupo.php": 3,
     "src/zonassacd/domain/contracts/ZonaGrupoRepositoryInterface.php": 4,
     "src/zonassacd/domain/contracts/ZonaRepositoryInterface.php": 4,
     "src/zonassacd/domain/contracts/ZonaSacdRepositoryInterface.php": 4,
-    "src/zonassacd/infrastructure/persistence/postgresql/PgZonaGrupoRepository.php": 16,
-    "src/zonassacd/infrastructure/persistence/postgresql/PgZonaRepository.php": 16,
-    "src/zonassacd/infrastructure/persistence/postgresql/PgZonaSacdRepository.php": 16
+    "src/zonassacd/infrastructure/persistence/postgresql/PgZonaGrupoRepository.php": 6,
+    "src/zonassacd/infrastructure/persistence/postgresql/PgZonaRepository.php": 6,
+    "src/zonassacd/infrastructure/persistence/postgresql/PgZonaSacdRepository.php": 6
 }

@@ -2,8 +2,11 @@
 
 namespace src\zonassacd\domain;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaGrupoField;
 use src\zonassacd\domain\entity\ZonaGrupo;
 
 /* No vale el underscore en el nombre */
@@ -31,13 +34,11 @@ class InfoZonaGrupo extends DatosInfoRepo
     public function getColeccion(): array
     {
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'orden'];
-            $aOperador = [];
+            $criteria = Criteria::create()->orderBy(ZonaGrupoField::Orden);
         } else {
-            $aWhere = ['nombre_grupo' => $this->k_buscar];
-            $aOperador = ['nombre_grupo' => 'sin_acentos'];
+            $criteria = Criteria::create()->where(Filter::matchesUnaccented(ZonaGrupoField::NombreGrupo, $this->k_buscar));
         }
 
-        return $this->zonaGrupoRepository->getZonasGrupo($aWhere, $aOperador);
+        return $this->zonaGrupoRepository->matching($criteria);
     }
 }

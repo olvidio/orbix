@@ -4,8 +4,11 @@ namespace src\zonassacd\application;
 
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 
 final class ZonaSacdListaTot
 {
@@ -29,7 +32,9 @@ final class ZonaSacdListaTot
         foreach ($cSacds as $oPersona) {
             $id_nom = $oPersona->getId_nom();
             $ap_nom = $oPersona->getPrefApellidosNombre();
-            $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_nom' => $id_nom]);
+            $cZonaSacd = $this->zonaSacdRepository->matching(
+                Criteria::create()->where(Filter::eq(ZonaSacdField::IdNom, $id_nom))
+            );
             $a_zonas = [];
             foreach ($cZonaSacd as $oZonaSacd) {
                 $id_zona = $oZonaSacd->getId_zona();

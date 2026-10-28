@@ -12,9 +12,12 @@ use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaSacd;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\zonassacd\application\ZonaSacdLista;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 use src\zonassacd\domain\entity\Zona;
 use src\zonassacd\domain\entity\ZonaSacd;
 
@@ -66,7 +69,7 @@ final class ZonaSacdListaTest extends TestCase
     public function test_id_zona_vacio_no_consulta_repositorio(): void
     {
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->expects($this->never())->method('getZonasSacds');
+        $zonaSacdRepo->expects($this->never())->method('matching');
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
         $zonaRepo->expects($this->never())->method('findById');
@@ -92,11 +95,10 @@ final class ZonaSacdListaTest extends TestCase
             ->willReturn([$oPersona1, $oPersona2]);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturnMap([
-            [['id_nom' => 101], [], []],
-            // Beltran ya tiene una zona -> se excluye.
-            [['id_nom' => 102], [], [$this->createStub(ZonaSacd::class)]],
-        ]);
+        $zonaSacdRepo->method('matching')->willReturnCallback(
+            // Beltran (102) ya tiene una zona -> se excluye.
+            fn (Criteria $c): array => $c->filters()[0]->value === 102 ? [$this->createStub(ZonaSacd::class)] : []
+        );
 
         $lista = new ZonaSacdLista($personaRepo, $zonaSacdRepo, $this->createStub(ZonaRepositoryInterface::class));
         $out = $lista->execute('no');
@@ -121,8 +123,8 @@ final class ZonaSacdListaTest extends TestCase
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->expects($this->once())
-            ->method('getZonasSacds')
-            ->with(['id_zona' => 5], [])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(ZonaSacdField::IdZona, 5))))
             ->willReturn([$oZonaSacdA, $oZonaSacdB]);
 
         // `Persona::findPersonaEnGlobal` resuelve `PersonaFinderService`
@@ -175,7 +177,7 @@ final class ZonaSacdListaTest extends TestCase
         $oZonaSacd = $this->zonaSacdStub(999, propia: false, dias: array_fill(0, 7, false));
 
         $zonaSacdRepo = $this->createStub(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([$oZonaSacd]);
+        $zonaSacdRepo->method('matching')->willReturn([$oZonaSacd]);
 
         $finder = $this->createMock(PersonaFinderService::class);
         $finder->method('findPersonaEnGlobalODePaso')->willReturn(null);
@@ -217,8 +219,8 @@ final class ZonaSacdListaTest extends TestCase
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->expects($this->once())
-            ->method('getZonasSacds')
-            ->with(['id_zona' => 3], [])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(ZonaSacdField::IdZona, 3))))
             ->willReturn([]);
 
         $lista = new ZonaSacdLista(

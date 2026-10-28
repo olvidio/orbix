@@ -2,6 +2,7 @@
 
 namespace src\zonassacd\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\zonassacd\domain\entity\ZonaGrupo;
 
 interface ZonaGrupoRepositoryInterface
@@ -12,6 +13,14 @@ interface ZonaGrupoRepositoryInterface
     public function getArrayZonaGrupos(string $sCondicion = ''): array;
 
     /**
+     * Grupos de zona que cumplen el criterio.
+     *
+     * @return list<ZonaGrupo>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<ZonaGrupo>

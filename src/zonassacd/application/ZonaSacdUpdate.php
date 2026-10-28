@@ -2,7 +2,10 @@
 
 namespace src\zonassacd\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 use src\zonassacd\domain\entity\ZonaSacd;
 
 final class ZonaSacdUpdate
@@ -28,12 +31,12 @@ final class ZonaSacdUpdate
             $idNom = (int) $id_nom;
             if ($acumular === 2) {
                 if ($zonaSinAsignar) {
-                    $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_nom' => $idNom, 'id_zona' => $id_zona]);
+                    $cZonaSacd = $this->buscarZonaSacd($idNom, $id_zona);
                     if ($cZonaSacd !== [] && $this->zonaSacdRepository->Eliminar($cZonaSacd[0]) === false) {
                         $errores[] = _("hay un error, no se ha eliminado");
                     }
                 } else {
-                    $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_nom' => $idNom, 'id_zona' => $idZonaNueva]);
+                    $cZonaSacd = $this->buscarZonaSacd($idNom, $idZonaNueva);
                     if ($cZonaSacd !== []) {
                         $oZonaSacd = $cZonaSacd[0];
                         $oZonaSacd->setPropia(false);
@@ -59,12 +62,12 @@ final class ZonaSacdUpdate
                         $errores[] = _("hay un error, no se ha guardado");
                     }
                 } elseif ($zonaSinAsignar) {
-                    $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_nom' => $idNom, 'id_zona' => $id_zona]);
+                    $cZonaSacd = $this->buscarZonaSacd($idNom, $id_zona);
                     if ($cZonaSacd !== [] && $this->zonaSacdRepository->Eliminar($cZonaSacd[0]) === false) {
                         $errores[] = _("hay un error, no se ha eliminado");
                     }
                 } else {
-                    $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_nom' => $idNom, 'id_zona' => $id_zona]);
+                    $cZonaSacd = $this->buscarZonaSacd($idNom, $id_zona);
                     if ($cZonaSacd !== []) {
                         $oZonaSacd = $cZonaSacd[0];
                         $oZonaSacd->setId_zona($idZonaNueva);
@@ -77,5 +80,17 @@ final class ZonaSacdUpdate
             }
         }
         return ['tipo' => 'update', 'mensaje' => implode("\n", $errores), 'error' => ''];
+    }
+
+    /**
+     * @return list<ZonaSacd>
+     */
+    private function buscarZonaSacd(int $idNom, int|string $idZona): array
+    {
+        return $this->zonaSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ZonaSacdField::IdNom, $idNom))
+                ->andWhere(Filter::eq(ZonaSacdField::IdZona, $idZona))
+        );
     }
 }

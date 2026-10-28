@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Tests\unit\zonassacd\domain;
 
 use PHPUnit\Framework\TestCase;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaField;
 use src\zonassacd\domain\InfoZona;
 
 final class InfoZonaTest extends TestCase
@@ -28,8 +31,8 @@ final class InfoZonaTest extends TestCase
     {
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
         $zonaRepo->expects($this->once())
-            ->method('getZonas')
-            ->with(['_ordre' => 'orden'], [])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->orderBy(ZonaField::Orden)))
             ->willReturn(['zona-a', 'zona-b']);
 
         $info = new InfoZona($zonaRepo);
@@ -42,8 +45,8 @@ final class InfoZonaTest extends TestCase
     {
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
         $zonaRepo->expects($this->once())
-            ->method('getZonas')
-            ->with(['nom' => 'nord'], ['nom' => 'sin_acentos'])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::matchesUnaccented(ZonaField::NombreZona, 'nord'))))
             ->willReturn(['zona-nord']);
 
         $info = new InfoZona($zonaRepo);

@@ -2,6 +2,7 @@
 
 namespace src\zonassacd\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\zonassacd\domain\entity\Zona;
 
 interface ZonaRepositoryInterface
@@ -14,6 +15,14 @@ interface ZonaRepositoryInterface
     public function getArrayZonas(?int $iid_nom_jefe = null): array;
 
     /**
+     * Zonas que cumplen el criterio.
+     *
+     * @return list<Zona>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<Zona>

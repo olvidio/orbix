@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Tests\unit\zonassacd\application;
 
 use PHPUnit\Framework\TestCase;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\zonassacd\application\ZonaSacdUpdate;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 use src\zonassacd\domain\entity\ZonaSacd;
 
 /**
@@ -51,8 +54,8 @@ final class ZonaSacdUpdateTest extends TestCase
 
         $repo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getZonasSacds')
-            ->with(['id_nom' => 501, 'id_zona' => '5'])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(ZonaSacdField::IdNom, 501))->andWhere(Filter::eq(ZonaSacdField::IdZona, '5'))))
             ->willReturn([$existente]);
         $repo->expects($this->once())
             ->method('Eliminar')
@@ -71,7 +74,7 @@ final class ZonaSacdUpdateTest extends TestCase
         $existente = $this->createMock(ZonaSacd::class);
 
         $repo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $repo->method('getZonasSacds')->willReturn([$existente]);
+        $repo->method('matching')->willReturn([$existente]);
         $repo->method('Eliminar')->willReturn(false);
 
         $update = new ZonaSacdUpdate($repo);
@@ -89,8 +92,8 @@ final class ZonaSacdUpdateTest extends TestCase
 
         $repo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getZonasSacds')
-            ->with(['id_nom' => 501, 'id_zona' => 8])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(ZonaSacdField::IdNom, 501))->andWhere(Filter::eq(ZonaSacdField::IdZona, 8))))
             ->willReturn([$existente]);
         $repo->expects($this->once())->method('Guardar')->with($existente)->willReturn(true);
         $repo->expects($this->never())->method('getNewId');
@@ -101,7 +104,7 @@ final class ZonaSacdUpdateTest extends TestCase
     public function test_acumular_sin_zona_existente_crea_entry_no_propia(): void
     {
         $repo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $repo->method('getZonasSacds')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
         $repo->expects($this->once())->method('getNewId')->willReturn(777);
 
         $capturada = null;
@@ -151,8 +154,8 @@ final class ZonaSacdUpdateTest extends TestCase
 
         $repo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getZonasSacds')
-            ->with(['id_nom' => 501, 'id_zona' => '5'])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(ZonaSacdField::IdNom, 501))->andWhere(Filter::eq(ZonaSacdField::IdZona, '5'))))
             ->willReturn([$existente]);
         $repo->expects($this->once())->method('Eliminar')->with($existente)->willReturn(true);
         $repo->expects($this->never())->method('Guardar');
@@ -167,7 +170,7 @@ final class ZonaSacdUpdateTest extends TestCase
         $existente->expects($this->once())->method('setPropia')->with(true);
 
         $repo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $repo->method('getZonasSacds')->willReturn([$existente]);
+        $repo->method('matching')->willReturn([$existente]);
         $repo->expects($this->once())->method('Guardar')->with($existente)->willReturn(true);
 
         (new ZonaSacdUpdate($repo))->execute('5', '8', 1, [501]);
@@ -178,7 +181,7 @@ final class ZonaSacdUpdateTest extends TestCase
         // Sin asignacion existente (getZonasSacds => []), el servicio
         // no hace nada: ni crea ni guarda ni elimina.
         $repo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $repo->method('getZonasSacds')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
         $repo->expects($this->never())->method('Guardar');
         $repo->expects($this->never())->method('Eliminar');
 

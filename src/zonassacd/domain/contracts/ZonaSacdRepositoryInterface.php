@@ -2,6 +2,7 @@
 
 namespace src\zonassacd\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\zonassacd\domain\entity\ZonaSacd;
 
 interface ZonaSacdRepositoryInterface
@@ -12,6 +13,14 @@ interface ZonaSacdRepositoryInterface
     public function getIdSacdsDeZona(int $iid_zona): array;
 
     /**
+     * Relaciones zona - sacd que cumplen el criterio.
+     *
+     * @return list<ZonaSacd>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<ZonaSacd>

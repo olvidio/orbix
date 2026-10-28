@@ -7,9 +7,12 @@ namespace Tests\unit\zonassacd\application;
 use PHPUnit\Framework\TestCase;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\PersonaSacd;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\zonassacd\application\ZonaSacdListaTot;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 use src\zonassacd\domain\entity\Zona;
 use src\zonassacd\domain\entity\ZonaSacd;
 
@@ -43,8 +46,8 @@ final class ZonaSacdListaTotTest extends TestCase
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->expects($this->once())
-            ->method('getZonasSacds')
-            ->with(['id_nom' => 501])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(ZonaSacdField::IdNom, 501))))
             ->willReturn([$oZonaSacdOtra, $oZonaSacdPropia]);
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
@@ -73,7 +76,7 @@ final class ZonaSacdListaTotTest extends TestCase
         $personaRepo->method('getPersonas')->willReturn([$oPersona]);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zonaSacdRepo->method('getZonasSacds')->willReturn([]);
+        $zonaSacdRepo->method('matching')->willReturn([]);
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
         $zonaRepo->expects($this->never())->method('findById');

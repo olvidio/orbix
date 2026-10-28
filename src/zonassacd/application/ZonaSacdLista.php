@@ -6,10 +6,13 @@ use src\permisos\domain\XPermisos;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\helpers\FuncTablasSupport;
 use src\shared\security\HashB;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 final class ZonaSacdLista
 {
     public function __construct(
@@ -42,7 +45,9 @@ final class ZonaSacdLista
             $i = 0;
             foreach ($cSacds as $oPersona) {
                 $id_nom = $oPersona->getId_nom();
-                $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_nom' => $id_nom]);
+                $cZonaSacd = $this->zonaSacdRepository->matching(
+                    Criteria::create()->where(Filter::eq(ZonaSacdField::IdNom, $id_nom))
+                );
                 if ($cZonaSacd === []) {
                     $a_valores[$i]['sel'] = $id_nom;
                     $a_valores[$i]['ctx_update'] = HashB::sign('zona_sacd_update', [
@@ -61,7 +66,9 @@ final class ZonaSacdLista
             }
             $oZona = $this->zonaRepository->findById($idZona);
             $nombre_zona = $oZona?->getNombre_zona() ?? '';
-            $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_zona' => $idZona], []);
+            $cZonaSacd = $this->zonaSacdRepository->matching(
+                Criteria::create()->where(Filter::eq(ZonaSacdField::IdZona, $idZona))
+            );
             $i = 0;
             $aAp1 = [];
             foreach ($cZonaSacd as $oZonaSacd) {
