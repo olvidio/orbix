@@ -33,7 +33,7 @@ final class CentroEncargadoReordenarTest extends TestCase
         $b->setNum_orden(2);
 
         $repo = $this->createMock(CentroEncargadoRepositoryInterface::class);
-        $repo->method('getCentrosEncargados')->willReturn([$a, $b]);
+        $repo->method('matching')->willReturn([$a, $b]);
         $repo->expects($this->exactly(2))->method('Guardar')->willReturn(true);
 
         $useCase = new CentroEncargadoReordenar($repo);

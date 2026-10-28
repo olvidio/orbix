@@ -370,7 +370,11 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - Migrados: `HabitacionFormData` (`orden DESC` + `limit 1`), `HabitacionesCamaLista` (el `IN` ya no construye un string `'a','b'`: `Filter::in` con los ids), `Select_habitaciones_cdc` y `getHabitacionesByUbi`/`getCamasByHabitacion`.
     - Cambio de comportamiento menor: `getHabitacionesByUbi` pasaba `['_ordre' => 'orden']` como *operadores* (se ignoraba, sin orden); ahora ordena de verdad por `orden`, que era la intención.
     - Tests unitarios (`SelectHabitacionesCdcTest`, `HabitacionFormDataTest`, `HabitacionesCamaListaTest`) mockean ahora `matching` (con `equalTo(Criteria)` donde había `with(...)`). Test nuevo: `PgUbiscamasMatchingTest` (3 tests, equivalencia con legacy incl. `IN`). Suites: unit de `ubiscamas` verde; integration con los mismos 4 errores previos (`PgCamaDl`/`PgHabitacionDl`), los 3 nuevos pasan.
-  - [ ] **4.1.actividadescentro**
+  - [x] **4.1.actividadescentro** Decisiones:
+    - `CentroEncargadoField` (4 campos); `COLUMNAS = []`. `matching()` en `CentroEncargadoRepositoryInterface` y `PgCentroEncargadoRepository`; `getCentrosEncargados` `@deprecated` como envoltorio.
+    - Migrados: `CentroEncargadoAsignar` (`num_orden DESC`), `CentroEncargadoReordenar` e `Info3010::getColeccion`. Sus tests unitarios mockean ahora `matching`.
+    - Se quedan con arrays por pertenecer a otros módulos: `CentrosDisponiblesData` (`CentroDl`/`CentroEllas::getCentros`, con `~` y `&` → 4.4 `ubis`) y `ListaActividadesCtrData` (`getActividades` → 4.3 `actividades`). Los llamantes de `getCentrosEncargados` en `actividades`, `asistentes`, `actividadessacd` y `pasarela` siguen por el envoltorio.
+    - Test: `PgCentroEncargadoMatchingTest` (2 tests, equivalencia con legacy). Suites verdes: unit/integration de `actividadescentro`; unit de `cambios`, `actividades`, `actividadessacd`, `pasarela`, `asistentes`.
   - [ ] **4.1.asignaturas**
   - [ ] **4.1.certificados**
   - [ ] **4.1.pasarela**

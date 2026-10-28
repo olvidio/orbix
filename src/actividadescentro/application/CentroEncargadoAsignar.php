@@ -3,7 +3,11 @@
 namespace src\actividadescentro\application;
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadescentro\domain\criteria\CentroEncargadoField;
 use src\actividadescentro\domain\entity\CentroEncargado;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 
 /**
  * Asigna un `CentroEncargado` nuevo a una actividad.
@@ -31,10 +35,11 @@ final class CentroEncargadoAsignar
             return _("faltan parametros id_activ / id_ubi");
         }
 
-        $cCentros = $this->centroEncargadoRepository->getCentrosEncargados([
-            'id_activ' => $id_activ,
-            '_ordre' => 'num_orden DESC',
-        ]);
+        $cCentros = $this->centroEncargadoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(CentroEncargadoField::IdActiv, $id_activ))
+                ->orderBy(CentroEncargadoField::NumOrden, OrderDirection::Desc)
+        );
         $num_orden = count($cCentros) >= 1
             ? ((int) ($cCentros[0]->getNum_orden() ?? 0) + 1)
             : 1;

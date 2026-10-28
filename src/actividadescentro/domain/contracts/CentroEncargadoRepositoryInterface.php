@@ -5,6 +5,7 @@ namespace src\actividadescentro\domain\contracts;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividadescentro\domain\entity\CentroEncargado;
 use src\actividadescentro\domain\value_objects\CentroEncargadoPk;
+use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
@@ -24,6 +25,14 @@ interface CentroEncargadoRepositoryInterface
     public function getCentrosEncargadosActividad(int $iid_activ): array;
 
     /**
+     * Centros encargados que cumplen el criterio.
+     *
+     * @return list<CentroEncargado>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      *

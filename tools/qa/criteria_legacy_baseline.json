@@ -33,7 +33,7 @@
     "src/actividadescentro/application/CentrosDisponiblesData.php": 11,
     "src/actividadescentro/application/ListaActividadesCtrData.php": 3,
     "src/actividadescentro/domain/contracts/CentroEncargadoRepositoryInterface.php": 4,
-    "src/actividadescentro/infrastructure/persistence/postgresql/PgCentroEncargadoRepository.php": 23,
+    "src/actividadescentro/infrastructure/persistence/postgresql/PgCentroEncargadoRepository.php": 6,
     "src/actividadessacd/application/ListaActividadesSacdData.php": 3,
     "src/actividadessacd/application/SacdAsignarAuto.php": 5,
     "src/actividadessacd/application/SolapesSacdData.php": 2,

@@ -3,7 +3,10 @@
 namespace src\actividadescentro\application;
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadescentro\domain\criteria\CentroEncargadoField;
 use src\actividadescentro\domain\entity\CentroEncargado;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Reordena un `CentroEncargado` en el listado de centros encargados de una
@@ -39,10 +42,11 @@ final class CentroEncargadoReordenar
             return _("direccion de orden incorrecta (mas / menos)");
         }
 
-        $cCentros = $this->centroEncargadoRepository->getCentrosEncargados([
-            'id_activ' => $id_activ,
-            '_ordre' => 'num_orden',
-        ]);
+        $cCentros = $this->centroEncargadoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(CentroEncargadoField::IdActiv, $id_activ))
+                ->orderBy(CentroEncargadoField::NumOrden)
+        );
 
         $errors = '';
         $i_max = count($cCentros);

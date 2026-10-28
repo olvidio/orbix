@@ -4,6 +4,7 @@ namespace src\actividadescentro\domain;
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadescentro\domain\entity\CentroEncargado;
+use src\shared\domain\criteria\Criteria;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -34,6 +35,6 @@ class Info3010 extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        return $this->centroEncargadoRepository->getCentrosEncargados([], []);
+        return $this->centroEncargadoRepository->matching(Criteria::create());
     }
 }

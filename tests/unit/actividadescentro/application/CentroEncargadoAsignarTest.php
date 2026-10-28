@@ -23,7 +23,7 @@ final class CentroEncargadoAsignarTest extends TestCase
     public function test_primer_centro_num_orden_1(): void
     {
         $repo = $this->createMock(CentroEncargadoRepositoryInterface::class);
-        $repo->method('getCentrosEncargados')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
         $repo->expects($this->once())
             ->method('Guardar')
             ->with($this->callback(function (CentroEncargado $e): bool {
@@ -44,7 +44,7 @@ final class CentroEncargadoAsignarTest extends TestCase
         $existente->setNum_orden(5);
 
         $repo = $this->createMock(CentroEncargadoRepositoryInterface::class);
-        $repo->method('getCentrosEncargados')->willReturn([$existente]);
+        $repo->method('matching')->willReturn([$existente]);
         $repo->expects($this->once())
             ->method('Guardar')
             ->with($this->callback(function (CentroEncargado $e): bool {
