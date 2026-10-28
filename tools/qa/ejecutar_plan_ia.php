@@ -506,7 +506,7 @@ Contexto de ejecución: es una tanda automática sin nadie delante. No hagas pre
 - Si el paso resulta mucho mayor de lo previsto, divídelo en el plan (sección 8) y ejecuta solo la primera parte.
 - Ejecuta también los tests de los módulos que llaman a lo que has tocado (no solo el módulo del paso).
 
-Reglas para que el Bash no te deniegue comandos (cada denegación cuesta turnos): UN comando por llamada; sin variables de shell (`X=...`, `\$X`), sin bucles `for`/`while`, sin `cd` ni `git -C` (ya estás en la raíz del repo), sin `&&` ni `;` encadenando operaciones distintas; edita ficheros con Edit/Write, no con scripts python ni heredocs. Para varias suites: `bash tools/qa/phpunit_modulos.sh tests/unit/<m1> tests/integration/<m1> tests/unit/<m2>`; para una sola: `docker exec -w /var/www/orbix orbix-php-fpm-1 php -d xdebug.mode=off libs/vendor/bin/phpunit -c phpunit.xml <ruta>`.
+Reglas para que el Bash no te deniegue comandos (cada denegación cuesta turnos): UN comando por llamada; sin variables de shell (`X=...`, `\$X`), sin bucles `for`/`while`, sin `cd` ni `git -C` (ya estás en la raíz del repo), sin `&&` ni `;` encadenando operaciones distintas; edita ficheros con Edit/Write, no con scripts python ni heredocs. Para varias suites: `php tools/qa/phpunit_modulos.php tests/unit/<m1> tests/integration/<m1> tests/unit/<m2>`; para una sola: `docker exec -w /var/www/orbix orbix-php-fpm-1 php -d xdebug.mode=off libs/vendor/bin/phpunit -c phpunit.xml <ruta>`.
 
 Fallos que ya existían antes de esta refactorización (no son tuyos, no los arregles ni los cuentes como regresión): tests/integration/ubiscamas (4 errores), tests/integration/cambios (inestable: falla un test distinto en cada ejecución y aborta), tests/integration/personas (aborta: el logger escribe en una ruta que no existe en el contenedor). Si dudas de otro fallo, compruébalo contra la base con `git stash` antes de achacárselo a tu cambio.
 {$presup}{$bloque4}{$sucioTxt}
@@ -525,7 +525,7 @@ TXT;
         $cmd[] = '--permission-mode';
         $cmd[] = 'acceptEdits';
         $cmd[] = '--allowedTools';
-        foreach (['Read', 'Edit', 'Write', 'Glob', 'Grep', 'Bash(git add:*)', 'Bash(git commit:*)', 'Bash(git status:*)', 'Bash(git diff:*)', 'Bash(git log:*)', 'Bash(git rm:*)', 'Bash(git mv:*)', 'Bash(git stash:*)', 'Bash(git show:*)', 'Bash(php:*)', 'Bash(docker exec:*)', 'Bash(bash tools/qa/phpunit_modulos.sh:*)', 'Bash(rg:*)', 'Bash(grep:*)', 'Bash(ls:*)', 'Bash(find:*)', 'Bash(wc:*)', 'Bash(mkdir:*)', 'Bash(cat:*)', 'Bash(sed:*)', 'Bash(python3:*)', 'Bash(head:*)', 'Bash(tail:*)'] as $t) {
+        foreach (['Read', 'Edit', 'Write', 'Glob', 'Grep', 'Bash(git add:*)', 'Bash(git commit:*)', 'Bash(git status:*)', 'Bash(git diff:*)', 'Bash(git log:*)', 'Bash(git rm:*)', 'Bash(git mv:*)', 'Bash(git stash:*)', 'Bash(git show:*)', 'Bash(php:*)', 'Bash(docker exec:*)', 'Bash(php tools/qa/phpunit_modulos.php:*)', 'Bash(rg:*)', 'Bash(grep:*)', 'Bash(ls:*)', 'Bash(find:*)', 'Bash(wc:*)', 'Bash(mkdir:*)', 'Bash(cat:*)', 'Bash(sed:*)', 'Bash(python3:*)', 'Bash(head:*)', 'Bash(tail:*)'] as $t) {
             $cmd[] = $t;
         }
     }
