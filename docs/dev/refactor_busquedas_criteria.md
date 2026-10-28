@@ -1,6 +1,6 @@
 # Refactor: búsquedas en repositorio con objetos de consulta (Criteria)
 
-> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Siguiente: paso 1.1.
+> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Siguiente: paso 1.2.
 > **Fecha:** 2026-10-28
 > **Cómo retomar:** leer las secciones 3–5, buscar en la sección 7 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese paso. Cada paso termina con tests en verde y un commit propio.
 
@@ -247,7 +247,12 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
 
 ### Fase 1 — Infraestructura común
 
-- [ ] **1.1** `CriteriaField` (interfaz), `Operator`, `OrderDirection` (enums), `Filter`, `FilterGroup`, `Order`, `Criteria` en `src/shared/domain/criteria/` + tests unitarios.
+- [x] **1.1** `CriteriaField` (interfaz), `Operator`, `OrderDirection` (enums), `Filter`, `FilterGroup`, `Order`, `Criteria` en `src/shared/domain/criteria/` + tests unitarios (`tests/unit/shared/domain/criteria/`, 26 tests). Decisiones del paso:
+  - Se eliminó el prototipo anterior (`Criteria` como interfaz, `AndCriteria`, `OrCriteria`, `FieldFilter`, `LegacyArrayCriteriaFactory`, `PostgresCriteriaRenderer` y su test): sin usos en producción.
+  - Añadidos al diseño: `FilterExpression` (interfaz común de `Filter` y `FilterGroup`), `LogicalOperator` (And/Or) y `NullsPosition` (First/Last, usado por `Order` para `NULLS LAST`).
+  - `CriteriaField extends BackedEnum`: solo lo pueden implementar enums.
+  - No se añadió `like`/`ilike` a `Operator`; se decide al migrar los 3 usos (ver sección 9).
+  - `Criteria::where()` y `orderBy()` sustituyen; `andWhere()` y `addOrderBy()` acumulan. `Filter` rechaza `null` (usar `isNull`) y tipos no escalares; los VO se aceptan si tienen `value()`.
 - [ ] **1.2** `PgCriteriaConverter` + tests unitarios (SQL y parámetros por operador, mapa campo→columna, campo de otro enum, grupos anidados, IN vacío, orden y límite).
 - [ ] **1.3** `LegacyWhereAdapter` + `LegacyRawFilter` + tests que comparen, para cada operador de `Condicion`, el resultado del adaptador con el SQL antiguo (mismas filas).
 - [ ] **1.4** Trait o método en `ClaseRepository` que ejecute un `Criteria` (prepara, ejecuta, devuelve filas) para no repetirlo en cada repositorio.
