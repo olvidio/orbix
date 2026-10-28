@@ -56,8 +56,19 @@ class AsistenteApplicationService
     }
 
     /**
+     * Obtiene una lista de asistentes que cumplen el criterio
+     *
+     * @return list<Asistente>
+     */
+    public function matching(\src\shared\domain\criteria\Criteria $criteria): array
+    {
+        return $this->repository->matching($criteria);
+    }
+
+    /**
      * Obtiene una lista de asistentes según criterios
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<Asistente>

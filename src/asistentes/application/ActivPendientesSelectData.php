@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use src\asistentes\domain\criteria\AsistenteField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
@@ -127,7 +130,9 @@ final class ActivPendientesSelectData
         $aAsistentes = [];
         foreach ($cActividades as $oActividad) {
             $id_activ = $oActividad->getId_activ();
-            $cAsistentes = $this->asistenteRepository->getAsistentes(['id_activ' => $id_activ, 'propio' => 't']);
+            $cAsistentes = $this->asistenteRepository->matching(Criteria::create()
+                ->where(Filter::eq(AsistenteField::IdActiv, $id_activ))
+                ->andWhere(Filter::eq(AsistenteField::Propio, 't')));
             foreach ($cAsistentes as $oAsistente) {
                 $aAsistentes[] = $oAsistente->getId_nom();
             }

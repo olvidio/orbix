@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use src\asistentes\domain\criteria\AsistenteField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
 use src\shared\config\ConfigGlobal;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -230,7 +233,9 @@ class ListaPlazasConjuntoActividades
                         $ctr_dl = $oPersona->getCentro_o_dl();
 
                         // ahora miro si también asiste:
-                        $cAsistentes = $this->asistenteRepository->getAsistentes(array('id_activ' => $id_pau, 'id_nom' => $id_nom));
+                        $cAsistentes = $this->asistenteRepository->matching(Criteria::create()
+                            ->where(Filter::eq(AsistenteField::IdActiv, $id_pau))
+                            ->andWhere(Filter::eq(AsistenteField::IdNom, $id_nom)));
 
                         if (count($cAsistentes) > 0) {
                             $asis = "t";

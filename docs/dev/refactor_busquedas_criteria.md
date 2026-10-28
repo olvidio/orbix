@@ -1,6 +1,6 @@
 # Refactor: búsquedas en repositorio con objetos de consulta (Criteria)
 
-> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fase 1 completa. Siguiente: paso 2.3. Presupuesto de IA en la sección 10.
+> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fase 1 completa. Siguiente: paso 2.4. Presupuesto de IA en la sección 10.
 > **Fecha:** 2026-10-28
 > **Cómo retomar:** leer las secciones 3–5, buscar en la sección 7 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese paso. Cada paso termina con tests en verde y un commit propio.
 
@@ -298,7 +298,11 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
   - `Dl`/`Ex`/`Out`/`Pub` no necesitan cambios: heredan `matching()` y el envoltorio de `PgAsistenteRepository` y solo difieren en conexión y tabla (revisado; sus métodos propios no usan `$aWhere`).
   - Decisión 5 resuelta: los repositorios que se unen comparten `AsistenteField`. Nuevo `matchingConjunto(list<class-string> $repos, Criteria)` en `AsistenteRepositoryInterface`/`PgAsistenteRepository`: consulta cada repo con el criterio sin orden y ordena el conjunto en memoria por los `Order` (getter, minúsculas, `strcmp`, ASC/DESC; orden estable, así los repos que van antes ganan en empates), igual que el `getConjunt` antiguo. `getConjunt()` queda `@deprecated` (la implementación genérica de `ClaseRepository` no se toca); sus 5 llamadas en `AsistenteActividadService` se migran en 2.3.
   - Test: `PgAsistenteMatchingConjuntoTest` (4 tests). Suites verdes: integration/unit de `asistentes`, integration de `actividades`.
-- [ ] **2.3** Migrar los llamantes de `src/asistentes/application/` a `matching()`.
+- [x] **2.3** Migrar los llamantes de `src/asistentes/application/` a `matching()`. Decisiones del paso:
+  - Migrados a `matching(Criteria)` con `AsistenteField`/`Filter::eq`: `ActivPendientesSelectData`, `Select_asistentes_a_una_actividad` (2), `ListaAsistentesData` (2), `FormAsistentesAUnaActividadData`, `ListaEstCtrData`, `ListaPlazasConjuntoActividades` y `AsistenteActividadService` (`getAsistenciasPersonaDeActividades`, `getPlazasOcupadasPorDl`, `getAsistentesDeActividad`, `buscarAsistencia`; 4 de las 5 llamadas a `getConjunt` pasan a `matchingConjunto`).
+  - `AsistenteApplicationService` gana `matching()`; su `getAsistentes()` queda `@deprecated`.
+  - Pendiente (se queda con arrays legacy): `AsistenteActividadService::getActividadesDeAsistente()` (última llamada a `getConjunt`). Recibe `$aWhereNom`/`$aOperadorNom` y los de actividad desde 8 llamantes de otros módulos (actividadcargos, actividadestudios, `InfoAsistenteDl`…), así que se migra con ellos en la fase 4.
+  - Suites verdes: integration/unit de `asistentes`, integration de `actividades` y `actividadcargos`, unit de `ubiscamas`, `actividadcargos` y `actividadestudios`. No se añaden tests nuevos: el comportamiento está cubierto por la caracterización de 2.0 y los tests de `matching`/`matchingConjunto`.
 - [ ] **2.4** Revisión: ajustar la API si el piloto lo pide y documentar el patrón en `AGENTS.md`.
 
 ### Fase 3 — Generador y freno

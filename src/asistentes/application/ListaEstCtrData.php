@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use src\asistentes\domain\criteria\AsistenteField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\value_objects\NivelStgrId;
@@ -171,8 +174,9 @@ final class ListaEstCtrData
                                             if ($oPersona === null) {
                                                 $preceptor = '(p)';
                                             } else {
-                                            $aWherePreceptor = ['id_activ' => $id_activ, 'id_nom' => $id_nom];
-                                            $cAsistentesP = $this->asistenteRepository->getAsistentes($aWherePreceptor);
+                                            $cAsistentesP = $this->asistenteRepository->matching(Criteria::create()
+                                                ->where(Filter::eq(AsistenteField::IdActiv, $id_activ))
+                                                ->andWhere(Filter::eq(AsistenteField::IdNom, $id_nom)));
                                             $p = count($cAsistentesP) > 0 ? '*' : '';
                                             $preceptor = '(p: ' . $oPersona->getPrefApellidosNombre() . ')' . $p;
                                             }

@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use src\asistentes\domain\criteria\AsistenteField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
 use DateTime;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -86,9 +89,10 @@ final readonly class ListaAsistentesData
                 $observ_c = $oActividadCargo->getObserv();
                 $ctr_dl = $oPersona->getCentro_o_dl();
 
-                $aWhere = ['id_activ' => $id_pau, 'id_nom' => $id_nom];
-                $aOperador = [];
-                if ($id_nom !== 0 && ($cAsistente = $this->asistenteRepository->getAsistentes($aWhere, $aOperador)) !== []) {
+                $criteria = Criteria::create()
+                    ->where(Filter::eq(AsistenteField::IdActiv, $id_pau))
+                    ->andWhere(Filter::eq(AsistenteField::IdNom, $id_nom));
+                if ($id_nom !== 0 && ($cAsistente = $this->asistenteRepository->matching($criteria)) !== []) {
                     if (count($cAsistente) > 1) {
                         $tabla = '';
                         foreach ($cAsistente as $Asistente) {
@@ -130,7 +134,7 @@ final readonly class ListaAsistentesData
 
         $asistentes = [];
         $msg_err = '';
-        foreach ($this->asistenteRepository->getAsistentes(['id_activ' => $id_pau]) as $oAsistente) {
+        foreach ($this->asistenteRepository->matching(Criteria::create()->where(Filter::eq(AsistenteField::IdActiv, $id_pau))) as $oAsistente) {
             $c++;
             $num++;
             $id_nom = $oAsistente->getId_nom();

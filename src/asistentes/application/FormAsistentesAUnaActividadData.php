@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use src\asistentes\domain\criteria\AsistenteField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -106,7 +109,9 @@ final class FormAsistentesAUnaActividadData
             $ape_nom = $oPersona->getPrefApellidosNombre();
             $id_nom_real = (string)$Qid_nom;
 
-            $cAsistentes = $this->asistenteRepository->getAsistentes(['id_activ' => $Qid_activ, 'id_nom' => $Qid_nom]);
+            $cAsistentes = $this->asistenteRepository->matching(Criteria::create()
+                ->where(Filter::eq(AsistenteField::IdActiv, $Qid_activ))
+                ->andWhere(Filter::eq(AsistenteField::IdNom, $Qid_nom)));
             if ($cAsistentes === []) {
                 return ['error' => _("No se encontró el asistente para esta actividad.")];
             }

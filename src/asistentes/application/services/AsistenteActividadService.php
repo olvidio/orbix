@@ -12,7 +12,10 @@ use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\asistentes\domain\entity\Asistente;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\application\services\PersonaListadoLookup;
 use src\personas\domain\entity\PersonaDl;
@@ -102,18 +105,15 @@ class AsistenteActividadService
      */
     public function getAsistenciasPersonaDeActividades(int $id_nom, array $a_id_activ_f_ini, bool $reverse = false): array
     {
-        $aWhereNom['id_nom'] = $id_nom;
-        $aOperadorNom = [];
-
         // Importa el orden, se queda con la primera
-        $a_Clases = [
-            ['repo' => AsistenteDlRepositoryInterface::class, 'get' => 'getAsistentes'],
-            ['repo' => AsistenteOutRepositoryInterface::class, 'get' => 'getAsistentes'],
-            ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
+        $repos = [
+            AsistenteDlRepositoryInterface::class,
+            AsistenteOutRepositoryInterface::class,
+            AsistenteExRepositoryInterface::class,
         ];
 
-        $namespace = 'src\asistentes\infrastructure\persistence\postgresql';
-        $cAsistencias = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhereNom, $aOperadorNom);
+        $criteria = Criteria::create()->where(Filter::eq(AsistenteField::IdNom, $id_nom));
+        $cAsistencias = $this->asistenteRepository->matchingConjunto($repos, $criteria);
 
         return $this->ordenarAsistenciasPorFecha($cAsistencias, $a_id_activ_f_ini, $reverse);
     }
@@ -173,22 +173,17 @@ class AsistenteActividadService
         }
         $dl_org = $oActividad->getDl_org() ?? '';
 
-        $aWhere = ['id_activ' => $iid_activ];
-        $aOperators = [];
-        $namespace = 'src\asistentes\infrastructure\persistence\postgresql';
+        $criteria = Criteria::create()->where(Filter::eq(AsistenteField::IdActiv, $iid_activ));
 
         if ($sdl === $mi_dele) {
             if ($dl_org === $sdl) {
                 // Organizadora: d_asistentes_all evita duplicar filas entre Dl/Pub/Ex.
                 /** @var AsistenteRepositoryInterface $repoAll */
                 $repoAll = $this->container->get(AsistenteRepositoryInterface::class);
-                $cAsistentes = $repoAll->getAsistentes($aWhere, $aOperators);
+                $cAsistentes = $repoAll->matching($criteria);
             } else {
-                $a_Clases = [
-                    ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
-                    ['repo' => AsistenteOutRepositoryInterface::class, 'get' => 'getAsistentes'],
-                ];
-                $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
+                $repos = [AsistenteExRepositoryInterface::class, AsistenteOutRepositoryInterface::class];
+                $cAsistentes = $this->asistenteRepository->matchingConjunto($repos, $criteria);
             }
         } elseif ($dl_org === $sdl) {
             $cAsistentes = [];
@@ -196,13 +191,10 @@ class AsistenteActividadService
             // Organizadora contando uso de plazas por otra dl (cedidas / de paso).
             /** @var AsistenteRepositoryInterface $repoAll */
             $repoAll = $this->container->get(AsistenteRepositoryInterface::class);
-            $cAsistentes = $repoAll->getAsistentes($aWhere, $aOperators);
+            $cAsistentes = $repoAll->matching($criteria);
         } else {
-            $a_Clases = [
-                ['repo' => AsistenteOutRepositoryInterface::class, 'get' => 'getAsistentes'],
-                ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
-            ];
-            $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
+            $repos = [AsistenteOutRepositoryInterface::class, AsistenteExRepositoryInterface::class];
+            $cAsistentes = $this->asistenteRepository->matchingConjunto($repos, $criteria);
         }
 
         $numAsis = 0;
@@ -279,33 +271,31 @@ class AsistenteActividadService
         // Si es de la sf quito la 'f'
         $dl = preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');
 
-        $aWhere['id_activ'] = $iid_activ;
-        $aOperators = [];
+        $criteria = Criteria::create()->where(Filter::eq(AsistenteField::IdActiv, $iid_activ));
 
         $msg_err = '';
         if ($dl === ConfigGlobal::mi_delef()) {
             // Todos los asistentes. Los de paso (id_nom negativo) viven en d_asistentes_ex.
-            $a_Clases = [
-                ['repo' => AsistenteDlRepositoryInterface::class, 'get' => 'getAsistentes'],
-                ['repo' => AsistentePubRepositoryInterface::class, 'get' => 'getAsistentes'],
-                ['repo' => AsistenteOutRepositoryInterface::class, 'get' => 'getAsistentes'],
-                ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
+            $repos = [
+                AsistenteDlRepositoryInterface::class,
+                AsistentePubRepositoryInterface::class,
+                AsistenteOutRepositoryInterface::class,
+                AsistenteExRepositoryInterface::class,
             ];
         } else {
             if ($id_tabla === 'dl') {
-                $a_Clases = [
-                    ['repo' => AsistenteOutRepositoryInterface::class, 'get' => 'getAsistentes'],
+                $repos = [
+                    AsistenteOutRepositoryInterface::class,
                 ];
             } else {
-                $a_Clases = [
-                    ['repo' => AsistenteOutRepositoryInterface::class, 'get' => 'getAsistentes'],
-                    ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
+                $repos = [
+                    AsistenteOutRepositoryInterface::class,
+                    AsistenteExRepositoryInterface::class,
                 ];
             }
         }
 
-        $namespace = 'src\asistentes\infrastructure\persistence\postgresql';
-        $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
+        $cAsistentes = $this->asistenteRepository->matchingConjunto($repos, $criteria);
 
         $cAsistentesOk = [];
         foreach ($cAsistentes as $oAsistente) {
@@ -332,7 +322,9 @@ class AsistenteActividadService
     {
         /** @var AsistenteRepositoryInterface $AsistenteRepository */
         $AsistenteRepository = $this->container->get(AsistenteRepositoryInterface::class);
-        $cAsistentes = $AsistenteRepository->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
+        $cAsistentes = $AsistenteRepository->matching(Criteria::create()
+            ->where(Filter::eq(AsistenteField::IdNom, $id_nom))
+            ->andWhere(Filter::eq(AsistenteField::IdActiv, $id_activ)));
         if ($cAsistentes !== []) {
             return $cAsistentes[0];
         }

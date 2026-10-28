@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use src\asistentes\domain\criteria\AsistenteField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
@@ -408,9 +411,10 @@ class Select_asistentes_a_una_actividad
 
             $plaza = PlazaId::PEDIDA;
             $propietario_txt = '';
-            $aWhere = ['id_activ' => $this->id_pau, 'id_nom' => $id_nom_int];
-            $aOperador = ['id_activ' => '=', 'id_nom' => '='];
-            if ($cAsistente = $this->asistenteRepository->getAsistentes($aWhere, $aOperador)) {
+            $criteria = Criteria::create()
+                ->where(Filter::eq(AsistenteField::IdActiv, $this->id_pau))
+                ->andWhere(Filter::eq(AsistenteField::IdNom, $id_nom_int));
+            if ($cAsistente = $this->asistenteRepository->matching($criteria)) {
                 if (count($cAsistente) > 1) {
                     $tabla = '';
                     foreach ($cAsistente as $Asistente) {
@@ -528,7 +532,7 @@ class Select_asistentes_a_una_actividad
     public function getAsistentes(): void
     {
         $this->a_asistentes = [];
-        $cAsistentes = $this->asistenteRepository->getAsistentes(['id_activ' => $this->id_pau]);
+        $cAsistentes = $this->asistenteRepository->matching(Criteria::create()->where(Filter::eq(AsistenteField::IdActiv, $this->id_pau)));
         foreach ($cAsistentes as $oAsistente) {
             $this->num++;
             $id_nom = $oAsistente->getId_nom();
