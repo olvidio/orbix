@@ -4,7 +4,10 @@ namespace Tests\integration\cartaspresentacion\infrastructure\persistence\postgr
 
 use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterface;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
+use src\cartaspresentacion\domain\criteria\CartaPresentacionField;
 use src\cartaspresentacion\domain\entity\CartaPresentacion;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
@@ -142,6 +145,23 @@ class PgCartaPresentacionRepositoryTest extends myTest
         // Verificar que ya no existe
         $oCartaPresentacionEliminado = $this->repository->findByPk($id);
         $this->assertNull($oCartaPresentacionEliminado);
+    }
+
+    public function test_matching_por_ubi_equivale_a_legacy()
+    {
+        $oCartaPresentacion = $this->factory->createSimple();
+        $idUbi = $oCartaPresentacion->getId_ubi();
+        $this->repository->Guardar($oCartaPresentacion);
+
+        $criteria = Criteria::create()->where(Filter::eq(CartaPresentacionField::IdUbi, $idUbi));
+        $nuevo = $this->repository->matching($criteria);
+        $legacy = $this->repository->getCartasPresentacion(['id_ubi' => $idUbi]);
+
+        $this->assertCount(1, $nuevo);
+        $this->assertEquals($legacy, $nuevo);
+
+        $this->repository->Eliminar($oCartaPresentacion);
+        $this->assertSame([], $this->repository->matching($criteria));
     }
 
     public function test_get_cartas_presentacion_sin_filtros()

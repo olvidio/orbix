@@ -100,7 +100,7 @@
     "src/cartaspresentacion/application/CartasPresentacionListaData.php": 7,
     "src/cartaspresentacion/application/CartasPresentacionUbisListaData.php": 2,
     "src/cartaspresentacion/domain/contracts/CartaPresentacionRepositoryInterface.php": 4,
-    "src/cartaspresentacion/infrastructure/persistence/postgresql/PgCartaPresentacionRepository.php": 16,
+    "src/cartaspresentacion/infrastructure/persistence/postgresql/PgCartaPresentacionRepository.php": 6,
     "src/casas/application/CalendarioUbiResumenData.php": 2,
     "src/casas/application/CasaActividadesListaData.php": 2,
     "src/casas/application/CasaEcGastosFormData.php": 2,

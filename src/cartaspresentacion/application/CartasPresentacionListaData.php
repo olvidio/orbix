@@ -5,7 +5,10 @@ namespace src\cartaspresentacion\application;
 use src\shared\config\ConfigGlobal;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterface;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
+use src\cartaspresentacion\domain\criteria\CartaPresentacionField;
 use src\cartaspresentacion\domain\entity\CartaPresentacion;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\application\services\UbiTelecoService;
 use src\ubis\application\UbisTiposLaborEtiquetas;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
@@ -99,7 +102,7 @@ final class CartasPresentacionListaData
         int $ordenar_dl,
         ?string $soloDl,
     ): array {
-        $cCartas = $repo->getCartasPresentacion();
+        $cCartas = $repo->matching(Criteria::create());
         $a_mega_tmp = [];
         foreach ($cCartas as $oCarta) {
             $id_ubi = $oCarta->getId_ubi();
@@ -178,9 +181,8 @@ final class CartasPresentacionListaData
 
             // Extiendo la busqueda al campo `zona`.
             if ($Qpoblacion !== '') {
-                $cCartasZona = $this->cartaPresentacionRepository->getCartasPresentacion(
-                    ['zona' => $Qpoblacion],
-                    ['zona' => 'sin_acentos']
+                $cCartasZona = $this->cartaPresentacionRepository->matching(
+                    Criteria::create()->where(Filter::matchesUnaccented(CartaPresentacionField::Zona, $Qpoblacion))
                 );
                 $a_mega_tmp = [];
                 foreach ($cCartasZona as $oCarta) {
@@ -222,7 +224,9 @@ final class CartasPresentacionListaData
         $cCentros = $this->centroRepository->getCentros($aWhere, []);
         $a_mega_tmp = [];
         foreach ($cCentros as $oCentro) {
-            $cCartas = $this->cartaPresentacionRepository->getCartasPresentacion(['id_ubi' => $oCentro->getId_ubi()]);
+            $cCartas = $this->cartaPresentacionRepository->matching(
+                Criteria::create()->where(Filter::eq(CartaPresentacionField::IdUbi, $oCentro->getId_ubi()))
+            );
             foreach ($cCartas as $oCarta) {
                 $a_mega_tmp[] = $this->megaArray($oCarta, $oCentro, $ordenar_dl);
             }

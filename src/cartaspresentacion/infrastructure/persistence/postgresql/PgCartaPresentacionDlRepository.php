@@ -17,6 +17,7 @@ class PgCartaPresentacionDlRepository extends PgCartaPresentacionRepository impl
     {
         parent::__construct();
         $this->setoDbl(GlobalPdo::get('oDB'));
+        $this->setoDbl_Select(GlobalPdo::get('oDB'));
         $this->setNomTabla('du_presentacion_dl');
     }
 }

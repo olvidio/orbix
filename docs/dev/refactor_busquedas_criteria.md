@@ -397,7 +397,10 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - `ColaMailField` (7 campos) en `src/shared/domain/criteria/`; `COLUMNAS = []`. `matching()` en `ColaMailRepositoryInterface` y `PgColaMailRepository` (que pasa a fijar también la conexión de selección, la misma `oDBPC`); `getColaMails` `@deprecated` como envoltorio. Se corrige además el tipo de retorno a `list<ColaMail>` y se elimina el bucle `Set` manual.
     - Migrada `EnviarMailsEnCola::seleccionar` (`sended IS NULL` + `_limit` → `isNull` + `limit`). El resto de ficheros de `shared` con `aWhere` son el propio motor (`LegacyWhereAdapter`, `Condicion`, `ClaseRepository`, `DBTrasvase`), que se retira en la fase 5.
     - Test: `PgColaMailMatchingTest` (equivalencia con legacy, `IN` + `IS NULL`, `limit`). Suites verdes: unit e integration de `shared`; unit de `cambios` y `actividadessacd`. Línea base: 466 ficheros.
-  - [ ] **4.2.cartaspresentacion**
+  - [x] **4.2.cartaspresentacion** Decisiones:
+    - `CartaPresentacionField` (7 campos); `COLUMNAS = []`. `matching()` en interfaz y `PgCartaPresentacionRepository`; `getCartasPresentacion` `@deprecated` como envoltorio. Las subclases `Dl` y `Ex` fijan también su conexión de selección (`oDB`, `oDBR`).
+    - Migrados `CartasPresentacionListaData` (3 llamadas; `sin_acentos` → `matchesUnaccented`) y `CartaPresentacionUpdate::sanear`. Siguen con arrays `getCentros`/`getDirecciones` (módulo `ubis`, 4.4).
+    - Test: `test_matching_por_ubi_equivale_a_legacy` en `PgCartaPresentacionRepositoryTest`. Suites verdes: unit e integration de `cartaspresentacion`.
   - [ ] **4.2.menus**
   - [ ] **4.2.configuracion**
   - [ ] **4.2.casas**

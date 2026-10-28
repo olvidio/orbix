@@ -4,6 +4,7 @@ namespace src\cartaspresentacion\domain\contracts;
 
 use src\cartaspresentacion\domain\entity\CartaPresentacion;
 use src\cartaspresentacion\domain\value_objects\PresentacionPk;
+use src\shared\domain\criteria\Criteria;
 
 
 /**
@@ -21,8 +22,16 @@ interface CartaPresentacionRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * Cartas de presentación que cumplen el criterio.
+     *
+     * @return list<CartaPresentacion>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
      * devuelve una colección (array) de objetos de tipo CartaPresentacion
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<CartaPresentacion>

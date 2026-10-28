@@ -7,6 +7,7 @@ use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterfa
 use src\cartaspresentacion\domain\contracts\CartaPresentacionExRepositoryInterface;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
 use src\cartaspresentacion\domain\entity\CartaPresentacion;
+use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 
@@ -103,7 +104,7 @@ final class CartaPresentacionUpdate
      */
     private function sanear(): void
     {
-        $cCartas = $this->cartaPresentacionDlRepository->getCartasPresentacion();
+        $cCartas = $this->cartaPresentacionDlRepository->matching(Criteria::create());
         foreach ($cCartas as $oCarta) {
             $id_ubi = $oCarta->getId_ubi();
             $id_direccion = $oCarta->getId_direccion();
