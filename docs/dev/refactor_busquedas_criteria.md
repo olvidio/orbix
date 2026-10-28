@@ -1,6 +1,6 @@
 # Refactor: búsquedas en repositorio con objetos de consulta (Criteria)
 
-> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Siguiente: paso 1.2.
+> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Siguiente: paso 1.3.
 > **Fecha:** 2026-10-28
 > **Cómo retomar:** leer las secciones 3–5, buscar en la sección 7 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese paso. Cada paso termina con tests en verde y un commit propio.
 
@@ -253,7 +253,13 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
   - `CriteriaField extends BackedEnum`: solo lo pueden implementar enums.
   - No se añadió `like`/`ilike` a `Operator`; se decide al migrar los 3 usos (ver sección 9).
   - `Criteria::where()` y `orderBy()` sustituyen; `andWhere()` y `addOrderBy()` acumulan. `Filter` rechaza `null` (usar `isNull`) y tipos no escalares; los VO se aceptan si tienen `value()`.
-- [ ] **1.2** `PgCriteriaConverter` + tests unitarios (SQL y parámetros por operador, mapa campo→columna, campo de otro enum, grupos anidados, IN vacío, orden y límite).
+- [x] **1.2** `PgCriteriaConverter` + tests unitarios (`tests/unit/shared/infrastructure/persistence/postgresql/PgCriteriaConverterTest.php`, 33 tests). Decisiones del paso:
+  - Ubicación: `src/shared/infrastructure/persistence/postgresql/PgCriteriaConverter.php`. Constructor: `new PgCriteriaConverter(AsistenteField::class, ['plaza' => 'plaza_id'])`.
+  - API: `convert(Criteria)` → `['sql' => ' WHERE … ORDER BY … LIMIT :pN OFFSET :pM', 'params' => [...]]`; `convertWhere(Criteria)` solo con el WHERE (para `count()`). Claves de `params` sin `:` (`p0`, `p1`…); enteros como `int` (enlazar con `PDO::PARAM_INT`, ver 1.4).
+  - Normalización de valores: `DateTimeInterface` → `Y-m-d H:i:s.uP`; `bool` → `'t'`/`'f'`; enum → `->value`; VO → `->value()`.
+  - `IN`/`ANY`/`OR` → siempre `IN (:p0, :p1…)`; lista vacía → `FALSE` (`NOT IN` → `TRUE`). `HasBits` usa dos parámetros con el mismo valor.
+  - Las columnas del mapa se validan con regex (`col` o `alias.col`); sin comillas, igual que el código antiguo.
+  - Eliminado `QueryBindContext` (restos del prototipo, sin usos).
 - [ ] **1.3** `LegacyWhereAdapter` + `LegacyRawFilter` + tests que comparen, para cada operador de `Condicion`, el resultado del adaptador con el SQL antiguo (mismas filas).
 - [ ] **1.4** Trait o método en `ClaseRepository` que ejecute un `Criteria` (prepara, ejecuta, devuelve filas) para no repetirlo en cada repositorio.
 
