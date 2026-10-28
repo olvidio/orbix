@@ -88,10 +88,10 @@ final class HabitacionesCamaListaTest extends TestCase
         $cama->method('isVip')->willReturn(false);
 
         $habRepo = $this->createMock(HabitacionDlRepositoryInterface::class);
-        $habRepo->method('getHabitaciones')->willReturn([$hab]);
+        $habRepo->method('matching')->willReturn([$hab]);
 
         $camaRepo = $this->createMock(CamaDlRepositoryInterface::class);
-        $camaRepo->method('getCamas')->willReturn([$cama]);
+        $camaRepo->method('matching')->willReturn([$cama]);
 
         $asistenteSvc = $this->createMock(AsistenteActividadService::class);
         $asistenteSvc->method('getAsistentesDeActividad')->with(9)->willReturn([]);
@@ -133,7 +133,7 @@ final class HabitacionesCamaListaTest extends TestCase
         $asistenteSvc->method('getAsistentesDeActividad')->with(9)->willReturn(['Doe, Jane' => $asistente]);
 
         $habRepo = $this->createMock(HabitacionDlRepositoryInterface::class);
-        $habRepo->method('getHabitaciones')->willReturn([]);
+        $habRepo->method('matching')->willReturn([]);
 
         $out = (new HabitacionesCamaLista(
             $actRepo,

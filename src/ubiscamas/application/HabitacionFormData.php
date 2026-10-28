@@ -2,7 +2,11 @@
 
 namespace src\ubiscamas\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\shared\security\HashB;
+use src\ubiscamas\domain\criteria\HabitacionField;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\HabitacionId;
@@ -86,11 +90,12 @@ final class HabitacionFormData
             $numero_camas = 1;
             $numero_camas_vip = 1;
 
-            $aLastHabitacion = $this->habitacionRepository->getHabitaciones([
-                'id_ubi' => $Qid_ubi,
-                '_ordre' => 'orden DESC',
-                '_limit' => 1,
-            ]);
+            $aLastHabitacion = $this->habitacionRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(HabitacionField::IdUbi, $Qid_ubi))
+                    ->orderBy(HabitacionField::Orden, OrderDirection::Desc)
+                    ->limit(1)
+            );
             if ($aLastHabitacion !== []) {
                 $oLastHabitacion = current($aLastHabitacion);
                 $orden = $oLastHabitacion->getOrdenVo()->value() + 1;

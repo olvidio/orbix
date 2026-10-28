@@ -3,7 +3,10 @@
 namespace src\ubiscamas\domain;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
+use src\ubiscamas\domain\criteria\HabitacionField;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
 
@@ -80,10 +83,12 @@ class Select_habitaciones_cdc
     {
         $c = 0;
         $a_valores = [];
-        $cHabitaciones = $this->habitacionRepository->getHabitaciones([
-            'id_ubi' => $this->id_pau,
-            '_ordre' => 'orden, planta',
-        ]);
+        $cHabitaciones = $this->habitacionRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(HabitacionField::IdUbi, $this->id_pau))
+                ->orderBy(HabitacionField::Orden)
+                ->addOrderBy(HabitacionField::Planta)
+        );
         $tiposLavabo = TipoLavabo::getArrayTipoLavabo();
         foreach ($cHabitaciones as $oHabitacion) {
             $c++;

@@ -365,7 +365,11 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - `TipoTarifaField` (5) y `RelacionTarifaTipoActividadField` (4); `COLUMNAS = []`. `matching()` en interfaces y repos; `getTipoTarifas`/`getTipoActivTarifas` `@deprecated` como envoltorios (el `Set` del código antiguo era una lista simple).
     - Migrado `TipoTarifaListaData` (`_ordre => 'sfsv,letra'` → `orderBy` + `addOrderBy`); su test unitario mockea ahora `matching`. `CalendarioUbiResumenData` (módulo `casas`) sigue por el envoltorio y migra en 4.2. `getTipoActivTarifas` no tiene llamantes fuera del repo.
     - Test: `PgActividadTarifasMatchingTest` (3 tests, equivalencia con legacy). Suites verdes: unit/integration de `actividadtarifas` y `casas`.
-  - [ ] **4.1.ubiscamas**
+  - [x] **4.1.ubiscamas** Decisiones:
+    - `HabitacionField` (12 campos; se omite `tipoLavabo`, cuya columna no se escribe como la propiedad y nadie filtra por ella) y `CamaField` (6) en `src/ubiscamas/domain/criteria/`; `COLUMNAS = []`. `matching()` en interfaces y repos (ambos pasan a leer de la conexión de selección ya configurada en el constructor); `getHabitaciones`/`getCamas` `@deprecated` como envoltorios.
+    - Migrados: `HabitacionFormData` (`orden DESC` + `limit 1`), `HabitacionesCamaLista` (el `IN` ya no construye un string `'a','b'`: `Filter::in` con los ids), `Select_habitaciones_cdc` y `getHabitacionesByUbi`/`getCamasByHabitacion`.
+    - Cambio de comportamiento menor: `getHabitacionesByUbi` pasaba `['_ordre' => 'orden']` como *operadores* (se ignoraba, sin orden); ahora ordena de verdad por `orden`, que era la intención.
+    - Tests unitarios (`SelectHabitacionesCdcTest`, `HabitacionFormDataTest`, `HabitacionesCamaListaTest`) mockean ahora `matching` (con `equalTo(Criteria)` donde había `with(...)`). Test nuevo: `PgUbiscamasMatchingTest` (3 tests, equivalencia con legacy incl. `IN`). Suites: unit de `ubiscamas` verde; integration con los mismos 4 errores previos (`PgCamaDl`/`PgHabitacionDl`), los 3 nuevos pasan.
   - [ ] **4.1.actividadescentro**
   - [ ] **4.1.asignaturas**
   - [ ] **4.1.certificados**

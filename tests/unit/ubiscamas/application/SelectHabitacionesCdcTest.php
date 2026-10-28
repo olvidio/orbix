@@ -6,7 +6,10 @@ namespace Tests\unit\ubiscamas\application;
 
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
+use src\ubiscamas\domain\criteria\HabitacionField;
 use src\ubiscamas\domain\entity\Habitacion;
 use src\ubiscamas\domain\Select_habitaciones_cdc;
 
@@ -53,8 +56,13 @@ final class SelectHabitacionesCdcTest extends TestCase
 
         $repo = $this->createMock(HabitacionDlRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getHabitaciones')
-            ->with(['id_ubi' => 12, '_ordre' => 'orden, planta'])
+            ->method('matching')
+            ->with($this->equalTo(
+                Criteria::create()
+                    ->where(Filter::eq(HabitacionField::IdUbi, 12))
+                    ->orderBy(HabitacionField::Orden)
+                    ->addOrderBy(HabitacionField::Planta)
+            ))
             ->willReturn([$hab]);
 
         $sel = new Select_habitaciones_cdc($repo);

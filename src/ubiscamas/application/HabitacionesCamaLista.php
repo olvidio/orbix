@@ -4,7 +4,11 @@ namespace src\ubiscamas\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
+use src\ubiscamas\domain\criteria\CamaField;
+use src\ubiscamas\domain\criteria\HabitacionField;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
 use src\shared\security\HashB;
@@ -34,15 +38,19 @@ class HabitacionesCamaLista
             return ['error' => 'No Ubi assigned to activity'];
         }
 
-        $cHabitaciones = $this->habitacionRepository->getHabitaciones(['id_ubi' => $id_ubi, '_ordre' => 'orden, planta']);
+        $cHabitaciones = $this->habitacionRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(HabitacionField::IdUbi, $id_ubi))
+                ->orderBy(HabitacionField::Orden)
+                ->addOrderBy(HabitacionField::Planta)
+        );
 
-        $aIdsHabitacion = array_map(fn($h) => "'" . $h->getIdHabitacionVo()->value() . "'", $cHabitaciones);
+        $aIdsHabitacion = array_map(fn($h) => $h->getIdHabitacionVo()->value(), $cHabitaciones);
         if ($aIdsHabitacion === []) {
             $cCamas = [];
         } else {
-            $cCamas = $this->camaRepository->getCamas(
-                ['id_habitacion' => implode(',', $aIdsHabitacion)],
-                ['id_habitacion' => 'IN']
+            $cCamas = $this->camaRepository->matching(
+                Criteria::create()->where(Filter::in(CamaField::IdHabitacion, $aIdsHabitacion))
             );
         }
 

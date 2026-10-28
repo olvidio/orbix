@@ -6,7 +6,11 @@ namespace Tests\unit\ubiscamas\application;
 
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\ubiscamas\application\HabitacionFormData;
+use src\ubiscamas\domain\criteria\HabitacionField;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\entity\Cama;
@@ -24,8 +28,13 @@ final class HabitacionFormDataTest extends TestCase
     {
         $habRepo = $this->createMock(HabitacionDlRepositoryInterface::class);
         $habRepo->expects($this->once())
-            ->method('getHabitaciones')
-            ->with(['id_ubi' => 8, '_ordre' => 'orden DESC', '_limit' => 1])
+            ->method('matching')
+            ->with($this->equalTo(
+                Criteria::create()
+                    ->where(Filter::eq(HabitacionField::IdUbi, 8))
+                    ->orderBy(HabitacionField::Orden, OrderDirection::Desc)
+                    ->limit(1)
+            ))
             ->willReturn([]);
 
         $out = (new HabitacionFormData(
@@ -53,7 +62,7 @@ final class HabitacionFormDataTest extends TestCase
         $last->method('getOrdenVo')->willReturn(new HabitacionOrden(25));
 
         $habRepo = $this->createMock(HabitacionDlRepositoryInterface::class);
-        $habRepo->method('getHabitaciones')->willReturn([$last]);
+        $habRepo->method('matching')->willReturn([$last]);
 
         $out = (new HabitacionFormData(
             $habRepo,
