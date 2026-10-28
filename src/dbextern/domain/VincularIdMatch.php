@@ -4,6 +4,9 @@ namespace src\dbextern\domain;
 
 use RuntimeException;
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
+use src\dbextern\domain\criteria\IdMatchPersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\dbextern\domain\entity\IdMatchPersona;
 
@@ -25,8 +28,8 @@ class VincularIdMatch
      */
     public function vincular(int $id_listas, int $id_orbix, string $tipo_persona): string
     {
-        $matchPorListas = $this->primerMatch(['id_listas' => $id_listas]);
-        $matchPorOrbix = $this->primerMatch(['id_orbix' => $id_orbix]);
+        $matchPorListas = $this->primerMatch(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdListas, $id_listas)));
+        $matchPorOrbix = $this->primerMatch(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdOrbix, $id_orbix)));
 
         if ($matchPorListas !== null && $matchPorListas->getId_orbix() === $id_orbix) {
             return '';
@@ -71,12 +74,9 @@ class VincularIdMatch
         return $personaBDU !== null && $personaBDU->getApenom() !== '';
     }
 
-    /**
-     * @param array<string, mixed> $where
-     */
-    private function primerMatch(array $where): ?IdMatchPersona
+    private function primerMatch(Criteria $criteria): ?IdMatchPersona
     {
-        $matches = $this->idMatchRepository->getIdMatchPersonas($where);
+        $matches = $this->idMatchRepository->matching($criteria);
 
         return $matches[0] ?? null;
     }

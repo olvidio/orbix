@@ -425,7 +425,19 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - Módulo sin repositorios propios: solo migra las dos llamadas a `getZonasSacds` de `ActividadesPorZonasService` (`id_zona` y `propia = 't'` → `Filter::eq(..., true)`), ya disponibles tras `zonassacd`. `ActividadesPorZonasServiceTest` mockea ahora `matching`.
     - Siguen por el envoltorio las llamadas a repositorios de otros módulos: `getActividades`/`getUbis` (`actividades`, 4.3), `getCentros`/`getCasas` (`ubis`, 4.4), `getPersonas` (`personas`, 4.3) y `getEncargoSacdHorarios` (`encargossacd`, 4.5).
     - Suites verdes: unit de `planning` y `zonassacd`; `planning` no tiene tests de integración (sin repositorios).
-- [ ] **4.3 Medianos (20–34):** `dbextern`, `cambios` (`~INV`), `actividades`, `procesos`, `actividadessacd`, `profesores`, `personas` (`TXT`, `OR`), `usuarios`
+- [ ] **4.3 Medianos (20–34):** troceado en un commit por módulo (cada casilla se marca al terminar). Mismo patrón que 4.1/4.2.
+  - [x] **4.3.dbextern** Decisiones:
+    - `IdMatchPersonaField` (`id_listas`, `id_orbix`, `id_tabla`) en `src/dbextern/domain/criteria/`; `COLUMNAS = []`. `matching()` en `IdMatchPersonaRepositoryInterface` y `PgIdMatchPersonaRepository`; `getIdMatchPersonas` `@deprecated` como envoltorio.
+    - Migrados los 10 llamantes del módulo (`SincroDB`, `VincularIdMatch` —`primerMatch` recibe ahora un `Criteria`— y 7 casos de uso/data). `VincularIdMatchTest` compara el `Criteria` recibido con `==`.
+    - Se quedan fuera: `PgPersonaBDURepository::getIdMatchPersonas` (tabla temporal `tmp_bdu`, sin llamantes) y `OdbcDlListasRepository::getDlListas` (acceso ODBC a una BD externa, sin `RunsCriteriaQueries`; su única llamada no pasa filtros). `SincroDB` sigue llamando a `getPersonas` de `personas` con arrays (4.3.personas).
+    - Test: `PgIdMatchPersonaMatchingTest` (2 tests, equivalencia con legacy). Suites verdes: unit e integration de `dbextern`.
+  - [ ] **4.3.cambios** (`~INV`)
+  - [ ] **4.3.actividades**
+  - [ ] **4.3.procesos**
+  - [ ] **4.3.actividadessacd**
+  - [ ] **4.3.profesores**
+  - [ ] **4.3.personas** (`TXT`, `OR`)
+  - [ ] **4.3.usuarios**
 - [ ] **4.4 Grandes (39–60):** `actividadplazas`, `ubis` (38 interfaces), `inventario`, `actividadestudios`, `notas`
 - [ ] **4.5 Los más usados (73+):** `misas`, `encargossacd` (127 llamadas)
 

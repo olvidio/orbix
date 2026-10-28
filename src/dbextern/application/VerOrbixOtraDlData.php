@@ -3,6 +3,9 @@
 namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
+use src\dbextern\domain\criteria\IdMatchPersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\shared\security\HashB;
 
@@ -36,7 +39,7 @@ class VerOrbixOtraDlData
         $i = 0;
         foreach ($a_ids_traslados_A as $id_nom_listas) {
             $i++;
-            $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_listas' => $id_nom_listas]);
+            $cIdMatch = $this->idMatchRepository->matching(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdListas, $id_nom_listas)));
             if ($cIdMatch === []) {
                 continue;
             }

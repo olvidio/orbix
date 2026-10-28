@@ -3,6 +3,9 @@
 namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
+use src\dbextern\domain\criteria\IdMatchPersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\dbextern\domain\CopiarBDU;
 use src\dbextern\application\support\SincroDBFactory;
@@ -83,7 +86,7 @@ class SincroIndexData
         foreach ($cPersonasBDU as $oPersonaBDU) {
             $id_nom_listas = $oPersonaBDU->getIdentif();
 
-            $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_listas' => $id_nom_listas]);
+            $cIdMatch = $this->idMatchRepository->matching(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdListas, $id_nom_listas)));
             if ($cIdMatch !== []) {
                 $id_orbix = $cIdMatch[0]->getId_orbix();
                 if ($id_orbix === null) {
@@ -127,7 +130,7 @@ class SincroIndexData
         foreach ($cPersonasOrbix as $oPersonaOrbix) {
             $id_nom_orbix = $oPersonaOrbix->getId_nom();
 
-            $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_orbix' => $id_nom_orbix]);
+            $cIdMatch = $this->idMatchRepository->matching(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdOrbix, $id_nom_orbix)));
             if ($cIdMatch !== []) {
                 $id_nom_listas = $cIdMatch[0]->getId_listas();
                 $oPersonaBDU = $this->personaBDURepository->findById($id_nom_listas);

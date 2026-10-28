@@ -4,16 +4,23 @@ namespace src\dbextern\infrastructure\persistence\postgresql;
 
 use PDO;
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
+use src\dbextern\domain\criteria\IdMatchPersonaField;
 use src\dbextern\domain\entity\IdMatchPersona;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\HandlesPdoErrors;
+use src\shared\traits\RunsCriteriaQueries;
 
 class PgIdMatchPersonaRepository extends ClaseRepository implements IdMatchPersonaRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
@@ -24,67 +31,31 @@ class PgIdMatchPersonaRepository extends ClaseRepository implements IdMatchPerso
     }
 
     /**
+     * IdMatch que cumplen el criterio.
+     *
+     * @return list<IdMatchPersona>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(IdMatchPersonaField::class, self::COLUMNAS);
+        $idMatchPersonas = [];
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
+            $idMatchPersonas[] = IdMatchPersona::fromArray($aDatos);
+        }
+
+        return $idMatchPersonas;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<IdMatchPersona>
      */
     public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
-        $IdMatchPersonaSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre' || $camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN' || $sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        if (isset($aWhere['_ordre']) && is_string($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
-        }
-        unset($aWhere['_ordre']);
-        if (isset($aWhere['_limit']) && is_string($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
-        }
-        unset($aWhere['_limit']);
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        /** @var list<IdMatchPersona> $idMatchPersonas */
-        $idMatchPersonas = [];
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $idMatchPersonas[] = IdMatchPersona::fromArray($normalized);
-        }
-
-        return $idMatchPersonas;
+        $adapter = new LegacyWhereAdapter(IdMatchPersonaField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function Eliminar(IdMatchPersona $IdMatchPersona): bool

@@ -3,6 +3,9 @@
 namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
+use src\dbextern\domain\criteria\IdMatchPersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\dbextern\application\support\SincroDBFactory;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\shared\security\HashB;
@@ -44,7 +47,7 @@ class VerOrbixData
         foreach ($cPersonasOrbix as $oPersonaOrbix) {
             $id_nom_orbix = $oPersonaOrbix->getId_nom();
 
-            $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_orbix' => $id_nom_orbix]);
+            $cIdMatch = $this->idMatchRepository->matching(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdOrbix, $id_nom_orbix)));
             if ($cIdMatch !== []) {
                 continue;
             }

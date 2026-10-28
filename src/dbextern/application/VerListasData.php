@@ -3,6 +3,9 @@
 namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
+use src\dbextern\domain\criteria\IdMatchPersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\dbextern\application\support\SincroDBFactory;
 use src\shared\security\HashB;
 
@@ -33,7 +36,7 @@ class VerListasData
         foreach ($cPersonasBDU as $oPersonaBDU) {
             $id_nom_bdu = $oPersonaBDU->getIdentif();
 
-            $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_listas' => $id_nom_bdu]);
+            $cIdMatch = $this->idMatchRepository->matching(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdListas, $id_nom_bdu)));
             if ($cIdMatch !== []) {
                 continue;
             }

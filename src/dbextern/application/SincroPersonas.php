@@ -3,6 +3,9 @@
 namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
+use src\dbextern\domain\criteria\IdMatchPersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\dbextern\application\support\SincroDBFactory;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
@@ -40,7 +43,7 @@ class SincroPersonas
         foreach ($cPersonasListas as $oPersonaListas) {
             $id_nom_listas = $oPersonaListas->getIdentif();
 
-            $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_listas' => $id_nom_listas]);
+            $cIdMatch = $this->idMatchRepository->matching(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdListas, $id_nom_listas)));
             if ($cIdMatch !== []) {
                 $i++;
                 $id_orbix = $cIdMatch[0]->getId_orbix();

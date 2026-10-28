@@ -10,7 +10,10 @@ use RuntimeException;
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
 use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\dbextern\domain\entity\IdMatchPersona;
+use src\dbextern\domain\criteria\IdMatchPersonaField;
 use src\dbextern\domain\entity\PersonaBDU;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\dbextern\domain\VincularIdMatch;
 
 final class VincularIdMatchTest extends TestCase
@@ -33,7 +36,7 @@ final class VincularIdMatchTest extends TestCase
 
     public function test_inserta_si_no_hay_match_previo(): void
     {
-        $this->idMatchRepository->method('getIdMatchPersonas')->willReturn([]);
+        $this->idMatchRepository->method('matching')->willReturn([]);
         $this->idMatchRepository->expects($this->once())
             ->method('Guardar')
             ->with($this->callback(static function (IdMatchPersona $match): bool {
@@ -51,9 +54,9 @@ final class VincularIdMatchTest extends TestCase
     public function test_ya_unido_devuelve_exito_sin_guardar(): void
     {
         $existente = $this->match(2001, 100133837, 'n');
-        $this->idMatchRepository->method('getIdMatchPersonas')->willReturnCallback(
-            static function (array $where) use ($existente): array {
-                if (($where['id_listas'] ?? null) === 2001 || ($where['id_orbix'] ?? null) === 100133837) {
+        $this->idMatchRepository->method('matching')->willReturnCallback(
+            static function (Criteria $criteria) use ($existente): array {
+                if ($criteria == Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdListas, 2001)) || $criteria == Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdOrbix, 100133837))) {
                     return [$existente];
                 }
 
@@ -68,9 +71,9 @@ final class VincularIdMatchTest extends TestCase
     public function test_reasigna_si_id_listas_ya_no_existe_en_bdu(): void
     {
         $huerfano = $this->match(999, 100133837, 'n');
-        $this->idMatchRepository->method('getIdMatchPersonas')->willReturnCallback(
-            static function (array $where) use ($huerfano): array {
-                if (($where['id_orbix'] ?? null) === 100133837) {
+        $this->idMatchRepository->method('matching')->willReturnCallback(
+            static function (Criteria $criteria) use ($huerfano): array {
+                if ($criteria == Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdOrbix, 100133837))) {
                     return [$huerfano];
                 }
 
@@ -92,9 +95,9 @@ final class VincularIdMatchTest extends TestCase
     public function test_no_roba_si_id_orbix_ya_esta_unido_a_persona_bdu_viva(): void
     {
         $ocupado = $this->match(1500, 100133837, 'n');
-        $this->idMatchRepository->method('getIdMatchPersonas')->willReturnCallback(
-            static function (array $where) use ($ocupado): array {
-                if (($where['id_orbix'] ?? null) === 100133837) {
+        $this->idMatchRepository->method('matching')->willReturnCallback(
+            static function (Criteria $criteria) use ($ocupado): array {
+                if ($criteria == Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdOrbix, 100133837))) {
                     return [$ocupado];
                 }
 
@@ -116,7 +119,7 @@ final class VincularIdMatchTest extends TestCase
 
     public function test_no_lanza_si_guardar_revienta_por_unicidad(): void
     {
-        $this->idMatchRepository->method('getIdMatchPersonas')->willReturn([]);
+        $this->idMatchRepository->method('matching')->willReturn([]);
         $this->idMatchRepository->method('Guardar')->willThrowException(
             new RuntimeException('llave duplicada viola restricción de unicidad «conv_id_personas_id_orbix_key»')
         );

@@ -5,6 +5,9 @@ namespace src\dbextern\domain;
 use PDO;
 use PDOStatement;
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
+use src\dbextern\domain\criteria\IdMatchPersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\dbextern\domain\entity\PersonaBDU;
 use src\dbextern\infrastructure\persistence\postgresql\OdbcDlListasRepository;
@@ -264,7 +267,7 @@ class SincroDB
         $a_lista_bdu = [];
         foreach ($cPersonasBDU as $oPersonaBDU) {
             $id_nom_listas = $oPersonaBDU->getIdentif();
-            $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_listas' => $id_nom_listas]);
+            $cIdMatch = $this->idMatchRepository->matching(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdListas, $id_nom_listas)));
             if ($cIdMatch !== []) {
                 continue;
             }
@@ -354,7 +357,7 @@ class SincroDB
         $a_lista_orbix = [];
         foreach ($cPersonasDl as $oPersonaDl) {
             $id_nom = $oPersonaDl->getId_nom();
-            $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_orbix' => $id_nom]);
+            $cIdMatch = $this->idMatchRepository->matching(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdOrbix, $id_nom)));
             if ($cIdMatch !== [] && $this->vincularIdMatch->esMatchVigente($cIdMatch[0])) {
                 continue;
             }
