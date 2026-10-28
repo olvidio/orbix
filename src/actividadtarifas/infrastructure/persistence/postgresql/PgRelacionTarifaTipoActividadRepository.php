@@ -7,13 +7,21 @@ use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryI
 use src\actividadtarifas\domain\entity\RelacionTarifaTipoActividad;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\actividadtarifas\domain\criteria\RelacionTarifaTipoActividadField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 
 class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements RelacionTarifaTipoActividadRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
@@ -23,76 +31,26 @@ class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements
     }
 
     /**
+     * RelacionTarifaTipoActividad que cumplen el criterio.
+     *
+     * @return list<RelacionTarifaTipoActividad>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(RelacionTarifaTipoActividadField::class, self::COLUMNAS);
+        return array_map(RelacionTarifaTipoActividad::fromArray(...), $this->rowsMatching($criteria, $conv));
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<RelacionTarifaTipoActividad>
      */
     public function getTipoActivTarifas(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
-        $RelacionTarifaTipoActividadSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre' || $camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = ' WHERE ' . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if (is_string($limitVal) && $limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $RelacionTarifaTipoActividadSet->add(RelacionTarifaTipoActividad::fromArray($normalized));
-        }
-        /** @var list<RelacionTarifaTipoActividad> $result */
-        $result = array_values($RelacionTarifaTipoActividadSet->getTot());
-
-        return $result;
+        $adapter = new LegacyWhereAdapter(RelacionTarifaTipoActividadField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function Eliminar(RelacionTarifaTipoActividad $RelacionTarifaTipoActividad): bool

@@ -3,7 +3,9 @@
 namespace src\actividadtarifas\application;
 
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\actividadtarifas\domain\criteria\TipoTarifaField;
 use src\actividadtarifas\domain\value_objects\TarifaModoId;
+use src\shared\domain\criteria\Criteria;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 
@@ -31,7 +33,9 @@ final class TipoTarifaListaData
         $a_seccion = [1 => _("sv"), 2 => _("sf")];
         $a_modos_tarifa = TarifaModoId::getArrayModo();
 
-        $cTipoTarifas = $this->tipoTarifaRepository->getTipoTarifas(['_ordre' => 'sfsv,letra']);
+        $cTipoTarifas = $this->tipoTarifaRepository->matching(
+            Criteria::create()->orderBy(TipoTarifaField::Sfsv)->addOrderBy(TipoTarifaField::Letra)
+        );
 
         $a_valores = [];
         $t = 0;

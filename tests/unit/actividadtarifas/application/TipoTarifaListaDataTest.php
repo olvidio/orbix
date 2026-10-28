@@ -34,7 +34,7 @@ final class TipoTarifaListaDataTest extends TestCase
         $_SESSION['oPerm'] = $this->oPermStub([]);
 
         $repo = $this->createMock(TipoTarifaRepositoryInterface::class);
-        $repo->method('getTipoTarifas')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $out = (new TipoTarifaListaData($repo))->execute();
         $this->assertSame([], $out['a_valores']);
@@ -54,7 +54,7 @@ final class TipoTarifaListaDataTest extends TestCase
         $o->method('getObserv')->willReturn('ok');
 
         $repo = $this->createMock(TipoTarifaRepositoryInterface::class);
-        $repo->method('getTipoTarifas')->willReturn([$o]);
+        $repo->method('matching')->willReturn([$o]);
 
         $out = (new TipoTarifaListaData($repo))->execute();
         $this->assertCount(1, $out['a_valores']);

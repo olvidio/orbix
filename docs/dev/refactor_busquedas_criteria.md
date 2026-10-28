@@ -361,7 +361,10 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - Migrados: `FormCargosDeActividadData`, `Select_cargos_de_actividad`, `InfoCargo::getColeccion` (`sin_acentos` → `matchesUnaccented`; `_ordre` → `orderBy`) y las dos llamadas internas por `id_nom` de `PgActividadCargoDlRepository`.
     - Se queda con arrays: `getActividadCargosDeAsistente($aWhereNom, …)` (recibe arrays de `asistentes`/`actividades`; migra con la fase 4 de esos módulos junto a `getActividadesDeAsistente`). Los llamantes de otros módulos (`actividadestudios`, `actividadessacd`, `asistentes`) siguen por el envoltorio; sus tests mockean `getActividadCargos`.
     - Test: `PgActividadCargosMatchingTest` (3 tests, equivalencia con legacy). Suites verdes: unit/integration de `actividadcargos` y `actividadessacd`, unit de `actividadestudios` y `asistentes`.
-  - [ ] **4.1.actividadtarifas**
+  - [x] **4.1.actividadtarifas** Decisiones:
+    - `TipoTarifaField` (5) y `RelacionTarifaTipoActividadField` (4); `COLUMNAS = []`. `matching()` en interfaces y repos; `getTipoTarifas`/`getTipoActivTarifas` `@deprecated` como envoltorios (el `Set` del código antiguo era una lista simple).
+    - Migrado `TipoTarifaListaData` (`_ordre => 'sfsv,letra'` → `orderBy` + `addOrderBy`); su test unitario mockea ahora `matching`. `CalendarioUbiResumenData` (módulo `casas`) sigue por el envoltorio y migra en 4.2. `getTipoActivTarifas` no tiene llamantes fuera del repo.
+    - Test: `PgActividadTarifasMatchingTest` (3 tests, equivalencia con legacy). Suites verdes: unit/integration de `actividadtarifas` y `casas`.
   - [ ] **4.1.ubiscamas**
   - [ ] **4.1.actividadescentro**
   - [ ] **4.1.asignaturas**

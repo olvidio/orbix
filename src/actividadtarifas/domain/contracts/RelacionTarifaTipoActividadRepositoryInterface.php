@@ -3,10 +3,19 @@
 namespace src\actividadtarifas\domain\contracts;
 
 use src\actividadtarifas\domain\entity\RelacionTarifaTipoActividad;
+use src\shared\domain\criteria\Criteria;
 
 interface RelacionTarifaTipoActividadRepositoryInterface
 {
     /**
+     * RelacionTarifaTipoActividad que cumplen el criterio.
+     *
+     * @return list<RelacionTarifaTipoActividad>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<RelacionTarifaTipoActividad>
