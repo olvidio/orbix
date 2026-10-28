@@ -2,12 +2,21 @@
 
 namespace src\tablonanuncios\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\tablonanuncios\domain\entity\Anuncio;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
 
 interface AnuncioRepositoryInterface
 {
     /**
+     * Anuncios que cumplen el criterio.
+     *
+     * @return list<Anuncio>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<Anuncio>

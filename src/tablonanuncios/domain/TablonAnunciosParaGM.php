@@ -5,8 +5,11 @@ namespace src\tablonanuncios\domain;
 use frontend\shared\web\Lista;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
+use src\tablonanuncios\domain\criteria\AnuncioField;
 
 class TablonAnunciosParaGM
 {
@@ -20,16 +23,12 @@ class TablonAnunciosParaGM
      */
     public function getArray(string $tablon): array
     {
-        $aWhere = [
-            'tablon' => $tablon,
-            'esquema_destino' => ConfigGlobal::mi_region_dl(),
-            't_eliminado' => 'x',
-        ];
-        $aOperador = [
-            'tablon' => '~*',
-            't_eliminado' => 'IS NULL',
-        ];
-        $cAnuncios = $this->anuncioRepository->getAnuncios($aWhere, $aOperador);
+        $cAnuncios = $this->anuncioRepository->matching(
+            Criteria::create()
+                ->where(Filter::matchesInsensitive(AnuncioField::Tablon, $tablon))
+                ->andWhere(Filter::eq(AnuncioField::EsquemaDestino, ConfigGlobal::mi_region_dl()))
+                ->andWhere(Filter::isNull(AnuncioField::TEliminado))
+        );
         $a_valores = [];
         /** @var list<string> $a_FechaIni */
         $a_FechaIni = [];

@@ -346,7 +346,10 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - `DbSchemaField` (`schema`, `id`) y `MapIdField` (`objeto`, `id_resto`, `id_dl`) en `src/utils_database/domain/criteria/`; `COLUMNAS = []`. `matching()` en ambas interfaces y repos (con `RunsCriteriaQueries`); `getDbSchemas`/`getMapIdes` quedan `@deprecated` como envoltorios de `LegacyWhereAdapter`.
     - Migrada la única llamada interna (`PgDbSchemaRepository::getNext`). Los llamantes de otros módulos (`notas`, `actividadestudios`, `shared`, `devel_db_admin`) siguen con arrays por el envoltorio y migran con sus módulos (sus tests unitarios mockean `getDbSchemas`).
     - Test: `PgUtilsDatabaseMatchingTest` (3 tests, incl. equivalencia con el método legacy). Suites verdes: unit/integration de `utils_database`, unit de `notas`, `shared`, `devel_db_admin`, unit/integration de `actividadestudios`. `tests/integration/notas` aborta por entorno (logger `log/errores.log` y memoria en `PgActaRepository`), ajeno al cambio.
-  - [ ] **4.1.tablonanuncios**
+  - [x] **4.1.tablonanuncios** Decisiones:
+    - `AnuncioField` (10 campos de la entidad), `COLUMNAS = []`; `matching()` en interfaz y repo, `getAnuncios` `@deprecated` como envoltorio. El repo solo tenía `oDbl`: se añade `setoDbl_select(oDBPC_Select)` porque `RunsCriteriaQueries` lee de la conexión de selección.
+    - Única llamada migrada: `TablonAnunciosParaGM::getArray` (`tablon ~*` → `matchesInsensitive`, `t_eliminado IS NULL` → `isNull`; el `'x'` del legacy era valor ficticio).
+    - Test: `PgAnuncioMatchingTest` (2 tests, incl. equivalencia con `getAnuncios`). Suites verdes: unit e integration de `tablonanuncios`.
   - [ ] **4.1.dossiers**
   - [ ] **4.1.permisos**
   - [ ] **4.1.actividadcargos**
