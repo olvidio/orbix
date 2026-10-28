@@ -714,6 +714,7 @@ Los controladores bajo `src/.../infrastructure/ui/http/controllers/` que respond
 4. **Listas / tablas** (`Lista`, `TablaEditable`, …): devolver **arrays con las claves y tipos** que el componente espera (p. ej. `a_botones` siempre **`array`**, no strings tipo `'ninguno'`).
 5. **Mutación solo ack** (`ContestarJson::enviar('', 'ok')`): válido; si el front ignora el retorno de `getDataFromUrl`, no cambia el flujo; si algún día se lee el resultado tras éxito, será **`[]`**, no `null`.
 6. **No usar** `ContestarJson::enviarDataAnidado` para endpoints consumidos por `PostRequest` (el envelope anidado no sigue el mismo contrato de doble decodificación).
+7. **Situaciones previstas no son errores:** una regla de negocio que impide mostrar o hacer algo (p. ej. «los datos de asistencia los modifica el propietario de la plaza») se devuelve como **respuesta válida** con `aviso_txt` (texto plano, el frontend lo escapa) y sin los datos del formulario; la vista lo pinta en lugar del formulario y el `Render::enrich()` debe devolver el payload tal cual si hay `aviso_txt`. `ContestarJson::enviar($error, …)` / `['error' => …]` se reserva para fallos reales, que sí enseñan el bloque técnico (endpoint, página, procedencia) de `PostRequest`. Referencias: `FormAsistentesAUnaActividadData`, `FormActividadesDeUnaPersonaData`, `AsistenteMoverData`.
 
 ### Preparar endpoints para un futuro camino interno
 

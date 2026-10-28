@@ -13,7 +13,8 @@ use Tests\myTest;
 /**
  * Regla «los datos de asistencia los modifica el propietario de la plaza» del formulario de
  * asistentes de una actividad: con `actividadplazas` instalada, un propietario `origen>destino`
- * cuyo destino no es mi delegación bloquea la edición.
+ * cuyo destino no es mi delegación impide la edición. Es una situación prevista: el caso de uso
+ * responde con `aviso_txt` (respuesta válida), no con `error`, que se reserva para fallos reales.
  */
 class FormAsistentesAUnaActividadDataTest extends myTest
 {
@@ -72,43 +73,45 @@ class FormAsistentesAUnaActividadDataTest extends myTest
         $this->assertTrue($this->repoDl->Guardar($a, false));
     }
 
-    private function errorDeLaRegla(): ?string
+    /** Aviso de la regla (respuesta válida `aviso_txt`), o null si no se aplica. */
+    private function avisoDeLaRegla(): ?string
     {
         $r = $this->caso->build(['id_activ' => self::ACT, 'id_nom' => $this->idNom]);
-        $error = (string) ($r['error'] ?? '');
-        return str_contains($error, 'propietario de la plaza') ? $error : null;
+        $this->assertArrayNotHasKey('error', $r, 'la regla de propietario no es un error: error=' . ($r['error'] ?? ''));
+        return isset($r['aviso_txt']) ? (string) $r['aviso_txt'] : null;
     }
 
-    public function test_bloquea_si_el_propietario_de_la_plaza_es_otra_dl(): void
+    public function test_avisa_si_el_propietario_de_la_plaza_es_otra_dl(): void
     {
         $this->plazasInstalada(true);
         $this->sembrar('dlmE>dlmE');
         $this->assertNotSame('dlmE', ConfigGlobal::mi_delef(), 'el test supone que mi dl no es dlmE');
 
-        $error = $this->errorDeLaRegla();
-        $this->assertNotNull($error);
-        $this->assertStringContainsString('dlmE', $error);
+        $aviso = $this->avisoDeLaRegla();
+        $this->assertNotNull($aviso);
+        $this->assertStringContainsString('propietario de la plaza', $aviso);
+        $this->assertStringContainsString('dlmE', $aviso);
     }
 
-    public function test_no_bloquea_si_el_propietario_soy_yo(): void
+    public function test_no_avisa_si_el_propietario_soy_yo(): void
     {
         $this->plazasInstalada(true);
         $this->sembrar('dlmE>' . ConfigGlobal::mi_delef());
-        $this->assertNull($this->errorDeLaRegla());
+        $this->assertNull($this->avisoDeLaRegla());
     }
 
-    public function test_no_bloquea_sin_propietario(): void
+    public function test_no_avisa_sin_propietario(): void
     {
         $this->plazasInstalada(true);
         $this->sembrar('');
-        $this->assertNull($this->errorDeLaRegla());
+        $this->assertNull($this->avisoDeLaRegla());
     }
 
-    public function test_no_bloquea_si_actividadplazas_no_esta_instalada(): void
+    public function test_no_avisa_si_actividadplazas_no_esta_instalada(): void
     {
         $this->plazasInstalada(false);
         $this->sembrar('dlmE>dlmE');
-        $this->assertNull($this->errorDeLaRegla());
+        $this->assertNull($this->avisoDeLaRegla());
     }
 
     public function test_asistente_inexistente_devuelve_error(): void

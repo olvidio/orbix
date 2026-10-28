@@ -29,17 +29,4 @@ class PostRequestStripProvenanceTest extends myTest
     {
         $this->assertSame('sin bloque', PostRequest::stripInternalCallProvenance('sin bloque'));
     }
-
-    /**
-     * Los controladores que muestran errores de negocio de sus datos deben usar exitOnError=false
-     * y recortar el bloque; con el valor por defecto `exit($error)` lo enseña entero.
-     */
-    public function test_los_formularios_con_regla_de_propietario_recortan_el_bloque_tecnico(): void
-    {
-        foreach (['form_asistentes_a_una_actividad', 'form_actividades_de_una_persona'] as $c) {
-            $src = (string) file_get_contents(dirname(__DIR__, 4) . "/frontend/asistentes/controller/$c.php");
-            $this->assertStringContainsString('stripInternalCallProvenance', $src, $c);
-            $this->assertMatchesRegularExpression('/getDataFromUrl\([^;]*\$campos,\s*false\)/', $src, $c);
-        }
-    }
 }

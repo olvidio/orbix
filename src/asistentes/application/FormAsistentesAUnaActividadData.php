@@ -128,8 +128,9 @@ final class FormAsistentesAUnaActividadData
                 $parts = explode('>', (string)$propietario, 2);
                 $child = (string)($parts[1] ?? '');
                 if ($obj_pau !== 'PersonaEx' && $child !== '' && $child !== ConfigGlobal::mi_delef()) {
+                    // Situación prevista, no un fallo: respuesta válida que el frontend muestra como aviso.
                     return [
-                        'error' => sprintf(
+                        'aviso_txt' => sprintf(
                             _("los datos de asistencia los modifica el propietario de la plaza: %s"),
                             $child
                         ),

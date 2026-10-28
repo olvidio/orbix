@@ -22,7 +22,7 @@ final class FormActividadesDeUnaPersonaRender
      */
     public static function enrich(array $payload): array
     {
-        if (isset($payload['error'])) {
+        if (isset($payload['error']) || isset($payload['aviso_txt'])) {
             return $payload;
         }
 
