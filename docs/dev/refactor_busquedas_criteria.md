@@ -355,7 +355,7 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - Migrados: `PermDossiersListaData`, `DossiersListaFichasData` y `PgTipoDossierRepository::findByCodigo`. `getDossieres` no tenía llamantes.
     - `PermDossierVerFormDataTest` tiene un repo anónimo que implementa la interfaz: se le añade `matching()`.
     - Test: `PgDossiersMatchingTest` (3 tests, incl. equivalencia con legacy). Suites verdes: unit e integration de `dossiers`.
-  - [ ] **4.1.permisos**
+  - [x] **4.1.permisos** Sin cambios de código: el módulo no tiene repositorios ni interfaces con `$aWhere`. Su única llamada (`PermisosActividades:141`, `getUsuariosGrupos(['id_usuario' => …])`) es a un repositorio de `usuarios`, así que migra con `usuarios` (4.3). No se ejecutan suites.
   - [ ] **4.1.actividadcargos**
   - [ ] **4.1.actividadtarifas**
   - [ ] **4.1.ubiscamas**
