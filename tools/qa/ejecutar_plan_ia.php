@@ -504,6 +504,11 @@ Contexto de ejecución: es una tanda automática sin nadie delante. No hagas pre
 - No hagas push, ni merge, ni cambies de rama, ni toques `main`. No dejes cambios sin commitear.
 - No inventes decisiones que sean del usuario. Si algo bloquea de verdad (decisión de diseño no cerrada, test que no puedes arreglar, entorno roto), deja tus cambios sin commitear guardados con `git stash push -u -m "bloqueado {$id}"`, no marques la casilla y explica el motivo.
 - Si el paso resulta mucho mayor de lo previsto, divídelo en el plan (sección 8) y ejecuta solo la primera parte.
+- Ejecuta también los tests de los módulos que llaman a lo que has tocado (no solo el módulo del paso).
+
+Reglas para que el Bash no te deniegue comandos (cada denegación cuesta turnos): UN comando por llamada; sin variables de shell (`X=...`, `\$X`), sin bucles `for`/`while`, sin `cd` ni `git -C` (ya estás en la raíz del repo), sin `&&` ni `;` encadenando operaciones distintas; edita ficheros con Edit/Write, no con scripts python ni heredocs. Para varias suites: `bash tools/qa/phpunit_modulos.sh tests/unit/<m1> tests/integration/<m1> tests/unit/<m2>`; para una sola: `docker exec -w /var/www/orbix orbix-php-fpm-1 php -d xdebug.mode=off libs/vendor/bin/phpunit -c phpunit.xml <ruta>`.
+
+Fallos que ya existían antes de esta refactorización (no son tuyos, no los arregles ni los cuentes como regresión): tests/integration/ubiscamas (4 errores), tests/integration/cambios (inestable: falla un test distinto en cada ejecución y aborta), tests/integration/personas (aborta: el logger escribe en una ruta que no existe en el contenedor). Si dudas de otro fallo, compruébalo contra la base con `git stash` antes de achacárselo a tu cambio.
 {$presup}{$bloque4}{$sucioTxt}
 
 La ÚLTIMA línea de tu respuesta debe ser exactamente una de:
@@ -520,7 +525,7 @@ TXT;
         $cmd[] = '--permission-mode';
         $cmd[] = 'acceptEdits';
         $cmd[] = '--allowedTools';
-        foreach (['Read', 'Edit', 'Write', 'Glob', 'Grep', 'Bash(git add:*)', 'Bash(git commit:*)', 'Bash(git status:*)', 'Bash(git diff:*)', 'Bash(git log:*)', 'Bash(git rm:*)', 'Bash(git mv:*)', 'Bash(git stash:*)', 'Bash(git show:*)', 'Bash(php:*)', 'Bash(docker exec:*)', 'Bash(rg:*)', 'Bash(grep:*)', 'Bash(ls:*)', 'Bash(find:*)', 'Bash(wc:*)', 'Bash(mkdir:*)', 'Bash(cat:*)', 'Bash(sed:*)', 'Bash(python3:*)', 'Bash(head:*)', 'Bash(tail:*)'] as $t) {
+        foreach (['Read', 'Edit', 'Write', 'Glob', 'Grep', 'Bash(git add:*)', 'Bash(git commit:*)', 'Bash(git status:*)', 'Bash(git diff:*)', 'Bash(git log:*)', 'Bash(git rm:*)', 'Bash(git mv:*)', 'Bash(git stash:*)', 'Bash(git show:*)', 'Bash(php:*)', 'Bash(docker exec:*)', 'Bash(bash tools/qa/phpunit_modulos.sh:*)', 'Bash(rg:*)', 'Bash(grep:*)', 'Bash(ls:*)', 'Bash(find:*)', 'Bash(wc:*)', 'Bash(mkdir:*)', 'Bash(cat:*)', 'Bash(sed:*)', 'Bash(python3:*)', 'Bash(head:*)', 'Bash(tail:*)'] as $t) {
             $cmd[] = $t;
         }
     }
@@ -611,6 +616,13 @@ TXT;
         'estimado' => $estU, 'pct_antes' => $pctDespues !== null ? $pctAntes : null, 'pct_despues' => $pctDespues,
         'limite' => $limite, 'sesion' => $sesion, 'commit' => $headDespues, 'rama' => git($repo, 'rev-parse', '--abbrev-ref', 'HEAD'),
         'denegaciones' => count((array) ($j['permission_denials'] ?? [])),
+        'denegaciones_detalle' => array_slice(array_map(
+            static function ($d): string {
+                $i = is_array($d) ? (array) ($d['tool_input'] ?? []) : [];
+                return (is_array($d) ? (string) ($d['tool_name'] ?? '?') : '?') . ': ' . mb_substr((string) ($i['command'] ?? $i['file_path'] ?? json_encode($i)), 0, 140);
+            },
+            (array) ($j['permission_denials'] ?? [])
+        ), 0, 10),
     ];
     anotarLog($ficheroLog, $reg);
     $log[] = $reg;
@@ -625,7 +637,10 @@ TXT;
         $detalle !== '' ? " — $detalle" : ''
     ));
     if ($reg['denegaciones'] > 0) {
-        out("    AVISO: {$reg['denegaciones']} herramienta(s) denegada(s) por permisos; revisa la lista o usa --permisos=bypass.");
+        out("    AVISO: {$reg['denegaciones']} herramienta(s) denegada(s) por permisos; detalle en el registro (denegaciones_detalle).");
+        foreach (array_slice($reg['denegaciones_detalle'], 0, 3) as $dd) {
+            out('      - ' . $dd);
+        }
     }
 
     // Actualizar % usado

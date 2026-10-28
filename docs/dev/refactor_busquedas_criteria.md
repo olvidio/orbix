@@ -391,6 +391,19 @@ Medido en esta sesión (2026-10-28):
 
 Mediana de los pasos de código (1.1–1.4): ~230.000 u.eq.; máximo medido: 291.000.
 
+**Piloto real (fase 2, ejecutada con `ejecutar_plan_ia.php` el 2026-10-28):**
+
+| Paso | u.eq. real | Estimación inicial | Coste USD | Denegaciones Bash |
+|---|---:|---:|---:|---:|
+| 2.0 red de seguridad | 341.600 | 300.000 | 0,71 | 3 |
+| 2.1 `matching()` en `PgAsistenteRepository` | 344.800 | 325.000 | 0,65 | 5 |
+| 2.2 subclases + `matchingConjunto` | 258.900 | 200.000 | 0,52 | 3 |
+| 2.3 llamantes de `application/` | 418.200 | 400.000 | 0,74 | 8 |
+| 2.4 revisión + `AGENTS.md` | 116.800 | 125.000 | 0,29 | 0 |
+| **Total** | **1.480.000** | 1.350.000 | **2,90** | 19 |
+
+La estimación de la sección 10.2 (1,0–1,6 M) acertó; cada paso quedó entre −7 % y +29 % de lo previsto. Todo el piloto movió el uso semanal del plan Pro de ~4 % a ~5 %: un orden de magnitud de **~0,7 % de la semana por cada millón de u.eq.** (con la granularidad de 1 % de `/usage`, el error es grande; mejora al acumular más pasos). Con ese ritmo, las fases 3–5 caben holgadamente en una semana.
+
 ### 10.2 Estimación de la fase 2 (aproximada)
 
 Tamaño real del piloto: 5 repositorios (`PgAsistenteRepository` 293 líneas + 4 subclases de 32–66), 20 llamadas en 8 ficheros de `src/asistentes/application/`, 5 llamadas a `getConjunt()` en un servicio. Pero el envoltorio hace que **los ~45 ficheros de otros módulos que llaman a `getAsistentes()` pasen por el adaptador desde 2.1**, aunque solo se migren 8: ahí está el riesgo.
@@ -453,9 +466,15 @@ Sin terminal el script no puede preguntar. Usa, por orden: `--usado=NN`, el últ
 - En los bloques de la fase 4 pide a `claude` que primero los trocee en un paso por módulo y que pare cuando el siguiente módulo no quepa en el presupuesto restante: así un presupuesto pequeño se aprovecha módulo a módulo.
 - Registro: `docs/dev/reports/consumo_ia.jsonl` (un registro por paso: u.eq., coste USD, turnos, duración, % antes/después, resultado, commit). Estado: `docs/dev/reports/consumo_ia_estado.json`. Las estimaciones por paso se corrigen con el cociente real/estimado de lo ya medido.
 
-**Pendiente de verificar con la primera ejecución real** (probado con un `claude` simulado sobre un repo temporal, no con el real):
+**Verificado con el piloto real:**
 
-1. Que `modelUsage` del JSON es el total de la ejecución: el registro guarda también `ueq_transcripcion` (leída de la transcripción) para contrastarlo.
-2. Que el texto real del aviso de límite coincide con la expresión que lo detecta; si no, el paso quedará como `ERROR`/`INCONSISTENTE` con el texto en `detalle` y se ajusta.
-3. Que la lista de herramientas permitidas basta (el registro cuenta `denegaciones`); si no, `--permisos=bypass` o ampliar la lista.
-4. El plan Pro tiene además un límite por ventana de 5 horas: si se alcanza, el script lo ve como límite agotado y para, aunque quede cupo semanal.
+1. `modelUsage` del JSON es el total de la ejecución: `ueq` y `ueq_transcripcion` coinciden exactamente en los cinco pasos.
+2. El aviso de límite **no se ha podido comprobar** (no se alcanzó el cupo). Si ocurre, el paso quedará como `ERROR`/`INCONSISTENTE` con el texto en `detalle`; ajustar entonces la expresión de detección.
+3. Las denegaciones (19 en total) **no venían de la lista de herramientas**, sino de las comprobaciones de seguridad del propio Bash en modo `acceptEdits`: comandos con variables de shell o bucles (`for m in …`), `cd … && git …`, `git -C …`, compuestos con `;`/`&&` y heredocs de python. `claude` los rodeaba con otros comandos, pero costó turnos y, en el 2.3, dejó sin ejecutar la tanda de suites de módulos dependientes. Corrección: el prompt incluye reglas de «un comando por llamada, sin variables ni bucles, edita con Edit/Write» y existe `bash tools/qa/phpunit_modulos.sh <rutas…>` (autorizado en la lista) para lanzar varias suites de una vez. El registro guarda ahora `denegaciones_detalle` (qué comando se denegó).
+4. El plan Pro tiene además un límite por ventana de 5 horas: si se alcanza, el script lo ve como cupo agotado y para aunque quede cupo semanal (sin comprobar).
+
+**Revisión posterior del piloto (suites de módulos dependientes, rama `refactor/criteria-auto` en 2.4 frente a `ab1b301c1`, antes del piloto):** `asistentes`, `actividades`, `planning`, `actividadcargos`, `misas`, `pasarela`, `actividadestudios` y `ubiscamas` (unit) en verde. Tres suites de integración fallan **igual antes y después**, así que no son regresión:
+
+- `tests/integration/ubiscamas`: 4 errores (`PgCamaDl`/`PgHabitacionDl`).
+- `tests/integration/cambios`: inestable; falla un test distinto en cada ejecución y aborta (1, 4, 8 o 16 tests ejecutados).
+- `tests/integration/personas`: aborta porque `GestorErrores` escribe en `/home/dani/orbix_local/orbix/log/errores.log`, que no existe dentro del contenedor. Mientras tanto, esa suite no puede validar cambios en `personas`.
