@@ -18,7 +18,9 @@ use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\domain\criteria\Criteria;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
+use src\utils_database\domain\criteria\DbSchemaField;
 
 final class MigracionesEjecutar
 {
@@ -514,7 +516,7 @@ final class MigracionesEjecutar
 
         $repository = $this->dbSchemaRepository;
         $schemas = [];
-        foreach ($repository->getDbSchemas(['_ordre' => 'schema']) as $dbSchema) {
+        foreach ($repository->matching(Criteria::create()->orderBy(DbSchemaField::Schema)) as $dbSchema) {
             $schema = $dbSchema->getSchema();
             if (MigracionEjecucionUtiles::esEsquemaResto($schema)) {
                 continue;

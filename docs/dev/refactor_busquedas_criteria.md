@@ -389,7 +389,17 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - `PasarelaConfigField` (solo `nom_parametro`; `json_valor` es jsonb y no se filtra); `COLUMNAS = []`. `matching()` en interfaz y `PgPasarelaConfigRepository`, con la hidratación de `json_valor` por `ConverterJson`; `getPasarelaConfigs` `@deprecated` como envoltorio (sin llamantes fuera del repo).
     - Migrado `ExportarActividadesData` solo en su llamada a `getCentrosEncargados` (`num_orden DESC` → `matching`). Quedan con arrays por ser de otros módulos: `getActividades` (`actividades`, 4.3) en `ExportarActividadesData` y `getTiposDeActividades` en `Conversiones`.
     - Se crean `tests/factories/pasarela/PasarelaConfigFactory.php` y `PgPasarelaConfigMatchingTest` (1 test, equivalencia con legacy y JSON decodificado). Suites verdes: unit e integration de `pasarela`; unit de `actividadescentro`.
-- [ ] **4.2 Pequeños (6–16):** `devel_db_admin`, `shared`, `cartaspresentacion`, `menus`, `configuracion`, `casas`, `zonassacd`, `planning`
+- [ ] **4.2 Pequeños (6–16):** troceado en un commit por módulo (cada casilla se marca al terminar).
+  - [x] **4.2.devel_db_admin** Decisiones:
+    - Módulo sin repositorios propios con `$aWhere`. Migrada `MigracionesEjecutar` (`getDbSchemas(['_ordre' => 'schema'])` → `matching(orderBy(DbSchemaField::Schema))`). `DbLugarDropdown` llama a `getDelegaciones` (módulo `ubis`, 4.4) y sigue por el envoltorio.
+    - Suites verdes: unit e integration de `devel_db_admin`.
+  - [ ] **4.2.shared**
+  - [ ] **4.2.cartaspresentacion**
+  - [ ] **4.2.menus**
+  - [ ] **4.2.configuracion**
+  - [ ] **4.2.casas**
+  - [ ] **4.2.zonassacd**
+  - [ ] **4.2.planning**
 - [ ] **4.3 Medianos (20–34):** `dbextern`, `cambios` (`~INV`), `actividades`, `procesos`, `actividadessacd`, `profesores`, `personas` (`TXT`, `OR`), `usuarios`
 - [ ] **4.4 Grandes (39–60):** `actividadplazas`, `ubis` (38 interfaces), `inventario`, `actividadestudios`, `notas`
 - [ ] **4.5 Los más usados (73+):** `misas`, `encargossacd` (127 llamadas)
