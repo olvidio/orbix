@@ -1,6 +1,6 @@
 # Refactor: búsquedas en repositorio con objetos de consulta (Criteria)
 
-> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fase 1 completa. Siguiente: paso 2.0 (red de seguridad), después 2.1. Presupuesto de IA en la sección 10.
+> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fase 1 completa. Siguiente: paso 2.1. Presupuesto de IA en la sección 10.
 > **Fecha:** 2026-10-28
 > **Cómo retomar:** leer las secciones 3–5, buscar en la sección 7 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese paso. Cada paso termina con tests en verde y un commit propio.
 
@@ -285,7 +285,10 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
 
 ### Fase 2 — Piloto `asistentes`
 
-- [ ] **2.0** Red de seguridad **antes** de tocar `PgAsistenteRepository` (ver sección 10.2): test de caracterización de `getAsistentes()` sobre datos sembrados (con `AsistenteFactory`, limpiando al final) que cubra las formas de `$aWhere`/`$aOperators` que usan los llamantes reales. Debe pasar en verde con el código actual; en 2.1 se ejecuta sin cambios tras el envoltorio. Incluir también una pasada por las formas de `getConjunt()`.
+- [x] **2.0** Red de seguridad **antes** de tocar `PgAsistenteRepository` (ver sección 10.2): test de caracterización de `getAsistentes()` sobre datos sembrados (con `AsistenteFactory`, limpiando al final) que cubra las formas de `$aWhere`/`$aOperators` que usan los llamantes reales. Debe pasar en verde con el código actual; en 2.1 se ejecuta sin cambios tras el envoltorio. Incluir también una pasada por las formas de `getConjunt()`.
+  - Hecho en `tests/integration/asistentes/infrastructure/persistence/postgresql/PgAsistenteGetAsistentesCaracterizacionTest.php` (26 tests). Siembra 5 filas con `AsistenteFactory` en `d_asistentes_dl`/`out`/`ex` (ids `99880000x`), limpia en `setUp`/`tearDown`. Cubre: igualdad implícita y `=`, `!=`, `<`, `>`, `BETWEEN` (cadena `a,b`), `IS NULL`/`IS NOT NULL`, `IN`/`NOT IN`, `~`/`~*`/`!~`, booleanos `'t'`/`'f'`, `_ordre` (simple, `DESC`, dos columnas, vacío), `_limit`, clave inexistente, hidratación de la entidad, tabla `all` frente a las hijas y cinco formas de `getConjunt()` (unión por orden de repos, subconjunto, por persona, `_ordre` que reordena, vacío).
+  - Decisión: `TXT` no se incluye, porque en el módulo solo lo usa `ListaUltimaActivData` sobre tablas de personas (`$aWhereP`), no sobre asistentes. Tampoco `sin_acentos` ni fechas (los llamantes de asistentes no las usan sobre estas columnas).
+  - Las expectativas están escritas a mano y pasan con el código actual; en 2.1 deben pasar sin cambios.
 - [ ] **2.1** `AsistenteField` en `src/asistentes/domain/criteria/`; `PgAsistenteRepository`: añadir `matching()`, convertir `getAsistentes()` en envoltorio. Test de integración.
 - [ ] **2.2** Resto de repositorios del módulo (`Dl`, `Ex`, `Out`, `Pub`) y `getConjunt`.
 - [ ] **2.3** Migrar los llamantes de `src/asistentes/application/` a `matching()`.
