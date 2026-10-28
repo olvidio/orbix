@@ -3,6 +3,10 @@
 namespace src\personas\domain;
 
 use PDO;
+use src\personas\domain\criteria\TelecoPersonaField;
+use src\personas\domain\criteria\TrasladoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -30,14 +34,23 @@ use src\personas\domain\entity\PersonaSSSC;
 use src\personas\domain\entity\Traslado;
 use src\personas\domain\value_objects\SituacionCode;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorAmpliacionField;
 use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorCongresoField;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorDirectorField;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorDocenciaStgrField;
 use src\profesores\domain\contracts\ProfesorJuramentoRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorJuramentoField;
 use src\profesores\domain\contracts\ProfesorLatinRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorLatinField;
 use src\profesores\domain\contracts\ProfesorPublicacionRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorPublicacionField;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorStgrField;
 use src\profesores\domain\contracts\ProfesorTituloEstRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorTituloEstField;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -924,52 +937,52 @@ class Trasladar
                 case 'TelecoPersonaDl':
                     $repo = $this->repositoryWithConnection(TelecoPersonaDlRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(TelecoPersonaDlRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getTelecosPersona(['id_nom' => $this->iid_nom]);
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(TelecoPersonaField::IdNom, $this->iid_nom)));
                     break;
                 case 'Profesor':
                     $repo = $this->repositoryWithConnection(ProfesorStgrRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(ProfesorStgrRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getProfesoresStgr(['id_nom' => $this->iid_nom]);
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(ProfesorStgrField::IdNom, $this->iid_nom)));
                     break;
                 case 'ProfesorAmpliacion':
                     $repo = $this->repositoryWithConnection(ProfesorAmpliacionRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(ProfesorAmpliacionRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getProfesorAmpliaciones(array('id_nom' => $this->iid_nom));
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(ProfesorAmpliacionField::IdNom, $this->iid_nom)));
                     break;
                 case 'ProfesorCongreso':
                     $repo = $this->repositoryWithConnection(ProfesorCongresoRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(ProfesorCongresoRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getProfesorCongresos(array('id_nom' => $this->iid_nom));
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(ProfesorCongresoField::IdNom, $this->iid_nom)));
                     break;
                 case 'ProfesorDirector':
                     $repo = $this->repositoryWithConnection(ProfesorDirectorRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(ProfesorDirectorRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getProfesoresDirectores(array('id_nom' => $this->iid_nom));
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(ProfesorDirectorField::IdNom, $this->iid_nom)));
                     break;
                 case 'ProfesorDocenciaStgr':
                     $repo = $this->repositoryWithConnection(ProfesorDocenciaStgrRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(ProfesorDocenciaStgrRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getProfesorDocenciasStgr(array('id_nom' => $this->iid_nom));
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(ProfesorDocenciaStgrField::IdNom, $this->iid_nom)));
                     break;
                 case 'ProfesorJuramento':
                     $repo = $this->repositoryWithConnection(ProfesorJuramentoRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(ProfesorJuramentoRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getProfesorJuramentos(array('id_nom' => $this->iid_nom));
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(ProfesorJuramentoField::IdNom, $this->iid_nom)));
                     break;
                 case 'ProfesorLatin':
                     $repo = $this->repositoryWithConnection(ProfesorLatinRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(ProfesorLatinRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getProfesoresLatin(array('id_nom' => $this->iid_nom));
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(ProfesorLatinField::IdNom, $this->iid_nom)));
                     break;
                 case 'ProfesorPublicacion':
                     $repo = $this->repositoryWithConnection(ProfesorPublicacionRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(ProfesorPublicacionRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getProfesorPublicaciones(array('id_nom' => $this->iid_nom));
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(ProfesorPublicacionField::IdNom, $this->iid_nom)));
                     break;
                 case 'ProfesorTituloEst':
                     $repo = $this->repositoryWithConnection(ProfesorTituloEstRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(ProfesorTituloEstRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getProfesorTitulosEst(array('id_nom' => $this->iid_nom));
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(ProfesorTituloEstField::IdNom, $this->iid_nom)));
                     break;
                 case 'PersonaNotaDl':
                     // Modelo acta: las notas no se trasladan con la persona (copiarNotas no-op).
@@ -982,7 +995,7 @@ class Trasladar
                 case 'Traslado':
                     $repo = $this->repositoryWithConnection(TrasladoRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(TrasladoRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getTraslados(array('id_nom' => $this->iid_nom));
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(TrasladoField::IdNom, $this->iid_nom)));
                     break;
                 case 'AsistenteDl':
                     // Lo hago a parte porque está en la base de datos exterior.

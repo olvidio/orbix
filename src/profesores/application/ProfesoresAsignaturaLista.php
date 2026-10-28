@@ -2,6 +2,7 @@
 
 namespace src\profesores\application;
 
+use src\personas\domain\criteria\TelecoPersonaField;
 use src\shared\domain\criteria\OrderDirection;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\Criteria;
@@ -80,7 +81,7 @@ final class ProfesoresAsignaturaLista
 
             $telfs = '';
             $mails = '';
-            $cTelecoPersona = $this->telecoPersonaDlRepository->getTelecosPersona(['id_nom' => $id_nom]);
+            $cTelecoPersona = $this->telecoPersonaDlRepository->matching(Criteria::create()->where(Filter::eq(TelecoPersonaField::IdNom, $id_nom)));
             foreach ($cTelecoPersona as $oTelecoPersona) {
                 $tipo = $oTelecoPersona->getId_tipo_teleco();
                 switch ($tipo) {

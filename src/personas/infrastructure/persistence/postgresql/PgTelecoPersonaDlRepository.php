@@ -20,6 +20,7 @@ class PgTelecoPersonaDlRepository extends PgTelecoPersonaRepository implements T
     public function __construct()
     {
         $this->setoDbl(GlobalPdo::get('oDB'));
+        $this->setoDbl_select(GlobalPdo::get('oDB'));
         $this->setNomTabla('d_teleco_personas_dl');
     }
 

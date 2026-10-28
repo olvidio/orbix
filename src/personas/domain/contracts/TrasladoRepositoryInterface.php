@@ -2,6 +2,7 @@
 
 namespace src\personas\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\personas\domain\entity\Traslado;
 
 
@@ -20,6 +21,12 @@ interface TrasladoRepositoryInterface
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
+	 * @return list<Traslado>
+	 */
+	public function matching(Criteria $criteria): array;
+
+	/**
+	 * @deprecated usar matching(Criteria)
 	 * devuelve una colección (array) de objetos de tipo Traslado
 	 *
 	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.

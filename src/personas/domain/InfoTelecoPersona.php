@@ -2,6 +2,9 @@
 
 namespace src\personas\domain;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\TelecoPersonaField;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaExRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaRepositoryInterface;
@@ -41,19 +44,19 @@ class InfoTelecoPersona extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        $aWhere = [];
-        $aOperador = [];
+        // para el datos_sql.php
+        // Si se quiere listar una selección, $this->k_buscar
+        $criteria = Criteria::create();
         if (!empty($this->id_pau)) {
-            $aWhere['id_nom'] = $this->id_pau;
+            $criteria = $criteria->andWhere(Filter::eq(TelecoPersonaField::IdNom, $this->id_pau));
         }
         if (empty($this->k_buscar)) {
-            $aWhere['_ordre'] = 'id_tipo_teleco';
+            $criteria = $criteria->orderBy(TelecoPersonaField::IdTipoTeleco);
         } else {
-            $aWhere['congreso'] = $this->k_buscar;
-            $aOperador['congreso'] = 'sin_acentos';
+            $criteria = $criteria->andWhere(Filter::matchesUnaccented(TelecoPersonaField::NumTeleco, $this->k_buscar));
         }
 
-        return $this->telecoPersonaRepository->getTelecosPersona($aWhere, $aOperador);
+        return $this->telecoPersonaRepository->matching($criteria);
     }
 
     public function setObj_pau(string $Qobj_pau): void

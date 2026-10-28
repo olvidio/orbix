@@ -4,6 +4,9 @@ namespace src\personas\domain;
 
 /* No vale el underscore en el nombre */
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\profesores\domain\criteria\SituacionField;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\entity\Situacion;
 use src\shared\domain\DatosInfoRepo;
@@ -29,14 +32,15 @@ class InfoSituacion extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
+        // para el datos_sql.php
+        // Si se quiere listar una selección, $this->k_buscar
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'situacion'];
-            $aOperador = [];
+            $criteria = $criteria->orderBy(SituacionField::Situacion);
         } else {
-            $aWhere = ['situacion' => $this->k_buscar];
-            $aOperador = ['situacion' => 'sin_acentos'];
+            $criteria = $criteria->andWhere(Filter::matchesUnaccented(SituacionField::Situacion, $this->k_buscar));
         }
 
-        return $this->situacionRepository->getSituaciones($aWhere, $aOperador);
+        return $this->situacionRepository->matching($criteria);
     }
 }

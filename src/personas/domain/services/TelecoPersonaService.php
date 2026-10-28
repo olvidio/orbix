@@ -3,6 +3,9 @@
 namespace src\personas\domain\services;
 
 use src\personas\domain\contracts\TelecoPersonaRepositoryInterface;
+use src\personas\domain\criteria\TelecoPersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 
 /**
@@ -31,15 +34,15 @@ class TelecoPersonaService
         $tipos_teleco =  ['telf' => 1, 'móvil' => 2 , 'e-mail' => 3 ];
         $id_tipo_teleco = $tipos_teleco[$tipo_teleco] ?? '';
 
-        $aWhere = [];
-        $aWhere['id_nom'] = $id_nom;
-        $aWhere['id_tipo_teleco'] = $id_tipo_teleco;
+        $criteria = Criteria::create()
+            ->where(Filter::eq(TelecoPersonaField::IdNom, $id_nom))
+            ->andWhere(Filter::eq(TelecoPersonaField::IdTipoTeleco, $id_tipo_teleco));
 
         if ($desc_teleco !== '*' && !empty($desc_teleco)) {
-            $aWhere['id_desc_teleco'] = (int)$desc_teleco;
+            $criteria = $criteria->andWhere(Filter::eq(TelecoPersonaField::IdDescTeleco, (int)$desc_teleco));
         }
 
-        $cTelecos = $this->telecoPersonaRepository->getTelecospersona($aWhere);
+        $cTelecos = $this->telecoPersonaRepository->matching($criteria);
 
         $tels = '';
         $separador = empty($separador) ? ".-<br>" : $separador;
@@ -69,18 +72,16 @@ class TelecoPersonaService
      */
     public function getEmailPrincipalOPrimero(int $id_nom, int $id_desc_teleco = 13): string
     {
-        $aWhere = [];
-        $aWhere['id_nom'] = $id_nom;
-        $aWhere['id_tipo_teleco'] = 3; //'e-mail';
+        $criteria = Criteria::create()
+            ->where(Filter::eq(TelecoPersonaField::IdNom, $id_nom))
+            ->andWhere(Filter::eq(TelecoPersonaField::IdTipoTeleco, 3)); // e-mail
 
         if ($id_desc_teleco !== 13) {
-            $aWhere['id_desc_teleco'] = $id_desc_teleco;
+            $criteria = $criteria->andWhere(Filter::eq(TelecoPersonaField::IdDescTeleco, $id_desc_teleco));
         }
 
-        $aWhere['_ordre'] = 'id_desc_teleco';
-
         $e_mail = '';
-        $cTelecos = $this->telecoPersonaRepository->getTelecospersona($aWhere);
+        $cTelecos = $this->telecoPersonaRepository->matching($criteria->orderBy(TelecoPersonaField::IdDescTeleco));
 
         if ($cTelecos !== []) {
             $oTeleco = $cTelecos[0];

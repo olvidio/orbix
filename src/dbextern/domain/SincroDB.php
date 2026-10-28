@@ -2,6 +2,7 @@
 
 namespace src\dbextern\domain;
 
+use src\personas\domain\criteria\TelecoPersonaField;
 use PDO;
 use PDOStatement;
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
@@ -501,11 +502,7 @@ class SincroDB
             return;
         }
 
-        $cTelecos = array_values($this->telecoPersonaDlRepository->getTelecosPersona([
-            'id_nom' => $id_orbix,
-            'id_tipo_teleco' => $id_tipo_teleco,
-            'id_desc_teleco' => $id_desc_teleco,
-        ]));
+        $cTelecos = array_values($this->telecoPersonaDlRepository->matching(Criteria::create()->where(Filter::eq(TelecoPersonaField::IdNom, $id_orbix))->andWhere(Filter::eq(TelecoPersonaField::IdTipoTeleco, $id_tipo_teleco))->andWhere(Filter::eq(TelecoPersonaField::IdDescTeleco, $id_desc_teleco))));
         $existentes = [];
         foreach ($cTelecos as $oTeleco) {
             $existentes[] = [
