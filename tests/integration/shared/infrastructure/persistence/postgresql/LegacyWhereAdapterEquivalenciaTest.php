@@ -5,21 +5,10 @@ declare(strict_types=1);
 namespace Tests\integration\shared\infrastructure\persistence\postgresql;
 
 use PDO;
-use src\shared\domain\criteria\CriteriaField;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use Tests\myTest;
-
-enum TablaField: string implements CriteriaField
-{
-    case Id = 'id';
-    case Nombre = 'nombre';
-    case FIni = 'f_ini';
-    case Bits = 'bits';
-    case Tags = 'tags';
-    case Cod = 'cod';
-}
 
 /**
  * Para cada operador de Condicion: las filas que devuelve el SQL antiguo (bucle de los

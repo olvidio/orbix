@@ -1,6 +1,6 @@
 # Refactor: búsquedas en repositorio con objetos de consulta (Criteria)
 
-> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Siguiente: paso 1.4.
+> **Estado:** diseño aprobado (decisiones cerradas el 2026-10-28, sección 5). Inventario hecho (0.1). Fase 1 completa. Siguiente: paso 2.1.
 > **Fecha:** 2026-10-28
 > **Cómo retomar:** leer las secciones 3–5, buscar en la sección 7 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese paso. Cada paso termina con tests en verde y un commit propio.
 
@@ -266,7 +266,22 @@ Marcar `- [x]` al terminar cada paso, con el hash del commit.
   - Cambios en el dominio: `OrderExpression` (interfaz; `Order` la implementa), `Criteria::addOrder()` y `Filter::of()` (constructor genérico validado).
   - Compatibilidad conservada: un operador con valor `null` daba `c = NULL` (nunca coincide) → `FALSE`. Diferencia aceptada: `IN` con lista vacía ya no lanza excepción, da `FALSE`.
   - `LIKE`/`ILIKE`/`NOT LIKE`/`NOT ILIKE` pasan por filtro crudo; reescribir con `matches*` al migrar cada uso (sección 9).
-- [ ] **1.4** Trait o método en `ClaseRepository` que ejecute un `Criteria` (prepara, ejecuta, devuelve filas) para no repetirlo en cada repositorio.
+- [x] **1.4** Trait `src/shared/traits/RunsCriteriaQueries.php` + `RunsCriteriaQueriesTest` (10 tests de integración). Decisiones del paso:
+  - Es un trait (no un método de `ClaseRepository`) que se usa junto a `HandlesPdoErrors`; reutiliza sus `prepareAndExecute()` y `getoDbl_Select()` / `getNomTabla()` de `ClaseRepository`. Mismos errores que hoy: `RuntimeException` (o `false` → `[]` si `throwOnError` es false).
+  - API (protegida): `rowsMatching(Criteria, PgCriteriaConverter): list<array<string, mixed>>` (`SELECT *`) y `countMatching(Criteria, PgCriteriaConverter): int`. El repositorio solo hidrata las filas (`Entidad::fromArray`).
+  - Los parámetros se pasan en `execute($params)` (todo `PARAM_STR`): PG infiere el tipo de `LIMIT`/`OFFSET` y de las columnas, comprobado en los tests. No se usa `bindValue(PARAM_INT)` porque `execute([])` descarta los enlaces previos.
+  - Repositorio típico:
+    ```php
+    use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(AsistenteField::class, self::COLUMNAS);
+        return array_map(Asistente::fromArray(...), $this->rowsMatching($criteria, $conv));
+    }
+    ```
+  - Los enums de prueba (`TablaField`, `FakeField`) van en ficheros propios para que se autocarguen.
 
 ### Fase 2 — Piloto `asistentes`
 
