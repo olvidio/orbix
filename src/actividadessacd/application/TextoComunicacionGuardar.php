@@ -2,6 +2,9 @@
 
 namespace src\actividadessacd\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\actividadessacd\domain\criteria\ActividadSacdTextoField;
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
 use src\actividadessacd\domain\entity\ActividadSacdTexto;
 
@@ -28,10 +31,7 @@ final class TextoComunicacionGuardar
             return _("faltan parametros clave / idioma");
         }
 
-        $cTextos = $this->actividadSacdTextoRepository->getActividadSacdTextos([
-            'clave' => $clave,
-            'idioma' => $idioma,
-        ]);
+        $cTextos = $this->actividadSacdTextoRepository->matching(Criteria::create()->where(Filter::eq(ActividadSacdTextoField::Clave, $clave))->andWhere(Filter::eq(ActividadSacdTextoField::Idioma, $idioma)));
         $existe = count($cTextos) > 0;
 
         if ($existe) {

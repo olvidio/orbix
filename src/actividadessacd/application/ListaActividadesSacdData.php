@@ -3,6 +3,9 @@
 namespace src\actividadessacd\application;
 
 use src\shared\config\ConfigGlobal;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 use src\permisos\domain\XPermisos;
@@ -55,15 +58,9 @@ final class ListaActividadesSacdData
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
 
-        $aWhere = [
-            'f_ini' => "'$inicioIso','$finIso'",
-            'status' => StatusId::TERMINADA,
-            '_ordre' => 'f_ini',
-        ];
-        $aOperador = [
-            'f_ini' => 'BETWEEN',
-            'status' => '<',
-        ];
+        $criteria = Criteria::create()
+            ->where(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso))
+            ->andWhere(Filter::lt(ActividadAllField::Status, StatusId::TERMINADA));
 
         $txt_fase_ok_sacd = '';
         if ($tipo === 'falta_sacd') {
@@ -74,12 +71,11 @@ final class ListaActividadesSacdData
         } else {
             $regex = self::regexPorTipo($tipo);
             if ($regex !== null) {
-                $aWhere['id_tipo_activ'] = $regex;
-                $aOperador['id_tipo_activ'] = '~';
+                $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $regex));
             }
         }
 
-        $cActividades = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $this->actividadDlRepository->matching($criteria->orderBy(ActividadAllField::FIni));
 
         $aIdCargos_sacd = $this->cargoRepository->getArrayCargos('sacd');
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));

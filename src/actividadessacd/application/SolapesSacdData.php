@@ -3,6 +3,9 @@
 namespace src\actividadessacd\application;
 
 use src\shared\config\ConfigGlobal;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
@@ -54,17 +57,12 @@ final class SolapesSacdData
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
 
-        $aWhere = [
-            'f_ini' => "'$inicioIso','$finIso'",
-            'status' => StatusId::TERMINADA,
-            '_ordre' => 'f_ini',
-        ];
-        $aOperador = [
-            'f_ini' => 'BETWEEN',
-            'status' => '<',
-        ];
-
-        $cActividades = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $this->actividadDlRepository->matching(
+            Criteria::create()
+                ->where(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso))
+                ->andWhere(Filter::lt(ActividadAllField::Status, StatusId::TERMINADA))
+                ->orderBy(ActividadAllField::FIni)
+        );
 
         $mi_dl = ConfigGlobal::mi_delef();
         $cSacds = $this->personaSacdRepository->getPersonas(

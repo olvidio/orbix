@@ -2,11 +2,18 @@
 
 namespace src\actividadessacd\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\actividadessacd\domain\entity\ActividadSacdTexto;
 
 interface ActividadSacdTextoRepositoryInterface
 {
     /**
+     * @return list<ActividadSacdTexto>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<ActividadSacdTexto>

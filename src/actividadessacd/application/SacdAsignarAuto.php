@@ -3,6 +3,9 @@
 namespace src\actividadessacd\application;
 
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividadcargos\domain\criteria\ActividadCargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\ActividadCargo;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
@@ -91,19 +94,16 @@ final class SacdAsignarAuto
     private function actividadesSinSacd(): array
     {
         $aIdCargos_sacd = $this->cargoRepository->getArrayCargos('sacd');
-        $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
-        $aWhere = [
-            'id_cargo' => $txt_where_cargos,
-        ];
-        $aOperador = [
-            'id_cargo' => 'IN',
-        ];
+        $idsCargos = array_map('intval', array_keys($aIdCargos_sacd));
 
         $a_sin = [];
         foreach ($this->a_actividades as $_fini => $id_activ) {
-            $aWhere['id_activ'] = (int)$id_activ;
-            $cActividadCargo = $this->actividadCargoRepository->getActividadCargos($aWhere, $aOperador);
+            $cActividadCargo = $this->actividadCargoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::in(ActividadCargoField::IdCargo, $idsCargos))
+                    ->andWhere(Filter::eq(ActividadCargoField::IdActiv, (int)$id_activ))
+            );
             if (count($cActividadCargo) === 0) {
                 $a_sin[] = (int)$id_activ;
             }

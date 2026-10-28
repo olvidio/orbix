@@ -43,7 +43,7 @@ final class ListaActividadesSacdDataTest extends TestCase
 
     public function test_sin_actividades_filas_vacias_y_claves_esperadas(): void {
         $actRepo = $this->createMock(ActividadDlRepositoryInterface::class);
-        $actRepo->method('getActividades')->willReturn([]);
+        $actRepo->method('matching')->willReturn([]);
 
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->with('sacd')->willReturn([1 => 'a']);

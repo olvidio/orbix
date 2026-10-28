@@ -19,7 +19,7 @@ final class TextoComunicacionGuardarTest extends TestCase
 {
         public function test_sin_clave_devuelve_error(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->expects($this->never())->method('getActividadSacdTextos');
+        $repo->expects($this->never())->method('matching');
 
         $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
             'clave' => '',
@@ -31,7 +31,7 @@ final class TextoComunicacionGuardarTest extends TestCase
 
     public function test_sin_idioma_devuelve_error(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->expects($this->never())->method('getActividadSacdTextos');
+        $repo->expects($this->never())->method('matching');
 
         $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
             'clave' => 'com_sacd',
@@ -43,7 +43,7 @@ final class TextoComunicacionGuardarTest extends TestCase
 
     public function test_texto_vacio_sin_fila_existente_no_crea_nada(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->method('getActividadSacdTextos')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
         $repo->expects($this->never())->method('Guardar');
         $repo->expects($this->never())->method('Eliminar');
 
@@ -60,7 +60,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $oTexto->setId_item(77);
 
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->method('getActividadSacdTextos')->willReturn([$oTexto]);
+        $repo->method('matching')->willReturn([$oTexto]);
         $repo->expects($this->once())
             ->method('Eliminar')
             ->with($oTexto)
@@ -80,7 +80,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $oTexto->setId_item(77);
 
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->method('getActividadSacdTextos')->willReturn([$oTexto]);
+        $repo->method('matching')->willReturn([$oTexto]);
         $repo->method('Eliminar')->willReturn(false);
 
         $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
@@ -97,7 +97,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $oTexto->setTextoVo(new SacdTextoTexto('viejo'));
 
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->method('getActividadSacdTextos')->willReturn([$oTexto]);
+        $repo->method('matching')->willReturn([$oTexto]);
         $repo->expects($this->never())->method('Eliminar');
         $repo->expects($this->once())
             ->method('Guardar')
@@ -121,7 +121,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $oTexto->setId_item(77);
 
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->method('getActividadSacdTextos')->willReturn([$oTexto]);
+        $repo->method('matching')->willReturn([$oTexto]);
         $repo->method('Guardar')->willReturn(false);
 
         $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
@@ -134,7 +134,7 @@ final class TextoComunicacionGuardarTest extends TestCase
 
     public function test_sin_fila_con_texto_crea_entidad_y_guarda(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->method('getActividadSacdTextos')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
         $repo->method('getNewId')->willReturn(4242);
 
         $guardada = null;
@@ -162,7 +162,7 @@ final class TextoComunicacionGuardarTest extends TestCase
 
     public function test_sin_fila_con_texto_error_si_guardar_falla(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->method('getActividadSacdTextos')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
         $repo->method('getNewId')->willReturn(1);
         $repo->method('Guardar')->willReturn(false);
 

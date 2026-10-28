@@ -48,7 +48,7 @@ final class SolapesSacdDataTest extends TestCase
         $faseRepo->method('findById')->willReturn(null);
 
         $actDlRepo = $this->createMock(ActividadDlRepositoryInterface::class);
-        $actDlRepo->method('getActividades')->willReturn([]);
+        $actDlRepo->method('matching')->willReturn([]);
 
         $personaSacdRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
         $personaSacdRepo->method('getPersonas')->willReturn([]);

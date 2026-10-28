@@ -2,6 +2,9 @@
 
 namespace src\actividadessacd\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\actividadessacd\domain\criteria\ActividadSacdTextoField;
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
 use src\shared\security\HashB;
 
@@ -27,10 +30,7 @@ final class TextoComunicacionData
             return ['texto' => ''];
         }
 
-        $cTextos = $this->actividadSacdTextoRepository->getActividadSacdTextos([
-            'clave' => $clave,
-            'idioma' => $idioma,
-        ]);
+        $cTextos = $this->actividadSacdTextoRepository->matching(Criteria::create()->where(Filter::eq(ActividadSacdTextoField::Clave, $clave))->andWhere(Filter::eq(ActividadSacdTextoField::Idioma, $idioma)));
         $texto = count($cTextos) === 0 ? '' : (string)$cTextos[0]->getTexto();
 
         return [

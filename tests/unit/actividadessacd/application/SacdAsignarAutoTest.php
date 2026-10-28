@@ -31,7 +31,7 @@ final class SacdAsignarAutoTest extends TestCase
         $cargoRepo->method('getArrayIdCargosSacd')->willReturn([3100]);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([]);
+        $activCargoRepo->method('matching')->willReturn([]);
         $activCargoRepo->method('getNewId')->willReturn(9001);
         $activCargoRepo->expects($this->once())
             ->method('Guardar')

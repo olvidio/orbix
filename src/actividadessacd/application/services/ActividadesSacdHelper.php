@@ -3,6 +3,7 @@
 namespace src\actividadessacd\application\services;
 
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
@@ -27,7 +28,7 @@ final class ActividadesSacdHelper
     {
         $idioma = $idioma === '' ? 'es' : $idioma;
         if (empty($this->a_txt[$idioma])) {
-            $cTextos = $this->actividadSacdTextoRepository->getActividadSacdTextos([]);
+            $cTextos = $this->actividadSacdTextoRepository->matching(Criteria::create());
             foreach ($cTextos as $oTexto) {
                 $clave = $oTexto->getClave();
                 $lang = $oTexto->getIdioma();

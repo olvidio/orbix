@@ -3,6 +3,9 @@
 namespace Tests\unit\actividadessacd\application;
 
 use PHPUnit\Framework\TestCase;
+use src\actividadessacd\domain\criteria\ActividadSacdTextoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadessacd\application\TextoComunicacionData;
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
 use src\actividadessacd\domain\entity\ActividadSacdTexto;
@@ -19,7 +22,7 @@ final class TextoComunicacionDataTest extends TestCase
 
     public function test_sin_clave_devuelve_texto_vacio(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->expects($this->never())->method('getActividadSacdTextos');
+        $repo->expects($this->never())->method('matching');
 
         $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute(['clave' => '', 'idioma' => 'ca']);
         $this->assertSame(['texto' => ''], $out);
@@ -27,7 +30,7 @@ final class TextoComunicacionDataTest extends TestCase
 
     public function test_sin_idioma_devuelve_texto_vacio(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->expects($this->never())->method('getActividadSacdTextos');
+        $repo->expects($this->never())->method('matching');
 
         $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute(['clave' => 'com_sacd', 'idioma' => '']);
         $this->assertSame(['texto' => ''], $out);
@@ -35,8 +38,8 @@ final class TextoComunicacionDataTest extends TestCase
 
     public function test_texto_inexistente_devuelve_cadena_vacia(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->method('getActividadSacdTextos')
-            ->with(['clave' => 'com_sacd', 'idioma' => 'es_ES.UTF-8'])
+        $repo->method('matching')
+            ->with(Criteria::create()->where(Filter::eq(ActividadSacdTextoField::Clave, 'com_sacd'))->andWhere(Filter::eq(ActividadSacdTextoField::Idioma, 'es_ES.UTF-8')))
             ->willReturn([]);
 
         $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute([
@@ -56,8 +59,8 @@ final class TextoComunicacionDataTest extends TestCase
         $oTexto->setTextoVo(new SacdTextoTexto('hola sacd'));
 
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->method('getActividadSacdTextos')
-            ->with(['clave' => 'com_sacd', 'idioma' => 'ca_ES.UTF-8'])
+        $repo->method('matching')
+            ->with(Criteria::create()->where(Filter::eq(ActividadSacdTextoField::Clave, 'com_sacd'))->andWhere(Filter::eq(ActividadSacdTextoField::Idioma, 'ca_ES.UTF-8')))
             ->willReturn([$oTexto]);
 
         $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute([
@@ -73,7 +76,7 @@ final class TextoComunicacionDataTest extends TestCase
 
     public function test_repo_devuelve_lista_vacia_se_trata_como_vacio(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->method('getActividadSacdTextos')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute([
             'clave' => 'com_sacd',

@@ -449,7 +449,11 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - `ActividadTipoIdTxt::filterForRepository(campo, valor)` sustituye a `applyToRepositoryWhere` (queda `@deprecated`; lo siguen usando `perm_activ_guardar.php` y su test, que migran con `usuarios`).
     - Siguen por el envoltorio los 4 controladores de `usuarios` que llaman a `getPermUsuarioActividades` (`perm_activ_lista`, `perm_activ_guardar`, `usuario_form`) → 4.3.usuarios.
     - Tests: `PgProcesosMatchingTest` (5 tests, equivalencia con legacy, incl. JSON de fases previas y alias de tipo con `IN`), `ActividadTipoIdTxtTest::test_filter_for_repository…`; los unitarios de `procesos` y `cambios` mockean `matching`. Suites verdes: unit e integration de `procesos`; unit de `cambios`, `actividades`, `usuarios`, `pasarela`, `actividadessacd`; integration de `usuarios`, `actividades`, `pasarela`, `cambios/infrastructure`.
-  - [ ] **4.3.actividadessacd**
+  - [x] **4.3.actividadessacd** Decisiones:
+    - `ActividadSacdTextoField` (`id_item`, `idioma`, `clave`, `texto`) en `src/actividadessacd/domain/criteria/`; `COLUMNAS = []`. `matching()` en `ActividadSacdTextoRepositoryInterface` y `PgActividadSacdTextoRepository` (único repositorio del módulo); `getActividadSacdTextos` `@deprecated` como envoltorio.
+    - Migrados los 3 llamantes de textos (`TextoComunicacionData`, `TextoComunicacionGuardar`, `ActividadesSacdHelper`) y, ya disponibles, las llamadas de otros módulos: `getActividades` de `ListaActividadesSacdData` y `SolapesSacdData` (`actividades`) y `getActividadCargos` de `SacdAsignarAuto` (`actividadcargos`; el `IN '1,2'` pasa a `Filter::in` con enteros).
+    - Se quedan con arrays: `getArrayIdsWithKeyFini` (proyección de `actividades`), `getCargoDeActividad`/`getAsistenteCargoDeActividad` (métodos con `$aWhereAct` propios de `actividadcargos`, fase 4.1) y `getEncargoSacdHorarios` (`encargossacd`, 4.5) en `ComunicarActividadesSacdService`.
+    - Tests: `PgActividadSacdTextoMatchingTest` (2 tests, equivalencia con legacy); `TextoComunicacionData`, `SacdAsignarAuto`, `SolapesSacdData` y `ListaActividadesSacdData` mockean `matching`. Suites verdes: unit e integration de `actividadessacd` y `actividadcargos`.
   - [ ] **4.3.profesores**
   - [ ] **4.3.personas** (`TXT`, `OR`)
   - [ ] **4.3.usuarios**
