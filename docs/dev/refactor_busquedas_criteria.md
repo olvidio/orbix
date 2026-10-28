@@ -393,7 +393,10 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
   - [x] **4.2.devel_db_admin** Decisiones:
     - Módulo sin repositorios propios con `$aWhere`. Migrada `MigracionesEjecutar` (`getDbSchemas(['_ordre' => 'schema'])` → `matching(orderBy(DbSchemaField::Schema))`). `DbLugarDropdown` llama a `getDelegaciones` (módulo `ubis`, 4.4) y sigue por el envoltorio.
     - Suites verdes: unit e integration de `devel_db_admin`.
-  - [ ] **4.2.shared**
+  - [x] **4.2.shared** Decisiones:
+    - `ColaMailField` (7 campos) en `src/shared/domain/criteria/`; `COLUMNAS = []`. `matching()` en `ColaMailRepositoryInterface` y `PgColaMailRepository` (que pasa a fijar también la conexión de selección, la misma `oDBPC`); `getColaMails` `@deprecated` como envoltorio. Se corrige además el tipo de retorno a `list<ColaMail>` y se elimina el bucle `Set` manual.
+    - Migrada `EnviarMailsEnCola::seleccionar` (`sended IS NULL` + `_limit` → `isNull` + `limit`). El resto de ficheros de `shared` con `aWhere` son el propio motor (`LegacyWhereAdapter`, `Condicion`, `ClaseRepository`, `DBTrasvase`), que se retira en la fase 5.
+    - Test: `PgColaMailMatchingTest` (equivalencia con legacy, `IN` + `IS NULL`, `limit`). Suites verdes: unit e integration de `shared`; unit de `cambios` y `actividadessacd`. Línea base: 466 ficheros.
   - [ ] **4.2.cartaspresentacion**
   - [ ] **4.2.menus**
   - [ ] **4.2.configuracion**

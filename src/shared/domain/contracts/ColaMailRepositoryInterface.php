@@ -2,6 +2,7 @@
 
 namespace src\shared\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\shared\domain\entity\ColaMail;
 
 
@@ -20,8 +21,16 @@ interface ColaMailRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * Mails de la cola que cumplen el criterio.
+     *
+     * @return list<ColaMail>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
      * devuelve una colección (array) de objetos de tipo ColaMail
      *
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array<int, ColaMail>

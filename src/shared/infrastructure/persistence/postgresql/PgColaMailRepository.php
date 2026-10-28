@@ -3,14 +3,15 @@
 namespace src\shared\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\ConverterDate;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
+use src\shared\domain\criteria\ColaMailField;
+use src\shared\domain\criteria\Criteria;
 use src\shared\domain\entity\ColaMail;
 use src\shared\traits\HandlesPdoErrors;
+use src\shared\traits\RunsCriteriaQueries;
 
 /**
  * Clase que adapta la tabla cola_mails a la interfaz del repositorio
@@ -24,100 +25,51 @@ use src\shared\traits\HandlesPdoErrors;
 class PgColaMailRepository extends ClaseRepository implements ColaMailRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
         $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('cola_mails');
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ColaMail
+     * Mails de la cola que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array<int, ColaMail>
+     * @return list<ColaMail>
      */
-    public function getColaMails(array $aWhere = [], array $aOperators = []): array
+    public function matching(Criteria $criteria): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $ColaMailSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        if (isset($aWhere['_ordre']) && is_string($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        if (isset($aWhere['_limit']) && is_numeric($aWhere['_limit'])) {
-            $sLimit = ' LIMIT ' . (int) $aWhere['_limit'];
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
+        $conv = new PgCriteriaConverter(ColaMailField::class, self::COLUMNAS);
+        $result = [];
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['sended'] = (new ConverterDate('timestamp', $aDatos['sended']))->fromPg();
-            $rowData = [];
-            foreach ($aDatos as $key => $value) {
-                if (is_string($key)) {
-                    $rowData[$key] = $value;
-                }
-            }
-            $ColaMail = ColaMail::fromArray($rowData);
-            $ColaMailSet->add($ColaMail);
-        }
-        $result = [];
-        foreach ($ColaMailSet->getTot() as $mail) {
-            if ($mail instanceof ColaMail) {
-                $result[] = $mail;
-            }
+            $result[] = ColaMail::fromArray($aDatos);
         }
 
         return $result;
+    }
+
+    /**
+     * devuelve una colección (array) de objetos de tipo ColaMail
+     *
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ColaMail>
+     */
+    public function getColaMails(array $aWhere = [], array $aOperators = []): array
+    {
+        $adapter = new LegacyWhereAdapter(ColaMailField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function deleteColaMails(string $date_iso): void

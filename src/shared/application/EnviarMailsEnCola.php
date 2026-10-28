@@ -4,6 +4,9 @@ namespace src\shared\application;
 
 use DateInterval;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
+use src\shared\domain\criteria\ColaMailField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\entity\ColaMail;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -82,8 +85,8 @@ final class EnviarMailsEnCola
      */
     private function seleccionar(int $limit): array
     {
-        $aWhere = ['sended' => 'x', '_limit' => $limit];
-        $aOperador = ['sended' => 'IS NULL'];
-        return $this->ColaMailRepository->getColaMails($aWhere, $aOperador);
+        return $this->ColaMailRepository->matching(
+            Criteria::create()->where(Filter::isNull(ColaMailField::Sended))->limit($limit)
+        );
     }
 }
