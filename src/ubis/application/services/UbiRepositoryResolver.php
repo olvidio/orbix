@@ -9,6 +9,10 @@ use src\ubis\domain\entity\CentroEx;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\ubis\domain\criteria\CasaField;
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroExField;
+use src\ubis\domain\criteria\CentroField;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
@@ -100,12 +104,19 @@ final class UbiRepositoryResolver
         };
     }
 
-    public function getMetodo(string $entityType): string
+    /**
+     * Enum de campos que acepta `matching()` del repositorio de ese tipo de ubi.
+     *
+     * @return class-string<\src\shared\domain\criteria\CriteriaField&\BackedEnum>
+     */
+    public function getFieldClass(string $entityType): string
     {
         return match ($entityType) {
-            'Centro', 'CentroDl', 'CentroEx' => 'getCentros',
-            'Casa', 'CasaDl', 'CasaEx' => 'getCasas',
-            default => throw new \InvalidArgumentException("Method for entity type '$entityType' not found"),
+            'Centro' => CentroField::class,
+            'CentroDl' => CentroDlField::class,
+            'CentroEx' => CentroExField::class,
+            'Casa', 'CasaDl', 'CasaEx' => CasaField::class,
+            default => throw new \InvalidArgumentException("Field class for entity type '$entityType' not found"),
         };
     }
 

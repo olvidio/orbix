@@ -95,7 +95,7 @@ final class MatriculaAutomaticaTest extends TestCase
         $asignaturas->method('matching')->willReturn([$oferta]);
 
         $notas = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $notas->method('getPersonaNotas')->willReturn([]);
+        $notas->method('matching')->willReturn([]);
 
         $mat = $this->createMock(MatriculaDlRepositoryInterface::class);
         $mat->method('matching')->willReturn([]);

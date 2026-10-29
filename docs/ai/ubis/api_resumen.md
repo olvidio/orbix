@@ -299,5 +299,5 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.ubis_tabla_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/ubis_tabla_data.php`
-- Entrada: `post.loc:string`, `post.tipo:string`, `post.simple:integer`, `post.sWhere:string`, `post.sOperador:string`, `post.sWhereD:string`, `post.sOperadorD:string`, `post.metodo:string`, `post.titulo:string`, `post.cmb:string`, `post.obj_pau:string`, `post.id_sel:string`, `post.scroll_id:string`, `post.nombre_ubi:string`, `post.region:string`, `post.dl:string`, `post.tipo_ctr:string`, `post.tipo_casa:string`, `post.ciudad:string`, `post.pais:string`
+- Entrada: `post.loc:string`, `post.tipo:string`, `post.simple:integer`, `post.sWhere:string`, `post.sWhereD:string`, `post.metodo:string`, `post.titulo:string`, `post.cmb:string`, `post.obj_pau:string`, `post.id_sel:string`, `post.scroll_id:string`, `post.nombre_ubi:string`, `post.region:string`, `post.dl:string`, `post.tipo_ctr:string`, `post.tipo_casa:string`, `post.ciudad:string`, `post.pais:string`
 - Respuesta: `standard_envelope_string_data`

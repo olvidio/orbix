@@ -20,6 +20,7 @@ use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\criteria\PersonaNotaField;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\helpers\FuncTablasSupport;
@@ -161,7 +162,9 @@ final class MatriculaAutomatica
                         }
                     }
 
-                    $cPersonaNotas = $this->personaNotaRepository->getPersonaNotas(['id_nom' => $id_nom]);
+                    $cPersonaNotas = $this->personaNotaRepository->matching(
+                        Criteria::create()->where(Filter::eq(PersonaNotaField::IdNom, $id_nom))
+                    );
                     $a_aprobadas = [];
                     foreach ($cPersonaNotas as $oPersonaNota) {
                         if ($oPersonaNota->isAprobada()) {
@@ -263,12 +266,14 @@ final class MatriculaAutomatica
         if (!isset($aFiltro[$bloque])) {
             return 'skip';
         }
-        $aWhereNota = [
-            'id_nom' => $id_nom,
-            'id_nivel' => $aFiltro[$bloque]['id_nivel'],
-        ];
-        $aOperadorNota = ['id_nivel' => '~'];
-        $cPersonaNotas = $this->personaNotaRepository->getPersonaNotas($aWhereNota, $aOperadorNota);
+        // Los patrones llevan comillas simples literales (el valor se enlaza como parámetro, así que
+        // nunca coinciden con `id_nivel::text`): comportamiento heredado que se conserva en esta
+        // migración. Pendiente de decisión del usuario si se corrige (ver 4.6.varios en el plan).
+        $cPersonaNotas = $this->personaNotaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(PersonaNotaField::IdNom, $id_nom))
+                ->andWhere(Filter::matches(PersonaNotaField::IdNivel, $aFiltro[$bloque]['id_nivel']))
+        );
         if (count($cPersonaNotas) >= $aFiltro[$bloque]['max']) {
             return 'skip';
         }

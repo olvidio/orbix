@@ -2,8 +2,11 @@
 
 namespace src\ubis\domain;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
+use src\ubis\domain\criteria\DescTelecoField;
 use src\ubis\domain\entity\DescTeleco;
 
 /* No vale el underscore en el nombre */
@@ -30,13 +33,16 @@ class InfoDescTeleco extends DatosInfoRepo
     public function getColeccion(): array
     {
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'ubi,persona,orden'];
-            $aOperador = [];
+            $criterio = Criteria::create()
+                ->orderBy(DescTelecoField::Ubi)
+                ->addOrderBy(DescTelecoField::Persona)
+                ->addOrderBy(DescTelecoField::Orden);
         } else {
-            $aWhere = ['id_desc_teleco' => $this->k_buscar];
-            $aOperador = ['id_desc_teleco' => 'sin_acentos'];
+            // Antes buscaba en la columna inexistente `id_desc_teleco` (error SQL); se busca en la descripción.
+            $criterio = Criteria::create()
+                ->where(Filter::matchesUnaccented(DescTelecoField::DescTeleco, (string) $this->k_buscar));
         }
 
-        return $this->descTelecoRepository->getDescsTeleco($aWhere, $aOperador);
+        return $this->descTelecoRepository->matching($criterio);
     }
 }
