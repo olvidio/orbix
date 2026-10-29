@@ -67,6 +67,7 @@ Construye el SlickGrid de cuadrícula de zona (columnas, filas encargo/sacd, met
   - `empieza_max`: string
   - `fila`: mixed
   - `columna`: mixed
+  - `ctx_update`: string — cápsula HashB (acción `cuadricula_update`, contexto `{id_zona, tipo_plantilla}`) que hay que reenviar al guardar celdas
 
 ### Estructura de fila / celda (útil para editar en Android)
 
@@ -96,6 +97,7 @@ Cada elemento de `data_cuadricula` incluye:
 }
 ```
 
+- Valores ausentes (`observ`, etc.) pueden venir como `null` JSON: el cliente debe mostrarlos vacíos, no como el texto `"null"`.
 - Vacío: `uuid_item`/`key`/`tstart`/`tend`/`observ` vacíos; `id_enc` y `dia` sí vienen.
 - Al POST a `cuadricula_update`, normalizar `key` a `iniciales#id_nom` (la carga puede traer `id_nom#iniciales`).
 - Filas `tipo: "sacd"` / `"titulo"`: no se editan con el modal (solo color/texto de disponibilidad).

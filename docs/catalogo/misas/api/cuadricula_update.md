@@ -6,17 +6,19 @@ url: "/src/misas/cuadricula_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/cuadricula_update.php"
-entrada: ["post.uuid_item:string", "post.key:string", "post.tstart:string", "post.tend:string", "post.observ:string", "post.status:integer", "post.id_enc:integer", "post.dia:string", "post.tipo_plantilla:string", "post.id_zona:integer"]
-entrada_obligatoria: ["uuid_item"]
+entrada: ["post.ctx_update:string", "post.uuid_item:string", "post.key:string", "post.tstart:string", "post.tend:string", "post.observ:string", "post.status:integer", "post.id_enc:integer", "post.dia:string", "post.tipo_plantilla:string", "post.id_zona:integer"]
+entrada_obligatoria: ["ctx_update", "uuid_item"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_CuadriculaUpdateData"
 respuesta_data: ["error:string, meta: array<string, mixed>"]
-requiere_hashb: false
+requiere_hashb: true
+hashb_campo: "ctx_update"
+hashb_action: "cuadricula_update"
 frontend_referencias: ["frontend/misas/support/CuadriculaZonaRenderer.php"]
 casos_uso: ["src\\misas\\application\\CuadriculaUpdate"]
 tags: ["misas", "cuadricula", "update"]
 estado_revision: "revisado"
-errores: ["Falta el id_item", "Este día tiene más de dos Misas", "Este día tiene dos Misas", "Este día no tiene ninguna Misa", "Tiene dos Misas a primera hora", "No está en la zona y tiene Misa a primera hora", "Está en ", "<repositorio getErrorTxt()>"]
+errores: ["Operación no autorizada", "Falta el id_item", "Este día tiene más de dos Misas", "Este día tiene dos Misas", "Este día no tiene ninguna Misa", "Tiene dos Misas a primera hora", "No está en la zona y tiene Misa a primera hora", "Está en ", "<repositorio getErrorTxt()>"]
 ---
 
 # Cuadricula update
@@ -42,6 +44,7 @@ Asigna, actualiza o borra un EncargoDia en una celda de la cuadrícula y recalcu
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
+| `ctx_update` | `string` | cápsula HashB | Sí | Cápsula firmada (acción `cuadricula_update`). Los campos que vayan dentro de la cápsula se toman de ella y se ignoran en el body. |
 | `uuid_item` | `string` | application | Si | UUID del `EncargoDia`. Si la celda estaba vacía, el front genera uno nuevo. |
 | `key` | `string` | application | No | `iniciales#id_nom` (p. ej. `JP#1234`). Vacío → elimina la asignación. El backend usa la 2ª parte como `id_nom`. |
 | `tstart` | `string` | application | No | Hora inicio, p. ej. `08:00` (puede vacío). |
@@ -69,6 +72,15 @@ uuid_item=a1b2c3d4-e5f6-7890-abcd-ef1234567890
 ```
 
 Origen web: `modificar_cuadricula_zona.phtml` → `commitCurrentEdit`. Flujo narrativo: [`flujos/cuadricula.md`](../flujos/cuadricula.md).
+
+## Autorizacion HashB
+
+- Campo POST: `ctx_update`
+- Accion: `cuadricula_update`
+- Contexto firmado: `{id_zona, tipo_plantilla}`
+- Origen de la cápsula: `ver_cuadricula_zona_data` y `crear_nuevo_periodo_data` → `ctx_update`
+- Cápsula inválida: `success: false`, `mensaje: "Operación no autorizada"`, `data: "none"`.
+- Ver `docs/dev/hash_arquitectura.md`.
 
 ## Salida
 

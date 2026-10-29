@@ -10,7 +10,7 @@ entrada: ["post.pantalla:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_PlanDeMisasPantallaDataData"
-respuesta_data: ["pantalla:string", "zonas_opciones:array", "orden_opciones:array"]
+respuesta_data: ["pantalla:string", "zonas_opciones:array", "orden_opciones:array", "ctx_crear:string", "ctx_importar:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/modificar_plan_de_misas.php", "frontend/misas/controller/preparar_plan_de_misas.php", "frontend/misas/controller/ver_plan_de_misas.php"]
 casos_uso: ["src\\misas\\application\\PlanDeMisasPantallaData"]
@@ -54,6 +54,8 @@ Datos comunes para pantallas preparar/modificar/ver plan de misas: zonas, orden 
   - `orden_opciones`: array
   - `tipos_plantilla`: array (solo preparar)
   - `plantilla_selected`: string (solo preparar)
+  - `ctx_crear`: string — cápsula HashB para `crear_nuevo_periodo_data` (solo `pantalla=preparar`)
+  - `ctx_importar`: string — cápsula HashB para `importar_plantilla_data` (solo `pantalla=modificar_plantilla`)
 
 ## Errores conocidos
 - `Usuario no encontrado`

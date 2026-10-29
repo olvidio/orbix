@@ -6,15 +6,17 @@ url: "/src/misas/crear_nuevo_periodo_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/crear_nuevo_periodo_data.php"
-entrada: ["post.id_zona:integer", "post.tipo_plantilla:string", "post.seleccion:integer", "post.periodo:string", "post.empiezamin:string", "post.empiezamax:string", "post.orden:string"]
-entrada_obligatoria: ["id_zona", "tipo_plantilla", "periodo"]
+entrada: ["post.ctx_crear:string", "post.id_zona:integer", "post.tipo_plantilla:string", "post.seleccion:integer", "post.periodo:string", "post.empiezamin:string", "post.empiezamax:string", "post.orden:string"]
+entrada_obligatoria: ["ctx_crear", "id_zona", "tipo_plantilla", "periodo"]
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
+requiere_hashb: true
+hashb_campo: "ctx_crear"
+hashb_action: "crear_nuevo_periodo_data"
 frontend_referencias: ["frontend/misas/controller/crear_nuevo_periodo.php"]
 casos_uso: ["src\\misas\\application\\CrearNuevoPeriodoData", "src\\misas\\application\\support\\MisasBuildInput"]
 tags: ["misas", "crear", "nuevo", "periodo", "data"]
 estado_revision: "revisado"
-errores: ["solo deberia haber uno", "<repositorio getErrorTxt() acumulado en error_txt>"]
+errores: ["Operación no autorizada", "solo deberia haber uno", "<repositorio getErrorTxt() acumulado en error_txt>"]
 ---
 
 # Crear nuevo periodo Data
@@ -40,6 +42,7 @@ Crea asignaciones EncargoDia para un nuevo periodo de plan de misas a partir de 
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
+| `ctx_crear` | `string` | cápsula HashB | Sí | Cápsula firmada (acción `crear_nuevo_periodo_data`). Los campos que vayan dentro de la cápsula se toman de ella y se ignoran en el body. |
 | `id_zona` | `integer` | application | Si | Zona. |
 | `tipo_plantilla` | `string` | application | Si | Plantilla origen: `s1`/`s3`/`d1`/`d3`/`m1`/`m3`. En el form web el campo se llama `tipoplantilla` y el controller lo mapea. |
 | `seleccion` | `integer` | application | No | Filtro sacd (bitmask); suele ir 0. |
@@ -59,6 +62,19 @@ id_zona=3&tipo_plantilla=s1&periodo=proxima_semana&orden=desc_enc&empiezamin=&em
 ```
 
 Flujo narrativo: [`flujos/cuadricula.md`](../flujos/cuadricula.md).
+
+## Autorizacion HashB
+
+- Campo POST: `ctx_crear`
+- Accion: `crear_nuevo_periodo_data`
+- Contexto firmado: (sin contexto)
+- Origen de la cápsula: `plan_de_misas_pantalla_data` → `ctx_crear` (solo en `pantalla=preparar`)
+- Cápsula inválida: `success: false`, `mensaje: "Operación no autorizada"`, `data: "none"`.
+- Ver `docs/dev/hash_arquitectura.md`.
+
+## Estado de las celdas creadas
+
+Las celdas nuevas (`EncargoDia`) se crean con `status = 1` (propuesta). Las celdas que ya están en «visible ctr» (`status = 3`) se conservan al preparar un plan.
 
 ## Salida
 

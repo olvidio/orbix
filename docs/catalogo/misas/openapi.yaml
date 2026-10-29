@@ -165,6 +165,8 @@ paths:
       description: |
         Crea asignaciones EncargoDia para un nuevo periodo de plan de misas a partir de plantilla y devuelve el payload de cuadrícula para renderizar ver_cuadricula_zona.phtml.
         
+        Requiere cápsula HashB en `ctx_crear` (accion `crear_nuevo_periodo_data`).
+        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/misas/api/crear_nuevo_periodo_data.md`
@@ -177,10 +179,13 @@ paths:
             schema:
               type: object
               required:
+                - "ctx_crear"
                 - "id_zona"
                 - "tipo_plantilla"
                 - "periodo"
               properties:
+                ctx_crear:
+                  type: "string"
                 id_zona:
                   type: "integer"
                 tipo_plantilla:
@@ -215,6 +220,8 @@ paths:
       description: |
         Asigna, actualiza o borra un EncargoDia en una celda de la cuadrícula y recalcula metadatos de color/texto para la fila SACD y la celda misa.
         
+        Requiere cápsula HashB en `ctx_update` (accion `cuadricula_update`).
+        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/misas/api/cuadricula_update.md`
@@ -227,8 +234,11 @@ paths:
             schema:
               type: object
               required:
+                - "ctx_update"
                 - "uuid_item"
               properties:
+                ctx_update:
+                  type: "string"
                 uuid_item:
                   type: "string"
                 key:
@@ -239,6 +249,8 @@ paths:
                   type: "string"
                 observ:
                   type: "string"
+                status:
+                  type: "integer"
                 id_enc:
                   type: "integer"
                 dia:
@@ -386,6 +398,8 @@ paths:
       description: |
         Elimina la relación EncargoCtr (encargo visible en un centro) por uuid.
         
+        Requiere cápsula HashB en `ctx_eliminar` (accion `eliminar_encargo_centro`).
+        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/misas/api/eliminar_encargo_centro.md`
@@ -398,8 +412,10 @@ paths:
             schema:
               type: object
               required:
-                - "id_item"
+                - "ctx_eliminar"
               properties:
+                ctx_eliminar:
+                  type: "string"
                 id_item:
                   type: "string"
       responses:
@@ -422,6 +438,8 @@ paths:
       description: |
         Elimina un Encargo de zona (grupo ZONAS_MISAS) por id_enc.
         
+        Requiere cápsula HashB en `ctx_eliminar` (accion `eliminar_encargo_zona`).
+        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/misas/api/eliminar_encargo_zona.md`
@@ -434,8 +452,10 @@ paths:
             schema:
               type: object
               required:
-                - "id_enc"
+                - "ctx_eliminar"
               properties:
+                ctx_eliminar:
+                  type: "string"
                 id_enc:
                   type: "integer"
       responses:
@@ -458,6 +478,8 @@ paths:
       description: |
         Inserta o actualiza un EncargoCtr vinculando un encargo de zona con un centro.
         
+        Requiere cápsula HashB en `ctx_guardar` (accion `guardar_encargo_centro`).
+        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/misas/api/guardar_encargo_centro.md`
@@ -470,9 +492,12 @@ paths:
             schema:
               type: object
               required:
+                - "ctx_guardar"
                 - "id_enc"
                 - "id_ctr"
               properties:
+                ctx_guardar:
+                  type: "string"
                 id_item:
                   type: "string"
                 id_enc:
@@ -499,6 +524,8 @@ paths:
       description: |
         Crea o actualiza un Encargo del grupo ZONAS_MISAS (id_enc=0 → alta) y devuelve id y nombre del centro.
         
+        Requiere cápsula HashB en `ctx_guardar` (accion `guardar_encargo_zona`).
+        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/misas/api/guardar_encargo_zona.md`
@@ -510,7 +537,11 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx_guardar"
               properties:
+                ctx_guardar:
+                  type: "string"
                 id_enc:
                   type: "integer"
                 id_tipo_enc:
@@ -625,6 +656,8 @@ paths:
       description: |
         Copia asignaciones de plantilla origen a destino para una zona, creando/actualizando EncargoDia en el rango correspondiente.
         
+        Requiere cápsula HashB en `ctx_importar` (accion `importar_plantilla_data`).
+        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/misas/api/importar_plantilla_data.md`
@@ -637,10 +670,13 @@ paths:
             schema:
               type: object
               required:
+                - "ctx_importar"
                 - "id_zona"
                 - "tipo_plantilla_origen"
                 - "tipo_plantilla_destino"
               properties:
+                ctx_importar:
+                  type: "string"
                 id_zona:
                   type: "integer"
                 tipo_plantilla_origen:
@@ -807,6 +843,8 @@ paths:
       description: |
         Actualiza masivamente el status de todos los EncargoDia de encargos 8100+ de una zona en el rango de fechas indicado.
         
+        Requiere cápsula HashB en `ctx_nuevo_status` (accion `nuevo_status`).
+        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/misas/api/nuevo_status.md`
@@ -819,10 +857,12 @@ paths:
             schema:
               type: object
               required:
-                - "id_zona"
+                - "ctx_nuevo_status"
                 - "periodo"
                 - "estado"
               properties:
+                ctx_nuevo_status:
+                  type: "string"
                 id_zona:
                   type: "integer"
                 periodo:
@@ -923,6 +963,8 @@ paths:
       description: |
         Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
         
+        Requiere cápsula HashB en `ctx_update` (accion `update_iniciales`).
+        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/misas/api/update_iniciales.md`
@@ -935,8 +977,10 @@ paths:
             schema:
               type: object
               required:
-                - "id_sacd"
+                - "ctx_update"
               properties:
+                ctx_update:
+                  type: "string"
                 id_sacd:
                   type: "integer"
                 iniciales:
@@ -1424,6 +1468,9 @@ components:
         estados_opciones:
           type: array
           items: {}
+        zona_ctx_map:
+          type: array
+          items: {}
     misas_CambiarStatusPantallaDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
@@ -1535,6 +1582,10 @@ components:
         orden_opciones:
           type: array
           items: {}
+        ctx_crear:
+          type: "string"
+        ctx_importar:
+          type: "string"
     misas_PlanDeMisasPantallaDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"

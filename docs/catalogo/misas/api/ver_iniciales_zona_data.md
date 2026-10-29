@@ -49,7 +49,7 @@ Lista sacds de una zona con sus iniciales y color para edición inline en SlickG
 - Claves en `data` (doble `JSON.parse`):
   - `id_zona`: integer
   - `columns`: array
-  - `rows`: array<{id_sacd, nombre_sacd, iniciales, color}>
+  - `rows`: array<{id_sacd, nombre_sacd, iniciales, color, ctx_update}> — `ctx_update` es la cápsula HashB para `update_iniciales`
 
 ## Errores conocidos
 

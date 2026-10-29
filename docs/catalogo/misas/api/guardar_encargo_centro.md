@@ -6,15 +6,17 @@ url: "/src/misas/guardar_encargo_centro"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/guardar_encargo_centro.php"
-entrada: ["post.id_item:string", "post.id_enc:integer", "post.id_ctr:integer"]
-entrada_obligatoria: ["id_enc", "id_ctr"]
+entrada: ["post.ctx_guardar:string", "post.id_item:string", "post.id_enc:integer", "post.id_ctr:integer"]
+entrada_obligatoria: ["ctx_guardar", "id_enc", "id_ctr"]
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
+requiere_hashb: true
+hashb_campo: "ctx_guardar"
+hashb_action: "guardar_encargo_centro"
 frontend_referencias: ["frontend/misas/controller/ver_encargos_centros.php"]
 casos_uso: ["src\\misas\\application\\GuardarEncargoCentro"]
 tags: ["misas", "guardar", "encargo", "centro"]
 estado_revision: "revisado"
-errores: ["No se encuentra el encargo-centro %s", "<repositorio getErrorTxt()>"]
+errores: ["Operación no autorizada", "No se encuentra el encargo-centro %s", "<repositorio getErrorTxt()>"]
 ---
 
 # Guardar encargo centro
@@ -40,9 +42,19 @@ Inserta o actualiza un EncargoCtr vinculando un encargo de zona con un centro.
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
+| `ctx_guardar` | `string` | cápsula HashB | Sí | Cápsula firmada (acción `guardar_encargo_centro`). Los campos que vayan dentro de la cápsula se toman de ella y se ignoran en el body. |
 | `id_item` | `string` | application | No | |
 | `id_enc` | `integer` | application | Si | |
 | `id_ctr` | `integer` | application | Si | |
+
+## Autorizacion HashB
+
+- Campo POST: `ctx_guardar`
+- Accion: `guardar_encargo_centro`
+- Contexto firmado: `{id_item}` (`""` = alta)
+- Origen de la cápsula: `ver_encargos_centros_data` → `rows[].ctx_guardar` (edición) o `ctx_nuevo` (alta)
+- Cápsula inválida: `success: false`, `mensaje: "Operación no autorizada"`, `data: "none"`.
+- Ver `docs/dev/hash_arquitectura.md`.
 
 ## Salida
 

@@ -52,6 +52,7 @@ Devuelve filas del grid EncargoCtr de una zona más desplegables estáticos del 
   - `rows`: array<{id_item, id_encargo, encargo, id_centro, centro}>
   - `a_opciones_zona`: array
   - `a_centros_zona`: array
+  - `ctx_nuevo`: string — cápsula HashB para dar de alta un vínculo (`guardar_encargo_centro`); cada fila trae además `ctx_guardar` y `ctx_eliminar`
 
 ## Errores conocidos
 

@@ -10,7 +10,7 @@ entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_CambiarStatusPantallaDataData"
-respuesta_data: ["zonas_opciones:array", "orden_opciones:array", "estados_opciones:array"]
+respuesta_data: ["zonas_opciones:array", "orden_opciones:array", "estados_opciones:array", "zona_ctx_map:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/cambiar_status.php"]
 casos_uso: ["src\\misas\\application\\CambiarStatusPantallaData"]
@@ -52,6 +52,7 @@ Carga los desplegables de la pantalla cambiar estado del plan de misas: zonas pe
   - `zonas_opciones`: array<int|string, string>
   - `orden_opciones`: array<string, string>
   - `estados_opciones`: array<int, string>
+  - `zona_ctx_map`: object<id_zona, string> — cápsula HashB `ctx_nuevo_status` por zona, para `nuevo_status`
 
 ## Errores conocidos
 - `Usuario no encontrado`
