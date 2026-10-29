@@ -6,7 +6,10 @@ use src\shared\config\ConfigGlobal;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividadplazas\domain\entity\ActividadPlazas;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 
 /**
  * Actualiza el array `cedidas` de `ActividadPlazasDl` para ceder
@@ -44,7 +47,7 @@ final class PlazasCeder
         $dl_sigla = ConfigGlobal::mi_sfsv() === 2 ? substr($mi_dele, 0, -1) : $mi_dele;
 
         $id_dl = 0;
-        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dl_sigla]);
+        $cDelegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(DelegacionField::Dl, $dl_sigla)));
         if ($cDelegaciones !== []) {
             $id_dl = (int) $cDelegaciones[0]->getIdDlVo()->value();
         }

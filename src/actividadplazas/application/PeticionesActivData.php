@@ -13,6 +13,7 @@ use src\shared\domain\criteria\Filter;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 use src\shared\security\HashB;
 
 /**
@@ -70,7 +71,9 @@ final class PeticionesActivData
 
         if ($todos !== 0 && $todos !== 1) {
             $grupo_estudios = $todos;
-            $cDelegaciones = $this->delegacionRepository->getDelegaciones(['grupo_estudios' => $grupo_estudios]);
+            $cDelegaciones = $this->delegacionRepository->matching(
+                Criteria::create()->where(Filter::eq(DelegacionField::GrupoEstudios, $grupo_estudios))
+            );
             if (count($cDelegaciones) > 1) {
                 $aOperador['dl_org'] = 'OR';
             }

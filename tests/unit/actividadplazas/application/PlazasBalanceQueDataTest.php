@@ -15,8 +15,7 @@ final class PlazasBalanceQueDataTest extends TestCase
     {
         $repo = $this->createMock(DelegacionRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getDelegaciones')
-            ->with(['active' => true, '_ordre' => 'nombre_dl'])
+            ->method('matching')
             ->willReturn([]);
 
         $out = (new PlazasBalanceQueData($repo))->execute(['id_tipo_activ' => '123456']);

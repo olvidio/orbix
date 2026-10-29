@@ -6,7 +6,10 @@ use src\personas\domain\Trasladar;
 use src\personas\domain\value_objects\SituacionCode;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 
 class TrasladarPersonaUseCase
 {
@@ -59,7 +62,11 @@ class TrasladarPersonaUseCase
         $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
 
         $dl_dst = str_starts_with($dl, 'dl') ? $dl : 'cr' . $dl;
-        $cDl = $this->delegacionRepository->getDelegaciones(['dl' => $dl_dst, 'active' => 't']);
+        $cDl = $this->delegacionRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(DelegacionField::Dl, $dl_dst))
+                ->andWhere(Filter::eq(DelegacionField::Active, true))
+        );
         if ($cDl === []) {
             return [
                 'success' => false,

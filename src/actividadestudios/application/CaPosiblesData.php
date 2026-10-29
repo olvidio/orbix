@@ -13,7 +13,10 @@ use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 use frontend\shared\web\Periodo;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 
@@ -213,7 +216,9 @@ final class CaPosiblesData
 
         if ($QgrupoEstudios !== 'todos') {
             $repoDelegacion = $this->delegacionRepository;
-            $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $QgrupoEstudios]);
+            $cDelegaciones = $repoDelegacion->matching(
+                Criteria::create()->where(Filter::eq(DelegacionField::GrupoEstudios, $QgrupoEstudios))
+            );
             if (count($cDelegaciones) > 1) {
                 $aOperadorActividad['dl_org'] = 'OR';
             }

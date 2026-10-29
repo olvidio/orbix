@@ -218,7 +218,7 @@ final class PersonasEditarDataTest extends TestCase
         ?DBPropiedades $dbPropiedades = null,
     ): PersonasEditarData {
         $delegacion = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegacion->method('getDelegaciones')->willReturn($delegaciones);
+        $delegacion->method('matching')->willReturn($delegaciones);
 
         $centroDl = $this->createMock(CentroDlRepositoryInterface::class);
         $centroDl->method('getArrayCentros')->willReturn([]);

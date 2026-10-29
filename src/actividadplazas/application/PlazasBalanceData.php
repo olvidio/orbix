@@ -11,6 +11,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 use src\actividades\domain\entity\TiposActividades;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\security\HashB;
@@ -125,9 +126,9 @@ final class PlazasBalanceData
         string $fincurs,
         string $mi_dl
     ): array {
-        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dlA]);
+        $cDelegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(DelegacionField::Dl, $dlA)));
         $id_dlA = $cDelegaciones !== [] ? (int) $cDelegaciones[0]->getIdDlVo()->value() : 0;
-        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dlB]);
+        $cDelegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(DelegacionField::Dl, $dlB)));
         $id_dlB = $cDelegaciones !== [] ? (int) $cDelegaciones[0]->getIdDlVo()->value() : 0;
 
         $aWhereA = [

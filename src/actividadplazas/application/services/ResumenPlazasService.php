@@ -10,6 +10,7 @@ use src\actividadplazas\domain\criteria\ActividadPlazasField as F;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 use src\ubis\domain\entity\Ubi;
 
 /**
@@ -661,7 +662,9 @@ class ResumenPlazasService
         if ($this->a_dele !== []) {
             return;
         }
-        $cDelegaciones = $this->DelegacionRepository->getDelegaciones(['_ordre' => 'region,dl']);
+        $cDelegaciones = $this->DelegacionRepository->matching(
+            Criteria::create()->orderBy(DelegacionField::Region)->addOrderBy(DelegacionField::Dl)
+        );
         $a_dele = [];
         $a_id_dele = [];
         foreach ($cDelegaciones as $oDelegacion) {

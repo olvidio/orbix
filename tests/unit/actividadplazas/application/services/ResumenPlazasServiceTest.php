@@ -74,7 +74,7 @@ final class ResumenPlazasServiceTest extends TestCase
         $delegacion->method('getIdDlVo')->willReturn(new DelegacionId($idDl));
 
         $delegacionRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegacionRepo->method('getDelegaciones')->willReturn([$delegacion]);
+        $delegacionRepo->method('matching')->willReturn([$delegacion]);
 
         $asistenteSvc = $this->createMock(AsistenteActividadService::class);
         $asistenteSvc->method('getPlazasOcupadasPorDl')->willReturn(0);
@@ -156,7 +156,7 @@ final class ResumenPlazasServiceTest extends TestCase
         $delegacion->method('getIdDlVo')->willReturn(new DelegacionId($idDlOrg));
 
         $delegacionRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegacionRepo->method('getDelegaciones')->willReturn([$delegacion]);
+        $delegacionRepo->method('matching')->willReturn([$delegacion]);
 
         $asistenteSvc = $this->createMock(AsistenteActividadService::class);
         $asistenteSvc->expects($this->once())

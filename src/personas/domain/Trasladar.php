@@ -59,6 +59,7 @@ use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 
 
 class Trasladar
@@ -330,7 +331,7 @@ class Trasladar
         }
         // Que la dl destino exista:
         $repoDelegacion = $this->delegacionRepository;
-        $cDelegAll = $repoDelegacion->getDelegaciones(['active' => true]);
+        $cDelegAll = $repoDelegacion->matching(Criteria::create()->where(Filter::eq(DelegacionField::Active, true)));
         $a_dl = [];
         foreach ($cDelegAll as $oDl) {
             $a_dl[] = $oDl->getDlVo()->value();
