@@ -2,6 +2,7 @@
 
 namespace src\cartaspresentacion\application;
 
+use src\ubis\domain\criteria\CentroExField as CentroExF;
 use src\ubis\domain\criteria\DireccionField as F;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -153,9 +154,12 @@ final class CartasPresentacionUbisListaData
      */
     private function buildEx(): array
     {
-        $aWhere = ['tipo_ctr' => 'cr|dl', 'active' => 't', '_ordre' => 'nombre_ubi'];
-        $aOperador = ['tipo_ctr' => '~'];
-        $cCentros = $this->centroExRepository->getCentros($aWhere, $aOperador);
+        $cCentros = $this->centroExRepository->matching(
+            Criteria::create()
+                ->where(Filter::matches(CentroExF::TipoCtr, 'cr|dl'))
+                ->andWhere(Filter::eq(CentroExF::Active, true))
+                ->orderBy(CentroExF::NombreUbi)
+        );
 
         $c = 0;
         $a_valores = [];

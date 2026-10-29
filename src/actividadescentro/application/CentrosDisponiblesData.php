@@ -2,6 +2,10 @@
 
 namespace src\actividadescentro\application;
 
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroEllasField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -84,9 +88,9 @@ final class CentrosDisponiblesData
             ];
         }
 
-        [$aWhere, $aOperador, $usarCentroEllas] = $this->filtros($tipo);
+        $usarCentroEllas = in_array($tipo, ['sfsg', 'sfsr', 'sfnagd'], true);
         $repo = $usarCentroEllas ? $this->centroEllasRepository : $this->centroDlRepository;
-        $cCentros = $repo->getCentros($aWhere, $aOperador);
+        $cCentros = $repo->matching($this->criterio($tipo, $usarCentroEllas));
 
         $centros = [];
         if ($tipo === 'sg') {
@@ -138,47 +142,35 @@ final class CentrosDisponiblesData
     }
 
     /**
-     * @return array{0: array<string, mixed>, 1: array<string, string>, 2: bool}
+     * Filtro de centros activos del tipo pedido, ordenados por nombre. Cada repositorio solo
+     * acepta su propio enum de campos (`CentroEllasField` o `CentroDlField`).
      */
-    private function filtros(string $tipo): array
+    private function criterio(string $tipo, bool $usarCentroEllas): Criteria
     {
-        $aWhere = ['active' => 't', '_ordre' => 'nombre_ubi'];
-        $aOperador = [];
-        $usarCentroEllas = false;
+        /** @var class-string<CentroDlField>|class-string<CentroEllasField> $f */
+        $f = $usarCentroEllas ? CentroEllasField::class : CentroDlField::class;
+        $criteria = Criteria::create()->where(Filter::eq($f::Active, true))->orderBy($f::NombreUbi);
 
         switch ($tipo) {
             case 'sg':
-                $aWhere['tipo_ctr'] = '^s[^s]*';
-                $aOperador['tipo_ctr'] = '~';
+                $criteria = $criteria->andWhere(Filter::matches($f::TipoCtr, '^s[^s]*'));
                 break;
             case 'sr':
-                $aWhere['tipo_labor'] = '512';
-                $aOperador['tipo_labor'] = '&';
+            case 'sfsr':
+                $criteria = $criteria->andWhere(Filter::hasBits($f::TipoLabor, 512));
                 break;
             case 'nagd':
-                $aWhere['tipo_ctr'] = '^[na]';
-                $aOperador['tipo_ctr'] = '~';
+            case 'sfnagd':
+                $criteria = $criteria->andWhere(Filter::matches($f::TipoCtr, '^[na]'));
                 break;
             case 'sssc':
-                $aWhere['tipo_ctr'] = '^(ss|sss)$';
-                $aOperador['tipo_ctr'] = '~';
+                $criteria = $criteria->andWhere(Filter::matches($f::TipoCtr, '^(ss|sss)$'));
                 break;
             case 'sfsg':
-                $aWhere['tipo_labor'] = '64';
-                $aOperador['tipo_labor'] = '&';
-                $usarCentroEllas = true;
-                break;
-            case 'sfsr':
-                $aWhere['tipo_labor'] = '512';
-                $aOperador['tipo_labor'] = '&';
-                $usarCentroEllas = true;
-                break;
-            case 'sfnagd':
-                $aWhere['tipo_ctr'] = '^[na]';
-                $aOperador['tipo_ctr'] = '~';
-                $usarCentroEllas = true;
+                $criteria = $criteria->andWhere(Filter::hasBits($f::TipoLabor, 64));
                 break;
         }
-        return [$aWhere, $aOperador, $usarCentroEllas];
+
+        return $criteria;
     }
 }
