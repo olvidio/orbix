@@ -2,6 +2,7 @@
 
 namespace src\cartaspresentacion\application;
 
+use src\ubis\domain\criteria\DireccionField as F;
 use src\shared\config\ConfigGlobal;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterface;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
@@ -143,18 +144,15 @@ final class CartasPresentacionListaData
         $a_mega = [];
 
         if ($Qpais !== '' || $Qpoblacion !== '') {
-            $aWhere = [];
-            $aOperador = [];
+            $criteria = Criteria::create();
             if ($Qpoblacion !== '') {
-                $aWhere['poblacion'] = $Qpoblacion;
-                $aOperador['poblacion'] = 'sin_acentos';
+                $criteria = $criteria->andWhere(Filter::matchesUnaccented(F::Poblacion, $Qpoblacion));
             }
             if ($Qpais !== '') {
-                $aWhere['pais'] = $Qpais;
-                $aOperador['pais'] = 'sin_acentos';
+                $criteria = $criteria->andWhere(Filter::matchesUnaccented(F::Pais, $Qpais));
             }
 
-            $cDirecciones = $this->direccionCentroRepository->getDirecciones($aWhere, $aOperador);
+            $cDirecciones = $this->direccionCentroRepository->matching($criteria);
 
             $a_mega_tmp = [];
             foreach ($cDirecciones as $oDireccion) {

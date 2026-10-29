@@ -2,6 +2,9 @@
 
 namespace src\cartaspresentacion\application;
 
+use src\ubis\domain\criteria\DireccionField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterface;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -77,9 +80,8 @@ final class CartasPresentacionUbisListaData
         $cDirCentros = [];
 
         if ($poblacion_sel !== '') {
-            $cDirecciones = $this->direccionCentroDlRepository->getDirecciones(
-                ['poblacion' => $poblacion_sel],
-                ['poblacion' => 'sin_acentos']
+            $cDirecciones = $this->direccionCentroDlRepository->matching(
+                Criteria::create()->where(Filter::matchesUnaccented(F::Poblacion, $poblacion_sel))
             );
             $d = 0;
             foreach ($cDirecciones as $oDireccion) {
