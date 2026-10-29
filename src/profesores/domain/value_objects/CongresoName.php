@@ -20,8 +20,8 @@ final class CongresoName
         if ($value === '') {
             throw new \InvalidArgumentException('CongresoName cannot be empty');
         }
-        if (mb_strlen($value) > 80) {
-            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('CongresoName must be at most 80 characters', $value));
+        if (mb_strlen($value) > 125) {
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('CongresoName must be at most 125 characters', $value));
         }
     }
 
