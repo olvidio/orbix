@@ -13,6 +13,7 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterfac
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\ActividadAsignatura;
 use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\notas\domain\criteria\ActaField;
 use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
@@ -131,12 +132,13 @@ final class ActaNotasData
             uksort($aPersonasMatriculadas, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
         }
 
-        $cActas = $this->actaRepository->getActas([
-            'id_activ' => $idActiv,
-            'id_asignatura' => $idAsignatura,
-            'id_schema' => $idSchema,
-            '_ordre' => 'f_acta',
-        ]);
+        $cActas = $this->actaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ActaField::IdActiv, $idActiv))
+                ->andWhere(Filter::eq(ActaField::IdAsignatura, $idAsignatura))
+                ->andWhere(Filter::eq(ActaField::IdSchema, $idSchema))
+                ->orderBy(ActaField::FActa)
+        );
         $actaPrincipal = '';
         $nomActa = '';
         $desplActasOpciones = [];

@@ -12,10 +12,13 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
+use src\notas\domain\criteria\PersonaNotaField;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
 use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
@@ -157,14 +160,12 @@ if ($a_id_schemas_rstgr === []) {
 }
 
 if ($error_txt === '') {
-    $aWhereNotas = [
-        'id_schema' => implode(',', $a_id_schemas_rstgr),
-        'id_nom' => $id_nom,
-        'id_nivel' => '1100,2500',
-        'tipo_acta' => TipoActa::FORMATO_ACTA,
-    ];
-    $aOperadorNotas = ['id_schema' => 'IN', 'id_nivel' => 'BETWEEN'];
-    $cNotas = $personaNotaRepository->getPersonaNotas($aWhereNotas, $aOperadorNotas);
+    $criterioNotas = Criteria::create()
+        ->where(Filter::in(PersonaNotaField::IdSchema, array_map('intval', array_values($a_id_schemas_rstgr))))
+        ->andWhere(Filter::eq(PersonaNotaField::IdNom, $id_nom))
+        ->andWhere(Filter::between(PersonaNotaField::IdNivel, 1100, 2500))
+        ->andWhere(Filter::eq(PersonaNotaField::TipoActa, TipoActa::FORMATO_ACTA));
+    $cNotas = $personaNotaRepository->matching($criterioNotas);
 
     $esquemaRegionStgr = CertificadosSession::esquemaRegionStgr();
     if ($esquemaRegionStgr !== '') {
@@ -173,7 +174,7 @@ if ($error_txt === '') {
             PersonaNotaOtraRegionStgrRepositoryInterface::class,
             ['esquema_region_stgr' => $esquemaRegionStgr],
         );
-        $cNotas = array_merge($cNotas, $personaNotaOtraRepo->getPersonaNotas($aWhereNotas, $aOperadorNotas));
+        $cNotas = array_merge($cNotas, $personaNotaOtraRepo->matching($criterioNotas));
     }
 
     /** @var list<PersonaNota|PersonaNotaOtraRegionStgr> $cNotas */

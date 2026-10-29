@@ -12,6 +12,7 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\notas\domain\criteria\ActaField;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use frontend\shared\web\Periodo;
@@ -109,7 +110,11 @@ final class DocenciaActualizar
                     }
                 }
 
-                $cActas = $this->actaRepository->getActas(['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura]);
+                $cActas = $this->actaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(ActaField::IdActiv, $id_activ))
+                        ->andWhere(Filter::eq(ActaField::IdAsignatura, $id_asignatura))
+                );
                 $acta = '';
                 if (count($cActas) > 0) {
                     foreach ($cActas as $oActa) {

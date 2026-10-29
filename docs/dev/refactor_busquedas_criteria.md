@@ -571,7 +571,12 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - `ListaEstCtrData` caso `sssc` comparaba `tipo_ctr = '^ss'` (igualdad literal, nunca coincide); se conserva con `Filter::eq` y un comentario, para no cambiar filas en esta tanda.
     - Tests: `CentrosDeZonaTest` y `ZonaCtrListaTest` comparan contra `Criteria` construido; mocks de `EncargoAplicacionServiceTest`, `PlanningPersonaSelectDataTest`, `ListaCentrosActivDatosTest`, `CartasPresentacionPoblacionesDataTest`, `ComunicacionActividadesSacdDataTest` y los de `misas` pasan a `matching`.
     - Suites verdes: unit de `encargossacd`, `actividadessacd`, `planning`, `actividades`, `cartaspresentacion`, `asistentes`, `personas`, `dbextern`, `zonassacd`, `misas`, `shared`, `casas`; integration de `encargossacd`, `actividadessacd`, `asistentes`, `dbextern`, `zonassacd`, `misas`, `casas`, `cartaspresentacion`, `ubis`, `shared`, `actividades`.
-  - [ ] **4.6.notas** llamantes de `getActas` / `getPersonaNotas`.
+  - [x] **4.6.notas** llamantes de `getActas` / `getPersonaNotas`. Decisiones:
+    - Migradas 4 llamadas a `getActas` (`DocenciaActualizar`, `ActaNotasData`, `ActaNotasDefinitivasGrabar`) y 8 a `getPersonaNotas` (`PosiblesCa`, `PosiblesAsignaturasCaData`, `E43CertificadoData`, `ActaNotasDefinitivasGrabar` (2), `FormMatriculasDeUnaPersonaData`, `certificado_emitido_imprimir_mpdf_datos.php` (2, con el mismo `Criteria` para el repo propio y el de otra región: ambos usan `PersonaNotaField`)). `id_nivel BETWEEN '1100,2500'` → `Filter::between`; `id_situacion ~ 'a|b'` se conserva como `Filter::matches` (misma semántica sin anclar).
+    - `MatriculaAutomatica` (2 llamadas a `getPersonaNotas`) queda en 4.6.varios.
+    - Pendiente de 5.1: ~45 llamadas a `getPersonaNotas` en `tests/unit/notas/{notasTest,trasladosNotasTest,trasladosNotasModeloActaTest}.php` (tests de comportamiento heredados que usan el envoltorio); migrarlos antes de borrar el envoltorio.
+    - Tests: `ActaNotasDataTest` inspecciona el `Criteria` (helper `valorDeFiltro`) en vez de `$where`.
+    - Suites verdes: unit de `actividadestudios`, `certificados`, `notas`, `personas`, `asistentes`; integration de `actividadestudios`, `certificados` (con `memory_limit=1G`).
   - [ ] **4.6.plazas** llamantes de `getActividadesPlazas` / `getPlazasPeticion`.
   - [ ] **4.6.estudios** llamantes de `getMatriculas` / `getActividadAsignaturas`.
   - [ ] **4.6.varios** `ubis/UbisTablaData`, `InfoDescTeleco`, `MatriculaAutomatica`.

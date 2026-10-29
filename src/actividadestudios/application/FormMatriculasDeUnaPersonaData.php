@@ -17,6 +17,7 @@ use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\application\PlanEstudiosDePersona;
 use src\notas\application\support\NivelesOcupadosEnPlan;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\criteria\PersonaNotaField;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\profesores\domain\services\ProfesorStgrService;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
@@ -168,14 +169,12 @@ final class FormMatriculasDeUnaPersonaData
             );
             $aSuperadasIds = NotaSituacion::getArraySuperadas();
             $cond = implode('|', $aSuperadasIds);
-            $cAsignaturasSuperadas = $this->personaNotaRepository->getPersonaNotas(
-                [
-                    'id_situacion' => $cond,
-                    'id_nom' => $idNom,
-                    'id_nivel' => 3000,
-                    '_ordre' => 'id_nivel',
-                ],
-                ['id_situacion' => '~', 'id_nivel' => '<'],
+            $cAsignaturasSuperadas = $this->personaNotaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::matches(PersonaNotaField::IdSituacion, $cond))
+                    ->andWhere(Filter::eq(PersonaNotaField::IdNom, $idNom))
+                    ->andWhere(Filter::lt(PersonaNotaField::IdNivel, 3000))
+                    ->orderBy(PersonaNotaField::IdNivel)
             );
             $aSuperadas = NivelesOcupadosEnPlan::ocupados(
                 $cAsignaturasSuperadas,

@@ -12,6 +12,7 @@ use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\notas\application\AsignaturasPendientes;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\criteria\PersonaNotaField;
 use src\notas\domain\value_objects\CursoStgr;
 use src\personas\domain\entity\Persona;
 
@@ -63,12 +64,11 @@ final class PosiblesAsignaturasCaData
             if (count($aNomAsignaturasFaltan) < 5) {
                 $aAlumnosFinC[] = ['apellidos_nombre' => $apNom, 'asignaturas' => $aNomAsignaturasFaltan];
             }
-            $aWhere = [];
-            $aOperador = [];
-            $aWhere['id_nom'] = $idNom;
-            $aWhere['id_nivel'] = '1100,2500';
-            $aOperador['id_nivel'] = 'BETWEEN';
-            $cNotas = $this->personaNotaRepository->getPersonaNotas($aWhere, $aOperador);
+            $cNotas = $this->personaNotaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PersonaNotaField::IdNom, $idNom))
+                    ->andWhere(Filter::between(PersonaNotaField::IdNivel, 1100, 2500))
+            );
             $aAprobadas = [];
             foreach ($cNotas as $oPersonaNota) {
                 $idAsignatura = $oPersonaNota->getId_asignatura();
