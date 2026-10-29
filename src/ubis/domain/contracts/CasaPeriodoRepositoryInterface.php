@@ -4,6 +4,7 @@ namespace src\ubis\domain\contracts;
 
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\entity\CasaPeriodo;
+use src\shared\domain\criteria\Criteria;
 
 
 /**
@@ -26,11 +27,17 @@ interface CasaPeriodoRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo CasaPeriodo
+     * CasaPeriodo que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<CasaPeriodo> Una colección de objetos de tipo CasaPeriodo
+     * @return list<CasaPeriodo>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<CasaPeriodo>
      */
     public function getCasaPeriodos(array $aWhere = [], array $aOperators = []): array;
 

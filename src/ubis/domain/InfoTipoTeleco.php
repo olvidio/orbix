@@ -2,6 +2,9 @@
 
 namespace src\ubis\domain;
 
+use src\ubis\domain\criteria\TipoTelecoField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use src\ubis\domain\entity\TipoTeleco;
@@ -29,14 +32,13 @@ class InfoTipoTeleco extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'nombre_teleco'];
-            $aOperador = [];
+            $criteria = $criteria->orderBy(F::NombreTeleco);
         } else {
-            $aWhere = ['nombre_teleco' => $this->k_buscar];
-            $aOperador = ['nombre_teleco' => 'sin_acentos'];
+            $criteria = $criteria->where(Filter::matchesUnaccented(F::NombreTeleco, (string) $this->k_buscar));
         }
 
-        return $this->tipoTelecoRepository->getTiposTeleco($aWhere, $aOperador);
+        return $this->tipoTelecoRepository->matching($criteria);
     }
 }

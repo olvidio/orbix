@@ -123,6 +123,30 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
     }
 
     /**
+     * retorna l'últim llibre d'actes.
+     *
+     * @return integer
+     */
+    function getUltimoLibro(): int
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sQuery = "SELECT max(libro) FROM $nom_tabla";
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorActa.UltimoLibro';
+                    $gestor = $_SESSION['oGestorErrores'] ?? null;
+        if (is_object($gestor) && method_exists($gestor, 'addErrorAppLastError')) {
+            $gestor->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+        }
+            return 0;
+        }
+        $val = $oDblSt->fetchColumn();
+        return is_numeric($val) ? (int) $val : 0;
+    }
+
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
+
+    /**
      * Acta que cumplen el criterio (con el pdf).
      *
      * @return list<Acta>

@@ -68,7 +68,7 @@ final class UbisGuardarTest extends TestCase
         $delegacion = $this->createMock(Delegacion::class);
         $delegacion->method('getRegion')->willReturn('H');
         $dlRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $dlRepo->method('getDelegaciones')->willReturn([$delegacion]);
+        $dlRepo->method('matching')->willReturn([$delegacion]);
 
         $traslado = $this->createMock(TrasladoUbiRepositoryInterface::class);
         $traslado->expects($this->once())->method('existeCdcDl')->with('H-dlmE')->willReturn(true);

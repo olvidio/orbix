@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\ubis\application;
 
+use src\ubis\domain\criteria\CasaPeriodoField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\application\CalendarioPeriodosGetData;
@@ -15,7 +18,7 @@ final class CalendarioPeriodosGetDataTest extends TestCase
     public function test_id_no_positivo_devuelve_array_vacio_sin_consultar_repo(): void
     {
         $repo = $this->createMock(CasaPeriodoRepositoryInterface::class);
-        $repo->expects($this->never())->method('getCasaPeriodos');
+        $repo->expects($this->never())->method('matching');
 
         $useCase = new CalendarioPeriodosGetData($repo);
 
@@ -39,8 +42,8 @@ final class CalendarioPeriodosGetDataTest extends TestCase
 
         $repo = $this->createMock(CasaPeriodoRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getCasaPeriodos')
-            ->with(['id_ubi' => 7, '_ordre' => 'f_ini'])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(F::IdUbi, 7))->orderBy(F::FIni)))
             ->willReturn([$periodo]);
 
         $useCase = new CalendarioPeriodosGetData($repo);

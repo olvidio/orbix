@@ -3,6 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\DescTeleco;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase DescTeleco y su Repositorio
@@ -23,15 +24,20 @@ interface DescTelecoRepositoryInterface
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo DescTeleco
-	 *
-	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return list<DescTeleco> Una colección de objetos de tipo DescTeleco
-	
-	 */
-	public function getDescsTeleco(array $aWhere=[], array $aOperators=[]): array;
+    /**
+     * DescTeleco que cumplen el criterio.
+     *
+     * @return list<DescTeleco>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<DescTeleco>
+     */
+    public function getDescsTeleco(array $aWhere=[], array $aOperators=[]): array;
 
     /**
      * @return array<int|string, string>

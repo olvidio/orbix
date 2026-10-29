@@ -2,6 +2,9 @@
 
 namespace src\ubis\application\services;
 
+use src\ubis\domain\criteria\RegionField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\RegionRepositoryInterface;
 
 /**
@@ -19,7 +22,9 @@ final class RegionDropdown
      */
     public function activasOrdenNombre(): array
     {
-        $regiones = $this->regionRepository->getRegiones(['active' => true, '_ordre' => 'nombre_region']);
+        $regiones = $this->regionRepository->matching(
+            Criteria::create()->where(Filter::eq(F::Active, true))->orderBy(F::NombreRegion)
+        );
 
         $opciones = [];
         foreach ($regiones as $region) {

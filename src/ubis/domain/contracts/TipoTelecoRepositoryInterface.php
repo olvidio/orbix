@@ -3,6 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\TipoTeleco;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase TipoTeleco y su Repositorio
@@ -31,15 +32,20 @@ interface TipoTelecoRepositoryInterface
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo TipoTeleco
-	 *
-	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return list<TipoTeleco> Una colección de objetos de tipo TipoTeleco
-	
-	 */
-	public function getTiposTeleco(array $aWhere=[], array $aOperators=[]): array;
+    /**
+     * TipoTeleco que cumplen el criterio.
+     *
+     * @return list<TipoTeleco>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<TipoTeleco>
+     */
+    public function getTiposTeleco(array $aWhere=[], array $aOperators=[]): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

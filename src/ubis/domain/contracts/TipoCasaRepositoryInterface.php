@@ -3,6 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\TipoCasa;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase TipoCasa y su Repositorio
@@ -23,15 +24,20 @@ interface TipoCasaRepositoryInterface
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo TipoCasa
-	 *
-	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return list<TipoCasa> Una colección de objetos de tipo TipoCasa
-	
-	 */
-	public function getTiposCasa(array $aWhere=[], array $aOperators=[]): array;
+    /**
+     * TipoCasa que cumplen el criterio.
+     *
+     * @return list<TipoCasa>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<TipoCasa>
+     */
+    public function getTiposCasa(array $aWhere=[], array $aOperators=[]): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

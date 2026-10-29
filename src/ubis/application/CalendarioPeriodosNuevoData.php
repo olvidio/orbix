@@ -2,6 +2,10 @@
 
 namespace src\ubis\application;
 
+use src\ubis\domain\criteria\CasaPeriodoField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use DateInterval;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\security\HashB;
@@ -24,18 +28,14 @@ final class CalendarioPeriodosNuevoData
         if ($idUbi > 0 && $year > 0) {
             $inicio = $year . '-1-1';
             $fin = $year . '-12-31';
-            $aWhere = [
-                'id_ubi' => $idUbi,
-                'f_ini' => $inicio,
-                'f_fin' => $fin,
-                '_ordre' => 'f_fin DESC',
-            ];
-            $aOperador = [
-                'f_ini' => '>=',
-                'f_fin' => '<=',
-            ];
             $repo = $this->casaPeriodoRepository;
-            $cCasaPeriodos = $repo->getCasaPeriodos($aWhere, $aOperador);
+            $cCasaPeriodos = $repo->matching(
+                Criteria::create()
+                    ->where(Filter::eq(F::IdUbi, $idUbi))
+                    ->andWhere(Filter::gte(F::FIni, $inicio))
+                    ->andWhere(Filter::lte(F::FFin, $fin))
+                    ->orderBy(F::FFin, OrderDirection::Desc)
+            );
             if (!empty($cCasaPeriodos)) {
                 $oCasaPeriodo = $cCasaPeriodos[0];
                 $oF_fin = $oCasaPeriodo->getF_fin();

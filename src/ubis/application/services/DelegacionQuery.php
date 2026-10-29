@@ -2,6 +2,9 @@
 
 namespace src\ubis\application\services;
 
+use src\ubis\domain\criteria\DelegacionField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 final class DelegacionQuery
@@ -17,13 +20,11 @@ final class DelegacionQuery
      */
     public function arrayDlByRegionStgr(array $regionesStgr = []): array
     {
-        $aWhere = ['status' => true, '_ordre' => 'dl'];
-        $aOper = [];
+        $criteria = Criteria::create()->where(Filter::eq(F::Active, true))->orderBy(F::Dl);
         if (!empty($regionesStgr)) {
-            $aWhere['region_stgr'] = "'" . implode("','", $regionesStgr) . "'";
-            $aOper['region_stgr'] = 'IN';
+            $criteria = $criteria->andWhere(Filter::in(F::RegionStgr, array_values($regionesStgr)));
         }
-        $delegaciones = $this->delegacionRepository->getDelegaciones($aWhere, $aOper) ?: [];
+        $delegaciones = $this->delegacionRepository->matching($criteria);
         $out = [];
         foreach ($delegaciones as $dl) {
             $idDl = $dl->getIdDlVo()->value();

@@ -2,6 +2,9 @@
 
 namespace src\ubis\application;
 
+use src\ubis\domain\criteria\DelegacionField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\config\ConfigGlobal;
 use src\ubis\application\services\UbiEsquemaDestino;
 use src\ubis\application\services\UbiRepositoryResolver;
@@ -86,7 +89,7 @@ final class UbisGuardar
 
     private function regionDeDelegacion(string $dl): string
     {
-        $delegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dl]);
+        $delegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(F::Dl, $dl)));
         $oDl = $delegaciones[0] ?? null;
         if ($oDl === null) {
             return '';

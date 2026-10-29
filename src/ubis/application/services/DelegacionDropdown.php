@@ -2,6 +2,9 @@
 
 namespace src\ubis\application\services;
 
+use src\ubis\domain\criteria\DelegacionField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
@@ -27,7 +30,7 @@ final class DelegacionDropdown
         }
         $sf = ($sfsv == 2) ? 'f' : '';
 
-        $delegaciones = $this->delegacionRepository->getDelegaciones(['active' => true]);
+        $delegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(F::Active, true)));
 
         $opciones = [];
         foreach ($delegaciones as $dl) {
@@ -50,7 +53,9 @@ final class DelegacionDropdown
      */
     public function activasOrdenNombre(): array
     {
-        $delegaciones = $this->delegacionRepository->getDelegaciones(['active' => true, '_ordre' => 'nombre_dl']);
+        $delegaciones = $this->delegacionRepository->matching(
+            Criteria::create()->where(Filter::eq(F::Active, true))->orderBy(F::NombreDl)
+        );
 
         $opciones = [];
         foreach ($delegaciones as $dl) {
@@ -78,13 +83,11 @@ final class DelegacionDropdown
      */
     public function byRegiones(array $regiones): array
     {
-        $aWhere = ['active' => true, '_ordre' => 'nombre_dl'];
-        $aOper = [];
+        $criteria = Criteria::create()->where(Filter::eq(F::Active, true))->orderBy(F::NombreDl);
         if (!empty($regiones)) {
-            $aWhere['region'] = "'" . implode('","', $regiones) . "'";
-            $aOper['region'] = 'IN';
+            $criteria = $criteria->andWhere(Filter::in(F::Region, array_values($regiones)));
         }
-        $delegaciones = $this->delegacionRepository->getDelegaciones($aWhere, $aOper);
+        $delegaciones = $this->delegacionRepository->matching($criteria);
 
         $opciones = [];
         foreach ($delegaciones as $dl) {
@@ -107,7 +110,7 @@ final class DelegacionDropdown
         $sf = (ConfigGlobal::mi_sfsv() == 2) ? 'f' : '';
         $propia = ConfigGlobal::mi_dele();
 
-        $delegaciones = $this->delegacionRepository->getDelegaciones(['active' => true]);
+        $delegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(F::Active, true)));
 
         $opciones = [];
         foreach ($delegaciones as $dl) {
@@ -140,7 +143,7 @@ final class DelegacionDropdown
         $sf = ($sfsv == 2) ? 'f' : '';
         $propia = ConfigGlobal::mi_dele();
 
-        $delegaciones = $this->delegacionRepository->getDelegaciones(['active' => true]);
+        $delegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(F::Active, true)));
 
         $opciones = [];
         foreach ($delegaciones as $dl) {

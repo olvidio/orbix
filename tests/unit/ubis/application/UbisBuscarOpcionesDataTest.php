@@ -26,7 +26,7 @@ final class UbisBuscarOpcionesDataTest extends TestCase
         $region->method('getNombreRegionVo')->willReturn(new RegionNameText('Costa'));
 
         $regionRepo = $this->createMock(RegionRepositoryInterface::class);
-        $regionRepo->method('getRegiones')->willReturn([$region]);
+        $regionRepo->method('matching')->willReturn([$region]);
 
         $tipoCtrRepo = $this->createMock(TipoCentroRepositoryInterface::class);
         $tipoCtrRepo->method('getArrayTiposCentro')->willReturn(['Z' => 'Zonal']);

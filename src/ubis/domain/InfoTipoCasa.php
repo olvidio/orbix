@@ -2,6 +2,9 @@
 
 namespace src\ubis\domain;
 
+use src\ubis\domain\criteria\TipoCasaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\TipoCasaRepositoryInterface;
 use src\ubis\domain\entity\TipoCasa;
@@ -29,14 +32,13 @@ class InfoTipoCasa extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'nombre_tipo_casa'];
-            $aOperador = [];
+            $criteria = $criteria->orderBy(F::NombreTipoCasa);
         } else {
-            $aWhere = ['nombre_tipo_casa' => $this->k_buscar];
-            $aOperador = ['nombre_tipo_casa' => 'sin_acentos'];
+            $criteria = $criteria->where(Filter::matchesUnaccented(F::NombreTipoCasa, (string) $this->k_buscar));
         }
 
-        return $this->tipoCasaRepository->getTiposCasa($aWhere, $aOperador);
+        return $this->tipoCasaRepository->matching($criteria);
     }
 }
