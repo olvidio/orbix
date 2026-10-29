@@ -9,10 +9,15 @@ use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\encargossacd\domain\criteria\EncargoSacdObservField;
 use src\encargossacd\domain\entity\EncargoHorario;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\encargossacd\domain\services\EncargoDominioService;
 use src\permisos\domain\XPermisos;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\shared\security\HashB;
 
 /**
@@ -50,22 +55,23 @@ final class SacdFichaData
         }
 
         $observ_sacd = '';
-        $cEncargoSacdObserv = $this->encargoSacdObservRepository->getEncargosSacdObservs(['id_nom' => $id_nom]);
+        $cEncargoSacdObserv = $this->encargoSacdObservRepository->matching(
+            Criteria::create()->where(Filter::eq(EncargoSacdObservField::IdNom, $id_nom))
+        );
         foreach ($cEncargoSacdObserv as $oEncargoSacdObserv) {
             $observ_sacd = (string) $oEncargoSacdObserv->getObserv();
         }
 
-        $aWhereES = [
-            'id_nom' => $id_nom,
-            'f_fin' => 'x',
-            '_ordre' => 'modo, f_ini DESC',
-        ];
-        $aOperadorES = ['f_fin' => 'IS NULL'];
-        $cEncargosSacd1 = $this->encargoSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
-
-        $aWhereES['f_fin'] = "'$hoy'";
-        $aOperadorES['f_fin'] = '>';
-        $cEncargosSacd2 = $this->encargoSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
+        $criterioES = Criteria::create()
+            ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
+            ->orderBy(EncargoSacdField::Modo)
+            ->addOrderBy(EncargoSacdField::FIni, OrderDirection::Desc);
+        $cEncargosSacd1 = $this->encargoSacdRepository->matching(
+            $criterioES->andWhere(Filter::isNull(EncargoSacdField::FFin))
+        );
+        $cEncargosSacd2 = $this->encargoSacdRepository->matching(
+            $criterioES->andWhere(Filter::gt(EncargoSacdField::FFin, $hoy))
+        );
 
         $cEncargosSacd = array_merge($cEncargosSacd1, $cEncargosSacd2);
 

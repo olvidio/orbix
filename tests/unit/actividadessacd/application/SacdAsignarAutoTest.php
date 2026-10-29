@@ -63,7 +63,7 @@ final class SacdAsignarAutoTest extends TestCase
         $encargoRepo->method('matching')->willReturn([$oEnc]);
 
         $encargoSacdRepo = $this->createMock(EncargoSacdRepositoryInterface::class);
-        $encargoSacdRepo->method('getEncargosSacd')->willReturn([$oEncSacd]);
+        $encargoSacdRepo->method('matching')->willReturn([$oEncSacd]);
 
         $out = (new \src\actividadessacd\application\SacdAsignarAuto($actividadRepo, $cargoRepo, $activCargoRepo, $centroEncRepo, $encargoSacdRepo, $encargoRepo))->execute(['f_ini_iso' => '2026-01-01']);
         $this->assertSame(['asignadas' => 1, 'sin_asignar' => 0], $out);

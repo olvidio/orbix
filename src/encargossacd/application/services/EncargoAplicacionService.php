@@ -7,7 +7,9 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\entity\Encargo;
 use src\encargossacd\domain\entity\EncargoHorario;
 use src\encargossacd\domain\entity\EncargoSacd;
@@ -368,7 +370,12 @@ class EncargoAplicacionService
 
     public function insert_sacd(int $id_enc, int $id_sacd, int $modo): ?EncargoSacd
     {
-        $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(['id_enc' => $id_enc, 'id_nom' => $id_sacd, 'modo' => $modo]);
+        $cEncargosSacd = $this->encargoSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                ->andWhere(Filter::eq(EncargoSacdField::IdNom, $id_sacd))
+                ->andWhere(Filter::eq(EncargoSacdField::Modo, $modo))
+        );
         $flag = 0;
         $oEncargoSacd = null;
         foreach ($cEncargosSacd as $oEncargoSacd) {
@@ -406,7 +413,12 @@ class EncargoAplicacionService
 
     public function finalizar_sacd(int $id_enc, int $id_sacd, int $modo, DateTimeLocal $f_fin): void
     {
-        $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(['id_enc' => $id_enc, 'id_nom' => $id_sacd, 'modo' => $modo]);
+        $cEncargosSacd = $this->encargoSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                ->andWhere(Filter::eq(EncargoSacdField::IdNom, $id_sacd))
+                ->andWhere(Filter::eq(EncargoSacdField::Modo, $modo))
+        );
         foreach ($cEncargosSacd as $oEncargoSacd) {
             $oEncargoSacd->setF_fin($f_fin);
             if ($this->encargoSacdRepository->Guardar($oEncargoSacd) === false) {
@@ -418,7 +430,12 @@ class EncargoAplicacionService
 
     public function delete_sacd(int $id_enc, int $id_sacd, int $modo): void
     {
-        $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(['id_enc' => $id_enc, 'id_nom' => $id_sacd, 'modo' => $modo]);
+        $cEncargosSacd = $this->encargoSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                ->andWhere(Filter::eq(EncargoSacdField::IdNom, $id_sacd))
+                ->andWhere(Filter::eq(EncargoSacdField::Modo, $modo))
+        );
         foreach ($cEncargosSacd as $oEncargoSacd) {
             if ($this->encargoSacdRepository->Eliminar($oEncargoSacd) === false) {
                 echo _("hay un error, no se ha eliminado");

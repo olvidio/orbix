@@ -6,6 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
@@ -52,9 +53,11 @@ final class SacdsDisponiblesData
                     continue;
                 }
                 $id_enc = (int)$cEncargos[0]->getId_enc();
-                $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(
-                    ['id_enc' => $id_enc, 'modo' => '2|3', 'f_fin' => ''],
-                    ['modo' => '~', 'f_fin' => 'IS NULL']
+                $cEncargosSacd = $this->encargoSacdRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                        ->andWhere(Filter::matches(EncargoSacdField::Modo, '2|3'))
+                        ->andWhere(Filter::isNull(EncargoSacdField::FFin))
                 );
                 if (count($cEncargosSacd) < 1) {
                     continue;

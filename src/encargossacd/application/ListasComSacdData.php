@@ -8,7 +8,11 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\encargossacd\domain\criteria\EncargoSacdObservField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -101,20 +105,23 @@ final class ListasComSacdData
                 'observ' => [],
             ];
 
-            $cEncargoSacdObserv = $this->encargoSacdObservRepository->getEncargosSacdObservs(['id_nom' => $id_nom]) ?: [];
+            $cEncargoSacdObserv = $this->encargoSacdObservRepository->matching(
+                Criteria::create()->where(Filter::eq(EncargoSacdObservField::IdNom, $id_nom))
+            );
             $observ = '';
             if (count($cEncargoSacdObserv) > 0) {
                 $observ = (string)$cEncargoSacdObserv[0]->getObserv();
             }
 
-            $cEncargosSacd1 = $this->encargoSacdRepository->getEncargosSacd(
-                ['id_nom' => $id_nom, 'f_fin' => 'x', '_ordre' => 'modo'],
-                ['f_fin' => 'IS NULL'],
-            ) ?: [];
-            $cEncargosSacd2 = $this->encargoSacdRepository->getEncargosSacd(
-                ['id_nom' => $id_nom, 'f_fin' => $hoy_iso, '_ordre' => 'modo'],
-                ['f_fin' => '>'],
-            ) ?: [];
+            $criterioSacd = Criteria::create()
+                ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
+                ->orderBy(EncargoSacdField::Modo);
+            $cEncargosSacd1 = $this->encargoSacdRepository->matching(
+                $criterioSacd->andWhere(Filter::isNull(EncargoSacdField::FFin))
+            );
+            $cEncargosSacd2 = $this->encargoSacdRepository->matching(
+                $criterioSacd->andWhere(Filter::gt(EncargoSacdField::FFin, $hoy_iso))
+            );
             $cEncargosSacd = array_merge($cEncargosSacd1, $cEncargosSacd2);
 
             foreach ($cEncargosSacd as $oEncargoSacd) {
@@ -157,30 +164,32 @@ final class ListasComSacdData
 
                 $sup_tit = '';
                 if ($modo === 2 || $modo === 3) {
-                    $cPar = $this->encargoSacdRepository->getEncargosSacd(
-                        ['id_enc' => $id_enc, 'f_fin' => 'x', 'modo' => 4],
-                        ['f_fin' => 'IS NULL'],
-                    ) ?: [];
+                    $criterioPar = Criteria::create()
+                        ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                        ->andWhere(Filter::eq(EncargoSacdField::Modo, 4));
+                    $cPar = $this->encargoSacdRepository->matching(
+                        $criterioPar->andWhere(Filter::isNull(EncargoSacdField::FFin))
+                    );
                     if (count($cPar) === 0) {
-                        $cPar = $this->encargoSacdRepository->getEncargosSacd(
-                            ['id_enc' => $id_enc, 'f_fin' => $hoy_iso, 'modo' => 4],
-                            ['f_fin' => '>'],
-                        ) ?: [];
+                        $cPar = $this->encargoSacdRepository->matching(
+                            $criterioPar->andWhere(Filter::gt(EncargoSacdField::FFin, $hoy_iso))
+                        );
                     }
                     if (count($cPar) === 1) {
                         $oSup = $this->personaDlRepository->findById($cPar[0]->getId_nom());
                         $sup_tit = $oSup?->getNombreApellidos() ?? '';
                     }
                 } elseif ($modo === 4) {
-                    $cPar = $this->encargoSacdRepository->getEncargosSacd(
-                        ['id_enc' => $id_enc, 'f_fin' => 'x', 'modo' => '[23]'],
-                        ['modo' => '~', 'f_fin' => 'IS NULL'],
-                    ) ?: [];
+                    $criterioPar = Criteria::create()
+                        ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                        ->andWhere(Filter::matches(EncargoSacdField::Modo, '[23]'));
+                    $cPar = $this->encargoSacdRepository->matching(
+                        $criterioPar->andWhere(Filter::isNull(EncargoSacdField::FFin))
+                    );
                     if (count($cPar) === 0) {
-                        $cPar = $this->encargoSacdRepository->getEncargosSacd(
-                            ['id_enc' => $id_enc, 'f_fin' => $hoy_iso, 'modo' => '[23]'],
-                            ['modo' => '~', 'f_fin' => '>'],
-                        ) ?: [];
+                        $cPar = $this->encargoSacdRepository->matching(
+                            $criterioPar->andWhere(Filter::gt(EncargoSacdField::FFin, $hoy_iso))
+                        );
                     }
                     if (count($cPar) === 1) {
                         $oTit = $this->personaDlRepository->findById($cPar[0]->getId_nom());

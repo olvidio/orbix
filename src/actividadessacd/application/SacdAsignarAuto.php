@@ -13,6 +13,7 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 
 /**
@@ -150,16 +151,11 @@ final class SacdAsignarAuto
             $id_enc = $oEncargo->getId_enc();
             $id_ubi = (int)$oEncargo->getId_ubi();
 
-            $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(
-                [
-                    'id_enc' => $id_enc,
-                    'f_fin' => 'x',
-                    'modo' => '2|3',
-                ],
-                [
-                    'f_fin' => 'IS NULL',
-                    'modo' => '~',
-                ]
+            $cEncargosSacd = $this->encargoSacdRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                    ->andWhere(Filter::matches(EncargoSacdField::Modo, '2|3'))
+                    ->andWhere(Filter::isNull(EncargoSacdField::FFin))
             );
             foreach ($cEncargosSacd as $oEncargoSacd) {
                 $a_ctr_sacd[$id_ubi] = (int)$oEncargoSacd->getId_nom();

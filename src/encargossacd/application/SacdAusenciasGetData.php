@@ -4,6 +4,7 @@ namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
@@ -61,14 +62,13 @@ final class SacdAusenciasGetData
             }
         }
 
-        if ($historial === 1) {
-            $aWhereP = ['id_nom' => $id_nom, '_ordre' => 'f_ini'];
-            $aOperadorP = [];
-        } else {
-            $aWhereP = ['id_nom' => $id_nom, 'f_ini' => $hoy, '_ordre' => 'f_ini'];
-            $aOperadorP = ['f_ini' => '>='];
+        $criterioP = Criteria::create()
+            ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
+            ->orderBy(EncargoSacdField::FIni);
+        if ($historial !== 1) {
+            $criterioP = $criterioP->andWhere(Filter::gte(EncargoSacdField::FIni, $hoy));
         }
-        $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd($aWhereP, $aOperadorP) ?: [];
+        $cEncargosSacd = $this->encargoSacdRepository->matching($criterioP);
 
         $filas = [];
         foreach ($cEncargosSacd as $oEncargoSacd) {

@@ -7,8 +7,11 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdObservField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -99,7 +102,9 @@ final class PropuestasListaSacdData
                 'observ' => [],
             ];
 
-            $cEncargoSacdObserv = $this->encargoSacdObservRepository->getEncargosSacdObservs(['id_nom' => $id_nom]) ?: [];
+            $cEncargoSacdObserv = $this->encargoSacdObservRepository->matching(
+                Criteria::create()->where(Filter::eq(EncargoSacdObservField::IdNom, $id_nom))
+            );
             $observ = '';
             if (count($cEncargoSacdObserv) > 0) {
                 $observ = (string)$cEncargoSacdObserv[0]->getObserv();

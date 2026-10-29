@@ -8,6 +8,7 @@ use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
@@ -112,10 +113,12 @@ final class ListasAData
                     $id_enc = $oEncargo->getId_enc();
                     $id_tipo_enc = (string)$oEncargo->getId_tipo_enc();
 
-                    $cEncargoSacd = $this->encargoSacdRepository->getEncargosSacd(
-                        ['id_enc' => $id_enc, 'f_fin' => 'null', '_ordre' => 'modo'],
-                        ['f_fin' => 'IS NULL'],
-                    ) ?: [];
+                    $cEncargoSacd = $this->encargoSacdRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                            ->andWhere(Filter::isNull(EncargoSacdField::FFin))
+                            ->orderBy(EncargoSacdField::Modo)
+                    );
                     foreach ($cEncargoSacd as $oEncargoSacd) {
                         $modo = $oEncargoSacd->getModo();
                         $id_nom = $oEncargoSacd->getId_nom();

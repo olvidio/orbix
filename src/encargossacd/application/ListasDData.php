@@ -9,7 +9,10 @@ use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\services\EncargoDominioService;
+use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -113,13 +116,12 @@ final class ListasDData
                             : _("otros");
                         $a_dedicacion = [];
 
-                        $aWhereT = [
-                            'id_nom' => $id_nom,
-                            'f_fin' => 'null',
-                            '_ordre' => 'modo',
-                        ];
-                        $aOperadorT = ['f_fin' => 'IS NULL'];
-                        $cTareasSacd = $this->encargoSacdRepository->getEncargosSacd($aWhereT, $aOperadorT) ?: [];
+                        $cTareasSacd = $this->encargoSacdRepository->matching(
+                            Criteria::create()
+                                ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
+                                ->andWhere(Filter::isNull(EncargoSacdField::FFin))
+                                ->orderBy(EncargoSacdField::Modo)
+                        );
                         foreach ($cTareasSacd as $oTareaSacd) {
                             $modo = (int)$oTareaSacd->getModo();
                             $id_enc = $oTareaSacd->getId_enc();

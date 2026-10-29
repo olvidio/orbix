@@ -4,8 +4,12 @@ namespace src\misas\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\misas\application\support\IdNomJefeResolver;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
@@ -135,20 +139,20 @@ class BuscarPlanCtrData
             }
         } else {
             $id_sacd = $oMiUsuario->getCsvIdPauAsString();
-            $aWhereES = [];
-            $aOperadorES = [];
-            $aWhereES['id_nom'] = $id_sacd;
-            $aWhereES['f_fin'] = 'x';
-            $aOperadorES['f_fin'] = 'IS NULL';
-            $aWhereES['_ordre'] = 'modo, f_ini DESC';
-            $cEncargosSacd1 = $this->encargoSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
+            $criterioES = Criteria::create()
+                ->where(Filter::eq(EncargoSacdField::IdNom, $id_sacd))
+                ->orderBy(EncargoSacdField::Modo)
+                ->addOrderBy(EncargoSacdField::FIni, OrderDirection::Desc);
+            $cEncargosSacd1 = $this->encargoSacdRepository->matching(
+                $criterioES->andWhere(Filter::isNull(EncargoSacdField::FFin))
+            );
 
             $oF_hoy = new DateTimeLocal(date('Y-m-d'));
             $hoy = $oF_hoy->getIso();
 
-            $aWhereES['f_fin'] = "'$hoy'";
-            $aOperadorES['f_fin'] = '>';
-            $cEncargosSacd2 = $this->encargoSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
+            $cEncargosSacd2 = $this->encargoSacdRepository->matching(
+                $criterioES->andWhere(Filter::gt(EncargoSacdField::FFin, $hoy))
+            );
 
             $cEncargosSacd = $cEncargosSacd1 + $cEncargosSacd2;
             foreach ($cEncargosSacd as $oEncargoSacd) {

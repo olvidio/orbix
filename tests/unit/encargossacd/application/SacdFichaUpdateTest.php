@@ -25,7 +25,7 @@ final class SacdFichaUpdateTest extends TestCase
 
         $encargoSacdRepository = $this->createMock(EncargoSacdRepositoryInterface::class);
         $encargoSacdRepository->expects($this->once())
-            ->method('getEncargosSacd')
+            ->method('matching')
             ->willReturn([$encargoSacd]);
 
         $aplicacionService = $this->createMock(EncargoAplicacionService::class);

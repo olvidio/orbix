@@ -5,8 +5,10 @@ namespace src\encargossacd\application;
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
@@ -242,13 +244,13 @@ final class CtrGetFichaData
         int $id_enc,
         string $f_hoy,
     ): array {
-        $base = ['id_enc' => $id_enc, '_ordre' => 'modo,f_ini DESC'];
+        $base = Criteria::create()
+            ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+            ->orderBy(EncargoSacdField::Modo)
+            ->addOrderBy(EncargoSacdField::FIni, OrderDirection::Desc);
 
-        $aWhere0 = $base + ['f_fin' => 'x'];
-        $c0 = $repo->getEncargosSacd($aWhere0, ['f_fin' => 'IS NULL']);
-
-        $aWhere1 = $base + ['f_fin' => "'$f_hoy'"];
-        $c1 = $repo->getEncargosSacd($aWhere1, ['f_fin' => '>']);
+        $c0 = $repo->matching($base->andWhere(Filter::isNull(EncargoSacdField::FFin)));
+        $c1 = $repo->matching($base->andWhere(Filter::gt(EncargoSacdField::FFin, $f_hoy)));
 
         return array_merge($c0, $c1);
     }

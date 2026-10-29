@@ -5,6 +5,8 @@ namespace src\encargossacd\application;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\encargossacd\domain\criteria\EncargoSacdObservField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
@@ -84,17 +86,13 @@ final class SacdFichaUpdate
                 continue;
             }
 
-            $aWhere = [
-                'id_nom' => $id_nom,
-                'id_enc' => $id_enc,
-                'modo' => '(2|3|5)',
-                'f_fin' => 'x',
-            ];
-            $aOperador = [
-                'f_fin' => 'IS NULL',
-                'modo' => '~',
-            ];
-            $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
+            $cEncargosSacd = $this->encargoSacdRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
+                    ->andWhere(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                    ->andWhere(Filter::matches(EncargoSacdField::Modo, '(2|3|5)'))
+                    ->andWhere(Filter::isNull(EncargoSacdField::FFin))
+            );
             if (empty($cEncargosSacd)) {
                 continue;
             }
@@ -112,7 +110,9 @@ final class SacdFichaUpdate
             $oAplicacion->modificar_horario_sacd($id_item_t_sacd, $id_enc, $id_nom, 'v', $dedic_v);
         }
 
-        $cEncargoSacdObserv = $this->encargoSacdObservRepository->getEncargosSacdObservs(['id_nom' => $id_nom]);
+        $cEncargoSacdObserv = $this->encargoSacdObservRepository->matching(
+            Criteria::create()->where(Filter::eq(EncargoSacdObservField::IdNom, $id_nom))
+        );
         $oEncargoSacdObserv = $cEncargoSacdObserv[0] ?? null;
 
         if ($oEncargoSacdObserv !== null) {
