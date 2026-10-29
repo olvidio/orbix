@@ -3,6 +3,9 @@
 namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -29,9 +32,9 @@ final class EncargoComprobacionesCtr
     {
         $ctrsv = 0;
         $ctrsf = 0;
-        $aWhere = ['id_ubi' => 'x'];
-        $aOperador = ['id_ubi' => 'IS NOT NULL'];
-        $cEncargosCtr = $this->encargoRepository->getEncargos($aWhere, $aOperador);
+        $cEncargosCtr = $this->encargoRepository->matching(
+            Criteria::create()->where(Filter::isNotNull(EncargoField::IdUbi))
+        );
         foreach ($cEncargosCtr as $oEncargo) {
             $id_ubi = $oEncargo->getId_ubi();
             if (empty($id_ubi)) {
@@ -65,7 +68,7 @@ final class EncargoComprobacionesCtr
         $msg .= sprintf(_("se han eliminado %s encargos de centros sf \n"), $ctrsf);
         // borrar los encargos de los sacd. No se puede hacer desde la DB porque se ha pasado a la DB comun.
         // $msg .= $this->encargoSacdRepository->deleteEncargos();
-        $cEncargos = $this->encargoRepository->getEncargos();
+        $cEncargos = $this->encargoRepository->matching(Criteria::create());
         $a_Id_enc = [];
         foreach ($cEncargos as $oEncargo) {
             $id_enc = $oEncargo->getId_enc();

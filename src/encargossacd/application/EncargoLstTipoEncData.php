@@ -3,6 +3,9 @@
 namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoTipoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\helpers\OpcionesDesplegable;
 
 /**
@@ -21,11 +24,9 @@ final class EncargoLstTipoEncData
      */
     public function execute(string $grupo, ?string $id_tipo_enc_selected): array
     {
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['id_tipo_enc'] = '^' . $grupo;
-        $aOperador['id_tipo_enc'] = '~';
-        $cEncargoTipos = $this->encargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
+        $cEncargoTipos = $this->encargoTipoRepository->matching(
+            Criteria::create()->where(Filter::matches(EncargoTipoField::IdTipoEnc, '^' . $grupo))
+        );
 
         $opciones = [];
         foreach ($cEncargoTipos as $oEncargoTipo) {

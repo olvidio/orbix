@@ -30,7 +30,7 @@ final class EncargoSelectDataTest extends TestCase
         $encargo->method('getDesc_lugar')->willReturn('');
 
         $encargoRepo = $this->createMock(EncargoRepositoryInterface::class);
-        $encargoRepo->method('getEncargos')->willReturn([$encargo]);
+        $encargoRepo->method('matching')->willReturn([$encargo]);
 
         $local = $this->createMock(Local::class);
         $local->method('getNomIdiomaAsString')->willReturn('Castellano');
@@ -66,7 +66,7 @@ final class EncargoSelectDataTest extends TestCase
         $encargo->method('getDesc_lugar')->willReturn('');
 
         $encargoRepo = $this->createMock(EncargoRepositoryInterface::class);
-        $encargoRepo->method('getEncargos')->willReturn([$encargo]);
+        $encargoRepo->method('matching')->willReturn([$encargo]);
 
         $local = $this->createMock(Local::class);
         $local->method('getNomIdiomaAsString')->willReturn('Castellano');

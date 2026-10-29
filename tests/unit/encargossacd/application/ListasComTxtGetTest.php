@@ -5,7 +5,10 @@ namespace Tests\unit\encargossacd\application;
 use PHPUnit\Framework\TestCase;
 use src\encargossacd\application\ListasComTxtGet;
 use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoTextoField;
 use src\encargossacd\domain\entity\EncargoTexto;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 
 final class ListasComTxtGetTest extends TestCase
@@ -20,8 +23,12 @@ final class ListasComTxtGetTest extends TestCase
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getEncargoTextos')
-            ->with(['clave' => 'c1', 'idioma' => 'es_ES.UTF-8'])
+            ->method('matching')
+            ->with($this->equalTo(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoTextoField::Clave, 'c1'))
+                    ->andWhere(Filter::eq(EncargoTextoField::Idioma, 'es_ES.UTF-8'))
+            ))
             ->willReturn([]);
 
         $useCase = new ListasComTxtGet($repo);
@@ -33,7 +40,7 @@ final class ListasComTxtGetTest extends TestCase
     public function test_getEncargoTextos_false_trata_como_vacio(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $useCase = new ListasComTxtGet($repo);
         $out = $useCase->execute('k', 'ca_ES.UTF-8');
@@ -47,7 +54,7 @@ final class ListasComTxtGetTest extends TestCase
         $row->method('getTexto')->willReturn('Hola');
 
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([$row]);
+        $repo->method('matching')->willReturn([$row]);
 
         $useCase = new ListasComTxtGet($repo);
         $out = $useCase->execute('x', 'es_ES.UTF-8');

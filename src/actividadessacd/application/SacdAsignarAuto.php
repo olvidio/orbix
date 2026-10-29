@@ -12,6 +12,7 @@ use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 
 /**
@@ -142,9 +143,8 @@ final class SacdAsignarAuto
         }
 
         $a_ctr_sacd = [];
-        $cEncargos = $this->encargoRepository->getEncargos(
-            ['id_tipo_enc' => '^1[12]00'],
-            ['id_tipo_enc' => '~']
+        $cEncargos = $this->encargoRepository->matching(
+            Criteria::create()->where(Filter::matches(EncargoField::IdTipoEnc, '^1[12]00'))
         );
         foreach ($cEncargos as $oEncargo) {
             $id_enc = $oEncargo->getId_enc();

@@ -4,6 +4,7 @@ namespace src\misas\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
 use src\misas\domain\criteria\EncargoDiaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -62,10 +63,9 @@ class DesplegableSacdData
                 );
                 foreach ($cEncargosDia as $oEncargoDia) {
                     $id_enc = $oEncargoDia->getId_enc();
-                    $aWhere = [];
-                    $aOperador = [];
-                    $aWhere['id_enc'] = $id_enc;
-                    $cEncargos = $this->encargoRepository->getEncargos($aWhere, $aOperador);
+                    $cEncargos = $this->encargoRepository->matching(
+                        Criteria::create()->where(Filter::eq(EncargoField::IdEnc, $id_enc))
+                    );
                     foreach ($cEncargos as $oEncargo) {
                         $id_tipo_enc = $oEncargo->getId_tipo_enc();
                         if ((int)substr((string)$id_tipo_enc, 1, 1) === 1) {

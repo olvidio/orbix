@@ -50,11 +50,11 @@ final class VerEncargosZonaDataTest extends TestCase
         $encargo->method('getObserv')->willReturn('');
 
         $encargoTipoRepository = $this->createMock(EncargoTipoRepositoryInterface::class);
-        $encargoTipoRepository->method('getEncargoTipos')->willReturn([$encargoTipo]);
+        $encargoTipoRepository->method('matching')->willReturn([$encargoTipo]);
         $encargoTipoRepository->method('findById')->with(8100)->willReturn($encargoTipo);
 
         $encargoRepository = $this->createMock(EncargoRepositoryInterface::class);
-        $encargoRepository->method('getEncargos')->willReturn([$encargo]);
+        $encargoRepository->method('matching')->willReturn([$encargo]);
 
         $useCase = $this->makeUseCase([], $encargoTipoRepository, $encargoRepository);
         $out = $useCase->getData(9, 'orden');

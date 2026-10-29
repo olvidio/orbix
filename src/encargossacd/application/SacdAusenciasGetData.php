@@ -3,6 +3,9 @@
 namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
@@ -46,9 +49,10 @@ final class SacdAusenciasGetData
     {
         $hoy = date('Y-m-d');
 
-        $cEncargos = $this->encargoRepository->getEncargos(
-            ['id_tipo_enc' => '(7|4)...', '_ordre' => 'id_tipo_enc'],
-            ['id_tipo_enc' => '~'],
+        $cEncargos = $this->encargoRepository->matching(
+            Criteria::create()
+                ->where(Filter::matches(EncargoField::IdTipoEnc, '(7|4)...'))
+                ->orderBy(EncargoField::IdTipoEnc)
         );
         $array_tipo_ausencias = [];
         if ($cEncargos !== []) {

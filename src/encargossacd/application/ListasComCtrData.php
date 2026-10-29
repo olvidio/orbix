@@ -5,6 +5,9 @@ namespace src\encargossacd\application;
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -68,10 +71,11 @@ final class ListasComCtrData
             $id_ubi = $oCentro->getId_ubi();
             $nombre_ubi = (string)$oCentro->getNombre_ubi();
 
-            $cEncargos = $this->encargoRepository->getEncargos(
-                ['id_ubi' => $id_ubi, 'id_tipo_enc' => '(1|2|3).00'],
-                ['id_tipo_enc' => '~'],
-            ) ?: [];
+            $cEncargos = $this->encargoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoField::IdUbi, $id_ubi))
+                    ->andWhere(Filter::matches(EncargoField::IdTipoEnc, '(1|2|3).00'))
+            );
             if (count($cEncargos) === 0) {
                 continue;
             }

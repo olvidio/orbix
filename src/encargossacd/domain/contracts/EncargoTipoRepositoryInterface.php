@@ -3,6 +3,7 @@
 namespace src\encargossacd\domain\contracts;
 
 use src\encargossacd\domain\entity\EncargoTipo;
+use src\shared\domain\criteria\Criteria;
 
 
 /**
@@ -27,11 +28,17 @@ interface EncargoTipoRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo EncargoTipo
+     * EncargoTipo que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<EncargoTipo> Una colección de objetos de tipo EncargoTipo
+     * @return list<EncargoTipo>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<EncargoTipo>
      */
     public function getEncargoTipos(array $aWhere = [], array $aOperators = []): array;
 

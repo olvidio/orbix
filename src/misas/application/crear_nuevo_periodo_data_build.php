@@ -18,6 +18,7 @@ use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoTipoField;
 use src\misas\domain\criteria\EncargoDiaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -258,11 +259,9 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
     $EncargoTipoRepository = $self->getEncargoTipoRepository();
 
     $grupo = '8...';
-    $aWhere = [];
-    $aOperador = [];
-    $aWhere['id_tipo_enc'] = '^' . $grupo;
-    $aOperador['id_tipo_enc'] = '~';
-    $cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
+    $cEncargoTipos = $EncargoTipoRepository->matching(
+        Criteria::create()->where(Filter::matches(EncargoTipoField::IdTipoEnc, '^' . $grupo))
+    );
 
     $a_tipo_enc = [];
     foreach ($cEncargoTipos as $oEncargoTipo) {

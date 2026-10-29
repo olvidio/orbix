@@ -39,7 +39,7 @@ final class VerMisasZonaDataTest extends TestCase
 
         $encargoRepo = $this->createMock(EncargoRepositoryInterface::class);
         $encargoRepo->expects($this->once())
-            ->method('getEncargos')
+            ->method('matching')
             ->willReturn([]);
 
         $useCase = new VerMisasZonaData(
@@ -66,7 +66,7 @@ final class VerMisasZonaDataTest extends TestCase
     public function test_sin_bit_2_no_resuelve_ZonaSacdRepository(): void
     {
         $encargoRepo = $this->createMock(EncargoRepositoryInterface::class);
-        $encargoRepo->method('getEncargos')->willReturn([]);
+        $encargoRepo->method('matching')->willReturn([]);
 
         $useCase = new VerMisasZonaData(
             $this->createStub(PersonaSacdRepositoryInterface::class),

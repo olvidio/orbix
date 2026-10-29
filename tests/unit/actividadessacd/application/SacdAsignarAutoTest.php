@@ -60,7 +60,7 @@ final class SacdAsignarAutoTest extends TestCase
         $oEncSacd->setId_nom(777);
 
         $encargoRepo = $this->createMock(EncargoRepositoryInterface::class);
-        $encargoRepo->method('getEncargos')->willReturn([$oEnc]);
+        $encargoRepo->method('matching')->willReturn([$oEnc]);
 
         $encargoSacdRepo = $this->createMock(EncargoSacdRepositoryInterface::class);
         $encargoSacdRepo->method('getEncargosSacd')->willReturn([$oEncSacd]);

@@ -18,7 +18,7 @@ final class ListasComTxtUpdateTest extends TestCase
         $existing->setTexto('viejo');
 
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([$existing]);
+        $repo->method('matching')->willReturn([$existing]);
         $repo->expects($this->once())->method('Guardar')->with($existing)->willReturn(true);
         $repo->expects($this->never())->method('Eliminar');
 
@@ -36,7 +36,7 @@ final class ListasComTxtUpdateTest extends TestCase
         $existing->setTexto('x');
 
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([$existing]);
+        $repo->method('matching')->willReturn([$existing]);
         $repo->expects($this->once())->method('Eliminar')->with($existing)->willReturn(true);
         $repo->expects($this->never())->method('Guardar');
 
@@ -47,7 +47,7 @@ final class ListasComTxtUpdateTest extends TestCase
     public function test_inserta_si_no_hay_filas(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
         $repo->method('getNewId')->willReturn(700);
         $repo->expects($this->once())->method('Guardar')->willReturnCallback(function (EncargoTexto $e) {
             $this->assertSame(700, $e->getId_item());

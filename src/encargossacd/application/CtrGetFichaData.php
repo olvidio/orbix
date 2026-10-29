@@ -4,6 +4,9 @@ namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
@@ -50,9 +53,10 @@ final class CtrGetFichaData
         $oCentroDl = $this->centroDlRepository->findById($id_ubi);
         $tipo_centro = $oCentroDl !== null ? (string)$oCentroDl->getTipo_ctr() : '';
 
-        $cEncargos = $this->encargoRepository->getEncargos(
-            ['id_ubi' => $id_ubi, 'id_tipo_enc' => '(1|2|3).0'],
-            ['id_tipo_enc' => '~'],
+        $cEncargos = $this->encargoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoField::IdUbi, $id_ubi))
+                ->andWhere(Filter::matches(EncargoField::IdTipoEnc, '(1|2|3).0'))
         );
 
         $encargos = [];

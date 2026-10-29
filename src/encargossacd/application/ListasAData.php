@@ -7,6 +7,9 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -100,10 +103,11 @@ final class ListasAData
                 $nombre_ubi = $oCentro->getNombre_ubi();
                 $tipo_ctr = $oCentro->getTipo_ctr();
 
-                $cEncargos = $this->encargoRepository->getEncargos(
-                    ['id_ubi' => $id_ubi, 'id_tipo_enc' => '1[0123]0.'],
-                    ['id_tipo_enc' => '~'],
-                ) ?: [];
+                $cEncargos = $this->encargoRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoField::IdUbi, $id_ubi))
+                        ->andWhere(Filter::matches(EncargoField::IdTipoEnc, '1[0123]0.'))
+                );
                 foreach ($cEncargos as $oEncargo) {
                     $id_enc = $oEncargo->getId_enc();
                     $id_tipo_enc = (string)$oEncargo->getId_tipo_enc();

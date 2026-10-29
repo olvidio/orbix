@@ -7,6 +7,9 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -102,7 +105,7 @@ final class ListasBData
                 $tipo_ctr = $oCentro->getTipo_ctr();
                 /** @var array<int, string> $cargos */
                 $cargos = [];
-                $cEncargos = $this->encargoRepository->getEncargos(['id_ubi' => $id_ubi]) ?: [];
+                $cEncargos = $this->encargoRepository->matching(Criteria::create()->where(Filter::eq(EncargoField::IdUbi, $id_ubi)));
                 $sacds = [];
                 foreach ($cEncargos as $oEncargo) {
                     $id_enc = $oEncargo->getId_enc();

@@ -3,6 +3,9 @@
 namespace src\encargossacd\application\services;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdRepositoryInterface;
 use src\encargossacd\domain\entity\Encargo;
 use src\encargossacd\domain\entity\PropuestaEncargoSacd;
@@ -53,9 +56,10 @@ final class PropuestasEncargosUbiHtml
      */
     private function datosPorUbi(int $id_ubi, string $ordenPropuestas): array
     {
-        $cEncargos = $this->encargoRepository->getEncargos(
-            ['id_ubi' => $id_ubi, 'id_tipo_enc' => '(1|2|3).0'],
-            ['id_tipo_enc' => '~'],
+        $cEncargos = $this->encargoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoField::IdUbi, $id_ubi))
+                ->andWhere(Filter::matches(EncargoField::IdTipoEnc, '(1|2|3).0'))
         );
         $out = [];
         foreach ($cEncargos as $oEncargo) {

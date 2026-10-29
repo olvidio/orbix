@@ -5,6 +5,9 @@ namespace src\actividadessacd\application;
 use src\shared\config\ConfigGlobal;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
@@ -40,9 +43,10 @@ final class SacdsDisponiblesData
             foreach ($cCentros as $oEncargado) {
                 $id_ctr = (int)$oEncargado->getId_ubi();
                 $num_orden = (int)$oEncargado->getNum_orden();
-                $cEncargos = $this->encargoRepository->getEncargos(
-                    ['id_ubi' => $id_ctr, 'id_tipo_enc' => '^1(00|100|200|300)'],
-                    ['id_tipo_enc' => '~']
+                $cEncargos = $this->encargoRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoField::IdUbi, $id_ctr))
+                        ->andWhere(Filter::matches(EncargoField::IdTipoEnc, '^1(00|100|200|300)'))
                 );
                 if (count($cEncargos) < 1) {
                     continue;

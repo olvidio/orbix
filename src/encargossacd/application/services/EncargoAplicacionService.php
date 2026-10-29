@@ -7,6 +7,7 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
 use src\encargossacd\domain\entity\Encargo;
 use src\encargossacd\domain\entity\EncargoHorario;
 use src\encargossacd\domain\entity\EncargoSacd;
@@ -47,7 +48,7 @@ class EncargoAplicacionService
     {
         $idioma = $idioma === '' ? 'es_ES.UTF-8' : $idioma;
         if (empty($this->a_txt[$idioma])) {
-            $cEncargoTextos = $this->encargoTextoRepository->getEncargoTextos();
+            $cEncargoTextos = $this->encargoTextoRepository->matching(Criteria::create());
             foreach ($cEncargoTextos as $oEncargoTexto) {
                 $clave = $oEncargoTexto->getClaveVo()->value();
                 $idioma_x = $oEncargoTexto->getIdiomaVo()->value();

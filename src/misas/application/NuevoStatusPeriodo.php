@@ -7,6 +7,7 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoTipoField;
 use src\misas\domain\criteria\EncargoDiaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -79,9 +80,9 @@ class NuevoStatusPeriodo
         $sInicio = $Qempiezamin_rep . ' 00:00:00';
         $sFin = $Qempiezamax_rep . ' 23:59:59';
         $grupo = '8...';
-        $aWhere = ['id_tipo_enc' => '^' . $grupo];
-        $aOperador = ['id_tipo_enc' => '~'];
-        $cEncargoTipos = $this->encargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
+        $cEncargoTipos = $this->encargoTipoRepository->matching(
+            Criteria::create()->where(Filter::matches(EncargoTipoField::IdTipoEnc, '^' . $grupo))
+        );
 
         $a_tipo_enc = [];
         foreach ($cEncargoTipos as $oEncargoTipo) {

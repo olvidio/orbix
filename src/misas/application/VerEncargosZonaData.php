@@ -7,6 +7,8 @@ use src\shared\domain\criteria\Criteria;
 use src\usuarios\domain\criteria\LocalField;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoTipoField;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
@@ -49,9 +51,8 @@ class VerEncargosZonaData
         ];
         
         // Tipos de encargo del grupo 8... con id_tipo_enc >= 8100.
-        $cEncargoTipos = $this->encargoTipoRepository->getEncargoTipos(
-            ['id_tipo_enc' => '^8...'],
-            ['id_tipo_enc' => '~'],
+        $cEncargoTipos = $this->encargoTipoRepository->matching(
+            Criteria::create()->where(Filter::matches(EncargoTipoField::IdTipoEnc, '^8...'))
         );
         $a_tipo_enc = [];
         $posibles_encargo_tipo = [];
@@ -64,14 +65,14 @@ class VerEncargosZonaData
 
         $rows = [];
         if (!empty($a_tipo_enc)) {
-            $cond_tipo_enc = '{' . implode(', ', $a_tipo_enc) . '}';
-            $aWhere = [
-                'id_tipo_enc' => $cond_tipo_enc,
-                'id_zona' => $id_zona,
-                '_ordre' => $orden,
-            ];
-            $aOperador = ['id_tipo_enc' => 'ANY'];
-            $cEncargos = $this->encargoRepository->getEncargos($aWhere, $aOperador);
+            $criteria = Criteria::create()
+                ->where(Filter::in(EncargoField::IdTipoEnc, $a_tipo_enc))
+                ->andWhere(Filter::eq(EncargoField::IdZona, $id_zona));
+            $campoOrden = EncargoField::tryFrom($orden);
+            if ($campoOrden !== null) {
+                $criteria = $criteria->orderBy($campoOrden);
+            }
+            $cEncargos = $this->encargoRepository->matching($criteria);
 
             foreach ($cEncargos as $oEncargo) {
                 $id_enc = $oEncargo->getId_enc();

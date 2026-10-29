@@ -3,7 +3,10 @@
 namespace src\encargossacd\domain;
 
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoTipoField;
 use src\encargossacd\domain\entity\EncargoTipo;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -30,17 +33,15 @@ class InfoEncargoTipo extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        $aWhere = [];
-        $aOperador = [];
+        $criteria = Criteria::create();
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->k_buscar)) {
-            $aWhere['tipo_enc'] = $this->k_buscar;
-            $aOperador['tipo_enc'] = 'sin_acentos';
+            $criteria = $criteria->where(Filter::matchesUnaccented(EncargoTipoField::TipoEnc, $this->k_buscar));
         }
-        $aWhere['_ordre'] = 'id_tipo_enc';
+        $criteria = $criteria->orderBy(EncargoTipoField::IdTipoEnc);
 
-        $Coleccion = $this->encargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
+        $Coleccion = $this->encargoTipoRepository->matching($criteria);
 
         return $Coleccion;
     }

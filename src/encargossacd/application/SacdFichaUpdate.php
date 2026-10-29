@@ -4,6 +4,9 @@ namespace src\encargossacd\application;
 
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoSacdObserv;
@@ -58,7 +61,7 @@ final class SacdFichaUpdate
 
             if (in_array($id_tipo_enc, [5020, 5030, 6000], true)) {
                 if ($id_enc === 0) {
-                    $cEncargos = $this->encargoRepository->getEncargos(['id_tipo_enc' => $id_tipo_enc]);
+                    $cEncargos = $this->encargoRepository->matching(Criteria::create()->where(Filter::eq(EncargoField::IdTipoEnc, $id_tipo_enc)));
                     if ($cEncargos === []) {
                         $desc_enc = match ($id_tipo_enc) {
                             5020 => 'estudio',
