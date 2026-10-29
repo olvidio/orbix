@@ -7,6 +7,9 @@ use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\entity\EncargoSacd;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\encargossacd\domain\entity\PropuestaEncargoSacd;
@@ -68,14 +71,12 @@ final class PropuestasAprobarService
         foreach ($cPropuestaHorarios as $oPropuestaHorario) {
             $dia_ref = (string) ($oPropuestaHorario->getDia_ref() ?? '');
             $dia_inc = (int) ($oPropuestaHorario->getDia_inc() ?? 0);
-            $cActualHorario = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios(
-                [
-                    'id_item_tarea_sacd' => $id_item,
-                    'dia_ref' => $dia_ref,
-                    'id_nom' => 'x',
-                    'f_fin' => 'x',
-                ],
-                ['id_nom' => 'IS NOT NULL', 'f_fin' => 'IS NULL'],
+            $cActualHorario = $this->encargoSacdHorarioRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdHorarioField::IdItemTareaSacd, $id_item))
+                    ->andWhere(Filter::eq(EncargoSacdHorarioField::DiaRef, $dia_ref))
+                    ->andWhere(Filter::isNotNull(EncargoSacdHorarioField::IdNom))
+                    ->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin))
             );
             if ($cActualHorario !== []) {
                 $oEncargoSacdHorario = $cActualHorario[0];

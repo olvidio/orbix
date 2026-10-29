@@ -166,7 +166,7 @@ final class EncargoDominioServiceTest extends TestCase
     public function test_dedicacion_horas_sin_registros_devuelve_false(): void
     {
         $repo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-        $repo->method('getEncargoSacdHorarios')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $service = new EncargoDominioService($repo);
         $this->assertFalse($service->dedicacion_horas(123, 45));
@@ -176,7 +176,7 @@ final class EncargoDominioServiceTest extends TestCase
     {
         // m -> x5, t -> x2, v -> x3. Esperado: 2*5 + 3*2 + 4*3 = 10+6+12 = 28.
         $repo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-        $repo->method('getEncargoSacdHorarios')->willReturn([
+        $repo->method('matching')->willReturn([
             $this->horarioStub('m', 2),
             $this->horarioStub('t', 3),
             $this->horarioStub('v', 4),
@@ -189,7 +189,7 @@ final class EncargoDominioServiceTest extends TestCase
     public function test_dedicacion_horas_ignora_tipos_desconocidos(): void
     {
         $repo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-        $repo->method('getEncargoSacdHorarios')->willReturn([
+        $repo->method('matching')->willReturn([
             $this->horarioStub('x', 10),
         ]);
 
@@ -204,7 +204,7 @@ final class EncargoDominioServiceTest extends TestCase
             public function getDiaRefVo(): ?DiaRefCode { return null; }
         };
         $repo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-        $repo->method('getEncargoSacdHorarios')->willReturn([$horario]);
+        $repo->method('matching')->willReturn([$horario]);
 
         $service = new EncargoDominioService($repo);
         $this->assertSame(0, $service->dedicacion_horas(1, 1));

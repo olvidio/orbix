@@ -4,6 +4,10 @@ namespace src\encargossacd\application\services;
 
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 
 /**
  * Texto de dedicación horaria (m/t/v) para la pantalla de propuestas.
@@ -40,9 +44,12 @@ final class PropuestasHorarioTexto
     private function dedicacionActual(int $id_enc, int $id_sacd): array
     {
         return $this->dedicacionDesdeHorarios(
-            $this->encargoSacdHorarioRepository->getEncargoSacdHorarios(
-                ['id_enc' => $id_enc, 'id_nom' => $id_sacd, 'f_fin' => 'x'],
-                ['f_fin' => 'IS NULL', '_ordre' => 'f_ini DESC'],
+            $this->encargoSacdHorarioRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdHorarioField::IdEnc, $id_enc))
+                    ->andWhere(Filter::eq(EncargoSacdHorarioField::IdNom, $id_sacd))
+                    ->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin))
+                    ->orderBy(EncargoSacdHorarioField::FIni, OrderDirection::Desc)
             ),
         );
     }

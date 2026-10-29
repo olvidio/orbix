@@ -19,6 +19,7 @@ use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\EncargoConstants;
 use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
 use src\encargossacd\domain\criteria\EncargoTipoField;
 use src\misas\domain\criteria\EncargoDiaField;
 use src\shared\domain\criteria\Criteria;
@@ -729,16 +730,14 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
             }
         }
         // ++++++++++++++ Añado las ausencias +++++++++++++++
-        $aWhereE = [];
-        $aOperadorE = [];
-        $aWhereE['id_nom'] = $id_nom;
-        $aWhereE['f_ini'] = "'$sFin_iso'";
-        $aOperadorE['f_ini'] = '<=';
-        $aWhereE['f_fin'] = "'$sInicio_iso'";
-        $aOperadorE['f_fin'] = '>=';
         $EncargoRepository = $self->getEncargoRepository();
         $EncargoSacdHorarioRepository = $self->getEncargoSacdHorarioRepository();
-        $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
+        $cAusencias = $EncargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                ->andWhere(Filter::lte(EncargoSacdHorarioField::FIni, $sFin_iso))
+                ->andWhere(Filter::gte(EncargoSacdHorarioField::FFin, $sInicio_iso))
+        );
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc = $oTareaHorarioSacd->getId_enc();
             $oF_ini = $oTareaHorarioSacd->getF_ini();

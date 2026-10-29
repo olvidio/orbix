@@ -10,6 +10,7 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
 use src\misas\domain\criteria\EncargoDiaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -245,16 +246,11 @@ class CuadriculaUpdate
         }
 
         // Ausencias (encargos horario) del sacd en el dia.
-        $cAusencias = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios(
-            [
-                'id_nom' => $id_sacd,
-                'f_ini' => "'$dia_iso'",
-                'f_fin' => "'$dia_iso'",
-            ],
-            [
-                'f_ini' => '<=',
-                'f_fin' => '>=',
-            ],
+        $cAusencias = $this->encargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_sacd))
+                ->andWhere(Filter::lte(EncargoSacdHorarioField::FIni, $dia_iso))
+                ->andWhere(Filter::gte(EncargoSacdHorarioField::FFin, $dia_iso))
         );
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc_aux = $oTareaHorarioSacd->getId_enc();

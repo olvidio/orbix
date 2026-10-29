@@ -8,6 +8,7 @@ use DateInterval;
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoHorarioField;
 use src\encargossacd\domain\entity\Encargo;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -74,17 +75,15 @@ class EncargosZona
 
                 $a_ctr_enc[$id_ubi][$id_tipo_enc][$id_enc][$dia_num_semana] = '+';
 
-                $aWhere = [];
-                $aOperador = [];
-                $aWhere['id_enc'] = $id_enc;
                 $inicio_iso = $oInicio->getIso();
                 $fin_iso = $oFin->getIso();
-                $aWhere['f_ini'] = "'$inicio_iso'";
-                $aOperador['f_ini'] = '>=';
-                $aWhere['f_fin'] = "'$fin_iso'";
-                $aOperador['f_fin'] = '>=';
 
-                $cEncargoHorario = $this->encargoHorarioRepository->getEncargoHorarios($aWhere, $aOperador);
+                $cEncargoHorario = $this->encargoHorarioRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoHorarioField::IdEnc, $id_enc))
+                        ->andWhere(Filter::gte(EncargoHorarioField::FIni, $inicio_iso))
+                        ->andWhere(Filter::gte(EncargoHorarioField::FFin, $fin_iso))
+                );
                 foreach ($cEncargoHorario as $oEncargoHorario) {
                     $dia_ref = strtolower($oEncargoHorario->getDia_ref() ?? '');
                     if ($dia_ref === $a_dia_semana) {

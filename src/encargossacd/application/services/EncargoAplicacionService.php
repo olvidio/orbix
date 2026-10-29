@@ -7,7 +7,9 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoHorarioField;
 use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\entity\Encargo;
@@ -220,9 +222,11 @@ class EncargoAplicacionService
 
     public function dedicacion_ctr(int $id_ubi, int $id_enc, string $idioma = ''): string|false
     {
-        $aWhere = ['id_enc' => $id_enc, 'f_fin' => 'x'];
-        $aOperador = ['f_fin' => 'IS NULL'];
-        $cEncargoHorarios = $this->encargoHorarioRepository->getEncargoHorarios($aWhere, $aOperador);
+        $cEncargoHorarios = $this->encargoHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoHorarioField::IdEnc, $id_enc))
+                ->andWhere(Filter::isNull(EncargoHorarioField::FFin))
+        );
 
         if ($cEncargoHorarios === []) {
             return false;
@@ -233,9 +237,12 @@ class EncargoAplicacionService
 
     public function dedicacion(int $id_nom, int $id_enc, string $idioma = ''): string|false
     {
-        $aWhere = ['id_enc' => $id_enc, 'id_nom' => $id_nom, 'f_fin' => 'x'];
-        $aOperador = ['f_fin' => 'IS NULL'];
-        $cEncargoSacdHorario = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhere, $aOperador);
+        $cEncargoSacdHorario = $this->encargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdEnc, $id_enc))
+                ->andWhere(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                ->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin))
+        );
         if ($cEncargoSacdHorario === []) {
             return false;
         }
@@ -269,9 +276,12 @@ class EncargoAplicacionService
             $n_sacd = 1;
         }
 
-        $aWhere = ['id_enc' => $id_enc, 'dia_ref' => $modulo, 'f_fin' => 'x'];
-        $aOperador = ['f_fin' => 'IS NULL'];
-        $cEncargoHorarios = $this->encargoHorarioRepository->getEncargoHorarios($aWhere, $aOperador);
+        $cEncargoHorarios = $this->encargoHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoHorarioField::IdEnc, $id_enc))
+                ->andWhere(Filter::eq(EncargoHorarioField::DiaRef, $modulo))
+                ->andWhere(Filter::isNull(EncargoHorarioField::FFin))
+        );
         if ($cEncargoHorarios === []) {
             if ($dedicacion !== '' && $dedicacion !== null) {
                 $this->insert_horario_ctr($id_enc, $modulo, $dedicacion, $n_sacd);
@@ -311,9 +321,12 @@ class EncargoAplicacionService
 
     public function finalizar_horario_sacd(int $id_enc, int $id_nom, DateTimeLocal $f_fin): void
     {
-        $aWhere = ['id_enc' => $id_enc, 'id_nom' => $id_nom, 'f_fin' => 'x'];
-        $aOperador = ['f_fin' => 'IS NULL'];
-        $cEncargoSacdHorario = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhere, $aOperador);
+        $cEncargoSacdHorario = $this->encargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdEnc, $id_enc))
+                ->andWhere(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                ->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin))
+        );
         foreach ($cEncargoSacdHorario as $oEncargoSacdHorario) {
             $oEncargoSacdHorario->setF_fin($f_fin);
             if ($this->encargoSacdHorarioRepository->Guardar($oEncargoSacdHorario) === false) {
@@ -325,9 +338,13 @@ class EncargoAplicacionService
 
     public function modificar_horario_sacd(int $id_item_t_sacd, int $id_enc, int $id_nom, string $modulo, mixed $dedicacion): void
     {
-        $aWhere = ['id_enc' => $id_enc, 'id_nom' => $id_nom, 'dia_ref' => $modulo, 'f_fin' => 'x'];
-        $aOperador = ['f_fin' => 'IS NULL'];
-        $cEncargoSacdHorario = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhere, $aOperador);
+        $cEncargoSacdHorario = $this->encargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdEnc, $id_enc))
+                ->andWhere(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                ->andWhere(Filter::eq(EncargoSacdHorarioField::DiaRef, $modulo))
+                ->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin))
+        );
         if ($cEncargoSacdHorario === []) {
             if ($dedicacion !== '' && $dedicacion !== null) {
                 $this->insert_horario_sacd($id_item_t_sacd, $id_enc, $id_nom, $modulo, $dedicacion);

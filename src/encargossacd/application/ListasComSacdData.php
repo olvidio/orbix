@@ -9,6 +9,7 @@ use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
 use src\encargossacd\domain\criteria\EncargoSacdObservField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\criteria\Criteria;
@@ -197,15 +198,15 @@ final class ListasComSacdData
                     }
                 }
 
-                $aWhereH = [
-                    'id_enc' => $id_enc,
-                    'id_nom' => $id_nom,
-                    'f_fin' => "'$hoy_iso'",
-                ];
-                $aOperadorH = ['f_fin' => '>'];
-                $cHorarios1 = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereH, $aOperadorH) ?: [];
-                $aOperadorH['f_fin'] = 'IS NULL';
-                $cHorarios2 = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereH, $aOperadorH) ?: [];
+                $criterioH = Criteria::create()
+                    ->where(Filter::eq(EncargoSacdHorarioField::IdEnc, $id_enc))
+                    ->andWhere(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom));
+                $cHorarios1 = $this->encargoSacdHorarioRepository->matching(
+                    $criterioH->andWhere(Filter::gt(EncargoSacdHorarioField::FFin, $hoy_iso))
+                );
+                $cHorarios2 = $this->encargoSacdHorarioRepository->matching(
+                    $criterioH->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin))
+                );
                 $cHorarios = array_merge($cHorarios1, $cHorarios2);
 
                 $dedic_m = '';

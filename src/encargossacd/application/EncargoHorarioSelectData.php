@@ -4,7 +4,10 @@ namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoHorarioField;
 use src\encargossacd\domain\services\EncargoDominioService;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 
 /**
@@ -54,7 +57,9 @@ final class EncargoHorarioSelectData
             $desc_enc = (string)$oEncargo->getDesc_enc();
         }
 
-        $cEncargoHorarios = $this->encargoHorarioRepository->getEncargoHorarios(['id_enc' => $id_enc]);
+        $cEncargoHorarios = $this->encargoHorarioRepository->matching(
+            Criteria::create()->where(Filter::eq(EncargoHorarioField::IdEnc, $id_enc))
+        );
 
         $filas = [];
         if ($cEncargoHorarios !== []) {

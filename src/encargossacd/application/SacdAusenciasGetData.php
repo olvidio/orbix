@@ -5,6 +5,7 @@ namespace src\encargossacd\application;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoField;
 use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
@@ -139,17 +140,15 @@ final class SacdAusenciasGetData
         int $historial,
         string $hoy,
     ): array {
+        $criterio = Criteria::create()
+            ->where(Filter::eq(EncargoSacdHorarioField::IdEnc, $id_enc))
+            ->andWhere(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom));
         if ($historial === 1) {
-            return $repo->getEncargoSacdHorarios(['id_enc' => $id_enc, 'id_nom' => $id_nom]) ?: [];
+            return $repo->matching($criterio);
         }
 
-        $aWhere = ['id_enc' => $id_enc, 'id_nom' => $id_nom, 'f_fin' => "'$hoy'"];
-        $aOperador = ['f_fin' => '>'];
-        $c1 = $repo->getEncargoSacdHorarios($aWhere, $aOperador) ?: [];
-
-        $aWhere['f_fin'] = '';
-        $aOperador['f_fin'] = 'IS NULL';
-        $c2 = $repo->getEncargoSacdHorarios($aWhere, $aOperador) ?: [];
+        $c1 = $repo->matching($criterio->andWhere(Filter::gt(EncargoSacdHorarioField::FFin, $hoy)));
+        $c2 = $repo->matching($criterio->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin)));
 
         return array_merge($c1, $c2);
     }

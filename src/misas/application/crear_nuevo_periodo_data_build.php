@@ -18,6 +18,7 @@ use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
 use src\encargossacd\domain\criteria\EncargoTipoField;
 use src\misas\domain\criteria\EncargoDiaField;
 use src\shared\domain\criteria\Criteria;
@@ -199,18 +200,16 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
         }
 
         // ++++++++++++++ Anado las ausencias +++++++++++++++
-        $aWhereE = [];
-        $aOperadorE = [];
-        $aWhereE['id_nom'] = $id_nom;
         $sInicio_iso = $oInicio->getIso();
         $sFin_iso = $oFin->getIso();
-        $aWhereE['f_ini'] = "'$sInicio_iso'";
-        $aOperadorE['f_ini'] = '<=';
-        $aWhereE['f_fin'] = "'$sFin_iso'";
-        $aOperadorE['f_fin'] = '>=';
         $EncargoRepository = $self->getEncargoRepository();
         $EncargoSacdHorarioRepository = $self->getEncargoSacdHorarioRepository();
-        $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
+        $cAusencias = $EncargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                ->andWhere(Filter::lte(EncargoSacdHorarioField::FIni, $sInicio_iso))
+                ->andWhere(Filter::gte(EncargoSacdHorarioField::FFin, $sFin_iso))
+        );
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc = $oTareaHorarioSacd->getId_enc();
             $oF_ini = $oTareaHorarioSacd->getF_ini();

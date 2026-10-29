@@ -256,7 +256,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_dedicacion_ctr_sin_horarios_devuelve_false(): void
     {
         $horarioRepo = $this->createMock(EncargoHorarioRepositoryInterface::class);
-        $horarioRepo->method('getEncargoHorarios')->willReturn([]);
+        $horarioRepo->method('matching')->willReturn([]);
         $this->service = $this->makeService([
             EncargoHorarioRepositoryInterface::class => $horarioRepo,
         ]);
@@ -267,7 +267,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_dedicacion_sin_horarios_de_sacd_devuelve_false(): void
     {
         $sacdHorarioRepo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-        $sacdHorarioRepo->method('getEncargoSacdHorarios')->willReturn([]);
+        $sacdHorarioRepo->method('matching')->willReturn([]);
         $this->service = $this->makeService([
             EncargoSacdHorarioRepositoryInterface::class => $sacdHorarioRepo,
         ]);

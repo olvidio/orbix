@@ -116,7 +116,7 @@ final class CuadriculaUpdateStatusTest extends TestCase
         $cargos->method('getAsistenteCargoDeActividad')->willReturn([]);
 
         $horarios = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-        $horarios->method('getEncargoSacdHorarios')->willReturn([]);
+        $horarios->method('matching')->willReturn([]);
 
         return new CuadriculaUpdate(
             $encargoDiaRepository,
