@@ -3,9 +3,13 @@
 namespace src\planning\application;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CasaField;
+use src\ubis\domain\criteria\CentroEllasField;
 use src\ubis\domain\entity\Ubi;
 
 /**
@@ -41,47 +45,49 @@ class ActividadesPorCasasService
         $a_actividades = [];
 
         if ($Qcdc_sel < 10) {
-            $aWhere = [];
-            $aOperador = [];
+            $criterio = Criteria::create();
             $cCentrosSf = [];
             switch ($Qcdc_sel) {
                 case 1:
-                    $aWhere['sv'] = 't';
-                    $aWhere['sf'] = 't';
+                    $criterio = $criterio->where(Filter::eq(CasaField::Sv, true))
+                        ->andWhere(Filter::eq(CasaField::Sf, true));
                     break;
                 case 2:
-                    $aWhere['sv'] = 'f';
-                    $aWhere['sf'] = 't';
+                    $criterio = $criterio->where(Filter::eq(CasaField::Sv, false))
+                        ->andWhere(Filter::eq(CasaField::Sf, true));
                     break;
                 case 3:
-                    $aWhere['sv'] = 't';
-                    $aWhere['sf'] = 't';
-                    $aWhere['tipo_ubi'] = 'cdcdl';
-                    $aWhere['tipo_casa'] = 'cdc|cdr';
-                    $aOperador['tipo_casa'] = '~';
+                    $criterio = $criterio->where(Filter::eq(CasaField::Sv, true))
+                        ->andWhere(Filter::eq(CasaField::Sf, true))
+                        ->andWhere(Filter::eq(CasaField::TipoUbi, 'cdcdl'))
+                        ->andWhere(Filter::matches(CasaField::TipoCasa, 'cdc|cdr'));
                     break;
                 case 4:
-                    $aWhere['sv'] = 't';
+                    $criterio = $criterio->where(Filter::eq(CasaField::Sv, true));
                     break;
                 case 5:
-                    $aWhere['sf'] = 't';
+                    $criterio = $criterio->where(Filter::eq(CasaField::Sf, true));
                     break;
                 case 6:
-                    $aWhere['sf'] = 't';
-                    $cCentrosSf = $this->centroEllasRepository->getCentros(['cdc' => 't', '_ordre' => 'nombre_ubi']);
+                    $criterio = $criterio->where(Filter::eq(CasaField::Sf, true));
+                    $cCentrosSf = $this->centroEllasRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(CentroEllasField::Cdc, true))
+                            ->orderBy(CentroEllasField::NombreUbi)
+                    );
                     break;
                 case 9:
                     $a_id_cdc = $aIdCdc ?? [];
                     $a_id_cdc = array_filter($a_id_cdc, static fn ($v) => $v !== '');
                     if (!empty($a_id_cdc)) {
                         $sCdc = implode(',', $a_id_cdc);
-                        $aWhere['id_ubi'] = $sCdc;
-                        $aOperador['id_ubi'] = 'IN';
+                        $criterio = $criterio->where(
+                            Filter::in(CasaField::IdUbi, array_map('intval', array_values($a_id_cdc)))
+                        );
                     }
                     break;
             }
-            $aWhere['_ordre'] = 'nombre_ubi';
-            $cCasasDl = $this->casaDlRepository->getCasas($aWhere, $aOperador);
+            $cCasasDl = $this->casaDlRepository->matching($criterio->orderBy(CasaField::NombreUbi));
 
             if ($Qcdc_sel === 6) {
                 foreach ($cCentrosSf as $oCentroSf) {

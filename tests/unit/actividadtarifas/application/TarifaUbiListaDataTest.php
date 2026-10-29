@@ -53,7 +53,7 @@ final class TarifaUbiListaDataTest extends TestCase
         $tipoTarifa->method('getModoTxt')->willReturn('manual');
 
         $tarifaUbiRepository = $this->createMock(TarifaUbiRepositoryInterface::class);
-        $tarifaUbiRepository->method('getTarifaUbis')->willReturn([$tarifaUbi]);
+        $tarifaUbiRepository->method('matching')->willReturn([$tarifaUbi]);
         $relacionRepository = $this->createMock(RelacionTarifaTipoActividadRepositoryInterface::class);
         $relacionRepository->method('getTipoActivTarifas')->willReturn([]);
         $tipoTarifaRepository = $this->createMock(TipoTarifaRepositoryInterface::class);

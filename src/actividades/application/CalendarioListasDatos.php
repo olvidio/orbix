@@ -15,6 +15,7 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\criteria\CasaField;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\application\services\CentroNombreResolver;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
@@ -74,8 +75,7 @@ final class CalendarioListasDatos
         $miSfsv = ConfigGlobal::mi_sfsv();
         $ver_ctr = empty($Qver_ctr) ? 'no' : $Qver_ctr;
 
-        $aWhereCasa = [];
-        $aOperadorCasa = [];
+        $criterioCasa = Criteria::create();
         $mi_of = '';
         $tipo = '';
         switch ($Qque) {
@@ -85,35 +85,33 @@ final class CalendarioListasDatos
                     $cdcIds = [];
                     foreach ($Qaid_cdc as $cdcId) {
                         if (is_scalar($cdcId)) {
-                            $cdcIds[] = (string) $cdcId;
+                            $cdcIds[] = (int) $cdcId;
                         }
                     }
-                    $v = '{' . implode(', ', $cdcIds) . '}';
-                    $aWhereCasa['id_ubi'] = $v;
-                    $aOperadorCasa['id_ubi'] = 'ANY';
+                    $criterioCasa = $criterioCasa->where(Filter::in(CasaField::IdUbi, $cdcIds));
                 }
                 break;
             case 'c_comunes':
             case 'c_comunes_sf':
             case 'c_comunes_sv':
                 $tipo = 'casa';
-                $aWhereCasa['tipo_ubi'] = 'cdcdl';
-                $aWhereCasa['sv'] = 't';
-                $aWhereCasa['sf'] = 't';
+                $criterioCasa = $criterioCasa->where(Filter::eq(CasaField::TipoUbi, 'cdcdl'))
+                    ->andWhere(Filter::eq(CasaField::Sv, true))
+                    ->andWhere(Filter::eq(CasaField::Sf, true));
                 break;
             case 'c_todas':
                 $tipo = 'casa';
-                $aWhereCasa['tipo_ubi'] = 'cdcdl';
+                $criterioCasa = $criterioCasa->where(Filter::eq(CasaField::TipoUbi, 'cdcdl'));
                 break;
             case 'c_todas_sf':
                 $tipo = 'casa';
-                $aWhereCasa['tipo_ubi'] = 'cdcdl';
-                $aWhereCasa['sf'] = 't';
+                $criterioCasa = $criterioCasa->where(Filter::eq(CasaField::TipoUbi, 'cdcdl'))
+                    ->andWhere(Filter::eq(CasaField::Sf, true));
                 break;
             case 'c_todas_sv':
                 $tipo = 'casa';
-                $aWhereCasa['tipo_ubi'] = 'cdcdl';
-                $aWhereCasa['sv'] = 't';
+                $criterioCasa = $criterioCasa->where(Filter::eq(CasaField::TipoUbi, 'cdcdl'))
+                    ->andWhere(Filter::eq(CasaField::Sv, true));
                 break;
             case 'o_actual':
                 $tipo = 'oficina';
@@ -145,7 +143,7 @@ final class CalendarioListasDatos
         switch ($tipo) {
             case 'casa':
                 $CasaDlRepository = $this->casaDlRepository;
-                $cCasas = $CasaDlRepository->getCasas($aWhereCasa, $aOperadorCasa);
+                $cCasas = $CasaDlRepository->matching($criterioCasa);
                 foreach ($cCasas as $oCasa) {
                     $aGrupos[$oCasa->getId_ubi()] = $oCasa->getNombre_ubi();
                 }

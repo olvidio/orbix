@@ -17,6 +17,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
+use src\ubis\domain\criteria\TarifaUbiField;
 use src\ubis\domain\entity\Ubi;
 
 /**
@@ -236,12 +237,14 @@ final class ExportarActividadesData
                 }
             }
             $year = $oF_ini?->format('Y') ?? '';
-            $cTarifas = $this->tarifaUbiRepository->getTarifaUbis([
-                'id_ubi' => $id_ubi,
-                'year' => $year,
-                'id_tarifa' => $id_tarifa,
-                '_ordre' => 'year,id_tarifa',
-            ]);
+            $cTarifas = $this->tarifaUbiRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(TarifaUbiField::IdUbi, $id_ubi))
+                    ->andWhere(Filter::eq(TarifaUbiField::Year, $year))
+                    ->andWhere(Filter::eq(TarifaUbiField::IdTarifa, $id_tarifa))
+                    ->orderBy(TarifaUbiField::Year)
+                    ->addOrderBy(TarifaUbiField::IdTarifa)
+            );
             $cantidad = 0;
             $cantidad_estudiante = 0;
             if ($cTarifas === []) {

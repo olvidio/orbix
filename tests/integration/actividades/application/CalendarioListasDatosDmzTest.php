@@ -61,7 +61,7 @@ final class CalendarioListasDatosDmzTest extends myTest
         $casa->method('getId_ubi')->willReturn(1001);
         $casa->method('getNombre_ubi')->willReturn('Casa prueba');
         $casaDl = $this->createMock(CasaDlRepositoryInterface::class);
-        $casaDl->method('getCasas')->willReturn([$casa]);
+        $casaDl->method('matching')->willReturn([$casa]);
 
         $actividad = $this->createMock(ActividadAll::class);
         $actividad->method('getId_activ')->willReturn(5001);

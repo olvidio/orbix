@@ -3,7 +3,10 @@
 namespace src\casas\application;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\ubis\domain\criteria\TarifaUbiField;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
@@ -159,11 +162,12 @@ final class CasaIngresosListaData
                         $oTipoTarifa = $this->tipoTarifaRepository->findById($id_tarifa);
                         $modo = $oTipoTarifa?->getModo() ?? 0;
 
-                        $cTarifasUbi = $this->tarifaUbiRepository->getTarifaUbis([
-                            'id_tarifa' => $id_tarifa,
-                            'id_ubi' => $id_ubi,
-                            'year' => $year,
-                        ]);
+                        $cTarifasUbi = $this->tarifaUbiRepository->matching(
+                            Criteria::create()
+                                ->where(Filter::eq(TarifaUbiField::IdTarifa, $id_tarifa))
+                                ->andWhere(Filter::eq(TarifaUbiField::IdUbi, $id_ubi))
+                                ->andWhere(Filter::eq(TarifaUbiField::Year, $year))
+                        );
                         if (isset($cTarifasUbi[0])) {
                             $cantidad = (float)$cTarifasUbi[0]->getCantidad();
                         }

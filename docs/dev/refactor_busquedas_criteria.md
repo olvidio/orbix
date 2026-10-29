@@ -560,7 +560,11 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - Migradas las 20 llamadas de `src/` a `matching()` con `DelegacionField`; no quedan llamantes fuera de repositorio y tests de equivalencia. `DbLugarDropdown` pasaba `_ordre` en `$aOperators` (nunca se aplicaba); ahora ordena por `dl` (solo orden, no filas).
     - Mocks de tests unitarios (`personas`, `actividadplazas`, `actividadestudios`) pasan de `getDelegaciones` a `matching`.
     - Suites verdes: unit de `personas`, `actividadplazas`, `actividadestudios`, `notas`, `actividades`, `dbextern`, `devel_db_admin`; integration de `actividadplazas`, `actividadestudios`, `actividades`, `dbextern`, `devel_db_admin`, `ubis`. `integration/notas`: 2 errores previos por tabla `e_actas_tribunal_ex` inexistente en el entorno (y necesita `memory_limit` mayor).
-  - [ ] **4.6.casas** llamantes de `getTarifaUbis` y `getCasas` (`casas`, `pasarela`, `actividadtarifas`, `planning`, `actividades`, `DBTrasvase`).
+  - [x] **4.6.casas** llamantes de `getTarifaUbis` y `getCasas` (`casas`, `pasarela`, `actividadtarifas`, `planning`, `actividades`, `DBTrasvase`). Decisiones:
+    - Migradas 6 llamadas a `getTarifaUbis` (`CasaIngresosListaData`, `CalendarioUbiResumenData` (2), `TarifaUbiListaData`, `ExportarActividadesData`) y 4 a `getCasas` (`ActividadesPorCasasService`, `CasasResumenData`, `CalendarioListasDatos`, `DBTrasvase` casas). Las 2 llamadas a `getCentros(['cdc' => 't'])` que viven en `ActividadesPorCasasService` y `CasasResumenData` se migraron aquí (`CentroEllasField::Cdc`); el resto de `getCentros` va en 4.6.centros.
+    - Los `IN`/`~ '^a$|^b$'`/`ANY '{..}'` sobre `id_ubi` pasan a `Filter::in(CasaField::IdUbi, [int...])`; `tipo_casa ~ 'cdc|cdr'` a `Filter::matches`. `DBTrasvase` usa `Filter::isNull(CasaField::Dl)` para el caso `cr`.
+    - Tests: `ActividadesPorCasasServiceTest` pasa de capturar `$aWhere/$aOperador` a inspeccionar el `Criteria`; mocks de `TarifaUbiListaDataTest` y `CalendarioListasDatosDmzTest` pasan a `matching`.
+    - Suites verdes: unit de `planning`, `actividadtarifas`, `casas`, `pasarela`, `actividades`, `shared`; integration de `casas`, `pasarela`, `actividadtarifas`, `ubis`, `actividades` (esta última con `memory_limit=1G` por límite del contenedor).
   - [ ] **4.6.centros** llamantes de `getCentros` (~50) y `ZonaCtrLista` + `CentrosDeZona::whereActivosIn`.
   - [ ] **4.6.notas** llamantes de `getActas` / `getPersonaNotas`.
   - [ ] **4.6.plazas** llamantes de `getActividadesPlazas` / `getPlazasPeticion`.

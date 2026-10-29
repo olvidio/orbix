@@ -8,8 +8,11 @@ use src\actividadtarifas\domain\value_objects\SerieId;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
+use src\ubis\domain\criteria\TarifaUbiField;
 
 /**
  * Data builder: listado de `TarifaUbi` por `id_ubi` + `year`.
@@ -47,11 +50,13 @@ final class TarifaUbiListaData
 
         $cTarifas = [];
         if ($id_ubi !== 0 && $year !== 0) {
-            $cTarifas = $this->tarifaUbiRepository->getTarifaUbis([
-                'id_ubi' => $id_ubi,
-                'year' => $year,
-                '_ordre' => 'year,id_tarifa',
-            ]);
+            $cTarifas = $this->tarifaUbiRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(TarifaUbiField::IdUbi, $id_ubi))
+                    ->andWhere(Filter::eq(TarifaUbiField::Year, $year))
+                    ->orderBy(TarifaUbiField::Year)
+                    ->addOrderBy(TarifaUbiField::IdTarifa)
+            );
         }
 
         $a_valores = [];

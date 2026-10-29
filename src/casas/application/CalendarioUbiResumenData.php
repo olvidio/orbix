@@ -14,6 +14,7 @@ use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
+use src\ubis\domain\criteria\TarifaUbiField;
 use src\actividades\domain\entity\TiposActividades;
 
 /**
@@ -81,11 +82,12 @@ final class CalendarioUbiResumenData
                 $modo = (int)$oTipoTarifa->getModo();
                 $letra = (string)$oTipoTarifa->getLetra();
 
-                $cTarifasUbi = $this->tarifaUbiRepository->getTarifaUbis([
-                    'id_tarifa' => $id_tarifa,
-                    'id_ubi' => $id_ubi,
-                    'year' => $any_actual,
-                ]);
+                $cTarifasUbi = $this->tarifaUbiRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(TarifaUbiField::IdTarifa, $id_tarifa))
+                        ->andWhere(Filter::eq(TarifaUbiField::IdUbi, $id_ubi))
+                        ->andWhere(Filter::eq(TarifaUbiField::Year, $any_actual))
+                );
                 $cantidad_actual = 0.0;
                 if (isset($cTarifasUbi[0])) {
                     $cantidad_actual = (float)$cTarifasUbi[0]->getCantidad();
@@ -96,11 +98,12 @@ final class CalendarioUbiResumenData
                     'cantidad' => $cantidad_actual,
                 ];
 
-                $cTarifasUbiPrev = $this->tarifaUbiRepository->getTarifaUbis([
-                    'id_tarifa' => $id_tarifa,
-                    'id_ubi' => $id_ubi,
-                    'year' => $any_prev,
-                ]);
+                $cTarifasUbiPrev = $this->tarifaUbiRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(TarifaUbiField::IdTarifa, $id_tarifa))
+                        ->andWhere(Filter::eq(TarifaUbiField::IdUbi, $id_ubi))
+                        ->andWhere(Filter::eq(TarifaUbiField::Year, $any_prev))
+                );
                 if (isset($cTarifasUbiPrev[0])) {
                     $oTarifaPrev = $cTarifasUbiPrev[0];
                     $cantidad = (float)$oTarifaPrev->getCantidad();
