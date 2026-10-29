@@ -2,6 +2,9 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
@@ -98,15 +101,14 @@ final class ActaNotasDefinitivasGrabar
             $iepoca = NotaEpoca::EPOCA_INVIERNO;
         }
 
-        $whereMatriculas = [
-            'id_asignatura' => $Qid_asignatura,
-            'id_activ' => $Qid_activ,
-        ];
+        $criteriaMatriculas = Criteria::create()
+            ->where(Filter::eq(MatF::IdAsignatura, $Qid_asignatura))
+            ->andWhere(Filter::eq(MatF::IdActiv, $Qid_activ));
         $dlOrg = $oActividad->getDl_org() ?? '';
         if ($dlOrg === '' || $dlOrg !== ConfigGlobal::mi_delef()) {
-            $whereMatriculas['id_schema'] = $idSchema;
+            $criteriaMatriculas = $criteriaMatriculas->andWhere(Filter::eq(MatF::IdSchema, $idSchema));
         }
-        $cMatriculados = $this->matriculaRepository->getMatriculas($whereMatriculas);
+        $cMatriculados = $this->matriculaRepository->matching($criteriaMatriculas);
 
         foreach ($cMatriculados as $oMatricula) {
             $id_nom = $oMatricula->getId_nom();

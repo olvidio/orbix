@@ -2,6 +2,9 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
 use frontend\shared\config\OrbixRuntime;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
@@ -86,7 +89,11 @@ final class E43CertificadoData
         $lugar = $oUbi !== null ? $oUbi->getNombre_ubi() : '';
         $txtActividad = "$lugar, $fIni-$fFin";
 
-        $cMatriculas = $this->matriculaRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]);
+        $cMatriculas = $this->matriculaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(MatF::IdNom, $idNom))
+                ->andWhere(Filter::eq(MatF::IdActiv, $idActiv))
+        );
         $matriculas = count($cMatriculas);
         $aAsignaturasMatriculadas = [];
         if ($matriculas > 0) {

@@ -48,7 +48,7 @@ final class SelectAsignaturasDeUnaActividadSelTest extends TestCase
         $ajena = $this->actividadAsignatura(2002);
 
         $aaRepo = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->willReturn([$propia, $ajena]);
+        $aaRepo->method('matching')->willReturn([$propia, $ajena]);
 
         $asig = $this->createMock(Asignatura::class);
         $asig->method('getNombre_corto')->willReturn('Latín I');

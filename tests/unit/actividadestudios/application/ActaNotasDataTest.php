@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\unit\actividadestudios\application;
 
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
@@ -44,11 +48,15 @@ final class ActaNotasDataTest extends TestCase
     public function test_filtra_acta_y_permiso_por_id_schema_propio(): void
     {
         $aaRepo = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->willReturnCallback(
-            function (array $where) {
-                $this->assertSame(10, $where['id_activ']);
-                $this->assertSame(1101, $where['id_asignatura']);
-                $this->assertSame(1001, $where['id_schema']);
+        $aaRepo->method('matching')->willReturnCallback(
+            function (Criteria $criteria) {
+                $this->assertEquals(
+                    Criteria::create()
+                        ->where(Filter::eq(AaF::IdActiv, 10))
+                        ->andWhere(Filter::eq(AaF::IdAsignatura, 1101))
+                        ->andWhere(Filter::eq(AaF::IdSchema, 1001)),
+                    $criteria
+                );
 
                 return [$this->actividadAsignatura(1001)];
             }
@@ -66,11 +74,14 @@ final class ActaNotasDataTest extends TestCase
         );
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $matRepo->method('getMatriculas')->willReturnCallback(
-            function (array $where) {
-                $this->assertArrayNotHasKey('id_schema', $where);
-                $this->assertSame(10, $where['id_activ']);
-                $this->assertSame(1101, $where['id_asignatura']);
+        $matRepo->method('matching')->willReturnCallback(
+            function (Criteria $criteria) {
+                $this->assertEquals(
+                    Criteria::create()
+                        ->where(Filter::eq(MatF::IdAsignatura, 1101))
+                        ->andWhere(Filter::eq(MatF::IdActiv, 10)),
+                    $criteria
+                );
 
                 return [];
             }
@@ -107,9 +118,15 @@ final class ActaNotasDataTest extends TestCase
     public function test_otra_dl_no_mezcla_acta_ni_deja_modificar(): void
     {
         $aaRepo = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->willReturnCallback(
-            function (array $where) {
-                $this->assertSame(2002, $where['id_schema']);
+        $aaRepo->method('matching')->willReturnCallback(
+            function (Criteria $criteria) {
+                $this->assertEquals(
+                    Criteria::create()
+                        ->where(Filter::eq(AaF::IdActiv, 10))
+                        ->andWhere(Filter::eq(AaF::IdAsignatura, 1101))
+                        ->andWhere(Filter::eq(AaF::IdSchema, 2002)),
+                    $criteria
+                );
 
                 return [$this->actividadAsignatura(2002)];
             }
@@ -127,10 +144,12 @@ final class ActaNotasDataTest extends TestCase
         );
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $matRepo->expects($this->once())->method('getMatriculas')->with(
-            $this->callback(static function (array $where): bool {
-                return !array_key_exists('id_schema', $where);
-            })
+        $matRepo->expects($this->once())->method('matching')->with(
+            $this->equalTo(
+                Criteria::create()
+                    ->where(Filter::eq(MatF::IdAsignatura, 1101))
+                    ->andWhere(Filter::eq(MatF::IdActiv, 10))
+            )
         )->willReturn([]);
 
         $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
@@ -153,7 +172,7 @@ final class ActaNotasDataTest extends TestCase
     public function test_sin_id_schema_elige_la_fila_de_la_sesion(): void
     {
         $aaRepo = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->willReturn([
+        $aaRepo->method('matching')->willReturn([
             $this->actividadAsignatura(2002),
             $this->actividadAsignatura(1001),
         ]);
@@ -168,7 +187,7 @@ final class ActaNotasDataTest extends TestCase
         )->willReturn([$actaPropia]);
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $matRepo->method('getMatriculas')->willReturn([]);
+        $matRepo->method('matching')->willReturn([]);
 
         $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
         $actRepo->method('findById')->willReturn(null);
@@ -185,16 +204,19 @@ final class ActaNotasDataTest extends TestCase
     public function test_dl_no_organizadora_filtra_matriculas_por_esquema(): void
     {
         $aaRepo = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->willReturn([$this->actividadAsignatura(1001)]);
+        $aaRepo->method('matching')->willReturn([$this->actividadAsignatura(1001)]);
 
         $actaRepo = $this->createMock(ActaRepositoryInterface::class);
         $actaRepo->method('getActas')->willReturn([]);
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $matRepo->expects($this->once())->method('getMatriculas')->with(
-            $this->callback(static function (array $where): bool {
-                return ($where['id_schema'] ?? 0) === 1001;
-            })
+        $matRepo->expects($this->once())->method('matching')->with(
+            $this->equalTo(
+                Criteria::create()
+                    ->where(Filter::eq(MatF::IdAsignatura, 1101))
+                    ->andWhere(Filter::eq(MatF::IdActiv, 10))
+                    ->andWhere(Filter::eq(MatF::IdSchema, 1001))
+            )
         )->willReturn([]);
 
         $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
@@ -216,7 +238,7 @@ final class ActaNotasDataTest extends TestCase
     public function test_acta_firmada_no_sale_en_desplegable_de_edicion(): void
     {
         $aaRepo = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->willReturn([$this->actividadAsignatura(1001)]);
+        $aaRepo->method('matching')->willReturn([$this->actividadAsignatura(1001)]);
 
         $actaFirmada = new Acta();
         $actaFirmada->setActa('dlbv 1/26');
@@ -225,7 +247,7 @@ final class ActaNotasDataTest extends TestCase
         $actaRepo->method('getActas')->willReturn([$actaFirmada]);
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $matRepo->method('getMatriculas')->willReturn([]);
+        $matRepo->method('matching')->willReturn([]);
 
         $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
         $oActiv = $this->createMock(ActividadAll::class);

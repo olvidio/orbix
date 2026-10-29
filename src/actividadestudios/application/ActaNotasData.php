@@ -2,6 +2,10 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividadestudios\application\support\MatriculaNotaEstado;
@@ -104,14 +108,13 @@ final class ActaNotasData
         $nomActiv = $oActividad !== null ? $oActividad->getNom_activ() : '';
         $esOrganizador = self::esDlOrganizadora($oActividad);
 
-        $whereMatriculas = [
-            'id_asignatura' => $idAsignatura,
-            'id_activ' => $idActiv,
-        ];
+        $criteriaMatriculas = Criteria::create()
+            ->where(Filter::eq(MatF::IdAsignatura, $idAsignatura))
+            ->andWhere(Filter::eq(MatF::IdActiv, $idActiv));
         if (!$esOrganizador) {
-            $whereMatriculas['id_schema'] = $idSchema;
+            $criteriaMatriculas = $criteriaMatriculas->andWhere(Filter::eq(MatF::IdSchema, $idSchema));
         }
-        $cMatriculados = $this->matriculaRepository->getMatriculas($whereMatriculas);
+        $cMatriculados = $this->matriculaRepository->matching($criteriaMatriculas);
         $matriculados = count($cMatriculados);
         $aPersonasMatriculadas = [];
         if ($matriculados > 0) {
@@ -212,14 +215,13 @@ final class ActaNotasData
 
     private function resolverActividadAsignatura(int $idActiv, int $idAsignatura, int $idSchema): ?ActividadAsignatura
     {
-        $where = [
-            'id_activ' => $idActiv,
-            'id_asignatura' => $idAsignatura,
-        ];
+        $criteria = Criteria::create()
+            ->where(Filter::eq(AaF::IdActiv, $idActiv))
+            ->andWhere(Filter::eq(AaF::IdAsignatura, $idAsignatura));
         if ($idSchema > 0) {
-            $where['id_schema'] = $idSchema;
+            $criteria = $criteria->andWhere(Filter::eq(AaF::IdSchema, $idSchema));
         }
-        $filas = $this->actividadAsignaturaRepository->getActividadAsignaturas($where);
+        $filas = $this->actividadAsignaturaRepository->matching($criteria);
         if ($filas === []) {
             return null;
         }

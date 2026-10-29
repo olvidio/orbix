@@ -2,6 +2,10 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -144,11 +148,12 @@ class Select_matriculas_de_una_persona
             $this->permiso = 2;
         }
 
-        $cMatriculas = $this->matriculaRepository->getMatriculas([
-            'id_nom' => $this->id_pau,
-            'id_activ' => $this->id_activ,
-            '_ordre' => 'id_nivel',
-        ]);
+        $cMatriculas = $this->matriculaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(MatF::IdNom, $this->id_pau))
+                ->andWhere(Filter::eq(MatF::IdActiv, $this->id_activ))
+                ->orderBy(MatF::IdNivel)
+        );
 
         $form = "seleccionados" . $ca_num;
         if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($est_ok)) {
@@ -300,7 +305,7 @@ class Select_matriculas_de_una_persona
     private function ofertasDlPorAsignatura(int $idActiv): array
     {
         $ofertasPorAsignatura = [];
-        foreach ($this->actividadAsignaturaRepository->getActividadAsignaturas(['id_activ' => $idActiv]) as $oOferta) {
+        foreach ($this->actividadAsignaturaRepository->matching(Criteria::create()->where(Filter::eq(AaF::IdActiv, $idActiv))) as $oOferta) {
             $idAsignatura = $oOferta->getId_asignatura();
             $idSchema = $oOferta->getId_schema();
             $ofertasPorAsignatura[$idAsignatura][] = [

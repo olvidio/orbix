@@ -3,6 +3,7 @@
 namespace src\actividadestudios\domain\contracts;
 
 use src\actividadestudios\domain\entity\Matricula;
+use src\shared\domain\criteria\Criteria;
 use src\actividadestudios\domain\value_objects\ActividadMatriculaPk;
 
 interface MatriculaRepositoryInterface
@@ -13,6 +14,14 @@ interface MatriculaRepositoryInterface
     public function getMatriculasPendientes(?int $id_nom = null): array;
 
     /**
+     * Matricula que cumplen el criterio.
+     *
+     * @return list<Matricula>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<Matricula>

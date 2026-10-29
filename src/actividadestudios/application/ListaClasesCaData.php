@@ -2,6 +2,10 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use frontend\shared\config\OrbixRuntime;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -78,7 +82,7 @@ final class ListaClasesCaData
         }
 
         $a = 0;
-        $cActividadAsignaturas = $this->actividadAsignaturaRepository->getActividadAsignaturas(['id_activ' => $idActiv]);
+        $cActividadAsignaturas = $this->actividadAsignaturaRepository->matching(Criteria::create()->where(Filter::eq(AaF::IdActiv, $idActiv)));
         $datosAsignatura = [];
         foreach ($cActividadAsignaturas as $oActividadAsignatura) {
             $a++;
@@ -108,7 +112,11 @@ final class ListaClasesCaData
                 $tipoProfesor = ucfirst(_("profesor"));
             }
 
-            $cMatriculas = $this->matriculaRepository->getMatriculas(['id_activ' => $idActiv, 'id_asignatura' => $idAsignatura]);
+            $cMatriculas = $this->matriculaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(MatF::IdActiv, $idActiv))
+                    ->andWhere(Filter::eq(MatF::IdAsignatura, $idAsignatura))
+            );
             $aMatriculados = [];
             foreach ($cMatriculas as $oMatricula) {
                 $idNom = $oMatricula->getId_nom();

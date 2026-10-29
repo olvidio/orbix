@@ -27,6 +27,7 @@ class PgActividadAsignaturaDlRepository extends PgActividadAsignaturaRepository 
         parent::__construct($asignaturaRepository);
         $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
+        $this->setoDbl_select($oDbl);
         $this->setNomTabla('d_asignaturas_activ_dl');
     }
 }

@@ -4,7 +4,11 @@ namespace src\actividadestudios\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\actividadestudios\domain\criteria\MatriculaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
@@ -25,11 +29,16 @@ use src\shared\traits\HandlesPdoErrors;
 class PgMatriculaRepository extends ClaseRepository implements MatriculaRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
         $oDbl = GlobalPdo::get('oDBP');
         $this->setoDbl($oDbl);
+        $this->setoDbl_select($oDbl);
         $this->setNomTabla('d_matriculas_activ');
     }
 
@@ -76,80 +85,34 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * Matricula que cumplen el criterio. Las filas con datos inválidos se descartan (y se eliminan) igual que antes.
+     *
      * @return list<Matricula>
      */
-    public function getMatriculas(array $aWhere = [], array $aOperators = []): array
+    public function matching(Criteria $criteria): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $MatriculaSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        if (isset($aWhere['_ordre']) && is_scalar($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . (string) $aWhere['_ordre'];
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . (string) $aWhere['_limit'];
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $conv = new PgCriteriaConverter(MatriculaField::class, self::COLUMNAS);
         /** @var list<Matricula> $items */
         $items = [];
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
+        foreach ($this->rowsMatching($criteria, $conv) as $normalized) {
             $oMatricula = $this->matriculaFromRow($normalized);
             if ($oMatricula !== null) {
                 $items[] = $oMatricula;
             }
         }
         return $items;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Matricula>
+     */
+    public function getMatriculas(array $aWhere = [], array $aOperators = []): array
+    {
+        $adapter = new LegacyWhereAdapter(MatriculaField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /**

@@ -2,6 +2,10 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\application\support\AsignaturaNombreDlPrefix;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
@@ -176,7 +180,11 @@ final class FormMatriculasDeUnaPersonaData
                 $plan,
                 $this->asignaturaRepository,
             );
-            $cMatriculas = $this->matriculaDlRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]);
+            $cMatriculas = $this->matriculaDlRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(MatF::IdNom, $idNom))
+                    ->andWhere(Filter::eq(MatF::IdActiv, $idActiv))
+            );
             $aMatriculadas = [];
             foreach ($cMatriculas as $oMatricula) {
                 $aMatriculadas[$oMatricula->getId_nivel()] = $oMatricula->getId_asignatura();
@@ -237,13 +245,17 @@ final class FormMatriculasDeUnaPersonaData
     private function opcionesAsignaturasDelCa(int $idActiv, int $idNom, string $dlOrg): array
     {
         $yaMatriculadas = [];
-        foreach ($this->matriculaRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]) as $oMatricula) {
+        foreach ($this->matriculaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(MatF::IdNom, $idNom))
+                    ->andWhere(Filter::eq(MatF::IdActiv, $idActiv))
+            ) as $oMatricula) {
             $yaMatriculadas[$oMatricula->getId_asignatura()] = true;
         }
 
         $nombres = $this->asignaturaRepository->getArrayAsignaturasCreditos();
         $filas = [];
-        foreach ($this->actividadAsignaturaRepository->getActividadAsignaturas(['id_activ' => $idActiv]) as $oOferta) {
+        foreach ($this->actividadAsignaturaRepository->matching(Criteria::create()->where(Filter::eq(AaF::IdActiv, $idActiv))) as $oOferta) {
             $idAsignatura = $oOferta->getId_asignatura();
             if (isset($yaMatriculadas[$idAsignatura])) {
                 continue;

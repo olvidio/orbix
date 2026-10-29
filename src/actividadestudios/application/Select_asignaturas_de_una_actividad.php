@@ -2,6 +2,9 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\application\support\ActividadAsignaturaSelToken;
@@ -97,9 +100,9 @@ class Select_asignaturas_de_una_actividad
         $this->txt_eliminar = _("¿Está seguro que desea quitar esta asignatura?");
         $this->txt_no_permiso = _("No puede modificar una asignatura que depende de otra dl");
 
-        $cActivAsignaturas = $this->actividadAsignaturaRepository->getActividadAsignaturas([
-            'id_activ' => $this->id_pau, '_ordre' => 'id_asignatura',
-        ]);
+        $cActivAsignaturas = $this->actividadAsignaturaRepository->matching(
+            Criteria::create()->where(Filter::eq(AaF::IdActiv, $this->id_pau))->orderBy(AaF::IdAsignatura)
+        );
 
         /** @var list<array{id_activ: int, id_asignatura: int, id_schema: int, dl: string, nombre_corto: string, creditos: mixed, id_profesor: ?int, avis: ?string, tipo: ?string, f_ini: ?string, f_fin: ?string}> $filas */
         $filas = [];

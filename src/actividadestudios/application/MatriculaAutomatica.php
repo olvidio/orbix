@@ -2,6 +2,10 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
@@ -146,7 +150,11 @@ final class MatriculaAutomatica
                         break;
                     }
 
-                    $cMatriculas = $this->matriculaDlRepository->getMatriculas(['id_nom' => $id_nom, 'id_activ' => $id_activ_1]);
+                    $cMatriculas = $this->matriculaDlRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(MatF::IdNom, $id_nom))
+                            ->andWhere(Filter::eq(MatF::IdActiv, $id_activ_1))
+                    );
                     foreach ($cMatriculas as $oMatricula) {
                         if ($this->matriculaDlRepository->Eliminar($oMatricula) === false) {
                             $msg .= _("hay un error, no se ha eliminado") . "\n" . $this->matriculaDlRepository->getErrorTxt() . "\n";
@@ -161,9 +169,10 @@ final class MatriculaAutomatica
                         }
                     }
 
-                    $cAsignaturasCa = $this->actividadAsignaturaRepository->getActividadAsignaturas(
-                        ['id_activ' => $id_activ_1, 'tipo' => 'x'],
-                        ['tipo' => 'IS NULL']
+                    $cAsignaturasCa = $this->actividadAsignaturaRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(AaF::IdActiv, $id_activ_1))
+                            ->andWhere(Filter::isNull(AaF::Tipo))
                     );
 
                     $m = 0;

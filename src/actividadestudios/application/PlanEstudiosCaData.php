@@ -2,6 +2,10 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -86,7 +90,9 @@ final class PlanEstudiosCaData
         $aPreceptores = [];
         $aProfesores = [];
         $a = 0;
-        $cActividadAsignaturas = $this->actividadAsignaturaDlRepository->getActividadAsignaturas(['id_activ' => $idActiv, '_ordre' => 'tipo']);
+        $cActividadAsignaturas = $this->actividadAsignaturaDlRepository->matching(
+            Criteria::create()->where(Filter::eq(AaF::IdActiv, $idActiv))->orderBy(AaF::Tipo)
+        );
         foreach ($cActividadAsignaturas as $oActividadAsignatura) {
             $a++;
             $idAsignatura = $oActividadAsignatura->getId_asignatura();
@@ -145,7 +151,11 @@ final class PlanEstudiosCaData
             $ctr = $oPersona->getCentro_o_dl();
             $stgr = $oPersona->getNivel_stgr();
 
-            $cMatriculas = $this->matriculaRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]);
+            $cMatriculas = $this->matriculaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(MatF::IdNom, $idNom))
+                    ->andWhere(Filter::eq(MatF::IdActiv, $idActiv))
+            );
             if (count($cMatriculas) === 0) {
                 switch ($stgr) {
                     case 'r':

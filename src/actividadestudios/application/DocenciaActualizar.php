@@ -2,6 +2,9 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -86,9 +89,10 @@ final class DocenciaActualizar
             $any = (int) $oFini->format('Y');
             $ini_a = ($mes < $ini_m) ? $any - 1 : $any;
 
-            $cActivAsignaturas = $this->actividadAsignaturaRepository->getActividadAsignaturas(
-                ['id_activ' => $id_activ],
-                ['id_profesor' => 'IS NOT NULL']
+            $cActivAsignaturas = $this->actividadAsignaturaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(AaF::IdActiv, $id_activ))
+                    ->andWhere(Filter::isNotNull(AaF::IdProfesor))
             );
 
             foreach ($cActivAsignaturas as $oActividadAsignatura) {

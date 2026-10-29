@@ -2,6 +2,10 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
@@ -112,10 +116,9 @@ class Select_matriculas_de_una_actividad
             $this->permiso = 1;
             $repoAsignaturas = $this->actividadAsignaturaRepository;
         }
-        $cActividadAsignaturas = $repoAsignaturas->getActividadAsignaturas([
-            'id_activ' => $this->id_pau,
-            '_ordre' => 'id_asignatura',
-        ]);
+        $cActividadAsignaturas = $repoAsignaturas->matching(
+            Criteria::create()->where(Filter::eq(AaF::IdActiv, $this->id_pau))->orderBy(AaF::IdAsignatura)
+        );
 
         if (count($cActividadAsignaturas) === 0) {
             $this->sin_asignaturas_mensaje = _("esta actividad no tiene ninguna asignatura");
@@ -151,10 +154,11 @@ class Select_matriculas_de_una_actividad
             $repoMatriculas = ($mi_dele == $dl_org)
                 ? $this->matriculaRepository
                 : $this->matriculaDlRepository;
-            $cMatriculas = $repoMatriculas->getMatriculas([
-                'id_activ' => $this->id_pau,
-                'id_asignatura' => $id_asignatura,
-            ]);
+            $cMatriculas = $repoMatriculas->matching(
+                Criteria::create()
+                    ->where(Filter::eq(MatF::IdActiv, $this->id_pau))
+                    ->andWhere(Filter::eq(MatF::IdAsignatura, $id_asignatura))
+            );
             $m = 0;
             foreach ($cMatriculas as $oMatricula) {
                 $id_nom = $oMatricula->getId_nom();

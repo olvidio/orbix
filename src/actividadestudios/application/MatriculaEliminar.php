@@ -2,6 +2,10 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
@@ -146,8 +150,10 @@ final class MatriculaEliminar
      */
     private function quitarAsignaturaHuerfanaSiEsPreceptor(int $id_activ, int $id_asignatura): void
     {
-        $cActividadAsignaturas = $this->actividadAsignaturaDlRepository->getActividadAsignaturas(
-            ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura],
+        $cActividadAsignaturas = $this->actividadAsignaturaDlRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(AaF::IdActiv, $id_activ))
+                ->andWhere(Filter::eq(AaF::IdAsignatura, $id_asignatura))
         );
         if (count($cActividadAsignaturas) !== 1) {
             return;
@@ -158,8 +164,10 @@ final class MatriculaEliminar
             return;
         }
 
-        $cMatriculas = $this->matriculaDlRepository->getMatriculas(
-            ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura],
+        $cMatriculas = $this->matriculaDlRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(MatF::IdActiv, $id_activ))
+                ->andWhere(Filter::eq(MatF::IdAsignatura, $id_asignatura))
         );
         if (count($cMatriculas) !== 0) {
             return;

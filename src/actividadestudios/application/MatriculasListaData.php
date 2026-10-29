@@ -5,9 +5,12 @@ namespace src\actividadestudios\application;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\services\TelecoPersonaService;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
@@ -47,11 +50,9 @@ final class MatriculasListaData
             $aOperadorActividad,
         );
 
-        $strActividades = '{' . implode(', ', $aIdActividades) . '}';
-        $aWhere = ['id_activ' => $strActividades];
-        $aOperador = ['id_activ' => 'ANY'];
-
-        $cMatriculas = $this->matriculaDlRepository->getMatriculas($aWhere, $aOperador);
+        $cMatriculas = $this->matriculaDlRepository->matching(
+            Criteria::create()->where(Filter::in(MatF::IdActiv, array_values($aIdActividades)))
+        );
 
         $oFini = new DateTimeLocal($inicioIso);
         $QinicioLocal = $oFini->getFromLocal();
