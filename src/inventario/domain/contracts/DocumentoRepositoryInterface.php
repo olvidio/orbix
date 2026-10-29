@@ -3,6 +3,7 @@
 namespace src\inventario\domain\contracts;
 
 use src\inventario\domain\entity\Documento;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Documento y su Repositorio
@@ -19,11 +20,17 @@ interface DocumentoRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo Documento
+     * Documento que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Documento> Una colección de objetos de tipo Documento
+     * @return list<Documento>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Documento>
      */
     public function getDocumentos(array $aWhere = [], array $aOperators = []): array;
 

@@ -3,6 +3,7 @@
 namespace src\inventario\domain\contracts;
 
 use src\inventario\domain\entity\Coleccion;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Coleccion y su Repositorio
@@ -26,15 +27,20 @@ interface ColeccionRepositoryInterface
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo Coleccion
-	 *
-	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return list<Coleccion> Una colección de objetos de tipo Coleccion
-	
-	 */
-	public function getColecciones(array $aWhere=[], array $aOperators=[]): array;
+    /**
+     * Coleccion que cumplen el criterio.
+     *
+     * @return list<Coleccion>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Coleccion>
+     */
+    public function getColecciones(array $aWhere=[], array $aOperators=[]): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

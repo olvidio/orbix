@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\LugarField as LugarF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\LugarRepositoryInterface;
@@ -39,7 +42,9 @@ foreach ($cUbisInventario as $oUbiInventario) {
     $id_ubi = $oUbiInventario->getId_ubi();
     $aGrupos[$id_ubi] = $oUbiInventario->getNom_ubi();
 
-    $cLugares = $LugarRepository->getLugares(['id_ubi' => $id_ubi, '_ordre' => 'nom_lugar']);
+    $cLugares = $LugarRepository->matching(
+        Criteria::create()->where(Filter::eq(LugarF::IdUbi, $id_ubi))->orderBy(LugarF::NomLugar)
+    );
     $a = 0;
     foreach ($cLugares as $oLugar) {
         $a++;

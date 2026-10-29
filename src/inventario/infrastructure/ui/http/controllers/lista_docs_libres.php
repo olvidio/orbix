@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\DocumentoField as DocF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
@@ -43,7 +46,9 @@ $id_ubi = 40;
 $LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
 /** @var DocumentoRepositoryInterface $DocumentoRepository */
 $DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
-$cDocumentos = $DocumentoRepository->getDocumentos(['id_tipo_doc' => $Qid_tipo_doc, 'id_ubi' => $id_ubi]);
+$cDocumentos = $DocumentoRepository->matching(Criteria::create()
+        ->where(Filter::eq(DocF::IdTipoDoc, $Qid_tipo_doc))
+        ->andWhere(Filter::eq(DocF::IdUbi, $id_ubi)));
 $d = 0;
 $a_valores = [];
 foreach ($cDocumentos as $oDocumento) {

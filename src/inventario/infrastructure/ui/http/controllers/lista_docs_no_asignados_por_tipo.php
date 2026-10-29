@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\DocumentoField as DocF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
@@ -30,7 +33,7 @@ $LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
 /** @var UbiInventarioRepositoryInterface $UbiInventarioRepository */
 $UbiInventarioRepository = DependencyResolver::get(UbiInventarioRepositoryInterface::class);
 
-$cTodosUbis = $UbiInventarioRepository->getUbisInventario();
+$cTodosUbis = $UbiInventarioRepository->matching(Criteria::create());
 $a_valores = [];
 $a_nom = [];
 $i = 0;
@@ -38,7 +41,9 @@ foreach ($cTodosUbis as $oUbiDoc) {
     $id_ubi = $oUbiDoc->getId_ubi();
     $nom_ubi = $oUbiDoc->getNom_ubi();
 
-    $cDocumentos = $DocumentoRepository->getDocumentos(['id_tipo_doc' => $Qid_tipo_doc, 'id_ubi' => $id_ubi]);
+    $cDocumentos = $DocumentoRepository->matching(Criteria::create()
+        ->where(Filter::eq(DocF::IdTipoDoc, $Qid_tipo_doc))
+        ->andWhere(Filter::eq(DocF::IdUbi, $id_ubi)));
     if (count($cDocumentos) > 0) {
         continue;
     }

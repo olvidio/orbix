@@ -3,7 +3,10 @@
 namespace src\inventario\domain;
 
 use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\criteria\LugarField as F;
 use src\inventario\domain\entity\Lugar;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -30,14 +33,13 @@ class InfoLugar extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'nom_lugar'];
-            $aOperador = [];
+            $criteria = $criteria->orderBy(F::NomLugar);
         } else {
-            $aWhere = ['nom_lugar' => $this->k_buscar];
-            $aOperador = ['nom_lugar' => 'sin_acentos'];
+            $criteria = $criteria->where(Filter::matchesUnaccented(F::NomLugar, (string) $this->k_buscar));
         }
 
-        return $this->lugarRepository->getLugares($aWhere, $aOperador);
+        return $this->lugarRepository->matching($criteria);
     }
 }

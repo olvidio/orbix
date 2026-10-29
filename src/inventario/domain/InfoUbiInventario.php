@@ -3,7 +3,10 @@
 namespace src\inventario\domain;
 
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
+use src\inventario\domain\criteria\UbiInventarioField as F;
 use src\inventario\domain\entity\UbiInventario;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -30,14 +33,13 @@ class InfoUbiInventario extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'nom_ubi'];
-            $aOperador = [];
+            $criteria = $criteria->orderBy(F::NomUbi);
         } else {
-            $aWhere = ['nom_ubi' => $this->k_buscar];
-            $aOperador = ['nom_ubi' => 'sin_acentos'];
+            $criteria = $criteria->where(Filter::matchesUnaccented(F::NomUbi, (string) $this->k_buscar));
         }
 
-        return $this->ubiInventarioRepository->getUbisInventario($aWhere, $aOperador);
+        return $this->ubiInventarioRepository->matching($criteria);
     }
 }

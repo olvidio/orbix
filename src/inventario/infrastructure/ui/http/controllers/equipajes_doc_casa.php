@@ -1,5 +1,10 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\DocumentoField as DocF;
+use src\inventario\domain\criteria\UbiInventarioField as UbiF;
+use src\inventario\domain\criteria\ColeccionField as ColF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
@@ -31,7 +36,7 @@ $TipoDocRepository = DependencyResolver::get(TipoDocRepositoryInterface::class);
 $LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
 /** @var UbiInventarioRepositoryInterface $UbiInventarioRepository */
 $UbiInventarioRepository = DependencyResolver::get(UbiInventarioRepositoryInterface::class);
-$cUbsiInventario = $UbiInventarioRepository->getUbisInventario(['id_ubi_activ' => $id_ubi_activ]);
+$cUbsiInventario = $UbiInventarioRepository->matching(Criteria::create()->where(Filter::eq(UbiF::IdUbiActiv, $id_ubi_activ)));
 $a_valores = [];
 $id_ubi = null;
 if (!empty($cUbsiInventario)) {
@@ -40,7 +45,7 @@ if (!empty($cUbsiInventario)) {
     $aColeccion = [];
     /** @var ColeccionRepositoryInterface $ColeccionRepository */
 $ColeccionRepository = DependencyResolver::get(ColeccionRepositoryInterface::class);
-    $cColecciones = $ColeccionRepository->getColecciones(array('_ordre' => 'nom_coleccion'));
+    $cColecciones = $ColeccionRepository->matching(Criteria::create()->orderBy(ColF::NomColeccion));
     foreach ($cColecciones as $oColeccion) {
         $aColeccion[$oColeccion->getId_coleccion()] = $oColeccion->isAgrupar();
     }
@@ -48,7 +53,9 @@ $ColeccionRepository = DependencyResolver::get(ColeccionRepositoryInterface::cla
     $nombre_ubi = $cUbsiInventario[0]->getNom_ubi();
     $id_ubi = $cUbsiInventario[0]->getId_ubi();
 
-    $cDocumentos = $DocumentoRepository->getDocumentos(['id_ubi' => $id_ubi, 'eliminado' => 'f']);
+    $cDocumentos = $DocumentoRepository->matching(Criteria::create()
+        ->where(Filter::eq(DocF::IdUbi, $id_ubi))
+        ->andWhere(Filter::eq(DocF::Eliminado, false)));
 
     $d = 0;
     $orden = [];

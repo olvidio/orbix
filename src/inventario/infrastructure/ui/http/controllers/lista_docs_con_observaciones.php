@@ -1,4 +1,7 @@
 <?php
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\DocumentoField as DocF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
@@ -14,30 +17,24 @@ $a_nom = [];
 
 /** @var DocumentoRepositoryInterface $DocumentoRepository */
 $DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
-$aWhere = [
-    'eliminado' => 'f',
-    'perdido' => 'f',
-    'observ' => 'x',
-];
-$aOperador = [
-    'observ' => 'IS NOT NULL',
-];
-$cDocumentosObservDl = $DocumentoRepository->getDocumentos($aWhere, $aOperador);
+$cDocumentosObservDl = $DocumentoRepository->matching(
+    Criteria::create()
+        ->where(Filter::eq(DocF::Eliminado, false))
+        ->andWhere(Filter::eq(DocF::Perdido, false))
+        ->andWhere(Filter::isNotNull(DocF::Observ))
+);
 // poner como índice el id_doc para poder sobreescribir co la siguinete colección.
 foreach ($cDocumentosObservDl as $oDocumento) {
     $id_doc = $oDocumento->getId_doc();
     $cDocumentosDl[$id_doc] = $oDocumento;
 }
 // para hacer un OR
-$aWhere = [
-    'eliminado' => 'f',
-    'perdido' => 'f',
-    'observ_ctr' => 'x',
-];
-$aOperador = [
-    'observ_ctr' => 'IS NOT NULL',
-];
-$cDocumentosObservCtr = $DocumentoRepository->getDocumentos($aWhere, $aOperador);
+$cDocumentosObservCtr = $DocumentoRepository->matching(
+    Criteria::create()
+        ->where(Filter::eq(DocF::Eliminado, false))
+        ->andWhere(Filter::eq(DocF::Perdido, false))
+        ->andWhere(Filter::isNotNull(DocF::ObservCtr))
+);
 // poner como índice el id_doc para poder sobreescribir co la siguinete colección.
 foreach ($cDocumentosObservCtr as $oDocumento) {
     $id_doc = $oDocumento->getId_doc();

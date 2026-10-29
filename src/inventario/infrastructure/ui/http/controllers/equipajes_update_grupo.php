@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\EgmField as EgmF;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
@@ -31,12 +34,12 @@ $error_txt = '';
 // Nuevo egm:
 /** @var EgmRepositoryInterface $EgmRepository */
 $EgmRepository = DependencyResolver::get(EgmRepositoryInterface::class);
-$aWhere = [
-    'id_equipaje' => $Qid_equipaje,
-    'id_grupo' => $Qid_grupo,
-    'id_lugar' => $Qid_lugar,
-];
-$cEgm = $EgmRepository->getEgmes($aWhere);
+$cEgm = $EgmRepository->matching(
+    Criteria::create()
+        ->where(Filter::eq(EgmF::IdEquipaje, $Qid_equipaje))
+        ->andWhere(Filter::eq(EgmF::IdGrupo, $Qid_grupo))
+        ->andWhere(Filter::eq(EgmF::IdLugar, $Qid_lugar))
+);
 if (empty($cEgm)) {
     // nuevo
     $id_item_egm = $EgmRepository->getNewId();

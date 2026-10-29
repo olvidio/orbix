@@ -5,7 +5,11 @@ namespace src\inventario\domain;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
+use src\inventario\domain\criteria\DocumentoField as F;
+use src\inventario\domain\criteria\UbiInventarioField as UbiF;
 use src\inventario\domain\entity\Documento;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -63,25 +67,25 @@ class InfoDocsxCtr extends DatosInfoRepo
         }
 
         $nom_ubi = str_replace('+', '\+', $this->k_buscar);
-        $aWhereUbi = ['nom_ubi' => $nom_ubi];
-        $aOperadorUbi = $this->exacto ? [] : ['nom_ubi' => 'sin_acentos'];
+        $criterioUbi = Criteria::create();
+        $criterioUbi = $this->exacto
+            ? $criterioUbi->where(Filter::eq(UbiF::NomUbi, $nom_ubi))
+            : $criterioUbi->where(Filter::matchesUnaccented(UbiF::NomUbi, $nom_ubi));
 
-        $cUbisInventario = $this->ubiInventarioRepository->getUbisInventario($aWhereUbi, $aOperadorUbi);
-        $lst_id_ubi = '';
+        $cUbisInventario = $this->ubiInventarioRepository->matching($criterioUbi);
+        $aIdUbi = [];
         foreach ($cUbisInventario as $oUbiDoc) {
-            $lst_id_ubi .= $lst_id_ubi === '' ? '' : ',';
-            $lst_id_ubi .= $oUbiDoc->getId_ubi();
+            $aIdUbi[] = $oUbiDoc->getId_ubi();
         }
 
-        if ($lst_id_ubi === '') {
-            $aWhere = ['_limit' => 6];
-            $aOperador = [];
+        $criteria = Criteria::create();
+        if ($aIdUbi === []) {
+            $criteria = $criteria->limit(6);
         } else {
-            $aWhere = ['id_ubi' => $lst_id_ubi];
-            $aOperador = ['id_ubi' => 'IN'];
+            $criteria = $criteria->where(Filter::in(F::IdUbi, $aIdUbi));
         }
 
-        return $this->documentoRepository->getDocumentos($aWhere, $aOperador);
+        return $this->documentoRepository->matching($criteria);
     }
 
     public function getOpcionesParaCondicion(mixed $pKeyRepository, mixed $valor_depende, mixed $opcion_sel = null): string

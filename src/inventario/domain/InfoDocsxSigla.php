@@ -5,7 +5,10 @@ namespace src\inventario\domain;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\criteria\DocumentoField as F;
 use src\inventario\domain\entity\Documento;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\DatosInfoRepo;
 
@@ -72,14 +75,15 @@ class InfoDocsxSigla extends DatosInfoRepo
     public function getColeccion(): array
     {
         if (empty($this->k_buscar)) {
-            $aWhere = ['id_tipo_doc' => 0];
-            $aOperador = [];
+            $criteria = Criteria::create()->where(Filter::eq(F::IdTipoDoc, 0));
         } else {
-            $aWhere = ['id_tipo_doc' => $this->k_buscar, '_ordre' => 'id_ubi,id_lugar'];
-            $aOperador = [];
+            $criteria = Criteria::create()
+                ->where(Filter::eq(F::IdTipoDoc, $this->k_buscar))
+                ->orderBy(F::IdUbi)
+                ->addOrderBy(F::IdLugar);
         }
 
-        return $this->documentoRepository->getDocumentos($aWhere, $aOperador);
+        return $this->documentoRepository->matching($criteria);
     }
 
     public function getOpcionesParaCondicion(mixed $pKeyRepository, mixed $valor_depende, mixed $opcion_sel = null): string

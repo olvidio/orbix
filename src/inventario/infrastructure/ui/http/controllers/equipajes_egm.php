@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\EgmField as EgmF;
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\ListaDocsGrupo;
@@ -16,7 +19,9 @@ $EgmRepository = DependencyResolver::get(EgmRepositoryInterface::class);
 /** @var ListaDocsGrupo $listaDocsGrupo */
 $listaDocsGrupo = DependencyResolver::get(ListaDocsGrupo::class);
 
-$cEgm = $EgmRepository->getEgmes(['id_equipaje' => $Qid_equipaje, '_ordre' => 'id_grupo']);
+$cEgm = $EgmRepository->matching(
+    Criteria::create()->where(Filter::eq(EgmF::IdEquipaje, $Qid_equipaje))->orderBy(EgmF::IdGrupo)
+);
 $a_egm = [];
 $i = 0;
 foreach ($cEgm as $oEgm) {

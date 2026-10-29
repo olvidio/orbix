@@ -3,7 +3,10 @@
 namespace src\inventario\domain;
 
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
+use src\inventario\domain\criteria\ColeccionField as F;
 use src\inventario\domain\entity\Coleccion;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -30,14 +33,13 @@ class InfoColeccion extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'nom_coleccion'];
-            $aOperador = [];
+            $criteria = $criteria->orderBy(F::NomColeccion);
         } else {
-            $aWhere = ['nom_coleccion' => $this->k_buscar];
-            $aOperador = ['nom_coleccion' => 'sin_acentos'];
+            $criteria = $criteria->where(Filter::matchesUnaccented(F::NomColeccion, (string) $this->k_buscar));
         }
 
-        return $this->coleccionRepository->getColecciones($aWhere, $aOperador);
+        return $this->coleccionRepository->matching($criteria);
     }
 }

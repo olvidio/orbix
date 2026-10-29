@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\LugarField as LugarF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\EgmRepositoryInterface;
@@ -38,7 +41,7 @@ $new_id_grupo = $EgmRepository->getUltimoGrupo($Qid_equipaje) + 1;
 
 /** @var LugarRepositoryInterface $LugarRepository */
 $LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
-$cLugares = $LugarRepository->getLugares(['id_ubi' => $id_ubi]);
+$cLugares = $LugarRepository->matching(Criteria::create()->where(Filter::eq(LugarF::IdUbi, $id_ubi)));
 $aOpciones = [];
 foreach ($cLugares as $oLugar) {
     $id_lugar = $oLugar->getId_lugar();

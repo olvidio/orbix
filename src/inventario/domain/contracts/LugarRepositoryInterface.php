@@ -3,6 +3,7 @@
 namespace src\inventario\domain\contracts;
 
 use src\inventario\domain\entity\Lugar;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Lugar y su Repositorio
@@ -27,11 +28,17 @@ interface LugarRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo Lugar
+     * Lugar que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Lugar> Una colección de objetos de tipo Lugar
+     * @return list<Lugar>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Lugar>
      */
     public function getLugares(array $aWhere = [], array $aOperators = []): array;
 

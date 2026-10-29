@@ -3,6 +3,7 @@
 namespace src\inventario\domain\contracts;
 
 use src\inventario\domain\entity\TipoDoc;
+use src\shared\domain\criteria\Criteria;
 use src\inventario\domain\value_objects\TipoDocId;
 
 /**
@@ -28,11 +29,17 @@ interface TipoDocRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo TipoDoc
+     * TipoDoc que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<TipoDoc> Una colección de objetos de tipo TipoDoc
+     * @return list<TipoDoc>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<TipoDoc>
      */
     public function getTipoDocs(array $aWhere = [], array $aOperators = []): array;
 

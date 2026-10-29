@@ -3,6 +3,7 @@
 namespace src\inventario\domain\contracts;
 
 use src\inventario\domain\entity\UbiInventario;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase UbiInventario y su Repositorio
@@ -27,15 +28,20 @@ interface UbiInventarioRepositoryInterface
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo UbiInventario
-	 *
-	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return list<UbiInventario> Una colección de objetos de tipo UbiInventario
-	
-	 */
-	public function getUbisInventario(array $aWhere=[], array $aOperators=[]): array;
+    /**
+     * UbiInventario que cumplen el criterio.
+     *
+     * @return list<UbiInventario>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<UbiInventario>
+     */
+    public function getUbisInventario(array $aWhere=[], array $aOperators=[]): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
