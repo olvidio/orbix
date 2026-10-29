@@ -577,7 +577,9 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
     - Pendiente de 5.1: ~45 llamadas a `getPersonaNotas` en `tests/unit/notas/{notasTest,trasladosNotasTest,trasladosNotasModeloActaTest}.php` (tests de comportamiento heredados que usan el envoltorio); migrarlos antes de borrar el envoltorio.
     - Tests: `ActaNotasDataTest` inspecciona el `Criteria` (helper `valorDeFiltro`) en vez de `$where`.
     - Suites verdes: unit de `actividadestudios`, `certificados`, `notas`, `personas`, `asistentes`; integration de `actividadestudios`, `certificados` (con `memory_limit=1G`).
-  - [ ] **4.6.plazas** llamantes de `getActividadesPlazas` / `getPlazasPeticion`.
+  - [x] **4.6.plazas** llamantes de `getActividadesPlazas` / `getPlazasPeticion`. Decisiones:
+    - Migradas 3 llamadas: `ActividadNueva` (`getActividadesPlazas` → `ActividadPlazasField`), `TablaPeticionesData` (`tipo ~` → `Filter::matches`) y `AsistenteMoverData` (`PlazaPeticionField`). Sin cambios de comportamiento; ningún test usaba mocks de los métodos viejos.
+    - Suites verdes: unit de `asistentes`, `actividades`, `actividadplazas`; integration de `asistentes`, `actividades`, `actividadplazas`.
   - [ ] **4.6.estudios** llamantes de `getMatriculas` / `getActividadAsignaturas`.
   - [ ] **4.6.varios** `ubis/UbisTablaData`, `InfoDescTeleco`, `MatriculaAutomatica`.
 

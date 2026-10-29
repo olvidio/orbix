@@ -13,6 +13,7 @@ use src\actividades\domain\value_objects\IdTablaCode;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
+use src\actividadplazas\domain\criteria\ActividadPlazasField;
 use src\actividadplazas\domain\entity\ActividadPlazas;
 use src\permisos\domain\PermisosActividades;
 use src\shared\domain\value_objects\Dinero;
@@ -173,11 +174,12 @@ class ActividadNueva
             if ($cDelegaciones !== []) {
                 $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
             }
-            $cActividadPlazasDl = $this->actividadPlazasDlRepository->getActividadesPlazas([
-                'id_activ' => $id_activ,
-                'id_dl' => $id_dl,
-                'dl_tabla' => $mi_dele,
-            ]);
+            $cActividadPlazasDl = $this->actividadPlazasDlRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(ActividadPlazasField::IdActiv, $id_activ))
+                    ->andWhere(Filter::eq(ActividadPlazasField::IdDl, $id_dl))
+                    ->andWhere(Filter::eq(ActividadPlazasField::DlTabla, $mi_dele))
+            );
             $oActividadPlazasDl = $cActividadPlazasDl[0] ?? null;
             if (!($oActividadPlazasDl instanceof ActividadPlazas)) {
                 $oActividadPlazasDl = new ActividadPlazas();

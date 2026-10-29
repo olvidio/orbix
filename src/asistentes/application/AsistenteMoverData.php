@@ -11,6 +11,9 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterf
 use src\actividadestudios\domain\PosiblesCa;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
+use src\actividadplazas\domain\criteria\PlazaPeticionField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\application\services\AsistenteApplicationService;
@@ -145,7 +148,12 @@ final class AsistenteMoverData
 
             if (ConfigGlobal::is_app_installed('actividadplazas')) {
                 $cActividadesPreferidas = [];
-                $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion(['id_nom' => $Qid_nom, 'tipo' => $sactividad, '_ordre' => 'orden']);
+                $cPlazasPeticion = $this->plazaPeticionRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(PlazaPeticionField::IdNom, $Qid_nom))
+                        ->andWhere(Filter::eq(PlazaPeticionField::Tipo, $sactividad))
+                        ->orderBy(PlazaPeticionField::Orden)
+                );
                 foreach ($cPlazasPeticion as $oPlazaPeticion) {
                     $id_activ_pref = $oPlazaPeticion->getId_activ();
                     $oActividadPref = $this->actividadAllRepository->findById($id_activ_pref);
