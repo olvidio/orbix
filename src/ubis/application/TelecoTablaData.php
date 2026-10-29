@@ -2,6 +2,9 @@
 
 namespace src\ubis\application;
 
+use src\ubis\domain\criteria\TelecoUbiField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosCampo;
 use src\shared\security\HashB;
 use src\ubis\application\services\UbiPermisos;
@@ -21,7 +24,7 @@ final class TelecoTablaData
         $repoTeleco = $this->ubiRepositoryResolver->getTelecoRepository($obj_pau);
 
         /** @var list<TelecoUbi> $coleccion */
-        $coleccion = $repoTeleco->getTelecos(['id_ubi' => $id_ubi]) ?: [];
+        $coleccion = $repoTeleco->matching(Criteria::create()->where(Filter::eq(F::IdUbi, $id_ubi))) ?: [];
         $oUbi = $this->ubiRepositoryResolver->findUbiForPermisos($obj_pau, $id_ubi);
         $dl = $oUbi !== null ? (string) ($oUbi->getDl() ?? '') : '';
         $botones = UbiPermisos::puedeModificarPorObjeto($obj_pau, $dl) ? '1' : '0';

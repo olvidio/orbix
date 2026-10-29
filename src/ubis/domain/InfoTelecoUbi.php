@@ -2,6 +2,9 @@
 
 namespace src\ubis\domain;
 
+use src\ubis\domain\criteria\TelecoUbiField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\application\services\UbiRepositoryResolver;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
@@ -44,21 +47,19 @@ class InfoTelecoUbi extends DatosInfoRepo
             throw new \RuntimeException('InfoTelecoUbi: falta setObj_pau() antes de getColeccion()');
         }
 
-        $aWhere = [];
-        if (!empty($this->id_pau)) {
-            $aWhere['id_ubi'] = $this->id_pau;
-        }
         if (empty($this->k_buscar)) {
-            $aWhere['_ordre'] = 'id_tipo_teleco';
-            $aOperador = [];
+            $criteria = Criteria::create()->orderBy(F::IdTipoTeleco);
+            if (!empty($this->id_pau)) {
+                $criteria = $criteria->where(Filter::eq(F::IdUbi, $this->id_pau));
+            }
         } else {
-            $aWhere = ['num_teleco' => $this->k_buscar];
-            $aOperador = ['num_teleco' => 'sin_acentos'];
+            // con texto de búsqueda se ignora `id_pau`, como antes
+            $criteria = Criteria::create()->where(Filter::matchesUnaccented(F::NumTeleco, (string) $this->k_buscar));
         }
 
         $repo = $this->ubiRepositoryResolver->getTelecoRepository($this->objPau);
 
-        return $repo->getTelecos($aWhere, $aOperador);
+        return $repo->matching($criteria);
     }
 
     public function setObj_pau(string $obj_pau): void

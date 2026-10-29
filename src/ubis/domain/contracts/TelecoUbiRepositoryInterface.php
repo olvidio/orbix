@@ -3,6 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\TelecoUbi;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase TelecoCdc y su Repositorio
@@ -27,6 +28,14 @@ interface TelecoUbiRepositoryInterface
      * @return list<TelecoUbi>
      */
     /**
+     * TelecoUbi que cumplen el criterio.
+     *
+     * @return list<TelecoUbi>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<TelecoUbi>
