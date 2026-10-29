@@ -27,7 +27,7 @@ final class PlanDeMisasPantallaDataTest extends TestCase
         $zonaRepo->method('getArrayZonas')->willReturn([1 => 'Zona A']);
 
         $prefRepo = $this->createMock(PreferenciaRepositoryInterface::class);
-        $prefRepo->method('getPreferencias')->willReturn([]);
+        $prefRepo->method('matching')->willReturn([]);
 
         return new PlanDeMisasPantallaData($zonaRepo, $prefRepo, $resolver);
     }

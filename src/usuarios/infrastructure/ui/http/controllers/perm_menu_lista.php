@@ -1,5 +1,8 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\usuarios\domain\criteria\PermMenuField;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\permisos\domain\MenuDlPermissionBits;
@@ -10,7 +13,7 @@ use src\shared\web\ContestarJson;
 $Qid_usuario = (string)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
 
 $PermMenuRepository = DependencyResolver::get(PermMenuRepositoryInterface::class);
-$oGrupoGrupoPermMenu = $PermMenuRepository->getPermMenus(array('id_usuario' => $Qid_usuario));
+$oGrupoGrupoPermMenu = $PermMenuRepository->matching(Criteria::create()->where(Filter::eq(PermMenuField::IdUsuario, $Qid_usuario)));
 
 $a_cabeceras = [array('name' => _("oficina o grupo"), 'width' => '350')];
 $a_botones = [array('txt' => _("quitar"), 'click' => "fnjs_del_perm_menu(\"#permisos_menu\")")];

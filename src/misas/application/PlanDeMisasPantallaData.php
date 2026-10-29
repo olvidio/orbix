@@ -2,6 +2,9 @@
 
 namespace src\misas\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\usuarios\domain\criteria\PreferenciaField;
 use src\shared\config\ConfigGlobal;
 use RuntimeException;
 use src\misas\application\support\IdNomJefeResolver;
@@ -70,7 +73,7 @@ class PlanDeMisasPantallaData
                 PlantillaConfig::PLANTILLA_MENSUAL_TRES => 'mensual tres opciones',
             ];
             $id_usuario = ConfigGlobal::mi_id_usuario();
-            $aPref = $this->preferenciaRepository->getPreferencias(['id_usuario' => $id_usuario, 'tipo' => 'ultima_plantilla']);
+            $aPref = $this->preferenciaRepository->matching(Criteria::create()->where(Filter::eq(PreferenciaField::IdUsuario, $id_usuario))->andWhere(Filter::eq(PreferenciaField::Tipo, 'ultima_plantilla')));
             $ultima = PlantillaConfig::PLANTILLA_SEMANAL_TRES;
             if (count($aPref) > 0) {
                 $pref = $aPref[0]->getPreferencia();

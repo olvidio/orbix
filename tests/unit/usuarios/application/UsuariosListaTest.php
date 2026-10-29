@@ -72,7 +72,7 @@ final class UsuariosListaTest extends TestCase
 
         $userRepo = $this->createMock(UsuarioRepositoryInterface::class);
         $userRepo->method('findById')->with(1)->willReturn($yo);
-        $userRepo->method('getUsuarios')->willReturn([$listado]);
+        $userRepo->method('matching')->willReturn([$listado]);
 
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('findById')->with(2)->willReturn($role);

@@ -1,5 +1,8 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\usuarios\domain\criteria\UsuarioGrupoField;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\shared\config\ConfigGlobal;
@@ -13,10 +16,10 @@ $sfsv = ConfigGlobal::mi_sfsv();
 $Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
 // listado de grupos posibles
 $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
-$cGrupos = $GrupoRepository->getGrupos();
+$cGrupos = $GrupoRepository->matching(Criteria::create());
 // no pongo los que ya tengo. Los pongo en un array
 $UsuarioGrupoRepository = DependencyResolver::get(UsuarioGrupoRepositoryInterface::class);
-$cListaGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $Qid_usuario));
+$cListaGrupos = $UsuarioGrupoRepository->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, $Qid_usuario)));
 $aGruposOn = [];
 foreach ($cListaGrupos as $oUsuarioGrupo) {
     $aGruposOn[] = $oUsuarioGrupo->getId_grupo();

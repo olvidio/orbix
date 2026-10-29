@@ -2,6 +2,9 @@
 
 namespace src\permisos\domain;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\usuarios\domain\criteria\UsuarioGrupoField;
 use PDO;
 use PDOStatement;
 use RuntimeException;
@@ -138,7 +141,7 @@ class PermisosActividades
         $this->tareaProcesoRepository = $tareaProcesoRepository;
         $this->idUsuario = $idUsuario;
         $sCondicion_usuario = "u.id_usuario=$idUsuario";
-        $cGrupos = $this->getUsuarioGrupoRepository()->getUsuariosGrupos(['id_usuario' => $idUsuario]);
+        $cGrupos = $this->getUsuarioGrupoRepository()->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, $idUsuario)));
         if (count($cGrupos) > 0) {
             foreach ($cGrupos as $oUsuarioGrupo) {
                 $id = $oUsuarioGrupo->getId_grupo();

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace src\shared\application;
 
+use src\usuarios\domain\criteria\PermMenuField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\usuarios\domain\criteria\UsuarioGrupoField;
 use src\menus\domain\PermisoMenu;
 use src\permisos\domain\PermDl;
 use src\shared\config\ConfigGlobal;
@@ -36,12 +40,12 @@ final class HydrateMenuPermissions
         $PermMenuRepository = DependencyResolver::get(PermMenuRepositoryInterface::class);
 
         $aRoles = $RoleRepository->getArrayRoles();
-        $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(['id_usuario' => ConfigGlobal::mi_id_usuario()]);
+        $cGrupos = $UsuarioGrupoRepository->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, ConfigGlobal::mi_id_usuario())));
         $iperm_menu = 0;
 
         foreach ($cGrupos as $UsuarioGrupo) {
             $id_grupo = $UsuarioGrupo->getId_grupo();
-            $cPermMenu = $PermMenuRepository->getPermMenus(['id_usuario' => $id_grupo]);
+            $cPermMenu = $PermMenuRepository->matching(Criteria::create()->where(Filter::eq(PermMenuField::IdUsuario, $id_grupo)));
             foreach ($cPermMenu as $oPermMenu) {
                 $iperm_menu = $iperm_menu | $oPermMenu->getMenu_perm();
             }

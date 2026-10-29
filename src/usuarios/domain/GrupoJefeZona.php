@@ -2,6 +2,11 @@
 
 namespace src\usuarios\domain;
 
+use src\usuarios\domain\criteria\RoleField;
+use src\usuarios\domain\criteria\UsuarioGrupoField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\usuarios\domain\criteria\UsuarioField;
 use src\menus\domain\PermisoMenuBits;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
@@ -63,10 +68,7 @@ class GrupoJefeZona
     private function quitarGrupoUsuario(int $id_usuario, int $id_grupo): string
     {
         $error_txt = '';
-        $cUsuarioGrupo = $this->usuarioGrupoRepository->getUsuariosGrupos([
-            'id_usuario' => $id_usuario,
-            'id_grupo' => $id_grupo,
-        ]);
+        $cUsuarioGrupo = $this->usuarioGrupoRepository->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, $id_usuario))->andWhere(Filter::eq(UsuarioGrupoField::IdGrupo, $id_grupo)));
         if ($cUsuarioGrupo !== []) {
             $oUsuarioGrupo = $cUsuarioGrupo[0];
             if ($this->usuarioGrupoRepository->Eliminar($oUsuarioGrupo) === false) {
@@ -83,13 +85,15 @@ class GrupoJefeZona
      */
     private function usuariosSacd(): array
     {
-        $cRoles = $this->roleRepository->getRoles(['pau' => PauType::PAU_SACD]);
+        $cRoles = $this->roleRepository->matching(Criteria::create()->where(Filter::eq(RoleField::Pau, PauType::PAU_SACD)));
         $RoleSacd = $cRoles[0];
         $id_role = $RoleSacd->getId_role();
 
-        $aWhere = ['id_role' => $id_role, 'id_pau' => 'x'];
-        $aOperador = ['id_pau' => 'IS NOT NULL'];
-        $cUsuarios = $this->usuarioRepository->getUsuarios($aWhere, $aOperador);
+        $cUsuarios = $this->usuarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(UsuarioField::IdRole, $id_role))
+                ->andWhere(Filter::isNotNull(UsuarioField::CsvIdPau))
+        );
         $a_usuarios_sacd = [];
         foreach ($cUsuarios as $oUsuario) {
             $id_nom = $oUsuario->getCsvIdPauAsString();
@@ -126,7 +130,7 @@ class GrupoJefeZona
     {
         $this->setIdGrupoConPermisoJefeZona();
 
-        $cUsuarios = $this->usuarioRepository->getUsuarios(['id_usuario' => $this->id_grupo_jefe_zona]);
+        $cUsuarios = $this->usuarioRepository->matching(Criteria::create()->where(Filter::eq(UsuarioField::IdUsuario, $this->id_grupo_jefe_zona)));
         $a_miembros_jefeZona = [];
         foreach ($cUsuarios as $oUsuario) {
             $csvIdPau = $oUsuario->getCsvIdPauAsString();
@@ -142,7 +146,7 @@ class GrupoJefeZona
     {
         $perm_jefe_zona = PermisoMenuBits::map()['jefeZona'];
 
-        $cGruposPermMenu = $this->permMenuRepository->getPermMenus();
+        $cGruposPermMenu = $this->permMenuRepository->matching(Criteria::create());
         $id_grupo_jefe_zona = 0;
         foreach ($cGruposPermMenu as $permMenu) {
             $iperm_menu = $permMenu->getMenu_perm();

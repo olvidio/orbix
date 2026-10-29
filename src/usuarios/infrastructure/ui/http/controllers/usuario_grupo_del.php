@@ -1,4 +1,7 @@
 <?php
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\usuarios\domain\criteria\UsuarioGrupoField;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
@@ -22,7 +25,7 @@ $Qid_grupo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($opened, 'id
 
 // elimino el grupo de permisos al usuario.
 $UsuarioGrupoRepository = DependencyResolver::get(UsuarioGrupoRepositoryInterface::class);
-$cUsuarioGrupo = $UsuarioGrupoRepository->getUsuariosGrupos(['id_usuario' => $Qid_usuario, 'id_grupo' => $Qid_grupo]);
+$cUsuarioGrupo = $UsuarioGrupoRepository->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, $Qid_usuario))->andWhere(Filter::eq(UsuarioGrupoField::IdGrupo, $Qid_grupo)));
 if (!empty($cUsuarioGrupo)) {
     $oUsuarioGrupo = $cUsuarioGrupo[0];
     if ($UsuarioGrupoRepository->Eliminar($oUsuarioGrupo) === false) {

@@ -2,6 +2,9 @@
 
 namespace src\actividadessacd\application\services;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\usuarios\domain\criteria\UsuarioField;
 use src\actividadessacd\application\services\ActividadesSacdHelper;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -320,7 +323,7 @@ final class ComunicarActividadesSacdService
         $a_jefes_calendario = explode(',', $valor);
         $jefe_calendario = $a_jefes_calendario[0];
 
-        $cUsuarios = $this->usuarioRepository->getUsuarios(['usuario' => $jefe_calendario]);
+        $cUsuarios = $this->usuarioRepository->matching(Criteria::create()->where(Filter::eq(UsuarioField::Usuario, $jefe_calendario)));
         if (empty($cUsuarios)) {
             return _("No hay un mail (jefe calendario) para enviar los errores. No se procesan los mails.");
         }

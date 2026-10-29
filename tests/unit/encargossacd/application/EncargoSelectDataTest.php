@@ -40,7 +40,7 @@ final class EncargoSelectDataTest extends TestCase
             ->method('findById')
             ->with('es_ES.UTF-8')
             ->willReturn($local);
-        $localRepo->expects($this->never())->method('getLocales');
+        $localRepo->expects($this->never())->method('matching');
 
         $aplicacion = $this->createMock(EncargoAplicacionService::class);
         $aplicacion->method('getArraySeccion')->willReturn(['1' => 'sv']);
@@ -73,7 +73,7 @@ final class EncargoSelectDataTest extends TestCase
 
         $localRepo = $this->createMock(LocalRepositoryInterface::class);
         $localRepo->method('findById')->with('es')->willReturn(null);
-        $localRepo->method('getLocales')->with(['idioma' => 'es'])->willReturn([$local]);
+        $localRepo->method('matching')->willReturn([$local]);
 
         $aplicacion = $this->createMock(EncargoAplicacionService::class);
         $aplicacion->method('getArraySeccion')->willReturn([]);

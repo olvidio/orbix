@@ -2,6 +2,11 @@
 
 namespace src\usuarios\application;
 
+use src\usuarios\domain\criteria\PermMenuField;
+use src\usuarios\domain\criteria\UsuarioGrupoField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\usuarios\domain\criteria\UsuarioField;
 use src\permisos\domain\MenuDlPermissionBits;
 use src\permisos\domain\PermDl;
 use src\shared\infrastructure\persistence\ConfigDB;
@@ -134,7 +139,7 @@ class usuariosRegionContactos
 
         $this->usuarioGrupoRepository->setoDbl_select($oDevelPC);
         $this->usuarioRepository->setoDbl_select($oDevelPC);
-        $cUsuariosRegion = $this->usuarioRepository->getUsuarios(['id_role' => 3], ['id_role' => '>']);
+        $cUsuariosRegion = $this->usuarioRepository->matching(Criteria::create()->where(Filter::gt(UsuarioField::IdRole, 3)));
 
         $aContactos = [];
         foreach ($cUsuariosRegion as $oUsuario) {
@@ -146,12 +151,12 @@ class usuariosRegionContactos
             $usuario = $oUsuario->getUsuarioAsString();
             $nom_usuario = $oUsuario->getNomUsuarioAsString() ?? $usuario;
 
-            $cGrupos = $this->usuarioGrupoRepository->getUsuariosGrupos(['id_usuario' => $id_usuario]);
+            $cGrupos = $this->usuarioGrupoRepository->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, $id_usuario)));
             $iperm_menu = 0;
             $this->permMenuRepository->setoDbl_select($oDevelPC);
             foreach ($cGrupos as $UsuarioGrupo) {
                 $id_grupo = $UsuarioGrupo->getId_grupo();
-                $cPermMenu = $this->permMenuRepository->getPermMenus(['id_usuario' => $id_grupo]);
+                $cPermMenu = $this->permMenuRepository->matching(Criteria::create()->where(Filter::eq(PermMenuField::IdUsuario, $id_grupo)));
                 foreach ($cPermMenu as $oPermMenu) {
                     $iperm_menu = $iperm_menu | $oPermMenu->getMenu_perm();
                 }

@@ -2,6 +2,9 @@
 
 namespace src\usuarios\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\usuarios\domain\criteria\RoleField;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
@@ -50,7 +53,7 @@ class rolesLista
             $aGrupMenus[$id_grupmenu] = $grup_menu;
         }
 
-        $cRoles = $this->roleRepository->getRoles(['_ordre' => 'role']);
+        $cRoles = $this->roleRepository->matching(Criteria::create()->orderBy(RoleField::Role));
 
         if ($miRole === 2) {
             $permiso = 2;

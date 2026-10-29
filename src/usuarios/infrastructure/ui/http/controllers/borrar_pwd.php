@@ -1,5 +1,8 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\usuarios\domain\criteria\UsuarioField;
 
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
@@ -61,9 +64,7 @@ foreach ($a_posibles_esquemas as $esquema) {
     $UsuarioRepository->setoDbl_select($oDevelPC);
 
     // No cambiar el superusuario (id_role = 1).
-    $aWhere = ['id_role' => 1];
-    $aOperador = ['id_role' => '>'];
-    $cUsuarios = $UsuarioRepository->getUsuarios($aWhere, $aOperador);
+    $cUsuarios = $UsuarioRepository->matching(Criteria::create()->where(Filter::gt(UsuarioField::IdRole, 1)));
     foreach ($cUsuarios as $oUsuario) {
         // poner de password el mismo login
         $login = $oUsuario->getUsuarioAsString();

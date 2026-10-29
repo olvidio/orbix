@@ -2,6 +2,7 @@
 
 namespace src\usuarios\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use PDO;
 use src\usuarios\domain\entity\UsuarioGrupo;
 
@@ -20,6 +21,12 @@ interface UsuarioGrupoRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * @return list<UsuarioGrupo>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * devuelve una colección (array) de objetos de tipo UsuarioGrupo
      *
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.

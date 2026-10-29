@@ -20,11 +20,7 @@ final class GruposListaTest extends TestCase
 
         $repo = $this->createMock(GrupoRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getGrupos')
-            ->with(
-                ['id_usuario' => '^5', '_ordre' => 'usuario'],
-                ['id_usuario' => '~']
-            )
+            ->method('matching')
             ->willReturn([$grupo]);
 
         $useCase = new GruposLista($repo);
@@ -42,11 +38,7 @@ final class GruposListaTest extends TestCase
     {
         $repo = $this->createMock(GrupoRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getGrupos')
-            ->with(
-                ['usuario' => 'ana', '_ordre' => 'usuario'],
-                ['usuario' => 'sin_acentos']
-            )
+            ->method('matching')
             ->willReturn([]);
 
         $useCase = new GruposLista($repo);

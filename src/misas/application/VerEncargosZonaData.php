@@ -2,6 +2,9 @@
 
 namespace src\misas\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\usuarios\domain\criteria\LocalField;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\shared\security\HashB;
@@ -98,7 +101,7 @@ class VerEncargosZonaData
                         $nom_idioma = (string)($oLocal->getNomIdiomaAsString() ?? '');
                     }
                     if ($nom_idioma === '') {
-                        $cIdiomas = $this->localRepository->getLocales(['idioma' => $idioma_enc_str]);
+                        $cIdiomas = $this->localRepository->matching(Criteria::create()->where(Filter::eq(LocalField::Idioma, $idioma_enc_str)));
                         if (count($cIdiomas) > 0) {
                             $nom_idioma = (string)($cIdiomas[0]->getNomIdiomaAsString() ?? '');
                         }

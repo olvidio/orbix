@@ -3,6 +3,9 @@
 namespace src\usuarios\application;
 
 use src\shared\security\HashB;
+use src\usuarios\domain\criteria\GrupoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 
 class GruposLista
@@ -17,18 +20,13 @@ class GruposLista
      */
     public function execute(string $username): array
     {
-        $aWhere = [];
-        $aOperador = [];
         if ($username !== '') {
-            $aWhere['usuario'] = $username;
-            $aOperador['usuario'] = 'sin_acentos';
+            $criteria = Criteria::create()->where(Filter::matchesUnaccented(GrupoField::Usuario, $username));
         } else {
-            $aWhere['id_usuario'] = '^5';
-            $aOperador['id_usuario'] = '~';
+            $criteria = Criteria::create()->where(Filter::matches(GrupoField::IdUsuario, '^5'));
         }
-        $aWhere['_ordre'] = 'usuario';
 
-        $cGrupos = $this->grupoRepository->getGrupos($aWhere, $aOperador);
+        $cGrupos = $this->grupoRepository->matching($criteria->orderBy(GrupoField::Usuario));
 
         $a_cabeceras = [
             _("grupo"),

@@ -2,6 +2,9 @@
 
 namespace src\encargossacd\application;
 
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Criteria;
+use src\usuarios\domain\criteria\LocalField;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
@@ -110,7 +113,7 @@ final class EncargoSelectData
             return (string)($oLocal->getNomIdiomaAsString() ?? '');
         }
 
-        $cIdiomas = $this->localRepository->getLocales(['idioma' => $idioma_enc]);
+        $cIdiomas = $this->localRepository->matching(Criteria::create()->where(Filter::eq(LocalField::Idioma, $idioma_enc)));
         if ($cIdiomas !== []) {
             return (string)($cIdiomas[0]->getNomIdiomaAsString() ?? '');
         }

@@ -2,6 +2,7 @@
 
 namespace src\usuarios\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\usuarios\domain\entity\Grupo;
 
 /**
@@ -19,6 +20,12 @@ interface GrupoRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * @return list<Grupo>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * devuelve una colección (array) de objetos de tipo Grupo
      *
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.

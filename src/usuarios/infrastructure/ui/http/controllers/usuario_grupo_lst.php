@@ -1,5 +1,9 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\usuarios\domain\criteria\GrupoField;
+use src\usuarios\domain\criteria\UsuarioGrupoField;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\shared\config\ConfigGlobal;
@@ -20,19 +24,14 @@ if ($oUsuario === null) {
     return;
 }
 $id_role = $oUsuario->getId_role();
-$aWhere = [];
-$aOperador = [];
 // la tabla es de grupos y usuarios. Los grupos empiezan  por 5:
-$aWhere['id_usuario'] = '^5';
-$aOperador['id_usuario'] = '~';
 // Ahora mismo no sé porque hay que filtrar por role. Para añadir se tienen que ver...
-//$aWhere['id_role'] = $id_role;
 // listado de grupos posibles
 $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
-$cGrupos = $GrupoRepository->getGrupos($aWhere,$aOperador);
+$cGrupos = $GrupoRepository->matching(Criteria::create()->where(Filter::matches(GrupoField::IdUsuario, '^5')));
 // no pongo los que ya tengo. Los pongo en un array
 $UsuarioGrupoRepository = DependencyResolver::get(UsuarioGrupoRepositoryInterface::class);
-$cListaGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $Qid_usuario));
+$cListaGrupos = $UsuarioGrupoRepository->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, $Qid_usuario)));
 $aGruposOn = [];
 foreach ($cListaGrupos as $oUsuarioGrupo) {
     $aGruposOn[] = $oUsuarioGrupo->getId_grupo();

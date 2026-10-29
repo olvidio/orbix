@@ -3,6 +3,10 @@
 namespace src\usuarios\domain;
 
 use src\shared\domain\DatosInfoRepo;
+use src\usuarios\domain\criteria\LocalField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use src\usuarios\domain\entity\Local;
 
@@ -29,15 +33,15 @@ class InfoLocales extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        if (empty($this->k_buscar)) {
-            $aWhere = [];
-            $aOperador = [];
-        } else {
-            $aWhere = ['nom_idioma' => $this->k_buscar];
-            $aOperador = ['nom_idioma' => 'sin_acentos'];
+        $criteria = Criteria::create();
+        if (!empty($this->k_buscar)) {
+            $criteria = $criteria->where(Filter::matchesUnaccented(LocalField::NomIdioma, $this->k_buscar));
         }
-        $aWhere['_ordre'] = 'active DESC,nom_idioma ASC';
 
-        return $this->localRepository->getLocales($aWhere, $aOperador);
+        return $this->localRepository->matching(
+            $criteria
+                ->orderBy(LocalField::Active, OrderDirection::Desc)
+                ->addOrderBy(LocalField::NomIdioma)
+        );
     }
 }

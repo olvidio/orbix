@@ -1,5 +1,8 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\usuarios\domain\criteria\UsuarioGrupoField;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
@@ -17,7 +20,7 @@ if (empty($Qid_usuario)) {
     // grupos:
     $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
     $UsuarioGrupoRepository = DependencyResolver::get(UsuarioGrupoRepositoryInterface::class);
-    $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $Qid_usuario));
+    $cGrupos = $UsuarioGrupoRepository->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, $Qid_usuario)));
     $i = 0;
     $txt = '';
     foreach ($cGrupos as $oUsuarioGrupo) {

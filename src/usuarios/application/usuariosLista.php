@@ -3,6 +3,9 @@
 namespace src\usuarios\application;
 
 use Exception;
+use src\usuarios\domain\criteria\UsuarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use InvalidArgumentException;
 use src\shared\config\ConfigGlobal;
 use src\shared\security\HashB;
@@ -38,21 +41,18 @@ class usuariosLista
         }
 
         $miSfsv = ConfigGlobal::mi_sfsv();
-        $aWhere = [];
-        $aOperador = [];
+        $criteria = Criteria::create();
         if ($miRole !== 1) {
-            $aWhere['id_role'] = 1;
-            $aOperador['id_role'] = '!=';
+            $criteria = $criteria->andWhere(Filter::neq(UsuarioField::IdRole, 1));
         }
 
         if ($Qusername !== '') {
-            $aWhere['usuario'] = $Qusername;
-            $aOperador['usuario'] = 'sin_acentos';
+            $criteria = $criteria->andWhere(Filter::matchesUnaccented(UsuarioField::Usuario, $Qusername));
         }
-        $aWhere['_ordre'] = 'usuario';
+        $criteria = $criteria->orderBy(UsuarioField::Usuario);
 
         try {
-            $cUsuarios = $this->usuarioRepository->getUsuarios($aWhere, $aOperador);
+            $cUsuarios = $this->usuarioRepository->matching($criteria);
         } catch (InvalidArgumentException $e) {
             $error_txt .= _("Error (no debería ocurrir): Se capturó una InvalidArgumentException: ");
             $error_txt .= $e->getMessage() . "\n\n";

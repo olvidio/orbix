@@ -2,6 +2,7 @@
 
 namespace src\usuarios\domain\contracts;
 
+use src\shared\domain\criteria\Criteria;
 use src\usuarios\domain\entity\Role;
 
 /**
@@ -33,6 +34,12 @@ interface RoleRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * @return list<Role>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * devuelve una colección (array) de objetos de tipo Role
      *
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
