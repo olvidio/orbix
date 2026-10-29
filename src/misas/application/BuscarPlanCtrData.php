@@ -13,6 +13,8 @@ use src\shared\domain\criteria\OrderDirection;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
+use src\ubis\domain\criteria\CentroEllasField;
+use src\ubis\domain\criteria\CentroEllosField;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -123,13 +125,16 @@ class BuscarPlanCtrData
 
         $id_ubi = '';
         if ($id_zona > 0) {
-            $filtro = CentrosDeZona::whereActivosIn($this->centrosDeZona->idUbisDeZona($id_zona));
+            $idUbis = $this->centrosDeZona->idUbisDeZona($id_zona);
             $cCentrosList = [];
-            if ($filtro !== null) {
-                [$aWhere, $aOperador] = $filtro;
+            if ($idUbis !== []) {
                 $cCentrosList = array_merge(
-                    $this->centroEllosRepository->getCentros($aWhere, $aOperador),
-                    $this->centroEllasRepository->getCentros($aWhere, $aOperador),
+                    $this->centroEllosRepository->matching(
+                        CentrosDeZona::criterioActivosIn($idUbis, CentroEllosField::class)
+                    ),
+                    $this->centroEllasRepository->matching(
+                        CentrosDeZona::criterioActivosIn($idUbis, CentroEllasField::class)
+                    ),
                 );
             }
             foreach ($cCentrosList as $oCentro) {

@@ -6,7 +6,11 @@ namespace src\zonassacd\application;
 
 use src\permisos\domain\XPermisos;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroEllasField;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
 use src\zonassacd\application\services\CentrosDeZona;
@@ -32,12 +36,16 @@ final class ZonaCtrLista
         switch ($id_zona) {
             case 'no':
                 $cCentros = $this->activosSinZona(
-                    $this->centroDlRepository->getCentros(['active' => 't', '_ordre' => 'nombre_ubi']),
+                    $this->centroDlRepository->matching(
+                        Criteria::create()->where(Filter::eq(CentroDlField::Active, true))->orderBy(CentroDlField::NombreUbi)
+                    ),
                 );
                 break;
             case 'no_sf':
                 $cCentros = $this->activosSinZona(
-                    $this->centroEllasRepository->getCentros(['active' => 't', '_ordre' => 'nombre_ubi']),
+                    $this->centroEllasRepository->matching(
+                        Criteria::create()->where(Filter::eq(CentroEllasField::Active, true))->orderBy(CentroEllasField::NombreUbi)
+                    ),
                 );
                 break;
             default:
@@ -105,15 +113,16 @@ final class ZonaCtrLista
      */
     private function activosDeZona(int $id_zona): array
     {
-        $filtro = CentrosDeZona::whereActivosIn($this->centrosDeZona->idUbisDeZona($id_zona));
-        if ($filtro === null) {
+        $idUbis = $this->centrosDeZona->idUbisDeZona($id_zona);
+        $criterioDl = CentrosDeZona::criterioActivosIn($idUbis, CentroDlField::class);
+        $criterioEllas = CentrosDeZona::criterioActivosIn($idUbis, CentroEllasField::class);
+        if ($criterioDl === null || $criterioEllas === null) {
             return [];
         }
-        [$aWhere, $aOperador] = $filtro;
 
         return array_merge(
-            $this->centroDlRepository->getCentros($aWhere, $aOperador),
-            $this->centroEllasRepository->getCentros($aWhere, $aOperador),
+            $this->centroDlRepository->matching($criterioDl),
+            $this->centroEllasRepository->matching($criterioEllas),
         );
     }
 }

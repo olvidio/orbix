@@ -4,8 +4,10 @@ namespace src\actividadessacd\application\services;
 
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
 use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 
 /**
  * Helpers para la comunicacion a los sacd.
@@ -60,12 +62,12 @@ final class ActividadesSacdHelper
         if (ConfigGlobal::is_dmz()) {
             return 'xxxx';
         }
-        $cCentros = $this->centroDlRepository->getCentros(['tipo_ctr' => 'dl']);
+        $cCentros = $this->centroDlRepository->matching(Criteria::create()->where(Filter::eq(CentroDlField::TipoCtr, 'dl')));
         $num_dl = count($cCentros);
         $oCentro = null;
         switch ($num_dl) {
             case 0:
-                $cCentros = $this->centroDlRepository->getCentros(['tipo_ctr' => 'cr']);
+                $cCentros = $this->centroDlRepository->matching(Criteria::create()->where(Filter::eq(CentroDlField::TipoCtr, 'cr')));
                 if (count($cCentros) > 0) {
                     $oCentro = $cCentros[0];
                 } else {

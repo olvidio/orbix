@@ -2,7 +2,10 @@
 
 namespace src\planning\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 
 /**
  * Listado de personas para `planning_persona_select`.
@@ -33,8 +36,7 @@ final class PlanningPersonaSelectData
             '_ordre' => 'apellido1,apellido2,nom',
         ];
         $aOperador = [];
-        $aWhereCtr = [];
-        $aOperadorCtr = [];
+        $criterioCtr = null;
 
         if ($Qapellido1 !== '') {
             $aWhere['apellido1'] = '^' . $Qapellido1;
@@ -50,8 +52,7 @@ final class PlanningPersonaSelectData
         }
         if ($Qcentro !== '') {
             $nom_ubi = str_replace('+', '\\+', $Qcentro);
-            $aWhereCtr['nombre_ubi'] = $nom_ubi;
-            $aOperadorCtr['nombre_ubi'] = 'sin_acentos';
+            $criterioCtr = Criteria::create()->where(Filter::matchesUnaccented(CentroDlField::NombreUbi, $nom_ubi));
         }
         if ($Qna !== '') {
             $aWhere['id_tabla'] = 'p' . $Qna;
@@ -60,8 +61,8 @@ final class PlanningPersonaSelectData
         $PersonaRepository = $this->personaRepositoryPicker->getSafe($Qobj_pau);
 
         $cPersonas = [];
-        if (!empty($aWhereCtr)) {
-            $cCentros = $this->centroDlRepository->getCentros($aWhereCtr, $aOperadorCtr);
+        if ($criterioCtr !== null) {
+            $cCentros = $this->centroDlRepository->matching($criterioCtr);
             foreach ($cCentros as $oCentro) {
                 $id_ubi = $oCentro->getId_ubi();
                 $aWhere['id_ctr'] = $id_ubi;

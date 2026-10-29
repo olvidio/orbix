@@ -55,7 +55,7 @@ final class CartasPresentacionPoblacionesDataTest extends TestCase
         $oDir->method('getPoblacion')->willReturn('Salamanca');
 
         $repoCentro = $this->createMock(CentroDlRepositoryInterface::class);
-        $repoCentro->method('getCentros')->willReturn([$oCentro]);
+        $repoCentro->method('matching')->willReturn([$oCentro]);
 
         $repoCtrx = $this->createMock(RelacionCentroDlDireccionRepositoryInterface::class);
         $repoCtrx->method('getDireccionesPorUbi')->with(10)->willReturn([['id_direccion' => 77]]);

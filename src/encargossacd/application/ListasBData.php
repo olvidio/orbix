@@ -16,6 +16,8 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroEllasField;
 
 /**
  * Genera el listado de atencion SACD "b" (cr 9/05, Anexo2, 9.4 b).
@@ -87,17 +89,20 @@ final class ListasBData
                     break;
             }
 
-            $aWhere = [
-                'active' => 't',
-                'tipo_ctr' => "^$tipo_ctr_que",
-                '_ordre' => 'nombre_ubi',
-            ];
-            $aOperador = ['tipo_ctr' => '~'];
-
             if ($sf === 1) {
-                $cCentros = $this->centroEllasRepository->getCentros($aWhere, $aOperador) ?: [];
+                $cCentros = $this->centroEllasRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(CentroEllasField::Active, true))
+                        ->andWhere(Filter::matches(CentroEllasField::TipoCtr, "^$tipo_ctr_que"))
+                        ->orderBy(CentroEllasField::NombreUbi)
+                );
             } else {
-                $cCentros = $this->centroDlRepository->getCentros($aWhere, $aOperador) ?: [];
+                $cCentros = $this->centroDlRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(CentroDlField::Active, true))
+                        ->andWhere(Filter::matches(CentroDlField::TipoCtr, "^$tipo_ctr_que"))
+                        ->orderBy(CentroDlField::NombreUbi)
+                );
             }
 
             foreach ($cCentros as $oCentro) {

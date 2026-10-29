@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace src\zonassacd\application\services;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\CriteriaField;
+use src\shared\domain\criteria\Filter;
 use src\zonassacd\domain\contracts\ZonaCtrRepositoryInterface;
 
 /**
@@ -52,21 +55,25 @@ final class CentrosDeZona
     }
 
     /**
-     * Filtro para `getCentros`: activos cuyo `id_ubi` está en la lista.
-     * `null` si no hay ids (el caller no debe lanzar `IN ()`).
+     * Criterio para `matching()` de un repositorio de centros: activos cuyo `id_ubi` está en la lista,
+     * ordenados por `nombre_ubi`. `null` si no hay ids (el caller no debe lanzar `IN ()`).
+     *
+     * Cada repositorio de centros solo acepta su propio enum de campos (`CentroDlField`,
+     * `CentroEllasField`, `CentroEllosField`...), todos con los mismos nombres de campo:
+     * el llamante indica cuál.
      *
      * @param list<int> $idUbis
-     * @return array{0: array<string, mixed>, 1: array<string, string>}|null
+     * @param class-string<CriteriaField&\BackedEnum> $campos enum de campos del repositorio destino
      */
-    public static function whereActivosIn(array $idUbis): ?array
+    public static function criterioActivosIn(array $idUbis, string $campos): ?Criteria
     {
         if ($idUbis === []) {
             return null;
         }
 
-        return [
-            ['active' => 't', 'id_ubi' => $idUbis, '_ordre' => 'nombre_ubi'],
-            ['id_ubi' => 'IN'],
-        ];
+        return Criteria::create()
+            ->where(Filter::eq($campos::from('active'), true))
+            ->andWhere(Filter::in($campos::from('id_ubi'), $idUbis))
+            ->orderBy($campos::from('nombre_ubi'));
     }
 }

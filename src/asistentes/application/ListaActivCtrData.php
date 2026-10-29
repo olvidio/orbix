@@ -11,7 +11,10 @@ use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 
 /**
  * Asistentes a actividades por centro (`lista_activ_ctr.php`).
@@ -111,46 +114,41 @@ final class ListaActivCtrData
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
 
-        $aWhere = [];
-        $aOperador = [];
+        $criterio = Criteria::create();
         $tabla = 'p_n_agd';
         switch ($Qn_agd) {
             case 'a':
                 $tabla = 'p_agregados';
-                $aWhere['tipo_ctr'] = '^a';
-                $aOperador['tipo_ctr'] = '~';
+                $criterio = $criterio->where(Filter::matches(CentroDlField::TipoCtr, '^a'));
                 break;
             case 'n':
                 $tabla = 'p_numerarios';
-                $aWhere['tipo_ctr'] = '^n';
-                $aOperador['tipo_ctr'] = '~';
+                $criterio = $criterio->where(Filter::matches(CentroDlField::TipoCtr, '^n'));
                 break;
             case 'nm':
                 $tabla = 'p_n_agd';
-                $aWhere['tipo_ctr'] = '^nm';
-                $aOperador['tipo_ctr'] = '~';
+                $criterio = $criterio->where(Filter::matches(CentroDlField::TipoCtr, '^nm'));
                 break;
             case 'nj':
                 $tabla = 'p_n_agd';
-                $aWhere['tipo_ctr'] = '^nj(ce)*';
-                $aOperador['tipo_ctr'] = '~';
+                $criterio = $criterio->where(Filter::matches(CentroDlField::TipoCtr, '^nj(ce)*'));
                 break;
             case 'sssc':
                 $tabla = 'p_sssc';
-                $aWhere['tipo_ctr'] = '^ss';
-                $aOperador['tipo_ctr'] = '~';
+                $criterio = $criterio->where(Filter::matches(CentroDlField::TipoCtr, '^ss'));
                 break;
             case 'c':
                 $tabla = 'p_n_agd';
-                $aWhere['id_ubi'] = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi');
+                $criterio = $criterio->where(
+                    Filter::eq(CentroDlField::IdUbi, \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_ubi'))
+                );
                 break;
             default:
                 $tabla = 'p_n_agd';
         }
-        $aWhere['active'] = 't';
-        $aWhere['_ordre'] = 'nombre_ubi';
+        $criterio = $criterio->andWhere(Filter::eq(CentroDlField::Active, true))->orderBy(CentroDlField::NombreUbi);
 
-        $cCentros = $this->centroDlRepository->getCentros($aWhere, $aOperador);
+        $cCentros = $this->centroDlRepository->matching($criterio);
 
         $aCentros = [];
         foreach ($cCentros as $oCentro) {

@@ -23,7 +23,7 @@ class SincroPersonas
      */
     public function __invoke(string $region, string $dl_listas, string $tipo_persona): array
     {
-        $cCentros = $this->centroDlRepository->getCentros();
+        $cCentros = $this->centroDlRepository->matching(Criteria::create());
         $a_centros = [];
         foreach ($cCentros as $oCentro) {
             $id_ubi = $oCentro->getId_ubi();

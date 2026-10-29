@@ -19,6 +19,7 @@ use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 
 class EncargoAplicacionService
 {
@@ -88,11 +89,11 @@ class EncargoAplicacionService
 
     public function getLugar_dl(): string
     {
-        $cCentros = $this->centroDlRepository->getCentros(['tipo_ctr' => 'dl']);
+        $cCentros = $this->centroDlRepository->matching(Criteria::create()->where(Filter::eq(CentroDlField::TipoCtr, 'dl')));
         $num_dl = count($cCentros);
         switch ($num_dl) {
             case 0:
-                $cCentros = $this->centroDlRepository->getCentros(['tipo_ctr' => 'cr']);
+                $cCentros = $this->centroDlRepository->matching(Criteria::create()->where(Filter::eq(CentroDlField::TipoCtr, 'cr')));
                 if ($cCentros === []) {
                     return '?';
                 }

@@ -87,10 +87,10 @@ final class VerEncargosZonaDataTest extends TestCase
         $localRepository->method('getArrayLocales')->willReturn([]);
 
         $centroEllosRepository = $this->createMock(CentroEllosRepositoryInterface::class);
-        $centroEllosRepository->method('getCentros')->willReturn([]);
+        $centroEllosRepository->method('matching')->willReturn([]);
 
         $centroEllasRepository = $this->createMock(CentroEllasRepositoryInterface::class);
-        $centroEllasRepository->method('getCentros')->willReturn([]);
+        $centroEllasRepository->method('matching')->willReturn([]);
 
         $zonaCtrRepository = $this->createMock(ZonaCtrRepositoryInterface::class);
         $zonaCtrRepository->method('idUbisDeZona')->willReturn($idUbisDeZona);

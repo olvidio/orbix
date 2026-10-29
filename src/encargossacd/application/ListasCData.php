@@ -15,6 +15,7 @@ use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 use src\zonassacd\application\services\CentrosDeZona;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
@@ -91,7 +92,9 @@ final class ListasCData
                 $idsZona = $this->centrosDeZona->idUbisDeZona((int) $id_zona);
                 $cCentrosDl = $idsZona === []
                     ? []
-                    : ($this->centroDlRepository->getCentros(['id_ubi' => $idsZona], ['id_ubi' => 'IN']) ?: []);
+                    : ($this->centroDlRepository->matching(
+                        Criteria::create()->where(Filter::in(CentroDlField::IdUbi, $idsZona))
+                    ));
                 foreach ($cCentrosDl as $oCentroDl) {
                     $id_ubi = $oCentroDl->getId_ubi();
                     $cPersonas = $this->personaDlRepository->getPersonas([

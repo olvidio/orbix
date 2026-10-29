@@ -14,7 +14,10 @@ use src\encargossacd\domain\value_objects\DiaRefCode;
 use src\encargossacd\domain\value_objects\EncargoText;
 use src\encargossacd\domain\value_objects\EncargoTextClave;
 use src\encargossacd\domain\value_objects\LocaleCode;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 
 /**
  * Unitarios de {@see EncargoAplicacionService}.
@@ -282,7 +285,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getLugar_dl_sin_dl_ni_cr_devuelve_interrogacion(): void
     {
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
-        $centroRepo->method('getCentros')->willReturn([]);
+        $centroRepo->method('matching')->willReturn([]);
         $this->service = $this->makeService([
             CentroDlRepositoryInterface::class => $centroRepo,
         ]);
@@ -301,7 +304,9 @@ final class EncargoAplicacionServiceTest extends TestCase
         };
 
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
-        $centroRepo->method('getCentros')->with(['tipo_ctr' => 'dl'])->willReturn([$oCentro]);
+        $centroRepo->method('matching')
+            ->with(Criteria::create()->where(Filter::eq(CentroDlField::TipoCtr, 'dl')))
+            ->willReturn([$oCentro]);
         $this->service = $this->makeService([
             CentroDlRepositoryInterface::class => $centroRepo,
         ]);
@@ -322,7 +327,7 @@ final class EncargoAplicacionServiceTest extends TestCase
         };
 
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
-        $centroRepo->method('getCentros')->willReturn([$oCentro]);
+        $centroRepo->method('matching')->willReturn([$oCentro]);
         $this->service = $this->makeService([
             CentroDlRepositoryInterface::class => $centroRepo,
         ]);
@@ -340,8 +345,8 @@ final class EncargoAplicacionServiceTest extends TestCase
         };
 
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
-        $centroRepo->method('getCentros')->willReturnCallback(function (array $aWhere) use ($oCentroCr): array {
-            return match ($aWhere['tipo_ctr'] ?? null) {
+        $centroRepo->method('matching')->willReturnCallback(function (Criteria $criterio) use ($oCentroCr): array {
+            return match ($criterio->filters()[0]->value ?? null) {
                 'dl' => [],
                 'cr' => [$oCentroCr],
                 default => [],

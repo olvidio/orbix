@@ -6,8 +6,12 @@ namespace Tests\unit\zonassacd\application;
 
 use PHPUnit\Framework\TestCase;
 use src\permisos\domain\XPermisos;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroEllasField;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
 use src\zonassacd\application\ZonaCtrLista;
@@ -41,8 +45,8 @@ final class ZonaCtrListaTest extends TestCase
 
         $centroDlRepo = $this->createMock(CentroDlRepositoryInterface::class);
         $centroDlRepo->expects($this->once())
-            ->method('getCentros')
-            ->with(['active' => 't', '_ordre' => 'nombre_ubi'])
+            ->method('matching')
+            ->with(Criteria::create()->where(Filter::eq(CentroDlField::Active, true))->orderBy(CentroDlField::NombreUbi))
             ->willReturn([$oCentro]);
 
         $zonaCtr = $this->createMock(ZonaCtrRepositoryInterface::class);
@@ -76,8 +80,8 @@ final class ZonaCtrListaTest extends TestCase
 
         $centroEllasRepo = $this->createMock(CentroEllasRepositoryInterface::class);
         $centroEllasRepo->expects($this->once())
-            ->method('getCentros')
-            ->with(['active' => 't', '_ordre' => 'nombre_ubi'])
+            ->method('matching')
+            ->with(Criteria::create()->where(Filter::eq(CentroEllasField::Active, true))->orderBy(CentroEllasField::NombreUbi))
             ->willReturn([$oCentro]);
 
         $zonaCtr = $this->createStub(ZonaCtrRepositoryInterface::class);
@@ -107,15 +111,15 @@ final class ZonaCtrListaTest extends TestCase
         $zonaCtr->method('idUbisDeZona')->willReturn([1042, 2055]);
         $centrosDeZona = new CentrosDeZona($zonaCtr);
 
-        $filtro = [
-            ['active' => 't', 'id_ubi' => [1042, 2055], '_ordre' => 'nombre_ubi'],
-            ['id_ubi' => 'IN'],
-        ];
         $centroDlRepo = $this->createMock(CentroDlRepositoryInterface::class);
-        $centroDlRepo->expects($this->once())->method('getCentros')->with($filtro[0], $filtro[1])->willReturn([$oCentroDl]);
+        $centroDlRepo->expects($this->once())->method('matching')
+            ->with(CentrosDeZona::criterioActivosIn([1042, 2055], CentroDlField::class))
+            ->willReturn([$oCentroDl]);
 
         $centroEllasRepo = $this->createMock(CentroEllasRepositoryInterface::class);
-        $centroEllasRepo->expects($this->once())->method('getCentros')->with($filtro[0], $filtro[1])->willReturn([$oCentroSf]);
+        $centroEllasRepo->expects($this->once())->method('matching')
+            ->with(CentrosDeZona::criterioActivosIn([1042, 2055], CentroEllasField::class))
+            ->willReturn([$oCentroSf]);
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
         $zonaRepo->method('findById')->with(9)->willReturn($this->zonaStub('Zona 9'));
@@ -138,9 +142,9 @@ final class ZonaCtrListaTest extends TestCase
         $centrosDeZona = new CentrosDeZona($zonaCtr);
 
         $centroDlRepo = $this->createStub(CentroDlRepositoryInterface::class);
-        $centroDlRepo->method('getCentros')->willReturn([$this->centroDlStub(1042, 'Centro DL')]);
+        $centroDlRepo->method('matching')->willReturn([$this->centroDlStub(1042, 'Centro DL')]);
         $centroEllasRepo = $this->createStub(CentroEllasRepositoryInterface::class);
-        $centroEllasRepo->method('getCentros')->willReturn([]);
+        $centroEllasRepo->method('matching')->willReturn([]);
         $zonaRepo = $this->createStub(ZonaRepositoryInterface::class);
         $zonaRepo->method('findById')->willReturn($this->zonaStub('Zona 9'));
 
@@ -158,9 +162,9 @@ final class ZonaCtrListaTest extends TestCase
         $centrosDeZona = new CentrosDeZona($zonaCtr);
 
         $centroDlRepo = $this->createStub(CentroDlRepositoryInterface::class);
-        $centroDlRepo->method('getCentros')->willReturn([$this->centroDlStub(1042, 'Centro DL')]);
+        $centroDlRepo->method('matching')->willReturn([$this->centroDlStub(1042, 'Centro DL')]);
         $centroEllasRepo = $this->createStub(CentroEllasRepositoryInterface::class);
-        $centroEllasRepo->method('getCentros')->willReturn([$this->centroEllasStub(2055, 'Centro SF')]);
+        $centroEllasRepo->method('matching')->willReturn([$this->centroEllasStub(2055, 'Centro SF')]);
         $zonaRepo = $this->createStub(ZonaRepositoryInterface::class);
         $zonaRepo->method('findById')->willReturn($this->zonaStub('Zona 9'));
 

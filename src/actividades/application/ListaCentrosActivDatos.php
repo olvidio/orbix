@@ -3,7 +3,10 @@
 namespace src\actividades\application;
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 use frontend\shared\web\Periodo;
 
 /**
@@ -57,28 +60,25 @@ final class ListaCentrosActivDatos
         }
 
         $CentroRepository = $this->centroDlRepository;
-        $aWhere = [];
-        $aOperador = [];
+        $criterioSinSss = Criteria::create()
+            ->where(Filter::matches(CentroDlField::TipoCtr, '^s[^s]'))
+            ->orderBy(CentroDlField::NombreUbi);
         if (empty($Qid_ctr_num)) {
-            $aWhere = ['tipo_ctr' => '^s[^s]', '_ordre' => 'nombre_ubi'];
-            $aOperador = ['tipo_ctr' => '~'];
-            $cCentros = $CentroRepository->getCentros($aWhere, $aOperador);
+            $cCentros = $CentroRepository->matching($criterioSinSss);
         } else {
             $Qa_id_ctr = array_filter($Qa_id_ctr);
             if (empty($Qa_id_ctr)) {
-                $aWhere = ['tipo_ctr' => '^s[^s]', '_ordre' => 'nombre_ubi'];
-                $aOperador = ['tipo_ctr' => '~'];
+                $criterio = $criterioSinSss;
             } else {
                 $idCtrList = [];
                 foreach ($Qa_id_ctr as $idCtr) {
                     if (is_scalar($idCtr)) {
-                        $idCtrList[] = (string) $idCtr;
+                        $idCtrList[] = (int) $idCtr;
                     }
                 }
-                $aWhere['id_ubi'] = implode(',', $idCtrList);
-                $aOperador['id_ubi'] = 'IN';
+                $criterio = Criteria::create()->where(Filter::in(CentroDlField::IdUbi, $idCtrList));
             }
-            $cCentros = $CentroRepository->getCentros($aWhere, $aOperador);
+            $cCentros = $CentroRepository->matching($criterio);
         }
 
         $c = 0;

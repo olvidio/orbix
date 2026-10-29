@@ -12,7 +12,10 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 
 /**
  * Listado última actividad / seguimiento (`lista_ultima_activ.php`).
@@ -198,7 +201,9 @@ final class ListaUltimaActivData
             if ($Qid_ubi == '999' || empty($Qid_ubi)) {
                 $nombre_ubi = '';
                 $id_ctr = $oPersona->getId_ctr();
-                $cCentros = $this->centroDlRepository->getCentros(['id_ubi' => $id_ctr]);
+                $cCentros = $this->centroDlRepository->matching(
+                    Criteria::create()->where(Filter::eq(CentroDlField::IdUbi, $id_ctr))
+                );
                 if ($cCentros !== []) {
                     /** @var \src\ubis\domain\entity\CentroDl $oCentro */
                     $oCentro = $cCentros[0];

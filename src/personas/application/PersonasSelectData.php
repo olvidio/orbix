@@ -14,7 +14,10 @@ use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
@@ -89,8 +92,7 @@ final class PersonasSelectData
                 default => 'nada',
             };
         } else {
-            $aWhereCtr = [];
-            $aOperadorCtr = [];
+            $criterioCtr = null;
 
             if (!empty($Qapellido1)) {
                 $aWhere['apellido1'] = $Qapellido1;
@@ -115,12 +117,13 @@ final class PersonasSelectData
             }
             if (!empty($Qcentro)) {
                 if (!empty($Qexacto)) {
-                    $aWhereCtr['nombre_ubi'] = addslashes(strtr($Qcentro, "+", "."));
+                    $criterioCtr = Criteria::create()
+                        ->where(Filter::eq(CentroDlField::NombreUbi, addslashes(strtr($Qcentro, "+", "."))));
                 } else {
                     $nom_ubi = addslashes($Qcentro);
                     $nom_ubi = str_replace("+", "\+", $nom_ubi);
-                    $aWhereCtr['nombre_ubi'] = '^' . $nom_ubi;
-                    $aOperadorCtr['nombre_ubi'] = 'sin_acentos';
+                    $criterioCtr = Criteria::create()
+                        ->where(Filter::matchesUnaccented(CentroDlField::NombreUbi, '^' . $nom_ubi));
                 }
             }
             if (empty($Qcmb)) {
@@ -133,9 +136,9 @@ final class PersonasSelectData
                 $aWhere['sacd'] = 't';
             }
 
-            if (!empty($aWhereCtr)) {
+            if ($criterioCtr !== null) {
                 $gesCentros = $this->centroDlRepository;
-                $cCentros = $gesCentros->getCentros($aWhereCtr, $aOperadorCtr);
+                $cCentros = $gesCentros->matching($criterioCtr);
                 $aId_ctrs = [];
                 foreach ($cCentros as $oCentro) {
                     $aId_ctrs[] = $oCentro->getId_ubi();

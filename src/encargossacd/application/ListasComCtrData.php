@@ -14,6 +14,8 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroEllasField;
 
 /**
  * Datos para la comunicacion a los centros.
@@ -58,11 +60,21 @@ final class ListasComCtrData
         $cCentros = [];
         switch ($sfsv) {
             case 'sv':
-                $cCentros = $this->centroDlRepository->getCentros(['active' => 't', '_ordre' => 'tipo_ctr,nombre_ubi']) ?: [];
+                $cCentros = $this->centroDlRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(CentroDlField::Active, true))
+                        ->orderBy(CentroDlField::TipoCtr)
+                        ->addOrderBy(CentroDlField::NombreUbi)
+                );
                 $origen_txt = (string)ConfigGlobal::mi_dele();
                 break;
             case 'sf':
-                $cCentros = $this->centroEllasRepository->getCentros(['active' => 't', '_ordre' => 'tipo_ctr,nombre_ubi']) ?: [];
+                $cCentros = $this->centroEllasRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(CentroEllasField::Active, true))
+                        ->orderBy(CentroEllasField::TipoCtr)
+                        ->addOrderBy(CentroEllasField::NombreUbi)
+                );
                 $origen_txt = ConfigGlobal::mi_dele() . 'f';
                 break;
         }

@@ -16,6 +16,8 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroEllasField;
 
 /**
  * Listado de exigencias SACD por centro/iglesia.
@@ -97,19 +99,22 @@ final class ListasExigenciaCtrData
                 $Html .= "$div_open<table><tr><td class=grupo colspan=2>$txt_tipo_ctr</td></tr>";
             }
 
-            $aWhere = [
-                'active' => 't',
-                'tipo_ctr' => "^$tipo_ctr_que",
-                '_ordre' => 'nombre_ubi',
-            ];
-            $aOperador = ['tipo_ctr' => '~'];
+            $criterioEllas = Criteria::create()
+                ->where(Filter::eq(CentroEllasField::Active, true))
+                ->andWhere(Filter::matches(CentroEllasField::TipoCtr, "^$tipo_ctr_que"))
+                ->orderBy(CentroEllasField::NombreUbi);
+            $criterioDl = Criteria::create()
+                ->where(Filter::eq(CentroDlField::Active, true))
+                ->andWhere(Filter::matches(CentroDlField::TipoCtr, "^$tipo_ctr_que"))
+                ->orderBy(CentroDlField::NombreUbi);
             $cCentros = [];
             if ($ctr_igl === 'ctr') {
-                $gesCentros = $sf === 1 ? $this->centroEllasRepository : $this->centroDlRepository;
-                $cCentros = $gesCentros->getCentros($aWhere, $aOperador) ?: [];
+                $cCentros = $sf === 1
+                    ? $this->centroEllasRepository->matching($criterioEllas)
+                    : $this->centroDlRepository->matching($criterioDl);
             } elseif ($ctr_igl === 'igl') {
-                $cCentrosF = $this->centroEllasRepository->getCentros($aWhere, $aOperador) ?: [];
-                $cCentrosV = $this->centroDlRepository->getCentros($aWhere, $aOperador) ?: [];
+                $cCentrosF = $this->centroEllasRepository->matching($criterioEllas);
+                $cCentrosV = $this->centroDlRepository->matching($criterioDl);
                 $cCentros = array_merge($cCentrosV, $cCentrosF);
             }
 
