@@ -3,6 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\Casa;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Casa y su Repositorio
@@ -24,11 +25,17 @@ interface CasaExRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo Casa
+     * Casa que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Casa> Una colección de objetos de tipo Casa
+     * @return list<Casa>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Casa>
      */
     public function getCasas(array $aWhere = [], array $aOperators = []): array;
 

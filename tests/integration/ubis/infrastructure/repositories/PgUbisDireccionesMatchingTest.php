@@ -8,6 +8,7 @@ use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionRepositoryInterface;
 use src\ubis\domain\criteria\DireccionField;
+use src\ubis\domain\value_objects\CodigoPostalText;
 use Tests\factories\ubis\DireccionFactory;
 use Tests\myTest;
 
@@ -19,7 +20,7 @@ class PgUbisDireccionesMatchingTest extends myTest
     public function test_direccion_matching_equivale_a_legacy(): void
     {
         $repo = $GLOBALS['container']->get(DireccionRepositoryInterface::class);
-        $o = (new DireccionFactory())->create();
+        $o = (new DireccionFactory())->createSimple();
         $id = $o->getId_direccion();
         $repo->Guardar($o);
 
@@ -42,8 +43,9 @@ class PgUbisDireccionesMatchingTest extends myTest
     public function test_direccion_matching_c_p_subcadena_equivale_a_like(): void
     {
         $repo = $GLOBALS['container']->get(DireccionRepositoryInterface::class);
-        $o = (new DireccionFactory())->create();
+        $o = (new DireccionFactory())->createSimple();
         $id = $o->getId_direccion();
+        $o->setCodigoPostalVo(new CodigoPostalText('CODE12345'));
         $repo->Guardar($o);
         $cp = (string) $o->getC_p();
         $fragmento = substr($cp, 1, 3);

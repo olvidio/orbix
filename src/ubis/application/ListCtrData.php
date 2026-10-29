@@ -3,6 +3,14 @@
 namespace src\ubis\application;
 
 use src\permisos\domain\XPermisos;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\CriteriaField;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Operator;
+use src\ubis\domain\criteria\CasaField;
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroExField;
+use src\ubis\domain\criteria\CentroField;
 
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
@@ -48,10 +56,10 @@ class ListCtrData
     ): array {
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-        $aWhere = [];
-        $aWhere['active'] = 't';
-        $aWhere['_ordre'] = 'nombre_ubi';
-        $aOperador = [];
+        /** @var list<array{0: string, 1: Operator, 2: mixed}> $filtros campo (valor del enum), operador, valor */
+        $filtros = [['active', Operator::Eq, true]];
+        /** @var list<string> $orden */
+        $orden = ['nombre_ubi'];
 
         if ($Qloc !== 'ex') {
             $a_reg = explode('-', $Qloc);
@@ -67,80 +75,71 @@ class ListCtrData
             } else {
                 $objCentro = 'Centro';
                 $objCasa = 'Casa';
-                $aWhere['region'] = $reg;
+                $filtros[] = ['region', Operator::Eq, $reg];
                 if ($dl !== 'cr') {
-                    $aWhere['dl'] = $dl;
+                    $filtros[] = ['dl', Operator::Eq, $dl];
                 }
             }
             switch ($Qque_lista) {
                 case "todos_ctr_dl":
                     $obj = $objCentro;
-                    $aWhere['_ordre'] = 'tipo_ctr,nombre_ubi';
+                    $orden = ['tipo_ctr', 'nombre_ubi'];
                     break;
                 case "ctr_n":
                     $obj = $objCentro;
-                    $aWhere['tipo_ctr'] = '^n';
-                    $aOperador['tipo_ctr'] = '~';
+                    $filtros[] = ['tipo_ctr', Operator::Matches, '^n'];
                     break;
                 case "ctr_nax":
                     $obj = $objCentro;
-                    $aWhere['tipo_ctr'] = '^x';
-                    $aOperador['tipo_ctr'] = '~';
+                    $filtros[] = ['tipo_ctr', Operator::Matches, '^x'];
                     break;
                 case "ctr_agd":
                     $obj = $objCentro;
-                    $aWhere['tipo_ctr'] = '^a[^p]*';
-                    $aOperador['tipo_ctr'] = '~';
+                    $filtros[] = ['tipo_ctr', Operator::Matches, '^a[^p]*'];
                     break;
                 case "ctr_s":
                     $obj = $objCentro;
-                    $aWhere['tipo_ctr'] = '^(sj|sm|s)$';
-                    $aOperador['tipo_ctr'] = '~';
+                    $filtros[] = ['tipo_ctr', Operator::Matches, '^(sj|sm|s)$'];
                     break;
                 case "ctr_sssc":
                     $obj = $objCentro;
-                    $aWhere['tipo_ctr'] = '^(ss|sss)$';
-                    $aOperador['tipo_ctr'] = '~';
+                    $filtros[] = ['tipo_ctr', Operator::Matches, '^(ss|sss)$'];
                     break;
                 case "oc":
                     $obj = $objCentro;
-                    $aWhere['tipo_ctr'] = '(oc)';
-                    $aOperador['tipo_ctr'] = '~';
+                    $filtros[] = ['tipo_ctr', Operator::Matches, '(oc)'];
                     break;
                 case "cgi":
                     $obj = $objCentro;
-                    $aWhere['tipo_ctr'] = '(cgi)';
-                    $aOperador['tipo_ctr'] = '~';
+                    $filtros[] = ['tipo_ctr', Operator::Matches, '(cgi)'];
                     break;
                 case "cdr_cdc_dl":
                     $obj = $objCasa;
-                    $aWhere['tipo_casa'] = 'cdc|cdr';
-                    $aOperador['tipo_casa'] = '~';
+                    $filtros[] = ['tipo_casa', Operator::Matches, 'cdc|cdr'];
                     switch ($miSfsv) {
                         case 1:
                             if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'))) {
                             } else {
-                                $aWhere['sv'] = 't';
+                                $filtros[] = ['sv', Operator::Eq, true];
                             }
                             break;
                         case 2:
-                            $aWhere['sf'] = 't';
+                            $filtros[] = ['sf', Operator::Eq, true];
                             break;
                     }
                     break;
                 case "otros_cdc":
                     $obj = $objCasa;
-                    $aWhere['tipo_casa'] = 'cdc|cdr|cgi';
-                    $aOperador['tipo_casa'] = '!~';
+                    $filtros[] = ['tipo_casa', Operator::NotMatches, 'cdc|cdr|cgi'];
                     switch ($miSfsv) {
                         case 1:
                             if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'))) {
                             } else {
-                                $aWhere['sv'] = 't';
+                                $filtros[] = ['sv', Operator::Eq, true];
                             }
                             break;
                         case 2:
-                            $aWhere['sf'] = 't';
+                            $filtros[] = ['sf', Operator::Eq, true];
                             break;
                     }
                     break;
@@ -152,34 +151,30 @@ class ListCtrData
             switch ($Qque_lista) {
                 case "ctr_n":
                     $obj = 'CentroEx';
-                    $aWhere['tipo_ctr'] = '^n';
-                    $aOperador['tipo_ctr'] = '~';
+                    $filtros[] = ['tipo_ctr', Operator::Matches, '^n'];
                     break;
                 case "ctr_nax":
                     $obj = 'CentroEx';
-                    $aWhere['tipo_ctr'] = '^x';
-                    $aOperador['tipo_ctr'] = '~';
+                    $filtros[] = ['tipo_ctr', Operator::Matches, '^x'];
                     break;
                 case "ctr_agd":
                     $obj = 'CentroEx';
-                    $aWhere['tipo_ctr'] = '^a[^p]*';
-                    $aOperador['tipo_ctr'] = '~';
+                    $filtros[] = ['tipo_ctr', Operator::Matches, '^a[^p]*'];
                     break;
                 case "ctr_s":
                     $obj = 'CentroEx';
-                    $aWhere['tipo_ctr'] = '^(sj|sm|s)$';
-                    $aOperador['tipo_ctr'] = '~';
+                    $filtros[] = ['tipo_ctr', Operator::Matches, '^(sj|sm|s)$'];
                     break;
                 case "todos_ctr_ex":
                     $obj = 'CentroEx';
                     break;
                 case "dl":
                     $obj = 'CentroEx';
-                    $aWhere['tipo_ctr'] = 'dl';
+                    $filtros[] = ['tipo_ctr', Operator::Eq, 'dl'];
                     break;
                 case "cr":
                     $obj = 'CentroEx';
-                    $aWhere['tipo_ctr'] = 'cr';
+                    $filtros[] = ['tipo_ctr', Operator::Eq, 'cr'];
                     break;
                 case "cdc_ex":
                     $obj = 'CasaEx';
@@ -193,27 +188,27 @@ class ListCtrData
         switch ($obj) {
             case 'Centro':
                 $CentroRepository = $this->centroRepository;
-                $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
+                $cUbis = $CentroRepository->matching($this->criterio(CentroField::class, $filtros, $orden));
                 break;
             case 'CentroDl':
                 $CentroRepository = $this->centroDlRepository;
-                $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
+                $cUbis = $CentroRepository->matching($this->criterio(CentroDlField::class, $filtros, $orden));
                 break;
             case 'CentroEx':
                 $CentroRepository = $this->centroExRepository;
-                $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
+                $cUbis = $CentroRepository->matching($this->criterio(CentroExField::class, $filtros, $orden));
                 break;
             case 'Casa':
                 $CasaRepository = $this->casaRepository;
-                $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
+                $cUbis = $CasaRepository->matching($this->criterio(CasaField::class, $filtros, $orden));
                 break;
             case 'CasaDl':
                 $CasaRepository = $this->casaDlRepository;
-                $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
+                $cUbis = $CasaRepository->matching($this->criterio(CasaField::class, $filtros, $orden));
                 break;
             case 'CasaEx':
                 $CasaRepository = $this->casaExRepository;
-                $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
+                $cUbis = $CasaRepository->matching($this->criterio(CasaField::class, $filtros, $orden));
                 break;
             case 'none':
             default:
@@ -352,5 +347,26 @@ class ListCtrData
             'a_botones' => $a_botones,
             'ctx_resincronizar' => HashB::sign('centros_resincronizar'),
         ];
+    }
+
+    /**
+     * Construye el criterio para el repositorio de `$campos` (cada repositorio solo acepta su enum):
+     * el nombre de campo es el valor del enum.
+     *
+     * @param class-string<CriteriaField&\BackedEnum> $campos
+     * @param list<array{0: string, 1: Operator, 2: mixed}> $filtros
+     * @param list<string> $orden
+     */
+    private function criterio(string $campos, array $filtros, array $orden): Criteria
+    {
+        $criteria = Criteria::create();
+        foreach ($filtros as [$campo, $operador, $valor]) {
+            $criteria = $criteria->andWhere(Filter::of($campos::from($campo), $operador, $valor));
+        }
+        foreach ($orden as $i => $campo) {
+            $criteria = $i === 0 ? $criteria->orderBy($campos::from($campo)) : $criteria->addOrderBy($campos::from($campo));
+        }
+
+        return $criteria;
     }
 }

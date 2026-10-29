@@ -2,6 +2,10 @@
 
 namespace src\ubis\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\ubis\domain\criteria\CasaField as CasaF;
+use src\ubis\domain\criteria\CentroField as CentroF;
 use src\permisos\domain\XPermisos;
 
 use src\shared\config\ConfigGlobal;
@@ -26,17 +30,13 @@ class UbisListaData
     {
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-        $aWhereCasa = [];
-        $aWhereCtr = [];
-        $aOperadorCasa = [];
-        $aOperadorCtr = [];
+        $criteriaCasa = Criteria::create();
+        $criteriaCtr = Criteria::create();
 
         if ($nombre_ubi !== '') {
             $nom_ubi = str_replace('+', "\+", $nombre_ubi);
-            $aWhereCasa['nombre_ubi'] = $nom_ubi;
-            $aOperadorCasa['nombre_ubi'] = 'sin_acentos';
-            $aWhereCtr['nombre_ubi'] = $nom_ubi;
-            $aOperadorCtr['nombre_ubi'] = 'sin_acentos';
+            $criteriaCasa = $criteriaCasa->andWhere(Filter::matchesUnaccented(CasaF::NombreUbi, $nom_ubi));
+            $criteriaCtr = $criteriaCtr->andWhere(Filter::matchesUnaccented(CentroF::NombreUbi, $nom_ubi));
         }
 
         switch ($miSfsv) {
@@ -45,11 +45,11 @@ class UbisListaData
                 $puedeVerSf = $oPerm instanceof XPermisos
                     && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'));
                 if (!$puedeVerSf) {
-                    $aWhereCasa['sv'] = 't';
+                    $criteriaCasa = $criteriaCasa->andWhere(Filter::eq(CasaF::Sv, true));
                 }
                 break;
             case 2:
-                $aWhereCasa['sf'] = 't';
+                $criteriaCasa = $criteriaCasa->andWhere(Filter::eq(CasaF::Sf, true));
                 break;
             default:
                 $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
@@ -60,20 +60,21 @@ class UbisListaData
                 ];
         }
 
-        $aWhereCasa['active'] = 't';
-        $aWhereCtr['active'] = 't';
-        $aWhereCtr['cdc'] = 't';
+        $criteriaCasa = $criteriaCasa->andWhere(Filter::eq(CasaF::Active, true));
+        $criteriaCtr = $criteriaCtr
+            ->andWhere(Filter::eq(CentroF::Active, true))
+            ->andWhere(Filter::eq(CentroF::Cdc, true));
 
         $a_ubis = [];
         $CasaRepository = $this->casaRepository;
-        $cCasas = $CasaRepository->getCasas($aWhereCasa, $aOperadorCasa);
+        $cCasas = $CasaRepository->matching($criteriaCasa);
         foreach ($cCasas as $oCasa) {
             $nom = $oCasa->getNombre_ubi();
             $a_ubis[$nom] = $oCasa;
         }
 
         $CentroRepository = $this->centroRepository;
-        $cCtr = $CentroRepository->getCentros($aWhereCtr, $aOperadorCtr);
+        $cCtr = $CentroRepository->matching($criteriaCtr);
         foreach ($cCtr as $oCentro) {
             $nom = $oCentro->getNombre_ubi();
             $a_ubis[$nom] = $oCentro;
