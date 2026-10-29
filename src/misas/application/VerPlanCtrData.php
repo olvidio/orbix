@@ -8,6 +8,9 @@ use src\misas\application\support\EncargoDiaTimeHelper;
 use src\misas\application\support\PeriodoDateRange;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
 use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
@@ -114,13 +117,12 @@ class VerPlanCtrData
                 $status = EncargoDiaStatus::STATUS_COMUNICADO_CTR;
 
                 $id_dia = $date->format('Y-m-d');
-                $aWhere = [
-                    'id_enc' => $id_enc_row,
-                    'tstart' => "'$id_dia 00:00:00', '$id_dia 23:59:59'",
-                    '_ordre' => 'tstart',
-                ];
-                $aOperador = ['tstart' => 'BETWEEN'];
-                $cEncargosDia = $this->encargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $this->encargoDiaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc_row))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, "$id_dia 00:00:00", "$id_dia 23:59:59"))
+                        ->orderBy(EncargoDiaField::Tstart)
+                );
                 foreach ($cEncargosDia as $oEncargoDia) {
                     $id_nom = $oEncargoDia->getId_nom();
                     if ($id_nom === null) {

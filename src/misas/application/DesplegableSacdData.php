@@ -4,6 +4,9 @@ namespace src\misas\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\application\services\InicialesSacdService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\shared\domain\helpers\OpcionesDesplegable;
@@ -52,14 +55,11 @@ class DesplegableSacdData
                 $libre = true;
                 $inicio_dia = $dia . ' 00:00:00';
                 $fin_dia = $dia . ' 23:59:59';
-                $aWhere = [
-                    'id_nom' => $id_nom,
-                    'tstart' => "'$inicio_dia', '$fin_dia'",
-                ];
-                $aOperador = [
-                    'tstart' => 'BETWEEN',
-                ];
-                $cEncargosDia = $this->encargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $this->encargoDiaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdNom, $id_nom))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia, $fin_dia))
+                );
                 foreach ($cEncargosDia as $oEncargoDia) {
                     $id_enc = $oEncargoDia->getId_enc();
                     $aWhere = [];

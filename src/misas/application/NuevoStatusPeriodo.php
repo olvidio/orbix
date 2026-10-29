@@ -7,6 +7,9 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\domain\EncargosZona;
 use src\shared\domain\value_objects\DateTimeLocal;
 
@@ -96,13 +99,11 @@ class NuevoStatusPeriodo
         $cEncargosZona = $EncargosZona->getEncargos();
         foreach ($cEncargosZona as $oEncargo) {
             $id_enc = $oEncargo->getId_enc();
-            $aWhereDia = [
-                'id_enc' => $id_enc,
-                'tstart' => "'$sInicio', '$sFin'",
-            ];
-            $aOperadorDia = ['tstart' => 'BETWEEN'];
-
-            $cEncargosaCambiar = $this->encargoDiaRepository->getEncargoDias($aWhereDia, $aOperadorDia);
+            $cEncargosaCambiar = $this->encargoDiaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                    ->andWhere(Filter::between(EncargoDiaField::Tstart, $sInicio, $sFin))
+            );
             foreach ($cEncargosaCambiar as $oEncargoaCambiar) {
                 $oEncargoaCambiar->setStatus($estado);
                 if ($this->encargoDiaRepository->Guardar($oEncargoaCambiar) === false) {

@@ -4,6 +4,7 @@ namespace src\misas\domain\contracts;
 
 use src\misas\domain\entity\EncargoCtr;
 use src\misas\domain\value_objects\EncargoCtrId;
+use src\shared\domain\criteria\Criteria;
 
 interface EncargoCtrRepositoryInterface
 {
@@ -18,6 +19,14 @@ interface EncargoCtrRepositoryInterface
     public function getCentrosEncargo(int $id_enc): array;
 
     /**
+     * EncargoCtr que cumplen el criterio.
+     *
+     * @return list<EncargoCtr>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<EncargoCtr>

@@ -97,7 +97,7 @@ final class CuadriculaUpdateStatusTest extends TestCase
     {
         $repo = $this->createMock(EncargoDiaRepositoryInterface::class);
         $repo->method('findById')->willReturn($existente);
-        $repo->method('getEncargoDias')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
         $repo->method('Guardar')->willReturnCallback(function (EncargoDia $encargo) use (&$saved): bool {
             $saved = $encargo;
 

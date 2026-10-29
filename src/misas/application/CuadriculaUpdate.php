@@ -10,6 +10,9 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\domain\entity\EncargoDia;
 use src\misas\domain\value_objects\EncargoDiaId;
 use src\misas\domain\value_objects\EncargoDiaStatus;
@@ -303,13 +306,11 @@ class CuadriculaUpdate
         $inicio_dia = $dia_iso . ' 00:00:00';
         $fin_dia = $dia_iso . ' 23:59:59';
 
-        $cEncargosDia = $this->encargoDiaRepository->getEncargoDias(
-            [
-                'id_nom' => $id_sacd,
-                'tstart' => "'$inicio_dia', '$fin_dia'",
-                '_ordre' => 'tstart',
-            ],
-            ['tstart' => 'BETWEEN'],
+        $cEncargosDia = $this->encargoDiaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoDiaField::IdNom, $id_sacd))
+                ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia, $fin_dia))
+                ->orderBy(EncargoDiaField::Tstart)
         );
 
         $misas_dia = 0;
