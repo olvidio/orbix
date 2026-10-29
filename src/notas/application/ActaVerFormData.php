@@ -11,6 +11,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\application\support\ActaContenidoImpreso;
 use src\notas\domain\contracts\ActaRepositoryInterface;
@@ -151,11 +152,12 @@ final class ActaVerFormData
                 if ($id_activ > 0 && $id_asignatura_actual !== null) {
                     $idSchemaScope = \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_schema_scope');
                     if ($idSchemaScope > 0) {
-                        $cAa = $this->actividadAsignaturaRepository->getActividadAsignaturas([
-                            'id_activ' => $id_activ,
-                            'id_asignatura' => $id_asignatura_actual,
-                            'id_schema' => $idSchemaScope,
-                        ]);
+                        $cAa = $this->actividadAsignaturaRepository->matching(
+                            Criteria::create()
+                                ->where(Filter::eq(ActividadAsignaturaField::IdActiv, $id_activ))
+                                ->andWhere(Filter::eq(ActividadAsignaturaField::IdAsignatura, $id_asignatura_actual))
+                                ->andWhere(Filter::eq(ActividadAsignaturaField::IdSchema, $idSchemaScope))
+                        );
                         $oActividadAsignatura = $cAa[0] ?? null;
                     } else {
                         $oActividadAsignatura = $this->actividadAsignaturaDlRepository->findById($id_activ, $id_asignatura_actual);

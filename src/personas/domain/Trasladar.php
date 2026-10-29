@@ -9,6 +9,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use src\actividadestudios\domain\criteria\MatriculaField;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
@@ -991,7 +992,7 @@ class Trasladar
                 case 'MatriculaDl':
                     $repo = $this->repositoryWithConnection(MatriculaDlRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(MatriculaDlRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getMatriculas(array('id_nom' => $this->iid_nom));
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(MatriculaField::IdNom, $this->iid_nom)));
                     break;
                 case 'Traslado':
                     $repo = $this->repositoryWithConnection(TrasladoRepositoryInterface::class, $oDBorg);

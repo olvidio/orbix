@@ -298,7 +298,7 @@ final class AsistenteGuardarTest extends TestCase
         $elimApp->expects($this->once())->method('eliminar')->with($oOrigen)->willReturn(true);
 
         $elimMatRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $elimMatRepo->method('getMatriculas')->willReturn([]);
+        $elimMatRepo->method('matching')->willReturn([]);
 
         $elimDosRepo = $this->createMock(DossierRepositoryInterface::class);
         $elimDosRepo->method('findByPk')->willReturn(null);

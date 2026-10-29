@@ -10,6 +10,7 @@ use frontend\shared\web\Periodo;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
+use src\actividadestudios\domain\criteria\MatriculaField;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
@@ -152,7 +153,11 @@ final class ListaEstCtrData
                                 break;
                             default:
                                 $asignaturas = '';
-                                $cMatriculas = $this->matriculaRepository->getMatriculas(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
+                                $cMatriculas = $this->matriculaRepository->matching(
+                                    Criteria::create()
+                                        ->where(Filter::eq(MatriculaField::IdNom, $id_nom))
+                                        ->andWhere(Filter::eq(MatriculaField::IdActiv, $id_activ))
+                                );
                                 foreach ($cMatriculas as $oMatricula) {
                                     $id_asignatura = $oMatricula->getId_asignatura();
                                     $preceptor = $oMatricula->isPreceptor();

@@ -580,7 +580,9 @@ Orden por nº de llamadas (src, sin tests). Cada bloque: repositorios → llaman
   - [x] **4.6.plazas** llamantes de `getActividadesPlazas` / `getPlazasPeticion`. Decisiones:
     - Migradas 3 llamadas: `ActividadNueva` (`getActividadesPlazas` → `ActividadPlazasField`), `TablaPeticionesData` (`tipo ~` → `Filter::matches`) y `AsistenteMoverData` (`PlazaPeticionField`). Sin cambios de comportamiento; ningún test usaba mocks de los métodos viejos.
     - Suites verdes: unit de `asistentes`, `actividades`, `actividadplazas`; integration de `asistentes`, `actividades`, `actividadplazas`.
-  - [ ] **4.6.estudios** llamantes de `getMatriculas` / `getActividadAsignaturas`.
+  - [x] **4.6.estudios** llamantes de `getMatriculas` / `getActividadAsignaturas`. Decisiones:
+    - Migradas 4 llamadas: `AsistenteEliminar`, `ListaEstCtrData` y `Trasladar` (rama `MatriculaDl`) a `MatriculaField`, y `ActaVerFormData` a `ActividadAsignaturaField`. Mocks de `AsistenteEliminarTest` / `AsistenteGuardarTest` pasan a `matching`.
+    - Suites verdes: unit de `asistentes`, `notas`, `personas`, `actividadestudios`; integration de `asistentes`, `actividadestudios`; `integration/notas` con `memory_limit=1G` sigue con los 2 errores previos (tabla `e_actas_tribunal_ex`).
   - [ ] **4.6.varios** `ubis/UbisTablaData`, `InfoDescTeleco`, `MatriculaAutomatica`.
 
 ### Fase 5 — Limpieza
