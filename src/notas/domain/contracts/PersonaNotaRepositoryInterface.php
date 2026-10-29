@@ -3,6 +3,7 @@
 namespace src\notas\domain\contracts;
 
 use src\notas\domain\entity\PersonaNota;
+use src\shared\domain\criteria\Criteria;
 use src\notas\domain\value_objects\PersonaNotaPk;
 
 /**
@@ -24,6 +25,14 @@ interface PersonaNotaRepositoryInterface
 
 
     /**
+     * PersonaNota que cumplen el criterio.
+     *
+     * @return list<\src\notas\domain\entity\PersonaNota>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<\src\notas\domain\entity\PersonaNota>

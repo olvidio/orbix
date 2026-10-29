@@ -2,6 +2,9 @@
 
 namespace src\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -25,10 +28,11 @@ final class PlanEstudiosDePersona
 
     public function resolve(int $idNom): int
     {
-        $cNotas = $this->personaNotaRepository->getPersonaNotas([
-            'id_nom' => $idNom,
-            'id_asignatura' => self::ID_ASIG_FIN_CUADRIENIO,
-        ]);
+        $cNotas = $this->personaNotaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdNom, $idNom))
+                ->andWhere(Filter::eq(F::IdAsignatura, self::ID_ASIG_FIN_CUADRIENIO))
+        );
         if ($cNotas === []) {
             return PlanEstudios::PLAN_2026;
         }

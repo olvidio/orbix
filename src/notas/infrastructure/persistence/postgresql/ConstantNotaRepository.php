@@ -5,6 +5,10 @@ use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use PDO;
+use src\notas\domain\criteria\NotaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\shared\traits\RunsCriteriaQueries;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\shared\traits\HandlesPdoErrors;
@@ -21,6 +25,7 @@ use src\shared\traits\HandlesPdoErrors;
 class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
 
     public function __construct()
     {
@@ -32,6 +37,17 @@ class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryIn
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
+
+    /**
+     * Nota que cumplen el criterio.
+     *
+     * @return list<Nota>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(NotaField::class, []);
+        return array_map(Nota::fromArray(...), $this->rowsMatching($criteria, $conv));
+    }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

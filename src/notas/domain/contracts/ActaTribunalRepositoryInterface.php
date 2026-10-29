@@ -3,6 +3,7 @@
 namespace src\notas\domain\contracts;
 
 use src\notas\domain\entity\ActaTribunal;
+use src\shared\domain\criteria\Criteria;
 
 
 /**
@@ -29,6 +30,14 @@ interface ActaTribunalRepositoryInterface
     /** @param array<string, mixed> $aWhere */
 
     /**
+     * ActaTribunal que cumplen el criterio.
+     *
+     * @return list<\src\notas\domain\entity\ActaTribunal>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<\src\notas\domain\entity\ActaTribunal>

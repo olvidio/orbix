@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\PlanEstudios;
@@ -184,7 +187,7 @@ final class ActaVerAddPersonaFormData
         }
 
         $ids = [];
-        foreach ($this->personaNotaRepository->getPersonaNotas(['id_asignatura' => $id_asignatura]) as $oNota) {
+        foreach ($this->personaNotaRepository->matching(Criteria::create()->where(Filter::eq(F::IdAsignatura, $id_asignatura))) as $oNota) {
             $id = (int) $oNota->getId_nom();
             if ($id > 0) {
                 $ids[$id] = true;

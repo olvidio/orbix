@@ -40,7 +40,7 @@ final class NivelCatalogoAsignaturaEnPlanTest extends TestCase
         $finCuad->method('getF_acta')->willReturn(new \src\shared\domain\value_objects\DateTimeLocal('2020-01-01'));
 
         $pnRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $pnRepo->method('getPersonaNotas')->willReturn([$finCuad]);
+        $pnRepo->method('matching')->willReturn([$finCuad]);
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $asigRepo->method('findById')
@@ -55,7 +55,7 @@ final class NivelCatalogoAsignaturaEnPlanTest extends TestCase
     private function planEstudiosDePersona(): PlanEstudiosDePersona
     {
         $pnRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $pnRepo->method('getPersonaNotas')->willReturn([]);
+        $pnRepo->method('matching')->willReturn([]);
 
         return new PlanEstudiosDePersona($pnRepo);
     }

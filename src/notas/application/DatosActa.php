@@ -2,6 +2,9 @@
 
 namespace src\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaSituacion;
@@ -25,13 +28,12 @@ final class DatosActa
      */
     public function getNotasActa(string $acta): array
     {
-        $aWhere = [
-            'acta' => $acta,
-            'tipo_acta' => TipoActa::FORMATO_ACTA,
-        ];
+        $criteria = Criteria::create()
+            ->where(Filter::eq(F::Acta, $acta))
+            ->andWhere(Filter::eq(F::TipoActa, TipoActa::FORMATO_ACTA));
 
         $out = [];
-        foreach ($this->personaNotaRepository->getPersonaNotas($aWhere) as $oPersonaNota) {
+        foreach ($this->personaNotaRepository->matching($criteria) as $oPersonaNota) {
             if (self::entraEnImpresion($oPersonaNota)) {
                 $out[] = $oPersonaNota;
             }

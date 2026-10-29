@@ -2,6 +2,9 @@
 
 namespace src\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use RuntimeException;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
@@ -140,11 +143,12 @@ class EditarPersonaNota
         /** @var PersonaNotaDlRepositoryInterface $PersonaNotaRepository */
         $PersonaNotaRepository = $a_ReposPersonaNota['repo_real'];
 
-        $cMismaAsignatura = $PersonaNotaRepository->getPersonaNotas([
-            'id_nom' => $id_nom,
-            'id_asignatura' => $id_asignatura,
-            'tipo_acta' => $tipo_acta ?? TipoActa::FORMATO_ACTA,
-        ]);
+        $cMismaAsignatura = $PersonaNotaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdNom, $id_nom))
+                ->andWhere(Filter::eq(F::IdAsignatura, $id_asignatura))
+                ->andWhere(Filter::eq(F::TipoActa, $tipo_acta ?? TipoActa::FORMATO_ACTA))
+        );
         if ($cMismaAsignatura !== []) {
             $oPersonaNota2 = $cMismaAsignatura[0];
             $err = sprintf(

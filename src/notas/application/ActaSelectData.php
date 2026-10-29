@@ -9,7 +9,11 @@ use src\notas\application\support\ActaPrefijosDeEsquema;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaExRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\notas\domain\criteria\ActaField as F;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
@@ -42,14 +46,13 @@ final class ActaSelectData
         $mi_dele = ConfigGlobal::mi_delef();
         $ambito = ConfigGlobal::mi_ambito();
 
-        $aWhere = [];
-        $aOperador = [];
         $titulo = '';
 
         if ($Qacta !== '') {
-            $aWhere['acta'] = $Qacta;
-            $aOperador['acta'] = '~';
-            $aWhere['_ordre'] = 'f_acta DESC, acta DESC';
+            $criteria = Criteria::create()
+                ->where(Filter::matches(F::Acta, $Qacta))
+                ->orderBy(F::FActa, OrderDirection::Desc)
+                ->addOrderBy(F::Acta, OrderDirection::Desc);
 
             $matches = [];
             preg_match("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
@@ -64,27 +67,30 @@ final class ActaSelectData
                         $Qacta_dl .= empty($Qacta_dl) ? '' : '|';
                         $Qacta_dl .= empty($matches[3]) ? "$dl " . $matches[1] . '/' . date('y') : "$dl $Qacta";
                     }
-                    $aWhere['acta'] = $Qacta_dl;
+                    $criteria = $criteria->where(Filter::matches(F::Acta, $Qacta_dl));
                     $repoActas = $this->actaRepository;
                 } else {
                     $soloNumero = empty($matches[3]);
                     $patron = $this->actaPrefijosDeEsquema->patronBusquedaPorNumero($Qacta, $soloNumero);
-                    $aWhere['acta'] = $patron !== ''
-                        ? $patron
-                        : (empty($matches[3]) ? "$mi_dele " . $matches[1] . '/' . date('y') : "$mi_dele $Qacta");
+                    $criteria = $criteria->where(Filter::matches(
+                        F::Acta,
+                        $patron !== ''
+                            ? $patron
+                            : (empty($matches[3]) ? "$mi_dele " . $matches[1] . '/' . date('y') : "$mi_dele $Qacta")
+                    ));
                     $repoActas = $this->actaDlRepository;
                 }
-                $cActas = $repoActas->getActas($aWhere, $aOperador);
+                $cActas = $repoActas->matching($criteria);
             } else {
                 if ($ambito === 'rstgr') {
                     $repoActas = $this->actaRepository;
-                    $cActas = $repoActas->getActas($aWhere, $aOperador);
+                    $cActas = $repoActas->matching($criteria);
                 } else {
                     $repoActas = $this->actaDlRepository;
-                    $cActas = $repoActas->getActas($aWhere, $aOperador);
+                    $cActas = $repoActas->matching($criteria);
                     if (empty($cActas)) {
                         $repoActas = $this->actaExRepository;
-                        $cActas = $repoActas->getActas($aWhere, $aOperador);
+                        $cActas = $repoActas->matching($criteria);
                     }
                 }
             }
@@ -100,25 +106,26 @@ final class ActaSelectData
             $fincurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
             $txt_curso = "$inicurs_ca - $fincurs_ca";
 
-            $aWhere['f_acta'] = "'$inicurs_ca','$fincurs_ca'";
-            $aOperador['f_acta'] = 'BETWEEN';
-            $aWhere['_ordre'] = 'f_acta DESC, acta DESC';
-            $aWhere['_limit'] = 20;
+            $limite = 20;
+            $criteria = Criteria::create()
+                ->where(Filter::between(F::FActa, $inicurs_ca, $fincurs_ca))
+                ->orderBy(F::FActa, OrderDirection::Desc)
+                ->addOrderBy(F::Acta, OrderDirection::Desc)
+                ->limit($limite);
 
-            $titulo = ucfirst(sprintf(_("lista de actas del curso %s. Máximo %s"), $txt_curso, $aWhere['_limit']));
+            $titulo = ucfirst(sprintf(_("lista de actas del curso %s. Máximo %s"), $txt_curso, $limite));
             if ($ambito === 'rstgr') {
                 $repoDelegacion = $this->delegacionRepository;
                 $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]);
                 $aDl = array_values($aDlMap);
                 $sReg = implode(' |', $aDl);
                 $Qacta_pat = "^($sReg )";
-                $aWhere['acta'] = $Qacta_pat;
-                $aOperador['acta'] = '~';
+                $criteria = $criteria->andWhere(Filter::matches(F::Acta, $Qacta_pat));
                 $repoActas = $this->actaRepository;
             } else {
                 $repoActas = $this->actaDlRepository;
             }
-            $cActas = $repoActas->getActas($aWhere, $aOperador);
+            $cActas = $repoActas->matching($criteria);
         }
 
         $AsignaturaRepository = $this->asignaturaRepository;

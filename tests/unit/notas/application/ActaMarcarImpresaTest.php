@@ -54,9 +54,9 @@ final class ActaMarcarImpresaTest extends TestCase
     private function contenidoVacio(): ActaContenidoImpreso
     {
         $tribunalRepo = $this->createMock(ActaTribunalRepositoryInterface::class);
-        $tribunalRepo->method('getActasTribunales')->willReturn([]);
+        $tribunalRepo->method('matching')->willReturn([]);
         $notaRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $notaRepo->method('getPersonaNotas')->willReturn([]);
+        $notaRepo->method('matching')->willReturn([]);
 
         return new ActaContenidoImpreso($tribunalRepo, new DatosActa($notaRepo));
     }

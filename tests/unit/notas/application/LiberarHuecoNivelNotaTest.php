@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
@@ -32,9 +35,9 @@ final class LiberarHuecoNivelNotaTest extends TestCase
 
         $ocupante = $this->nota(1004199, 2211, 2212, 'dlmO 35/13');
         $notaRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $notaRepo->method('getPersonaNotas')->willReturnCallback(
-            static function (array $where) use ($ocupante): array {
-                $nivel = (int) ($where['id_nivel'] ?? 0);
+        $notaRepo->method('matching')->willReturnCallback(
+            function (Criteria $criteria) use ($ocupante): array {
+                $nivel = $this->nivelDe($criteria);
                 if ($nivel === 2212) {
                     return [$ocupante];
                 }
@@ -53,7 +56,7 @@ final class LiberarHuecoNivelNotaTest extends TestCase
     public function test_no_hace_nada_si_el_hueco_esta_libre(): void
     {
         $notaRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $notaRepo->method('getPersonaNotas')->willReturn([]);
+        $notaRepo->method('matching')->willReturn([]);
         $notaRepo->expects($this->never())->method('actualizarIdNivel');
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
@@ -80,9 +83,9 @@ final class LiberarHuecoNivelNotaTest extends TestCase
         $latin3Nota = $this->nota(9, 2211, 2212, 'dlmO 35/13');
         $hebreoNota = $this->nota(9, 2112, 2112, 'dlb 1/10');
         $notaRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $notaRepo->method('getPersonaNotas')->willReturnCallback(
-            static function (array $where) use ($latin3Nota, $hebreoNota): array {
-                return ((int) ($where['id_nivel'] ?? 0) === 2212) ? [$latin3Nota] : [$hebreoNota];
+        $notaRepo->method('matching')->willReturnCallback(
+            function (Criteria $criteria) use ($latin3Nota, $hebreoNota): array {
+                return ($this->nivelDe($criteria) === 2212) ? [$latin3Nota] : [$hebreoNota];
             }
         );
         $notaRepo->expects($this->never())->method('actualizarIdNivel');
@@ -104,7 +107,7 @@ final class LiberarHuecoNivelNotaTest extends TestCase
 
         $hebreoNota = $this->nota(3, 2112, 2112, 'x');
         $notaRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $notaRepo->method('getPersonaNotas')->willReturn([$hebreoNota]);
+        $notaRepo->method('matching')->willReturn([$hebreoNota]);
         $notaRepo->expects($this->never())->method('actualizarIdNivel');
 
         $this->expectException(\RuntimeException::class);
@@ -114,7 +117,7 @@ final class LiberarHuecoNivelNotaTest extends TestCase
     private function liberar(AsignaturaRepositoryInterface $asigRepo): LiberarHuecoNivelNota
     {
         $planRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $planRepo->method('getPersonaNotas')->willReturn([]);
+        $planRepo->method('matching')->willReturn([]);
 
         return new LiberarHuecoNivelNota($asigRepo, new PlanEstudiosDePersona($planRepo));
     }
@@ -140,5 +143,16 @@ final class LiberarHuecoNivelNotaTest extends TestCase
         $nota->method('getTipo_acta')->willReturn(TipoActa::FORMATO_ACTA);
 
         return $nota;
+    }
+
+    private function nivelDe(Criteria $criteria): int
+    {
+        foreach ($criteria->filters() as $filtro) {
+            if ($filtro instanceof Filter && $filtro->field === F::IdNivel) {
+                return (int) $filtro->value;
+            }
+        }
+
+        return 0;
     }
 }

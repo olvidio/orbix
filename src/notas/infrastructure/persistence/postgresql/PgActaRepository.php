@@ -4,9 +4,11 @@ namespace src\notas\infrastructure\persistence\postgresql;
 use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\notas\domain\criteria\ActaField;
+use src\notas\infrastructure\persistence\postgresql\traits\NotasCriteriaTrait;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\ConverterDate;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\entity\Acta;
@@ -26,6 +28,7 @@ use src\shared\traits\HandlesPgBytea;
 class PgActaRepository extends ClaseRepository implements ActaRepositoryInterface
 {
     use HandlesPdoErrors;
+    use NotasCriteriaTrait;
     use HandlesPgBytea;
 
     private const ACTAS_LIST_COLUMNS = 'acta, id_asignatura, id_activ, f_acta, libro, pagina, linea, lugar, observ';
@@ -120,116 +123,60 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
     }
 
     /**
-     * retorna l'últim llibre d'actes.
+     * Acta que cumplen el criterio (con el pdf).
      *
-     * @return integer
+     * @return list<Acta>
      */
-    function getUltimoLibro(): int
+    public function matching(Criteria $criteria): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT max(libro) FROM $nom_tabla";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorActa.UltimoLibro';
-                    $gestor = $_SESSION['oGestorErrores'] ?? null;
-        if (is_object($gestor) && method_exists($gestor, 'addErrorAppLastError')) {
-            $gestor->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-        }
-            return 0;
-        }
-        $val = $oDblSt->fetchColumn();
-        return is_numeric($val) ? (int) $val : 0;
+        return $this->actasDesdeFilas($this->filasNotasMatching($criteria, ActaField::class), false);
     }
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ActaDl
+     * Igual que {@see matching()} pero sin leer el bytea `pdf` (listados).
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<\src\notas\domain\entity\Acta> Una colección de objetos de tipo ActaDl
+     * @return list<Acta>
      */
-    public function getActas(array $aWhere = [], array $aOperators = []): array
+    public function matchingSinPdf(Criteria $criteria): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $sinPdf = !empty($aWhere['_sin_pdf']);
-        if (isset($aWhere['_sin_pdf'])) {
-            unset($aWhere['_sin_pdf']);
-        }
-        $ActaDlSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $select = $sinPdf ? self::ACTAS_LIST_COLUMNS : '*';
-        $sQry = "SELECT $select FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
+        return $this->actasDesdeFilas(
+            $this->filasNotasMatching($criteria, ActaField::class, self::ACTAS_LIST_COLUMNS),
+            true
+        );
+    }
 
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
+    /**
+     * @param list<array<string, mixed>> $filas
+     * @return list<Acta>
+     */
+    private function actasDesdeFilas(array $filas, bool $sinPdf): array
+    {
+        $items = [];
+        foreach ($filas as $normalized) {
             if (!$sinPdf) {
                 // para los bytea: (resources)
                 $normalized['pdf'] = $this->normalizeBytea($this->readByteaField($normalized['pdf'] ?? null));
             }
             // para las fechas del postgres (texto iso)
             $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta']))->fromPg();
-            $ActaDl = Acta::fromArray($normalized);
-            $ActaDlSet->add($ActaDl);
+            $items[] = Acta::fromArray($normalized);
         }
-        /** @var list<Acta> $items */
-        $items = array_values($ActaDlSet->getTot());
         return $items;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria) / matchingSinPdf(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Acta>
+     */
+    public function getActas(array $aWhere = [], array $aOperators = []): array
+    {
+        $sinPdf = !empty($aWhere['_sin_pdf']);
+        unset($aWhere['_sin_pdf']);
+        $adapter = new LegacyWhereAdapter(ActaField::class, []);
+        $criteria = $adapter->toCriteria($aWhere, $aOperators);
+        return $sinPdf ? $this->matchingSinPdf($criteria) : $this->matching($criteria);
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

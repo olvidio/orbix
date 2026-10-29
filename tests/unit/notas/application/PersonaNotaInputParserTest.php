@@ -52,7 +52,7 @@ final class PersonaNotaInputParserTest extends TestCase
     private function planEstudiosDePersona(): PlanEstudiosDePersona
     {
         $repoPlan = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $repoPlan->method('getPersonaNotas')->willReturn([]);
+        $repoPlan->method('matching')->willReturn([]);
 
         return new PlanEstudiosDePersona($repoPlan);
     }

@@ -3,6 +3,9 @@
 namespace src\notas\application;
 
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
@@ -100,7 +103,7 @@ final class AsignaturasPendientesResumenData
 
             $tipo = $id_tabla . $a_NivelesStgr[$nivel_stgr];
 
-            $cNotas = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $id_nom]);
+            $cNotas = $PersonaNotaDBRepository->matching(Criteria::create()->where(Filter::eq(F::IdNom, $id_nom)));
             $aAprobadas = [];
             foreach ($cNotas as $oPersonaNota) {
                 $id_asignatura = $oPersonaNota->getId_asignatura();

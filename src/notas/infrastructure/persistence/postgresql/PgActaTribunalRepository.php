@@ -4,9 +4,11 @@ namespace src\notas\infrastructure\persistence\postgresql;
 use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\notas\domain\criteria\ActaTribunalField;
+use src\notas\infrastructure\persistence\postgresql\traits\NotasCriteriaTrait;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\config\ConfigGlobal;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
 use src\notas\domain\entity\ActaTribunal;
@@ -25,6 +27,7 @@ use src\shared\traits\HandlesPdoErrors;
 class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRepositoryInterface
 {
     use HandlesPdoErrors;
+    use NotasCriteriaTrait;
 
     public function __construct()
     {
@@ -84,89 +87,25 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ActaTribunalDl
+     * ActaTribunal que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<\src\notas\domain\entity\ActaTribunal> Una colección de objetos de tipo ActaTribunalDl
+     * @return list<ActaTribunal>
      */
-    /** @param array<string, mixed> $aWhere */
+    public function matching(Criteria $criteria): array
+    {
+        return array_map(ActaTribunal::fromArray(...), $this->filasNotasMatching($criteria, ActaTribunalField::class));
+    }
 
     /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
-     * @return list<\src\notas\domain\entity\ActaTribunal>
+     * @return list<ActaTribunal>
      */
     public function getActasTribunales(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $ActaTribunalDlSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $ActaTribunalDl = ActaTribunal::fromArray($normalized);
-            $ActaTribunalDlSet->add($ActaTribunalDl);
-        }
-        /** @var list<ActaTribunal> $items */
-        $items = array_values($ActaTribunalDlSet->getTot());
-        return $items;
+        $adapter = new LegacyWhereAdapter(ActaTribunalField::class, []);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

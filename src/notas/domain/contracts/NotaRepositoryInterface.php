@@ -3,6 +3,7 @@
 namespace src\notas\domain\contracts;
 
 use src\notas\domain\entity\Nota;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Nota y su Repositorio
@@ -17,6 +18,13 @@ interface NotaRepositoryInterface
 {
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
+
+	/**
+	 * Nota que cumplen el criterio.
+	 *
+	 * @return list<Nota>
+	 */
+	public function matching(Criteria $criteria): array;
 
 /* -------------------- ENTIDAD --------------------------------------------- */
 

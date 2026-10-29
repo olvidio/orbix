@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\notas\application\ActaVerNotasListadoData;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -42,11 +45,12 @@ final class ActaVerNotasListadoDataTest extends TestCase
 
         $repo = $this->createMock(PersonaNotaRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getPersonaNotas')
-            ->with([
-                'acta' => 'dlb 1/26',
-                'tipo_acta' => TipoActa::FORMATO_ACTA,
-            ])
+            ->method('matching')
+            ->with($this->equalTo(
+                Criteria::create()
+                    ->where(Filter::eq(F::Acta, 'dlb 1/26'))
+                    ->andWhere(Filter::eq(F::TipoActa, TipoActa::FORMATO_ACTA))
+            ))
             ->willReturn([$notaA, $notaB]);
 
         $personaA = $this->createMock(PersonaDl::class);
@@ -83,7 +87,7 @@ final class ActaVerNotasListadoDataTest extends TestCase
         $nota->method('getId_situacion')->willReturn(NotaSituacion::NUMERICA);
 
         $repo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $repo->method('getPersonaNotas')->willReturn([$nota]);
+        $repo->method('matching')->willReturn([$nota]);
 
         $finder = $this->createMock(PersonaFinderService::class);
         $finder->method('findPersonaEnGlobalODePaso')->with(99)->willReturn(null);
@@ -104,7 +108,7 @@ final class ActaVerNotasListadoDataTest extends TestCase
         $nota->method('getId_situacion')->willReturn(NotaSituacion::NUMERICA);
 
         $repo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $repo->method('getPersonaNotas')->willReturn([$nota]);
+        $repo->method('matching')->willReturn([$nota]);
 
         $personaEx = $this->createMock(PersonaEx::class);
         $personaEx->method('getApellidosUpperNombre')->willReturn('PASO, Luis');

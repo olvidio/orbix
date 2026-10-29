@@ -4,7 +4,10 @@ namespace src\notas\infrastructure\persistence\postgresql;
 use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\notas\domain\criteria\PersonaNotaField;
+use src\notas\infrastructure\persistence\postgresql\traits\NotasCriteriaTrait;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
@@ -29,6 +32,7 @@ use src\shared\traits\HandlesPdoErrors;
 class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepositoryInterface
 {
     use HandlesPdoErrors;
+    use NotasCriteriaTrait;
 
     protected string $esquema_region_stgr;
 
@@ -43,68 +47,28 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * PersonaNota que cumplen el criterio (en `e_notas` se omiten los placeholders «falta certificado»).
+     *
+     * @return list<PersonaNota|PersonaNotaOtraRegionStgr>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $filtro = $this->filtroExcluirOtraRegionStgr($this->getNomTabla());
+        $filas = $this->filasNotasMatching($criteria, PersonaNotaField::class, '*', $filtro);
+
+        return $this->entidadesDesdeFilas($filas);
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
-     * @return list<\src\notas\domain\entity\PersonaNota|\src\notas\domain\entity\PersonaNotaOtraRegionStgr>
+     * @return list<PersonaNota|PersonaNotaOtraRegionStgr>
      */
     public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sCondicion = $this->anexarFiltroExcluirOtraRegionStgr($nom_tabla, $sCondicion);
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $this->entidadesDesdeFilas(is_array($filas) ? $filas : []);
+        $adapter = new LegacyWhereAdapter(PersonaNotaField::class, []);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function getNotasPersonasDePasoDeRegion(string $esquemaRegionStgr): array
