@@ -3,10 +3,19 @@
 namespace src\encargossacd\domain\contracts;
 
 use src\encargossacd\domain\entity\PropuestaEncargoSacd;
+use src\shared\domain\criteria\Criteria;
 
 interface PropuestaEncargoSacdRepositoryInterface
 {
     /**
+     * PropuestaEncargoSacd que cumplen el criterio.
+     *
+     * @return list<PropuestaEncargoSacd>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<PropuestaEncargoSacd>

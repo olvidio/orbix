@@ -4,6 +4,7 @@ namespace src\encargossacd\application\services;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\PropuestaEncargoSacdField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdRepositoryInterface;
@@ -27,7 +28,7 @@ final class PropuestasEncargosUbiHtml
     public function editable(int $id_ubi): string
     {
         $html = '';
-        foreach ($this->datosPorUbi($id_ubi, 'modo,id_nom,f_ini') as $fila) {
+        foreach ($this->datosPorUbi($id_ubi, [PropuestaEncargoSacdField::Modo, PropuestaEncargoSacdField::IdNom, PropuestaEncargoSacdField::FIni]) as $fila) {
             $html .= $this->renderEditable($fila['encargo'], $fila['slots']);
         }
 
@@ -37,7 +38,7 @@ final class PropuestasEncargosUbiHtml
     public function simple(int $id_ubi): string
     {
         $html = '';
-        foreach ($this->datosPorUbi($id_ubi, 'id_nom,f_ini') as $fila) {
+        foreach ($this->datosPorUbi($id_ubi, [PropuestaEncargoSacdField::IdNom, PropuestaEncargoSacdField::FIni]) as $fila) {
             $html .= $this->renderSimple($fila['encargo'], $fila['slots']);
         }
 
@@ -54,7 +55,7 @@ final class PropuestasEncargosUbiHtml
      *   }
      * }>
      */
-    private function datosPorUbi(int $id_ubi, string $ordenPropuestas): array
+    private function datosPorUbi(int $id_ubi, array $ordenPropuestas): array
     {
         $cEncargos = $this->encargoRepository->matching(
             Criteria::create()
@@ -63,10 +64,13 @@ final class PropuestasEncargosUbiHtml
         );
         $out = [];
         foreach ($cEncargos as $oEncargo) {
-            $propuestas = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(
-                ['id_enc' => $oEncargo->getId_enc(), 'f_fin' => 'x'],
-                ['f_fin' => 'IS NULL', '_ordre' => $ordenPropuestas],
-            );
+            $criterio = Criteria::create()
+                ->where(Filter::eq(PropuestaEncargoSacdField::IdEnc, $oEncargo->getId_enc()))
+                ->andWhere(Filter::isNull(PropuestaEncargoSacdField::FFin));
+            foreach ($ordenPropuestas as $campo) {
+                $criterio = $criterio->addOrderBy($campo);
+            }
+            $propuestas = $this->propuestaEncargoSacdRepository->matching($criterio);
             $out[] = [
                 'encargo' => $oEncargo,
                 'slots' => $this->slotsDesdePropuestas($propuestas),

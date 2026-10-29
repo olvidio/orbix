@@ -5,6 +5,7 @@ namespace src\encargossacd\application\services;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
+use src\encargossacd\domain\criteria\PropuestaEncargoSacdHorarioField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\OrderDirection;
@@ -60,9 +61,12 @@ final class PropuestasHorarioTexto
     private function dedicacionPropuesta(int $id_enc, int $id_sacd): array
     {
         return $this->dedicacionDesdeHorarios(
-            $this->propuestaHorarioRepository->getEncargoSacdHorarios(
-                ['id_enc' => $id_enc, 'id_nom' => $id_sacd, 'f_fin' => 'x'],
-                ['f_fin' => 'IS NULL', '_ordre' => 'f_ini DESC'],
+            $this->propuestaHorarioRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PropuestaEncargoSacdHorarioField::IdEnc, $id_enc))
+                    ->andWhere(Filter::eq(PropuestaEncargoSacdHorarioField::IdNom, $id_sacd))
+                    ->andWhere(Filter::isNull(PropuestaEncargoSacdHorarioField::FFin))
+                    ->orderBy(PropuestaEncargoSacdHorarioField::FIni, OrderDirection::Desc)
             ),
         );
     }

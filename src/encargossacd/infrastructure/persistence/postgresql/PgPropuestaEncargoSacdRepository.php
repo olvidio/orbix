@@ -9,12 +9,21 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConverterDate;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\encargossacd\domain\criteria\PropuestaEncargoSacdField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\shared\traits\RunsCriteriaQueries;
 use src\shared\traits\HandlesPdoErrors;
 
 class PgPropuestaEncargoSacdRepository extends ClaseRepository implements PropuestaEncargoSacdRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
@@ -24,64 +33,37 @@ class PgPropuestaEncargoSacdRepository extends ClaseRepository implements Propue
     }
 
     /**
+     * PropuestaEncargoSacd que cumplen el criterio.
+     *
+     * @return list<PropuestaEncargoSacd>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(PropuestaEncargoSacdField::class, self::COLUMNAS);
+        $items = [];
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
+            $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
+            $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
+            $items[] = PropuestaEncargoSacd::fromArray($aDatos);
+        }
+        return $items;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<PropuestaEncargoSacd>
      */
     public function getPropuestasEncargoSacd(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre' || $camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            if (in_array($sOperador, ['BETWEEN', 'IS NULL', 'IS NOT NULL', 'OR', 'IN', 'NOT IN', 'TXT'], true)) {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = ' WHERE ' . $sCondicion;
-        }
-        $sOrdre = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        unset($aWhere['_ordre'], $aWhere['_limit']);
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $out = [];
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
-            $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $out[] = PropuestaEncargoSacd::fromArray($normalized);
-        }
-
-        return $out;
+        $adapter = new LegacyWhereAdapter(PropuestaEncargoSacdField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function findById(int $id_item): ?PropuestaEncargoSacd
     {
-        $rows = $this->getPropuestasEncargoSacd(['id_item' => $id_item]);
+        $rows = $this->matching(Criteria::create()->where(Filter::eq(PropuestaEncargoSacdField::IdItem, $id_item)));
 
         return $rows[0] ?? null;
     }

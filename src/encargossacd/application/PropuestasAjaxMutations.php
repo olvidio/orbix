@@ -5,6 +5,10 @@ namespace src\encargossacd\application;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdRepositoryInterface;
+use src\encargossacd\domain\criteria\PropuestaEncargoSacdField;
+use src\encargossacd\domain\criteria\PropuestaEncargoSacdHorarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\encargossacd\domain\entity\PropuestaEncargoSacd;
 use src\encargossacd\domain\value_objects\EncargoModoId;
@@ -79,9 +83,11 @@ final class PropuestasAjaxMutations
         $dedic_v = (int) (\src\shared\domain\helpers\FilterPostGet::post('dedic_v') ?? 0);
 
         if ($id_item === $id_enc) {
-            $cEncargosSacd = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(
-                ['id_nom_new' => $id_sacd, 'id_enc' => $id_enc, 'f_fin' => 'x'],
-                ['f_fin' => 'IS NULL'],
+            $cEncargosSacd = $this->propuestaEncargoSacdRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PropuestaEncargoSacdField::IdNomNew, $id_sacd))
+                    ->andWhere(Filter::eq(PropuestaEncargoSacdField::IdEnc, $id_enc))
+                    ->andWhere(Filter::isNull(PropuestaEncargoSacdField::FFin))
             );
             if (count($cEncargosSacd) === 1) {
                 $id_item = $cEncargosSacd[0]->getId_item();
@@ -94,12 +100,13 @@ final class PropuestasAjaxMutations
         $error_txt = '';
 
         foreach (['m' => $dedic_m, 't' => $dedic_t, 'v' => $dedic_v] as $modulo => $dedicacion) {
-            $cHorarios = $this->propuestaHorarioRepository->getEncargoSacdHorarios([
-                'id_enc' => $id_enc,
-                'id_nom' => $id_sacd,
-                'id_item_tarea_sacd' => $id_item,
-                'dia_ref' => $modulo,
-            ]);
+            $cHorarios = $this->propuestaHorarioRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PropuestaEncargoSacdHorarioField::IdEnc, $id_enc))
+                    ->andWhere(Filter::eq(PropuestaEncargoSacdHorarioField::IdNom, $id_sacd))
+                    ->andWhere(Filter::eq(PropuestaEncargoSacdHorarioField::IdItemTareaSacd, $id_item))
+                    ->andWhere(Filter::eq(PropuestaEncargoSacdHorarioField::DiaRef, $modulo))
+            );
 
             if ($cHorarios !== []) {
                 $oHorario = $cHorarios[0];
@@ -136,9 +143,11 @@ final class PropuestasAjaxMutations
         $id_enc = (int) (\src\shared\domain\helpers\FilterPostGet::post('id_enc') ?? 0);
 
         $apellidos_nombre = $this->apellidosNombre($id_sacd);
-        $cHorarios = $this->propuestaHorarioRepository->getEncargoSacdHorarios(
-            ['id_nom' => $id_sacd, 'id_item_tarea_sacd' => $id_item, 'f_fin' => 'x'],
-            ['f_fin' => 'IS NULL'],
+        $cHorarios = $this->propuestaHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(PropuestaEncargoSacdHorarioField::IdNom, $id_sacd))
+                ->andWhere(Filter::eq(PropuestaEncargoSacdHorarioField::IdItemTareaSacd, $id_item))
+                ->andWhere(Filter::isNull(PropuestaEncargoSacdHorarioField::FFin))
         );
 
         $dedic_m = $dedic_t = $dedic_v = '';
@@ -179,7 +188,9 @@ final class PropuestasAjaxMutations
     {
         $id_sacd = (int) (\src\shared\domain\helpers\FilterPostGet::post('id_sacd') ?? 0);
         $apellidos_nombre = $this->apellidosNombre($id_sacd);
-        $cEncargosSacd = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(['id_nom_new' => $id_sacd]);
+        $cEncargosSacd = $this->propuestaEncargoSacdRepository->matching(
+            Criteria::create()->where(Filter::eq(PropuestaEncargoSacdField::IdNomNew, $id_sacd))
+        );
 
         $encargos = [];
         foreach ($cEncargosSacd as $oEncargoSacd) {
