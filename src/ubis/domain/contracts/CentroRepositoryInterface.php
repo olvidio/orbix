@@ -3,6 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\Centro;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Centro y su Repositorio
@@ -29,11 +30,17 @@ interface CentroRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo Centro
+     * Centro que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Centro> Una colección de objetos de tipo Centro
+     * @return list<Centro>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Centro>
      */
     public function getCentros(array $aWhere = [], array $aOperators = []): array;
 

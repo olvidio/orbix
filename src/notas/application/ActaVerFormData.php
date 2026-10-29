@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace src\notas\application;
 
 
+use src\notas\domain\criteria\ActaField as F;
+use src\notas\domain\criteria\ActaTribunalField as TF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -174,11 +178,13 @@ final class ActaVerFormData
                     $idSchemaSel = isset($parts[3]) && is_numeric($parts[3])
                         ? (int) $parts[3]
                         : \src\shared\domain\helpers\FuncTablasSupport::inputInt($in, 'id_schema_scope');
-                    $whereActa = ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura];
+                    $criteriaActa = Criteria::create()
+                        ->where(Filter::eq(F::IdActiv, $id_activ))
+                        ->andWhere(Filter::eq(F::IdAsignatura, $id_asignatura));
                     if ($idSchemaSel > 0) {
-                        $whereActa['id_schema'] = $idSchemaSel;
+                        $criteriaActa = $criteriaActa->andWhere(Filter::eq(F::IdSchema, $idSchemaSel));
                     }
-                    $cActas = $ActaRepository->getActas($whereActa);
+                    $cActas = $ActaRepository->matching($criteriaActa);
                     $oActa = $cActas[0] ?? null;
                     if ($oActa instanceof Acta) {
                         $id_asignatura = $oActa->getId_asignatura();
@@ -207,7 +213,9 @@ final class ActaVerFormData
             } else {
                 $repoActaTribunal = $this->actaTribunalDlRepository;
             }
-            $cTribunal = $repoActaTribunal->getActasTribunales(['acta' => $acta_actual, '_ordre' => 'orden']);
+            $cTribunal = $repoActaTribunal->matching(
+                Criteria::create()->where(Filter::eq(TF::Acta, $acta_actual))->orderBy(TF::Orden)
+            );
         }
 
         $nombre_asignatura = '';

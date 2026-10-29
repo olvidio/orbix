@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\PlanEstudios;
@@ -28,7 +31,7 @@ final class AsignaturasSearchDataTest extends TestCase
 
         // Sin id_nom no se resuelve el plan: el repo de notas no debe consultarse.
         $repoPlan = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $repoPlan->expects($this->never())->method('getPersonaNotas');
+        $repoPlan->expects($this->never())->method('matching');
 
         $useCase = new AsignaturasSearchData($repo, new PlanEstudiosDePersona($repoPlan));
         $this->assertSame('[{"label":"x"}]', $useCase->execute(['search' => 'mat']));
@@ -51,8 +54,12 @@ final class AsignaturasSearchDataTest extends TestCase
 
         $repoPlan = $this->createMock(PersonaNotaRepositoryInterface::class);
         $repoPlan->expects($this->once())
-            ->method('getPersonaNotas')
-            ->with(['id_nom' => 42, 'id_asignatura' => 9998])
+            ->method('matching')
+            ->with($this->equalTo(
+                Criteria::create()
+                    ->where(Filter::eq(F::IdNom, 42))
+                    ->andWhere(Filter::eq(F::IdAsignatura, 9998))
+            ))
             ->willReturn([$notaFinCuadrienio]);
 
         $useCase = new AsignaturasSearchData($repo, new PlanEstudiosDePersona($repoPlan));

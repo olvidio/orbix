@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -93,8 +96,8 @@ final class ActaVerAddPersonaFormDataTest extends TestCase
         $nota->method('getId_nom')->willReturn(9);
         $notaRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
         $notaRepo->expects($this->once())
-            ->method('getPersonaNotas')
-            ->with(['id_asignatura' => 100])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(F::IdAsignatura, 100))))
             ->willReturn([$nota]);
 
         $uc = new ActaVerAddPersonaFormData($actaRepo, $asigRepo, $dlRepo, $pubRepo, $notaRepo);

@@ -2,6 +2,10 @@
 
 namespace src\notas\application;
 
+use src\asignaturas\domain\criteria\AsignaturaField as AF;
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\application\PlanEstudiosDePersona;
@@ -34,26 +38,21 @@ final class PosiblesOpcionalesData
         $plan = $this->planEstudiosDePersona->resolve($id_nom);
 
         $AsignaturaRepository = $this->asignaturaRepository;
-        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
-            'active' => 't',
-            'id_nivel' => '3000,5000',
-            '_ordre' => 'nombre_corto',
-        ], ['id_nivel' => 'BETWEEN']);
-
-        $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
+        $cOpcionales = $AsignaturaRepository->matching(
+            Criteria::create()
+                ->where(PlanEstudiosFilter::filter($plan))
+                ->andWhere(Filter::eq(AF::Active, true))
+                ->andWhere(Filter::between(AF::IdNivel, 3000, 5000))
+                ->orderBy(AF::NombreCorto)
+        );
 
         $aSuperadas = NotaSituacion::getArraySuperadas();
         $PersonaNotaRepository = $this->personaNotaRepository;
-        $cOpSuperadas = $PersonaNotaRepository->getPersonaNotas(
-            [
-                'id_situacion' => implode(',', $aSuperadas),
-                'id_nom' => $id_nom,
-                'id_asignatura' => 3000,
-            ],
-            [
-                'id_situacion' => 'IN',
-                'id_asignatura' => '>',
-            ]
+        $cOpSuperadas = $PersonaNotaRepository->matching(
+            Criteria::create()
+                ->where(Filter::in(F::IdSituacion, $aSuperadas))
+                ->andWhere(Filter::eq(F::IdNom, $id_nom))
+                ->andWhere(Filter::gt(F::IdAsignatura, 3000))
         );
 
         $aOpSuperadas = [];

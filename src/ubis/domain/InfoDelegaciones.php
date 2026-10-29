@@ -2,6 +2,9 @@
 
 namespace src\ubis\domain;
 
+use src\ubis\domain\criteria\DelegacionField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Delegacion;
@@ -29,14 +32,13 @@ class InfoDelegaciones extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
+        $criteria = Criteria::create();
         if (empty($this->k_buscar)) {
-            $aWhere = ['_ordre' => 'region'];
-            $aOperador = [];
+            $criteria = $criteria->orderBy(F::Region);
         } else {
-            $aWhere = ['dl' => $this->k_buscar];
-            $aOperador = ['dl' => 'sin_acentos'];
+            $criteria = $criteria->where(Filter::matchesUnaccented(F::Dl, (string) $this->k_buscar));
         }
 
-        return $this->delegacionRepository->getDelegaciones($aWhere, $aOperador);
+        return $this->delegacionRepository->matching($criteria);
     }
 }

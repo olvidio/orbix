@@ -3,6 +3,7 @@
 namespace src\inventario\domain\contracts;
 
 use src\inventario\domain\entity\Equipaje;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Equipaje y su Repositorio
@@ -29,11 +30,17 @@ interface EquipajeRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo Equipaje
+     * Equipaje que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Equipaje> Una colección de objetos de tipo Equipaje
+     * @return list<Equipaje>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Equipaje>
      */
     public function getEquipajes(array $aWhere = [], array $aOperators = []): array;
 

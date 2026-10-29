@@ -4,6 +4,7 @@ namespace src\actividadplazas\domain\contracts;
 
 use src\actividadplazas\domain\entity\PlazaPeticion;
 use src\actividadplazas\domain\value_objects\PlazaPeticionPk;
+use src\shared\domain\criteria\Criteria;
 
 
 /**
@@ -21,8 +22,14 @@ interface PlazaPeticionRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo PlazaPeticion
+     * PlazaPeticion que cumplen el criterio.
      *
+     * @return list<PlazaPeticion>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<PlazaPeticion>

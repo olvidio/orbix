@@ -2,6 +2,9 @@
 
 namespace src\ubis\application;
 
+use src\ubis\domain\criteria\CentroDlField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 class CentrosGetPlazasData
@@ -16,8 +19,9 @@ class CentrosGetPlazasData
     public function execute(): array
     {
         $oGesCentrosDl = $this->centroDlRepository;
-        $aWhere = ['active' => 't', '_ordre' => 'nombre_ubi'];
-        $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
+        $cCentrosDl = $oGesCentrosDl->matching(
+            Criteria::create()->where(Filter::eq(F::Active, true))->orderBy(F::NombreUbi)
+        );
 
         $c = 0;
         $a_valores = [];

@@ -39,6 +39,7 @@ class PgMatriculaDlRepository extends PgMatriculaRepository implements Matricula
         parent::__construct();
         $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
+        $this->setoDbl_select($oDbl);
         $this->setNomTabla('d_matriculas_activ_dl');
     }
 

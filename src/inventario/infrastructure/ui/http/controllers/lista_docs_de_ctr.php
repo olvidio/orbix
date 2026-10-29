@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\DocumentoField as DocF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
@@ -27,17 +30,17 @@ $ColeccionRepository = DependencyResolver::get(ColeccionRepositoryInterface::cla
 /** @var LugarRepositoryInterface $LugarRepository */
 $LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
 
-$aWhere = [];
+$criteria = Criteria::create();
 if (!empty($Qid_ubi)) {
-    $aWhere['id_ubi'] = $Qid_ubi;
+    $criteria = $criteria->where(Filter::eq(DocF::IdUbi, $Qid_ubi));
 }
 if (!empty($Qid_lugar)) {
-    $aWhere['id_lugar'] = $Qid_lugar;
+    $criteria = $criteria->andWhere(Filter::eq(DocF::IdLugar, $Qid_lugar));
 }
 
 /** @var DocumentoRepositoryInterface $DocumentoRepository */
 $DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
-$cDocumentos = $DocumentoRepository->getDocumentos($aWhere);
+$cDocumentos = $DocumentoRepository->matching($criteria);
 
 $d = 0;
 $a_valores = [];

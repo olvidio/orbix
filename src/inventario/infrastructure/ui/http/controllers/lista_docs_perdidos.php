@@ -1,4 +1,7 @@
 <?php
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\DocumentoField as DocF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
@@ -11,7 +14,7 @@ $error_txt = '';
 
 /** @var DocumentoRepositoryInterface $DocumentoRepository */
 $DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
-$cDocumentos = $DocumentoRepository->getDocumentos(['perdido' => 't']);
+$cDocumentos = $DocumentoRepository->matching(Criteria::create()->where(Filter::eq(DocF::Perdido, true)));
 
 /** @var LugarRepositoryInterface $LugarRepository */
 $LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);

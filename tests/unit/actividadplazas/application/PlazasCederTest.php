@@ -56,9 +56,9 @@ final class PlazasCederTest extends TestCase
         $delegRepo->method('getDelegaciones')->with(['dl' => 'dl'])->willReturn([$deleg]);
 
         $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
-        $plazasDlRepo->method('getActividadesPlazas')->willReturn([]);
+        $plazasDlRepo->method('matching')->willReturn([]);
         $calRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
-        $calRepo->method('getActividadesPlazas')->willReturn([]);
+        $calRepo->method('matching')->willReturn([]);
 
         $msg = $this->makeUseCase($delegRepo, $plazasDlRepo, $calRepo)->execute([
             'id_activ' => 99,
@@ -81,7 +81,7 @@ final class PlazasCederTest extends TestCase
         $oPlazas->method('getArrayCedidas')->willReturn(['dlx' => 3]);
 
         $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
-        $plazasDlRepo->method('getActividadesPlazas')->willReturn([$oPlazas]);
+        $plazasDlRepo->method('matching')->willReturn([$oPlazas]);
         $calRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
         $oPlazas->expects($this->once())->method('setCedidas')->with([]);
         $plazasDlRepo->expects($this->once())->method('Guardar')->with($oPlazas)->willReturn(true);
@@ -107,7 +107,7 @@ final class PlazasCederTest extends TestCase
         $oPlazas->method('getArrayCedidas')->willReturn([]);
 
         $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
-        $plazasDlRepo->method('getActividadesPlazas')->willReturn([$oPlazas]);
+        $plazasDlRepo->method('matching')->willReturn([$oPlazas]);
 
         $resumenSvc = $this->createMock(ResumenPlazasService::class);
         $resumenSvc->expects($this->once())->method('setId_activ')->with(1);
@@ -136,7 +136,7 @@ final class PlazasCederTest extends TestCase
         $oPlazas->method('getArrayCedidas')->willReturn(['dlx' => 1]);
 
         $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
-        $plazasDlRepo->method('getActividadesPlazas')->willReturn([$oPlazas]);
+        $plazasDlRepo->method('matching')->willReturn([$oPlazas]);
         $plazasDlRepo->expects($this->never())->method('Guardar');
 
         $resumenSvc = $this->createMock(ResumenPlazasService::class);
@@ -165,7 +165,7 @@ final class PlazasCederTest extends TestCase
         $oPlazas->method('getArrayCedidas')->willReturn(['dlx' => 1]);
 
         $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
-        $plazasDlRepo->method('getActividadesPlazas')->willReturn([$oPlazas]);
+        $plazasDlRepo->method('matching')->willReturn([$oPlazas]);
         $oPlazas->expects($this->once())->method('setCedidas')->with(['dlx' => 1, 'dly' => 2]);
         $plazasDlRepo->expects($this->once())->method('Guardar')->with($oPlazas)->willReturn(true);
 
@@ -196,7 +196,7 @@ final class PlazasCederTest extends TestCase
         $oPlazas->method('getPlazasVo')->willReturn(null);
 
         $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
-        $plazasDlRepo->method('getActividadesPlazas')->willReturn([$oPlazas]);
+        $plazasDlRepo->method('matching')->willReturn([$oPlazas]);
         $oPlazas->expects($this->once())->method('setCedidas')->with(['dlx' => 1]);
         $plazasDlRepo->expects($this->once())->method('Guardar')->with($oPlazas)->willReturn(true);
 
@@ -231,7 +231,7 @@ final class PlazasCederTest extends TestCase
         $oPlazas->method('getPlazasVo')->willReturn(null);
 
         $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
-        $plazasDlRepo->method('getActividadesPlazas')->willReturn([$oPlazas]);
+        $plazasDlRepo->method('matching')->willReturn([$oPlazas]);
         $oPlazas->expects($this->once())->method('setCedidas')->with(['dlx' => 1]);
         $plazasDlRepo->expects($this->once())->method('Guardar')->with($oPlazas)->willReturn(true);
 

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace src\notas\application\support;
 
+use src\notas\domain\criteria\ActaTribunalField as TF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\notas\application\DatosActa;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
 use src\notas\domain\entity\Acta;
@@ -25,10 +28,9 @@ final class ActaContenidoImpreso
     public function hashDeActa(Acta $oActa): string
     {
         $actaNum = $oActa->getActa();
-        $cTribunal = $this->actaTribunalRepository->getActasTribunales([
-            'acta' => $actaNum,
-            '_ordre' => 'orden',
-        ]);
+        $cTribunal = $this->actaTribunalRepository->matching(
+            Criteria::create()->where(Filter::eq(TF::Acta, $actaNum))->orderBy(TF::Orden)
+        );
         $examinadores = [];
         foreach ($cTribunal as $oTribunal) {
             $examinadores[] = (string) $oTribunal->getExaminador();

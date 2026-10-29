@@ -71,10 +71,10 @@ final class ActaContenidoImpresoTest extends TestCase
         $ex = new ActaTribunal();
         $ex->setExaminador('Examinador Uno');
         $tribunalRepo = $this->createMock(ActaTribunalRepositoryInterface::class);
-        $tribunalRepo->method('getActasTribunales')->willReturn([$ex]);
+        $tribunalRepo->method('matching')->willReturn([$ex]);
 
         $notaRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $notaRepo->method('getPersonaNotas')->willReturn($notas);
+        $notaRepo->method('matching')->willReturn($notas);
 
         return new ActaContenidoImpreso($tribunalRepo, new DatosActa($notaRepo));
     }

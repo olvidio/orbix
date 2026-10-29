@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\NivelId;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
@@ -84,7 +87,7 @@ final class ActaVerAddPersona
 
         if (HuecoOpcionalDePlan::esOpcionalConcreta($id_asignatura)) {
             $notasNivel = [];
-            foreach ($this->personaNotaRepository->getPersonaNotas(['id_nom' => $id_nom]) as $oPersonaNota1) {
+            foreach ($this->personaNotaRepository->matching(Criteria::create()->where(Filter::eq(F::IdNom, $id_nom))) as $oPersonaNota1) {
                 $notasNivel[] = [
                     'id_asignatura' => (int) $oPersonaNota1->getId_asignatura(),
                     'id_nivel' => (int) $oPersonaNota1->getIdNivelVo()->value(),
@@ -110,11 +113,12 @@ final class ActaVerAddPersona
             $id_situacion = NotaSituacion::EXAMINADO;
         }
 
-        $existentes = $this->personaNotaRepository->getPersonaNotas([
-            'id_nom' => $id_nom,
-            'id_asignatura' => $id_asignatura,
-            'acta' => $acta,
-        ]);
+        $existentes = $this->personaNotaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdNom, $id_nom))
+                ->andWhere(Filter::eq(F::IdAsignatura, $id_asignatura))
+                ->andWhere(Filter::eq(F::Acta, $acta))
+        );
 
         $oPersonaNota = new PersonaNota();
         $oPersonaNota->setIdNivelVo(NivelId::fromNullableInt($id_nivel));

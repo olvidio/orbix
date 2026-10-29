@@ -2,6 +2,11 @@
 
 namespace src\notas\application;
 
+use src\asignaturas\domain\criteria\AsignaturaField as AF;
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
@@ -85,11 +90,12 @@ final class NotaPersonaFormData
     private function prepareEditar(int $id_pau, int $id_asignatura_real): array
     {
         $PersonaNotaRepository = $this->personaNotaRepository;
-        $cPersonaNotas = $PersonaNotaRepository->getPersonaNotas([
-            '_ordre' => 'tipo_acta DESC',
-            'id_nom' => $id_pau,
-            'id_asignatura' => $id_asignatura_real,
-        ]);
+        $cPersonaNotas = $PersonaNotaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdNom, $id_pau))
+                ->andWhere(Filter::eq(F::IdAsignatura, $id_asignatura_real))
+                ->orderBy(F::TipoActa, OrderDirection::Desc)
+        );
         if ($cPersonaNotas === []) {
             throw new \RuntimeException(_("No se encuentra la nota a editar"));
         }
@@ -154,24 +160,22 @@ final class NotaPersonaFormData
         $AsignaturaRepository = $this->asignaturaRepository;
         $plan = $this->planEstudiosDePersona->resolve($id_pau);
 
-        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
-            'active' => 't',
-            'id_nivel' => 3000,
-            '_ordre' => 'id_nivel',
-        ], ['id_nivel' => '<']);
-
-        $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
+        $cAsignaturas = $AsignaturaRepository->matching(
+            Criteria::create()
+                ->where(PlanEstudiosFilter::filter($plan))
+                ->andWhere(Filter::eq(AF::Active, true))
+                ->andWhere(Filter::lt(AF::IdNivel, 3000))
+                ->orderBy(AF::IdNivel)
+        );
 
         $PersonaNotaRepository = $this->personaNotaRepository;
         $aSuperadas = NotaSituacion::getArraySuperadas();
-        $cSuperadas = $PersonaNotaRepository->getPersonaNotas(
-            [
-                'id_situacion' => implode(',', $aSuperadas),
-                'id_nom' => $id_pau,
-                'id_nivel' => 3000,
-                '_ordre' => 'id_nivel',
-            ],
-            ['id_situacion' => 'IN', 'id_nivel' => '<']
+        $cSuperadas = $PersonaNotaRepository->matching(
+            Criteria::create()
+                ->where(Filter::in(F::IdSituacion, $aSuperadas))
+                ->andWhere(Filter::eq(F::IdNom, $id_pau))
+                ->andWhere(Filter::lt(F::IdNivel, 3000))
+                ->orderBy(F::IdNivel)
         );
 
         $aSuperadasSlots = NivelesOcupadosEnPlan::ocupados(
@@ -328,14 +332,14 @@ final class NotaPersonaFormData
             ? $this->planEstudiosDePersona->resolve($idNom)
             : \src\asignaturas\domain\value_objects\PlanEstudios::PLAN_2026;
 
-        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
-            'active' => 't',
-            'id_sector' => 1,
-            'id_nivel' => 3000,
-            '_ordre' => 'nombre_corto',
-        ], ['id_nivel' => '<']);
-
-        $cGenericas = $repo->getAsignaturas($aWhere, $aOperador);
+        $cGenericas = $repo->matching(
+            Criteria::create()
+                ->where(PlanEstudiosFilter::filter($plan))
+                ->andWhere(Filter::eq(AF::Active, true))
+                ->andWhere(Filter::eq(AF::IdSector, 1))
+                ->andWhere(Filter::lt(AF::IdNivel, 3000))
+                ->orderBy(AF::NombreCorto)
+        );
         $condicion = '';
         foreach ($cGenericas as $oOpcional) {
             $condicion .= 'id==' . $oOpcional->getId_nivel() . ' || ';
@@ -365,7 +369,7 @@ final class NotaPersonaFormData
     private function notasParaHueco(int $idNom): array
     {
         $notas = [];
-        foreach ($this->personaNotaRepository->getPersonaNotas(['id_nom' => $idNom]) as $nota) {
+        foreach ($this->personaNotaRepository->matching(Criteria::create()->where(Filter::eq(F::IdNom, $idNom))) as $nota) {
             $notas[] = [
                 'id_asignatura' => (int) $nota->getId_asignatura(),
                 'id_nivel' => (int) $nota->getIdNivelVo()->value(),

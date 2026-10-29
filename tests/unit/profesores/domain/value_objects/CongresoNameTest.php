@@ -19,6 +19,17 @@ class CongresoNameTest extends myTest
         new CongresoName(str_repeat('a', 1000)); // Assuming max length validation
     }
 
+    public function test_max_length_125_is_valid()
+    {
+        $this->assertSame(125, mb_strlen((new CongresoName(str_repeat('a', 125)))->value()));
+    }
+
+    public function test_length_126_throws_exception()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new CongresoName(str_repeat('a', 126));
+    }
+
     public function test_to_string_returns_congresoName_value()
     {
         $congresoName = new CongresoName('test value');

@@ -2,6 +2,9 @@
 
 namespace src\ubis\application\services;
 
+use src\ubis\domain\criteria\TelecoUbiField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 
 final class UbiTelecoService
@@ -30,15 +33,14 @@ final class UbiTelecoService
         }
 
         $TelecoRepository = $this->ubiRepositoryResolver->getTelecoRepository($obj_pau);
-        $aWhere = [
-            'id_ubi' => $id_ubi,
-            'id_tipo_teleco' => $id_tipo_teleco,
-        ];
+        $criteria = Criteria::create()
+            ->where(Filter::eq(F::IdUbi, $id_ubi))
+            ->andWhere(Filter::eq(F::IdTipoTeleco, $id_tipo_teleco));
         if ($desc_teleco !== '*' && $desc_teleco !== '') {
-            $aWhere['id_desc_teleco'] = $desc_teleco;
+            $criteria = $criteria->andWhere(Filter::eq(F::IdDescTeleco, $desc_teleco));
         }
 
-        $cTelecos = $TelecoRepository->getTelecos($aWhere) ?: [];
+        $cTelecos = $TelecoRepository->matching($criteria);
         if (empty($cTelecos)) {
             return '';
         }

@@ -3,6 +3,7 @@
 namespace src\actividadestudios\domain\contracts;
 
 use src\actividadestudios\domain\entity\ActividadAsignatura;
+use src\shared\domain\criteria\Criteria;
 use src\actividadestudios\domain\value_objects\ActividadAsignaturaPk;
 
 interface ActividadAsignaturaRepositoryInterface
@@ -13,6 +14,14 @@ interface ActividadAsignaturaRepositoryInterface
     public function getAsignaturasCa(int $id_activ, string $tipo = ''): array;
 
     /**
+     * ActividadAsignatura que cumplen el criterio.
+     *
+     * @return list<ActividadAsignatura>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<ActividadAsignatura>

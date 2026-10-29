@@ -3,6 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\CentroEx;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase CentroEx y su Repositorio
@@ -23,15 +24,20 @@ interface CentroExRepositoryInterface
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo CentroEx
-	 *
-	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return list<CentroEx> Una colección de objetos de tipo CentroEx
-	
-	 */
-	public function getCentros(array $aWhere=[], array $aOperators=[]): array;
+    /**
+     * CentroEx que cumplen el criterio.
+     *
+     * @return list<CentroEx>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<CentroEx>
+     */
+    public function getCentros(array $aWhere=[], array $aOperators=[]): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

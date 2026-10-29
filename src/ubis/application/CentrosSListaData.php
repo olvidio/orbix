@@ -2,6 +2,9 @@
 
 namespace src\ubis\application;
 
+use src\ubis\domain\criteria\CentroDlField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
@@ -26,9 +29,11 @@ final class CentrosSListaData
     public function execute(): array
     {
         $CentroRepository = $this->centroDlRepository;
-        $cCentros = $CentroRepository->getCentros(
-            ['tipo_ctr' => '^s[^s]', 'active' => 't', '_ordre' => 'nombre_ubi'],
-            ['tipo_ctr' => '~']
+        $cCentros = $CentroRepository->matching(
+            Criteria::create()
+                ->where(Filter::matches(F::TipoCtr, '^s[^s]'))
+                ->andWhere(Filter::eq(F::Active, true))
+                ->orderBy(F::NombreUbi)
         );
 
         $PersonaSRepository = $this->personaSRepository;

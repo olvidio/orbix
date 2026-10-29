@@ -6,6 +6,9 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
+use src\actividadplazas\domain\criteria\ActividadPlazasField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
@@ -158,7 +161,11 @@ final class PlazasBalanceData
             $a_valores[$i]['dlorg'] = $dl_org;
 
             $concedidasA = 0;
-            $cActividadPlazas = $this->actividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dlA, 'id_activ' => $id_activ]);
+            $cActividadPlazas = $this->actividadPlazasRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(F::IdDl, $id_dlA))
+                    ->andWhere(Filter::eq(F::IdActiv, $id_activ))
+            );
             foreach ($cActividadPlazas as $oActividadPlazas) {
                 if ($dl_org === $oActividadPlazas->getDl_tabla()) {
                     $concedidasA = $oActividadPlazas->getPlazasVo()?->value() ?? 0;
@@ -169,7 +176,11 @@ final class PlazasBalanceData
             $sumaConcedidasA += $concedidasA;
 
             $concedidasB = 0;
-            $cActividadPlazas = $this->actividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dlB, 'id_activ' => $id_activ]);
+            $cActividadPlazas = $this->actividadPlazasRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(F::IdDl, $id_dlB))
+                    ->andWhere(Filter::eq(F::IdActiv, $id_activ))
+            );
             foreach ($cActividadPlazas as $oActividadPlazas) {
                 if ($dl_org === $oActividadPlazas->getDl_tabla()) {
                     $concedidasB = $oActividadPlazas->getPlazasVo()?->value() ?? 0;

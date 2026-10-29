@@ -2,6 +2,9 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\actividadestudios\application\support\AsignaturaNombreDlPrefix;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
@@ -85,10 +88,11 @@ final class MatriculaNueva
         }
 
         if (!$matricularEnCa && !$confirmar) {
-            $existentes = $this->actividadAsignaturaRepository->getActividadAsignaturas([
-                'id_activ' => $Qid_activ,
-                'id_asignatura' => $Qid_asignatura,
-            ]);
+            $existentes = $this->actividadAsignaturaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(AaF::IdActiv, $Qid_activ))
+                    ->andWhere(Filter::eq(AaF::IdAsignatura, $Qid_asignatura))
+            );
             if ($existentes !== []) {
                 return [
                     'error' => '',
@@ -132,8 +136,10 @@ final class MatriculaNueva
             $this->dossierRepository->Guardar($oDossierActiv);
         }
 
-        $cActividadAsignaturas = $this->actividadAsignaturaDlRepository->getActividadAsignaturas(
-            ['id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura]
+        $cActividadAsignaturas = $this->actividadAsignaturaDlRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(AaF::IdActiv, $Qid_activ))
+                ->andWhere(Filter::eq(AaF::IdAsignatura, $Qid_asignatura))
         );
         if ($matricularEnCa) {
             return self::resultado('');

@@ -1,5 +1,8 @@
 <?php
 
+use src\inventario\domain\criteria\WhereisField as WhF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
@@ -36,7 +39,7 @@ if ($oLugar === null) {
 }
 $nombre_valija = $oLugar->getNom_lugar();
 
-$cWhereis = $WhereisRepository->getWhereare(['id_item_egm' => $Qid_item_egm]);
+$cWhereis = $WhereisRepository->matching(Criteria::create()->where(Filter::eq(WhF::IdItemEgm, $Qid_item_egm)));
 
 $d = 0;
 $a_valores = [];

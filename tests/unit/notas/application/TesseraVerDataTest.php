@@ -77,9 +77,9 @@ final class TesseraVerDataTest extends TestCase
     private function useCase(PersonaFinderService $finder): TesseraVerData
     {
         $notaRepo = $this->createStub(PersonaNotaRepositoryInterface::class);
-        $notaRepo->method('getPersonaNotas')->willReturn([]);
+        $notaRepo->method('matching')->willReturn([]);
         $asigRepo = $this->createStub(AsignaturaRepositoryInterface::class);
-        $asigRepo->method('getAsignaturas')->willReturn([]);
+        $asigRepo->method('matching')->willReturn([]);
         $tesera = new Tesera(
             new ExpedienteNotasPersona($notaRepo),
             $asigRepo,

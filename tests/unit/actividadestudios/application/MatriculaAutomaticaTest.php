@@ -92,13 +92,13 @@ final class MatriculaAutomaticaTest extends TestCase
         $oferta->setIdAsignaturaVo(1101);
 
         $asignaturas = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $asignaturas->method('getActividadAsignaturas')->willReturn([$oferta]);
+        $asignaturas->method('matching')->willReturn([$oferta]);
 
         $notas = $this->createMock(PersonaNotaRepositoryInterface::class);
         $notas->method('getPersonaNotas')->willReturn([]);
 
         $mat = $this->createMock(MatriculaDlRepositoryInterface::class);
-        $mat->method('getMatriculas')->willReturn([]);
+        $mat->method('matching')->willReturn([]);
         $mat->expects($this->once())->method('Guardar')->willReturn(true);
 
         $out = $this->useCase([

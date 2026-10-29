@@ -102,7 +102,7 @@ final class PersonaNotaEliminarTest extends TestCase
         ActaFirmadaPolicy $policy,
     ): PersonaNotaEliminar {
         $planRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $planRepo->method('getPersonaNotas')->willReturn([]);
+        $planRepo->method('matching')->willReturn([]);
 
         $asignaturaRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $planEstudios = new PlanEstudiosDePersona($planRepo);

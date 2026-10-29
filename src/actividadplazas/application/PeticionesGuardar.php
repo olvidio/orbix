@@ -3,7 +3,10 @@
 namespace src\actividadplazas\application;
 
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
+use src\actividadplazas\domain\criteria\PlazaPeticionField as F;
 use src\actividadplazas\domain\entity\PlazaPeticion;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Guarda las peticiones de una persona+tipo. Borra todas las
@@ -30,10 +33,11 @@ final class PeticionesGuardar
             return (string)_("faltan parametros id_nom / sactividad");
         }
 
-        $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion([
-            'id_nom' => $id_nom,
-            'tipo' => $sactividad,
-        ]);
+        $cPlazasPeticion = $this->plazaPeticionRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdNom, $id_nom))
+                ->andWhere(Filter::eq(F::Tipo, $sactividad))
+        );
         foreach ($cPlazasPeticion as $oPlazaPeticion) {
             $this->plazaPeticionRepository->Eliminar($oPlazaPeticion);
         }

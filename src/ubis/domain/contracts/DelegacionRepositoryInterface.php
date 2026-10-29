@@ -3,6 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\Delegacion;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Delegacion y su Repositorio
@@ -19,11 +20,17 @@ interface DelegacionRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo Delegacion
+     * Delegacion que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Delegacion> Una colección de objetos de tipo Delegacion
+     * @return list<Delegacion>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Delegacion>
      */
     public function getDelegaciones(array $aWhere = [], array $aOperators = []): array;
 

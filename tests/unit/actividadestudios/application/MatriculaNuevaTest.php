@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\actividadestudios\application;
 
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\actividadestudios\application\ActividadAsignaturaNueva;
 use src\actividadestudios\application\FormMatriculasDeUnaPersonaData;
@@ -51,10 +54,11 @@ final class MatriculaNuevaTest extends TestCase
         $mat->expects($this->never())->method('Guardar');
 
         $all = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $all->expects($this->once())->method('getActividadAsignaturas')->with([
-            'id_activ' => 10,
-            'id_asignatura' => 1101,
-        ])->willReturn([$existente]);
+        $all->expects($this->once())->method('matching')->with($this->equalTo(
+            Criteria::create()
+                ->where(Filter::eq(AaF::IdActiv, 10))
+                ->andWhere(Filter::eq(AaF::IdAsignatura, 1101))
+        ))->willReturn([$existente]);
 
         $dl = $this->createMock(ActividadAsignaturaDlRepositoryInterface::class);
         $dl->expects($this->never())->method('Guardar');
@@ -84,13 +88,13 @@ final class MatriculaNuevaTest extends TestCase
         $mat->expects($this->once())->method('Guardar')->willReturn(true);
 
         $all = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $all->expects($this->never())->method('getActividadAsignaturas');
+        $all->expects($this->never())->method('matching');
 
         $existenteDl = new ActividadAsignatura();
         $existenteDl->setId_activ(10);
         $existenteDl->setIdAsignaturaVo(1101);
         $dl = $this->createMock(ActividadAsignaturaDlRepositoryInterface::class);
-        $dl->method('getActividadAsignaturas')->willReturn([$existenteDl]);
+        $dl->method('matching')->willReturn([$existenteDl]);
         $dl->expects($this->once())->method('Guardar')->willReturn(true);
 
         $out = $this->useCase(
@@ -118,7 +122,7 @@ final class MatriculaNuevaTest extends TestCase
         $mat->expects($this->once())->method('Guardar')->willReturn(true);
 
         $all = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $all->expects($this->never())->method('getActividadAsignaturas');
+        $all->expects($this->never())->method('matching');
 
         $dl = $this->createMock(ActividadAsignaturaDlRepositoryInterface::class);
         $dl->expects($this->never())->method('Guardar');
@@ -191,10 +195,10 @@ final class MatriculaNuevaTest extends TestCase
         );
 
         $all = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $all->method('getActividadAsignaturas')->willReturn([]);
+        $all->method('matching')->willReturn([]);
 
         $dl = $this->createMock(ActividadAsignaturaDlRepositoryInterface::class);
-        $dl->method('getActividadAsignaturas')->willReturn([]);
+        $dl->method('matching')->willReturn([]);
         $dl->expects($this->once())->method('Guardar')->willReturn(true);
 
         $out = $this->useCase(

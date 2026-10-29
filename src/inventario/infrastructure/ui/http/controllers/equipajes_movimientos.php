@@ -1,5 +1,10 @@
 <?php
 
+use src\inventario\domain\criteria\WhereisField as WhF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\DocumentoField as DocF;
+use src\inventario\domain\criteria\EgmField as EgmF;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
@@ -38,7 +43,7 @@ foreach ($a_sel as $id_equipaje) {
     $aGrupos[$id_equipaje]= $oEquipaje->getNom_equipaje();
     $aNomEquipajes[$id_equipaje]= $oEquipaje->getNom_equipaje();
     // tadas las maletas
-    $cEgm = $EgmRepository->getEgmes(['id_equipaje'=>$id_equipaje]);
+    $cEgm = $EgmRepository->matching(Criteria::create()->where(Filter::eq(EgmF::IdEquipaje, $id_equipaje)));
     $txt = '';
     foreach ($cEgm as $oEgm) {
         $id_item_egm = $oEgm->getId_item();
@@ -51,7 +56,9 @@ foreach ($a_sel as $id_equipaje) {
         $aLugaresPorEgm[$id_item_egm] = $oLugar->getNom_lugar();
         // por grupo, comparar los de documentos y los de whereis
         // Quitar
-        $cDocumentos = $DocumentoRepository->getDocumentos(['id_lugar'=>$id_lugar,'_ordre'=>'id_doc']);
+        $cDocumentos = $DocumentoRepository->matching(
+            Criteria::create()->where(Filter::eq(DocF::IdLugar, $id_lugar))->orderBy(DocF::IdDoc)
+        );
         $d = 0;
         $ident_num = '';
         foreach ($cDocumentos as $oDocumento) {
@@ -59,7 +66,11 @@ foreach ($a_sel as $id_equipaje) {
             $identificador = $oDocumento->getIdentificador();
             $identificador = empty($identificador)? '' : $identificador ;
             // miro donde està.
-            $cWhereis = $WhereisRepository->getWhereare(['id_doc'=>$id_doc,'id_item_egm'=>$id_item_egm]);
+            $cWhereis = $WhereisRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(WhF::IdDoc, $id_doc))
+                    ->andWhere(Filter::eq(WhF::IdItemEgm, $id_item_egm))
+            );
             if (count($cWhereis) === 0) { // no está en su sitio.
                 $id_tipo_doc = $oDocumento->getId_tipo_doc();
                 $oTipoDoc = $TipoDocRepository->findById((int) $id_tipo_doc);
@@ -84,7 +95,7 @@ foreach ($a_sel as $id_equipaje) {
             }
         }
         // Poner
-        $cWhereis = $WhereisRepository->getWhereare(['id_item_egm'=>$id_item_egm]);
+        $cWhereis = $WhereisRepository->matching(Criteria::create()->where(Filter::eq(WhF::IdItemEgm, $id_item_egm)));
         $ident_lugar = '';
         foreach ($cWhereis as $oWhereis) {
             $id_doc = $oWhereis->getId_doc();

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\notas\application;
 
+use src\notas\domain\criteria\ActaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -29,8 +32,8 @@ final class BuscarActaDataTest extends TestCase
         $acta->method('getF_acta')->willReturn(new DateTimeLocal('2026-06-01'));
 
         $actaDl = $this->createMock(ActaDlRepositoryInterface::class);
-        $actaDl->method('getActas')
-            ->with(['acta' => 'dlmE 39/26'])
+        $actaDl->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(F::Acta, 'dlmE 39/26'))))
             ->willReturn([$acta]);
 
         $latin3 = $this->createMock(Asignatura::class);
@@ -63,7 +66,7 @@ final class BuscarActaDataTest extends TestCase
         $acta->method('getF_acta')->willReturn(null);
 
         $actaDl = $this->createMock(ActaDlRepositoryInterface::class);
-        $actaDl->method('getActas')->willReturn([$acta]);
+        $actaDl->method('matching')->willReturn([$acta]);
 
         $filaArbitraria = $this->createMock(Asignatura::class);
         $filaArbitraria->method('getId_nivel')->willReturn(2212);
@@ -85,9 +88,9 @@ final class BuscarActaDataTest extends TestCase
     public function test_acta_inexistente_devuelve_no(): void
     {
         $actaDl = $this->createMock(ActaDlRepositoryInterface::class);
-        $actaDl->method('getActas')->willReturn([]);
+        $actaDl->method('matching')->willReturn([]);
         $actaEx = $this->createMock(ActaExRepositoryInterface::class);
-        $actaEx->method('getActas')->willReturn([]);
+        $actaEx->method('matching')->willReturn([]);
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $asigRepo->expects($this->never())->method('findById');
@@ -121,7 +124,7 @@ final class BuscarActaDataTest extends TestCase
     private function planEstudiosDePersona(): PlanEstudiosDePersona
     {
         $pnRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $pnRepo->method('getPersonaNotas')->willReturn([]);
+        $pnRepo->method('matching')->willReturn([]);
 
         return new PlanEstudiosDePersona($pnRepo);
     }

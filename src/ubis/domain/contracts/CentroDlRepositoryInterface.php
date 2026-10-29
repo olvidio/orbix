@@ -3,6 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\CentroDl;
+use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\entity\Direccion;
 
 /**
@@ -25,11 +26,17 @@ interface CentroDlRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo CentroDl
+     * CentroDl que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<CentroDl> Una colección de objetos de tipo CentroDl
+     * @return list<CentroDl>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<CentroDl>
      */
     public function getCentros(array $aWhere = [], array $aOperators = []): array;
 

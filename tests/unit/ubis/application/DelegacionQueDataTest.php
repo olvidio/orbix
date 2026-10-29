@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\ubis\application;
 
+use src\ubis\domain\criteria\DelegacionField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\ubis\application\DelegacionQueData;
 use src\ubis\application\services\DelegacionDropdown;
@@ -44,7 +47,7 @@ final class DelegacionQueDataTest extends TestCase
         $dlOtra = $this->delegacionMock('R', 'dl2', 'Dos');
 
         $repo = $this->createMock(DelegacionRepositoryInterface::class);
-        $repo->method('getDelegaciones')->with(['active' => true])->willReturn([$dlPropia, $dlOtra]);
+        $repo->method('matching')->with($this->equalTo(Criteria::create()->where(Filter::eq(F::Active, true))))->willReturn([$dlPropia, $dlOtra]);
 
         $useCase = new DelegacionQueData(new DelegacionDropdown($repo));
         $out = $useCase->execute();

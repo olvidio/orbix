@@ -2,6 +2,9 @@
 
 namespace src\ubis\application\services;
 
+use src\ubis\domain\criteria\TelecoUbiField as TelecoF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\DependencyResolver;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
@@ -89,17 +92,15 @@ trait UbiContactsTrait
             return '';
         }
 
-        /** @var array<string, mixed> $aWhere */
-        $aWhere = [
-            'id_ubi' => $this->getId_ubi(),
-            'id_tipo_teleco' => 3,
-        ];
+        $criteria = Criteria::create()
+            ->where(Filter::eq(TelecoF::IdUbi, $this->getId_ubi()))
+            ->andWhere(Filter::eq(TelecoF::IdTipoTeleco, 3));
 
         if ($desc_teleco !== 13) {
-            $aWhere['id_desc_teleco'] = $desc_teleco;
+            $criteria = $criteria->andWhere(Filter::eq(TelecoF::IdDescTeleco, $desc_teleco));
         }
 
-        $cTelecos = $TelecoUbiRepository->getTelecos($aWhere);
+        $cTelecos = $TelecoUbiRepository->matching($criteria);
         if ($cTelecos === []) {
             return '';
         }
@@ -122,17 +123,15 @@ trait UbiContactsTrait
             default => 0,
         };
 
-        /** @var array<string, mixed> $aWhere */
-        $aWhere = [
-            'id_ubi' => $this->getId_ubi(),
-            'id_tipo_teleco' => $id_tipo_teleco,
-        ];
+        $criteria = Criteria::create()
+            ->where(Filter::eq(TelecoF::IdUbi, $this->getId_ubi()))
+            ->andWhere(Filter::eq(TelecoF::IdTipoTeleco, $id_tipo_teleco));
 
         if ($desc_teleco !== '*' && $desc_teleco !== '' && $desc_teleco !== 0) {
-            $aWhere['id_desc_teleco'] = $desc_teleco;
+            $criteria = $criteria->andWhere(Filter::eq(TelecoF::IdDescTeleco, $desc_teleco));
         }
 
-        $cTelecos = $TelecoUbiRepository->getTelecos($aWhere);
+        $cTelecos = $TelecoUbiRepository->matching($criteria);
         $tels = '';
         $separador = $separador === '' ? '.-<br>' : $separador;
 

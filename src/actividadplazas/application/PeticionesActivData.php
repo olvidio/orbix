@@ -7,6 +7,9 @@ use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
+use src\actividadplazas\domain\criteria\PlazaPeticionField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -165,11 +168,12 @@ final class PeticionesActivData
         }
 
         // Peticiones actuales: borrar las que ya no esten en la lista.
-        $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion([
-            'id_nom' => $id_nom,
-            'tipo' => $sactividad,
-            '_ordre' => 'orden',
-        ]);
+        $cPlazasPeticion = $this->plazaPeticionRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdNom, $id_nom))
+                ->andWhere(Filter::eq(F::Tipo, $sactividad))
+                ->orderBy(F::Orden)
+        );
         $sid_activ = '';
         foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
             $id_activ_pet = $oPlazaPeticion->getId_activ();

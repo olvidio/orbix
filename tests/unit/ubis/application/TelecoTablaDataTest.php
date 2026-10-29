@@ -44,7 +44,7 @@ final class TelecoTablaDataTest extends TestCase
         $teleco->method('getDatosCampos')->willReturn([]);
 
         $repo = $this->createMock(TelecoCtrRepositoryInterface::class);
-        $repo->method('getTelecos')->willReturn([$teleco]);
+        $repo->method('matching')->willReturn([$teleco]);
 
         $useCase = new TelecoTablaData($this->resolver($repo));
         $out = $useCase->execute('Centro', 5);
@@ -61,7 +61,7 @@ final class TelecoTablaDataTest extends TestCase
     public function test_sin_telecos_devuelve_valores_vacios(): void
     {
         $repo = $this->createMock(TelecoCtrRepositoryInterface::class);
-        $repo->method('getTelecos')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $useCase = new TelecoTablaData($this->resolver($repo));
         $out = $useCase->execute('Centro', 5);

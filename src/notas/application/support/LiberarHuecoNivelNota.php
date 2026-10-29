@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace src\notas\application\support;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use RuntimeException;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\application\PlanEstudiosDePersona;
@@ -31,10 +34,11 @@ final class LiberarHuecoNivelNota
         int $idNivel,
         int $idAsignaturaNueva,
     ): void {
-        $ocupantes = $repo->getPersonaNotas([
-            'id_nom' => $idNom,
-            'id_nivel' => $idNivel,
-        ]);
+        $ocupantes = $repo->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdNom, $idNom))
+                ->andWhere(Filter::eq(F::IdNivel, $idNivel))
+        );
         if ($ocupantes === []) {
             return;
         }
@@ -83,10 +87,11 @@ final class LiberarHuecoNivelNota
             ));
         }
 
-        $yaEnDestino = $repo->getPersonaNotas([
-            'id_nom' => $ocupante->getId_nom(),
-            'id_nivel' => $nivelCatalogo,
-        ]);
+        $yaEnDestino = $repo->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdNom, $ocupante->getId_nom()))
+                ->andWhere(Filter::eq(F::IdNivel, $nivelCatalogo))
+        );
         if ($yaEnDestino !== []) {
             $bloqueante = $yaEnDestino[0];
             $asigBloqueante = $this->asignaturaRepository->findById($bloqueante->getId_asignatura(), $plan);

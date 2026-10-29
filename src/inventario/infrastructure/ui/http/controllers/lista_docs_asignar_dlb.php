@@ -1,5 +1,10 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
+use src\inventario\domain\criteria\DocumentoField as DocF;
+use src\inventario\domain\criteria\UbiInventarioField as UbiF;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
@@ -30,7 +35,9 @@ $DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::cla
 if ($isNumerado) {
     //conseguir el último número.
     $ultimo = 0;
-    $cDocumentos = $DocumentoRepository->getDocumentos(array('id_tipo_doc' => $Qid_tipo_doc, '_ordre' => 'num_reg DESC'));
+    $cDocumentos = $DocumentoRepository->matching(
+        Criteria::create()->where(Filter::eq(DocF::IdTipoDoc, $Qid_tipo_doc))->orderBy(DocF::NumReg, OrderDirection::Desc)
+    );
     if (!empty($cDocumentos[0])) {
         $ultimo = $cDocumentos[0]->getNum_reg();
     }
@@ -38,7 +45,7 @@ if ($isNumerado) {
 
 /** @var UbiInventarioRepositoryInterface $UbiInventarioRepository */
 $UbiInventarioRepository = DependencyResolver::get(UbiInventarioRepositoryInterface::class);
-$cUbisInventario = $UbiInventarioRepository->getUbisInventario(['_ordre' => 'nom_ubi']);
+$cUbisInventario = $UbiInventarioRepository->matching(Criteria::create()->orderBy(UbiF::NomUbi));
 
 /** @var LugarRepositoryInterface $LugarRepository */
 $LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
@@ -61,7 +68,9 @@ foreach ($a_sel as $id_lugar) {
         $num = $ultimo + $i;
     } else {
         // es el número de ejemplares
-        $cDocumentos = $DocumentoRepository->getDocumentos(array('id_tipo_doc' => $Qid_tipo_doc, 'id_ubi' => $id_ubi));
+        $cDocumentos = $DocumentoRepository->matching(Criteria::create()
+        ->where(Filter::eq(DocF::IdTipoDoc, $Qid_tipo_doc))
+        ->andWhere(Filter::eq(DocF::IdUbi, $id_ubi)));
         if (!empty($cDocumentos[0])) {
             $num_ej = $cDocumentos[0]->getNum_ejemplares();
         } else {

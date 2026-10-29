@@ -5,7 +5,12 @@ namespace src\actividadestudios\infrastructure\persistence\postgresql;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
@@ -28,12 +33,17 @@ use src\shared\traits\HandlesPdoErrors;
 class PgActividadAsignaturaRepository extends ClaseRepository implements ActividadAsignaturaRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct(
         private AsignaturaRepositoryInterface $asignaturaRepository,
     ) {
         $oDbl = GlobalPdo::get('oDBP');
         $this->setoDbl($oDbl);
+        $this->setoDbl_select($oDbl);
         $this->setNomTabla('d_asignaturas_activ_all');
     }
 
@@ -50,15 +60,11 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
         $aAsigDatos = $this->asignaturaRepository->getArrayAsignaturasCreditos();
 
         // por cada ca creo un array con las asignaturas y los créditos.
-        $aWhere['id_activ'] = $id_activ;
-        $aOperador = [];
-        if (empty($tipo)) {
-            $aWhere['tipo'] = 'NULL';
-            $aOperador['tipo'] = 'IS NULL';
-        } else {
-            $aWhere['tipo'] = $tipo;
-        }
-        $cActividadAsignaturas = $this->getActividadAsignaturas($aWhere, $aOperador);
+        $criteria = Criteria::create()->where(Filter::eq(ActividadAsignaturaField::IdActiv, $id_activ));
+        $criteria = empty($tipo)
+            ? $criteria->andWhere(Filter::isNull(ActividadAsignaturaField::Tipo))
+            : $criteria->andWhere(Filter::eq(ActividadAsignaturaField::Tipo, $tipo));
+        $cActividadAsignaturas = $this->matching($criteria);
         $aAsignaturasCa = [];
         foreach ($cActividadAsignaturas as $oActividadAsignatura) {
             $id_asignatura = $oActividadAsignatura->getIdAsignaturaVo()->value();
@@ -74,80 +80,33 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
+     * ActividadAsignatura que cumplen el criterio.
+     *
+     * @return list<ActividadAsignatura>
+     */
+    public function matching(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(ActividadAsignaturaField::class, self::COLUMNAS);
+        $items = [];
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
+            // para las fechas del postgres (texto iso)
+            $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
+            $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
+            $items[] = ActividadAsignatura::fromArray($aDatos);
+        }
+        return $items;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<ActividadAsignatura>
      */
     public function getActividadAsignaturas(array $aWhere = [], array $aOperators = []): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $ActividadAsignaturaSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        if (isset($aWhere['_ordre']) && is_scalar($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . (string) $aWhere['_ordre'];
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . (string) $aWhere['_limit'];
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        /** @var list<ActividadAsignatura> $items */
-        $items = [];
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            // para las fechas del postgres (texto iso)
-            $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
-            $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $items[] = ActividadAsignatura::fromArray($normalized);
-        }
-        return $items;
+        $adapter = new LegacyWhereAdapter(ActividadAsignaturaField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -3,6 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\Region;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Region y su Repositorio
@@ -18,15 +19,20 @@ interface RegionRepositoryInterface
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo Region
-	 *
-	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return list<Region> Una colección de objetos de tipo Region
-	
-	 */
-	public function getRegiones(array $aWhere=[], array $aOperators=[]): array;
+    /**
+     * Region que cumplen el criterio.
+     *
+     * @return list<Region>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Region>
+     */
+    public function getRegiones(array $aWhere=[], array $aOperators=[]): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

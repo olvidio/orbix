@@ -4,6 +4,7 @@ namespace src\actividadplazas\domain\contracts;
 
 use JsonException;
 use src\actividadplazas\domain\entity\ActividadPlazas;
+use src\shared\domain\criteria\Criteria;
 
 
 /**
@@ -21,8 +22,14 @@ interface ActividadPlazasRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ActividadPlazas
+     * ActividadPlazas que cumplen el criterio.
      *
+     * @return list<ActividadPlazas>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
      * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<ActividadPlazas>

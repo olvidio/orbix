@@ -3,6 +3,9 @@
 namespace src\notas\application;
 
 
+use src\asignaturas\domain\criteria\AsignaturaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
@@ -116,13 +119,13 @@ final class Tesera
      */
     public function getAsignaturasPosibles(int $plan = self::PLAN_NUEVO): array
     {
-        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
-            'active' => 't',
-            'id_nivel' => self::ID_NIVEL_ASIG_DESDE . ',' . self::ID_NIVEL_ASIG_HASTA,
-            '_ordre' => 'id_nivel',
-        ], ['id_nivel' => 'BETWEEN']);
-
-        return $this->asignaturaRepository->getAsignaturas($aWhere, $aOperador);
+        return $this->asignaturaRepository->matching(
+            Criteria::create()
+                ->where(PlanEstudiosFilter::filter($plan))
+                ->andWhere(Filter::eq(F::Active, true))
+                ->andWhere(Filter::between(F::IdNivel, self::ID_NIVEL_ASIG_DESDE, self::ID_NIVEL_ASIG_HASTA))
+                ->orderBy(F::IdNivel)
+        );
     }
 
     /**

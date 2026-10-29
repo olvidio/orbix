@@ -20,7 +20,7 @@ final class PosiblesOpcionalesDataTest extends TestCase
     private function planEstudiosDePersona(): PlanEstudiosDePersona
     {
         $repoPlan = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $repoPlan->method('getPersonaNotas')->willReturn([]);
+        $repoPlan->method('matching')->willReturn([]);
 
         return new PlanEstudiosDePersona($repoPlan);
     }
@@ -37,7 +37,7 @@ final class PosiblesOpcionalesDataTest extends TestCase
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $asigRepo->expects($this->once())
-            ->method('getAsignaturas')
+            ->method('matching')
             ->willReturn([$a1, $a2]);
 
         $pnSuperada = $this->createMock(PersonaNota::class);
@@ -45,7 +45,7 @@ final class PosiblesOpcionalesDataTest extends TestCase
 
         $pnRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
         $pnRepo->expects($this->once())
-            ->method('getPersonaNotas')
+            ->method('matching')
             ->willReturn([$pnSuperada]);
 
         $useCase = new PosiblesOpcionalesData($asigRepo, $pnRepo, $this->planEstudiosDePersona());
@@ -60,10 +60,10 @@ final class PosiblesOpcionalesDataTest extends TestCase
         $a1->method('getNombre_corto')->willReturn('X');
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
-        $asigRepo->method('getAsignaturas')->willReturn([$a1]);
+        $asigRepo->method('matching')->willReturn([$a1]);
 
         $pnRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $pnRepo->method('getPersonaNotas')->willReturn([]);
+        $pnRepo->method('matching')->willReturn([]);
 
         $useCase = new PosiblesOpcionalesData($asigRepo, $pnRepo, $this->planEstudiosDePersona());
         $this->assertSame([4001 => 'X'], $useCase->execute(['id_nom' => 1]));

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
+use src\notas\domain\criteria\ActaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -49,9 +52,9 @@ final class BuscarActaData
             return ['id_asignatura' => 'no'];
         }
 
-        $cActas = $this->actaDlRepository->getActas(['acta' => $actaBuscar]);
+        $cActas = $this->actaDlRepository->matching(Criteria::create()->where(Filter::eq(F::Acta, $actaBuscar)));
         if (count($cActas) !== 1) {
-            $cActas = $this->actaExRepository->getActas(['acta' => $actaBuscar]);
+            $cActas = $this->actaExRepository->matching(Criteria::create()->where(Filter::eq(F::Acta, $actaBuscar)));
         }
 
         if (count($cActas) !== 1) {

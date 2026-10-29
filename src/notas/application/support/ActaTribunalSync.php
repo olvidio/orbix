@@ -3,6 +3,9 @@
 namespace src\notas\application\support;
 
 
+use src\notas\domain\criteria\ActaTribunalField as TF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\entity\ActaTribunal;
 
@@ -27,7 +30,7 @@ final class ActaTribunalSync
         $error = '';
 
         $repo = $this->actaTribunalDlRepository;
-        $cActaTribunal = $repo->getActasTribunales(['acta' => $acta]);
+        $cActaTribunal = $repo->matching(Criteria::create()->where(Filter::eq(TF::Acta, $acta)));
         foreach ($cActaTribunal as $oActaTribunal) {
             if ($repo->Eliminar($oActaTribunal) === false) {
                 $error .= _("hay un error, no se ha eliminado");

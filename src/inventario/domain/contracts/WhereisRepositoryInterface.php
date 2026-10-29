@@ -3,6 +3,7 @@
 namespace src\inventario\domain\contracts;
 
 use src\inventario\domain\entity\Whereis;
+use src\shared\domain\criteria\Criteria;
 use src\inventario\domain\value_objects\WhereisItemId;
 
 /**
@@ -25,15 +26,20 @@ interface WhereisRepositoryInterface
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo Whereis
-	 *
-	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return list<Whereis> Una colección de objetos de tipo Whereis
-	
-	 */
-	public function getWhereare(array $aWhere=[], array $aOperators=[]): array;
+    /**
+     * Whereis que cumplen el criterio.
+     *
+     * @return list<Whereis>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Whereis>
+     */
+    public function getWhereare(array $aWhere=[], array $aOperators=[]): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\DocumentoField as DocF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
@@ -23,7 +26,7 @@ $nombreDoc = empty($nom_doc) ? $oTipoDoc->getSigla() : $oTipoDoc->getSigla() . '
 
 /** @var DocumentoRepositoryInterface $DocumentoRepository */
 $DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
-$cDocumentos = $DocumentoRepository->getDocumentos(['id_tipo_doc' => $Qid_tipo_doc]);
+$cDocumentos = $DocumentoRepository->matching(Criteria::create()->where(Filter::eq(DocF::IdTipoDoc, $Qid_tipo_doc)));
 
 /** @var LugarRepositoryInterface $LugarRepository */
 $LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);

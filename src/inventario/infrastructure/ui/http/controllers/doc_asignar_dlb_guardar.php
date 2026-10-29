@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\DocumentoField as DocF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
@@ -49,11 +52,12 @@ foreach ($selected_id as $id_lugar_raw) {
     $var_num = 'num_' . $id_lugar;
     $numRaw = $_POST[$var_num] ?? 0;
     $num = is_numeric($numRaw) ? (int) $numRaw : 0;
-    $aWhere = ['id_ubi' => $id_ubi,
-        'id_lugar' => $id_lugar,
-        'id_tipo_doc' => $Qid_tipo_doc
-    ];
-    $cDocumentos = $DocumentoRepository->getDocumentos($aWhere);
+    $cDocumentos = $DocumentoRepository->matching(
+        Criteria::create()
+            ->where(Filter::eq(DocF::IdUbi, $id_ubi))
+            ->andWhere(Filter::eq(DocF::IdLugar, $id_lugar))
+            ->andWhere(Filter::eq(DocF::IdTipoDoc, $Qid_tipo_doc))
+    );
     if (count($cDocumentos) !== 1) {
         $error_txt .= _("No se encuentra el documento");
         $error_txt .= "\\n";

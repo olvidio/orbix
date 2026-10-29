@@ -4,7 +4,10 @@ namespace src\notas\infrastructure\persistence\postgresql;
 
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\notas\domain\criteria\PersonaNotaField;
+use src\notas\infrastructure\persistence\postgresql\traits\NotasCriteriaTrait;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -35,6 +38,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
 {
 
     use HandlesPdoErrors;
+    use NotasCriteriaTrait;
 
     protected string $esquema_region_stgr;
 
@@ -145,83 +149,14 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ActaTribunalDl
+     * PersonaNotaOtraRegionStgr que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<\src\notas\domain\entity\PersonaNota|\src\notas\domain\entity\PersonaNotaOtraRegionStgr> Una colección de objetos PersonaNota
+     * @return list<PersonaNotaOtraRegionStgr>
      */
-    /** @param array<string, mixed> $aWhere */
-
-    /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<\src\notas\domain\entity\PersonaNotaOtraRegionStgr>
-     */
-    public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array
+    public function matching(Criteria $criteria): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
         $PersonaNotaSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string)$limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string)$key] = $value;
-            }
+        foreach ($this->filasNotasMatching($criteria, PersonaNotaField::class) as $normalized) {
             // para las fechas del postgres (texto iso)
             $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta']))->fromPg();
             // para los json
@@ -245,6 +180,18 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         /** @var list<PersonaNotaOtraRegionStgr> $items */
         $items = array_values($PersonaNotaSet->getTot());
         return $items;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<PersonaNotaOtraRegionStgr>
+     */
+    public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array
+    {
+        $adapter = new LegacyWhereAdapter(PersonaNotaField::class, []);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /**

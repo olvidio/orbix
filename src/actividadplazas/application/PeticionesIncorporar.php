@@ -8,6 +8,9 @@ use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
+use src\actividadplazas\domain\criteria\PlazaPeticionField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
@@ -123,13 +126,12 @@ final class PeticionesIncorporar
             $aId_activ[$oActividad->getId_activ()] = (string)($oActividad->getDl_org() ?? '');
         }
 
-        $aWhereP = [
-            'orden' => 1,
-            'tipo' => $sactividad,
-            'id_nom' => '^\d{4}' . $filtro_id_nom,
-        ];
-        $aOperadorP = ['id_nom' => '~'];
-        $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion($aWhereP, $aOperadorP);
+        $cPlazasPeticion = $this->plazaPeticionRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::Orden, 1))
+                ->andWhere(Filter::eq(F::Tipo, $sactividad))
+                ->andWhere(Filter::matches(F::IdNom, '^\d{4}' . $filtro_id_nom))
+        );
 
         $incorporadas = 0;
         $msg_err = '';

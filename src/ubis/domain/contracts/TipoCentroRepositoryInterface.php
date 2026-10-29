@@ -3,6 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\TipoCentro;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase TipoCentro y su Repositorio
@@ -23,15 +24,20 @@ interface TipoCentroRepositoryInterface
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo TipoCentro
-	 *
-	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return list<TipoCentro> Una colección de objetos de tipo TipoCentro
-	
-	 */
-	public function getTiposCentro(array $aWhere=[], array $aOperators=[]): array;
+    /**
+     * TipoCentro que cumplen el criterio.
+     *
+     * @return list<TipoCentro>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<TipoCentro>
+     */
+    public function getTiposCentro(array $aWhere=[], array $aOperators=[]): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

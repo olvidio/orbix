@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\TipoActa;
 use src\personas\application\services\PersonaFinderService;
@@ -36,10 +39,11 @@ final class ActaVerNotasListadoData
             return ['filas' => [], 'avisos' => []];
         }
 
-        $notas = $this->personaNotaRepository->getPersonaNotas([
-            'acta' => $acta,
-            'tipo_acta' => TipoActa::FORMATO_ACTA,
-        ]);
+        $notas = $this->personaNotaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::Acta, $acta))
+                ->andWhere(Filter::eq(F::TipoActa, TipoActa::FORMATO_ACTA))
+        );
 
         $filasPorNombre = [];
         $avisos = [];

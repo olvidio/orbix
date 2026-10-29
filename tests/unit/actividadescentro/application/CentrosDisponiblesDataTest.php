@@ -90,7 +90,7 @@ final class CentrosDisponiblesDataTest extends TestCase
         };
 
         $ellas = $this->createStub(CentroEllasRepositoryInterface::class);
-        $ellas->method('getCentros')->willReturn([$c]);
+        $ellas->method('matching')->willReturn([$c]);
 
         $useCase = new CentrosDisponiblesData(
             $this->createStub(CentroEncargadoRepositoryInterface::class),
@@ -123,7 +123,7 @@ final class CentrosDisponiblesDataTest extends TestCase
         };
 
         $dl = $this->createStub(CentroDlRepositoryInterface::class);
-        $dl->method('getCentros')->willReturn([$c]);
+        $dl->method('matching')->willReturn([$c]);
 
         $useCase = new CentrosDisponiblesData(
             $this->createStub(CentroEncargadoRepositoryInterface::class),
@@ -151,7 +151,7 @@ final class CentrosDisponiblesDataTest extends TestCase
         };
 
         $dl = $this->createStub(CentroDlRepositoryInterface::class);
-        $dl->method('getCentros')->willReturn([$centro]);
+        $dl->method('matching')->willReturn([$centro]);
 
         $enc = $this->createStub(CentroEncargadoRepositoryInterface::class);
         $enc->method('getActividadesDeCentros')->with(8, "f_ini BETWEEN '2024-01-01' AND '2024-12-31'")->willReturn([1, 2, 3]);

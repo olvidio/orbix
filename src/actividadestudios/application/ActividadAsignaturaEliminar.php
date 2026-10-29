@@ -2,6 +2,9 @@
 
 namespace src\actividadestudios\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
 use src\actividadestudios\application\support\ActividadAsignaturaSelToken;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
@@ -80,10 +83,11 @@ final class ActividadAsignaturaEliminar
             return self::resultado(_("no encuentro la asignatura"));
         }
 
-        $matriculas = $this->matriculaDlRepository->getMatriculas([
-            'id_activ' => $Qid_activ,
-            'id_asignatura' => $Qid_asignatura,
-        ]);
+        $matriculas = $this->matriculaDlRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(MatF::IdActiv, $Qid_activ))
+                ->andWhere(Filter::eq(MatF::IdAsignatura, $Qid_asignatura))
+        );
         if ($matriculas !== [] && !$confirmar) {
             $porDl = $this->contarPorDl($matriculas);
 

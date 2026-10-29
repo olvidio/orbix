@@ -2,6 +2,10 @@
 
 namespace Tests\unit\actividadestudios\application;
 
+use src\actividadestudios\domain\criteria\MatriculaField as MatF;
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\actividadestudios\application\MatriculaEliminar;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
@@ -112,10 +116,10 @@ final class MatriculaEliminarTest extends TestCase
             [10, 21, 30, $oMat2],
         ]);
         $matRepo->expects($this->exactly(2))->method('Eliminar')->willReturn(true);
-        $matRepo->method('getMatriculas')->willReturn([]);
+        $matRepo->method('matching')->willReturn([]);
 
         $aaRepo = $this->createMock(ActividadAsignaturaDlRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->willReturn([]);
+        $aaRepo->method('matching')->willReturn([]);
 
         $useCase = new MatriculaEliminar($aaRepo, $matRepo, $this->createMock(DossierRepositoryInterface::class));
 
@@ -135,16 +139,10 @@ final class MatriculaEliminarTest extends TestCase
         $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
         $matRepo->method('findById')->with(10, 20, 30)->willReturn($oMat);
         $matRepo->method('Eliminar')->with($oMat)->willReturn(true);
-        $matRepo->method('getMatriculas')->with([
-            'id_activ' => 10,
-            'id_asignatura' => 20,
-        ])->willReturn([]);
+        $matRepo->method('matching')->with($this->equalTo(Criteria::create()->where(Filter::eq(MatF::IdActiv, 10))->andWhere(Filter::eq(MatF::IdAsignatura, 20))))->willReturn([]);
 
         $aaRepo = $this->createMock(ActividadAsignaturaDlRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->with([
-            'id_activ' => 10,
-            'id_asignatura' => 20,
-        ])->willReturn([$oAa]);
+        $aaRepo->method('matching')->with($this->equalTo(Criteria::create()->where(Filter::eq(AaF::IdActiv, 10))->andWhere(Filter::eq(AaF::IdAsignatura, 20))))->willReturn([$oAa]);
         $aaRepo->expects($this->once())->method('Eliminar')->with($oAa)->willReturn(true);
 
         $useCase = new MatriculaEliminar($aaRepo, $matRepo, $this->createMock(DossierRepositoryInterface::class));
@@ -165,13 +163,10 @@ final class MatriculaEliminarTest extends TestCase
         $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
         $matRepo->method('findById')->with(10, 20, 30)->willReturn($oMat);
         $matRepo->method('Eliminar')->with($oMat)->willReturn(true);
-        $matRepo->expects($this->never())->method('getMatriculas');
+        $matRepo->expects($this->never())->method('matching');
 
         $aaRepo = $this->createMock(ActividadAsignaturaDlRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->with([
-            'id_activ' => 10,
-            'id_asignatura' => 20,
-        ])->willReturn([$oAa]);
+        $aaRepo->method('matching')->with($this->equalTo(Criteria::create()->where(Filter::eq(AaF::IdActiv, 10))->andWhere(Filter::eq(AaF::IdAsignatura, 20))))->willReturn([$oAa]);
         $aaRepo->expects($this->never())->method('Eliminar');
 
         $useCase = new MatriculaEliminar($aaRepo, $matRepo, $this->createMock(DossierRepositoryInterface::class));

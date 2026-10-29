@@ -3,6 +3,9 @@
 namespace src\notas\application;
 
 
+use src\notas\domain\criteria\ActaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\config\ConfigGlobal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
@@ -34,11 +37,7 @@ final class ListadoAnualActasData
      */
     public function execute(string $inicioIso, string $finIso): array
     {
-        $aWhere = [
-            'f_acta' => "'$inicioIso','$finIso'",
-            '_sin_pdf' => true,
-        ];
-        $aOperador = ['f_acta' => 'BETWEEN'];
+        $criteria = Criteria::create()->where(Filter::between(F::FActa, $inicioIso, $finIso));
 
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
             $mi_dele = ConfigGlobal::mi_delef();
@@ -49,14 +48,13 @@ final class ListadoAnualActasData
                 $Qacta_dl .= empty($Qacta_dl) ? '' : '|';
                 $Qacta_dl .= "$dl ";
             }
-            $aWhere['acta'] = '^(' . $Qacta_dl . ')';
-            $aOperador['acta'] = '~';
+            $criteria = $criteria->andWhere(Filter::matches(F::Acta, '^(' . $Qacta_dl . ')'));
             $ActaRepository = $this->actaRepository;
         } else {
             $ActaRepository = $this->actaDlRepository;
         }
 
-        $cActas = $ActaRepository->getActas($aWhere, $aOperador);
+        $cActas = $ActaRepository->matchingSinPdf($criteria);
 
         $AsignaturaRepository = $this->asignaturaRepository;
         $aActas = [];

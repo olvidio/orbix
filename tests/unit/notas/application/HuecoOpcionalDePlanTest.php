@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\unit\notas\application;
 
+use src\asignaturas\domain\criteria\AsignaturaField as F;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
@@ -203,12 +207,18 @@ final class HuecoOpcionalDePlanTest extends TestCase
     public function test_niveles_del_plan_solo_opcionales_genericas_ordenadas(): void
     {
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
-        $repo->method('getAsignaturas')->willReturnCallback(
-            function (array $where, array $operador): array {
-                $this->assertSame(HuecoOpcionalDePlan::ID_TIPO_OPCIONAL, $where['id_tipo']);
-                $this->assertSame(PlanEstudios::PLAN_2026, $where['plan_estudios']);
-                $this->assertSame('<', $operador['id_nivel']);
-                $this->assertSame('<', $operador['id_asignatura']);
+        $repo->method('matching')->willReturnCallback(
+            function (Criteria $criteria): array {
+                $this->assertEquals(
+                    Criteria::create()
+                        ->where(PlanEstudiosFilter::filter(PlanEstudios::PLAN_2026))
+                        ->andWhere(Filter::eq(F::Active, true))
+                        ->andWhere(Filter::eq(F::IdTipo, HuecoOpcionalDePlan::ID_TIPO_OPCIONAL))
+                        ->andWhere(Filter::lt(F::IdNivel, HuecoOpcionalDePlan::UMBRAL_OPCIONAL))
+                        ->andWhere(Filter::lt(F::IdAsignatura, HuecoOpcionalDePlan::UMBRAL_OPCIONAL))
+                        ->orderBy(F::IdNivel),
+                    $criteria
+                );
 
                 return [
                     $this->asignatura(2432, 2432, 8),

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace src\notas\application\support;
 
+use src\asignaturas\domain\criteria\AsignaturaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\application\PlanEstudiosDePersona;
@@ -55,19 +58,16 @@ final class HuecoOpcionalDePlan
      */
     public function nivelesDelPlan(int $plan): array
     {
-        [$where, $operador] = PlanEstudiosFilter::apply($plan, [
-            'active' => 't',
-            'id_tipo' => self::ID_TIPO_OPCIONAL,
-            'id_nivel' => self::UMBRAL_OPCIONAL,
-            'id_asignatura' => self::UMBRAL_OPCIONAL,
-            '_ordre' => 'id_nivel',
-        ], [
-            'id_nivel' => '<',
-            'id_asignatura' => '<',
-        ]);
+        $criteria = Criteria::create()
+            ->where(PlanEstudiosFilter::filter($plan))
+            ->andWhere(Filter::eq(F::Active, true))
+            ->andWhere(Filter::eq(F::IdTipo, self::ID_TIPO_OPCIONAL))
+            ->andWhere(Filter::lt(F::IdNivel, self::UMBRAL_OPCIONAL))
+            ->andWhere(Filter::lt(F::IdAsignatura, self::UMBRAL_OPCIONAL))
+            ->orderBy(F::IdNivel);
 
         $slots = [];
-        foreach ($this->asignaturaRepository->getAsignaturas($where, $operador) as $asignatura) {
+        foreach ($this->asignaturaRepository->matching($criteria) as $asignatura) {
             if (!$asignatura->isActive() || (int) $asignatura->getId_tipo() !== self::ID_TIPO_OPCIONAL) {
                 continue;
             }

@@ -3,6 +3,7 @@
 namespace src\inventario\domain\contracts;
 
 use src\inventario\domain\entity\Egm;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Interfaz de la clase Egm y su Repositorio
@@ -27,11 +28,17 @@ interface EgmRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo Egm
+     * Egm que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Egm> Una colección de objetos de tipo Egm
+     * @return list<Egm>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Egm>
      */
     public function getEgmes(array $aWhere = [], array $aOperators = []): array;
 

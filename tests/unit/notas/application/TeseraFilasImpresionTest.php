@@ -69,7 +69,7 @@ final class TeseraFilasImpresionTest extends TestCase
         $nota->method('getActaVo')->willReturn(null);
 
         $notaRepo = $this->createStub(PersonaNotaRepositoryInterface::class);
-        $notaRepo->method('getPersonaNotas')->willReturn([$nota]);
+        $notaRepo->method('matching')->willReturn([$nota]);
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $asigRepo->method('findById')->willReturnCallback(

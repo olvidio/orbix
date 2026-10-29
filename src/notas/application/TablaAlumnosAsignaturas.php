@@ -3,6 +3,9 @@
 namespace src\notas\application;
 
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\application\support\HuecoOpcionalDePlan;
@@ -25,7 +28,7 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
  *     `Lista` se hace en el controller frontend, separando datos y UI.
  *   - Los dos metodos `getTablaCr`/`getTablaDl` (duplicados al 95 %) se
  *     unifican en un pipeline privado `construirTabla()`.
- *   - Las notas se cargan en un unico `getPersonaNotas(..., 'id_nom' => 'IN')`
+ *   - Las notas se cargan en un unico `matching()` con `Filter::in(IdNom, …)`
  *     para todo el colectivo, en vez de dos consultas por persona (legacy
  *     hacia `2 * N` queries: una para `fin_bienio/cuadrienio` y otra para
  *     todas las notas de la persona).
@@ -199,9 +202,8 @@ final class TablaAlumnosAsignaturas
         if (empty($aIdNoms)) {
             return [];
         }
-        $cNotas = $repo->getPersonaNotas(
-            ['id_nom' => implode(',', $aIdNoms)],
-            ['id_nom' => 'IN'],
+        $cNotas = $repo->matching(
+            Criteria::create()->where(Filter::in(F::IdNom, array_values($aIdNoms)))
         );
         $agrupado = [];
         foreach ($cNotas as $oNota) {

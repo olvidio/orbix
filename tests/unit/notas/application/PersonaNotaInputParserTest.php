@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\unit\notas\application;
 
+use src\asignaturas\domain\criteria\AsignaturaField as F;
+use src\asignaturas\domain\support\PlanEstudiosFilter;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\PlanEstudios;
@@ -52,7 +56,7 @@ final class PersonaNotaInputParserTest extends TestCase
     private function planEstudiosDePersona(): PlanEstudiosDePersona
     {
         $repoPlan = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $repoPlan->method('getPersonaNotas')->willReturn([]);
+        $repoPlan->method('matching')->willReturn([]);
 
         return new PlanEstudiosDePersona($repoPlan);
     }
@@ -82,8 +86,12 @@ final class PersonaNotaInputParserTest extends TestCase
     {
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
         // Plan resuelto por `PlanEstudiosDePersona` (sin marca 9998 → 2026): entra en el filtro.
-        $repo->method('getAsignaturas')
-            ->with(['id_nivel' => 3100, 'plan_estudios' => PlanEstudios::PLAN_2026])
+        $repo->method('matching')
+            ->with($this->equalTo(
+                Criteria::create()
+                    ->where(PlanEstudiosFilter::filter(PlanEstudios::PLAN_2026))
+                    ->andWhere(Filter::eq(F::IdNivel, 3100))
+            ))
             ->willReturn([]);
 
         $plan = $this->planEstudiosDePersona();
@@ -109,7 +117,7 @@ final class PersonaNotaInputParserTest extends TestCase
         $asig->method('getId_asignatura')->willReturn(3001);
 
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
-        $repo->method('getAsignaturas')->willReturn([$asig]);
+        $repo->method('matching')->willReturn([$asig]);
 
         $plan = $this->planEstudiosDePersona();
         $parser = new PersonaNotaInputParser(

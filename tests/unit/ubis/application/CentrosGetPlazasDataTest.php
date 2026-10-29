@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\ubis\application;
 
+use src\ubis\domain\criteria\CentroDlField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\ubis\application\CentrosGetPlazasData;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -28,8 +31,8 @@ final class CentrosGetPlazasDataTest extends TestCase
 
         $repo = $this->createMock(CentroDlRepositoryInterface::class);
         $repo->expects($this->once())
-            ->method('getCentros')
-            ->with(['active' => 't', '_ordre' => 'nombre_ubi'])
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(F::Active, true))->orderBy(F::NombreUbi)))
             ->willReturn([$c1, $c2]);
 
         $useCase = new CentrosGetPlazasData($repo);

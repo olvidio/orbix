@@ -2,6 +2,9 @@
 
 namespace src\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\application\support\ActaFirmadaPolicy;
@@ -87,7 +90,7 @@ final class PersonaNotaNueva
 
         $idNom = (int) $oPersonaNota->getId_nom();
         $notas = [];
-        foreach ($this->personaNotaRepository->getPersonaNotas(['id_nom' => $idNom]) as $nota) {
+        foreach ($this->personaNotaRepository->matching(Criteria::create()->where(Filter::eq(F::IdNom, $idNom))) as $nota) {
             $notas[] = [
                 'id_asignatura' => (int) $nota->getId_asignatura(),
                 'id_nivel' => (int) $nota->getIdNivelVo()->value(),

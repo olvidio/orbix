@@ -3,6 +3,10 @@
 namespace src\inventario\domain;
 
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
+use src\inventario\domain\criteria\EgmField as EgmF;
+use src\inventario\domain\criteria\WhereisField as WhereisF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
@@ -27,17 +31,21 @@ class ListaDocsGrupo
     public function listaDocsGrupo(int $id_equipaje, int $id_lugar, int $id_grupo): array
     {
         $aColeccion = [];
-        $cColecciones = $this->coleccionRepository->getColecciones();
+        $cColecciones = $this->coleccionRepository->matching(Criteria::create());
         foreach ($cColecciones as $oColeccion) {
             $aColeccion[$oColeccion->getId_coleccion()] = $oColeccion->isAgrupar();
         }
 
-        $cEgm = $this->egmRepository->getEgmes(['id_equipaje' => $id_equipaje, 'id_grupo' => $id_grupo]);
+        $cEgm = $this->egmRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EgmF::IdEquipaje, $id_equipaje))
+                ->andWhere(Filter::eq(EgmF::IdGrupo, $id_grupo))
+        );
         $id_item_egm = null;
         $a_valores = [];
         if ($cEgm !== []) {
             $id_item_egm = $cEgm[0]->getId_item();
-            $cWhereis = $this->whereisRepository->getWhereare(['id_item_egm' => $id_item_egm]);
+            $cWhereis = $this->whereisRepository->matching(Criteria::create()->where(Filter::eq(WhereisF::IdItemEgm, $id_item_egm)));
 
             $d = 0;
             $orden = [];

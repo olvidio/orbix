@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\EgmField as EgmF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\EgmRepositoryInterface;
@@ -20,8 +23,9 @@ if (!empty($Qid_item_egm)) {
         return;
     }
 } else {
-    $aWhere = ['id_equipaje' => $Qid_equipaje, 'id_grupo' => $Qid_grupo];
-    $cEgm = $EgmRepository->getEgmes($aWhere);
+    $cEgm = $EgmRepository->matching(Criteria::create()
+        ->where(Filter::eq(EgmF::IdEquipaje, $Qid_equipaje))
+        ->andWhere(Filter::eq(EgmF::IdGrupo, $Qid_grupo)));
     $oEgm = $cEgm[0];
 }
 

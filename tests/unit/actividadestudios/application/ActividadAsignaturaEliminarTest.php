@@ -88,7 +88,7 @@ final class ActividadAsignaturaEliminarTest extends TestCase
         $m2 = $this->matricula(12);
         $m3 = $this->matricula(13);
         $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
-        $matRepo->method('getMatriculas')->willReturn([$m1, $m2, $m3]);
+        $matRepo->method('matching')->willReturn([$m1, $m2, $m3]);
         $matRepo->expects($this->never())->method('Eliminar');
 
         $pB = $this->persona('dlbv');
@@ -127,7 +127,7 @@ final class ActividadAsignaturaEliminarTest extends TestCase
 
         $m1 = $this->matricula(11);
         $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
-        $matRepo->method('getMatriculas')->willReturn([$m1]);
+        $matRepo->method('matching')->willReturn([$m1]);
         $matRepo->expects($this->once())->method('Eliminar')->with($m1)->willReturn(true);
 
         $out = $this->useCase($aaRepo, $matRepo)->execute([
@@ -171,7 +171,7 @@ final class ActividadAsignaturaEliminarTest extends TestCase
     ): ActividadAsignaturaEliminar {
         $mat = $matRepo ?? $this->createMock(MatriculaDlRepositoryInterface::class);
         if ($matRepo === null) {
-            $mat->method('getMatriculas')->willReturn([]);
+            $mat->method('matching')->willReturn([]);
         }
 
         return new ActividadAsignaturaEliminar(

@@ -2,6 +2,9 @@
 
 namespace src\ubis\application;
 
+use src\ubis\domain\criteria\CasaPeriodoField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 
 final class CalendarioPeriodosGetData
@@ -23,7 +26,9 @@ final class CalendarioPeriodosGetData
             return [];
         }
         $repo = $this->casaPeriodoRepository;
-        $cCasaPeriodos = $repo->getCasaPeriodos(['id_ubi' => $idUbi, '_ordre' => 'f_ini']);
+        $cCasaPeriodos = $repo->matching(
+            Criteria::create()->where(Filter::eq(F::IdUbi, $idUbi))->orderBy(F::FIni)
+        );
 
         $rows = [];
         foreach ($cCasaPeriodos as $oCasaPeriodo) {

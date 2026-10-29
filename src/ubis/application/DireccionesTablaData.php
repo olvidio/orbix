@@ -2,6 +2,9 @@
 
 namespace src\ubis\application;
 
+use src\ubis\domain\criteria\DireccionField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 
 final class DireccionesTablaData
@@ -16,24 +19,21 @@ final class DireccionesTablaData
     public function execute(int $id_ubi, string $obj_dir, string $c_p, string $ciudad, string $pais): array
     {
         $DireccionRepository = $this->direccionesResolver->direccionRepo($obj_dir);
-        $aWhere = [];
-        $aOperador = [];
+        $criteria = Criteria::create();
         if ($c_p !== '') {
-            $aWhere['c_p'] = '%' . $c_p . '%';
-            $aOperador['c_p'] = 'LIKE';
+            // antes `c_p LIKE '%…%'`: subcadena (el texto se escapa para que no valga como patrón)
+            $criteria = $criteria->andWhere(Filter::matches(F::CP, preg_quote($c_p)));
         }
         if ($ciudad !== '') {
-            $aWhere['poblacion'] = $ciudad;
-            $aOperador['poblacion'] = 'sin_acentos';
+            $criteria = $criteria->andWhere(Filter::matchesUnaccented(F::Poblacion, $ciudad));
         }
         if ($pais !== '') {
-            $aWhere['pais'] = $pais;
-            $aOperador['pais'] = 'sin_acentos';
+            $criteria = $criteria->andWhere(Filter::matchesUnaccented(F::Pais, $pais));
         }
 
         $a_valores = [];
         $i = 0;
-        $cDirecciones = $DireccionRepository->getDirecciones($aWhere, $aOperador);
+        $cDirecciones = $DireccionRepository->matching($criteria);
         foreach ($cDirecciones as $oDireccion) {
             $i++;
             $id_direccion = $oDireccion->getId_direccion();

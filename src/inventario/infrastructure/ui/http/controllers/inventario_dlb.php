@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\DocumentoField as DocF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
@@ -53,7 +56,9 @@ foreach ($a_sel as $id_lugar_raw) {
     }
     $nombre_ubi = $oUbiDoc->getNom_ubi();
 
-    $cDocumentos = $DocumentoRepository->getDocumentos(['id_lugar' => $id_lugar, 'eliminado' => 'f']);
+    $cDocumentos = $DocumentoRepository->matching(Criteria::create()
+        ->where(Filter::eq(DocF::IdLugar, $id_lugar))
+        ->andWhere(Filter::eq(DocF::Eliminado, false)));
 
     $d = 0;
     $a_valores = [];

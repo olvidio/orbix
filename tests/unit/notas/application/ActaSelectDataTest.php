@@ -49,7 +49,7 @@ final class ActaSelectDataTest extends TestCase
         $acta->method('getPdf')->willReturn(null);
 
         $actaDl = $this->createMock(ActaDlRepositoryInterface::class);
-        $actaDl->method('getActas')->willReturn([$acta]);
+        $actaDl->method('matching')->willReturn([$acta]);
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $asigRepo->method('getArrayAsignaturas')->willReturn([100 => 'Latín I']);

@@ -42,7 +42,7 @@ final class CentrosGetLaborDataTest extends TestCase
     public function test_execute_cumple_contrato_de_claves(): void
     {
         $repo = $this->createMock(CentroDlRepositoryInterface::class);
-        $repo->method('getCentros')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $useCase = new CentrosGetLaborData($repo);
         $data = $useCase->execute();
@@ -75,7 +75,7 @@ final class CentrosGetLaborDataTest extends TestCase
         };
 
         $repo = $this->createMock(CentroDlRepositoryInterface::class);
-        $repo->method('getCentros')->willReturn([$centro]);
+        $repo->method('matching')->willReturn([$centro]);
 
         $useCase = new CentrosGetLaborData($repo);
         $data = $useCase->execute();

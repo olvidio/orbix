@@ -2,6 +2,9 @@
 
 namespace src\ubis\application;
 
+use src\ubis\domain\criteria\CentroDlField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\CuadrosLaborBits;
@@ -18,8 +21,9 @@ class CentrosGetLaborData
     public function execute(): array
     {
         $oGesCentrosDl = $this->centroDlRepository;
-        $aWhere = ['active' => 't', '_ordre' => 'nombre_ubi'];
-        $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
+        $cCentrosDl = $oGesCentrosDl->matching(
+            Criteria::create()->where(Filter::eq(F::Active, true))->orderBy(F::NombreUbi)
+        );
 
         $a_valores = [];
         foreach ($cCentrosDl as $oCentro) {

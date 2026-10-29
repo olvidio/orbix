@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace src\notas\application;
 
 
+use src\notas\domain\criteria\ActaTribunalField as TF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
 use frontend\shared\config\OrbixRuntime;
@@ -122,7 +125,9 @@ final class ActaImprimirPresentacionData
             $repoActaTribunal = $this->actaTribunalRepository;
         }
 
-        $cTribunal = $repoActaTribunal->getActasTribunales(['acta' => $acta, '_ordre' => 'orden']);
+        $cTribunal = $repoActaTribunal->matching(
+            Criteria::create()->where(Filter::eq(TF::Acta, $acta))->orderBy(TF::Orden)
+        );
         $num_examinadores = count($cTribunal);
         $examinadores = [];
         foreach ($cTribunal as $oTribunal) {

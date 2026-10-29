@@ -4,10 +4,13 @@ namespace src\actividadplazas\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\actividadplazas\domain\criteria\ActividadPlazasField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
+use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\ConverterJson;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use JsonException;
 use PDO;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
@@ -27,98 +30,53 @@ use src\shared\traits\HandlesPdoErrors;
 class PgActividadPlazasRepository extends ClaseRepository implements ActividadPlazasRepositoryInterface
 {
     use HandlesPdoErrors;
+    use RunsCriteriaQueries;
+
+    /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
+    private const COLUMNAS = [];
 
     public function __construct()
     {
         $oDbl = GlobalPdo::get('oDBP');
         $this->setoDbl($oDbl);
+        $this->setoDbl_select($oDbl);
         $this->setNomTabla('da_plazas');
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ActividadPlazas
+     * ActividadPlazas que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<ActividadPlazas>
      * @throws JsonException
      */
-    public function getActividadesPlazas(array $aWhere = [], array $aOperators = []): array
+    public function matching(Criteria $criteria): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $ActividadPlazasSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string)$limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        /** @var list<ActividadPlazas> $items */
+        $conv = new PgCriteriaConverter(ActividadPlazasField::class, self::COLUMNAS);
         $items = [];
-        foreach ($filas as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
+        foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
             $cedidasRaw = $aDatos['cedidas'] ?? null;
             $aDatos['cedidas'] = (new ConverterJson(
                 is_array($cedidasRaw) || is_string($cedidasRaw) || $cedidasRaw instanceof \stdClass ? $cedidasRaw : null,
                 true
             ))->fromPg();
-            $normalized = [];
-            foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
-            }
-            $items[] = ActividadPlazas::fromArray($normalized);
+            $items[] = ActividadPlazas::fromArray($aDatos);
         }
         return $items;
+    }
+
+    /**
+     * @deprecated usar matching(Criteria)
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<ActividadPlazas>
+     * @throws JsonException
+     */
+    public function getActividadesPlazas(array $aWhere = [], array $aOperators = []): array
+    {
+        $adapter = new LegacyWhereAdapter(ActividadPlazasField::class, self::COLUMNAS);
+        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

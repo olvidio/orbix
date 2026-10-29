@@ -38,7 +38,7 @@ final class DireccionesTablaDataTest extends TestCase
         $direccion->method('getObserv')->willReturn('');
 
         $direccionRepo = $this->createMock(DireccionCentroRepositoryInterface::class);
-        $direccionRepo->method('getDirecciones')->willReturn([$direccion]);
+        $direccionRepo->method('matching')->willReturn([$direccion]);
 
         $useCase = new DireccionesTablaData($this->resolver($direccionRepo));
         $out = $useCase->execute(501, 'DireccionCentro', '', '', '');

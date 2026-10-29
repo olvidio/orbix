@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\LugarField as LugarF;
 use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\LugarRepositoryInterface;
@@ -10,7 +13,9 @@ $error_txt = '';
 
 /** @var LugarRepositoryInterface $LugarRepository */
 $LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
-$cLugares = $LugarRepository->getLugares(['id_ubi' => $Qid_ubi, '_ordre' => 'nom_lugar']);
+$cLugares = $LugarRepository->matching(
+    Criteria::create()->where(Filter::eq(LugarF::IdUbi, $Qid_ubi))->orderBy(LugarF::NomLugar)
+);
 $a = 0;
 $a_valores = [];
 foreach ($cLugares as $oLugar) {

@@ -3,6 +3,7 @@
 namespace src\notas\domain\contracts;
 
 use src\notas\domain\entity\Acta;
+use src\shared\domain\criteria\Criteria;
 
 
 /**
@@ -30,6 +31,21 @@ interface ActaRepositoryInterface
     /** @param array<string, mixed> $aWhere */
 
     /**
+     * Acta que cumplen el criterio.
+     *
+     * @return list<\src\notas\domain\entity\Acta>
+     */
+    public function matching(Criteria $criteria): array;
+
+    /**
+     * Igual que {@see matching()} pero sin leer el bytea `pdf` (listados).
+     *
+     * @return list<\src\notas\domain\entity\Acta>
+     */
+    public function matchingSinPdf(Criteria $criteria): array;
+
+    /**
+     * @deprecated usar matching(Criteria)
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return list<\src\notas\domain\entity\Acta>

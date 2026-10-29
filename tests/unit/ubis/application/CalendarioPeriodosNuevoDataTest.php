@@ -18,7 +18,7 @@ final class CalendarioPeriodosNuevoDataTest extends TestCase
     public function test_execute_sin_periodos_previos_devuelve_campos_vacios(): void
     {
         $repo = $this->createMock(CasaPeriodoRepositoryInterface::class);
-        $repo->method('getCasaPeriodos')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $useCase = new CalendarioPeriodosNuevoData($repo);
         $data = $useCase->execute(5, 2024);
@@ -31,7 +31,7 @@ final class CalendarioPeriodosNuevoDataTest extends TestCase
     public function test_execute_emite_ctx_guardar_atado_a_id_ubi_con_id_item_cero(): void
     {
         $repo = $this->createMock(CasaPeriodoRepositoryInterface::class);
-        $repo->method('getCasaPeriodos')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $useCase = new CalendarioPeriodosNuevoData($repo);
         $data = $useCase->execute(7, 2024);

@@ -1,5 +1,8 @@
 <?php
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\inventario\domain\criteria\EgmField as EgmF;
 use src\shared\infrastructure\DependencyResolver;
 
 // grabar la cabecera, pie o texto en las maletas.
@@ -71,8 +74,9 @@ try {
 
         /** @var EgmRepositoryInterface $EgmRepository */
 $EgmRepository = DependencyResolver::get(EgmRepositoryInterface::class);
-        $aWhere = ['id_equipaje' => $Qid_equipaje, 'id_grupo' => $id_grupo];
-        $cEgm = $EgmRepository->getEgmes($aWhere);
+        $cEgm = $EgmRepository->matching(Criteria::create()
+        ->where(Filter::eq(EgmF::IdEquipaje, $Qid_equipaje))
+        ->andWhere(Filter::eq(EgmF::IdGrupo, $id_grupo)));
         $oEgm = $cEgm[0];
 
         $oEgm->setTextoVo($Qtexto);

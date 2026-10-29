@@ -2,6 +2,9 @@
 
 namespace src\notas\application;
 
+use src\notas\domain\criteria\PersonaNotaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
@@ -28,9 +31,8 @@ final class ExpedienteNotasPersona
      */
     public function getNotas(int $id_nom): array
     {
-        $cNotas = $this->personaNotaRepository->getPersonaNotas(
-            ['id_nom' => $id_nom, '_ordre' => 'id_nivel'],
-            ['id_asignatura' => '<']
+        $cNotas = $this->personaNotaRepository->matching(
+            Criteria::create()->where(Filter::eq(F::IdNom, $id_nom))->orderBy(F::IdNivel)
         );
 
         return $this->preferirActaSobreCertificado($cNotas);

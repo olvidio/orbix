@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\actividadestudios\application;
 
+use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use PHPUnit\Framework\TestCase;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
@@ -33,12 +36,12 @@ final class FormMatriculasDeUnaPersonaDataTest extends TestCase
         $ofertaB->setId_schema(1001);
 
         $aaRepo = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->with(['id_activ' => 10])->willReturn([$ofertaA, $ofertaB]);
+        $aaRepo->method('matching')->with($this->equalTo(Criteria::create()->where(Filter::eq(AaF::IdActiv, 10))))->willReturn([$ofertaA, $ofertaB]);
 
         $ya = $this->createMock(Matricula::class);
         $ya->method('getId_asignatura')->willReturn(1101);
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $matRepo->method('getMatriculas')->willReturn([$ya]);
+        $matRepo->method('matching')->willReturn([$ya]);
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $asigRepo->method('getArrayAsignaturasCreditos')->willReturn([
@@ -78,10 +81,10 @@ final class FormMatriculasDeUnaPersonaDataTest extends TestCase
         $oferta->setId_schema(2002);
 
         $aaRepo = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->willReturn([$oferta]);
+        $aaRepo->method('matching')->willReturn([$oferta]);
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $matRepo->method('getMatriculas')->willReturn([]);
+        $matRepo->method('matching')->willReturn([]);
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $asigRepo->method('getArrayAsignaturasCreditos')->willReturn([
@@ -121,10 +124,10 @@ final class FormMatriculasDeUnaPersonaDataTest extends TestCase
         $ajena->setId_schema(2002);
 
         $aaRepo = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
-        $aaRepo->method('getActividadAsignaturas')->willReturn([$propia, $ajena]);
+        $aaRepo->method('matching')->willReturn([$propia, $ajena]);
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $matRepo->method('getMatriculas')->willReturn([]);
+        $matRepo->method('matching')->willReturn([]);
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $asigRepo->method('getArrayAsignaturasCreditos')->willReturn([
