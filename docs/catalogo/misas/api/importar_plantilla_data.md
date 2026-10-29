@@ -6,15 +6,17 @@ url: "/src/misas/importar_plantilla_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/importar_plantilla_data.php"
-entrada: ["post.id_zona:integer", "post.tipo_plantilla_origen:string", "post.tipo_plantilla_destino:string"]
-entrada_obligatoria: ["id_zona", "tipo_plantilla_origen", "tipo_plantilla_destino"]
+entrada: ["post.ctx_importar:string", "post.id_zona:integer", "post.tipo_plantilla_origen:string", "post.tipo_plantilla_destino:string"]
+entrada_obligatoria: ["ctx_importar", "id_zona", "tipo_plantilla_origen", "tipo_plantilla_destino"]
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
+requiere_hashb: true
+hashb_campo: "ctx_importar"
+hashb_action: "importar_plantilla_data"
 frontend_referencias: ["frontend/misas/controller/importar_plantilla.php"]
 casos_uso: ["src\\misas\\application\\ImportarPlantillaData", "src\\misas\\application\\support\\MisasBuildInput"]
 tags: ["misas", "importar", "plantilla", "data"]
 estado_revision: "revisado"
-errores: ["solo deberia haber uno", "<repositorio getErrorTxt() acumulado>"]
+errores: ["Operación no autorizada", "solo deberia haber uno", "<repositorio getErrorTxt() acumulado>"]
 ---
 
 # Importar plantilla Data
@@ -40,6 +42,7 @@ Copia asignaciones de plantilla origen a destino para una zona, creando/actualiz
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
+| `ctx_importar` | `string` | cápsula HashB | Sí | Cápsula firmada (acción `importar_plantilla_data`). Los campos que vayan dentro de la cápsula se toman de ella y se ignoran en el body. |
 | `id_zona` | `integer` | application | Si | Zona. |
 | `tipo_plantilla_origen` | `string` | application | Si | Select «Importar de la plantilla» (`#importar_de_plantilla`), p. ej. `s1`. |
 | `tipo_plantilla_destino` | `string` | application | Si | Plantilla que se está editando (`#tipo_plantilla`), p. ej. `d1`. |
@@ -55,6 +58,15 @@ id_zona=3&tipo_plantilla_origen=s1&tipo_plantilla_destino=d1
 ```
 
 Flujo narrativo: [`flujos/cuadricula.md`](../flujos/cuadricula.md).
+
+## Autorizacion HashB
+
+- Campo POST: `ctx_importar`
+- Accion: `importar_plantilla_data`
+- Contexto firmado: (sin contexto)
+- Origen de la cápsula: `plan_de_misas_pantalla_data` → `ctx_importar` (solo en `pantalla=modificar_plantilla`)
+- Cápsula inválida: `success: false`, `mensaje: "Operación no autorizada"`, `data: "none"`.
+- Ver `docs/dev/hash_arquitectura.md`.
 
 ## Salida
 

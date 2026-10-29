@@ -55,6 +55,9 @@ Devuelve encargos 8100+ de una zona ordenados para SlickGrid y datos del modal d
   - `tipos_encargo`: array
   - `centros`: array
   - `idiomas`: array
+  - `ctx_nuevo`: string — cápsula HashB para dar de alta (`guardar_encargo_zona` con `id_enc=0`); cada fila trae además `ctx_guardar` y `ctx_eliminar`
+
+Nota: `rows[].idioma_enc`, `descripcion_lugar` y `observ` pueden venir `null`. El cliente debe tratarlos como cadena vacía y **no reenviar el texto `"null"`** (ver `guardar_encargo_zona`).
 
 ## Errores conocidos
 

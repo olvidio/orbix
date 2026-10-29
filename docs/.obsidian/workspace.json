@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
-                "mode": "source",
+                "file": "dev/refactor_busquedas_criteria.md",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "refactor_busquedas_criteria"
             }
           }
         ]
@@ -190,6 +190,18 @@
   },
   "active": "a6a90e9d6a043c30",
   "lastOpenFiles": [
+    "dev/XXPHQ8I4",
+    "dev/refactor_busquedas_criteria.md.tmp.1053376.272d86eb4bf4",
+    "dev/refactor_busquedas_criteria.md.tmp.1053376.8f4d48fdf29f",
+    "dev/refactor_busquedas_criteria.md.tmp.1053376.738ba20e3e23",
+    "dev/refactor_busquedas_criteria.md.tmp.1053376.007c1174b110",
+    "dev/refactor_busquedas_criteria.md.tmp.1053376.3a1dca633aca",
+    "dev/refactor_busquedas_criteria.md.tmp.1053376.f8141e9f9cdb",
+    "dev/refactor_busquedas_criteria.md.tmp.1053376.cd3cd6179a9a",
+    "dev/refactor_busquedas_criteria.md.tmp.1053376.69d69274a899",
+    "dev/refactor_busquedas_criteria.md.tmp.1053376.272732a778f1",
+    "dev/refactor_busquedas_criteria.md.tmp.1053376.1f5c9ef7f33e",
+    "dev/reports/criteria_inventario.md",
     "dev/supervision_arquitectura.md",
     "README.md",
     "REPASSO_FINAL.md",

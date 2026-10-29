@@ -20,6 +20,20 @@ Fichas API con ejemplos verificados contra `orbix-android` (mayo 2026). Estado `
 
 Índice nativo: `PlanMisasScreen` (`misas_index.php`). Pantallas en `MisasApi.kt` / `MisasNavigation.kt`.
 
+**Cápsulas HashB en mutaciones.** Todas las mutaciones de misas exigen una cápsula firmada (`ctx_*`) que entrega el endpoint `*_data` de la pantalla; sin ella responden «Operación no autorizada». La app debe reenviarla tal cual:
+
+| Mutación | Campo | Dónde se obtiene |
+|----------|-------|------------------|
+| `cuadricula_update` | `ctx_update` | `ver_cuadricula_zona_data` → `ctx_update` |
+| `crear_nuevo_periodo_data` | `ctx_crear` | `plan_de_misas_pantalla_data` (`pantalla=preparar`) |
+| `importar_plantilla_data` | `ctx_importar` | `plan_de_misas_pantalla_data` (`pantalla=modificar_plantilla`) |
+| `nuevo_status` | `ctx_nuevo_status` | `cambiar_status_data` → `zona_ctx_map[id_zona]` |
+| `guardar_encargo_zona` / `eliminar_encargo_zona` | `ctx_guardar` / `ctx_eliminar` | `ver_encargos_zona_data` → `rows[]` (alta: `ctx_nuevo`) |
+| `guardar_encargo_centro` / `eliminar_encargo_centro` | `ctx_guardar` / `ctx_eliminar` | `ver_encargos_centros_data` → `rows[]` (alta: `ctx_nuevo`) |
+| `update_iniciales` | `ctx_update` | `ver_iniciales_zona_data` → `rows[].ctx_update` |
+
+**Valores `null`.** Los `*_data` pueden devolver `null` JSON (`observ`, `idioma_enc`, …). El cliente debe tratarlos como cadena vacía; reenviar el texto `"null"` rompe el servidor (p. ej. `LocaleCode` en `guardar_encargo_zona`).
+
 ### Cuadrícula zona (ver, modificar, preparar, plantilla, cambiar estado)
 
 Flujo típico: `plan_de_misas_pantalla_data` → `ver_cuadricula_zona_data` al pulsar «Ver cuadrícula».

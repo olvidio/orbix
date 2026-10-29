@@ -6,15 +6,17 @@ url: "/src/misas/eliminar_encargo_zona"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/eliminar_encargo_zona.php"
-entrada: ["post.id_enc:integer"]
-entrada_obligatoria: ["id_enc"]
+entrada: ["post.ctx_eliminar:string", "post.id_enc:integer"]
+entrada_obligatoria: ["ctx_eliminar"]
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
+requiere_hashb: true
+hashb_campo: "ctx_eliminar"
+hashb_action: "eliminar_encargo_zona"
 frontend_referencias: ["frontend/misas/controller/ver_encargos_zona.php"]
 casos_uso: ["src\\misas\\application\\EliminarEncargoZona"]
 tags: ["misas", "eliminar", "encargo", "zona"]
 estado_revision: "revisado"
-errores: ["No se encuentra el encargo %d", "<repositorio getErrorTxt()>"]
+errores: ["Operación no autorizada", "No se encuentra el encargo %d", "<repositorio getErrorTxt()>"]
 ---
 
 # Eliminar encargo zona
@@ -40,7 +42,17 @@ Elimina un Encargo de zona (grupo ZONAS_MISAS) por id_enc.
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_enc` | `integer` | application | Si | |
+| `ctx_eliminar` | `string` | cápsula HashB | Sí | Cápsula firmada (acción `eliminar_encargo_zona`). Los campos que vayan dentro de la cápsula se toman de ella y se ignoran en el body. |
+| `id_enc` | `integer` | application | No | Se toma de la cápsula HashB; si viene en el body se ignora. |
+
+## Autorizacion HashB
+
+- Campo POST: `ctx_eliminar`
+- Accion: `eliminar_encargo_zona`
+- Contexto firmado: `{id_enc}`
+- Origen de la cápsula: `ver_encargos_zona_data` → `rows[].ctx_eliminar`
+- Cápsula inválida: `success: false`, `mensaje: "Operación no autorizada"`, `data: "none"`.
+- Ver `docs/dev/hash_arquitectura.md`.
 
 ## Salida
 

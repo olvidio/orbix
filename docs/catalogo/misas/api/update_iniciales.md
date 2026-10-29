@@ -6,15 +6,17 @@ url: "/src/misas/update_iniciales"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/update_iniciales.php"
-entrada: ["post.id_sacd:integer", "post.iniciales:string", "post.color:string"]
-entrada_obligatoria: ["id_sacd"]
+entrada: ["post.ctx_update:string", "post.id_sacd:integer", "post.iniciales:string", "post.color:string"]
+entrada_obligatoria: ["ctx_update"]
 respuesta: "standard_envelope_string_data"
-requiere_hashb: false
+requiere_hashb: true
+hashb_campo: "ctx_update"
+hashb_action: "update_iniciales"
 frontend_referencias: ["frontend/misas/controller/ver_iniciales_zona.php"]
 casos_uso: ["src\\misas\\application\\UpdateIniciales"]
 tags: ["misas", "update", "iniciales"]
 estado_revision: "revisado"
-errores: ["<repositorio getErrorTxt()>"]
+errores: ["Operación no autorizada", "<repositorio getErrorTxt()>"]
 ---
 
 # Update iniciales
@@ -40,9 +42,19 @@ Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_sacd` | `integer` | application | Si | |
+| `ctx_update` | `string` | cápsula HashB | Sí | Cápsula firmada (acción `update_iniciales`). Los campos que vayan dentro de la cápsula se toman de ella y se ignoran en el body. |
+| `id_sacd` | `integer` | application | No | Se toma de la cápsula HashB; si viene en el body se ignora. |
 | `iniciales` | `string` | application | No | |
 | `color` | `string` | application | No | |
+
+## Autorizacion HashB
+
+- Campo POST: `ctx_update`
+- Accion: `update_iniciales`
+- Contexto firmado: `{id_sacd}`
+- Origen de la cápsula: `ver_iniciales_zona_data` → `rows[].ctx_update`
+- Cápsula inválida: `success: false`, `mensaje: "Operación no autorizada"`, `data: "none"`.
+- Ver `docs/dev/hash_arquitectura.md`.
 
 ## Salida
 
