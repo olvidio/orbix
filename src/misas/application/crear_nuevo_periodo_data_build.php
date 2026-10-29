@@ -741,6 +741,7 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
                         $oEncargoDia->setObserv($observ);
                     }
                     $oEncargoDia->setId_enc($id_enc);
+                    $oEncargoDia->setStatusVo(EncargoDiaStatus::propuesta());
                     if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
                         $error_txt .= $EncargoDiaRepository->getErrorTxt();
                     }
