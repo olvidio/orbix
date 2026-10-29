@@ -6,6 +6,9 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
+use src\actividadplazas\domain\criteria\ActividadPlazasField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 
@@ -79,7 +82,7 @@ class ResumenPlazasService
 
         $asistenteActividadService = $this->AsistenteActividadService;
         $a_dl = [];
-        $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(['id_activ' => $id_activ]);
+        $cActividadPlazas = $this->ActividadPlazasRepository->matching(Criteria::create()->where(Filter::eq(F::IdActiv, $id_activ)));
         foreach ($cActividadPlazas as $oActividadPlazas) {
             $id_dl_otra = $oActividadPlazas->getId_dl();
             $dl_otra = $this->getDlText($id_dl_otra);
@@ -177,16 +180,18 @@ class ResumenPlazasService
         }
         $dl_org = $this->getDl_org();
 
-        $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas([
-            'id_activ' => $id_activ,
-            'id_dl' => $id_mi_dl,
-            'dl_tabla' => $dl_org,
-        ]);
+        $cActividadPlazas = $this->ActividadPlazasRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdActiv, $id_activ))
+                ->andWhere(Filter::eq(F::IdDl, $id_mi_dl))
+                ->andWhere(Filter::eq(F::DlTabla, $dl_org))
+        );
         if ($cActividadPlazas === []) {
-            $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas([
-                'id_activ' => $id_activ,
-                'id_dl' => $id_mi_dl,
-            ]);
+            $cActividadPlazas = $this->ActividadPlazasRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(F::IdActiv, $id_activ))
+                    ->andWhere(Filter::eq(F::IdDl, $id_mi_dl))
+            );
         }
 
         $plazas_calendario = 0;
@@ -225,7 +230,12 @@ class ResumenPlazasService
         $dl_org = $this->getDl_org();
 
         // plazas de calendario de cada dl
-        $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(array('id_activ' => $id_activ, 'id_dl' => $id_mi_dl, 'dl_tabla' => $mi_dl));
+        $cActividadPlazas = $this->ActividadPlazasRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdActiv, $id_activ))
+                ->andWhere(Filter::eq(F::IdDl, $id_mi_dl))
+                ->andWhere(Filter::eq(F::DlTabla, $mi_dl))
+        );
         foreach ($cActividadPlazas as $oActividadPlazas) {
             $aCedidas = $oActividadPlazas->getArrayCedidas();
             $plazas_cedidas = 0;
@@ -249,7 +259,7 @@ class ResumenPlazasService
 
         // plazas de calendario de cada dl
         $plazas_conseguidas = 0;
-        $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(array('id_activ' => $id_activ));
+        $cActividadPlazas = $this->ActividadPlazasRepository->matching(Criteria::create()->where(Filter::eq(F::IdActiv, $id_activ)));
         foreach ($cActividadPlazas as $oActividadPlazas) {
             $id_dl_otra = $oActividadPlazas->getId_dl();
             $dl_otra = $this->getDlText($id_dl_otra);
@@ -347,7 +357,7 @@ class ResumenPlazasService
          *
          */
         // plazas de calendario de cada dl + cedidas
-        $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(['id_activ' => $id_activ]);
+        $cActividadPlazas = $this->ActividadPlazasRepository->matching(Criteria::create()->where(Filter::eq(F::IdActiv, $id_activ)));
         foreach ($cActividadPlazas as $oActividadPlazas) {
             $id_dl = $oActividadPlazas->getId_dl();
             $dl = $this->getDlText($id_dl);
@@ -518,7 +528,7 @@ class ResumenPlazasService
         if (empty($propiedad)) {
             //Conseguidas
             // plazas de calendario de cada dl
-            $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(array('id_activ' => $id_activ));
+            $cActividadPlazas = $this->ActividadPlazasRepository->matching(Criteria::create()->where(Filter::eq(F::IdActiv, $id_activ)));
             foreach ($cActividadPlazas as $oActividadPlazas) {
                 $id_dl_otra = $oActividadPlazas->getId_dl();
                 $dl_otra = $this->getDlText($id_dl_otra);
@@ -602,7 +612,7 @@ class ResumenPlazasService
             $ocupadas = $this->AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $mi_dl);
         } else {
             $concedidas = 0;
-            $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(['id_activ' => $id_activ]);
+            $cActividadPlazas = $this->ActividadPlazasRepository->matching(Criteria::create()->where(Filter::eq(F::IdActiv, $id_activ)));
             foreach ($cActividadPlazas as $oActividadPlazas) {
                 $dl_otra = self::normalizarDl($this->getDlText($oActividadPlazas->getId_dl()));
                 if ($dl_otra !== $dl_hub) {

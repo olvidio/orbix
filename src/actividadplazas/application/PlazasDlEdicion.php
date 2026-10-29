@@ -4,7 +4,10 @@ namespace src\actividadplazas\application;
 
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
+use src\actividadplazas\domain\criteria\ActividadPlazasField as F;
 use src\actividadplazas\domain\entity\ActividadPlazas;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Resuelve el registro local (da_plazas_dl) para editar concedidas/pedidas/cedidas.
@@ -20,11 +23,12 @@ final class PlazasDlEdicion
 
     public function obtenerOCrearDesdeCalendario(int $idActiv, int $idDl, string $dlTabla): ?ActividadPlazas
     {
-        $cLocal = $this->actividadPlazasDlRepository->getActividadesPlazas([
-            'id_activ' => $idActiv,
-            'id_dl' => $idDl,
-            'dl_tabla' => $dlTabla,
-        ]);
+        $cLocal = $this->actividadPlazasDlRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdActiv, $idActiv))
+                ->andWhere(Filter::eq(F::IdDl, $idDl))
+                ->andWhere(Filter::eq(F::DlTabla, $dlTabla))
+        );
         if ($cLocal !== []) {
             $local = $cLocal[0];
             // Registro local vacío (p. ej. creado antes de existir calendario):
@@ -73,16 +77,18 @@ final class PlazasDlEdicion
 
     private function buscarFilaCalendario(int $idActiv, int $idDl, string $dlTabla): ?ActividadPlazas
     {
-        $cCal = $this->actividadPlazasRepository->getActividadesPlazas([
-            'id_activ' => $idActiv,
-            'id_dl' => $idDl,
-            'dl_tabla' => $dlTabla,
-        ]);
+        $cCal = $this->actividadPlazasRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdActiv, $idActiv))
+                ->andWhere(Filter::eq(F::IdDl, $idDl))
+                ->andWhere(Filter::eq(F::DlTabla, $dlTabla))
+        );
         if ($cCal === []) {
-            $cCal = $this->actividadPlazasRepository->getActividadesPlazas([
-                'id_activ' => $idActiv,
-                'id_dl' => $idDl,
-            ]);
+            $cCal = $this->actividadPlazasRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(F::IdActiv, $idActiv))
+                    ->andWhere(Filter::eq(F::IdDl, $idDl))
+            );
         }
         if ($cCal === []) {
             return null;

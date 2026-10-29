@@ -9,7 +9,10 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
+use src\actividadplazas\domain\criteria\ActividadPlazasField as F;
 use src\actividadplazas\domain\entity\ActividadPlazas;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadplazas\domain\value_objects\DelegacionTablaCode;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -62,8 +65,8 @@ final class ResumenPlazasServiceTest extends TestCase
         $actividadRepo->method('findById')->with($idActiv)->willReturn($actividad);
 
         $plazasRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
-        $plazasRepo->method('getActividadesPlazas')
-            ->with(['id_activ' => $idActiv])
+        $plazasRepo->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(F::IdActiv, $idActiv))))
             ->willReturn([$actividadPlazas]);
 
         $delegacion = $this->createMock(Delegacion::class);
@@ -144,8 +147,8 @@ final class ResumenPlazasServiceTest extends TestCase
         $actividadRepo->method('findById')->with($idActiv)->willReturn($actividad);
 
         $plazasRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
-        $plazasRepo->method('getActividadesPlazas')
-            ->with(['id_activ' => $idActiv])
+        $plazasRepo->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(Filter::eq(F::IdActiv, $idActiv))))
             ->willReturn([$actividadPlazas]);
 
         $delegacion = $this->createMock(Delegacion::class);

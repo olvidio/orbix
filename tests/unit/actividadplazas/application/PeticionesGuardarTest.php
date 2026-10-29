@@ -12,7 +12,7 @@ final class PeticionesGuardarTest extends TestCase
     public function test_faltan_parametros(): void
     {
         $repo = $this->createMock(PlazaPeticionRepositoryInterface::class);
-        $repo->expects($this->never())->method('getPlazasPeticion');
+        $repo->expects($this->never())->method('matching');
 
         $msg = (new PeticionesGuardar($repo))->execute(['id_nom' => 1, 'sactividad' => '']);
         $this->assertNotSame('', $msg);
@@ -23,7 +23,7 @@ final class PeticionesGuardarTest extends TestCase
         $vieja = $this->createMock(PlazaPeticion::class);
 
         $repo = $this->createMock(PlazaPeticionRepositoryInterface::class);
-        $repo->method('getPlazasPeticion')->willReturn([$vieja]);
+        $repo->method('matching')->willReturn([$vieja]);
         $repo->expects($this->once())->method('Eliminar')->with($vieja);
 
         $repo->method('findById')->willReturn(null);
@@ -46,7 +46,7 @@ final class PeticionesGuardarTest extends TestCase
         $existente->setTipo('x');
 
         $repo = $this->createMock(PlazaPeticionRepositoryInterface::class);
-        $repo->method('getPlazasPeticion')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
         $repo->method('findById')->with(100, 10)->willReturn($existente);
         $repo->expects($this->once())->method('Guardar')->with($this->callback(function (PlazaPeticion $p) {
             return $p->getId_nom() === 100
@@ -65,7 +65,7 @@ final class PeticionesGuardarTest extends TestCase
     public function test_error_si_guardar_falla(): void
     {
         $repo = $this->createMock(PlazaPeticionRepositoryInterface::class);
-        $repo->method('getPlazasPeticion')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
         $repo->method('findById')->willReturn(null);
         $repo->method('Guardar')->willReturn(false);
 

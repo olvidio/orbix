@@ -28,6 +28,7 @@ class PgActividadPlazasDlRepository extends PgActividadPlazasRepository implemen
         parent::__construct();
         $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
+        $this->setoDbl_select($oDbl);
         $this->setNomTabla('da_plazas_dl');
     }
 

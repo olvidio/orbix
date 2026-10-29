@@ -3,6 +3,9 @@
 namespace src\actividadplazas\application;
 
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
+use src\actividadplazas\domain\criteria\PlazaPeticionField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Elimina todas las peticiones de plaza para un {id_nom, tipo}.
@@ -28,10 +31,11 @@ final class PeticionesEliminar
             return (string)_("faltan parametros id_nom / sactividad");
         }
 
-        $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion([
-            'id_nom' => $id_nom,
-            'tipo' => $sactividad,
-        ]);
+        $cPlazasPeticion = $this->plazaPeticionRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdNom, $id_nom))
+                ->andWhere(Filter::eq(F::Tipo, $sactividad))
+        );
         foreach ($cPlazasPeticion as $oPlazaPeticion) {
             if ($this->plazaPeticionRepository->Eliminar($oPlazaPeticion) === false) {
                 return (string)_("hay un error, no se ha podido eliminar");
