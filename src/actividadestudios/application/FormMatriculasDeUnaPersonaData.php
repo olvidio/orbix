@@ -2,6 +2,7 @@
 
 namespace src\actividadestudios\application;
 
+use src\asignaturas\domain\criteria\AsignaturaField as AF;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividadestudios\domain\criteria\MatriculaField as MatF;
@@ -158,12 +159,13 @@ final class FormMatriculasDeUnaPersonaData
         } else {
             $mod = 'nuevo';
             $plan = $this->planEstudiosDePersona->resolve($idNom);
-            [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
-                'active' => 't',
-                'id_nivel' => 3000,
-                '_ordre' => 'id_nivel',
-            ], ['id_nivel' => '<']);
-            $cAsignaturas = $this->asignaturaRepository->getAsignaturas($aWhere, $aOperador);
+            $cAsignaturas = $this->asignaturaRepository->matching(
+                Criteria::create()
+                    ->where(PlanEstudiosFilter::filter($plan))
+                    ->andWhere(Filter::eq(AF::Active, true))
+                    ->andWhere(Filter::lt(AF::IdNivel, 3000))
+                    ->orderBy(AF::IdNivel)
+            );
             $aSuperadasIds = NotaSituacion::getArraySuperadas();
             $cond = implode('|', $aSuperadasIds);
             $cAsignaturasSuperadas = $this->personaNotaRepository->getPersonaNotas(
@@ -208,13 +210,14 @@ final class FormMatriculasDeUnaPersonaData
             ]);
             $camposForm = 'id_asignatura!id_nivel';
 
-            [$aWhereOp, $aOperadorOp] = PlanEstudiosFilter::apply($plan, [
-                'active' => 't',
-                'id_sector' => 1,
-                'id_nivel' => 3000,
-                '_ordre' => 'nombre_corto',
-            ], ['id_nivel' => '<']);
-            $cOpcionalesGenericas = $this->asignaturaRepository->getAsignaturas($aWhereOp, $aOperadorOp);
+            $cOpcionalesGenericas = $this->asignaturaRepository->matching(
+                Criteria::create()
+                    ->where(PlanEstudiosFilter::filter($plan))
+                    ->andWhere(Filter::eq(AF::Active, true))
+                    ->andWhere(Filter::eq(AF::IdSector, 1))
+                    ->andWhere(Filter::lt(AF::IdNivel, 3000))
+                    ->orderBy(AF::NombreCorto)
+            );
             $condicion = '';
             foreach ($cOpcionalesGenericas as $oOpcional) {
                 $condicion .= 'id==' . $oOpcional->getId_nivel() . ' || ';

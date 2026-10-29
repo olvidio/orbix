@@ -3,6 +3,9 @@
 namespace src\notas\application;
 
 
+use src\asignaturas\domain\criteria\AsignaturaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -99,8 +102,11 @@ final class NotasDeUnaPersonaData
 
             if (HuecoOpcionalDePlan::esOpcionalConcreta($id_asignatura)) {
                 $plan = $this->planEstudiosDePersona->resolve($id_pau);
-                [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, ['id_nivel' => $id_nivel]);
-                $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
+                $cOpcionales = $AsignaturaRepository->matching(
+                    Criteria::create()
+                        ->where(PlanEstudiosFilter::filter($plan))
+                        ->andWhere(Filter::eq(F::IdNivel, $id_nivel))
+                );
                 if (empty($cOpcionales)) {
                     $nombre_corto = _("opcional de sobra");
                 } else {

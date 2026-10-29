@@ -2,6 +2,9 @@
 
 namespace src\actividadestudios\application;
 
+use src\asignaturas\domain\criteria\AsignaturaField as AF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
@@ -79,12 +82,12 @@ final class PosiblesAsignaturasCaData
 
         $aAsignaturasPorId = [];
         foreach ([PlanEstudios::PLAN_1997, PlanEstudios::PLAN_2026] as $plan) {
-            [$aWhereAsig, $aOperadorAsig] = PlanEstudiosFilter::apply($plan, [
-                'active' => 't',
-                'id_tipo' => 8,
-                '_ordre' => 'id_nivel',
-            ], ['id_tipo' => '!=']);
-            foreach ($this->asignaturaRepository->getAsignaturas($aWhereAsig, $aOperadorAsig) as $oAsignatura) {
+            $criteria = Criteria::create()
+                ->where(PlanEstudiosFilter::filter($plan))
+                ->andWhere(Filter::eq(AF::Active, true))
+                ->andWhere(Filter::neq(AF::IdTipo, 8))
+                ->orderBy(AF::IdNivel);
+            foreach ($this->asignaturaRepository->matching($criteria) as $oAsignatura) {
                 $aAsignaturasPorId[$oAsignatura->getId_asignatura()] = $oAsignatura;
             }
         }

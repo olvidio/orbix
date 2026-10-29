@@ -2,6 +2,7 @@
 
 namespace src\notas\application;
 
+use src\asignaturas\domain\criteria\AsignaturaField as AF;
 use src\notas\domain\criteria\PersonaNotaField as F;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -159,13 +160,13 @@ final class NotaPersonaFormData
         $AsignaturaRepository = $this->asignaturaRepository;
         $plan = $this->planEstudiosDePersona->resolve($id_pau);
 
-        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
-            'active' => 't',
-            'id_nivel' => 3000,
-            '_ordre' => 'id_nivel',
-        ], ['id_nivel' => '<']);
-
-        $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
+        $cAsignaturas = $AsignaturaRepository->matching(
+            Criteria::create()
+                ->where(PlanEstudiosFilter::filter($plan))
+                ->andWhere(Filter::eq(AF::Active, true))
+                ->andWhere(Filter::lt(AF::IdNivel, 3000))
+                ->orderBy(AF::IdNivel)
+        );
 
         $PersonaNotaRepository = $this->personaNotaRepository;
         $aSuperadas = NotaSituacion::getArraySuperadas();
@@ -331,14 +332,14 @@ final class NotaPersonaFormData
             ? $this->planEstudiosDePersona->resolve($idNom)
             : \src\asignaturas\domain\value_objects\PlanEstudios::PLAN_2026;
 
-        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
-            'active' => 't',
-            'id_sector' => 1,
-            'id_nivel' => 3000,
-            '_ordre' => 'nombre_corto',
-        ], ['id_nivel' => '<']);
-
-        $cGenericas = $repo->getAsignaturas($aWhere, $aOperador);
+        $cGenericas = $repo->matching(
+            Criteria::create()
+                ->where(PlanEstudiosFilter::filter($plan))
+                ->andWhere(Filter::eq(AF::Active, true))
+                ->andWhere(Filter::eq(AF::IdSector, 1))
+                ->andWhere(Filter::lt(AF::IdNivel, 3000))
+                ->orderBy(AF::NombreCorto)
+        );
         $condicion = '';
         foreach ($cGenericas as $oOpcional) {
             $condicion .= 'id==' . $oOpcional->getId_nivel() . ' || ';

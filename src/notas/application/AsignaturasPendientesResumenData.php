@@ -3,6 +3,7 @@
 namespace src\notas\application;
 
 
+use src\asignaturas\domain\criteria\AsignaturaField as AF;
 use src\notas\domain\criteria\PersonaNotaField as F;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -41,12 +42,12 @@ final class AsignaturasPendientesResumenData
         $AsignaturaRepository = $this->asignaturaRepository;
         $aPendientes = [];
         foreach ([PlanEstudios::PLAN_1997, PlanEstudios::PLAN_2026] as $plan) {
-            [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
-                'active' => 't',
-                'id_nivel' => '1100,2500',
-                '_ordre' => 'id_nivel',
-            ], ['id_nivel' => 'BETWEEN']);
-            foreach ($AsignaturaRepository->getAsignaturas($aWhere, $aOperador) as $oAsignatura) {
+            $criteria = Criteria::create()
+                ->where(PlanEstudiosFilter::filter($plan))
+                ->andWhere(Filter::eq(AF::Active, true))
+                ->andWhere(Filter::between(AF::IdNivel, 1100, 2500))
+                ->orderBy(AF::IdNivel);
+            foreach ($AsignaturaRepository->matching($criteria) as $oAsignatura) {
                 $id_nivel = $oAsignatura->getId_nivel();
                 if (isset($aPendientes[$id_nivel])) {
                     continue;

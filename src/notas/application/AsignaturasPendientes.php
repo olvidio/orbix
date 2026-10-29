@@ -2,6 +2,9 @@
 
 namespace src\notas\application;
 
+use src\asignaturas\domain\criteria\AsignaturaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\asignaturas\domain\value_objects\PlanEstudios;
@@ -225,12 +228,12 @@ final class AsignaturasPendientes
             return $this->asignaturasPorRango[$clave];
         }
 
-        [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
-            'active' => 't',
-            'id_nivel' => "$desde,$hasta",
-        ], ['id_nivel' => 'BETWEEN']);
-
-        $asignaturas = $this->asignaturaRepository->getAsignaturas($aWhere, $aOperador);
+        $asignaturas = $this->asignaturaRepository->matching(
+            Criteria::create()
+                ->where(PlanEstudiosFilter::filter($plan))
+                ->andWhere(Filter::eq(F::Active, true))
+                ->andWhere(Filter::between(F::IdNivel, $desde, $hasta))
+        );
 
         $niveles = [];
         foreach ($asignaturas as $oAsignatura) {
@@ -329,8 +332,10 @@ final class AsignaturasPendientes
 
         $cAsignaturas = [];
         foreach ([PlanEstudios::PLAN_1997, PlanEstudios::PLAN_2026] as $plan) {
-            [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, ['active' => 'true']);
-            foreach ($this->asignaturaRepository->getAsignaturas($aWhere, $aOperador) as $oAsignatura) {
+            $criteria = Criteria::create()
+                ->where(PlanEstudiosFilter::filter($plan))
+                ->andWhere(Filter::eq(F::Active, true));
+            foreach ($this->asignaturaRepository->matching($criteria) as $oAsignatura) {
                 $cAsignaturas[$oAsignatura->getId_asignatura()] = $oAsignatura;
             }
         }

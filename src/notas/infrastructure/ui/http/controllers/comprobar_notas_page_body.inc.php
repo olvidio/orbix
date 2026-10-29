@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 
 
+use src\asignaturas\domain\criteria\AsignaturaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\application\AsignaturasMapData;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -105,11 +108,12 @@ $asignaturaRepo = DependencyResolver::get(AsignaturaRepositoryInterface::class);
  * @return array{count: int, niveles: list<int>, in_niveles: string, in_asignaturas: string}
  */
 $asignaturasDeRango = static function (int $desde, int $hasta, int $plan) use ($asignaturaRepo): array {
-    [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
-        'active' => 't',
-        'id_nivel' => "$desde,$hasta",
-    ], ['id_nivel' => 'BETWEEN']);
-    $asignaturas = $asignaturaRepo->getAsignaturas($aWhere, $aOperador);
+    $asignaturas = $asignaturaRepo->matching(
+        Criteria::create()
+            ->where(PlanEstudiosFilter::filter($plan))
+            ->andWhere(Filter::eq(F::Active, true))
+            ->andWhere(Filter::between(F::IdNivel, $desde, $hasta))
+    );
     $niveles = [];
     $idsAsig = [];
     foreach ($asignaturas as $asig) {

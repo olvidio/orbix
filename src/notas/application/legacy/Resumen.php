@@ -3,6 +3,9 @@
 namespace src\notas\application\legacy;
 
 
+use src\asignaturas\domain\criteria\AsignaturaField as AF;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
@@ -306,8 +309,10 @@ class Resumen
         $AsignaturaRepository = $this->asignaturaRepository;
         $cAsignaturasMap = [];
         foreach ([PlanEstudios::PLAN_1997, PlanEstudios::PLAN_2026] as $plan) {
-            [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, ['active' => 'true']);
-            foreach ($AsignaturaRepository->getAsignaturas($aWhere, $aOperador) as $oAsignatura) {
+            $criteria = Criteria::create()
+                ->where(PlanEstudiosFilter::filter($plan))
+                ->andWhere(Filter::eq(AF::Active, true));
+            foreach ($AsignaturaRepository->matching($criteria) as $oAsignatura) {
                 $cAsignaturasMap[$oAsignatura->getId_asignatura()] = $oAsignatura;
             }
         }

@@ -79,7 +79,7 @@ final class TesseraVerDataTest extends TestCase
         $notaRepo = $this->createStub(PersonaNotaRepositoryInterface::class);
         $notaRepo->method('matching')->willReturn([]);
         $asigRepo = $this->createStub(AsignaturaRepositoryInterface::class);
-        $asigRepo->method('getAsignaturas')->willReturn([]);
+        $asigRepo->method('matching')->willReturn([]);
         $tesera = new Tesera(
             new ExpedienteNotasPersona($notaRepo),
             $asigRepo,

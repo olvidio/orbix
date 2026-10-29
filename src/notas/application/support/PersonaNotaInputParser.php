@@ -2,6 +2,9 @@
 
 namespace src\notas\application\support;
 
+use src\asignaturas\domain\criteria\AsignaturaField as F;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\asignaturas\domain\value_objects\NivelId;
@@ -52,8 +55,11 @@ final class PersonaNotaInputParser
         if ($id_asignatura === 1) {
             $AsignaturaRepository = $this->asignaturaRepository;
             $plan = $this->planEstudiosDePersona->resolve($id_pau);
-            [$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, ['id_nivel' => $id_nivel]);
-            $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
+            $cAsignaturas = $AsignaturaRepository->matching(
+                Criteria::create()
+                    ->where(PlanEstudiosFilter::filter($plan))
+                    ->andWhere(Filter::eq(F::IdNivel, $id_nivel))
+            );
             if (count($cAsignaturas) === 0) {
                 throw new \RuntimeException(sprintf(_("No se encuentra una asignatura para el nivel: %s"), $id_nivel));
             }

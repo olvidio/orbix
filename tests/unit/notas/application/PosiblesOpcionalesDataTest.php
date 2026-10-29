@@ -37,7 +37,7 @@ final class PosiblesOpcionalesDataTest extends TestCase
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $asigRepo->expects($this->once())
-            ->method('getAsignaturas')
+            ->method('matching')
             ->willReturn([$a1, $a2]);
 
         $pnSuperada = $this->createMock(PersonaNota::class);
@@ -60,7 +60,7 @@ final class PosiblesOpcionalesDataTest extends TestCase
         $a1->method('getNombre_corto')->willReturn('X');
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
-        $asigRepo->method('getAsignaturas')->willReturn([$a1]);
+        $asigRepo->method('matching')->willReturn([$a1]);
 
         $pnRepo = $this->createMock(PersonaNotaRepositoryInterface::class);
         $pnRepo->method('matching')->willReturn([]);
