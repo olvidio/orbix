@@ -35,14 +35,6 @@ interface DireccionCentroRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Direccion>
-     */
-    public function getDirecciones(array $aWhere = [], array $aOperators = []): array;
-
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(Direccion $Direccion): bool;

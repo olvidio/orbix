@@ -2,6 +2,7 @@
 
 namespace Tests\integration\ubis\infrastructure\persistence\postgresql;
 
+use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\contracts\DireccionRepositoryInterface;
 use src\ubis\domain\entity\Direccion;
 use Tests\myTest;
@@ -149,7 +150,7 @@ class PgDireccionRepositoryTest extends myTest
 
     public function test_get_direcciones_sin_filtros()
     {
-        $result = $this->repository->getDirecciones();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada
