@@ -10,7 +10,6 @@ use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\cartaspresentacion\domain\criteria\CartaPresentacionField;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\RunsCriteriaQueries;
@@ -47,18 +46,6 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
         }
 
         return $result;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<CartaPresentacion>
-     */
-    public function getCartasPresentacion(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(CartaPresentacionField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
 

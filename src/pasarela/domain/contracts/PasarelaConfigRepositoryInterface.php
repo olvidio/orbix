@@ -17,16 +17,6 @@ interface PasarelaConfigRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * devuelve una colección (array) de objetos de tipo ConfigSchema
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<PasarelaConfig>
-     */
-    public function getPasarelaConfigs(array $aWhere = [], array $aOperators = []): array;
-
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(PasarelaConfig $PasarelaConfig): bool;

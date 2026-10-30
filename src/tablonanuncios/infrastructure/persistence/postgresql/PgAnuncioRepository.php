@@ -7,7 +7,6 @@ use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\tablonanuncios\domain\criteria\AnuncioField;
@@ -49,17 +48,6 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
         return $anuncios;
     }
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Anuncio>
-     */
-    public function getAnuncios(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(AnuncioField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
-    }
     public function Eliminar(Anuncio $Anuncio): bool
     {
         $uuid_item = $Anuncio->getUuid_item()->value();
