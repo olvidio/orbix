@@ -38,7 +38,7 @@ class PgCasasMatchingTest extends myTest
         parent::tearDown();
     }
 
-    public function test_gastos_entre_fechas_equivale_a_legacy(): void
+    public function test_gastos_entre_fechas(): void
     {
         $repo = $GLOBALS['container']->get(UbiGastoRepositoryInterface::class);
         $oGasto = (new UbiGastoFactory())->createSimple();
@@ -51,14 +51,9 @@ class PgCasasMatchingTest extends myTest
                 ->andWhere(Filter::between(UbiGastoField::FGasto, '2031-01-01', '2031-12-31'))
                 ->orderBy(UbiGastoField::FGasto);
             $nuevo = $repo->matching($criteria);
-            $legacy = $repo->getUbisGastos(
-                ['id_ubi' => -10019001, 'f_gasto' => "'2031/1/1','2031/12/31'", '_ordre' => 'f_gasto'],
-                ['f_gasto' => 'BETWEEN']
-            );
 
             $this->assertCount(1, $nuevo);
             $this->assertSame('2031-03-15', $nuevo[0]->getF_gasto()->format('Y-m-d'));
-            $this->assertEquals($legacy, $nuevo);
 
             $fuera = Criteria::create()
                 ->where(Filter::eq(UbiGastoField::IdUbi, -10019001))
@@ -69,18 +64,12 @@ class PgCasasMatchingTest extends myTest
         }
     }
 
-    public function test_grupos_e_ingresos_equivalen_a_legacy(): void
+    public function test_grupos_e_ingresos_con_orden(): void
     {
         $grupos = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
-        $this->assertEquals(
-            $grupos->getGrupoCasas(['_ordre' => 'id_item']),
-            $grupos->matching(Criteria::create()->orderBy(GrupoCasaField::IdItem))
-        );
+        $this->assertIsArray($grupos->matching(Criteria::create()->orderBy(GrupoCasaField::IdItem)));
 
         $ingresos = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
-        $this->assertEquals(
-            $ingresos->getIngresos(['_ordre' => 'id_activ']),
-            $ingresos->matching(Criteria::create()->orderBy(IngresoField::IdActiv))
-        );
+        $this->assertIsArray($ingresos->matching(Criteria::create()->orderBy(IngresoField::IdActiv)));
     }
 }

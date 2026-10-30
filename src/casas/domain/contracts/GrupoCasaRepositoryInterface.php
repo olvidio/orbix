@@ -14,13 +14,6 @@ interface GrupoCasaRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<GrupoCasa>
-     */
-    public function getGrupoCasas(array $aWhere = [], array $aOperators = []): array;
 
     public function Eliminar(GrupoCasa $GrupoCasa): bool;
 

@@ -5,6 +5,7 @@ namespace Tests\integration\casas\infrastructure\persistence\postgresql;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\casas\domain\entity\Ingreso;
+use src\shared\domain\criteria\Criteria;
 use Tests\factories\actividades\ActividadAllFactory;
 use Tests\myTest;
 use Tests\factories\casas\IngresoFactory;
@@ -153,7 +154,7 @@ class PgIngresoRepositoryTest extends myTest
 
     public function test_get_ingresos_sin_filtros()
     {
-        $result = $this->repository->getIngresos();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada
