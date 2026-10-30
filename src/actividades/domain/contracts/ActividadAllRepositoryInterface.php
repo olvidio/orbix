@@ -39,6 +39,11 @@ interface ActividadAllRepositoryInterface
     public function getArrayActividadesDeTipo(string $sid_tipo = '......', string $scondicion = ''): array;
 
     /**
+     * @return array<string, int> id_activ con clave `f_ini#n`
+     */
+    public function idsConFechaInicio(Criteria $criteria): array;
+
+    /**
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
      * @return array<string, int>

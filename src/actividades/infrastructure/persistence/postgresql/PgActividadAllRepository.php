@@ -385,6 +385,22 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         return $aListaId;
     }
 
+    /**
+     * Ids de las actividades que cumplen el criterio, con clave `f_ini#n` (n = posición, para ordenar por fecha).
+     *
+     * @return array<string, int>
+     */
+    public function idsConFechaInicio(Criteria $criteria): array
+    {
+        $aListaId = [];
+        $i = 0;
+        foreach ($this->matching($criteria) as $oActividad) {
+            $i++;
+            $aListaId[($oActividad->getF_ini()?->getIso() ?? '') . '#' . $i] = $oActividad->getId_activ();
+        }
+        return $aListaId;
+    }
+
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**

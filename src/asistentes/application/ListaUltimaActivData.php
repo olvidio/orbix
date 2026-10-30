@@ -60,8 +60,7 @@ final class ListaUltimaActivData
             $nombre_ubi = '';
         }
 
-        $aWhereA = [];
-        $aOperadorA = [];
+        $criteriaA = Criteria::create();
 
         /** @var ConfigSnapshot $oConfig */
         $oConfig = $_SESSION['oConfig'];
@@ -109,8 +108,7 @@ final class ListaUltimaActivData
         $alert = '';
         switch ($Qque) {
             case 'crt_s_sg':
-                $aWhereA['id_tipo_activ'] = '^1[45]1';
-                $aOperadorA['id_tipo_activ'] = '~';
+                $criteriaA = $criteriaA->where(Filter::matches(ActividadAllField::IdTipoActiv, '^1[45]1'));
                 if (empty($nombre_ubi)) {
                     $titulo_actividad = _("s que todavía no han asistido a crt-s o crt-sg");
                 } else {
@@ -118,8 +116,7 @@ final class ListaUltimaActivData
                 }
                 break;
             case 'crt_s':
-                $aWhereA['id_tipo_activ'] = '^141';
-                $aOperadorA['id_tipo_activ'] = '~';
+                $criteriaA = $criteriaA->where(Filter::matches(ActividadAllField::IdTipoActiv, '^141'));
                 $titulo_actividad = sprintf(_("s no celadores que NO han asistido al crt interno"));
                 $alert = '*' . sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
                 // COALESCE(eap,'x') !~* 'C\d\d': un eap nulo cuenta como «no celador».
@@ -129,15 +126,13 @@ final class ListaUltimaActivData
                 );
                 break;
             case 'crt_cel':
-                $aWhereA['id_tipo_activ'] = '^141';
-                $aOperadorA['id_tipo_activ'] = '~';
+                $criteriaA = $criteriaA->where(Filter::matches(ActividadAllField::IdTipoActiv, '^141'));
                 $titulo_actividad = sprintf(_("s celadores que NO han asistido a un crt interno"));
                 $alert = '*' . sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
                 $filtrosP[] = Filter::matchesInsensitive(PersonaField::Eap, 'C\d\d');
                 break;
             case 'cv_s':
-                $aWhereA['id_tipo_activ'] = '^143';
-                $aOperadorA['id_tipo_activ'] = '~';
+                $criteriaA = $criteriaA->where(Filter::matches(ActividadAllField::IdTipoActiv, '^143'));
                 if (empty($nombre_ubi)) {
                     $titulo_actividad = _("s que no han asistido a cv de s");
                 } else {
@@ -145,7 +140,7 @@ final class ListaUltimaActivData
                 }
                 break;
             case 'cv_s_ad':
-                $aWhereA['id_tipo_activ'] = '1431';
+                $criteriaA = $criteriaA->where(Filter::eq(ActividadAllField::IdTipoActiv, '1431'));
                 $titulo_actividad = sprintf(_("s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión del año- que todavía no han asistido a cv de ad"));
                 $anyCv = (int)date('Y');
                 $fin_d = $oConfig->getDiaFinCrt();
@@ -186,8 +181,9 @@ final class ListaUltimaActivData
                 exit(_("No sé en que tipo de actividad hay que mirar las asistencias"));
         }
 
-        $aWhereA['_ordre'] = 'f_ini DESC';
-        $a_id_activ_f_ini = $this->actividadRepository->getArrayIdsWithKeyFini($aWhereA, $aOperadorA);
+        $a_id_activ_f_ini = $this->actividadRepository->idsConFechaInicio(
+            $criteriaA->orderBy(ActividadAllField::FIni, OrderDirection::Desc)
+        );
 
         $titulo = $titulo_actividad . ' ' . $titulo_fecha;
 

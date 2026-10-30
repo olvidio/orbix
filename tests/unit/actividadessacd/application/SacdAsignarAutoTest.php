@@ -24,7 +24,7 @@ final class SacdAsignarAutoTest extends TestCase
 
     public function test_asigna_cuando_hay_centro_y_sacd_titular(): void {
         $actividadRepo = $this->createMock(ActividadDlRepositoryInterface::class);
-        $actividadRepo->method('getArrayIdsWithKeyFini')->willReturn(['2026-05-01#1' => 500]);
+        $actividadRepo->method('idsConFechaInicio')->willReturn(['2026-05-01#1' => 500]);
 
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->with('sacd')->willReturn([3100 => 'sacd1']);

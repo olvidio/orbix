@@ -155,6 +155,18 @@ class PgActividadDlRepositoryTest extends myTest
         // TODO: Añadir más aserciones según la estructura esperada
     }
 
+    public function test_ids_con_fecha_inicio_equivale_a_get_array_ids_with_key_fini()
+    {
+        $antiguo = $this->repository->getArrayIdsWithKeyFini(['_ordre' => 'f_ini DESC']);
+        $nuevo = $this->repository->idsConFechaInicio(
+            \src\shared\domain\criteria\Criteria::create()
+                ->orderBy(\src\actividades\domain\criteria\ActividadAllField::FIni, \src\shared\domain\criteria\OrderDirection::Desc)
+        );
+
+        $this->assertSame(array_values($antiguo), array_values($nuevo));
+        $this->assertSame(array_keys($antiguo), array_keys($nuevo));
+    }
+
     public function test_matching_sin_filtros()
     {
         $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
