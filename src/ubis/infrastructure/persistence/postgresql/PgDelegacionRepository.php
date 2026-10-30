@@ -10,7 +10,6 @@ use src\ubis\domain\RegionStgrConfigException;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\ubis\domain\criteria\DelegacionField;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\traits\HandlesPdoErrors;
@@ -299,18 +298,6 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
     {
         $conv = new PgCriteriaConverter(DelegacionField::class, self::COLUMNAS);
         return array_map(Delegacion::fromArray(...), $this->rowsMatching($criteria, $conv));
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Delegacion>
-     */
-    public function getDelegaciones(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(DelegacionField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
