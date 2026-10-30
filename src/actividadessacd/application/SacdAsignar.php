@@ -8,7 +8,11 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\ActividadCargo;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\asistentes\domain\entity\Asistente;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 
 /**
  * Asigna un sacd nuevo a una actividad.
@@ -86,10 +90,11 @@ final class SacdAsignar
      */
     private function resolverIdCargo(array $aIdCargos_sacd, int $id_activ): ?int
     {
-        $txt_where = implode(',', array_keys($aIdCargos_sacd));
-        $cCargos = $this->actividadCargoRepository->getActividadCargos(
-            ['id_activ' => $id_activ, 'id_cargo' => $txt_where, '_ordre' => 'id_cargo DESC'],
-            ['id_cargo' => 'IN']
+        $cCargos = $this->actividadCargoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ActividadCargoField::IdActiv, $id_activ))
+                ->andWhere(Filter::in(ActividadCargoField::IdCargo, array_map('intval', array_keys($aIdCargos_sacd))))
+                ->orderBy(ActividadCargoField::IdCargo, OrderDirection::Desc)
         );
         if (count($cCargos) < 1) {
             return (int)key($aIdCargos_sacd);

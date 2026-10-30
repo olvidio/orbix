@@ -75,7 +75,7 @@ final class SacdsEncargadosDataTest extends TestCase
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->expects($this->never())->method('getArrayCargos');
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->expects($this->never())->method('getActividadCargos');
+        $activCargoRepo->expects($this->never())->method('matching');
 
         $out = (new \src\actividadessacd\application\SacdsEncargadosData($cargoRepo, $activCargoRepo))->execute([
             'id_activ' => 77,
@@ -93,7 +93,7 @@ final class SacdsEncargadosDataTest extends TestCase
         $cargoRepo->method('getArrayCargos')->with('sacd')->willReturn([88 => 'sacd1']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([]);
+        $activCargoRepo->method('matching')->willReturn([]);
 
         $out = (new \src\actividadessacd\application\SacdsEncargadosData($cargoRepo, $activCargoRepo))->execute([
             'id_activ' => 77,

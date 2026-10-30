@@ -7,7 +7,10 @@ use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\personas\domain\entity\Persona;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\procesos\domain\PermAccion;
 use src\shared\security\HashB;
 
@@ -47,11 +50,11 @@ final class SacdsEncargadosData
         $sacds = [];
         if ($permite_ver) {
             $aIdCargos_sacd = $this->cargoRepository->getArrayCargos('sacd');
-            $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
-            $cCargos = $this->actividadCargoRepository->getActividadCargos(
-                ['id_activ' => $id_activ, 'id_cargo' => $txt_where_cargos],
-                ['id_cargo' => 'IN']
+            $cCargos = $this->actividadCargoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(ActividadCargoField::IdActiv, $id_activ))
+                    ->andWhere(Filter::in(ActividadCargoField::IdCargo, array_map('intval', array_keys($aIdCargos_sacd))))
             );
             foreach ($cCargos as $oCargo) {
                     $id_nom = (int)$oCargo->getId_nom();

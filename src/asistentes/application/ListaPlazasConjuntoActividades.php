@@ -2,6 +2,7 @@
 
 namespace src\asistentes\application;
 
+use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\actividadescentro\domain\criteria\CentroEncargadoField;
 use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Filter;
@@ -210,7 +211,9 @@ class ListaPlazasConjuntoActividades
                 $aIdCargos = []; // id_nom de los cargos (si actividadcargos) para no duplicar como asistentes.
                 if (ConfigGlobal::is_app_installed('actividadcargos')) {
                     //selecciono el cl
-                    $cActividadCargos = $this->actividadCargoRepository->getActividadCargos(array('id_activ' => $id_pau));
+                    $cActividadCargos = $this->actividadCargoRepository->matching(
+                        Criteria::create()->where(Filter::eq(ActividadCargoField::IdActiv, $id_pau))
+                    );
                     $cl = 0;
                     $num = 0; //número total de asistentes
                     $plazas_pedidas = 0; // plazas pedidas o 'en espera'

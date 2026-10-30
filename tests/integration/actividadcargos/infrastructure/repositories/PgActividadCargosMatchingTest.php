@@ -37,13 +37,10 @@ class PgActividadCargosMatchingTest extends myTest
                 ->where(Filter::eq(ActividadCargoField::IdItem, $idItem))
                 ->andWhere(Filter::eq(ActividadCargoField::IdActiv, $oActividadCargo->getId_activ()))
         );
-        $legacy = $this->actividadCargoRepo->getActividadCargos(
-            ['id_item' => $idItem, 'id_activ' => $oActividadCargo->getId_activ()]
-        );
 
         $this->assertCount(1, $nuevo);
         $this->assertSame($idItem, $nuevo[0]->getId_item());
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertSame($oActividadCargo->getId_activ(), $nuevo[0]->getId_activ());
 
         $this->actividadCargoRepo->Eliminar($nuevo[0]);
         $this->assertSame([], $this->actividadCargoRepo->matching(

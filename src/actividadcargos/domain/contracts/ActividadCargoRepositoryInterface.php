@@ -53,14 +53,6 @@ interface ActividadCargoRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ActividadCargo>
-     */
-    public function getActividadCargos(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(ActividadCargo $ActividadCargo): bool;
 
     public function Guardar(ActividadCargo $ActividadCargo): bool;

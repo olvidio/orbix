@@ -32,8 +32,7 @@ final class SacdEliminarTest extends TestCase
         $oCargo->setId_cargo(2001);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')
-            ->with(['id_activ' => 500, 'id_cargo' => 2001])
+        $activCargoRepo->method('matching')
             ->willReturn([$oCargo]);
         $activCargoRepo->expects($this->once())
             ->method('Eliminar')
@@ -65,8 +64,7 @@ final class SacdEliminarTest extends TestCase
         $oCargo->setId_cargo(2001);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')
-            ->with(['id_activ' => 500, 'id_cargo' => 2001])
+        $activCargoRepo->method('matching')
             ->willReturn([$oCargo]);
         $activCargoRepo->expects($this->once())
             ->method('Eliminar')
@@ -97,7 +95,7 @@ final class SacdEliminarTest extends TestCase
         $oCargo->setId_cargo(2001);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$oCargo]);
+        $activCargoRepo->method('matching')->willReturn([$oCargo]);
         $activCargoRepo->method('Eliminar')->willReturn(true);
 
         $asistenteRepo = $this->createMock(AsistenteDlRepositoryInterface::class);
@@ -117,7 +115,7 @@ final class SacdEliminarTest extends TestCase
         $oCargo->setId_cargo(2001);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$oCargo]);
+        $activCargoRepo->method('matching')->willReturn([$oCargo]);
         $activCargoRepo->method('Eliminar')->willReturn(false);
 
         $asistenteRepo = $this->createMock(AsistenteDlRepositoryInterface::class);
@@ -136,7 +134,7 @@ final class SacdEliminarTest extends TestCase
         $oCargo->setId_cargo(2001);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$oCargo]);
+        $activCargoRepo->method('matching')->willReturn([$oCargo]);
         $activCargoRepo->method('Eliminar')->willReturn(true);
 
         $oAsistencia = new Asistente();
@@ -155,7 +153,7 @@ final class SacdEliminarTest extends TestCase
 
     public function test_cargo_inexistente_no_rompe_y_sigue_con_asistencia(): void {
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([]);
+        $activCargoRepo->method('matching')->willReturn([]);
         $activCargoRepo->expects($this->never())->method('Eliminar');
 
         $asistenteRepo = $this->createMock(AsistenteDlRepositoryInterface::class);

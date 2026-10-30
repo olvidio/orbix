@@ -2,6 +2,7 @@
 
 namespace src\asistentes\application;
 
+use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\Criteria;
@@ -350,7 +351,9 @@ class Select_asistentes_a_una_actividad
         $num = 0;
         $a_valores = [];
         $this->aListaCargos = [];
-        $cCargosEnActividad = $this->actividadCargoRepository->getActividadCargos(['id_activ' => $this->id_pau]);
+        $cCargosEnActividad = $this->actividadCargoRepository->matching(
+            Criteria::create()->where(Filter::eq(ActividadCargoField::IdActiv, $this->id_pau))
+        );
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         /** @var XPermisos $oPerm */
         $oPerm = $_SESSION['oPerm'];

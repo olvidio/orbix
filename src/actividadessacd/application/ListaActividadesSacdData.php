@@ -4,8 +4,10 @@ namespace src\actividadessacd\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\criteria\ActividadAllField;
+use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 use src\permisos\domain\XPermisos;
@@ -78,7 +80,7 @@ final class ListaActividadesSacdData
         $cActividades = $this->actividadDlRepository->matching($criteria->orderBy(ActividadAllField::FIni));
 
         $aIdCargos_sacd = $this->cargoRepository->getArrayCargos('sacd');
-        $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
+        $a_id_cargos_sacd = array_map('intval', array_keys($aIdCargos_sacd));
 
         $tieneProcesos = ConfigGlobal::is_app_installed('procesos');
 
@@ -124,13 +126,11 @@ final class ListaActividadesSacdData
 
             $sacds = [];
             if ($oPermSacd->have_perm_activ('ver') === true) {
-                $cCargosActividad = $this->actividadCargoRepository->getActividadCargos(
-                    [
-                        'id_activ' => $id_activ,
-                        'id_cargo' => $txt_where_cargos,
-                        '_ordre' => 'id_cargo DESC',
-                    ],
-                    ['id_cargo' => 'IN']
+                $cCargosActividad = $this->actividadCargoRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(ActividadCargoField::IdActiv, $id_activ))
+                        ->andWhere(Filter::in(ActividadCargoField::IdCargo, $a_id_cargos_sacd))
+                        ->orderBy(ActividadCargoField::IdCargo, OrderDirection::Desc)
                 );
                 foreach ($cCargosActividad as $oCargo) {
                     $id_nom = (int)$oCargo->getId_nom();

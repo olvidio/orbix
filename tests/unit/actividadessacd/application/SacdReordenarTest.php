@@ -50,7 +50,7 @@ final class SacdReordenarTest extends TestCase
         ]);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
+        $activCargoRepo->method('matching')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->expects($this->exactly(2))->method('Guardar')->willReturn(true);
 
         $out = (new SacdReordenar($cargoRepo, $activCargoRepo))->execute([
@@ -88,7 +88,7 @@ final class SacdReordenarTest extends TestCase
         ]);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
+        $activCargoRepo->method('matching')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->expects($this->exactly(2))->method('Guardar')->willReturn(true);
 
         $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
@@ -114,7 +114,7 @@ final class SacdReordenarTest extends TestCase
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'a', 2002 => 'b']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
+        $activCargoRepo->method('matching')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->expects($this->exactly(2))->method('Guardar')->willReturn(true);
 
         $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
@@ -140,7 +140,7 @@ final class SacdReordenarTest extends TestCase
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'a', 2002 => 'b']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
+        $activCargoRepo->method('matching')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->expects($this->never())->method('Guardar');
 
         $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
@@ -164,7 +164,7 @@ final class SacdReordenarTest extends TestCase
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'a', 2002 => 'b']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
+        $activCargoRepo->method('matching')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->expects($this->never())->method('Guardar');
 
         $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
@@ -184,7 +184,7 @@ final class SacdReordenarTest extends TestCase
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'a']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1]);
+        $activCargoRepo->method('matching')->willReturn([$cargo1]);
         $activCargoRepo->expects($this->never())->method('Guardar');
 
         $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
@@ -208,7 +208,7 @@ final class SacdReordenarTest extends TestCase
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'a', 2002 => 'b']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
+        $activCargoRepo->method('matching')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->expects($this->never())->method('Guardar');
 
         $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
@@ -232,7 +232,7 @@ final class SacdReordenarTest extends TestCase
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'a', 2002 => 'b']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
+        $activCargoRepo->method('matching')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->method('Guardar')->willReturn(false);
 
         $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([

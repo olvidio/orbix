@@ -6,7 +6,6 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\config\ConfigGlobal;
@@ -181,7 +180,9 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
         // seleccionar las actividades según los criterios de búsqueda.
         $aListaIds = $this->actividadAllRepository->getArrayIdsWithKeyFini($aWhere, $aOperators);
 
-        $cCargos = $this->getActividadCargos($aWhereNom);
+        $cCargos = $this->matching(
+            Criteria::create()->where(Filter::eq(ActividadCargoField::IdNom, $aWhereNom['id_nom']))
+        );
         // descarto los que no están.
         $cCargosOk = [];
         $i = 0;
@@ -333,20 +334,6 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
     {
         $conv = new PgCriteriaConverter(ActividadCargoField::class, self::COLUMNAS);
         return array_map(ActividadCargo::fromArray(...), $this->rowsMatching($criteria, $conv));
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo ActividadCargo
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<ActividadCargo>
-     */
-    public function getActividadCargos(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ActividadCargoField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
