@@ -4,6 +4,8 @@ namespace src\profesores\application;
 
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\profesores\domain\criteria\ProfesorStgrField;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
@@ -67,10 +69,13 @@ final class ListaPorDepartamentos
             $aProfesores['director'] = $aDirs;
 
             foreach ($cTipoProfesor as $id_tipo => $tipo) {
-                $aWhere = $this->buildWhere($id_departamento, $dl);
-                $aWhere['id_tipo_profesor'] = $id_tipo;
+                // d_profesor_stgr no tiene columna id_dl: el filtro por dl solo aplica a directores.
+                $criteria = Criteria::create()
+                    ->where(Filter::eq(ProfesorStgrField::IdDepartamento, $id_departamento))
+                    ->andWhere(Filter::isNull(ProfesorStgrField::FCese))
+                    ->andWhere(Filter::eq(ProfesorStgrField::IdTipoProfesor, $id_tipo));
                 $aProfesores[$tipo] = $this->getPersonasOrdenadas(
-                    $this->profesorStgrRepository->getProfesoresStgr($aWhere, $this->buildOperador($dl)),
+                    $this->profesorStgrRepository->matching($criteria),
                     $this->personaDlRepository
                 );
             }

@@ -133,7 +133,7 @@ class PgProfesorStgrRepositoryTest extends myTest
 
     public function test_get_profesores_stgr_sin_filtros()
     {
-        $result = $this->repository->getProfesoresStgr();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada
