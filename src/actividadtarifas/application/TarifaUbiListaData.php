@@ -4,6 +4,7 @@ namespace src\actividadtarifas\application;
 
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\actividadtarifas\domain\criteria\RelacionTarifaTipoActividadField;
 use src\actividadtarifas\domain\value_objects\SerieId;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\XPermisos;
@@ -70,7 +71,9 @@ final class TarifaUbiListaData
 
             $cantidad_txt = "$cantidad " . _("€");
 
-            $cTipoActivTarifas = $this->relacionTarifaRepository->getTipoActivTarifas(['id_tarifa' => $id_tarifa]);
+            $cTipoActivTarifas = $this->relacionTarifaRepository->matching(
+                Criteria::create()->where(Filter::eq(RelacionTarifaTipoActividadField::IdTarifa, $id_tarifa))
+            );
             $aplicado_a = '';
             $t = 0;
             foreach ($cTipoActivTarifas as $oRelacion) {

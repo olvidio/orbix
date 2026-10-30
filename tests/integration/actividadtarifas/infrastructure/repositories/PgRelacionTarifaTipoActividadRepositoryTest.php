@@ -4,6 +4,7 @@ namespace Tests\integration\actividadtarifas\infrastructure\persistence\postgres
 
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\entity\RelacionTarifaTipoActividad;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\actividadtarifas\RelacionTarifaTipoActividadFactory;
 
@@ -133,7 +134,7 @@ class PgRelacionTarifaTipoActividadRepositoryTest extends myTest
 
     public function test_get_relacion_tarifas_tipo_activides_sin_filtros()
     {
-        $result = $this->repository->getTipoActivTarifas();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

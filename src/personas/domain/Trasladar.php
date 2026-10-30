@@ -3,6 +3,7 @@
 namespace src\personas\domain;
 
 use PDO;
+use src\certificados\domain\criteria\CertificadoRecibidoField;
 use src\personas\domain\criteria\TelecoPersonaField;
 use src\personas\domain\criteria\TrasladoField;
 use src\shared\domain\criteria\Criteria;
@@ -1035,7 +1036,7 @@ class Trasladar
         // si es una dl, hay que buscarlos en la region del stgr
 
         $certificadoRecibidoRepository = $this->repositoryWithConnection(CertificadoRecibidoRepositoryInterface::class, $oDBorg);
-        $cCertificados = $certificadoRecibidoRepository->getCertificados(['id_nom' => $this->iid_nom]);
+        $cCertificados = $certificadoRecibidoRepository->matching(Criteria::create()->where(Filter::eq(CertificadoRecibidoField::IdNom, $this->iid_nom)));
         foreach ($cCertificados as $Certificado) {
             if (!$this->trasladar_certificados($Certificado)) {
                 $error .= '<br>' . $this->serror = $error;

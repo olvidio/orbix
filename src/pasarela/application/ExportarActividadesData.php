@@ -9,6 +9,7 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadescentro\domain\criteria\CentroEncargadoField;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\actividadtarifas\domain\criteria\RelacionTarifaTipoActividadField;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -224,7 +225,9 @@ final class ExportarActividadesData
             $numero_de_dias = $oActividad->getDuracion();
             $id_tarifa = $oActividad->getTarifa();
             if (empty($id_tarifa)) {
-                $cTipoActivTarifas = $this->relacionTarifaTipoActividadRepository->getTipoActivTarifas(['id_tipo_activ' => $id_tipo_activ]);
+                $cTipoActivTarifas = $this->relacionTarifaTipoActividadRepository->matching(
+                    Criteria::create()->where(Filter::eq(RelacionTarifaTipoActividadField::IdTipoActiv, $id_tipo_activ))
+                );
                 if ($cTipoActivTarifas === []) {
                     $oTipoActivdad = new TiposActividades($id_tipo_activ);
                     $nom_tipo_actividad = $oTipoActivdad->getNom();

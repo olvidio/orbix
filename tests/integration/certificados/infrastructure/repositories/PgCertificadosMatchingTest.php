@@ -26,10 +26,9 @@ class PgCertificadosMatchingTest extends myTest
             ->where(Filter::eq(CertificadoRecibidoField::IdItem, $idItem))
             ->orderBy(CertificadoRecibidoField::FCertificado);
         $nuevo = $repo->matching($criteria);
-        $legacy = $repo->getCertificados(['id_item' => $idItem, '_ordre' => 'f_certificado']);
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertSame($idItem, $nuevo[0]->getId_item());
 
         $repo->Eliminar($nuevo[0]);
         $this->assertSame([], $repo->matching($criteria));

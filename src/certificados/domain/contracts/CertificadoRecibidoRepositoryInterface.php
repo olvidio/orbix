@@ -14,14 +14,6 @@ interface CertificadoRecibidoRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<CertificadoRecibido>
-     */
-    public function getCertificados(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(CertificadoRecibido $Certificado): bool;
 
     public function Guardar(CertificadoRecibido $Certificado): bool;

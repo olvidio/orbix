@@ -27,25 +27,28 @@ class PgActividadTarifasMatchingTest extends myTest
         $this->relacionRepo = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
     }
 
-    public function test_tipo_tarifa_matching_ordenado_equivale_a_legacy(): void
+    public function test_tipo_tarifa_matching_ordenado(): void
     {
         $nuevo = $this->tipoTarifaRepo->matching(
             Criteria::create()->orderBy(TipoTarifaField::Sfsv)->addOrderBy(TipoTarifaField::Letra)
         );
-        $legacy = $this->tipoTarifaRepo->getTipoTarifas(['_ordre' => 'sfsv,letra']);
 
-        $this->assertEquals($legacy, $nuevo);
+        $sfsv = array_map(fn ($o) => $o->getSfsv(), $nuevo);
+        $ordenado = $sfsv;
+        sort($ordenado);
+        $this->assertSame($ordenado, $sfsv);
     }
 
-    public function test_tipo_tarifa_matching_por_sfsv_equivale_a_legacy(): void
+    public function test_tipo_tarifa_matching_por_sfsv(): void
     {
         $nuevo = $this->tipoTarifaRepo->matching(Criteria::create()->where(Filter::eq(TipoTarifaField::Sfsv, 1)));
-        $legacy = $this->tipoTarifaRepo->getTipoTarifas(['sfsv' => 1]);
 
-        $this->assertEquals($legacy, $nuevo);
+        foreach ($nuevo as $oTipoTarifa) {
+            $this->assertSame(1, $oTipoTarifa->getSfsv());
+        }
     }
 
-    public function test_relacion_matching_por_item_equivale_a_legacy(): void
+    public function test_relacion_matching_por_item(): void
     {
         $oRelacion = (new RelacionTarifaTipoActividadFactory())->createSimple();
         $idItem = $oRelacion->getId_item();
@@ -53,10 +56,9 @@ class PgActividadTarifasMatchingTest extends myTest
 
         $criteria = Criteria::create()->where(Filter::eq(RelacionTarifaTipoActividadField::IdItem, $idItem));
         $nuevo = $this->relacionRepo->matching($criteria);
-        $legacy = $this->relacionRepo->getTipoActivTarifas(['id_item' => $idItem]);
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertSame($idItem, $nuevo[0]->getId_item());
 
         $this->relacionRepo->Eliminar($nuevo[0]);
         $this->assertSame([], $this->relacionRepo->matching($criteria));

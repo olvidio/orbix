@@ -5,6 +5,7 @@ namespace Tests\integration\certificados\infrastructure\persistence\postgresql;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use Tests\factories\certificados\CertificadoRecibidoFactory;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 
 class PgCertificadoRecibidoRepositoryTest extends myTest
@@ -133,7 +134,7 @@ class PgCertificadoRecibidoRepositoryTest extends myTest
 
     public function test_get_certificados_sin_filtros()
     {
-        $result = $this->repository->getCertificados();
+        $result = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

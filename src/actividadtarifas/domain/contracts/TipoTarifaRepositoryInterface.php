@@ -19,14 +19,6 @@ interface TipoTarifaRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<TipoTarifa>
-     */
-    public function getTipoTarifas(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(TipoTarifa $TipoTarifa): bool;
 
     public function Guardar(TipoTarifa $TipoTarifa): bool;

@@ -37,7 +37,7 @@ final class RelacionTarifaListaDataTest extends TestCase
         $_SESSION['oPerm'] = $this->oPermStub([]);
 
         $repoRel = $this->createMock(RelacionTarifaTipoActividadRepositoryInterface::class);
-        $repoRel->method('getTipoActivTarifas')->willReturn([]);
+        $repoRel->method('matching')->willReturn([]);
 
         $repoTipo = $this->createMock(TipoTarifaRepositoryInterface::class);
         $repoTipo->expects($this->never())->method('findById');
