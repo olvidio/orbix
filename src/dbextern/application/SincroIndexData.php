@@ -10,6 +10,7 @@ use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\dbextern\domain\CopiarBDU;
 use src\dbextern\application\support\SincroDBFactory;
 use src\permisos\domain\XPermisos;
+use src\personas\domain\criteria\PersonaField;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\shared\config\ConfigGlobal;
 use src\shared\security\HashB;
@@ -92,7 +93,7 @@ class SincroIndexData
                 if ($id_orbix === null) {
                     continue;
                 }
-                $cPersonas = $repoPersona->getPersonas(['id_nom' => $id_orbix]);
+                $cPersonas = $repoPersona->matching(Criteria::create()->where(Filter::eq(PersonaField::IdNom, (int) $id_orbix)));
                 if ($cPersonas !== []) {
                     $situacion = $cPersonas[0]->getSituacion();
                     if ($situacion === 'A') {
@@ -119,7 +120,7 @@ class SincroIndexData
             }
         }
 
-        $cPersonasOrbix = $repoPersona->getPersonas(['situacion' => 'A']);
+        $cPersonasOrbix = $repoPersona->matching(Criteria::create()->where(Filter::eq(PersonaField::Situacion, 'A')));
         $p7_orbix_unidas_otra_dl = 0;
         $p8_orbix_unidas_desaparecidas = 0;
         $p910_orbix_no_unidas = 0;

@@ -2,6 +2,7 @@
 
 namespace src\dbextern\domain;
 
+use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\criteria\TelecoPersonaField;
 use PDO;
 use PDOStatement;
@@ -227,17 +228,21 @@ class SincroDB
         $f_nacimiento_txt = $f_nacimiento;
         $nombre = $oPersonaListas->getNombre();
 
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['id_tabla'] = $this->tipo_persona;
-        $aWhere['apellido1'] = $apellido1_sinprep;
+        $criteria = Criteria::create()
+            ->where(Filter::eq(PersonaField::IdTabla, $this->tipo_persona))
+            ->andWhere(Filter::eq(PersonaField::Apellido1, $apellido1_sinprep));
         if ($apellido2_sinprep !== '') {
-            $aWhere['apellido2'] = $apellido2_sinprep;
+            $criteria = $criteria->andWhere(Filter::eq(PersonaField::Apellido2, $apellido2_sinprep));
         }
-        $aWhere['f_nacimiento'] = "'$f_nacimiento_txt'";
-        $aWhere['nom'] = trim($nombre);
+        $f_nacimiento_vo = DateTimeLocal::createFromLocal($f_nacimiento_txt);
+        if (!$f_nacimiento_vo instanceof DateTimeLocal) {
+            // sin fecha de nacimiento no hay coincidencia exacta posible
+            return false;
+        }
+        $criteria = $criteria->andWhere(Filter::eq(PersonaField::FNacimiento, $f_nacimiento_vo->getIso()));
+        $criteria = $criteria->andWhere(Filter::eq(PersonaField::Nom, trim($nombre)));
 
-        $cPersonasDl = $this->personaDlRepository->getPersonas($aWhere, $aOperador);
+        $cPersonasDl = $this->personaDlRepository->matching($criteria);
         if (count($cPersonasDl) === 1) {
             $oPersonaDl = $cPersonasDl[0];
             $id_nom = $oPersonaDl->getId_nom();
@@ -340,13 +345,13 @@ class SincroDB
         $apellido1_sinprep = $oPersonaBDU->getApellido1_sinprep();
         $tokens = explode(' ', $apellido1_sinprep);
         $apellido1_sinprep_c = $tokens[0];
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['id_tabla'] = $this->tipo_persona;
-        $aWhere['situacion'] = 'A';
-        $aWhere['apellido1'] = $apellido1_sinprep_c;
-        $aOperador['apellido1'] = 'sin_acentos';
-        $aWhere['_ordre'] = 'apellido1, apellido2, nom';
+        $criteria = Criteria::create()
+            ->where(Filter::eq(PersonaField::IdTabla, $this->tipo_persona))
+            ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+            ->andWhere(Filter::matchesUnaccented(PersonaField::Apellido1, $apellido1_sinprep_c))
+            ->orderBy(PersonaField::Apellido1)
+            ->addOrderBy(PersonaField::Apellido2)
+            ->addOrderBy(PersonaField::Nom);
 
         $personaDlRepository = $this->personaDlRepositoryFactory->create();
         $oDB = null;
@@ -354,7 +359,7 @@ class SincroDB
             $oDB = $this->conexion($esquema);
             $personaDlRepository = $this->personaDlRepositoryFactory->createWithConnection($oDB);
         }
-        $cPersonasDl = $personaDlRepository->getPersonas($aWhere, $aOperador);
+        $cPersonasDl = $personaDlRepository->matching($criteria);
         $a_lista_orbix = [];
         foreach ($cPersonasDl as $oPersonaDl) {
             $id_nom = $oPersonaDl->getId_nom();
