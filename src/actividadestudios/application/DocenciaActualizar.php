@@ -8,6 +8,7 @@ use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
@@ -64,17 +65,12 @@ final class DocenciaActualizar
         $id_tipo = '^' . $mi_sfsv . '[123][23]';
         $id_tipo_inv = '^' . $mi_sfsv . '325';
 
-        $aWhere = [
-            'f_ini' => "'$inicioIso','$finIso'",
-            'status' => StatusId::TERMINADA,
-            'id_tipo_activ' => $id_tipo,
-        ];
-        $aOperador = [
-            'f_ini' => 'BETWEEN',
-            'id_tipo_activ' => '~',
-        ];
-
-        $cActividades = $this->actividadAllRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $this->actividadAllRepository->matching(
+            Criteria::create()
+                ->where(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso))
+                ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::TERMINADA))
+                ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $id_tipo))
+        );
         /** @var ConfigSnapshot $oConfig */
         $oConfig = $_SESSION['oConfig'];
         $ini_m = $oConfig->getMesIniStgr();

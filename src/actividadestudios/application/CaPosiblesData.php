@@ -5,6 +5,7 @@ namespace src\actividadestudios\application;
 use frontend\shared\config\OrbixRuntime;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
@@ -121,8 +122,7 @@ final class CaPosiblesData
         }
 
         $miSfsv = OrbixRuntime::miSfsv();
-        $aWhereActividad = [];
-        $aOperadorActividad = [];
+        $patronTipoActiv = '';
         $idCtr = '';
         $idTablaPersona = '';
 
@@ -142,8 +142,7 @@ final class CaPosiblesData
                         $idTipoActiv = '^1' . $miSfsv . '334';
                     }
                 }
-                $aWhereActividad['id_tipo_activ'] = $idTipoActiv;
-                $aOperadorActividad['id_tipo_activ'] = '~';
+                $patronTipoActiv = $idTipoActiv;
                 break;
             case 'n':
                 $idCtr = ($QidCtrN === 1) ? '' : (string)$QidCtrN;
@@ -159,8 +158,7 @@ final class CaPosiblesData
                         $idTipoActiv = '^' . $miSfsv . '124';
                     }
                 }
-                $aWhereActividad['id_tipo_activ'] = $idTipoActiv;
-                $aOperadorActividad['id_tipo_activ'] = '~';
+                $patronTipoActiv = $idTipoActiv;
                 break;
             default:
                 throw new \InvalidArgumentException(_("Parámetro na no válido"));
@@ -211,31 +209,38 @@ final class CaPosiblesData
 
         $cPersonas = $personaRepository->getPersonas($aWhere, $aOperador);
 
-        $aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
-        $aOperadorActividad['f_ini'] = 'BETWEEN';
+        $criterioActividad = Criteria::create()
+            ->where(Filter::matches(ActividadAllField::IdTipoActiv, $patronTipoActiv))
+            ->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso));
 
         if ($QgrupoEstudios !== 'todos') {
             $repoDelegacion = $this->delegacionRepository;
             $cDelegaciones = $repoDelegacion->matching(
                 Criteria::create()->where(Filter::eq(DelegacionField::GrupoEstudios, $QgrupoEstudios))
             );
-            if (count($cDelegaciones) > 1) {
-                $aOperadorActividad['dl_org'] = 'OR';
-            }
-            $miGrupo = '';
+            $dlsGrupo = [];
             foreach ($cDelegaciones as $oDelegacion) {
-                $miGrupo .= $miGrupo === '' ? '' : ',';
-                $miGrupo .= "'" . $oDelegacion->getDlVo()->value() . "'";
+                $dlsGrupo[] = $oDelegacion->getDlVo()->value();
             }
-            $aWhereActividad['dl_org'] = $miGrupo;
+            if (count($dlsGrupo) > 1) {
+                $criterioActividad = $criterioActividad->andWhere(Filter::in(ActividadAllField::DlOrg, $dlsGrupo));
+            } else {
+                // Comportamiento heredado: con 0 o 1 delegaciones el valor se comparaba por
+                // igualdad con el texto ya entrecomillado (`'dl'`), que no coincide nunca.
+                $dlHeredada = $dlsGrupo === [] ? '' : "'" . $dlsGrupo[0] . "'";
+                $criterioActividad = $criterioActividad->andWhere(Filter::eq(ActividadAllField::DlOrg, $dlHeredada));
+            }
         }
 
-        $aWhereActividad['status'] = StatusId::ACTUAL;
-        $aWhereActividad['_ordre'] = 'nivel_stgr,f_ini';
+        $criterioActividad = $criterioActividad
+            ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+            ->orderBy(ActividadAllField::NivelStgr)
+            ->addOrderBy(ActividadAllField::FIni);
 
-        $cActividades1 = $this->actividadPubRepository->getActividades($aWhereActividad, $aOperadorActividad);
-        $aWhereActividad['publicado'] = 'f';
-        $cActividades2 = $this->actividadDlRepository->getActividades($aWhereActividad, $aOperadorActividad);
+        $cActividades1 = $this->actividadPubRepository->matching($criterioActividad);
+        $cActividades2 = $this->actividadDlRepository->matching(
+            $criterioActividad->andWhere(Filter::eq(ActividadAllField::Publicado, false))
+        );
         $cActividades = $cActividades1 + $cActividades2;
 
         $msgTxt = '';
