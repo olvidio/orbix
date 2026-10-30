@@ -23,6 +23,11 @@ use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
+use src\cambios\domain\criteria\CambioAnotadoField;
+use src\cambios\domain\criteria\CambioField;
+use src\cambios\domain\criteria\CambioUsuarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\cambios\domain\entity\Cambio;
 use src\cambios\domain\entity\CambioAnotado;
 use src\cambios\domain\entity\CambioUsuario;
@@ -645,10 +650,11 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
             $jsonFases,
         );
 
-        $cCambios = $publicRepository->getCambios([
-            'id_schema' => $idSchemaOrigen,
-            'id_item_cambio' => $idItemCambio,
-        ]);
+        $cCambios = $publicRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(CambioField::IdSchema, $idSchemaOrigen))
+                ->andWhere(Filter::eq(CambioField::IdItemCambio, $idItemCambio))
+        );
         $this->assertCount(1, $cCambios);
         $persistido = $cCambios[0];
         $this->cambioCreado = $persistido;
@@ -967,13 +973,14 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
         /** @var CambioUsuarioRepositoryInterface $repository */
         $repository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
 
-        $avisos = $repository->getCambiosUsuario([
-            'id_item_cambio' => $contexto['id_item_cambio'],
-            'id_schema_cambio' => $contexto['id_schema'],
-            'id_usuario' => ConfigGlobal::mi_id_usuario(),
-            'aviso_tipo' => 1,
-            'sfsv' => ConfigGlobal::mi_sfsv(),
-        ]);
+        $avisos = $repository->matching(
+            Criteria::create()
+                ->where(Filter::eq(CambioUsuarioField::IdItemCambio, $contexto['id_item_cambio']))
+                ->andWhere(Filter::eq(CambioUsuarioField::IdSchemaCambio, $contexto['id_schema']))
+                ->andWhere(Filter::eq(CambioUsuarioField::IdUsuario, ConfigGlobal::mi_id_usuario()))
+                ->andWhere(Filter::eq(CambioUsuarioField::AvisoTipo, 1))
+                ->andWhere(Filter::eq(CambioUsuarioField::Sfsv, ConfigGlobal::mi_sfsv()))
+        );
 
         foreach ($avisos as $aviso) {
             $this->avisosCreados[] = $aviso;
@@ -1054,10 +1061,11 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
 
         if ($this->cambioCreado !== null) {
             $anotadoRepository->setTabla((string) getenv('UBICACION'));
-            $anotados = $anotadoRepository->getCambiosAnotados([
-                'id_item_cambio' => $this->cambioCreado->getId_item_cambio(),
-                'id_schema_cambio' => $this->cambioCreado->getId_schema(),
-            ]);
+            $anotados = $anotadoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(CambioAnotadoField::IdItemCambio, $this->cambioCreado->getId_item_cambio()))
+                    ->andWhere(Filter::eq(CambioAnotadoField::IdSchemaCambio, $this->cambioCreado->getId_schema()))
+            );
             foreach ($anotados as $anotado) {
                 $anotadoRepository->Eliminar($anotado);
             }
@@ -1104,20 +1112,33 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
         $avisoRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
         $anotadoRepository->setTabla((string) getenv('UBICACION'));
 
-        $cambios = $cambioRepository->getCambios(['id_activ' => $this->idActiv]);
+        $cambios = $cambioRepository->matching(
+            Criteria::create()->where(Filter::eq(CambioField::IdActiv, $this->idActiv))
+        );
         if ($this->nomActiv !== '') {
-            $cambios = array_merge($cambios, $cambioRepository->getCambios(['valor_old' => $this->nomActiv]));
+            $cambios = array_merge(
+                $cambios,
+                $cambioRepository->matching(
+                    Criteria::create()->where(Filter::eq(CambioField::ValorOld, $this->nomActiv))
+                )
+            );
         }
 
         foreach ($cambios as $cambio) {
-            $criterios = [
-                'id_item_cambio' => $cambio->getId_item_cambio(),
-                'id_schema_cambio' => $cambio->getId_schema(),
-            ];
-            foreach ($avisoRepository->getCambiosUsuario($criterios) as $aviso) {
+            $avisos = $avisoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(CambioUsuarioField::IdItemCambio, $cambio->getId_item_cambio()))
+                    ->andWhere(Filter::eq(CambioUsuarioField::IdSchemaCambio, $cambio->getId_schema()))
+            );
+            foreach ($avisos as $aviso) {
                 $avisoRepository->Eliminar($aviso);
             }
-            foreach ($anotadoRepository->getCambiosAnotados($criterios) as $anotado) {
+            $anotados = $anotadoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(CambioAnotadoField::IdItemCambio, $cambio->getId_item_cambio()))
+                    ->andWhere(Filter::eq(CambioAnotadoField::IdSchemaCambio, $cambio->getId_schema()))
+            );
+            foreach ($anotados as $anotado) {
                 $anotadoRepository->Eliminar($anotado);
             }
             $cambioRepository->Eliminar($cambio);
@@ -1140,10 +1161,11 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
         $server = is_numeric($serverRaw) ? (int) $serverRaw : 0;
 
         foreach ($cambioRepository->getCambiosNuevos() as $cambio) {
-            $anotados = $anotadoRepository->getCambiosAnotados([
-                'id_item_cambio' => $cambio->getId_item_cambio(),
-                'id_schema_cambio' => $cambio->getId_schema(),
-            ]);
+            $anotados = $anotadoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(CambioAnotadoField::IdItemCambio, $cambio->getId_item_cambio()))
+                    ->andWhere(Filter::eq(CambioAnotadoField::IdSchemaCambio, $cambio->getId_schema()))
+            );
             if ($anotados !== []) {
                 continue;
             }

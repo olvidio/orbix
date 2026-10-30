@@ -35,15 +35,6 @@ interface CambioRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Cambio>
-     * @throws JsonException
-     */
-    public function getCambios(array $aWhere = [], array $aOperators = []): array;
-
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(Cambio $Cambio): bool;

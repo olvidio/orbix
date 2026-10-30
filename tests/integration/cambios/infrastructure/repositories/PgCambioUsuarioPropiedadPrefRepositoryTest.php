@@ -154,7 +154,7 @@ class PgCambioUsuarioPropiedadPrefRepositoryTest extends myTest
 
     public function test_get_cambio_usuario_propiedad_prefs_sin_filtros()
     {
-        $result = $this->repository->getCambioUsuarioPropiedadPrefs();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

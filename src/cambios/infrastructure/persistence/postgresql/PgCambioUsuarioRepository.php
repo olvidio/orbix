@@ -4,7 +4,6 @@ namespace src\cambios\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\cambios\domain\criteria\CambioUsuarioField;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -78,18 +77,6 @@ class PgCambioUsuarioRepository extends ClaseRepository implements CambioUsuario
         }
 
         return $result;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<CambioUsuario>
-     */
-    public function getCambiosUsuario(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(CambioUsuarioField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
