@@ -14,6 +14,7 @@ use src\actividadestudios\domain\criteria\MatriculaField;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
@@ -853,7 +854,7 @@ class Trasladar
         // Los Out pasan a Dl si la dl destino es la que organiza.
         $AsistenteOutOrgRepository = $this->repositoryWithConnection(AsistenteOutRepositoryInterface::class, $oDBorgE);
         $AsistenteDlDstRepository = $this->repositoryWithConnection(AsistenteDlRepositoryInterface::class, $oDBdstE);
-        $collection = $AsistenteOutOrgRepository->getAsistentes(array('id_nom' => $this->iid_nom));
+        $collection = $AsistenteOutOrgRepository->matching(Criteria::create()->where(Filter::eq(AsistenteField::IdNom, $this->iid_nom)));
         $ActividadAllRepository = $this->actividadAllRepository;
         foreach ($collection as $oAsistenteOut) {
             $err = 0;
@@ -882,7 +883,7 @@ class Trasladar
         }
         // Los Dl pasan a Out
         $AsistenteDlOrgRepository = $this->repositoryWithConnection(AsistenteDlRepositoryInterface::class, $oDBorgE);
-        $collection = $AsistenteDlOrgRepository->getAsistentes(['id_nom' => $this->iid_nom]);
+        $collection = $AsistenteDlOrgRepository->matching(Criteria::create()->where(Filter::eq(AsistenteField::IdNom, $this->iid_nom)));
         $AsistenteOutDstRepository = $this->repositoryWithConnection(AsistenteOutRepositoryInterface::class, $oDBdstE);
         foreach ($collection as $oAsistenteDl) {
             $err = 0;

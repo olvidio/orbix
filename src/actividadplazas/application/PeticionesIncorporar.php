@@ -15,6 +15,7 @@ use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\asistentes\domain\entity\Asistente;
 use src\actividades\domain\entity\TiposActividades;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
@@ -193,13 +194,16 @@ final class PeticionesIncorporar
      */
     private function tieneAsistencia(int $id_nom, array $aId_activ): bool
     {
-        $cAsistentes = $this->asistenteDlRepository->getAsistentes(['id_nom' => $id_nom, 'propio' => 't']);
+        $criteria = Criteria::create()
+            ->where(Filter::eq(AsistenteField::IdNom, $id_nom))
+            ->andWhere(Filter::eq(AsistenteField::Propio, true));
+        $cAsistentes = $this->asistenteDlRepository->matching($criteria);
         foreach ($cAsistentes as $oAsistente) {
             if (array_key_exists($oAsistente->getId_activ(), $aId_activ)) {
                 return true;
             }
         }
-        $cAsistentesOut = $this->asistenteOutRepository->getAsistentes(['id_nom' => $id_nom, 'propio' => 't']);
+        $cAsistentesOut = $this->asistenteOutRepository->matching($criteria);
         foreach ($cAsistentesOut as $oAsistente) {
             if (array_key_exists($oAsistente->getId_activ(), $aId_activ)) {
                 return true;
