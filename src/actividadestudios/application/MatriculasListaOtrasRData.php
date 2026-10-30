@@ -9,6 +9,9 @@ use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -177,7 +180,7 @@ final class MatriculasListaOtrasRData
         }
 
         $fichas = [];
-        foreach ($this->personaExRepository->getPersonas(['id_nom' => $ids], ['id_nom' => 'IN']) as $persona) {
+        foreach ($this->personaExRepository->matching(Criteria::create()->where(Filter::in(PersonaField::IdNom, $ids))) as $persona) {
             $fichas[$persona->getId_nom()] = $persona;
         }
 

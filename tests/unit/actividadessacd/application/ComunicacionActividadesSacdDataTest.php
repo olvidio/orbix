@@ -164,7 +164,7 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
         $personaSacdRepo->method('matching')->willReturn([$oPersona]);
 
         $personaExRepo = $this->createMock(PersonaExRepositoryInterface::class);
-        $personaExRepo->method('getPersonas')->willReturn([]);
+        $personaExRepo->method('matching')->willReturn([]);
 
         $centroDlRepo = $this->createMock(CentroDlRepositoryInterface::class);
         $centroDlRepo->method('matching')->willReturn([]);

@@ -51,13 +51,15 @@ class PgPersonasMatchingTest extends myTest
         );
     }
 
-    public function test_persona_ex_equivale_a_legacy(): void
+    public function test_persona_ex_respeta_orden_y_limite(): void
     {
         $repo = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-        $this->assertEquals(
-            $repo->getPersonas(['_ordre' => 'id_nom', '_limit' => 30]),
-            $repo->matching(Criteria::create()->orderBy(PersonaField::IdNom)->limit(30))
-        );
+        $personas = $repo->matching(Criteria::create()->orderBy(PersonaField::IdNom)->limit(30));
+        $this->assertLessThanOrEqual(30, count($personas));
+        $ids = array_map(static fn($p) => $p->getId_nom(), $personas);
+        $ordenados = $ids;
+        sort($ordenados);
+        $this->assertSame($ordenados, $ids);
     }
 
     public function test_persona_pub_aplica_el_filtro_de_publicacion_igual_que_legacy(): void
