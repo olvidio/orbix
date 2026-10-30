@@ -8,6 +8,9 @@ use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
@@ -100,6 +103,28 @@ class Select_cargos_personas_en_actividad
         ];
     }
 
+    /**
+     * Traduce el filtro de {@see BotonesCurso} (`status` y `f_ini` BETWEEN `'ini','fin'`) a `Criteria`.
+     *
+     * @param array<string, mixed> $aWhere
+     */
+    private function criterioActividadDeCurso(array $aWhere): Criteria
+    {
+        $criteria = Criteria::create();
+        if (isset($aWhere['status'])) {
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Status, (int) $aWhere['status']));
+        }
+        if (isset($aWhere['f_ini'])) {
+            [$ini, $fin] = array_map(
+                static fn(string $f): string => trim($f, "' "),
+                explode(',', (string) $aWhere['f_ini'])
+            );
+            $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FIni, $ini, $fin));
+        }
+
+        return $criteria;
+    }
+
     private function loadValores(): void
     {
         if (!empty($this->a_valores)) {
@@ -109,7 +134,6 @@ class Select_cargos_personas_en_actividad
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $this->oBotonesCurso = new BotonesCurso($this->modo_curso);
         $aWhere = $this->oBotonesCurso->getWhere();
-        $aOperator = $this->oBotonesCurso->getOperator();
 
         $oPersona = $this->resolvePersona();
         if ($oPersona === null) {
@@ -140,9 +164,8 @@ class Select_cargos_personas_en_actividad
         }
 
         $cCargosEnActividad = $this->actividadCargoRepository->getActividadCargosDeAsistente(
-            ['id_nom' => $this->id_pau],
-            $aWhere,
-            $aOperator
+            $this->id_pau,
+            $this->criterioActividadDeCurso($aWhere)
         );
 
         $this->a_valores = SelectCargosPersonasEnActividadTableData::buildValorRows(

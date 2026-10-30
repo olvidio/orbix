@@ -163,15 +163,19 @@ class PgActividadCargoDlRepositoryTest extends myTest
         // TODO: Añadir más aserciones según la estructura esperada
     }
 
-    /*
-    public function test_get_actividad_cargos_de_asistente_sin_filtros()
+    public function test_get_actividad_cargos_de_asistente_con_filtro_de_actividad()
     {
-        $result = $this->repository->getActividadCargosDeAsistente();
-        
+        $criteria = \src\shared\domain\criteria\Criteria::create()->where(
+            \src\shared\domain\criteria\Filter::between(
+                \src\actividades\domain\criteria\ActividadAllField::FIni,
+                '2000-01-01',
+                '2000-12-31'
+            )
+        );
+        $result = $this->repository->getActividadCargosDeAsistente(30011345, $criteria);
+
         $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
     }
-    */
 
     /*
     public function test_get_asistente_cargo_de_actividad_sin_filtros()

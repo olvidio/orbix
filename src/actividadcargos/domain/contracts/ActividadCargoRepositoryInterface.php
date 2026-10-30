@@ -21,12 +21,10 @@ interface ActividadCargoRepositoryInterface
     public function getActividadSacds(int $iid_activ): array;
 
     /**
-     * @param array<string, mixed> $aWhereNom
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * @param \src\shared\domain\criteria\Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
      * @return array<string, ActividadCargo>
      */
-    public function getActividadCargosDeAsistente(array $aWhereNom, array $aWhere = [], array $aOperators = []): array;
+    public function getActividadCargosDeAsistente(int $idNom, \src\shared\domain\criteria\Criteria $criteriaActividad): array;
 
     /**
      * @param array<string, mixed> $aWhere
