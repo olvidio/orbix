@@ -236,26 +236,18 @@ class ActividadesPorZonasService
         string $Qpropuesta
     ): array {
         $aActivPersona = [];
-        $aWhereAct = [
-            'f_ini' => "'$fin_iso'",
-            'f_fin' => "'$inicio_iso'",
-        ];
-        $aOperadorAct = [
-            'f_ini' => '<=',
-            'f_fin' => '>=',
-        ];
+        $criterioActividad = Criteria::create()
+            ->where(Filter::lte(ActividadAllField::FIni, $fin_iso))
+            ->andWhere(Filter::gte(ActividadAllField::FFin, $inicio_iso));
         if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpropuesta)) {
-            $aWhereAct['status'] = StatusId::ACTUAL;
+            $criterioActividad = $criterioActividad->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL));
         } else {
-            $aWhereAct['status'] = StatusId::BORRABLE;
-            $aOperadorAct['status'] = '!=';
+            $criterioActividad = $criterioActividad->andWhere(Filter::neq(ActividadAllField::Status, StatusId::BORRABLE));
         }
 
         $cAsistentes = $this->actividadCargoRepository->getAsistenteCargoDeActividad(
-            ['id_nom' => $id_nom],
-            [],
-            $aWhereAct,
-            $aOperadorAct
+            (int) $id_nom,
+            $criterioActividad
         );
 
         foreach ($cAsistentes as $aAsistente) {

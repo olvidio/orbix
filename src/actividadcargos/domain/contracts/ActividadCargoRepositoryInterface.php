@@ -27,22 +27,16 @@ interface ActividadCargoRepositoryInterface
     public function getActividadCargosDeAsistente(int $idNom, \src\shared\domain\criteria\Criteria $criteriaActividad): array;
 
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperador
-     * @param array<string, mixed> $aWhereAct
-     * @param array<string, string> $aOperadorAct
+     * @param Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
      * @return array<int, array<string, mixed>>
      */
-    public function getAsistenteCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array;
+    public function getAsistenteCargoDeActividad(int $idNom, Criteria $criteriaActividad): array;
 
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperador
-     * @param array<string, mixed> $aWhereAct
-     * @param array<string, string> $aOperadorAct
+     * @param Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
      * @return array<int, array<string, mixed>>
      */
-    public function getCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array;
+    public function getCargoDeActividad(int $idNom, Criteria $criteriaActividad): array;
 
     /**
      * ActividadCargo que cumplen el criterio.

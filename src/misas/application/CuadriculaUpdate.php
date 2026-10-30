@@ -217,20 +217,12 @@ class CuadriculaUpdate
         $donde = '';
 
         // Actividades con el sacd como asistente en el dia.
-        $aWhereAct = [
-            'f_ini' => $dia_iso,
-            'f_fin' => $dia_iso,
-            'status' => StatusId::ACTUAL,
-        ];
-        $aOperadorAct = [
-            'f_ini' => '<=',
-            'f_fin' => '>=',
-        ];
         $cAsistentes = $this->actividadCargoRepository->getAsistenteCargoDeActividad(
-            ['id_nom' => $id_sacd],
-            [],
-            $aWhereAct,
-            $aOperadorAct,
+            $id_sacd,
+            Criteria::create()
+                ->where(Filter::lte(ActividadAllField::FIni, $dia_iso))
+                ->andWhere(Filter::gte(ActividadAllField::FFin, $dia_iso))
+                ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL)),
         );
         foreach ($cAsistentes as $aAsistente) {
             $id_activ = $aAsistente['id_activ'];

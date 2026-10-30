@@ -670,20 +670,17 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
             $esta_sacd[$id_nom][$num_dia] = 1;
         }
 
-        $aWhereAct = [];
-        $aOperadorAct = [];
         $sInicio_iso = $oInicio->getIso();
         $sFin_iso = $oFin->getIso();
-        $aWhereAct['f_ini'] = $sFin_iso;
-        $aOperadorAct['f_ini'] = '<=';
-        $aWhereAct['f_fin'] = $sInicio_iso;
-        $aOperadorAct['f_fin'] = '>=';
-        $aWhereAct['status'] = StatusId::ACTUAL;
-        $aWhere = ['id_nom' => $id_nom];
-        $aOperador = [];
 
         $ActividadCargoRepository = $self->getActividadCargoRepository();
-        $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+        $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad(
+            (int) $id_nom,
+            Criteria::create()
+                ->where(Filter::lte(ActividadAllField::FIni, $sFin_iso))
+                ->andWhere(Filter::gte(ActividadAllField::FFin, $sInicio_iso))
+                ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+        );
 
         foreach ($cAsistentes as $aAsistente) {
             $id_activ = $aAsistente['id_activ'];

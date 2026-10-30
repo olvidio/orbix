@@ -7,7 +7,6 @@ use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\asistentes\domain\criteria\AsistenteField;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\config\ConfigGlobal;
@@ -171,17 +170,6 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
     }
 
     /**
-     * Transición: los llamantes aún pasan `$aWhere`/`$aOperators` sobre la actividad; se traducen aquí a `Criteria`.
-     *
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     */
-    private function criterioActividad(array $aWhere, array $aOperators): Criteria
-    {
-        return (new LegacyWhereAdapter(ActividadAllField::class, []))->toCriteria($aWhere, $aOperators);
-    }
-
-    /**
      * retorna l'array d'objectes de tipus ActividadCargo
      *
      * @param Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
@@ -224,22 +212,18 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * retorna un array amb els asistents i el carrec (si el té):
      *        $aAsis[$id_activ] = array('id_activ','id_nom','propio','id_cargo');
      *
-     * @param array<string, mixed> $aWhere para la asistencia (id_nom y plaza)
-     * @param array<string, string> $aOperador para la asistencia (id_nom y plaza)
-     * @param array<string, mixed> $aWhereAct para la Actividad
-     * @param array<string, string> $aOperadorAct para la Actividad
+     * @param Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
      * @return array<int, array{id_activ: int, id_nom: int|string, propio: mixed, plaza?: mixed, id_cargo?: int}>
      */
-    public function getAsistenteCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array
+    public function getAsistenteCargoDeActividad(int $idNom, Criteria $criteriaActividad): array
     {
 
-        if (empty($aWhere['id_nom'])) {
+        if ($idNom === 0) {
             return [];
         }
-        $id_nom = is_numeric($aWhere['id_nom']) ? (int) $aWhere['id_nom'] : 0;
+        $id_nom = $idNom;
 
-        $criteriaAsistente = (new LegacyWhereAdapter(AsistenteField::class, []))->toCriteria($aWhere, $aOperador);
-        $criteriaActividad = $this->criterioActividad($aWhereAct, $aOperadorAct);
+        $criteriaAsistente = Criteria::create()->where(Filter::eq(AsistenteField::IdNom, $id_nom));
         $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaActividad);
 
         $cCargos = $this->matching(Criteria::create()->where(Filter::eq(ActividadCargoField::IdNom, $id_nom)));
@@ -290,23 +274,20 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * retorna un array amb els carrecs (perque sigui compatible amb: getAsistenteCargoDeActividad).
      *       $aAsis[$id_activ] = array('id_activ','id_nom','propio','id_cargo');
      *
-     * @param array<string, mixed> $aWhere para la asistencia (id_nom y plaza)
-     * @param array<string, string> $aOperador para la asistencia (id_nom y plaza)
-     * @param array<string, mixed> $aWhereAct para la Actividad
-     * @param array<string, string> $aOperadorAct para la Actividad
+     * @param Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
      * @return array<int, array{id_activ: int, id_nom: int|string, propio: string, id_cargo: int, plaza: int}>
      */
-    public function getCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array
+    public function getCargoDeActividad(int $idNom, Criteria $criteriaActividad): array
     {
 
-        if (empty($aWhere['id_nom'])) {
+        if ($idNom === 0) {
             return [];
         }
-        $id_nom = is_numeric($aWhere['id_nom']) ? (int) $aWhere['id_nom'] : 0;
+        $id_nom = $idNom;
 
         $cCargos = $this->matching(Criteria::create()->where(Filter::eq(ActividadCargoField::IdNom, $id_nom)));
         // seleccionar las actividades segun los criterios de búsqueda.
-        $aListaIds = $this->actividadRepository->idsConFechaInicio($this->criterioActividad($aWhereAct, $aOperadorAct));
+        $aListaIds = $this->actividadRepository->idsConFechaInicio($criteriaActividad);
         // descarto los que no están.
         $cActividadesOk = [];
         foreach ($cCargos as $oCargo) {

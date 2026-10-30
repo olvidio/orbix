@@ -11,6 +11,7 @@ use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\criteria\CambioAnotadoField;
 use src\cambios\domain\criteria\CambioUsuarioField;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\cambios\domain\entity\CambioAnotado;
@@ -360,13 +361,11 @@ class Avisos
         switch ($this->sObjeto) {
             case 'Actividad':
                 // busco los datos de las actividades
-                $aWhereAct = ['id_activ' => $id_activ];
-                $aOperadorAct = [];
-                $aWhere = ['id_nom' => $id_nom];
-                $aOperador = [];
-
                 $permiso_ver = false;
-                $cAsistentes = $this->actividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+                $cAsistentes = $this->actividadCargoRepository->getAsistenteCargoDeActividad(
+                    (int) $id_nom,
+                    Criteria::create()->where(Filter::eq(ActividadAllField::IdActiv, $id_activ))
+                );
                 if ($cAsistentes !== [] && isset($cAsistentes[$id_activ])) {
                     $aAsistente = $cAsistentes[$id_activ];
                     $propio = \src\shared\domain\helpers\FuncTablasSupport::isTrue($aAsistente['propio'] ?? false) === true;
