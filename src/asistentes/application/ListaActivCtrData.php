@@ -7,6 +7,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\XPermisos;
@@ -156,9 +157,17 @@ final class ListaActivCtrData
             $id_ubi = $oCentro->getId_ubi();
             $nombre_ubi = $oCentro->getNombre_ubi();
             if ($tabla === 'p_sssc') {
-                $cPersonas = $this->personaSSSCRepository->getPersonas(['id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1']);
+                $cPersonas = $this->personaSSSCRepository->matching(Criteria::create()
+                    ->where(Filter::eq(PersonaField::IdCtr, $id_ubi))
+                    ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->orderBy(PersonaField::Apellido1));
             } else {
-                $cPersonas = $this->personaDlRepository->getPersonas(['id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom']);
+                $cPersonas = $this->personaDlRepository->matching(Criteria::create()
+                    ->where(Filter::eq(PersonaField::IdCtr, $id_ubi))
+                    ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->orderBy(PersonaField::Apellido1)
+                    ->addOrderBy(PersonaField::Apellido2)
+                    ->addOrderBy(PersonaField::Nom));
             }
 
             $aCentros[$id_ubi]['nombre_ubi'] = $nombre_ubi;
