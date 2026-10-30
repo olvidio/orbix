@@ -13,6 +13,7 @@ use src\actividadestudios\domain\PosiblesCa;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -164,32 +165,28 @@ final class CaPosiblesData
                 throw new \InvalidArgumentException(_("Parámetro na no válido"));
         }
 
-        $aWhere = [];
-        $aOperador = [];
-        $alum = 0;
         if (!empty($aSel)) {
-            $idNomLst = '';
+            $idsNom = [];
             foreach ($aSel as $selBox) {
                 $partsSel = explode('#', is_scalar($selBox) ? (string) $selBox : '');
                 $idNom = (int) $partsSel[0];
-                if ($alum > 0) {
-                    $idNomLst .= '|';
-                }
                 if (!empty($idNom)) {
-                    $idNomLst .= '^' . $idNom . '$';
+                    $idsNom[] = $idNom;
                 }
-                $alum++;
             }
-            $aWhere['id_nom'] = $idNomLst;
-            $aOperador['id_nom'] = '~';
-            $aWhere['_ordre'] = 'apellido1,apellido2,nom';
+            $criterioPersona = Criteria::create()
+                ->where(Filter::in(PersonaField::IdNom, $idsNom))
+                ->orderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom);
             $Qtexto = 'image';
             $personaRepository = $this->personaDlRepository;
         } else {
+            $criterioPersona = Criteria::create();
             switch ($idTablaPersona) {
                 case 'n':
-                    $aWhere['nivel_stgr'] = NivelStgrId::getArrayNivelStgrOn();
-                    $aOperador['nivel_stgr'] = 'IN';
+                    $criterioPersona = $criterioPersona
+                        ->where(Filter::in(PersonaField::NivelStgr, NivelStgrId::getArrayNivelStgrOn()));
                     $personaRepository = $this->personaNRepository;
                     break;
                 case 'a':
@@ -198,16 +195,21 @@ final class CaPosiblesData
                 default:
                     throw new \RuntimeException('id_tabla_persona');
             }
-            $aWhere['situacion'] = 'A';
-            $aWhere['sacd'] = 'f';
-            $aWhere['id_tabla'] = $idTablaPersona;
-            $aWhere['_ordre'] = 'id_ctr,apellido1,apellido2,nom';
+            $criterioPersona = $criterioPersona
+                ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                ->andWhere(Filter::eq(PersonaField::Sacd, false))
+                ->andWhere(Filter::eq(PersonaField::IdTabla, $idTablaPersona));
             if ($idCtr !== '') {
-                $aWhere['id_ctr'] = $idCtr;
+                $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::IdCtr, (int) $idCtr));
             }
+            $criterioPersona = $criterioPersona
+                ->orderBy(PersonaField::IdCtr)
+                ->addOrderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom);
         }
 
-        $cPersonas = $personaRepository->getPersonas($aWhere, $aOperador);
+        $cPersonas = $personaRepository->matching($criterioPersona);
 
         $criterioActividad = Criteria::create()
             ->where(Filter::matches(ActividadAllField::IdTipoActiv, $patronTipoActiv))

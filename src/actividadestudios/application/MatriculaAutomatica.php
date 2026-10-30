@@ -24,6 +24,7 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\criteria\PersonaNotaField;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
@@ -95,12 +96,10 @@ final class MatriculaAutomatica
             }
             $cAlumnos = [$oPersona];
         } else {
-            $cAlumnos = $this->personaDlRepository->getPersonas(
-                [
-                    'situacion' => 'A',
-                    'nivel_stgr' => NivelStgrId::R,
-                ],
-                ['nivel_stgr' => '!='],
+            $cAlumnos = $this->personaDlRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->andWhere(Filter::neq(PersonaField::NivelStgr, NivelStgrId::R))
             );
         }
 

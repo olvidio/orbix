@@ -5,6 +5,7 @@ namespace src\personas\application;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\PersonaPublicacion;
+use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
@@ -67,8 +68,10 @@ final class PersonasSelectData
         $Qapellido2 = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apellido2');
         $Qcentro = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'centro');
 
+        // `$aWhere/$aOperador` solo los sigue usando `getPersonasParaListado` (rama de paso).
         $aWhere = [];
         $aOperador = [];
+        $criterioPersona = Criteria::create();
         $oPerm = $_SESSION['oPerm'] ?? null;
         $tienePermOficina = static fn (string $perm): bool => $oPerm instanceof XPermisos
             && $oPerm->have_perm_oficina($perm);
@@ -81,6 +84,7 @@ final class PersonasSelectData
             }
             $id_nom = (int) $oMiUsuario->getCsvIdPauAsString();
             $aWhere = ['id_nom' => $id_nom];
+            $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::IdNom, $id_nom));
             $PersonaDlrepository = $this->personaDlRepository;
             $oPersona = $PersonaDlrepository->findById($id_nom);
             $tabla = match ($oPersona?->getId_tabla()) {
@@ -94,25 +98,21 @@ final class PersonasSelectData
         } else {
             $criterioCtr = null;
 
-            if (!empty($Qapellido1)) {
-                $aWhere['apellido1'] = $Qapellido1;
-                if (empty($Qexacto)) {
-                    $aWhere['apellido1'] = '^' . $aWhere['apellido1'];
-                    $aOperador['apellido1'] = 'sin_acentos';
+            foreach ([
+                'apellido1' => [PersonaField::Apellido1, $Qapellido1],
+                'apellido2' => [PersonaField::Apellido2, $Qapellido2],
+                'nom' => [PersonaField::Nom, $Qnombre],
+            ] as $clave => [$campo, $valor]) {
+                if (empty($valor)) {
+                    continue;
                 }
-            }
-            if (!empty($Qapellido2)) {
-                $aWhere['apellido2'] = $Qapellido2;
+                $aWhere[$clave] = $valor;
                 if (empty($Qexacto)) {
-                    $aWhere['apellido2'] = '^' . $aWhere['apellido2'];
-                    $aOperador['apellido2'] = 'sin_acentos';
-                }
-            }
-            if (!empty($Qnombre)) {
-                $aWhere['nom'] = $Qnombre;
-                if (empty($Qexacto)) {
-                    $aWhere['nom'] = '^' . $aWhere['nom'];
-                    $aOperador['nom'] = 'sin_acentos';
+                    $aWhere[$clave] = '^' . $valor;
+                    $aOperador[$clave] = 'sin_acentos';
+                    $criterioPersona = $criterioPersona->andWhere(Filter::matchesUnaccented($campo, '^' . $valor));
+                } else {
+                    $criterioPersona = $criterioPersona->andWhere(Filter::eq($campo, $valor));
                 }
             }
             if (!empty($Qcentro)) {
@@ -128,12 +128,15 @@ final class PersonasSelectData
             }
             if (empty($Qcmb)) {
                 $aWhere['situacion'] = 'A';
+                $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::Situacion, 'A'));
             } elseif (!$tienePermOficina('dtor')) {
                 $aWhere['situacion'] = 'B';
                 $aOperador['situacion'] = '!=';
+                $criterioPersona = $criterioPersona->andWhere(Filter::neq(PersonaField::Situacion, 'B'));
             }
             if ($Qes_sacd === 1) {
                 $aWhere['sacd'] = 't';
+                $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::Sacd, true));
             }
 
             if ($criterioCtr !== null) {
@@ -146,6 +149,7 @@ final class PersonasSelectData
                 if (!empty($aId_ctrs)) {
                     $aWhere['id_ctr'] = "{" . implode(', ', $aId_ctrs) . "}";
                     $aOperador['id_ctr'] = 'ANY';
+                    $criterioPersona = $criterioPersona->andWhere(Filter::in(PersonaField::IdCtr, array_map('intval', $aId_ctrs)));
                 } else {
                     $tabla = 'nada';
                 }
@@ -161,21 +165,21 @@ final class PersonasSelectData
         switch ($tabla) {
             case 'p_sssc':
                 $obj_pau = 'PersonaSSSC';
-                $cPersonas = $this->personaSSSCRepository->getPersonas($aWhere, $aOperador);
+                $cPersonas = $this->personaSSSCRepository->matching($criterioPersona);
                 if ($tienePermOficina('des')) {
                     $permiso = 3;
                 }
                 break;
             case 'p_supernumerarios':
                 $obj_pau = 'PersonaS';
-                $cPersonas = $this->personaSRepository->getPersonas($aWhere, $aOperador);
+                $cPersonas = $this->personaSRepository->matching($criterioPersona);
                 if ($tienePermOficina('sg')) {
                     $permiso = 3;
                 }
                 break;
             case 'p_numerarios':
                 $obj_pau = 'PersonaN';
-                $cPersonas = $this->personaNRepository->getPersonas($aWhere, $aOperador);
+                $cPersonas = $this->personaNRepository->matching($criterioPersona);
                 if ($tienePermOficina('sm')) {
                     $permiso = 3;
                 }
@@ -183,14 +187,14 @@ final class PersonasSelectData
             case 'p_nax':
                 $obj_pau = 'PersonaNax';
                 $repoNax = $this->personaNaxRepository;
-                $cPersonas = $repoNax->getPersonas($aWhere, $aOperador);
+                $cPersonas = $repoNax->matching($criterioPersona);
                 if ($tienePermOficina('nax')) {
                     $permiso = 3;
                 }
                 break;
             case 'p_agregados':
                 $obj_pau = 'PersonaAgd';
-                $cPersonas = $this->personaAgdRepository->getPersonas($aWhere, $aOperador);
+                $cPersonas = $this->personaAgdRepository->matching($criterioPersona);
                 if ($tienePermOficina('agd')) {
                     $permiso = 3;
                 }
