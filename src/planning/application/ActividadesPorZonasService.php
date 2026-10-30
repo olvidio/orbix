@@ -5,7 +5,9 @@ namespace src\planning\application;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\domain\helpers\FuncTablasSupport;
 use src\actividades\domain\value_objects\StatusId;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
@@ -267,8 +269,14 @@ class ActividadesPorZonasService
             $idCargoRaw = $aAsistente['id_cargo'] ?? null;
             $id_cargo = is_scalar($idCargoRaw) && $idCargoRaw !== '' ? (string)$idCargoRaw : '';
 
-            $aWhereAct['id_activ'] = $id_activ;
-            $cActividades = $this->actividadRepository->getActividades($aWhereAct, $aOperadorAct);
+            $criteriaActiv = Criteria::create()
+                ->where(Filter::lte(ActividadAllField::FIni, $fin_iso))
+                ->andWhere(Filter::gte(ActividadAllField::FFin, $inicio_iso))
+                ->andWhere(FuncTablasSupport::isTrue($Qpropuesta)
+                    ? Filter::neq(ActividadAllField::Status, StatusId::BORRABLE)
+                    : Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+                ->andWhere(Filter::eq(ActividadAllField::IdActiv, $id_activ));
+            $cActividades = $this->actividadRepository->matching($criteriaActiv);
             if (count($cActividades) === 0) {
                 continue;
             }
