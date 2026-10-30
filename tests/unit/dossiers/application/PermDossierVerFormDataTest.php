@@ -208,11 +208,6 @@ final class PermDossierVerFormDataTest extends TestCase
                 return [];
             }
 
-            public function getTiposDossiers(array $aWhere = [], array $aOperators = []): array
-            {
-                return [];
-            }
-
             public function Eliminar(TipoDossier $TipoDossier): bool
             {
                 return false;

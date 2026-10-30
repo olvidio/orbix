@@ -33,10 +33,15 @@ class PgDossiersMatchingTest extends myTest
                 ->where(Filter::eq(TipoDossierField::TablaFrom, 'p'))
                 ->orderBy(TipoDossierField::IdTipoDossier)
         );
-        $legacy = $this->tipoRepo->getTiposDossiers(['tabla_from' => 'p', '_ordre' => 'id_tipo_dossier']);
 
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $ids = array_map(fn($t) => $t->getId_tipo_dossier(), $nuevo);
+        $ordenados = $ids;
+        sort($ordenados);
+        $this->assertSame($ordenados, $ids);
+        foreach ($nuevo as $tipo) {
+            $this->assertSame('p', $tipo->getTabla_from());
+        }
     }
 
     public function test_tipo_dossier_find_by_codigo_inexistente_devuelve_null(): void
@@ -54,14 +59,10 @@ class PgDossiersMatchingTest extends myTest
             ->andWhere(Filter::eq(DossierField::IdPau, $dossier->getId_pau()))
             ->andWhere(Filter::eq(DossierField::IdTipoDossier, $dossier->getId_tipo_dossier()));
         $nuevo = $this->dossierRepo->matching($criteria);
-        $legacy = $this->dossierRepo->getDossieres([
-            'tabla' => $dossier->getTablaVo()->value(),
-            'id_pau' => $dossier->getId_pau(),
-            'id_tipo_dossier' => $dossier->getId_tipo_dossier(),
-        ]);
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertEquals($dossier->getId_pau(), $nuevo[0]->getId_pau());
+        $this->assertEquals($dossier->getId_tipo_dossier(), $nuevo[0]->getId_tipo_dossier());
 
         $this->dossierRepo->Eliminar($nuevo[0]);
         $this->assertSame([], $this->dossierRepo->matching($criteria));

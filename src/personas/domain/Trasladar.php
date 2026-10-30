@@ -19,6 +19,7 @@ use src\certificados\domain\entity\CertificadoEmitido;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\dossiers\domain\criteria\DossierField;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
@@ -915,7 +916,11 @@ class Trasladar
         $DossierRepository = $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBorg);
         $DossierRepositoryDst = $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBdst);
         // Comprobar que están apuntados.
-        $cDossiers = $DossierRepository->getDossieres(['tabla' => 'p', 'id_pau' => $this->iid_nom]);
+        $cDossiers = $DossierRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(DossierField::Tabla, 'p'))
+                ->andWhere(Filter::eq(DossierField::IdPau, $this->iid_nom))
+        );
 
         $TipoDossierRepository = $this->tipoDossierRepository;
         foreach ($cDossiers as $oDossier) {

@@ -5,7 +5,6 @@ namespace src\dossiers\infrastructure\persistence\postgresql;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\dossiers\domain\criteria\DossierField;
@@ -60,20 +59,6 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
             $dossieres[] = Dossier::fromArray($aDatos);
         }
         return $dossieres;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo Dossier
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Dossier> Una colección de objetos de tipo Dossier
-     */
-    public function getDossieres(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(DossierField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
