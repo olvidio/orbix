@@ -6,6 +6,7 @@ use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\Criteria;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
@@ -119,13 +120,11 @@ final class ActivPendientesSelectData
         if ($Qsactividad !== 'ca' && $Qsactividad !== 'crt') {
             $cActividades = [];
         } else {
-            $aWhereA = [];
-            $aOperadorA = [];
-            $aWhereA['id_tipo_activ'] = $id_tipo_activ;
-            $aOperadorA['id_tipo_activ'] = '~';
-            $aWhereA['f_ini'] = "'$inicurs','$fincurs'";
-            $aOperadorA['f_ini'] = 'BETWEEN';
-            $cActividades = $this->actividadRepository->getActividades($aWhereA, $aOperadorA);
+            $cActividades = $this->actividadRepository->matching(
+                Criteria::create()
+                    ->where(Filter::matches(ActividadAllField::IdTipoActiv, $id_tipo_activ))
+                    ->andWhere(Filter::between(ActividadAllField::FIni, $inicurs, $fincurs))
+            );
         }
         $aAsistentes = [];
         foreach ($cActividades as $oActividad) {

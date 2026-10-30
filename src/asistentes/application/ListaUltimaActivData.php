@@ -7,7 +7,9 @@ use frontend\shared\web\Lista;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\domain\criteria\OrderDirection;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
@@ -145,13 +147,13 @@ final class ListaUltimaActivData
                 $fin_m = $oConfig->getMesFinCrt();
                 $f_iso_final = "$anyCv-$fin_m-$fin_d";
 
-                $aWhereUltima = ['id_tipo_activ' => '1431',
-                    'status' => 2,
-                    'f_ini' => $f_iso_final,
-                    '_ordre' => 'f_ini DESC',
-                ];
-                $aOperadorUltima = ['f_ini' => '<'];
-                $cActividades = $this->actividadDlRepository->getActividades($aWhereUltima, $aOperadorUltima);
+                $cActividades = $this->actividadDlRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(ActividadAllField::IdTipoActiv, '1431'))
+                        ->andWhere(Filter::eq(ActividadAllField::Status, 2))
+                        ->andWhere(Filter::lt(ActividadAllField::FIni, $f_iso_final))
+                        ->orderBy(ActividadAllField::FIni, OrderDirection::Desc)
+                );
                 if ($cActividades !== []) {
                     /** @var \src\actividades\domain\entity\ActividadAll $oActividadU */
                     $oActividadU = $cActividades[0];

@@ -7,7 +7,11 @@ namespace Tests\unit\asistentes\application;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use src\asistentes\application\ListaAsisConjuntoActivData;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Operator;
 
 /**
  * El contenedor devuelve una sola instancia de ListaPlazasConjuntoActividades.
@@ -56,29 +60,15 @@ final class ListaAsisConjuntoActivDataTest extends TestCase
     public function test_listas_de_la_dl_y_de_otras_no_comparten_filtro(): void
     {
         $compartida = new class {
-            /** @var array<string, mixed> */
-            public array $where = [];
-            /** @var array<string, string> */
-            public array $operador = [];
+            public ?Criteria $criteria = null;
 
             public function setMi_dele(string $miDele): void
             {
             }
 
-            /**
-             * @param array<string, mixed> $where
-             */
-            public function setWhere(array $where): void
+            public function setCriteria(Criteria $criteria): void
             {
-                $this->where = $where;
-            }
-
-            /**
-             * @param array<string, string> $operador
-             */
-            public function setOperador(array $operador): void
-            {
-                $this->operador = $operador;
+                $this->criteria = $criteria;
             }
 
             public function setId_tipo_activ(string $idTipoActiv): void
@@ -91,26 +81,26 @@ final class ListaAsisConjuntoActivDataTest extends TestCase
 
             public function getLista(): object
             {
-                $where = $this->where;
-                $operador = $this->operador;
+                $criteria = $this->criteria;
 
-                return new class($where, $operador) {
-                    /**
-                     * @param array<string, mixed> $where
-                     * @param array<string, string> $operador
-                     */
+                return new class($criteria) {
                     public function __construct(
-                        private array $where,
-                        private array $operador,
+                        private ?Criteria $criteria,
                     ) {
                     }
 
                     public function listaPaginada(): string
                     {
-                        $dl = (string) ($this->where['dl_org'] ?? '');
-                        $op = (string) ($this->operador['dl_org'] ?? '=');
+                        $dl = '';
+                        $op = Operator::Eq;
+                        foreach ($this->criteria?->filters() ?? [] as $filter) {
+                            if ($filter instanceof Filter && $filter->field === ActividadAllField::DlOrg) {
+                                $dl = (string) $filter->value;
+                                $op = $filter->operator;
+                            }
+                        }
 
-                        return $op === '!=' ? '[OTRAS:' . $dl . ']' : '[PROPIA:' . $dl . ']';
+                        return $op === Operator::Neq ? '[OTRAS:' . $dl . ']' : '[PROPIA:' . $dl . ']';
                     }
                 };
             }

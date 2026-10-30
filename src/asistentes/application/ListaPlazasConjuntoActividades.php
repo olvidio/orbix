@@ -53,46 +53,19 @@ class ListaPlazasConjuntoActividades
         return $this->smi_dele;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function getWhere(): array
-    {
-        return $this->aWhere;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function getOperador(): array
-    {
-        return $this->aOperador;
-    }
-
     public function setMi_dele(string $smi_dele): void
     {
         $this->smi_dele = $smi_dele;
     }
 
-    /**
-     * @param array<string, mixed> $aWhere
-     */
-    public function setWhere(array $aWhere): void
+    public function setCriteria(Criteria $criteria): void
     {
-        $this->aWhere = $aWhere;
+        $this->criteria = $criteria;
     }
 
     public function setSacd(bool $sacd): void
     {
         $this->bsacd = $sacd;
-    }
-
-    /**
-     * @param array<string, string> $aOperador
-     */
-    public function setOperador(array $aOperador): void
-    {
-        $this->aOperador = $aOperador;
     }
 
     public function getId_tipo_activ(): string
@@ -107,10 +80,7 @@ class ListaPlazasConjuntoActividades
 
     private bool $bsacd = false;
     private string $smi_dele = '';
-    /** @var array<string, mixed> */
-    private array $aWhere = [];
-    /** @var array<string, string> */
-    private array $aOperador = [];
+    private ?Criteria $criteria = null;
     private string $iid_tipo_activ = '';
 
     public function getLista(): Lista
@@ -119,7 +89,7 @@ class ListaPlazasConjuntoActividades
         $sasistentes = $oTipoActiv->getAsistentesText();
         $sactividad = $oTipoActiv->getActividadText();
 
-        $cActividades = $this->actividadRepository->getActividades($this->aWhere, $this->aOperador);
+        $cActividades = $this->actividadRepository->matching($this->criteria ?? Criteria::create());
 
         if (count($cActividades) < 1) {
             // No hacer echo: esta clase participa en endpoints JSON (lista_asis_conjunto_activ_data).
