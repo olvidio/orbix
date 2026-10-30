@@ -14,14 +14,6 @@ interface PlantillaRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Plantilla>
-     */
-    public function getPlantillas(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(Plantilla $Plantilla): bool;
 
     public function Guardar(Plantilla $Plantilla): bool;

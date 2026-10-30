@@ -25,14 +25,6 @@ interface EncargoCtrRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<EncargoCtr>
-     */
-    public function getEncargosCentros(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(EncargoCtr $EncargoCtr): bool;
 
     public function Guardar(EncargoCtr $EncargoCtr): bool;

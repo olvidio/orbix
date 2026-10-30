@@ -14,14 +14,6 @@ interface InicialesSacdRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<InicialesSacd>
-     */
-    public function getInicialesSacd(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(InicialesSacd $InicialesSacd): bool;
 
     public function Guardar(InicialesSacd $InicialesSacd): bool;

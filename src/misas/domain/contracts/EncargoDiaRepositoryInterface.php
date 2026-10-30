@@ -15,14 +15,6 @@ interface EncargoDiaRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<EncargoDia>
-     */
-    public function getEncargoDias(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(EncargoDia $EncargoDia): bool;
 
     public function Guardar(EncargoDia $EncargoDia): bool;
