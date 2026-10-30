@@ -14,6 +14,7 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 
 /**
  * Construye la matriz "alumnos x asignaturas" que muestra
@@ -73,28 +74,27 @@ final class TablaAlumnosAsignaturas
      */
     public function paraRegionStgr(array $aIdDl, array $aDelegacionesStgr): array
     {
-        $dlsTxt = [];
+        $dls = [];
         foreach ($aIdDl as $idDl) {
             if (isset($aDelegacionesStgr[$idDl])) {
-                $dlsTxt[] = "'" . $aDelegacionesStgr[$idDl] . "'";
+                $dls[] = (string) $aDelegacionesStgr[$idDl];
             }
         }
-        if (empty($dlsTxt)) {
+        if (empty($dls)) {
             return ['cabeceras' => $this->cabeceras([]), 'filas' => []];
         }
 
-        $wherePersonas = [
-            'situacion' => 'A',
-            'nivel_stgr' => 'b|c1|c2',
-            'dl' => implode(',', $dlsTxt),
-            '_ordre' => 'dl,nivel_stgr,apellido1,nom',
-        ];
-        $operadoresPersonas = [
-            'nivel_stgr' => '~',
-            'dl' => 'IN',
-        ];
+        // La regex 'b|c1|c2' sobre nivel_stgr (numérico) se conserva tal cual estaba.
+        $criterioPersonas = Criteria::create()
+            ->where(Filter::eq(PersonaField::Situacion, 'A'))
+            ->andWhere(Filter::matches(PersonaField::NivelStgr, 'b|c1|c2'))
+            ->andWhere(Filter::in(PersonaField::Dl, $dls))
+            ->orderBy(PersonaField::Dl)
+            ->addOrderBy(PersonaField::NivelStgr)
+            ->addOrderBy(PersonaField::Apellido1)
+            ->addOrderBy(PersonaField::Nom);
 
-        return $this->construirTabla($wherePersonas, $operadoresPersonas, true);
+        return $this->construirTabla($criterioPersonas, true);
     }
 
     /**
@@ -105,25 +105,23 @@ final class TablaAlumnosAsignaturas
      */
     public function paraDelegacion(): array
     {
-        $wherePersonas = [
-            'situacion' => 'A',
-            'nivel_stgr' => NivelStgrId::B . ',' . NivelStgrId::C1 . ',' . NivelStgrId::C2 . ',' . NivelStgrId::BC,
-            '_ordre' => 'nivel_stgr,apellido1,nom',
-        ];
-        $operadoresPersonas = ['nivel_stgr' => 'IN'];
+        $criterioPersonas = Criteria::create()
+            ->where(Filter::eq(PersonaField::Situacion, 'A'))
+            ->andWhere(Filter::in(PersonaField::NivelStgr, [NivelStgrId::B, NivelStgrId::C1, NivelStgrId::C2, NivelStgrId::BC]))
+            ->orderBy(PersonaField::NivelStgr)
+            ->addOrderBy(PersonaField::Apellido1)
+            ->addOrderBy(PersonaField::Nom);
 
-        return $this->construirTabla($wherePersonas, $operadoresPersonas, false);
+        return $this->construirTabla($criterioPersonas, false);
     }
 
     /**
      * @param bool $usarDlComoCentro cuando `true`, la columna 3 (centro) contiene
      *   el codigo de delegacion (`getDl()`); cuando `false`, el centro de estudios
      *   (`getCentro_o_dl()`).
-     * @param array<string, mixed> $wherePersonas
-     * @param array<string, string> $operadoresPersonas
      * @return array{cabeceras: array<int, string>, filas: array<int, array<int, mixed>>}
      */
-    private function construirTabla(array $wherePersonas, array $operadoresPersonas, bool $usarDlComoCentro): array
+    private function construirTabla(Criteria $criterioPersonas, bool $usarDlComoCentro): array
     {
         $asignaturaRepo = $this->asignaturaRepository;
         $personaRepo = $this->personaDlRepository;
@@ -142,7 +140,7 @@ final class TablaAlumnosAsignaturas
 
         $cabeceras = $this->cabeceras($asignaturas);
 
-        $cPersonas = $personaRepo->getPersonas($wherePersonas, $operadoresPersonas);
+        $cPersonas = $personaRepo->matching($criterioPersonas);
         if (empty($cPersonas)) {
             return ['cabeceras' => $cabeceras, 'filas' => []];
         }

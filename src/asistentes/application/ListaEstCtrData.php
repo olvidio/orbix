@@ -15,6 +15,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\criteria\CentroDlField;
@@ -103,19 +104,20 @@ final class ListaEstCtrData
             $id_ubi = $oCentroDl->getId_ubi();
             $aGrupos[$id_ubi] = $oCentroDl->getNombre_ubi();
 
-            $aWhere = [];
-            $aOperador = [];
-            $aWhere['situacion'] = 'A';
-            $aWhere['id_ctr'] = $id_ubi;
-            $aWhere['_ordre'] = 'apellido1,apellido2,nom';
+            $criterioPersonas = Criteria::create()
+                ->where(Filter::eq(PersonaField::Situacion, 'A'))
+                ->andWhere(Filter::eq(PersonaField::IdCtr, $id_ubi))
+                ->orderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom);
             $tipo_ctr = $oCentroDl->getTipo_ctr() ?? '';
             if (strpos($tipo_ctr, 'n') === 0) {
-                $aWhere['sacd'] = 'f';
-                $aWhere['nivel_stgr'] = NivelStgrId::N;
-                $aOperador['nivel_stgr'] = '!=';
+                $criterioPersonas = $criterioPersonas
+                    ->andWhere(Filter::eq(PersonaField::Sacd, false))
+                    ->andWhere(Filter::neq(PersonaField::NivelStgr, NivelStgrId::N));
             }
 
-            $cPersonas = $this->personaDlRepository->getPersonas($aWhere, $aOperador);
+            $cPersonas = $this->personaDlRepository->matching($criterioPersonas);
             $i = 0;
             foreach ($cPersonas as $oPersonaDl) {
                 $i++;

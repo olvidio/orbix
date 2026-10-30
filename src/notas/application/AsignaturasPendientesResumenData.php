@@ -15,6 +15,7 @@ use src\notas\application\support\HuecoOpcionalDePlan;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 
 /**
  * Resumen: número de alumnos con cada asignatura pendiente, desglosado por
@@ -80,15 +81,13 @@ final class AsignaturasPendientesResumenData
             $a_Asig_nivel[$id_asignatura] = $oAsignatura->getId_nivel();
         }
 
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['situacion'] = 'A';
-        $aWhere['nivel_stgr'] = NivelStgrId::B . ',' . NivelStgrId::C1 . ',' . NivelStgrId::C2;
-        $aOperador['nivel_stgr'] = 'IN';
-        $aWhere['id_tabla'] = '^[na]';
-        $aOperador['id_tabla'] = '~';
         $PersonaDlRepository = $this->personaDlRepository;
-        $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
+        $cPersonas = $PersonaDlRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(PersonaField::Situacion, 'A'))
+                ->andWhere(Filter::in(PersonaField::NivelStgr, [NivelStgrId::B, NivelStgrId::C1, NivelStgrId::C2]))
+                ->andWhere(Filter::matches(PersonaField::IdTabla, '^[na]'))
+        );
 
         $PersonaNotaDBRepository = $this->personaNotaRepository;
         $arrayNotasSuperadas = NotaSituacion::getArraySuperadas();
