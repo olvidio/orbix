@@ -37,7 +37,7 @@ foreach ($cGMR as $oGrupMenuRole) {
 }
 
 $GrupMenuRepository = DependencyResolver::get(GrupMenuRepositoryInterface::class);
-$cGM = $GrupMenuRepository->getGrupMenus();
+$cGM = $GrupMenuRepository->matching(Criteria::create());
 $a_valores = [];
 $i = 0;
 foreach ($cGM as $oGrupMenu) {
