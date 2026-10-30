@@ -2,7 +2,10 @@
 
 namespace Tests\unit\usuarios\infrastructure\persistence\postgresql;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
+use src\usuarios\domain\criteria\GrupoField;
 use src\usuarios\domain\entity\Grupo;
 use src\usuarios\domain\value_objects\Username;
 use Tests\myTest;
@@ -150,7 +153,7 @@ class PgGrupoRepositoryTest extends myTest
 
     public function test_get_grupos_sin_filtros()
     {
-        $cGrupos = $this->repository->getGrupos();
+        $cGrupos = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($cGrupos);
         $this->assertNotEmpty($cGrupos);
@@ -172,7 +175,7 @@ class PgGrupoRepositoryTest extends myTest
         $this->repository->Guardar($oGrupo);
 
         // Buscar con filtro
-        $cGrupos = $this->repository->getGrupos(['id_usuario' => $id_grupo]);
+        $cGrupos = $this->repository->matching(Criteria::create()->where(Filter::eq(GrupoField::IdUsuario, $id_grupo)));
 
         $this->assertIsArray($cGrupos);
         $this->assertCount(1, $cGrupos);

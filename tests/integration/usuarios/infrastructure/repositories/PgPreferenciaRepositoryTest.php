@@ -2,7 +2,10 @@
 
 namespace Tests\unit\usuarios\infrastructure\persistence\postgresql;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
+use src\usuarios\domain\criteria\PreferenciaField;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Preferencia;
 use src\usuarios\domain\value_objects\TipoPreferencia;
@@ -208,7 +211,7 @@ class PgPreferenciaRepositoryTest extends myTest
 
     public function test_get_preferencias_sin_filtros()
     {
-        $cPreferencias = $this->repository->getPreferencias();
+        $cPreferencias = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($cPreferencias);
 
@@ -235,7 +238,7 @@ class PgPreferenciaRepositoryTest extends myTest
         $this->repository->Guardar($oPreferencia);
 
         // Buscar con filtro
-        $cPreferencias = $this->repository->getPreferencias(['id_usuario' => $id_usuario]);
+        $cPreferencias = $this->repository->matching(Criteria::create()->where(Filter::eq(PreferenciaField::IdUsuario, $id_usuario)));
 
         $this->assertIsArray($cPreferencias);
         $this->assertNotEmpty($cPreferencias);
@@ -271,7 +274,7 @@ class PgPreferenciaRepositoryTest extends myTest
         $this->repository->Guardar($oPreferencia);
 
         // Buscar con filtro
-        $cPreferencias = $this->repository->getPreferencias(['tipo' => $tipo]);
+        $cPreferencias = $this->repository->matching(Criteria::create()->where(Filter::eq(PreferenciaField::Tipo, $tipo)));
 
         $this->assertIsArray($cPreferencias);
         $this->assertNotEmpty($cPreferencias);

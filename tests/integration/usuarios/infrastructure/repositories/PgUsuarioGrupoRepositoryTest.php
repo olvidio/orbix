@@ -2,7 +2,10 @@
 
 namespace Tests\unit\usuarios\infrastructure\persistence\postgresql;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
+use src\usuarios\domain\criteria\UsuarioGrupoField;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Grupo;
@@ -89,10 +92,11 @@ class PgUsuarioGrupoRepositoryTest extends myTest
         $this->assertTrue($result);
 
         // Verificar que se guardó correctamente
-        $cUsuarioGrupo = $this->repository->getUsuariosGrupos([
-            'id_usuario' => $id_usuario,
-            'id_grupo' => $id_grupo
-        ]);
+        $cUsuarioGrupo = $this->repository->matching(
+            Criteria::create()
+                ->where(Filter::eq(UsuarioGrupoField::IdUsuario, $id_usuario))
+                ->andWhere(Filter::eq(UsuarioGrupoField::IdGrupo, $id_grupo))
+        );
         $this->assertNotEmpty($cUsuarioGrupo);
         $this->assertEquals($id_usuario, $cUsuarioGrupo[0]->getId_usuario());
         $this->assertEquals($id_grupo, $cUsuarioGrupo[0]->getId_grupo());
@@ -202,7 +206,7 @@ class PgUsuarioGrupoRepositoryTest extends myTest
 
     public function test_get_usuarios_grupos_sin_filtros()
     {
-        $cUsuariosGrupos = $this->repository->getUsuariosGrupos();
+        $cUsuariosGrupos = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($cUsuariosGrupos);
 
@@ -229,7 +233,7 @@ class PgUsuarioGrupoRepositoryTest extends myTest
         $this->repository->Guardar($oUsuarioGrupo);
 
         // Buscar con filtro
-        $cUsuariosGrupos = $this->repository->getUsuariosGrupos(['id_usuario' => $id_usuario]);
+        $cUsuariosGrupos = $this->repository->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, $id_usuario)));
 
         $this->assertIsArray($cUsuariosGrupos);
         $this->assertNotEmpty($cUsuariosGrupos);
@@ -261,7 +265,7 @@ class PgUsuarioGrupoRepositoryTest extends myTest
         $this->repository->Guardar($oUsuarioGrupo);
 
         // Buscar con filtro
-        $cUsuariosGrupos = $this->repository->getUsuariosGrupos(['id_grupo' => $id_grupo]);
+        $cUsuariosGrupos = $this->repository->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdGrupo, $id_grupo)));
 
         $this->assertIsArray($cUsuariosGrupos);
         $this->assertNotEmpty($cUsuariosGrupos);

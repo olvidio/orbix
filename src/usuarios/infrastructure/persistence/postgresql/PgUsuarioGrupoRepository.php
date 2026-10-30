@@ -5,7 +5,6 @@ use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\usuarios\domain\criteria\UsuarioGrupoField;
 use PDO;
@@ -56,18 +55,6 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
         }
 
         return $result;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<UsuarioGrupo>
-     */
-    public function getUsuariosGrupos(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(UsuarioGrupoField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

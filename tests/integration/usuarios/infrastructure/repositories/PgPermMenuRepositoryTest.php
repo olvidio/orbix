@@ -2,7 +2,10 @@
 
 namespace Tests\unit\usuarios\infrastructure\persistence\postgresql;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
+use src\usuarios\domain\criteria\PermMenuField;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\PermMenu;
 use Tests\factories\usuarios\UsuariosFactory;
@@ -203,7 +206,7 @@ class PgPermMenuRepositoryTest extends myTest
 
     public function test_get_perm_menus_sin_filtros()
     {
-        $cPermMenus = $this->repository->getPermMenus();
+        $cPermMenus = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($cPermMenus);
 
@@ -230,7 +233,7 @@ class PgPermMenuRepositoryTest extends myTest
         $this->repository->Guardar($oPermMenu);
 
         // Buscar con filtro
-        $cPermMenus = $this->repository->getPermMenus(['id_usuario' => $id_usuario]);
+        $cPermMenus = $this->repository->matching(Criteria::create()->where(Filter::eq(PermMenuField::IdUsuario, $id_usuario)));
 
         $this->assertIsArray($cPermMenus);
         $this->assertNotEmpty($cPermMenus);
