@@ -16,7 +16,7 @@ final class ZonaSacdDatosGetTest extends TestCase
     public function test_no_existe(): void
     {
         $zRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zRepo->method('getZonasSacds')->willReturn([]);
+        $zRepo->method('matching')->willReturn([]);
 
         $out = (new ZonaSacdDatosGet($zRepo, $this->createStub(PersonaSacdRepositoryInterface::class)))->execute(1, 2);
         $this->assertNotSame('', $out['error']);
@@ -38,7 +38,7 @@ final class ZonaSacdDatosGetTest extends TestCase
         $persona->method('getNombreApellidos')->willReturn('Juan Pérez');
 
         $zRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zRepo->method('getZonasSacds')->willReturn([$zs]);
+        $zRepo->method('matching')->willReturn([$zs]);
 
         $pRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
         $pRepo->method('findById')->with(9)->willReturn($persona);
@@ -62,7 +62,7 @@ final class ZonaSacdDatosGetTest extends TestCase
         $zs->method('isDw7')->willReturn(null);
 
         $zRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zRepo->method('getZonasSacds')->willReturn([$zs]);
+        $zRepo->method('matching')->willReturn([$zs]);
 
         $pRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
         $pRepo->method('findById')->willReturn(null);

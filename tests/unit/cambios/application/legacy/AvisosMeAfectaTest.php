@@ -321,7 +321,7 @@ final class AvisosMeAfectaTest extends myTest
         $oZona->method('getId_zona')->willReturn(10);
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
-        $zonaRepo->method('getZonas')->willReturn([$oZona]);
+        $zonaRepo->method('matching')->willReturn([$oZona]);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->method('getIdSacdsDeZona')->with(10)->willReturn([
@@ -351,7 +351,7 @@ final class AvisosMeAfectaTest extends myTest
         $oZona->method('getId_zona')->willReturn(10);
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
-        $zonaRepo->method('getZonas')->willReturn([$oZona]);
+        $zonaRepo->method('matching')->willReturn([$oZona]);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->method('getIdSacdsDeZona')->with(10)->willReturn([
@@ -435,7 +435,7 @@ final class AvisosMeAfectaTest extends myTest
         }
 
         $zonaRepo ??= $this->createMock(ZonaRepositoryInterface::class);
-        $zonaRepo->method('getZonas')->willReturn([]);
+        $zonaRepo->method('matching')->willReturn([]);
 
         $zonaSacdRepo ??= $this->createMock(ZonaSacdRepositoryInterface::class);
         $cargoRepo ??= $this->createMock(ActividadCargoRepositoryInterface::class);

@@ -110,7 +110,7 @@ final class CuadriculaUpdateStatusTest extends TestCase
     private function useCase(EncargoDiaRepositoryInterface $encargoDiaRepository): CuadriculaUpdate
     {
         $zona = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zona->method('getZonasSacds')->willReturn([]);
+        $zona->method('matching')->willReturn([]);
 
         $cargos = $this->createMock(ActividadCargoRepositoryInterface::class);
         $cargos->method('getAsistenteCargoDeActividad')->willReturn([]);

@@ -19,6 +19,8 @@ use src\ubis\domain\criteria\CentroDlField;
 use src\zonassacd\application\services\CentrosDeZona;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaField;
+use src\zonassacd\domain\criteria\ZonaGrupoField;
 
 /**
  * Genera el listado de atencion SACD "c" (cr 9/05, Anexo2, 9.4 c).
@@ -74,7 +76,7 @@ final class ListasCData
             $permiso_sf = 'si';
         }
 
-        $cZonasGrupos = $this->zonaGrupoRepository->getZonasGrupo(['_ordre' => 'orden']) ?: [];
+        $cZonasGrupos = $this->zonaGrupoRepository->matching(Criteria::create()->orderBy(ZonaGrupoField::Orden)) ?: [];
         $array_grupos = [];
         foreach ($cZonasGrupos as $oZonaGrupo) {
             $array_grupos[$oZonaGrupo->getId_grupo()] = $oZonaGrupo->getNombre_grupo();
@@ -84,7 +86,7 @@ final class ListasCData
 
         foreach ($cZonasGrupos as $oZonaGrupo) {
             $id_grupo = $oZonaGrupo->getId_grupo();
-            $cZonas = $this->zonaRepository->getZonas(['id_grupo' => $id_grupo]) ?: [];
+            $cZonas = $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdGrupo, $id_grupo))) ?: [];
             $a_sacd = [];
 
             foreach ($cZonas as $oZona) {

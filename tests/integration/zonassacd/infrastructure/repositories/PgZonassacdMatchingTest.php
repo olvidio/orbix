@@ -35,9 +35,11 @@ class PgZonassacdMatchingTest extends myTest
         );
 
         $sacds = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
-        $this->assertEquals(
-            $sacds->getZonasSacds(['_ordre' => 'id_item']),
-            $sacds->matching(Criteria::create()->orderBy(ZonaSacdField::IdItem))
-        );
+        $orden = $sacds->matching(Criteria::create()->orderBy(ZonaSacdField::IdItem));
+        $this->assertIsArray($orden);
+        $ids = array_map(static fn($z) => $z->getId_item(), $orden);
+        $esperado = $ids;
+        sort($esperado);
+        $this->assertSame($esperado, $ids);
     }
 }

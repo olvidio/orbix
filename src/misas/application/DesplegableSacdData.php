@@ -12,6 +12,7 @@ use src\misas\application\services\InicialesSacdService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\shared\domain\helpers\OpcionesDesplegable;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 
 /**
  * Opciones del desplegable dinámico de SACD en el modal de la cuadrícula de zona.
@@ -74,10 +75,11 @@ class DesplegableSacdData
                     }
                 }
                 if ($libre) {
-                    $aWhere = [];
-                    $aWhere['id_zona'] = $id_zona;
-                    $aWhere['id_nom'] = $id_nom;
-                    $cZonaSacd = $this->zonaSacdRepository->getZonasSacds($aWhere);
+                    $cZonaSacd = $this->zonaSacdRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(ZonaSacdField::IdZona, $id_zona))
+                            ->andWhere(Filter::eq(ZonaSacdField::IdNom, $id_nom))
+                    );
                     $dia_ts = strtotime($dia);
                     $n_dia_semana = $dia_ts !== false ? (int) date('N', $dia_ts) : 1;
                     $oZonaSacd = $cZonaSacd[0];

@@ -55,7 +55,7 @@ final class BuscarPlanSacdDataTest extends TestCase
         $roleRepo->method('getArrayRoles')->willReturn([77 => 'p-sacd']);
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
-        $zonaRepo->method('getZonas')->willReturn([]);
+        $zonaRepo->method('matching')->willReturn([]);
 
         $inicialesSacdService = $this->createMock(InicialesSacdService::class);
         $inicialesSacdService->method('obtenerNombreConIniciales')->with(9988)->willReturn('Garcia, Luis (GLG)');
@@ -93,7 +93,7 @@ final class BuscarPlanSacdDataTest extends TestCase
         $zonaStub->method('getId_zona')->willReturn(10);
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
-        $zonaRepo->method('getZonas')->willReturn([$zonaStub]);
+        $zonaRepo->method('matching')->willReturn([$zonaStub]);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->method('getIdSacdsDeZona')->with(10)->willReturn([]);

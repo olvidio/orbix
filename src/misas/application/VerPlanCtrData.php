@@ -18,6 +18,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaField;
 
 /**
  * Datos para la vista `ver_plan_ctr.phtml`: cuadricula del plan de misas
@@ -67,7 +68,7 @@ class VerPlanCtrData
 
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
             $role = 'sacd';
-            $cZonas = $this->zonaRepository->getZonas(['id_nom' => $id_sacd]);
+            $cZonas = $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdNom, $id_sacd)));
             $jefe_zona = count($cZonas) > 0;
         }
 

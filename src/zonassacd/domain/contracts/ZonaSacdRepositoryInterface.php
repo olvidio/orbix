@@ -19,14 +19,6 @@ interface ZonaSacdRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ZonaSacd>
-     */
-    public function getZonasSacds(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(ZonaSacd $ZonaSacd): bool;
 
     public function Guardar(ZonaSacd $ZonaSacd): bool;

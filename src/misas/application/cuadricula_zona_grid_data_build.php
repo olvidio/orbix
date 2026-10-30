@@ -112,11 +112,11 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
     }
 
     //Busco los sacd de la zona, para señalar si en la plantilla o en plan hay alguno que no es de la zona.
-    $aWhere = [];
-    $aWhere['id_zona'] = $Qid_zona;
-    $aOperador = [];
     $ZonaSacdRepository = $self->getZonaSacdRepository();
-    $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
+    $cZonaSacd = $ZonaSacdRepository->matching(
+        \src\shared\domain\criteria\Criteria::create()
+            ->where(\src\shared\domain\criteria\Filter::eq(\src\zonassacd\domain\criteria\ZonaSacdField::IdZona, $Qid_zona))
+    );
     $sacd_zona = [];
     $InicialesSacdService = $self->getInicialesSacdService();
     foreach ($cZonaSacd as $oZonaSacd) {
@@ -816,10 +816,10 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
     $data_cols["meta"] = $meta;
     $data_cuadricula[] = $data_cols;
 
-    $aWhere = [];
-    $aWhere['id_zona'] = $Qid_zona;
-    $aOperador = [];
-    $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
+    $cZonaSacd = $ZonaSacdRepository->matching(
+        \src\shared\domain\criteria\Criteria::create()
+            ->where(\src\shared\domain\criteria\Filter::eq(\src\zonassacd\domain\criteria\ZonaSacdField::IdZona, $Qid_zona))
+    );
     foreach ($cZonaSacd as $oZonaSacd) {
         $data_cols = [];
         $id_nom = $oZonaSacd->getId_nom();

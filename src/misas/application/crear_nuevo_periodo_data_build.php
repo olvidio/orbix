@@ -125,11 +125,11 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
             ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
     }
 
-    $aWhere = [];
-    $aWhere['id_zona'] = $Qid_zona;
-    $aOperador = [];
     $ZonaSacdRepository = $self->getZonaSacdRepository();
-    $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
+    $cZonaSacd = $ZonaSacdRepository->matching(
+        \src\shared\domain\criteria\Criteria::create()
+            ->where(\src\shared\domain\criteria\Filter::eq(\src\zonassacd\domain\criteria\ZonaSacdField::IdZona, $Qid_zona))
+    );
     $contador_1a_sacd = [];
     $contador_total_sacd = [];
     $contador_sacd = [];

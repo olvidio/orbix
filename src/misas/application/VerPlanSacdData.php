@@ -14,6 +14,7 @@ use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaField;
 
 /**
  * Datos para la vista `ver_plan_sacd.phtml`: plan de misas de un
@@ -43,7 +44,7 @@ class VerPlanSacdData
             return ['rows' => []];
         }
         $id_sacd_csv = $oMiUsuario->getCsvIdPauAsString();
-        $cZonas = $this->zonaRepository->getZonas(['id_nom' => $id_sacd_csv]);
+        $cZonas = $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdNom, $id_sacd_csv)));
         $jefe_zona = count($cZonas) > 0;
 
         $exp_id_sacd = explode('#', $id_sacd_key);

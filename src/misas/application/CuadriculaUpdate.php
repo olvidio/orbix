@@ -22,6 +22,7 @@ use src\misas\domain\value_objects\EncargoDiaTstart;
 use src\misas\domain\value_objects\PlantillaConfig;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 use src\actividades\domain\entity\TiposActividades;
 
 /**
@@ -112,7 +113,7 @@ class CuadriculaUpdate
         $color_misa = self::colorMisa($oEncargoDia->getStatus(), $tipo_plantilla);
 
         // Datos de la zona: sacds y en que dias de la semana estan.
-        $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_zona' => $id_zona], []);
+        $cZonaSacd = $this->zonaSacdRepository->matching(Criteria::create()->where(Filter::eq(ZonaSacdField::IdZona, $id_zona)));
         $lista_sacd = [];
         $esta_en_zona = [];
         foreach ($cZonaSacd as $oZonaSacd) {

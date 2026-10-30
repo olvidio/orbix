@@ -111,7 +111,7 @@ class GrupoJefeZona
      */
     private function arrayJefesZona(): array
     {
-        $cZonas = $this->zonaRepository->getZonas();
+        $cZonas = $this->zonaRepository->matching(Criteria::create());
         $a_jefes_zona = [];
         foreach ($cZonas as $oZona) {
             $idNom = $oZona->getId_nom();

@@ -14,7 +14,7 @@ final class ZonaSacdDatosPutTest extends TestCase
     public function test_no_existe(): void
     {
         $repo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $repo->method('getZonasSacds')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $out = (new ZonaSacdDatosPut($repo))->execute(1, 2, []);
         $this->assertNotSame('', $out['error']);
@@ -24,7 +24,7 @@ final class ZonaSacdDatosPutTest extends TestCase
     {
         $zs = $this->createMock(ZonaSacd::class);
         $repo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $repo->method('getZonasSacds')->willReturn([$zs]);
+        $repo->method('matching')->willReturn([$zs]);
         $repo->method('Guardar')->willReturn(false);
         $repo->method('getErrorTxt')->willReturn('put-fail');
 
@@ -35,7 +35,7 @@ final class ZonaSacdDatosPutTest extends TestCase
     {
         $zs = $this->createMock(ZonaSacd::class);
         $repo = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $repo->method('getZonasSacds')->willReturn([$zs]);
+        $repo->method('matching')->willReturn([$zs]);
         $repo->expects($this->once())->method('Guardar')->with($zs)->willReturn(true);
 
         $out = (new ZonaSacdDatosPut($repo))->execute(3, 4, ['dw1' => 'true', 'dw2' => false]);
