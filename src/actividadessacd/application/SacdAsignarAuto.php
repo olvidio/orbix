@@ -4,6 +4,7 @@ namespace src\actividadessacd\application;
 
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\criteria\ActividadCargoField;
+use src\actividadescentro\domain\criteria\CentroEncargadoField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -123,8 +124,10 @@ final class SacdAsignarAuto
         }
         $a_ctr = [];
         foreach ($this->a_actividades as $_fini => $id_activ) {
-            $cCentros = $this->centroEncargadoRepository->getCentrosEncargados(
-                ['id_activ' => (int)$id_activ, 'num_orden' => 0]
+            $cCentros = $this->centroEncargadoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(CentroEncargadoField::IdActiv, (int)$id_activ))
+                    ->andWhere(Filter::eq(CentroEncargadoField::NumOrden, 0))
             );
             if (count($cCentros) === 1) {
                 $a_ctr[(int)$id_activ] = (int)$cCentros[0]->getId_ubi();

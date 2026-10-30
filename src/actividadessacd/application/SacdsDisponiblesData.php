@@ -5,6 +5,7 @@ namespace src\actividadessacd\application;
 use src\shared\config\ConfigGlobal;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\actividadescentro\domain\criteria\CentroEncargadoField;
 use src\encargossacd\domain\criteria\EncargoField;
 use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\shared\domain\criteria\Criteria;
@@ -38,8 +39,10 @@ final class SacdsDisponiblesData
 
         $sacds_ctr = [];
         if (ConfigGlobal::is_app_installed('encargossacd') && $id_activ > 0) {
-            $cCentros = $this->centroEncargadoRepository->getCentrosEncargados(
-                ['id_activ' => $id_activ, '_ordre' => 'num_orden']
+            $cCentros = $this->centroEncargadoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(CentroEncargadoField::IdActiv, $id_activ))
+                    ->orderBy(CentroEncargadoField::NumOrden)
             );
             foreach ($cCentros as $oEncargado) {
                 $id_ctr = (int)$oEncargado->getId_ubi();

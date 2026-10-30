@@ -9,6 +9,7 @@ use src\permisos\domain\PermisosActividadesTrue;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\criteria\ActividadAllField;
+use src\actividadescentro\domain\criteria\CentroEncargadoField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
@@ -308,10 +309,11 @@ final class CalendarioListasDatos
 
                 $a_ubi_activ[$key][$a]['ctr_encargados'] = '';
                 if ($ver_ctr === 'si' && $oPermCtr->have_perm_action('ver')) {
-                    $cCtrsEncargados = $CentroEncargadoRepository->getCentrosEncargados([
-                        'id_activ' => $id_activ,
-                        '_ordre' => 'num_orden',
-                    ]);
+                    $cCtrsEncargados = $CentroEncargadoRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(CentroEncargadoField::IdActiv, $id_activ))
+                            ->orderBy(CentroEncargadoField::NumOrden)
+                    );
                     $txt_ctr = '';
                     foreach ($cCtrsEncargados as $oCentroEncargado) {
                         $id_ubi_ctr = $oCentroEncargado->getId_ubi();

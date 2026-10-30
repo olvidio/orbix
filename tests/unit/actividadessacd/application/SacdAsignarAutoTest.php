@@ -49,7 +49,7 @@ final class SacdAsignarAutoTest extends TestCase
         $ce->setNum_orden(0);
 
         $centroEncRepo = $this->createMock(CentroEncargadoRepositoryInterface::class);
-        $centroEncRepo->method('getCentrosEncargados')->willReturn([$ce]);
+        $centroEncRepo->method('matching')->willReturn([$ce]);
 
         $oEnc = new Encargo();
         $oEnc->setId_enc(11);

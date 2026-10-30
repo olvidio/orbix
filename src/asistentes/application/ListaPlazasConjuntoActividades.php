@@ -2,6 +2,7 @@
 
 namespace src\asistentes\application;
 
+use src\actividadescentro\domain\criteria\CentroEncargadoField;
 use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\Criteria;
@@ -180,7 +181,11 @@ class ListaPlazasConjuntoActividades
             if (ConfigGlobal::is_app_installed('actividadcentros')) {
                 if ((($sasistentes === "s") || ($sasistentes === "sss+")) and ($sactividad === "cv")) {
                     // para las cv de s y de sss+ consulto los ctr que organizan
-                    $cCtrsEncargados = $this->centroEncargadoRepository->getCentrosEncargados(['id_activ' => $id_activ, '_ordre' => 'num_orden']);
+                    $cCtrsEncargados = $this->centroEncargadoRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(CentroEncargadoField::IdActiv, $id_activ))
+                            ->orderBy(CentroEncargadoField::NumOrden)
+                    );
 
                     $c = 0;
                     foreach ($cCtrsEncargados as $oCentroEncargado) {

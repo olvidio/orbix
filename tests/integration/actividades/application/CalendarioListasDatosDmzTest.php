@@ -75,7 +75,7 @@ final class CalendarioListasDatosDmzTest extends myTest
         $encargado = $this->createMock(CentroEncargado::class);
         $encargado->method('getId_ubi')->willReturn($idCtr);
         $encargados = $this->createMock(CentroEncargadoRepositoryInterface::class);
-        $encargados->method('getCentrosEncargados')->willReturn([$encargado]);
+        $encargados->method('matching')->willReturn([$encargado]);
 
         $_SESSION['oPermActividades'] = new PermisosActividadesTrue(1);
 
