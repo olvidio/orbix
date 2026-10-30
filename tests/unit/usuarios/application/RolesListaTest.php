@@ -74,7 +74,7 @@ final class RolesListaTest extends TestCase
         $roleRepo->method('matching')->willReturn([$role]);
 
         $gmRoleRepo = $this->createMock(GrupMenuRoleRepositoryInterface::class);
-        $gmRoleRepo->method('getGrupMenuRoles')->with(['id_role' => 3])->willReturn([$gmr]);
+        $gmRoleRepo->method('matching')->willReturn([$gmr]);
 
         $useCase = new rolesLista($userRepo, $grupMenuRepo, $roleRepo, $gmRoleRepo);
         $out = $useCase->execute();
@@ -117,7 +117,7 @@ final class RolesListaTest extends TestCase
         $roleRepo->method('matching')->willReturn([$role]);
 
         $gmRoleRepo = $this->createMock(GrupMenuRoleRepositoryInterface::class);
-        $gmRoleRepo->method('getGrupMenuRoles')->willReturn([]);
+        $gmRoleRepo->method('matching')->willReturn([]);
 
         $useCase = new rolesLista($userRepo, $grupMenuRepo, $roleRepo, $gmRoleRepo);
         $out = $useCase->execute();

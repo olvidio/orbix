@@ -3,7 +3,10 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuRoleField;
 use src\menus\domain\entity\GrupMenuRole;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
@@ -25,7 +28,11 @@ if (!empty($a_sel)) { //vengo de un checkbox
         }
         $id_role = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_role');
         $id_grupmenu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_grupmenu');
-        $cGrupMenuRoles = $GrupMenuRoleRepository->getGrupMenuRoles(['id_role' => $id_role, 'id_grupmenu' => $id_grupmenu]);
+        $cGrupMenuRoles = $GrupMenuRoleRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(GrupMenuRoleField::IdRole, $id_role))
+                ->andWhere(Filter::eq(GrupMenuRoleField::IdGrupmenu, $id_grupmenu))
+        );
         if (empty($cGrupMenuRoles)) {
             $id_item = $GrupMenuRoleRepository->getNewId();
             $oGrupMenuRole = new GrupMenuRole();

@@ -5,6 +5,9 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuRoleField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
@@ -49,7 +52,7 @@ if (ConfigGlobal::is_app_installed('cambios')) {
 
 //oficinas posibles:
 $GrupMenuRoleRepository = DependencyResolver::get(GrupMenuRoleRepositoryInterface::class);
-$cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $id_role));
+$cGMR = $GrupMenuRoleRepository->matching(Criteria::create()->where(Filter::eq(GrupMenuRoleField::IdRole, (int)$id_role)));
 $GrupMenuRepository = DependencyResolver::get(GrupMenuRepositoryInterface::class);
 $oficinas_posibles = [];
 $ambito = ($_SESSION['oConfig'] ?? null) instanceof ConfigSnapshot

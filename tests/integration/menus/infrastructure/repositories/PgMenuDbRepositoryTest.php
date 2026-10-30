@@ -4,6 +4,7 @@ namespace Tests\integration\menus\infrastructure\persistence\postgresql;
 
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\menus\MenuDbFactory;
 
@@ -133,7 +134,7 @@ class PgMenuDbRepositoryTest extends myTest
 
     public function test_get_menu_dbs_sin_filtros()
     {
-        $result = $this->repository->getMenuDbs();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

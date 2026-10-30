@@ -4,6 +4,7 @@ namespace Tests\integration\menus\infrastructure\persistence\postgresql;
 
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\entity\GrupMenuRole;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\menus\GrupMenuRoleFactory;
 
@@ -133,7 +134,7 @@ class PgGrupMenuRoleRepositoryTest extends myTest
 
     public function test_get_grup_menu_roles_sin_filtros()
     {
-        $result = $this->repository->getGrupMenuRoles();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

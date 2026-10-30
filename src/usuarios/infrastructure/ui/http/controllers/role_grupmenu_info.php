@@ -4,6 +4,9 @@ use src\shared\domain\helpers\FilterPostGet;
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuRoleField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\shared\security\HashB;
@@ -26,7 +29,7 @@ $ambito = ($_SESSION['oConfig'] ?? null) instanceof ConfigSnapshot
 
 // los que ya tengo:
 $GrupMenuRoleRepository = DependencyResolver::get(GrupMenuRoleRepositoryInterface::class);
-$cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $Qid_role));
+$cGMR = $GrupMenuRoleRepository->matching(Criteria::create()->where(Filter::eq(GrupMenuRoleField::IdRole, (int)$Qid_role)));
 $aGrupMenus = [];
 foreach ($cGMR as $oGrupMenuRole) {
     $id_grupmenu = $oGrupMenuRole->getId_grupmenu();

@@ -45,7 +45,11 @@ use frontend\shared\layouts\LayoutFactory;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuRoleField;
+use src\menus\domain\criteria\MenuDbField;
 use src\menus\domain\PermisoMenu;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -90,7 +94,7 @@ if ($oPreferencia !== null) {
     }
 } else {
     $inicio = '';
-    $cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $id_role));
+    $cGMR = $GrupMenuRoleRepository->matching(Criteria::create()->where(Filter::eq(GrupMenuRoleField::IdRole, $id_role)));
     if (empty($cGMR)) {
         $oRole = $RoleRepository->findById($id_role);
         $nom_role = $oRole->getRoleAsString();
@@ -199,8 +203,9 @@ try {
     $oLayout = LayoutFactory::create($layout);
 }
 
-$aWhere = array('id_role' => $oUsuario->getId_role());
-$cGrupMenuRoles = $GrupMenuRoleRepository->getGrupMenuRoles($aWhere);
+$cGrupMenuRoles = $GrupMenuRoleRepository->matching(
+    Criteria::create()->where(Filter::eq(GrupMenuRoleField::IdRole, $oUsuario->getId_role()))
+);
 
 $gm = 0;
 $grupMenuData = [];
@@ -211,7 +216,7 @@ foreach ($cGrupMenuRoles as $oGrupMenuRole) {
     $gm++;
     $id_gm = $oGrupMenuRole->getId_grupmenu();
     // comprobar que tiene algún submenú.
-    $cMenuDbs = $MenusDbRepository->getMenuDbs(array('id_grupmenu' => $id_gm));
+    $cMenuDbs = $MenusDbRepository->matching(Criteria::create()->where(Filter::eq(MenuDbField::IdGrupmenu, $id_gm)));
     if (is_array($cMenuDbs) && count($cMenuDbs) < 1) {
         continue;
     }

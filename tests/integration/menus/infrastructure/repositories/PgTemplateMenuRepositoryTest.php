@@ -4,6 +4,7 @@ namespace Tests\integration\menus\infrastructure\persistence\postgresql;
 
 use src\menus\domain\contracts\TemplateMenuRepositoryInterface;
 use src\menus\domain\entity\TemplateMenu;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\menus\TemplateMenuFactory;
 
@@ -141,7 +142,7 @@ class PgTemplateMenuRepositoryTest extends myTest
 
     public function test_get_templates_menus_sin_filtros()
     {
-        $result = $this->repository->getTemplatesMenus();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

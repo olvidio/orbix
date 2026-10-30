@@ -8,6 +8,7 @@ use src\usuarios\domain\criteria\RoleField;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuRoleField;
 use src\shared\config\ConfigGlobal;
 use src\shared\security\HashB;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
@@ -91,7 +92,7 @@ class rolesLista
             }
             $i++;
 
-            $cGMR = $this->grupMenuRoleRepository->getGrupMenuRoles(['id_role' => $id_role]);
+            $cGMR = $this->grupMenuRoleRepository->matching(Criteria::create()->where(Filter::eq(GrupMenuRoleField::IdRole, $id_role)));
             $a_GM = [];
             foreach ($cGMR as $oGrupMenuRole) {
                 $id_grupmenu = $oGrupMenuRole->getId_grupmenu();

@@ -9,7 +9,6 @@ use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\criteria\MenuDbField;
 use src\menus\domain\entity\MenuDb;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\RunsCriteriaQueries;
@@ -60,20 +59,6 @@ class PgMenuDbRepository extends ClaseRepository implements MenuDbRepositoryInte
         }
 
         return $items;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo MenuDb
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<MenuDb> Una colección de objetos de tipo MenuDb
-     */
-    public function getMenuDbs(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(MenuDbField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
