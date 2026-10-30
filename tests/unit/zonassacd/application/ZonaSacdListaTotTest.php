@@ -39,7 +39,7 @@ final class ZonaSacdListaTotTest extends TestCase
         $oPersona = $this->personaSacdStub(501, 'Perez, Juan');
 
         $personaRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
-        $personaRepo->expects($this->once())->method('getPersonas')->willReturn([$oPersona]);
+        $personaRepo->expects($this->once())->method('matching')->willReturn([$oPersona]);
 
         $oZonaSacdPropia = $this->zonaSacdStub(10, propia: true);
         $oZonaSacdOtra = $this->zonaSacdStub(20, propia: false);
@@ -73,7 +73,7 @@ final class ZonaSacdListaTotTest extends TestCase
         $oPersona = $this->personaSacdStub(600, 'Ruiz, Maria');
 
         $personaRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
-        $personaRepo->method('getPersonas')->willReturn([$oPersona]);
+        $personaRepo->method('matching')->willReturn([$oPersona]);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->method('matching')->willReturn([]);

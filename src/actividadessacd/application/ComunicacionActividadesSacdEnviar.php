@@ -5,6 +5,9 @@ namespace src\actividadessacd\application;
 use src\shared\config\ConfigGlobal;
 use src\actividadessacd\application\services\ComunicarActividadesSacdService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Mutacion: encola los mails de comunicacion de actividades a los sacd.
@@ -33,25 +36,28 @@ final class ComunicacionActividadesSacdEnviar
 
         switch ($que) {
             case 'nagd':
-                $cPersonas = $this->personaSacdRepository->getPersonas(
-                    [
-                        'id_tabla' => "'n','a'",
-                        'situacion' => 'A',
-                        'sacd' => 't',
-                        'dl' => $mi_dele,
-                        '_ordre' => 'apellido1,apellido2,nom',
-                    ],
-                    ['id_tabla' => 'IN']
+                $cPersonas = $this->personaSacdRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::in(PersonaField::IdTabla, ['n', 'a']))
+                        ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                        ->andWhere(Filter::eq(PersonaField::Sacd, true))
+                        ->andWhere(Filter::eq(PersonaField::Dl, $mi_dele))
+                        ->orderBy(PersonaField::Apellido1)
+                        ->addOrderBy(PersonaField::Apellido2)
+                        ->addOrderBy(PersonaField::Nom)
                 );
                 break;
             case 'sssc':
-                $cPersonas = $this->personaSacdRepository->getPersonas([
-                    'id_tabla' => 'sssc',
-                    'situacion' => 'A',
-                    'sacd' => 't',
-                    'dl' => $mi_dele,
-                    '_ordre' => 'apellido1,apellido2,nom',
-                ]);
+                $cPersonas = $this->personaSacdRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(PersonaField::IdTabla, 'sssc'))
+                        ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                        ->andWhere(Filter::eq(PersonaField::Sacd, true))
+                        ->andWhere(Filter::eq(PersonaField::Dl, $mi_dele))
+                        ->orderBy(PersonaField::Apellido1)
+                        ->addOrderBy(PersonaField::Apellido2)
+                        ->addOrderBy(PersonaField::Nom)
+                );
                 break;
             case 'un_sacd':
                 $oPersona = $this->personaSacdRepository->findById($ctx['id_nom']);

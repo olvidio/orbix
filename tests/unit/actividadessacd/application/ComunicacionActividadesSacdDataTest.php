@@ -161,7 +161,7 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
         $oPersona->setSituacionVo(new SituacionCode('A'));
 
         $personaSacdRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
-        $personaSacdRepo->method('getPersonas')->willReturn([$oPersona]);
+        $personaSacdRepo->method('matching')->willReturn([$oPersona]);
 
         $personaExRepo = $this->createMock(PersonaExRepositoryInterface::class);
         $personaExRepo->method('getPersonas')->willReturn([]);

@@ -13,7 +13,7 @@ use src\shared\infrastructure\persistence\ConverterDate;
 use src\personas\domain\criteria\PersonaField;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaCriteriaTrait;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\domain\criteria\Filter;
 
 
 /**
@@ -64,16 +64,7 @@ class PgPersonaSacdRepository extends ClaseRepository implements PersonaSacdRepo
             $a_tipos_tablas[] = 'sssc';
         }
 
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['id_tabla'] = "'" . implode("','", $a_tipos_tablas) . "'";
-        $aOperador['id_tabla'] = 'IN';
-        $aWhere['sacd'] = 't';
-        $aWhere['situacion'] = 'A';
-        $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-        $cPersonas = $this->getPersonas($aWhere, $aOperador);
-
-        return $cPersonas;
+        return $this->matching($this->criterioSacdActivos($a_tipos_tablas));
     }
 
     public function getArraySacdyCheckBox(int $Qseleccion_sacd): array
@@ -99,14 +90,7 @@ class PgPersonaSacdRepository extends ClaseRepository implements PersonaSacdRepo
             $chk_sssc = 'checked';
         }
 
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['id_tabla'] = "'" . implode("','", $a_tipos_tablas) . "'";
-        $aOperador['id_tabla'] = 'IN';
-        $aWhere['sacd'] = 't';
-        $aWhere['situacion'] = 'A';
-        $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-        $cPersonas = $this->getPersonas($aWhere, $aOperador);
+        $cPersonas = $this->matching($this->criterioSacdActivos($a_tipos_tablas));
         $aOpciones = [];
         foreach ($cPersonas as $oPersona) {
             $id_nom = $oPersona->getId_nom();
@@ -135,15 +119,17 @@ class PgPersonaSacdRepository extends ClaseRepository implements PersonaSacdRepo
     }
 
     /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<PersonaSacd>
+     * @param list<string> $a_tipos_tablas
      */
-    public function getPersonas(array $aWhere = [], array $aOperators = []): array
+    private function criterioSacdActivos(array $a_tipos_tablas): Criteria
     {
-        $adapter = new LegacyWhereAdapter(PersonaField::class, []);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
+        return Criteria::create()
+            ->where(Filter::in(PersonaField::IdTabla, $a_tipos_tablas))
+            ->andWhere(Filter::eq(PersonaField::Sacd, true))
+            ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+            ->orderBy(PersonaField::Apellido1)
+            ->addOrderBy(PersonaField::Apellido2)
+            ->addOrderBy(PersonaField::Nom);
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

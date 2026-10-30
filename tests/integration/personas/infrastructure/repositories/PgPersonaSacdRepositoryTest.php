@@ -4,6 +4,7 @@ namespace Tests\integration\personas\infrastructure\persistence\postgresql;
 
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\PersonaSacd;
+use src\shared\domain\criteria\Criteria;
 use Tests\factories\personas\PersonaSacdFactory;
 use Tests\myTest;
 
@@ -46,7 +47,7 @@ class PgPersonaSacdRepositoryTest extends myTest
 
     public function test_get_personas_devuelve_instancias_persona_sacd()
     {
-        $cPersonas = $this->repository->getPersonas(['_limit' => 1]);
+        $cPersonas = $this->repository->matching(Criteria::create()->limit(1));
         if ($cPersonas === []) {
             $this->markTestSkipped('No hay filas en cp_sacd para comprobar el tipo hidratado');
         }

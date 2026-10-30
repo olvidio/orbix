@@ -51,7 +51,7 @@ final class SolapesSacdDataTest extends TestCase
         $actDlRepo->method('matching')->willReturn([]);
 
         $personaSacdRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
-        $personaSacdRepo->method('getPersonas')->willReturn([]);
+        $personaSacdRepo->method('matching')->willReturn([]);
 
         $cargoOAsis = $this->createMock(CargoOAsistenteInterface::class);
         $cargoOAsis->method('getSolapes')->willReturn([]);

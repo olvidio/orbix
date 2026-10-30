@@ -10,6 +10,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\misas\application\services\InicialesSacdService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\shared\domain\helpers\OpcionesDesplegable;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\zonassacd\domain\criteria\ZonaSacdField;
@@ -127,14 +128,15 @@ class DesplegableSacdData
         }
 
         if ($seleccion & 4) {
-            $aWhere = [];
-            $aOperador = [];
-            $aWhere['sacd'] = 't';
-            $aWhere['situacion'] = 'A';
-            $aWhere['id_tabla'] = "'n','a'";
-            $aOperador['id_tabla'] = 'IN';
-            $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-            $cPersonas = $this->personaSacdRepository->getPersonas($aWhere, $aOperador);
+            $cPersonas = $this->personaSacdRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PersonaField::Sacd, true))
+                    ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->andWhere(Filter::in(PersonaField::IdTabla, ['n', 'a']))
+                    ->orderBy(PersonaField::Apellido1)
+                    ->addOrderBy(PersonaField::Apellido2)
+                    ->addOrderBy(PersonaField::Nom)
+            );
             foreach ($cPersonas as $oPersona) {
                 $id_nom = $oPersona->getId_nom();
                 $sacd_nom = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom);
@@ -145,12 +147,14 @@ class DesplegableSacdData
         }
 
         if ($seleccion & 8) {
-            $aWhere = [];
-            $aOperador = [];
-            $aWhere['sacd'] = 't';
-            $aWhere['situacion'] = 'A';
-            $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-            $cPersonas = $this->personaSacdRepository->getPersonas($aWhere, $aOperador);
+            $cPersonas = $this->personaSacdRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PersonaField::Sacd, true))
+                    ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->orderBy(PersonaField::Apellido1)
+                    ->addOrderBy(PersonaField::Apellido2)
+                    ->addOrderBy(PersonaField::Nom)
+            );
             foreach ($cPersonas as $oPersona) {
                 $id_nom = $oPersona->getId_nom();
                 $sacd_nom = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom);

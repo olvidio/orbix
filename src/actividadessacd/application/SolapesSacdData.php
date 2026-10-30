@@ -11,6 +11,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\entity\Persona;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
@@ -65,14 +66,14 @@ final class SolapesSacdData
         );
 
         $mi_dl = ConfigGlobal::mi_delef();
-        $cSacds = $this->personaSacdRepository->getPersonas(
-            [
-                'id_tabla' => "'n','a'",
-                'sacd' => 't',
-                'dl' => $mi_dl,
-                '_ordre' => 'apellido1,apellido2,nom',
-            ],
-            ['id_tabla' => 'IN']
+        $cSacds = $this->personaSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::in(PersonaField::IdTabla, ['n', 'a']))
+                ->andWhere(Filter::eq(PersonaField::Sacd, true))
+                ->andWhere(Filter::eq(PersonaField::Dl, $mi_dl))
+                ->orderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom)
         );
 
         $a_solapes = $this->cargoOAsistenteRepository->getSolapes($cSacds, $cActividades);

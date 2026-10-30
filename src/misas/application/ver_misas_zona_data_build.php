@@ -19,6 +19,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\misas\domain\EncargosZona;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
@@ -113,14 +114,15 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
         }
     }
     if ($Qseleccion & 4) {
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['sacd'] = 't';
-        $aWhere['situacion'] = 'A';
-        $aWhere['id_tabla'] = "'n','a'";
-        $aOperador['id_tabla'] = 'IN';
-        $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-        $cPersonas = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
+        $cPersonas = $PersonaSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(PersonaField::Sacd, true))
+                ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                ->andWhere(Filter::in(PersonaField::IdTabla, ['n', 'a']))
+                ->orderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom)
+        );
         foreach ($cPersonas as $oPersonaSacd) {
             $id_nom = $oPersonaSacd->getId_nom();
             $sacd = $oPersonaSacd->getNombreApellidos();
@@ -137,13 +139,14 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
         }
     }
     if ($Qseleccion & 8) {
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['sacd'] = 't';
-        $aWhere['situacion'] = 'A';
-        $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-
-        $cPersonas = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
+        $cPersonas = $PersonaSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(PersonaField::Sacd, true))
+                ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                ->orderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom)
+        );
         foreach ($cPersonas as $oPersonaSacd) {
             $id_nom = $oPersonaSacd->getId_nom();
             $sacd = $oPersonaSacd->getNombreApellidos();
