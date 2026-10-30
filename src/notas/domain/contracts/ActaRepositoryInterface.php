@@ -44,14 +44,6 @@ interface ActaRepositoryInterface
      */
     public function matchingSinPdf(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<\src\notas\domain\entity\Acta>
-     */
-    public function getActas(array $aWhere = [], array $aOperators = []): array;
-
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(Acta $Acta): bool;

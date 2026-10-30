@@ -34,14 +34,12 @@ class PgNotasMatchingTest extends myTest
             ->where(Filter::eq(ActaField::Acta, $acta))
             ->orderBy(ActaField::FActa, OrderDirection::Desc);
         $nuevo = $repo->matching($criteria);
-        $legacy = $repo->getActas(['acta' => $acta, '_ordre' => 'f_acta DESC']);
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertSame($acta, $nuevo[0]->getActa());
 
         $nuevoSinPdf = $repo->matchingSinPdf($criteria);
-        $legacySinPdf = $repo->getActas(['acta' => $acta, '_ordre' => 'f_acta DESC', '_sin_pdf' => true]);
         $this->assertCount(1, $nuevoSinPdf);
-        $this->assertEquals($legacySinPdf, $nuevoSinPdf);
+        $this->assertSame($acta, $nuevoSinPdf[0]->getActa());
 
         $repo->Eliminar($o);
     }
@@ -55,9 +53,7 @@ class PgNotasMatchingTest extends myTest
         $nuevo = $repo->matching(
             Criteria::create()->where(Filter::between(ActaField::FActa, '2025-10-01', '2025-10-31'))
         );
-        $legacy = $repo->getActas(['f_acta' => "'2025-10-01','2025-10-31'"], ['f_acta' => 'BETWEEN']);
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
 
         $repo->Eliminar($o);
     }
@@ -71,9 +67,8 @@ class PgNotasMatchingTest extends myTest
         $nuevo = $repo->matching(
             Criteria::create()->where(Filter::eq(ActaTribunalField::IdItem, $o->getId_item()))->orderBy(ActaTribunalField::Orden)
         );
-        $legacy = $repo->getActasTribunales(['id_item' => $o->getId_item(), '_ordre' => 'orden']);
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertEquals($o->getId_item(), $nuevo[0]->getId_item());
 
         $repo->Eliminar($o);
     }

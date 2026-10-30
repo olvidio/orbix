@@ -133,7 +133,7 @@ class PgTarifaUbiRepositoryTest extends myTest
 
     public function test_get_tarifa_ubis_sin_filtros()
     {
-        $result = $this->repository->getTarifaUbis();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

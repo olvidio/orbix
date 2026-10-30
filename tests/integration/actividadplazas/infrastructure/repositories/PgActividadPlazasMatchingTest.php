@@ -39,10 +39,9 @@ class PgActividadPlazasMatchingTest extends myTest
                 ->where(Filter::eq(ActividadPlazasField::IdActiv, $id))
                 ->andWhere(Filter::eq(ActividadPlazasField::IdDl, 1))
         );
-        $legacy = $this->plazasRepo->getActividadesPlazas(['id_activ' => $id, 'id_dl' => 1]);
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertSame($id, $nuevo[0]->getId_activ());
 
         $this->plazasRepo->Eliminar($oPlazas);
     }
@@ -58,13 +57,9 @@ class PgActividadPlazasMatchingTest extends myTest
             ->andWhere(Filter::matches(PlazaPeticionField::IdNom, '^\d{4}9'))
             ->orderBy(PlazaPeticionField::Orden);
         $nuevo = $this->peticionRepo->matching($criteria);
-        $legacy = $this->peticionRepo->getPlazasPeticion(
-            ['id_nom' => $idNom, '_ordre' => 'orden'],
-            ['id_nom' => '=']
-        );
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertSame($idNom, $nuevo[0]->getId_nom());
 
         $this->peticionRepo->Eliminar($oPeticion);
     }

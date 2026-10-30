@@ -127,7 +127,7 @@ class PgActividadAsignaturaDlRepositoryTest extends myTest
 
     public function test_get_actividad_asignaturas_sin_filtros()
     {
-        $result = $this->repository->getActividadAsignaturas();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

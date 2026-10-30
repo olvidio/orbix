@@ -8,7 +8,6 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\actividadestudios\domain\criteria\ActividadAsignaturaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -95,18 +94,6 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
             $items[] = ActividadAsignatura::fromArray($aDatos);
         }
         return $items;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ActividadAsignatura>
-     */
-    public function getActividadAsignaturas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ActividadAsignaturaField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

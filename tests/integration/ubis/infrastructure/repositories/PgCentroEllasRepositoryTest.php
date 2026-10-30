@@ -141,7 +141,7 @@ class PgCentroEllasRepositoryTest extends myTest
 
     public function test_get_centros_sin_filtros()
     {
-        $result = $this->repository->getCentros();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

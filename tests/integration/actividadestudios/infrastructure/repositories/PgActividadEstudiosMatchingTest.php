@@ -40,12 +40,10 @@ class PgActividadEstudiosMatchingTest extends myTest
             ->andWhere(Filter::eq(MatriculaField::IdActiv, $idActiv))
             ->orderBy(MatriculaField::IdNivel);
         $nuevo = $this->matriculaRepo->matching($criteria);
-        $legacy = $this->matriculaRepo->getMatriculas(
-            ['id_nom' => $idNom, 'id_activ' => $idActiv, '_ordre' => 'id_nivel']
-        );
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertSame($idNom, $nuevo[0]->getId_nom());
+        $this->assertSame($idActiv, $nuevo[0]->getId_activ());
 
         $this->matriculaRepo->Eliminar($o);
     }
@@ -59,13 +57,11 @@ class PgActividadEstudiosMatchingTest extends myTest
         $nuevo = $this->matriculaRepo->matching(
             Criteria::create()->where(Filter::in(MatriculaField::IdActiv, [$idActiv, $idActiv + 1]))
         );
-        $legacy = $this->matriculaRepo->getMatriculas(
-            ['id_activ' => '{' . $idActiv . ', ' . ($idActiv + 1) . '}'],
-            ['id_activ' => 'ANY']
-        );
 
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        foreach ($nuevo as $m) {
+            $this->assertContains($m->getId_activ(), [$idActiv, $idActiv + 1]);
+        }
 
         $this->matriculaRepo->Eliminar($o);
     }
@@ -82,13 +78,11 @@ class PgActividadEstudiosMatchingTest extends myTest
                 ->andWhere(Filter::isNull(ActividadAsignaturaField::Tipo))
                 ->orderBy(ActividadAsignaturaField::IdAsignatura)
         );
-        $legacy = $this->asignaturaRepo->getActividadAsignaturas(
-            ['id_activ' => $idActiv, 'tipo' => 'x', '_ordre' => 'id_asignatura'],
-            ['tipo' => 'IS NULL']
-        );
 
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        foreach ($nuevo as $a) {
+            $this->assertNull($a->getTipo());
+        }
 
         $this->asignaturaRepo->Eliminar($o);
     }
