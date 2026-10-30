@@ -73,7 +73,7 @@ final class AsignaturasPendientesResumenData
 
         $a_Asig_isActive = [];
         $a_Asig_nivel = [];
-        $cAsignaturasTodas = $AsignaturaRepository->getAsignaturas(['_ordre' => 'id_asignatura']);
+        $cAsignaturasTodas = $AsignaturaRepository->matching(Criteria::create()->orderBy(AF::IdAsignatura));
         foreach ($cAsignaturasTodas as $oAsignatura) {
             $id_asignatura = $oAsignatura->getId_asignatura();
             $a_Asig_isActive[$id_asignatura] = $oAsignatura->isActive();

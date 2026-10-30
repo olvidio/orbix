@@ -3,6 +3,7 @@
 namespace src\notas\application;
 
 
+use src\asignaturas\domain\criteria\AsignaturaField;
 use src\notas\domain\criteria\PersonaNotaField as F;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -134,7 +135,7 @@ final class TablaAlumnosAsignaturas
         // inactivas). Necesario para resolver el nivel de una nota cuando la
         // asignatura no es opcional (`id_asignatura <= 3000`).
         $mapAsigNivel = [];
-        $todas = $asignaturaRepo->getAsignaturas(['_ordre' => 'id_asignatura']);
+        $todas = $asignaturaRepo->matching(Criteria::create()->orderBy(AsignaturaField::IdAsignatura));
         foreach ($todas as $oAsig) {
                 $mapAsigNivel[(int)$oAsig->getId_asignatura()] = (int)$oAsig->getId_nivel();
         }
