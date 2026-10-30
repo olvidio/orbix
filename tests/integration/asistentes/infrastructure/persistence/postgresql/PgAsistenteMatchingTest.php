@@ -117,17 +117,13 @@ class PgAsistenteMatchingTest extends myTest
         $this->assertSame(20000, $r[0]->getCfi_con());
     }
 
-    public function test_get_asistentes_equivale_a_matching(): void
+    public function test_filtra_por_booleano(): void
     {
-        $viejo = $this->repoAll->getAsistentes(
-            ['id_activ' => self::ACT_A, 'propio' => 't', '_ordre' => 'id_nom'],
-        );
-        $nuevo = $this->repoAll->matching(
+        $r = $this->repoAll->matching(
             Criteria::create()->where(Filter::eq(F::IdActiv, self::ACT_A))
                 ->andWhere(Filter::eq(F::Propio, true))->orderBy(F::IdNom)
         );
-        $this->assertSame($this->claves($nuevo), $this->claves($viejo));
-        $this->assertSame(['1-1'], $this->claves($viejo));
+        $this->assertSame(['1-1'], $this->claves($r));
     }
 
     public function test_sin_resultados(): void

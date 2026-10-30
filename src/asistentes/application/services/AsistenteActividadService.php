@@ -61,16 +61,14 @@ class AsistenteActividadService
     /**
      * Obtiene las actividades de un asistente
      *
-     * @param array<string, mixed> $aWhereNom asociativo con los valores de las variables para el nombre
-     * @param array<string, string> $aOperadorNom asociativo con los operadores para cada variable del nombre
+     * @param Criteria $criteriaAsistente filtros sobre la asistencia ({@see AsistenteField}); el orden lo fija la fecha de la actividad
      * @param array<string, mixed> $aWhereActividad asociativo con los valores de las variables para la actividad
      * @param array<string, string> $aOperadorActividad asociativo con los operadores para cada variable de la actividad
      * @param bool $reverse TRUE para ordenar de nuevo a viejo
      * @return list<\src\asistentes\domain\entity\Asistente>
      */
     public function getActividadesDeAsistente(
-        array $aWhereNom,
-        array $aOperadorNom,
+        Criteria $criteriaAsistente,
         array $aWhereActividad = [],
         array $aOperadorActividad = [],
         bool  $reverse = false
@@ -83,14 +81,12 @@ class AsistenteActividadService
             return [];
         }
         // Importa el orden, se queda con la primera
-        $a_Clases = [
-            ['repo' => AsistenteDlRepositoryInterface::class, 'get' => 'getAsistentes'],
-            ['repo' => AsistenteOutRepositoryInterface::class, 'get' => 'getAsistentes'],
-            ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
+        $repos = [
+            AsistenteDlRepositoryInterface::class,
+            AsistenteOutRepositoryInterface::class,
+            AsistenteExRepositoryInterface::class,
         ];
-
-        $namespace = 'src\asistentes\infrastructure\persistence\postgresql';
-        $cAsistencias = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhereNom, $aOperadorNom);
+        $cAsistencias = $this->asistenteRepository->matchingConjunto($repos, $criteriaAsistente);
 
         return $this->ordenarAsistenciasPorFecha($cAsistencias, $a_id_activ_f_ini, $reverse);
     }

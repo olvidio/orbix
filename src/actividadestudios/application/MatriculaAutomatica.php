@@ -18,6 +18,7 @@ use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\asistentes\domain\entity\Asistente;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\criteria\PersonaNotaField;
@@ -128,7 +129,13 @@ final class MatriculaAutomatica
             $id_nom = $oPersonaDl->getId_nom();
             $cAsistencias = [];
             if (empty($Qid_activ)) {
-                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente(['id_nom' => $id_nom, 'propio' => 't'], [], $aWhereAct, $aOperadoresAct);
+                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente(
+                    Criteria::create()
+                        ->where(Filter::eq(AsistenteField::IdNom, (int) $id_nom))
+                        ->andWhere(Filter::eq(AsistenteField::Propio, true)),
+                    $aWhereAct,
+                    $aOperadoresAct,
+                );
             } else {
                 $oAsistente = $this->findAsistenteEnActividad($Qid_activ, $id_nom);
                 $cAsistencias = $oAsistente === null ? [] : [$oAsistente];

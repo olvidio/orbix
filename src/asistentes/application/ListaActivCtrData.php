@@ -11,6 +11,7 @@ use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -164,19 +165,18 @@ final class ListaActivCtrData
 
             $i = 0;
             $aPersonasCtr = [];
-            $aWhereNom = [];
             $aPlazas = PlazaId::getArrayPosiblesPlazas();
             foreach ($cPersonas as $oPersona) {
                 $i++;
                 $id_nom = $oPersona->getId_nom();
                 $ap_nom = $oPersona->getPrefApellidosNombre();
-                $aWhereNom['id_nom'] = $id_nom;
-                $aWhereNom['propio'] = 't';
-                $aOperadorNom = [];
+                $criteriaAsistente = Criteria::create()
+                    ->where(Filter::eq(AsistenteField::IdNom, $id_nom))
+                    ->andWhere(Filter::eq(AsistenteField::Propio, true));
                 $aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
                 $aOperadorAct['f_ini'] = 'BETWEEN';
 
-                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
+                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $aWhereAct, $aOperadorAct);
                 $aActividades = [];
                 if (count($cAsistencias) === 0) {
                     $aActividades = [];

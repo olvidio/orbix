@@ -9,6 +9,9 @@ use src\dossiers\application\PermDossier;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\domain\criteria\AsistenteField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
@@ -170,11 +173,8 @@ class Select_actividades_de_una_persona
 
         $i = 0;
         $a_valores = [];
-        $aWhereNom = ['id_nom' => $this->id_pau];
-        $aOperadorNom = [];
         $cActividadesAsistente = $this->asistenteActividadService->getActividadesDeAsistente(
-            $aWhereNom,
-            $aOperadorNom,
+            Criteria::create()->where(Filter::eq(AsistenteField::IdNom, (int) $this->id_pau)),
             $aWhere,
             $aOperator,
             true,

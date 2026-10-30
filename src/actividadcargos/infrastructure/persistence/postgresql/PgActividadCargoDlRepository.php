@@ -6,6 +6,8 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
+use src\asistentes\domain\criteria\AsistenteField;
+use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\config\ConfigGlobal;
@@ -226,7 +228,8 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
         }
         $id_nom = is_numeric($aWhere['id_nom']) ? (int) $aWhere['id_nom'] : 0;
 
-        $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+        $criteriaAsistente = (new LegacyWhereAdapter(AsistenteField::class, []))->toCriteria($aWhere, $aOperador);
+        $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $aWhereAct, $aOperadorAct);
 
         $cCargos = $this->matching(Criteria::create()->where(Filter::eq(ActividadCargoField::IdNom, $id_nom)));
         // seleccionar las actividades según los criterios de búsqueda.

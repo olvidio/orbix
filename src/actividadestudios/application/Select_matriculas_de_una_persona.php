@@ -15,6 +15,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\Matricula;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
@@ -355,8 +356,10 @@ class Select_matriculas_de_una_persona
         $aOperadores = [];
         if (!empty($this->Qid_activ)) {
             $aWhere['id_activ'] = $this->Qid_activ;
-            $aWhereNom = ['id_nom' => $this->id_pau, 'id_activ' => $this->Qid_activ];
-            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, [], $aWhere, $aOperadores, true);
+            $criteriaAsistente = Criteria::create()
+                ->where(Filter::eq(AsistenteField::IdNom, (int) $this->id_pau))
+                ->andWhere(Filter::eq(AsistenteField::IdActiv, (int) $this->Qid_activ));
+            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $aWhere, $aOperadores, true);
         } else {
             if (empty($this->todos)) {
                 $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
@@ -365,8 +368,10 @@ class Select_matriculas_de_una_persona
             $aWhere['id_tipo_activ'] = '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)|(123)';
             $aOperadores['id_tipo_activ'] = '~';
 
-            $aWhereNom = ['id_nom' => $this->id_pau, 'propio' => 't'];
-            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, [], $aWhere, $aOperadores, true);
+            $criteriaAsistente = Criteria::create()
+                ->where(Filter::eq(AsistenteField::IdNom, (int) $this->id_pau))
+                ->andWhere(Filter::eq(AsistenteField::Propio, true));
+            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $aWhere, $aOperadores, true);
         }
         $n = count($cAsistencias);
         if ($n === 0 && empty($this->todos)) {

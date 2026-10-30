@@ -60,7 +60,6 @@ final class ListaEstCtrData
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
 
-        $aWhereNom['propio'] = 't';
         $aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
         $aOperadorAct['f_ini'] = 'BETWEEN';
         $aWhereAct['id_tipo_activ'] = '^1(12|33)';
@@ -126,9 +125,10 @@ final class ListaEstCtrData
                 $a_valores[$id_ubi][$i][1] = $i;
                 $a_valores[$id_ubi][$i][2] = $nom;
 
-                $aWhereNom['id_nom'] = $id_nom;
-                $aOperadorNom = [];
-                $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
+                $criteriaAsistente = Criteria::create()
+                    ->where(Filter::eq(AsistenteField::Propio, true))
+                    ->andWhere(Filter::eq(AsistenteField::IdNom, $id_nom));
+                $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $aWhereAct, $aOperadorAct);
                 $a = 0;
                 foreach ($cAsistentes as $oAsistente) {
                     $a++;

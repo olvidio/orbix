@@ -67,19 +67,6 @@ class AsistenteApplicationService
     }
 
     /**
-     * Obtiene una lista de asistentes según criterios
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Asistente>
-     */
-    public function getAsistentes(array $aWhere = [], array $aOperators = []): array
-    {
-        return $this->repository->getAsistentes($aWhere, $aOperators);
-    }
-
-    /**
      * Guarda un asistente dentro de una transacción
      *
      * Los eventos de dominio se despachan automáticamente si la operación tiene éxito

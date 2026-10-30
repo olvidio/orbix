@@ -9,7 +9,6 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\criteria\NullsPosition;
 use src\shared\domain\criteria\Order;
 use src\shared\domain\criteria\OrderDirection;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use DateTimeInterface;
@@ -66,20 +65,6 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
     {
         $conv = new PgCriteriaConverter(AsistenteField::class, self::COLUMNAS);
         return array_map(Asistente::fromArray(...), $this->rowsMatching($criteria, $conv));
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo Asistente
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Asistente>
-     */
-    public function getAsistentes(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(AsistenteField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /**
