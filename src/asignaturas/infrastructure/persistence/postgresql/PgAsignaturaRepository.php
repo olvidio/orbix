@@ -12,7 +12,6 @@ use src\shared\domain\helpers\FuncTablasSupport;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
@@ -325,18 +324,6 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             $items[] = Asignatura::fromArray($this->normalizeRowFromDb($aDatos));
         }
         return $items;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Asignatura>
-     */
-    public function getAsignaturas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(AsignaturaField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function Eliminar(Asignatura $Asignatura): bool

@@ -29,10 +29,15 @@ class PgAsignaturasMatchingTest extends myTest
                 ->where(Filter::lt(AsignaturaField::IdAsignatura, 3000))
                 ->orderBy(AsignaturaField::IdNivel)
         );
-        $legacy = $repo->getAsignaturas(['id_asignatura' => 3000, '_ordre' => 'id_nivel'], ['id_asignatura' => '<']);
 
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $niveles = array_map(static fn($a) => $a->getId_nivel(), $nuevo);
+        $ordenados = $niveles;
+        sort($ordenados);
+        $this->assertSame($ordenados, $niveles);
+        foreach ($nuevo as $a) {
+            $this->assertLessThan(3000, $a->getId_asignatura());
+        }
     }
 
     public function test_asignatura_matching_plan_estudios_array_equivale_a_legacy(): void
@@ -44,9 +49,10 @@ class PgAsignaturasMatchingTest extends myTest
                 ->where(Filter::arrayContains(AsignaturaField::PlanEstudios, 2))
                 ->orderBy(AsignaturaField::IdNivel)
         );
-        $legacy = $repo->getAsignaturas(['plan_estudios' => 2, '_ordre' => 'id_nivel'], ['plan_estudios' => 'IN_ARRAY']);
 
-        $this->assertEquals($legacy, $nuevo);
+        foreach ($nuevo as $a) {
+            $this->assertContains(2, array_map('intval', (array) $a->getPlan_estudios()));
+        }
     }
 
     public function test_asignatura_tipo_matching_ordenado_equivale_a_legacy(): void
