@@ -12,6 +12,7 @@ use src\misas\application\support\MisasBuildInput;
 use src\shared\config\ConfigGlobal;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
@@ -690,8 +691,13 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
             $id_cargo = empty($aAsistente['id_cargo']) ? '' : $aAsistente['id_cargo'];
 
             // Seleccionar sólo las del periodo
-            $aWhereAct['id_activ'] = $id_activ;
-            $cActividades = $ActividadRepository->getActividades($aWhereAct, $aOperadorAct);
+            $cActividades = $ActividadRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(ActividadAllField::IdActiv, $id_activ))
+                    ->andWhere(Filter::lte(ActividadAllField::FIni, $sFin_iso))
+                    ->andWhere(Filter::gte(ActividadAllField::FFin, $sInicio_iso))
+                    ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+            );
             if ($cActividades === []) { continue; }
 
             $oActividad = $cActividades[0]; // sólo debería haber una.

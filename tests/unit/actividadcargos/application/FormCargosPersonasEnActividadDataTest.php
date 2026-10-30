@@ -59,17 +59,13 @@ final class FormCargosPersonasEnActividadDataTest extends TestCase
     public function test_build_sin_item_llama_lista_actividades(): void
     {
         $capture = new class {
-            /** @var array<string, mixed>|null */
-            public ?array $where = null;
-            /** @var array<string, mixed>|null */
-            public ?array $op = null;
+            public ?\src\shared\domain\criteria\Criteria $criteria = null;
         };
 
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
-        $actividadRepo->method('getActividades')
-            ->willReturnCallback(function (array $aWhere, array $aOperators = []) use ($capture): array {
-                $capture->where = $aWhere;
-                $capture->op = $aOperators;
+        $actividadRepo->method('matching')
+            ->willReturnCallback(function (\src\shared\domain\criteria\Criteria $criteria) use ($capture): array {
+                $capture->criteria = $criteria;
                 return [];
             });
 
@@ -92,9 +88,13 @@ final class FormCargosPersonasEnActividadDataTest extends TestCase
         ]);
 
         $this->assertSame([], $data['aActividades']);
-        $this->assertNotNull($capture->where);
-        $this->assertSame('^1', $capture->where['id_tipo_activ']);
-        $this->assertSame('~', $capture->op['id_tipo_activ']);
+        $this->assertNotNull($capture->criteria);
+        $porCampo = [];
+        foreach ($capture->criteria->filters() as $filtro) {
+            $porCampo[$filtro->field->value] = $filtro;
+        }
+        $this->assertSame('^1', $porCampo['id_tipo_activ']->value);
+        $this->assertSame(\src\shared\domain\criteria\Operator::Matches, $porCampo['id_tipo_activ']->operator);
         $this->assertSame([1 => 'C1'], $data['cargos_select']['opciones']);
     }
 
@@ -158,7 +158,7 @@ final class FormCargosPersonasEnActividadDataTest extends TestCase
     public function test_build_cumple_contrato_de_claves_modo_lista(): void
     {
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
-        $actividadRepo->method('getActividades')->willReturn([]);
+        $actividadRepo->method('matching')->willReturn([]);
 
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->willReturn([]);

@@ -5,6 +5,7 @@ namespace src\misas\application;
 use DateTimeZone;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
@@ -233,8 +234,13 @@ class CuadriculaUpdate
         );
         foreach ($cAsistentes as $aAsistente) {
             $id_activ = $aAsistente['id_activ'];
-            $aWhereAct['id_activ'] = $id_activ;
-            $cActividades = $this->actividadRepository->getActividades($aWhereAct, $aOperadorAct);
+            $cActividades = $this->actividadRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(ActividadAllField::IdActiv, $id_activ))
+                    ->andWhere(Filter::lte(ActividadAllField::FIni, $dia_iso))
+                    ->andWhere(Filter::gte(ActividadAllField::FFin, $dia_iso))
+                    ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+            );
             if ($cActividades === []) {
                 continue;
             }
