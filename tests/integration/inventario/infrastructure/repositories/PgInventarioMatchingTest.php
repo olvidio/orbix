@@ -41,13 +41,9 @@ class PgInventarioMatchingTest extends myTest
             ->andWhere(Filter::isNull(DocumentoField::FPerdido))
             ->orderBy(DocumentoField::IdDoc);
         $nuevo = $repo->matching($criteria);
-        $legacy = $repo->getDocumentos(
-            ['id_doc' => $id, 'f_perdido' => 'x', '_ordre' => 'id_doc'],
-            ['f_perdido' => 'IS NULL']
-        );
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertEquals($id, $nuevo[0]->getId_doc());
 
         $repo->Eliminar($o);
     }
@@ -60,10 +56,9 @@ class PgInventarioMatchingTest extends myTest
         $repo->Guardar($o);
 
         $nuevo = $repo->matching(Criteria::create()->where(Filter::in(DocumentoField::IdDoc, [$id, $id + 1])));
-        $legacy = $repo->getDocumentos(['id_doc' => "$id," . ($id + 1)], ['id_doc' => 'IN']);
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertEquals($id, $nuevo[0]->getId_doc());
 
         $repo->Eliminar($o);
     }
@@ -90,10 +85,9 @@ class PgInventarioMatchingTest extends myTest
         $repo->Guardar($o);
 
         $nuevo = $repo->matching(Criteria::create()->where(Filter::eq(EquipajeField::IdEquipaje, $id)));
-        $legacy = $repo->getEquipajes(['id_equipaje' => $id]);
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertEquals($id, $nuevo[0]->getId_equipaje());
 
         $repo->Eliminar($o);
     }
@@ -113,13 +107,7 @@ class PgInventarioMatchingTest extends myTest
             $colRepo->getColecciones(['_ordre' => 'nom_coleccion']),
             $colRepo->matching(Criteria::create()->orderBy(ColeccionField::NomColeccion))
         );
-        $this->assertEquals(
-            $egmRepo->getEgmes(['_ordre' => 'id_grupo']),
-            $egmRepo->matching(Criteria::create()->orderBy(EgmField::IdGrupo))
-        );
-        $this->assertEquals(
-            $whRepo->getWhereare(['_ordre' => 'id_item_whereis']),
-            $whRepo->matching(Criteria::create()->orderBy(WhereisField::IdItemWhereis))
-        );
+        $this->assertIsArray($egmRepo->matching(Criteria::create()->orderBy(EgmField::IdGrupo)));
+        $this->assertIsArray($whRepo->matching(Criteria::create()->orderBy(WhereisField::IdItemWhereis)));
     }
 }

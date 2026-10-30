@@ -6,7 +6,6 @@ use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\inventario\domain\criteria\EquipajeField;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -110,18 +109,6 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
             $items[] = Equipaje::fromArray($aDatos);
         }
         return $items;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Equipaje>
-     */
-    public function getEquipajes(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(EquipajeField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

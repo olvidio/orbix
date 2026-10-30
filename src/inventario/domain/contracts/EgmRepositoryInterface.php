@@ -34,14 +34,6 @@ interface EgmRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Egm>
-     */
-    public function getEgmes(array $aWhere = [], array $aOperators = []): array;
-
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(Egm $Egm): bool;
