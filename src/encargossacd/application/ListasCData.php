@@ -10,6 +10,7 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -99,12 +100,15 @@ final class ListasCData
                     ));
                 foreach ($cCentrosDl as $oCentroDl) {
                     $id_ubi = $oCentroDl->getId_ubi();
-                    $cPersonas = $this->personaDlRepository->getPersonas([
-                        'id_ctr' => $id_ubi,
-                        'situacion' => 'A',
-                        'sacd' => 't',
-                        '_ordre' => 'apellido1,apellido2,nom',
-                    ]) ?: [];
+                    $cPersonas = $this->personaDlRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(PersonaField::IdCtr, $id_ubi))
+                            ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                            ->andWhere(Filter::eq(PersonaField::Sacd, true))
+                            ->orderBy(PersonaField::Apellido1)
+                            ->addOrderBy(PersonaField::Apellido2)
+                            ->addOrderBy(PersonaField::Nom)
+                    ) ?: [];
                     foreach ($cPersonas as $oPersonaNAgd) {
                         $id_nom = $oPersonaNAgd->getId_nom();
                         $nom_ap = $oPersonaNAgd->getNombreApellidosCrSin();
