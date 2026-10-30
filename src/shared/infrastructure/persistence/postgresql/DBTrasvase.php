@@ -5,6 +5,7 @@ namespace src\shared\infrastructure\persistence\postgresql;
 use PDO;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\DependencyResolver;
@@ -662,7 +663,9 @@ class DBTrasvase extends DBAbstract
                     $dl_org = $dl;
                 }
                 $ActividadExRepository = DependencyResolver::get(ActividadExRepositoryInterface::class);
-                $cActividades = $ActividadExRepository->getActividades(['dl_org' => $dl_org]);
+                $cActividades = $ActividadExRepository->matching(
+                    Criteria::create()->where(Filter::eq(ActividadAllField::DlOrg, $dl_org))
+                );
                 if (!empty($cActividades)) {
                     $MapIdRepository = DependencyResolver::get(MapIdRepositoryInterface::class);
                     $this->configurarMapIdRepository($MapIdRepository);
@@ -685,7 +688,9 @@ class DBTrasvase extends DBAbstract
 
                 $ActividadDlRepository = DependencyResolver::get(ActividadDlRepositoryInterface::class);
                 $this->setRepositoryPdo($ActividadDlRepository, $oDbl);
-                $cActividades = $ActividadDlRepository->getActividades(['dl_org' => $dl]);
+                $cActividades = $ActividadDlRepository->matching(
+                    Criteria::create()->where(Filter::eq(ActividadAllField::DlOrg, $dl))
+                );
                 if (!empty($cActividades)) {
                     $ActividadExRepository = DependencyResolver::get(ActividadExRepositoryInterface::class);
                     foreach ($cActividades as $oActividad) {

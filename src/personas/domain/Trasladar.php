@@ -6,6 +6,7 @@ use PDO;
 use src\certificados\domain\criteria\CertificadoRecibidoField;
 use src\personas\domain\criteria\TelecoPersonaField;
 use src\personas\domain\criteria\TrasladoField;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -1222,7 +1223,9 @@ class Trasladar
     private function testActividad(int $id_activ): bool
     {
         $ActividadAllRepository = $this->actividadAllRepository;
-        $cActividades = $ActividadAllRepository->getActividades(['id_activ' => $id_activ]);
+        $cActividades = $ActividadAllRepository->matching(
+            Criteria::create()->where(Filter::eq(ActividadAllField::IdActiv, $id_activ))
+        );
 
         return (!empty($cActividades) && count($cActividades) === 1);
     }
