@@ -11,11 +11,9 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConverterDate;
-use src\personas\domain\criteria\PersonaField;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaCriteriaTrait;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
@@ -172,18 +170,6 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         }
 
         return $result;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<PersonaPub>
-     */
-    public function getPersonas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(PersonaField::class, []);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /**

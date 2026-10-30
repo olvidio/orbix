@@ -19,6 +19,7 @@ use src\notas\domain\entity\Acta;
 use src\notas\domain\entity\PersonaNota;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\entity\PersonaDl;
 use src\shared\domain\value_objects\DateTimeLocal;
 
@@ -78,19 +79,19 @@ final class ActaVerAddPersonaFormDataTest extends TestCase
 
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
         $dlRepo->expects($this->once())
-            ->method('getPersonas')
-            ->with(
-                $this->callback(static function (array $where): bool {
-                    return ($where['nivel_stgr'] ?? null) === NivelStgrId::R;
-                }),
-                $this->callback(static function (array $op): bool {
-                    return ($op['nivel_stgr'] ?? null) === '!=';
-                }),
-            )
+            ->method('matching')
+            ->with($this->equalTo(
+                Criteria::create()
+                    ->where(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->andWhere(Filter::neq(PersonaField::NivelStgr, NivelStgrId::R))
+                    ->orderBy(PersonaField::Apellido1)
+                    ->addOrderBy(PersonaField::Apellido2)
+                    ->addOrderBy(PersonaField::Nom)
+            ))
             ->willReturn([$ok, $repaso, $yaNota]);
 
         $pubRepo = $this->createMock(PersonaPubRepositoryInterface::class);
-        $pubRepo->method('getPersonas')->willReturn([]);
+        $pubRepo->method('matching')->willReturn([]);
 
         $nota = $this->createMock(PersonaNota::class);
         $nota->method('getId_nom')->willReturn(9);
