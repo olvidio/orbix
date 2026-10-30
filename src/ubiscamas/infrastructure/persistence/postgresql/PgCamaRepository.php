@@ -8,7 +8,6 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\ubiscamas\domain\criteria\CamaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\postgresql\Set;
@@ -81,18 +80,6 @@ public function getArrayCamas(string $sCondicion = ''): array
     {
         $conv = new PgCriteriaConverter(CamaField::class, self::COLUMNAS);
         return array_map(Cama::fromArray(...), $this->rowsMatching($criteria, $conv));
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Cama>
-     */
-    public function getCamas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(CamaField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /**

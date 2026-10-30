@@ -36,16 +36,6 @@ interface CamaRepositoryInterface
     public function matching(Criteria $criteria): array;
 
     /**
-     * devuelve una colección (array) de objetos de tipo Cama
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Cama> Una colección de objetos de tipo Cama
-     */
-    public function getCamas(array $aWhere = [], array $aOperators = []): array;
-
-    /**
      * devuelve una colección (array) de objetos de tipo Cama para una habitación específica
      *
      * @return list<Cama>

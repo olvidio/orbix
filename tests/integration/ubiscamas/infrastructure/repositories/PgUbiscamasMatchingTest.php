@@ -35,10 +35,9 @@ class PgUbiscamasMatchingTest extends myTest
 
         $criteria = Criteria::create()->where(Filter::eq(HabitacionField::IdHabitacion, $idHabitacion));
         $nuevo = $this->habitacionRepo->matching($criteria);
-        $legacy = $this->habitacionRepo->getHabitaciones(['id_habitacion' => $idHabitacion]);
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertSame($idHabitacion, $nuevo[0]->getId_habitacion());
 
         $this->habitacionRepo->Eliminar($nuevo[0]);
         $this->assertSame([], $this->habitacionRepo->matching($criteria));
@@ -72,10 +71,9 @@ class PgUbiscamasMatchingTest extends myTest
 
         $criteria = Criteria::create()->where(Filter::in(CamaField::IdHabitacion, [$idHabitacion, $idHabitacion]));
         $nuevo = $this->camaRepo->matching($criteria);
-        $legacy = $this->camaRepo->getCamas(['id_habitacion' => "'$idHabitacion'"], ['id_habitacion' => 'IN']);
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertSame($oCama->getIdCamaVo()->value(), $nuevo[0]->getIdCamaVo()->value());
 
         foreach ($nuevo as $cama) {
             $this->camaRepo->Eliminar($cama);
