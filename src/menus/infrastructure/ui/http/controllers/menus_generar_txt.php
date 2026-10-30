@@ -41,7 +41,7 @@ foreach ($cMenus as $oMenuDb) {
 // Añadir los tipos de repetición
 /** @var RepeticionRepositoryInterface $RepeticionRepository */
 $RepeticionRepository = DependencyResolver::get(RepeticionRepositoryInterface::class);
-$cRepeticion = $RepeticionRepository->getRepeticiones();
+$cRepeticion = $RepeticionRepository->matching(Criteria::create());
 
 $texto .= "//tipos de repetición actividades\n";
 foreach ($cRepeticion as $oRepeticion) {

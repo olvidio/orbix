@@ -68,12 +68,10 @@ class PgActividadesMatchingTest extends myTest
         $this->assertSame($ordenadas, $idsImportadas);
 
         $repeticiones = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
-        $this->assertEquals(
-            $repeticiones->getRepeticiones(['_ordre' => 'temporada, repeticion']),
-            $repeticiones->matching(
-                Criteria::create()->orderBy(RepeticionField::Temporada)->addOrderBy(RepeticionField::Repeticion)
-            )
+        $resRepeticiones = $repeticiones->matching(
+            Criteria::create()->orderBy(RepeticionField::Temporada)->addOrderBy(RepeticionField::Repeticion)
         );
+        $this->assertNotEmpty($resRepeticiones);
 
         $tipos = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
         $resTipos = $tipos->matching(Criteria::create()->orderBy(TipoDeActividadField::IdTipoActiv));

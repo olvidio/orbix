@@ -7,6 +7,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\profesores\domain\criteria\ProfesorStgrField;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\asignaturas\domain\criteria\DepartamentoField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
@@ -51,7 +52,9 @@ final class ListaPorDepartamentos
             $cTipoProfesor[$oProfesorTipo->getId_tipo_profesor()] = $oProfesorTipo->getTipo_profesor();
         }
 
-        $cDepartamentos = $this->departamentoRepository->getDepartamentos(['_ordre' => 'departamento']);
+        $cDepartamentos = $this->departamentoRepository->matching(
+            Criteria::create()->orderBy(DepartamentoField::NombreDepartamento)
+        );
 
         $aClaustro = [];
         foreach ($cDepartamentos as $oDepartamento) {
