@@ -50,16 +50,6 @@ interface PersonaDlRepositoryInterface
     public function matching(Criteria $criteria): array;
 
     /**
-     * @deprecated usar matching(Criteria)
-     * devuelve una colección (array) de objetos de tipo PersonaDl
-     *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<PersonaDl> Una colección de objetos de tipo PersonaDl
-     */
-    public function getPersonas(array $aWhere = [], array $aOperators = []): array;
-
-    /**
      * Busca la clase con id_nom en el repositorio.
      */
     public function findById(int $id_nom): ?PersonaDl;
