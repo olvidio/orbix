@@ -186,7 +186,7 @@ final class FormMatriculasDeUnaPersonaDataTest extends TestCase
         ?DbSchemaRepositoryInterface $schemaRepo = null,
     ): FormMatriculasDeUnaPersonaData {
         $repoPlan = $this->createMock(PersonaNotaRepositoryInterface::class);
-        $repoPlan->method('getPersonaNotas')->willReturn([]);
+        $repoPlan->method('matching')->willReturn([]);
 
         return new FormMatriculasDeUnaPersonaData(
             $actRepo,

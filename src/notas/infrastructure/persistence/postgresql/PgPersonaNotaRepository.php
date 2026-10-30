@@ -7,7 +7,7 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\notas\domain\criteria\PersonaNotaField;
 use src\notas\infrastructure\persistence\postgresql\traits\NotasCriteriaTrait;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
@@ -57,18 +57,6 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
         $filas = $this->filasNotasMatching($criteria, PersonaNotaField::class, '*', $filtro);
 
         return $this->entidadesDesdeFilas($filas);
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<PersonaNota|PersonaNotaOtraRegionStgr>
-     */
-    public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(PersonaNotaField::class, []);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function getNotasPersonasDePasoDeRegion(string $esquemaRegionStgr): array
@@ -215,10 +203,11 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
         // Unique (id_nom, id_asignatura): el id_nivel del formulario puede ser el del
         // catálogo (Latín IV 1997 → 2312) distinto del almacenado (plan 2026 → 2212).
         if ($bInsert) {
-            $pkAsig = PersonaNotaPkPorAsignatura::pkParaUpdate($this->getPersonaNotas([
-                'id_nom' => $id_nom,
-                'id_asignatura' => $PersonaNota->getId_asignatura(),
-            ]));
+            $pkAsig = PersonaNotaPkPorAsignatura::pkParaUpdate($this->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PersonaNotaField::IdNom, $id_nom))
+                    ->andWhere(Filter::eq(PersonaNotaField::IdAsignatura, $PersonaNota->getId_asignatura()))
+            ));
             if ($pkAsig !== null) {
                 $id_nivel = $pkAsig['id_nivel'];
                 $tipo_acta = $pkAsig['tipo_acta'];

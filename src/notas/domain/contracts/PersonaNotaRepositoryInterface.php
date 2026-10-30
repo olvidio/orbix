@@ -32,14 +32,6 @@ interface PersonaNotaRepositoryInterface
     public function matching(Criteria $criteria): array;
 
     /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<\src\notas\domain\entity\PersonaNota>
-     */
-    public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array;
-
-    /**
      * Notas de acta de personas de paso (`id_nom` < 0) en los `e_notas_dl`
      * de la región STGR indicada (p. ej. `H-Hv` → esquemas `H-%v`).
      *

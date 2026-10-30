@@ -22,6 +22,8 @@ use Tests\myTest;
 
 class notasTest extends myTest
 {
+    use BuscaPersonaNotasTrait;
+
     private string $session_org;
 
     /**
@@ -55,7 +57,7 @@ class notasTest extends myTest
         );
 
         foreach ($idsNom as $idNom) {
-            $cPersonaNotas = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $idNom]);
+            $cPersonaNotas = $this->buscarPersonaNotas($PersonaNotaOtraRegionStgrRepository, ['id_nom' => $idNom]);
             foreach ($cPersonaNotas as $oPersonaNota) {
                 $PersonaNotaOtraRegionStgrRepository->Eliminar($oPersonaNota);
             }
@@ -87,7 +89,7 @@ class notasTest extends myTest
     private function assertSinNotasOtraRegion(int $id_nom, int $id_asignatura): void
     {
         $PersonaNotaOtraRegionStgrRepository = $this->personaNotaOtraRegionStgrRepositoryForSession();
-        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas([
+        $cPersonaNota = $this->buscarPersonaNotas($PersonaNotaOtraRegionStgrRepository, [
             'id_nom' => $id_nom,
             'id_asignatura' => $id_asignatura,
         ]);
@@ -100,7 +102,7 @@ class notasTest extends myTest
     private function assertSinPlaceholderCertificadoEnDlAlumno(string $esquemaAlumno, int $id_nom, int $id_asignatura): void
     {
         $PersonaNotaRepository = $this->personaNotaDlRepositoryForSchema($esquemaAlumno);
-        $cPersonaNotaDB = $PersonaNotaRepository->getPersonaNotas([
+        $cPersonaNotaDB = $this->buscarPersonaNotas($PersonaNotaRepository, [
             'id_nom' => $id_nom,
             'id_asignatura' => $id_asignatura,
         ]);
@@ -225,7 +227,7 @@ class notasTest extends myTest
         $oPersonaNota = $rta['nota_real'];
 
         $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
-        $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas([
+        $cPersonaNota = $this->buscarPersonaNotas($PersonaNotaDlRepository, [
             'id_nom' => $id_nom,
             'id_asignatura' => $personaNota->getId_asignatura(),
         ]);
@@ -276,7 +278,7 @@ class notasTest extends myTest
         $oPersonaNota = $rta['nota_real'];
 
         $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
-        $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas([
+        $cPersonaNota = $this->buscarPersonaNotas($PersonaNotaDlRepository, [
             'id_nom' => $id_nom,
             'id_asignatura' => $personaNota->getId_asignatura(),
         ]);
@@ -327,7 +329,7 @@ class notasTest extends myTest
         $oPersonaNota = $rta['nota_real'];
 
         $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
-        $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas([
+        $cPersonaNota = $this->buscarPersonaNotas($PersonaNotaDlRepository, [
             'id_nom' => $id_nom,
             'id_asignatura' => $personaNota->getId_asignatura(),
         ]);
@@ -388,7 +390,7 @@ class notasTest extends myTest
         $oPersonaNota = $rta['nota_real'];
 
         $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
-        $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas([
+        $cPersonaNota = $this->buscarPersonaNotas($PersonaNotaDlRepository, [
             'id_nom' => $id_nom,
             'id_asignatura' => $personaNota->getId_asignatura(),
         ]);
@@ -442,7 +444,7 @@ class notasTest extends myTest
 
         // Estoy en H-dlbv. La nota debe estar en H-dlbv.e_notas_dl (DL examinadora).
         $PersonaNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
-        $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
+        $cPersonaNota = $this->buscarPersonaNotas($PersonaNotaDlRepository, ['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
         $oPersonaNota2 = $cPersonaNota[0] ?? null;
 
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
@@ -486,7 +488,7 @@ class notasTest extends myTest
         $oPersonaNota1 = $rta['nota_real'];
 
         $PersonaNotaDlRepository =$GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
-        $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $oPersonaNota->getId_asignatura()]);
+        $cPersonaNota = $this->buscarPersonaNotas($PersonaNotaDlRepository, ['id_nom' => $id_nom, 'id_asignatura' => $oPersonaNota->getId_asignatura()]);
         $oPersonaNota2 = $cPersonaNota[0];
 
         $this->assertEquals($oPersonaNota1, $oPersonaNota2);
@@ -515,7 +517,7 @@ class notasTest extends myTest
         $id_nom = $oPersonaNota->getId_nom();
         $id_asignatura = $oPersonaNota->getId_asignatura();
 
-        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
+        $cPersonaNota = $this->buscarPersonaNotas($PersonaNotaOtraRegionStgrRepository, ['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
         $oPersonaNota2 = $cPersonaNota[0];
 
         // Falla al comprara el json, porque no está formateado exactamente igual.
@@ -561,7 +563,7 @@ class notasTest extends myTest
         $id_nom = $oPersonaNota->getId_nom();
         $id_asignatura = $oPersonaNota->getIdAsignaturaVo()->value();
 
-        $cPersonaNota = $PersonaNotaDlRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
+        $cPersonaNota = $this->buscarPersonaNotas($PersonaNotaDlRepository, ['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
         $oPersonaNota2 = $cPersonaNota[0];
 
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
