@@ -4,6 +4,7 @@ namespace Tests\integration\encargossacd\infrastructure\persistence\postgresql;
 
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoHorario;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\encargossacd\EncargoHorarioFactory;
 
@@ -133,7 +134,7 @@ class PgEncargoHorarioRepositoryTest extends myTest
 
     public function test_get_encargo_horarios_sin_filtros()
     {
-        $result = $this->repository->getEncargoHorarios();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

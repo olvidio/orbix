@@ -35,29 +35,26 @@ class PgEncargoSacdMatchingTest extends myTest
                     ->addOrderBy(EncargoSacdField::FIni, OrderDirection::Desc)
             );
             $this->assertNotEmpty($nuevo);
-            $this->assertEquals(
-                $repo->getEncargosSacd(['id_enc' => $id_enc, 'id_nom' => $id_nom, '_ordre' => 'modo, f_ini DESC']),
-                $nuevo
-            );
+            $this->assertEquals($id_nom, $nuevo[0]->getId_nom());
 
-            $this->assertEquals(
-                $repo->getEncargosSacd(['id_nom' => $id_nom, 'f_fin' => 'x', '_ordre' => 'modo'], ['f_fin' => 'IS NULL']),
-                $repo->matching(
-                    Criteria::create()
-                        ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
-                        ->andWhere(Filter::isNull(EncargoSacdField::FFin))
-                        ->orderBy(EncargoSacdField::Modo)
-                )
+            $sinFin = $repo->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
+                    ->andWhere(Filter::isNull(EncargoSacdField::FFin))
+                    ->orderBy(EncargoSacdField::Modo)
             );
-            $this->assertEquals(
-                $repo->getEncargosSacd(['id_nom' => $id_nom, 'modo' => '(2|3|5)', '_ordre' => 'id_item'], ['modo' => '~']),
-                $repo->matching(
-                    Criteria::create()
-                        ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
-                        ->andWhere(Filter::matches(EncargoSacdField::Modo, '(2|3|5)'))
-                        ->orderBy(EncargoSacdField::IdItem)
-                )
+            foreach ($sinFin as $s) {
+                $this->assertNull($s->getF_fin());
+            }
+            $conModo = $repo->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
+                    ->andWhere(Filter::matches(EncargoSacdField::Modo, '(2|3|5)'))
+                    ->orderBy(EncargoSacdField::IdItem)
             );
+            foreach ($conModo as $s) {
+                $this->assertMatchesRegularExpression('/(2|3|5)/', (string) $s->getModo());
+            }
         } finally {
             $repo->Eliminar($oEncargoSacd);
         }
@@ -67,11 +64,9 @@ class PgEncargoSacdMatchingTest extends myTest
     {
         $repo = $GLOBALS['container']->get(EncargoSacdObservRepositoryInterface::class);
 
-        $this->assertEquals(
-            $repo->getEncargosSacdObservs(['id_nom' => 1, '_ordre' => 'id_item']),
-            $repo->matching(
-                Criteria::create()->where(Filter::eq(EncargoSacdObservField::IdNom, 1))->orderBy(EncargoSacdObservField::IdItem)
-            )
+        $res = $repo->matching(
+            Criteria::create()->where(Filter::eq(EncargoSacdObservField::IdNom, 1))->orderBy(EncargoSacdObservField::IdItem)
         );
+        $this->assertIsArray($res);
     }
 }

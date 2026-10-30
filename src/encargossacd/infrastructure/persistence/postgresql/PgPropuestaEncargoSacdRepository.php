@@ -12,7 +12,6 @@ use src\shared\infrastructure\persistence\ConverterDate;
 use src\encargossacd\domain\criteria\PropuestaEncargoSacdField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\traits\HandlesPdoErrors;
@@ -47,18 +46,6 @@ class PgPropuestaEncargoSacdRepository extends ClaseRepository implements Propue
             $items[] = PropuestaEncargoSacd::fromArray($aDatos);
         }
         return $items;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<PropuestaEncargoSacd>
-     */
-    public function getPropuestasEncargoSacd(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(PropuestaEncargoSacdField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function findById(int $id_item): ?PropuestaEncargoSacd

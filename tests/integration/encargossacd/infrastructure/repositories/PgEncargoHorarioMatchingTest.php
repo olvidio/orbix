@@ -33,19 +33,16 @@ class PgEncargoHorarioMatchingTest extends myTest
                     ->orderBy(EncargoHorarioField::FIni, OrderDirection::Desc)
             );
             $this->assertNotEmpty($nuevo);
-            $this->assertEquals(
-                $repo->getEncargoHorarios(['id_enc' => $id_enc, '_ordre' => 'f_ini DESC']),
-                $nuevo
-            );
+            $this->assertEquals($id_enc, $nuevo[0]->getId_enc());
 
-            $this->assertEquals(
-                $repo->getEncargoHorarios(['id_enc' => $id_enc, 'f_fin' => 'x'], ['f_fin' => 'IS NULL']),
-                $repo->matching(
-                    Criteria::create()
-                        ->where(Filter::eq(EncargoHorarioField::IdEnc, $id_enc))
-                        ->andWhere(Filter::isNull(EncargoHorarioField::FFin))
-                )
+            $sinFin = $repo->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoHorarioField::IdEnc, $id_enc))
+                    ->andWhere(Filter::isNull(EncargoHorarioField::FFin))
             );
+            foreach ($sinFin as $h) {
+                $this->assertNull($h->getF_fin());
+            }
         } finally {
             $repo->Eliminar($oHorario);
         }
@@ -69,25 +66,17 @@ class PgEncargoHorarioMatchingTest extends myTest
                     ->limit(1)
             );
             $this->assertCount(1, $nuevo);
-            $this->assertEquals(
-                $repo->getEncargoSacdHorarios(
-                    ['id_enc' => $id_enc, 'id_nom' => $id_nom, '_ordre' => 'id_item DESC', '_limit' => '1']
-                ),
-                $nuevo
-            );
+            $this->assertEquals($id_nom, $nuevo[0]->getId_nom());
 
-            $this->assertEquals(
-                $repo->getEncargoSacdHorarios(
-                    ['id_nom' => $id_nom, 'f_fin' => 'x', '_ordre' => 'f_ini DESC'],
-                    ['f_fin' => 'IS NULL']
-                ),
-                $repo->matching(
-                    Criteria::create()
-                        ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
-                        ->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin))
-                        ->orderBy(EncargoSacdHorarioField::FIni, OrderDirection::Desc)
-                )
+            $sinFin = $repo->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                    ->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin))
+                    ->orderBy(EncargoSacdHorarioField::FIni, OrderDirection::Desc)
             );
+            foreach ($sinFin as $h) {
+                $this->assertNull($h->getF_fin());
+            }
         } finally {
             $repo->Eliminar($oHorario);
         }

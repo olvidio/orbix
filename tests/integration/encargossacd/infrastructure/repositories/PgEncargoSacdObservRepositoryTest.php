@@ -4,6 +4,7 @@ namespace Tests\integration\encargossacd\infrastructure\persistence\postgresql;
 
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoSacdObserv;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\encargossacd\EncargoSacdObservFactory;
 
@@ -133,7 +134,7 @@ class PgEncargoSacdObservRepositoryTest extends myTest
 
     public function test_get_encargos_sacd_observs_sin_filtros()
     {
-        $result = $this->repository->getEncargosSacdObservs();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

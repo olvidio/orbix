@@ -10,7 +10,6 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\encargossacd\domain\criteria\PropuestaEncargoSacdHorarioField;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\traits\HandlesPdoErrors;
@@ -47,18 +46,6 @@ class PgPropuestaEncargoSacdHorarioRepository extends ClaseRepository implements
             $items[] = EncargoSacdHorario::fromArray($aDatos);
         }
         return $items;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<EncargoSacdHorario>
-     */
-    public function getEncargoSacdHorarios(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(PropuestaEncargoSacdHorarioField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function Guardar(EncargoSacdHorario $horario): bool

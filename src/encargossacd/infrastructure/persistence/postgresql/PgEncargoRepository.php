@@ -6,7 +6,6 @@ use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\encargossacd\domain\criteria\EncargoField;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use PDO;
@@ -52,18 +51,6 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
     {
         $conv = new PgCriteriaConverter(EncargoField::class, self::COLUMNAS);
         return array_map(Encargo::fromArray(...), $this->rowsMatching($criteria, $conv));
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Encargo>
-     */
-    public function getEncargos(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(EncargoField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

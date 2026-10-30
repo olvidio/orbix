@@ -29,6 +29,31 @@ class PgEncargosMatchingTest extends myTest
         $this->assertEquals($legacy, $nuevo);
     }
 
+    public function test_encargo_matching_in_regex_y_no_nulo(): void
+    {
+        $repo = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+
+        foreach ($repo->matching(Criteria::create()->where(Filter::matches(EncargoField::IdTipoEnc, '(1|2|3).0'))->orderBy(EncargoField::IdEnc)) as $e) {
+            $this->assertMatchesRegularExpression('/(1|2|3).0/', (string) $e->getId_tipo_enc());
+        }
+        foreach ($repo->matching(Criteria::create()->where(Filter::in(EncargoField::IdTipoEnc, [8100, 8200, 1100]))->orderBy(EncargoField::IdEnc)) as $e) {
+            $this->assertContains((int) $e->getId_tipo_enc(), [8100, 8200, 1100]);
+        }
+        foreach ($repo->matching(Criteria::create()->where(Filter::isNotNull(EncargoField::IdUbi))->orderBy(EncargoField::IdEnc)) as $e) {
+            $this->assertNotNull($e->getId_ubi());
+        }
+    }
+
+    public function test_encargo_texto_matching(): void
+    {
+        $repo = $GLOBALS['container']->get(EncargoTextoRepositoryInterface::class);
+
+        $this->assertIsArray($repo->matching(Criteria::create()));
+        foreach ($repo->matching(Criteria::create()->where(Filter::eq(EncargoTextoField::Idioma, 'es'))->orderBy(EncargoTextoField::IdItem)) as $t) {
+            $this->assertSame('es', (string) $t->getIdioma());
+        }
+    }
+
     public function test_encargo_tipo_sin_acentos_equivale_a_legacy(): void
     {
         $repo = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
@@ -41,35 +66,4 @@ class PgEncargosMatchingTest extends myTest
         );
     }
 
-    public function test_encargo_in_y_regex_equivalen_a_legacy(): void
-    {
-        $repo = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-
-        $this->assertEquals(
-            $repo->getEncargos(['id_tipo_enc' => '(1|2|3).0', '_ordre' => 'id_enc'], ['id_tipo_enc' => '~']),
-            $repo->matching(
-                Criteria::create()->where(Filter::matches(EncargoField::IdTipoEnc, '(1|2|3).0'))->orderBy(EncargoField::IdEnc)
-            )
-        );
-        $this->assertEquals(
-            $repo->getEncargos(['id_tipo_enc' => '{8100, 8200, 1100}', '_ordre' => 'id_enc'], ['id_tipo_enc' => 'ANY']),
-            $repo->matching(
-                Criteria::create()->where(Filter::in(EncargoField::IdTipoEnc, [8100, 8200, 1100]))->orderBy(EncargoField::IdEnc)
-            )
-        );
-        $this->assertEquals(
-            $repo->getEncargos(['id_ubi' => 'x', '_ordre' => 'id_enc'], ['id_ubi' => 'IS NOT NULL']),
-            $repo->matching(Criteria::create()->where(Filter::isNotNull(EncargoField::IdUbi))->orderBy(EncargoField::IdEnc))
-        );
-    }
-
-    public function test_encargo_texto_matching_equivale_a_legacy(): void
-    {
-        $repo = $GLOBALS['container']->get(EncargoTextoRepositoryInterface::class);
-
-        $this->assertEquals(
-            $repo->getEncargoTextos(['idioma' => 'es', '_ordre' => 'id_item']),
-            $repo->matching(Criteria::create()->where(Filter::eq(EncargoTextoField::Idioma, 'es'))->orderBy(EncargoTextoField::IdItem))
-        );
-    }
 }

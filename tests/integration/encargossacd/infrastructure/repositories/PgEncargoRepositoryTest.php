@@ -4,6 +4,7 @@ namespace Tests\integration\encargossacd\infrastructure\persistence\postgresql;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\entity\Encargo;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\encargossacd\EncargoFactory;
 
@@ -133,7 +134,7 @@ class PgEncargoRepositoryTest extends myTest
 
     public function test_get_encargos_sin_filtros()
     {
-        $result = $this->repository->getEncargos();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

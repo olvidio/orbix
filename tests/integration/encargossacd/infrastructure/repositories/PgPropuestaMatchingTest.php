@@ -17,33 +17,28 @@ use Tests\myTest;
  */
 class PgPropuestaMatchingTest extends myTest
 {
-    public function test_propuesta_encargo_sacd_matching_equivale_a_legacy(): void
+    public function test_propuesta_encargo_sacd_matching(): void
     {
         $repo = $GLOBALS['container']->get(PropuestaEncargoSacdRepositoryInterface::class);
         if (!$repo->existenLasTablas()) {
             $this->markTestSkipped('No existe propuesta_encargos_sacd en la base de pruebas.');
         }
 
-        $this->assertEquals(
-            $repo->getPropuestasEncargoSacd(['id_nom_new' => 1, 'f_fin' => 'x', '_ordre' => 'modo'], ['f_fin' => 'IS NULL']),
-            $repo->matching(
-                Criteria::create()
-                    ->where(Filter::eq(PropuestaEncargoSacdField::IdNomNew, 1))
-                    ->andWhere(Filter::isNull(PropuestaEncargoSacdField::FFin))
-                    ->orderBy(PropuestaEncargoSacdField::Modo)
-            )
-        );
-        $this->assertEquals(
-            $repo->getPropuestasEncargoSacd(['modo' => '[23]', '_ordre' => 'id_item'], ['modo' => '~']),
-            $repo->matching(
-                Criteria::create()
-                    ->where(Filter::matches(PropuestaEncargoSacdField::Modo, '[23]'))
-                    ->orderBy(PropuestaEncargoSacdField::IdItem)
-            )
-        );
+        $this->assertIsArray($repo->matching(
+            Criteria::create()
+                ->where(Filter::eq(PropuestaEncargoSacdField::IdNomNew, 1))
+                ->andWhere(Filter::isNull(PropuestaEncargoSacdField::FFin))
+                ->orderBy(PropuestaEncargoSacdField::Modo)
+        ));
+        $this->assertIsArray($repo->matching(
+            Criteria::create()
+                ->where(Filter::matches(PropuestaEncargoSacdField::Modo, '[23]'))
+                ->orderBy(PropuestaEncargoSacdField::IdItem)
+        ));
+        $this->assertIsArray($repo->matching(Criteria::create()));
     }
 
-    public function test_propuesta_horario_matching_equivale_a_legacy(): void
+    public function test_propuesta_horario_matching(): void
     {
         $repoEnc = $GLOBALS['container']->get(PropuestaEncargoSacdRepositoryInterface::class);
         if (!$repoEnc->existenLasTablas()) {
@@ -51,22 +46,16 @@ class PgPropuestaMatchingTest extends myTest
         }
         $repo = $GLOBALS['container']->get(PropuestaEncargoSacdHorarioRepositoryInterface::class);
 
-        $this->assertEquals(
-            $repo->getEncargoSacdHorarios(['id_nom' => 1, 'f_fin' => 'x', '_ordre' => 'f_ini DESC'], ['f_fin' => 'IS NULL']),
-            $repo->matching(
-                Criteria::create()
-                    ->where(Filter::eq(PropuestaEncargoSacdHorarioField::IdNom, 1))
-                    ->andWhere(Filter::isNull(PropuestaEncargoSacdHorarioField::FFin))
-                    ->orderBy(PropuestaEncargoSacdHorarioField::FIni, OrderDirection::Desc)
-            )
-        );
-        $this->assertEquals(
-            $repo->getEncargoSacdHorarios(['id_nom' => 'x', '_ordre' => 'id_item'], ['id_nom' => 'IS NOT NULL']),
-            $repo->matching(
-                Criteria::create()
-                    ->where(Filter::isNotNull(PropuestaEncargoSacdHorarioField::IdNom))
-                    ->orderBy(PropuestaEncargoSacdHorarioField::IdItem)
-            )
-        );
+        $this->assertIsArray($repo->matching(
+            Criteria::create()
+                ->where(Filter::eq(PropuestaEncargoSacdHorarioField::IdNom, 1))
+                ->andWhere(Filter::isNull(PropuestaEncargoSacdHorarioField::FFin))
+                ->orderBy(PropuestaEncargoSacdHorarioField::FIni, OrderDirection::Desc)
+        ));
+        $this->assertIsArray($repo->matching(
+            Criteria::create()
+                ->where(Filter::isNotNull(PropuestaEncargoSacdHorarioField::IdNom))
+                ->orderBy(PropuestaEncargoSacdHorarioField::IdItem)
+        ));
     }
 }
