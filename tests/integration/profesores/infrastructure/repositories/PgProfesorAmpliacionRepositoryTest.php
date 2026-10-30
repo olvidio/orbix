@@ -5,6 +5,7 @@ namespace Tests\integration\profesores\infrastructure\persistence\postgresql;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\entity\ProfesorAmpliacion;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\profesores\ProfesorAmpliacionFactory;
 
@@ -150,7 +151,7 @@ class PgProfesorAmpliacionRepositoryTest extends myTest
 
     public function test_get_profesor_ampliaciones_sin_filtros()
     {
-        $result = $this->repository->getProfesorAmpliaciones();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

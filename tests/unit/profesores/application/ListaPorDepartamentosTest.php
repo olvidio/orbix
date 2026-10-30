@@ -81,7 +81,7 @@ final class ListaPorDepartamentosTest extends TestCase
         $oDir->method('getId_nom')->willReturn(100);
 
         $oDirRepo = $this->createMock(ProfesorDirectorRepositoryInterface::class);
-        $oDirRepo->method('getProfesoresDirectores')->willReturn([$oDir]);
+        $oDirRepo->method('matching')->willReturn([$oDir]);
 
         $oPersona = $this->createMock(PersonaDl::class);
         $oPersona->method('getSituacion')->willReturn('A');

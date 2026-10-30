@@ -5,7 +5,7 @@ use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\profesores\domain\criteria\ProfesorAmpliacionField;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -49,7 +49,11 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
      */
     public function getArrayProfesoresAsignatura(int $id_asignatura): array
     {
-        $gesProfesores = $this->getProfesorAmpliaciones(['id_asignatura' => $id_asignatura, 'f_cese' => ''], ['f_cese' => 'IS NULL']);
+        $gesProfesores = $this->matching(
+            Criteria::create()
+                ->where(Filter::eq(ProfesorAmpliacionField::IdAsignatura, $id_asignatura))
+                ->andWhere(Filter::isNull(ProfesorAmpliacionField::FCese))
+        );
         $aProfesores = [];
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
@@ -108,18 +112,6 @@ public function getArrayProfesoresAsignaturaVo(AsignaturaId $id_asignatura): arr
         $aDatos['f_cese'] = (new ConverterDate('date', $aDatos['f_cese']))->fromPg();
 
         return $aDatos;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ProfesorAmpliacion>
-     */
-    public function getProfesorAmpliaciones(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ProfesorAmpliacionField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

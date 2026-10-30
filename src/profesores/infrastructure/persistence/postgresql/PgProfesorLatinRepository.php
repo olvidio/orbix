@@ -5,7 +5,6 @@ use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\profesores\domain\criteria\ProfesorLatinField;
 use PDO;
@@ -55,18 +54,6 @@ class PgProfesorLatinRepository extends ClaseRepository implements ProfesorLatin
         }
 
         return $result;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ProfesorLatin>
-     */
-    public function getProfesoresLatin(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ProfesorLatinField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -15,6 +15,7 @@ use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\criteria\ActaField;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorDocenciaStgrField;
 use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use frontend\shared\web\Periodo;
 
@@ -118,12 +119,12 @@ final class DocenciaActualizar
                     }
                 }
 
-                $aWhereDocencia = [
-                    'id_nom' => $id_profesor,
-                    'id_activ' => $id_activ,
-                    'id_asignatura' => $id_asignatura,
-                ];
-                $cProfesorDocencia = $this->profesorDocenciaStgrRepository->getProfesorDocenciasStgr($aWhereDocencia);
+                $cProfesorDocencia = $this->profesorDocenciaStgrRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(ProfesorDocenciaStgrField::IdNom, $id_profesor))
+                        ->andWhere(Filter::eq(ProfesorDocenciaStgrField::IdActiv, $id_activ))
+                        ->andWhere(Filter::eq(ProfesorDocenciaStgrField::IdAsignatura, $id_asignatura))
+                );
                 if (count($cProfesorDocencia) > 0) {
                     $oProfesorDocencia = $cProfesorDocencia[0];
                     $oProfesorDocencia->setCurso_inicio($ini_a);

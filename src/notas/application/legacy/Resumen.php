@@ -18,6 +18,7 @@ use src\notas\application\services\ResumenTempTablesService;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
+use src\profesores\domain\criteria\ProfesorDirectorField;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\StoresPdoErrorTxt;
 
@@ -1270,7 +1271,9 @@ class Resumen
         $tabla = $this->getNomTabla();
 
         $ProfesorDirectorRepository = $this->profesorDirectorRepository;
-        $cDirectores = $ProfesorDirectorRepository->getProfesoresDirectores(array('f_cese' => 1), array('f_cese' => 'IS NULL'));
+        $cDirectores = $ProfesorDirectorRepository->matching(
+            Criteria::create()->where(Filter::isNull(ProfesorDirectorField::FCese))
+        );
         $DepartamentoRepository = $this->departamentoRepository;
         $PersonaDlRepository = $this->personaDlRepository;
 

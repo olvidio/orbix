@@ -4,6 +4,7 @@ namespace Tests\integration\profesores\infrastructure\persistence\postgresql;
 
 use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
 use src\profesores\domain\entity\ProfesorTipo;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\profesores\ProfesorTipoFactory;
 
@@ -141,7 +142,7 @@ class PgProfesorTipoRepositoryTest extends myTest
 
     public function test_get_profesor_tipos_sin_filtros()
     {
-        $result = $this->repository->getProfesorTipos();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

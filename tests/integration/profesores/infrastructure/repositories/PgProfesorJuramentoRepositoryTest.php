@@ -4,6 +4,7 @@ namespace Tests\integration\profesores\infrastructure\persistence\postgresql;
 
 use src\profesores\domain\contracts\ProfesorJuramentoRepositoryInterface;
 use src\profesores\domain\entity\ProfesorJuramento;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\profesores\ProfesorJuramentoFactory;
 
@@ -133,7 +134,7 @@ class PgProfesorJuramentoRepositoryTest extends myTest
 
     public function test_get_profesor_juramentos_sin_filtros()
     {
-        $result = $this->repository->getProfesorJuramentos();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada
