@@ -4,6 +4,7 @@ namespace Tests\integration\configuracion\infrastructure\persistence\postgresql;
 
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\entity\App;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\configuracion\AppFactory;
 
@@ -133,7 +134,7 @@ class PgAppRepositoryTest extends myTest
 
     public function test_get_apps_sin_filtros()
     {
-        $result = $this->repository->getApps();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

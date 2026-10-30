@@ -9,7 +9,6 @@ use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\criteria\AppField;
 use src\configuracion\domain\entity\App;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\RunsCriteriaQueries;
@@ -56,20 +55,6 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         }
 
         return $apps;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo App
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<App> Una colección de objetos de tipo App
-     */
-    public function getApps(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(AppField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

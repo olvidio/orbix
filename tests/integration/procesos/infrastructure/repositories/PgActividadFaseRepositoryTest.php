@@ -4,6 +4,7 @@ namespace Tests\integration\procesos\infrastructure\persistence\postgresql;
 
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\entity\ActividadFase;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\procesos\ActividadFaseFactory;
 
@@ -165,7 +166,7 @@ class PgActividadFaseRepositoryTest extends myTest
 
     public function test_get_actividad_fases_sin_filtros()
     {
-        $result = $this->repository->getActividadFases();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

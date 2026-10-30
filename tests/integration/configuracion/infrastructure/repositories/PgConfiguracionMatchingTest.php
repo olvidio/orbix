@@ -34,7 +34,7 @@ class PgConfiguracionMatchingTest extends myTest
         $nuevo = $repo->matching(Criteria::create()->orderBy(AppField::Nom));
 
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($repo->getApps(['_ordre' => 'nom']), $nuevo);
+        $this->assertContainsOnlyInstancesOf(\src\configuracion\domain\entity\App::class, $nuevo);
     }
 
     public function test_modulos_instalados_y_config_schema_equivalen_a_legacy(): void

@@ -35,14 +35,6 @@ interface UbiInventarioRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<UbiInventario>
-     */
-    public function getUbisInventario(array $aWhere=[], array $aOperators=[]): array;
-	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
 	public function Eliminar(UbiInventario $UbiInventario): bool;

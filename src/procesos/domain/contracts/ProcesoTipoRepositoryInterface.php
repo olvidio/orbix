@@ -30,16 +30,6 @@ interface ProcesoTipoRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * devuelve una colección (array) de objetos de tipo ProcesoTipo
-     *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<ProcesoTipo> Una colección de objetos de tipo ProcesoTipo
-     */
-    public function getProcesoTipos(array $aWhere = [], array $aOperators = []): array;
-
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(ProcesoTipo $ProcesoTipo): bool;
