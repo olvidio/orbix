@@ -7,6 +7,9 @@ use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 use src\procesos\domain\PermAccion;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -66,22 +69,17 @@ final class ListaActividadesCtrData
         $inicioIso = (string) ($oPeriodo->getF_ini_iso() ?? '');
         $finIso = (string) ($oPeriodo->getF_fin_iso() ?? '');
 
-        $aWhere = [
-            'f_ini' => "'$inicioIso','$finIso'",
-            'status' => 3,
-            '_ordre' => 'f_ini,nom_activ',
-        ];
-        $aOperador = [
-            'f_ini' => 'BETWEEN',
-            'status' => '<',
-        ];
+        $criteria = Criteria::create()
+            ->where(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso))
+            ->andWhere(Filter::lt(ActividadAllField::Status, 3))
+            ->orderBy(ActividadAllField::FIni)
+            ->addOrderBy(ActividadAllField::NomActiv);
         $regex = $this->regexPorTipo($tipo);
         if ($regex !== null) {
-            $aWhere['id_tipo_activ'] = $regex;
-            $aOperador['id_tipo_activ'] = '~';
+            $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $regex));
         }
 
-        $cActividades = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $this->actividadDlRepository->matching($criteria);
         $a_casas = $this->casaRepository->getArrayCasas();
 
         $filas = [];

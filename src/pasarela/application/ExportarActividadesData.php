@@ -4,6 +4,7 @@ namespace src\pasarela\application;
 
 use DateInterval;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\entity\TiposActividades;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadescentro\domain\criteria\CentroEncargadoField;
@@ -52,8 +53,7 @@ final class ExportarActividadesData
 
         $aCasasDl = $this->casaDlRepository->getArrayCasas();
 
-        $aWhere = [];
-        $aOperador = [];
+        $criteria = Criteria::create();
         if ($Qid_tipo_activ === '') {
             $ssfsvRaw = $input['isfsv_val'] ?? '';
             $Qssfsv = is_string($ssfsvRaw) ? $ssfsvRaw : '';
@@ -79,8 +79,7 @@ final class ExportarActividadesData
             $Qid_tipo_activ = (string)$oTipoActiv->getId_tipo_activ();
         }
         if ($Qid_tipo_activ !== '......') {
-            $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
-            $aOperador['id_tipo_activ'] = '~';
+            $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, "^$Qid_tipo_activ"));
         }
 
         $err = '';
@@ -97,8 +96,7 @@ final class ExportarActividadesData
                 'errores' => _("Periodo no válido"),
             ];
         }
-        $aWhere['f_ini'] = "'$inicioIso','$finIso'";
-        $aOperador['f_ini'] = 'BETWEEN';
+        $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso));
 
         $Qaid_cdc = $input['id_cdc'] ?? [];
         if (!is_array($Qaid_cdc)) {
@@ -106,9 +104,9 @@ final class ExportarActividadesData
         }
         /** @var list<int|string> $Qaid_cdc */
         if ($Qaid_cdc !== []) {
-            $v = '{' . implode(', ', array_map('strval', $Qaid_cdc)) . '}';
-            $aWhere['id_ubi'] = $v;
-            $aOperador['id_ubi'] = 'ANY';
+            $criteria = $criteria->andWhere(
+                Filter::in(ActividadAllField::IdUbi, array_map('intval', $Qaid_cdc))
+            );
         }
 
         $aCentrosPosibles = $this->centroDlRepository->getArrayCentros();
@@ -118,7 +116,7 @@ final class ExportarActividadesData
             $aCentrosPosiblesSinSgAgd[$id_ubi] = $nombre_ubi_sin;
         }
 
-        $cActividades = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $this->actividadDlRepository->matching($criteria);
 
         $a_cabeceras = [
             _("activada"),

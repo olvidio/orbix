@@ -49,7 +49,7 @@ final class ListaActividadesCtrDataTest extends TestCase
     public function test_sin_actividades_contrato_y_filas_vacias(): void
     {
         $act = $this->createStub(ActividadDlRepositoryInterface::class);
-        $act->method('getActividades')->willReturn([]);
+        $act->method('matching')->willReturn([]);
         $ce = $this->createStub(CentroEncargadoRepositoryInterface::class);
         $casa = $this->createStub(CasaRepositoryInterface::class);
         $casa->method('getArrayCasas')->willReturn([]);
@@ -120,7 +120,7 @@ final class ListaActividadesCtrDataTest extends TestCase
         };
 
         $act = $this->createStub(ActividadDlRepositoryInterface::class);
-        $act->method('getActividades')->willReturn([$activ]);
+        $act->method('matching')->willReturn([$activ]);
 
         $ce = $this->createStub(CentroEncargadoRepositoryInterface::class);
         $ce->method('getCentrosEncargadosActividad')->with(10)->willReturn([$centroEnc]);

@@ -4,6 +4,9 @@ namespace src\notas\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\application\services\DelegacionDropdown;
 
@@ -58,17 +61,12 @@ final class ActividadesBuscarData
         }
 
         $ActividadRepository = $this->actividadRepository;
-        $cActividades = $ActividadRepository->getActividades(
-            [
-                'f_ini' => "'$f_ini_iso','$f_fin_iso'",
-                'id_tipo_activ' => '^1(12|33)',
-                '_ordre' => 'f_ini',
-                'dl_org' => $dl_org,
-            ],
-            [
-                'f_ini' => 'BETWEEN',
-                'id_tipo_activ' => '~',
-            ]
+        $cActividades = $ActividadRepository->matching(
+            Criteria::create()
+                ->where(Filter::between(ActividadAllField::FIni, $f_ini_iso, $f_fin_iso))
+                ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^1(12|33)'))
+                ->andWhere(Filter::eq(ActividadAllField::DlOrg, $dl_org))
+                ->orderBy(ActividadAllField::FIni)
         );
 
         $aActividades = [];
