@@ -4,6 +4,7 @@ namespace Tests\integration\actividadcargos\infrastructure\persistence\postgresq
 
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\Cargo;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\actividadcargos\CargoFactory;
 
@@ -149,7 +150,7 @@ class PgCargoRepositoryTest extends myTest
 
     public function test_get_cargos_sin_filtros()
     {
-        $result = $this->repository->getCargos();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

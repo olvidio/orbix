@@ -27,14 +27,6 @@ interface CargoRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Cargo>
-     */
-    public function getCargos(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(Cargo $Cargo): bool;
 
     public function Guardar(Cargo $Cargo): bool;

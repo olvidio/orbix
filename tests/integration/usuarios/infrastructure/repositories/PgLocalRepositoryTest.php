@@ -2,7 +2,10 @@
 
 namespace Tests\unit\usuarios\infrastructure\persistence\postgresql;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
+use src\usuarios\domain\criteria\LocalField;
 use src\usuarios\domain\entity\Local;
 use src\usuarios\domain\value_objects\IdLocale;
 use src\usuarios\domain\value_objects\NombreLocale;
@@ -180,7 +183,7 @@ class PgLocalRepositoryTest extends myTest
 
     public function test_get_locales_sin_filtros()
     {
-        $cLocales = $this->repository->getLocales();
+        $cLocales = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($cLocales);
         $this->assertNotEmpty($cLocales);
@@ -192,7 +195,7 @@ class PgLocalRepositoryTest extends myTest
 
     public function test_get_locales_con_filtro_activos()
     {
-        $cLocales = $this->repository->getLocales(['active' => true]);
+        $cLocales = $this->repository->matching(Criteria::create()->where(Filter::eq(LocalField::Active, true)));
 
         $this->assertIsArray($cLocales);
         $this->assertNotEmpty($cLocales);
@@ -216,7 +219,7 @@ class PgLocalRepositoryTest extends myTest
         $this->repository->Guardar($oLocal);
 
         // Buscar con filtro
-        $cLocales = $this->repository->getLocales(['idioma' => 'pt']);
+        $cLocales = $this->repository->matching(Criteria::create()->where(Filter::eq(LocalField::Idioma, 'pt')));
 
         $this->assertIsArray($cLocales);
         $this->assertNotEmpty($cLocales);

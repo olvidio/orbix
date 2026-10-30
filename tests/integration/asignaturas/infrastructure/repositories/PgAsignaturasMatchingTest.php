@@ -54,9 +54,13 @@ class PgAsignaturasMatchingTest extends myTest
         $repo = $GLOBALS['container']->get(AsignaturaTipoRepositoryInterface::class);
 
         $nuevo = $repo->matching(Criteria::create()->orderBy(AsignaturaTipoField::TipoAsignatura));
-        $legacy = $repo->getAsignaturaTipos(['_ordre' => 'tipo_asignatura']);
 
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertNotEmpty($nuevo);
+        $sinOrden = $repo->matching(Criteria::create());
+        $this->assertEqualsCanonicalizing(
+            array_map(static fn($t) => $t->getId_tipo(), $sinOrden),
+            array_map(static fn($t) => $t->getId_tipo(), $nuevo)
+        );
     }
 
     public function test_departamento_matching_usa_la_columna_departamento(): void
@@ -82,8 +86,12 @@ class PgAsignaturasMatchingTest extends myTest
         $repo = $GLOBALS['container']->get(SectorRepositoryInterface::class);
 
         $nuevo = $repo->matching(Criteria::create()->orderBy(SectorField::NombreSector));
-        $legacy = $repo->getSectores(['_ordre' => 'sector']);
 
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertNotEmpty($nuevo);
+        $sinOrden = $repo->matching(Criteria::create());
+        $this->assertEqualsCanonicalizing(
+            array_map(static fn($s) => $s->getId_sector(), $sinOrden),
+            array_map(static fn($s) => $s->getId_sector(), $nuevo)
+        );
     }
 }

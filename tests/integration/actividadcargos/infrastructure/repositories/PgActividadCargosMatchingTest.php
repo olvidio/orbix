@@ -55,10 +55,15 @@ class PgActividadCargosMatchingTest extends myTest
                 ->where(Filter::eq(CargoField::TipoCargo, 'sacd'))
                 ->orderBy(CargoField::OrdenCargo)
         );
-        $legacy = $this->cargoRepo->getCargos(['tipo_cargo' => 'sacd', '_ordre' => 'orden_cargo']);
 
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        foreach ($nuevo as $cargo) {
+            $this->assertSame('sacd', $cargo->getTipo_cargo());
+        }
+        $ordenes = array_map(static fn($c) => $c->getOrden_cargo() ?? PHP_INT_MAX, $nuevo);
+        $esperado = $ordenes;
+        sort($esperado);
+        $this->assertSame($esperado, $ordenes);
     }
 
     public function test_cargo_matching_sin_acentos_equivale_a_legacy(): void
@@ -66,8 +71,10 @@ class PgActividadCargosMatchingTest extends myTest
         $nuevo = $this->cargoRepo->matching(
             Criteria::create()->where(Filter::matchesUnaccented(CargoField::Cargo, 'd.est'))
         );
-        $legacy = $this->cargoRepo->getCargos(['cargo' => 'd.est'], ['cargo' => 'sin_acentos']);
 
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertIsArray($nuevo);
+        foreach ($nuevo as $cargo) {
+            $this->assertStringContainsStringIgnoringCase('d.est', $cargo->getCargo());
+        }
     }
 }

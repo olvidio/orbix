@@ -21,14 +21,6 @@ interface ZonaRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Zona>
-     */
-    public function getZonas(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(Zona $Zona): bool;
 
     public function Guardar(Zona $Zona): bool;

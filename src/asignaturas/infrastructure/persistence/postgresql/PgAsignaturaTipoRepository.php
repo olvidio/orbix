@@ -9,7 +9,6 @@ use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\asignaturas\domain\criteria\AsignaturaTipoField;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\postgresql\Set;
@@ -68,18 +67,6 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
     {
         $conv = new PgCriteriaConverter(AsignaturaTipoField::class, self::COLUMNAS);
         return array_map(AsignaturaTipo::fromArray(...), $this->rowsMatching($criteria, $conv));
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<AsignaturaTipo>
-     */
-    public function getAsignaturaTipos(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(AsignaturaTipoField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function Eliminar(AsignaturaTipo $AsignaturaTipo): bool

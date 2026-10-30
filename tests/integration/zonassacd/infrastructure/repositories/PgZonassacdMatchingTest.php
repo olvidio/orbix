@@ -17,22 +17,26 @@ use Tests\myTest;
  */
 class PgZonassacdMatchingTest extends myTest
 {
-    public function test_zonas_equivalen_a_legacy(): void
+    public function test_zonas_ordenadas_por_orden_e_id(): void
     {
         $repo = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-        $this->assertEquals(
-            $repo->getZonas(['_ordre' => 'orden, id_zona']),
-            $repo->matching(Criteria::create()->orderBy(ZonaField::Orden)->addOrderBy(ZonaField::IdZona))
-        );
+        $zonas = $repo->matching(Criteria::create()->orderBy(ZonaField::Orden)->addOrderBy(ZonaField::IdZona));
+        $this->assertIsArray($zonas);
+        $claves = array_map(static fn($z) => [$z->getOrden() ?? PHP_INT_MAX, $z->getId_zona()], $zonas);
+        $esperado = $claves;
+        usort($esperado, static fn($a, $b) => $a <=> $b);
+        $this->assertSame($esperado, $claves);
     }
 
-    public function test_zonas_grupo_y_zonas_sacd_equivalen_a_legacy(): void
+    public function test_zonas_grupo_y_zonas_sacd_ordenadas(): void
     {
         $grupos = $GLOBALS['container']->get(ZonaGrupoRepositoryInterface::class);
-        $this->assertEquals(
-            $grupos->getZonasGrupo(['_ordre' => 'orden, id_grupo']),
-            $grupos->matching(Criteria::create()->orderBy(ZonaGrupoField::Orden)->addOrderBy(ZonaGrupoField::IdGrupo))
-        );
+        $lista = $grupos->matching(Criteria::create()->orderBy(ZonaGrupoField::Orden)->addOrderBy(ZonaGrupoField::IdGrupo));
+        $this->assertIsArray($lista);
+        $claves = array_map(static fn($g) => [$g->getOrden() ?? PHP_INT_MAX, $g->getId_grupo()], $lista);
+        $esperado = $claves;
+        usort($esperado, static fn($a, $b) => $a <=> $b);
+        $this->assertSame($esperado, $claves);
 
         $sacds = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
         $orden = $sacds->matching(Criteria::create()->orderBy(ZonaSacdField::IdItem));

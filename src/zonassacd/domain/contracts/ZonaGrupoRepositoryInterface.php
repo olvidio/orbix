@@ -19,14 +19,6 @@ interface ZonaGrupoRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ZonaGrupo>
-     */
-    public function getZonasGrupo(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(ZonaGrupo $ZonaGrupo): bool;
 
     public function Guardar(ZonaGrupo $ZonaGrupo): bool;
