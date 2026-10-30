@@ -6,6 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\criteria\PlazaPeticionField as F;
@@ -85,34 +86,31 @@ final class PeticionesIncorporar
         }
 
         $mi_dele = ConfigGlobal::mi_delef();
-        $aWhereA = [
-            'status' => StatusId::ACTUAL,
-            'f_ini' => "'$inicurs','$fincurs'",
-        ];
-        $aOperadorA = ['f_ini' => 'BETWEEN'];
+        $criterioBase = Criteria::create()
+            ->where(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+            ->andWhere(Filter::between(ActividadAllField::FIni, $inicurs, $fincurs));
         $cActividades = [];
         $filtro_id_nom = 0;
 
         switch ($sasistentes) {
             case 'agd':
             case 'a':
-                $aWhereA['id_tipo_activ'] = $id_tipo_activ;
-                $aOperadorA['id_tipo_activ'] = '~';
-                $cActividadesDl = $this->actividadDlRepository->getActividades($aWhereA, $aOperadorA);
-                $aWhereA['dl_org'] = $mi_dele;
-                $aOperadorA['dl_org'] = '!=';
-                $cActividadesPub = $this->actividadPubRepository->getActividades($aWhereA, $aOperadorA);
+                $criterioTipo = $criterioBase->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $id_tipo_activ));
+                $cActividadesDl = $this->actividadDlRepository->matching($criterioTipo);
+                $cActividadesPub = $this->actividadPubRepository->matching(
+                    $criterioTipo->andWhere(Filter::neq(ActividadAllField::DlOrg, $mi_dele))
+                );
                 $cActividades = array_merge($cActividadesDl, $cActividadesPub);
                 $filtro_id_nom = 2;
                 break;
             case 'n':
-                $aWhereA['id_tipo_activ'] = $id_tipo_activ;
-                $aOperadorA['id_tipo_activ'] = '~';
-                $cActividades1 = $this->actividadRepository->getActividades($aWhereA, $aOperadorA);
+                $cActividades1 = $this->actividadRepository->matching(
+                    $criterioBase->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $id_tipo_activ))
+                );
                 if ($id_tipo_activ_sup !== '') {
-                    $aWhereA['id_tipo_activ'] = $id_tipo_activ_sup;
-                    $aOperadorA['id_tipo_activ'] = '~';
-                    $cActividades_sup = $this->actividadRepository->getActividades($aWhereA, $aOperadorA);
+                    $cActividades_sup = $this->actividadRepository->matching(
+                        $criterioBase->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $id_tipo_activ_sup))
+                    );
                     $cActividades = array_merge($cActividades1, $cActividades_sup);
                 } else {
                     $cActividades = $cActividades1;

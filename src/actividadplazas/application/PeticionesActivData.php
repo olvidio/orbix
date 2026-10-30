@@ -5,6 +5,7 @@ namespace src\actividadplazas\application;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\criteria\PlazaPeticionField as F;
@@ -66,24 +67,22 @@ final class PeticionesActivData
         $oPersona = $this->personaDlRepository->findById($id_nom);
         $ap_nom = is_object($oPersona) ? (string)$oPersona->getPrefApellidosNombre() : '';
 
-        $aWhere = [];
-        $aOperador = [];
-
+        $filtroGrupo = null;
         if ($todos !== 0 && $todos !== 1) {
             $grupo_estudios = $todos;
             $cDelegaciones = $this->delegacionRepository->matching(
                 Criteria::create()->where(Filter::eq(DelegacionField::GrupoEstudios, $grupo_estudios))
             );
-            if (count($cDelegaciones) > 1) {
-                $aOperador['dl_org'] = 'OR';
-            }
-            $mi_grupo = '';
+            $dlsGrupo = [];
             foreach ($cDelegaciones as $oDelegacion) {
-                $mi_grupo .= $mi_grupo === '' ? '' : ',';
-                $mi_grupo .= "'" . $oDelegacion->getDlVo()->value() . "'";
+                $dlsGrupo[] = (string) $oDelegacion->getDlVo()->value();
             }
-            if ($mi_grupo !== '') {
-                $aWhere['dl_org'] = $mi_grupo;
+            if (count($dlsGrupo) > 1) {
+                $filtroGrupo = Filter::in(ActividadAllField::DlOrg, $dlsGrupo);
+            } elseif ($dlsGrupo !== []) {
+                // Comportamiento heredado: con una sola delegación el valor se comparaba por
+                // igualdad con el texto ya entrecomillado (`'dl'`), que no coincide nunca.
+                $filtroGrupo = Filter::eq(ActividadAllField::DlOrg, "'" . $dlsGrupo[0] . "'");
             }
         }
 
@@ -105,10 +104,12 @@ final class PeticionesActivData
                 $fincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d');
                 break;
         }
-        $aWhere['f_ini'] = "'$inicurs','$fincurs'";
-        $aOperador['f_ini'] = 'BETWEEN';
-        $aWhere['status'] = StatusId::ACTUAL;
-        $aWhere['_ordre'] = 'f_ini,nivel_stgr';
+        $criterioBase = Criteria::create()
+            ->where(Filter::between(ActividadAllField::FIni, $inicurs, $fincurs))
+            ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL));
+        $criterioBase = $criterioBase
+            ->orderBy(ActividadAllField::FIni)
+            ->addOrderBy(ActividadAllField::NivelStgr);
 
         $sfsv = ConfigGlobal::mi_sfsv();
         $mi_dele = ConfigGlobal::mi_delef();
@@ -127,14 +128,14 @@ final class PeticionesActivData
                         $Qid_tipo_activ = '^' . $sfsv . '31';
                         break;
                 }
-                $aWhere['id_tipo_activ'] = $Qid_tipo_activ;
-                $aOperador['id_tipo_activ'] = '~';
-
-                $cActividadesDl = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
+                $criterioTipo = $criterioBase->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $Qid_tipo_activ));
+                $cActividadesDl = $this->actividadDlRepository->matching(
+                    $filtroGrupo !== null ? $criterioTipo->andWhere($filtroGrupo) : $criterioTipo
+                );
                 // Evitar duplicar las de midele al sacar las publicadas.
-                $aWhere['dl_org'] = $mi_dele;
-                $aOperador['dl_org'] = '!=';
-                $cActividadesPub = $this->actividadPubRepository->getActividades($aWhere, $aOperador);
+                $cActividadesPub = $this->actividadPubRepository->matching(
+                    $criterioTipo->andWhere(Filter::neq(ActividadAllField::DlOrg, $mi_dele))
+                );
                 $cActividades = array_merge($cActividadesDl, ['-------'], $cActividadesPub);
                 break;
             case 'n':
@@ -146,13 +147,13 @@ final class PeticionesActivData
                         $Qid_tipo_activ = '^' . $sfsv . '11';
                         break;
                 }
-                $aWhere['id_tipo_activ'] = $Qid_tipo_activ;
-                $aOperador['id_tipo_activ'] = '~';
-
-                $cActividadesDl = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
-                $aWhere['dl_org'] = $mi_dele;
-                $aOperador['dl_org'] = '!=';
-                $cActividadesPub = $this->actividadPubRepository->getActividades($aWhere, $aOperador);
+                $criterioTipo = $criterioBase->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $Qid_tipo_activ));
+                $cActividadesDl = $this->actividadDlRepository->matching(
+                    $filtroGrupo !== null ? $criterioTipo->andWhere($filtroGrupo) : $criterioTipo
+                );
+                $cActividadesPub = $this->actividadPubRepository->matching(
+                    $criterioTipo->andWhere(Filter::neq(ActividadAllField::DlOrg, $mi_dele))
+                );
                 $cActividades = array_merge($cActividadesDl, ['-------'], $cActividadesPub);
                 break;
         }

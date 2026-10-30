@@ -4,6 +4,7 @@ namespace src\actividadplazas\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\actividadplazas\domain\criteria\ActividadPlazasField as F;
@@ -156,15 +157,15 @@ final class GestionPlazasData
             $dl = (string) $oDelegacion->getDlVo()->value();
             $id_dl = (int) $oDelegacion->getIdDlVo()->value();
             $a_grupo[$dl] = $id_dl;
-            $aWhere = [
-                'dl_org' => $dl,
-                'id_tipo_activ' => $id_tipo_activ_regex,
-                'status' => $status,
-                'f_ini' => "'$inicioIso','$finIso'",
-                '_ordre' => 'publicado,f_ini',
-            ];
-            $aOperador = ['id_tipo_activ' => '~', 'f_ini' => 'BETWEEN'];
-            $cActividades1 = $this->actividadRepository->getActividades($aWhere, $aOperador);
+            $cActividades1 = $this->actividadRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(ActividadAllField::DlOrg, $dl))
+                    ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $id_tipo_activ_regex))
+                    ->andWhere(Filter::eq(ActividadAllField::Status, $status))
+                    ->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso))
+                    ->orderBy(ActividadAllField::Publicado)
+                    ->addOrderBy(ActividadAllField::FIni)
+            );
             array_push($cActividades, ...$cActividades1);
         }
 

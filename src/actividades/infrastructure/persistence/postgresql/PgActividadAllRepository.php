@@ -5,7 +5,7 @@ namespace src\actividades\infrastructure\persistence\postgresql;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\actividades\domain\criteria\ActividadAllField;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -67,31 +67,23 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $oIniPlanning = $oFini;
         $a = 0;
         $a_cdc = [];
-        $aWhere = [];
-        $aOperador = [];
+        $criterio = Criteria::create();
         if (empty($id_ubi) || $id_ubi === 1) { // en estos casos sólo miro las actividades de cada sección.
-            if (empty($id_ubi)) {
-                $aOperador['id_ubi'] = 'IS NULL';
-            }
             switch ($cdc_sel) {
                 case 11:
-                    $aWhere['id_tipo_activ'] = '^1';
-                    $aOperador['id_tipo_activ'] = '~';
+                    $criterio = $criterio->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^1'));
                     break;
                 case 12:
-                    $aWhere['id_tipo_activ'] = '^2';
-                    $aOperador['id_tipo_activ'] = '~';
+                    $criterio = $criterio->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^2'));
                     break;
             }
         }
-        $aWhere['f_ini'] = "'" . $oFfin->format('Y-m-d') . "'";
-        $aOperador['f_ini'] = '<=';
-        $aWhere['f_fin'] = "'" . $oFini->format('Y-m-d') . "'";
-        $aOperador['f_fin'] = '>=';
-        $aWhere['id_ubi'] = $id_ubi;
-        $aWhere['status'] = 4;
-        $aOperador['status'] = '<';
-        $oActividades = $this->getActividades($aWhere, $aOperador);
+        $criterio = $criterio
+            ->andWhere(Filter::lte(ActividadAllField::FIni, $oFfin->format('Y-m-d')))
+            ->andWhere(Filter::gte(ActividadAllField::FFin, $oFini->format('Y-m-d')))
+            ->andWhere(empty($id_ubi) ? Filter::isNull(ActividadAllField::IdUbi) : Filter::eq(ActividadAllField::IdUbi, $id_ubi))
+            ->andWhere(Filter::lt(ActividadAllField::Status, 4));
+        $oActividades = $this->matching($criterio);
         foreach ($oActividades as $oActividad) {
             $id_activ = $oActividad->getId_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -442,18 +434,6 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
 
         return $aDatos;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ActividadAll>
-     */
-    public function getActividades(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ActividadAllField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

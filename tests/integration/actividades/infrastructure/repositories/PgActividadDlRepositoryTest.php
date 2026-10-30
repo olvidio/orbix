@@ -155,12 +155,11 @@ class PgActividadDlRepositoryTest extends myTest
         // TODO: Añadir más aserciones según la estructura esperada
     }
 
-    public function test_get_actividades_sin_filtros()
+    public function test_matching_sin_filtros()
     {
-        $result = $this->repository->getActividades();
-        
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
+
         $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
     }
 
 }
