@@ -101,7 +101,7 @@ final class FormMatriculasDeUnaPersonaDataTest extends TestCase
         $schema->method('getId')->willReturn(2002);
         $schema->method('getSchema')->willReturn('H-dlxxv');
         $schemaRepo = $this->createMock(\src\utils_database\domain\contracts\DbSchemaRepositoryInterface::class);
-        $schemaRepo->method('getDbSchemas')->willReturn([$schema]);
+        $schemaRepo->method('matching')->willReturn([$schema]);
 
         $out = $this->useCase($actRepo, $asigRepo, $matRepo, $aaRepo, $schemaRepo)->execute([
             'id_pau' => 7,
@@ -147,7 +147,7 @@ final class FormMatriculasDeUnaPersonaDataTest extends TestCase
         $schemaAjena->method('getId')->willReturn(2002);
         $schemaAjena->method('getSchema')->willReturn('H-dlxxv');
         $schemaRepo = $this->createMock(DbSchemaRepositoryInterface::class);
-        $schemaRepo->method('getDbSchemas')->willReturn([$schemaPropia, $schemaAjena]);
+        $schemaRepo->method('matching')->willReturn([$schemaPropia, $schemaAjena]);
 
         $out = $this->useCase($actRepo, $asigRepo, $matRepo, $aaRepo, $schemaRepo)->execute([
             'id_pau' => 7,

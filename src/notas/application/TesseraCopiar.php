@@ -11,6 +11,7 @@ use src\notas\domain\entity\PersonaNota;
 use src\notas\infrastructure\persistence\postgresql\PgPersonaNotaDlRepository;
 use src\shared\config\ConfigGlobal;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
+use src\utils_database\domain\criteria\DbSchemaField;
 
 /**
  * Copia todas las `PersonaNota` de una persona origen hacia una persona
@@ -84,7 +85,7 @@ final class TesseraCopiar
             return $this->personaNotaDlRepository;
         }
 
-        $cSchemas = $this->dbSchemaRepository->getDbSchemas(['id' => $idSchema]);
+        $cSchemas = $this->dbSchemaRepository->matching(Criteria::create()->where(Filter::eq(DbSchemaField::Id, $idSchema)));
         if ($cSchemas === []) {
             return $this->personaNotaDlRepository;
         }

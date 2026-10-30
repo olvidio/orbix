@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace src\actividadestudios\application\support;
 
 use src\ubis\application\services\DelegacionUtils;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
+use src\utils_database\domain\criteria\DbSchemaField;
 
 /**
  * Prefijo «(dl) » en el nombre corto cuando la oferta no es de la dl organizadora
@@ -40,7 +43,7 @@ final class AsignaturaNombreDlPrefix
         if ($idSchema <= 0) {
             return '';
         }
-        $encontrados = $repo->getDbSchemas(['id' => $idSchema]);
+        $encontrados = $repo->matching(Criteria::create()->where(Filter::eq(DbSchemaField::Id, $idSchema)));
         foreach ($encontrados as $oSchema) {
             if ($oSchema->getId() === $idSchema) {
                 return self::dlDesdeEsquema($oSchema->getSchema());

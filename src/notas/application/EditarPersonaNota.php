@@ -22,6 +22,7 @@ use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
+use src\utils_database\domain\criteria\DbSchemaField;
 
 /**
  * Alta/edición/baja de notas de persona (modelo acta: docs/dev/notas_modelo_acta.md).
@@ -393,7 +394,7 @@ class EditarPersonaNota
         if ($id_schema <= 0) {
             return DestinoNotaExterno::esExternoPorIdNom($this->id_nom) ? 'restov' : null;
         }
-        $cSchemas = $this->dbSchemaRepository->getDbSchemas(['id' => $id_schema]);
+        $cSchemas = $this->dbSchemaRepository->matching(Criteria::create()->where(Filter::eq(DbSchemaField::Id, $id_schema)));
         if ($cSchemas === []) {
             return null;
         }
