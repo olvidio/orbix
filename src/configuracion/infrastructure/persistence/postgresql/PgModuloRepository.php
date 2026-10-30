@@ -10,7 +10,6 @@ use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\criteria\ModuloField;
 use src\configuracion\domain\entity\Modulo;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\RunsCriteriaQueries;
@@ -81,20 +80,6 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         }
 
         return $modulos;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo Modulo
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Modulo> Una colección de objetos de tipo Modulo
-     */
-    public function getModulos(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ModuloField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

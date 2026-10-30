@@ -9,7 +9,6 @@ use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 use src\configuracion\domain\criteria\ConfigSchemaField;
 use src\configuracion\domain\entity\ConfigSchema;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\RunsCriteriaQueries;
@@ -61,20 +60,6 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
         }
 
         return $configSchemas;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo ConfigSchema
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<ConfigSchema> Una colección de objetos de tipo ConfigSchema
-     */
-    public function getConfigSchemas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ConfigSchemaField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

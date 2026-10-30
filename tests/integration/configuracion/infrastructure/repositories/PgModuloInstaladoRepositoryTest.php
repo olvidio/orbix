@@ -141,7 +141,7 @@ class PgModuloInstaladoRepositoryTest extends myTest
 
     public function test_get_modulo_instalados_sin_filtros()
     {
-        $result = $this->repository->getModuloInstalados();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada
