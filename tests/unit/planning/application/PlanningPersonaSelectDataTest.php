@@ -15,7 +15,10 @@ use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\criteria\PersonaField;
 use src\planning\application\PlanningPersonaRepositoryPicker;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\planning\application\PlanningPersonaSelectData;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
@@ -31,7 +34,7 @@ final class PlanningPersonaSelectDataTest extends TestCase
         $p->method('getCentro_o_dl')->willReturn('Mi centro');
 
         $repo = $this->createMock(PersonaNRepositoryInterface::class);
-        $repo->expects($this->once())->method('getPersonas')->willReturn([$p]);
+        $repo->expects($this->once())->method('matching')->willReturn([$p]);
 
         $useCase = $this->createUseCase(personaN: $repo);
         $out = $useCase->execute([
@@ -60,12 +63,19 @@ final class PlanningPersonaSelectDataTest extends TestCase
 
         $repoN = $this->createMock(PersonaNRepositoryInterface::class);
         $repoN->expects($this->once())
-            ->method('getPersonas')
-            ->with($this->callback(static fn (array $where): bool => ($where['id_ctr'] ?? null) === 42))
+            ->method('matching')
+            ->with($this->callback(static function (Criteria $criteria): bool {
+                foreach ($criteria->filters() as $filter) {
+                    if ($filter instanceof Filter && $filter->field === PersonaField::IdCtr && $filter->value === 42) {
+                        return true;
+                    }
+                }
+                return false;
+            }))
             ->willReturn([$p]);
 
         $repoDl = $this->createMock(PersonaDlRepositoryInterface::class);
-        $repoDl->expects($this->never())->method('getPersonas');
+        $repoDl->expects($this->never())->method('matching');
 
         $repoCentro = $this->createMock(CentroDlRepositoryInterface::class);
         $repoCentro->method('matching')->willReturn([$centro]);
@@ -83,7 +93,7 @@ final class PlanningPersonaSelectDataTest extends TestCase
     public function test_lista_vacia(): void
     {
         $repo = $this->createMock(PersonaNRepositoryInterface::class);
-        $repo->method('getPersonas')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $useCase = $this->createUseCase(personaN: $repo);
         $this->assertSame([], $useCase->execute(['obj_pau' => 'PersonaN']));

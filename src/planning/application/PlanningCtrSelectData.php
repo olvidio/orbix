@@ -3,6 +3,7 @@
 namespace src\planning\application;
 
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -33,9 +34,9 @@ final class PlanningCtrSelectData
         $Qtodos_agd = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'todos_agd');
         $Qtodos_s = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'todos_s');
 
-        $aWhereP = ['situacion' => 'A'];
+        $criterioBase = Criteria::create()->where(Filter::eq(PersonaField::Situacion, 'A'));
         if ($Qsacd === '') {
-            $aWhereP['sacd'] = 'f';
+            $criterioBase = $criterioBase->andWhere(Filter::eq(PersonaField::Sacd, false));
         }
 
         $msg_txt = '';
@@ -51,9 +52,11 @@ final class PlanningCtrSelectData
                     $id_ubi = $oCentro->getId_ubi();
                     $nombre_ubi = $oCentro->getNombre_ubi();
                     $cabecera_title = ucfirst(sprintf(_("personas de: %s"), $nombre_ubi));
-                    $aWhereP['id_ctr'] = $id_ubi;
-                    $aWhereP['_ordre'] = 'apellido1';
-                    $cPersonas2 = $this->personaDlRepository->getPersonas($aWhereP);
+                    $cPersonas2 = $this->personaDlRepository->matching(
+                        $criterioBase
+                            ->andWhere(Filter::eq(PersonaField::IdCtr, $id_ubi))
+                            ->orderBy(PersonaField::Apellido1)
+                    );
                     if (count($cPersonas2) >= 1) {
                         $cPersonas = array_merge($cPersonas, $cPersonas2);
                     } else {
@@ -66,18 +69,19 @@ final class PlanningCtrSelectData
             }
         } else {
             $cabecera_title = ucfirst(_("centros"));
-            $aWhereP['id_tabla'] = 'n';
-            if ($Qtodos_n !== '') {
-                $aWhereP['id_tabla'] = 'n';
-            }
+            $id_tabla = 'n';
             if ($Qtodos_agd !== '') {
-                $aWhereP['id_tabla'] = 'a';
+                $id_tabla = 'a';
             }
             if ($Qtodos_s !== '') {
-                $aWhereP['id_tabla'] = 's';
+                $id_tabla = 's';
             }
-            $aWhereP['_ordre'] = 'id_ctr, apellido1';
-            $cPersonas = $this->personaDlRepository->getPersonas($aWhereP);
+            $cPersonas = $this->personaDlRepository->matching(
+                $criterioBase
+                    ->andWhere(Filter::eq(PersonaField::IdTabla, $id_tabla))
+                    ->orderBy(PersonaField::IdCtr)
+                    ->addOrderBy(PersonaField::Apellido1)
+            );
         }
 
         $a_actividades2 = $this->actividadesDePersonaService->actividadesPorPersona(
