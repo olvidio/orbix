@@ -33,6 +33,7 @@ use src\ubis\domain\contracts\RelacionCasaExDireccionRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
+use src\ubis\domain\criteria\TelecoUbiField;
 use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
@@ -802,7 +803,7 @@ class DBTrasvase extends DBAbstract
                         }
                         // Buscar las telecos
                         $TelecoCdcExRepository = DependencyResolver::get(TelecoCdcExRepositoryInterface::class);
-                        $cTelecos = $TelecoCdcExRepository->getTelecos(['id_ubi' => $id_ubi_old]);
+                        $cTelecos = $TelecoCdcExRepository->matching(Criteria::create()->where(Filter::eq(TelecoUbiField::IdUbi, $id_ubi_old)));
                         $TelecoCdcDlRepository = DependencyResolver::get(TelecoCdcDlRepositoryInterface::class);
                         foreach ($cTelecos as $oTelecoCdcEx) {
                             $newId = $TelecoCdcDlRepository->getNewId();
@@ -966,7 +967,7 @@ class DBTrasvase extends DBAbstract
                         }
                         // Buscar las telecos
                         $TelecoCtrExRepository = DependencyResolver::get(TelecoCtrExRepositoryInterface::class);
-                        $cTelecos = $TelecoCtrExRepository->getTelecos(['id_ubi' => $id_ubi_old]);
+                        $cTelecos = $TelecoCtrExRepository->matching(Criteria::create()->where(Filter::eq(TelecoUbiField::IdUbi, $id_ubi_old)));
                         $TelecoCtrDlRepository = DependencyResolver::get(TelecoCtrDlRepositoryInterface::class);
                         foreach ($cTelecos as $oTelecoCtrEx) {
                             $newId = $TelecoCtrDlRepository->getNewId();
