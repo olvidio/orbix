@@ -4,6 +4,7 @@ namespace Tests\integration\menus\infrastructure\persistence\postgresql;
 
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use src\menus\domain\entity\MetaMenu;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\menus\MetaMenuFactory;
 
@@ -131,10 +132,10 @@ class PgMetaMenuRepositoryTest extends myTest
         $this->assertNull($oMetaMenuEliminado);
     }
 
-    public function test_get_meta_menus_sin_filtros()
+    public function test_matching_meta_menus_sin_filtros()
     {
-        $result = $this->repository->getMetaMenus();
-        
+        $result = $this->repository->matching(Criteria::create());
+
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada
     }

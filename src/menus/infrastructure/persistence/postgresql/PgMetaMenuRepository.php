@@ -9,7 +9,6 @@ use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use src\menus\domain\criteria\MetaMenuField;
 use src\menus\domain\entity\MetaMenu;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\RunsCriteriaQueries;
@@ -86,20 +85,6 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
         }
 
         return $items;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo MetaMenu
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<MetaMenu> Una colección de objetos de tipo MetaMenu
-     */
-    public function getMetaMenus(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(MetaMenuField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

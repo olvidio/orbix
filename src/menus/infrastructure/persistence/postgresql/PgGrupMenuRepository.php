@@ -10,7 +10,6 @@ use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\criteria\GrupMenuField;
 use src\menus\domain\entity\GrupMenu;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\RunsCriteriaQueries;
@@ -82,20 +81,6 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         }
 
         return $items;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo GrupMenu
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<GrupMenu> Una colección de objetos de tipo GrupMenu
-     */
-    public function getGrupMenus(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(GrupMenuField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -4,6 +4,7 @@ namespace Tests\integration\menus\infrastructure\persistence\postgresql;
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\entity\GrupMenu;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\menus\GrupMenuFactory;
 
@@ -139,10 +140,10 @@ class PgGrupMenuRepositoryTest extends myTest
         // TODO: Añadir más aserciones según la estructura esperada
     }
 
-    public function test_get_grup_menus_sin_filtros()
+    public function test_matching_grup_menus_sin_filtros()
     {
-        $result = $this->repository->getGrupMenus();
-        
+        $result = $this->repository->matching(Criteria::create());
+
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada
     }

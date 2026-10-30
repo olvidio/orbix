@@ -32,16 +32,6 @@ interface MetaMenuRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * devuelve una colección (array) de objetos de tipo MetaMenu
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<MetaMenu> Una colección de objetos de tipo MetaMenu
-     */
-    public function getMetaMenus(array $aWhere = [], array $aOperators = []): array;
-
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(MetaMenu $MetaMenu): bool;
