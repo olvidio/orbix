@@ -2,6 +2,7 @@
 
 namespace src\actividadestudios\application;
 
+use src\actividades\domain\criteria\ActividadAllField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividadestudios\domain\criteria\MatriculaField as MatF;
@@ -352,26 +353,23 @@ class Select_matriculas_de_una_persona
             $this->avisoLines[] = _("está de repaso") . "<br>";
         }
 
-        $aWhere = [];
-        $aOperadores = [];
         if (!empty($this->Qid_activ)) {
-            $aWhere['id_activ'] = $this->Qid_activ;
+            $criteriaAct = Criteria::create()->where(Filter::eq(ActividadAllField::IdActiv, (int) $this->Qid_activ));
             $criteriaAsistente = Criteria::create()
                 ->where(Filter::eq(AsistenteField::IdNom, (int) $this->id_pau))
                 ->andWhere(Filter::eq(AsistenteField::IdActiv, (int) $this->Qid_activ));
-            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $aWhere, $aOperadores, true);
+            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaAct, true);
         } else {
+            $criteriaAct = Criteria::create()
+                ->where(Filter::matches(ActividadAllField::IdTipoActiv, '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)|(123)'));
             if (empty($this->todos)) {
-                $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
-                $aOperadores['f_ini'] = 'BETWEEN';
+                $criteriaAct = $criteriaAct->andWhere(Filter::between(ActividadAllField::FIni, $inicurs_ca, $fincurs_ca));
             }
-            $aWhere['id_tipo_activ'] = '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)|(123)';
-            $aOperadores['id_tipo_activ'] = '~';
 
             $criteriaAsistente = Criteria::create()
                 ->where(Filter::eq(AsistenteField::IdNom, (int) $this->id_pau))
                 ->andWhere(Filter::eq(AsistenteField::Propio, true));
-            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $aWhere, $aOperadores, true);
+            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaAct, true);
         }
         $n = count($cAsistencias);
         if ($n === 0 && empty($this->todos)) {

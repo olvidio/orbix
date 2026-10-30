@@ -9,6 +9,7 @@ use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\criteria\MatriculaField;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -61,10 +62,9 @@ final class ListaEstCtrData
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
 
-        $aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
-        $aOperadorAct['f_ini'] = 'BETWEEN';
-        $aWhereAct['id_tipo_activ'] = '^1(12|33)';
-        $aOperadorAct['id_tipo_activ'] = '~';
+        $criteriaAct = Criteria::create()
+            ->where(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso))
+            ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^1(12|33)'));
 
         $criterioCtr = Criteria::create();
         switch ($Qn_agd) {
@@ -130,7 +130,7 @@ final class ListaEstCtrData
                 $criteriaAsistente = Criteria::create()
                     ->where(Filter::eq(AsistenteField::Propio, true))
                     ->andWhere(Filter::eq(AsistenteField::IdNom, $id_nom));
-                $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $aWhereAct, $aOperadorAct);
+                $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaAct);
                 $a = 0;
                 foreach ($cAsistentes as $oAsistente) {
                     $a++;

@@ -43,12 +43,6 @@ interface ActividadAllRepositoryInterface
      */
     public function idsConFechaInicio(Criteria $criteria): array;
 
-    /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return array<string, int>
-     */
-    public function getArrayIdsWithKeyFini(array $aWhere = [], array $aOperators = []): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 

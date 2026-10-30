@@ -62,20 +62,18 @@ class AsistenteActividadService
      * Obtiene las actividades de un asistente
      *
      * @param Criteria $criteriaAsistente filtros sobre la asistencia ({@see AsistenteField}); el orden lo fija la fecha de la actividad
-     * @param array<string, mixed> $aWhereActividad asociativo con los valores de las variables para la actividad
-     * @param array<string, string> $aOperadorActividad asociativo con los operadores para cada variable de la actividad
+     * @param Criteria|null $criteriaActividad filtros sobre la actividad ({@see \src\actividades\domain\criteria\ActividadAllField}); null = todas
      * @param bool $reverse TRUE para ordenar de nuevo a viejo
      * @return list<\src\asistentes\domain\entity\Asistente>
      */
     public function getActividadesDeAsistente(
         Criteria $criteriaAsistente,
-        array $aWhereActividad = [],
-        array $aOperadorActividad = [],
+        ?Criteria $criteriaActividad = null,
         bool  $reverse = false
     ): array
     {
         // Todas las actividades de la persona
-        $a_id_activ_f_ini = $this->actividadRepository->getArrayIdsWithKeyFini($aWhereActividad, $aOperadorActividad);
+        $a_id_activ_f_ini = $this->actividadRepository->idsConFechaInicio($criteriaActividad ?? Criteria::create());
 
         if (empty($a_id_activ_f_ini)) {
             return [];

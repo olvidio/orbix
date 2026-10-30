@@ -7,6 +7,7 @@ use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use src\dossiers\application\PermDossier;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\criteria\AsistenteField;
@@ -78,8 +79,7 @@ class Select_actividades_de_una_persona
 
     private mixed $status;
 
-    /** @return array{0: array<string, mixed>, 1: array<string, string>} */
-    private function cursoWhereFromModo(int $modo_curso): array
+    private function cursoCriteriaFromModo(int $modo_curso): Criteria
     {
         $mes = date('m');
         /** @var ConfigSnapshot $oConfig */
@@ -89,26 +89,22 @@ class Select_actividades_de_una_persona
         $inicurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst("inicio", $any)->format('Y-m-d');
         $fincurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst("fin", $any)->format('Y-m-d');
 
-        /** @var array<string, mixed> $aWhere */
-        $aWhere = ['_ordre' => 'f_ini'];
-        /** @var array<string, string> $aOperator */
-        $aOperator = [];
+        $criteria = Criteria::create();
         switch ($modo_curso) {
             case 2:
-                $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
-                $aOperator['f_ini'] = 'BETWEEN';
+                $criteria = $criteria->where(Filter::between(ActividadAllField::FIni, $inicurs_ca, $fincurs_ca));
                 break;
             case 3:
                 break;
             case 1:
             default:
-                $aWhere['status'] = StatusId::ACTUAL;
-                $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
-                $aOperator['f_ini'] = 'BETWEEN';
+                $criteria = $criteria
+                    ->where(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+                    ->andWhere(Filter::between(ActividadAllField::FIni, $inicurs_ca, $fincurs_ca));
                 break;
         }
 
-        return [$aWhere, $aOperator];
+        return $criteria->orderBy(ActividadAllField::FIni);
     }
 
     /** @return array<int, array{txt: string, click: string}> */
@@ -150,7 +146,7 @@ class Select_actividades_de_una_persona
         /** @var XPermisos $oPerm */
         $oPerm = $_SESSION['oPerm'];
 
-        [$aWhere, $aOperator] = $this->cursoWhereFromModo($this->modo_curso);
+        $criteriaAct = $this->cursoCriteriaFromModo($this->modo_curso);
 
         $oPersona = $this->resolvePersona();
         if ($oPersona === null) {
@@ -175,8 +171,7 @@ class Select_actividades_de_una_persona
         $a_valores = [];
         $cActividadesAsistente = $this->asistenteActividadService->getActividadesDeAsistente(
             Criteria::create()->where(Filter::eq(AsistenteField::IdNom, (int) $this->id_pau)),
-            $aWhere,
-            $aOperator,
+            $criteriaAct,
             true,
         );
         foreach ($cActividadesAsistente as $oAsistente) {

@@ -147,24 +147,28 @@ class PgActividadDlRepositoryTest extends myTest
         // TODO: Añadir más aserciones según la estructura esperada
     }
 
-    public function test_get_array_ids_with_key_fini_sin_filtros()
+    public function test_ids_con_fecha_inicio_sin_filtros()
     {
-        $result = $this->repository->getArrayIdsWithKeyFini();
-        
+        $result = $this->repository->idsConFechaInicio(\src\shared\domain\criteria\Criteria::create());
+
         $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
+        foreach ($result as $clave => $idActiv) {
+            $this->assertMatchesRegularExpression('/#\d+$/', (string) $clave);
+            $this->assertIsInt($idActiv);
+        }
     }
 
-    public function test_ids_con_fecha_inicio_equivale_a_get_array_ids_with_key_fini()
+    public function test_ids_con_fecha_inicio_respeta_el_orden_descendente()
     {
-        $antiguo = $this->repository->getArrayIdsWithKeyFini(['_ordre' => 'f_ini DESC']);
-        $nuevo = $this->repository->idsConFechaInicio(
+        $result = $this->repository->idsConFechaInicio(
             \src\shared\domain\criteria\Criteria::create()
                 ->orderBy(\src\actividades\domain\criteria\ActividadAllField::FIni, \src\shared\domain\criteria\OrderDirection::Desc)
         );
 
-        $this->assertSame(array_values($antiguo), array_values($nuevo));
-        $this->assertSame(array_keys($antiguo), array_keys($nuevo));
+        $fechas = array_map(static fn($k) => explode('#', (string) $k)[0], array_keys($result));
+        $ordenadas = $fechas;
+        rsort($ordenadas);
+        $this->assertSame($ordenadas, $fechas);
     }
 
     public function test_matching_sin_filtros()

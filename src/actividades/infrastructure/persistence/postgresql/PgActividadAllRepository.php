@@ -333,59 +333,6 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     }
 
     /**
-     * retorna l'array de id d'Actividad
-     *
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return array<string, int>
-     */
-    public function getArrayIdsWithKeyFini(array $aWhere = [], array $aOperators = []): array
-    {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTablaSelect();
-
-        $oCondicion = new Condicion();
-        $aCondi = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') continue;
-            $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador === 'TXT') unset($aWhere[$camp]);
-        }
-        $sCondi = implode(' AND ', $aCondi);
-        if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
-        $sLimit = $this->getLimitPaginador('a_actividades', $sCondi, $aWhere);
-        $sOrdre = '';
-        $ordreIds = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreIds) && $ordreIds !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreIds;
-        }
-        unset($aWhere['_ordre']);
-        $sQry = "SELECT * FROM $nom_tabla" . $sCondi . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $i = 0;
-        $aListaId = [];
-        foreach ($stmt as $aDades) {
-            if (!is_array($aDades)) {
-                continue;
-            }
-            $i++;
-            $fIni = $aDades['f_ini'] ?? '';
-            $f_ini_iso = (is_scalar($fIni) ? (string) $fIni : '') . '#' . $i;
-            $idActiv = $aDades['id_activ'] ?? 0;
-            $aListaId[$f_ini_iso] = is_numeric($idActiv) ? (int) $idActiv : 0;
-        }
-        return $aListaId;
-    }
-
-    /**
      * Ids de las actividades que cumplen el criterio, con clave `f_ini#n` (n = posición, para ordenar por fecha).
      *
      * @return array<string, int>

@@ -20,6 +20,7 @@ use src\actividadcargos\domain\entity\ActividadCargo;
 use src\actividadcargos\infrastructure\persistence\postgresql\traits\SincronizaCdCargosActivTrait;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
@@ -170,6 +171,17 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
     }
 
     /**
+     * Transición: los llamantes aún pasan `$aWhere`/`$aOperators` sobre la actividad; se traducen aquí a `Criteria`.
+     *
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     */
+    private function criterioActividad(array $aWhere, array $aOperators): Criteria
+    {
+        return (new LegacyWhereAdapter(ActividadAllField::class, []))->toCriteria($aWhere, $aOperators);
+    }
+
+    /**
      * retorna l'array d'objectes de tipus ActividadCargo
      *
      * @param array<string, mixed> $aWhereNom
@@ -180,7 +192,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
     public function getActividadCargosDeAsistente(array $aWhereNom, array $aWhere = [], array $aOperators = []): array
     {
         // seleccionar las actividades según los criterios de búsqueda.
-        $aListaIds = $this->actividadAllRepository->getArrayIdsWithKeyFini($aWhere, $aOperators);
+        $aListaIds = $this->actividadAllRepository->idsConFechaInicio($this->criterioActividad($aWhere, $aOperators));
 
         $cCargos = $this->matching(
             Criteria::create()->where(Filter::eq(ActividadCargoField::IdNom, $aWhereNom['id_nom']))
@@ -229,11 +241,12 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
         $id_nom = is_numeric($aWhere['id_nom']) ? (int) $aWhere['id_nom'] : 0;
 
         $criteriaAsistente = (new LegacyWhereAdapter(AsistenteField::class, []))->toCriteria($aWhere, $aOperador);
-        $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $aWhereAct, $aOperadorAct);
+        $criteriaActividad = $this->criterioActividad($aWhereAct, $aOperadorAct);
+        $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaActividad);
 
         $cCargos = $this->matching(Criteria::create()->where(Filter::eq(ActividadCargoField::IdNom, $id_nom)));
         // seleccionar las actividades según los criterios de búsqueda.
-        $aListaIds = $this->actividadRepository->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
+        $aListaIds = $this->actividadRepository->idsConFechaInicio($criteriaActividad);
         // descarto los que no estan.
         $cActividadesOk = [];
         foreach ($cCargos as $oCargo) {
@@ -295,7 +308,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
 
         $cCargos = $this->matching(Criteria::create()->where(Filter::eq(ActividadCargoField::IdNom, $id_nom)));
         // seleccionar las actividades segun los criterios de búsqueda.
-        $aListaIds = $this->actividadRepository->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
+        $aListaIds = $this->actividadRepository->idsConFechaInicio($this->criterioActividad($aWhereAct, $aOperadorAct));
         // descarto los que no están.
         $cActividadesOk = [];
         foreach ($cCargos as $oCargo) {

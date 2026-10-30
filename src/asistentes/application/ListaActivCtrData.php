@@ -4,6 +4,7 @@ namespace src\asistentes\application;
 
 use frontend\shared\web\Periodo;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -101,10 +102,6 @@ final class ListaActivCtrData
         $condicion .= $condta_plus === '' ? '' : '|^' . $condta_plus;
         $condicion .= $condta_sr === '' ? '' : '|^' . $condta_sr;
 
-        $aWhereAct = [];
-        $aOperadorAct = [];
-        $aWhereAct['id_tipo_activ'] = $condicion;
-        $aOperadorAct['id_tipo_activ'] = '~';
 
         $oPeriodo = Periodo::conCalendarioDesdeBackend();
         $oPeriodo->setDefaultAny('next');
@@ -182,10 +179,11 @@ final class ListaActivCtrData
                 $criteriaAsistente = Criteria::create()
                     ->where(Filter::eq(AsistenteField::IdNom, $id_nom))
                     ->andWhere(Filter::eq(AsistenteField::Propio, true));
-                $aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
-                $aOperadorAct['f_ini'] = 'BETWEEN';
+                $criteriaAct = Criteria::create()
+                    ->where(Filter::matches(ActividadAllField::IdTipoActiv, $condicion))
+                    ->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso));
 
-                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $aWhereAct, $aOperadorAct);
+                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaAct);
                 $aActividades = [];
                 if (count($cAsistencias) === 0) {
                     $aActividades = [];
