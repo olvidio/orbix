@@ -6,7 +6,11 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
+use src\procesos\domain\criteria\PermUsuarioActividadField;
 use src\procesos\domain\PermAccionBits;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\procesos\domain\PermAfectadosBits;
 use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
@@ -14,9 +18,13 @@ use src\actividades\domain\entity\TiposActividades;
 $Qid_usuario = (string)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
 
 $PermUsuarioActividadRepository = DependencyResolver::get(PermUsuarioActividadRepositoryInterface::class);
-$aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt, afecta_a'];
-$aOperador = [];
-$cUsuarioPerm = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere, $aOperador);
+$cUsuarioPerm = $PermUsuarioActividadRepository->matching(
+    Criteria::create()
+        ->where(Filter::eq(PermUsuarioActividadField::IdUsuario, (int) $Qid_usuario))
+        ->orderBy(PermUsuarioActividadField::DlPropia, OrderDirection::Desc)
+        ->addOrderBy(PermUsuarioActividadField::IdTipoActivTxt)
+        ->addOrderBy(PermUsuarioActividadField::AfectaA)
+);
 // No se pueden mandar objetos de php por json. Deben se arrays
 $cUsuarioPermArray = [];
 foreach ($cUsuarioPerm as $oUsuarioPerm) {

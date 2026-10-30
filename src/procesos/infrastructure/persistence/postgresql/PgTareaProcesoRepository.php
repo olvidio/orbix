@@ -5,7 +5,6 @@ use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\procesos\domain\criteria\TareaProcesoField;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -334,15 +333,32 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
     }
 
     /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * Tareas de un tipo de proceso con las de fases previas vacías primero.
+     * Orden por expresión SQL sobre jsonb: sin equivalente en Criteria.
+     *
      * @return list<TareaProceso>
      */
-    public function getTareasProceso(array $aWhere = [], array $aOperators = []): array
+    public function getTareasDeProcesoVaciasPrimero(int $id_tipo_proceso): array
     {
-        $adapter = new LegacyWhereAdapter(TareaProcesoField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
+        $sql = 'SELECT * FROM ' . $this->getNomTabla()
+            . ' WHERE id_tipo_proceso = :id_tipo_proceso ORDER BY (json_fases_previas::json->0)::text DESC';
+        $stmt = $this->prepareAndExecute(
+            $this->getoDbl_Select(),
+            $sql,
+            ['id_tipo_proceso' => $id_tipo_proceso],
+            __METHOD__,
+            __FILE__,
+            __LINE__
+        );
+        if ($stmt === false) {
+            return [];
+        }
+        $result = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $aDatos) {
+            $result[] = TareaProceso::fromArray($this->hidratarFila($aDatos));
+        }
+
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -3,7 +3,10 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
+use src\procesos\domain\criteria\PermUsuarioActividadField;
 use src\procesos\domain\entity\PermUsuarioActividad;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\procesos\domain\PermAfectadosBits;
 use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 use src\shared\security\HashB;
@@ -50,17 +53,11 @@ if ($Qid_tipo_activ === '' || $Qid_tipo_activ === '0') {
 // afecta a:
 $PermUsuarioActividadRepository = DependencyResolver::get(PermUsuarioActividadRepositoryInterface::class);
 foreach (PermAfectadosBits::map() as $afecta_a) {
-    $aWhere = [
-        'id_usuario' => $Qid_usuario,
-        'dl_propia' => $Qdl_propia,
-        'afecta_a' => $afecta_a,
-    ];
-    $aOperador = [];
-    [$aWhere, $aOperador] = ActividadTipoIdTxt::applyToRepositoryWhere(
-        $aWhere,
-        $aOperador,
-        $id_tipo_activ_txt,
-    );
+    $criteria = Criteria::create()
+        ->where(Filter::eq(PermUsuarioActividadField::IdUsuario, $Qid_usuario))
+        ->andWhere(Filter::eq(PermUsuarioActividadField::DlPropia, \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qdl_propia) === true))
+        ->andWhere(Filter::eq(PermUsuarioActividadField::AfectaA, $afecta_a))
+        ->andWhere(ActividadTipoIdTxt::filterForRepository(PermUsuarioActividadField::IdTipoActivTxt, $id_tipo_activ_txt));
 
     $fase_ref = '';
     $perm_on = '';
@@ -76,7 +73,7 @@ foreach (PermAfectadosBits::map() as $afecta_a) {
         } else {
             $perm_off = empty($QaPerm_off[$i]) ? 0 : $QaPerm_off[$i];
             $perm_on = empty($QaPerm_on[$i]) ? 0 : $QaPerm_on[$i];
-            $cPermUsuarioActividad = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere, $aOperador);
+            $cPermUsuarioActividad = $PermUsuarioActividadRepository->matching($criteria);
             $oPermUsuarioActividad = null;
             $extras = [];
             foreach ($cPermUsuarioActividad as $rowPerm) {
@@ -119,7 +116,7 @@ foreach (PermAfectadosBits::map() as $afecta_a) {
         }
     }
     if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($eliminar)) {
-        $cPermUsuarioActividad = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere, $aOperador);
+        $cPermUsuarioActividad = $PermUsuarioActividadRepository->matching($criteria);
         foreach ($cPermUsuarioActividad as $oPermUsuarioActividad) {
             if ($PermUsuarioActividadRepository->Eliminar($oPermUsuarioActividad) === false) {
                 $error_txt .= _("hay un error.");

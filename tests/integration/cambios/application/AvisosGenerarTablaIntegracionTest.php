@@ -754,7 +754,11 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
         }
 
         $idTipoProceso = $cTiposActividad[0]->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
-        $cTareasProceso = $tareaRepository->getTareasProceso(['id_tipo_proceso' => $idTipoProceso]);
+        $cTareasProceso = $tareaRepository->matching(
+            \src\shared\domain\criteria\Criteria::create()->where(
+                \src\shared\domain\criteria\Filter::eq(\src\procesos\domain\criteria\TareaProcesoField::IdTipoProceso, $idTipoProceso)
+            )
+        );
         if (count($cTareasProceso) < 2) {
             return null;
         }

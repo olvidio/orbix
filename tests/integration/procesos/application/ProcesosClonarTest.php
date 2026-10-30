@@ -43,6 +43,15 @@ class ProcesosClonarTest extends myTest
         parent::tearDown();
     }
 
+    private function tareasDeProceso(int $id_tipo_proceso): array
+    {
+        return $this->repository->matching(
+            \src\shared\domain\criteria\Criteria::create()->where(
+                \src\shared\domain\criteria\Filter::eq(\src\procesos\domain\criteria\TareaProcesoField::IdTipoProceso, $id_tipo_proceso)
+            )
+        );
+    }
+
     /**
      * Limpia cualquier tarea_proceso residual con los ids de tipo_proceso
      * usados por este test (que pueda haber sobrevivido a un fallo previo).
@@ -50,7 +59,7 @@ class ProcesosClonarTest extends myTest
     private function cleanupFromTipoProceso(): void
     {
         foreach ($this->idsTipoProcesoUsados as $id_tipo) {
-            $tareas = $this->repository->getTareasProceso(['id_tipo_proceso' => $id_tipo]);
+            $tareas = $this->tareasDeProceso($id_tipo);
             foreach ($tareas as $t) {
                 $this->repository->Eliminar($t);
             }
@@ -85,9 +94,9 @@ class ProcesosClonarTest extends myTest
         $this->idsCreados[] = $dst_prev->getId_item();
         $this->repository->Guardar($dst_prev);
 
-        $tareasRefAntes = $this->repository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso_ref]);
+        $tareasRefAntes = $this->tareasDeProceso($id_tipo_proceso_ref);
         $this->assertCount(2, $tareasRefAntes);
-        $tareasDstAntes = $this->repository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso_dst]);
+        $tareasDstAntes = $this->tareasDeProceso($id_tipo_proceso_dst);
         $this->assertCount(1, $tareasDstAntes);
 
         DependencyResolver::get(ProcesosClonar::class)->execute([
@@ -98,7 +107,7 @@ class ProcesosClonarTest extends myTest
         // Ahora destino debe tener 2 tareas y la previa (con su id_item viejo) no existir
         $this->assertNull($this->repository->findById($dst_prev->getId_item()));
 
-        $tareasDstDespues = $this->repository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso_dst]);
+        $tareasDstDespues = $this->tareasDeProceso($id_tipo_proceso_dst);
         $this->assertCount(2, $tareasDstDespues);
 
         // Los nuevos ids son distintos a los del proceso de referencia
