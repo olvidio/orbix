@@ -110,12 +110,8 @@ class PgUbisCatalogosMatchingTest extends myTest
                 ->andWhere(Filter::gte(CasaPeriodoField::FIni, '1900-1-1'))
                 ->orderBy(CasaPeriodoField::FIni)
         );
-        $legacy = $repo->getCasaPeriodos(
-            ['id_item' => $id, 'f_ini' => '1900-1-1', '_ordre' => 'f_ini'],
-            ['f_ini' => '>=']
-        );
-
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertCount(1, $nuevo);
+        $this->assertSame($id, $nuevo[0]->getId_item());
 
         $repo->Eliminar($o);
     }

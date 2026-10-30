@@ -4,7 +4,6 @@ namespace src\actividades\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\actividades\domain\criteria\ImportadaField;
 use PDO;
@@ -57,18 +56,6 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
         }
 
         return $result;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Importada>
-     */
-    public function getImportadas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ImportadaField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

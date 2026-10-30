@@ -754,7 +754,10 @@ final class AvisosGenerarTablaIntegracionTest extends myTest
         /** @var TareaProcesoRepositoryInterface $tareaRepository */
         $tareaRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
 
-        $cTiposActividad = $tipoRepository->getTiposDeActividades(['id_tipo_activ' => $idTipo]);
+        $cTiposActividad = $tipoRepository->matching(
+            \src\shared\domain\criteria\Criteria::create()
+                ->where(\src\shared\domain\criteria\Filter::eq(\src\actividades\domain\criteria\TipoDeActividadField::IdTipoActiv, $idTipo))
+        );
         if ($cTiposActividad === []) {
             return null;
         }

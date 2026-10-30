@@ -4,6 +4,7 @@ namespace src\procesos\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\criteria\TipoDeActividadField;
 use src\actividades\domain\entity\TiposActividades;
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
 use src\shared\domain\criteria\Criteria;
@@ -27,8 +28,9 @@ class TipoActivProcesoLista
      */
     public function execute(): array
     {
-        $aWhere = ['_ordre' => 'id_tipo_activ'];
-        $cTiposDeActividades = $this->tipoDeActividadRepository->getTiposDeActividades($aWhere);
+        $cTiposDeActividades = $this->tipoDeActividadRepository->matching(
+            Criteria::create()->orderBy(TipoDeActividadField::IdTipoActiv)
+        );
 
         $cProcesosTipo = $this->procesoTipoRepository->matching(Criteria::create());
         $a_procesos_tipo = [];

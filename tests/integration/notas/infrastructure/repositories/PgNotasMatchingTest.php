@@ -102,6 +102,9 @@ class PgNotasMatchingTest extends myTest
 
         $nuevo = $repo->matching(Criteria::create()->orderBy(NotaField::IdSituacion));
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($repo->getNotas(['_ordre' => 'id_situacion']), $nuevo);
+        $ids = array_map(fn($o) => $o->getId_situacion(), $nuevo);
+        $ordenados = $ids;
+        sort($ordenados);
+        $this->assertSame($ordenados, $ids);
     }
 }
