@@ -5,11 +5,17 @@ namespace src\encargossacd\application;
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroEllasField;
 
 /**
  * Datos para la comunicacion a los centros.
@@ -54,11 +60,21 @@ final class ListasComCtrData
         $cCentros = [];
         switch ($sfsv) {
             case 'sv':
-                $cCentros = $this->centroDlRepository->getCentros(['active' => 't', '_ordre' => 'tipo_ctr,nombre_ubi']) ?: [];
+                $cCentros = $this->centroDlRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(CentroDlField::Active, true))
+                        ->orderBy(CentroDlField::TipoCtr)
+                        ->addOrderBy(CentroDlField::NombreUbi)
+                );
                 $origen_txt = (string)ConfigGlobal::mi_dele();
                 break;
             case 'sf':
-                $cCentros = $this->centroEllasRepository->getCentros(['active' => 't', '_ordre' => 'tipo_ctr,nombre_ubi']) ?: [];
+                $cCentros = $this->centroEllasRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(CentroEllasField::Active, true))
+                        ->orderBy(CentroEllasField::TipoCtr)
+                        ->addOrderBy(CentroEllasField::NombreUbi)
+                );
                 $origen_txt = ConfigGlobal::mi_dele() . 'f';
                 break;
         }
@@ -68,10 +84,11 @@ final class ListasComCtrData
             $id_ubi = $oCentro->getId_ubi();
             $nombre_ubi = (string)$oCentro->getNombre_ubi();
 
-            $cEncargos = $this->encargoRepository->getEncargos(
-                ['id_ubi' => $id_ubi, 'id_tipo_enc' => '(1|2|3).00'],
-                ['id_tipo_enc' => '~'],
-            ) ?: [];
+            $cEncargos = $this->encargoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoField::IdUbi, $id_ubi))
+                    ->andWhere(Filter::matches(EncargoField::IdTipoEnc, '(1|2|3).00'))
+            );
             if (count($cEncargos) === 0) {
                 continue;
             }
@@ -82,10 +99,12 @@ final class ListasComCtrData
             if (empty($id_enc)) {
                 continue;
             }
-            $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(
-                ['id_enc' => $id_enc, 'f_fin' => 'x', '_ordre' => 'modo'],
-                ['f_fin' => 'IS NULL'],
-            ) ?: [];
+            $cEncargosSacd = $this->encargoSacdRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                    ->andWhere(Filter::isNull(EncargoSacdField::FFin))
+                    ->orderBy(EncargoSacdField::Modo)
+            );
 
             $sacd_colaborador = [];
             $array_atn_sacd[$nombre_ubi] = [

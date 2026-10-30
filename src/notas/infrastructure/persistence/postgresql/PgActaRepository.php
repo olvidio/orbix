@@ -7,7 +7,6 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\notas\domain\criteria\ActaField;
 use src\notas\infrastructure\persistence\postgresql\traits\NotasCriteriaTrait;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\ConverterDate;
 use PDO;
 use src\notas\domain\contracts\ActaRepositoryInterface;
@@ -186,21 +185,6 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
             $items[] = Acta::fromArray($normalized);
         }
         return $items;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria) / matchingSinPdf(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Acta>
-     */
-    public function getActas(array $aWhere = [], array $aOperators = []): array
-    {
-        $sinPdf = !empty($aWhere['_sin_pdf']);
-        unset($aWhere['_sin_pdf']);
-        $adapter = new LegacyWhereAdapter(ActaField::class, []);
-        $criteria = $adapter->toCriteria($aWhere, $aOperators);
-        return $sinPdf ? $this->matchingSinPdf($criteria) : $this->matching($criteria);
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

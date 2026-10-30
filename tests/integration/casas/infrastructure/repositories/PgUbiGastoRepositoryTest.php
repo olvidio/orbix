@@ -4,6 +4,7 @@ namespace Tests\integration\casas\infrastructure\persistence\postgresql;
 
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\casas\domain\entity\UbiGasto;
+use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use Tests\factories\casas\GrupoCasaFactory;
@@ -156,7 +157,7 @@ class PgUbiGastoRepositoryTest extends myTest
 
     public function test_get_ubis_gastos_sin_filtros()
     {
-        $result = $this->repository->getUbisGastos();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

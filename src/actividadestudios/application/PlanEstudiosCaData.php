@@ -8,6 +8,7 @@ use src\actividadestudios\domain\criteria\MatriculaField as MatF;
 use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\domain\criteria\CargoField;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
@@ -67,7 +68,7 @@ final class PlanEstudiosCaData
         }
         $nomActiv = $oActividad->getNom_activ();
 
-        $cCargos = $this->cargoRepository->getCargos(['cargo' => 'd.est.']);
+        $cCargos = $this->cargoRepository->matching(Criteria::create()->where(Filter::eq(CargoField::Cargo, 'd.est.')));
         $idCargo = $cCargos[0]->getId_cargo();
         $cActividadCargos = $this->actividadCargoRepository->getActividadCargos(['id_activ' => $idActiv, 'id_cargo' => $idCargo]);
         $idNomDtorEst = 0;

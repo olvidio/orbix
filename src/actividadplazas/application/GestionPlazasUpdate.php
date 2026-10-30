@@ -5,7 +5,10 @@ namespace src\actividadplazas\application;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 
 /**
  * Mutacion de celda de la tabla editable de `gestion_plazas` (y
@@ -82,7 +85,7 @@ final class GestionPlazasUpdate
             $dl_sigla = substr($dl_sigla, 0, -1);
         }
         $id_dl = 0;
-        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dl_sigla]);
+        $cDelegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(DelegacionField::Dl, $dl_sigla)));
         if ($cDelegaciones !== []) {
             $id_dl = (int) $cDelegaciones[0]->getIdDlVo()->value();
         }

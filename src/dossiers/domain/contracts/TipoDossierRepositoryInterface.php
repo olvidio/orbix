@@ -43,16 +43,6 @@ interface TipoDossierRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * devuelve una colección (array) de objetos de tipo TipoDossier
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<TipoDossier> Una colección de objetos de tipo TipoDossier
-     */
-    public function getTiposDossiers(array $aWhere = [], array $aOperators = []): array;
-
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(TipoDossier $TipoDossier): bool;

@@ -57,10 +57,10 @@ final class VerEncargosCentrosDataTest extends TestCase
         $encargoRepository->method('findById')->with(7)->willReturn($encargo);
 
         $centroEllosRepository = $this->createMock(CentroEllosRepositoryInterface::class);
-        $centroEllosRepository->method('getCentros')->willReturn([$centro]);
+        $centroEllosRepository->method('matching')->willReturn([$centro]);
 
         $centroEllasRepository = $this->createMock(CentroEllasRepositoryInterface::class);
-        $centroEllasRepository->method('getCentros')->willReturn([]);
+        $centroEllasRepository->method('matching')->willReturn([]);
 
         $zonaCtrRepository = $this->createMock(ZonaCtrRepositoryInterface::class);
         $zonaCtrRepository->method('idUbisDeZona')->willReturn([$idUbi]);
@@ -98,10 +98,10 @@ final class VerEncargosCentrosDataTest extends TestCase
     private function makeUseCase(array $idUbisDeZona): VerEncargosCentrosData
     {
         $centroEllosRepository = $this->createMock(CentroEllosRepositoryInterface::class);
-        $centroEllosRepository->method('getCentros')->willReturn([]);
+        $centroEllosRepository->method('matching')->willReturn([]);
 
         $centroEllasRepository = $this->createMock(CentroEllasRepositoryInterface::class);
-        $centroEllasRepository->method('getCentros')->willReturn([]);
+        $centroEllasRepository->method('matching')->willReturn([]);
 
         $encargoCtrRepository = $this->createMock(EncargoCtrRepositoryInterface::class);
         $encargoRepository = $this->createMock(EncargoRepositoryInterface::class);

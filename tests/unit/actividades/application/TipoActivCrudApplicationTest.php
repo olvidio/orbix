@@ -104,7 +104,7 @@ final class TipoActivCrudApplicationTest extends TestCase
     public function test_tipo_activ_lista_html_con_repositorio_vacio(): void
     {
         $repo = $this->createMock(TipoDeActividadRepositoryInterface::class);
-        $repo->method('getTiposDeActividades')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
 
         $html = (new TipoActivLista($repo))->execute();
         $this->assertNotSame('', $html);

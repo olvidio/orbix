@@ -77,7 +77,7 @@ final class SacdAusenciasJefeZonaDataTest extends TestCase
 
         $oZona = $this->zona(10);
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
-        $zonaRepo->method('getZonas')->willReturn([$oZona]);
+        $zonaRepo->method('matching')->willReturn([$oZona]);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         // Afirmamos que se invoca el metodo real del contrato, no un typo.
@@ -137,7 +137,7 @@ final class SacdAusenciasJefeZonaDataTest extends TestCase
         $roleRepo->method('getArrayRoles')->willReturn([1 => 'otro_rol']);
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
-        $zonaRepo->method('getZonas')->willReturn([]);
+        $zonaRepo->method('matching')->willReturn([]);
 
         $oPersona = $this->createStub(PersonaSacd::class);
         $oPersona->method('getNombreApellidos')->willReturn('Ruiz, Maria');

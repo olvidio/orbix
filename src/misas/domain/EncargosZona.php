@@ -7,7 +7,11 @@ namespace src\misas\domain;
 use DateInterval;
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoHorarioField;
 use src\encargossacd\domain\entity\Encargo;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 
 class EncargosZona
@@ -71,17 +75,15 @@ class EncargosZona
 
                 $a_ctr_enc[$id_ubi][$id_tipo_enc][$id_enc][$dia_num_semana] = '+';
 
-                $aWhere = [];
-                $aOperador = [];
-                $aWhere['id_enc'] = $id_enc;
                 $inicio_iso = $oInicio->getIso();
                 $fin_iso = $oFin->getIso();
-                $aWhere['f_ini'] = "'$inicio_iso'";
-                $aOperador['f_ini'] = '>=';
-                $aWhere['f_fin'] = "'$fin_iso'";
-                $aOperador['f_fin'] = '>=';
 
-                $cEncargoHorario = $this->encargoHorarioRepository->getEncargoHorarios($aWhere, $aOperador);
+                $cEncargoHorario = $this->encargoHorarioRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoHorarioField::IdEnc, $id_enc))
+                        ->andWhere(Filter::gte(EncargoHorarioField::FIni, $inicio_iso))
+                        ->andWhere(Filter::gte(EncargoHorarioField::FFin, $fin_iso))
+                );
                 foreach ($cEncargoHorario as $oEncargoHorario) {
                     $dia_ref = strtolower($oEncargoHorario->getDia_ref() ?? '');
                     if ($dia_ref === $a_dia_semana) {
@@ -100,18 +102,15 @@ class EncargosZona
      */
     public function getEncargos(): array
     {
-        $aWhere = [];
-        $aOperador = [];
-
-        $cond_tipo_enc = '{' . implode(', ', $this->a_tipo_enc) . '}';
-        $aWhere['id_tipo_enc'] = $cond_tipo_enc;
-        $aOperador['id_tipo_enc'] = 'ANY';
-        $aWhere['id_zona'] = $this->id_zona;
-        if ($this->orden !== '') {
-            $aWhere['_ordre'] = $this->orden;
+        $criteria = Criteria::create()
+            ->where(Filter::in(EncargoField::IdTipoEnc, $this->a_tipo_enc))
+            ->andWhere(Filter::eq(EncargoField::IdZona, $this->id_zona));
+        $campoOrden = EncargoField::tryFrom($this->orden);
+        if ($campoOrden !== null) {
+            $criteria = $criteria->orderBy($campoOrden);
         }
 
-        return $this->encargoRepository->getEncargos($aWhere, $aOperador);
+        return $this->encargoRepository->matching($criteria);
     }
 
     private function getDiaSemana(int $diaNum): string

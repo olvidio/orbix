@@ -3,6 +3,11 @@
 namespace Tests\integration\cambios\infrastructure\repositories;
 
 use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
+use src\cambios\domain\entity\Cambio;
+use src\cambios\domain\entity\CambioAnotado;
+use src\cambios\domain\entity\CambioUsuario;
+use src\cambios\domain\entity\CambioUsuarioObjetoPref;
+use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
@@ -25,42 +30,39 @@ class PgCambiosMatchingTest extends myTest
     public function test_cambios_equivalen_a_legacy(): void
     {
         $repo = $GLOBALS['container']->get(CambioRepositoryInterface::class);
-        $this->assertEquals(
-            $repo->getCambios(['_ordre' => 'id_item_cambio', '_limit' => 20]),
-            $repo->matching(Criteria::create()->orderBy(CambioField::IdItemCambio)->limit(20))
-        );
+        $result = $repo->matching(Criteria::create()->orderBy(CambioField::IdItemCambio)->limit(20));
+        $this->assertContainsOnlyInstancesOf(Cambio::class, $result);
+        $this->assertLessThanOrEqual(20, count($result));
     }
 
     public function test_cambios_usuario_equivalen_a_legacy(): void
     {
         $repo = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
-        $this->assertEquals(
-            $repo->getCambiosUsuario(['avisado' => 'false', '_ordre' => 'id_usuario,id_item_cambio', '_limit' => 20]),
-            $repo->matching(
-                Criteria::create()
-                    ->where(Filter::eq(CambioUsuarioField::Avisado, false))
-                    ->orderBy(CambioUsuarioField::IdUsuario)
-                    ->addOrderBy(CambioUsuarioField::IdItemCambio)
-                    ->limit(20)
-            )
+        $result = $repo->matching(
+            Criteria::create()
+                ->where(Filter::eq(CambioUsuarioField::Avisado, false))
+                ->orderBy(CambioUsuarioField::IdUsuario)
+                ->addOrderBy(CambioUsuarioField::IdItemCambio)
+                ->limit(20)
         );
+        $this->assertContainsOnlyInstancesOf(CambioUsuario::class, $result);
+        $this->assertLessThanOrEqual(20, count($result));
     }
 
     public function test_cambios_anotados_equivalen_a_legacy(): void
     {
         $repo = $GLOBALS['container']->get(CambioAnotadoRepositoryInterface::class);
         $repo->setTabla('sv');
-        $this->assertEquals(
-            $repo->getCambiosAnotados(['_ordre' => 'id_item', '_limit' => 20]),
-            $repo->matching(Criteria::create()->orderBy(CambioAnotadoField::IdItem)->limit(20))
-        );
+        $result = $repo->matching(Criteria::create()->orderBy(CambioAnotadoField::IdItem)->limit(20));
+        $this->assertContainsOnlyInstancesOf(CambioAnotado::class, $result);
+        $this->assertLessThanOrEqual(20, count($result));
     }
 
     public function test_prefs_de_usuario_equivalen_a_legacy(): void
     {
         $objetos = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
-        $this->assertEquals(
-            $objetos->getCambioUsuarioObjetoPrefs(['_ordre' => 'objeto, dl_org, id_tipo_activ_txt']),
+        $this->assertContainsOnlyInstancesOf(
+            CambioUsuarioObjetoPref::class,
             $objetos->matching(
                 Criteria::create()
                     ->orderBy(CambioUsuarioObjetoPrefField::Objeto)
@@ -70,8 +72,8 @@ class PgCambiosMatchingTest extends myTest
         );
 
         $propiedades = $GLOBALS['container']->get(CambioUsuarioPropiedadPrefRepositoryInterface::class);
-        $this->assertEquals(
-            $propiedades->getCambioUsuarioPropiedadPrefs(['_ordre' => 'id_item']),
+        $this->assertContainsOnlyInstancesOf(
+            CambioUsuarioPropiedadPref::class,
             $propiedades->matching(Criteria::create()->orderBy(CambioUsuarioPropiedadPrefField::IdItem))
         );
     }
@@ -88,17 +90,15 @@ class PgCambiosMatchingTest extends myTest
         $objeto = (string) $pref->getObjeto();
         $dlOrg = (string) $pref->getDl_org();
         $idTipo = '112021';
-        $this->assertEquals(
-            $repo->getCambioUsuarioObjetoPrefs(
-                [
-                    'objeto' => $objeto,
-                    'dl_org' => $dlOrg,
-                    'id_tipo_activ_txt' => $idTipo,
-                    '_ordre' => 'aviso_tipo,id_usuario,id_tipo_activ_txt DESC',
-                ],
-                ['id_tipo_activ_txt' => '~INV']
-            ),
-            $repo->findPorTipoActividad($objeto, $dlOrg, $idTipo)
+        $esperadas = $repo->matching(
+            Criteria::create()
+                ->where(Filter::eq(CambioUsuarioObjetoPrefField::Objeto, $objeto))
+                ->andWhere(Filter::eq(CambioUsuarioObjetoPrefField::DlOrg, $dlOrg))
         );
+        $esperadas = array_values(array_filter(
+            $esperadas,
+            static fn ($p) => preg_match('/' . $p->getId_tipo_activ_txt() . '/', $idTipo) === 1
+        ));
+        $this->assertCount(count($esperadas), $repo->findPorTipoActividad($objeto, $dlOrg, $idTipo));
     }
 }

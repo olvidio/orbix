@@ -14,6 +14,7 @@ use src\permisos\domain\PermisosActividadesTrue;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\planning\domain\value_objects\PlanningStyle;
 use src\shared\config\ConfigGlobal;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -372,16 +373,12 @@ class ActividadesPorZonasService
         DateTimeLocal $oIniPlanning
     ): array {
         $aActivPersona = [];
-        $aWhereE = [
-            'id_nom' => $id_nom,
-            'f_ini' => "'$fin_iso'",
-            'f_fin' => "'$inicio_iso'",
-        ];
-        $aOperadorE = [
-            'f_ini' => '<=',
-            'f_fin' => '>=',
-        ];
-        $cAusencias = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
+        $cAusencias = $this->encargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                ->andWhere(Filter::lte(EncargoSacdHorarioField::FIni, $fin_iso))
+                ->andWhere(Filter::gte(EncargoSacdHorarioField::FFin, $inicio_iso))
+        );
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc = $oTareaHorarioSacd->getId_enc();
             $oF_ini = $oTareaHorarioSacd->getF_ini();

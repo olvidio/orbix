@@ -23,7 +23,7 @@ class PgAnuncioMatchingTest extends myTest
         $this->repository = $GLOBALS['container']->get(AnuncioRepositoryInterface::class);
     }
 
-    public function test_matching_por_id_tablon_y_no_eliminado_equivale_a_legacy(): void
+    public function test_matching_por_id_tablon_y_no_eliminado(): void
     {
         $anuncio = (new AnuncioFactory())->createSimple();
         $id = $anuncio->getUuid_item();
@@ -34,15 +34,10 @@ class PgAnuncioMatchingTest extends myTest
             ->andWhere(Filter::matchesInsensitive(AnuncioField::Tablon, 'EST'))
             ->andWhere(Filter::isNull(AnuncioField::TEliminado));
         $nuevo = $this->repository->matching($criteria);
-        $legacy = $this->repository->getAnuncios(
-            ['uuid_item' => $id->value(), 'tablon' => 'EST', 't_eliminado' => 'x'],
-            ['tablon' => '~*', 't_eliminado' => 'IS NULL']
-        );
 
         $this->assertCount(1, $nuevo);
         $this->assertEquals($id, $nuevo[0]->getUuid_item());
         $this->assertNotNull($nuevo[0]->getT_anotado());
-        $this->assertEquals($legacy, $nuevo);
 
         $this->repository->Eliminar($nuevo[0]);
     }

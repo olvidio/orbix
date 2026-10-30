@@ -5,8 +5,11 @@ namespace src\actividadestudios\application;
 use frontend\shared\config\OrbixRuntime;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 
 /**
  * Desplegables y texto de grupo para `ca_posibles_que.php`.
@@ -40,13 +43,15 @@ final class CaPosiblesQueData
     public function execute(array $input = []): array
     {
         $miDele = OrbixRuntime::miDelef();
-        $cMiDl = $this->delegacionRepository->getDelegaciones(['dl' => $miDele]);
+        $cMiDl = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(DelegacionField::Dl, $miDele)));
         $grupoEstudios = null;
         $miGrupo = '';
         if (count($cMiDl) > 0) {
             $grupoEstudios = $cMiDl[0]->getGrupoEstudiosVo()?->value();
             if ($grupoEstudios !== null) {
-                $cDelegaciones = $this->delegacionRepository->getDelegaciones(['grupo_estudios' => $grupoEstudios]);
+                $cDelegaciones = $this->delegacionRepository->matching(
+                    Criteria::create()->where(Filter::eq(DelegacionField::GrupoEstudios, $grupoEstudios))
+                );
                 foreach ($cDelegaciones as $oDelegacion) {
                     $miGrupo .= $miGrupo === '' ? '' : ',';
                     $miGrupo .= $oDelegacion->getDlVo()->value();

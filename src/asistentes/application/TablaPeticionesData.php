@@ -4,6 +4,9 @@ namespace src\asistentes\application;
 
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
+use src\actividadplazas\domain\criteria\PlazaPeticionField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
@@ -103,9 +106,12 @@ final class TablaPeticionesData
             }
             $nom_ap = $oPersona->getApellidosNombre();
 
-            $aWhere = ['id_nom' => $id_nom, 'tipo' => $sactividad, '_ordre' => 'orden'];
-            $aOperador = ['tipo' => '~'];
-            $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion($aWhere, $aOperador);
+            $cPlazasPeticion = $this->plazaPeticionRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PlazaPeticionField::IdNom, $id_nom))
+                    ->andWhere(Filter::matches(PlazaPeticionField::Tipo, $sactividad))
+                    ->orderBy(PlazaPeticionField::Orden)
+            );
             $parts = [];
             foreach ($cPlazasPeticion as $oPlazaPeticion) {
                 $id_activ = $oPlazaPeticion->getId_activ();

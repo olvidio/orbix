@@ -3,6 +3,7 @@
 namespace src\encargossacd\domain\contracts;
 
 use src\encargossacd\domain\entity\EncargoSacd;
+use src\shared\domain\criteria\Criteria;
 
 
 /**
@@ -27,13 +28,11 @@ interface EncargoSacdRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo EncargoSacd
+     * EncargoSacd que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<EncargoSacd> Una colección de objetos de tipo EncargoSacd
+     * @return list<EncargoSacd>
      */
-    public function getEncargosSacd(array $aWhere = [], array $aOperators = []): array;
+    public function matching(Criteria $criteria): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

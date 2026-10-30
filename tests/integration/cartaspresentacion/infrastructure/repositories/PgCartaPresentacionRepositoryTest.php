@@ -147,7 +147,7 @@ class PgCartaPresentacionRepositoryTest extends myTest
         $this->assertNull($oCartaPresentacionEliminado);
     }
 
-    public function test_matching_por_ubi_equivale_a_legacy()
+    public function test_matching_por_ubi()
     {
         $oCartaPresentacion = $this->factory->createSimple();
         $idUbi = $oCartaPresentacion->getId_ubi();
@@ -155,10 +155,9 @@ class PgCartaPresentacionRepositoryTest extends myTest
 
         $criteria = Criteria::create()->where(Filter::eq(CartaPresentacionField::IdUbi, $idUbi));
         $nuevo = $this->repository->matching($criteria);
-        $legacy = $this->repository->getCartasPresentacion(['id_ubi' => $idUbi]);
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertEquals($idUbi, $nuevo[0]->getId_ubi());
 
         $this->repository->Eliminar($oCartaPresentacion);
         $this->assertSame([], $this->repository->matching($criteria));
@@ -166,7 +165,7 @@ class PgCartaPresentacionRepositoryTest extends myTest
 
     public function test_get_cartas_presentacion_sin_filtros()
     {
-        $result = $this->repository->getCartasPresentacion();
+        $result = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

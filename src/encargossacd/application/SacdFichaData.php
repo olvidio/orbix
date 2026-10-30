@@ -9,10 +9,17 @@ use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoHorarioField;
+use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
+use src\encargossacd\domain\criteria\EncargoSacdObservField;
 use src\encargossacd\domain\entity\EncargoHorario;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\encargossacd\domain\services\EncargoDominioService;
 use src\permisos\domain\XPermisos;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\shared\security\HashB;
 
 /**
@@ -50,22 +57,23 @@ final class SacdFichaData
         }
 
         $observ_sacd = '';
-        $cEncargoSacdObserv = $this->encargoSacdObservRepository->getEncargosSacdObservs(['id_nom' => $id_nom]);
+        $cEncargoSacdObserv = $this->encargoSacdObservRepository->matching(
+            Criteria::create()->where(Filter::eq(EncargoSacdObservField::IdNom, $id_nom))
+        );
         foreach ($cEncargoSacdObserv as $oEncargoSacdObserv) {
             $observ_sacd = (string) $oEncargoSacdObserv->getObserv();
         }
 
-        $aWhereES = [
-            'id_nom' => $id_nom,
-            'f_fin' => 'x',
-            '_ordre' => 'modo, f_ini DESC',
-        ];
-        $aOperadorES = ['f_fin' => 'IS NULL'];
-        $cEncargosSacd1 = $this->encargoSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
-
-        $aWhereES['f_fin'] = "'$hoy'";
-        $aOperadorES['f_fin'] = '>';
-        $cEncargosSacd2 = $this->encargoSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
+        $criterioES = Criteria::create()
+            ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
+            ->orderBy(EncargoSacdField::Modo)
+            ->addOrderBy(EncargoSacdField::FIni, OrderDirection::Desc);
+        $cEncargosSacd1 = $this->encargoSacdRepository->matching(
+            $criterioES->andWhere(Filter::isNull(EncargoSacdField::FFin))
+        );
+        $cEncargosSacd2 = $this->encargoSacdRepository->matching(
+            $criterioES->andWhere(Filter::gt(EncargoSacdField::FFin, $hoy))
+        );
 
         $cEncargosSacd = array_merge($cEncargosSacd1, $cEncargosSacd2);
 
@@ -235,17 +243,11 @@ final class SacdFichaData
         int $id_enc,
         string $hoy,
     ): array {
-        $aWhere = [
-            'id_enc' => $id_enc,
-            'f_fin' => 'x',
-            '_ordre' => 'f_ini DESC',
-        ];
-        $aOperador = ['f_fin' => 'IS NULL'];
-        $c0 = $repo->getEncargoHorarios($aWhere, $aOperador);
-
-        $aWhere['f_fin'] = "'$hoy'";
-        $aOperador['f_fin'] = '>';
-        $c1 = $repo->getEncargoHorarios($aWhere, $aOperador);
+        $criterio = Criteria::create()
+            ->where(Filter::eq(EncargoHorarioField::IdEnc, $id_enc))
+            ->orderBy(EncargoHorarioField::FIni, OrderDirection::Desc);
+        $c0 = $repo->matching($criterio->andWhere(Filter::isNull(EncargoHorarioField::FFin)));
+        $c1 = $repo->matching($criterio->andWhere(Filter::gt(EncargoHorarioField::FFin, $hoy)));
 
         return array_merge($c0, $c1);
     }
@@ -259,17 +261,11 @@ final class SacdFichaData
         int $id_nom,
         string $hoy,
     ): array {
-        $aWhere = [
-            'id_enc' => $id_enc,
-            'id_nom' => $id_nom,
-            'f_fin' => "'$hoy'",
-        ];
-        $aOperador = ['f_fin' => '>'];
-        $c1 = $repo->getEncargoSacdHorarios($aWhere, $aOperador);
-
-        $aWhere['f_fin'] = 'x';
-        $aOperador['f_fin'] = 'IS NULL';
-        $c2 = $repo->getEncargoSacdHorarios($aWhere, $aOperador);
+        $criterio = Criteria::create()
+            ->where(Filter::eq(EncargoSacdHorarioField::IdEnc, $id_enc))
+            ->andWhere(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom));
+        $c1 = $repo->matching($criterio->andWhere(Filter::gt(EncargoSacdHorarioField::FFin, $hoy)));
+        $c2 = $repo->matching($criterio->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin)));
 
         return array_merge($c1, $c2);
     }

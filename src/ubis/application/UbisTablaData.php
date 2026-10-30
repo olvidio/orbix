@@ -4,8 +4,12 @@ namespace src\ubis\application;
 
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\CriteriaField;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 use src\ubis\application\services\UbiRepositoryResolver;
+use src\ubis\domain\criteria\DireccionField;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\Centro;
 use src\ubis\domain\entity\CentroDl;
@@ -48,12 +52,8 @@ final class UbisTablaData
 
         /** @var array<string, mixed> $aWhere */
         $aWhere = is_array($filtros['aWhere'] ?? null) ? $filtros['aWhere'] : [];
-        /** @var array<string, string> $aOperador */
-        $aOperador = is_array($filtros['aOperador'] ?? null) ? $filtros['aOperador'] : [];
         /** @var array<string, mixed> $aWhereD */
         $aWhereD = is_array($filtros['aWhereD'] ?? null) ? $filtros['aWhereD'] : [];
-        /** @var array<string, string> $aOperadorD */
-        $aOperadorD = is_array($filtros['aOperadorD'] ?? null) ? $filtros['aOperadorD'] : [];
         $Qobj_pauRaw = $filtros['Qobj_pau'] ?? '';
         $Qobj_pau = is_array($Qobj_pauRaw) ? $Qobj_pauRaw : (is_string($Qobj_pauRaw) ? $Qobj_pauRaw : '');
         $titulo = is_string($filtros['titulo'] ?? null) ? $filtros['titulo'] : '';
@@ -70,17 +70,15 @@ final class UbisTablaData
 
         // ----- Buscar ubis por nombre y por dirección -----
         $qcmb = is_string($in['Qcmb'] ?? null) ? $in['Qcmb'] : '';
-        $cUbis = $this->buscarUbisPorNombre($aWhere, $aOperador, $Qobj_pau, $qcmb, $miSfsv);
-        $cUbisD = $this->buscarUbisPorDireccion($aWhereD, $aOperadorD, $repoDir, $qcmb);
+        $cUbis = $this->buscarUbisPorNombre($aWhere, $Qobj_pau, $qcmb, $miSfsv);
+        $cUbisD = $this->buscarUbisPorDireccion($aWhereD, $repoDir, $qcmb);
 
         // ----- Mezclar y deduplicar -----
         [$cUbisTot] = $this->combinarColecciones($cUbis, $cUbisD);
 
         // ----- Serializar condiciones para mantener estado -----
         $sWhere = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aWhere, JSON_THROW_ON_ERROR));
-        $sOperador = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
         $sWhereD = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aWhereD, JSON_THROW_ON_ERROR));
-        $sOperadorD = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aOperadorD, JSON_THROW_ON_ERROR));
 
         $qtipo = is_string($in['Qtipo'] ?? null) ? $in['Qtipo'] : '';
         $qloc = is_string($in['Qloc'] ?? null) ? $in['Qloc'] : '';
@@ -99,10 +97,8 @@ final class UbisTablaData
             'tipo' => $in['Qtipo'],
             'loc' => $in['Qloc'],
             'sWhere' => $sWhere,
-            'sOperador' => $sOperador,
             'obj_pau' => $Qobj_pau,
             'sWhereD' => $sWhereD,
-            'sOperadorD' => $sOperadorD,
             'metodo' => $metodo,
             'titulo' => $titulo,
         ];
@@ -137,7 +133,6 @@ final class UbisTablaData
                 'tipo' => $in['Qtipo'],
                 'loc' => $in['Qloc'],
                 'sWhere' => $sWhere,
-                'sOperador' => $sOperador,
                 'obj_pau' => $Qobj_pau,
                 'metodo' => $metodo,
                 'titulo' => $titulo,
@@ -166,9 +161,7 @@ final class UbisTablaData
             'Qtipo' => $Qtipo,
             'Qsimple' => $Qsimple,
             'sWhere' => is_string($p['sWhere'] ?? null) ? $p['sWhere'] : '',
-            'sOperador' => is_string($p['sOperador'] ?? null) ? $p['sOperador'] : '',
             'sWhereD' => is_string($p['sWhereD'] ?? null) ? $p['sWhereD'] : '',
-            'sOperadorD' => is_string($p['sOperadorD'] ?? null) ? $p['sOperadorD'] : '',
             'metodo' => is_string($p['metodo'] ?? null) ? $p['metodo'] : '',
             'titulo' => is_string($p['titulo'] ?? null) ? $p['titulo'] : '',
             'Qcmb' => is_string($p['cmb'] ?? null) ? $p['cmb'] : '',
@@ -179,7 +172,12 @@ final class UbisTablaData
     }
 
     /**
-     * Construye las condiciones aWhere/aWhereD a partir de parámetros de formulario.
+     * Construye los filtros `aWhere` (ubi) y `aWhereD` (dirección) a partir de parámetros de formulario.
+     *
+     * Son especificaciones neutras (no SQL) que viajan serializadas en la URL de paginación; el operador
+     * va implícito en la clave: `nombre_ubi`, `dl`, `tipo_ctr`, `tipo_casa`, `poblacion` y `pais` buscan
+     * sin acentos; `region` es igualdad; `active`, `sv` y `sf` son banderas ('t'/'f'); `_ordre` lista
+     * campos separados por coma. {@see self::criterioUbis()}.
      *
      * @param array<string, mixed> $p
      * @param array<string, mixed> $in
@@ -207,15 +205,12 @@ final class UbisTablaData
         }
 
         $aWhere = [];
-        $aOperador = [];
         $aWhereD = [];
-        $aOperadorD = [];
 
         $Qnombre_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputString($p, 'nombre_ubi');
         if ($Qnombre_ubi !== '') {
             $nom_ubi = str_replace('+', "\+", $Qnombre_ubi); // para los centros de la sss+
             $aWhere['nombre_ubi'] = $nom_ubi;
-            $aOperador['nombre_ubi'] = 'sin_acentos';
             $aWhere['_ordre'] = 'tipo_ubi,nombre_ubi';
         }
         $Qregion = \src\shared\domain\helpers\FuncTablasSupport::inputString($p, 'region');
@@ -226,32 +221,27 @@ final class UbisTablaData
         $Qdl = \src\shared\domain\helpers\FuncTablasSupport::inputString($p, 'dl');
         if ($Qdl !== '') {
             $aWhere['dl'] = $Qdl;
-            $aOperador['dl'] = 'sin_acentos';
             $aWhere['_ordre'] = 'dl';
         }
         $Qtipo_ctr = \src\shared\domain\helpers\FuncTablasSupport::inputString($p, 'tipo_ctr');
         if ($Qtipo_ctr !== '') {
             $aWhere['tipo_ctr'] = $Qtipo_ctr;
-            $aOperador['tipo_ctr'] = 'sin_acentos';
             $aWhere['_ordre'] = 'tipo_ctr';
         }
         $Qtipo_casa = \src\shared\domain\helpers\FuncTablasSupport::inputString($p, 'tipo_casa');
         if ($Qtipo_casa !== '') {
             $aWhere['tipo_casa'] = $Qtipo_casa;
-            $aOperador['tipo_casa'] = 'sin_acentos';
             $aWhere['_ordre'] = 'tipo_casa';
         }
 
         $Qciudad = \src\shared\domain\helpers\FuncTablasSupport::inputString($p, 'ciudad');
         if ($Qciudad !== '') {
             $aWhereD['poblacion'] = $Qciudad;
-            $aOperadorD['poblacion'] = 'sin_acentos';
             $aWhereD['_ordre'] = 'poblacion';
         }
         $Qpais = \src\shared\domain\helpers\FuncTablasSupport::inputString($p, 'pais');
         if ($Qpais !== '') {
             $aWhereD['pais'] = $Qpais;
-            $aOperadorD['pais'] = 'sin_acentos';
             $aWhereD['_ordre'] = 'pais';
         }
 
@@ -279,9 +269,7 @@ final class UbisTablaData
 
         return [
             'aWhere' => $aWhere,
-            'aOperador' => $aOperador,
             'aWhereD' => $aWhereD,
-            'aOperadorD' => $aOperadorD,
             'Qobj_pau' => $Qobj_pau,
             'titulo' => $titulo,
             'metodo' => $in['metodo'],
@@ -403,18 +391,13 @@ final class UbisTablaData
     {
         $decodedWhere = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode(is_string($in['sWhere'] ?? null) ? $in['sWhere'] : ''), true);
         $aWhere = is_array($decodedWhere) ? $decodedWhere : [];
-        $decodedOperador = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode(is_string($in['sOperador'] ?? null) ? $in['sOperador'] : ''), true);
-        $aOperador = is_array($decodedOperador) ? $decodedOperador : [];
         $decodedWhereD = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode(is_string($in['sWhereD'] ?? null) ? $in['sWhereD'] : ''), true);
         $aWhereD = is_array($decodedWhereD) ? $decodedWhereD : [];
-        $decodedOperadorD = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode(is_string($in['sOperadorD'] ?? null) ? $in['sOperadorD'] : ''), true);
-        $aOperadorD = is_array($decodedOperadorD) ? $decodedOperadorD : [];
 
         $Qobj_pau = $in['Qobj_pau'] ?? '';
         $metodo = is_string($in['metodo'] ?? null) ? $in['metodo'] : '';
         $repoDir = '';
         if (!empty($Qobj_pau) && is_string($Qobj_pau)) {
-            $metodo = $this->ubiRepositoryResolver->getMetodo($Qobj_pau);
             $repoDir = $this->ubiRepositoryResolver->getDireccionRepositoryClass($Qobj_pau);
         }
 
@@ -423,9 +406,7 @@ final class UbisTablaData
 
         return [
             'aWhere' => $aWhere,
-            'aOperador' => $aOperador,
             'aWhereD' => $aWhereD,
-            'aOperadorD' => $aOperadorD,
             'Qobj_pau' => $Qobj_pau,
             'titulo' => is_string($in['titulo'] ?? null) ? $in['titulo'] : '',
             'metodo' => $metodo,
@@ -438,11 +419,53 @@ final class UbisTablaData
     }
 
     /**
+     * Traduce un filtro neutro (ver {@see self::buildFiltrosDesdeInput()}) a `Criteria`.
+     *
+     * Las claves de `$textoSinAcentos` buscan sin acentos; `active`, `sv` y `sf` son banderas; el resto
+     * es igualdad. Una clave que no sea campo del enum del repositorio se ignora (p. ej. `tipo_ctr`
+     * al buscar casas).
+     *
+     * @param array<string, mixed> $filtros
+     * @param class-string<CriteriaField&\BackedEnum> $campos enum de campos del repositorio destino
+     * @param list<string> $textoSinAcentos
+     */
+    private function criterioDesdeFiltros(array $filtros, string $campos, array $textoSinAcentos): Criteria
+    {
+        $criterio = Criteria::create();
+        foreach ($filtros as $clave => $valor) {
+            if ($clave === '_ordre') {
+                continue;
+            }
+            $campo = $campos::tryFrom($clave);
+            if ($campo === null) {
+                continue;
+            }
+            if (in_array($clave, $textoSinAcentos, true)) {
+                $filtro = Filter::matchesUnaccented($campo, is_scalar($valor) ? (string) $valor : '');
+            } elseif (in_array($clave, ['active', 'sv', 'sf'], true)) {
+                $filtro = Filter::eq($campo, in_array($valor, ['t', 'true', '1', 1, true], true));
+            } else {
+                $filtro = Filter::eq($campo, $valor);
+            }
+            $criterio = $criterio->andWhere($filtro);
+        }
+
+        $ordre = is_string($filtros['_ordre'] ?? null) ? $filtros['_ordre'] : '';
+        foreach (array_filter(array_map('trim', explode(',', $ordre))) as $nombre) {
+            $campo = $campos::tryFrom($nombre);
+            if ($campo !== null) {
+                $criterio = $criterio->addOrderBy($campo);
+            }
+        }
+
+        return $criterio;
+    }
+
+    /**
      * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperador
      * @return list<Casa|Centro|CentroDl|CentroEx|CentroEllas|CentroEllos>
      */
-    private function buscarUbisPorNombre(array &$aWhere, array $aOperador, mixed $Qobj_pau, string $Qcmb, int $miSfsv): array
+    private function buscarUbisPorNombre(array &$aWhere, mixed $Qobj_pau, string $Qcmb, int $miSfsv): array
     {
         $cUbis = [];
         if (empty($aWhere)) {
@@ -468,9 +491,14 @@ final class UbisTablaData
             if (!is_string($Qobj_pau_i)) {
                 continue;
             }
-            $metodo = $this->ubiRepositoryResolver->getMetodo($Qobj_pau_i);
             $UbiRepository = $this->ubiRepositoryResolver->getRepository($Qobj_pau_i);
-            $cUbis_i = $UbiRepository->$metodo($aWhere, $aOperador);
+            $cUbis_i = $UbiRepository->matching(
+                $this->criterioDesdeFiltros(
+                    $aWhere,
+                    $this->ubiRepositoryResolver->getFieldClass($Qobj_pau_i),
+                    ['nombre_ubi', 'dl', 'tipo_ctr', 'tipo_casa']
+                )
+            );
             foreach ($cUbis_i as $ubi) {
                 $cUbis[] = $ubi;
             }
@@ -481,10 +509,9 @@ final class UbisTablaData
 
     /**
      * @param array<string, mixed> $aWhereD
-     * @param array<string, string> $aOperadorD
      * @return list<Casa|Centro|CentroDl|CentroEx|CentroEllas|CentroEllos>
      */
-    private function buscarUbisPorDireccion(array $aWhereD, array $aOperadorD, mixed $repoDir, string $Qcmb): array
+    private function buscarUbisPorDireccion(array $aWhereD, mixed $repoDir, string $Qcmb): array
     {
         $cUbisD = [];
         if (empty($aWhereD) || empty($repoDir)) {
@@ -499,7 +526,9 @@ final class UbisTablaData
                 continue;
             }
             $DireccionesRepository = $this->ubiRepositoryResolver->getDireccionRepositoryByInterface($repoDir_i);
-            $cDirecciones = $DireccionesRepository->getDirecciones($aWhereD, $aOperadorD) ?: [];
+            $cDirecciones = $DireccionesRepository->matching(
+                $this->criterioDesdeFiltros($aWhereD, DireccionField::class, ['poblacion', 'pais'])
+            );
             $RelacionRepository = $this->ubiRepositoryResolver->getRelacionRepositoryForDireccion($repoDir_i);
             foreach ($cDirecciones as $oDireccion) {
                 $id_direccion = $oDireccion->getId_direccion();

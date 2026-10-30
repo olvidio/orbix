@@ -14,7 +14,10 @@ use src\encargossacd\domain\value_objects\DiaRefCode;
 use src\encargossacd\domain\value_objects\EncargoText;
 use src\encargossacd\domain\value_objects\EncargoTextClave;
 use src\encargossacd\domain\value_objects\LocaleCode;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 
 /**
  * Unitarios de {@see EncargoAplicacionService}.
@@ -58,7 +61,7 @@ final class EncargoAplicacionServiceTest extends TestCase
             $this->textoStub('t_mañana', 'en_US.UTF-8', 'morning'),
         ];
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->expects($this->once())->method('getEncargoTextos')->willReturn($textos);
+        $repo->expects($this->once())->method('matching')->willReturn($textos);
         $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         $rta = $this->service->getArrayTraducciones('en_US.UTF-8');
@@ -69,7 +72,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getArrayTraducciones_cachea_y_no_vuelve_a_consultar_el_repo(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->expects($this->once())->method('getEncargoTextos')->willReturn([
+        $repo->expects($this->once())->method('matching')->willReturn([
             $this->textoStub('k', 'es_ES.UTF-8', 'v'),
         ]);
         $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
@@ -82,7 +85,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getArrayTraducciones_idioma_vacio_usa_es_ES_UTF8(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([
+        $repo->method('matching')->willReturn([
             $this->textoStub('k', 'es_ES.UTF-8', 'v'),
         ]);
         $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
@@ -93,7 +96,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getArrayTraducciones_idioma_sin_textos_devuelve_mensaje_de_error(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([
+        $repo->method('matching')->willReturn([
             $this->textoStub('k', 'es_ES.UTF-8', 'v'),
         ]);
         $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
@@ -110,7 +113,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getTraduccion_devuelve_texto_del_idioma_pedido(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([
+        $repo->method('matching')->willReturn([
             $this->textoStub('hola', 'es_ES.UTF-8', 'hola'),
             $this->textoStub('hola', 'en_US.UTF-8', 'hello'),
         ]);
@@ -122,7 +125,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getTraduccion_cae_al_es_ES_UTF8_si_falta_en_el_idioma_pedido(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([
+        $repo->method('matching')->willReturn([
             $this->textoStub('hola', 'es_ES.UTF-8', 'hola-es'),
             $this->textoStub('otra', 'en_US.UTF-8', 'other'),
         ]);
@@ -135,7 +138,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getTraduccion_clave_inexistente_devuelve_cadena_vacia_y_emite_mensaje(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([
+        $repo->method('matching')->willReturn([
             $this->textoStub('otra', 'es_ES.UTF-8', 'v'),
         ]);
         $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
@@ -194,7 +197,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getTxtDedicacion_con_manyana_pluraliza_con_dia_inc_mayor_que_uno(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([
+        $repo->method('matching')->willReturn([
             $this->textoStub('t_mañana', 'es_ES.UTF-8', 'mañanas'),
         ]);
         $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
@@ -207,7 +210,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getTxtDedicacion_con_manyana_singular_cuando_dia_inc_es_uno(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([
+        $repo->method('matching')->willReturn([
             $this->textoStub('t_mañanas', 'es_ES.UTF-8', 'mañana'),
         ]);
         $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
@@ -220,7 +223,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getTxtDedicacion_combina_m_t_v(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([
+        $repo->method('matching')->willReturn([
             $this->textoStub('t_mañana', 'es_ES.UTF-8', 'mañanas'),
             $this->textoStub('t_tarde1', 'es_ES.UTF-8', 'tardes'),
             $this->textoStub('t_tarde2', 'es_ES.UTF-8', 'noches'),
@@ -238,7 +241,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getTxtDedicacion_solo_con_t_limpia_separadores_sobrantes(): void
     {
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
-        $repo->method('getEncargoTextos')->willReturn([
+        $repo->method('matching')->willReturn([
             $this->textoStub('t_tarde1', 'es_ES.UTF-8', 'tardes'),
         ]);
         $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
@@ -256,7 +259,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_dedicacion_ctr_sin_horarios_devuelve_false(): void
     {
         $horarioRepo = $this->createMock(EncargoHorarioRepositoryInterface::class);
-        $horarioRepo->method('getEncargoHorarios')->willReturn([]);
+        $horarioRepo->method('matching')->willReturn([]);
         $this->service = $this->makeService([
             EncargoHorarioRepositoryInterface::class => $horarioRepo,
         ]);
@@ -267,7 +270,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_dedicacion_sin_horarios_de_sacd_devuelve_false(): void
     {
         $sacdHorarioRepo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-        $sacdHorarioRepo->method('getEncargoSacdHorarios')->willReturn([]);
+        $sacdHorarioRepo->method('matching')->willReturn([]);
         $this->service = $this->makeService([
             EncargoSacdHorarioRepositoryInterface::class => $sacdHorarioRepo,
         ]);
@@ -282,7 +285,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     public function test_getLugar_dl_sin_dl_ni_cr_devuelve_interrogacion(): void
     {
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
-        $centroRepo->method('getCentros')->willReturn([]);
+        $centroRepo->method('matching')->willReturn([]);
         $this->service = $this->makeService([
             CentroDlRepositoryInterface::class => $centroRepo,
         ]);
@@ -301,7 +304,9 @@ final class EncargoAplicacionServiceTest extends TestCase
         };
 
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
-        $centroRepo->method('getCentros')->with(['tipo_ctr' => 'dl'])->willReturn([$oCentro]);
+        $centroRepo->method('matching')
+            ->with(Criteria::create()->where(Filter::eq(CentroDlField::TipoCtr, 'dl')))
+            ->willReturn([$oCentro]);
         $this->service = $this->makeService([
             CentroDlRepositoryInterface::class => $centroRepo,
         ]);
@@ -322,7 +327,7 @@ final class EncargoAplicacionServiceTest extends TestCase
         };
 
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
-        $centroRepo->method('getCentros')->willReturn([$oCentro]);
+        $centroRepo->method('matching')->willReturn([$oCentro]);
         $this->service = $this->makeService([
             CentroDlRepositoryInterface::class => $centroRepo,
         ]);
@@ -340,8 +345,8 @@ final class EncargoAplicacionServiceTest extends TestCase
         };
 
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
-        $centroRepo->method('getCentros')->willReturnCallback(function (array $aWhere) use ($oCentroCr): array {
-            return match ($aWhere['tipo_ctr'] ?? null) {
+        $centroRepo->method('matching')->willReturnCallback(function (Criteria $criterio) use ($oCentroCr): array {
+            return match ($criterio->filters()[0]->value ?? null) {
                 'dl' => [],
                 'cr' => [$oCentroCr],
                 default => [],

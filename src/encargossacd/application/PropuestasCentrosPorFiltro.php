@@ -2,8 +2,12 @@
 
 namespace src\encargossacd\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroEllasField;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
 
@@ -24,47 +28,52 @@ final class PropuestasCentrosPorFiltro
     public function execute(int $filtro_ctr, bool $todosEnDefault = false): array
     {
         return match ($filtro_ctr) {
-            1 => $this->centroDlRepository->getCentros([
-                'tipo_ctr' => '^a|n|s[^s]|of',
-                'active' => 't',
-                '_ordre' => 'nombre_ubi',
-            ], ['tipo_ctr' => '~']) ?: [],
-            2 => $this->centroEllasRepository->getCentros([
-                'active' => 't',
-                '_ordre' => 'nombre_ubi',
-            ]) ?: [],
-            3 => $this->centroDlRepository->getCentros([
-                'tipo_ctr' => '^ss',
-                'active' => 't',
-                '_ordre' => 'nombre_ubi',
-            ], ['tipo_ctr' => '~']) ?: [],
-            4 => $this->centroDlRepository->getCentros([
-                'tipo_ctr' => 'igl',
-                'active' => 't',
-                '_ordre' => 'nombre_ubi',
-            ], ['tipo_ctr' => '~']) ?: [],
+            1 => $this->dl('^a|n|s[^s]|of'),
+            2 => $this->centroEllasRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(CentroEllasField::Active, true))
+                    ->orderBy(CentroEllasField::NombreUbi)
+            ),
+            3 => $this->dl('^ss'),
+            4 => $this->dl('igl'),
             5 => array_merge(
-                $this->centroDlRepository->getCentros([
-                    'tipo_ctr' => 'cgioc|oc|cgi',
-                    'active' => 't',
-                    '_ordre' => 'nombre_ubi',
-                ], ['tipo_ctr' => '~']) ?: [],
-                $this->centroEllasRepository->getCentros([
-                    'tipo_ctr' => 'cgioc|oc|cgi',
-                    'active' => 't',
-                    '_ordre' => 'nombre_ubi',
-                ], ['tipo_ctr' => '~']) ?: [],
+                $this->dl('cgioc|oc|cgi'),
+                $this->centroEllasRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(CentroEllasField::Active, true))
+                        ->andWhere(Filter::matches(CentroEllasField::TipoCtr, 'cgioc|oc|cgi'))
+                        ->orderBy(CentroEllasField::NombreUbi)
+                ),
             ),
             default => $todosEnDefault ? array_merge(
-                $this->centroDlRepository->getCentros([
-                    'active' => 't',
-                    '_ordre' => 'tipo_ctr, nombre_ubi',
-                ]) ?: [],
-                $this->centroEllasRepository->getCentros([
-                    'active' => 't',
-                    '_ordre' => 'tipo_ctr, nombre_ubi',
-                ]) ?: [],
+                $this->centroDlRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(CentroDlField::Active, true))
+                        ->orderBy(CentroDlField::TipoCtr)
+                        ->addOrderBy(CentroDlField::NombreUbi)
+                ),
+                $this->centroEllasRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(CentroEllasField::Active, true))
+                        ->orderBy(CentroEllasField::TipoCtr)
+                        ->addOrderBy(CentroEllasField::NombreUbi)
+                ),
             ) : [],
         };
+    }
+
+    /**
+     * Centros de la delegación activos cuyo `tipo_ctr` cumple la expresión regular.
+     *
+     * @return list<CentroDl>
+     */
+    private function dl(string $patronTipoCtr): array
+    {
+        return $this->centroDlRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(CentroDlField::Active, true))
+                ->andWhere(Filter::matches(CentroDlField::TipoCtr, $patronTipoCtr))
+                ->orderBy(CentroDlField::NombreUbi)
+        );
     }
 }

@@ -8,7 +8,7 @@ use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\procesos\domain\criteria\ActividadProcesoTareaField;
 use src\shared\config\ConfigGlobal;
@@ -245,7 +245,9 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             // Asegurar que no existe, a veces al hacerlo para las dos secciones, una lo tiene y otra no:
             // >> Cuando se hace manual, es porque se quiere regenerar y hay que forzar:
             if ($force === FALSE) {
-                $cActividadProcesoTarea = $this->getActividadProcesoTareas(['id_activ' => $iid_activ]);
+                $cActividadProcesoTarea = $this->matching(
+                    Criteria::create()->where(Filter::eq(ActividadProcesoTareaField::IdActiv, $iid_activ))
+                );
                 if (empty($cActividadProcesoTarea)) {
                     $iid_fase[$sfsv] = $this->generar($id_activ, $id_tipo_proceso, $sfsv, $force, $oActividad);
                 } else {
@@ -413,11 +415,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
 
         // ordena por fases previas, no importa la fase: simplemente las vacias primero
         // para saber cual es la primera: que no depende de ninguna.
-        $aWhere = [
-            'id_tipo_proceso' => $iid_tipo_proceso,
-            '_ordre' => '(json_fases_previas::json->0)::text DESC'
-        ];
-        $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso($aWhere);
+        $cTareasProceso = $this->tareaProcesoRepository->getTareasDeProcesoVaciasPrimero($iid_tipo_proceso);
 
         // OJO: cuando se accede actividades ya existentes,
         // hay que intentar conservar el status que tenga. Para las actividades anteriores
@@ -534,11 +532,11 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                         );
                     }
                 }
-                $aWhere = [
-                    'id_activ' => $iid_activ,
-                    '_ordre' => 'id_fase',
-                ];
-                $cActividadProcesoTarea = $this->getActividadProcesoTareas($aWhere);
+                $cActividadProcesoTarea = $this->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(ActividadProcesoTareaField::IdActiv, $iid_activ))
+                        ->orderBy(ActividadProcesoTareaField::IdFase)
+                );
                 foreach ($cActividadProcesoTarea as $oActividadProcesoTarea) {
                     $id_fase = $oActividadProcesoTarea->getIdFaseVo()?->value();
                     $id_tarea = $oActividadProcesoTarea->getIdTareaVo()?->value();
@@ -658,18 +656,6 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         }
 
         return $result;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ActividadProcesoTarea>
-     */
-    public function getActividadProcesoTareas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ActividadProcesoTareaField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

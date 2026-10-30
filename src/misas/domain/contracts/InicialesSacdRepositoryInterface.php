@@ -3,15 +3,16 @@
 namespace src\misas\domain\contracts;
 
 use src\misas\domain\entity\InicialesSacd;
+use src\shared\domain\criteria\Criteria;
 
 interface InicialesSacdRepositoryInterface
 {
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * InicialesSacd que cumplen el criterio.
+     *
      * @return list<InicialesSacd>
      */
-    public function getInicialesSacd(array $aWhere = [], array $aOperators = []): array;
+    public function matching(Criteria $criteria): array;
 
     public function Eliminar(InicialesSacd $InicialesSacd): bool;
 

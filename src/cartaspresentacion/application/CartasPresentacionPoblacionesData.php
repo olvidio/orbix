@@ -2,6 +2,7 @@
 
 namespace src\cartaspresentacion\application;
 
+use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
@@ -84,7 +85,7 @@ final class CartasPresentacionPoblacionesData
      */
     private function poblacionesDelegacion(): array
     {
-        $cCentros = $this->centroDlRepository->getCentros();
+        $cCentros = $this->centroDlRepository->matching(Criteria::create());
         $poblaciones = [];
         foreach ($cCentros as $oCentro) {
             $aDirecciones = $this->relacionCentroDlDireccionRepository->getDireccionesPorUbi($oCentro->getId_ubi());

@@ -4,7 +4,6 @@ namespace src\utils_database\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\utils_database\domain\criteria\MapIdField;
@@ -56,20 +55,6 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
             $mapIdes[] = MapId::fromArray($aDatos);
         }
         return $mapIdes;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo MapId
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<MapId>
-     */
-    public function getMapIdes(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(MapIdField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

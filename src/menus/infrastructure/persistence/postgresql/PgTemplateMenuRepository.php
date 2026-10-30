@@ -9,7 +9,6 @@ use src\menus\domain\contracts\TemplateMenuRepositoryInterface;
 use src\menus\domain\criteria\TemplateMenuField;
 use src\menus\domain\entity\TemplateMenu;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\RunsCriteriaQueries;
@@ -80,20 +79,6 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         }
 
         return $items;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo TemplateMenu
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<TemplateMenu> Una colección de objetos de tipo TemplateMenu
-     */
-    public function getTemplatesMenus(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(TemplateMenuField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

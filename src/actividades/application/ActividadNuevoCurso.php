@@ -6,6 +6,7 @@ use DateInterval;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividades\domain\criteria\ActividadAllField;
+use src\actividadescentro\domain\criteria\CentroEncargadoField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\NullsPosition;
@@ -279,7 +280,9 @@ class ActividadNuevoCurso
         if (ConfigGlobal::is_app_installed('actividadescentro')) {
             // También copio los centros encargados.
             $CentroEncargadoRepository = $this->centroEncargadoRepository;
-            $cEncargados = $CentroEncargadoRepository->getCentrosEncargados(array('id_activ' => $oActividadOrigen->getId_activ()));
+            $cEncargados = $CentroEncargadoRepository->matching(
+                Criteria::create()->where(Filter::eq(CentroEncargadoField::IdActiv, $oActividadOrigen->getId_activ()))
+            );
             foreach ($cEncargados as $oCentroEncargado) {
                 $newEncargado = clone $oCentroEncargado;
                 $newEncargado->setId_activ($id_actividad_new);

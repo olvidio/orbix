@@ -5,6 +5,11 @@ namespace src\actividadessacd\application;
 use src\shared\config\ConfigGlobal;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\actividadescentro\domain\criteria\CentroEncargadoField;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
@@ -34,23 +39,28 @@ final class SacdsDisponiblesData
 
         $sacds_ctr = [];
         if (ConfigGlobal::is_app_installed('encargossacd') && $id_activ > 0) {
-            $cCentros = $this->centroEncargadoRepository->getCentrosEncargados(
-                ['id_activ' => $id_activ, '_ordre' => 'num_orden']
+            $cCentros = $this->centroEncargadoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(CentroEncargadoField::IdActiv, $id_activ))
+                    ->orderBy(CentroEncargadoField::NumOrden)
             );
             foreach ($cCentros as $oEncargado) {
                 $id_ctr = (int)$oEncargado->getId_ubi();
                 $num_orden = (int)$oEncargado->getNum_orden();
-                $cEncargos = $this->encargoRepository->getEncargos(
-                    ['id_ubi' => $id_ctr, 'id_tipo_enc' => '^1(00|100|200|300)'],
-                    ['id_tipo_enc' => '~']
+                $cEncargos = $this->encargoRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoField::IdUbi, $id_ctr))
+                        ->andWhere(Filter::matches(EncargoField::IdTipoEnc, '^1(00|100|200|300)'))
                 );
                 if (count($cEncargos) < 1) {
                     continue;
                 }
                 $id_enc = (int)$cEncargos[0]->getId_enc();
-                $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(
-                    ['id_enc' => $id_enc, 'modo' => '2|3', 'f_fin' => ''],
-                    ['modo' => '~', 'f_fin' => 'IS NULL']
+                $cEncargosSacd = $this->encargoSacdRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                        ->andWhere(Filter::matches(EncargoSacdField::Modo, '2|3'))
+                        ->andWhere(Filter::isNull(EncargoSacdField::FFin))
                 );
                 if (count($cEncargosSacd) < 1) {
                     continue;

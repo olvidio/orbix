@@ -17,6 +17,10 @@ use PHPUnit\Framework\TestCase;
 use src\configuracion\application\ObtenerConfigSnapshot;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\usuarios\domain\criteria\PermMenuField;
+use src\usuarios\domain\criteria\UsuarioGrupoField;
 use src\usuarios\domain\entity\Usuario;
 
 class myTest extends TestCase
@@ -252,12 +256,12 @@ class myTest extends TestCase
             if (empty($_SESSION['iPermMenus'])) { // con hacerlo una vez basta.
                 // Grupos
                 $UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
-                $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => ConfigGlobal::mi_id_usuario()));
+                $cGrupos = $UsuarioGrupoRepository->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, ConfigGlobal::mi_id_usuario())));
                 $iperm_menu = 0;
                 foreach ($cGrupos as $UsuarioGrupo) {
                     $id_grupo = $UsuarioGrupo->getId_grupo();
                     $PermMenuRepository = $GLOBALS['container']->get(PermMenuRepositoryInterface::class);
-                    $cPermMenu = $PermMenuRepository->getPermMenus(array('id_usuario' => $id_grupo));
+                    $cPermMenu = $PermMenuRepository->matching(Criteria::create()->where(Filter::eq(PermMenuField::IdUsuario, $id_grupo)));
                     foreach ($cPermMenu as $oPermMenu) {
                         // Or (inclusive or) 	Bits that are set in either $a or $b are set.
                         $iperm_menu |= $oPermMenu->getMenu_perm();

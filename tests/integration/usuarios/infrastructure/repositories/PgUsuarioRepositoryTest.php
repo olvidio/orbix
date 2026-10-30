@@ -3,6 +3,9 @@
 namespace Tests\unit\usuarios\infrastructure\persistence\postgresql;
 
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\usuarios\domain\criteria\UsuarioField;
 use src\usuarios\domain\entity\Usuario;
 use Tests\factories\usuarios\UsuariosFactory;
 use Tests\myTest;
@@ -156,7 +159,7 @@ class PgUsuarioRepositoryTest extends myTest
 
     public function test_get_usuarios_sin_filtros()
     {
-        $cUsuarios = $this->repository->getUsuarios();
+        $cUsuarios = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($cUsuarios);
         $this->assertNotEmpty($cUsuarios);
@@ -174,7 +177,7 @@ class PgUsuarioRepositoryTest extends myTest
         $this->repository->Guardar($oUsuario);
 
         // Buscar con filtro
-        $cUsuarios = $this->repository->getUsuarios(['id_usuario' => $id_usuario]);
+        $cUsuarios = $this->repository->matching(Criteria::create()->where(Filter::eq(UsuarioField::IdUsuario, $id_usuario)));
 
         $this->assertIsArray($cUsuarios);
         $this->assertCount(1, $cUsuarios);
@@ -194,7 +197,7 @@ class PgUsuarioRepositoryTest extends myTest
         $this->repository->Guardar($oUsuario);
 
         // Buscar con filtro
-        $cUsuarios = $this->repository->getUsuarios(['usuario' => $username]);
+        $cUsuarios = $this->repository->matching(Criteria::create()->where(Filter::eq(UsuarioField::Usuario, $username)));
 
         $this->assertIsArray($cUsuarios);
         $this->assertCount(1, $cUsuarios);
@@ -207,7 +210,7 @@ class PgUsuarioRepositoryTest extends myTest
     public function test_get_usuarios_con_limite()
     {
         $limit = 5;
-        $cUsuarios = $this->repository->getUsuarios(['_limit' => $limit]);
+        $cUsuarios = $this->repository->matching(Criteria::create()->limit($limit));
 
         $this->assertIsArray($cUsuarios);
         $this->assertLessThanOrEqual($limit, count($cUsuarios));
@@ -215,7 +218,7 @@ class PgUsuarioRepositoryTest extends myTest
 
     public function test_get_usuarios_con_orden()
     {
-        $cUsuarios = $this->repository->getUsuarios(['_ordre' => 'usuario ASC', '_limit' => 10]);
+        $cUsuarios = $this->repository->matching(Criteria::create()->orderBy(UsuarioField::Usuario)->limit(10));
 
         $this->assertIsArray($cUsuarios);
         $this->assertNotEmpty($cUsuarios);

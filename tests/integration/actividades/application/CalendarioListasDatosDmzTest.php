@@ -61,7 +61,7 @@ final class CalendarioListasDatosDmzTest extends myTest
         $casa->method('getId_ubi')->willReturn(1001);
         $casa->method('getNombre_ubi')->willReturn('Casa prueba');
         $casaDl = $this->createMock(CasaDlRepositoryInterface::class);
-        $casaDl->method('getCasas')->willReturn([$casa]);
+        $casaDl->method('matching')->willReturn([$casa]);
 
         $actividad = $this->createMock(ActividadAll::class);
         $actividad->method('getId_activ')->willReturn(5001);
@@ -75,7 +75,7 @@ final class CalendarioListasDatosDmzTest extends myTest
         $encargado = $this->createMock(CentroEncargado::class);
         $encargado->method('getId_ubi')->willReturn($idCtr);
         $encargados = $this->createMock(CentroEncargadoRepositoryInterface::class);
-        $encargados->method('getCentrosEncargados')->willReturn([$encargado]);
+        $encargados->method('matching')->willReturn([$encargado]);
 
         $_SESSION['oPermActividades'] = new PermisosActividadesTrue(1);
 

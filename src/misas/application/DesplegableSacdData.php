@@ -4,10 +4,15 @@ namespace src\misas\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\application\services\InicialesSacdService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\shared\domain\helpers\OpcionesDesplegable;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 
 /**
  * Opciones del desplegable dinámico de SACD en el modal de la cuadrícula de zona.
@@ -52,20 +57,16 @@ class DesplegableSacdData
                 $libre = true;
                 $inicio_dia = $dia . ' 00:00:00';
                 $fin_dia = $dia . ' 23:59:59';
-                $aWhere = [
-                    'id_nom' => $id_nom,
-                    'tstart' => "'$inicio_dia', '$fin_dia'",
-                ];
-                $aOperador = [
-                    'tstart' => 'BETWEEN',
-                ];
-                $cEncargosDia = $this->encargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $this->encargoDiaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdNom, $id_nom))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia, $fin_dia))
+                );
                 foreach ($cEncargosDia as $oEncargoDia) {
                     $id_enc = $oEncargoDia->getId_enc();
-                    $aWhere = [];
-                    $aOperador = [];
-                    $aWhere['id_enc'] = $id_enc;
-                    $cEncargos = $this->encargoRepository->getEncargos($aWhere, $aOperador);
+                    $cEncargos = $this->encargoRepository->matching(
+                        Criteria::create()->where(Filter::eq(EncargoField::IdEnc, $id_enc))
+                    );
                     foreach ($cEncargos as $oEncargo) {
                         $id_tipo_enc = $oEncargo->getId_tipo_enc();
                         if ((int)substr((string)$id_tipo_enc, 1, 1) === 1) {
@@ -74,10 +75,11 @@ class DesplegableSacdData
                     }
                 }
                 if ($libre) {
-                    $aWhere = [];
-                    $aWhere['id_zona'] = $id_zona;
-                    $aWhere['id_nom'] = $id_nom;
-                    $cZonaSacd = $this->zonaSacdRepository->getZonasSacds($aWhere);
+                    $cZonaSacd = $this->zonaSacdRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(ZonaSacdField::IdZona, $id_zona))
+                            ->andWhere(Filter::eq(ZonaSacdField::IdNom, $id_nom))
+                    );
                     $dia_ts = strtotime($dia);
                     $n_dia_semana = $dia_ts !== false ? (int) date('N', $dia_ts) : 1;
                     $oZonaSacd = $cZonaSacd[0];

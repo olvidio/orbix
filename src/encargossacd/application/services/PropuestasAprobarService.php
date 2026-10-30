@@ -7,6 +7,10 @@ use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
+use src\encargossacd\domain\criteria\PropuestaEncargoSacdHorarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\entity\EncargoSacd;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\encargossacd\domain\entity\PropuestaEncargoSacd;
@@ -30,7 +34,7 @@ final class PropuestasAprobarService
         $f_iso = date('Y-m-d');
         $f_fin = new DateTimeLocal($f_iso);
 
-        $propuestas = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd();
+        $propuestas = $this->propuestaEncargoSacdRepository->matching(Criteria::create());
         foreach ($propuestas as $oPropuesta) {
             $id_nom = $oPropuesta->getId_nom();
             $id_nom_new = (int) ($oPropuesta->getId_nom_new() ?? 0);
@@ -61,21 +65,20 @@ final class PropuestasAprobarService
 
     private function comprobarHorario(int $id_item, DateTimeLocal $f_ini): void
     {
-        $cPropuestaHorarios = $this->propuestaHorarioRepository->getEncargoSacdHorarios(
-            ['id_item_tarea_sacd' => $id_item, 'id_nom' => 'x'],
-            ['id_nom' => 'IS NOT NULL'],
+        $cPropuestaHorarios = $this->propuestaHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(PropuestaEncargoSacdHorarioField::IdItemTareaSacd, $id_item))
+                ->andWhere(Filter::isNotNull(PropuestaEncargoSacdHorarioField::IdNom))
         );
         foreach ($cPropuestaHorarios as $oPropuestaHorario) {
             $dia_ref = (string) ($oPropuestaHorario->getDia_ref() ?? '');
             $dia_inc = (int) ($oPropuestaHorario->getDia_inc() ?? 0);
-            $cActualHorario = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios(
-                [
-                    'id_item_tarea_sacd' => $id_item,
-                    'dia_ref' => $dia_ref,
-                    'id_nom' => 'x',
-                    'f_fin' => 'x',
-                ],
-                ['id_nom' => 'IS NOT NULL', 'f_fin' => 'IS NULL'],
+            $cActualHorario = $this->encargoSacdHorarioRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdHorarioField::IdItemTareaSacd, $id_item))
+                    ->andWhere(Filter::eq(EncargoSacdHorarioField::DiaRef, $dia_ref))
+                    ->andWhere(Filter::isNotNull(EncargoSacdHorarioField::IdNom))
+                    ->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin))
             );
             if ($cActualHorario !== []) {
                 $oEncargoSacdHorario = $cActualHorario[0];
@@ -119,9 +122,10 @@ final class PropuestasAprobarService
 
     private function newHorario(int $id_item, int $id_enc, int $id_nom_new, DateTimeLocal $f_ini, int $id_item_new): void
     {
-        $cPropuestaHorarios = $this->propuestaHorarioRepository->getEncargoSacdHorarios(
-            ['id_item_tarea_sacd' => $id_item, 'id_nom' => 'x'],
-            ['id_nom' => 'IS NOT NULL'],
+        $cPropuestaHorarios = $this->propuestaHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(PropuestaEncargoSacdHorarioField::IdItemTareaSacd, $id_item))
+                ->andWhere(Filter::isNotNull(PropuestaEncargoSacdHorarioField::IdNom))
         );
         foreach ($cPropuestaHorarios as $oPropuestaHorario) {
             $dia_ref = (string) ($oPropuestaHorario->getDia_ref() ?? '');
@@ -151,9 +155,10 @@ final class PropuestasAprobarService
 
     private function finHorarioPropuesta(int $id_item, DateTimeLocal $f_fin): void
     {
-        $cPropuestaHorarios = $this->propuestaHorarioRepository->getEncargoSacdHorarios(
-            ['id_item_tarea_sacd' => $id_item, 'id_nom' => 'x'],
-            ['id_nom' => 'IS NOT NULL'],
+        $cPropuestaHorarios = $this->propuestaHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(PropuestaEncargoSacdHorarioField::IdItemTareaSacd, $id_item))
+                ->andWhere(Filter::isNotNull(PropuestaEncargoSacdHorarioField::IdNom))
         );
         foreach ($cPropuestaHorarios as $oPropuestaHorario) {
             $oPropuestaHorario->setF_fin($f_fin);

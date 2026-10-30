@@ -182,7 +182,7 @@ class TrasladoDlTest extends TestCase
     private function makeTrasladarSpy(array $delegaciones = []): TrasladarSpy
     {
         $delegacionRepository = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegacionRepository->method('getDelegaciones')->willReturn(
+        $delegacionRepository->method('matching')->willReturn(
             array_map(
                 static fn(string $dl): FakeDelegacion => new FakeDelegacion($dl),
                 $delegaciones
@@ -202,7 +202,7 @@ class TrasladoDlTest extends TestCase
     private function makeDelegacionRepositoryMock(array $delegaciones = []): DelegacionRepositoryInterface
     {
         $delegacionRepository = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegacionRepository->method('getDelegaciones')->willReturn(
+        $delegacionRepository->method('matching')->willReturn(
             array_map(
                 static fn(string $dl): FakeDelegacion => new FakeDelegacion($dl),
                 $delegaciones

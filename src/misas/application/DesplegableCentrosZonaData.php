@@ -4,6 +4,8 @@ namespace src\misas\application;
 
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
+use src\ubis\domain\criteria\CentroEllasField;
+use src\ubis\domain\criteria\CentroEllosField;
 use src\shared\domain\helpers\OpcionesDesplegable;
 use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
@@ -32,11 +34,14 @@ class DesplegableCentrosZonaData
         $opciones_sf = [];
         $opciones_sv = [];
 
-        $filtro = CentrosDeZona::whereActivosIn($this->centrosDeZona->idUbisDeZona($id_zona));
-        if ($filtro !== null) {
-            [$aWhere, $aOperador] = $filtro;
-            $opciones_sf = self::mapaCentrosOrdenados($this->centroEllasRepository->getCentros($aWhere, $aOperador));
-            $opciones_sv = self::mapaCentrosOrdenados($this->centroEllosRepository->getCentros($aWhere, $aOperador));
+        $idUbis = $this->centrosDeZona->idUbisDeZona($id_zona);
+        if ($idUbis !== []) {
+            $opciones_sf = self::mapaCentrosOrdenados($this->centroEllasRepository->matching(
+                CentrosDeZona::criterioActivosIn($idUbis, CentroEllasField::class)
+            ));
+            $opciones_sv = self::mapaCentrosOrdenados($this->centroEllosRepository->matching(
+                CentrosDeZona::criterioActivosIn($idUbis, CentroEllosField::class)
+            ));
         }
 
         return [

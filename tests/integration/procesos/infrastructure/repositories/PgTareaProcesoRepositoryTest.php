@@ -157,7 +157,7 @@ class PgTareaProcesoRepositoryTest extends myTest
 
     public function test_get_tareas_proceso_sin_filtros()
     {
-        $result = $this->repository->getTareasProceso();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

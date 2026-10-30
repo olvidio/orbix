@@ -7,8 +7,13 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdObservField;
+use src\encargossacd\domain\criteria\PropuestaEncargoSacdField;
+use src\encargossacd\domain\criteria\PropuestaEncargoSacdHorarioField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -99,19 +104,22 @@ final class PropuestasListaSacdData
                 'observ' => [],
             ];
 
-            $cEncargoSacdObserv = $this->encargoSacdObservRepository->getEncargosSacdObservs(['id_nom' => $id_nom]) ?: [];
+            $cEncargoSacdObserv = $this->encargoSacdObservRepository->matching(
+                Criteria::create()->where(Filter::eq(EncargoSacdObservField::IdNom, $id_nom))
+            );
             $observ = '';
             if (count($cEncargoSacdObserv) > 0) {
                 $observ = (string)$cEncargoSacdObserv[0]->getObserv();
             }
 
-            $cEncargosSacd1 = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(
-                ['id_nom_new' => $id_nom, 'f_fin' => 'x', '_ordre' => 'modo'],
-                ['f_fin' => 'IS NULL'],
+            $criterioPropuesta = Criteria::create()
+                ->where(Filter::eq(PropuestaEncargoSacdField::IdNomNew, $id_nom))
+                ->orderBy(PropuestaEncargoSacdField::Modo);
+            $cEncargosSacd1 = $this->propuestaEncargoSacdRepository->matching(
+                $criterioPropuesta->andWhere(Filter::isNull(PropuestaEncargoSacdField::FFin))
             );
-            $cEncargosSacd2 = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(
-                ['id_nom_new' => $id_nom, 'f_fin' => $hoy_iso, '_ordre' => 'modo'],
-                ['f_fin' => '>'],
+            $cEncargosSacd2 = $this->propuestaEncargoSacdRepository->matching(
+                $criterioPropuesta->andWhere(Filter::gt(PropuestaEncargoSacdField::FFin, $hoy_iso))
             );
             $cEncargosSacd = array_merge($cEncargosSacd1, $cEncargosSacd2);
 
@@ -155,14 +163,15 @@ final class PropuestasListaSacdData
 
                 $sup_tit = '';
                 if ($modo === 2 || $modo === 3) {
-                    $cPar = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(
-                        ['id_enc' => $id_enc, 'f_fin' => 'x', 'modo' => 4],
-                        ['f_fin' => 'IS NULL'],
+                    $criterioPar = Criteria::create()
+                        ->where(Filter::eq(PropuestaEncargoSacdField::IdEnc, $id_enc))
+                        ->andWhere(Filter::eq(PropuestaEncargoSacdField::Modo, 4));
+                    $cPar = $this->propuestaEncargoSacdRepository->matching(
+                        $criterioPar->andWhere(Filter::isNull(PropuestaEncargoSacdField::FFin))
                     );
                     if (count($cPar) === 0) {
-                        $cPar = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(
-                            ['id_enc' => $id_enc, 'f_fin' => $hoy_iso, 'modo' => 4],
-                            ['f_fin' => '>'],
+                        $cPar = $this->propuestaEncargoSacdRepository->matching(
+                            $criterioPar->andWhere(Filter::gt(PropuestaEncargoSacdField::FFin, $hoy_iso))
                         );
                     }
                     if (count($cPar) === 1) {
@@ -170,14 +179,15 @@ final class PropuestasListaSacdData
                         $sup_tit = $oSup?->getNombreApellidos() ?? '';
                     }
                 } elseif ($modo === 4) {
-                    $cPar = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(
-                        ['id_enc' => $id_enc, 'f_fin' => 'x', 'modo' => '[23]'],
-                        ['modo' => '~', 'f_fin' => 'IS NULL'],
+                    $criterioPar = Criteria::create()
+                        ->where(Filter::eq(PropuestaEncargoSacdField::IdEnc, $id_enc))
+                        ->andWhere(Filter::matches(PropuestaEncargoSacdField::Modo, '[23]'));
+                    $cPar = $this->propuestaEncargoSacdRepository->matching(
+                        $criterioPar->andWhere(Filter::isNull(PropuestaEncargoSacdField::FFin))
                     );
                     if (count($cPar) === 0) {
-                        $cPar = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(
-                            ['id_enc' => $id_enc, 'f_fin' => $hoy_iso, 'modo' => '[23]'],
-                            ['modo' => '~', 'f_fin' => '>'],
+                        $cPar = $this->propuestaEncargoSacdRepository->matching(
+                            $criterioPar->andWhere(Filter::gt(PropuestaEncargoSacdField::FFin, $hoy_iso))
                         );
                     }
                     if (count($cPar) === 1) {
@@ -186,15 +196,15 @@ final class PropuestasListaSacdData
                     }
                 }
 
-                $aWhereH = [
-                    'id_enc' => $id_enc,
-                    'id_nom' => $id_nom,
-                    'f_fin' => "'$hoy_iso'",
-                ];
-                $aOperadorH = ['f_fin' => '>'];
-                $cHorarios1 = $this->propuestaEncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereH, $aOperadorH);
-                $aOperadorH['f_fin'] = 'IS NULL';
-                $cHorarios2 = $this->propuestaEncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereH, $aOperadorH);
+                $criterioH = Criteria::create()
+                    ->where(Filter::eq(PropuestaEncargoSacdHorarioField::IdEnc, $id_enc))
+                    ->andWhere(Filter::eq(PropuestaEncargoSacdHorarioField::IdNom, $id_nom));
+                $cHorarios1 = $this->propuestaEncargoSacdHorarioRepository->matching(
+                    $criterioH->andWhere(Filter::gt(PropuestaEncargoSacdHorarioField::FFin, $hoy_iso))
+                );
+                $cHorarios2 = $this->propuestaEncargoSacdHorarioRepository->matching(
+                    $criterioH->andWhere(Filter::isNull(PropuestaEncargoSacdHorarioField::FFin))
+                );
                 $cHorarios = array_merge($cHorarios1, $cHorarios2);
 
                 $dedic_m = '';

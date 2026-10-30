@@ -2,6 +2,7 @@
 
 namespace Tests\integration\tablonanuncios\infrastructure\persistence\postgresql;
 
+use src\shared\domain\criteria\Criteria;
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
 use src\tablonanuncios\domain\entity\Anuncio;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
@@ -134,7 +135,7 @@ class PgAnuncioRepositoryTest extends myTest
 
     public function test_get_anuncios_sin_filtros()
     {
-        $result = $this->repository->getAnuncios();
+        $result = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

@@ -10,12 +10,14 @@ use frontend\shared\web\Periodo;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
+use src\actividadestudios\domain\criteria\MatriculaField;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 
 /**
  * Listado estudios por centro (`lista_est_ctr.php`).
@@ -64,44 +66,38 @@ final class ListaEstCtrData
         $aWhereAct['id_tipo_activ'] = '^1(12|33)';
         $aOperadorAct['id_tipo_activ'] = '~';
 
-        $aWhereCtr = [];
-        $aOperadorCtr = [];
+        $criterioCtr = Criteria::create();
         switch ($Qn_agd) {
             case 'a':
                 $tabla = 'p_agregados';
-                $aWhereCtr['tipo_ctr'] = '^a';
-                $aOperadorCtr['tipo_ctr'] = '~';
+                $criterioCtr = $criterioCtr->where(Filter::matches(CentroDlField::TipoCtr, '^a'));
                 break;
             case 'n':
                 $tabla = 'p_numerarios';
-                $aWhereCtr['tipo_ctr'] = '^n';
-                $aOperadorCtr['tipo_ctr'] = '~';
+                $criterioCtr = $criterioCtr->where(Filter::matches(CentroDlField::TipoCtr, '^n'));
                 break;
             case 'nm':
                 $tabla = 'p_n_agd';
-                $aWhereCtr['tipo_ctr'] = '^nm';
-                $aOperadorCtr['tipo_ctr'] = '~';
+                $criterioCtr = $criterioCtr->where(Filter::matches(CentroDlField::TipoCtr, '^nm'));
                 break;
             case 'nj':
                 $tabla = 'p_n_agd';
-                $aWhereCtr['tipo_ctr'] = '^nj(ce)*';
-                $aOperadorCtr['tipo_ctr'] = '~';
+                $criterioCtr = $criterioCtr->where(Filter::matches(CentroDlField::TipoCtr, '^nj(ce)*'));
                 break;
             case 'sssc':
                 $tabla = 'p_n_agd';
-                $aWhereCtr['tipo_ctr'] = '^ss';
-                $aOperadorCtr['tipo_ctr'] = '=';
+                // Igualdad literal con '^ss' (nunca coincide): se conserva el comportamiento previo.
+                $criterioCtr = $criterioCtr->where(Filter::eq(CentroDlField::TipoCtr, '^ss'));
                 break;
             case 'c':
                 $tabla = 'p_n_agd';
-                $aWhereCtr['id_ubi'] = $Qid_ubi;
-                $aOperadorCtr = [];
+                $criterioCtr = $criterioCtr->where(Filter::eq(CentroDlField::IdUbi, $Qid_ubi));
                 break;
             default:
                 $tabla = 'p_n_agd';
         }
 
-        $cCentros = $this->centroDlRepository->getCentros($aWhereCtr, $aOperadorCtr);
+        $cCentros = $this->centroDlRepository->matching($criterioCtr);
         $a_valores = [];
         $aGrupos = [];
         foreach ($cCentros as $oCentroDl) {
@@ -157,7 +153,11 @@ final class ListaEstCtrData
                                 break;
                             default:
                                 $asignaturas = '';
-                                $cMatriculas = $this->matriculaRepository->getMatriculas(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
+                                $cMatriculas = $this->matriculaRepository->matching(
+                                    Criteria::create()
+                                        ->where(Filter::eq(MatriculaField::IdNom, $id_nom))
+                                        ->andWhere(Filter::eq(MatriculaField::IdActiv, $id_activ))
+                                );
                                 foreach ($cMatriculas as $oMatricula) {
                                     $id_asignatura = $oMatricula->getId_asignatura();
                                     $preceptor = $oMatricula->isPreceptor();

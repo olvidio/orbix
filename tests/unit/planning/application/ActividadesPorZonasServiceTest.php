@@ -286,7 +286,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $horario->method('getF_fin')->willReturn(new DateTimeLocal('2030-02-10'));
 
         $encargoSacdRepo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-        $encargoSacdRepo->method('getEncargoSacdHorarios')->willReturn([$horario]);
+        $encargoSacdRepo->method('matching')->willReturn([$horario]);
 
         $encargoRepo = $this->createMock(EncargoRepositoryInterface::class);
         $encargoRepo->method('findById')->with(9001)->willThrowException(
@@ -345,7 +345,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
         ]);
 
         $encargoSacdRepo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-        $encargoSacdRepo->method('getEncargoSacdHorarios')->willReturn([]);
+        $encargoSacdRepo->method('matching')->willReturn([]);
 
         // `Qpropuesta = 'true'` (reconocido por `is_true`) desvia a la rama
         // que no toca `$_SESSION['oPermActividades']`.

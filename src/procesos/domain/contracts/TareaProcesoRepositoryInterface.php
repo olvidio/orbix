@@ -53,15 +53,11 @@ interface TareaProcesoRepositoryInterface
     public function matching(Criteria $criteria): array;
 
     /**
-     * @deprecated usar matching(Criteria)
-     * devuelve una colección (array) de objetos de tipo TareaProceso
+     * Tareas de un tipo de proceso, con las de fases previas vacías primero.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<TareaProceso> Una colección de objetos de tipo TareaProceso
-     * @throws JsonException
+     * @return list<TareaProceso>
      */
-    public function getTareasProceso(array $aWhere = [], array $aOperators = []): array;
+    public function getTareasDeProcesoVaciasPrimero(int $id_tipo_proceso): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

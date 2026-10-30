@@ -8,6 +8,9 @@ use src\misas\application\support\EncargoDiaTimeHelper;
 use src\misas\application\support\PeriodoDateRange;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
 use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
@@ -15,6 +18,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaField;
 
 /**
  * Datos para la vista `ver_plan_ctr.phtml`: cuadricula del plan de misas
@@ -64,7 +68,7 @@ class VerPlanCtrData
 
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
             $role = 'sacd';
-            $cZonas = $this->zonaRepository->getZonas(['id_nom' => $id_sacd]);
+            $cZonas = $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdNom, $id_sacd)));
             $jefe_zona = count($cZonas) > 0;
         }
 
@@ -114,13 +118,12 @@ class VerPlanCtrData
                 $status = EncargoDiaStatus::STATUS_COMUNICADO_CTR;
 
                 $id_dia = $date->format('Y-m-d');
-                $aWhere = [
-                    'id_enc' => $id_enc_row,
-                    'tstart' => "'$id_dia 00:00:00', '$id_dia 23:59:59'",
-                    '_ordre' => 'tstart',
-                ];
-                $aOperador = ['tstart' => 'BETWEEN'];
-                $cEncargosDia = $this->encargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $this->encargoDiaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc_row))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, "$id_dia 00:00:00", "$id_dia 23:59:59"))
+                        ->orderBy(EncargoDiaField::Tstart)
+                );
                 foreach ($cEncargosDia as $oEncargoDia) {
                     $id_nom = $oEncargoDia->getId_nom();
                     if ($id_nom === null) {

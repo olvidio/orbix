@@ -4,7 +4,6 @@ namespace src\cambios\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\cambios\domain\criteria\CambioUsuarioObjetoPrefField;
 use PDO;
@@ -54,18 +53,6 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
         }
 
         return $result;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<CambioUsuarioObjetoPref>
-     */
-    public function getCambioUsuarioObjetoPrefs(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(CambioUsuarioObjetoPrefField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /**

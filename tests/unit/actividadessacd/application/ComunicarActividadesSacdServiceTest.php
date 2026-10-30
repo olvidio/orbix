@@ -91,7 +91,7 @@ final class ComunicarActividadesSacdServiceTest extends TestCase
         $encargo->method('getDesc_enc')->willReturn('Retiro');
 
         $horarioRepo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-        $horarioRepo->method('getEncargoSacdHorarios')->willReturn([$horario]);
+        $horarioRepo->method('matching')->willReturn([$horario]);
 
         $encargoRepo = $this->createMock(EncargoRepositoryInterface::class);
         $encargoRepo->method('findById')->with(7010)->willReturn($encargo);
@@ -176,7 +176,7 @@ final class ComunicarActividadesSacdServiceTest extends TestCase
 
         if ($horarioRepo === null) {
             $horarioRepo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-            $horarioRepo->method('getEncargoSacdHorarios')->willReturn([]);
+            $horarioRepo->method('matching')->willReturn([]);
         }
 
         $helper = new ActividadesSacdHelper(

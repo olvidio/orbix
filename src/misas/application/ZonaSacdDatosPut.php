@@ -2,7 +2,10 @@
 
 namespace src\misas\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 
 class ZonaSacdDatosPut
 {
@@ -17,8 +20,11 @@ class ZonaSacdDatosPut
      */
     public function execute(int $id_zona, int $id_sacd, array $dw): array
     {
-        $aWhere = ['id_zona' => $id_zona, 'id_nom' => $id_sacd];
-        $cZonaSacd = $this->zonaSacdRepository->getZonasSacds($aWhere);
+        $cZonaSacd = $this->zonaSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ZonaSacdField::IdZona, $id_zona))
+                ->andWhere(Filter::eq(ZonaSacdField::IdNom, $id_sacd))
+        );
         if (empty($cZonaSacd)) {
             return ['error' => _("No existe")];
         }

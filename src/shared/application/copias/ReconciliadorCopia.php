@@ -11,7 +11,9 @@ use src\shared\infrastructure\persistence\copias\ContextoCopia;
 use src\shared\infrastructure\persistence\copias\CopiaWriter;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\EsquemaPg;
+use src\shared\domain\criteria\Criteria;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
+use src\utils_database\domain\criteria\DbSchemaField;
 use Throwable;
 
 /**
@@ -276,7 +278,7 @@ abstract class ReconciliadorCopia
     protected function esquemasComun(string $soloEsquema): array
     {
         $esquemas = [];
-        foreach ($this->dbSchemaRepository->getDbSchemas(['_ordre' => 'schema']) as $dbSchema) {
+        foreach ($this->dbSchemaRepository->matching(Criteria::create()->orderBy(DbSchemaField::Schema)) as $dbSchema) {
             $schema = $dbSchema->getSchema();
             if (EsquemaPg::esEsquemaResto($schema) || EsquemaPg::esEsquemaRegionStgrComun($schema)) {
                 continue;

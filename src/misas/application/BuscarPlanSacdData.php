@@ -7,7 +7,10 @@ use src\misas\application\services\InicialesSacdService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaField;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 /**
@@ -48,7 +51,7 @@ class BuscarPlanSacdData
         /** @var array<string, string> $a_sacd */
         $a_sacd = [];
         $aRoles = $this->roleRepository->getArrayRoles();
-        $cZonas = $this->zonaRepository->getZonas(['id_nom' => $id_sacd]);
+        $cZonas = $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdNom, $id_sacd)));
 
         if (count($cZonas) > 0) {
             foreach ($cZonas as $oZona) {

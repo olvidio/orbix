@@ -37,14 +37,6 @@ interface ActaTribunalRepositoryInterface
     public function matching(Criteria $criteria): array;
 
     /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<\src\notas\domain\entity\ActaTribunal>
-     */
-    public function getActasTribunales(array $aWhere = [], array $aOperators = []): array;
-
-    /**
      * Autocomplete JSON de examinadores para actas recientes.
      */
     public function getJsonExaminadores(string $sQuery = ''): string;

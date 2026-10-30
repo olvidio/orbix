@@ -14,6 +14,9 @@ use src\misas\application\support\MisasBuildInput;
 
 use src\encargossacd\domain\EncargoConstants;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\domain\EncargosZona;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -210,14 +213,11 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
 
             $inicio_dia = $num_dia . ' 00:00:00';
             $fin_dia = $num_dia . ' 23:59:59';
-            $aWhere = [
-                'id_enc' => $id_enc,
-                'tstart' => "'$inicio_dia', '$fin_dia'",
-            ];
-            $aOperador = [
-                'tstart' => 'BETWEEN',
-            ];
-            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+            $cEncargosDia = $EncargoDiaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                    ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia, $fin_dia))
+            );
 
             if (count($cEncargosDia) > 1) {
                 throw new \RuntimeException(_("solo deberia haber uno"));

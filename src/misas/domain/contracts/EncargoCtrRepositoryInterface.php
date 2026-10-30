@@ -4,6 +4,7 @@ namespace src\misas\domain\contracts;
 
 use src\misas\domain\entity\EncargoCtr;
 use src\misas\domain\value_objects\EncargoCtrId;
+use src\shared\domain\criteria\Criteria;
 
 interface EncargoCtrRepositoryInterface
 {
@@ -18,11 +19,11 @@ interface EncargoCtrRepositoryInterface
     public function getCentrosEncargo(int $id_enc): array;
 
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * EncargoCtr que cumplen el criterio.
+     *
      * @return list<EncargoCtr>
      */
-    public function getEncargosCentros(array $aWhere = [], array $aOperators = []): array;
+    public function matching(Criteria $criteria): array;
 
     public function Eliminar(EncargoCtr $EncargoCtr): bool;
 

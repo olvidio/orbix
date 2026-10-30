@@ -4,7 +4,10 @@ namespace src\planning\application;
 
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 
 /**
  * Personas + actividades agrupadas por centro para `planning_ctr_select`.
@@ -40,9 +43,9 @@ final class PlanningCtrSelectData
         $cPersonas = [];
         if ($Qctr !== '') {
             $nom_ubi = str_replace('+', '\\+', $Qctr);
-            $aWhere = ['nombre_ubi' => '^' . $nom_ubi];
-            $aOperador = ['nombre_ubi' => 'sin_acentos'];
-            $cCentros = $this->centroDlRepository->getCentros($aWhere, $aOperador);
+            $cCentros = $this->centroDlRepository->matching(
+                Criteria::create()->where(Filter::matchesUnaccented(CentroDlField::NombreUbi, '^' . $nom_ubi))
+            );
             if (!empty($cCentros)) {
                 foreach ($cCentros as $oCentro) {
                     $id_ubi = $oCentro->getId_ubi();

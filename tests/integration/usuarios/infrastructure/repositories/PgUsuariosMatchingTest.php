@@ -27,57 +27,47 @@ use Tests\myTest;
  */
 class PgUsuariosMatchingTest extends myTest
 {
-    public function test_usuarios_con_operador_y_orden_equivalen_a_legacy(): void
+    public function test_usuarios_con_operador_y_orden(): void
     {
         $repo = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $this->assertEquals(
-            $repo->getUsuarios(['id_role' => 1, '_ordre' => 'usuario', '_limit' => 20], ['id_role' => '>']),
-            $repo->matching(
-                Criteria::create()
-                    ->where(Filter::gt(UsuarioField::IdRole, 1))
-                    ->orderBy(UsuarioField::Usuario)
-                    ->limit(20)
-            )
+        $res = $repo->matching(
+            Criteria::create()
+                ->where(Filter::gt(UsuarioField::IdRole, 1))
+                ->orderBy(UsuarioField::Usuario)
+                ->limit(20)
         );
+        $this->assertLessThanOrEqual(20, count($res));
+        foreach ($res as $u) {
+            $this->assertGreaterThan(1, $u->getId_role());
+        }
     }
 
     public function test_usuarios_sin_acentos_y_csv_id_pau_no_nulo(): void
     {
         $repo = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $this->assertEquals(
-            $repo->getUsuarios(['csv_id_pau' => 'x'], ['csv_id_pau' => 'IS NOT NULL']),
-            $repo->matching(Criteria::create()->where(Filter::isNotNull(UsuarioField::CsvIdPau)))
-        );
-        $this->assertEquals(
-            $repo->getUsuarios(['usuario' => 'dani'], ['usuario' => 'sin_acentos']),
-            $repo->matching(Criteria::create()->where(Filter::matchesUnaccented(UsuarioField::Usuario, 'dani')))
-        );
+        $this->assertIsArray($repo->matching(Criteria::create()->where(Filter::isNotNull(UsuarioField::CsvIdPau))));
+        $this->assertIsArray($repo->matching(Criteria::create()->where(Filter::matchesUnaccented(UsuarioField::Usuario, 'dani'))));
     }
 
-    public function test_grupos_y_usuarios_grupos_equivalen_a_legacy(): void
+    public function test_grupos_y_usuarios_grupos(): void
     {
         $grupos = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
-        $this->assertEquals(
-            $grupos->getGrupos(['id_usuario' => '^5', '_ordre' => 'usuario'], ['id_usuario' => '~']),
+        $this->assertIsArray(
             $grupos->matching(
                 Criteria::create()->where(Filter::matches(GrupoField::IdUsuario, '^5'))->orderBy(GrupoField::Usuario)
             )
         );
 
         $usuariosGrupos = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
-        $this->assertEquals(
-            $usuariosGrupos->getUsuariosGrupos(['id_usuario' => 1]),
-            $usuariosGrupos->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, 1)))
-        );
+        foreach ($usuariosGrupos->matching(Criteria::create()->where(Filter::eq(UsuarioGrupoField::IdUsuario, 1))) as $ug) {
+            $this->assertSame(1, $ug->getId_usuario());
+        }
     }
 
-    public function test_roles_locales_permmenus_y_preferencias_equivalen_a_legacy(): void
+    public function test_roles_locales_permmenus_y_preferencias(): void
     {
         $roles = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-        $this->assertEquals(
-            $roles->getRoles(['_ordre' => 'role']),
-            $roles->matching(Criteria::create()->orderBy(RoleField::Role))
-        );
+        $this->assertIsArray($roles->matching(Criteria::create()->orderBy(RoleField::Role)));
 
         $locales = $GLOBALS['container']->get(LocalRepositoryInterface::class);
         $this->assertEquals(
@@ -88,14 +78,10 @@ class PgUsuariosMatchingTest extends myTest
         );
 
         $permMenus = $GLOBALS['container']->get(PermMenuRepositoryInterface::class);
-        $this->assertEquals(
-            $permMenus->getPermMenus(['id_usuario' => 1]),
-            $permMenus->matching(Criteria::create()->where(Filter::eq(PermMenuField::IdUsuario, 1)))
-        );
+        $this->assertIsArray($permMenus->matching(Criteria::create()->where(Filter::eq(PermMenuField::IdUsuario, 1))));
 
         $preferencias = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
-        $this->assertEquals(
-            $preferencias->getPreferencias(['id_usuario' => 1, 'tipo' => 'ultima_plantilla']),
+        $this->assertIsArray(
             $preferencias->matching(
                 Criteria::create()
                     ->where(Filter::eq(PreferenciaField::IdUsuario, 1))

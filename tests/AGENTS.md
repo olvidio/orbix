@@ -14,7 +14,7 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 
 ## Resultados de búsqueda: colecciones vs objeto único
 
-- Métodos como **`getActividadesPlazas()`** están tipados como **`array|bool`**: devuelven **lista de entidades** (o `false` en error), no un solo objeto.
+- Métodos como **`matching()`** (p. ej. `ActividadPlazasRepositoryInterface::matching()`) devuelven **lista de entidades**, no un solo objeto.
 - El código de aplicación debe: tratar `false`, usar el **primer elemento** si hay filas, o **crear una entidad nueva** con las claves necesarias si la lista viene vacía; **nunca** asumir un objeto directo.
 
 ## `findById` y otros retornos `?Entidad` (repos no encuentran fila)

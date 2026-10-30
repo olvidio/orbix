@@ -7,10 +7,14 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\misas\application\support\EncargoDiaTimeHelper;
 use src\misas\application\support\PeriodoDateRange;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaField;
 
 /**
  * Datos para la vista `ver_plan_sacd.phtml`: plan de misas de un
@@ -40,7 +44,7 @@ class VerPlanSacdData
             return ['rows' => []];
         }
         $id_sacd_csv = $oMiUsuario->getCsvIdPauAsString();
-        $cZonas = $this->zonaRepository->getZonas(['id_nom' => $id_sacd_csv]);
+        $cZonas = $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdNom, $id_sacd_csv)));
         $jefe_zona = count($cZonas) > 0;
 
         $exp_id_sacd = explode('#', $id_sacd_key);
@@ -61,13 +65,12 @@ class VerPlanSacdData
             $dia = $a_dias_semana_breve[$dia_week] . ' ' . $date->format('j') . '.' . $date->format('n');
 
             $id_dia = $date->format('Y-m-d');
-            $aWhere = [
-                'id_nom' => $Qid_sacd,
-                'tstart' => "'$id_dia 00:00:00', '$id_dia 23:59:59'",
-                '_ordre' => 'tstart',
-            ];
-            $aOperador = ['tstart' => 'BETWEEN'];
-            $cEncargosDia = $this->encargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+            $cEncargosDia = $this->encargoDiaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoDiaField::IdNom, $Qid_sacd))
+                    ->andWhere(Filter::between(EncargoDiaField::Tstart, "$id_dia 00:00:00", "$id_dia 23:59:59"))
+                    ->orderBy(EncargoDiaField::Tstart)
+            );
 
             if (count($cEncargosDia) === 0) {
                 $rows[] = ['dia' => $dia, 'encargo' => '', 'observ' => ''];

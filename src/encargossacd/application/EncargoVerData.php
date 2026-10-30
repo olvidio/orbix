@@ -5,6 +5,9 @@ namespace src\encargossacd\application;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoTipoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -90,9 +93,8 @@ final class EncargoVerData
 
         $posibles_encargo_tipo = [];
         if ($grupo !== '') {
-            $cEncargoTipos = $this->encargoTipoRepository->getEncargoTipos(
-                ['id_tipo_enc' => '^' . $grupo],
-                ['id_tipo_enc' => '~'],
+            $cEncargoTipos = $this->encargoTipoRepository->matching(
+                Criteria::create()->where(Filter::matches(EncargoTipoField::IdTipoEnc, '^' . $grupo))
             );
             if ($cEncargoTipos !== []) {
                 foreach ($cEncargoTipos as $oEncargoTipo) {

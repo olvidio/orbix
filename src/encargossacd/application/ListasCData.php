@@ -8,13 +8,19 @@ use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
 use src\zonassacd\application\services\CentrosDeZona;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaField;
+use src\zonassacd\domain\criteria\ZonaGrupoField;
 
 /**
  * Genera el listado de atencion SACD "c" (cr 9/05, Anexo2, 9.4 c).
@@ -70,7 +76,7 @@ final class ListasCData
             $permiso_sf = 'si';
         }
 
-        $cZonasGrupos = $this->zonaGrupoRepository->getZonasGrupo(['_ordre' => 'orden']) ?: [];
+        $cZonasGrupos = $this->zonaGrupoRepository->matching(Criteria::create()->orderBy(ZonaGrupoField::Orden)) ?: [];
         $array_grupos = [];
         foreach ($cZonasGrupos as $oZonaGrupo) {
             $array_grupos[$oZonaGrupo->getId_grupo()] = $oZonaGrupo->getNombre_grupo();
@@ -80,7 +86,7 @@ final class ListasCData
 
         foreach ($cZonasGrupos as $oZonaGrupo) {
             $id_grupo = $oZonaGrupo->getId_grupo();
-            $cZonas = $this->zonaRepository->getZonas(['id_grupo' => $id_grupo]) ?: [];
+            $cZonas = $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdGrupo, $id_grupo))) ?: [];
             $a_sacd = [];
 
             foreach ($cZonas as $oZona) {
@@ -88,7 +94,9 @@ final class ListasCData
                 $idsZona = $this->centrosDeZona->idUbisDeZona((int) $id_zona);
                 $cCentrosDl = $idsZona === []
                     ? []
-                    : ($this->centroDlRepository->getCentros(['id_ubi' => $idsZona], ['id_ubi' => 'IN']) ?: []);
+                    : ($this->centroDlRepository->matching(
+                        Criteria::create()->where(Filter::in(CentroDlField::IdUbi, $idsZona))
+                    ));
                 foreach ($cCentrosDl as $oCentroDl) {
                     $id_ubi = $oCentroDl->getId_ubi();
                     $cPersonas = $this->personaDlRepository->getPersonas([
@@ -107,13 +115,12 @@ final class ListasCData
                         $sf_ctr = [];
                         $sf_cgi = [];
 
-                        $aWhereT = [
-                            'id_nom' => $id_nom,
-                            'f_fin' => 'null',
-                            '_ordre' => 'modo',
-                        ];
-                        $aOperadorT = ['f_fin' => 'IS NULL'];
-                        $cTareasSacd = $this->encargoSacdRepository->getEncargosSacd($aWhereT, $aOperadorT) ?: [];
+                        $cTareasSacd = $this->encargoSacdRepository->matching(
+                            Criteria::create()
+                                ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
+                                ->andWhere(Filter::isNull(EncargoSacdField::FFin))
+                                ->orderBy(EncargoSacdField::Modo)
+                        );
                         foreach ($cTareasSacd as $oTareaSacd) {
                             $modo = (int)$oTareaSacd->getModo();
                             $id_enc = $oTareaSacd->getId_enc();

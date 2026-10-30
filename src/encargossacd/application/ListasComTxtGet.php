@@ -3,6 +3,9 @@
 namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoTextoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 
 /**
@@ -24,10 +27,11 @@ final class ListasComTxtGet
      */
     public function execute(string $clave, string $idioma): array
     {
-        $cEncargoTextos = $this->encargoTextoRepository->getEncargoTextos([
-            'clave' => $clave,
-            'idioma' => $idioma,
-        ]);
+        $cEncargoTextos = $this->encargoTextoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoTextoField::Clave, $clave))
+                ->andWhere(Filter::eq(EncargoTextoField::Idioma, $idioma))
+        );
 
         $texto = '';
         if ($cEncargoTextos !== []) {

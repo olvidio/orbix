@@ -7,7 +7,6 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\notas\domain\criteria\ActaTribunalField;
 use src\notas\infrastructure\persistence\postgresql\traits\NotasCriteriaTrait;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\config\ConfigGlobal;
 use PDO;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
@@ -94,18 +93,6 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
     public function matching(Criteria $criteria): array
     {
         return array_map(ActaTribunal::fromArray(...), $this->filasNotasMatching($criteria, ActaTribunalField::class));
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ActaTribunal>
-     */
-    public function getActasTribunales(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ActaTribunalField::class, []);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

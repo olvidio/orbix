@@ -15,13 +15,6 @@ interface UbiGastoRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<UbiGasto>
-     */
-    public function getUbisGastos(array $aWhere = [], array $aOperators = []): array;
 
     public function getSumaGastos(int $id_ubi, int $tipo, DateTimeLocal $oInicio, DateTimeLocal $oFin): float;
 

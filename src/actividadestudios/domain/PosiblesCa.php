@@ -3,6 +3,9 @@
 namespace src\actividadestudios\domain;
 
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\criteria\PersonaNotaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\notas\domain\value_objects\NotaSituacion;
 
 /**
@@ -32,7 +35,7 @@ class PosiblesCa
         foreach ($aNotas as $id_situacion) {
             $aSuperadas[$id_situacion] = 't';
         }
-        $cPersonaNotas = $this->personaNotaRepository->getPersonaNotas(array('id_nom' => $id_nom));
+        $cPersonaNotas = $this->personaNotaRepository->matching(Criteria::create()->where(Filter::eq(PersonaNotaField::IdNom, $id_nom)));
         $num_opcionales = 0;
         $todas_asig_p = [];
         foreach ($cPersonaNotas as $oPersonaNota) {

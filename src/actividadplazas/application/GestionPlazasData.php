@@ -10,6 +10,7 @@ use src\actividadplazas\domain\criteria\ActividadPlazasField as F;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 use src\ubis\domain\entity\Ubi;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
@@ -112,7 +113,11 @@ final class GestionPlazasData
 
         $mi_reg = ConfigGlobal::mi_region();
         $mi_dl = ConfigGlobal::mi_delef();
-        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['region' => $mi_reg, 'dl' => $mi_dl]);
+        $cDelegaciones = $this->delegacionRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(DelegacionField::Region, $mi_reg))
+                ->andWhere(Filter::eq(DelegacionField::Dl, $mi_dl))
+        );
         if (empty($cDelegaciones)) {
             return [
                 'a_cabeceras' => [],
@@ -133,11 +138,13 @@ final class GestionPlazasData
         if ($grupo_estudios === null) {
             $cDelegaciones = [$oMiDelegacion];
         } else {
-            $cDelegaciones = $this->delegacionRepository->getDelegaciones([
-                'grupo_estudios' => $grupo_estudios,
-                'active' => true,
-                '_ordre' => 'region,dl',
-            ]);
+            $cDelegaciones = $this->delegacionRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(DelegacionField::GrupoEstudios, $grupo_estudios))
+                    ->andWhere(Filter::eq(DelegacionField::Active, true))
+                    ->orderBy(DelegacionField::Region)
+                    ->addOrderBy(DelegacionField::Dl)
+            );
         }
 
         // Actividades publicadas en el periodo, agrupadas por dl_org.

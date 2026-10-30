@@ -251,7 +251,7 @@ final class NotaPersonaFormData
     private function getProfesoresDl(): array
     {
         $repo = $this->rofesorStgrRepository;
-        $cProfesores = $repo->getProfesoresStgr();
+        $cProfesores = $repo->matching(\src\shared\domain\criteria\Criteria::create());
         $aProfesores = [];
         foreach ($cProfesores as $oProfesor) {
             $oPersona = Persona::findPersonaEnGlobal($oProfesor->getId_nom());

@@ -4,6 +4,7 @@ namespace Tests\integration\actividadessacd\infrastructure\persistence\postgresq
 
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
 use src\actividadessacd\domain\entity\ActividadSacdTexto;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\actividadessacd\ActividadSacdTextoFactory;
 
@@ -133,7 +134,7 @@ class PgActividadSacdTextoRepositoryTest extends myTest
 
     public function test_get_actividad_sacd_textos_sin_filtros()
     {
-        $result = $this->repository->getActividadSacdTextos();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

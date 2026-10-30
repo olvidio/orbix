@@ -3,15 +3,16 @@
 namespace src\encargossacd\domain\contracts;
 
 use src\encargossacd\domain\entity\EncargoSacdHorario;
+use src\shared\domain\criteria\Criteria;
 
 interface PropuestaEncargoSacdHorarioRepositoryInterface
 {
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * EncargoSacdHorario que cumplen el criterio.
+     *
      * @return list<EncargoSacdHorario>
      */
-    public function getEncargoSacdHorarios(array $aWhere = [], array $aOperators = []): array;
+    public function matching(Criteria $criteria): array;
 
     public function Guardar(EncargoSacdHorario $horario): bool;
 

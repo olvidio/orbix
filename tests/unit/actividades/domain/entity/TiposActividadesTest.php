@@ -55,11 +55,6 @@ final class TiposActividadesTest extends myTest
                 return [];
             }
 
-            public function getTiposDeActividades(array $aWhere = [], array $aOperators = []): array
-            {
-                return [];
-            }
-
             public function Eliminar(TipoDeActividad $TipoDeActividad): bool
             {
                 return true;

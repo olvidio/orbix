@@ -2,6 +2,7 @@
 
 namespace src\actividadessacd\application\services;
 
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\Criteria;
 use src\usuarios\domain\criteria\UsuarioField;
@@ -503,16 +504,12 @@ final class ComunicarActividadesSacdService
      */
     private function anadirAusenciasDelPeriodo(int $id_nom, array &$ord_activ): void
     {
-        $aWhereE = [
-            'id_nom' => $id_nom,
-            'f_ini' => $this->finIso,
-            'f_fin' => $this->inicioIso,
-        ];
-        $aOperadorE = [
-            'f_ini' => '<=',
-            'f_fin' => '>=',
-        ];
-        $cAusencias = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
+        $cAusencias = $this->encargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                ->andWhere(Filter::lte(EncargoSacdHorarioField::FIni, $this->finIso))
+                ->andWhere(Filter::gte(EncargoSacdHorarioField::FFin, $this->inicioIso))
+        );
         foreach ($cAusencias as $oTareaHorarioSacd) {
             if (!$oTareaHorarioSacd instanceof EncargoSacdHorario) {
                 continue;

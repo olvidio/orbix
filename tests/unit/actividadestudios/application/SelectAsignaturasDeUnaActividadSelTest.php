@@ -57,9 +57,9 @@ final class SelectAsignaturasDeUnaActividadSelTest extends TestCase
         $asigRepo->method('findById')->willReturn($asig);
 
         $schemaRepo = $this->createMock(DbSchemaRepositoryInterface::class);
-        $schemaRepo->method('getDbSchemas')->willReturnCallback(
-            function (array $where) {
-                $id = (int) ($where['id'] ?? 0);
+        $schemaRepo->method('matching')->willReturnCallback(
+            function (\src\shared\domain\criteria\Criteria $criteria) {
+                $id = (int) $criteria->filters()[0]->value;
                 $o = $this->createMock(DbSchema::class);
                 $o->method('getId')->willReturn($id);
                 $o->method('getSchema')->willReturn($id === 1001 ? 'H-dlbvv' : 'H-dlxxv');

@@ -4,6 +4,7 @@ namespace Tests\integration\casas\infrastructure\persistence\postgresql;
 
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\casas\domain\entity\GrupoCasa;
+use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use Tests\factories\casas\GrupoCasaFactory;
@@ -157,7 +158,7 @@ class PgGrupoCasaRepositoryTest extends myTest
 
     public function test_get_grupo_casas_sin_filtros()
     {
-        $result = $this->repository->getGrupoCasas();
+        $result = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

@@ -3,6 +3,7 @@
 namespace src\encargossacd\domain\contracts;
 
 use src\encargossacd\domain\entity\EncargoHorario;
+use src\shared\domain\criteria\Criteria;
 
 
 /**
@@ -20,13 +21,11 @@ interface EncargoHorarioRepositoryInterface
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo EncargoHorario
+     * EncargoHorario que cumplen el criterio.
      *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<EncargoHorario> Una colección de objetos de tipo EncargoHorario
+     * @return list<EncargoHorario>
      */
-    public function getEncargoHorarios(array $aWhere = [], array $aOperators = []): array;
+    public function matching(Criteria $criteria): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

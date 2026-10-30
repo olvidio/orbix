@@ -4,12 +4,16 @@ namespace src\actividadtarifas\application;
 
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\actividadtarifas\domain\criteria\RelacionTarifaTipoActividadField;
 use src\actividadtarifas\domain\value_objects\SerieId;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
+use src\ubis\domain\criteria\TarifaUbiField;
 
 /**
  * Data builder: listado de `TarifaUbi` por `id_ubi` + `year`.
@@ -47,11 +51,13 @@ final class TarifaUbiListaData
 
         $cTarifas = [];
         if ($id_ubi !== 0 && $year !== 0) {
-            $cTarifas = $this->tarifaUbiRepository->getTarifaUbis([
-                'id_ubi' => $id_ubi,
-                'year' => $year,
-                '_ordre' => 'year,id_tarifa',
-            ]);
+            $cTarifas = $this->tarifaUbiRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(TarifaUbiField::IdUbi, $id_ubi))
+                    ->andWhere(Filter::eq(TarifaUbiField::Year, $year))
+                    ->orderBy(TarifaUbiField::Year)
+                    ->addOrderBy(TarifaUbiField::IdTarifa)
+            );
         }
 
         $a_valores = [];
@@ -65,7 +71,9 @@ final class TarifaUbiListaData
 
             $cantidad_txt = "$cantidad " . _("€");
 
-            $cTipoActivTarifas = $this->relacionTarifaRepository->getTipoActivTarifas(['id_tarifa' => $id_tarifa]);
+            $cTipoActivTarifas = $this->relacionTarifaRepository->matching(
+                Criteria::create()->where(Filter::eq(RelacionTarifaTipoActividadField::IdTarifa, $id_tarifa))
+            );
             $aplicado_a = '';
             $t = 0;
             foreach ($cTipoActivTarifas as $oRelacion) {

@@ -22,7 +22,7 @@ class PgPasarelaConfigMatchingTest extends myTest
         $this->repository = $GLOBALS['container']->get(PasarelaConfigRepositoryInterface::class);
     }
 
-    public function test_matching_por_nombre_equivale_a_legacy_y_decodifica_el_json(): void
+    public function test_matching_por_nombre_y_decodifica_el_json(): void
     {
         $oConfig = (new PasarelaConfigFactory())->createSimple();
         $nombre = $oConfig->getNom_parametro();
@@ -30,11 +30,9 @@ class PgPasarelaConfigMatchingTest extends myTest
 
         $criteria = Criteria::create()->where(Filter::eq(PasarelaConfigField::NomParametro, $nombre));
         $nuevo = $this->repository->matching($criteria);
-        $legacy = $this->repository->getPasarelaConfigs(['nom_parametro' => $nombre]);
 
         $this->assertCount(1, $nuevo);
         $this->assertSame(['valor' => 'test'], $nuevo[0]->getJson_valor(true));
-        $this->assertEquals($legacy, $nuevo);
 
         $this->repository->Eliminar($nuevo[0]);
         $this->assertSame([], $this->repository->matching($criteria));

@@ -178,9 +178,12 @@ if ($miRole < 4) { // es administrador
 
         if (ConfigGlobal::is_app_installed('procesos')) {
             $PermUsuarioActividadRepository = DependencyResolver::get(PermUsuarioActividadRepositoryInterface::class);
-            $aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt'];
-            $aOperador = [];
-            $cUsuarioPerm = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere, $aOperador);
+            $cUsuarioPerm = $PermUsuarioActividadRepository->matching(
+                \src\shared\domain\criteria\Criteria::create()
+                    ->where(\src\shared\domain\criteria\Filter::eq(\src\procesos\domain\criteria\PermUsuarioActividadField::IdUsuario, (int) $Qid_usuario))
+                    ->orderBy(\src\procesos\domain\criteria\PermUsuarioActividadField::DlPropia, \src\shared\domain\criteria\OrderDirection::Desc)
+                    ->addOrderBy(\src\procesos\domain\criteria\PermUsuarioActividadField::IdTipoActivTxt)
+            );
         }
         }
         }

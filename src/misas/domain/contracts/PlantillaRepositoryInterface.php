@@ -3,15 +3,16 @@
 namespace src\misas\domain\contracts;
 
 use src\misas\domain\entity\Plantilla;
+use src\shared\domain\criteria\Criteria;
 
 interface PlantillaRepositoryInterface
 {
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * Plantilla que cumplen el criterio.
+     *
      * @return list<Plantilla>
      */
-    public function getPlantillas(array $aWhere = [], array $aOperators = []): array;
+    public function matching(Criteria $criteria): array;
 
     public function Eliminar(Plantilla $Plantilla): bool;
 

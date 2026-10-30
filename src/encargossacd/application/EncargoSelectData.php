@@ -7,6 +7,7 @@ use src\shared\domain\criteria\Criteria;
 use src\usuarios\domain\criteria\LocalField;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use src\shared\security\HashB;
@@ -46,17 +47,15 @@ final class EncargoSelectData
         $oAplicacion = $this->aplicacionService;
         $a_seccion = $oAplicacion->getArraySeccion();
 
-        $aWhere = ['_ordre' => 'desc_enc'];
-        $aOperador = [];
+        $criteria = Criteria::create()->orderBy(EncargoField::DescEnc);
         if ($desc_enc !== '') {
-            $aWhere['desc_enc'] = $desc_enc;
-            $aOperador['desc_enc'] = 'sin_acentos';
+            $criteria = $criteria->andWhere(Filter::matchesUnaccented(EncargoField::DescEnc, $desc_enc));
         }
         if ($id_tipo_enc !== 0) {
-            $aWhere['id_tipo_enc'] = $id_tipo_enc;
+            $criteria = $criteria->andWhere(Filter::eq(EncargoField::IdTipoEnc, $id_tipo_enc));
         }
 
-        $cEncargos = $this->encargoRepository->getEncargos($aWhere, $aOperador);
+        $cEncargos = $this->encargoRepository->matching($criteria);
 
         $filas = [];
         $idiomaCache = [];

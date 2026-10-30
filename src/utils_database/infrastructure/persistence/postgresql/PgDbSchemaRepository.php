@@ -5,7 +5,6 @@ namespace src\utils_database\infrastructure\persistence\postgresql;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\utils_database\domain\criteria\DbSchemaField;
@@ -109,20 +108,6 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
             $dbSchemas[] = DbSchema::fromArray($aDatos);
         }
         return $dbSchemas;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo DbSchema
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<DbSchema>
-     */
-    public function getDbSchemas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(DbSchemaField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

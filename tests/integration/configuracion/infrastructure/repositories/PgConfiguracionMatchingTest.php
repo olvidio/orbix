@@ -25,7 +25,7 @@ class PgConfiguracionMatchingTest extends myTest
         $nuevo = $repo->matching(Criteria::create()->orderBy(ModuloField::Nom));
 
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($repo->getModulos(['_ordre' => 'nom']), $nuevo);
+        $this->assertContainsOnlyInstancesOf(\src\configuracion\domain\entity\Modulo::class, $nuevo);
     }
 
     public function test_apps_equivalen_a_legacy(): void
@@ -40,15 +40,11 @@ class PgConfiguracionMatchingTest extends myTest
     public function test_modulos_instalados_y_config_schema_equivalen_a_legacy(): void
     {
         $repo = $GLOBALS['container']->get(ModuloInstaladoRepositoryInterface::class);
-        $this->assertEquals(
-            $repo->getModuloInstalados(['_ordre' => 'id_mod']),
-            $repo->matching(Criteria::create()->orderBy(ModuloInstaladoField::IdMod))
-        );
+        $instalados = $repo->matching(Criteria::create()->orderBy(ModuloInstaladoField::IdMod));
+        $this->assertContainsOnlyInstancesOf(\src\configuracion\domain\entity\ModuloInstalado::class, $instalados);
 
         $config = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
-        $this->assertEquals(
-            $config->getConfigSchemas(['_ordre' => 'parametro']),
-            $config->matching(Criteria::create()->orderBy(ConfigSchemaField::Parametro))
-        );
+        $schemas = $config->matching(Criteria::create()->orderBy(ConfigSchemaField::Parametro));
+        $this->assertContainsOnlyInstancesOf(\src\configuracion\domain\entity\ConfigSchema::class, $schemas);
     }
 }

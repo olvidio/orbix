@@ -5,9 +5,13 @@ namespace Tests\unit\planning\application;
 use PHPUnit\Framework\TestCase;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\planning\application\ActividadesPorCasasService;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\Operator;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CasaField;
 use src\ubis\domain\entity\Casa;
 
 /**
@@ -37,7 +41,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
     public function test_sin_casas_devuelve_lista_vacia_con_linea_en_blanco_final(): void
     {
         $casaRepo = $this->createMock(CasaDlRepositoryInterface::class);
-        $casaRepo->method('getCasas')->willReturn([]);
+        $casaRepo->method('matching')->willReturn([]);
 
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
         $actividadRepo->expects($this->never())->method('actividadesDeUnaCasa');
@@ -62,9 +66,9 @@ final class ActividadesPorCasasServiceTest extends TestCase
     {
         $capturado = null;
         $casaRepo = $this->createMock(CasaDlRepositoryInterface::class);
-        $casaRepo->method('getCasas')
-            ->willReturnCallback(function (array $where, array $op) use (&$capturado) {
-                $capturado = ['where' => $where, 'op' => $op];
+        $casaRepo->method('matching')
+            ->willReturnCallback(function (Criteria $criterio) use (&$capturado) {
+                $capturado = $criterio;
                 return [];
             });
 
@@ -79,18 +83,29 @@ final class ActividadesPorCasasServiceTest extends TestCase
             $this->fecha('2030/1/1'),
         );
 
-        $this->assertSame('t', $capturado['where']['sv']);
-        $this->assertSame('t', $capturado['where']['sf']);
-        $this->assertSame('nombre_ubi', $capturado['where']['_ordre']);
+        $this->assertTrue($this->filtroDe($capturado, CasaField::Sv)->value);
+        $this->assertTrue($this->filtroDe($capturado, CasaField::Sf)->value);
+        $this->assertSame(CasaField::NombreUbi, $capturado->orders()[0]->field);
+    }
+
+    private function filtroDe(Criteria $criterio, CasaField $campo): ?Filter
+    {
+        foreach ($criterio->filters() as $filtro) {
+            if ($filtro instanceof Filter && $filtro->field === $campo) {
+                return $filtro;
+            }
+        }
+
+        return null;
     }
 
     public function test_qcdc_sel_3_aplica_filtro_tipo_casa_cdc_cdr(): void
     {
         $capturado = null;
         $casaRepo = $this->createMock(CasaDlRepositoryInterface::class);
-        $casaRepo->method('getCasas')
-            ->willReturnCallback(function (array $where, array $op) use (&$capturado) {
-                $capturado = ['where' => $where, 'op' => $op];
+        $casaRepo->method('matching')
+            ->willReturnCallback(function (Criteria $criterio) use (&$capturado) {
+                $capturado = $criterio;
                 return [];
             });
 
@@ -105,9 +120,10 @@ final class ActividadesPorCasasServiceTest extends TestCase
             $this->fecha('2030/1/1'),
         );
 
-        $this->assertSame('cdcdl', $capturado['where']['tipo_ubi']);
-        $this->assertSame('cdc|cdr', $capturado['where']['tipo_casa']);
-        $this->assertSame('~', $capturado['op']['tipo_casa']);
+        $this->assertSame('cdcdl', $this->filtroDe($capturado, CasaField::TipoUbi)->value);
+        $tipoCasa = $this->filtroDe($capturado, CasaField::TipoCasa);
+        $this->assertSame('cdc|cdr', $tipoCasa->value);
+        $this->assertSame(Operator::Matches, $tipoCasa->operator);
     }
 
     public function test_qcdc_sel_6_agrega_centros_ellas_despues_de_casas(): void
@@ -116,10 +132,10 @@ final class ActividadesPorCasasServiceTest extends TestCase
         $oCentro = $this->crearCasaStub(20, 'BetaCentro');
 
         $casaRepo = $this->createMock(CasaDlRepositoryInterface::class);
-        $casaRepo->method('getCasas')->willReturn([$oCasa]);
+        $casaRepo->method('matching')->willReturn([$oCasa]);
 
         $centroRepo = $this->createMock(CentroEllasRepositoryInterface::class);
-        $centroRepo->method('getCentros')->willReturn([$oCentro]);
+        $centroRepo->method('matching')->willReturn([$oCentro]);
 
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
         $actividadRepo->method('actividadesDeUnaCasa')->willReturn([['nom_curt' => 'A']]);
@@ -141,9 +157,9 @@ final class ActividadesPorCasasServiceTest extends TestCase
     {
         $capturado = null;
         $casaRepo = $this->createMock(CasaDlRepositoryInterface::class);
-        $casaRepo->method('getCasas')
-            ->willReturnCallback(function (array $where, array $op) use (&$capturado) {
-                $capturado = ['where' => $where, 'op' => $op];
+        $casaRepo->method('matching')
+            ->willReturnCallback(function (Criteria $criterio) use (&$capturado) {
+                $capturado = $criterio;
                 return [];
             });
 
@@ -160,8 +176,9 @@ final class ActividadesPorCasasServiceTest extends TestCase
         );
 
         $this->assertSame('11,22,33', $sCdc);
-        $this->assertSame('11,22,33', $capturado['where']['id_ubi']);
-        $this->assertSame('IN', $capturado['op']['id_ubi']);
+        $idUbi = $this->filtroDe($capturado, CasaField::IdUbi);
+        $this->assertSame([11, 22, 33], $idUbi->value);
+        $this->assertSame(Operator::In, $idUbi->operator);
     }
 
     public function test_qcdc_sel_9_sin_ids_no_anade_clausula_id_ubi(): void
@@ -169,9 +186,9 @@ final class ActividadesPorCasasServiceTest extends TestCase
         $_POST = [];
         $capturado = null;
         $casaRepo = $this->createMock(CasaDlRepositoryInterface::class);
-        $casaRepo->method('getCasas')
-            ->willReturnCallback(function (array $where, array $op) use (&$capturado) {
-                $capturado = ['where' => $where, 'op' => $op];
+        $casaRepo->method('matching')
+            ->willReturnCallback(function (Criteria $criterio) use (&$capturado) {
+                $capturado = $criterio;
                 return [];
             });
 
@@ -188,7 +205,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
         );
 
         $this->assertSame('', $sCdc);
-        $this->assertArrayNotHasKey('id_ubi', $capturado['where']);
+        $this->assertNull($this->filtroDe($capturado, CasaField::IdUbi));
     }
 
     public function test_casa_con_array_vacio_se_incluye_con_lista_vacia(): void
@@ -199,7 +216,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
         $oCasa = $this->crearCasaStub(10, 'CasaSinActiv');
 
         $casaRepo = $this->createMock(CasaDlRepositoryInterface::class);
-        $casaRepo->method('getCasas')->willReturn([$oCasa]);
+        $casaRepo->method('matching')->willReturn([$oCasa]);
 
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
         $actividadRepo->method('actividadesDeUnaCasa')->willReturn([]);
@@ -225,7 +242,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
         $oCasaB = $this->crearCasaStub(2, 'Alfa');
 
         $casaRepo = $this->createMock(CasaDlRepositoryInterface::class);
-        $casaRepo->method('getCasas')->willReturn([$oCasaA, $oCasaB]);
+        $casaRepo->method('matching')->willReturn([$oCasaA, $oCasaB]);
 
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
         $actividadRepo->method('actividadesDeUnaCasa')

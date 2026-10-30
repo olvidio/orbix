@@ -12,7 +12,7 @@ final class ListaCentrosActivDatosTest extends TestCase
     public function test_sin_centros_solo_estilo(): void
     {
         $centroDl = $this->createMock(CentroDlRepositoryInterface::class);
-        $centroDl->method('getCentros')->willReturn([]);
+        $centroDl->method('matching')->willReturn([]);
 
         $encRepo = $this->createMock(CentroEncargadoRepositoryInterface::class);
 

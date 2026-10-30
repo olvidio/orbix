@@ -5,7 +5,11 @@ namespace src\shared\infrastructure\persistence\postgresql;
 use PDO;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\DependencyResolver;
+use src\ubis\domain\criteria\CasaField;
+use src\ubis\domain\criteria\CentroExField;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConfigDB;
@@ -718,15 +722,13 @@ class DBTrasvase extends DBAbstract
         switch ($que) {
             case 'resto2dl':
                 $this->configurarMapIdRepository($MapIdRepository);
-                if ($tipoUbicacion === 'cr') { //no hay delegaciones.
-                    $aWhere = ['dl' => '', 'region' => $region];
-                    $aOperador = ['dl' => 'IS NULL'];
-                } else {
-                    $aWhere = ['dl' => $dl, 'region' => $region];
-                    $aOperador = [];
-                }
+                $criterio = Criteria::create()->where(
+                    $tipoUbicacion === 'cr' //no hay delegaciones.
+                        ? Filter::isNull(CasaField::Dl)
+                        : Filter::eq(CasaField::Dl, $dl)
+                )->andWhere(Filter::eq(CasaField::Region, $region));
                 $CasaExRepository = DependencyResolver::get(CasaExRepositoryInterface::class);
-                $cCasasEx = $CasaExRepository->getCasas($aWhere, $aOperador);
+                $cCasasEx = $CasaExRepository->matching($criterio);
                 $CasaDlRepository = DependencyResolver::get(CasaDlRepositoryInterface::class);
                 $RelacionCasaDlDireccion = DependencyResolver::get(RelacionCasaDlDireccionRepositoryInterface::class);
                 $RelacionCasaExDireccion = DependencyResolver::get(RelacionCasaExDireccionRepositoryInterface::class);
@@ -865,15 +867,13 @@ class DBTrasvase extends DBAbstract
         switch ($que) {
             case 'resto2dl':
                 $this->configurarMapIdRepository($MapIdRepository);
-                if ($tipoUbicacion === 'cr') { //no hay delegaciones.
-                    $aWhere = ['dl' => '', 'region' => $region];
-                    $aOperador = ['dl' => 'IS NULL'];
-                } else {
-                    $aWhere = ['dl' => $dl, 'region' => $region];
-                    $aOperador = [];
-                }
+                $criterio = Criteria::create()->where(
+                    $tipoUbicacion === 'cr' //no hay delegaciones.
+                        ? Filter::isNull(CentroExField::Dl)
+                        : Filter::eq(CentroExField::Dl, $dl)
+                )->andWhere(Filter::eq(CentroExField::Region, $region));
                 $CentroExRepository = DependencyResolver::get(CentroExRepositoryInterface::class);
-                $cCentroEx = $CentroExRepository->getCentros($aWhere, $aOperador);
+                $cCentroEx = $CentroExRepository->matching($criterio);
                 $CentroDlRepository = DependencyResolver::get(CentroDlRepositoryInterface::class);
                 $CentroEllasRepository = DependencyResolver::get(CentroEllasRepositoryInterface::class);
                 $CentroEllosRepository = DependencyResolver::get(CentroEllosRepositoryInterface::class);

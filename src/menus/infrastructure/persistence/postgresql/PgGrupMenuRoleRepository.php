@@ -9,7 +9,6 @@ use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\criteria\GrupMenuRoleField;
 use src\menus\domain\entity\GrupMenuRole;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\RunsCriteriaQueries;
@@ -56,20 +55,6 @@ class PgGrupMenuRoleRepository extends ClaseRepository implements GrupMenuRoleRe
         }
 
         return $items;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo GrupMenuRole
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<GrupMenuRole> Una colección de objetos de tipo GrupMenuRole
-     */
-    public function getGrupMenuRoles(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(GrupMenuRoleField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

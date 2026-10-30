@@ -9,7 +9,6 @@ use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\actividadtarifas\domain\criteria\RelacionTarifaTipoActividadField;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\postgresql\Set;
@@ -39,18 +38,6 @@ class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements
     {
         $conv = new PgCriteriaConverter(RelacionTarifaTipoActividadField::class, self::COLUMNAS);
         return array_map(RelacionTarifaTipoActividad::fromArray(...), $this->rowsMatching($criteria, $conv));
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<RelacionTarifaTipoActividad>
-     */
-    public function getTipoActivTarifas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(RelacionTarifaTipoActividadField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function Eliminar(RelacionTarifaTipoActividad $RelacionTarifaTipoActividad): bool

@@ -3,6 +3,9 @@
 namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoTextoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use src\shared\security\HashB;
 
@@ -29,10 +32,11 @@ final class ListasComTxtData
     {
         $a_locales = self::normalizeStringKeys($this->localRepository->getArrayLocales());
 
-        $cEncargoTextos = $this->encargoTextoRepository->getEncargoTextos([
-            'clave' => 'com_sacd',
-            'idioma' => 'es',
-        ]);
+        $cEncargoTextos = $this->encargoTextoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoTextoField::Clave, 'com_sacd'))
+                ->andWhere(Filter::eq(EncargoTextoField::Idioma, 'es'))
+        );
         $texto_inicial = '';
         if ($cEncargoTextos !== []) {
             $texto_inicial = (string) $cEncargoTextos[0]->getTexto();

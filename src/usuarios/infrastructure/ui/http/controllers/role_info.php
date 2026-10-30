@@ -6,6 +6,9 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuRoleField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
@@ -66,7 +69,7 @@ if (!empty($Qid_role)) {
     $txt_sfsv = empty($txt_sfsv) ? '' : "($txt_sfsv)";
     //////////////////// grupmenu de role ////////////////////////////////
     $GrupMenuRoleRepository = DependencyResolver::get(GrupMenuRoleRepositoryInterface::class);
-    $cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $Qid_role));
+    $cGMR = $GrupMenuRoleRepository->matching(Criteria::create()->where(Filter::eq(GrupMenuRoleField::IdRole, (int)$Qid_role)));
 
     $i = 0;
     $a_cabeceras = [['name' => _("grupo de menus"), 'width' => '350']];

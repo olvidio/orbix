@@ -7,12 +7,15 @@ use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\value_objects\IncCode;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 
 /**
@@ -192,7 +195,9 @@ final class PersonasEditarData
         }
 
         // Opciones: delegaciones (PersonaEx: solo las que no tienen esquema Orbix).
-        $cDeleg = $this->delegacionRepository->getDelegaciones(['active' => true, '_ordre' => 'dl']);
+        $cDeleg = $this->delegacionRepository->matching(
+            Criteria::create()->where(Filter::eq(DelegacionField::Active, true))->orderBy(DelegacionField::Dl)
+        );
         $a_dl_todas = [];
         foreach ($cDeleg as $oDeleg) {
             $dl_sigla = (string)$oDeleg->getDlVo()->value();

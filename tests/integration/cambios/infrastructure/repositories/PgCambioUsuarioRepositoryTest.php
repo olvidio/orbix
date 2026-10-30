@@ -133,7 +133,7 @@ class PgCambioUsuarioRepositoryTest extends myTest
 
     public function test_get_cambios_usuario_sin_filtros()
     {
-        $result = $this->repository->getCambiosUsuario();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

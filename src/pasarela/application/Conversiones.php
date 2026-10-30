@@ -3,7 +3,9 @@
 namespace src\pasarela\application;
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\criteria\TipoDeActividadField;
 use src\actividades\domain\entity\TipoDeActividad;
+use src\shared\domain\criteria\Criteria;
 use src\actividades\domain\entity\TiposActividades;
 use src\pasarela\domain\Activacion;
 use src\pasarela\domain\ContribucionNoDuerme;
@@ -235,8 +237,9 @@ class Conversiones
     private function getcTiposDeActividades(): array
     {
         if ($this->c_tipos_activ === []) {
-            $aWhere = ['_ordre' => 'id_tipo_activ'];
-            $this->c_tipos_activ = $this->tipoDeActividadRepository->getTiposDeActividades($aWhere);
+            $this->c_tipos_activ = $this->tipoDeActividadRepository->matching(
+                Criteria::create()->orderBy(TipoDeActividadField::IdTipoActiv)
+            );
         }
 
         return $this->c_tipos_activ;

@@ -97,7 +97,7 @@ final class CuadriculaUpdateStatusTest extends TestCase
     {
         $repo = $this->createMock(EncargoDiaRepositoryInterface::class);
         $repo->method('findById')->willReturn($existente);
-        $repo->method('getEncargoDias')->willReturn([]);
+        $repo->method('matching')->willReturn([]);
         $repo->method('Guardar')->willReturnCallback(function (EncargoDia $encargo) use (&$saved): bool {
             $saved = $encargo;
 
@@ -110,13 +110,13 @@ final class CuadriculaUpdateStatusTest extends TestCase
     private function useCase(EncargoDiaRepositoryInterface $encargoDiaRepository): CuadriculaUpdate
     {
         $zona = $this->createMock(ZonaSacdRepositoryInterface::class);
-        $zona->method('getZonasSacds')->willReturn([]);
+        $zona->method('matching')->willReturn([]);
 
         $cargos = $this->createMock(ActividadCargoRepositoryInterface::class);
         $cargos->method('getAsistenteCargoDeActividad')->willReturn([]);
 
         $horarios = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
-        $horarios->method('getEncargoSacdHorarios')->willReturn([]);
+        $horarios->method('matching')->willReturn([]);
 
         return new CuadriculaUpdate(
             $encargoDiaRepository,

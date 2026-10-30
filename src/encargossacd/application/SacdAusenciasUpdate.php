@@ -4,7 +4,10 @@ namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
 use src\encargossacd\domain\entity\EncargoSacd;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\shared\domain\value_objects\DateTimeLocal;
 
@@ -82,11 +85,12 @@ final class SacdAusenciasUpdate
                 . $this->encargoSacdRepository->getErrorTxt() . "\n";
         }
 
-        $cHorario = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios([
-            'id_enc' => $id_enc,
-            'id_nom' => $id_nom,
-            'id_item_tarea_sacd' => $id_item,
-        ]);
+        $cHorario = $this->encargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdEnc, $id_enc))
+                ->andWhere(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                ->andWhere(Filter::eq(EncargoSacdHorarioField::IdItemTareaSacd, $id_item))
+        );
         foreach ($cHorario as $oHorario) {
             $oHorario->setF_ini($this->toDate($f_ini));
             $oHorario->setF_fin($this->toDate($f_fin));

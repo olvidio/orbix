@@ -7,6 +7,8 @@ use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
+use src\ubis\domain\criteria\CentroEllasField;
+use src\ubis\domain\criteria\CentroEllosField;
 use src\zonassacd\application\services\CentrosDeZona;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
@@ -42,13 +44,16 @@ class VerEncargosCentrosData
         $rows = [];
         $centros_zona = [];
         if (!empty($id_zona)) {
-            $filtro = CentrosDeZona::whereActivosIn($this->centrosDeZona->idUbisDeZona($id_zona));
+            $idUbis = $this->centrosDeZona->idUbisDeZona($id_zona);
             $cCentros = [];
-            if ($filtro !== null) {
-                [$aWhere, $aOperador] = $filtro;
+            if ($idUbis !== []) {
                 $cCentros = array_merge(
-                    $this->centroEllosRepository->getCentros($aWhere, $aOperador),
-                    $this->centroEllasRepository->getCentros($aWhere, $aOperador),
+                    $this->centroEllosRepository->matching(
+                        CentrosDeZona::criterioActivosIn($idUbis, CentroEllosField::class)
+                    ),
+                    $this->centroEllasRepository->matching(
+                        CentrosDeZona::criterioActivosIn($idUbis, CentroEllasField::class)
+                    ),
                 );
             }
 

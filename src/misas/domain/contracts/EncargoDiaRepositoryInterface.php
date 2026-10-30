@@ -4,15 +4,16 @@ namespace src\misas\domain\contracts;
 
 use src\misas\domain\entity\EncargoDia;
 use src\misas\domain\value_objects\EncargoDiaId;
+use src\shared\domain\criteria\Criteria;
 
 interface EncargoDiaRepositoryInterface
 {
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * EncargoDia que cumplen el criterio.
+     *
      * @return list<EncargoDia>
      */
-    public function getEncargoDias(array $aWhere = [], array $aOperators = []): array;
+    public function matching(Criteria $criteria): array;
 
     public function Eliminar(EncargoDia $EncargoDia): bool;
 

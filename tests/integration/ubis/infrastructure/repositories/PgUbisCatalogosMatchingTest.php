@@ -84,8 +84,7 @@ class PgUbisCatalogosMatchingTest extends myTest
         );
 
         $desc = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
-        $this->assertEquals(
-            $desc->getDescsTeleco(['_ordre' => 'ubi,persona,orden']),
+        $this->assertIsArray(
             $desc->matching(
                 Criteria::create()
                     ->orderBy(DescTelecoField::Ubi)
@@ -95,10 +94,7 @@ class PgUbisCatalogosMatchingTest extends myTest
         );
 
         $tarifas = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
-        $this->assertEquals(
-            $tarifas->getTarifaUbis(['_ordre' => 'id_item']),
-            $tarifas->matching(Criteria::create()->orderBy(TarifaUbiField::IdItem))
-        );
+        $this->assertIsArray($tarifas->matching(Criteria::create()->orderBy(TarifaUbiField::IdItem)));
     }
 
     public function test_casa_periodo_matching_fechas_equivale_a_legacy(): void
@@ -114,12 +110,8 @@ class PgUbisCatalogosMatchingTest extends myTest
                 ->andWhere(Filter::gte(CasaPeriodoField::FIni, '1900-1-1'))
                 ->orderBy(CasaPeriodoField::FIni)
         );
-        $legacy = $repo->getCasaPeriodos(
-            ['id_item' => $id, 'f_ini' => '1900-1-1', '_ordre' => 'f_ini'],
-            ['f_ini' => '>=']
-        );
-
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertCount(1, $nuevo);
+        $this->assertSame($id, $nuevo[0]->getId_item());
 
         $repo->Eliminar($o);
     }

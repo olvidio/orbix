@@ -4,7 +4,10 @@ namespace src\actividadplazas\application;
 
 use src\actividades\domain\entity\TiposActividades;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 
 /**
  * Opciones del desplegable de delegaciones + `id_tipo_activ` resuelto para
@@ -53,10 +56,9 @@ final class PlazasBalanceQueData
      */
     private function delegacionesActivasOrdenNombre(): array
     {
-        $delegaciones = $this->delegacionRepository->getDelegaciones([
-            'active' => true,
-            '_ordre' => 'nombre_dl',
-        ]);
+        $delegaciones = $this->delegacionRepository->matching(
+            Criteria::create()->where(Filter::eq(DelegacionField::Active, true))->orderBy(DelegacionField::NombreDl)
+        );
 
         $opciones = [];
         foreach ($delegaciones as $dl) {

@@ -12,14 +12,6 @@ interface IdMatchPersonaRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<IdMatchPersona>
-     */
-    public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(IdMatchPersona $IdMatchPersona): bool;
 
     public function Guardar(IdMatchPersona $IdMatchPersona): bool;

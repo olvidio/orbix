@@ -4,10 +4,12 @@ namespace src\actividadtarifas\application;
 
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\actividadtarifas\domain\criteria\RelacionTarifaTipoActividadField;
 use src\actividadtarifas\domain\value_objects\TarifaModoId;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
 
 /**
  * Data builder: listado de relaciones `TipoTarifa` ↔ tipo de actividad.
@@ -32,9 +34,9 @@ final class RelacionTarifaListaData
         $miSfsv = ConfigGlobal::mi_sfsv();
         $a_modos_tarifa = TarifaModoId::getArrayModo();
 
-        $cRelaciones = $this->relacionTarifaRepository->getTipoActivTarifas([
-            '_ordre' => 'substring(id_tipo_activ::text,1)',
-        ]);
+        $cRelaciones = $this->relacionTarifaRepository->matching(
+            Criteria::create()->orderBy(RelacionTarifaTipoActividadField::IdTipoActiv)
+        );
 
         $a_valores = [];
         $i = 0;

@@ -4,6 +4,10 @@ namespace src\misas\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoTipoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\helpers\OpcionesDesplegable;
 
 class DesplegableEncargosData
@@ -24,9 +28,8 @@ class DesplegableEncargosData
     public function getData(int $id_zona, ?int $id_enc_sel = null): array
     {
         
-        $cEncargoTipos = $this->encargoTipoRepository->getEncargoTipos(
-            ['id_tipo_enc' => '^8...'],
-            ['id_tipo_enc' => '~'],
+        $cEncargoTipos = $this->encargoTipoRepository->matching(
+            Criteria::create()->where(Filter::matches(EncargoTipoField::IdTipoEnc, '^8...'))
         );
         $a_tipo_enc = [];
         foreach ($cEncargoTipos as $oEncargoTipo) {
@@ -45,13 +48,10 @@ class DesplegableEncargosData
         }
 
         if (!empty($a_tipo_enc)) {
-            $cond_tipo_enc = '{' . implode(', ', $a_tipo_enc) . '}';
-            $cEncargos = $this->encargoRepository->getEncargos(
-                [
-                    'id_tipo_enc' => $cond_tipo_enc,
-                    'id_zona' => $id_zona,
-                ],
-                ['id_tipo_enc' => 'ANY'],
+            $cEncargos = $this->encargoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::in(EncargoField::IdTipoEnc, $a_tipo_enc))
+                    ->andWhere(Filter::eq(EncargoField::IdZona, $id_zona))
             );
             foreach ($cEncargos as $oEncargo) {
                 $opciones[(string)$oEncargo->getId_enc()] = (string) ($oEncargo->getDesc_enc() ?? '');

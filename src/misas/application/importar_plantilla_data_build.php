@@ -12,6 +12,10 @@ use src\misas\application\support\MisasBuildInput;
 use Ramsey\Uuid\Uuid as RamseyUuid;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoTipoField;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\domain\EncargosZona;
 use src\misas\domain\entity\EncargoDia;
 use src\misas\domain\value_objects\EncargoDiaId;
@@ -116,11 +120,9 @@ function misas_importar_plantilla_build(array $in, \src\misas\application\Import
     $EncargoTipoRepository = $self->getEncargoTipoRepository();
 
     $grupo = '8...';
-    $aWhere = [];
-    $aOperador = [];
-    $aWhere['id_tipo_enc'] = '^' . $grupo;
-    $aOperador['id_tipo_enc'] = '~';
-    $cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
+    $cEncargoTipos = $EncargoTipoRepository->matching(
+        Criteria::create()->where(Filter::matches(EncargoTipoField::IdTipoEnc, '^' . $grupo))
+    );
 
     $a_tipo_enc = [];
     foreach ($cEncargoTipos as $oEncargoTipo) {
@@ -140,16 +142,12 @@ function misas_importar_plantilla_build(array $in, \src\misas\application\Import
     foreach ($cEncargosZona as $oEncargo) {
         $id_enc = $oEncargo->getId_enc();
 
-        $aWhere = [
-            'id_enc' => $id_enc,
-            'tstart' => "'$sInicio_iso', '$sFin_iso'",
-        ];
-        $aOperador = [
-            'tstart' => 'BETWEEN',
-        ];
-
         // Borro los encargos de la zona ya asignados en ese periodo
-        $cEncargosaBorrar = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+        $cEncargosaBorrar = $EncargoDiaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                ->andWhere(Filter::between(EncargoDiaField::Tstart, $sInicio_iso, $sFin_iso))
+        );
         foreach ($cEncargosaBorrar as $oEncargoaBorrar) {
             $EncargoDiaRepository->Eliminar($oEncargoaBorrar);
         }
@@ -223,14 +221,11 @@ function misas_importar_plantilla_build(array $in, \src\misas\application\Import
             $fin_dia_plantilla = $oDiaOrigen->format('Y-m-d') . ' 23:59:59';
             $id_enc = $oEncargo->getId_enc();
 
-            $aWhere = [
-                'id_enc' => $id_enc,
-                'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
-            ];
-            $aOperador = [
-                'tstart' => 'BETWEEN',
-            ];
-            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+            $cEncargosDia = $EncargoDiaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                    ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia_plantilla, $fin_dia_plantilla))
+            );
             if (count($cEncargosDia) > 1) {
                 throw new \RuntimeException(_("solo deberia haber uno"));
             }
@@ -263,14 +258,11 @@ function misas_importar_plantilla_build(array $in, \src\misas\application\Import
                 $inicio_dia_plantilla = $oDiaOrigen2->format('Y-m-d') . ' 00:00:00';
                 $fin_dia_plantilla = $oDiaOrigen2->format('Y-m-d') . ' 23:59:59';
 
-                $aWhere = [
-                    'id_enc' => $id_enc,
-                    'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
-                ];
-                $aOperador = [
-                    'tstart' => 'BETWEEN',
-                ];
-                $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $EncargoDiaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia_plantilla, $fin_dia_plantilla))
+                );
                 if (count($cEncargosDia) > 1) {
                     throw new \RuntimeException(_("solo deberia haber uno"));
                 }
@@ -303,14 +295,11 @@ function misas_importar_plantilla_build(array $in, \src\misas\application\Import
                 $inicio_dia_plantilla = $oDiaOrigen3->format('Y-m-d') . ' 00:00:00';
                 $fin_dia_plantilla = $oDiaOrigen3->format('Y-m-d') . ' 23:59:59';
 
-                $aWhere = [
-                    'id_enc' => $id_enc,
-                    'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
-                ];
-                $aOperador = [
-                    'tstart' => 'BETWEEN',
-                ];
-                $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $EncargoDiaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia_plantilla, $fin_dia_plantilla))
+                );
                 if (count($cEncargosDia) > 1) {
                     throw new \RuntimeException(_("solo deberia haber uno"));
                 }

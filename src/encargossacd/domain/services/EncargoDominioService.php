@@ -5,6 +5,9 @@ namespace src\encargossacd\domain\services;
 use PDO;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\EncargoConstants;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\GlobalPdo;
 
 class EncargoDominioService
@@ -39,9 +42,12 @@ class EncargoDominioService
 
     public function dedicacion_horas(int $id_nom, int $id_enc): int|false
     {
-        $aWhere = ['id_enc' => $id_enc, 'id_nom' => $id_nom, 'f_fin' => 'x'];
-        $aOperador = ['f_fin' => 'IS NULL'];
-        $cEncargoSacdHorario = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhere, $aOperador);
+        $cEncargoSacdHorario = $this->encargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdEnc, $id_enc))
+                ->andWhere(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                ->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin))
+        );
         if ($cEncargoSacdHorario === []) {
             return false;
         }

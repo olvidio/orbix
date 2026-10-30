@@ -49,7 +49,7 @@ final class SacdAsignarAutoTest extends TestCase
         $ce->setNum_orden(0);
 
         $centroEncRepo = $this->createMock(CentroEncargadoRepositoryInterface::class);
-        $centroEncRepo->method('getCentrosEncargados')->willReturn([$ce]);
+        $centroEncRepo->method('matching')->willReturn([$ce]);
 
         $oEnc = new Encargo();
         $oEnc->setId_enc(11);
@@ -60,10 +60,10 @@ final class SacdAsignarAutoTest extends TestCase
         $oEncSacd->setId_nom(777);
 
         $encargoRepo = $this->createMock(EncargoRepositoryInterface::class);
-        $encargoRepo->method('getEncargos')->willReturn([$oEnc]);
+        $encargoRepo->method('matching')->willReturn([$oEnc]);
 
         $encargoSacdRepo = $this->createMock(EncargoSacdRepositoryInterface::class);
-        $encargoSacdRepo->method('getEncargosSacd')->willReturn([$oEncSacd]);
+        $encargoSacdRepo->method('matching')->willReturn([$oEncSacd]);
 
         $out = (new \src\actividadessacd\application\SacdAsignarAuto($actividadRepo, $cargoRepo, $activCargoRepo, $centroEncRepo, $encargoSacdRepo, $encargoRepo))->execute(['f_ini_iso' => '2026-01-01']);
         $this->assertSame(['asignadas' => 1, 'sin_asignar' => 0], $out);

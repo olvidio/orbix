@@ -50,11 +50,11 @@ final class VerEncargosZonaDataTest extends TestCase
         $encargo->method('getObserv')->willReturn('');
 
         $encargoTipoRepository = $this->createMock(EncargoTipoRepositoryInterface::class);
-        $encargoTipoRepository->method('getEncargoTipos')->willReturn([$encargoTipo]);
+        $encargoTipoRepository->method('matching')->willReturn([$encargoTipo]);
         $encargoTipoRepository->method('findById')->with(8100)->willReturn($encargoTipo);
 
         $encargoRepository = $this->createMock(EncargoRepositoryInterface::class);
-        $encargoRepository->method('getEncargos')->willReturn([$encargo]);
+        $encargoRepository->method('matching')->willReturn([$encargo]);
 
         $useCase = $this->makeUseCase([], $encargoTipoRepository, $encargoRepository);
         $out = $useCase->getData(9, 'orden');
@@ -87,10 +87,10 @@ final class VerEncargosZonaDataTest extends TestCase
         $localRepository->method('getArrayLocales')->willReturn([]);
 
         $centroEllosRepository = $this->createMock(CentroEllosRepositoryInterface::class);
-        $centroEllosRepository->method('getCentros')->willReturn([]);
+        $centroEllosRepository->method('matching')->willReturn([]);
 
         $centroEllasRepository = $this->createMock(CentroEllasRepositoryInterface::class);
-        $centroEllasRepository->method('getCentros')->willReturn([]);
+        $centroEllasRepository->method('matching')->willReturn([]);
 
         $zonaCtrRepository = $this->createMock(ZonaCtrRepositoryInterface::class);
         $zonaCtrRepository->method('idUbisDeZona')->willReturn($idUbisDeZona);

@@ -7,9 +7,12 @@ namespace src\notas\application\support;
 use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\PersonaPublicacion;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 
 /**
  * Opciones de sigla DL para el formulario notas de persona (acta / certificado).
@@ -250,8 +253,8 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
         $database = $sfsv === 2 ? 'sf' : 'sv';
         $oConfigDB = new ConfigDB($database);
 
-        $delegaciones = $this->delegacionRepository->getDelegaciones(
-            ['active' => true, '_ordre' => 'dl'],
+        $delegaciones = $this->delegacionRepository->matching(
+            Criteria::create()->where(Filter::eq(DelegacionField::Active, true))->orderBy(DelegacionField::Dl),
         );
 
         $out = [];

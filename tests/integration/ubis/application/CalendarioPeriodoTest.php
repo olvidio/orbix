@@ -44,7 +44,10 @@ class CalendarioPeriodoTest extends myTest
         $msg = $GLOBALS['container']->get(CalendarioPeriodoGuardar::class)->execute(0, $idUbi, $fIni, $fFin, 1);
         $this->assertSame('', $msg);
 
-        $arr = $this->repository->getCasaPeriodos(['id_ubi' => $idUbi]);
+        $arr = $this->repository->matching(
+            \src\shared\domain\criteria\Criteria::create()
+                ->where(\src\shared\domain\criteria\Filter::eq(\src\ubis\domain\criteria\CasaPeriodoField::IdUbi, $idUbi))
+        );
         $this->assertNotEmpty($arr, 'No se creó ningún periodo nuevo');
 
         foreach ($arr as $o) {

@@ -7,11 +7,17 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroEllasField;
 
 /**
  * Genera el listado de atencion SACD "a" (cr 9/05, Anexo2, 9.4 a).
@@ -79,17 +85,20 @@ final class ListasAData
                 $Html .= "<div class=salta_pag><table><tr><td class=grupo colspan=2>$txt_tipo_ctr</td></tr>";
             }
 
-            $aWhere = [
-                'active' => 't',
-                'tipo_ctr' => "^$tipo_ctr_que",
-                '_ordre' => 'nombre_ubi',
-            ];
-            $aOperador = ['tipo_ctr' => '~'];
-
             if ($sf === 1) {
-                $cCentros = $this->centroEllasRepository->getCentros($aWhere, $aOperador) ?: [];
+                $cCentros = $this->centroEllasRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(CentroEllasField::Active, true))
+                        ->andWhere(Filter::matches(CentroEllasField::TipoCtr, "^$tipo_ctr_que"))
+                        ->orderBy(CentroEllasField::NombreUbi)
+                );
             } else {
-                $cCentros = $this->centroDlRepository->getCentros($aWhere, $aOperador) ?: [];
+                $cCentros = $this->centroDlRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(CentroDlField::Active, true))
+                        ->andWhere(Filter::matches(CentroDlField::TipoCtr, "^$tipo_ctr_que"))
+                        ->orderBy(CentroDlField::NombreUbi)
+                );
             }
 
             foreach ($cCentros as $oCentro) {
@@ -100,18 +109,21 @@ final class ListasAData
                 $nombre_ubi = $oCentro->getNombre_ubi();
                 $tipo_ctr = $oCentro->getTipo_ctr();
 
-                $cEncargos = $this->encargoRepository->getEncargos(
-                    ['id_ubi' => $id_ubi, 'id_tipo_enc' => '1[0123]0.'],
-                    ['id_tipo_enc' => '~'],
-                ) ?: [];
+                $cEncargos = $this->encargoRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoField::IdUbi, $id_ubi))
+                        ->andWhere(Filter::matches(EncargoField::IdTipoEnc, '1[0123]0.'))
+                );
                 foreach ($cEncargos as $oEncargo) {
                     $id_enc = $oEncargo->getId_enc();
                     $id_tipo_enc = (string)$oEncargo->getId_tipo_enc();
 
-                    $cEncargoSacd = $this->encargoSacdRepository->getEncargosSacd(
-                        ['id_enc' => $id_enc, 'f_fin' => 'null', '_ordre' => 'modo'],
-                        ['f_fin' => 'IS NULL'],
-                    ) ?: [];
+                    $cEncargoSacd = $this->encargoSacdRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                            ->andWhere(Filter::isNull(EncargoSacdField::FFin))
+                            ->orderBy(EncargoSacdField::Modo)
+                    );
                     foreach ($cEncargoSacd as $oEncargoSacd) {
                         $modo = $oEncargoSacd->getModo();
                         $id_nom = $oEncargoSacd->getId_nom();

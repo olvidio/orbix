@@ -78,19 +78,9 @@ class PgCertificadoEmitidoMatchingTest extends myTest
             ->orderBy(CertificadoEmitidoField::FCertificado, OrderDirection::Desc)
             ->addOrderBy(CertificadoEmitidoField::Certificado, OrderDirection::Desc);
         $nuevo = $this->repository->matching($criteria);
-        $legacy = $this->repository->getCertificados(
-            [
-                'id_item' => $idItem,
-                'f_certificado' => "'2023-01-01','2024-12-31'",
-                'f_enviado' => 'x',
-                '_ordre' => 'f_certificado DESC, certificado DESC',
-            ],
-            ['f_certificado' => 'BETWEEN', 'f_enviado' => 'IS NOT NULL']
-        );
 
         $this->assertCount(1, $nuevo);
         $this->assertSame('2024-01-01', $nuevo[0]->getF_certificado()->getIso());
-        $this->assertEquals($legacy, $nuevo);
 
         $sinEnviar = $this->repository->matching(
             Criteria::create()

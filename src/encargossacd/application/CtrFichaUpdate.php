@@ -6,8 +6,11 @@ use src\encargossacd\application\traits\EncargoFunciones;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\encargossacd\domain\entity\Encargo;
 use src\encargossacd\domain\value_objects\EncargoGrupo;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -306,9 +309,11 @@ final class CtrFichaUpdate
             $oEncargoFunciones->modificar_horario_ctr($id_enc, 'v', $dedic_ctr_v, $n_sacd);
         }
 
-        $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(
-            ['id_enc' => $id_enc, 'modo' => '5', 'f_fin' => 'x'],
-            ['f_fin' => 'IS NULL'],
+        $cEncargosSacd = $this->encargoSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                ->andWhere(Filter::eq(EncargoSacdField::Modo, 5))
+                ->andWhere(Filter::isNull(EncargoSacdField::FFin))
         );
         foreach ($cEncargosSacd as $oEncargoSacd) {
             $oEncargoSacd->setF_fin($oF_fin);
@@ -326,13 +331,11 @@ final class CtrFichaUpdate
                     $oEncargoFunciones->insert_sacd($id_enc, $sacd_id, 5);
                 }
             } else {
-                $cTitular = $this->encargoSacdRepository->getEncargosSacd(
-                    [
-                        'id_enc' => $id_enc,
-                        'modo' => '(2|3)',
-                        'f_fin' => 'x',
-                    ],
-                    ['f_fin' => 'IS NULL', 'modo' => '~'],
+                $cTitular = $this->encargoSacdRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                        ->andWhere(Filter::matches(EncargoSacdField::Modo, '(2|3)'))
+                        ->andWhere(Filter::isNull(EncargoSacdField::FFin))
                 );
                 $actual_id_sacd_titular = 0;
                 $actual_modo = 0;
@@ -351,12 +354,13 @@ final class CtrFichaUpdate
                         $oEncargoFunciones->finalizar_sacd($id_enc, $actual_id_sacd_titular, $actual_modo, $oF_fin);
                     }
                 } elseif ($actual_modo !== $modo && $oActualTitular !== null) {
-                    $cExistente = $this->encargoSacdRepository->getEncargosSacd([
-                        'id_enc' => $id_enc,
-                        'id_nom' => $actual_id_sacd_titular,
-                        'modo' => $modo,
-                        'f_ini' => $oF_ini->getIso(),
-                    ]);
+                    $cExistente = $this->encargoSacdRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                            ->andWhere(Filter::eq(EncargoSacdField::IdNom, $actual_id_sacd_titular))
+                            ->andWhere(Filter::eq(EncargoSacdField::Modo, $modo))
+                            ->andWhere(Filter::eq(EncargoSacdField::FIni, $oF_ini->getIso()))
+                    );
                     foreach ($cExistente as $oEx) {
                         if ($this->encargoSacdRepository->Eliminar($oEx) === false) {
                             return ['error' => _("hay un error, no se ha eliminado") . "\n" . $this->encargoSacdRepository->getErrorTxt()];
@@ -372,14 +376,12 @@ final class CtrFichaUpdate
 
             $sacd_id = $this->arrayIntAt($Aid_sacd, $i);
             if ($sacd_id !== 0) {
-                $cItem = $this->encargoSacdRepository->getEncargosSacd(
-                    [
-                        'id_nom' => $sacd_id,
-                        'id_enc' => $id_enc,
-                        'modo' => '(2|3|5)',
-                        'f_fin' => 'x',
-                    ],
-                    ['f_fin' => 'IS NULL', 'modo' => '~'],
+                $cItem = $this->encargoSacdRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoSacdField::IdNom, $sacd_id))
+                        ->andWhere(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                        ->andWhere(Filter::matches(EncargoSacdField::Modo, '(2|3|5)'))
+                        ->andWhere(Filter::isNull(EncargoSacdField::FFin))
                 );
                 $id_item_t_sacd = 0;
                 foreach ($cItem as $oIt) {
@@ -393,9 +395,11 @@ final class CtrFichaUpdate
         }
 
         if ($id_sacd_suplente !== 0) {
-            $cSupl = $this->encargoSacdRepository->getEncargosSacd(
-                ['id_enc' => $id_enc, 'modo' => '4', 'f_fin' => 'x'],
-                ['f_fin' => 'IS NULL'],
+            $cSupl = $this->encargoSacdRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                    ->andWhere(Filter::eq(EncargoSacdField::Modo, 4))
+                    ->andWhere(Filter::isNull(EncargoSacdField::FFin))
             );
             if ($cSupl === []) {
                 $oEncargoFunciones->insert_sacd($id_enc, $id_sacd_suplente, 4);
@@ -412,7 +416,11 @@ final class CtrFichaUpdate
                 }
             }
         } else {
-            $cSupl = $this->encargoSacdRepository->getEncargosSacd(['id_enc' => $id_enc, 'modo' => 4]);
+            $cSupl = $this->encargoSacdRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                    ->andWhere(Filter::eq(EncargoSacdField::Modo, 4))
+            );
             foreach ($cSupl as $oS) {
                 $oS->setF_fin($oF_fin);
                 if ($this->encargoSacdRepository->Guardar($oS) === false) {

@@ -22,25 +22,26 @@ class PgIdMatchPersonaMatchingTest extends myTest
         $this->repository = $GLOBALS['container']->get(IdMatchPersonaRepositoryInterface::class);
     }
 
-    public function test_matching_ordenado_equivale_a_legacy(): void
+    public function test_matching_ordenado_y_limitado(): void
     {
-        $this->assertEquals(
-            $this->repository->getIdMatchPersonas(['_ordre' => 'id_listas', '_limit' => 20]),
-            $this->repository->matching(Criteria::create()->orderBy(IdMatchPersonaField::IdListas)->limit(20))
-        );
+        $res = $this->repository->matching(Criteria::create()->orderBy(IdMatchPersonaField::IdListas)->limit(20));
+        $this->assertLessThanOrEqual(20, count($res));
+        $ids = array_map(fn($o) => $o->getId_listas(), $res);
+        $ordenados = $ids;
+        sort($ordenados);
+        $this->assertSame($ordenados, $ids);
     }
 
-    public function test_matching_por_id_listas_equivale_a_legacy(): void
+    public function test_matching_por_id_listas(): void
     {
         $todos = $this->repository->matching(Criteria::create()->orderBy(IdMatchPersonaField::IdListas)->limit(1));
         if ($todos === []) {
-            $this->assertSame([], $this->repository->getIdMatchPersonas(['id_listas' => 0]));
+            $this->assertSame([], $this->repository->matching(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdListas, 0))));
             return;
         }
         $id = $todos[0]->getId_listas();
-        $this->assertEquals(
-            $this->repository->getIdMatchPersonas(['id_listas' => $id]),
-            $this->repository->matching(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdListas, $id)))
-        );
+        $res = $this->repository->matching(Criteria::create()->where(Filter::eq(IdMatchPersonaField::IdListas, $id)));
+        $this->assertCount(1, $res);
+        $this->assertSame($id, $res[0]->getId_listas());
     }
 }

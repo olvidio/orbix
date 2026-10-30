@@ -20,14 +20,6 @@ interface ActividadAsignaturaRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ActividadAsignatura>
-     */
-    public function getActividadAsignaturas(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(ActividadAsignatura $ActividadAsignatura): bool;
 
     public function Guardar(ActividadAsignatura $ActividadAsignatura): bool;

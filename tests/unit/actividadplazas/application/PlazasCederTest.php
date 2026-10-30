@@ -53,7 +53,7 @@ final class PlazasCederTest extends TestCase
         $deleg->setDl('dl');
 
         $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegRepo->method('getDelegaciones')->with(['dl' => 'dl'])->willReturn([$deleg]);
+        $delegRepo->method('matching')->willReturn([$deleg]);
 
         $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
         $plazasDlRepo->method('matching')->willReturn([]);
@@ -75,7 +75,7 @@ final class PlazasCederTest extends TestCase
         $deleg->setDl('dl');
 
         $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegRepo->method('getDelegaciones')->willReturn([$deleg]);
+        $delegRepo->method('matching')->willReturn([$deleg]);
 
         $oPlazas = $this->createMock(ActividadPlazas::class);
         $oPlazas->method('getArrayCedidas')->willReturn(['dlx' => 3]);
@@ -101,7 +101,7 @@ final class PlazasCederTest extends TestCase
         $deleg->setDl('dl');
 
         $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegRepo->method('getDelegaciones')->willReturn([$deleg]);
+        $delegRepo->method('matching')->willReturn([$deleg]);
 
         $oPlazas = $this->createMock(ActividadPlazas::class);
         $oPlazas->method('getArrayCedidas')->willReturn([]);
@@ -130,7 +130,7 @@ final class PlazasCederTest extends TestCase
         $deleg->setDl('dl');
 
         $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegRepo->method('getDelegaciones')->willReturn([$deleg]);
+        $delegRepo->method('matching')->willReturn([$deleg]);
 
         $oPlazas = $this->createMock(ActividadPlazas::class);
         $oPlazas->method('getArrayCedidas')->willReturn(['dlx' => 1]);
@@ -159,7 +159,7 @@ final class PlazasCederTest extends TestCase
         $deleg->setDl('dl');
 
         $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegRepo->method('getDelegaciones')->willReturn([$deleg]);
+        $delegRepo->method('matching')->willReturn([$deleg]);
 
         $oPlazas = $this->createMock(ActividadPlazas::class);
         $oPlazas->method('getArrayCedidas')->willReturn(['dlx' => 1]);
@@ -189,7 +189,7 @@ final class PlazasCederTest extends TestCase
         $deleg->setDl('dl');
 
         $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegRepo->method('getDelegaciones')->willReturn([$deleg]);
+        $delegRepo->method('matching')->willReturn([$deleg]);
 
         $oPlazas = $this->createMock(ActividadPlazas::class);
         $oPlazas->method('getArrayCedidas')->willReturn([]);
@@ -224,7 +224,7 @@ final class PlazasCederTest extends TestCase
         $deleg->setDl('dl');
 
         $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegRepo->method('getDelegaciones')->willReturn([$deleg]);
+        $delegRepo->method('matching')->willReturn([$deleg]);
 
         $oPlazas = $this->createMock(ActividadPlazas::class);
         $oPlazas->method('getArrayCedidas')->willReturn([]);

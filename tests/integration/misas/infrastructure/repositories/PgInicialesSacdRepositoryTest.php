@@ -133,7 +133,7 @@ class PgInicialesSacdRepositoryTest extends myTest
 
     public function test_get_iniciales_sacd_sin_filtros()
     {
-        $result = $this->repository->getInicialesSacd();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

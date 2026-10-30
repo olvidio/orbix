@@ -117,7 +117,7 @@ class PgPlazaPeticionRepositoryTest extends myTest
 
     public function test_get_plazas_peticion_sin_filtros()
     {
-        $result = $this->repository->getPlazasPeticion();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

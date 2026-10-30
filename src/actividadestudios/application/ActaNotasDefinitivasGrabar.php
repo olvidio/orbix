@@ -21,6 +21,8 @@ use src\notas\application\support\NivelCatalogoAsignaturaEnPlan;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\criteria\ActaField;
+use src\notas\domain\criteria\PersonaNotaField;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaSituacion;
@@ -85,11 +87,12 @@ final class ActaNotasDefinitivasGrabar
         $error = '';
         $msg_err = '';
 
-        $cActas = $this->actaRepository->getActas([
-            'id_activ' => $Qid_activ,
-            'id_asignatura' => $Qid_asignatura,
-            'id_schema' => $idSchema,
-        ]);
+        $cActas = $this->actaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ActaField::IdActiv, $Qid_activ))
+                ->andWhere(Filter::eq(ActaField::IdAsignatura, $Qid_asignatura))
+                ->andWhere(Filter::eq(ActaField::IdSchema, $idSchema))
+        );
         $oActividad = $this->actividadAllRepository->findById($Qid_activ);
         if ($oActividad === null) {
             return ['success' => false, 'mensaje' => _("no encuentro la actividad")];
@@ -185,7 +188,9 @@ final class ActaNotasDefinitivasGrabar
 
             if (HuecoOpcionalDePlan::esOpcionalConcreta($Qid_asignatura)) {
                 $notasNivel = [];
-                foreach ($this->personaNotaRepository->getPersonaNotas(['id_nom' => $id_nom]) as $oPersonaNota1) {
+                foreach ($this->personaNotaRepository->matching(
+                    Criteria::create()->where(Filter::eq(PersonaNotaField::IdNom, $id_nom))
+                ) as $oPersonaNota1) {
                     $notasNivel[] = [
                         'id_asignatura' => (int) $oPersonaNota1->getId_asignatura(),
                         'id_nivel' => (int) $oPersonaNota1->getIdNivelVo()->value(),
@@ -203,7 +208,11 @@ final class ActaNotasDefinitivasGrabar
                 $id_nivel = $this->nivelCatalogoAsignaturaEnPlan->resolve($id_nom, $Qid_asignatura);
             }
 
-            $cBuscarPersonaNotas = $this->personaNotaRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $Qid_asignatura]);
+            $cBuscarPersonaNotas = $this->personaNotaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PersonaNotaField::IdNom, $id_nom))
+                    ->andWhere(Filter::eq(PersonaNotaField::IdAsignatura, $Qid_asignatura))
+            );
             $oPersonaNotaAnterior = null;
             $id_activ_old = 0;
             if (!empty($cBuscarPersonaNotas)) {

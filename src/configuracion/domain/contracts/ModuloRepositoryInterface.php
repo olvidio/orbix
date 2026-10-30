@@ -34,15 +34,6 @@ interface ModuloRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * devuelve una colección (array) de objetos de tipo Modulo
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Modulo> Una colección de objetos de tipo Modulo
-     */
-    public function getModulos(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

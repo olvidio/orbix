@@ -6,8 +6,10 @@ use PHPUnit\Framework\TestCase;
 use src\actividadestudios\application\CaPosiblesQueData;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\Delegacion;
 
@@ -35,7 +37,7 @@ final class CaPosiblesQueDataTest extends TestCase
     public function test_sin_delegacion_mi_dl_centros_vacios(): void
     {
         $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegRepo->method('getDelegaciones')->willReturn([]);
+        $delegRepo->method('matching')->willReturn([]);
 
         $personaN = $this->createMock(PersonaNRepositoryInterface::class);
         $personaN->method('getArrayIdCentros')->willReturn([]);
@@ -67,10 +69,9 @@ final class CaPosiblesQueDataTest extends TestCase
         $d2->setGrupoEstudiosVo('G1');
 
         $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $delegRepo->method('getDelegaciones')->willReturnMap([
-            [['dl' => 'dl'], [], [$d1]],
-            [['grupo_estudios' => 'G1'], [], [$d1, $d2]],
-        ]);
+        $delegRepo->method('matching')->willReturnCallback(
+            static fn (Criteria $c): array => $c->filters()[0]->field === DelegacionField::Dl ? [$d1] : [$d1, $d2]
+        );
 
         $personaN = $this->createMock(PersonaNRepositoryInterface::class);
         $personaN->method('getArrayIdCentros')->willReturn([10]);

@@ -33,18 +33,19 @@ use Tests\myTest;
  */
 class PgProfesoresMatchingTest extends myTest
 {
-    public function test_profesor_stgr_con_cese_nulo_equivale_a_legacy(): void
+    public function test_profesor_stgr_con_cese_nulo(): void
     {
         $repo = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-        $this->assertEquals(
-            $repo->getProfesoresStgr(['f_cese' => '', '_ordre' => 'f_nombramiento DESC', '_limit' => 30], ['f_cese' => 'IS NULL']),
-            $repo->matching(
-                Criteria::create()
-                    ->where(Filter::isNull(ProfesorStgrField::FCese))
-                    ->orderBy(ProfesorStgrField::FNombramiento, OrderDirection::Desc)
-                    ->limit(30)
-            )
+        $result = $repo->matching(
+            Criteria::create()
+                ->where(Filter::isNull(ProfesorStgrField::FCese))
+                ->orderBy(ProfesorStgrField::FNombramiento, OrderDirection::Desc)
+                ->limit(30)
         );
+        $this->assertLessThanOrEqual(30, count($result));
+        foreach ($result as $profesor) {
+            $this->assertNull($profesor->getF_cese());
+        }
     }
 
     public function test_directores_ampliaciones_y_congresos_equivalen_a_legacy(): void

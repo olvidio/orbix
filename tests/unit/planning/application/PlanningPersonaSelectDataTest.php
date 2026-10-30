@@ -68,7 +68,7 @@ final class PlanningPersonaSelectDataTest extends TestCase
         $repoDl->expects($this->never())->method('getPersonas');
 
         $repoCentro = $this->createMock(CentroDlRepositoryInterface::class);
-        $repoCentro->method('getCentros')->willReturn([$centro]);
+        $repoCentro->method('matching')->willReturn([$centro]);
 
         $useCase = $this->createUseCase(personaDl: $repoDl, personaN: $repoN, centroDl: $repoCentro);
         $out = $useCase->execute([

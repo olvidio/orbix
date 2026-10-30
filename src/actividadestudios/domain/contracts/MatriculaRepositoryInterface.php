@@ -20,14 +20,6 @@ interface MatriculaRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Matricula>
-     */
-    public function getMatriculas(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(Matricula $Matricula): bool;
 
     public function Guardar(Matricula $Matricula): bool;

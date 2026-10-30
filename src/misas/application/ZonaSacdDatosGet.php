@@ -3,7 +3,10 @@
 namespace src\misas\application;
 
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 
 class ZonaSacdDatosGet
 {
@@ -21,8 +24,11 @@ class ZonaSacdDatosGet
         $error_txt = '';
         $payload = [];
 
-        $aWhere = ['id_zona' => $id_zona, 'id_nom' => $id_sacd];
-        $cZonaSacd = $this->zonaSacdRepository->getZonasSacds($aWhere);
+        $cZonaSacd = $this->zonaSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ZonaSacdField::IdZona, $id_zona))
+                ->andWhere(Filter::eq(ZonaSacdField::IdNom, $id_sacd))
+        );
         if (empty($cZonaSacd)) {
             $error_txt = _("No existe");
         } else {

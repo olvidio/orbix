@@ -2,7 +2,10 @@
 
 namespace Tests\unit\usuarios\infrastructure\persistence\postgresql;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\criteria\RoleField;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\RoleName;
 use src\usuarios\domain\value_objects\PauType;
@@ -194,7 +197,7 @@ class PgRoleRepositoryTest extends myTest
 
     public function test_get_roles_sin_filtros()
     {
-        $cRoles = $this->repository->getRoles();
+        $cRoles = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($cRoles);
         $this->assertNotEmpty($cRoles);
@@ -218,7 +221,7 @@ class PgRoleRepositoryTest extends myTest
         $this->repository->Guardar($oRole);
 
         // Buscar con filtro
-        $cRoles = $this->repository->getRoles(['id_role' => $id_role]);
+        $cRoles = $this->repository->matching(Criteria::create()->where(Filter::eq(RoleField::IdRole, $id_role)));
 
         $this->assertIsArray($cRoles);
         $this->assertCount(1, $cRoles);

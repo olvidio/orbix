@@ -22,23 +22,29 @@ class PgActividadSacdTextoMatchingTest extends myTest
         $this->repository = $GLOBALS['container']->get(ActividadSacdTextoRepositoryInterface::class);
     }
 
-    public function test_matching_ordenado_equivale_a_legacy(): void
+    public function test_matching_ordenado_por_id_item(): void
     {
-        $this->assertEquals(
-            $this->repository->getActividadSacdTextos(['_ordre' => 'id_item']),
+        $ids = array_map(
+            fn ($o) => $o->getId_item(),
             $this->repository->matching(Criteria::create()->orderBy(ActividadSacdTextoField::IdItem))
         );
+        $ordenados = $ids;
+        sort($ordenados);
+
+        $this->assertSame($ordenados, $ids);
     }
 
-    public function test_matching_por_clave_e_idioma_equivale_a_legacy(): void
+    public function test_matching_por_clave_e_idioma(): void
     {
-        $this->assertEquals(
-            $this->repository->getActividadSacdTextos(['clave' => 'com_sacd', 'idioma' => 'es_ES.UTF-8']),
-            $this->repository->matching(
-                Criteria::create()
-                    ->where(Filter::eq(ActividadSacdTextoField::Clave, 'com_sacd'))
-                    ->andWhere(Filter::eq(ActividadSacdTextoField::Idioma, 'es_ES.UTF-8'))
-            )
+        $textos = $this->repository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ActividadSacdTextoField::Clave, 'com_sacd'))
+                ->andWhere(Filter::eq(ActividadSacdTextoField::Idioma, 'es_ES.UTF-8'))
         );
+
+        foreach ($textos as $oTexto) {
+            $this->assertSame('com_sacd', $oTexto->getClave());
+            $this->assertSame('es_ES.UTF-8', $oTexto->getIdioma());
+        }
     }
 }

@@ -6,6 +6,11 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\EncargoConstants;
+use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\OrderDirection;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\encargossacd\domain\services\EncargoDominioService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -42,13 +47,12 @@ final class EncargoSacdHorarioVerData
 
         $id_item = $id_item_post > 0 ? $id_item_post : 0;
         if ($id_item === 0) {
-            $cands = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios(
-                [
-                    'id_nom' => $id_nom,
-                    'id_enc' => $id_enc,
-                    '_ordre' => 'id_item DESC',
-                    '_limit' => '1',
-                ]
+            $cands = $this->encargoSacdHorarioRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                    ->andWhere(Filter::eq(EncargoSacdHorarioField::IdEnc, $id_enc))
+                    ->orderBy(EncargoSacdHorarioField::IdItem, OrderDirection::Desc)
+                    ->limit(1)
             );
             if ($cands !== []) {
                 $id_item = $cands[0]->getId_item();
@@ -86,8 +90,11 @@ final class EncargoSacdHorarioVerData
             }
         }
 
-        $cSacd = $this->encargoSacdRepository->getEncargosSacd(
-            ['id_nom' => $id_nom, 'id_enc' => $id_enc, '_limit' => '1']
+        $cSacd = $this->encargoSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdField::IdNom, $id_nom))
+                ->andWhere(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                ->limit(1)
         );
         $f_ini = '';
         $f_fin = '';

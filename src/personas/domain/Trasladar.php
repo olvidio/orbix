@@ -3,12 +3,14 @@
 namespace src\personas\domain;
 
 use PDO;
+use src\certificados\domain\criteria\CertificadoRecibidoField;
 use src\personas\domain\criteria\TelecoPersonaField;
 use src\personas\domain\criteria\TrasladoField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use src\actividadestudios\domain\criteria\MatriculaField;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
@@ -18,6 +20,7 @@ use src\certificados\domain\entity\CertificadoEmitido;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\dossiers\domain\criteria\DossierField;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
@@ -59,6 +62,7 @@ use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 
 
 class Trasladar
@@ -330,7 +334,7 @@ class Trasladar
         }
         // Que la dl destino exista:
         $repoDelegacion = $this->delegacionRepository;
-        $cDelegAll = $repoDelegacion->getDelegaciones(['active' => true]);
+        $cDelegAll = $repoDelegacion->matching(Criteria::create()->where(Filter::eq(DelegacionField::Active, true)));
         $a_dl = [];
         foreach ($cDelegAll as $oDl) {
             $a_dl[] = $oDl->getDlVo()->value();
@@ -913,7 +917,11 @@ class Trasladar
         $DossierRepository = $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBorg);
         $DossierRepositoryDst = $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBdst);
         // Comprobar que están apuntados.
-        $cDossiers = $DossierRepository->getDossieres(['tabla' => 'p', 'id_pau' => $this->iid_nom]);
+        $cDossiers = $DossierRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(DossierField::Tabla, 'p'))
+                ->andWhere(Filter::eq(DossierField::IdPau, $this->iid_nom))
+        );
 
         $TipoDossierRepository = $this->tipoDossierRepository;
         foreach ($cDossiers as $oDossier) {
@@ -990,7 +998,7 @@ class Trasladar
                 case 'MatriculaDl':
                     $repo = $this->repositoryWithConnection(MatriculaDlRepositoryInterface::class, $oDBorg);
                     $repo_dst = $this->repositoryWithConnection(MatriculaDlRepositoryInterface::class, $oDBdst);
-                    $collection = $repo->getMatriculas(array('id_nom' => $this->iid_nom));
+                    $collection = $repo->matching(Criteria::create()->where(Filter::eq(MatriculaField::IdNom, $this->iid_nom)));
                     break;
                 case 'Traslado':
                     $repo = $this->repositoryWithConnection(TrasladoRepositoryInterface::class, $oDBorg);
@@ -1028,7 +1036,7 @@ class Trasladar
         // si es una dl, hay que buscarlos en la region del stgr
 
         $certificadoRecibidoRepository = $this->repositoryWithConnection(CertificadoRecibidoRepositoryInterface::class, $oDBorg);
-        $cCertificados = $certificadoRecibidoRepository->getCertificados(['id_nom' => $this->iid_nom]);
+        $cCertificados = $certificadoRecibidoRepository->matching(Criteria::create()->where(Filter::eq(CertificadoRecibidoField::IdNom, $this->iid_nom)));
         foreach ($cCertificados as $Certificado) {
             if (!$this->trasladar_certificados($Certificado)) {
                 $error .= '<br>' . $this->serror = $error;

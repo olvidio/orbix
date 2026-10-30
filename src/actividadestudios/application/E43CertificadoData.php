@@ -10,6 +10,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\criteria\PersonaNotaField;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\entity\Ubi;
 
@@ -101,7 +102,11 @@ final class E43CertificadoData
                 $idAsignatura = $oMatricula->getId_asignatura();
                 $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
                 $nombreCorto = $oAsignatura !== null ? ($oAsignatura->getNombre_corto() ?? '') : '';
-                $cNotas = $this->personaNotaRepository->getPersonaNotas(['id_nom' => $idNom, 'id_asignatura' => $idAsignatura]);
+                $cNotas = $this->personaNotaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(PersonaNotaField::IdNom, $idNom))
+                        ->andWhere(Filter::eq(PersonaNotaField::IdAsignatura, $idAsignatura))
+                );
                 if (count($cNotas) > 0) {
                     $oNota = $cNotas[0];
                     $nota = (string) $oNota->getNota_txt();

@@ -9,6 +9,7 @@ use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use Tests\factories\certificados\CertificadoEmitidoFactory;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 
 class PgCertificadoEmitidoRepositoryTest extends myTest
@@ -149,7 +150,7 @@ class PgCertificadoEmitidoRepositoryTest extends myTest
 
     public function test_get_certificados_sin_filtros()
     {
-        $result = $this->repository->getCertificados();
+        $result = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

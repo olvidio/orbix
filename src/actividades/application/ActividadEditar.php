@@ -12,7 +12,10 @@ use src\permisos\domain\PermisosActividades;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\Dinero;
 use src\shared\domain\value_objects\TimeLocal;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 use src\usuarios\domain\value_objects\IdLocale;
 
 /**
@@ -153,7 +156,7 @@ final class ActividadEditar
             $mi_dele = ConfigGlobal::mi_delef();
             if ($Qplazas !== 0 && ($plazas_old != $Qplazas) && $Qdl_org == $mi_dele) {
                 $id_dl = 0;
-                $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $mi_dele]);
+                $cDelegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(DelegacionField::Dl, $mi_dele)));
                 if (count($cDelegaciones) > 0) {
                     $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
                 }

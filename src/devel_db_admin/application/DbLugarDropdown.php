@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\helpers\OpcionesDesplegable;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 
 /**
  * Datos del desplegable de delegación (dl) filtradas por región, para pantallas de administración de BD.
@@ -32,11 +35,11 @@ final class DbLugarDropdown
      */
     public static function opcionesPorRegion(string $region, DelegacionRepositoryInterface $repoDl): array
     {
-        $aWhere = ['active' => true];
+        $criterio = Criteria::create()->where(Filter::eq(DelegacionField::Active, true));
         if ($region !== '') {
-            $aWhere['region'] = $region;
+            $criterio = $criterio->andWhere(Filter::eq(DelegacionField::Region, $region));
         }
-        $cDelegaciones = $repoDl->getDelegaciones($aWhere, ['_ordre' => 'dl']);
+        $cDelegaciones = $repoDl->matching($criterio->orderBy(DelegacionField::Dl));
         $aOpciones = [];
         foreach ($cDelegaciones as $oDeleg) {
             $dlValue = $oDeleg->getDlVo()->value();

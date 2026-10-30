@@ -3,6 +3,9 @@
 namespace src\asistentes\application;
 
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
+use src\actividadestudios\domain\criteria\MatriculaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asistentes\application\services\AsistenteApplicationService;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
@@ -67,7 +70,12 @@ final class AsistenteEliminar
         $this->cerrarDossier1301($id_nom);
 
         $MatriculaRepository = $this->matriculaRepository;
-        foreach ($MatriculaRepository->getMatriculas(['id_activ' => $id_activ, 'id_nom' => $id_nom]) as $oMatricula) {
+        $matriculas = $MatriculaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(MatriculaField::IdActiv, $id_activ))
+                ->andWhere(Filter::eq(MatriculaField::IdNom, $id_nom))
+        );
+        foreach ($matriculas as $oMatricula) {
             if ($MatriculaRepository->Eliminar($oMatricula) === false) {
                 $msg_err .= _("hay un error, no se ha eliminado");
             }

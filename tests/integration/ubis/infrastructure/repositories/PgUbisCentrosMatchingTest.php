@@ -22,7 +22,7 @@ use Tests\myTest;
  */
 class PgUbisCentrosMatchingTest extends myTest
 {
-    public function test_centro_dl_matching_booleano_y_orden_equivale_a_legacy(): void
+    public function test_centro_dl_matching_booleano_y_orden(): void
     {
         $repo = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $o = (new CentroDlFactory())->createSimple();
@@ -34,15 +34,15 @@ class PgUbisCentrosMatchingTest extends myTest
             ->andWhere(Filter::eq(CentroDlField::Active, false))
             ->orderBy(CentroDlField::NombreUbi);
         $nuevo = $repo->matching($criteria);
-        $legacy = $repo->getCentros(['id_ubi' => $id, 'active' => 'f', '_ordre' => 'nombre_ubi']);
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertSame($id, $nuevo[0]->getId_ubi());
+        $this->assertFalse($nuevo[0]->isActive());
 
         $repo->Eliminar($o);
     }
 
-    public function test_centro_dl_matching_regex_in_y_bits_equivalen_a_legacy(): void
+    public function test_centro_dl_matching_regex_in_y_bits(): void
     {
         $repo = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 
@@ -52,53 +52,48 @@ class PgUbisCentrosMatchingTest extends myTest
                 ->andWhere(Filter::eq(CentroDlField::Active, true))
                 ->orderBy(CentroDlField::NombreUbi)
         );
-        $legacy = $repo->getCentros(
-            ['tipo_ctr' => '^s[^s]', 'active' => 't', '_ordre' => 'nombre_ubi'],
-            ['tipo_ctr' => '~']
-        );
-        $this->assertEquals($legacy, $nuevo);
+        foreach ($nuevo as $centro) {
+            $this->assertMatchesRegularExpression('/^s[^s]/', (string) $centro->getTipo_ctr());
+            $this->assertTrue($centro->isActive());
+        }
 
         $nuevoBits = $repo->matching(
             Criteria::create()->where(Filter::hasBits(CentroDlField::TipoLabor, 512))->orderBy(CentroDlField::IdUbi)
         );
-        $legacyBits = $repo->getCentros(['tipo_labor' => '512', '_ordre' => 'id_ubi'], ['tipo_labor' => '&']);
-        $this->assertEquals($legacyBits, $nuevoBits);
+        foreach ($nuevoBits as $centro) {
+            $this->assertSame(512, ((int) $centro->getTipo_labor()) & 512);
+        }
 
-        $ids = array_slice(array_map(static fn ($c) => $c->getId_ubi(), $repo->getCentros(['_limit' => 3])), 0, 3);
+        $todos = $repo->matching(Criteria::create()->orderBy(CentroDlField::IdUbi)->limit(3));
+        $ids = array_map(static fn ($c) => $c->getId_ubi(), $todos);
         $nuevoIn = $repo->matching(Criteria::create()->where(Filter::in(CentroDlField::IdUbi, $ids))->orderBy(CentroDlField::IdUbi));
-        $legacyIn = $repo->getCentros(['id_ubi' => implode(',', $ids), '_ordre' => 'id_ubi'], ['id_ubi' => 'IN']);
-        $this->assertEquals($legacyIn, $nuevoIn);
+        $this->assertSame($ids, array_map(static fn ($c) => $c->getId_ubi(), $nuevoIn));
     }
 
-    public function test_otros_repos_de_centros_equivalen_a_legacy(): void
+    public function test_otros_repos_de_centros(): void
     {
         $centro = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-        $this->assertEquals(
-            $centro->getCentros(['_ordre' => 'id_ubi', '_limit' => 5]),
-            $centro->matching(Criteria::create()->orderBy(CentroField::IdUbi)->limit(5))
-        );
+        $primeros = $centro->matching(Criteria::create()->orderBy(CentroField::IdUbi)->limit(5));
+        $this->assertLessThanOrEqual(5, count($primeros));
 
         $ex = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
-        $this->assertEquals(
-            $ex->getCentros(['tipo_ctr' => 'cr|dl', 'active' => 't', '_ordre' => 'nombre_ubi'], ['tipo_ctr' => '~']),
-            $ex->matching(
-                Criteria::create()
-                    ->where(Filter::matches(CentroExField::TipoCtr, 'cr|dl'))
-                    ->andWhere(Filter::eq(CentroExField::Active, true))
-                    ->orderBy(CentroExField::NombreUbi)
-            )
-        );
+        foreach ($ex->matching(
+            Criteria::create()
+                ->where(Filter::matches(CentroExField::TipoCtr, 'cr|dl'))
+                ->andWhere(Filter::eq(CentroExField::Active, true))
+                ->orderBy(CentroExField::NombreUbi)
+        ) as $c) {
+            $this->assertTrue($c->isActive());
+        }
 
         $ellas = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-        $this->assertEquals(
-            $ellas->getCentros(['cdc' => 't', '_ordre' => 'nombre_ubi']),
-            $ellas->matching(Criteria::create()->where(Filter::eq(CentroEllasField::Cdc, true))->orderBy(CentroEllasField::NombreUbi))
-        );
+        foreach ($ellas->matching(Criteria::create()->where(Filter::eq(CentroEllasField::Cdc, true))->orderBy(CentroEllasField::NombreUbi)) as $c) {
+            $this->assertTrue($c->isCdc());
+        }
 
         $ellos = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
-        $this->assertEquals(
-            $ellos->getCentros(['active' => 't', '_ordre' => 'nombre_ubi']),
-            $ellos->matching(Criteria::create()->where(Filter::eq(CentroEllosField::Active, true))->orderBy(CentroEllosField::NombreUbi))
-        );
+        foreach ($ellos->matching(Criteria::create()->where(Filter::eq(CentroEllosField::Active, true))->orderBy(CentroEllosField::NombreUbi)) as $c) {
+            $this->assertTrue($c->isActive());
+        }
     }
 }

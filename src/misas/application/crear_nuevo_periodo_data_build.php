@@ -18,6 +18,11 @@ use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
+use src\encargossacd\domain\criteria\EncargoTipoField;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\domain\EncargosZona;
 use src\misas\domain\entity\EncargoDia;
 use src\misas\domain\value_objects\EncargoDiaId;
@@ -120,11 +125,11 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
             ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
     }
 
-    $aWhere = [];
-    $aWhere['id_zona'] = $Qid_zona;
-    $aOperador = [];
     $ZonaSacdRepository = $self->getZonaSacdRepository();
-    $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
+    $cZonaSacd = $ZonaSacdRepository->matching(
+        \src\shared\domain\criteria\Criteria::create()
+            ->where(\src\shared\domain\criteria\Filter::eq(\src\zonassacd\domain\criteria\ZonaSacdField::IdZona, $Qid_zona))
+    );
     $contador_1a_sacd = [];
     $contador_total_sacd = [];
     $contador_sacd = [];
@@ -195,18 +200,16 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
         }
 
         // ++++++++++++++ Anado las ausencias +++++++++++++++
-        $aWhereE = [];
-        $aOperadorE = [];
-        $aWhereE['id_nom'] = $id_nom;
         $sInicio_iso = $oInicio->getIso();
         $sFin_iso = $oFin->getIso();
-        $aWhereE['f_ini'] = "'$sInicio_iso'";
-        $aOperadorE['f_ini'] = '<=';
-        $aWhereE['f_fin'] = "'$sFin_iso'";
-        $aOperadorE['f_fin'] = '>=';
         $EncargoRepository = $self->getEncargoRepository();
         $EncargoSacdHorarioRepository = $self->getEncargoSacdHorarioRepository();
-        $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
+        $cAusencias = $EncargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                ->andWhere(Filter::lte(EncargoSacdHorarioField::FIni, $sInicio_iso))
+                ->andWhere(Filter::gte(EncargoSacdHorarioField::FFin, $sFin_iso))
+        );
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc = $oTareaHorarioSacd->getId_enc();
             $oF_ini = $oTareaHorarioSacd->getF_ini();
@@ -255,11 +258,9 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
     $EncargoTipoRepository = $self->getEncargoTipoRepository();
 
     $grupo = '8...';
-    $aWhere = [];
-    $aOperador = [];
-    $aWhere['id_tipo_enc'] = '^' . $grupo;
-    $aOperador['id_tipo_enc'] = '~';
-    $cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
+    $cEncargoTipos = $EncargoTipoRepository->matching(
+        Criteria::create()->where(Filter::matches(EncargoTipoField::IdTipoEnc, '^' . $grupo))
+    );
 
     $a_tipo_enc = [];
     foreach ($cEncargoTipos as $oEncargoTipo) {
@@ -424,17 +425,13 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
         $id_tipo = $oEncargo->getId_tipo_enc();
         $desc_enc = $oEncargo->getDesc_enc();
 
-        $aWhere = [
-            'id_enc' => $id_enc,
-            'tstart' => "'$sInicio', '$sFin'",
-        ];
-        $aOperador = [
-            'tstart' => 'BETWEEN',
-        ];
-
         // Borro los encargos de la zona ya asignados en ese periodo
         $EncargoDiaRepository = $self->getEncargoDiaRepository();
-        $cEncargosaBorrar = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+        $cEncargosaBorrar = $EncargoDiaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                ->andWhere(Filter::between(EncargoDiaField::Tstart, $sInicio, $sFin))
+        );
         foreach ($cEncargosaBorrar as $oEncargoaBorrar) {
             if (EncargoDiaStatus::preserveWhenPreparingPlan($oEncargoaBorrar->getStatus())) {
                 continue;
@@ -448,10 +445,8 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
             $dia_plantilla = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_UNO);
             $dia_plantilla2 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_DOS);
             $dia_plantilla3 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_TRES);
-            $aWhere2 = [];
-            $aOperador2 = [];
-            $aWhere3 = [];
-            $aOperador3 = [];
+            $criterio2 = null;
+            $criterio3 = null;
             $id_nom = null;
             $observ = '';
             $hora_ini = '';
@@ -545,37 +540,25 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
 
                 $inicio_dia_plantilla = $dia_plantilla->format('Y-m-d') . ' 00:00:00';
                 $fin_dia_plantilla = $dia_plantilla->format('Y-m-d') . ' 23:59:59';
-                $aWhere = [
-                    'id_enc' => $id_enc,
-                    'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
-                ];
-                $aOperador = [
-                    'tstart' => 'BETWEEN',
-                ];
+                $criterio = Criteria::create()
+                    ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                    ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia_plantilla, $fin_dia_plantilla));
 
                 if (($QTipoPlantilla == PlantillaConfig::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_MENSUAL_TRES)) {
                     $inicio_dia_plantilla2 = $dia_plantilla2->format('Y-m-d') . ' 00:00:00';
                     $fin_dia_plantilla2 = $dia_plantilla2->format('Y-m-d') . ' 23:59:59';
-                    $aWhere2 = [
-                        'id_enc' => $id_enc,
-                        'tstart' => "'$inicio_dia_plantilla2', '$fin_dia_plantilla2'",
-                    ];
-                    $aOperador2 = [
-                        'tstart' => 'BETWEEN',
-                    ];
+                    $criterio2 = Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia_plantilla2, $fin_dia_plantilla2));
                     $inicio_dia_plantilla3 = $dia_plantilla3->format('Y-m-d') . ' 00:00:00';
                     $fin_dia_plantilla3 = $dia_plantilla3->format('Y-m-d') . ' 23:59:59';
-                    $aWhere3 = [
-                        'id_enc' => $id_enc,
-                        'tstart' => "'$inicio_dia_plantilla3', '$fin_dia_plantilla3'",
-                    ];
-                    $aOperador3 = [
-                        'tstart' => 'BETWEEN',
-                    ];
+                    $criterio3 = Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia_plantilla3, $fin_dia_plantilla3));
                 }
 
                 $EncargoDiaRepository = $self->getEncargoDiaRepository();
-                $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $EncargoDiaRepository->matching($criterio);
                 if (count($cEncargosDia) > 1) {
                     throw new \RuntimeException(_("solo deberia haber uno"));
                 }
@@ -622,7 +605,7 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
 
                 if ((($QTipoPlantilla == PlantillaConfig::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_MENSUAL_TRES)) && (!$ok_encargo)) {
                     $EncargoDiaRepository = $self->getEncargoDiaRepository();
-                    $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere2, $aOperador2);
+                    $cEncargosDia = $EncargoDiaRepository->matching($criterio2);
 
                     if (count($cEncargosDia) > 1) {
                         throw new \RuntimeException(_("solo deberia haber uno"));
@@ -662,7 +645,7 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
                 }
                 if ((($QTipoPlantilla == PlantillaConfig::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_MENSUAL_TRES)) && (!$ok_encargo)) {
                     $EncargoDiaRepository = $self->getEncargoDiaRepository();
-                    $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere3, $aOperador3);
+                    $cEncargosDia = $EncargoDiaRepository->matching($criterio3);
 
                     if (count($cEncargosDia) > 1) {
                         throw new \RuntimeException(_("solo deberia haber uno"));
@@ -702,14 +685,11 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
                 }
                 $inicio_dia_periodo = $num_dia . ' 00:00:00';
                 $fin_dia_periodo = $num_dia . ' 23:59:59';
-                $aWherePeriodo = [
-                    'id_enc' => $id_enc,
-                    'tstart' => "'$inicio_dia_periodo', '$fin_dia_periodo'",
-                ];
-                $aOperadorPeriodo = [
-                    'tstart' => 'BETWEEN',
-                ];
-                $cEncargoDiaPeriodo = $EncargoDiaRepository->getEncargoDias($aWherePeriodo, $aOperadorPeriodo);
+                $cEncargoDiaPeriodo = $EncargoDiaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia_periodo, $fin_dia_periodo))
+                );
                 $celdaVisibleCtr = count($cEncargoDiaPeriodo) === 1
                     && EncargoDiaStatus::preserveWhenPreparingPlan($cEncargoDiaPeriodo[0]->getStatus());
 
@@ -779,15 +759,12 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
                 // sobreescribir los que tengo datos:
                 $inicio_dia = $num_dia . ' 00:00:00';
                 $fin_dia = $num_dia . ' 23:59:59';
-                $aWhere = [
-                    'id_enc' => $id_enc,
-                    'tstart' => "'$inicio_dia', '$fin_dia'",
-                ];
-                $aOperador = [
-                    'tstart' => 'BETWEEN',
-                ];
                 $EncargoDiaRepository = $self->getEncargoDiaRepository();
-                $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $EncargoDiaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia, $fin_dia))
+                );
 
                 if (count($cEncargosDia) > 1) {
                     throw new \RuntimeException(_("solo deberia haber uno"));

@@ -10,7 +10,6 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConverterJson;
 use src\pasarela\domain\criteria\PasarelaConfigField;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\infrastructure\persistence\postgresql\Set;
@@ -46,20 +45,6 @@ class PgPasarelaConfigRepository extends ClaseRepository implements PasarelaConf
         }
 
         return $result;
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo ConfigSchema
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<PasarelaConfig>
-     */
-    public function getPasarelaConfigs(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(PasarelaConfigField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function Eliminar(PasarelaConfig $PasarelaConfig): bool

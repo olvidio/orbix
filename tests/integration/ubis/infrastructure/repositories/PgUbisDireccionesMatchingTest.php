@@ -29,13 +29,9 @@ class PgUbisDireccionesMatchingTest extends myTest
             ->andWhere(Filter::matchesUnaccented(DireccionField::Poblacion, (string) $o->getPoblacion()))
             ->orderBy(DireccionField::Poblacion);
         $nuevo = $repo->matching($criteria);
-        $legacy = $repo->getDirecciones(
-            ['id_direccion' => $id, 'poblacion' => (string) $o->getPoblacion(), '_ordre' => 'poblacion'],
-            ['poblacion' => 'sin_acentos']
-        );
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertEquals($id, $nuevo[0]->getId_direccion());
 
         $repo->Eliminar($o);
     }
@@ -55,13 +51,9 @@ class PgUbisDireccionesMatchingTest extends myTest
                 ->where(Filter::eq(DireccionField::IdDireccion, $id))
                 ->andWhere(Filter::matches(DireccionField::CP, preg_quote($fragmento)))
         );
-        $legacy = $repo->getDirecciones(
-            ['id_direccion' => $id, 'c_p' => '%' . $fragmento . '%'],
-            ['c_p' => 'LIKE']
-        );
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertEquals($id, $nuevo[0]->getId_direccion());
 
         $repo->Eliminar($o);
     }
@@ -76,7 +68,13 @@ class PgUbisDireccionesMatchingTest extends myTest
             ->orderBy(DireccionField::IdDireccion)
             ->limit(5);
 
-        $this->assertEquals($casa->getDirecciones(['id_direccion' => '10000,39999', '_ordre' => 'id_direccion', '_limit' => 5], ['id_direccion' => 'BETWEEN']), $casa->matching($criteria));
-        $this->assertEquals($centroDl->getDirecciones(['id_direccion' => '10000,39999', '_ordre' => 'id_direccion', '_limit' => 5], ['id_direccion' => 'BETWEEN']), $centroDl->matching($criteria));
+        foreach ([$casa, $centroDl] as $repo) {
+            $res = $repo->matching($criteria);
+            $this->assertLessThanOrEqual(5, count($res));
+            foreach ($res as $d) {
+                $this->assertGreaterThanOrEqual(10000, $d->getId_direccion());
+                $this->assertLessThanOrEqual(39999, $d->getId_direccion());
+            }
+        }
     }
 }

@@ -53,7 +53,7 @@ final class AsignaturaNombreDlPrefixTest extends TestCase
         $ajena->method('getSchema')->willReturn('H-dlxxv');
 
         $repo = $this->createMock(DbSchemaRepositoryInterface::class);
-        $repo->method('getDbSchemas')->willReturn([$propia, $ajena]);
+        $repo->method('matching')->willReturn([$propia, $ajena]);
 
         $this->assertSame('dlxx', AsignaturaNombreDlPrefix::dlDesdeIdSchema($repo, 2002));
         $this->assertSame('dlbv', AsignaturaNombreDlPrefix::dlDesdeIdSchema($repo, 1001));

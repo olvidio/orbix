@@ -35,16 +35,6 @@ interface HabitacionRepositoryInterface
     public function matching(Criteria $criteria): array;
 
     /**
-     * devuelve una colección (array) de objetos de tipo Habitacion
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Habitacion> Una colección de objetos de tipo Habitacion
-     */
-    public function getHabitaciones(array $aWhere = [], array $aOperators = []): array;
-
-    /**
      * devuelve una colección (array) de objetos de tipo Habitacion para un id_ubi específico
      *
      * @param int $id_ubi

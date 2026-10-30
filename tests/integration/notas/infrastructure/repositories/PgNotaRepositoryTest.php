@@ -4,6 +4,7 @@ namespace Tests\integration\notas\infrastructure\persistence\postgresql;
 
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\notas\NotaFactory;
 
@@ -133,7 +134,7 @@ class PgNotaRepositoryTest extends myTest
 
     public function test_get_notas_sin_filtros()
     {
-        $result = $this->repository->getNotas();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

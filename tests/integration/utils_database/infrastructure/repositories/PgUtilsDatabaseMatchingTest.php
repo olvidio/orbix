@@ -35,11 +35,9 @@ class PgUtilsDatabaseMatchingTest extends myTest
         $this->schemaRepo->Guardar($oDbSchema);
 
         $nuevo = $this->schemaRepo->matching(Criteria::create()->where(Filter::eq(DbSchemaField::Schema, $schema)));
-        $legacy = $this->schemaRepo->getDbSchemas(['schema' => $schema]);
 
         $this->assertCount(1, $nuevo);
         $this->assertSame($schema, $nuevo[0]->getSchema());
-        $this->assertEquals($legacy, $nuevo);
 
         $this->schemaRepo->Eliminar($nuevo[0]);
         $this->assertSame([], $this->schemaRepo->matching(Criteria::create()->where(Filter::eq(DbSchemaField::Schema, $schema))));
@@ -79,11 +77,9 @@ class PgUtilsDatabaseMatchingTest extends myTest
             ->where(Filter::eq(MapIdField::Objeto, 'tstm'))
             ->andWhere(Filter::eq(MapIdField::IdResto, $idResto));
         $nuevo = $this->mapIdRepo->matching($criteria);
-        $legacy = $this->mapIdRepo->getMapIdes(['objeto' => 'tstm', 'id_resto' => $idResto]);
 
         $this->assertCount(1, $nuevo);
         $this->assertSame($idResto, $nuevo[0]->getId_resto());
-        $this->assertEquals($legacy, $nuevo);
 
         $this->mapIdRepo->Eliminar($nuevo[0]);
         $this->assertSame([], $this->mapIdRepo->matching($criteria));

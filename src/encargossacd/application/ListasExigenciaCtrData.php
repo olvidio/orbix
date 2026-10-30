@@ -7,11 +7,17 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoField;
+use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\criteria\CentroDlField;
+use src\ubis\domain\criteria\CentroEllasField;
 
 /**
  * Listado de exigencias SACD por centro/iglesia.
@@ -93,19 +99,22 @@ final class ListasExigenciaCtrData
                 $Html .= "$div_open<table><tr><td class=grupo colspan=2>$txt_tipo_ctr</td></tr>";
             }
 
-            $aWhere = [
-                'active' => 't',
-                'tipo_ctr' => "^$tipo_ctr_que",
-                '_ordre' => 'nombre_ubi',
-            ];
-            $aOperador = ['tipo_ctr' => '~'];
+            $criterioEllas = Criteria::create()
+                ->where(Filter::eq(CentroEllasField::Active, true))
+                ->andWhere(Filter::matches(CentroEllasField::TipoCtr, "^$tipo_ctr_que"))
+                ->orderBy(CentroEllasField::NombreUbi);
+            $criterioDl = Criteria::create()
+                ->where(Filter::eq(CentroDlField::Active, true))
+                ->andWhere(Filter::matches(CentroDlField::TipoCtr, "^$tipo_ctr_que"))
+                ->orderBy(CentroDlField::NombreUbi);
             $cCentros = [];
             if ($ctr_igl === 'ctr') {
-                $gesCentros = $sf === 1 ? $this->centroEllasRepository : $this->centroDlRepository;
-                $cCentros = $gesCentros->getCentros($aWhere, $aOperador) ?: [];
+                $cCentros = $sf === 1
+                    ? $this->centroEllasRepository->matching($criterioEllas)
+                    : $this->centroDlRepository->matching($criterioDl);
             } elseif ($ctr_igl === 'igl') {
-                $cCentrosF = $this->centroEllasRepository->getCentros($aWhere, $aOperador) ?: [];
-                $cCentrosV = $this->centroDlRepository->getCentros($aWhere, $aOperador) ?: [];
+                $cCentrosF = $this->centroEllasRepository->matching($criterioEllas);
+                $cCentrosV = $this->centroDlRepository->matching($criterioDl);
                 $cCentros = array_merge($cCentrosV, $cCentrosF);
             }
 
@@ -115,17 +124,19 @@ final class ListasExigenciaCtrData
                 $tipo_ctr = $oCentro->getTipo_ctr();
                 /** @var array<int, string> $cargos */
                 $cargos = [];
-                $cEncargos = $this->encargoRepository->getEncargos(['id_ubi' => $id_ubi]) ?: [];
+                $cEncargos = $this->encargoRepository->matching(Criteria::create()->where(Filter::eq(EncargoField::IdUbi, $id_ubi)));
                 $sacds = [];
                 $dedicacion_ctr = '';
                 foreach ($cEncargos as $oEncargo) {
                     $id_enc = $oEncargo->getId_enc();
                     $dedicacion_ctr = $oService->dedicacion_ctr($id_ubi, $id_enc);
 
-                    $cTareasSacd = $this->encargoSacdRepository->getEncargosSacd(
-                        ['id_enc' => $id_enc, 'f_fin' => 'null', '_ordre' => 'modo'],
-                        ['f_fin' => 'IS NULL'],
-                    ) ?: [];
+                    $cTareasSacd = $this->encargoSacdRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(EncargoSacdField::IdEnc, $id_enc))
+                            ->andWhere(Filter::isNull(EncargoSacdField::FFin))
+                            ->orderBy(EncargoSacdField::Modo)
+                    );
                     $s = 0;
                     foreach ($cTareasSacd as $oTareaSacd) {
                         $s++;

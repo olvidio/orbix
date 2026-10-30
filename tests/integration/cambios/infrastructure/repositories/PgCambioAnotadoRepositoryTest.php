@@ -134,7 +134,7 @@ class PgCambioAnotadoRepositoryTest extends myTest
 
     public function test_get_cambios_anotados_sin_filtros()
     {
-        $result = $this->repository->getCambiosAnotados();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

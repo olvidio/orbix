@@ -3,15 +3,16 @@
 namespace src\encargossacd\domain\contracts;
 
 use src\encargossacd\domain\entity\PropuestaEncargoSacd;
+use src\shared\domain\criteria\Criteria;
 
 interface PropuestaEncargoSacdRepositoryInterface
 {
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * PropuestaEncargoSacd que cumplen el criterio.
+     *
      * @return list<PropuestaEncargoSacd>
      */
-    public function getPropuestasEncargoSacd(array $aWhere = [], array $aOperators = []): array;
+    public function matching(Criteria $criteria): array;
 
     public function findById(int $id_item): ?PropuestaEncargoSacd;
 

@@ -21,6 +21,7 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaField;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 /**
@@ -294,7 +295,7 @@ class Avisos
             // soy jefe zona?
             // si soy jefe de zona me afectan todos los sacd de la zona.
             $rta = false;
-            $cZonas = $this->zonaRepository->getZonas(['id_nom' => $id_nom_usuario]);
+            $cZonas = $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdNom, $id_nom_usuario)));
             if (count($cZonas) > 0) {
                 // sacd de mi zona
                 foreach ($cZonas as $oZona) {

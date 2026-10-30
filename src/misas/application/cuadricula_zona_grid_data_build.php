@@ -19,6 +19,11 @@ use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\EncargoConstants;
 use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
+use src\encargossacd\domain\criteria\EncargoTipoField;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\domain\EncargosZona;
 use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\misas\domain\value_objects\PlantillaConfig;
@@ -107,11 +112,11 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
     }
 
     //Busco los sacd de la zona, para señalar si en la plantilla o en plan hay alguno que no es de la zona.
-    $aWhere = [];
-    $aWhere['id_zona'] = $Qid_zona;
-    $aOperador = [];
     $ZonaSacdRepository = $self->getZonaSacdRepository();
-    $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
+    $cZonaSacd = $ZonaSacdRepository->matching(
+        \src\shared\domain\criteria\Criteria::create()
+            ->where(\src\shared\domain\criteria\Filter::eq(\src\zonassacd\domain\criteria\ZonaSacdField::IdZona, $Qid_zona))
+    );
     $sacd_zona = [];
     $InicialesSacdService = $self->getInicialesSacdService();
     foreach ($cZonaSacd as $oZonaSacd) {
@@ -334,11 +339,9 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
 
     $grupo = '8...';
     //if (!empty($grupo)) {
-    $aWhere = [];
-    $aOperador = [];
-    $aWhere['id_tipo_enc'] = '^' . $grupo;
-    $aOperador['id_tipo_enc'] = '~';
-    $cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
+    $cEncargoTipos = $EncargoTipoRepository->matching(
+        Criteria::create()->where(Filter::matches(EncargoTipoField::IdTipoEnc, '^' . $grupo))
+    );
 
     $posibles_encargo_tipo = [];
     $a_tipo_enc = [];
@@ -413,15 +416,12 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
             // sobreescribir los que tengo datos:
             $inicio_dia = $num_dia . ' 00:00:00';
             $fin_dia = $num_dia . ' 23:59:59';
-            $aWhere = [
-                'id_enc' => $id_enc,
-                'tstart' => "'$inicio_dia', '$fin_dia'",
-            ];
-            $aOperador = [
-                'tstart' => 'BETWEEN',
-            ];
             $EncargoDiaRepository = $self->getEncargoDiaRepository();
-            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+            $cEncargosDia = $EncargoDiaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                    ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia, $fin_dia))
+            );
 
             if (count($cEncargosDia) > 1) {
                 $oEncargoDia = $cEncargosDia[0];
@@ -523,15 +523,12 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
 
                 $inicio_dia3 = $num_dia3 . ' 00:00:00';
                 $fin_dia3 = $num_dia3 . ' 23:59:59';
-                $aWhere = [
-                    'id_enc' => $id_enc,
-                    'tstart' => "'$inicio_dia2', '$fin_dia2'",
-                ];
-                $aOperador = [
-                    'tstart' => 'BETWEEN',
-                ];
                 $EncargoDiaRepository = $self->getEncargoDiaRepository();
-                $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $EncargoDiaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia2, $fin_dia2))
+                );
 
                     if (count($cEncargosDia) > 1) {
                         $oEncargoDia = $cEncargosDia[0];
@@ -577,15 +574,12 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
                     $data_cols2["$num_dia"] = $iniciales;
                 }
 
-                $aWhere = [
-                    'id_enc' => $id_enc,
-                    'tstart' => "'$inicio_dia3', '$fin_dia3'",
-                ];
-                $aOperador = [
-                    'tstart' => 'BETWEEN',
-                ];
                 $EncargoDiaRepository = $self->getEncargoDiaRepository();
-                $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $EncargoDiaRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(EncargoDiaField::IdEnc, $id_enc))
+                        ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia3, $fin_dia3))
+                );
 
                 if (count($cEncargosDia) > 1) {
                     $oEncargoDia = $cEncargosDia[0];
@@ -736,16 +730,14 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
             }
         }
         // ++++++++++++++ Añado las ausencias +++++++++++++++
-        $aWhereE = [];
-        $aOperadorE = [];
-        $aWhereE['id_nom'] = $id_nom;
-        $aWhereE['f_ini'] = "'$sFin_iso'";
-        $aOperadorE['f_ini'] = '<=';
-        $aWhereE['f_fin'] = "'$sInicio_iso'";
-        $aOperadorE['f_fin'] = '>=';
         $EncargoRepository = $self->getEncargoRepository();
         $EncargoSacdHorarioRepository = $self->getEncargoSacdHorarioRepository();
-        $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
+        $cAusencias = $EncargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
+                ->andWhere(Filter::lte(EncargoSacdHorarioField::FIni, $sFin_iso))
+                ->andWhere(Filter::gte(EncargoSacdHorarioField::FFin, $sInicio_iso))
+        );
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc = $oTareaHorarioSacd->getId_enc();
             $oF_ini = $oTareaHorarioSacd->getF_ini();
@@ -824,10 +816,10 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
     $data_cols["meta"] = $meta;
     $data_cuadricula[] = $data_cols;
 
-    $aWhere = [];
-    $aWhere['id_zona'] = $Qid_zona;
-    $aOperador = [];
-    $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
+    $cZonaSacd = $ZonaSacdRepository->matching(
+        \src\shared\domain\criteria\Criteria::create()
+            ->where(\src\shared\domain\criteria\Filter::eq(\src\zonassacd\domain\criteria\ZonaSacdField::IdZona, $Qid_zona))
+    );
     foreach ($cZonaSacd as $oZonaSacd) {
         $data_cols = [];
         $id_nom = $oZonaSacd->getId_nom();
@@ -853,16 +845,13 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
             $texto = '';
             $color_fondo = '';
 
-            $aWhere = [
-                'id_nom' => $id_nom,
-                'tstart' => "'$inicio_dia', '$fin_dia'",
-            ];
-            $aWhere['_ordre'] = 'tstart';
-            $aOperador = [
-                'tstart' => 'BETWEEN',
-            ];
             $EncargoDiaRepository = $self->getEncargoDiaRepository();
-            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+            $cEncargosDia = $EncargoDiaRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(EncargoDiaField::IdNom, $id_nom))
+                    ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia, $fin_dia))
+                    ->orderBy(EncargoDiaField::Tstart)
+            );
 
             $misas_dia = 0;
             $misas_1a_hora = 0;

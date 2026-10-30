@@ -7,11 +7,14 @@ namespace src\devel_db_admin\application;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\devel_db_admin\infrastructure\DBAlterSchema;
 use src\shared\config\ReplicaSelectPolicy;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBRol;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\criteria\DelegacionField;
 
 /**
  * Absorción de un esquema DL en otro (comun + sv + sv-e): copias, actualizaciones y renombre del esquema origen.
@@ -209,9 +212,17 @@ final class AbsorberEsquema
         $this->actualizarMapaPrefijoActa($esquemaDel, $esquemaMatriz, $dl_old, $dl_new, $errores);
 
         $gesDelegaciones = $this->delegacionRepository;
-        $cDelegaciones = $gesDelegaciones->getDelegaciones(['dl' => $dl_old, 'region' => $region_old]);
+        $cDelegaciones = $gesDelegaciones->matching(
+            Criteria::create()
+                ->where(Filter::eq(DelegacionField::Dl, $dl_old))
+                ->andWhere(Filter::eq(DelegacionField::Region, $region_old))
+        );
         $id_dl_old = $cDelegaciones[0]->getIdDlVo()->value();
-        $cDelegaciones = $gesDelegaciones->getDelegaciones(['dl' => $dl_new, 'region' => $region_new]);
+        $cDelegaciones = $gesDelegaciones->matching(
+            Criteria::create()
+                ->where(Filter::eq(DelegacionField::Dl, $dl_new))
+                ->andWhere(Filter::eq(DelegacionField::Region, $region_new))
+        );
         $id_dl_new = $cDelegaciones[0]->getIdDlVo()->value();
 
         $aDatos = [

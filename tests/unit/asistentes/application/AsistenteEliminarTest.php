@@ -4,7 +4,10 @@ namespace Tests\unit\asistentes\application;
 
 use PHPUnit\Framework\TestCase;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
+use src\actividadestudios\domain\criteria\MatriculaField;
 use src\actividadestudios\domain\entity\Matricula;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\asistentes\application\AsistenteEliminar;
 use src\asistentes\application\services\AsistenteApplicationService;
 use src\asistentes\domain\entity\Asistente;
@@ -97,7 +100,11 @@ final class AsistenteEliminarTest extends TestCase
         $app->method('eliminar')->with($o)->willReturn(true);
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $matRepo->method('getMatriculas')->with(['id_activ' => 7, 'id_nom' => 3])->willReturn([]);
+        $matRepo->method('matching')
+            ->with(Criteria::create()
+                ->where(Filter::eq(MatriculaField::IdActiv, 7))
+                ->andWhere(Filter::eq(MatriculaField::IdNom, 3)))
+            ->willReturn([]);
 
         $dosRepo = $this->createMock(DossierRepositoryInterface::class);
         $dosRepo->method('findByPk')->willReturn(null);
@@ -125,7 +132,7 @@ final class AsistenteEliminarTest extends TestCase
         $m->method('DBEliminar')->willReturn(false);
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
-        $matRepo->method('getMatriculas')->willReturn([$m]);
+        $matRepo->method('matching')->willReturn([$m]);
 
         $sut = $this->createSut($app, $matRepo);
 

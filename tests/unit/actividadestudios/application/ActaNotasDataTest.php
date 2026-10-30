@@ -16,6 +16,7 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterfac
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\ActividadAsignatura;
 use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\notas\domain\criteria\ActaField;
 use src\notas\domain\entity\Acta;
 
 final class ActaNotasDataTest extends TestCase
@@ -65,9 +66,9 @@ final class ActaNotasDataTest extends TestCase
         $actaPropia = new Acta();
         $actaPropia->setActa('dlbv 1/26');
         $actaRepo = $this->createMock(ActaRepositoryInterface::class);
-        $actaRepo->method('getActas')->willReturnCallback(
-            function (array $where) use ($actaPropia) {
-                $this->assertSame(1001, $where['id_schema']);
+        $actaRepo->method('matching')->willReturnCallback(
+            function (Criteria $criteria) use ($actaPropia) {
+                $this->assertSame(1001, $this->valorDeFiltro($criteria, ActaField::IdSchema));
 
                 return [$actaPropia];
             }
@@ -135,9 +136,9 @@ final class ActaNotasDataTest extends TestCase
         $actaAjena = new Acta();
         $actaAjena->setActa('dlxx 9/26');
         $actaRepo = $this->createMock(ActaRepositoryInterface::class);
-        $actaRepo->method('getActas')->willReturnCallback(
-            function (array $where) use ($actaAjena) {
-                $this->assertSame(2002, $where['id_schema']);
+        $actaRepo->method('matching')->willReturnCallback(
+            function (Criteria $criteria) use ($actaAjena) {
+                $this->assertSame(2002, $this->valorDeFiltro($criteria, ActaField::IdSchema));
 
                 return [$actaAjena];
             }
@@ -180,9 +181,9 @@ final class ActaNotasDataTest extends TestCase
         $actaPropia = new Acta();
         $actaPropia->setActa('dlbv 1/26');
         $actaRepo = $this->createMock(ActaRepositoryInterface::class);
-        $actaRepo->expects($this->once())->method('getActas')->with(
-            $this->callback(static function (array $where): bool {
-                return ($where['id_schema'] ?? 0) === 1001;
+        $actaRepo->expects($this->once())->method('matching')->with(
+            $this->callback(function (Criteria $criteria): bool {
+                return ($this->valorDeFiltro($criteria, ActaField::IdSchema) ?? 0) === 1001;
             })
         )->willReturn([$actaPropia]);
 
@@ -207,7 +208,7 @@ final class ActaNotasDataTest extends TestCase
         $aaRepo->method('matching')->willReturn([$this->actividadAsignatura(1001)]);
 
         $actaRepo = $this->createMock(ActaRepositoryInterface::class);
-        $actaRepo->method('getActas')->willReturn([]);
+        $actaRepo->method('matching')->willReturn([]);
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
         $matRepo->expects($this->once())->method('matching')->with(
@@ -244,7 +245,7 @@ final class ActaNotasDataTest extends TestCase
         $actaFirmada->setActa('dlbv 1/26');
         $actaFirmada->setPdf('%PDF-fake');
         $actaRepo = $this->createMock(ActaRepositoryInterface::class);
-        $actaRepo->method('getActas')->willReturn([$actaFirmada]);
+        $actaRepo->method('matching')->willReturn([$actaFirmada]);
 
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
         $matRepo->method('matching')->willReturn([]);
@@ -266,6 +267,17 @@ final class ActaNotasDataTest extends TestCase
         $this->assertSame('', $out['acta_asignable']);
         $this->assertFalse($out['hay_alumnos_sin_nota']);
         $this->assertFalse($out['puede_nueva_convocatoria']);
+    }
+
+    private function valorDeFiltro(Criteria $criteria, ActaField $campo): mixed
+    {
+        foreach ($criteria->filters() as $filtro) {
+            if ($filtro instanceof Filter && $filtro->field === $campo) {
+                return $filtro->value;
+            }
+        }
+
+        return null;
     }
 
     private function actividadAsignatura(int $idSchema): ActividadAsignatura

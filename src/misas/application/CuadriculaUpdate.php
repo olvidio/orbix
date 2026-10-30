@@ -10,6 +10,10 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
+use src\misas\domain\criteria\EncargoDiaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\misas\domain\entity\EncargoDia;
 use src\misas\domain\value_objects\EncargoDiaId;
 use src\misas\domain\value_objects\EncargoDiaStatus;
@@ -18,6 +22,7 @@ use src\misas\domain\value_objects\EncargoDiaTstart;
 use src\misas\domain\value_objects\PlantillaConfig;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\criteria\ZonaSacdField;
 use src\actividades\domain\entity\TiposActividades;
 
 /**
@@ -108,7 +113,7 @@ class CuadriculaUpdate
         $color_misa = self::colorMisa($oEncargoDia->getStatus(), $tipo_plantilla);
 
         // Datos de la zona: sacds y en que dias de la semana estan.
-        $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_zona' => $id_zona], []);
+        $cZonaSacd = $this->zonaSacdRepository->matching(Criteria::create()->where(Filter::eq(ZonaSacdField::IdZona, $id_zona)));
         $lista_sacd = [];
         $esta_en_zona = [];
         foreach ($cZonaSacd as $oZonaSacd) {
@@ -242,16 +247,11 @@ class CuadriculaUpdate
         }
 
         // Ausencias (encargos horario) del sacd en el dia.
-        $cAusencias = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios(
-            [
-                'id_nom' => $id_sacd,
-                'f_ini' => "'$dia_iso'",
-                'f_fin' => "'$dia_iso'",
-            ],
-            [
-                'f_ini' => '<=',
-                'f_fin' => '>=',
-            ],
+        $cAusencias = $this->encargoSacdHorarioRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_sacd))
+                ->andWhere(Filter::lte(EncargoSacdHorarioField::FIni, $dia_iso))
+                ->andWhere(Filter::gte(EncargoSacdHorarioField::FFin, $dia_iso))
         );
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc_aux = $oTareaHorarioSacd->getId_enc();
@@ -303,13 +303,11 @@ class CuadriculaUpdate
         $inicio_dia = $dia_iso . ' 00:00:00';
         $fin_dia = $dia_iso . ' 23:59:59';
 
-        $cEncargosDia = $this->encargoDiaRepository->getEncargoDias(
-            [
-                'id_nom' => $id_sacd,
-                'tstart' => "'$inicio_dia', '$fin_dia'",
-                '_ordre' => 'tstart',
-            ],
-            ['tstart' => 'BETWEEN'],
+        $cEncargosDia = $this->encargoDiaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(EncargoDiaField::IdNom, $id_sacd))
+                ->andWhere(Filter::between(EncargoDiaField::Tstart, $inicio_dia, $fin_dia))
+                ->orderBy(EncargoDiaField::Tstart)
         );
 
         $misas_dia = 0;
