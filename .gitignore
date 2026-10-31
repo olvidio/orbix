@@ -122,3 +122,6 @@ languages/**/*còpia*
 languages/**/*copia*
 *.py.old
 __pycache__/
+
+# Lock del script tools/qa/ejecutar_plan_ia.php
+docs/dev/reports/.ejecutar_plan_ia.lock
