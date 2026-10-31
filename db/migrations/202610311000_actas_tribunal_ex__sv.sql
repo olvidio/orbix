@@ -9,3 +9,7 @@ CREATE TABLE IF NOT EXISTS restov.e_actas_tribunal_ex (
 ) INHERITS (publicv.e_actas_tribunal);
 
 CREATE INDEX IF NOT EXISTS e_actas_tribunal_ex_acta ON restov.e_actas_tribunal_ex USING hash (acta);
+
+-- Mismos permisos que restov.e_actas_ex.
+GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER ON TABLE restov.e_actas_tribunal_ex TO PUBLIC;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE restov.e_actas_tribunal_id_item_seq TO PUBLIC;
