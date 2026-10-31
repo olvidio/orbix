@@ -11,13 +11,6 @@ interface PersonaBDURepositoryInterface
      */
     public function getPersonaBDUQuery(string $sQuery = ''): array;
 
-    /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<PersonaBDU>
-     */
-    public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array;
-
     public function getErrorTxt(): string;
 
     public function getNomTabla(): string;

@@ -11,7 +11,6 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\helpers\FuncTablasSupport;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
@@ -240,63 +239,12 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
     }
 
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * Asignaturas que cumplen el criterio, como JSON (lista de cadenas JSON con id, nivel, nombre y créditos).
      */
-    public function getAsignaturasAsJson(array $aWhere = [], array $aOperators = []): string
+    public function getAsignaturasAsJson(Criteria $criteria): string
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
         $jsonAsignaturas = [];
-        $oCondicion = new Condicion();
-        $aCondi = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondi[] = $a;
-            }
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN' || $sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $sCondi = implode(' AND ', $aCondi);
-        if ($sCondi !== '') {
-            $sCondi = " WHERE " . $sCondi;
-        }
-        $sLimit = '';
-        $sOrdre = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return '[]';
-        }
-
-        foreach ($stmt as $aDatos) {
-            if (!is_array($aDatos)) {
-                continue;
-            }
-            $normalized = $this->normalizeRowFromDb($aDatos);
-            $oAsignatura = Asignatura::fromArray($normalized);
+        foreach ($this->matching($criteria) as $oAsignatura) {
             $oMin = new stdClass();
             $oMin->id_asignatura = $oAsignatura->getIdAsignaturaVo()->value();
             $oMin->id_nivel = $oAsignatura->getIdNivelVo()->value();

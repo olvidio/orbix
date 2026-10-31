@@ -55,6 +55,26 @@ class PgAsignaturasMatchingTest extends myTest
         }
     }
 
+    public function test_asignaturas_as_json_sigue_el_criterio(): void
+    {
+        $repo = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $criterio = Criteria::create()
+            ->where(Filter::eq(AsignaturaField::Active, true))
+            ->andWhere(Filter::between(AsignaturaField::IdNivel, 1100, 2500))
+            ->orderBy(AsignaturaField::IdNivel);
+
+        $esperadas = $repo->matching($criterio);
+        $json = json_decode($repo->getAsignaturasAsJson($criterio), true);
+
+        $this->assertIsArray($json);
+        $this->assertCount(count($esperadas), $json);
+        if ($esperadas !== []) {
+            $primera = json_decode($json[0], true);
+            $this->assertSame($esperadas[0]->getId_nivel(), $primera['id_nivel']);
+            $this->assertArrayHasKey('nombre_asignatura', $primera);
+        }
+    }
+
     public function test_asignatura_tipo_matching_ordenado_equivale_a_legacy(): void
     {
         $repo = $GLOBALS['container']->get(AsignaturaTipoRepositoryInterface::class);

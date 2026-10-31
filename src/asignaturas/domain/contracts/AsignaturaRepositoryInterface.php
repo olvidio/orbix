@@ -36,11 +36,7 @@ interface AsignaturaRepositoryInterface
      */
     public function getArrayAsignaturas(): array;
 
-    /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     */
-    public function getAsignaturasAsJson(array $aWhere = [], array $aOperators = []): string;
+    public function getAsignaturasAsJson(Criteria $criteria): string;
 
     /**
      * Asignatura que cumplen el criterio.
