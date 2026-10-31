@@ -905,7 +905,6 @@ namespace src\\$grupo\\infrastructure\\repositories;
 
 use src\\shared\\infrastructure\\persistence\\ClaseRepository;
 use src\\shared\\infrastructure\\persistence\\postgresql\\Set;
-use src\\shared\\infrastructure\\persistence\\postgresql\\LegacyWhereAdapter;
 use src\\shared\\infrastructure\\persistence\\postgresql\\PgCriteriaConverter;
 use src\\shared\\domain\\criteria\\Criteria;
 use src\\shared\\traits\\RunsCriteriaQueries;
@@ -965,23 +964,6 @@ $txt_pgRepositorio .= '
 $txt_repository .= "\n";
 $txt_repository .= '/* --------------------  BASiC SEARCH ---------------------------------------- */';
 $txt_repository .= "\n";
-$txt_repository .= '
-	/**
-	 * devuelve una colección (array) de objetos de tipo ' . $Q_clase . '
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|bool Una colección de objetos de tipo ' . $Q_clase;
-if (!empty($a_use_txt['JsonException'])) {
-    $txt_repository .= "\n\t" . ' * @throws JsonException';
-}
-$txt_repository .= "\n\t" . '
-	 */
-	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|bool
-	{
-	    return $this->repository->get' . $clase_plural . '($aWhere, $aOperators);
-	}
-	';
 
 $txt_interface .= "\n";
 $txt_interface .= '/* --------------------  BASiC SEARCH ---------------------------------------- */';
@@ -997,20 +979,6 @@ if (!empty($a_use_txt['JsonException'])) {
 $txt_interface .= "\n\t" . '
 	 */
 	public function matching(Criteria $criteria): array;
-
-	/**
-	 * devuelve una colección (array) de objetos de tipo ' . $Q_clase . '
-	 *
-	 * @deprecated usar matching(Criteria)
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|bool Una colección de objetos de tipo ' . $Q_clase;
-if (!empty($a_use_txt['JsonException'])) {
-    $txt_interface .= "\n\t" . ' * @throws JsonException';
-}
-$txt_interface .= "\n\t" . '
-	 */
-	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|bool;
 	';
 
 $txt_pgRepositorio .= "\n";
@@ -1056,24 +1024,6 @@ $txt_pgRepositorio .= '
 			$' . $Q_clase . 'Set->add($' . $Q_clase . ');
 		}
 		return $' . $Q_clase . 'Set->getTot();
-	}
-
-	/**
-	 * devuelve una colección (array) de objetos de tipo ' . $Q_clase . '
-	 *
-	 * @deprecated usar matching(Criteria)
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|bool Una colección de objetos de tipo ' . $Q_clase;
-if (!empty($a_use_txt['JsonException'])) {
-    $txt_pgRepositorio .= "\n\t" . ' * @throws JsonException';
-}
-$txt_pgRepositorio .= "\n\t" . '
-	 */
-	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|bool
-	{
-		$adapter = new LegacyWhereAdapter(' . $Q_clase . 'Field::class, self::COLUMNAS);
-		return $this->matching($adapter->toCriteria($aWhere, $aOperators));
 	}
 ';
 

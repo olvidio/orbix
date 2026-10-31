@@ -110,30 +110,7 @@ final class PgCriteriaConverter
         if ($e instanceof Filter) {
             return $this->operatorSql($this->column($e->field), $e->operator, $e->value);
         }
-        if ($e instanceof LegacyColumnFilter) {
-            self::validarColumna($e->column);
-            return $this->operatorSql($e->column, $e->operator, $e->value);
-        }
-        if ($e instanceof LegacyRawFilter) {
-            return $this->raw($e);
-        }
         throw new InvalidArgumentException('Expresión de filtro no soportada: ' . get_debug_type($e));
-    }
-
-    private function raw(LegacyRawFilter $f): string
-    {
-        if ($f->values === []) {
-            return '(' . $f->sql . ')';
-        }
-        $partes = explode('?', $f->sql);
-        if (count($partes) - 1 !== count($f->values)) {
-            throw new InvalidArgumentException('LegacyRawFilter: número de ? distinto del de valores');
-        }
-        $sql = $partes[0];
-        foreach ($f->values as $i => $valor) {
-            $sql .= $this->bind($valor) . $partes[$i + 1];
-        }
-        return '(' . $sql . ')';
     }
 
     private function operatorSql(string $c, Operator $operator, mixed $v): string
@@ -188,9 +165,6 @@ final class PgCriteriaConverter
 
     private function order(OrderExpression $o): string
     {
-        if ($o instanceof LegacyRawOrder) {
-            return $o->sql;
-        }
         if (!$o instanceof Order) {
             throw new InvalidArgumentException('Ordenación no soportada: ' . get_debug_type($o));
         }

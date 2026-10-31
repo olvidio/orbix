@@ -53,8 +53,6 @@ interface PersonaPubRepositoryInterface
      * Como matching(): incluye todas las filas aunque falte región stgr de la dl;
      * acumula problemas en $problemasRegionStgr (usar RegionStgrAviso::formatear al mostrar).
      *
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
      * @param array<string, array<int|string, string>> $problemasRegionStgr
      * @param array<int, true> $sinRegionStgrPorIdNom
      * @return list<PersonaPub>
@@ -62,8 +60,7 @@ interface PersonaPubRepositoryInterface
      * @param-out array<int, true> $sinRegionStgrPorIdNom id_nom marcados sin región stgr en la dl
      */
     public function getPersonasParaListado(
-        array $aWhere,
-        array $aOperators,
+        Criteria $criteria,
         array &$problemasRegionStgr,
         array &$sinRegionStgrPorIdNom = [],
     ): array;

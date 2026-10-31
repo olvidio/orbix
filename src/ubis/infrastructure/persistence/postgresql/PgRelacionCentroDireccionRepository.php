@@ -3,7 +3,6 @@
 namespace src\ubis\infrastructure\persistence\postgresql;
 use src\shared\infrastructure\GlobalPdo;
 
-use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;

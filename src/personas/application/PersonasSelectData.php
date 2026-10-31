@@ -68,9 +68,6 @@ final class PersonasSelectData
         $Qapellido2 = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'apellido2');
         $Qcentro = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'centro');
 
-        // `$aWhere/$aOperador` solo los sigue usando `getPersonasParaListado` (rama de paso).
-        $aWhere = [];
-        $aOperador = [];
         $criterioPersona = Criteria::create();
         $oPerm = $_SESSION['oPerm'] ?? null;
         $tienePermOficina = static fn (string $perm): bool => $oPerm instanceof XPermisos
@@ -83,7 +80,6 @@ final class PersonasSelectData
                 return ['error' => _("No se encuentra el usuario")];
             }
             $id_nom = (int) $oMiUsuario->getCsvIdPauAsString();
-            $aWhere = ['id_nom' => $id_nom];
             $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::IdNom, $id_nom));
             $PersonaDlrepository = $this->personaDlRepository;
             $oPersona = $PersonaDlrepository->findById($id_nom);
@@ -106,10 +102,7 @@ final class PersonasSelectData
                 if (empty($valor)) {
                     continue;
                 }
-                $aWhere[$clave] = $valor;
                 if (empty($Qexacto)) {
-                    $aWhere[$clave] = '^' . $valor;
-                    $aOperador[$clave] = 'sin_acentos';
                     $criterioPersona = $criterioPersona->andWhere(Filter::matchesUnaccented($campo, '^' . $valor));
                 } else {
                     $criterioPersona = $criterioPersona->andWhere(Filter::eq($campo, $valor));
@@ -127,15 +120,11 @@ final class PersonasSelectData
                 }
             }
             if (empty($Qcmb)) {
-                $aWhere['situacion'] = 'A';
                 $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::Situacion, 'A'));
             } elseif (!$tienePermOficina('dtor')) {
-                $aWhere['situacion'] = 'B';
-                $aOperador['situacion'] = '!=';
                 $criterioPersona = $criterioPersona->andWhere(Filter::neq(PersonaField::Situacion, 'B'));
             }
             if ($Qes_sacd === 1) {
-                $aWhere['sacd'] = 't';
                 $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::Sacd, true));
             }
 
@@ -147,8 +136,6 @@ final class PersonasSelectData
                     $aId_ctrs[] = $oCentro->getId_ubi();
                 }
                 if (!empty($aId_ctrs)) {
-                    $aWhere['id_ctr'] = "{" . implode(', ', $aId_ctrs) . "}";
-                    $aOperador['id_ctr'] = 'ANY';
                     $criterioPersona = $criterioPersona->andWhere(Filter::in(PersonaField::IdCtr, array_map('intval', $aId_ctrs)));
                 } else {
                     $tabla = 'nada';
@@ -205,15 +192,14 @@ final class PersonasSelectData
                     $id_tabla = PersonaRepositoryResolver::idTablaDePasoDesdeNa($Qna);
                     $a_id_tabla_filtro = PersonaRepositoryResolver::idTablasDePasoParaFiltro($id_tabla);
                     if (count($a_id_tabla_filtro) > 1) {
-                        $aWhere['id_tabla'] = "'" . implode("','", $a_id_tabla_filtro) . "'";
-                        $aOperador['id_tabla'] = 'IN';
+                        $criterioPersona = $criterioPersona->andWhere(Filter::in(PersonaField::IdTabla, array_values($a_id_tabla_filtro)));
                     } else {
-                        $aWhere['id_tabla'] = $id_tabla;
+                        $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::IdTabla, $id_tabla));
                     }
                 }
                 $obj_pau = 'PersonaEx';
                 $cPersonas = $this->personaPubRepository
-                    ->getPersonasParaListado($aWhere, $aOperador, $problemasRegionStgr, $sinRegionStgrPorIdNom);
+                    ->getPersonasParaListado($criterioPersona, $problemasRegionStgr, $sinRegionStgrPorIdNom);
                 if (
                     $tienePermOficina('sm')
                     || $tienePermOficina('agd')

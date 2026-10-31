@@ -12,8 +12,6 @@ use src\shared\domain\criteria\FilterGroup;
 use src\shared\domain\criteria\NullsPosition;
 use src\shared\domain\criteria\OrderDirection;
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\LegacyColumnFilter;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\RunsCriteriaQueries;
@@ -123,18 +121,10 @@ SQL);
         $this->assertSame(5, $this->repo->cuenta(Criteria::create()));
     }
 
-    public function test_con_el_adaptador_legacy(): void
-    {
-        $c = (new LegacyWhereAdapter(TablaField::class))->toCriteria(
-            ['nombre' => 'jose', '_ordre' => 'id DESC', '_limit' => 5],
-            ['nombre' => 'sin_acentos'],
-        );
-        $this->assertSame([2, 1], $this->ids($c));
-    }
-
     public function test_error_de_sql_lanza_runtime_exception(): void
     {
-        $c = Criteria::create()->where(new LegacyColumnFilter('no_existe', \src\shared\domain\criteria\Operator::Eq, 1));
+        $c = Criteria::create()->where(Filter::eq(TablaField::Id, 1))->orderBy(TablaField::Nombre)->limit(1);
+        $this->pdo->exec('ALTER TABLE t_criteria RENAME COLUMN nombre TO nombre_renombrado');
         // Sin gestor, el trait no escribe en el log de errores (su ruta no existe en el contenedor).
         $gestor = $_SESSION['oGestorErrores'] ?? null;
         unset($_SESSION['oGestorErrores']);

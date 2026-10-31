@@ -64,14 +64,14 @@ final class MatriculasListaOtrasRData
         $aNombre = [];
 
         if ($apellido1 !== '') {
-            $aWhere = [
-                'apellido1' => '^' . $apellido1,
-                'situacion' => 'A',
-                '_ordre' => 'dl,stgr,apellido1,nom',
-            ];
-            $aOperador = ['apellido1' => 'sin_acentos'];
+            $criteria = Criteria::create()
+                ->where(Filter::matchesUnaccented(PersonaField::Apellido1, '^' . $apellido1))
+                ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                ->orderBy(PersonaField::Dl)
+                ->addOrderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Nom);
             $sinRegionStgrPorIdNom = [];
-            $cPersonas = $this->personaPubRepository->getPersonasParaListado($aWhere, $aOperador, $problemasRegionStgr, $sinRegionStgrPorIdNom);
+            $cPersonas = $this->personaPubRepository->getPersonasParaListado($criteria, $problemasRegionStgr, $sinRegionStgrPorIdNom);
             $i = 0;
             foreach ($cPersonas as $oPersona) {
                 $idNom = $oPersona->getId_nom();
